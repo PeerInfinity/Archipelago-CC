@@ -1,6 +1,6 @@
 """Vibe Coding Simulator — Core simulation engine.
 
-Models the game state: features, phases, Claude instances, test results,
+Models the game state: features, phases, Claw instances, test results,
 and the simulation of time, task progress, and regressions.
 """
 
@@ -80,7 +80,7 @@ class Task:
 
 
 @dataclass
-class ClaudeInstance:
+class ClawInstance:
     id: int
     task: Task | None = None
     subtask_index: int = 0
@@ -170,7 +170,7 @@ class SimulationConfig:
         # Test workflow
         self.test_workflow_duration: float = 10.0  # minutes
 
-        # Claude inline regression detection
+        # Claw inline regression detection
         self.inline_regression_catch_rate: float = 0.6
 
         # Merge conflicts
@@ -184,7 +184,7 @@ class GameState:
         self.config = config or SimulationConfig()
         self.features: dict[str, Feature] = {}
         self.all_phases: dict[str, Phase] = {}  # node_id -> Phase
-        self.claude_instances: list[ClaudeInstance] = []
+        self.claw_instances: list[ClawInstance] = []
         self.simulated_time: float = 0.0  # in minutes
         self.credits_remaining: float = self.config.weekly_credits
         self.week_start: float = 0.0
@@ -234,10 +234,10 @@ class GameState:
 
             self.features[feat_id] = feature
 
-    def add_claude_instance(self) -> ClaudeInstance:
-        """Add a new Claude instance."""
-        instance = ClaudeInstance(id=len(self.claude_instances) + 1)
-        self.claude_instances.append(instance)
+    def add_claw_instance(self) -> ClawInstance:
+        """Add a new Claw instance."""
+        instance = ClawInstance(id=len(self.claw_instances) + 1)
+        self.claw_instances.append(instance)
         return instance
 
     def is_phase_unlocked(self, node_id: str) -> bool:
@@ -254,7 +254,7 @@ class GameState:
     def get_available_phases(self) -> list[Phase]:
         """Get phases that are unlocked, not complete, and not being worked on."""
         in_progress = set()
-        for inst in self.claude_instances:
+        for inst in self.claw_instances:
             if inst.task:
                 in_progress.add(inst.task.target_node)
 
@@ -268,8 +268,8 @@ class GameState:
                 available.append(phase)
         return available
 
-    def assign_task(self, instance: ClaudeInstance, task_type: TaskType, target_node: str) -> bool:
-        """Assign a task to a Claude instance. Returns False if invalid."""
+    def assign_task(self, instance: ClawInstance, task_type: TaskType, target_node: str) -> bool:
+        """Assign a task to a Claw instance. Returns False if invalid."""
         if not instance.is_idle:
             return False
         if target_node not in self.all_phases:
@@ -293,13 +293,13 @@ class GameState:
             durations.append(duration)
         instance.subtask_durations = durations
 
-        self.log.append(f"[{self._time_str()}] Claude #{instance.id}: started {task.label}")
+        self.log.append(f"[{self._time_str()}] Claw #{instance.id}: started {task.label}")
         return True
 
-    def cancel_task(self, instance: ClaudeInstance):
-        """Cancel the current task on a Claude instance."""
+    def cancel_task(self, instance: ClawInstance):
+        """Cancel the current task on a Claw instance."""
         if instance.task:
-            self.log.append(f"[{self._time_str()}] Claude #{instance.id}: cancelled {instance.task.label}")
+            self.log.append(f"[{self._time_str()}] Claw #{instance.id}: cancelled {instance.task.label}")
             instance.task = None
             instance.subtask_durations = []
 
@@ -336,8 +336,8 @@ class GameState:
             self.week_start = self.simulated_time
             self.log.append(f"[{self._time_str()}] Weekly credits refreshed!")
 
-        # Update Claude instances
-        for instance in self.claude_instances:
+        # Update Claw instances
+        for instance in self.claw_instances:
             if instance.is_idle:
                 continue
             self._tick_instance(instance, dt)
@@ -348,8 +348,8 @@ class GameState:
             if elapsed >= self.test_workflow.duration:
                 self._complete_test_workflow()
 
-    def _tick_instance(self, instance: ClaudeInstance, dt: float):
-        """Advance a single Claude instance by dt simulated minutes."""
+    def _tick_instance(self, instance: ClawInstance, dt: float):
+        """Advance a single Claw instance by dt simulated minutes."""
         # Consume credits
         credit_cost = dt * self.config.credit_rate
         if self.credits_remaining <= 0:
@@ -384,19 +384,19 @@ class GameState:
                     instance.subtask_durations.extend([fix_duration, test_duration])
                     instance.regression_fix_cycles += 1
                     self.log.append(
-                        f"[{self._time_str()}] Claude #{instance.id}: "
+                        f"[{self._time_str()}] Claw #{instance.id}: "
                         f"found regression during testing, attempting fix"
                     )
 
-    def _roll_inline_regression(self, instance: ClaudeInstance) -> bool:
-        """Roll for whether Claude's inline regression tests catch an issue."""
+    def _roll_inline_regression(self, instance: ClawInstance) -> bool:
+        """Roll for whether Claw's inline regression tests catch an issue."""
         if self.rng.random() < self.config.regression_rate:
             if self.rng.random() < self.config.inline_regression_catch_rate:
                 return True  # Caught it, needs fix cycle
         return False
 
-    def _complete_task(self, instance: ClaudeInstance):
-        """Handle task completion for a Claude instance."""
+    def _complete_task(self, instance: ClawInstance):
+        """Handle task completion for a Claw instance."""
         task = instance.task
         if not task:
             return
@@ -411,7 +411,7 @@ class GameState:
             if self._check_merge_conflict(instance):
                 self.pending_merge_conflicts.append(task.target_node)
                 self.log.append(
-                    f"[{self._time_str()}] MERGE CONFLICT: Claude #{instance.id}'s "
+                    f"[{self._time_str()}] MERGE CONFLICT: Claw #{instance.id}'s "
                     f"work on {task.target_node} conflicts with another instance"
                 )
                 instance.task = None
@@ -423,7 +423,7 @@ class GameState:
             old_completion = target.completion
             target.completion = min(1.0, target.completion + progress)
             self.log.append(
-                f"[{self._time_str()}] Claude #{instance.id}: completed {task.label} "
+                f"[{self._time_str()}] Claw #{instance.id}: completed {task.label} "
                 f"({old_completion:.0%} → {target.completion:.0%})"
             )
 
@@ -440,7 +440,7 @@ class GameState:
             old_completion = target.completion
             target.completion = min(1.0, target.completion + progress)
             self.log.append(
-                f"[{self._time_str()}] Claude #{instance.id}: resolved merge conflict "
+                f"[{self._time_str()}] Claw #{instance.id}: resolved merge conflict "
                 f"on {task.target_node} ({old_completion:.0%} → {target.completion:.0%})"
             )
             # Merge conflict resolution can also cause regressions
@@ -450,7 +450,7 @@ class GameState:
         instance.task = None
         instance.subtask_durations = []
 
-    def _check_merge_conflict(self, completing_instance: ClaudeInstance) -> bool:
+    def _check_merge_conflict(self, completing_instance: ClawInstance) -> bool:
         """Check if a completing task conflicts with other running instances."""
         task = completing_instance.task
         if not task:
@@ -458,7 +458,7 @@ class GameState:
 
         completing_feature = task.target_node.split(".")[0]
 
-        for other in self.claude_instances:
+        for other in self.claw_instances:
             if other.id == completing_instance.id or other.is_idle:
                 continue
             if not other.task:
@@ -566,5 +566,5 @@ def load_game(depgraph_path: str | Path, num_instances: int = 2, seed: int | Non
         state.rng = random.Random(seed)
     state.load_depgraph(depgraph_path)
     for _ in range(num_instances):
-        state.add_claude_instance()
+        state.add_claw_instance()
     return state

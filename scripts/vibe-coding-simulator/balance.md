@@ -22,7 +22,7 @@ Variables in `SimulationConfig` that affect game balance. Grouped by what they a
 - 0.3 = mild variance, tasks are fairly predictable
 - 0.6 = moderate variance (current), occasional surprises
 - 1.0 = high variance, some tasks take 10x longer than others
-- 1.5 = extreme, "is Claude stuck?" becomes a real question
+- 1.5 = extreme, "is Claw stuck?" becomes a real question
 
 This is the core variable for the "cancel and retry" decision. Higher sigma means more value in recognizing stuck tasks.
 
@@ -60,13 +60,13 @@ This is the core variable for the "cancel and retry" decision. Higher sigma mean
 
 **When conflicts trigger:** Same feature = full rate (25%). Shared dependencies = half rate (12.5%). Unrelated features = no conflict.
 
-**Resolution:** The player must assign a Claude instance to resolve the conflict (a separate task). Resolution can also cause regressions. The original progress is applied on successful resolution.
+**Resolution:** The player must assign a Claw instance to resolve the conflict (a separate task). Resolution can also cause regressions. The original progress is applied on successful resolution.
 
-## Inline Testing — Claude's Self-Correction
+## Inline Testing — Claw's Self-Correction
 
 | Variable | Current | Effect |
 |---|---|---|
-| `inline_regression_catch_rate` | 0.6 | Probability that Claude catches a regression during its own testing (before committing). Caught regressions add fix cycles to the task. |
+| `inline_regression_catch_rate` | 0.6 | Probability that Claw catches a regression during its own testing (before committing). Caught regressions add fix cycles to the task. |
 
 **Effective shipped regression rate:** `regression_rate × (1 - inline_regression_catch_rate)` = 0.25 × 0.4 = 0.10 (10% of commits ship regressions). The other 15% are caught and fixed inline, costing time but not progress.
 
@@ -88,5 +88,5 @@ These variables from the planning doc don't exist yet but would affect balance:
 |---|---|
 | Task duration scaling by phase complexity | Using LOC estimates to vary base duration per phase |
 | Context degradation | Error rate increasing over long conversations |
-| Model selection | Different Claude models with different speed/accuracy/cost tradeoffs |
+| Model selection | Different Claw models with different speed/accuracy/cost tradeoffs |
 | Human fatigue | Simulating the player's own energy/attention over a work day |

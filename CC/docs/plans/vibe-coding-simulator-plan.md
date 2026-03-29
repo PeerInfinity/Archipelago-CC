@@ -2,7 +2,7 @@
 
 ## Vision
 
-A game that simulates the experience of managing an AI-assisted coding project. The player gives prompts to a simulated Claude, manages resources (time, compute, API credits, context windows), and makes strategic decisions about task prioritization, branching, and autonomy levels. The game tracks progress through a real dependency graph of features and tests.
+A game that simulates the experience of managing an AI-assisted coding project. The player gives prompts to a simulated Claw, manages resources (time, compute, API credits, context windows), and makes strategic decisions about task prioritization, branching, and autonomy levels. The game tracks progress through a real dependency graph of features and tests.
 
 The game has two modes of use:
 - **As an Archipelago apworld** — regions are features on a dependency graph, locations are subfeatures/phases, items are "understanding" that unlocks dependent work
@@ -190,7 +190,7 @@ A UI showing current project state — test results, plan status, blocking relat
 
 ### Milestone 3: Simulation Engine
 
-The core game loop — giving prompts to simulated Claude, time passing, success/failure rolls, regressions. Resource management (credits, compute, context windows).
+The core game loop — giving prompts to simulated Claw, time passing, success/failure rolls, regressions. Resource management (credits, compute, context windows).
 
 ### Milestone 4: Archipelago Integration
 
@@ -214,29 +214,105 @@ Use the phase structure from the actual planning documents as-is. The SWFRecomp 
 
 ### Archipelago Logic / Relaxed Requirements
 
-Following the DepGraph apworld's default: require all event items (all dependencies must actually be implemented) but only one normal item (you only need "understanding"/inspiration from one dependency). This means the simulated Claude can't attempt blocked work, but the player doesn't need multiworld items from every prerequisite — just one source of insight is enough to get started.
+Following the DepGraph apworld's default: require all event items (all dependencies must actually be implemented) but only one normal item (you only need "understanding"/inspiration from one dependency). In the simulator, features whose upstream dependencies haven't passed manual testing are not blocked — but tasks for them take twice as long. The player can work ahead at a cost.
 
-### Game Loop: Real-Time with Claude Instances
+### Game Loop: Real-Time with Claw Instances
 
-The game is **real-time**. When the player assigns a task to a Claude instance, a progress bar appears. The player can:
-- Start multiple Claude instances working in parallel
+The game is **real-time**. When the player assigns a task to a Claw instance, a progress bar appears. The player can:
+- Start multiple Claw instances working in parallel
 - Do other management tasks while waiting
 - Cancel a task or give updated instructions mid-execution
 
 Options:
 - **Progress bar visibility** — can be hidden, making task duration unpredictable (harder mode)
-- **Claude getting stuck** — a random event where Claude consumes time and tokens without progress. The player needs to recognize this and intervene (cancel, redirect, provide hints)
+- **Claw getting stuck** — a random event where Claw consumes time and tokens without progress. The player needs to recognize this and intervene (cancel, redirect, provide hints)
 
-### Claude Task Types and Failure Modes
+### Completeness Model
 
-Each action the simulated Claude performs has a random chance of failure. V1 focuses on the simplest failure modes:
+Each feature has three hidden completeness values, each from 0.0 to 1.0:
 
-| Task | Success | Failure |
-|---|---|---|
-| Write code for a phase | Phase completion % increases | No progress, or regression in related phases |
-| Write/update planning doc | Document becomes accurate | Missing or inaccurate information in doc |
-| Check blocked status of a plan | Correct blocked/unblocked report | False positive (says blocked when it isn't) or false negative |
-| Investigate remaining work | Accurate list of what's left | Missing features from list, or hallucinated features that don't exist |
+- **Document completeness** — how complete/accurate the planning doc is
+- **Code completeness** — how much of the feature is correctly implemented
+- **Test completeness** — how thorough the test coverage is
+
+**Constraints:**
+- Code completeness cannot meaningfully exceed document completeness (you can't implement what isn't planned)
+- Test completeness cannot exceed document completeness (you can't test what isn't planned)
+
+**Hidden state:** The player never sees these values directly. They see Claw's reports (which may be optimistic) and test results (which are limited by test completeness). The player must invest time to reduce uncertainty.
+
+### Universal Outcome Formula
+
+The same formula is used for document reevaluation, code re-implementation, and test re-implementation. Given current completeness `c` (0.0 to 1.0) relative to the target ceiling (1.0 for docs, doc completeness for code/tests):
+
+```
+c_rel = current / ceiling
+
+P(reduce)      = 1/4                 — lose up to 50% of current value
+P(nothing)     = 1/4                 — no change
+P(improve)     = (1 - c_rel) / 2    — gain up to 50% of the gap to ceiling
+P(match ceil)  = c_rel / 2          — jump directly to ceiling
+```
+
+At c_rel = 0.5: 25/25/25/25. At c_rel = 0.1: 25/25/45/05. At c_rel = 0.9: 25/25/05/45.
+
+The "reduce" probability is constant — there's always a risk of making things worse. But the balance between "incremental improvement" and "jump to ceiling" shifts: when far from the ceiling, small improvements are more likely; when close, jumping to ceiling becomes more likely.
+
+### Claw Task Types
+
+**Write Planning Doc** — Creates the planning doc for a feature. Prerequisite for implementation and test writing.
+- 50% chance of success (100% completeness)
+- 50% chance of partial result (25–75% completeness, uniformly distributed)
+
+**Evaluate Planning Doc** — Reviews and potentially improves an existing planning doc.
+- Uses the universal outcome formula with ceiling = 1.0
+- Can both improve and worsen the doc
+
+**Implement Feature** — Implements code based on the planning doc. Requires a planning doc to exist.
+- During investigation phase: 25% chance of triggering a free document reevaluation (using the universal formula). This simulates Claw noticing the plan is incomplete.
+- First implementation (code completeness = 0): 25% chance code matches doc completeness exactly, 75% chance code is 25–75% of doc completeness (uniform)
+- Re-implementation (code completeness > 0): Uses the universal outcome formula with ceiling = doc completeness
+
+**Write Tests** — Creates tests for a feature. Requires a planning doc to exist.
+- Same mechanics as Implement Feature, including the 25% chance of doc reevaluation during investigation
+- Test completeness ceiling is doc completeness
+- First attempt and re-attempt use the same formulas as code implementation
+
+**Resolve Merge Conflict** — Resolves a merge conflict from parallel work on the same feature.
+- The "current value" is the higher completion of the two branches being merged
+- Uses the universal outcome formula with that value
+- Can cause regressions
+
+### Manual Testing
+
+A special player action (not a Claw task) that reveals hidden quality information.
+
+- Takes **1 simulated hour** per feature
+- **Blocks the player** from starting new actions during this time (running Claw instances and workflows continue)
+- Two levels of information:
+  - **First manual test**: Reveals whether anything is incomplete for this feature (yes/no)
+  - **Follow-up manual test** (same 1-hour cost): Reveals *which* of docs/code/tests is the problem, but not how incomplete
+
+This is the only way to get ground truth about feature quality. The strategic decision is whether to invest the time.
+
+### Archipelago Integration
+
+Location checks for a feature are awarded after the feature passes the manual test — meaning all three completeness values (doc, code, tests) are at 100%.
+
+### Cross-Feature Side Effects
+
+Any task that modifies code completeness in one feature has a **25% chance** to affect another feature's code completeness. When triggered:
+
+- The change is a **random amount between -25% and +25%** (can improve or regress)
+- Clamped to [0%, 100%], but **NOT limited by the target's doc completeness**
+- **75% chance** the affected feature is upstream in the dependency chain
+- **25% chance** the affected feature is unrelated
+
+This is **hidden** — the player doesn't know a side effect occurred until tests are run or manual testing is performed. Side effects model the reality that code changes can have unexpected consequences elsewhere — sometimes fixing a bug in one area accidentally fixes (or breaks) something upstream.
+
+### Example Project
+
+The TaskFlow fictional project (20-node dependency graph representing a task management web app) is the primary dev/test example. The Flash/SWFRecomp project (368 nodes from 98 plans) is the real-world dataset.
 
 **Deferred to later versions:**
 - Context degradation (error rate increasing over long conversations)
@@ -244,27 +320,10 @@ Each action the simulated Claude performs has a random chance of failure. V1 foc
 - Autonomy level (humorous/serious consequences of too much autonomy)
 - Ralph loops and advanced automation
 
-### Example Project
-
-The Flash/SWFRecomp project will be the primary real dataset, but it's too large for initial development. A smaller example will also be created — preferably a subset of the Flash data if an appropriate one can be found, otherwise a fictional ~10-feature project. The extraction pipeline will target the Flash data as the first real-world test regardless.
-
-### Regression Model
-
-About **1 in 4 commits** introduces a regression (estimated from real SWFRecomp data). When a regression occurs, it follows a proximity gradient:
-- **Most likely**: regression in the current phase being worked on
-- **Less likely**: regression in a related/adjacent phase
-- **Rare**: regression in an apparently unrelated feature
-
-This mirrors real experience — most bugs are local, but occasionally a change breaks something surprising. The 1/4 rate and proximity distribution are tunable game balance parameters.
-
-### Document Accuracy
-
-Deferred from V1. The idea of using real planning documents with algorithmically simulated mistakes is appealing but complex. For V1, planning documents are either accurate or not yet written — no partial accuracy tracking. This simplifies the game model significantly while still allowing the core "investigate → plan → implement" loop.
-
 ### Multi-Instance Resource Model
 
-Simulates a Claude subscription model:
-- **5-hour usage limit** per rolling period (maps to real Claude Pro limits)
+Simulates a Claw subscription model:
+- **5-hour usage limit** per rolling period (maps to real Claw Pro limits)
 - **Weekly credit cap** on top of the rolling limit
 - Running one instance rarely hits the limit; multiple instances can burn through credits fast
 
@@ -281,9 +340,9 @@ Task duration in V1 is **flat** — all tasks take roughly the same base simulat
 
 ### Task Progress Model
 
-A Claude task's progress bar has **one section per subtask**: initial testing, reading code, planning, implementing, regression tests, fixing regressions. Each subtask takes a random amount of time, distributed on a **log scale** — tasks can randomly take orders of magnitude more or less time than expected.
+A Claw task's progress bar has **one section per subtask**: initial testing, reading code, planning, implementing, regression tests, fixing regressions. Each subtask takes a random amount of time, distributed on a **log scale** — tasks can randomly take orders of magnitude more or less time than expected.
 
-The **regression testing / fixing cycle** is also variable. After implementing, Claude runs some regression tests. If it finds a regression, it attempts a fix, then tests again. The number of these cycles is random. This could be simulated with the same system that handles normal regressions (rolling for whether a regression occurred, then rolling for whether Claude's chosen tests would catch it), or it could be simplified in V1 to a fixed random number of fix cycles.
+The **regression testing / fixing cycle** is also variable. After implementing, Claw runs some regression tests. If it finds a regression, it attempts a fix, then tests again. The number of these cycles is random. This could be simulated with the same system that handles normal regressions (rolling for whether a regression occurred, then rolling for whether Claw's chosen tests would catch it), or it could be simplified in V1 to a fixed random number of fix cycles.
 
 The game shows a brief **status label** for the current subtask, giving the player information to act on without revealing the internal random state.
 
@@ -294,23 +353,23 @@ This creates strategic decisions:
 
 ### Credit Accounting
 
-Credits are consumed **continuously** as Claude instances run. Canceling a stuck task is not free — the credits spent so far are gone. This makes the cancel-and-retry decision a genuine cost/benefit calculation, not a free reset.
+Credits are consumed **continuously** as Claw instances run. Canceling a stuck task is not free — the credits spent so far are gone. This makes the cancel-and-retry decision a genuine cost/benefit calculation, not a free reset.
 
 ### Merge Conflict Resolution
 
-When parallel Claude instances produce conflicting changes, the player must assign a Claude instance to resolve the merge conflict. This is itself a task that can randomly fail, potentially introducing regressions. This makes parallel work a genuine risk/reward tradeoff, not just a resource cost.
+When parallel Claw instances produce conflicting changes, the player must assign a Claw instance to resolve the merge conflict. This is itself a task that can randomly fail, potentially introducing regressions. This makes parallel work a genuine risk/reward tradeoff, not just a resource cost.
 
 ### Testing Infrastructure
 
 Two ways to run tests, mirroring the real project:
 
-**Claude's inline testing** — Each Claude instance runs tests as part of its work:
+**Claw's inline testing** — Each Claw instance runs tests as part of its work:
 - Initial baseline tests at the start
 - Implementation-phase spot checks
 - Regression tests before committing
-- Variable thoroughness: sometimes Claude runs many regression tests and finds nothing; sometimes runs few and catches a regression early
+- Variable thoroughness: sometimes Claw runs many regression tests and finds nothing; sometimes runs few and catches a regression early
 
-The player can **end Claude's regression testing early** and commit what's there, saving time at the risk of shipping regressions.
+The player can **end Claw's regression testing early** and commit what's there, saving time at the risk of shipping regressions.
 
 **Test workflow (CI)** — The player can trigger a full test suite run separately:
 - Runs in the background (simulating GitHub Actions)
@@ -321,16 +380,33 @@ The player can **end Claude's regression testing early** and commit what's there
 Strategic tradeoffs:
 - Running the workflow frequently catches regressions early but takes time
 - Running it rarely means regressions compound before being discovered
-- Ending Claude's regression testing early and using the workflow instead can be more efficient — but the workflow results come later
-- **Wait for results?** — the player can assign Claude new tasks before workflow results arrive, but risks building on top of undiscovered regressions
-- **Cancel and re-run?** — if Claude just committed, the current workflow run is testing stale code. Cancel and restart, or wait for it to finish and then run again?
+- Ending Claw's regression testing early and using the workflow instead can be more efficient — but the workflow results come later
+- **Wait for results?** — the player can assign Claw new tasks before workflow results arrive, but risks building on top of undiscovered regressions
+- **Cancel and re-run?** — if Claw just committed, the current workflow run is testing stale code. Cancel and restart, or wait for it to finish and then run again?
 
 V1 only supports running the full test suite. Future versions may allow selecting subsets and choosing parallelism levels (10/20/30 processes).
 
 ---
 
+### Test Result Display
+
+Automated test results are shown as a percentage per feature. The displayed value is:
+
+```
+if code_completeness <= test_completeness:
+    display = code_completeness / test_completeness
+else:
+    display = test_completeness / code_completeness
+```
+
+When code is less complete than tests, the tests accurately report what's missing. When code is more complete than tests, the tests can't tell — they report their own incompleteness as if it were a code problem. The player can't distinguish between "code is bad" and "tests are incomplete" from the test results alone.
+
+### Regression Interaction with Tests
+
+Assigning a task to improve tests has the same 25% chance to trigger a document reevaluation as a task to improve code. This simulates discovering doc issues while investigating test failures.
+
+---
+
 ## Open Questions
 
-- **Smaller example selection**: Need to evaluate whether a coherent ~10-feature subset of the Flash data exists (e.g., the rendering pipeline: transforms → cxform → drawing API → masks → bitmaps), or whether a fictional example is cleaner.
 - **Log-scale distribution specifics**: What distribution for subtask durations? Log-normal? Power law? Needs to feel unpredictable but not absurd. Playtesting will determine this.
-- **Inline regression simulation detail**: Should V1 fully simulate whether Claude's chosen regression tests would catch a given regression (using the test-to-feature mapping)? Or simplify to a flat probability that Claude catches its own regressions before committing?

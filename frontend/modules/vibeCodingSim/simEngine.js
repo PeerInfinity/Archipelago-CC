@@ -1,14 +1,21 @@
 /**
- * Vibe Coding Simulator — Simulation Engine
+ * Vibe Coding Simulator — Simulation Engine (v2)
  *
- * JavaScript port of the Python prototype (engine.py).
- * Manages game state: features, phases, tasks, tests, credits, time.
+ * Three hidden completeness values per feature (doc, code, test).
+ * Information is revealed through Claw reports (unreliable), test results
+ * (ambiguous), and manual testing (ground truth but costly).
  */
 
+// --- Constants ---
+
 const TaskType = Object.freeze({
+    WRITE_DOC: 'write_doc',
+    EVALUATE_DOC: 'evaluate_doc',
     IMPLEMENT: 'implement',
+    WRITE_TESTS: 'write_tests',
     MERGE_CONFLICT: 'merge_conflict',
     TEST_WORKFLOW: 'test_workflow',
+    MANUAL_TEST: 'manual_test',
 });
 
 const TaskStatus = Object.freeze({
@@ -19,24 +26,40 @@ const TaskStatus = Object.freeze({
     MERGE_CONFLICT: 'merge_conflict',
 });
 
-const SubtaskType = Object.freeze({
-    BASELINE_TESTING: 'baseline testing',
+const SubtaskLabel = Object.freeze({
+    INVESTIGATING: 'investigating',
     READING_CODE: 'reading code',
     PLANNING: 'planning',
+    WRITING: 'writing',
     IMPLEMENTING: 'implementing',
-    REGRESSION_TESTING: 'regression testing',
-    FIXING_REGRESSIONS: 'fixing regressions',
+    TESTING: 'testing',
+    FIXING: 'fixing regressions',
+    RESOLVING: 'resolving conflict',
+    MANUAL_TESTING: 'manual testing',
 });
 
 const IMPLEMENT_SUBTASKS = [
-    SubtaskType.BASELINE_TESTING,
-    SubtaskType.READING_CODE,
-    SubtaskType.PLANNING,
-    SubtaskType.IMPLEMENTING,
-    SubtaskType.REGRESSION_TESTING,
+    SubtaskLabel.INVESTIGATING,
+    SubtaskLabel.READING_CODE,
+    SubtaskLabel.PLANNING,
+    SubtaskLabel.IMPLEMENTING,
+    SubtaskLabel.TESTING,
 ];
 
-// Simple seeded PRNG (xoshiro128**)
+const DOC_SUBTASKS = [
+    SubtaskLabel.INVESTIGATING,
+    SubtaskLabel.READING_CODE,
+    SubtaskLabel.WRITING,
+];
+
+const MERGE_SUBTASKS = [
+    SubtaskLabel.INVESTIGATING,
+    SubtaskLabel.RESOLVING,
+    SubtaskLabel.TESTING,
+];
+
+// --- Seeded PRNG (xoshiro128**) ---
+
 class SeededRandom {
     constructor(seed = Date.now()) {
         this.s = new Uint32Array(4);
@@ -50,64 +73,72 @@ class SeededRandom {
         const s = this.s;
         const result = (s[1] * 5) | 0;
         const t = s[1] << 9;
-        s[2] ^= s[0];
-        s[3] ^= s[1];
-        s[1] ^= s[2];
-        s[0] ^= s[3];
+        s[2] ^= s[0]; s[3] ^= s[1]; s[1] ^= s[2]; s[0] ^= s[3];
         s[2] ^= t;
         s[3] = (s[3] << 11) | (s[3] >>> 21);
         return (result >>> 0) / 4294967296;
     }
 
-    random() {
-        return this._next();
-    }
+    random() { return this._next(); }
 
     gauss(mean = 0, stddev = 1) {
-        // Box-Muller transform
         let u, v, s;
-        do {
-            u = this.random() * 2 - 1;
-            v = this.random() * 2 - 1;
-            s = u * u + v * v;
-        } while (s >= 1 || s === 0);
-        const mul = Math.sqrt(-2 * Math.log(s) / s);
-        return mean + stddev * u * mul;
+        do { u = this.random() * 2 - 1; v = this.random() * 2 - 1; s = u * u + v * v; }
+        while (s >= 1 || s === 0);
+        return mean + stddev * u * Math.sqrt(-2 * Math.log(s) / s);
+    }
+
+    uniform(min, max) {
+        return min + this.random() * (max - min);
     }
 }
 
+// --- Config ---
+
 class SimulationConfig {
     constructor(overrides = {}) {
-        // Time
-        this.timeScale = 60.0;           // simulated seconds per real second
-        this.baseTaskDuration = 10.0;    // base minutes per subtask
+        this.timeScale = 60.0;
+        this.baseTaskDuration = 10.0;
 
-        // Weekly credits
-        this.weeklyCredits = 5040.0;     // 1 instance × 12h/day × 7 days
-        this.weekDuration = 7 * 24 * 60; // 7 days in minutes
-        this.creditRate = 1.0;           // credits per simulated minute per instance
+        this.weeklyCredits = 5040.0;
+        this.weekDuration = 7 * 24 * 60;
+        this.creditRate = 1.0;
 
-        // Regressions
-        this.regressionRate = 0.25;
-        this.regressionLocalWeight = 0.7;
-        this.regressionAdjacentWeight = 0.2;
-        this.regressionRemoteWeight = 0.1;
-        this.regressionSeverityMean = 0.15;
+        // Doc writing
+        this.docSuccessRate = 0.5;
+        this.docPartialMin = 0.25;
+        this.docPartialMax = 0.75;
+
+        // First implementation
+        this.firstImplExactMatchRate = 0.25;
+        this.firstImplPartialMin = 0.25;
+        this.firstImplPartialMax = 0.75;
+
+        // Investigation doc reevaluation chance
+        this.investigationDocRevalRate = 0.25;
+
+        // Reported success accuracy
+        this.reportAccuracyRate = 0.5;
+
+        // Cross-feature side effects
+        this.sideEffectRate = 0.25;
+        this.sideEffectMaxChange = 0.25;
+        this.sideEffectUpstreamWeight = 0.75;
+
+        // Merge conflicts
+        this.mergeConflictRate = 0.25;
+
+        // Dependencies-not-met slowdown
+        this.depsNotMetMultiplier = 2.0;
 
         // Task duration variance
         this.durationLogSigma = 0.6;
 
-        // Implementation
-        this.implementProgressPerTask = 1.0;
-
         // Test workflow
         this.testWorkflowDuration = 10.0;
 
-        // Inline regression detection
-        this.inlineRegressionCatchRate = 0.6;
-
-        // Merge conflicts
-        this.mergeConflictRate = 0.25;
+        // Manual test
+        this.manualTestDuration = 60.0; // 1 hour
 
         // Task history
         this.maxTaskHistory = 100;
@@ -116,52 +147,50 @@ class SimulationConfig {
     }
 }
 
-class Phase {
-    constructor(id, name, featureId, dependsOn = []) {
-        this.id = id;
-        this.name = name;
-        this.featureId = featureId;
-        this.dependsOn = dependsOn;
-        this.completion = 0.0;
-    }
-
-    get nodeId() {
-        return `${this.featureId}.${this.id}`;
-    }
-
-    get isComplete() {
-        return this.completion >= 1.0;
-    }
-}
+// --- Feature ---
 
 class Feature {
     constructor(id, name) {
         this.id = id;
         this.name = name;
-        this.phases = [];
+
+        // Hidden state
+        this.docCompleteness = 0;
+        this.codeCompleteness = 0;
+        this.testCompleteness = 0;
+
+        // Visible state
+        this.hasDoc = false;
+        this.hasCode = false;
+        this.hasTests = false;
+        this.testResultPercent = null;
+        this.testResultUpdated = null;
+        this.manualTestResult = null; // null | "incomplete" | "doc" | "code" | "tests" | "pass"
+
+        // Graph
         this.upstreamIds = new Set();
         this.downstreamIds = new Set();
-        this.relatedTestIds = [];
+        this.dependsOn = []; // node IDs from the graph (for determining upstream features)
     }
 
-    get completion() {
-        if (this.phases.length === 0) return 0;
-        return this.phases.reduce((sum, p) => sum + p.completion, 0) / this.phases.length;
+    get depsAreMet() {
+        // Checked externally by GameState
+        return this._depsAreMet;
     }
-
-    get isLocked() {
-        return this.phases.length > 0 && this.phases.every(p => p._locked);
+    set depsAreMet(val) {
+        this._depsAreMet = val;
     }
 }
+
+// --- Task ---
 
 let _nextTaskId = 1;
 
 class Task {
-    constructor(type, targetNodeId, config) {
+    constructor(type, targetFeatureId) {
         this.id = `task-${_nextTaskId++}`;
         this.type = type;
-        this.targetNodeId = targetNodeId;
-        this.targetFeatureId = targetNodeId ? targetNodeId.split('.')[0] : null;
+        this.targetFeatureId = targetFeatureId;
         this.status = TaskStatus.RUNNING;
         this.progress = 0;
         this.subtaskIndex = 0;
@@ -171,197 +200,137 @@ class Task {
         this.startedAt = 0;
         this.completedAt = null;
         this.creditsUsed = 0;
-        this.regressionFixCycles = 0;
-        this._config = config;
+        this.reportedSuccess = null; // set on completion
+
+        // For merge conflicts: the code completeness of the branch
+        this.branchCodeCompleteness = null;
     }
 
-    get currentSubtask() {
-        if (this.status !== TaskStatus.RUNNING) return null;
-        if (this.subtaskIndex < IMPLEMENT_SUBTASKS.length) {
-            return IMPLEMENT_SUBTASKS[this.subtaskIndex];
+    get subtasks() {
+        switch (this.type) {
+            case TaskType.WRITE_DOC:
+            case TaskType.EVALUATE_DOC:
+            case TaskType.WRITE_TESTS:
+                return DOC_SUBTASKS;
+            case TaskType.MERGE_CONFLICT:
+                return MERGE_SUBTASKS;
+            case TaskType.IMPLEMENT:
+            default:
+                return IMPLEMENT_SUBTASKS;
         }
-        const cycleOffset = this.subtaskIndex - IMPLEMENT_SUBTASKS.length;
-        return cycleOffset % 2 === 0
-            ? SubtaskType.FIXING_REGRESSIONS
-            : SubtaskType.REGRESSION_TESTING;
+    }
+
+    get currentSubtaskLabel() {
+        if (this.status !== TaskStatus.RUNNING) return null;
+        const subs = this.subtasks;
+        if (this.subtaskIndex < subs.length) return subs[this.subtaskIndex];
+        // In fix cycles
+        const offset = this.subtaskIndex - subs.length;
+        return offset % 2 === 0 ? SubtaskLabel.FIXING : SubtaskLabel.TESTING;
     }
 
     get overallProgress() {
         if (this.subtaskDurations.length === 0) return 0;
-        const completed = this.subtaskIndex + this.subtaskProgress;
-        return Math.min(completed / this.subtaskDurations.length, 1.0);
+        return Math.min((this.subtaskIndex + this.subtaskProgress) / this.subtaskDurations.length, 1.0);
     }
 
     get label() {
-        return `${this.type}: ${this.targetNodeId}`;
+        const typeLabels = {
+            [TaskType.WRITE_DOC]: 'Write Doc',
+            [TaskType.EVALUATE_DOC]: 'Evaluate Doc',
+            [TaskType.IMPLEMENT]: 'Implement',
+            [TaskType.WRITE_TESTS]: 'Write Tests',
+            [TaskType.MERGE_CONFLICT]: 'Merge Resolve',
+            [TaskType.MANUAL_TEST]: 'Manual Test',
+        };
+        return `${typeLabels[this.type] || this.type}: ${this.targetFeatureId}`;
     }
 }
 
-class TestResult {
-    constructor(id, name, relatedFeatureIds = []) {
-        this.id = id;
-        this.name = name;
-        this.status = 'unknown';    // pass | fail | partial | unknown
-        this.linesMatching = 0;
-        this.linesTotal = 0;
-        this.lastUpdated = null;
-        this.relatedFeatureIds = relatedFeatureIds;
-    }
-}
+// --- Test Workflow ---
 
 class TestWorkflow {
-    constructor(startedAt, duration, completionSnapshot) {
+    constructor(startedAt, duration) {
         this.startedAt = startedAt;
         this.duration = duration;
-        this.completionSnapshot = completionSnapshot;
-        this.results = null;
-    }
-
-    get isComplete() {
-        return this.results !== null;
-    }
-
-    get progress() {
-        return 0; // Will be set by GameState during tick
+        this.complete = false;
     }
 }
+
+// --- Game State ---
 
 class GameState {
     constructor(config) {
         this.config = config || new SimulationConfig();
-        this.features = new Map();      // id -> Feature
-        this.allPhases = new Map();     // nodeId -> Phase
-        this.tests = new Map();         // id -> TestResult
-        this.tasks = [];                // all tasks (running + history)
-        this.simulatedTime = 0;         // minutes
+        this.features = new Map();
+        this.tasks = [];
+        this.simulatedTime = 0;
         this.creditsRemaining = this.config.weeklyCredits;
         this.weekStart = 0;
         this.testWorkflow = null;
+        this.manualTestFeatureId = null;
+        this.manualTestStartedAt = null;
         this.rng = new SeededRandom();
         this.log = [];
         this.paused = true;
         this.speedMultiplier = 1;
 
-        // Callbacks for UI notification
         this.onStateChanged = null;
         this.onLogEntry = null;
     }
 
+    // --- Data Loading ---
+
     loadFromSlotData(slotData) {
-        // slotData comes from rules JSON: { graph_structure: { "1": {...}, "2": {...} }, title, ... }
         const graphStructure = slotData.graph_structure;
         if (!graphStructure) return;
 
-        // Build index→label mapping for dependency resolution
         const indexToLabel = {};
         for (const [idx, step] of Object.entries(graphStructure)) {
             indexToLabel[parseInt(idx)] = step.label;
         }
 
-        // Parse into our node format
-        const featurePhases = new Map();
-
+        // Each node in the graph becomes a feature
         for (const [idx, step] of Object.entries(graphStructure)) {
-            const nodeId = step.label; // e.g., "DATABASE.1"
-            let featId, phaseId;
-            const dotIdx = nodeId.indexOf('.');
-            if (dotIdx >= 0) {
-                featId = nodeId.substring(0, dotIdx);
-                phaseId = nodeId.substring(dotIdx + 1);
-            } else {
-                featId = nodeId;
-                phaseId = '1';
-            }
+            const featureId = step.label;
+            const displayName = step.expression || featureId;
+            const depNodeIds = (step.dependencies || []).map(i => indexToLabel[i]).filter(Boolean);
 
-            // Resolve dependencies from integer indices to node IDs
-            const dependsOn = (step.dependencies || []).map(depIdx => indexToLabel[depIdx]).filter(Boolean);
-
-            if (!featurePhases.has(featId)) {
-                featurePhases.set(featId, []);
-            }
-            featurePhases.get(featId).push({
-                nodeId,
-                phaseId,
-                label: step.expression || nodeId,
-                dependsOn,
-            });
+            const feature = new Feature(featureId, displayName);
+            feature.dependsOn = depNodeIds;
+            this.features.set(featureId, feature);
         }
 
-        for (const [featId, phaseDicts] of featurePhases) {
-            const firstLabel = phaseDicts[0].label;
-            const featName = firstLabel.includes(':')
-                ? firstLabel.split(':')[0].trim()
-                : featId;
-
-            const feature = new Feature(featId, featName);
-
-            for (const pd of phaseDicts) {
-                const phase = new Phase(pd.phaseId, pd.label, featId, pd.dependsOn);
-                feature.phases.push(phase);
-                this.allPhases.set(pd.nodeId, phase);
-            }
-
-            this.features.set(featId, feature);
-        }
-
-        // Compute upstream/downstream relationships between features
-        for (const [, phase] of this.allPhases) {
-            const feat = this.features.get(phase.featureId);
-            for (const depId of phase.dependsOn) {
-                const depFeatId = depId.split('.')[0];
-                if (depFeatId !== phase.featureId) {
-                    feat.upstreamIds.add(depFeatId);
-                    const depFeat = this.features.get(depFeatId);
-                    if (depFeat) depFeat.downstreamIds.add(phase.featureId);
-                }
+        // Compute upstream/downstream
+        for (const [id, feat] of this.features) {
+            for (const depId of feat.dependsOn) {
+                feat.upstreamIds.add(depId);
+                const depFeat = this.features.get(depId);
+                if (depFeat) depFeat.downstreamIds.add(id);
             }
         }
 
-        // Generate simulated tests (one per feature for now)
-        for (const [featId, feat] of this.features) {
-            const testId = `test_${featId}`;
-            const test = new TestResult(testId, `${feat.name} tests`, [featId]);
-            feat.relatedTestIds.push(testId);
-            this.tests.set(testId, test);
-        }
-
-        this._updateLockStatus();
+        this._updateDepsMetStatus();
     }
 
-    _updateLockStatus() {
-        for (const [nodeId, phase] of this.allPhases) {
-            phase._locked = false;
-            for (const depId of phase.dependsOn) {
-                const dep = this.allPhases.get(depId);
-                if (!dep || !dep.isComplete) {
-                    phase._locked = true;
+    _updateDepsMetStatus() {
+        for (const [, feat] of this.features) {
+            let met = true;
+            for (const upId of feat.upstreamIds) {
+                const up = this.features.get(upId);
+                if (!up || up.manualTestResult !== 'pass') {
+                    met = false;
                     break;
                 }
             }
+            feat.depsAreMet = met;
         }
     }
 
-    isPhaseUnlocked(nodeId) {
-        const phase = this.allPhases.get(nodeId);
-        return phase && !phase._locked;
-    }
+    // --- Queries ---
 
-    getAvailablePhases(featureId = null) {
-        const inProgress = new Set();
-        for (const task of this.tasks) {
-            if (task.status === TaskStatus.RUNNING) {
-                inProgress.add(task.targetNodeId);
-            }
-        }
-
-        const available = [];
-        for (const [nodeId, phase] of this.allPhases) {
-            if (featureId && phase.featureId !== featureId) continue;
-            if (phase.isComplete) continue;
-            if (phase._locked) continue;
-            available.push(phase);
-        }
-        return available;
+    get isManualTestActive() {
+        return this.manualTestFeatureId !== null;
     }
 
     getRunningTasks() {
@@ -378,57 +347,73 @@ class GameState {
         return this.tasks.filter(t => t.status === TaskStatus.MERGE_CONFLICT);
     }
 
-    assignImplementTask(targetNodeId) {
-        if (!this.allPhases.has(targetNodeId)) return null;
-        if (!this.isPhaseUnlocked(targetNodeId)) return null;
+    getFeatureActions(featureId) {
+        const feat = this.features.get(featureId);
+        if (!feat) return [];
 
-        const task = new Task(TaskType.IMPLEMENT, targetNodeId, this.config);
+        const actions = [];
+
+        if (!feat.hasDoc) {
+            actions.push({ type: TaskType.WRITE_DOC, label: 'Write Planning Doc' });
+        } else {
+            actions.push({ type: TaskType.EVALUATE_DOC, label: 'Evaluate Doc' });
+
+            if (!feat.hasCode) {
+                actions.push({ type: TaskType.IMPLEMENT, label: 'Implement' });
+            } else {
+                actions.push({ type: TaskType.IMPLEMENT, label: 'Debug Code' });
+            }
+
+            if (!feat.hasTests) {
+                actions.push({ type: TaskType.WRITE_TESTS, label: 'Write Tests' });
+            } else {
+                actions.push({ type: TaskType.WRITE_TESTS, label: 'Debug Tests' });
+            }
+        }
+
+        if (feat.hasCode && feat.hasTests && !this.isManualTestActive) {
+            actions.push({ type: TaskType.MANUAL_TEST, label: 'Manual Test' });
+        }
+
+        return actions;
+    }
+
+    // --- Task Assignment ---
+
+    assignTask(featureId, taskType) {
+        const feat = this.features.get(featureId);
+        if (!feat) return null;
+
+        if (taskType === TaskType.MANUAL_TEST) {
+            return this._startManualTest(featureId);
+        }
+
+        const task = new Task(taskType, featureId);
         task.startedAt = this.simulatedTime;
 
-        // Generate random subtask durations
-        for (let i = 0; i < IMPLEMENT_SUBTASKS.length; i++) {
-            const dur = this.config.baseTaskDuration *
+        const subtasks = task.subtasks;
+        const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
+
+        for (let i = 0; i < subtasks.length; i++) {
+            const dur = this.config.baseTaskDuration * durationMult *
                 Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
             task.subtaskDurations.push(dur);
         }
 
-        task.subtaskLabel = IMPLEMENT_SUBTASKS[0];
+        task.subtaskLabel = subtasks[0];
         this.tasks.push(task);
-        this._addLog(`New task: ${task.label}`);
+        this._addLog(`Started: ${task.label}`);
         this._notify();
         return task;
     }
 
-    assignMergeConflictResolution(conflictTaskId) {
-        const conflictTask = this.tasks.find(t => t.id === conflictTaskId);
-        if (!conflictTask || conflictTask.status !== TaskStatus.MERGE_CONFLICT) return null;
-
-        const task = new Task(TaskType.MERGE_CONFLICT, conflictTask.targetNodeId, this.config);
-        task.startedAt = this.simulatedTime;
-
-        // Merge resolution is shorter
-        for (let i = 0; i < 3; i++) {
-            const dur = this.config.baseTaskDuration * 0.5 *
-                Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
-            task.subtaskDurations.push(dur);
-        }
-
-        task.subtaskLabel = 'resolving merge conflict';
-        conflictTask.status = TaskStatus.FAILED; // Mark original as failed, resolution in progress
-        this.tasks.push(task);
-        this._addLog(`Resolving merge conflict on ${task.targetNodeId}`);
+    _startManualTest(featureId) {
+        if (this.isManualTestActive) return null;
+        this.manualTestFeatureId = featureId;
+        this.manualTestStartedAt = this.simulatedTime;
+        this._addLog(`Manual test started: ${featureId}`);
         this._notify();
-        return task;
-    }
-
-    discardMergeConflict(conflictTaskId) {
-        const task = this.tasks.find(t => t.id === conflictTaskId);
-        if (!task || task.status !== TaskStatus.MERGE_CONFLICT) return false;
-        task.status = TaskStatus.CANCELLED;
-        task.completedAt = this.simulatedTime;
-        this._addLog(`Discarded merge conflict changes on ${task.targetNodeId}`);
-        this._notify();
-        return true;
+        return { type: TaskType.MANUAL_TEST, featureId };
     }
 
     cancelTask(taskId) {
@@ -444,43 +429,71 @@ class GameState {
     skipTesting(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (!task || task.status !== TaskStatus.RUNNING) return false;
-        // Jump to end of subtasks
         task.subtaskIndex = task.subtaskDurations.length;
-        this._addLog(`Skipped regression testing: ${task.label}`);
+        this._addLog(`Skipped testing: ${task.label}`);
+        return true;
+    }
+
+    resolveMergeConflict(conflictTaskId) {
+        const conflict = this.tasks.find(t => t.id === conflictTaskId);
+        if (!conflict || conflict.status !== TaskStatus.MERGE_CONFLICT) return null;
+
+        const feat = this.features.get(conflict.targetFeatureId);
+        if (!feat) return null;
+
+        const task = new Task(TaskType.MERGE_CONFLICT, conflict.targetFeatureId);
+        task.startedAt = this.simulatedTime;
+        // Store the higher of current code and branch code
+        task.branchCodeCompleteness = Math.max(
+            feat.codeCompleteness,
+            conflict.branchCodeCompleteness ?? 0
+        );
+
+        const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
+        for (let i = 0; i < MERGE_SUBTASKS.length; i++) {
+            const dur = this.config.baseTaskDuration * 0.5 * durationMult *
+                Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+            task.subtaskDurations.push(dur);
+        }
+
+        task.subtaskLabel = MERGE_SUBTASKS[0];
+        conflict.status = TaskStatus.FAILED;
+        this.tasks.push(task);
+        this._addLog(`Resolving merge conflict: ${task.targetFeatureId}`);
+        this._notify();
+        return task;
+    }
+
+    discardMergeConflict(conflictTaskId) {
+        const task = this.tasks.find(t => t.id === conflictTaskId);
+        if (!task || task.status !== TaskStatus.MERGE_CONFLICT) return false;
+        task.status = TaskStatus.CANCELLED;
+        task.completedAt = this.simulatedTime;
+        this._addLog(`Discarded merge conflict: ${task.targetFeatureId}`);
+        this._notify();
         return true;
     }
 
     startTestWorkflow() {
-        if (this.testWorkflow && !this.testWorkflow.isComplete) return false;
-
-        const snapshot = {};
-        for (const [nodeId, phase] of this.allPhases) {
-            snapshot[nodeId] = phase.completion;
-        }
-
-        this.testWorkflow = new TestWorkflow(
-            this.simulatedTime,
-            this.config.testWorkflowDuration,
-            snapshot
-        );
+        if (this.testWorkflow && !this.testWorkflow.complete) return false;
+        this.testWorkflow = new TestWorkflow(this.simulatedTime, this.config.testWorkflowDuration);
         this._addLog('Test workflow started');
         this._notify();
         return true;
     }
 
     cancelTestWorkflow() {
-        if (!this.testWorkflow || this.testWorkflow.isComplete) return false;
+        if (!this.testWorkflow || this.testWorkflow.complete) return false;
         this.testWorkflow = null;
         this._addLog('Test workflow cancelled');
         this._notify();
         return true;
     }
 
-    // --- Game loop ---
+    // --- Game Loop ---
 
     tick(dtReal) {
         if (this.paused) return;
-
         const dt = dtReal * this.config.timeScale * this.speedMultiplier / 60.0;
         this.simulatedTime += dt;
 
@@ -492,264 +505,419 @@ class GameState {
         }
 
         // Update tasks
-        let stateChanged = false;
+        let changed = false;
         for (const task of this.tasks) {
             if (task.status !== TaskStatus.RUNNING) continue;
-            if (this._tickTask(task, dt)) {
-                stateChanged = true;
-            }
+            if (this._tickTask(task, dt)) changed = true;
         }
 
         // Update test workflow
-        if (this.testWorkflow && !this.testWorkflow.isComplete) {
-            const elapsed = this.simulatedTime - this.testWorkflow.startedAt;
-            if (elapsed >= this.testWorkflow.duration) {
+        if (this.testWorkflow && !this.testWorkflow.complete) {
+            if (this.simulatedTime - this.testWorkflow.startedAt >= this.testWorkflow.duration) {
                 this._completeTestWorkflow();
-                stateChanged = true;
+                changed = true;
             }
         }
 
-        if (stateChanged) {
-            this._updateLockStatus();
+        // Update manual test
+        if (this.isManualTestActive) {
+            if (this.simulatedTime - this.manualTestStartedAt >= this.config.manualTestDuration) {
+                this._completeManualTest();
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            this._updateDepsMetStatus();
             this._notify();
         }
     }
 
     _tickTask(task, dt) {
-        // Consume credits
-        const creditCost = dt * this.config.creditRate;
         if (this.creditsRemaining <= 0) return false;
+        const creditCost = dt * this.config.creditRate;
         this.creditsRemaining = Math.max(0, this.creditsRemaining - creditCost);
         task.creditsUsed += creditCost;
 
-        // Check if task is done
         if (task.subtaskIndex >= task.subtaskDurations.length) {
             this._completeTask(task);
             return true;
         }
 
-        // Advance subtask
-        const subtaskDuration = task.subtaskDurations[task.subtaskIndex];
-        task.subtaskProgress += dt / subtaskDuration;
-        task.subtaskLabel = task.currentSubtask || 'finishing';
+        const dur = task.subtaskDurations[task.subtaskIndex];
+        task.subtaskProgress += dt / dur;
+        task.subtaskLabel = task.currentSubtaskLabel || 'finishing';
 
         if (task.subtaskProgress >= 1.0) {
             task.subtaskProgress = 0;
             task.subtaskIndex++;
-
-            // After main subtasks: roll for inline regression
-            if (task.subtaskIndex >= IMPLEMENT_SUBTASKS.length &&
-                task.subtaskIndex === IMPLEMENT_SUBTASKS.length) {
-                if (this._rollInlineRegression()) {
-                    const fixDur = this.config.baseTaskDuration *
-                        Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
-                    const testDur = this.config.baseTaskDuration * 0.5 *
-                        Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
-                    task.subtaskDurations.push(fixDur, testDur);
-                    task.regressionFixCycles++;
-                    this._addLog(`${task.label}: found regression during testing, fixing`);
-                }
-            }
-
-            // Update label
-            task.subtaskLabel = task.currentSubtask || 'finishing';
+            task.subtaskLabel = task.currentSubtaskLabel || 'finishing';
         }
 
         task.progress = task.overallProgress;
         return false;
     }
 
-    _rollInlineRegression() {
-        return this.rng.random() < this.config.regressionRate &&
-               this.rng.random() < this.config.inlineRegressionCatchRate;
-    }
+    // --- Task Completion ---
 
     _completeTask(task) {
-        const target = this.allPhases.get(task.targetNodeId);
-        if (!target) {
+        const feat = this.features.get(task.targetFeatureId);
+        if (!feat) {
             task.status = TaskStatus.FAILED;
             task.completedAt = this.simulatedTime;
             return;
         }
 
-        if (task.type === TaskType.IMPLEMENT) {
-            // Check for merge conflict
-            if (this._checkMergeConflict(task)) {
-                task.status = TaskStatus.MERGE_CONFLICT;
-                task.completedAt = this.simulatedTime;
-                this._addLog(`MERGE CONFLICT: ${task.label}`);
-                return;
-            }
-
-            // Apply progress
-            const old = target.completion;
-            target.completion = Math.min(1.0, target.completion + this.config.implementProgressPerTask);
-            task.status = TaskStatus.COMPLETED;
-            task.completedAt = this.simulatedTime;
-            this._addLog(`Completed: ${task.label} (${Math.round(old * 100)}% → ${Math.round(target.completion * 100)}%)`);
-
-            // Roll for regression (hidden until tests are run)
-            if (this.rng.random() < this.config.regressionRate) {
-                this._applyHiddenRegression(task.targetNodeId);
-            }
-
-        } else if (task.type === TaskType.MERGE_CONFLICT) {
-            // Merge resolution: apply progress
-            const old = target.completion;
-            target.completion = Math.min(1.0, target.completion + this.config.implementProgressPerTask);
-            task.status = TaskStatus.COMPLETED;
-            task.completedAt = this.simulatedTime;
-            this._addLog(`Merge resolved: ${task.targetNodeId} (${Math.round(old * 100)}% → ${Math.round(target.completion * 100)}%)`);
-
-            if (this.rng.random() < this.config.regressionRate) {
-                this._applyHiddenRegression(task.targetNodeId);
-            }
+        switch (task.type) {
+            case TaskType.WRITE_DOC:
+                this._completeWriteDoc(task, feat);
+                break;
+            case TaskType.EVALUATE_DOC:
+                this._completeEvaluateDoc(task, feat);
+                break;
+            case TaskType.IMPLEMENT:
+                this._completeImplement(task, feat);
+                break;
+            case TaskType.WRITE_TESTS:
+                this._completeWriteTests(task, feat);
+                break;
+            case TaskType.MERGE_CONFLICT:
+                this._completeMergeConflict(task, feat);
+                break;
         }
     }
 
-    _checkMergeConflict(completingTask) {
-        const completingFeature = completingTask.targetFeatureId;
+    _completeWriteDoc(task, feat) {
+        if (this.rng.random() < this.config.docSuccessRate) {
+            feat.docCompleteness = 1.0;
+        } else {
+            feat.docCompleteness = this.rng.uniform(this.config.docPartialMin, this.config.docPartialMax);
+        }
+        feat.hasDoc = true;
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
+        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues found'}`);
+    }
 
-        for (const other of this.tasks) {
-            if (other.id === completingTask.id) continue;
-            if (other.status !== TaskStatus.RUNNING) continue;
+    _completeEvaluateDoc(task, feat) {
+        this._applyUniversalOutcome(feat, 'docCompleteness', 1.0);
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
+        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports doc looks good' : 'reports issues found'}`);
+    }
 
-            if (other.targetFeatureId === completingFeature) {
-                return this.rng.random() < this.config.mergeConflictRate;
+    _completeImplement(task, feat) {
+        // 25% chance of free doc reevaluation during investigation
+        if (this.rng.random() < this.config.investigationDocRevalRate) {
+            this._applyUniversalOutcome(feat, 'docCompleteness', 1.0);
+            this._addLog(`${task.label}: noticed doc issue during investigation`);
+        }
+
+        // Check for merge conflict
+        if (this._checkMergeConflict(task)) {
+            // Store what the code would have been
+            task.branchCodeCompleteness = this._computeImplementResult(feat);
+            task.status = TaskStatus.MERGE_CONFLICT;
+            task.completedAt = this.simulatedTime;
+            this._addLog(`MERGE CONFLICT: ${task.label}`);
+            return;
+        }
+
+        const ceiling = feat.docCompleteness;
+        if (feat.codeCompleteness === 0) {
+            // First implementation
+            if (this.rng.random() < this.config.firstImplExactMatchRate) {
+                feat.codeCompleteness = ceiling;
+            } else {
+                feat.codeCompleteness = this.rng.uniform(
+                    this.config.firstImplPartialMin,
+                    this.config.firstImplPartialMax
+                ) * ceiling;
             }
+        } else {
+            // Re-implementation
+            this._applyUniversalOutcome(feat, 'codeCompleteness', ceiling);
+        }
 
-            // Shared dependencies
-            const cPhase = this.allPhases.get(completingTask.targetNodeId);
-            const oPhase = this.allPhases.get(other.targetNodeId);
-            if (cPhase && oPhase) {
-                const cDeps = new Set(cPhase.dependsOn.map(d => d.split('.')[0]));
-                const oDeps = new Set(oPhase.dependsOn.map(d => d.split('.')[0]));
-                for (const d of cDeps) {
-                    if (oDeps.has(d)) {
-                        return this.rng.random() < this.config.mergeConflictRate * 0.5;
-                    }
-                }
+        feat.hasCode = true;
+        feat.manualTestResult = null; // invalidate previous manual test
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= ceiling);
+        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues found'}`);
+
+        // Cross-feature side effects
+        this._rollSideEffect(feat);
+    }
+
+    _computeImplementResult(feat) {
+        // Compute what the code completeness would be (for merge conflict branches)
+        const ceiling = feat.docCompleteness;
+        if (feat.codeCompleteness === 0) {
+            if (this.rng.random() < this.config.firstImplExactMatchRate) {
+                return ceiling;
+            }
+            return this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling;
+        }
+        // Simulate universal outcome without applying
+        return this._simulateUniversalOutcome(feat.codeCompleteness, ceiling);
+    }
+
+    _completeWriteTests(task, feat) {
+        // 25% chance of free doc reevaluation
+        if (this.rng.random() < this.config.investigationDocRevalRate) {
+            this._applyUniversalOutcome(feat, 'docCompleteness', 1.0);
+            this._addLog(`${task.label}: noticed doc issue during investigation`);
+        }
+
+        const ceiling = feat.docCompleteness;
+        if (feat.testCompleteness === 0) {
+            // First test writing
+            if (this.rng.random() < this.config.firstImplExactMatchRate) {
+                feat.testCompleteness = ceiling;
+            } else {
+                feat.testCompleteness = this.rng.uniform(
+                    this.config.firstImplPartialMin,
+                    this.config.firstImplPartialMax
+                ) * ceiling;
+            }
+        } else {
+            // Re-implementation of tests
+            this._applyUniversalOutcome(feat, 'testCompleteness', ceiling);
+        }
+
+        feat.hasTests = true;
+        feat.manualTestResult = null; // invalidate
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        task.reportedSuccess = this._rollReportedSuccess(feat.testCompleteness >= ceiling);
+        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues found'}`);
+    }
+
+    _completeMergeConflict(task, feat) {
+        const branchCode = task.branchCodeCompleteness ?? 0;
+        const current = Math.max(feat.codeCompleteness, branchCode);
+        const ceiling = feat.docCompleteness;
+
+        // Apply universal outcome starting from the higher value
+        feat.codeCompleteness = current;
+        this._applyUniversalOutcome(feat, 'codeCompleteness', ceiling);
+
+        feat.hasCode = true;
+        feat.manualTestResult = null;
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= ceiling);
+        this._addLog(`Merge resolved: ${task.targetFeatureId} — ${task.reportedSuccess ? 'reports success' : 'reports issues'}`);
+
+        this._rollSideEffect(feat);
+    }
+
+    // --- Universal Outcome Formula ---
+
+    _applyUniversalOutcome(feat, property, ceiling) {
+        if (ceiling <= 0) return;
+        const current = feat[property];
+        const cRel = current / ceiling;
+        const roll = this.rng.random();
+
+        if (roll < 0.25) {
+            // Reduce: lose up to 50% of current
+            const loss = this.rng.random() * 0.5 * current;
+            feat[property] = Math.max(0, current - loss);
+        } else if (roll < 0.5) {
+            // Nothing
+        } else if (roll < 0.5 + (1 - cRel) / 2) {
+            // Improve: gain up to 50% of gap to ceiling
+            const gap = ceiling - current;
+            const gain = this.rng.random() * 0.5 * gap;
+            feat[property] = Math.min(ceiling, current + gain);
+        } else {
+            // Jump to ceiling
+            feat[property] = ceiling;
+        }
+    }
+
+    _simulateUniversalOutcome(current, ceiling) {
+        if (ceiling <= 0) return current;
+        const cRel = current / ceiling;
+        const roll = this.rng.random();
+
+        if (roll < 0.25) {
+            return Math.max(0, current - this.rng.random() * 0.5 * current);
+        } else if (roll < 0.5) {
+            return current;
+        } else if (roll < 0.5 + (1 - cRel) / 2) {
+            const gap = ceiling - current;
+            return Math.min(ceiling, current + this.rng.random() * 0.5 * gap);
+        } else {
+            return ceiling;
+        }
+    }
+
+    // --- Cross-Feature Side Effects ---
+
+    _rollSideEffect(sourceFeat) {
+        if (this.rng.random() >= this.config.sideEffectRate) return;
+
+        // Pick target
+        let target = null;
+        if (this.rng.random() < this.config.sideEffectUpstreamWeight && sourceFeat.upstreamIds.size > 0) {
+            // Upstream feature
+            const upIds = [...sourceFeat.upstreamIds];
+            target = this.features.get(upIds[Math.floor(this.rng.random() * upIds.length)]);
+        }
+        if (!target) {
+            // Unrelated feature
+            const candidates = [...this.features.values()].filter(f => f.id !== sourceFeat.id);
+            if (candidates.length > 0) {
+                target = candidates[Math.floor(this.rng.random() * candidates.length)];
+            }
+        }
+        if (!target) return;
+
+        const change = this.rng.uniform(-this.config.sideEffectMaxChange, this.config.sideEffectMaxChange);
+        target.codeCompleteness = Math.max(0, Math.min(1, target.codeCompleteness + change));
+        // Note: NOT capped by doc completeness, and NOT logged (hidden)
+    }
+
+    // --- Merge Conflict Detection ---
+
+    _checkMergeConflict(task) {
+        for (const other of this.tasks) {
+            if (other.id === task.id || other.status !== TaskStatus.RUNNING) continue;
+            if (other.targetFeatureId === task.targetFeatureId) {
+                return this.rng.random() < this.config.mergeConflictRate;
             }
         }
         return false;
     }
 
-    _applyHiddenRegression(sourceNodeId) {
-        // Regressions are hidden — they reduce actual completion but the UI
-        // won't show them until the test workflow runs and detects them.
-        const sourcePhase = this.allPhases.get(sourceNodeId);
-        if (!sourcePhase) return;
+    // --- Reported Success ---
 
-        const roll = this.rng.random();
-        let target;
-
-        if (roll < this.config.regressionLocalWeight) {
-            target = sourcePhase;
-        } else if (roll < this.config.regressionLocalWeight + this.config.regressionAdjacentWeight) {
-            const feature = this.features.get(sourcePhase.featureId);
-            const candidates = feature.phases.filter(
-                p => p.nodeId !== sourceNodeId && p.completion > 0
-            );
-            target = candidates.length > 0
-                ? candidates[Math.floor(this.rng.random() * candidates.length)]
-                : sourcePhase;
-        } else {
-            const candidates = [...this.allPhases.values()].filter(
-                p => p.completion > 0 && p.nodeId !== sourceNodeId
-            );
-            target = candidates.length > 0
-                ? candidates[Math.floor(this.rng.random() * candidates.length)]
-                : sourcePhase;
-        }
-
-        const severity = Math.abs(this.rng.gauss(this.config.regressionSeverityMean, 0.05));
-        target.completion = Math.max(0, target.completion - severity);
-        // Note: no log entry here — regressions are hidden until tests detect them
+    _rollReportedSuccess(actuallyComplete) {
+        if (actuallyComplete) return true;
+        // 50% chance of accurately reporting incomplete, 50% false positive
+        return this.rng.random() >= this.config.reportAccuracyRate;
     }
+
+    // --- Test Workflow ---
 
     _completeTestWorkflow() {
         if (!this.testWorkflow) return;
+        this.testWorkflow.complete = true;
 
-        const results = {};
-        // Compare current completion to snapshot to detect regressions
-        for (const [nodeId, snapshotCompletion] of Object.entries(this.testWorkflow.completionSnapshot)) {
-            const phase = this.allPhases.get(nodeId);
-            if (!phase) continue;
-            const noise = this.rng.gauss(0, 0.03);
-            const matchRate = Math.max(0, Math.min(1, phase.completion + noise));
-            results[nodeId] = matchRate;
+        for (const [, feat] of this.features) {
+            feat.testResultPercent = this._computeTestResult(feat);
+            feat.testResultUpdated = this.simulatedTime;
         }
 
-        this.testWorkflow.results = results;
+        const passing = [...this.features.values()].filter(f => f.testResultPercent !== null && f.testResultPercent >= 95).length;
+        this._addLog(`Tests complete: ${passing}/${this.features.size} passing`);
+    }
 
-        // Update test results
-        for (const [, test] of this.tests) {
-            let totalLines = 0;
-            let matchingLines = 0;
-            for (const featId of test.relatedFeatureIds) {
-                const feature = this.features.get(featId);
-                if (!feature) continue;
-                for (const phase of feature.phases) {
-                    const rate = results[phase.nodeId];
-                    if (rate !== undefined) {
-                        totalLines += 100; // simulated line count
-                        matchingLines += Math.round(rate * 100);
-                    }
-                }
+    _computeTestResult(feat) {
+        if (!feat.hasCode || !feat.hasTests) return null;
+
+        // Own result: min(code, test) / max(code, test)
+        const code = feat.codeCompleteness;
+        const test = feat.testCompleteness;
+        const maxVal = Math.max(code, test);
+        const ownResult = maxVal > 0 ? Math.min(code, test) / maxVal : 0;
+
+        // Product with upstream results
+        let chainResult = ownResult;
+        for (const upId of feat.upstreamIds) {
+            const up = this.features.get(upId);
+            if (!up) continue;
+            const upResult = this._computeOwnTestResult(up);
+            if (upResult !== null) {
+                chainResult *= upResult;
             }
-            test.linesTotal = totalLines;
-            test.linesMatching = matchingLines;
-            test.lastUpdated = this.simulatedTime;
+        }
 
-            if (totalLines === 0) {
-                test.status = 'unknown';
-            } else if (matchingLines >= totalLines * 0.95) {
-                test.status = 'pass';
-            } else if (matchingLines >= totalLines * 0.5) {
-                test.status = 'partial';
+        return Math.round(chainResult * 100);
+    }
+
+    _computeOwnTestResult(feat) {
+        if (!feat.hasCode || !feat.hasTests) return null;
+        const code = feat.codeCompleteness;
+        const test = feat.testCompleteness;
+        const maxVal = Math.max(code, test);
+        return maxVal > 0 ? Math.min(code, test) / maxVal : 0;
+    }
+
+    // --- Manual Test ---
+
+    _completeManualTest() {
+        const feat = this.features.get(this.manualTestFeatureId);
+        if (!feat) {
+            this.manualTestFeatureId = null;
+            this.manualTestStartedAt = null;
+            return;
+        }
+
+        const allComplete = feat.docCompleteness >= 1.0 &&
+                            feat.codeCompleteness >= 1.0 &&
+                            feat.testCompleteness >= 1.0;
+
+        if (allComplete) {
+            feat.manualTestResult = 'pass';
+            this._addLog(`Manual test PASSED: ${feat.id}`);
+        } else if (feat.manualTestResult === 'incomplete') {
+            // Follow-up test: reveal which area is the problem
+            if (feat.docCompleteness < 1.0) {
+                feat.manualTestResult = 'doc';
+            } else if (feat.codeCompleteness < 1.0) {
+                feat.manualTestResult = 'code';
             } else {
-                test.status = 'fail';
+                feat.manualTestResult = 'tests';
             }
+            this._addLog(`Manual test revealed: ${feat.id} — ${feat.manualTestResult} needs work`);
+        } else {
+            feat.manualTestResult = 'incomplete';
+            this._addLog(`Manual test: ${feat.id} — something is incomplete`);
         }
 
-        const passing = [...this.tests.values()].filter(t => t.status === 'pass').length;
-        this._addLog(`Tests complete: ${passing}/${this.tests.size} passing`);
-        this._notify();
+        this.manualTestFeatureId = null;
+        this.manualTestStartedAt = null;
+        this._updateDepsMetStatus();
     }
 
     // --- Utilities ---
 
     get timeStr() {
-        const totalMinutes = this.simulatedTime;
-        const day = Math.floor(totalMinutes / (24 * 60)) + 1;
-        const dayMinutes = totalMinutes % (24 * 60);
-        const hours = Math.floor(dayMinutes / 60);
-        const minutes = Math.floor(dayMinutes % 60);
-        return `Day ${day} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        const day = Math.floor(this.simulatedTime / (24 * 60)) + 1;
+        const dayMin = this.simulatedTime % (24 * 60);
+        const h = Math.floor(dayMin / 60);
+        const m = Math.floor(dayMin % 60);
+        return `Day ${day} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     }
 
     get creditHours() {
-        return this.creditsRemaining / 60.0;
+        return this.creditsRemaining / 60;
     }
 
     get overallProgress() {
-        if (this.allPhases.size === 0) return 0;
-        let sum = 0;
-        for (const p of this.allPhases.values()) sum += p.completion;
-        return sum / this.allPhases.size;
+        const feats = [...this.features.values()];
+        if (feats.length === 0) return 0;
+        return feats.filter(f => f.manualTestResult === 'pass').length / feats.length;
     }
 
     get isComplete() {
-        for (const p of this.allPhases.values()) {
-            if (!p.isComplete) return false;
-        }
-        return true;
+        return [...this.features.values()].every(f => f.manualTestResult === 'pass');
     }
 
     get testWorkflowProgress() {
-        if (!this.testWorkflow || this.testWorkflow.isComplete) return null;
-        const elapsed = this.simulatedTime - this.testWorkflow.startedAt;
-        return Math.min(elapsed / this.testWorkflow.duration, 1.0);
+        if (!this.testWorkflow || this.testWorkflow.complete) return null;
+        return Math.min((this.simulatedTime - this.testWorkflow.startedAt) / this.testWorkflow.duration, 1);
+    }
+
+    get manualTestProgress() {
+        if (!this.isManualTestActive) return null;
+        return Math.min((this.simulatedTime - this.manualTestStartedAt) / this.config.manualTestDuration, 1);
     }
 
     _addLog(message) {
@@ -773,9 +941,7 @@ export {
     SimulationConfig,
     TaskType,
     TaskStatus,
-    SubtaskType,
-    Phase,
+    SubtaskLabel,
     Feature,
     Task,
-    TestResult,
 };

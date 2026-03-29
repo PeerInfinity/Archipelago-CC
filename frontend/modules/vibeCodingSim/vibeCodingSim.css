@@ -1,4 +1,4 @@
-/* Vibe Coding Simulator — Panel Styles */
+/* Vibe Coding Simulator — Panel Styles (v2) */
 
 .vcs-panel {
     display: flex;
@@ -37,6 +37,11 @@
     font-weight: 500;
     padding: 0 6px;
     white-space: nowrap;
+}
+
+.vcs-manual-test-active {
+    color: #e0a030;
+    font-weight: 600;
 }
 
 /* --- Column toggles --- */
@@ -116,7 +121,7 @@
 .vcs-card {
     background: #2a2a2a;
     border: 1px solid #383838;
-    border-left: 3px solid #666;
+    border-left: 3px solid #555;
     border-radius: 4px;
     padding: 8px 10px;
     margin-bottom: 4px;
@@ -138,25 +143,76 @@
     background: #2a2535;
 }
 
+.vcs-card-manual-test {
+    border-left-color: #e0a030;
+    background: #2a2820;
+}
+
 .vcs-card-summary {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .vcs-card-name {
     font-weight: 500;
-    flex-shrink: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 60%;
+    max-width: 55%;
+    flex-shrink: 1;
 }
 
 .vcs-card-meta {
     color: #999;
     font-size: 12px;
     margin-top: 2px;
+}
+
+.vcs-card-pct {
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* --- Badges (D/C/T indicators) --- */
+
+.vcs-badges {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.vcs-badge {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* --- Manual test result --- */
+
+.vcs-manual-result {
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.vcs-manual-pass {
+    color: #2d8a4e;
+}
+
+.vcs-manual-incomplete,
+.vcs-manual-doc,
+.vcs-manual-code,
+.vcs-manual-tests {
+    color: #e0a030;
 }
 
 /* --- Card details (expanded) --- */
@@ -176,24 +232,10 @@
     margin-bottom: 3px;
 }
 
-.vcs-phase-row {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 0;
+.vcs-warning {
+    color: #e0a030;
     font-size: 12px;
-}
-
-.vcs-phase-icon {
-    flex-shrink: 0;
-    width: 16px;
-    text-align: center;
-}
-
-.vcs-phase-pct {
-    margin-left: auto;
-    color: #999;
-    flex-shrink: 0;
+    padding: 4px 0;
 }
 
 .vcs-dep-link {
@@ -214,6 +256,12 @@
     gap: 6px;
     font-size: 12px;
     padding: 2px 0;
+}
+
+.vcs-history-row {
+    font-size: 12px;
+    color: #aaa;
+    padding: 1px 0;
 }
 
 .vcs-merge-conflict {
@@ -299,6 +347,11 @@
 
 .vcs-btn-danger:hover {
     background: #7a3a3a;
+}
+
+.vcs-btn-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 .vcs-btn-speed {

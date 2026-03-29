@@ -1,9 +1,9 @@
 /**
- * Vibe Coding Simulator — Panel UI
+ * Vibe Coding Simulator — Panel UI (v2)
  *
- * Three-column layout: Features | Tests | Tasks
- * Each column has a scrollable card list and a fixed action area.
- * Simulator toolbar at top with time, credits, speed, and wait controls.
+ * Two-column layout: Features | Tasks
+ * Features show hidden-state indicators, test results, and workflow actions.
+ * Tasks show running/completed Claw instances with reported outcomes.
  */
 
 import { setPanelInstance, getModuleApis } from './index.js';
@@ -13,57 +13,60 @@ const STATUS_COLORS = {
     pass: '#2d8a4e',
     partial: '#b8860b',
     fail: '#c0392b',
-    unknown: '#666',
+    unknown: '#555',
+    none: '#333',
 };
+
+function testColor(pct) {
+    if (pct === null || pct === undefined) return STATUS_COLORS.none;
+    if (pct >= 95) return STATUS_COLORS.pass;
+    if (pct >= 50) return STATUS_COLORS.partial;
+    return STATUS_COLORS.fail;
+}
+
+function manualResultLabel(result) {
+    if (!result) return '';
+    const labels = {
+        incomplete: '⚠ Incomplete',
+        doc: '⚠ Doc needs work',
+        code: '⚠ Code needs work',
+        tests: '⚠ Tests need work',
+        pass: '✓ Passed',
+    };
+    return labels[result] || result;
+}
 
 export class VibeCodingSimUI {
     static moduleApis = null;
-
-    static setModuleApis(apis) {
-        VibeCodingSimUI.moduleApis = apis;
-    }
+    static setModuleApis(apis) { VibeCodingSimUI.moduleApis = apis; }
 
     constructor(container, componentState) {
         this.container = container;
-        this.componentState = componentState;
         this.apis = VibeCodingSimUI.moduleApis || getModuleApis();
         this.selectedFeatureId = null;
-        this.selectedTestId = null;
         this.selectedTaskId = null;
         this.expandedFeatures = new Set();
-        this.expandedTests = new Set();
         this.featureSearch = '';
-        this.testSearch = '';
-        this.featureSort = 'topo';
-        this.testSort = 'status';
-        this.visibleColumns = { features: true, tests: true, tasks: true };
+        this.visibleColumns = { features: true, tasks: true };
 
-        // Create root element immediately (required by GoldenLayout)
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'vcs-panel';
         this.rootElement.innerHTML = '<div class="vcs-empty">Waiting for game data...</div>';
-
         setPanelInstance(this);
     }
 
-    getRootElement() {
-        return this.rootElement;
-    }
+    getRootElement() { return this.rootElement; }
+    destroy() { setPanelInstance(null); }
+    onPanelShow() { this.render(); }
+    onPanelResize() {}
 
-    destroy() {
-        setPanelInstance(null);
-    }
+    get gameState() { return this.apis?.getGameState?.(); }
 
-    get gameState() {
-        return this.apis?.getGameState?.();
-    }
-
-    // --- Rendering ---
+    // --- Main Render ---
 
     render() {
         const gs = this.gameState;
         if (!this.rootElement) return;
-
         this.rootElement.innerHTML = '';
         this.rootElement.className = 'vcs-panel';
 
@@ -72,20 +75,13 @@ export class VibeCodingSimUI {
             return;
         }
 
-        // Toolbar
         this.rootElement.appendChild(this._renderToolbar(gs));
-
-        // Column toggles
         this.rootElement.appendChild(this._renderColumnToggles());
 
-        // Columns container
         const cols = document.createElement('div');
         cols.className = 'vcs-columns';
-
         if (this.visibleColumns.features) cols.appendChild(this._renderFeatureColumn(gs));
-        if (this.visibleColumns.tests) cols.appendChild(this._renderTestColumn(gs));
         if (this.visibleColumns.tasks) cols.appendChild(this._renderTaskColumn(gs));
-
         this.rootElement.appendChild(cols);
     }
 
@@ -95,23 +91,24 @@ export class VibeCodingSimUI {
         const bar = document.createElement('div');
         bar.className = 'vcs-toolbar';
 
-        // Time
-        const time = document.createElement('span');
-        time.className = 'vcs-toolbar-item';
-        time.textContent = gs.timeStr;
-        bar.appendChild(time);
+        const items = [
+            gs.timeStr,
+            `Credits: ${gs.creditHours.toFixed(1)}h`,
+            `Progress: ${Math.round(gs.overallProgress * 100)}%`,
+        ];
+        for (const text of items) {
+            const span = document.createElement('span');
+            span.className = 'vcs-toolbar-item';
+            span.textContent = text;
+            bar.appendChild(span);
+        }
 
-        // Credits
-        const credits = document.createElement('span');
-        credits.className = 'vcs-toolbar-item';
-        credits.textContent = `Credits: ${gs.creditHours.toFixed(1)}h`;
-        bar.appendChild(credits);
-
-        // Progress
-        const progress = document.createElement('span');
-        progress.className = 'vcs-toolbar-item';
-        progress.textContent = `Progress: ${Math.round(gs.overallProgress * 100)}%`;
-        bar.appendChild(progress);
+        if (gs.isManualTestActive) {
+            const span = document.createElement('span');
+            span.className = 'vcs-toolbar-item vcs-manual-test-active';
+            span.textContent = `🔍 Manual testing: ${gs.manualTestFeatureId} (${Math.round((gs.manualTestProgress ?? 0) * 100)}%)`;
+            bar.appendChild(span);
+        }
 
         // Speed buttons
         const speeds = [
@@ -129,12 +126,8 @@ export class VibeCodingSimUI {
             }
             btn.textContent = sp.label;
             btn.addEventListener('click', () => {
-                if (sp.mult === 0) {
-                    gs.paused = true;
-                } else {
-                    gs.paused = false;
-                    gs.speedMultiplier = sp.mult;
-                }
+                gs.paused = sp.mult === 0;
+                if (sp.mult > 0) gs.speedMultiplier = sp.mult;
                 this.render();
             });
             bar.appendChild(btn);
@@ -146,16 +139,14 @@ export class VibeCodingSimUI {
             btn.className = 'vcs-btn';
             btn.textContent = `Wait ${hours}h`;
             btn.addEventListener('click', () => {
+                const minutes = hours * 60;
+                const steps = Math.max(1, minutes * 2);
+                const dtPerStep = minutes / steps / (gs.config.timeScale / 60);
                 const wasPaused = gs.paused;
                 gs.paused = false;
                 const oldMult = gs.speedMultiplier;
                 gs.speedMultiplier = 1;
-                const minutes = hours * 60;
-                const steps = Math.max(1, minutes * 2);
-                const dtPerStep = minutes / steps / (gs.config.timeScale / 60);
-                for (let i = 0; i < steps; i++) {
-                    gs.tick(dtPerStep);
-                }
+                for (let i = 0; i < steps; i++) gs.tick(dtPerStep);
                 gs.paused = wasPaused;
                 gs.speedMultiplier = oldMult;
                 this.render();
@@ -166,13 +157,10 @@ export class VibeCodingSimUI {
         return bar;
     }
 
-    // --- Column toggles ---
-
     _renderColumnToggles() {
         const row = document.createElement('div');
         row.className = 'vcs-column-toggles';
-
-        for (const [key, label] of [['features', 'Features'], ['tests', 'Tests'], ['tasks', 'Tasks']]) {
+        for (const [key, label] of [['features', 'Features'], ['tasks', 'Tasks']]) {
             const btn = document.createElement('button');
             btn.className = 'vcs-btn vcs-btn-toggle';
             if (this.visibleColumns[key]) btn.classList.add('vcs-btn-active');
@@ -183,7 +171,6 @@ export class VibeCodingSimUI {
             });
             row.appendChild(btn);
         }
-
         return row;
     }
 
@@ -193,99 +180,87 @@ export class VibeCodingSimUI {
         const col = document.createElement('div');
         col.className = 'vcs-column';
 
-        // Header with search and sort
+        // Header
         const header = document.createElement('div');
         header.className = 'vcs-column-header';
         header.innerHTML = '<strong>Features</strong>';
-
         const search = document.createElement('input');
         search.type = 'text';
         search.className = 'vcs-search';
         search.placeholder = 'Search...';
         search.value = this.featureSearch;
-        search.addEventListener('input', (e) => {
-            this.featureSearch = e.target.value;
-            this.render();
-        });
+        search.addEventListener('input', (e) => { this.featureSearch = e.target.value; this.render(); });
         header.appendChild(search);
-
         col.appendChild(header);
 
-        // Scrollable card list
+        // Card list
         const list = document.createElement('div');
         list.className = 'vcs-card-list';
-
-        const features = this._getSortedFeatures(gs);
+        const features = [...gs.features.values()].sort((a, b) => a.upstreamIds.size - b.upstreamIds.size || a.name.localeCompare(b.name));
         for (const feat of features) {
-            if (this.featureSearch && !feat.name.toLowerCase().includes(this.featureSearch.toLowerCase())) {
-                continue;
-            }
+            if (this.featureSearch && !feat.name.toLowerCase().includes(this.featureSearch.toLowerCase())) continue;
             list.appendChild(this._renderFeatureCard(gs, feat));
         }
-
         col.appendChild(list);
 
         // Action area
         col.appendChild(this._renderFeatureActions(gs));
-
         return col;
     }
 
-    _getSortedFeatures(gs) {
-        const features = [...gs.features.values()];
-        // Default: topological (features with no upstream first)
-        return features.sort((a, b) => {
-            if (a.upstreamIds.size !== b.upstreamIds.size) return a.upstreamIds.size - b.upstreamIds.size;
-            return a.name.localeCompare(b.name);
-        });
-    }
-
     _renderFeatureCard(gs, feat) {
-        const card = document.createElement('div');
         const isSelected = this.selectedFeatureId === feat.id;
         const isExpanded = this.expandedFeatures.has(feat.id);
 
-        // Determine status color from tests
-        const testStatuses = feat.relatedTestIds
-            .map(id => gs.tests.get(id))
-            .filter(Boolean)
-            .map(t => t.status);
-        const statusColor = this._featureStatusColor(testStatuses);
-
+        const card = document.createElement('div');
         card.className = `vcs-card ${isSelected ? 'vcs-card-selected' : ''}`;
-        card.style.borderLeftColor = statusColor;
+        card.style.borderLeftColor = testColor(feat.testResultPercent);
 
-        // Collapsed content (always visible)
+        // Summary (always visible)
         const summary = document.createElement('div');
         summary.className = 'vcs-card-summary';
         summary.addEventListener('click', () => {
             this.selectedFeatureId = feat.id;
-            if (this.expandedFeatures.has(feat.id)) {
-                this.expandedFeatures.delete(feat.id);
-            } else {
-                this.expandedFeatures.add(feat.id);
-            }
+            if (this.expandedFeatures.has(feat.id)) this.expandedFeatures.delete(feat.id);
+            else this.expandedFeatures.add(feat.id);
             this.render();
         });
 
-        const lockIcon = feat.isLocked ? '🔒 ' : '';
+        // Name with deps-met indicator
         const name = document.createElement('span');
         name.className = 'vcs-card-name';
-        name.textContent = `${lockIcon}${feat.name}`;
+        const depsIcon = feat.depsAreMet ? '' : '⏳ ';
+        name.textContent = `${depsIcon}${feat.name}`;
         summary.appendChild(name);
 
-        const bar = this._progressBar(feat.completion);
-        summary.appendChild(bar);
+        // Status badges
+        const badges = document.createElement('span');
+        badges.className = 'vcs-badges';
+        if (feat.hasDoc) badges.appendChild(this._badge('D', '#4a7a5a'));
+        if (feat.hasCode) badges.appendChild(this._badge('C', '#4a5a7a'));
+        if (feat.hasTests) badges.appendChild(this._badge('T', '#7a5a4a'));
+        summary.appendChild(badges);
 
-        const testCount = document.createElement('span');
-        testCount.className = 'vcs-card-meta';
-        const passing = testStatuses.filter(s => s === 'pass').length;
-        testCount.textContent = `${passing}/${testStatuses.length} tests`;
-        summary.appendChild(testCount);
+        // Test result
+        if (feat.testResultPercent !== null) {
+            const pct = document.createElement('span');
+            pct.className = 'vcs-card-pct';
+            pct.style.color = testColor(feat.testResultPercent);
+            pct.textContent = `${feat.testResultPercent}%`;
+            summary.appendChild(pct);
+        }
+
+        // Manual test result
+        if (feat.manualTestResult) {
+            const mt = document.createElement('span');
+            mt.className = `vcs-manual-result vcs-manual-${feat.manualTestResult}`;
+            mt.textContent = manualResultLabel(feat.manualTestResult);
+            summary.appendChild(mt);
+        }
 
         card.appendChild(summary);
 
-        // Expanded content
+        // Expanded details
         if (isExpanded) {
             card.appendChild(this._renderFeatureDetails(gs, feat));
         }
@@ -297,216 +272,103 @@ export class VibeCodingSimUI {
         const details = document.createElement('div');
         details.className = 'vcs-card-details';
 
-        // Phases
-        const phasesDiv = document.createElement('div');
-        phasesDiv.innerHTML = '<div class="vcs-detail-label">Phases</div>';
-        for (const phase of feat.phases) {
-            const row = document.createElement('div');
-            row.className = 'vcs-phase-row';
-            const lockIcon = phase._locked ? '🔒' : (phase.isComplete ? '✓' : '○');
-            const phaseName = phase.name.includes(':') ? phase.name.split(':').slice(1).join(':').trim() : phase.name;
-            const shortName = phaseName.length > 40 ? phaseName.substring(0, 37) + '...' : phaseName;
-            row.innerHTML = `<span class="vcs-phase-icon">${lockIcon}</span> ${shortName} <span class="vcs-phase-pct">${Math.round(phase.completion * 100)}%</span>`;
-            phasesDiv.appendChild(row);
-        }
-        details.appendChild(phasesDiv);
-
         // Dependencies
-        if (feat.upstreamIds.size > 0 || feat.downstreamIds.size > 0) {
-            const depsDiv = document.createElement('div');
-            if (feat.upstreamIds.size > 0) {
-                depsDiv.innerHTML += '<div class="vcs-detail-label">Depends on</div>';
-                for (const depId of feat.upstreamIds) {
-                    const link = document.createElement('a');
-                    link.className = 'vcs-dep-link';
-                    link.href = '#';
-                    link.textContent = gs.features.get(depId)?.name || depId;
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        this.selectFeature(depId);
-                    });
-                    depsDiv.appendChild(link);
-                }
-            }
-            if (feat.downstreamIds.size > 0) {
-                depsDiv.innerHTML += '<div class="vcs-detail-label">Unlocks</div>';
-                for (const depId of feat.downstreamIds) {
-                    const link = document.createElement('a');
-                    link.className = 'vcs-dep-link';
-                    link.href = '#';
-                    link.textContent = gs.features.get(depId)?.name || depId;
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        this.selectFeature(depId);
-                    });
-                    depsDiv.appendChild(link);
-                }
-            }
-            details.appendChild(depsDiv);
+        if (feat.upstreamIds.size > 0) {
+            details.appendChild(this._renderDepLinks(gs, 'Depends on', feat.upstreamIds));
+        }
+        if (feat.downstreamIds.size > 0) {
+            details.appendChild(this._renderDepLinks(gs, 'Unlocks', feat.downstreamIds));
+        }
+
+        // Deps-not-met warning
+        if (!feat.depsAreMet) {
+            const warn = document.createElement('div');
+            warn.className = 'vcs-warning';
+            warn.textContent = '⏳ Upstream deps not verified — tasks take 2× longer';
+            details.appendChild(warn);
         }
 
         // Active tasks
-        const activeTasks = gs.getRunningTasks().filter(t => t.targetFeatureId === feat.id);
-        if (activeTasks.length > 0) {
-            const tasksDiv = document.createElement('div');
-            tasksDiv.innerHTML = '<div class="vcs-detail-label">Active tasks</div>';
-            for (const task of activeTasks) {
+        const active = gs.getRunningTasks().filter(t => t.targetFeatureId === feat.id);
+        if (active.length > 0) {
+            const section = document.createElement('div');
+            section.innerHTML = '<div class="vcs-detail-label">Active</div>';
+            for (const task of active) {
                 const row = document.createElement('div');
                 row.className = 'vcs-task-inline';
                 row.appendChild(this._progressBar(task.progress));
-                const label = document.createElement('span');
-                label.textContent = ` ${task.subtaskLabel}`;
-                row.appendChild(label);
-                tasksDiv.appendChild(row);
+                const lbl = document.createElement('span');
+                lbl.textContent = ` ${task.subtaskLabel}`;
+                row.appendChild(lbl);
+                section.appendChild(row);
             }
-            details.appendChild(tasksDiv);
+            details.appendChild(section);
+        }
+
+        // Recent task history for this feature
+        const history = gs.getCompletedTasks().filter(t => t.targetFeatureId === feat.id).slice(-5);
+        if (history.length > 0) {
+            const section = document.createElement('div');
+            section.innerHTML = '<div class="vcs-detail-label">Recent</div>';
+            for (const task of history) {
+                const row = document.createElement('div');
+                row.className = 'vcs-history-row';
+                const icon = task.reportedSuccess ? '✓' : '⚠';
+                const typeLabel = task.label.split(':')[0];
+                row.textContent = `${icon} ${typeLabel} — ${task.reportedSuccess ? 'success' : 'issues found'}`;
+                section.appendChild(row);
+            }
+            details.appendChild(section);
         }
 
         return details;
     }
 
+    _renderDepLinks(gs, label, ids) {
+        const div = document.createElement('div');
+        div.innerHTML = `<div class="vcs-detail-label">${label}</div>`;
+        for (const id of ids) {
+            const link = document.createElement('a');
+            link.className = 'vcs-dep-link';
+            link.href = '#';
+            link.textContent = gs.features.get(id)?.name || id;
+            link.addEventListener('click', (e) => { e.preventDefault(); this.selectFeature(id); });
+            div.appendChild(link);
+        }
+        return div;
+    }
+
     _renderFeatureActions(gs) {
         const area = document.createElement('div');
         area.className = 'vcs-action-area';
-
         if (!this.selectedFeatureId || !gs) return area;
 
-        const feat = gs.features.get(this.selectedFeatureId);
-        if (!feat) return area;
-
-        const available = gs.getAvailablePhases(this.selectedFeatureId);
-        if (available.length > 0) {
-            for (const phase of available) {
-                const btn = document.createElement('button');
-                btn.className = 'vcs-btn vcs-btn-action';
-                const phaseName = phase.name.includes(':') ? phase.name.split(':').slice(1).join(':').trim() : phase.name;
-                const shortName = phaseName.length > 30 ? phaseName.substring(0, 27) + '...' : phaseName;
-                btn.textContent = `Implement: ${shortName}`;
-                btn.addEventListener('click', () => {
-                    gs.assignImplementTask(phase.nodeId);
-                    this.render();
-                });
-                area.appendChild(btn);
-            }
-        } else if (feat.isLocked) {
+        const actions = gs.getFeatureActions(this.selectedFeatureId);
+        if (actions.length === 0) {
             const msg = document.createElement('span');
             msg.className = 'vcs-action-msg';
-            msg.textContent = 'Feature is locked — dependencies not met';
+            msg.textContent = 'No actions available';
             area.appendChild(msg);
-        } else if (feat.completion >= 1) {
-            const msg = document.createElement('span');
-            msg.className = 'vcs-action-msg';
-            msg.textContent = 'Feature complete';
-            area.appendChild(msg);
+            return area;
         }
 
-        return area;
-    }
-
-    // --- Test Column ---
-
-    _renderTestColumn(gs) {
-        const col = document.createElement('div');
-        col.className = 'vcs-column';
-
-        const header = document.createElement('div');
-        header.className = 'vcs-column-header';
-        header.innerHTML = '<strong>Tests</strong>';
-
-        const search = document.createElement('input');
-        search.type = 'text';
-        search.className = 'vcs-search';
-        search.placeholder = 'Search...';
-        search.value = this.testSearch;
-        search.addEventListener('input', (e) => {
-            this.testSearch = e.target.value;
-            this.render();
-        });
-        header.appendChild(search);
-        col.appendChild(header);
-
-        const list = document.createElement('div');
-        list.className = 'vcs-card-list';
-
-        const tests = [...gs.tests.values()];
-        tests.sort((a, b) => {
-            const statusOrder = { fail: 0, partial: 1, unknown: 2, pass: 3 };
-            return (statusOrder[a.status] ?? 2) - (statusOrder[b.status] ?? 2);
-        });
-
-        for (const test of tests) {
-            if (this.testSearch && !test.name.toLowerCase().includes(this.testSearch.toLowerCase())) {
-                continue;
+        const blocked = gs.isManualTestActive;
+        for (const action of actions) {
+            const btn = document.createElement('button');
+            btn.className = 'vcs-btn vcs-btn-action';
+            btn.textContent = action.label;
+            if (blocked && action.type !== TaskType.MANUAL_TEST) {
+                // During manual test, only show manual test is in progress
             }
-            list.appendChild(this._renderTestCard(gs, test));
-        }
-
-        col.appendChild(list);
-        col.appendChild(this._renderTestActions(gs));
-
-        return col;
-    }
-
-    _renderTestCard(gs, test) {
-        const card = document.createElement('div');
-        const isSelected = this.selectedTestId === test.id;
-        card.className = `vcs-card ${isSelected ? 'vcs-card-selected' : ''}`;
-        card.style.borderLeftColor = STATUS_COLORS[test.status] || STATUS_COLORS.unknown;
-
-        card.addEventListener('click', () => {
-            this.selectedTestId = test.id;
-            this.render();
-        });
-
-        const name = document.createElement('div');
-        name.className = 'vcs-card-name';
-        name.textContent = test.name;
-        card.appendChild(name);
-
-        const meta = document.createElement('div');
-        meta.className = 'vcs-card-meta';
-        if (test.linesTotal > 0) {
-            meta.textContent = `${test.linesMatching}/${test.linesTotal} lines`;
-        } else {
-            meta.textContent = 'Not yet tested';
-        }
-        card.appendChild(meta);
-
-        if (test.relatedFeatureIds.length > 0) {
-            const feats = document.createElement('div');
-            feats.className = 'vcs-card-meta';
-            for (const fid of test.relatedFeatureIds) {
-                const link = document.createElement('a');
-                link.className = 'vcs-dep-link';
-                link.href = '#';
-                link.textContent = gs.features.get(fid)?.name || fid;
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.selectFeature(fid);
-                });
-                feats.appendChild(link);
+            if (blocked) {
+                btn.disabled = true;
+                btn.classList.add('vcs-btn-disabled');
             }
-            card.appendChild(feats);
-        }
-
-        return card;
-    }
-
-    _renderTestActions(gs) {
-        const area = document.createElement('div');
-        area.className = 'vcs-action-area';
-
-        if (this.selectedTestId) {
-            const test = gs.tests.get(this.selectedTestId);
-            if (test && test.relatedFeatureIds.length > 0) {
-                const btn = document.createElement('button');
-                btn.className = 'vcs-btn vcs-btn-action';
-                btn.textContent = 'View Feature';
-                btn.addEventListener('click', () => {
-                    this.selectFeature(test.relatedFeatureIds[0]);
-                });
-                area.appendChild(btn);
-            }
+            btn.addEventListener('click', () => {
+                gs.assignTask(this.selectedFeatureId, action.type);
+                this.render();
+            });
+            area.appendChild(btn);
         }
 
         return area;
@@ -526,7 +388,12 @@ export class VibeCodingSimUI {
         const list = document.createElement('div');
         list.className = 'vcs-card-list';
 
-        // Test workflow entry (always visible)
+        // Manual test (if active)
+        if (gs.isManualTestActive) {
+            list.appendChild(this._renderManualTestCard(gs));
+        }
+
+        // Test workflow
         list.appendChild(this._renderTestWorkflowCard(gs));
 
         // Running tasks
@@ -539,93 +406,83 @@ export class VibeCodingSimUI {
             list.appendChild(this._renderTaskCard(gs, task));
         }
 
-        // Completed tasks
+        // Completed
         const completed = gs.getCompletedTasks();
-        for (const task of completed.reverse()) {
-            list.appendChild(this._renderTaskCard(gs, task));
+        for (let i = completed.length - 1; i >= 0; i--) {
+            list.appendChild(this._renderTaskCard(gs, completed[i]));
         }
 
         col.appendChild(list);
         col.appendChild(this._renderTaskActions(gs));
-
         return col;
+    }
+
+    _renderManualTestCard(gs) {
+        const card = document.createElement('div');
+        card.className = 'vcs-card vcs-card-manual-test';
+        card.innerHTML = `<div class="vcs-card-name">🔍 Manual Test: ${gs.manualTestFeatureId}</div>`;
+        card.appendChild(this._progressBar(gs.manualTestProgress ?? 0));
+        const meta = document.createElement('div');
+        meta.className = 'vcs-card-meta';
+        meta.textContent = 'Player is busy testing — no new actions can be started';
+        card.appendChild(meta);
+        return card;
     }
 
     _renderTestWorkflowCard(gs) {
         const card = document.createElement('div');
         card.className = 'vcs-card vcs-card-workflow';
+        card.innerHTML = '<div class="vcs-card-name">🧪 Test Workflow</div>';
 
-        const name = document.createElement('div');
-        name.className = 'vcs-card-name';
-        name.textContent = '🧪 Test Workflow';
-        card.appendChild(name);
-
-        if (gs.testWorkflow && !gs.testWorkflow.isComplete) {
-            const progress = gs.testWorkflowProgress ?? 0;
-            card.appendChild(this._progressBar(progress));
+        if (gs.testWorkflow && !gs.testWorkflow.complete) {
+            card.appendChild(this._progressBar(gs.testWorkflowProgress ?? 0));
             const meta = document.createElement('div');
             meta.className = 'vcs-card-meta';
             meta.textContent = 'Running...';
             card.appendChild(meta);
-        } else if (gs.testWorkflow?.isComplete) {
-            const passing = [...gs.tests.values()].filter(t => t.status === 'pass').length;
-            const meta = document.createElement('div');
-            meta.className = 'vcs-card-meta';
-            meta.textContent = `Last run: ${passing}/${gs.tests.size} passing`;
-            card.appendChild(meta);
-
-            const btn = document.createElement('button');
-            btn.className = 'vcs-btn vcs-btn-action';
-            btn.textContent = 'Run Tests';
-            btn.addEventListener('click', () => {
-                gs.startTestWorkflow();
-                this.render();
-            });
-            card.appendChild(btn);
         } else {
+            if (gs.testWorkflow?.complete) {
+                const passing = [...gs.features.values()].filter(f => f.testResultPercent !== null && f.testResultPercent >= 95).length;
+                const tested = [...gs.features.values()].filter(f => f.testResultPercent !== null).length;
+                const meta = document.createElement('div');
+                meta.className = 'vcs-card-meta';
+                meta.textContent = `Last run: ${passing}/${tested} passing`;
+                card.appendChild(meta);
+            }
             const btn = document.createElement('button');
             btn.className = 'vcs-btn vcs-btn-action';
             btn.textContent = 'Run Tests';
-            btn.addEventListener('click', () => {
-                gs.startTestWorkflow();
-                this.render();
-            });
+            btn.addEventListener('click', () => { gs.startTestWorkflow(); this.render(); });
             card.appendChild(btn);
         }
-
         return card;
     }
 
     _renderTaskCard(gs, task) {
-        const card = document.createElement('div');
         const isSelected = this.selectedTaskId === task.id;
+        const card = document.createElement('div');
         card.className = `vcs-card ${isSelected ? 'vcs-card-selected' : ''}`;
 
-        if (task.status === TaskStatus.MERGE_CONFLICT) {
-            card.style.borderLeftColor = '#e67e22';
-        } else if (task.status === TaskStatus.RUNNING) {
-            card.style.borderLeftColor = '#3498db';
-        } else if (task.status === TaskStatus.COMPLETED) {
-            card.style.borderLeftColor = '#2d8a4e';
-        } else {
-            card.style.borderLeftColor = '#999';
-        }
+        const borderColors = {
+            [TaskStatus.RUNNING]: '#3498db',
+            [TaskStatus.COMPLETED]: '#2d8a4e',
+            [TaskStatus.MERGE_CONFLICT]: '#e67e22',
+            [TaskStatus.CANCELLED]: '#666',
+            [TaskStatus.FAILED]: '#666',
+        };
+        card.style.borderLeftColor = borderColors[task.status] || '#666';
+        card.addEventListener('click', () => { this.selectedTaskId = task.id; this.render(); });
 
-        card.addEventListener('click', () => {
-            this.selectedTaskId = task.id;
-            this.render();
-        });
-
-        const name = document.createElement('div');
-        name.className = 'vcs-card-name';
-        const statusIcon = {
+        const icons = {
             [TaskStatus.RUNNING]: '⚡',
-            [TaskStatus.COMPLETED]: '✓',
+            [TaskStatus.COMPLETED]: task.reportedSuccess ? '✓' : '⚠',
+            [TaskStatus.MERGE_CONFLICT]: '🔀',
             [TaskStatus.CANCELLED]: '✗',
             [TaskStatus.FAILED]: '✗',
-            [TaskStatus.MERGE_CONFLICT]: '⚠',
-        }[task.status] || '';
-        name.textContent = `${statusIcon} ${task.label}`;
+        };
+        const name = document.createElement('div');
+        name.className = 'vcs-card-name';
+        name.textContent = `${icons[task.status] || ''} ${task.label}`;
         card.appendChild(name);
 
         if (task.status === TaskStatus.RUNNING) {
@@ -638,6 +495,11 @@ export class VibeCodingSimUI {
             const meta = document.createElement('div');
             meta.className = 'vcs-card-meta vcs-merge-conflict';
             meta.textContent = 'Merge conflict — needs resolution';
+            card.appendChild(meta);
+        } else if (task.status === TaskStatus.COMPLETED) {
+            const meta = document.createElement('div');
+            meta.className = 'vcs-card-meta';
+            meta.textContent = task.reportedSuccess ? 'Reported: success' : 'Reported: issues found';
             card.appendChild(meta);
         } else {
             const meta = document.createElement('div');
@@ -652,56 +514,33 @@ export class VibeCodingSimUI {
     _renderTaskActions(gs) {
         const area = document.createElement('div');
         area.className = 'vcs-action-area';
-
         if (!this.selectedTaskId) return area;
 
         const task = gs.tasks.find(t => t.id === this.selectedTaskId);
         if (!task) return area;
 
         if (task.status === TaskStatus.RUNNING) {
-            const cancelBtn = document.createElement('button');
-            cancelBtn.className = 'vcs-btn vcs-btn-action vcs-btn-danger';
-            cancelBtn.textContent = 'Cancel';
-            cancelBtn.addEventListener('click', () => {
-                gs.cancelTask(task.id);
-                this.render();
-            });
-            area.appendChild(cancelBtn);
-
-            const skipBtn = document.createElement('button');
-            skipBtn.className = 'vcs-btn vcs-btn-action';
-            skipBtn.textContent = 'Skip Testing';
-            skipBtn.addEventListener('click', () => {
-                gs.skipTesting(task.id);
-                this.render();
-            });
-            area.appendChild(skipBtn);
+            this._addActionBtn(area, 'Cancel', 'vcs-btn-danger', () => { gs.cancelTask(task.id); this.render(); });
+            this._addActionBtn(area, 'Skip Testing', '', () => { gs.skipTesting(task.id); this.render(); });
         }
 
         if (task.status === TaskStatus.MERGE_CONFLICT) {
-            const resolveBtn = document.createElement('button');
-            resolveBtn.className = 'vcs-btn vcs-btn-action';
-            resolveBtn.textContent = 'Resolve';
-            resolveBtn.addEventListener('click', () => {
-                gs.assignMergeConflictResolution(task.id);
-                this.render();
-            });
-            area.appendChild(resolveBtn);
-
-            const discardBtn = document.createElement('button');
-            discardBtn.className = 'vcs-btn vcs-btn-action vcs-btn-danger';
-            discardBtn.textContent = 'Discard';
-            discardBtn.addEventListener('click', () => {
-                gs.discardMergeConflict(task.id);
-                this.render();
-            });
-            area.appendChild(discardBtn);
+            this._addActionBtn(area, 'Resolve', '', () => { gs.resolveMergeConflict(task.id); this.render(); });
+            this._addActionBtn(area, 'Discard', 'vcs-btn-danger', () => { gs.discardMergeConflict(task.id); this.render(); });
         }
 
         return area;
     }
 
     // --- Helpers ---
+
+    _addActionBtn(parent, label, extraClass, onClick) {
+        const btn = document.createElement('button');
+        btn.className = `vcs-btn vcs-btn-action ${extraClass}`;
+        btn.textContent = label;
+        btn.addEventListener('click', onClick);
+        parent.appendChild(btn);
+    }
 
     _progressBar(pct) {
         const bar = document.createElement('div');
@@ -713,38 +552,24 @@ export class VibeCodingSimUI {
         return bar;
     }
 
-    _featureStatusColor(testStatuses) {
-        if (testStatuses.length === 0) return STATUS_COLORS.unknown;
-        if (testStatuses.every(s => s === 'pass')) return STATUS_COLORS.pass;
-        if (testStatuses.some(s => s === 'fail')) return STATUS_COLORS.fail;
-        if (testStatuses.some(s => s === 'partial')) return STATUS_COLORS.partial;
-        return STATUS_COLORS.unknown;
+    _badge(letter, color) {
+        const b = document.createElement('span');
+        b.className = 'vcs-badge';
+        b.style.background = color;
+        b.textContent = letter;
+        return b;
     }
-
-    // --- Public methods ---
 
     selectFeature(featureId) {
         this.selectedFeatureId = featureId;
         this.expandedFeatures.add(featureId);
         this.render();
-
-        // Scroll to feature card
         requestAnimationFrame(() => {
-            const card = this.rootElement?.querySelector(`.vcs-card-selected`);
+            const card = this.rootElement?.querySelector('.vcs-card-selected');
             if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
-
-        // Publish for Region Graph
         if (this.apis?.eventBus) {
             this.apis.eventBus.publish('vibeCodingSim:featureSelected', { featureId });
         }
-    }
-
-    onPanelShow() {
-        this.render();
-    }
-
-    onPanelResize() {
-        // No special handling needed — CSS flexbox handles it
     }
 }
