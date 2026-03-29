@@ -31,7 +31,7 @@ def event_item_name(label, max_length=50):
     return f"Event: {label}"
 
 
-def generate_item_table(max_nodes: int = 100):
+def generate_item_table(max_nodes: int = 1000):
     """Generate a generic item table with numbered names (for class-level registration)."""
     item_table = {}
 
@@ -45,8 +45,8 @@ def generate_item_table(max_nodes: int = 100):
 
 
 # Default item table
-item_table = generate_item_table(100)
+item_table = generate_item_table(1000)
 
 item_groups = {
-    "Nodes": [f"Node {i}" for i in range(1, 101)],
+    "Nodes": [f"Node {i}" for i in range(1, 1001)],
 }

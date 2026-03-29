@@ -23,7 +23,7 @@ def node_location_name(label, max_length=50):
     return label
 
 
-def generate_location_table(max_nodes: int = 100):
+def generate_location_table(max_nodes: int = 1000):
     """Generate a generic location table with numbered names (for class-level registration)."""
     location_table = {}
     for i in range(1, max_nodes + 1):
@@ -32,4 +32,4 @@ def generate_location_table(max_nodes: int = 100):
 
 
 # Default location table
-location_table = generate_location_table(100)
+location_table = generate_location_table(1000)

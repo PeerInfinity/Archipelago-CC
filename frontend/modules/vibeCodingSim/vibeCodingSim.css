@@ -1,0 +1,312 @@
+/* Vibe Coding Simulator — Panel Styles */
+
+.vcs-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: #e0e0e0;
+    background: #1e1e1e;
+}
+
+.vcs-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-style: italic;
+}
+
+/* --- Toolbar --- */
+
+.vcs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #252525;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.vcs-toolbar-item {
+    color: #ccc;
+    font-weight: 500;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+
+/* --- Column toggles --- */
+
+.vcs-column-toggles {
+    display: flex;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #222;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+/* --- Columns --- */
+
+.vcs-columns {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.vcs-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-right: 1px solid #333;
+}
+
+.vcs-column:last-child {
+    border-right: none;
+}
+
+.vcs-column-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #252525;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.vcs-column-header strong {
+    flex-shrink: 0;
+}
+
+/* --- Search --- */
+
+.vcs-search {
+    flex: 1;
+    min-width: 60px;
+    padding: 3px 6px;
+    background: #333;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #e0e0e0;
+    font-size: 12px;
+}
+
+.vcs-search:focus {
+    outline: none;
+    border-color: #666;
+}
+
+/* --- Card list --- */
+
+.vcs-card-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+/* --- Cards --- */
+
+.vcs-card {
+    background: #2a2a2a;
+    border: 1px solid #383838;
+    border-left: 3px solid #666;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.vcs-card:hover {
+    background: #303030;
+}
+
+.vcs-card-selected {
+    background: #2a3040;
+    border-color: #4a6080;
+}
+
+.vcs-card-workflow {
+    border-left-color: #8e44ad;
+    background: #2a2535;
+}
+
+.vcs-card-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vcs-card-name {
+    font-weight: 500;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+}
+
+.vcs-card-meta {
+    color: #999;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* --- Card details (expanded) --- */
+
+.vcs-card-details {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #383838;
+}
+
+.vcs-detail-label {
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
+    margin-bottom: 3px;
+}
+
+.vcs-phase-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+.vcs-phase-icon {
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+}
+
+.vcs-phase-pct {
+    margin-left: auto;
+    color: #999;
+    flex-shrink: 0;
+}
+
+.vcs-dep-link {
+    display: inline-block;
+    color: #6ea8d9;
+    text-decoration: none;
+    font-size: 12px;
+    margin-right: 8px;
+}
+
+.vcs-dep-link:hover {
+    text-decoration: underline;
+}
+
+.vcs-task-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 2px 0;
+}
+
+.vcs-merge-conflict {
+    color: #e67e22;
+    font-weight: 500;
+}
+
+/* --- Progress bar --- */
+
+.vcs-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 40px;
+}
+
+.vcs-progress-fill {
+    height: 100%;
+    background: #3498db;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* --- Action area --- */
+
+.vcs-action-area {
+    min-height: 36px;
+    padding: 6px 10px;
+    background: #252525;
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.vcs-action-msg {
+    color: #888;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* --- Buttons --- */
+
+.vcs-btn {
+    padding: 4px 10px;
+    background: #383838;
+    border: 1px solid #4a4a4a;
+    border-radius: 3px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.vcs-btn:hover {
+    background: #444;
+}
+
+.vcs-btn-active {
+    background: #3a5070;
+    border-color: #4a6090;
+    color: #fff;
+}
+
+.vcs-btn-action {
+    background: #2a5a3a;
+    border-color: #3a7a4a;
+}
+
+.vcs-btn-action:hover {
+    background: #3a7a4a;
+}
+
+.vcs-btn-danger {
+    background: #5a2a2a;
+    border-color: #7a3a3a;
+}
+
+.vcs-btn-danger:hover {
+    background: #7a3a3a;
+}
+
+.vcs-btn-speed {
+    padding: 4px 8px;
+    min-width: 32px;
+    text-align: center;
+}
+
+.vcs-btn-toggle {
+    padding: 3px 8px;
+}
