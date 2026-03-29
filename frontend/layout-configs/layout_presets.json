@@ -523,8 +523,8 @@
           "content": [
             {
               "type": "component",
-              "componentType": "vibeCodingSimPanel",
-              "title": "Vibe Coding Simulator"
+              "componentType": "regionGraphPanel",
+              "title": "Dependency Graph"
             },
             {
               "type": "component",
@@ -550,8 +550,8 @@
           "content": [
             {
               "type": "component",
-              "componentType": "regionGraphPanel",
-              "title": "Dependency Graph"
+              "componentType": "vibeCodingSimPanel",
+              "title": "Vibe Coding Simulator"
             },
             {
               "type": "component",

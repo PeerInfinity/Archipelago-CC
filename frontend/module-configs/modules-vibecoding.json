@@ -16,6 +16,10 @@
       "path": "./modules/client/index.js",
       "enabled": true
     },
+    "timer": {
+      "path": "./modules/timer/index.js",
+      "enabled": true
+    },
     "editorCore": {
       "path": "./modules/editorCore/index.js",
       "enabled": true
@@ -57,6 +61,7 @@
     "json",
     "stateManager",
     "client",
+    "timer",
     "editorCore",
     "editorCodeMirror6",
     "settings",

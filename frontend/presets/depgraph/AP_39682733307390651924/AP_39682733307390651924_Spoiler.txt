@@ -1,0 +1,148 @@
+﻿Archipelago Version 0.6.7  -  Seed: 20
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            DepGraph
+Location Count:                  19
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Graph File:                      Taskflow Example
+Vanilla Item Placement:          No
+Randomize Items:                 Yes
+Randomize Starting Nodes:        Yes
+Starting Nodes %:                0
+Entrance Rule Mode:              Relaxed Items
+
+
+Starting Items:
+
+Node 1
+Completed Node 1
+
+Locations:
+
+Complete Node 2: Node 4
+Completed Node 2: Completed Node 2
+Complete Node 3: Node 10
+Completed Node 3: Completed Node 3
+Complete Node 4: Node 5
+Completed Node 4: Completed Node 4
+Complete Node 5: Node 3
+Completed Node 5: Completed Node 5
+Complete Node 6: Node 2
+Completed Node 6: Completed Node 6
+Complete Node 7: Node 7
+Completed Node 7: Completed Node 7
+Complete Node 8: Node 8
+Completed Node 8: Completed Node 8
+Complete Node 9: Node 9
+Completed Node 9: Completed Node 9
+Complete Node 10: Node 13
+Completed Node 10: Completed Node 10
+Complete Node 11: Node 6
+Completed Node 11: Completed Node 11
+Complete Node 12: Node 18
+Completed Node 12: Completed Node 12
+Complete Node 13: Node 19
+Completed Node 13: Completed Node 13
+Complete Node 14: Node 15
+Completed Node 14: Completed Node 14
+Complete Node 15: Node 12
+Completed Node 15: Completed Node 15
+Complete Node 16: Node 17
+Completed Node 16: Completed Node 16
+Complete Node 17: Node 11
+Completed Node 17: Completed Node 17
+Complete Node 18: Node 16
+Completed Node 18: Completed Node 18
+Complete Node 19: Node 14
+Completed Node 19: Completed Node 19
+Complete Node 20: Node 20
+Completed Node 20: Completed Node 20
+
+Playthrough:
+
+0: {
+  Completed Node 1
+  Node 1
+}
+1: {
+  Complete Node 2: Node 4
+  Complete Node 4: Node 5
+  Completed Node 2: Completed Node 2
+  Completed Node 4: Completed Node 4
+}
+2: {
+  Complete Node 5: Node 3
+  Completed Node 5: Completed Node 5
+}
+3: {
+  Complete Node 6: Node 2
+  Completed Node 6: Completed Node 6
+}
+4: {
+  Complete Node 3: Node 10
+  Completed Node 3: Completed Node 3
+}
+5: {
+  Complete Node 7: Node 7
+  Completed Node 7: Completed Node 7
+}
+6: {
+  Complete Node 8: Node 8
+  Completed Node 8: Completed Node 8
+}
+7: {
+  Complete Node 9: Node 9
+  Completed Node 9: Completed Node 9
+}
+8: {
+  Complete Node 10: Node 13
+  Completed Node 10: Completed Node 10
+}
+9: {
+  Complete Node 11: Node 6
+  Completed Node 11: Completed Node 11
+}
+10: {
+  Complete Node 13: Node 19
+  Completed Node 13: Completed Node 13
+}
+11: {
+  Complete Node 14: Node 15
+  Complete Node 17: Node 11
+  Completed Node 14: Completed Node 14
+  Completed Node 17: Completed Node 17
+}
+12: {
+  Complete Node 12: Node 18
+  Complete Node 18: Node 16
+  Completed Node 12: Completed Node 12
+  Completed Node 18: Completed Node 18
+}
+13: {
+  Complete Node 19: Node 14
+  Completed Node 19: Completed Node 19
+}
+14: {
+  Complete Node 15: Node 12
+  Completed Node 15: Completed Node 15
+}
+15: {
+  Complete Node 16: Node 17
+  Completed Node 16: Completed Node 16
+}
+16: {
+  Complete Node 20: Node 20
+  Completed Node 20: Completed Node 20
+}
