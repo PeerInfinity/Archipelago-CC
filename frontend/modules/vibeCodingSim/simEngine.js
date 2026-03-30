@@ -469,6 +469,18 @@ class GameState {
         return true;
     }
 
+    /** Discard a completed task's changes (used for merge conflict source tasks). */
+    discardTask(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return false;
+        task.status = TaskStatus.CANCELLED;
+        task.completedAt = this.simulatedTime;
+        this._addLog(`Discarded: ${task.label}`);
+        this._updatePendingMerges();
+        this._notify();
+        return true;
+    }
+
     skipTesting(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (!task || task.status !== TaskStatus.RUNNING) return false;

@@ -791,8 +791,7 @@ export class VibeCodingSimUI {
                 discardBtn.title = 'Discard this branch (cancel merge)';
                 discardBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    task.status = TaskStatus.CANCELLED;
-                    task.completedAt = gs.simulatedTime;
+                    gs.discardTask(task.id);
                     this.render();
                 });
                 rightBtns.appendChild(discardBtn);
