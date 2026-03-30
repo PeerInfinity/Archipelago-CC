@@ -380,8 +380,8 @@
 .vcs-expand-toggle {
     color: #888;
     font-size: 11px;
-    margin-left: auto;
-    padding: 0 4px;
+    flex-shrink: 0;
+    padding: 0 4px 0 0;
 }
 
 /* --- Progress bar --- */
