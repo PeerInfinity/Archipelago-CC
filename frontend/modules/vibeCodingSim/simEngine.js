@@ -420,18 +420,25 @@ class GameState {
 
         // Check if this creates a potential merge conflict
         // (another running task of the same type on the same feature)
-        if (taskType === TaskType.IMPLEMENT) {
+        const mergeableTypes = [TaskType.IMPLEMENT, TaskType.WRITE_DOC, TaskType.EVALUATE_DOC, TaskType.WRITE_TESTS];
+        if (mergeableTypes.includes(taskType)) {
             const otherRunning = this.tasks.filter(
                 t => t.id !== task.id && t.status === TaskStatus.RUNNING &&
-                     t.targetFeatureId === featureId && t.type === TaskType.IMPLEMENT
+                     t.targetFeatureId === featureId && t.type === taskType
             );
-            if (otherRunning.length > 0) {
-                // Create a pending merge conflict entry
+            // Only create a merge entry if there isn't already a pending one for these tasks
+            const existingMerge = this.tasks.find(
+                t => t.status === TaskStatus.MERGE_CONFLICT && t._pendingMerge &&
+                     t.targetFeatureId === featureId &&
+                     t._sourceTaskIds?.some(id => otherRunning.some(o => o.id === id))
+            );
+            if (otherRunning.length > 0 && !existingMerge) {
                 const mergeTask = new Task(TaskType.MERGE_CONFLICT, featureId);
                 mergeTask.startedAt = this.simulatedTime;
                 mergeTask.status = TaskStatus.MERGE_CONFLICT;
-                mergeTask._pendingMerge = true; // waiting for source tasks to finish
+                mergeTask._pendingMerge = true;
                 mergeTask._sourceTaskIds = [otherRunning[0].id, task.id];
+                mergeTask._mergeTaskType = taskType;
                 this.tasks.push(mergeTask);
                 this._addLog(`Potential merge conflict: two agents on ${featureId}`);
             }

@@ -711,13 +711,15 @@ export class VibeCodingSimUI {
             const badges = document.createElement('div');
             badges.className = 'vcs-card-right';
 
-            const skipBtn = document.createElement('button');
-            skipBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
-            skipBtn.style.background = '#5a5a2a';
-            skipBtn.textContent = '⏭';
-            skipBtn.title = 'Skip Testing';
-            skipBtn.addEventListener('click', (e) => { e.stopPropagation(); gs.skipTesting(task.id); this.render(); });
-            badges.appendChild(skipBtn);
+            if (task.type === TaskType.IMPLEMENT) {
+                const skipBtn = document.createElement('button');
+                skipBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
+                skipBtn.style.background = '#5a5a2a';
+                skipBtn.textContent = '⏭';
+                skipBtn.title = 'Skip Testing';
+                skipBtn.addEventListener('click', (e) => { e.stopPropagation(); gs.skipTesting(task.id); this.render(); });
+                badges.appendChild(skipBtn);
+            }
 
             const cancelBtn = document.createElement('button');
             cancelBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
@@ -777,8 +779,10 @@ export class VibeCodingSimUI {
 
             // Check if this task is part of a pending merge — show discard button
             const pendingMerge = gs.tasks.find(
-                t => t.status === TaskStatus.MERGE_CONFLICT && t._pendingMerge &&
+                t => t.status === TaskStatus.MERGE_CONFLICT &&
                      t._sourceTaskIds?.includes(task.id));
+            const rightBtns = document.createElement('div');
+            rightBtns.className = 'vcs-card-right';
             if (pendingMerge) {
                 const discardBtn = document.createElement('button');
                 discardBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
@@ -791,7 +795,8 @@ export class VibeCodingSimUI {
                     task.completedAt = gs.simulatedTime;
                     this.render();
                 });
-                metaRow.appendChild(discardBtn);
+                rightBtns.appendChild(discardBtn);
+                metaRow.appendChild(rightBtns);
             } else if (!task.reportedSuccess && task.type !== TaskType.MERGE_CONFLICT) {
                 const retryBtn = document.createElement('button');
                 retryBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
@@ -804,7 +809,8 @@ export class VibeCodingSimUI {
                     if (newTask && this.autoSkipTesting) gs.skipTesting(newTask.id);
                     this.render();
                 });
-                metaRow.appendChild(retryBtn);
+                rightBtns.appendChild(retryBtn);
+                metaRow.appendChild(rightBtns);
             }
             card.appendChild(metaRow);
         } else {
@@ -854,7 +860,10 @@ export class VibeCodingSimUI {
         return [bar, fill];
     }
 
-    selectFeature(featureId) {
+    selectFeature(featureId, collapseOthers = false) {
+        if (collapseOthers && this.selectedFeatureId && this.selectedFeatureId !== featureId) {
+            this.expandedFeatures.delete(this.selectedFeatureId);
+        }
         this.selectedFeatureId = featureId;
         this.expandedFeatures.add(featureId);
         this.render();
@@ -868,7 +877,6 @@ export class VibeCodingSimUI {
     }
 
     selectFeatureByRegion(regionNodeId) {
-        // Region names are like "Complete Node 3" — extract the index
         const gs = this.gameState;
         if (!gs) return;
         const match = regionNodeId.match(/(\d+)/);
@@ -876,13 +884,12 @@ export class VibeCodingSimUI {
             const idx = parseInt(match[1]);
             const featureId = gs.indexToFeatureId[idx];
             if (featureId) {
-                this.selectFeature(featureId);
+                this.selectFeature(featureId, true);
                 return;
             }
         }
-        // Fallback: try treating it as a feature ID directly
         if (gs.features.has(regionNodeId)) {
-            this.selectFeature(regionNodeId);
+            this.selectFeature(regionNodeId, true);
         }
     }
 }
