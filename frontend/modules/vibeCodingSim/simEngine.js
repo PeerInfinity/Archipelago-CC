@@ -492,9 +492,10 @@ class GameState {
 
     _updatePendingMerges() {
         for (const merge of this.tasks) {
-            if (merge.status !== TaskStatus.MERGE_CONFLICT || !merge._pendingMerge) continue;
+            if (merge.status !== TaskStatus.MERGE_CONFLICT) continue;
+            if (!merge._sourceTaskIds) continue;
 
-            const sourceIds = merge._sourceTaskIds || [];
+            const sourceIds = merge._sourceTaskIds;
             const sources = sourceIds.map(id => this.tasks.find(t => t.id === id)).filter(Boolean);
             const uncancelled = sources.filter(t => t.status !== TaskStatus.CANCELLED);
 
@@ -507,9 +508,11 @@ class GameState {
             }
 
             // If all source tasks are done (completed/failed), enable the merge for resolution
-            const allDone = uncancelled.every(t => t.status !== TaskStatus.RUNNING);
-            if (allDone) {
-                merge._pendingMerge = false;
+            if (merge._pendingMerge) {
+                const allDone = uncancelled.every(t => t.status !== TaskStatus.RUNNING);
+                if (allDone) {
+                    merge._pendingMerge = false;
+                }
             }
         }
     }
