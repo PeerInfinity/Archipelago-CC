@@ -1,9 +1,9 @@
 /**
- * Vibe Coding Simulator — Simulation Engine (v2)
+ * Vibe Coding Simulator — Simulation Engine (v3)
  *
- * Three hidden completeness values per feature (doc, code, test).
- * Information is revealed through Claw reports (unreliable), test results
- * (ambiguous), and manual testing (ground truth but costly).
+ * Event-based task execution with minute-by-minute random events.
+ * Review/supervision mechanic reveals events progressively.
+ * Accept/reject for completed tasks.
  */
 
 // --- Constants ---
@@ -20,6 +20,7 @@ const TaskType = Object.freeze({
 
 const TaskStatus = Object.freeze({
     RUNNING: 'running',
+    PENDING_REVIEW: 'pending_review',  // completed but not accepted/rejected
     COMPLETED: 'completed',
     CANCELLED: 'cancelled',
     FAILED: 'failed',
@@ -58,7 +59,7 @@ const MERGE_SUBTASKS = [
     SubtaskLabel.TESTING,
 ];
 
-// --- Seeded PRNG (xoshiro128**) ---
+// --- Seeded PRNG ---
 
 class SeededRandom {
     constructor(seed = Date.now()) {
@@ -68,7 +69,6 @@ class SeededRandom {
         this.s[2] = (this.s[1] * 1664525 + 1013904223) >>> 0;
         this.s[3] = (this.s[2] * 1664525 + 1013904223) >>> 0;
     }
-
     _next() {
         const s = this.s;
         const result = (s[1] * 5) | 0;
@@ -78,19 +78,14 @@ class SeededRandom {
         s[3] = (s[3] << 11) | (s[3] >>> 21);
         return (result >>> 0) / 4294967296;
     }
-
     random() { return this._next(); }
-
     gauss(mean = 0, stddev = 1) {
         let u, v, s;
         do { u = this.random() * 2 - 1; v = this.random() * 2 - 1; s = u * u + v * v; }
         while (s >= 1 || s === 0);
         return mean + stddev * u * Math.sqrt(-2 * Math.log(s) / s);
     }
-
-    uniform(min, max) {
-        return min + this.random() * (max - min);
-    }
+    uniform(min, max) { return min + this.random() * (max - min); }
 }
 
 // --- Config ---
@@ -98,11 +93,16 @@ class SeededRandom {
 class SimulationConfig {
     constructor(overrides = {}) {
         this.timeScale = 60.0;
-        this.baseTaskDuration = 10.0;
+        this.baseTaskDuration = 10.0; // base minutes per subtask
 
         this.weeklyCredits = 5040.0;
         this.weekDuration = 7 * 24 * 60;
         this.creditRate = 1.0;
+
+        // Event probabilities (per minute)
+        this.eventProbability = 0.08;      // chance of any event per minute
+        this.eventPositiveWeight = 0.6;    // of events, fraction that are positive
+        this.eventQualityDelta = 0.05;     // quality change per event
 
         // Doc writing
         this.docSuccessRate = 0.5;
@@ -138,7 +138,11 @@ class SimulationConfig {
         this.testWorkflowDuration = 10.0;
 
         // Manual test
-        this.manualTestDuration = 60.0; // 1 hour
+        this.manualTestDuration = 60.0;
+
+        // Review
+        this.reviewSpeedMultiplier = 2.0;
+        this.dailyReviewBudget = 8 * 60; // 8 hours in minutes
 
         // Task history
         this.maxTaskHistory = 100;
@@ -153,32 +157,33 @@ class Feature {
     constructor(id, name) {
         this.id = id;
         this.name = name;
-
-        // Hidden state
         this.docCompleteness = 0;
         this.codeCompleteness = 0;
         this.testCompleteness = 0;
-
-        // Visible state
         this.hasDoc = false;
         this.hasCode = false;
         this.hasTests = false;
         this.testResultPercent = null;
         this.testResultUpdated = null;
-        this.manualTestResult = null; // null | "incomplete" | "doc" | "code" | "tests" | "pass"
-
-        // Graph
+        this.manualTestResult = null;
         this.upstreamIds = new Set();
         this.downstreamIds = new Set();
-        this.dependsOn = []; // node IDs from the graph (for determining upstream features)
+        this.dependsOn = [];
+        this._depsAreMet = true;
     }
+    get depsAreMet() { return this._depsAreMet; }
+    set depsAreMet(val) { this._depsAreMet = val; }
+}
 
-    get depsAreMet() {
-        // Checked externally by GameState
-        return this._depsAreMet;
-    }
-    set depsAreMet(val) {
-        this._depsAreMet = val;
+// --- Task Event ---
+
+class TaskEvent {
+    constructor(minute, type, description, positive, qualityDelta = 0) {
+        this.minute = minute;        // simulated minute within the task
+        this.type = type;            // 'quality' | 'step' | 'info'
+        this.description = description;
+        this.positive = positive;    // true = green, false = red, null = neutral
+        this.qualityDelta = qualityDelta;
     }
 }
 
@@ -192,18 +197,43 @@ class Task {
         this.type = type;
         this.targetFeatureId = targetFeatureId;
         this.status = TaskStatus.RUNNING;
-        this.progress = 0;
-        this.subtaskIndex = 0;
-        this.subtaskProgress = 0;
-        this.subtaskDurations = [];
-        this.subtaskLabel = '';
+        this.createdAt = 0;       // for stable ordering
         this.startedAt = 0;
         this.completedAt = null;
         this.creditsUsed = 0;
-        this.reportedSuccess = null; // set on completion
+        this.reportedSuccess = null;
 
-        // For merge conflicts: the code completeness of the branch
+        // Subtask structure
+        this.subtaskDurations = [];  // minutes per subtask
+        this.subtaskLabels = [];     // label for each subtask
+
+        // Minute-based progress
+        this.elapsedMinutes = 0;     // integer minutes elapsed
+        this.fractionalMinute = 0;   // sub-minute accumulator
+
+        // Events
+        this.events = [];            // TaskEvent[]
+        this.pendingQuality = 0;     // accumulated quality from events (applied on accept)
+
+        // Review state
+        this.reviewMinute = 0;       // how far review has progressed
+        this.reviewFractional = 0;
+
+        // Accept/reject
+        this.accepted = false;
+        this.rejected = false;
+
+        // Merge conflict
         this.branchCodeCompleteness = null;
+        this._pendingMerge = false;
+        this._sourceTaskIds = null;
+        this._mergeTaskType = null;
+
+        // Skip testing flag
+        this._skipTesting = false;
+
+        // Retry tracking
+        this._retried = false;
     }
 
     get subtasks() {
@@ -220,29 +250,56 @@ class Task {
         }
     }
 
+    get totalDuration() {
+        return this.subtaskDurations.reduce((a, b) => a + b, 0);
+    }
+
     get currentSubtaskLabel() {
-        if (this.status !== TaskStatus.RUNNING) return null;
-        const subs = this.subtasks;
-        if (this.subtaskIndex < subs.length) return subs[this.subtaskIndex];
-        // In fix cycles
-        const offset = this.subtaskIndex - subs.length;
-        return offset % 2 === 0 ? SubtaskLabel.FIXING : SubtaskLabel.TESTING;
+        let elapsed = 0;
+        for (let i = 0; i < this.subtaskDurations.length; i++) {
+            elapsed += this.subtaskDurations[i];
+            if (this.elapsedMinutes < elapsed) {
+                return this.subtaskLabels[i] || 'working';
+            }
+        }
+        return 'finishing';
+    }
+
+    get currentSubtaskIndex() {
+        let elapsed = 0;
+        for (let i = 0; i < this.subtaskDurations.length; i++) {
+            elapsed += this.subtaskDurations[i];
+            if (this.elapsedMinutes < elapsed) return i;
+        }
+        return this.subtaskDurations.length;
     }
 
     get overallProgress() {
-        if (this.subtaskDurations.length === 0) return 0;
-        return Math.min((this.subtaskIndex + this.subtaskProgress) / this.subtaskDurations.length, 1.0);
+        const total = this.totalDuration;
+        if (total <= 0) return 0;
+        return Math.min(this.elapsedMinutes / total, 1.0);
     }
 
     /** Returns fractional positions (0-1) where each subtask boundary falls. */
     get subtaskBoundaries() {
-        const n = this.subtaskDurations.length;
-        if (n <= 1) return [];
+        const total = this.totalDuration;
+        if (total <= 0) return [];
         const boundaries = [];
-        for (let i = 1; i < n; i++) {
-            boundaries.push(i / n);
+        let elapsed = 0;
+        for (let i = 0; i < this.subtaskDurations.length - 1; i++) {
+            elapsed += this.subtaskDurations[i];
+            boundaries.push(elapsed / total);
         }
         return boundaries;
+    }
+
+    /** Returns event positions as fractions (0-1) for the progress bar. */
+    get eventMarkers() {
+        const total = this.totalDuration;
+        if (total <= 0) return [];
+        return this.events
+            .filter(e => e.type === 'quality')
+            .map(e => ({ position: e.minute / total, positive: e.positive }));
     }
 
     get label() {
@@ -252,9 +309,27 @@ class Task {
             [TaskType.IMPLEMENT]: 'Implement',
             [TaskType.WRITE_TESTS]: 'Write Tests',
             [TaskType.MERGE_CONFLICT]: 'Merge Resolve',
-            [TaskType.MANUAL_TEST]: 'Manual Test',
         };
         return `${typeLabels[this.type] || this.type}: ${this.targetFeatureId}`;
+    }
+
+    /** Get the step index for a given minute */
+    stepIndexAtMinute(minute) {
+        let elapsed = 0;
+        for (let i = 0; i < this.subtaskDurations.length; i++) {
+            elapsed += this.subtaskDurations[i];
+            if (minute < elapsed) return i;
+        }
+        return this.subtaskDurations.length - 1;
+    }
+
+    /** Get the start minute of a given step */
+    stepStartMinute(stepIndex) {
+        let elapsed = 0;
+        for (let i = 0; i < stepIndex && i < this.subtaskDurations.length; i++) {
+            elapsed += this.subtaskDurations[i];
+        }
+        return elapsed;
     }
 }
 
@@ -285,12 +360,18 @@ class GameState {
         this.log = [];
         this.paused = true;
         this.speedMultiplier = 1;
+        this.autoAccept = false;
+
+        // Review state
+        this.activeReviewTaskId = null;   // task being reviewed
+        this.reviewUsedToday = 0;         // minutes used today
+        this.reviewDayStart = 0;          // when the current day started
+
+        // Index mapping for region graph
+        this.indexToFeatureId = {};
 
         this.onStateChanged = null;
         this.onLogEntry = null;
-
-        // Map from graph node index to feature ID (for Region Graph integration)
-        this.indexToFeatureId = {};
     }
 
     // --- Data Loading ---
@@ -304,7 +385,6 @@ class GameState {
             indexToLabel[parseInt(idx)] = step.label;
         }
 
-        // Each node in the graph becomes a feature
         for (const [idx, step] of Object.entries(graphStructure)) {
             const featureId = step.label;
             this.indexToFeatureId[parseInt(idx)] = featureId;
@@ -316,7 +396,6 @@ class GameState {
             this.features.set(featureId, feature);
         }
 
-        // Compute upstream/downstream
         for (const [id, feat] of this.features) {
             for (const depId of feat.dependsOn) {
                 feat.upstreamIds.add(depId);
@@ -348,48 +427,56 @@ class GameState {
         return this.manualTestFeatureId !== null;
     }
 
+    get reviewBudgetRemaining() {
+        return Math.max(0, this.config.dailyReviewBudget - this.reviewUsedToday);
+    }
+
+    get isReviewActive() {
+        return this.activeReviewTaskId !== null || this.isManualTestActive;
+    }
+
     getRunningTasks() {
         return this.tasks.filter(t => t.status === TaskStatus.RUNNING);
     }
 
+    getPendingReviewTasks() {
+        return this.tasks.filter(t => t.status === TaskStatus.PENDING_REVIEW);
+    }
+
     getCompletedTasks() {
-        return this.tasks
-            .filter(t => t.status !== TaskStatus.RUNNING && t.status !== TaskStatus.MERGE_CONFLICT)
-            .slice(-this.config.maxTaskHistory);
+        return this.tasks.filter(t =>
+            t.status === TaskStatus.COMPLETED || t.status === TaskStatus.CANCELLED ||
+            t.status === TaskStatus.FAILED);
     }
 
     getMergeConflicts() {
         return this.tasks.filter(t => t.status === TaskStatus.MERGE_CONFLICT);
     }
 
+    /** Get all tasks in stable creation order for display. */
+    getOrderedTasks() {
+        // Merge conflicts at top, then everything else in creation order
+        const merges = this.tasks.filter(t => t.status === TaskStatus.MERGE_CONFLICT);
+        const rest = this.tasks.filter(t => t.status !== TaskStatus.MERGE_CONFLICT);
+        return [...merges, ...rest];
+    }
+
     getFeatureActions(featureId) {
         const feat = this.features.get(featureId);
         if (!feat) return [];
-
         const actions = [];
-
         if (!feat.hasDoc) {
             actions.push({ type: TaskType.WRITE_DOC, label: 'Write Planning Doc' });
         } else {
             actions.push({ type: TaskType.EVALUATE_DOC, label: 'Evaluate Doc' });
-
-            if (!feat.hasCode) {
-                actions.push({ type: TaskType.IMPLEMENT, label: 'Implement' });
-            } else {
-                actions.push({ type: TaskType.IMPLEMENT, label: 'Debug Code' });
-            }
-
-            if (!feat.hasTests) {
-                actions.push({ type: TaskType.WRITE_TESTS, label: 'Write Tests' });
-            } else {
-                actions.push({ type: TaskType.WRITE_TESTS, label: 'Debug Tests' });
-            }
+            actions.push({ type: feat.hasCode ? TaskType.IMPLEMENT : TaskType.IMPLEMENT,
+                label: feat.hasCode ? 'Debug Code' : 'Implement' });
+            actions.push({ type: TaskType.WRITE_TESTS,
+                label: feat.hasTests ? 'Debug Tests' : 'Write Tests' });
         }
-
         if (feat.hasCode && feat.hasTests && !this.isManualTestActive) {
             actions.push({ type: TaskType.MANUAL_TEST, label: 'Manual Test' });
         }
-
         return actions;
     }
 
@@ -404,29 +491,39 @@ class GameState {
         }
 
         const task = new Task(taskType, featureId);
+        task.createdAt = this.simulatedTime;
         task.startedAt = this.simulatedTime;
 
-        const subtasks = task.subtasks;
+        const subtaskList = task.subtasks;
         const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
 
-        for (let i = 0; i < subtasks.length; i++) {
-            const dur = this.config.baseTaskDuration * durationMult *
-                Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+        for (const label of subtaskList) {
+            const dur = Math.max(1, Math.round(
+                this.config.baseTaskDuration * durationMult *
+                Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
+            ));
             task.subtaskDurations.push(dur);
+            task.subtaskLabels.push(label);
         }
 
-        task.subtaskLabel = subtasks[0];
+        // Add step start events
+        let elapsed = 0;
+        for (let i = 0; i < task.subtaskDurations.length; i++) {
+            task.events.push(new TaskEvent(
+                elapsed, 'step', `Started: ${task.subtaskLabels[i]}`, null
+            ));
+            elapsed += task.subtaskDurations[i];
+        }
+
         this.tasks.push(task);
 
-        // Check if this creates a potential merge conflict
-        // (another running task of the same type on the same feature)
+        // Check for merge conflicts
         const mergeableTypes = [TaskType.IMPLEMENT, TaskType.WRITE_DOC, TaskType.EVALUATE_DOC, TaskType.WRITE_TESTS];
         if (mergeableTypes.includes(taskType)) {
             const otherRunning = this.tasks.filter(
                 t => t.id !== task.id && t.status === TaskStatus.RUNNING &&
                      t.targetFeatureId === featureId && t.type === taskType
             );
-            // Only create a merge entry if there isn't already a pending one for these tasks
             const existingMerge = this.tasks.find(
                 t => t.status === TaskStatus.MERGE_CONFLICT && t._pendingMerge &&
                      t.targetFeatureId === featureId &&
@@ -434,6 +531,7 @@ class GameState {
             );
             if (otherRunning.length > 0 && !existingMerge) {
                 const mergeTask = new Task(TaskType.MERGE_CONFLICT, featureId);
+                mergeTask.createdAt = this.simulatedTime;
                 mergeTask.startedAt = this.simulatedTime;
                 mergeTask.status = TaskStatus.MERGE_CONFLICT;
                 mergeTask._pendingMerge = true;
@@ -451,8 +549,12 @@ class GameState {
 
     _startManualTest(featureId) {
         if (this.isManualTestActive) return null;
+        // Manual test uses review budget
+        if (this.reviewBudgetRemaining <= 0) return null;
         this.manualTestFeatureId = featureId;
         this.manualTestStartedAt = this.simulatedTime;
+        // Cancel any active task review
+        this.activeReviewTaskId = null;
         this._addLog(`Manual test started: ${featureId}`);
         this._notify();
         return { type: TaskType.MANUAL_TEST, featureId };
@@ -460,7 +562,7 @@ class GameState {
 
     cancelTask(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
-        if (!task || task.status !== TaskStatus.RUNNING) return false;
+        if (!task || (task.status !== TaskStatus.RUNNING && task.status !== TaskStatus.PENDING_REVIEW)) return false;
         task.status = TaskStatus.CANCELLED;
         task.completedAt = this.simulatedTime;
         this._addLog(`Cancelled: ${task.label}`);
@@ -469,7 +571,6 @@ class GameState {
         return true;
     }
 
-    /** Discard a completed task's changes (used for merge conflict source tasks). */
     discardTask(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (!task) return false;
@@ -481,41 +582,103 @@ class GameState {
         return true;
     }
 
+    acceptTask(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task || task.status !== TaskStatus.PENDING_REVIEW) return false;
+        task.accepted = true;
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        this._applyTaskResult(task);
+        this._addLog(`Accepted: ${task.label}`);
+        this._updateDepsMetStatus();
+        this._notify();
+        return true;
+    }
+
+    rejectTask(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task || task.status !== TaskStatus.PENDING_REVIEW) return false;
+        task.rejected = true;
+        task.status = TaskStatus.CANCELLED;
+        task.completedAt = this.simulatedTime;
+        this._addLog(`Rejected: ${task.label}`);
+        this._notify();
+        return true;
+    }
+
     skipTesting(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (!task || task.status !== TaskStatus.RUNNING) return false;
-        // Mark task to skip to just past the testing subtask
         task._skipTesting = true;
         this._addLog(`Will skip testing: ${task.label}`);
         return true;
     }
 
-    _updatePendingMerges() {
-        for (const merge of this.tasks) {
-            if (merge.status !== TaskStatus.MERGE_CONFLICT) continue;
-            if (!merge._sourceTaskIds) continue;
+    // --- Review ---
 
-            const sourceIds = merge._sourceTaskIds;
-            const sources = sourceIds.map(id => this.tasks.find(t => t.id === id)).filter(Boolean);
-            const uncancelled = sources.filter(t => t.status !== TaskStatus.CANCELLED);
-
-            // If only one source remains uncancelled, remove the merge entry
-            if (uncancelled.length <= 1) {
-                merge.status = TaskStatus.CANCELLED;
-                merge.completedAt = this.simulatedTime;
-                this._addLog(`Merge conflict resolved: only one task remains on ${merge.targetFeatureId}`);
-                continue;
-            }
-
-            // If all source tasks are done (completed/failed), enable the merge for resolution
-            if (merge._pendingMerge) {
-                const allDone = uncancelled.every(t => t.status !== TaskStatus.RUNNING);
-                if (allDone) {
-                    merge._pendingMerge = false;
-                }
-            }
-        }
+    startReview(taskId) {
+        if (this.reviewBudgetRemaining <= 0) return false;
+        // Cancel current review if any
+        this.activeReviewTaskId = taskId;
+        return true;
     }
+
+    stopReview() {
+        this.activeReviewTaskId = null;
+    }
+
+    /** Rewind task to the start of the step containing the first negative event. */
+    rewindToFirstNegative(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return false;
+        const firstNeg = task.events.find(e => e.type === 'quality' && !e.positive);
+        if (!firstNeg) return false;
+        const stepIdx = task.stepIndexAtMinute(firstNeg.minute);
+        return this._rewindTask(task, task.stepStartMinute(stepIdx));
+    }
+
+    /** Rewind task one step back. */
+    rewindOneStep(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return false;
+        const curStep = task.currentSubtaskIndex;
+        const targetStep = Math.max(0, curStep - 1);
+        return this._rewindTask(task, task.stepStartMinute(targetStep));
+    }
+
+    /** Rewind task to the beginning. */
+    rewindToStart(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return false;
+        return this._rewindTask(task, 0);
+    }
+
+    _rewindTask(task, toMinute) {
+        // Remove events after the rewind point
+        task.events = task.events.filter(e => e.minute < toMinute || e.type === 'step');
+        // Reset quality from remaining events
+        task.pendingQuality = 0;
+        for (const e of task.events) {
+            if (e.type === 'quality') task.pendingQuality += e.qualityDelta;
+        }
+        // Reset elapsed time
+        task.elapsedMinutes = toMinute;
+        task.fractionalMinute = 0;
+        // Reset review to rewind point
+        task.reviewMinute = Math.min(task.reviewMinute, toMinute);
+        task.reviewFractional = 0;
+        // Re-enable if was pending
+        if (task.status === TaskStatus.PENDING_REVIEW) {
+            task.status = TaskStatus.RUNNING;
+            task.completedAt = null;
+            task.reportedSuccess = null;
+        }
+        this._addLog(`Rewound: ${task.label} to minute ${toMinute}`);
+        this._notify();
+        return true;
+    }
+
+    // --- Merge Conflicts ---
 
     resolveMergeConflict(conflictTaskId) {
         const conflict = this.tasks.find(t => t.id === conflictTaskId);
@@ -525,21 +688,27 @@ class GameState {
         if (!feat) return null;
 
         const task = new Task(TaskType.MERGE_CONFLICT, conflict.targetFeatureId);
+        task.createdAt = this.simulatedTime;
         task.startedAt = this.simulatedTime;
-        // Store the higher of current code and branch code
         task.branchCodeCompleteness = Math.max(
-            feat.codeCompleteness,
-            conflict.branchCodeCompleteness ?? 0
-        );
+            feat.codeCompleteness, conflict.branchCodeCompleteness ?? 0);
 
         const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
-        for (let i = 0; i < MERGE_SUBTASKS.length; i++) {
-            const dur = this.config.baseTaskDuration * 0.5 * durationMult *
-                Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+        for (const label of MERGE_SUBTASKS) {
+            const dur = Math.max(1, Math.round(
+                this.config.baseTaskDuration * 0.5 * durationMult *
+                Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
+            ));
             task.subtaskDurations.push(dur);
+            task.subtaskLabels.push(label);
         }
 
-        task.subtaskLabel = MERGE_SUBTASKS[0];
+        let elapsed = 0;
+        for (let i = 0; i < task.subtaskDurations.length; i++) {
+            task.events.push(new TaskEvent(elapsed, 'step', `Started: ${task.subtaskLabels[i]}`, null));
+            elapsed += task.subtaskDurations[i];
+        }
+
         conflict.status = TaskStatus.FAILED;
         this.tasks.push(task);
         this._addLog(`Resolving merge conflict: ${task.targetFeatureId}`);
@@ -550,22 +719,30 @@ class GameState {
     retryMergeResolve(completedMergeTaskId) {
         const prev = this.tasks.find(t => t.id === completedMergeTaskId);
         if (!prev || prev.type !== TaskType.MERGE_CONFLICT) return null;
-
         const feat = this.features.get(prev.targetFeatureId);
         if (!feat) return null;
 
         const task = new Task(TaskType.MERGE_CONFLICT, prev.targetFeatureId);
+        task.createdAt = this.simulatedTime;
         task.startedAt = this.simulatedTime;
         task.branchCodeCompleteness = prev.branchCodeCompleteness ?? feat.codeCompleteness;
 
         const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
-        for (let i = 0; i < MERGE_SUBTASKS.length; i++) {
-            const dur = this.config.baseTaskDuration * 0.5 * durationMult *
-                Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+        for (const label of MERGE_SUBTASKS) {
+            const dur = Math.max(1, Math.round(
+                this.config.baseTaskDuration * 0.5 * durationMult *
+                Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
+            ));
             task.subtaskDurations.push(dur);
+            task.subtaskLabels.push(label);
         }
 
-        task.subtaskLabel = MERGE_SUBTASKS[0];
+        let elapsed = 0;
+        for (let i = 0; i < task.subtaskDurations.length; i++) {
+            task.events.push(new TaskEvent(elapsed, 'step', `Started: ${task.subtaskLabels[i]}`, null));
+            elapsed += task.subtaskDurations[i];
+        }
+
         this.tasks.push(task);
         this._addLog(`Retrying merge resolve: ${task.targetFeatureId}`);
         this._notify();
@@ -581,6 +758,32 @@ class GameState {
         this._notify();
         return true;
     }
+
+    _updatePendingMerges() {
+        for (const merge of this.tasks) {
+            if (merge.status !== TaskStatus.MERGE_CONFLICT) continue;
+            if (!merge._sourceTaskIds) continue;
+
+            const sources = merge._sourceTaskIds.map(id => this.tasks.find(t => t.id === id)).filter(Boolean);
+            const uncancelled = sources.filter(t => t.status !== TaskStatus.CANCELLED);
+
+            if (uncancelled.length <= 1) {
+                merge.status = TaskStatus.CANCELLED;
+                merge.completedAt = this.simulatedTime;
+                this._addLog(`Merge conflict resolved: only one task remains on ${merge.targetFeatureId}`);
+                continue;
+            }
+
+            if (merge._pendingMerge) {
+                const allDone = uncancelled.every(t => t.status !== TaskStatus.RUNNING);
+                if (allDone) {
+                    merge._pendingMerge = false;
+                }
+            }
+        }
+    }
+
+    // --- Test Workflow ---
 
     startTestWorkflow() {
         if (this.testWorkflow && !this.testWorkflow.complete) return false;
@@ -612,16 +815,28 @@ class GameState {
             this._addLog('Weekly credits refreshed!');
         }
 
-        // Update tasks
+        // Daily review budget refresh
+        const currentDay = Math.floor(this.simulatedTime / (24 * 60));
+        const reviewDay = Math.floor(this.reviewDayStart / (24 * 60));
+        if (currentDay > reviewDay) {
+            this.reviewUsedToday = 0;
+            this.reviewDayStart = currentDay * 24 * 60;
+        }
+
+        // Update tasks (minute-by-minute)
         let changed = false;
         for (const task of this.tasks) {
             if (task.status !== TaskStatus.RUNNING) continue;
             if (this._tickTask(task, dt)) changed = true;
         }
 
-        // Update pending merge conflicts
-        this._updatePendingMerges();
+        // Update active review
+        if (this.activeReviewTaskId && this.reviewBudgetRemaining > 0) {
+            this._tickReview(dt);
+        }
 
+        // Update pending merges
+        this._updatePendingMerges();
 
         // Update test workflow
         if (this.testWorkflow && !this.testWorkflow.complete) {
@@ -633,7 +848,10 @@ class GameState {
 
         // Update manual test
         if (this.isManualTestActive) {
-            if (this.simulatedTime - this.manualTestStartedAt >= this.config.manualTestDuration) {
+            // Manual test uses review budget
+            this.reviewUsedToday += dt;
+            if (this.reviewBudgetRemaining <= 0 ||
+                this.simulatedTime - this.manualTestStartedAt >= this.config.manualTestDuration) {
                 this._completeManualTest();
                 changed = true;
             }
@@ -651,287 +869,263 @@ class GameState {
         this.creditsRemaining = Math.max(0, this.creditsRemaining - creditCost);
         task.creditsUsed += creditCost;
 
-        if (task.subtaskIndex >= task.subtaskDurations.length) {
-            this._completeTask(task);
-            return true;
-        }
+        // Advance time in minutes
+        task.fractionalMinute += dt;
+        let minutesAdvanced = 0;
+        while (task.fractionalMinute >= 1) {
+            task.fractionalMinute -= 1;
+            task.elapsedMinutes += 1;
+            minutesAdvanced++;
 
-        // Handle skip testing: if flagged and we've reached the testing step, jump past it
-        if (task._skipTesting) {
-            const baseSubtasks = task.subtasks;
-            const testingIndex = baseSubtasks.indexOf(SubtaskLabel.TESTING);
-            if (testingIndex >= 0 && task.subtaskIndex >= testingIndex) {
-                // Skip all remaining subtasks (testing + any fix cycles)
-                task.subtaskIndex = task.subtaskDurations.length;
-                task._skipTesting = false;
-                task.progress = task.overallProgress;
-                // Complete immediately on next tick
-                return false;
-            }
-        }
-
-        const dur = task.subtaskDurations[task.subtaskIndex];
-        task.subtaskProgress += dt / dur;
-        task.subtaskLabel = task.currentSubtaskLabel || 'finishing';
-
-        if (task.subtaskProgress >= 1.0) {
-            task.subtaskProgress = 0;
-            task.subtaskIndex++;
-
-            // Check if we just finished the main testing subtask — roll for inline regression
-            const baseSubtasks = task.subtasks;
-            const testingIndex = baseSubtasks.indexOf(SubtaskLabel.TESTING);
-            if (testingIndex >= 0 && task.subtaskIndex === baseSubtasks.length) {
-                // Just finished the last base subtask (testing)
-                if (this._rollInlineRegression()) {
-                    // Add fix + retest cycle
-                    const feat = this.features.get(task.targetFeatureId);
-                    const durationMult = (feat && !feat.depsAreMet) ? this.config.depsNotMetMultiplier : 1;
-                    const fixDur = this.config.baseTaskDuration * durationMult *
-                        Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
-                    const retestDur = this.config.baseTaskDuration * 0.5 * durationMult *
-                        Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
-                    task.subtaskDurations.push(fixDur, retestDur);
-                    this._addLog(`${task.label}: found issue during testing, fixing`);
+            // Handle skip testing
+            if (task._skipTesting) {
+                const testingStartMinute = this._findTestingStartMinute(task);
+                if (testingStartMinute !== null && task.elapsedMinutes >= testingStartMinute) {
+                    task.elapsedMinutes = task.totalDuration;
+                    task._skipTesting = false;
+                    break;
                 }
             }
 
-            task.subtaskLabel = task.currentSubtaskLabel || 'finishing';
+            // Roll for random event this minute
+            if (task.elapsedMinutes <= task.totalDuration) {
+                this._rollMinuteEvent(task);
+            }
+
+            // Check if task is done
+            if (task.elapsedMinutes >= task.totalDuration) {
+                this._finishTask(task);
+                return true;
+            }
         }
 
-        task.progress = task.overallProgress;
         return false;
     }
 
-    _rollInlineRegression() {
-        // 25% chance of a regression, and if so, 60% chance of catching it during testing
-        return this.rng.random() < this.config.sideEffectRate &&
-               this.rng.random() < 0.6;
+    _findTestingStartMinute(task) {
+        const labels = task.subtaskLabels;
+        const testIdx = labels.indexOf(SubtaskLabel.TESTING);
+        if (testIdx < 0) return null;
+        return task.stepStartMinute(testIdx);
     }
 
-    // --- Task Completion ---
+    _rollMinuteEvent(task) {
+        if (this.rng.random() >= this.config.eventProbability) return;
 
-    _completeTask(task) {
-        const feat = this.features.get(task.targetFeatureId);
-        if (!feat) {
-            task.status = TaskStatus.FAILED;
-            task.completedAt = this.simulatedTime;
+        const positive = this.rng.random() < this.config.eventPositiveWeight;
+        const delta = positive ? this.config.eventQualityDelta : -this.config.eventQualityDelta;
+        const descriptions = positive
+            ? ['Found a cleaner approach', 'Reused existing pattern', 'Good insight from docs',
+               'Optimized implementation', 'Caught edge case early']
+            : ['Introduced subtle bug', 'Misread specification', 'Wrong assumption about API',
+               'Overlooked edge case', 'Used deprecated pattern'];
+        const desc = descriptions[Math.floor(this.rng.random() * descriptions.length)];
+
+        const event = new TaskEvent(task.elapsedMinutes, 'quality', desc, positive, delta);
+        task.events.push(event);
+        task.pendingQuality += delta;
+    }
+
+    _finishTask(task) {
+        task.status = this.autoAccept ? TaskStatus.COMPLETED : TaskStatus.PENDING_REVIEW;
+        task.completedAt = this.simulatedTime;
+        task.reportedSuccess = this._rollReportedSuccess(task);
+
+        if (this.autoAccept) {
+            task.accepted = true;
+            this._applyTaskResult(task);
+        }
+
+        this._addLog(`Finished: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues'}`);
+    }
+
+    _tickReview(dt) {
+        const task = this.tasks.find(t => t.id === this.activeReviewTaskId);
+        if (!task) {
+            this.activeReviewTaskId = null;
             return;
         }
 
+        const reviewDt = dt * this.config.reviewSpeedMultiplier;
+        this.reviewUsedToday += dt;
+
+        task.reviewFractional += reviewDt;
+        while (task.reviewFractional >= 1) {
+            task.reviewFractional -= 1;
+            task.reviewMinute += 1;
+        }
+
+        // Can't pass the main task progress
+        const maxReview = task.elapsedMinutes;
+        if (task.reviewMinute > maxReview) {
+            task.reviewMinute = maxReview;
+            task.reviewFractional = 0;
+        }
+    }
+
+    // --- Task Result Application ---
+
+    _applyTaskResult(task) {
+        const feat = this.features.get(task.targetFeatureId);
+        if (!feat) return;
+
         switch (task.type) {
             case TaskType.WRITE_DOC:
-                this._completeWriteDoc(task, feat);
+                this._applyWriteDoc(task, feat);
                 break;
             case TaskType.EVALUATE_DOC:
-                this._completeEvaluateDoc(task, feat);
+                this._applyEvaluateDoc(task, feat);
                 break;
             case TaskType.IMPLEMENT:
-                this._completeImplement(task, feat);
+                this._applyImplement(task, feat);
                 break;
             case TaskType.WRITE_TESTS:
-                this._completeWriteTests(task, feat);
+                this._applyWriteTests(task, feat);
                 break;
             case TaskType.MERGE_CONFLICT:
-                this._completeMergeConflict(task, feat);
+                this._applyMergeConflict(task, feat);
                 break;
         }
     }
 
-    _completeWriteDoc(task, feat) {
+    _applyWriteDoc(task, feat) {
+        // Base quality from events
+        const baseQuality = 0.5 + task.pendingQuality;
         if (this.rng.random() < this.config.docSuccessRate) {
-            feat.docCompleteness = 1.0;
+            feat.docCompleteness = Math.min(1.0, Math.max(0, baseQuality + 0.5));
         } else {
-            feat.docCompleteness = this.rng.uniform(this.config.docPartialMin, this.config.docPartialMax);
+            feat.docCompleteness = Math.max(0, Math.min(1.0,
+                this.rng.uniform(this.config.docPartialMin, this.config.docPartialMax) + task.pendingQuality));
         }
         feat.hasDoc = true;
-        task.status = TaskStatus.COMPLETED;
-        task.completedAt = this.simulatedTime;
-        task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
-        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues found'}`);
     }
 
-    _completeEvaluateDoc(task, feat) {
-        this._applyUniversalOutcome(feat, 'docCompleteness', 1.0);
-        task.status = TaskStatus.COMPLETED;
-        task.completedAt = this.simulatedTime;
-        task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
-        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports doc looks good' : 'reports issues found'}`);
+    _applyEvaluateDoc(task, feat) {
+        this._applyUniversalOutcome(feat, 'docCompleteness', 1.0, task.pendingQuality);
     }
 
-    _completeImplement(task, feat) {
-        // 25% chance of free doc reevaluation during investigation
+    _applyImplement(task, feat) {
+        // Investigation doc reevaluation
         if (this.rng.random() < this.config.investigationDocRevalRate) {
-            this._applyUniversalOutcome(feat, 'docCompleteness', 1.0);
-            this._addLog(`${task.label}: noticed doc issue during investigation`);
+            this._applyUniversalOutcome(feat, 'docCompleteness', 1.0, 0);
         }
 
-        // Store branch completeness for any pending merge conflict
-        task.branchCodeCompleteness = this._computeImplementResult(feat);
+        task.branchCodeCompleteness = feat.codeCompleteness; // for merge conflicts
 
         const ceiling = feat.docCompleteness;
         if (feat.codeCompleteness === 0) {
-            // First implementation
             if (this.rng.random() < this.config.firstImplExactMatchRate) {
-                feat.codeCompleteness = ceiling;
+                feat.codeCompleteness = Math.min(1.0, ceiling + task.pendingQuality * 0.5);
             } else {
-                feat.codeCompleteness = this.rng.uniform(
-                    this.config.firstImplPartialMin,
-                    this.config.firstImplPartialMax
-                ) * ceiling;
+                feat.codeCompleteness = Math.max(0, Math.min(ceiling,
+                    this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling
+                    + task.pendingQuality * ceiling));
             }
         } else {
-            // Re-implementation
-            this._applyUniversalOutcome(feat, 'codeCompleteness', ceiling);
+            this._applyUniversalOutcome(feat, 'codeCompleteness', ceiling, task.pendingQuality);
         }
 
         feat.hasCode = true;
-        feat.manualTestResult = null; // invalidate previous manual test
-        task.status = TaskStatus.COMPLETED;
-        task.completedAt = this.simulatedTime;
-        task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= ceiling);
-        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues found'}`);
-
-        // Cross-feature side effects
+        feat.manualTestResult = null;
         this._rollSideEffect(feat);
-    }
 
-    _computeImplementResult(feat) {
-        // Compute what the code completeness would be (for merge conflict branches)
-        const ceiling = feat.docCompleteness;
-        if (feat.codeCompleteness === 0) {
-            if (this.rng.random() < this.config.firstImplExactMatchRate) {
-                return ceiling;
-            }
-            return this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling;
+        // Check for location check (100% code)
+        if (feat.codeCompleteness >= 1.0) {
+            this._awardLocationCheck(feat);
         }
-        // Simulate universal outcome without applying
-        return this._simulateUniversalOutcome(feat.codeCompleteness, ceiling);
     }
 
-    _completeWriteTests(task, feat) {
-        // 25% chance of free doc reevaluation
+    _applyWriteTests(task, feat) {
         if (this.rng.random() < this.config.investigationDocRevalRate) {
-            this._applyUniversalOutcome(feat, 'docCompleteness', 1.0);
-            this._addLog(`${task.label}: noticed doc issue during investigation`);
+            this._applyUniversalOutcome(feat, 'docCompleteness', 1.0, 0);
         }
 
         const ceiling = feat.docCompleteness;
         if (feat.testCompleteness === 0) {
-            // First test writing
             if (this.rng.random() < this.config.firstImplExactMatchRate) {
-                feat.testCompleteness = ceiling;
+                feat.testCompleteness = Math.min(1.0, ceiling + task.pendingQuality * 0.5);
             } else {
-                feat.testCompleteness = this.rng.uniform(
-                    this.config.firstImplPartialMin,
-                    this.config.firstImplPartialMax
-                ) * ceiling;
+                feat.testCompleteness = Math.max(0, Math.min(ceiling,
+                    this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling
+                    + task.pendingQuality * ceiling));
             }
         } else {
-            // Re-implementation of tests
-            this._applyUniversalOutcome(feat, 'testCompleteness', ceiling);
+            this._applyUniversalOutcome(feat, 'testCompleteness', ceiling, task.pendingQuality);
         }
 
         feat.hasTests = true;
-        feat.manualTestResult = null; // invalidate
-        task.status = TaskStatus.COMPLETED;
-        task.completedAt = this.simulatedTime;
-        task.reportedSuccess = this._rollReportedSuccess(feat.testCompleteness >= ceiling);
-        this._addLog(`Completed: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues found'}`);
+        feat.manualTestResult = null;
     }
 
-    _completeMergeConflict(task, feat) {
+    _applyMergeConflict(task, feat) {
         const branchCode = task.branchCodeCompleteness ?? 0;
         const current = Math.max(feat.codeCompleteness, branchCode);
-        const ceiling = feat.docCompleteness;
-
-        // Apply universal outcome starting from the higher value
         feat.codeCompleteness = current;
-        this._applyUniversalOutcome(feat, 'codeCompleteness', ceiling);
-
+        this._applyUniversalOutcome(feat, 'codeCompleteness', feat.docCompleteness, task.pendingQuality);
         feat.hasCode = true;
         feat.manualTestResult = null;
-        task.status = TaskStatus.COMPLETED;
-        task.completedAt = this.simulatedTime;
-        task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= ceiling);
-        this._addLog(`Merge resolved: ${task.targetFeatureId} — ${task.reportedSuccess ? 'reports success' : 'reports issues'}`);
-
         this._rollSideEffect(feat);
+        if (feat.codeCompleteness >= 1.0) {
+            this._awardLocationCheck(feat);
+        }
+    }
+
+    _awardLocationCheck(feat) {
+        // Location check placeholder — in Archipelago integration this would
+        // dispatch a location check event
+        if (!feat._locationChecked) {
+            feat._locationChecked = true;
+            this._addLog(`LOCATION CHECK: ${feat.id} — code at 100%!`);
+        }
     }
 
     // --- Universal Outcome Formula ---
 
-    _applyUniversalOutcome(feat, property, ceiling) {
+    _applyUniversalOutcome(feat, property, ceiling, qualityBonus = 0) {
         if (ceiling <= 0) return;
         const current = feat[property];
         const cRel = current / ceiling;
         const roll = this.rng.random();
 
         if (roll < 0.25) {
-            // Reduce: lose up to 50% of current
             const loss = this.rng.random() * 0.5 * current;
-            feat[property] = Math.max(0, current - loss);
+            feat[property] = Math.max(0, current - loss + qualityBonus * 0.3);
         } else if (roll < 0.5) {
-            // Nothing
+            feat[property] = Math.min(ceiling, current + qualityBonus * 0.5);
         } else if (roll < 0.5 + (1 - cRel) / 2) {
-            // Improve: gain up to 50% of gap to ceiling
             const gap = ceiling - current;
             const gain = this.rng.random() * 0.5 * gap;
-            feat[property] = Math.min(ceiling, current + gain);
+            feat[property] = Math.min(ceiling, current + gain + qualityBonus * 0.3);
         } else {
-            // Jump to ceiling
             feat[property] = ceiling;
         }
-    }
-
-    _simulateUniversalOutcome(current, ceiling) {
-        if (ceiling <= 0) return current;
-        const cRel = current / ceiling;
-        const roll = this.rng.random();
-
-        if (roll < 0.25) {
-            return Math.max(0, current - this.rng.random() * 0.5 * current);
-        } else if (roll < 0.5) {
-            return current;
-        } else if (roll < 0.5 + (1 - cRel) / 2) {
-            const gap = ceiling - current;
-            return Math.min(ceiling, current + this.rng.random() * 0.5 * gap);
-        } else {
-            return ceiling;
-        }
+        feat[property] = Math.max(0, Math.min(1.0, feat[property]));
     }
 
     // --- Cross-Feature Side Effects ---
 
     _rollSideEffect(sourceFeat) {
         if (this.rng.random() >= this.config.sideEffectRate) return;
-
-        // Pick target
         let target = null;
         if (this.rng.random() < this.config.sideEffectUpstreamWeight && sourceFeat.upstreamIds.size > 0) {
-            // Upstream feature
             const upIds = [...sourceFeat.upstreamIds];
             target = this.features.get(upIds[Math.floor(this.rng.random() * upIds.length)]);
         }
         if (!target) {
-            // Unrelated feature
             const candidates = [...this.features.values()].filter(f => f.id !== sourceFeat.id);
-            if (candidates.length > 0) {
-                target = candidates[Math.floor(this.rng.random() * candidates.length)];
-            }
+            if (candidates.length > 0) target = candidates[Math.floor(this.rng.random() * candidates.length)];
         }
         if (!target) return;
-
         const change = this.rng.uniform(-this.config.sideEffectMaxChange, this.config.sideEffectMaxChange);
         target.codeCompleteness = Math.max(0, Math.min(1, target.codeCompleteness + change));
-        // Note: NOT capped by doc completeness, and NOT logged (hidden)
     }
 
     // --- Reported Success ---
 
-    _rollReportedSuccess(actuallyComplete) {
-        if (actuallyComplete) return true;
-        // 50% chance of accurately reporting incomplete, 50% false positive
+    _rollReportedSuccess(task) {
+        // Determine if the task was actually successful based on pending quality
+        const actuallyGood = task.pendingQuality >= 0;
+        if (actuallyGood) return true;
         return this.rng.random() >= this.config.reportAccuracyRate;
     }
 
@@ -940,45 +1134,35 @@ class GameState {
     _completeTestWorkflow() {
         if (!this.testWorkflow) return;
         this.testWorkflow.complete = true;
-
         for (const [, feat] of this.features) {
             feat.testResultPercent = this._computeTestResult(feat);
             feat.testResultUpdated = this.simulatedTime;
         }
-
         const passing = [...this.features.values()].filter(f => f.testResultPercent !== null && f.testResultPercent >= 95).length;
         this._addLog(`Tests complete: ${passing}/${this.features.size} passing`);
     }
 
     _computeTestResult(feat) {
         if (!feat.hasCode || !feat.hasTests) return null;
-
-        // Own result: min(code, test) / max(code, test)
         const code = feat.codeCompleteness;
         const test = feat.testCompleteness;
         const maxVal = Math.max(code, test);
         const ownResult = maxVal > 0 ? Math.min(code, test) / maxVal : 0;
-
-        // Product with upstream results
         let chainResult = ownResult;
         for (const upId of feat.upstreamIds) {
             const up = this.features.get(upId);
-            if (!up) continue;
-            const upResult = this._computeOwnTestResult(up);
-            if (upResult !== null) {
-                chainResult *= upResult;
+            if (up) {
+                const upResult = this._computeOwnTestResult(up);
+                if (upResult !== null) chainResult *= upResult;
             }
         }
-
         return Math.round(chainResult * 100);
     }
 
     _computeOwnTestResult(feat) {
         if (!feat.hasCode || !feat.hasTests) return null;
-        const code = feat.codeCompleteness;
-        const test = feat.testCompleteness;
-        const maxVal = Math.max(code, test);
-        return maxVal > 0 ? Math.min(code, test) / maxVal : 0;
+        const maxVal = Math.max(feat.codeCompleteness, feat.testCompleteness);
+        return maxVal > 0 ? Math.min(feat.codeCompleteness, feat.testCompleteness) / maxVal : 0;
     }
 
     // --- Manual Test ---
@@ -990,29 +1174,19 @@ class GameState {
             this.manualTestStartedAt = null;
             return;
         }
-
-        const allComplete = feat.docCompleteness >= 1.0 &&
-                            feat.codeCompleteness >= 1.0 &&
-                            feat.testCompleteness >= 1.0;
-
+        const allComplete = feat.docCompleteness >= 1.0 && feat.codeCompleteness >= 1.0 && feat.testCompleteness >= 1.0;
         if (allComplete) {
             feat.manualTestResult = 'pass';
             this._addLog(`Manual test PASSED: ${feat.id}`);
         } else if (feat.manualTestResult === 'incomplete') {
-            // Follow-up test: reveal which area is the problem
-            if (feat.docCompleteness < 1.0) {
-                feat.manualTestResult = 'doc';
-            } else if (feat.codeCompleteness < 1.0) {
-                feat.manualTestResult = 'code';
-            } else {
-                feat.manualTestResult = 'tests';
-            }
+            if (feat.docCompleteness < 1.0) feat.manualTestResult = 'doc';
+            else if (feat.codeCompleteness < 1.0) feat.manualTestResult = 'code';
+            else feat.manualTestResult = 'tests';
             this._addLog(`Manual test revealed: ${feat.id} — ${feat.manualTestResult} needs work`);
         } else {
             feat.manualTestResult = 'incomplete';
             this._addLog(`Manual test: ${feat.id} — something is incomplete`);
         }
-
         this.manualTestFeatureId = null;
         this.manualTestStartedAt = null;
         this._updateDepsMetStatus();
@@ -1028,18 +1202,16 @@ class GameState {
         return `Day ${day} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     }
 
-    get creditHours() {
-        return this.creditsRemaining / 60;
-    }
+    get creditHours() { return this.creditsRemaining / 60; }
 
     get overallProgress() {
         const feats = [...this.features.values()];
         if (feats.length === 0) return 0;
-        return feats.filter(f => f.manualTestResult === 'pass').length / feats.length;
+        return feats.filter(f => f._locationChecked).length / feats.length;
     }
 
     get isComplete() {
-        return [...this.features.values()].every(f => f.manualTestResult === 'pass');
+        return [...this.features.values()].every(f => f._locationChecked);
     }
 
     get testWorkflowProgress() {
@@ -1076,4 +1248,5 @@ export {
     SubtaskLabel,
     Feature,
     Task,
+    TaskEvent,
 };

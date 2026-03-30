@@ -423,6 +423,81 @@
     pointer-events: none;
 }
 
+/* Event markers on progress bars */
+.vcs-progress-event-marker {
+    position: absolute;
+    top: -1px;
+    width: 3px;
+    height: calc(100% + 2px);
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+.vcs-event-marker-pos {
+    background: #2d8a4e;
+}
+
+.vcs-event-marker-neg {
+    background: #c0392b;
+}
+
+/* Review progress bar */
+.vcs-task-bar-container {
+    margin: 3px 0;
+}
+
+.vcs-review-bar {
+    height: 4px;
+    margin-bottom: 2px;
+}
+
+.vcs-review-bar .vcs-progress-fill {
+    background: #8e44ad;
+}
+
+/* Event log */
+.vcs-event-log {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.vcs-event-entries {
+    padding: 4px 0;
+}
+
+.vcs-event-entry {
+    font-size: 11px;
+    padding: 2px 4px;
+    color: #aaa;
+}
+
+.vcs-event-positive {
+    color: #4a9a5a;
+}
+
+.vcs-event-negative {
+    color: #c05040;
+}
+
+/* Rewind controls */
+.vcs-rewind-controls {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+    border-bottom: 1px solid #333;
+    margin-bottom: 4px;
+}
+
+/* Location checked star */
+.vcs-location-checked {
+    font-size: 12px;
+}
+
+/* Pending review border */
+.vcs-card[style*="border-left-color: rgb(142, 68, 173)"] {
+    /* purple accent for pending review */
+}
+
 /* --- Action area --- */
 
 .vcs-action-area {
@@ -506,11 +581,15 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-left: auto;
+    margin-left: 8px;
     font-size: 11px;
     color: #aaa;
     cursor: pointer;
     white-space: nowrap;
+}
+
+.vcs-auto-skip:first-of-type {
+    margin-left: auto;
 }
 
 .vcs-auto-skip input {
