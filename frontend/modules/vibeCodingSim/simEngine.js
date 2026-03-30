@@ -234,6 +234,17 @@ class Task {
         return Math.min((this.subtaskIndex + this.subtaskProgress) / this.subtaskDurations.length, 1.0);
     }
 
+    /** Returns fractional positions (0-1) where each subtask boundary falls. */
+    get subtaskBoundaries() {
+        const n = this.subtaskDurations.length;
+        if (n <= 1) return [];
+        const boundaries = [];
+        for (let i = 1; i < n; i++) {
+            boundaries.push(i / n);
+        }
+        return boundaries;
+    }
+
     get label() {
         const typeLabels = {
             [TaskType.WRITE_DOC]: 'Write Doc',
@@ -429,8 +440,9 @@ class GameState {
     skipTesting(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (!task || task.status !== TaskStatus.RUNNING) return false;
-        task.subtaskIndex = task.subtaskDurations.length;
-        this._addLog(`Skipped testing: ${task.label}`);
+        // Mark task to skip to just past the testing subtask
+        task._skipTesting = true;
+        this._addLog(`Will skip testing: ${task.label}`);
         return true;
     }
 
@@ -544,6 +556,20 @@ class GameState {
             return true;
         }
 
+        // Handle skip testing: if flagged and we've reached the testing step, jump past it
+        if (task._skipTesting) {
+            const baseSubtasks = task.subtasks;
+            const testingIndex = baseSubtasks.indexOf(SubtaskLabel.TESTING);
+            if (testingIndex >= 0 && task.subtaskIndex >= testingIndex) {
+                // Skip all remaining subtasks (testing + any fix cycles)
+                task.subtaskIndex = task.subtaskDurations.length;
+                task._skipTesting = false;
+                task.progress = task.overallProgress;
+                // Complete immediately on next tick
+                return false;
+            }
+        }
+
         const dur = task.subtaskDurations[task.subtaskIndex];
         task.subtaskProgress += dt / dur;
         task.subtaskLabel = task.currentSubtaskLabel || 'finishing';
@@ -551,11 +577,36 @@ class GameState {
         if (task.subtaskProgress >= 1.0) {
             task.subtaskProgress = 0;
             task.subtaskIndex++;
+
+            // Check if we just finished the main testing subtask — roll for inline regression
+            const baseSubtasks = task.subtasks;
+            const testingIndex = baseSubtasks.indexOf(SubtaskLabel.TESTING);
+            if (testingIndex >= 0 && task.subtaskIndex === baseSubtasks.length) {
+                // Just finished the last base subtask (testing)
+                if (this._rollInlineRegression()) {
+                    // Add fix + retest cycle
+                    const feat = this.features.get(task.targetFeatureId);
+                    const durationMult = (feat && !feat.depsAreMet) ? this.config.depsNotMetMultiplier : 1;
+                    const fixDur = this.config.baseTaskDuration * durationMult *
+                        Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+                    const retestDur = this.config.baseTaskDuration * 0.5 * durationMult *
+                        Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+                    task.subtaskDurations.push(fixDur, retestDur);
+                    this._addLog(`${task.label}: found issue during testing, fixing`);
+                }
+            }
+
             task.subtaskLabel = task.currentSubtaskLabel || 'finishing';
         }
 
         task.progress = task.overallProgress;
         return false;
+    }
+
+    _rollInlineRegression() {
+        // 25% chance of a regression, and if so, 60% chance of catching it during testing
+        return this.rng.random() < this.config.sideEffectRate &&
+               this.rng.random() < 0.6;
     }
 
     // --- Task Completion ---

@@ -24,6 +24,7 @@ let eventBus = null;
 let dispatcher = null;
 let gameState = null;
 let tickInterval = null;
+let renderInterval = null;
 
 export function register(registrationApi) {
     // CSS
@@ -86,7 +87,9 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     return () => {
         if (tickInterval) clearInterval(tickInterval);
+        if (renderInterval) clearInterval(renderInterval);
         tickInterval = null;
+        renderInterval = null;
         panelInstance = null;
         eventBus = null;
         dispatcher = null;
@@ -122,14 +125,21 @@ function initializeGame(staticData) {
         }
     };
 
-    // Start the game loop
+    // Start the game loop (simulation tick) and UI render loop (separate)
     if (tickInterval) clearInterval(tickInterval);
+    if (renderInterval) clearInterval(renderInterval);
     const TICK_MS = 100;
+    const RENDER_MS = 200;
     tickInterval = setInterval(() => {
         if (gameState && !gameState.paused) {
             gameState.tick(TICK_MS / 1000);
         }
     }, TICK_MS);
+    renderInterval = setInterval(() => {
+        if (gameState && !gameState.paused && panelInstance) {
+            panelInstance.updateTick();
+        }
+    }, RENDER_MS);
 
     if (panelInstance) {
         panelInstance.render();

@@ -1,4 +1,4 @@
-/* Vibe Coding Simulator — Panel Styles (v2) */
+/* Vibe Coding Simulator — Panel Styles (v3) */
 
 .vcs-panel {
     display: flex;
@@ -24,7 +24,7 @@
 .vcs-toolbar {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     padding: 6px 10px;
     background: #252525;
     border-bottom: 1px solid #333;
@@ -37,6 +37,30 @@
     font-weight: 500;
     padding: 0 6px;
     white-space: nowrap;
+}
+
+/* Toolbar items with background progress bars */
+.vcs-toolbar-bar-item {
+    position: relative;
+    padding: 3px 8px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #333;
+}
+
+.vcs-toolbar-bar-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 3px;
+    opacity: 0.5;
+    transition: width 250ms linear;
+}
+
+.vcs-toolbar-bar-label {
+    position: relative;
+    z-index: 1;
 }
 
 .vcs-manual-test-active {
@@ -148,11 +172,18 @@
     background: #2a2820;
 }
 
+/* --- Feature card summary layout --- */
+
 .vcs-card-summary {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
+}
+
+.vcs-card-left {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
 }
 
 .vcs-card-name {
@@ -160,8 +191,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 55%;
-    flex-shrink: 1;
 }
 
 .vcs-card-meta {
@@ -170,30 +199,81 @@
     margin-top: 2px;
 }
 
+.vcs-card-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
 .vcs-card-pct {
     font-weight: 600;
     font-size: 12px;
-    flex-shrink: 0;
 }
 
-/* --- Badges (D/C/T indicators) --- */
+/* --- Badges (D/C/T/M as clickable buttons) --- */
 
-.vcs-badges {
+.vcs-badge-row {
     display: flex;
     gap: 3px;
     flex-shrink: 0;
 }
 
 .vcs-badge {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
     border-radius: 3px;
     font-size: 10px;
     font-weight: 700;
     color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.vcs-badge-btn {
+    padding: 0;
+}
+
+.vcs-badge-btn:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: scale(1.1);
+}
+
+.vcs-badge-active {
+    /* color set inline */
+}
+
+.vcs-badge-empty {
+    background: #444;
+    color: #777;
+}
+
+.vcs-badge-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.vcs-badge-task-action {
+    font-size: 11px;
+}
+
+/* --- Card right side (badges/buttons aligned right) --- */
+
+.vcs-card-right {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: auto;
+    align-items: center;
+}
+
+.vcs-btn-small {
+    padding: 2px 8px;
+    font-size: 11px;
 }
 
 /* --- Manual test result --- */
@@ -201,19 +281,13 @@
 .vcs-manual-result {
     font-size: 12px;
     font-weight: 500;
-    flex-shrink: 0;
 }
 
-.vcs-manual-pass {
-    color: #2d8a4e;
-}
-
+.vcs-manual-pass { color: #2d8a4e; }
 .vcs-manual-incomplete,
 .vcs-manual-doc,
 .vcs-manual-code,
-.vcs-manual-tests {
-    color: #e0a030;
-}
+.vcs-manual-tests { color: #e0a030; }
 
 /* --- Card details (expanded) --- */
 
@@ -269,22 +343,73 @@
     font-weight: 500;
 }
 
+/* --- Test result list (expanded test workflow) --- */
+
+.vcs-test-result-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 6px 0;
+    padding: 4px;
+    background: #222;
+    border-radius: 3px;
+}
+
+.vcs-test-result-row {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
+.vcs-test-result-name {
+    color: #bbb;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vcs-expand-toggle {
+    color: #888;
+    font-size: 11px;
+    margin-left: auto;
+    padding: 0 4px;
+}
+
 /* --- Progress bar --- */
 
 .vcs-progress-bar {
-    flex: 1;
+    position: relative;
     height: 6px;
     background: #333;
     border-radius: 3px;
     overflow: hidden;
     min-width: 40px;
+    margin: 3px 0;
 }
 
 .vcs-progress-fill {
     height: 100%;
     background: #3498db;
     border-radius: 3px;
-    transition: width 0.3s ease;
+    transition: width 250ms linear;
+}
+
+.vcs-progress-marker {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+}
+
+.vcs-progress-skip-marker {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #e0a030;
+    pointer-events: none;
 }
 
 /* --- Action area --- */
