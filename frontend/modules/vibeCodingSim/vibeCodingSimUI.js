@@ -61,6 +61,17 @@ export class VibeCodingSimUI {
     render() {
         const gs = this.gameState;
         if (!this.rootElement) return;
+
+        // Save scroll positions before rebuild
+        const scrollPositions = {};
+        for (const list of this.rootElement.querySelectorAll('.vcs-card-list')) {
+            const col = list.closest('.vcs-column');
+            if (col) {
+                const idx = [...col.parentElement.children].indexOf(col);
+                scrollPositions[idx] = list.scrollTop;
+            }
+        }
+
         this._dyn = {};
         this.rootElement.innerHTML = '';
         this.rootElement.className = 'vcs-panel';
@@ -75,6 +86,18 @@ export class VibeCodingSimUI {
         if (this.visibleColumns.features) cols.appendChild(this._renderFeatureColumn(gs));
         if (this.visibleColumns.tasks) cols.appendChild(this._renderTaskColumn(gs));
         this.rootElement.appendChild(cols);
+
+        // Restore scroll positions
+        const lists = this.rootElement.querySelectorAll('.vcs-card-list');
+        for (const list of lists) {
+            const col = list.closest('.vcs-column');
+            if (col) {
+                const idx = [...col.parentElement.children].indexOf(col);
+                if (scrollPositions[idx] !== undefined) {
+                    list.scrollTop = scrollPositions[idx];
+                }
+            }
+        }
     }
 
     /** Lightweight tick update — updates text and progress bars without rebuilding DOM. */
