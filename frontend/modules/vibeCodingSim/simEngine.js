@@ -59,7 +59,7 @@ const MERGE_SUBTASKS = [
     SubtaskLabel.TESTING,
 ];
 
-// --- Seeded PRNG ---
+// --- Seeded PRNG (xoshiro128**) ---
 
 class SeededRandom {
     constructor(seed = Date.now()) {
@@ -69,6 +69,7 @@ class SeededRandom {
         this.s[2] = (this.s[1] * 1664525 + 1013904223) >>> 0;
         this.s[3] = (this.s[2] * 1664525 + 1013904223) >>> 0;
     }
+
     _next() {
         const s = this.s;
         const result = (s[1] * 5) | 0;
@@ -78,14 +79,19 @@ class SeededRandom {
         s[3] = (s[3] << 11) | (s[3] >>> 21);
         return (result >>> 0) / 4294967296;
     }
+
     random() { return this._next(); }
+
     gauss(mean = 0, stddev = 1) {
         let u, v, s;
         do { u = this.random() * 2 - 1; v = this.random() * 2 - 1; s = u * u + v * v; }
         while (s >= 1 || s === 0);
         return mean + stddev * u * Math.sqrt(-2 * Math.log(s) / s);
     }
-    uniform(min, max) { return min + this.random() * (max - min); }
+
+    uniform(min, max) {
+        return min + this.random() * (max - min);
+    }
 }
 
 // --- Config ---
@@ -103,6 +109,9 @@ class SimulationConfig {
         this.eventProbability = 0.08;      // chance of any event per minute
         this.eventPositiveWeight = 0.6;    // of events, fraction that are positive
         this.eventQualityDelta = 0.05;     // quality change per event
+
+        // Outcome event (pre-rolled at task start)
+        this.outcomeEventQualityRange = 0.15; // max magnitude of outcome quality delta
 
         // Doc writing
         this.docSuccessRate = 0.5;
@@ -127,6 +136,7 @@ class SimulationConfig {
 
         // Merge conflicts
         this.mergeConflictRate = 0.25;
+        this.mergeTaskDurationScale = 0.5;        // merge/retest subtasks take half base duration
 
         // Dependencies-not-met slowdown
         this.depsNotMetMultiplier = 2.0;
@@ -138,7 +148,24 @@ class SimulationConfig {
         this.testWorkflowDuration = 10.0;
 
         // Manual test
-        this.manualTestDuration = 60.0;
+        this.manualTestDuration = 60.0; // 1 hour
+
+        // Universal outcome formula
+        this.outcomeReduceRate = 0.25;           // probability of reduce branch
+        this.outcomeNothingRate = 0.25;           // probability of nothing branch (cumulative: 0.50)
+        this.outcomeMaxLossFraction = 0.5;        // max fraction of current value lost in reduce
+        this.outcomeMaxGainFraction = 0.5;        // max fraction of gap gained in improve
+        this.qualityBonusReduceScale = 0.3;       // qualityBonus multiplier in reduce branch
+        this.qualityBonusNothingScale = 0.5;      // qualityBonus multiplier in nothing branch
+        this.qualityBonusImproveScale = 0.3;      // qualityBonus multiplier in improve branch
+        this.qualityBonusFirstImplScale = 0.5;    // qualityBonus multiplier for first impl exact match
+
+        // Doc base quality (for _applyWriteDoc)
+        this.docBaseQuality = 0.5;                // base quality before events
+        this.docSuccessBonus = 0.5;               // added to base quality on success roll
+
+        // Inline regression (during testing subtask)
+        this.regressionCatchRate = 0.6;           // if regression occurs, chance of catching it
 
         // Review
         this.reviewSpeedMultiplier = 2.0;
@@ -157,20 +184,27 @@ class Feature {
     constructor(id, name) {
         this.id = id;
         this.name = name;
+
+        // Hidden state
         this.docCompleteness = 0;
         this.codeCompleteness = 0;
         this.testCompleteness = 0;
+
+        // Visible state
         this.hasDoc = false;
         this.hasCode = false;
         this.hasTests = false;
         this.testResultPercent = null;
         this.testResultUpdated = null;
-        this.manualTestResult = null;
+        this.manualTestResult = null; // null | "incomplete" | "doc" | "code" | "tests" | "pass"
+
+        // Graph
         this.upstreamIds = new Set();
         this.downstreamIds = new Set();
-        this.dependsOn = [];
+        this.dependsOn = []; // node IDs from the graph (for determining upstream features)
         this._depsAreMet = true;
     }
+
     get depsAreMet() { return this._depsAreMet; }
     set depsAreMet(val) { this._depsAreMet = val; }
 }
@@ -298,8 +332,8 @@ class Task {
         const total = this.totalDuration;
         if (total <= 0) return [];
         return this.events
-            .filter(e => e.type === 'quality')
-            .map(e => ({ position: e.minute / total, positive: e.positive }));
+            .filter(e => e.type === 'quality' || e.type === 'outcome')
+            .map(e => ({ position: e.minute / total, positive: e.positive, isOutcome: e.type === 'outcome' }));
     }
 
     get label() {
@@ -309,6 +343,7 @@ class Task {
             [TaskType.IMPLEMENT]: 'Implement',
             [TaskType.WRITE_TESTS]: 'Write Tests',
             [TaskType.MERGE_CONFLICT]: 'Merge Resolve',
+            [TaskType.MANUAL_TEST]: 'Manual Test',
         };
         return `${typeLabels[this.type] || this.type}: ${this.targetFeatureId}`;
     }
@@ -385,6 +420,7 @@ class GameState {
             indexToLabel[parseInt(idx)] = step.label;
         }
 
+        // Each node in the graph becomes a feature
         for (const [idx, step] of Object.entries(graphStructure)) {
             const featureId = step.label;
             this.indexToFeatureId[parseInt(idx)] = featureId;
@@ -396,6 +432,7 @@ class GameState {
             this.features.set(featureId, feature);
         }
 
+        // Compute upstream/downstream
         for (const [id, feat] of this.features) {
             for (const depId of feat.dependsOn) {
                 feat.upstreamIds.add(depId);
@@ -464,16 +501,26 @@ class GameState {
     getFeatureActions(featureId) {
         const feat = this.features.get(featureId);
         if (!feat) return [];
+
         const actions = [];
+
         if (!feat.hasDoc) {
             actions.push({ type: TaskType.WRITE_DOC, label: 'Write Planning Doc' });
         } else {
             actions.push({ type: TaskType.EVALUATE_DOC, label: 'Evaluate Doc' });
-            actions.push({ type: feat.hasCode ? TaskType.IMPLEMENT : TaskType.IMPLEMENT,
-                label: feat.hasCode ? 'Debug Code' : 'Implement' });
-            actions.push({ type: TaskType.WRITE_TESTS,
-                label: feat.hasTests ? 'Debug Tests' : 'Write Tests' });
+            if (!feat.hasCode) {
+                actions.push({ type: TaskType.IMPLEMENT, label: 'Implement' });
+            } else {
+                actions.push({ type: TaskType.IMPLEMENT, label: 'Debug Code' });
+            }
+
+            if (!feat.hasTests) {
+                actions.push({ type: TaskType.WRITE_TESTS, label: 'Write Tests' });
+            } else {
+                actions.push({ type: TaskType.WRITE_TESTS, label: 'Debug Tests' });
+            }
         }
+
         if (feat.hasCode && feat.hasTests && !this.isManualTestActive) {
             actions.push({ type: TaskType.MANUAL_TEST, label: 'Manual Test' });
         }
@@ -514,6 +561,9 @@ class GameState {
             ));
             elapsed += task.subtaskDurations[i];
         }
+
+        // Roll main outcome event at a random position in the timeline
+        this._rollOutcomeEvent(task);
 
         this.tasks.push(task);
 
@@ -654,12 +704,18 @@ class GameState {
     }
 
     _rewindTask(task, toMinute) {
-        // Remove events after the rewind point
+        // Check if the outcome event will be removed
+        const hadOutcome = task.events.some(e => e.type === 'outcome' && e.minute >= toMinute);
+        // Remove events after the rewind point (keep step events)
         task.events = task.events.filter(e => e.minute < toMinute || e.type === 'step');
+        // Re-roll outcome event if it was removed, placing it in the remaining timeline
+        if (hadOutcome) {
+            this._rollOutcomeEvent(task, toMinute);
+        }
         // Reset quality from remaining events
         task.pendingQuality = 0;
         for (const e of task.events) {
-            if (e.type === 'quality') task.pendingQuality += e.qualityDelta;
+            if (e.type === 'quality' || e.type === 'outcome') task.pendingQuality += e.qualityDelta;
         }
         // Reset elapsed time
         task.elapsedMinutes = toMinute;
@@ -696,7 +752,7 @@ class GameState {
         const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
         for (const label of MERGE_SUBTASKS) {
             const dur = Math.max(1, Math.round(
-                this.config.baseTaskDuration * 0.5 * durationMult *
+                this.config.baseTaskDuration * this.config.mergeTaskDurationScale * durationMult *
                 Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
             ));
             task.subtaskDurations.push(dur);
@@ -709,6 +765,7 @@ class GameState {
             elapsed += task.subtaskDurations[i];
         }
 
+        this._rollOutcomeEvent(task);
         conflict.status = TaskStatus.FAILED;
         this.tasks.push(task);
         this._addLog(`Resolving merge conflict: ${task.targetFeatureId}`);
@@ -730,7 +787,7 @@ class GameState {
         const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
         for (const label of MERGE_SUBTASKS) {
             const dur = Math.max(1, Math.round(
-                this.config.baseTaskDuration * 0.5 * durationMult *
+                this.config.baseTaskDuration * this.config.mergeTaskDurationScale * durationMult *
                 Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
             ));
             task.subtaskDurations.push(dur);
@@ -743,6 +800,7 @@ class GameState {
             elapsed += task.subtaskDurations[i];
         }
 
+        this._rollOutcomeEvent(task);
         this.tasks.push(task);
         this._addLog(`Retrying merge resolve: ${task.targetFeatureId}`);
         this._notify();
@@ -892,6 +950,14 @@ class GameState {
                 this._rollMinuteEvent(task);
             }
 
+            // Check if we just finished the testing subtask — roll for inline regression
+            if (task.elapsedMinutes >= task.totalDuration && !task._regressionChecked) {
+                task._regressionChecked = true;
+                if (this._rollInlineRegression()) {
+                    this._addFixCycle(task);
+                }
+            }
+
             // Check if task is done
             if (task.elapsedMinutes >= task.totalDuration) {
                 this._finishTask(task);
@@ -907,6 +973,53 @@ class GameState {
         const testIdx = labels.indexOf(SubtaskLabel.TESTING);
         if (testIdx < 0) return null;
         return task.stepStartMinute(testIdx);
+    }
+
+    _rollInlineRegression() {
+        // sideEffectRate chance of a regression, and if so, regressionCatchRate chance of catching it
+        return this.rng.random() < this.config.sideEffectRate &&
+               this.rng.random() < this.config.regressionCatchRate;
+    }
+
+    _addFixCycle(task) {
+        const feat = this.features.get(task.targetFeatureId);
+        const durationMult = (feat && !feat.depsAreMet) ? this.config.depsNotMetMultiplier : 1;
+        const fixDur = Math.max(1, Math.round(
+            this.config.baseTaskDuration * durationMult *
+            Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
+        ));
+        const retestDur = Math.max(1, Math.round(
+            this.config.baseTaskDuration * this.config.mergeTaskDurationScale * durationMult *
+            Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
+        ));
+        const fixStart = task.totalDuration;
+        task.subtaskDurations.push(fixDur, retestDur);
+        task.subtaskLabels.push(SubtaskLabel.FIXING, SubtaskLabel.TESTING);
+        // Add step events for the new subtasks
+        task.events.push(new TaskEvent(fixStart, 'step', `Started: ${SubtaskLabel.FIXING}`, null));
+        task.events.push(new TaskEvent(fixStart + fixDur, 'step', `Started: ${SubtaskLabel.TESTING}`, null));
+        // Allow another regression check at end of this new testing phase
+        task._regressionChecked = false;
+        this._addLog(`${task.label}: found issue during testing, fixing`);
+    }
+
+    /** Roll the main outcome event and place it at a random position in the timeline. */
+    _rollOutcomeEvent(task, fromMinute = 0) {
+        const range = this.config.outcomeEventQualityRange;
+        const delta = this.rng.uniform(-range, range);
+        const positive = delta >= 0;
+        const descriptions = positive
+            ? ['Key insight led to clean solution', 'Approach aligns well with codebase',
+               'Design decision paying off', 'Good pattern match from experience']
+            : ['Fundamental approach has a flaw', 'Misunderstanding in requirements',
+               'Architectural mismatch discovered', 'Key assumption was wrong'];
+        const desc = descriptions[Math.floor(this.rng.random() * descriptions.length)];
+        // Place at a random minute between fromMinute and totalDuration
+        const totalDur = task.totalDuration;
+        const minute = fromMinute + Math.floor(this.rng.random() * Math.max(1, totalDur - fromMinute));
+        const event = new TaskEvent(minute, 'outcome', desc, positive, delta);
+        task.events.push(event);
+        task.pendingQuality += delta;
     }
 
     _rollMinuteEvent(task) {
@@ -929,14 +1042,17 @@ class GameState {
     _finishTask(task) {
         task.status = this.autoAccept ? TaskStatus.COMPLETED : TaskStatus.PENDING_REVIEW;
         task.completedAt = this.simulatedTime;
-        task.reportedSuccess = this._rollReportedSuccess(task);
 
         if (this.autoAccept) {
             task.accepted = true;
             this._applyTaskResult(task);
+            // Clear review if we were reviewing this task
+            if (this.activeReviewTaskId === task.id) {
+                this.activeReviewTaskId = null;
+            }
         }
 
-        this._addLog(`Finished: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues'}`);
+        this._addLog(`Finished: ${task.label}`);
     }
 
     _tickReview(dt) {
@@ -990,18 +1106,20 @@ class GameState {
 
     _applyWriteDoc(task, feat) {
         // Base quality from events
-        const baseQuality = 0.5 + task.pendingQuality;
+        const baseQuality = this.config.docBaseQuality + task.pendingQuality;
         if (this.rng.random() < this.config.docSuccessRate) {
-            feat.docCompleteness = Math.min(1.0, Math.max(0, baseQuality + 0.5));
+            feat.docCompleteness = Math.min(1.0, Math.max(0, baseQuality + this.config.docSuccessBonus));
         } else {
             feat.docCompleteness = Math.max(0, Math.min(1.0,
                 this.rng.uniform(this.config.docPartialMin, this.config.docPartialMax) + task.pendingQuality));
         }
         feat.hasDoc = true;
+        task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
     }
 
     _applyEvaluateDoc(task, feat) {
         this._applyUniversalOutcome(feat, 'docCompleteness', 1.0, task.pendingQuality);
+        task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
     }
 
     _applyImplement(task, feat) {
@@ -1010,23 +1128,27 @@ class GameState {
             this._applyUniversalOutcome(feat, 'docCompleteness', 1.0, 0);
         }
 
-        task.branchCodeCompleteness = feat.codeCompleteness; // for merge conflicts
+        // Store branch completeness for any pending merge conflict
+        task.branchCodeCompleteness = this._computeImplementResult(feat);
 
         const ceiling = feat.docCompleteness;
         if (feat.codeCompleteness === 0) {
+            // First implementation
             if (this.rng.random() < this.config.firstImplExactMatchRate) {
-                feat.codeCompleteness = Math.min(1.0, ceiling + task.pendingQuality * 0.5);
+                feat.codeCompleteness = Math.min(1.0, ceiling + task.pendingQuality * this.config.qualityBonusFirstImplScale);
             } else {
                 feat.codeCompleteness = Math.max(0, Math.min(ceiling,
                     this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling
                     + task.pendingQuality * ceiling));
             }
         } else {
+            // Re-implementation
             this._applyUniversalOutcome(feat, 'codeCompleteness', ceiling, task.pendingQuality);
         }
 
         feat.hasCode = true;
-        feat.manualTestResult = null;
+        feat.manualTestResult = null; // invalidate previous manual test
+        task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= ceiling);
         this._rollSideEffect(feat);
 
         // Check for location check (100% code)
@@ -1042,8 +1164,9 @@ class GameState {
 
         const ceiling = feat.docCompleteness;
         if (feat.testCompleteness === 0) {
+            // First test writing
             if (this.rng.random() < this.config.firstImplExactMatchRate) {
-                feat.testCompleteness = Math.min(1.0, ceiling + task.pendingQuality * 0.5);
+                feat.testCompleteness = Math.min(1.0, ceiling + task.pendingQuality * this.config.qualityBonusFirstImplScale);
             } else {
                 feat.testCompleteness = Math.max(0, Math.min(ceiling,
                     this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling
@@ -1054,7 +1177,8 @@ class GameState {
         }
 
         feat.hasTests = true;
-        feat.manualTestResult = null;
+        feat.manualTestResult = null; // invalidate
+        task.reportedSuccess = this._rollReportedSuccess(feat.testCompleteness >= ceiling);
     }
 
     _applyMergeConflict(task, feat) {
@@ -1064,9 +1188,42 @@ class GameState {
         this._applyUniversalOutcome(feat, 'codeCompleteness', feat.docCompleteness, task.pendingQuality);
         feat.hasCode = true;
         feat.manualTestResult = null;
+        task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= feat.docCompleteness);
         this._rollSideEffect(feat);
         if (feat.codeCompleteness >= 1.0) {
             this._awardLocationCheck(feat);
+        }
+    }
+
+    _computeImplementResult(feat) {
+        // Compute what the code completeness would be (for merge conflict branches)
+        const ceiling = feat.docCompleteness;
+        if (feat.codeCompleteness === 0) {
+            if (this.rng.random() < this.config.firstImplExactMatchRate) {
+                return ceiling;
+            }
+            return this.rng.uniform(this.config.firstImplPartialMin, this.config.firstImplPartialMax) * ceiling;
+        }
+        // Simulate universal outcome without applying
+        return this._simulateUniversalOutcome(feat.codeCompleteness, ceiling);
+    }
+
+    _simulateUniversalOutcome(current, ceiling) {
+        if (ceiling <= 0) return current;
+        const cRel = current / ceiling;
+        const roll = this.rng.random();
+        const reduceThreshold = this.config.outcomeReduceRate;
+        const nothingThreshold = reduceThreshold + this.config.outcomeNothingRate;
+
+        if (roll < reduceThreshold) {
+            return Math.max(0, current - this.rng.random() * this.config.outcomeMaxLossFraction * current);
+        } else if (roll < nothingThreshold) {
+            return current;
+        } else if (roll < nothingThreshold + (1 - cRel) / 2) {
+            const gap = ceiling - current;
+            return Math.min(ceiling, current + this.rng.random() * this.config.outcomeMaxGainFraction * gap);
+        } else {
+            return ceiling;
         }
     }
 
@@ -1086,17 +1243,23 @@ class GameState {
         const current = feat[property];
         const cRel = current / ceiling;
         const roll = this.rng.random();
+        const reduceThreshold = this.config.outcomeReduceRate;
+        const nothingThreshold = reduceThreshold + this.config.outcomeNothingRate;
 
-        if (roll < 0.25) {
-            const loss = this.rng.random() * 0.5 * current;
-            feat[property] = Math.max(0, current - loss + qualityBonus * 0.3);
-        } else if (roll < 0.5) {
-            feat[property] = Math.min(ceiling, current + qualityBonus * 0.5);
-        } else if (roll < 0.5 + (1 - cRel) / 2) {
+        if (roll < reduceThreshold) {
+            // Reduce: lose up to outcomeMaxLossFraction of current
+            const loss = this.rng.random() * this.config.outcomeMaxLossFraction * current;
+            feat[property] = Math.max(0, current - loss + qualityBonus * this.config.qualityBonusReduceScale);
+        } else if (roll < nothingThreshold) {
+            // Nothing (plus quality bonus)
+            feat[property] = Math.min(ceiling, current + qualityBonus * this.config.qualityBonusNothingScale);
+        } else if (roll < nothingThreshold + (1 - cRel) / 2) {
+            // Improve: gain up to outcomeMaxGainFraction of gap to ceiling
             const gap = ceiling - current;
-            const gain = this.rng.random() * 0.5 * gap;
-            feat[property] = Math.min(ceiling, current + gain + qualityBonus * 0.3);
+            const gain = this.rng.random() * this.config.outcomeMaxGainFraction * gap;
+            feat[property] = Math.min(ceiling, current + gain + qualityBonus * this.config.qualityBonusImproveScale);
         } else {
+            // Jump to ceiling
             feat[property] = ceiling;
         }
         feat[property] = Math.max(0, Math.min(1.0, feat[property]));
@@ -1122,10 +1285,9 @@ class GameState {
 
     // --- Reported Success ---
 
-    _rollReportedSuccess(task) {
-        // Determine if the task was actually successful based on pending quality
-        const actuallyGood = task.pendingQuality >= 0;
-        if (actuallyGood) return true;
+    _rollReportedSuccess(actuallyComplete) {
+        if (actuallyComplete) return true;
+        // 50% chance of accurately reporting incomplete, 50% false positive
         return this.rng.random() >= this.config.reportAccuracyRate;
     }
 
@@ -1202,16 +1364,18 @@ class GameState {
         return `Day ${day} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     }
 
-    get creditHours() { return this.creditsRemaining / 60; }
+    get creditHours() {
+        return this.creditsRemaining / 60;
+    }
 
     get overallProgress() {
         const feats = [...this.features.values()];
         if (feats.length === 0) return 0;
-        return feats.filter(f => f._locationChecked).length / feats.length;
+        return feats.filter(f => f.manualTestResult === 'pass').length / feats.length;
     }
 
     get isComplete() {
-        return [...this.features.values()].every(f => f._locationChecked);
+        return [...this.features.values()].every(f => f.manualTestResult === 'pass');
     }
 
     get testWorkflowProgress() {

@@ -112,8 +112,8 @@ export class VibeCodingSimUI {
             }
         }
 
-        // Task progress bars and labels
-        for (const task of gs.getRunningTasks()) {
+        // Task progress bars, labels, and event marker reveal
+        const updateTaskDyn = (task) => {
             const fill = d[`task-bar-${task.id}`];
             if (fill) fill.style.width = `${Math.round(task.overallProgress * 100)}%`;
             const label = d[`task-label-${task.id}`];
@@ -126,17 +126,43 @@ export class VibeCodingSimUI {
                 const pct = total > 0 ? Math.min(task.reviewMinute / total, 1) : 0;
                 reviewFill.style.width = `${Math.round(pct * 100)}%`;
             }
-        }
 
-        // Pending review tasks too
-        for (const task of gs.getPendingReviewTasks()) {
-            const reviewFill = d[`task-review-bar-${task.id}`];
-            if (reviewFill) {
-                const total = task.totalDuration;
-                const pct = total > 0 ? Math.min(task.reviewMinute / total, 1) : 0;
-                reviewFill.style.width = `${Math.round(pct * 100)}%`;
+            // Reveal event markers as review progresses
+            const markerEls = d[`task-markers-${task.id}`];
+            if (markerEls) {
+                const revealedFrac = task.totalDuration > 0 ? task.reviewMinute / task.totalDuration : 0;
+                for (const m of markerEls) {
+                    m.style.display = parseFloat(m.dataset.position) <= revealedFrac ? '' : 'none';
+                }
             }
-        }
+
+            // Re-render if new events were added since last render (e.g., from _rollMinuteEvent)
+            const logEntries = d[`task-log-entries-${task.id}`];
+            const storedCount = d[`task-event-count-${task.id}`];
+            if (logEntries && storedCount !== undefined && task.events.length !== storedCount) {
+                this.render();
+                return;
+            }
+
+            // Reveal event log entries as review progresses
+            if (logEntries) {
+                let anyRevealed = false;
+                for (const el of logEntries) {
+                    const visible = parseFloat(el.dataset.minute) <= task.reviewMinute;
+                    el.style.display = visible ? '' : 'none';
+                    if (visible) anyRevealed = true;
+                }
+                const emptyMsg = d[`task-log-empty-${task.id}`];
+                if (emptyMsg) emptyMsg.style.display = anyRevealed ? 'none' : '';
+                const summaryEl = d[`task-log-summary-${task.id}`];
+                if (summaryEl) {
+                    const reviewDone = task.totalDuration > 0 && task.reviewMinute >= task.totalDuration;
+                    summaryEl.style.display = reviewDone ? '' : 'none';
+                }
+            }
+        };
+        for (const task of gs.getRunningTasks()) updateTaskDyn(task);
+        for (const task of gs.getPendingReviewTasks()) updateTaskDyn(task);
 
         // Feature inline task bars
         for (const task of gs.getRunningTasks()) {
@@ -647,8 +673,8 @@ export class VibeCodingSimUI {
             const barContainer = document.createElement('div');
             barContainer.className = 'vcs-task-bar-container';
 
-            // Review bar (on top)
-            if (isExpanded) {
+            // Review bar (on top) — show when expanded, or when collapsed with review progress
+            if (isExpanded || task.reviewMinute > 0) {
                 const [reviewBar, reviewFill] = this._progressBar(
                     task.totalDuration > 0 ? task.reviewMinute / task.totalDuration : 0);
                 reviewBar.classList.add('vcs-review-bar');
@@ -656,11 +682,12 @@ export class VibeCodingSimUI {
                 barContainer.appendChild(reviewBar);
             }
 
-            // Main bar with markers
-            const revealedMinute = isExpanded ? task.reviewMinute : task.totalDuration; // show all if not reviewing
-            const markers = task.eventMarkers.filter(m => m.position <= (revealedMinute / task.totalDuration));
-            const [bar, fill] = this._progressBar(task.overallProgress, task.subtaskBoundaries, null, markers);
+            // Main bar with markers — create all markers, hide unrevealed ones
+            const allMarkers = task.eventMarkers;
+            const revealedFrac = task.totalDuration > 0 ? task.reviewMinute / task.totalDuration : 0;
+            const [bar, fill, markerEls] = this._progressBar(task.overallProgress, task.subtaskBoundaries, null, allMarkers, revealedFrac);
             this._dyn[`task-bar-${task.id}`] = fill;
+            this._dyn[`task-markers-${task.id}`] = markerEls;
             barContainer.appendChild(bar);
 
             card.appendChild(barContainer);
@@ -775,35 +802,67 @@ export class VibeCodingSimUI {
             details.appendChild(controls);
         }
 
-        // Event log entries (only those revealed by review)
+        // Event log entries — create ALL entries, hide unrevealed ones
+        // Sorted by minute for correct display order
+        const allEvents = [...task.events].sort((a, b) => a.minute - b.minute);
         const revealedMinute = task.reviewMinute;
-        const visibleEvents = task.events.filter(e => e.minute <= revealedMinute);
 
         const logDiv = document.createElement('div');
         logDiv.className = 'vcs-event-entries';
-        for (const evt of visibleEvents) {
+
+        const entryEls = [];
+        for (const evt of allEvents) {
             const entry = document.createElement('div');
             entry.className = 'vcs-event-entry';
-            if (evt.type === 'quality') {
+            if (evt.type === 'quality' || evt.type === 'outcome') {
                 entry.classList.add(evt.positive ? 'vcs-event-positive' : 'vcs-event-negative');
+                if (evt.type === 'outcome') entry.classList.add('vcs-event-outcome');
             }
             entry.textContent = `[${evt.minute}m] ${evt.description}`;
+            entry.dataset.minute = evt.minute;
+            if (evt.minute > revealedMinute) entry.style.display = 'none';
             logDiv.appendChild(entry);
+            entryEls.push(entry);
         }
-        if (visibleEvents.length === 0) {
-            const empty = document.createElement('div');
-            empty.className = 'vcs-event-entry vcs-card-meta';
-            empty.textContent = 'Reviewing...';
-            logDiv.appendChild(empty);
-        }
+
+        // "Reviewing..." placeholder shown when no events revealed yet
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'vcs-event-entry vcs-card-meta';
+        emptyMsg.textContent = 'Reviewing...';
+        const anyRevealed = allEvents.some(e => e.minute <= revealedMinute);
+        if (anyRevealed) emptyMsg.style.display = 'none';
+        logDiv.appendChild(emptyMsg);
+
+        // Review summary shown when review reaches 100%
+        const summary = document.createElement('div');
+        summary.className = 'vcs-event-entry vcs-review-summary';
+        summary.textContent = `Review complete — ${this._describeTaskQuality(task.pendingQuality)}`;
+        const reviewComplete = task.totalDuration > 0 && revealedMinute >= task.totalDuration;
+        if (!reviewComplete) summary.style.display = 'none';
+        logDiv.appendChild(summary);
+
+        // Store refs for updateTick to reveal progressively
+        this._dyn[`task-log-entries-${task.id}`] = entryEls;
+        this._dyn[`task-log-empty-${task.id}`] = emptyMsg;
+        this._dyn[`task-log-summary-${task.id}`] = summary;
+        this._dyn[`task-event-count-${task.id}`] = task.events.length;
+
         details.appendChild(logDiv);
 
         return details;
     }
 
+    _describeTaskQuality(pendingQuality) {
+        if (pendingQuality >= 0.12) return 'Work looks excellent — significant improvement expected';
+        if (pendingQuality >= 0.05) return 'Work looks good — solid improvement expected';
+        if (pendingQuality >= -0.02) return 'Work looks adequate — modest progress expected';
+        if (pendingQuality >= -0.08) return 'Work looks rough — marginal improvement at best';
+        return 'Work looks problematic — may introduce regressions';
+    }
+
     // ========== Helpers ==========
 
-    _progressBar(pct, boundaries = null, skipMarkerAt = null, eventMarkers = null) {
+    _progressBar(pct, boundaries = null, skipMarkerAt = null, eventMarkers = null, revealedFrac = null) {
         const bar = document.createElement('div');
         bar.className = 'vcs-progress-bar';
         const fill = document.createElement('div');
@@ -818,12 +877,19 @@ export class VibeCodingSimUI {
                 bar.appendChild(m);
             }
         }
+        const markerEls = [];
         if (eventMarkers) {
             for (const em of eventMarkers) {
                 const m = document.createElement('div');
                 m.className = `vcs-progress-event-marker ${em.positive ? 'vcs-event-marker-pos' : 'vcs-event-marker-neg'}`;
                 m.style.left = `${Math.round(em.position * 100)}%`;
+                // Hide markers not yet revealed by review
+                if (revealedFrac !== null && em.position > revealedFrac) {
+                    m.style.display = 'none';
+                }
+                m.dataset.position = em.position;
                 bar.appendChild(m);
+                markerEls.push(m);
             }
         }
         if (skipMarkerAt !== null) {
@@ -832,7 +898,7 @@ export class VibeCodingSimUI {
             m.style.left = `${Math.round(skipMarkerAt * 100)}%`;
             bar.appendChild(m);
         }
-        return [bar, fill];
+        return [bar, fill, markerEls];
     }
 
     selectFeature(featureId, collapseOthers = false) {

@@ -479,6 +479,19 @@
     color: #c05040;
 }
 
+.vcs-event-outcome {
+    font-weight: 600;
+    font-style: italic;
+}
+
+.vcs-review-summary {
+    color: #b8b8b8;
+    font-weight: 600;
+    padding-top: 4px;
+    margin-top: 4px;
+    border-top: 1px solid #383838;
+}
+
 /* Rewind controls */
 .vcs-rewind-controls {
     display: flex;
@@ -560,9 +573,14 @@
     background: #7a3a3a;
 }
 
-.vcs-btn-disabled {
+.vcs-btn-disabled,
+.vcs-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+.vcs-btn:disabled:hover {
+    background: #383838;
 }
 
 .vcs-btn-speed {
