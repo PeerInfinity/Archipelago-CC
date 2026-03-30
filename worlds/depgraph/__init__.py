@@ -102,8 +102,10 @@ class DepGraphWorld(World):
                 self.name_substitutions["regions"][generic_loc] = meaningful_loc
 
         # Determine starting nodes
-        num_starting = max(1, int(self.num_nodes * self.options.starting_nodes.value / 100))
-        if not self.options.randomize_starting_nodes.value:
+        num_starting = int(self.num_nodes * self.options.starting_nodes.value / 100)
+        if num_starting == 0:
+            self.starting_node_set = set()
+        elif not self.options.randomize_starting_nodes.value:
             self.starting_node_set = set(range(1, num_starting + 1))
         else:
             self.starting_node_set = {1}
