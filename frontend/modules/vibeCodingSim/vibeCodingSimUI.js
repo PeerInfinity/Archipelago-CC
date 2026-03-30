@@ -589,34 +589,33 @@ export class VibeCodingSimUI {
         // Header row with Run Tests button in top-right
         const headerRow = document.createElement('div');
         headerRow.className = 'vcs-card-summary';
-        const name = document.createElement('span');
-        name.className = 'vcs-card-name';
-        name.textContent = '🧪 Test Workflow';
-        headerRow.appendChild(name);
-
-        const headerRight = document.createElement('div');
-        headerRight.className = 'vcs-card-right';
-
-        if (gs.testWorkflow && !gs.testWorkflow.complete) {
-            // Running — no button
-        } else {
-            const btn = document.createElement('button');
-            btn.className = 'vcs-btn vcs-btn-action vcs-btn-small';
-            btn.textContent = 'Run Tests';
-            btn.addEventListener('click', (e) => { e.stopPropagation(); gs.startTestWorkflow(); this.render(); });
-            headerRight.appendChild(btn);
-        }
-
+        // Expand/collapse toggle on the left (only when there are results)
         if (gs.testWorkflow?.complete) {
             const toggle = document.createElement('span');
             toggle.className = 'vcs-expand-toggle';
             toggle.textContent = this.expandedTestWorkflow ? '▼' : '▶';
-            headerRight.appendChild(toggle);
+            headerRow.appendChild(toggle);
             headerRow.style.cursor = 'pointer';
             headerRow.addEventListener('click', () => {
                 this.expandedTestWorkflow = !this.expandedTestWorkflow;
                 this.render();
             });
+        }
+
+        const name = document.createElement('span');
+        name.className = 'vcs-card-name';
+        name.textContent = 'Test Workflow';
+        headerRow.appendChild(name);
+
+        const headerRight = document.createElement('div');
+        headerRight.className = 'vcs-card-right';
+
+        if (!(gs.testWorkflow && !gs.testWorkflow.complete)) {
+            const btn = document.createElement('button');
+            btn.className = 'vcs-btn vcs-btn-action vcs-btn-small';
+            btn.textContent = 'Run Tests';
+            btn.addEventListener('click', (e) => { e.stopPropagation(); gs.startTestWorkflow(); this.render(); });
+            headerRight.appendChild(btn);
         }
 
         headerRow.appendChild(headerRight);
@@ -796,7 +795,7 @@ export class VibeCodingSimUI {
                 });
                 rightBtns.appendChild(discardBtn);
                 metaRow.appendChild(rightBtns);
-            } else if (!task.reportedSuccess && task.type !== TaskType.MERGE_CONFLICT) {
+            } else if (!task.reportedSuccess && !task._retried && task.type !== TaskType.MERGE_CONFLICT) {
                 const retryBtn = document.createElement('button');
                 retryBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
                 retryBtn.style.background = '#3a5a3a';
@@ -804,6 +803,7 @@ export class VibeCodingSimUI {
                 retryBtn.title = `Retry: ${typeLabel}`;
                 retryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    task._retried = true;
                     const newTask = gs.assignTask(task.targetFeatureId, task.type);
                     if (newTask && this.autoSkipTesting) gs.skipTesting(newTask.id);
                     this.render();
