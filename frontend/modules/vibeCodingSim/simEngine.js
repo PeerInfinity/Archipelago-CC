@@ -547,6 +547,31 @@ class GameState {
         return task;
     }
 
+    retryMergeResolve(completedMergeTaskId) {
+        const prev = this.tasks.find(t => t.id === completedMergeTaskId);
+        if (!prev || prev.type !== TaskType.MERGE_CONFLICT) return null;
+
+        const feat = this.features.get(prev.targetFeatureId);
+        if (!feat) return null;
+
+        const task = new Task(TaskType.MERGE_CONFLICT, prev.targetFeatureId);
+        task.startedAt = this.simulatedTime;
+        task.branchCodeCompleteness = prev.branchCodeCompleteness ?? feat.codeCompleteness;
+
+        const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
+        for (let i = 0; i < MERGE_SUBTASKS.length; i++) {
+            const dur = this.config.baseTaskDuration * 0.5 * durationMult *
+                Math.exp(this.rng.gauss(0, this.config.durationLogSigma));
+            task.subtaskDurations.push(dur);
+        }
+
+        task.subtaskLabel = MERGE_SUBTASKS[0];
+        this.tasks.push(task);
+        this._addLog(`Retrying merge resolve: ${task.targetFeatureId}`);
+        this._notify();
+        return task;
+    }
+
     discardMergeConflict(conflictTaskId) {
         const task = this.tasks.find(t => t.id === conflictTaskId);
         if (!task || task.status !== TaskStatus.MERGE_CONFLICT) return false;

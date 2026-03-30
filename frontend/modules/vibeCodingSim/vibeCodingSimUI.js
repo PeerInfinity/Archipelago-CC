@@ -818,7 +818,7 @@ export class VibeCodingSimUI {
                 });
                 rightBtns.appendChild(discardBtn);
                 metaRow.appendChild(rightBtns);
-            } else if (!task.reportedSuccess && !task._retried && task.type !== TaskType.MERGE_CONFLICT) {
+            } else if (!task.reportedSuccess && !task._retried) {
                 const retryBtn = document.createElement('button');
                 retryBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
                 retryBtn.style.background = '#3a5a3a';
@@ -827,8 +827,12 @@ export class VibeCodingSimUI {
                 retryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     task._retried = true;
-                    const newTask = gs.assignTask(task.targetFeatureId, task.type);
-                    if (newTask && this.autoSkipTesting) gs.skipTesting(newTask.id);
+                    if (task.type === TaskType.MERGE_CONFLICT) {
+                        gs.retryMergeResolve(task.id);
+                    } else {
+                        const newTask = gs.assignTask(task.targetFeatureId, task.type);
+                        if (newTask && this.autoSkipTesting) gs.skipTesting(newTask.id);
+                    }
                     this.render();
                 });
                 rightBtns.appendChild(retryBtn);
