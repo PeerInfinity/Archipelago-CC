@@ -327,7 +327,37 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Complete Node 1",
+            "id": 234800001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 100",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Completed Node 1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
       },
       "Complete Node 2": {
         "name": "Complete Node 2",
@@ -356,7 +386,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 145",
+              "name": "Node 12",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -405,7 +435,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 36",
+              "name": "Node 19",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -454,7 +484,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 276",
+              "name": "Node 259",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -503,7 +533,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 83",
+              "name": "Node 225",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -554,7 +584,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 220",
+              "name": "Node 58",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -603,7 +633,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 45",
+              "name": "Node 216",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -652,7 +682,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 167",
+              "name": "Node 343",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -701,7 +731,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 105",
+              "name": "Node 35",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -752,7 +782,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 150",
+              "name": "Node 51",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -801,7 +831,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 49",
+              "name": "Node 86",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -850,7 +880,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 61",
+              "name": "Node 163",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -899,7 +929,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 134",
+              "name": "Node 133",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -948,7 +978,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 128",
+              "name": "Node 1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -997,7 +1027,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 23",
+              "name": "Node 267",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1046,7 +1076,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 19",
+              "name": "Node 298",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1095,7 +1125,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 2",
+              "name": "Node 275",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1146,7 +1176,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 66",
+              "name": "Node 238",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1195,7 +1225,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 302",
+              "name": "Node 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1244,7 +1274,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 207",
+              "name": "Node 53",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1279,7 +1309,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 332",
+              "name": "Node 231",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1328,7 +1358,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 174",
+              "name": "Node 219",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1377,7 +1407,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 264",
+              "name": "Node 118",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1426,7 +1456,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 194",
+              "name": "Node 350",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1461,7 +1491,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 32",
+              "name": "Node 247",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1510,7 +1540,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 180",
+              "name": "Node 116",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1586,7 +1616,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 112",
+              "name": "Node 7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1621,7 +1651,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 16",
+              "name": "Node 349",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1670,7 +1700,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 270",
+              "name": "Node 103",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1719,7 +1749,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 124",
+              "name": "Node 235",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1768,7 +1798,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 79",
+              "name": "Node 157",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1817,7 +1847,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 133",
+              "name": "Node 273",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1852,7 +1882,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 28",
+              "name": "Node 106",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1901,7 +1931,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 279",
+              "name": "Node 152",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1950,7 +1980,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 95",
+              "name": "Node 190",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2012,7 +2042,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 242",
+              "name": "Node 89",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2047,7 +2077,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 51",
+              "name": "Node 164",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2096,7 +2126,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 269",
+              "name": "Node 220",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2145,7 +2175,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 294",
+              "name": "Node 56",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2180,7 +2210,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 281",
+              "name": "Node 21",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2229,7 +2259,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 230",
+              "name": "Node 87",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2278,7 +2308,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 58",
+              "name": "Node 177",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2327,7 +2357,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 33",
+              "name": "Node 114",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2362,7 +2392,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 111",
+              "name": "Node 355",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2411,7 +2441,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 225",
+              "name": "Node 244",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2460,7 +2490,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 239",
+              "name": "Node 254",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2509,7 +2539,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 78",
+              "name": "Node 201",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2544,7 +2574,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 68",
+              "name": "Node 159",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2633,7 +2663,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 132",
+              "name": "Node 70",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2668,7 +2698,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 108",
+              "name": "Node 268",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2730,7 +2760,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 334",
+              "name": "Node 10",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2765,7 +2795,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 292",
+              "name": "Node 101",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2814,7 +2844,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 223",
+              "name": "Node 173",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2863,7 +2893,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 7",
+              "name": "Node 212",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2912,7 +2942,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 123",
+              "name": "Node 222",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2947,7 +2977,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 86",
+              "name": "Node 141",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2996,7 +3026,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 170",
+              "name": "Node 96",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3045,7 +3075,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 262",
+              "name": "Node 272",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3080,7 +3110,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 18",
+              "name": "Node 326",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3129,7 +3159,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 146",
+              "name": "Node 71",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3178,7 +3208,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 107",
+              "name": "Node 204",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3227,7 +3257,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 62",
+              "name": "Node 42",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3276,7 +3306,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 12",
+              "name": "Node 15",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3325,7 +3355,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 110",
+              "name": "Node 194",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3374,7 +3404,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 315",
+              "name": "Node 341",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3423,7 +3453,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 21",
+              "name": "Node 144",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3472,7 +3502,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 255",
+              "name": "Node 161",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3521,7 +3551,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 284",
+              "name": "Node 250",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3570,7 +3600,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 138",
+              "name": "Node 224",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3619,7 +3649,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 163",
+              "name": "Node 330",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3668,7 +3698,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 152",
+              "name": "Node 342",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3717,7 +3747,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 75",
+              "name": "Node 329",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3766,7 +3796,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 125",
+              "name": "Node 124",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3815,7 +3845,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 328",
+              "name": "Node 344",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3850,7 +3880,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 286",
+              "name": "Node 301",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3899,7 +3929,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 181",
+              "name": "Node 213",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3948,7 +3978,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 113",
+              "name": "Node 334",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3997,7 +4027,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 93",
+              "name": "Node 339",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4046,7 +4076,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 60",
+              "name": "Node 165",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4095,7 +4125,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 318",
+              "name": "Node 317",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4144,7 +4174,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 70",
+              "name": "Node 255",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4179,7 +4209,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 25",
+              "name": "Node 16",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4277,7 +4307,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 148",
+              "name": "Node 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4326,7 +4356,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 325",
+              "name": "Node 102",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4375,7 +4405,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 298",
+              "name": "Node 269",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4424,7 +4454,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 74",
+              "name": "Node 28",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4473,7 +4503,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 20",
+              "name": "Node 291",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4522,7 +4552,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 229",
+              "name": "Node 181",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4623,7 +4653,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 339",
+              "name": "Node 307",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4672,7 +4702,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 197",
+              "name": "Node 351",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4707,7 +4737,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 353",
+              "name": "Node 333",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4756,7 +4786,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 99",
+              "name": "Node 107",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4805,7 +4835,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 301",
+              "name": "Node 20",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4854,7 +4884,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 214",
+              "name": "Node 346",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4903,7 +4933,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 175",
+              "name": "Node 66",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4952,7 +4982,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 268",
+              "name": "Node 230",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5001,7 +5031,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 317",
+              "name": "Node 62",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5050,7 +5080,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 203",
+              "name": "Node 27",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5099,7 +5129,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 277",
+              "name": "Node 228",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5148,7 +5178,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 297",
+              "name": "Node 170",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5197,7 +5227,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 169",
+              "name": "Node 34",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5246,7 +5276,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 310",
+              "name": "Node 306",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5295,7 +5325,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 291",
+              "name": "Node 270",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5344,7 +5374,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 337",
+              "name": "Node 211",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5379,7 +5409,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 67",
+              "name": "Node 139",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5428,7 +5458,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 303",
+              "name": "Node 288",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5477,7 +5507,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 306",
+              "name": "Node 85",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5526,7 +5556,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 349",
+              "name": "Node 48",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5575,7 +5605,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 258",
+              "name": "Node 193",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5610,7 +5640,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 136",
+              "name": "Node 325",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5659,7 +5689,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 326",
+              "name": "Node 64",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5708,7 +5738,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 41",
+              "name": "Node 197",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5757,7 +5787,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 235",
+              "name": "Node 30",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5792,7 +5822,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 300",
+              "name": "Node 328",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5841,7 +5871,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 185",
+              "name": "Node 99",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5890,7 +5920,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 80",
+              "name": "Node 280",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5939,7 +5969,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 97",
+              "name": "Node 140",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5974,7 +6004,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 35",
+              "name": "Node 294",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6009,7 +6039,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 237",
+              "name": "Node 187",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6058,7 +6088,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 188",
+              "name": "Node 142",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6093,7 +6123,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 343",
+              "name": "Node 178",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6142,7 +6172,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 313",
+              "name": "Node 13",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6191,7 +6221,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 63",
+              "name": "Node 11",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6240,7 +6270,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 260",
+              "name": "Node 313",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6315,7 +6345,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 39",
+              "name": "Node 115",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6364,7 +6394,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 187",
+              "name": "Node 300",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6413,7 +6443,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 55",
+              "name": "Node 158",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6462,7 +6492,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 89",
+              "name": "Node 315",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6511,7 +6541,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 56",
+              "name": "Node 155",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6546,7 +6576,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 106",
+              "name": "Node 119",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6595,7 +6625,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 186",
+              "name": "Node 167",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6644,7 +6674,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 218",
+              "name": "Node 191",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6693,7 +6723,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 114",
+              "name": "Node 242",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6728,7 +6758,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 22",
+              "name": "Node 43",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6777,7 +6807,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 321",
+              "name": "Node 243",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6826,7 +6856,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 178",
+              "name": "Node 234",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6875,7 +6905,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 261",
+              "name": "Node 256",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6924,7 +6954,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 351",
+              "name": "Node 75",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6973,7 +7003,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 246",
+              "name": "Node 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7008,7 +7038,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 6",
+              "name": "Node 168",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7070,7 +7100,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 171",
+              "name": "Node 151",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7119,7 +7149,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 34",
+              "name": "Node 57",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7154,7 +7184,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 76",
+              "name": "Node 321",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7203,7 +7233,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 5",
+              "name": "Node 237",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7252,7 +7282,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 101",
+              "name": "Node 335",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7301,7 +7331,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 40",
+              "name": "Node 81",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7350,7 +7380,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 238",
+              "name": "Node 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7412,7 +7442,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 84",
+              "name": "Node 229",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7461,7 +7491,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 42",
+              "name": "Node 340",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7510,7 +7540,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 355",
+              "name": "Node 154",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7559,7 +7589,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 155",
+              "name": "Node 241",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7608,7 +7638,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 159",
+              "name": "Node 290",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7657,7 +7687,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 190",
+              "name": "Node 215",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7692,7 +7722,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 344",
+              "name": "Node 126",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7741,7 +7771,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 158",
+              "name": "Node 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7805,7 +7835,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 46",
+              "name": "Node 143",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7854,7 +7884,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 72",
+              "name": "Node 274",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7889,7 +7919,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 327",
+              "name": "Node 246",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7938,7 +7968,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 65",
+              "name": "Node 347",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7987,7 +8017,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 347",
+              "name": "Node 117",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8036,7 +8066,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 228",
+              "name": "Node 162",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8085,7 +8115,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 287",
+              "name": "Node 199",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8134,7 +8164,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 139",
+              "name": "Node 17",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8183,7 +8213,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 354",
+              "name": "Node 156",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8218,7 +8248,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 88",
+              "name": "Node 125",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8267,7 +8297,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 283",
+              "name": "Node 147",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8316,7 +8346,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 147",
+              "name": "Node 25",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8351,7 +8381,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 205",
+              "name": "Node 327",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8400,7 +8430,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 314",
+              "name": "Node 180",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8449,7 +8479,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 182",
+              "name": "Node 73",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8498,7 +8528,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 102",
+              "name": "Node 90",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8547,7 +8577,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 195",
+              "name": "Node 311",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8582,7 +8612,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 278",
+              "name": "Node 74",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8644,7 +8674,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 142",
+              "name": "Node 145",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8693,7 +8723,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 293",
+              "name": "Node 253",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8742,7 +8772,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 288",
+              "name": "Node 208",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8777,7 +8807,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 131",
+              "name": "Node 153",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8826,7 +8856,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 117",
+              "name": "Node 277",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8875,7 +8905,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 3",
+              "name": "Node 60",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8924,7 +8954,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 116",
+              "name": "Node 206",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8973,7 +9003,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 249",
+              "name": "Node 22",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9008,7 +9038,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 274",
+              "name": "Node 14",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9057,7 +9087,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 280",
+              "name": "Node 252",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9106,7 +9136,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 290",
+              "name": "Node 54",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9141,7 +9171,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 202",
+              "name": "Node 183",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9190,7 +9220,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 213",
+              "name": "Node 41",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9239,7 +9269,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 198",
+              "name": "Node 251",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9288,7 +9318,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 217",
+              "name": "Node 68",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9337,7 +9367,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 48",
+              "name": "Node 202",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9372,7 +9402,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 57",
+              "name": "Node 336",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9421,7 +9451,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 336",
+              "name": "Node 278",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9470,7 +9500,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 340",
+              "name": "Node 172",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9505,7 +9535,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 153",
+              "name": "Node 38",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9554,7 +9584,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 172",
+              "name": "Node 217",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9603,7 +9633,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 263",
+              "name": "Node 265",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9652,7 +9682,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 165",
+              "name": "Node 29",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9687,7 +9717,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 119",
+              "name": "Node 132",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9736,7 +9766,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 77",
+              "name": "Node 309",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9785,7 +9815,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 350",
+              "name": "Node 44",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9834,7 +9864,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 52",
+              "name": "Node 248",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9869,7 +9899,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 222",
+              "name": "Node 122",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9918,7 +9948,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 10",
+              "name": "Node 249",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9967,7 +9997,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 206",
+              "name": "Node 192",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10016,7 +10046,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 215",
+              "name": "Node 245",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10065,7 +10095,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 189",
+              "name": "Node 32",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10100,7 +10130,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 209",
+              "name": "Node 200",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10192,7 +10222,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 335",
+              "name": "Node 281",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10241,7 +10271,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 24",
+              "name": "Node 138",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10290,7 +10320,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 59",
+              "name": "Node 37",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10339,7 +10369,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 333",
+              "name": "Node 24",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10388,7 +10418,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 126",
+              "name": "Node 131",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10423,7 +10453,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 285",
+              "name": "Node 135",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10472,7 +10502,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 308",
+              "name": "Node 354",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10521,7 +10551,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 26",
+              "name": "Node 65",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10570,7 +10600,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 289",
+              "name": "Node 108",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10619,7 +10649,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 38",
+              "name": "Node 23",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10654,7 +10684,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 254",
+              "name": "Node 299",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10718,7 +10748,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 9",
+              "name": "Node 111",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10782,7 +10812,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 98",
+              "name": "Node 218",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10831,7 +10861,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 204",
+              "name": "Node 297",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10880,7 +10910,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 304",
+              "name": "Node 303",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10915,7 +10945,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 177",
+              "name": "Node 91",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10950,7 +10980,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 100",
+              "name": "Node 293",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10999,7 +11029,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 265",
+              "name": "Node 226",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11048,7 +11078,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 324",
+              "name": "Node 95",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11097,7 +11127,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 96",
+              "name": "Node 271",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11146,7 +11176,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 224",
+              "name": "Node 295",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11195,7 +11225,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 196",
+              "name": "Node 266",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11230,7 +11260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 212",
+              "name": "Node 186",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11279,7 +11309,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 14",
+              "name": "Node 332",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11328,7 +11358,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 320",
+              "name": "Node 26",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11377,7 +11407,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 316",
+              "name": "Node 195",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11426,7 +11456,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 295",
+              "name": "Node 146",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11475,7 +11505,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 37",
+              "name": "Node 283",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11524,7 +11554,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 120",
+              "name": "Node 112",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11573,7 +11603,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 345",
+              "name": "Node 352",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11608,7 +11638,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 352",
+              "name": "Node 322",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11657,7 +11687,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 267",
+              "name": "Node 93",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11706,7 +11736,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 135",
+              "name": "Node 47",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11755,7 +11785,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 4",
+              "name": "Node 67",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11804,7 +11834,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 309",
+              "name": "Node 179",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11839,7 +11869,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 8",
+              "name": "Node 279",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11888,7 +11918,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 13",
+              "name": "Node 97",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11937,7 +11967,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 17",
+              "name": "Node 258",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11986,7 +12016,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 341",
+              "name": "Node 264",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12021,7 +12051,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 348",
+              "name": "Node 33",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12070,7 +12100,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 226",
+              "name": "Node 49",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12119,7 +12149,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 221",
+              "name": "Node 316",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12168,7 +12198,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 236",
+              "name": "Node 72",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12217,7 +12247,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 141",
+              "name": "Node 304",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12266,7 +12296,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 252",
+              "name": "Node 46",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12315,7 +12345,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 154",
+              "name": "Node 319",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12364,7 +12394,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 319",
+              "name": "Node 82",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12413,7 +12443,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 129",
+              "name": "Node 188",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12462,7 +12492,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 130",
+              "name": "Node 320",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12497,7 +12527,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 243",
+              "name": "Node 287",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12546,7 +12576,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 92",
+              "name": "Node 292",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12595,7 +12625,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 164",
+              "name": "Node 120",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12644,7 +12674,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 247",
+              "name": "Node 227",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12693,7 +12723,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 11",
+              "name": "Node 39",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12728,7 +12758,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 160",
+              "name": "Node 257",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12777,7 +12807,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 179",
+              "name": "Node 302",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12812,7 +12842,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 296",
+              "name": "Node 40",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12861,7 +12891,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 69",
+              "name": "Node 9",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12910,7 +12940,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 143",
+              "name": "Node 84",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12959,7 +12989,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 149",
+              "name": "Node 130",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13008,7 +13038,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 103",
+              "name": "Node 182",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13057,7 +13087,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 156",
+              "name": "Node 175",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13106,7 +13136,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 323",
+              "name": "Node 305",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13208,7 +13238,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 244",
+              "name": "Node 128",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13257,7 +13287,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 346",
+              "name": "Node 214",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13306,7 +13336,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 232",
+              "name": "Node 348",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13355,7 +13385,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 219",
+              "name": "Node 345",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13404,7 +13434,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 15",
+              "name": "Node 185",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13439,7 +13469,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 127",
+              "name": "Node 223",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13488,7 +13518,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 272",
+              "name": "Node 45",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13537,7 +13567,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 144",
+              "name": "Node 18",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13572,7 +13602,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 322",
+              "name": "Node 189",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13621,7 +13651,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 233",
+              "name": "Node 285",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13670,7 +13700,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 208",
+              "name": "Node 209",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13705,7 +13735,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 168",
+              "name": "Node 88",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13740,7 +13770,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 329",
+              "name": "Node 36",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13789,7 +13819,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 273",
+              "name": "Node 296",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13838,7 +13868,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 47",
+              "name": "Node 310",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13887,7 +13917,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 166",
+              "name": "Node 77",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13922,7 +13952,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 331",
+              "name": "Node 76",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13971,7 +14001,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 271",
+              "name": "Node 98",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14020,7 +14050,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 305",
+              "name": "Node 123",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14069,7 +14099,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 184",
+              "name": "Node 240",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14118,7 +14148,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 173",
+              "name": "Node 148",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14167,7 +14197,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 121",
+              "name": "Node 61",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14230,7 +14260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 27",
+              "name": "Node 176",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14279,7 +14309,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 299",
+              "name": "Node 239",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14328,7 +14358,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 231",
+              "name": "Node 198",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14377,7 +14407,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 64",
+              "name": "Node 149",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14426,7 +14456,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 29",
+              "name": "Node 31",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14475,7 +14505,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 282",
+              "name": "Node 169",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14537,7 +14567,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 241",
+              "name": "Node 318",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14572,7 +14602,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 91",
+              "name": "Node 324",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14621,7 +14651,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 307",
+              "name": "Node 205",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14670,7 +14700,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 43",
+              "name": "Node 184",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14719,7 +14749,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 256",
+              "name": "Node 314",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14768,7 +14798,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 73",
+              "name": "Node 129",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14817,7 +14847,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 109",
+              "name": "Node 263",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14866,7 +14896,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 115",
+              "name": "Node 174",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14915,7 +14945,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 234",
+              "name": "Node 104",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14977,7 +15007,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 157",
+              "name": "Node 312",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15026,7 +15056,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 140",
+              "name": "Node 286",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15075,7 +15105,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 245",
+              "name": "Node 136",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15124,7 +15154,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 162",
+              "name": "Node 92",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15173,7 +15203,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 211",
+              "name": "Node 52",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15222,7 +15252,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 342",
+              "name": "Node 78",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15271,7 +15301,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 54",
+              "name": "Node 80",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15306,7 +15336,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 192",
+              "name": "Node 110",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15355,7 +15385,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 200",
+              "name": "Node 276",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15404,7 +15434,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 253",
+              "name": "Node 105",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15453,7 +15483,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 311",
+              "name": "Node 282",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15502,7 +15532,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 44",
+              "name": "Node 323",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15551,7 +15581,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 193",
+              "name": "Node 207",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15586,7 +15616,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 81",
+              "name": "Node 196",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15635,7 +15665,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 330",
+              "name": "Node 63",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15684,7 +15714,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 151",
+              "name": "Node 166",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15733,7 +15763,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 248",
+              "name": "Node 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15782,7 +15812,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 216",
+              "name": "Node 262",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15831,7 +15861,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 312",
+              "name": "Node 338",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15866,7 +15896,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 191",
+              "name": "Node 127",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15915,7 +15945,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 201",
+              "name": "Node 233",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -15964,7 +15994,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 338",
+              "name": "Node 353",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16013,7 +16043,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 210",
+              "name": "Node 260",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16048,7 +16078,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 122",
+              "name": "Node 121",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16097,7 +16127,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 266",
+              "name": "Node 232",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16146,7 +16176,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 251",
+              "name": "Node 171",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16181,7 +16211,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 227",
+              "name": "Node 284",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16230,7 +16260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 137",
+              "name": "Node 236",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16279,7 +16309,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 104",
+              "name": "Node 79",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16328,7 +16358,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 176",
+              "name": "Node 69",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16377,7 +16407,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 85",
+              "name": "Node 113",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16412,7 +16442,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 199",
+              "name": "Node 261",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16461,7 +16491,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 118",
+              "name": "Node 203",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16510,7 +16540,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 50",
+              "name": "Node 308",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16559,7 +16589,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 71",
+              "name": "Node 210",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16608,7 +16638,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 30",
+              "name": "Node 134",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16657,7 +16687,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 259",
+              "name": "Node 331",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16692,7 +16722,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 183",
+              "name": "Node 221",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16741,7 +16771,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 53",
+              "name": "Node 337",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16790,7 +16820,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 240",
+              "name": "Node 83",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16839,7 +16869,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 161",
+              "name": "Node 289",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16888,7 +16918,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 275",
+              "name": "Node 50",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16937,7 +16967,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 87",
+              "name": "Node 150",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16986,7 +17016,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 90",
+              "name": "Node 59",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -17035,7 +17065,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 31",
+              "name": "Node 160",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -17084,7 +17114,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 250",
+              "name": "Node 137",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -17133,7 +17163,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 257",
+              "name": "Node 109",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -17182,7 +17212,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 82",
+              "name": "Node 55",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -28253,6 +28283,17 @@
         "type": null,
         "max_count": 1
       },
+      "Completed Node 1": {
+        "name": "Completed Node 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "Completed Node 2": {
         "name": "Completed Node 2",
         "id": null,
@@ -32157,15 +32198,6 @@
         "event": true,
         "type": "Event",
         "max_count": 1
-      },
-      "Completed Node 1": {
-        "name": "Completed Node 1",
-        "id": null,
-        "groups": [],
-        "classification": "progression",
-        "event": true,
-        "type": null,
-        "max_count": 1
       }
     }
   },
@@ -32893,6 +32925,7 @@
   },
   "canonical_placements": {
     "1": {
+      "Complete Node 1": "Node 1",
       "Complete Node 2": "Node 2",
       "Complete Node 3": "Node 3",
       "Complete Node 4": "Node 4",
@@ -33253,10 +33286,7 @@
     "1": {}
   },
   "starting_items": {
-    "1": [
-      "Node 1",
-      "Completed Node 1"
-    ]
+    "1": []
   },
   "world": {
     "1": {
@@ -35142,6 +35172,7 @@
         }
       },
       "canonical_placements": {
+        "Complete Node 1": "Node 1",
         "Complete Node 2": "Node 2",
         "Complete Node 3": "Node 3",
         "Complete Node 4": "Node 4",
@@ -43487,9 +43518,7 @@
             "full_text": "EXTERNAL_INTERFACE.4: Status: DONE | Tests: external_interface_escapexml, external_interface_unescapexml, external_interface_toxml_basic, external_interface_toxml_array, external_interface_jsquotestring, external_interface_toas_basic, external_interface"
           }
         },
-        "starting_nodes": [
-          1
-        ],
+        "starting_nodes": [],
         "title": "SWFRecomp AVM1 \u2014 Vibe Coding Simulator",
         "randomize_items": 1,
         "vanilla_placement": 0

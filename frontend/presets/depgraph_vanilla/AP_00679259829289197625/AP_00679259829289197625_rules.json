@@ -327,7 +327,37 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Complete Node 1",
+            "id": 234800001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Completed Node 1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
       },
       "Complete Node 2": {
         "name": "Complete Node 2",
@@ -28253,6 +28283,17 @@
         "type": null,
         "max_count": 1
       },
+      "Completed Node 1": {
+        "name": "Completed Node 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "Completed Node 2": {
         "name": "Completed Node 2",
         "id": null,
@@ -32157,15 +32198,6 @@
         "event": true,
         "type": "Event",
         "max_count": 1
-      },
-      "Completed Node 1": {
-        "name": "Completed Node 1",
-        "id": null,
-        "groups": [],
-        "classification": "progression",
-        "event": true,
-        "type": null,
-        "max_count": 1
       }
     }
   },
@@ -32893,6 +32925,7 @@
   },
   "canonical_placements": {
     "1": {
+      "Complete Node 1": "Node 1",
       "Complete Node 2": "Node 2",
       "Complete Node 3": "Node 3",
       "Complete Node 4": "Node 4",
@@ -33253,10 +33286,7 @@
     "1": {}
   },
   "starting_items": {
-    "1": [
-      "Node 1",
-      "Completed Node 1"
-    ]
+    "1": []
   },
   "world": {
     "1": {
@@ -35143,6 +35173,7 @@
         }
       },
       "canonical_placements": {
+        "Complete Node 1": "Node 1",
         "Complete Node 2": "Node 2",
         "Complete Node 3": "Node 3",
         "Complete Node 4": "Node 4",
@@ -43488,9 +43519,7 @@
             "full_text": "EXTERNAL_INTERFACE.4: Status: DONE | Tests: external_interface_escapexml, external_interface_unescapexml, external_interface_toxml_basic, external_interface_toxml_array, external_interface_jsquotestring, external_interface_toas_basic, external_interface"
           }
         },
-        "starting_nodes": [
-          1
-        ],
+        "starting_nodes": [],
         "title": "SWFRecomp AVM1 \u2014 Vibe Coding Simulator",
         "randomize_items": false,
         "vanilla_placement": 1

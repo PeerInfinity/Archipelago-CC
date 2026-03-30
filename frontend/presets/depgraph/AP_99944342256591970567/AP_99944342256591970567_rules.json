@@ -47,7 +47,37 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Complete Node 1",
+            "id": 234800001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Completed Node 1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
       },
       "Complete Node 2": {
         "name": "Complete Node 2",
@@ -88,7 +118,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 2",
+              "name": "Node 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -138,7 +168,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 4",
+              "name": "Node 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -187,7 +217,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 7",
+              "name": "Node 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -250,7 +280,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 5",
+              "name": "Node 1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -313,7 +343,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 3",
+              "name": "Node 10",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -362,7 +392,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 8",
+              "name": "Node 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -411,7 +441,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 6",
+              "name": "Node 9",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -460,7 +490,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 15",
+              "name": "Node 16",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -509,7 +539,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 10",
+              "name": "Node 13",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -558,7 +588,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 14",
+              "name": "Node 12",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -656,7 +686,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 9",
+              "name": "Node 14",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -705,7 +735,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 12",
+              "name": "Node 7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -754,7 +784,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 13",
+              "name": "Node 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -789,7 +819,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 16",
+              "name": "Node 19",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -852,7 +882,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 11",
+              "name": "Node 17",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -901,7 +931,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 19",
+              "name": "Node 11",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -936,7 +966,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 17",
+              "name": "Node 15",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12007,6 +12037,17 @@
         "type": null,
         "max_count": 1
       },
+      "Completed Node 1": {
+        "name": "Completed Node 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "Completed Node 2": {
         "name": "Completed Node 2",
         "id": null,
@@ -12215,15 +12256,6 @@
         "event": true,
         "type": "Event",
         "max_count": 1
-      },
-      "Completed Node 1": {
-        "name": "Completed Node 1",
-        "id": null,
-        "groups": [],
-        "classification": "progression",
-        "event": true,
-        "type": null,
-        "max_count": 1
       }
     }
   },
@@ -12279,6 +12311,7 @@
   },
   "canonical_placements": {
     "1": {
+      "Complete Node 1": "Node 1",
       "Complete Node 2": "Node 2",
       "Complete Node 3": "Node 3",
       "Complete Node 4": "Node 4",
@@ -12303,10 +12336,7 @@
     "1": {}
   },
   "starting_items": {
-    "1": [
-      "Node 1",
-      "Completed Node 1"
-    ]
+    "1": []
   },
   "world": {
     "1": {
@@ -12512,6 +12542,7 @@
         }
       },
       "canonical_placements": {
+        "Complete Node 1": "Node 1",
         "Complete Node 2": "Node 2",
         "Complete Node 3": "Node 3",
         "Complete Node 4": "Node 4",
@@ -13048,9 +13079,7 @@
             "full_text": "TASKS.3: Due date tracking, overdue detection, recurring task generation"
           }
         },
-        "starting_nodes": [
-          1
-        ],
+        "starting_nodes": [],
         "title": "Vibe Coding Simulator \u2014 TaskFlow App",
         "randomize_items": 1,
         "vanilla_placement": 0

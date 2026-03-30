@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            DepGraph
-Location Count:                  355
+Location Count:                  356
 Progression Balancing:           50
 Accessibility:                   Minimal
 Local Items:                     
@@ -24,13 +24,10 @@ Starting Nodes %:                0
 Entrance Rule Mode:              Relaxed Items
 
 
-Starting Items:
-
-Node 1
-Completed Node 1
-
 Locations:
 
+Complete Node 1: Node 1
+Completed Node 1: Completed Node 1
 Complete Node 2: Node 2
 Completed Node 2: Completed Node 2
 Complete Node 3: Node 3
@@ -745,10 +742,10 @@ Completed Node 356: Completed Node 356
 Playthrough:
 
 0: {
-  Completed Node 1
-  Node 1
+
 }
 1: {
+  Complete Node 1: Node 1
   Complete Node 107: Node 107
   Complete Node 116: Node 116
   Complete Node 121: Node 121
@@ -765,7 +762,6 @@ Playthrough:
   Complete Node 2: Node 2
   Complete Node 208: Node 208
   Complete Node 22: Node 22
-  Complete Node 225: Node 225
   Complete Node 231: Node 231
   Complete Node 239: Node 239
   Complete Node 244: Node 244
@@ -791,6 +787,7 @@ Playthrough:
   Complete Node 76: Node 76
   Complete Node 83: Node 83
   Complete Node 93: Node 93
+  Completed Node 1: Completed Node 1
   Completed Node 107: Completed Node 107
   Completed Node 116: Completed Node 116
   Completed Node 121: Completed Node 121
@@ -807,7 +804,6 @@ Playthrough:
   Completed Node 2: Completed Node 2
   Completed Node 208: Completed Node 208
   Completed Node 22: Completed Node 22
-  Completed Node 225: Completed Node 225
   Completed Node 231: Completed Node 231
   Completed Node 239: Completed Node 239
   Completed Node 244: Completed Node 244
@@ -852,7 +848,7 @@ Playthrough:
   Complete Node 200: Node 200
   Complete Node 214: Node 214
   Complete Node 219: Node 219
-  Complete Node 226: Node 226
+  Complete Node 225: Node 225
   Complete Node 23: Node 23
   Complete Node 232: Node 232
   Complete Node 240: Node 240
@@ -899,7 +895,7 @@ Playthrough:
   Completed Node 200: Completed Node 200
   Completed Node 214: Completed Node 214
   Completed Node 219: Completed Node 219
-  Completed Node 226: Completed Node 226
+  Completed Node 225: Completed Node 225
   Completed Node 23: Completed Node 23
   Completed Node 232: Completed Node 232
   Completed Node 240: Completed Node 240
@@ -947,7 +943,7 @@ Playthrough:
   Complete Node 21: Node 21
   Complete Node 215: Node 215
   Complete Node 220: Node 220
-  Complete Node 227: Node 227
+  Complete Node 226: Node 226
   Complete Node 233: Node 233
   Complete Node 24: Node 24
   Complete Node 241: Node 241
@@ -990,7 +986,7 @@ Playthrough:
   Completed Node 21: Completed Node 21
   Completed Node 215: Completed Node 215
   Completed Node 220: Completed Node 220
-  Completed Node 227: Completed Node 227
+  Completed Node 226: Completed Node 226
   Completed Node 233: Completed Node 233
   Completed Node 24: Completed Node 24
   Completed Node 241: Completed Node 241
@@ -1034,7 +1030,7 @@ Playthrough:
   Complete Node 216: Node 216
   Complete Node 221: Node 221
   Complete Node 224: Node 224
-  Complete Node 228: Node 228
+  Complete Node 227: Node 227
   Complete Node 234: Node 234
   Complete Node 242: Node 242
   Complete Node 247: Node 247
@@ -1071,7 +1067,7 @@ Playthrough:
   Completed Node 216: Completed Node 216
   Completed Node 221: Completed Node 221
   Completed Node 224: Completed Node 224
-  Completed Node 228: Completed Node 228
+  Completed Node 227: Completed Node 227
   Completed Node 234: Completed Node 234
   Completed Node 242: Completed Node 242
   Completed Node 247: Completed Node 247
@@ -1106,7 +1102,7 @@ Playthrough:
   Complete Node 182: Node 182
   Complete Node 217: Node 217
   Complete Node 222: Node 222
-  Complete Node 229: Node 229
+  Complete Node 228: Node 228
   Complete Node 235: Node 235
   Complete Node 243: Node 243
   Complete Node 251: Node 251
@@ -1132,7 +1128,7 @@ Playthrough:
   Completed Node 182: Completed Node 182
   Completed Node 217: Completed Node 217
   Completed Node 222: Completed Node 222
-  Completed Node 229: Completed Node 229
+  Completed Node 228: Completed Node 228
   Completed Node 235: Completed Node 235
   Completed Node 243: Completed Node 243
   Completed Node 251: Completed Node 251
@@ -1159,7 +1155,7 @@ Playthrough:
   Complete Node 184: Node 184
   Complete Node 218: Node 218
   Complete Node 223: Node 223
-  Complete Node 230: Node 230
+  Complete Node 229: Node 229
   Complete Node 236: Node 236
   Complete Node 252: Node 252
   Complete Node 262: Node 262
@@ -1181,7 +1177,7 @@ Playthrough:
   Completed Node 184: Completed Node 184
   Completed Node 218: Completed Node 218
   Completed Node 223: Completed Node 223
-  Completed Node 230: Completed Node 230
+  Completed Node 229: Completed Node 229
   Completed Node 236: Completed Node 236
   Completed Node 252: Completed Node 252
   Completed Node 262: Completed Node 262
@@ -1203,6 +1199,7 @@ Playthrough:
   Complete Node 174: Node 174
   Complete Node 185: Node 185
   Complete Node 203: Node 203
+  Complete Node 230: Node 230
   Complete Node 237: Node 237
   Complete Node 253: Node 253
   Complete Node 271: Node 271
@@ -1222,6 +1219,7 @@ Playthrough:
   Completed Node 174: Completed Node 174
   Completed Node 185: Completed Node 185
   Completed Node 203: Completed Node 203
+  Completed Node 230: Completed Node 230
   Completed Node 237: Completed Node 237
   Completed Node 253: Completed Node 253
   Completed Node 271: Completed Node 271
