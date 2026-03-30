@@ -40,6 +40,7 @@ export class VibeCodingSimUI {
         this.expandedTestWorkflow = false;
         this.featureSearch = '';
         this.visibleColumns = { features: true, tasks: true };
+        this.autoSkipTesting = false;
 
         // Dynamic refs: elements that get updated on tick without full rebuild
         this._dyn = {};
@@ -109,12 +110,25 @@ export class VibeCodingSimUI {
             }
         }
 
-        // Task progress bars and subtask labels
+        // Task progress bars, subtask labels, and markers
         for (const task of gs.getRunningTasks()) {
             const barFill = d[`task-bar-${task.id}`];
             if (barFill) barFill.style.width = `${Math.round(task.progress * 100)}%`;
             const label = d[`task-label-${task.id}`];
             if (label) label.textContent = task.subtaskLabel;
+            // Update markers if subtask count changed
+            const barEl = d[`task-bar-el-${task.id}`];
+            const prevCount = d[`task-subtask-count-${task.id}`];
+            if (barEl && prevCount !== task.subtaskDurations.length) {
+                d[`task-subtask-count-${task.id}`] = task.subtaskDurations.length;
+                barEl.querySelectorAll('.vcs-progress-marker').forEach(m => m.remove());
+                for (const pos of task.subtaskBoundaries) {
+                    const marker = document.createElement('div');
+                    marker.className = 'vcs-progress-marker';
+                    marker.style.left = `${Math.round(pos * 100)}%`;
+                    barEl.appendChild(marker);
+                }
+            }
         }
 
         // Feature inline task progress
@@ -340,24 +354,39 @@ export class VibeCodingSimUI {
         const btn = document.createElement('button');
         const taskType = exists ? improveType : createType;
 
-        // Determine if this action is available
-        const needsDoc = taskType !== TaskType.WRITE_DOC && taskType !== TaskType.EVALUATE_DOC;
         const canAct = taskType === TaskType.WRITE_DOC ? !feat.hasDoc
             : taskType === TaskType.EVALUATE_DOC ? feat.hasDoc
-            : feat.hasDoc; // implement and write_tests need doc
+            : feat.hasDoc;
+
+        // Check if any running task matches this action
+        const actionTaskTypes = letter === 'D' ? [TaskType.WRITE_DOC, TaskType.EVALUATE_DOC]
+            : letter === 'C' ? [TaskType.IMPLEMENT] : [TaskType.WRITE_TESTS];
+        const inProgress = gs.getRunningTasks().some(
+            t => t.targetFeatureId === feat.id && actionTaskTypes.includes(t.type));
 
         const colors = { D: '#4a7a5a', C: '#4a5a7a', T: '#7a5a4a' };
-        btn.className = `vcs-badge vcs-badge-btn ${exists ? 'vcs-badge-active' : 'vcs-badge-empty'}`;
-        if (exists) btn.style.background = colors[letter];
+        const actionLabel = exists
+            ? (letter === 'D' ? 'Evaluate Doc' : letter === 'C' ? 'Debug Code' : 'Debug Tests')
+            : (letter === 'D' ? 'Write Planning Doc' : letter === 'C' ? 'Implement' : 'Write Tests');
+
+        btn.className = 'vcs-badge vcs-badge-btn';
+        if (inProgress) {
+            btn.classList.add('vcs-badge-in-progress');
+            btn.style.background = colors[letter];
+        } else if (exists) {
+            btn.classList.add('vcs-badge-active');
+            btn.style.background = colors[letter];
+        } else {
+            btn.classList.add('vcs-badge-empty');
+        }
         btn.textContent = letter;
-        btn.title = exists
-            ? `${letter === 'D' ? 'Evaluate Doc' : letter === 'C' ? 'Debug Code' : 'Debug Tests'}`
-            : `${letter === 'D' ? 'Write Planning Doc' : letter === 'C' ? 'Implement' : 'Write Tests'}`;
+        btn.title = inProgress ? `${actionLabel} (in progress)` : actionLabel;
 
         if (canAct && !gs.isManualTestActive) {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                gs.assignTask(feat.id, taskType);
+                const task = gs.assignTask(feat.id, taskType);
+                if (task && this.autoSkipTesting) gs.skipTesting(task.id);
                 this.render();
             });
         } else {
@@ -371,22 +400,33 @@ export class VibeCodingSimUI {
     _manualBadge(gs, feat) {
         const btn = document.createElement('button');
         const canTest = feat.hasCode && feat.hasTests && !gs.isManualTestActive;
+        const isActive = gs.isManualTestActive && gs.manualTestFeatureId === feat.id;
 
-        // Badge state based on manual test result
         let bgColor = null;
         let title = 'Manual Test';
-        if (feat.manualTestResult === 'pass') {
+        if (isActive) {
+            const phase = feat.manualTestResult === 'incomplete' ? 'Phase 2' : 'Phase 1';
+            bgColor = '#5a5a2a';
+            title = `Manual Test in progress (${phase})`;
+        } else if (feat.manualTestResult === 'pass') {
             bgColor = '#2d8a4e';
             title = 'Manual Test: Passed';
         } else if (feat.manualTestResult === 'incomplete') {
             bgColor = '#b8860b';
-            title = 'Manual Test: Run again to identify issue';
+            title = 'Manual Test: Run again to identify issue (Phase 2)';
         } else if (feat.manualTestResult === 'doc' || feat.manualTestResult === 'code' || feat.manualTestResult === 'tests') {
             bgColor = '#c04030';
             title = `Manual Test: ${feat.manualTestResult} needs work`;
         }
 
-        btn.className = `vcs-badge vcs-badge-btn ${bgColor ? 'vcs-badge-active' : 'vcs-badge-empty'}`;
+        btn.className = 'vcs-badge vcs-badge-btn';
+        if (isActive) {
+            btn.classList.add('vcs-badge-in-progress');
+        } else if (bgColor) {
+            btn.classList.add('vcs-badge-active');
+        } else {
+            btn.classList.add('vcs-badge-empty');
+        }
         if (bgColor) btn.style.background = bgColor;
         btn.textContent = 'M';
         btn.title = title;
@@ -489,6 +529,22 @@ export class VibeCodingSimUI {
         const header = document.createElement('div');
         header.className = 'vcs-column-header';
         header.innerHTML = '<strong>Tasks</strong>';
+        const autoSkipLabel = document.createElement('label');
+        autoSkipLabel.className = 'vcs-auto-skip';
+        autoSkipLabel.title = 'Automatically skip regression testing on all tasks';
+        const autoSkipCb = document.createElement('input');
+        autoSkipCb.type = 'checkbox';
+        autoSkipCb.checked = this.autoSkipTesting;
+        autoSkipCb.addEventListener('change', () => {
+            this.autoSkipTesting = autoSkipCb.checked;
+            if (this.autoSkipTesting) {
+                // Skip testing on all currently running tasks
+                for (const t of gs.getRunningTasks()) gs.skipTesting(t.id);
+            }
+        });
+        autoSkipLabel.appendChild(autoSkipCb);
+        autoSkipLabel.appendChild(document.createTextNode(' Auto-skip testing'));
+        header.appendChild(autoSkipLabel);
         col.appendChild(header);
 
         const list = document.createElement('div');
@@ -686,6 +742,8 @@ export class VibeCodingSimUI {
             }
             const [bar, fill] = this._progressBar(task.progress, task.subtaskBoundaries, skipAt);
             this._dyn[`task-bar-${task.id}`] = fill;
+            this._dyn[`task-bar-el-${task.id}`] = bar;
+            this._dyn[`task-subtask-count-${task.id}`] = task.subtaskDurations.length;
             card.appendChild(bar);
             const meta = document.createElement('div');
             meta.className = 'vcs-card-meta';
@@ -693,30 +751,62 @@ export class VibeCodingSimUI {
             this._dyn[`task-label-${task.id}`] = meta;
             card.appendChild(meta);
         } else if (task.status === TaskStatus.MERGE_CONFLICT) {
-            // Merge conflict actions inline
             const mcRow = document.createElement('div');
             mcRow.className = 'vcs-card-meta vcs-merge-conflict';
-            mcRow.textContent = 'Merge conflict — ';
 
-            const resolveBtn = document.createElement('button');
-            resolveBtn.className = 'vcs-btn vcs-btn-action vcs-btn-small';
-            resolveBtn.textContent = 'Resolve';
-            resolveBtn.addEventListener('click', (e) => { e.stopPropagation(); gs.resolveMergeConflict(task.id); this.render(); });
-            mcRow.appendChild(resolveBtn);
+            if (task._pendingMerge) {
+                mcRow.textContent = 'Merge conflict pending — waiting for tasks to finish';
+            } else {
+                mcRow.textContent = 'Merge conflict — ';
 
-            const discardBtn = document.createElement('button');
-            discardBtn.className = 'vcs-btn vcs-btn-danger vcs-btn-small';
-            discardBtn.textContent = 'Discard';
-            discardBtn.style.marginLeft = '4px';
-            discardBtn.addEventListener('click', (e) => { e.stopPropagation(); gs.discardMergeConflict(task.id); this.render(); });
-            mcRow.appendChild(discardBtn);
+                const resolveBtn = document.createElement('button');
+                resolveBtn.className = 'vcs-btn vcs-btn-action vcs-btn-small';
+                resolveBtn.textContent = 'Resolve';
+                resolveBtn.addEventListener('click', (e) => { e.stopPropagation(); gs.resolveMergeConflict(task.id); this.render(); });
+                mcRow.appendChild(resolveBtn);
+            }
 
             card.appendChild(mcRow);
         } else if (task.status === TaskStatus.COMPLETED) {
-            const meta = document.createElement('div');
+            const metaRow = document.createElement('div');
+            metaRow.className = 'vcs-card-summary';
+            const meta = document.createElement('span');
             meta.className = 'vcs-card-meta';
             meta.textContent = task.reportedSuccess ? 'Reported: success' : 'Reported: issues found';
-            card.appendChild(meta);
+            metaRow.appendChild(meta);
+
+            // Check if this task is part of a pending merge — show discard button
+            const pendingMerge = gs.tasks.find(
+                t => t.status === TaskStatus.MERGE_CONFLICT && t._pendingMerge &&
+                     t._sourceTaskIds?.includes(task.id));
+            if (pendingMerge) {
+                const discardBtn = document.createElement('button');
+                discardBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
+                discardBtn.style.background = '#5a2a2a';
+                discardBtn.textContent = '✗';
+                discardBtn.title = 'Discard this branch (cancel merge)';
+                discardBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    task.status = TaskStatus.CANCELLED;
+                    task.completedAt = gs.simulatedTime;
+                    this.render();
+                });
+                metaRow.appendChild(discardBtn);
+            } else if (!task.reportedSuccess && task.type !== TaskType.MERGE_CONFLICT) {
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'vcs-badge vcs-badge-btn vcs-badge-task-action';
+                retryBtn.style.background = '#3a5a3a';
+                retryBtn.textContent = '↻';
+                retryBtn.title = `Retry: ${typeLabel}`;
+                retryBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const newTask = gs.assignTask(task.targetFeatureId, task.type);
+                    if (newTask && this.autoSkipTesting) gs.skipTesting(newTask.id);
+                    this.render();
+                });
+                metaRow.appendChild(retryBtn);
+            }
+            card.appendChild(metaRow);
         } else {
             const meta = document.createElement('div');
             meta.className = 'vcs-card-meta';
@@ -774,6 +864,25 @@ export class VibeCodingSimUI {
         });
         if (this.apis?.eventBus) {
             this.apis.eventBus.publish('vibeCodingSim:featureSelected', { featureId });
+        }
+    }
+
+    selectFeatureByRegion(regionNodeId) {
+        // Region names are like "Complete Node 3" — extract the index
+        const gs = this.gameState;
+        if (!gs) return;
+        const match = regionNodeId.match(/(\d+)/);
+        if (match) {
+            const idx = parseInt(match[1]);
+            const featureId = gs.indexToFeatureId[idx];
+            if (featureId) {
+                this.selectFeature(featureId);
+                return;
+            }
+        }
+        // Fallback: try treating it as a feature ID directly
+        if (gs.features.has(regionNodeId)) {
+            this.selectFeature(regionNodeId);
         }
     }
 }

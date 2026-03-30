@@ -288,6 +288,9 @@ class GameState {
 
         this.onStateChanged = null;
         this.onLogEntry = null;
+
+        // Map from graph node index to feature ID (for Region Graph integration)
+        this.indexToFeatureId = {};
     }
 
     // --- Data Loading ---
@@ -304,6 +307,7 @@ class GameState {
         // Each node in the graph becomes a feature
         for (const [idx, step] of Object.entries(graphStructure)) {
             const featureId = step.label;
+            this.indexToFeatureId[parseInt(idx)] = featureId;
             const displayName = step.expression || featureId;
             const depNodeIds = (step.dependencies || []).map(i => indexToLabel[i]).filter(Boolean);
 
@@ -413,6 +417,26 @@ class GameState {
 
         task.subtaskLabel = subtasks[0];
         this.tasks.push(task);
+
+        // Check if this creates a potential merge conflict
+        // (another running task of the same type on the same feature)
+        if (taskType === TaskType.IMPLEMENT) {
+            const otherRunning = this.tasks.filter(
+                t => t.id !== task.id && t.status === TaskStatus.RUNNING &&
+                     t.targetFeatureId === featureId && t.type === TaskType.IMPLEMENT
+            );
+            if (otherRunning.length > 0) {
+                // Create a pending merge conflict entry
+                const mergeTask = new Task(TaskType.MERGE_CONFLICT, featureId);
+                mergeTask.startedAt = this.simulatedTime;
+                mergeTask.status = TaskStatus.MERGE_CONFLICT;
+                mergeTask._pendingMerge = true; // waiting for source tasks to finish
+                mergeTask._sourceTaskIds = [otherRunning[0].id, task.id];
+                this.tasks.push(mergeTask);
+                this._addLog(`Potential merge conflict: two agents on ${featureId}`);
+            }
+        }
+
         this._addLog(`Started: ${task.label}`);
         this._notify();
         return task;
@@ -444,6 +468,30 @@ class GameState {
         task._skipTesting = true;
         this._addLog(`Will skip testing: ${task.label}`);
         return true;
+    }
+
+    _updatePendingMerges() {
+        for (const merge of this.tasks) {
+            if (merge.status !== TaskStatus.MERGE_CONFLICT || !merge._pendingMerge) continue;
+
+            const sourceIds = merge._sourceTaskIds || [];
+            const sources = sourceIds.map(id => this.tasks.find(t => t.id === id)).filter(Boolean);
+            const uncancelled = sources.filter(t => t.status !== TaskStatus.CANCELLED);
+
+            // If only one source remains uncancelled, remove the merge entry
+            if (uncancelled.length <= 1) {
+                merge.status = TaskStatus.CANCELLED;
+                merge.completedAt = this.simulatedTime;
+                this._addLog(`Merge conflict resolved: only one task remains on ${merge.targetFeatureId}`);
+                continue;
+            }
+
+            // If all source tasks are done (completed/failed), enable the merge for resolution
+            const allDone = uncancelled.every(t => t.status !== TaskStatus.RUNNING);
+            if (allDone) {
+                merge._pendingMerge = false;
+            }
+        }
     }
 
     resolveMergeConflict(conflictTaskId) {
@@ -522,6 +570,10 @@ class GameState {
             if (task.status !== TaskStatus.RUNNING) continue;
             if (this._tickTask(task, dt)) changed = true;
         }
+
+        // Update pending merge conflicts
+        this._updatePendingMerges();
+
 
         // Update test workflow
         if (this.testWorkflow && !this.testWorkflow.complete) {
@@ -666,15 +718,8 @@ class GameState {
             this._addLog(`${task.label}: noticed doc issue during investigation`);
         }
 
-        // Check for merge conflict
-        if (this._checkMergeConflict(task)) {
-            // Store what the code would have been
-            task.branchCodeCompleteness = this._computeImplementResult(feat);
-            task.status = TaskStatus.MERGE_CONFLICT;
-            task.completedAt = this.simulatedTime;
-            this._addLog(`MERGE CONFLICT: ${task.label}`);
-            return;
-        }
+        // Store branch completeness for any pending merge conflict
+        task.branchCodeCompleteness = this._computeImplementResult(feat);
 
         const ceiling = feat.docCompleteness;
         if (feat.codeCompleteness === 0) {
@@ -832,18 +877,6 @@ class GameState {
         const change = this.rng.uniform(-this.config.sideEffectMaxChange, this.config.sideEffectMaxChange);
         target.codeCompleteness = Math.max(0, Math.min(1, target.codeCompleteness + change));
         // Note: NOT capped by doc completeness, and NOT logged (hidden)
-    }
-
-    // --- Merge Conflict Detection ---
-
-    _checkMergeConflict(task) {
-        for (const other of this.tasks) {
-            if (other.id === task.id || other.status !== TaskStatus.RUNNING) continue;
-            if (other.targetFeatureId === task.targetFeatureId) {
-                return this.rng.random() < this.config.mergeConflictRate;
-            }
-        }
-        return false;
     }
 
     // --- Reported Success ---

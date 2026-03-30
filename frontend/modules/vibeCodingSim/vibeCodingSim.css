@@ -252,6 +252,15 @@
     color: #777;
 }
 
+.vcs-badge-in-progress {
+    animation: vcs-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes vcs-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
 .vcs-badge-disabled {
     opacity: 0.3;
     cursor: not-allowed;
@@ -487,4 +496,21 @@
 
 .vcs-btn-toggle {
     padding: 3px 8px;
+}
+
+/* --- Auto-skip checkbox --- */
+
+.vcs-auto-skip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    font-size: 11px;
+    color: #aaa;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.vcs-auto-skip input {
+    cursor: pointer;
 }

@@ -43,13 +43,7 @@ export function register(registrationApi) {
     // Events we subscribe to
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
-
-    // Intercept region clicks to navigate to features
-    registrationApi.registerDispatcherReceiver(
-        'user:regionClicked',
-        handleRegionClicked,
-        { direction: 'bottom', stopPropagation: true }
-    );
+    registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
 
     // Public functions
     registrationApi.registerPublicFunction(
@@ -76,6 +70,16 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         const staticData = stateManager.getStaticData();
         if (staticData) {
             initializeGame(staticData);
+        }
+    });
+
+    // Listen for region graph clicks
+    eventBus.subscribe('regionGraph:nodeSelected', (data) => {
+        const nodeId = data?.nodeId;
+        if (nodeId && panelInstance) {
+            // Region names are like "Complete Node 3" — look up which feature this maps to
+            // The graph_structure maps indices to feature IDs
+            panelInstance.selectFeatureByRegion(nodeId);
         }
     });
 
@@ -148,16 +152,6 @@ function initializeGame(staticData) {
     if (eventBus) {
         eventBus.publish('vibeCodingSim:stateChanged', { gameState });
     }
-}
-
-function handleRegionClicked(eventData) {
-    // Intercept region click from Region Graph, select feature
-    const regionName = eventData?.regionName || eventData?.region;
-    if (regionName && panelInstance) {
-        panelInstance.selectFeature(regionName);
-    }
-    // Don't propagate — we handle it
-    return false;
 }
 
 export function setPanelInstance(instance) {
