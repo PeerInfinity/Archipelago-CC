@@ -354,7 +354,7 @@ class GameState {
 
     getCompletedTasks() {
         return this.tasks
-            .filter(t => t.status !== TaskStatus.RUNNING)
+            .filter(t => t.status !== TaskStatus.RUNNING && t.status !== TaskStatus.MERGE_CONFLICT)
             .slice(-this.config.maxTaskHistory);
     }
 
@@ -464,6 +464,7 @@ class GameState {
         task.status = TaskStatus.CANCELLED;
         task.completedAt = this.simulatedTime;
         this._addLog(`Cancelled: ${task.label}`);
+        this._updatePendingMerges();
         this._notify();
         return true;
     }
