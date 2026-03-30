@@ -254,6 +254,8 @@
 
 .vcs-badge-in-progress {
     animation: vcs-pulse 1.5s ease-in-out infinite;
+    outline: 2px solid #fff;
+    outline-offset: -1px;
 }
 
 @keyframes vcs-pulse {
