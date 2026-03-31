@@ -88,20 +88,20 @@ export class VibeCodingSimUI {
         if (d.timeLabel) {
             const dayElapsed = gs.simulatedTime - gs.creditDayStart;
             d.timeLabel.textContent = gs.timeStr;
-            if (d.timeBar) d.timeBar.style.width = `${Math.round(Math.min(dayElapsed / gs.config.dayDuration, 1) * 100)}%`;
+            if (d.timeBar) d.timeBar.style.width = `${Math.min(dayElapsed / gs.config.dayDuration, 1) * 100}%`;
         }
         if (d.creditLabel) {
             d.creditLabel.textContent = `Credits: ${gs.creditHours.toFixed(1)}h`;
-            if (d.creditBar) d.creditBar.style.width = `${Math.round(gs.creditsRemaining / gs.config.dailyCredits * 100)}%`;
+            if (d.creditBar) d.creditBar.style.width = `${gs.creditsRemaining / gs.config.dailyCredits * 100}%`;
         }
         if (d.reviewLabel) {
             const remainH = gs.reviewBudgetRemaining / 60;
             d.reviewLabel.textContent = `Review: ${remainH.toFixed(1)}h`;
-            if (d.reviewBar) d.reviewBar.style.width = `${Math.round(gs.reviewBudgetRemaining / gs.config.dailyReviewBudget * 100)}%`;
+            if (d.reviewBar) d.reviewBar.style.width = `${gs.reviewBudgetRemaining / gs.config.dailyReviewBudget * 100}%`;
         }
         if (d.progressLabel) {
             d.progressLabel.textContent = `Progress: ${Math.round(gs.overallProgress * 100)}%`;
-            if (d.progressBar) d.progressBar.style.width = `${Math.round(gs.overallProgress * 100)}%`;
+            if (d.progressBar) d.progressBar.style.width = `${gs.overallProgress * 100}%`;
         }
         if (d.manualTestToolbar) {
             if (gs.isManualTestActive) {
@@ -115,14 +115,14 @@ export class VibeCodingSimUI {
         // Task progress bars, labels, and event marker reveal
         const updateTaskDyn = (task) => {
             const fill = d[`task-bar-${task.id}`];
-            if (fill) fill.style.width = `${Math.round(task.overallProgress * 100)}%`;
+            if (fill) fill.style.width = `${task.overallProgress * 100}%`;
             const label = d[`task-label-${task.id}`];
             if (label && task.status === TaskStatus.RUNNING) label.textContent = task.currentSubtaskLabel;
 
             // Review bar
             const reviewFill = d[`task-review-bar-${task.id}`];
             if (reviewFill) {
-                reviewFill.style.width = `${Math.round(task.reviewProgress * 100)}%`;
+                reviewFill.style.width = `${task.reviewProgress * 100}%`;
             }
 
             // Reveal event markers as review progresses
@@ -175,16 +175,16 @@ export class VibeCodingSimUI {
         // Feature inline task bars
         for (const task of gs.getRunningTasks()) {
             const fill = d[`feat-task-bar-${task.id}`];
-            if (fill) fill.style.width = `${Math.round(task.overallProgress * 100)}%`;
+            if (fill) fill.style.width = `${task.overallProgress * 100}%`;
             const label = d[`feat-task-label-${task.id}`];
             if (label) label.textContent = ` ${task.currentSubtaskLabel}`;
         }
 
         // Manual test & workflow
         if (d.manualTestBar && gs.isManualTestActive)
-            d.manualTestBar.style.width = `${Math.round((gs.manualTestProgress ?? 0) * 100)}%`;
+            d.manualTestBar.style.width = `${(gs.manualTestProgress ?? 0) * 100}%`;
         if (d.workflowBar && gs.testWorkflow && !gs.testWorkflow.complete)
-            d.workflowBar.style.width = `${Math.round((gs.testWorkflowProgress ?? 0) * 100)}%`;
+            d.workflowBar.style.width = `${(gs.testWorkflowProgress ?? 0) * 100}%`;
     }
 
     // ========== Toolbar ==========
@@ -250,7 +250,7 @@ export class VibeCodingSimUI {
         w.className = 'vcs-toolbar-item vcs-toolbar-bar-item';
         const bg = document.createElement('div');
         bg.className = 'vcs-toolbar-bar-bg';
-        bg.style.width = `${Math.round(Math.max(0, Math.min(1, pct)) * 100)}%`;
+        bg.style.width = `${Math.max(0, Math.min(1, pct)) * 100}%`;
         bg.style.background = color;
         w.appendChild(bg);
         const lbl = document.createElement('span');
@@ -881,7 +881,7 @@ export class VibeCodingSimUI {
         bar.className = 'vcs-progress-bar';
         const fill = document.createElement('div');
         fill.className = 'vcs-progress-fill';
-        fill.style.width = `${Math.round(pct * 100)}%`;
+        fill.style.width = `${pct * 100}%`;
         bar.appendChild(fill);
         if (boundaries) {
             for (const pos of boundaries) {

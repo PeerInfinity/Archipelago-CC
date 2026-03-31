@@ -741,6 +741,8 @@ class GameState {
         for (const e of task.events) {
             if (e.type === 'quality' || e.type === 'outcome') task.pendingQuality += e.qualityDelta;
         }
+        // Add rewind event to the task log
+        task.events.push(new TaskEvent(toMinute, 'rewind', `Rewound to minute ${toMinute}`, null));
         // Reset elapsed time
         task.elapsedMinutes = toMinute;
         task.fractionalMinute = 0;
@@ -974,16 +976,20 @@ class GameState {
                 this._rollMinuteEvent(task);
             }
 
-            // Check if we just finished the testing subtask — roll for inline regression
-            if (task.elapsedMinutes >= task.totalDuration && !task._regressionChecked) {
-                task._regressionChecked = true;
-                if (this._rollInlineRegression()) {
-                    this._addFixCycle(task);
-                }
-            }
-
             // Check if task is done
             if (task.elapsedMinutes >= task.totalDuration) {
+                // Roll for whether the agent catches a negative event and rewinds
+                if (this._rollInlineRegression()) {
+                    const negEvents = task.events.filter(e =>
+                        (e.type === 'quality' || e.type === 'outcome') && !e.positive);
+                    if (negEvents.length > 0) {
+                        const firstNeg = negEvents.reduce((a, b) => a.minute < b.minute ? a : b);
+                        const stepIdx = task.stepIndexAtMinute(firstNeg.minute);
+                        this._addLog(`${task.label}: agent noticed issue, rewinding to fix`);
+                        this._rewindTask(task, task.stepStartMinute(stepIdx));
+                        break;
+                    }
+                }
                 this._finishTask(task);
                 return true;
             }
@@ -1003,28 +1009,6 @@ class GameState {
         // sideEffectRate chance of a regression, and if so, regressionCatchRate chance of catching it
         return this.rng.random() < this.config.sideEffectRate &&
                this.rng.random() < this.config.regressionCatchRate;
-    }
-
-    _addFixCycle(task) {
-        const feat = this.features.get(task.targetFeatureId);
-        const durationMult = (feat && !feat.depsAreMet) ? this.config.depsNotMetMultiplier : 1;
-        const fixDur = Math.max(1, Math.round(
-            this.config.baseTaskDuration * durationMult *
-            Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
-        ));
-        const retestDur = Math.max(1, Math.round(
-            this.config.baseTaskDuration * this.config.mergeTaskDurationScale * durationMult *
-            Math.exp(this.rng.gauss(0, this.config.durationLogSigma))
-        ));
-        const fixStart = task.totalDuration;
-        task.subtaskDurations.push(fixDur, retestDur);
-        task.subtaskLabels.push(SubtaskLabel.FIXING, SubtaskLabel.TESTING);
-        // Add step events for the new subtasks
-        task.events.push(new TaskEvent(fixStart, 'step', `Started: ${SubtaskLabel.FIXING}`, null));
-        task.events.push(new TaskEvent(fixStart + fixDur, 'step', `Started: ${SubtaskLabel.TESTING}`, null));
-        // Allow another regression check at end of this new testing phase
-        task._regressionChecked = false;
-        this._addLog(`${task.label}: found issue during testing, fixing`);
     }
 
     /** Roll the main outcome event and place it at a random position in the timeline. */
