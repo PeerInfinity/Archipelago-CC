@@ -86,13 +86,13 @@ export class VibeCodingSimUI {
 
         // Toolbar
         if (d.timeLabel) {
-            const weekElapsed = gs.simulatedTime - gs.weekStart;
+            const dayElapsed = gs.simulatedTime - gs.creditDayStart;
             d.timeLabel.textContent = gs.timeStr;
-            if (d.timeBar) d.timeBar.style.width = `${Math.round(Math.min(weekElapsed / gs.config.weekDuration, 1) * 100)}%`;
+            if (d.timeBar) d.timeBar.style.width = `${Math.round(Math.min(dayElapsed / gs.config.dayDuration, 1) * 100)}%`;
         }
         if (d.creditLabel) {
             d.creditLabel.textContent = `Credits: ${gs.creditHours.toFixed(1)}h`;
-            if (d.creditBar) d.creditBar.style.width = `${Math.round(gs.creditsRemaining / gs.config.weeklyCredits * 100)}%`;
+            if (d.creditBar) d.creditBar.style.width = `${Math.round(gs.creditsRemaining / gs.config.dailyCredits * 100)}%`;
         }
         if (d.reviewLabel) {
             const remainH = gs.reviewBudgetRemaining / 60;
@@ -117,20 +117,18 @@ export class VibeCodingSimUI {
             const fill = d[`task-bar-${task.id}`];
             if (fill) fill.style.width = `${Math.round(task.overallProgress * 100)}%`;
             const label = d[`task-label-${task.id}`];
-            if (label) label.textContent = task.currentSubtaskLabel;
+            if (label && task.status === TaskStatus.RUNNING) label.textContent = task.currentSubtaskLabel;
 
             // Review bar
             const reviewFill = d[`task-review-bar-${task.id}`];
             if (reviewFill) {
-                const total = task.totalDuration;
-                const pct = total > 0 ? Math.min(task.reviewMinute / total, 1) : 0;
-                reviewFill.style.width = `${Math.round(pct * 100)}%`;
+                reviewFill.style.width = `${Math.round(task.reviewProgress * 100)}%`;
             }
 
             // Reveal event markers as review progresses
             const markerEls = d[`task-markers-${task.id}`];
             if (markerEls) {
-                const revealedFrac = task.totalDuration > 0 ? task.reviewMinute / task.totalDuration : 0;
+                const revealedFrac = task.reviewProgress;
                 for (const m of markerEls) {
                     m.style.display = parseFloat(m.dataset.position) <= revealedFrac ? '' : 'none';
                 }
@@ -142,6 +140,14 @@ export class VibeCodingSimUI {
             if (logEntries && storedCount !== undefined && task.events.length !== storedCount) {
                 this.render();
                 return;
+            }
+
+            // Update rewind button disabled state
+            const rwNeg = d[`task-rwneg-${task.id}`];
+            if (rwNeg) {
+                const hasNeg = task.events.some(e =>
+                    (e.type === 'quality' || e.type === 'outcome') && !e.positive && e.minute < task.reviewMinute);
+                rwNeg.disabled = !hasNeg;
             }
 
             // Reveal event log entries as review progresses
@@ -163,6 +169,8 @@ export class VibeCodingSimUI {
         };
         for (const task of gs.getRunningTasks()) updateTaskDyn(task);
         for (const task of gs.getPendingReviewTasks()) updateTaskDyn(task);
+        // Also update completed tasks (for review bar and rewind button state)
+        for (const task of gs.getCompletedTasks()) updateTaskDyn(task);
 
         // Feature inline task bars
         for (const task of gs.getRunningTasks()) {
@@ -185,12 +193,12 @@ export class VibeCodingSimUI {
         const bar = document.createElement('div');
         bar.className = 'vcs-toolbar';
 
-        const weekElapsed = gs.simulatedTime - gs.weekStart;
-        const [timeEl, timeBar, timeLabel] = this._toolbarBar(gs.timeStr, Math.min(weekElapsed / gs.config.weekDuration, 1), '#3a5070');
+        const dayElapsed = gs.simulatedTime - gs.creditDayStart;
+        const [timeEl, timeBar, timeLabel] = this._toolbarBar(gs.timeStr, Math.min(dayElapsed / gs.config.dayDuration, 1), '#3a5070');
         this._dyn.timeBar = timeBar; this._dyn.timeLabel = timeLabel;
         bar.appendChild(timeEl);
 
-        const [creditEl, creditBar, creditLabel] = this._toolbarBar(`Credits: ${gs.creditHours.toFixed(1)}h`, gs.creditsRemaining / gs.config.weeklyCredits, '#4a6a3a');
+        const [creditEl, creditBar, creditLabel] = this._toolbarBar(`Credits: ${gs.creditHours.toFixed(1)}h`, gs.creditsRemaining / gs.config.dailyCredits, '#4a6a3a');
         this._dyn.creditBar = creditBar; this._dyn.creditLabel = creditLabel;
         bar.appendChild(creditEl);
 
@@ -675,8 +683,7 @@ export class VibeCodingSimUI {
 
             // Review bar (on top) — show when expanded, or when collapsed with review progress
             if (isExpanded || task.reviewMinute > 0) {
-                const [reviewBar, reviewFill] = this._progressBar(
-                    task.totalDuration > 0 ? task.reviewMinute / task.totalDuration : 0);
+                const [reviewBar, reviewFill] = this._progressBar(task.reviewProgress);
                 reviewBar.classList.add('vcs-review-bar');
                 this._dyn[`task-review-bar-${task.id}`] = reviewFill;
                 barContainer.appendChild(reviewBar);
@@ -684,7 +691,7 @@ export class VibeCodingSimUI {
 
             // Main bar with markers — create all markers, hide unrevealed ones
             const allMarkers = task.eventMarkers;
-            const revealedFrac = task.totalDuration > 0 ? task.reviewMinute / task.totalDuration : 0;
+            const revealedFrac = task.reviewProgress;
             const [bar, fill, markerEls] = this._progressBar(task.overallProgress, task.subtaskBoundaries, null, allMarkers, revealedFrac);
             this._dyn[`task-bar-${task.id}`] = fill;
             this._dyn[`task-markers-${task.id}`] = markerEls;
@@ -694,7 +701,12 @@ export class VibeCodingSimUI {
 
             const meta = document.createElement('div');
             meta.className = 'vcs-card-meta';
-            meta.textContent = task.currentSubtaskLabel;
+            if (task.status === TaskStatus.PENDING_REVIEW) {
+                meta.textContent = task.reportedSuccess ? 'Agent reports: success' : 'Agent reports: issues found';
+                if (!task.reportedSuccess) meta.classList.add('vcs-event-negative');
+            } else {
+                meta.textContent = task.currentSubtaskLabel;
+            }
             this._dyn[`task-label-${task.id}`] = meta;
             card.appendChild(meta);
         }
@@ -770,18 +782,20 @@ export class VibeCodingSimUI {
         const details = document.createElement('div');
         details.className = 'vcs-card-details vcs-event-log';
 
-        // Rewind buttons
-        if (task.status === TaskStatus.RUNNING || task.status === TaskStatus.PENDING_REVIEW) {
+        // Rewind buttons — shown for running, pending review, and completed tasks
+        if (task.status === TaskStatus.RUNNING || task.status === TaskStatus.PENDING_REVIEW || task.status === TaskStatus.COMPLETED) {
             const controls = document.createElement('div');
             controls.className = 'vcs-rewind-controls';
 
-            const hasNeg = task.events.some(e => e.type === 'quality' && !e.positive && e.minute < task.reviewMinute);
+            const hasNeg = task.events.some(e =>
+                (e.type === 'quality' || e.type === 'outcome') && !e.positive && e.minute < task.reviewMinute);
 
             const rwNeg = document.createElement('button');
             rwNeg.className = 'vcs-btn vcs-btn-small';
             rwNeg.textContent = '⏪ First issue';
             rwNeg.title = 'Rewind to first negative event';
             rwNeg.disabled = !hasNeg;
+            this._dyn[`task-rwneg-${task.id}`] = rwNeg;
             rwNeg.addEventListener('click', (e) => { e.stopPropagation(); gs.rewindToFirstNegative(task.id); this.render(); });
             controls.appendChild(rwNeg);
 
@@ -835,7 +849,7 @@ export class VibeCodingSimUI {
 
         // Review summary shown when review reaches 100%
         const summary = document.createElement('div');
-        summary.className = 'vcs-event-entry vcs-review-summary';
+        summary.className = `vcs-event-entry vcs-review-summary ${task.pendingQuality >= 0 ? 'vcs-event-positive' : 'vcs-event-negative'}`;
         summary.textContent = `Review complete — ${this._describeTaskQuality(task.pendingQuality)}`;
         const reviewComplete = task.totalDuration > 0 && revealedMinute >= task.totalDuration;
         if (!reviewComplete) summary.style.display = 'none';

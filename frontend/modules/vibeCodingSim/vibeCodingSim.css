@@ -457,8 +457,6 @@
 
 /* Event log */
 .vcs-event-log {
-    max-height: 200px;
-    overflow-y: auto;
 }
 
 .vcs-event-entries {
@@ -485,7 +483,6 @@
 }
 
 .vcs-review-summary {
-    color: #b8b8b8;
     font-weight: 600;
     padding-top: 4px;
     margin-top: 4px;

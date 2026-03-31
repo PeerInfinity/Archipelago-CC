@@ -101,8 +101,8 @@ class SimulationConfig {
         this.timeScale = 60.0;
         this.baseTaskDuration = 10.0; // base minutes per subtask
 
-        this.weeklyCredits = 5040.0;
-        this.weekDuration = 7 * 24 * 60;
+        this.dailyCredits = 960.0; // 16 hours of task execution per day
+        this.dayDuration = 24 * 60;
         this.creditRate = 1.0;
 
         // Event probabilities (per minute)
@@ -311,7 +311,13 @@ class Task {
     get overallProgress() {
         const total = this.totalDuration;
         if (total <= 0) return 0;
-        return Math.min(this.elapsedMinutes / total, 1.0);
+        return Math.min((this.elapsedMinutes + this.fractionalMinute) / total, 1.0);
+    }
+
+    get reviewProgress() {
+        const total = this.totalDuration;
+        if (total <= 0) return 0;
+        return Math.min((this.reviewMinute + this.reviewFractional) / total, 1.0);
     }
 
     /** Returns fractional positions (0-1) where each subtask boundary falls. */
@@ -386,8 +392,8 @@ class GameState {
         this.features = new Map();
         this.tasks = [];
         this.simulatedTime = 0;
-        this.creditsRemaining = this.config.weeklyCredits;
-        this.weekStart = 0;
+        this.creditsRemaining = this.config.dailyCredits;
+        this.creditDayStart = 0;
         this.testWorkflow = null;
         this.manualTestFeatureId = null;
         this.manualTestStartedAt = null;
@@ -493,9 +499,10 @@ class GameState {
     /** Get all tasks in stable creation order for display. */
     getOrderedTasks() {
         // Merge conflicts at top, then everything else in creation order
+        // Merge conflicts at top, then everything else newest-first
         const merges = this.tasks.filter(t => t.status === TaskStatus.MERGE_CONFLICT);
         const rest = this.tasks.filter(t => t.status !== TaskStatus.MERGE_CONFLICT);
-        return [...merges, ...rest];
+        return [...merges, ...rest.reverse()];
     }
 
     getFeatureActions(featureId) {
@@ -574,21 +581,37 @@ class GameState {
                 t => t.id !== task.id && t.status === TaskStatus.RUNNING &&
                      t.targetFeatureId === featureId && t.type === taskType
             );
-            const existingMerge = this.tasks.find(
-                t => t.status === TaskStatus.MERGE_CONFLICT && t._pendingMerge &&
-                     t.targetFeatureId === featureId &&
-                     t._sourceTaskIds?.some(id => otherRunning.some(o => o.id === id))
-            );
-            if (otherRunning.length > 0 && !existingMerge) {
-                const mergeTask = new Task(TaskType.MERGE_CONFLICT, featureId);
-                mergeTask.createdAt = this.simulatedTime;
-                mergeTask.startedAt = this.simulatedTime;
-                mergeTask.status = TaskStatus.MERGE_CONFLICT;
-                mergeTask._pendingMerge = true;
-                mergeTask._sourceTaskIds = [otherRunning[0].id, task.id];
-                mergeTask._mergeTaskType = taskType;
-                this.tasks.push(mergeTask);
-                this._addLog(`Potential merge conflict: two agents on ${featureId}`);
+            if (otherRunning.length > 0) {
+                // Find any existing merge for this feature/type that hasn't been accepted/rejected
+                const existingMerge = this.tasks.find(
+                    t => t.targetFeatureId === featureId && t._mergeTaskType === taskType &&
+                         (t.status === TaskStatus.MERGE_CONFLICT ||
+                          (t.type === TaskType.MERGE_CONFLICT &&
+                           (t.status === TaskStatus.RUNNING || t.status === TaskStatus.PENDING_REVIEW)))
+                );
+                if (existingMerge) {
+                    // Reset to pending and add new task as source
+                    if (!existingMerge._sourceTaskIds.includes(task.id)) {
+                        existingMerge._sourceTaskIds.push(task.id);
+                    }
+                    existingMerge.status = TaskStatus.MERGE_CONFLICT;
+                    existingMerge._pendingMerge = true;
+                    existingMerge.createdAt = this.simulatedTime;
+                    existingMerge.completedAt = null;
+                    existingMerge.reportedSuccess = null;
+                    this._addLog(`Merge conflict reset: ${existingMerge._sourceTaskIds.length} agents on ${featureId}`);
+                } else {
+                    const allSourceIds = [...otherRunning.map(t => t.id), task.id];
+                    const mergeTask = new Task(TaskType.MERGE_CONFLICT, featureId);
+                    mergeTask.createdAt = this.simulatedTime;
+                    mergeTask.startedAt = this.simulatedTime;
+                    mergeTask.status = TaskStatus.MERGE_CONFLICT;
+                    mergeTask._pendingMerge = true;
+                    mergeTask._sourceTaskIds = allSourceIds;
+                    mergeTask._mergeTaskType = taskType;
+                    this.tasks.push(mergeTask);
+                    this._addLog(`Potential merge conflict: ${allSourceIds.length} agents on ${featureId}`);
+                }
             }
         }
 
@@ -681,8 +704,9 @@ class GameState {
     rewindToFirstNegative(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (!task) return false;
-        const firstNeg = task.events.find(e => e.type === 'quality' && !e.positive);
-        if (!firstNeg) return false;
+        const negEvents = task.events.filter(e => (e.type === 'quality' || e.type === 'outcome') && !e.positive);
+        if (negEvents.length === 0) return false;
+        const firstNeg = negEvents.reduce((a, b) => a.minute < b.minute ? a : b);
         const stepIdx = task.stepIndexAtMinute(firstNeg.minute);
         return this._rewindTask(task, task.stepStartMinute(stepIdx));
     }
@@ -866,11 +890,11 @@ class GameState {
         const dt = dtReal * this.config.timeScale * this.speedMultiplier / 60.0;
         this.simulatedTime += dt;
 
-        // Weekly credit refresh
-        if (this.simulatedTime - this.weekStart >= this.config.weekDuration) {
-            this.creditsRemaining = this.config.weeklyCredits;
-            this.weekStart = this.simulatedTime;
-            this._addLog('Weekly credits refreshed!');
+        // Daily credit refresh
+        if (this.simulatedTime - this.creditDayStart >= this.config.dayDuration) {
+            this.creditsRemaining = this.config.dailyCredits;
+            this.creditDayStart = this.simulatedTime;
+            this._addLog('Daily credits refreshed!');
         }
 
         // Daily review budget refresh
@@ -1042,6 +1066,8 @@ class GameState {
     _finishTask(task) {
         task.status = this.autoAccept ? TaskStatus.COMPLETED : TaskStatus.PENDING_REVIEW;
         task.completedAt = this.simulatedTime;
+        // Agent's self-report — may falsely report success
+        task.reportedSuccess = this._rollReportedSuccess(task.pendingQuality >= 0);
 
         if (this.autoAccept) {
             task.accepted = true;
@@ -1052,13 +1078,23 @@ class GameState {
             }
         }
 
-        this._addLog(`Finished: ${task.label}`);
+        this._addLog(`Finished: ${task.label} — ${task.reportedSuccess ? 'reports success' : 'reports issues'}`);
     }
 
     _tickReview(dt) {
         const task = this.tasks.find(t => t.id === this.activeReviewTaskId);
         if (!task) {
             this.activeReviewTaskId = null;
+            return;
+        }
+
+        // Don't consume review budget if review is already complete
+        const maxMinute = task.elapsedMinutes;
+        const maxFrac = task.fractionalMinute;
+        if (task.reviewMinute > maxMinute ||
+            (task.reviewMinute === maxMinute && task.reviewFractional >= maxFrac)) {
+            task.reviewMinute = maxMinute;
+            task.reviewFractional = maxFrac;
             return;
         }
 
@@ -1072,10 +1108,10 @@ class GameState {
         }
 
         // Can't pass the main task progress
-        const maxReview = task.elapsedMinutes;
-        if (task.reviewMinute > maxReview) {
-            task.reviewMinute = maxReview;
-            task.reviewFractional = 0;
+        if (task.reviewMinute > maxMinute ||
+            (task.reviewMinute === maxMinute && task.reviewFractional > maxFrac)) {
+            task.reviewMinute = maxMinute;
+            task.reviewFractional = maxFrac;
         }
     }
 
