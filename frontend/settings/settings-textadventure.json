@@ -1,0 +1,23 @@
+{
+  "activeLayout": "textadventure",
+  "moduleSettings": {
+    "regionGraph": {
+      "showRegionInPanel": false
+    },
+    "discovery": {
+      "enableDiscoveryMode": true,
+      "regionDiscoveryTrigger": "onEnter",
+      "autoDiscoverLocations": true,
+      "autoDiscoverExits": true,
+      "undiscoveredDisplay": "placeholder",
+      "clickDiscoversRegion": true,
+      "disableLocationCheckUI": true,
+      "clickDiscoversLocation": true,
+      "showUndiscoveredRegionNames": true
+    },
+    "textAdventure": {
+      "enableDiscoveryMode": true,
+      "autoLoadCustomData": "adventure"
+    }
+  }
+}

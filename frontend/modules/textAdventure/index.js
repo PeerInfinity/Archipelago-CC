@@ -74,6 +74,11 @@ export async function register(registrationApi) {
             type: 'boolean',
             default: false,
             description: 'Enable discovery mode for text adventure'
+        },
+        autoLoadCustomData: {
+            type: 'string',
+            default: '',
+            description: 'Automatically load this custom data file on startup (e.g., "adventure")'
         }
     });
 

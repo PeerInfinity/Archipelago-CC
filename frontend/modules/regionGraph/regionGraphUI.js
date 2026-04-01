@@ -650,13 +650,43 @@ export class RegionGraphUI {
           }
         },
         {
-          // Undiscovered but accessible: keep ??? text style but show accessibility coloring
+          // Undiscovered but accessible: default to dark green, overridden by interior color classes below
           selector: 'node.undiscovered-placeholder.accessible',
           style: {
             'background-color': '#2d5a1e',
             'border-color': '#52b845',
             'opacity': 0.8,
             'color': '#ccc'
+          }
+        },
+        {
+          // Undiscovered but accessible with all locations accessible
+          selector: 'node.undiscovered-placeholder.accessible.all-accessible',
+          style: {
+            'background-color': '#2d5a1e'
+          }
+        },
+        {
+          // Undiscovered but accessible with mixed location accessibility
+          selector: 'node.undiscovered-placeholder.accessible.mixed-locations',
+          style: {
+            'background-color': '#8a7a1a'
+          }
+        },
+        {
+          // Undiscovered but accessible with all locations inaccessible
+          selector: 'node.undiscovered-placeholder.accessible.all-inaccessible',
+          style: {
+            'background-color': '#6b2e2e'
+          }
+        },
+        {
+          // Undiscovered but accessible with all locations checked
+          selector: 'node.undiscovered-placeholder.accessible.completed',
+          style: {
+            'background-color': '#000',
+            'border-color': '#52b845',
+            'border-width': 3
           }
         },
         // Undiscovered edge styles (Discovery Mode)

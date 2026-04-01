@@ -345,6 +345,12 @@ export class LayoutControlsManager {
         logger.debug(`Positioning player with saved positions at ${this.ui.initialPlayerRegion}`);
         this.ui.updatePlayerLocation(this.ui.initialPlayerRegion);
         this.ui.initialPlayerRegion = null;
+
+        // Refresh node colors now that player positioning is complete
+        const snapshot = stateManager.getLatestStateSnapshot();
+        if (snapshot) {
+          this.ui.dataManager.onStateUpdate({ snapshot });
+        }
       }
 
       return;

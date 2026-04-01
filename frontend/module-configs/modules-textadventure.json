@@ -1,0 +1,100 @@
+{
+  "moduleDefinitions": {
+    "modules": {
+      "path": "./modules/modules/index.js",
+      "enabled": true
+    },
+    "json": {
+      "path": "./modules/json/index.js",
+      "enabled": true
+    },
+    "stateManager": {
+      "path": "./modules/stateManager/index.js",
+      "enabled": true
+    },
+    "client": {
+      "path": "./modules/client/index.js",
+      "enabled": true
+    },
+    "timer": {
+      "path": "./modules/timer/index.js",
+      "enabled": true
+    },
+    "inventory": {
+      "path": "./modules/inventory/index.js",
+      "enabled": true
+    },
+    "editorCore": {
+      "path": "./modules/editorCore/index.js",
+      "enabled": true
+    },
+    "editorCodeMirror6": {
+      "path": "./modules/editorCodeMirror6/index.js",
+      "enabled": true,
+      "requires": ["editorCore"]
+    },
+    "settings": {
+      "path": "./modules/settings/index.js",
+      "enabled": true
+    },
+    "optionsPanel": {
+      "path": "./modules/optionsPanel/index.js",
+      "enabled": true
+    },
+    "commonUI": {
+      "path": "./modules/commonUI/index.js",
+      "enabled": true
+    },
+    "regionGraph": {
+      "path": "./modules/regionGraph/index.js",
+      "enabled": true,
+      "requires": ["stateManager", "playerState"]
+    },
+    "discovery": {
+      "path": "./modules/discovery/index.js",
+      "enabled": true
+    },
+    "discoveryPanel": {
+      "path": "./modules/discoveryPanel/index.js",
+      "enabled": true,
+      "requires": ["discovery"]
+    },
+    "playerState": {
+      "path": "./modules/playerState/index.js",
+      "enabled": true
+    },
+    "playerStatePanel": {
+      "path": "./modules/playerStatePanel/index.js",
+      "enabled": true
+    },
+    "presets": {
+      "path": "./modules/presets/index.js",
+      "enabled": true
+    },
+    "textAdventure": {
+      "path": "./modules/textAdventure/index.js",
+      "enabled": true,
+      "requires": ["stateManager", "playerState", "discovery"]
+    }
+  },
+  "loadPriority": [
+    "modules",
+    "json",
+    "stateManager",
+    "client",
+    "timer",
+    "inventory",
+    "editorCore",
+    "editorCodeMirror6",
+    "settings",
+    "optionsPanel",
+    "commonUI",
+    "regionGraph",
+    "discovery",
+    "discoveryPanel",
+    "playerState",
+    "playerStatePanel",
+    "presets",
+    "textAdventure"
+  ]
+}

@@ -37,7 +37,7 @@ export class GraphInteractionManager {
     });
 
     this.ui.cy.on('layoutstop', () => {
-      this.ui.isLayoutRunning = false;
+      // Keep isLayoutRunning true during animation to prevent premature player positioning
 
       // Capture the current layout generation so we can detect if the graph
       // was rebuilt before this timeout fires (stale layoutstop from a stopped layout)
@@ -52,6 +52,7 @@ export class GraphInteractionManager {
           return;
         }
 
+        this.ui.isLayoutRunning = false;
         this.ui.saveNodePositions();
         this.ui.updateStatus('Layout complete');
 
@@ -60,8 +61,14 @@ export class GraphInteractionManager {
           logger.debug(`Positioning player after layout animation at ${this.ui.initialPlayerRegion}`);
           this.ui.updatePlayerLocation(this.ui.initialPlayerRegion);
           this.ui.initialPlayerRegion = null; // Clear it so we don't reposition on subsequent layouts
+
+          // Refresh node colors now that layout and player positioning are complete
+          const snapshot = stateManager.getLatestStateSnapshot();
+          if (snapshot) {
+            this.ui.dataManager.onStateUpdate({ snapshot });
+          }
         }
-      }, 200); // Add small buffer to ensure animation is complete
+      }, 1050); // Wait for layout animation (1000ms) plus buffer
     });
 
     // Update location nodes when region nodes are dragged
@@ -438,6 +445,16 @@ export class GraphInteractionManager {
       const fullPath = playerState.getPath();
 
       if (!fullPath || fullPath.length < 1) return;
+
+      // Highlight edge from start region to first destination
+      if (this.ui.currentPath.length > 0 && this.ui.currentPath[0].sourceRegion) {
+        const firstSource = this.ui.currentPath[0].sourceRegion;
+        const firstDest = this.ui.currentPath[0].destinationRegion;
+        const firstEdge = this.ui.cy.edges(`[source="${firstSource}"][target="${firstDest}"], [source="${firstDest}"][target="${firstSource}"]`);
+        if (firstEdge && firstEdge.length > 0) {
+          firstEdge.addClass('in-path');
+        }
+      }
 
       // Highlight edges between consecutive regions in the path (regionMove entries)
       for (let i = 0; i < this.ui.currentPath.length - 1; i++) {

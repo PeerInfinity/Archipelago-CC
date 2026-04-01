@@ -194,12 +194,12 @@
     },
     "jtaGameDataPanel": {
       "path": "./modules/jtaGameDataPanel/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["iframeAdapter", "iframePanel"]
     },
     "jtaCostDebugger": {
       "path": "./modules/jtaCostDebugger/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["jtaGameDataPanel"]
     },
     "windowAdapter": {
@@ -222,28 +222,33 @@
     },
     "proofQueue": {
       "path": "./modules/proofQueue/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["stateManager"]
     },
     "proofGraph": {
       "path": "./modules/proofGraph/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["stateManager"]
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["iframeAdapter", "iframePanel"]
     },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["jtaQueueEngine"]
     },
     "jtaArchipelago": {
       "path": "./modules/jtaArchipelago/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["stateManager", "client", "iframeAdapter", "iframePanel"]
+    },
+    "vibeCodingSim": {
+      "path": "./modules/vibeCodingSim/index.js",
+      "enabled": false,
+      "requires": ["stateManager"]
     }
   },
   "loadPriority": [
@@ -300,6 +305,7 @@
     "proofGraph",
     "jtaQueueEngine",
     "jtaActionQueue",
-    "jtaArchipelago"
+    "jtaArchipelago",
+    "vibeCodingSim"
   ]
 }
