@@ -114,6 +114,7 @@ import * as proofGraphModule from './modules/proofGraph/index.js';
 import * as jtaQueueEngineModule from './modules/jtaQueueEngine/index.js';
 import * as jtaActionQueueModule from './modules/jtaActionQueue/index.js';
 import * as jtaArchipelagoModule from './modules/jtaArchipelago/index.js';
+import * as vibeCodingSimModule from './modules/vibeCodingSim/index.js';
 
 // ============================================================================
 // STATIC TEST CASE IMPORTS - These get bundled and self-register on import
@@ -197,6 +198,7 @@ const BUNDLED_MODULES = {
   jtaQueueEngine: jtaQueueEngineModule,
   jtaActionQueue: jtaActionQueueModule,
   jtaArchipelago: jtaArchipelagoModule,
+  vibeCodingSim: vibeCodingSimModule,
 };
 
 // Make bundled modules available globally for the module loader
