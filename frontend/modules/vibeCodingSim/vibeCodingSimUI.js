@@ -16,9 +16,16 @@ function testColor(pct) {
     return '#c0392b';
 }
 
-function manualResultLabel(result) {
-    return { incomplete: '⚠ Incomplete', doc: '⚠ Doc', code: '⚠ Code',
-             tests: '⚠ Tests', pass: '✓ Passed' }[result] || '';
+function manualResultLabel(feat) {
+    if (feat.manualTestResult === 'pass') return '✓ Passed';
+    if (!feat.manualReviewIssues) return '';
+    const { doc, code, tests } = feat.manualReviewIssues;
+    const parts = [];
+    if (doc > 0) parts.push(`Doc: ${doc}`);
+    if (code > 0) parts.push(`Code: ${code}`);
+    if (tests > 0) parts.push(`Tests: ${tests}`);
+    if (parts.length === 0) return '✓ No issues';
+    return `⚠ ${parts.join(', ')}`;
 }
 
 export class VibeCodingSimUI {
@@ -35,6 +42,8 @@ export class VibeCodingSimUI {
         this.featureSearch = '';
         this.visibleColumns = { features: true, tasks: true };
         this.autoSkipTesting = false;
+        this.autoTest = false;
+        this.autoRewind = false;
         this._dyn = {};
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'vcs-panel';
@@ -104,8 +113,9 @@ export class VibeCodingSimUI {
             if (d.progressBar) d.progressBar.style.width = `${gs.overallProgress * 100}%`;
         }
         if (d.manualTestToolbar) {
-            if (gs.isManualTestActive) {
-                d.manualTestToolbar.textContent = `🔍 Testing: ${gs.manualTestFeatureId} (${Math.round((gs.manualTestProgress ?? 0) * 100)}%)`;
+            const mt = gs.activeManualTestTask;
+            if (mt) {
+                d.manualTestToolbar.textContent = `🔍 Reviewing: ${mt.targetFeatureId} (${Math.round(mt.overallProgress * 100)}%)`;
                 d.manualTestToolbar.style.display = '';
             } else {
                 d.manualTestToolbar.style.display = 'none';
@@ -117,7 +127,9 @@ export class VibeCodingSimUI {
             const fill = d[`task-bar-${task.id}`];
             if (fill) fill.style.width = `${task.overallProgress * 100}%`;
             const label = d[`task-label-${task.id}`];
-            if (label && task.status === TaskStatus.RUNNING) label.textContent = task.currentSubtaskLabel;
+            if (label && task.status === TaskStatus.RUNNING && task.type !== TaskType.MANUAL_TEST) {
+                label.textContent = task.currentSubtaskLabel;
+            }
 
             // Review bar
             const reviewFill = d[`task-review-bar-${task.id}`];
@@ -146,7 +158,7 @@ export class VibeCodingSimUI {
             const rwNeg = d[`task-rwneg-${task.id}`];
             if (rwNeg) {
                 const hasNeg = task.events.some(e =>
-                    (e.type === 'quality' || e.type === 'outcome') && !e.positive && e.minute < task.reviewMinute);
+                    (e.type === 'quality' || e.type === 'outcome') && !e.positive && e.minute <= task.reviewMinute);
                 rwNeg.disabled = !hasNeg;
             }
 
@@ -180,9 +192,22 @@ export class VibeCodingSimUI {
             if (label) label.textContent = ` ${task.currentSubtaskLabel}`;
         }
 
-        // Manual test & workflow
-        if (d.manualTestBar && gs.isManualTestActive)
-            d.manualTestBar.style.width = `${(gs.manualTestProgress ?? 0) * 100}%`;
+        // Manual review event reveal
+        for (const task of gs.getRunningTasks()) {
+            const manualEntries = d[`manual-log-entries-${task.id}`];
+            if (manualEntries && task.type === TaskType.MANUAL_TEST) {
+                let anyRevealed = false;
+                for (const el of manualEntries) {
+                    const visible = parseFloat(el.dataset.minute) <= task.reviewMinute;
+                    el.style.display = visible ? '' : 'none';
+                    if (visible) anyRevealed = true;
+                }
+                const emptyMsg = d[`manual-log-empty-${task.id}`];
+                if (emptyMsg) emptyMsg.style.display = anyRevealed ? 'none' : '';
+            }
+        }
+
+        // Workflow bar
         if (d.workflowBar && gs.testWorkflow && !gs.testWorkflow.complete)
             d.workflowBar.style.width = `${(gs.testWorkflowProgress ?? 0) * 100}%`;
     }
@@ -213,7 +238,8 @@ export class VibeCodingSimUI {
 
         const mtSpan = document.createElement('span');
         mtSpan.className = 'vcs-toolbar-item vcs-manual-test-active';
-        if (gs.isManualTestActive) mtSpan.textContent = `🔍 Testing: ${gs.manualTestFeatureId}`;
+        const mtTask = gs.activeManualTestTask;
+        if (mtTask) mtSpan.textContent = `🔍 Reviewing: ${mtTask.targetFeatureId} (${Math.round(mtTask.overallProgress * 100)}%)`;
         else mtSpan.style.display = 'none';
         this._dyn.manualTestToolbar = mtSpan;
         bar.appendChild(mtSpan);
@@ -227,21 +253,23 @@ export class VibeCodingSimUI {
             bar.appendChild(btn);
         }
 
-        for (const hours of [1, 8]) {
-            const btn = document.createElement('button');
-            btn.className = 'vcs-btn';
-            btn.textContent = `Wait ${hours}h`;
-            btn.addEventListener('click', () => {
-                const minutes = hours * 60, steps = Math.max(1, minutes * 2);
-                const dtPerStep = minutes / steps / (gs.config.timeScale / 60);
-                const wasPaused = gs.paused, oldMult = gs.speedMultiplier;
-                gs.paused = false; gs.speedMultiplier = 1;
-                for (let i = 0; i < steps; i++) gs.tick(dtPerStep);
-                gs.paused = wasPaused; gs.speedMultiplier = oldMult;
-                this.render();
-            });
-            bar.appendChild(btn);
-        }
+        const wait1h = document.createElement('button');
+        wait1h.className = 'vcs-btn';
+        wait1h.textContent = 'Wait 1h';
+        wait1h.addEventListener('click', () => {
+            this._advanceTime(gs, 60);
+        });
+        bar.appendChild(wait1h);
+
+        const waitDay = document.createElement('button');
+        waitDay.className = 'vcs-btn';
+        waitDay.textContent = 'Next day';
+        waitDay.addEventListener('click', () => {
+            const nextDayStart = gs.creditDayStart + gs.config.dayDuration;
+            const remaining = Math.max(1, nextDayStart - gs.simulatedTime);
+            this._advanceTime(gs, remaining);
+        });
+        bar.appendChild(waitDay);
         return bar;
     }
 
@@ -331,10 +359,13 @@ export class VibeCodingSimUI {
             pct.textContent = `${feat.testResultPercent}%`;
             meta.appendChild(pct);
         }
-        if (feat.manualTestResult) {
+        const mtLabel = manualResultLabel(feat);
+        if (mtLabel) {
             const mt = document.createElement('span');
-            mt.className = `vcs-manual-result vcs-manual-${feat.manualTestResult}`;
-            mt.textContent = manualResultLabel(feat.manualTestResult);
+            mt.className = 'vcs-manual-result';
+            if (feat.manualTestResult === 'pass') mt.classList.add('vcs-manual-pass');
+            else if (feat.manualReviewIssues) mt.classList.add('vcs-manual-issues');
+            mt.textContent = mtLabel;
             meta.appendChild(mt);
         }
         if (feat._locationChecked) {
@@ -373,6 +404,13 @@ export class VibeCodingSimUI {
         if (inProgress) { btn.classList.add('vcs-badge-in-progress'); btn.style.background = colors[letter]; }
         else if (exists) { btn.classList.add('vcs-badge-active'); btn.style.background = colors[letter]; }
         else btn.classList.add('vcs-badge-empty');
+
+        // Red border if manual review found issues for this category
+        const issueKey = { D: 'doc', C: 'code', T: 'tests' }[letter];
+        if (feat.manualReviewIssues && feat.manualReviewIssues[issueKey] > 0) {
+            btn.classList.add('vcs-badge-issue');
+        }
+
         btn.textContent = letter;
         btn.title = inProgress ? `${actionLabel} (in progress)` : actionLabel;
 
@@ -381,6 +419,7 @@ export class VibeCodingSimUI {
                 e.stopPropagation();
                 const task = gs.assignTask(feat.id, taskType);
                 if (task && this.autoSkipTesting) gs.skipTesting(task.id);
+                if (task) this._autoExpandTask(gs, task);
                 this.render();
             });
         } else { btn.disabled = true; btn.classList.add('vcs-badge-disabled'); }
@@ -390,22 +429,38 @@ export class VibeCodingSimUI {
     _manualBadge(gs, feat) {
         const btn = document.createElement('button');
         const canTest = feat.hasCode && feat.hasTests && !gs.isManualTestActive;
-        const isActive = gs.isManualTestActive && gs.manualTestFeatureId === feat.id;
-        let bgColor = null, title = 'Manual Test';
-        if (isActive) { bgColor = '#5a5a2a'; title = `Manual Test in progress`; }
+        const activeTask = gs.activeManualTestTask;
+        const isActive = activeTask && activeTask.targetFeatureId === feat.id;
+        let bgColor = null, title = 'Manual Review';
+        if (isActive) { bgColor = '#5a5a2a'; title = 'Manual Review in progress'; }
         else if (feat.manualTestResult === 'pass') { bgColor = '#2d8a4e'; title = 'Passed'; }
-        else if (feat.manualTestResult === 'incomplete') { bgColor = '#b8860b'; title = 'Run again to identify issue'; }
-        else if (feat.manualTestResult) { bgColor = '#c04030'; title = `${feat.manualTestResult} needs work`; }
+        else if (feat.manualReviewIssues) {
+            const total = feat.manualReviewIssues.doc + feat.manualReviewIssues.code + feat.manualReviewIssues.tests;
+            if (total > 0) { bgColor = '#c04030'; title = `${total} issue(s) found`; }
+            else { bgColor = '#2d8a4e'; title = 'No issues found'; }
+        }
 
         btn.className = 'vcs-badge vcs-badge-btn';
         if (isActive) btn.classList.add('vcs-badge-in-progress');
         else if (bgColor) btn.classList.add('vcs-badge-active');
         else btn.classList.add('vcs-badge-empty');
         if (bgColor) btn.style.background = bgColor;
+
+        // Highlight border when feature needs review (has work but not passing)
+        const hasWork = feat.hasDoc || feat.hasCode || feat.hasTests;
+        if (hasWork && feat.manualTestResult !== 'pass') {
+            btn.classList.add('vcs-badge-needs-review');
+        }
+
         btn.textContent = 'M'; btn.title = title;
 
         if (canTest) {
-            btn.addEventListener('click', (e) => { e.stopPropagation(); gs.assignTask(feat.id, TaskType.MANUAL_TEST); this.render(); });
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const task = gs.assignTask(feat.id, TaskType.MANUAL_TEST);
+                if (task) this._autoExpandTask(gs, task);
+                this.render();
+            });
         } else { btn.disabled = true; btn.classList.add('vcs-badge-disabled'); }
         return btn;
     }
@@ -491,39 +546,52 @@ export class VibeCodingSimUI {
         autoSkipLabel.appendChild(document.createTextNode(' Auto-skip'));
         header.appendChild(autoSkipLabel);
 
+        // Auto-test checkbox
+        const autoTestLabel = document.createElement('label');
+        autoTestLabel.className = 'vcs-auto-skip';
+        autoTestLabel.title = 'Automatically run test workflow after code/test changes';
+        const autoTestCb = document.createElement('input');
+        autoTestCb.type = 'checkbox'; autoTestCb.checked = gs.autoTest;
+        autoTestCb.addEventListener('change', () => { gs.autoTest = autoTestCb.checked; });
+        autoTestLabel.appendChild(autoTestCb);
+        autoTestLabel.appendChild(document.createTextNode(' Auto-test'));
+        header.appendChild(autoTestLabel);
+
+        // Auto-rewind checkbox
+        const autoRewindLabel = document.createElement('label');
+        autoRewindLabel.className = 'vcs-auto-skip';
+        autoRewindLabel.title = 'Automatically rewind when first issue is discovered during review';
+        const autoRewindCb = document.createElement('input');
+        autoRewindCb.type = 'checkbox'; autoRewindCb.checked = gs.autoRewind;
+        autoRewindCb.addEventListener('change', () => { gs.autoRewind = autoRewindCb.checked; });
+        autoRewindLabel.appendChild(autoRewindCb);
+        autoRewindLabel.appendChild(document.createTextNode(' Auto-rewind'));
+        header.appendChild(autoRewindLabel);
+
         col.appendChild(header);
 
         const list = document.createElement('div');
         list.className = 'vcs-card-list';
 
-        if (gs.isManualTestActive) list.appendChild(this._renderManualTestCard(gs));
         list.appendChild(this._renderTestWorkflowCard(gs));
 
-        // Stable ordering: all tasks in creation order
+        // Stable ordering: all tasks in creation order, skip FAILED merge markers
         const ordered = gs.getOrderedTasks();
         for (const task of ordered) {
-            if (task.type === TaskType.TEST_WORKFLOW || task.type === TaskType.MANUAL_TEST) continue;
+            if (task.type === TaskType.TEST_WORKFLOW) continue;
+            if (task.status === TaskStatus.FAILED) continue;
             list.appendChild(this._renderTaskCard(gs, task));
+        }
+
+        if (gs.clearedTaskCount > 0) {
+            const cleared = document.createElement('div');
+            cleared.className = 'vcs-card vcs-card-cleared';
+            cleared.innerHTML = `<div class="vcs-card-meta">${gs.clearedTaskCount} older task${gs.clearedTaskCount === 1 ? '' : 's'} cleared</div>`;
+            list.appendChild(cleared);
         }
 
         col.appendChild(list);
         return col;
-    }
-
-    _renderManualTestCard(gs) {
-        const card = document.createElement('div');
-        card.className = 'vcs-card vcs-card-manual-test';
-        const feat = gs.features.get(gs.manualTestFeatureId);
-        const phase = feat?.manualTestResult === 'incomplete' ? 'Phase 2' : 'Phase 1';
-        card.innerHTML = `<div class="vcs-card-name">🔍 Manual Test: ${feat?.name || gs.manualTestFeatureId}</div>`;
-        const [mtBar, mtFill] = this._progressBar(gs.manualTestProgress ?? 0);
-        this._dyn.manualTestBar = mtFill;
-        card.appendChild(mtBar);
-        const meta = document.createElement('div');
-        meta.className = 'vcs-card-meta';
-        meta.textContent = `${phase} — player is busy`;
-        card.appendChild(meta);
-        return card;
     }
 
     _renderTestWorkflowCard(gs) {
@@ -600,6 +668,7 @@ export class VibeCodingSimUI {
             [TaskStatus.MERGE_CONFLICT]: '#e67e22',
         };
         card.style.borderLeftColor = borderColors[task.status] || '#666';
+        if (task.type === TaskType.MANUAL_TEST) card.classList.add('vcs-card-manual-test');
 
         const feat = gs.features.get(task.targetFeatureId);
         const featName = feat?.name || task.targetFeatureId;
@@ -609,13 +678,14 @@ export class VibeCodingSimUI {
             [TaskType.IMPLEMENT]: feat?.hasCode ? 'Debug Code' : 'Implement',
             [TaskType.WRITE_TESTS]: feat?.hasTests ? 'Debug Tests' : 'Write Tests',
             [TaskType.MERGE_CONFLICT]: 'Merge Resolve',
+            [TaskType.MANUAL_TEST]: 'Manual Review',
         };
         const typeLabel = typeLabels[task.type] || task.type;
 
         const icons = {
-            [TaskStatus.RUNNING]: '⚡',
+            [TaskStatus.RUNNING]: task.type === TaskType.MANUAL_TEST ? '🔍' : '⚡',
             [TaskStatus.PENDING_REVIEW]: '📋',
-            [TaskStatus.COMPLETED]: task.reportedSuccess ? '✓' : '⚠',
+            [TaskStatus.COMPLETED]: task.reportedSuccess ? '✓' : (task.type === TaskType.MANUAL_TEST ? '🔍' : '⚠'),
             [TaskStatus.MERGE_CONFLICT]: '🔀',
             [TaskStatus.CANCELLED]: '✗',
             [TaskStatus.FAILED]: '✗',
@@ -630,7 +700,9 @@ export class VibeCodingSimUI {
                 gs.stopReview();
             } else {
                 this.expandedTaskId = task.id;
-                gs.startReview(task.id);
+                if (task.status === TaskStatus.RUNNING || task.status === TaskStatus.PENDING_REVIEW) {
+                    gs.startReview(task.id);
+                }
             }
             this.render();
         });
@@ -682,7 +754,8 @@ export class VibeCodingSimUI {
             barContainer.className = 'vcs-task-bar-container';
 
             // Review bar (on top) — show when expanded, or when collapsed with review progress
-            if (isExpanded || task.reviewMinute > 0) {
+            // Skip for manual test tasks (main bar IS the progress)
+            if (task.type !== TaskType.MANUAL_TEST && (isExpanded || task.reviewMinute > 0)) {
                 const [reviewBar, reviewFill] = this._progressBar(task.reviewProgress);
                 reviewBar.classList.add('vcs-review-bar');
                 this._dyn[`task-review-bar-${task.id}`] = reviewFill;
@@ -690,7 +763,9 @@ export class VibeCodingSimUI {
             }
 
             // Main bar with markers — create all markers, hide unrevealed ones
-            const allMarkers = task.eventMarkers;
+            const allMarkers = task.type === TaskType.MANUAL_TEST
+                ? task._manualReviewEvents.map(e => ({ position: e.minute / task.totalDuration, positive: false, isOutcome: false }))
+                : task.eventMarkers;
             const revealedFrac = task.reviewProgress;
             const [bar, fill, markerEls] = this._progressBar(task.overallProgress, task.subtaskBoundaries, null, allMarkers, revealedFrac);
             this._dyn[`task-bar-${task.id}`] = fill;
@@ -701,7 +776,9 @@ export class VibeCodingSimUI {
 
             const meta = document.createElement('div');
             meta.className = 'vcs-card-meta';
-            if (task.status === TaskStatus.PENDING_REVIEW) {
+            if (task.type === TaskType.MANUAL_TEST) {
+                meta.textContent = isExpanded ? 'Reviewing...' : 'Expand to review';
+            } else if (task.status === TaskStatus.PENDING_REVIEW) {
                 meta.textContent = task.reportedSuccess ? 'Agent reports: success' : 'Agent reports: issues found';
                 if (!task.reportedSuccess) meta.classList.add('vcs-event-negative');
             } else {
@@ -760,8 +837,10 @@ export class VibeCodingSimUI {
                 retryBtn.title = `Retry: ${typeLabel}`;
                 retryBtn.addEventListener('click', (e) => {
                     e.stopPropagation(); task._retried = true;
-                    if (task.type === TaskType.MERGE_CONFLICT) gs.retryMergeResolve(task.id);
-                    else { const t = gs.assignTask(task.targetFeatureId, task.type); if (t && this.autoSkipTesting) gs.skipTesting(t.id); }
+                    let newTask;
+                    if (task.type === TaskType.MERGE_CONFLICT) newTask = gs.retryMergeResolve(task.id);
+                    else { newTask = gs.assignTask(task.targetFeatureId, task.type); if (newTask && this.autoSkipTesting) gs.skipTesting(newTask.id); }
+                    if (newTask) this._autoExpandTask(gs, newTask);
                     this.render();
                 });
                 btnRight.appendChild(retryBtn);
@@ -772,23 +851,74 @@ export class VibeCodingSimUI {
 
         // Expanded: event log and rewind controls
         if (isExpanded) {
-            card.appendChild(this._renderTaskEventLog(gs, task));
+            if (task.type === TaskType.MANUAL_TEST) {
+                card.appendChild(this._renderManualReviewLog(gs, task));
+            } else {
+                card.appendChild(this._renderTaskEventLog(gs, task));
+            }
         }
 
         return card;
+    }
+
+    _renderManualReviewLog(gs, task) {
+        const details = document.createElement('div');
+        details.className = 'vcs-card-details vcs-event-log';
+
+        const logDiv = document.createElement('div');
+        logDiv.className = 'vcs-event-entries';
+        const catLabels = { doc: 'Doc', code: 'Code', tests: 'Tests' };
+
+        const entryEls = [];
+        for (const evt of task._manualReviewEvents) {
+            const entry = document.createElement('div');
+            entry.className = 'vcs-event-entry vcs-event-negative';
+            entry.textContent = `[${evt.minute}m] [${catLabels[evt.category]}] ${evt.description}`;
+            entry.dataset.minute = evt.minute;
+            if (!evt.revealed) entry.style.display = 'none';
+            logDiv.appendChild(entry);
+            entryEls.push(entry);
+        }
+
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'vcs-event-entry vcs-card-meta';
+        const anyRevealed = task._manualReviewEvents.some(e => e.revealed);
+        emptyMsg.textContent = task._manualReviewEvents.length > 0 ? 'Reviewing...' : 'No issues to discover';
+        if (anyRevealed) emptyMsg.style.display = 'none';
+        logDiv.appendChild(emptyMsg);
+
+        if (task.status === TaskStatus.COMPLETED) {
+            const feat = gs.features.get(task.targetFeatureId);
+            const issues = feat?.manualReviewIssues || { doc: 0, code: 0, tests: 0 };
+            const total = issues.doc + issues.code + issues.tests;
+            const summary = document.createElement('div');
+            summary.className = `vcs-event-entry vcs-review-summary ${total === 0 ? 'vcs-event-positive' : 'vcs-event-negative'}`;
+            summary.textContent = total === 0
+                ? 'Review complete — no issues found'
+                : `Review complete — ${total} issue(s): Doc ${issues.doc}, Code ${issues.code}, Tests ${issues.tests}`;
+            logDiv.appendChild(summary);
+        }
+
+        this._dyn[`manual-log-entries-${task.id}`] = entryEls;
+        this._dyn[`manual-log-empty-${task.id}`] = emptyMsg;
+
+        details.appendChild(logDiv);
+        return details;
     }
 
     _renderTaskEventLog(gs, task) {
         const details = document.createElement('div');
         details.className = 'vcs-card-details vcs-event-log';
 
-        // Rewind buttons — shown for running, pending review, and completed tasks
-        if (task.status === TaskStatus.RUNNING || task.status === TaskStatus.PENDING_REVIEW || task.status === TaskStatus.COMPLETED) {
+        // Rewind buttons — shown for running, pending review, and completed tasks (not yet accepted/rejected)
+        const canRewind = (task.status === TaskStatus.RUNNING || task.status === TaskStatus.PENDING_REVIEW || task.status === TaskStatus.COMPLETED)
+            && !task.accepted && !task.rejected;
+        if (canRewind) {
             const controls = document.createElement('div');
             controls.className = 'vcs-rewind-controls';
 
             const hasNeg = task.events.some(e =>
-                (e.type === 'quality' || e.type === 'outcome') && !e.positive && e.minute < task.reviewMinute);
+                (e.type === 'quality' || e.type === 'outcome') && !e.positive && e.minute <= task.reviewMinute);
 
             const rwNeg = document.createElement('button');
             rwNeg.className = 'vcs-btn vcs-btn-small';
@@ -839,10 +969,10 @@ export class VibeCodingSimUI {
             entryEls.push(entry);
         }
 
-        // "Reviewing..." placeholder shown when no events revealed yet
+        // "Reviewing..." placeholder shown when events exist but none revealed yet
         const emptyMsg = document.createElement('div');
         emptyMsg.className = 'vcs-event-entry vcs-card-meta';
-        emptyMsg.textContent = 'Reviewing...';
+        emptyMsg.textContent = allEvents.length > 0 ? 'Reviewing...' : 'No events';
         const anyRevealed = allEvents.some(e => e.minute <= revealedMinute);
         if (anyRevealed) emptyMsg.style.display = 'none';
         logDiv.appendChild(emptyMsg);
@@ -876,6 +1006,26 @@ export class VibeCodingSimUI {
 
     // ========== Helpers ==========
 
+    _autoExpandTask(gs, task) {
+        if (!task) return;
+        // Don't steal focus from a task that has review in progress
+        if (this.expandedTaskId && gs.activeReviewTaskId === this.expandedTaskId) return;
+        this.expandedTaskId = task.id;
+        if (task.status === TaskStatus.RUNNING || task.status === TaskStatus.PENDING_REVIEW) {
+            gs.startReview(task.id);
+        }
+    }
+
+    _advanceTime(gs, minutes) {
+        const steps = Math.max(1, minutes * 2);
+        const dtPerStep = minutes / steps / (gs.config.timeScale / 60);
+        const wasPaused = gs.paused, oldMult = gs.speedMultiplier;
+        gs.paused = false; gs.speedMultiplier = 1;
+        for (let i = 0; i < steps; i++) gs.tick(dtPerStep);
+        gs.paused = wasPaused; gs.speedMultiplier = oldMult;
+        this.render();
+    }
+
     _progressBar(pct, boundaries = null, skipMarkerAt = null, eventMarkers = null, revealedFrac = null) {
         const bar = document.createElement('div');
         bar.className = 'vcs-progress-bar';
@@ -896,7 +1046,7 @@ export class VibeCodingSimUI {
             for (const em of eventMarkers) {
                 const m = document.createElement('div');
                 m.className = `vcs-progress-event-marker ${em.positive ? 'vcs-event-marker-pos' : 'vcs-event-marker-neg'}`;
-                m.style.left = `${Math.round(em.position * 100)}%`;
+                m.style.left = `${Math.min(Math.round(em.position * 100), 97)}%`;
                 // Hide markers not yet revealed by review
                 if (revealedFrac !== null && em.position > revealedFrac) {
                     m.style.display = 'none';

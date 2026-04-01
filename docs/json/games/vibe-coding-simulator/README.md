@@ -24,7 +24,9 @@ Select a feature from the Features column and click the action badges (D/C/T/M) 
 - **D** — Write or evaluate the planning doc
 - **C** — Implement or debug the code
 - **T** — Write or debug tests
-- **M** — Manual test (requires code and tests to exist)
+- **M** — Manual review (requires code and tests to exist)
+
+New tasks automatically expand when created, unless another task is already being reviewed.
 
 Multiple agents can work on the same feature simultaneously, but this creates merge conflicts that must be resolved.
 
@@ -46,6 +48,8 @@ Completed tasks enter "pending review" status. You must accept or reject them:
 - **Reject** discards the work (time and credits are still spent)
 - **Auto-accept** checkbox skips the review step
 
+Rewind buttons are disabled for tasks that have already been accepted or rejected.
+
 ### Rewind
 
 If you spot a negative event during review, you can rewind the task:
@@ -63,17 +67,34 @@ Rewinding clears events after the rewind point and re-rolls them with different 
 | Agent self-report | Whether the agent thinks it succeeded | ~50% accurate |
 | Task review | Individual events during the task | Ground truth (for reviewed portion) |
 | Test workflow | Pass/fail percentage per feature | Reflects actual code/test quality |
-| Manual test | Which area (doc/code/tests) needs work | Ground truth, progressive reveal |
+| Manual review | Specific issues per category (doc/code/tests) | Ground truth, progressive reveal |
+
+### Manual Review
+
+Manual review works like task review — click the M badge to create a review task, then expand its card to advance review progress. As you review, issue events are revealed on the progress bar and in the event log, identifying specific problems in documentation, code, or tests. The feature card tracks discovered issue counts and shows them on the D/C/T badges (red border) and in the feature metadata.
+
+- Review only advances while the card is expanded
+- Switching to another task pauses the manual review
+- Re-expanding the manual review card resumes it
+- Review uses the daily review budget
+
+### Automation
+
+- **Auto-accept** — automatically accept completed tasks without review
+- **Auto-skip** — skip regression testing on new tasks
+- **Auto-test** — automatically run the test workflow whenever code or test changes are accepted
+- **Auto-rewind** — automatically rewind to the first issue when a negative event is discovered during review
 
 ### Winning
 
-A feature is complete when it passes a manual test — all three completeness values (doc, code, tests) must reach 100%. Overall progress is the fraction of features that have passed manual testing.
+A feature is complete when it passes a manual review — all three completeness values (doc, code, tests) must reach 100%. Overall progress is the fraction of features that have passed manual review.
 
 ## Resources and Budgets
 
-- **Credits** — 960 per day (16 hours of agent time). Each minute of agent work costs 1 credit. Refreshes daily.
-- **Review budget** — 8 hours per day. Reviewing tasks and manual testing both consume this budget.
+- **Credits** — 1920 per day (32 hours of agent time). Each minute of agent work costs 1 credit. Refreshes daily.
+- **Review budget** — 8 hours per day. Reviewing tasks and manual review both consume this budget.
 - **Speed controls** — 1x, 2x, 5x, 10x simulation speed plus pause.
+- **Wait buttons** — "Wait 1h" and "Next day" to skip forward.
 
 ## Key Mechanics
 

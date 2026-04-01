@@ -167,6 +167,13 @@
     background: #2a2535;
 }
 
+.vcs-card-cleared {
+    border-left-color: #555;
+    background: #252525;
+    text-align: center;
+    opacity: 0.7;
+}
+
 .vcs-card-manual-test {
     border-left-color: #e0a030;
     background: #2a2820;
@@ -247,6 +254,14 @@
     /* color set inline */
 }
 
+.vcs-badge-issue {
+    border: 2px solid #c0392b;
+}
+
+.vcs-badge-needs-review {
+    border: 2px solid #e0a030;
+}
+
 .vcs-badge-empty {
     background: #444;
     color: #777;
@@ -295,10 +310,7 @@
 }
 
 .vcs-manual-pass { color: #2d8a4e; }
-.vcs-manual-incomplete,
-.vcs-manual-doc,
-.vcs-manual-code,
-.vcs-manual-tests { color: #e0a030; }
+.vcs-manual-issues { color: #e0a030; }
 
 /* --- Card details (expanded) --- */
 
@@ -453,6 +465,14 @@
 
 .vcs-review-bar .vcs-progress-fill {
     background: #8e44ad;
+}
+
+.vcs-card-manual-test .vcs-progress-fill {
+    background: #8e44ad;
+}
+
+.vcs-card-workflow .vcs-progress-fill {
+    background: #27ae60;
 }
 
 /* Event log */

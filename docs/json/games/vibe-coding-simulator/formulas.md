@@ -133,6 +133,22 @@ testPercent = round(chainResult * 100)
 
 Features without code or tests return null. Upstream features' failures propagate downstream.
 
+## Manual Review Event Generation
+
+When a manual review starts, issue events are pre-generated for each of doc, code, and tests:
+
+```
+for each category in [doc, code, tests]:
+    potentialCount = ceil((1 - completeness) * 10)
+    if potentialCount == 0: skip
+    for i in 0..potentialCount:
+        if i > 0 and random() >= 0.5: skip    // first guaranteed, rest 50%
+        minute = floor(random() * totalDuration)
+        add event(minute, category, description)
+```
+
+Events are sorted by minute and revealed progressively as the review advances. Each event has a category-specific description drawn from a pool of 10 descriptions per category. As events are revealed, the feature's `manualReviewIssues` counters are incremented.
+
 ## Configuration Reference
 
 All values are defined in `SimulationConfig` and can be overridden.
@@ -142,7 +158,7 @@ All values are defined in `SimulationConfig` and can be overridden.
 | Config Key | Default | Description |
 |------------|---------|-------------|
 | `timeScale` | 60.0 | Simulated minutes per real second (at 1x speed) |
-| `dailyCredits` | 960.0 | Credits per day (16 hours of agent time) |
+| `dailyCredits` | 1920.0 | Credits per day (32 hours of agent time) |
 | `dayDuration` | 1440 | Simulated minutes per day |
 | `creditRate` | 1.0 | Credits consumed per simulated minute per task |
 | `dailyReviewBudget` | 480 | Review minutes per day (8 hours) |
@@ -156,7 +172,7 @@ All values are defined in `SimulationConfig` and can be overridden.
 | `durationLogSigma` | 0.6 | Log-normal variance for subtask duration |
 | `depsNotMetMultiplier` | 2.0 | Duration multiplier when dependencies unmet |
 | `mergeTaskDurationScale` | 0.5 | Duration scale for merge/retest subtasks |
-| `manualTestDuration` | 60.0 | Duration of manual test (1 hour) |
+| `manualTestDuration` | 30.0 | Duration of manual review (30 minutes) |
 | `testWorkflowDuration` | 10.0 | Duration of automated test workflow |
 
 ### Events

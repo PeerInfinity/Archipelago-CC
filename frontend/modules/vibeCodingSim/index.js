@@ -111,19 +111,17 @@ function initializeGame(staticData) {
     gameState.loadFromSlotData(slotData);
     gameState.setSeed(42);
 
+    let renderDirty = false;
+
     gameState.onStateChanged = () => {
         if (eventBus) {
             eventBus.publish('vibeCodingSim:stateChanged', { gameState });
         }
-        if (panelInstance) {
-            panelInstance.render();
-        }
+        renderDirty = true;
     };
 
     gameState.onLogEntry = () => {
-        if (panelInstance) {
-            panelInstance.render();
-        }
+        renderDirty = true;
     };
 
     // Combined game tick + UI render loop using requestAnimationFrame
@@ -134,7 +132,13 @@ function initializeGame(staticData) {
         lastFrameTime = now;
         if (gameState && !gameState.paused) {
             gameState.tick(dtReal);
-            if (panelInstance) panelInstance.updateTick();
+        }
+        if (renderDirty && panelInstance) {
+            renderDirty = false;
+            panelInstance.render();
+        }
+        if (gameState && !gameState.paused && panelInstance) {
+            panelInstance.updateTick();
         }
         renderRafId = requestAnimationFrame(gameLoop);
     };

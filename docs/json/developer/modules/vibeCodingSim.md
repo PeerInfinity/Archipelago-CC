@@ -22,11 +22,11 @@ All tunable parameters for the simulation. Defined with defaults in `simEngine.j
 
 ### Feature
 
-Represents a node in the dependency graph. Holds hidden completeness values (`docCompleteness`, `codeCompleteness`, `testCompleteness`) and visible state (`hasDoc`, `hasCode`, `hasTests`, `manualTestResult`, `testResultPercent`).
+Represents a node in the dependency graph. Holds hidden completeness values (`docCompleteness`, `codeCompleteness`, `testCompleteness`) and visible state (`hasDoc`, `hasCode`, `hasTests`, `manualTestResult`, `testResultPercent`, `manualReviewIssues`).
 
 ### Task
 
-A unit of agent work. Tracks minute-by-minute progress via `elapsedMinutes` and `fractionalMinute`. Contains an array of `TaskEvent` objects and accumulates `pendingQuality` from events.
+A unit of agent work. Tracks minute-by-minute progress via `elapsedMinutes` and `fractionalMinute`. Contains an array of `TaskEvent` objects and accumulates `pendingQuality` from events. Manual review tasks also hold `_manualReviewEvents` — pre-generated issue events with `{ minute, category, description, revealed }`.
 
 Key getters: `overallProgress`, `reviewProgress`, `currentSubtaskLabel`, `subtaskBoundaries`, `eventMarkers`.
 
@@ -38,11 +38,13 @@ An event that occurred during task execution. Types: `quality` (random per-minut
 
 The simulation engine. Manages features, tasks, time, credits, and the review system. Provides the game loop (`tick`), task assignment (`assignTask`), review (`startReview`/`stopReview`), rewind (`rewindToFirstNegative`/`rewindOneStep`/`rewindToStart`), and accept/reject (`acceptTask`/`rejectTask`).
 
+Key state flags: `autoAccept`, `autoTest`, `autoRewind`, `_testsDirty`. Manual test state is derived from the task list via computed getters (`isManualTestActive`, `activeManualTestTask`, `manualTestFeatureId`). Completed tasks are pruned to a maximum of 100 via `_pruneCompletedTasks()` (called from `_notify()`), with the count tracked in `clearedTaskCount`.
+
 ## UI Architecture
 
 ### VibeCodingSimUI
 
-Renders a three-column layout: Features, Tasks, and Log. Uses a two-phase rendering model:
+Renders a two-column layout: Features and Tasks. Uses a two-phase rendering model:
 
 - **`render()`** — Full DOM rebuild. Called on state changes (task completion, user actions, new events). Creates all elements and stores references in `this._dyn` for dynamic updates.
 - **`updateTick()`** — Lightweight per-frame update. Updates progress bar widths, reveals event markers and log entries as review progresses, toggles button states. Avoids DOM creation.
@@ -60,6 +62,8 @@ The `_dyn` object maps string keys to DOM elements for `updateTick`:
 - `task-log-summary-{id}` — review summary element
 - `task-event-count-{id}` — event count at last render (triggers re-render on mismatch)
 - `task-rwneg-{id}` — "First Issue" rewind button (for dynamic disabled state)
+- `manual-log-entries-{id}` — array of manual review event log entry elements
+- `manual-log-empty-{id}` — manual review "Reviewing..." placeholder element
 
 ### Event Marker Reveal
 
@@ -73,9 +77,12 @@ The game loop in `index.js` uses `requestAnimationFrame`. Each frame:
 
 1. Computes real elapsed time since last frame
 2. Calls `gameState.tick(dtReal)` to advance the simulation
-3. Calls `panelInstance.updateTick()` to update the UI
+3. If the render dirty flag is set (from engine callbacks), performs a full `render()`
+4. Calls `panelInstance.updateTick()` to update the UI
 
-The simulation tick handles credit/review budget refresh, task progress, review advancement, merge conflict updates, test workflow, and manual test completion.
+Engine callbacks (`onStateChanged`, `onLogEntry`) set a `renderDirty` flag rather than calling `render()` directly. This prevents DOM rebuilds mid-tick that could interfere with queued browser click events. The dirty flag is checked once per frame between `tick()` and `updateTick()`, coalescing multiple state changes into a single render.
+
+The simulation tick handles credit/review budget refresh, task progress, review advancement (including auto-rewind), merge conflict updates, auto-test triggering, and test workflow completion.
 
 ## Integration Points
 

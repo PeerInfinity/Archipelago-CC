@@ -101,7 +101,7 @@ class SimulationConfig {
         this.timeScale = 60.0;
         this.baseTaskDuration = 10.0; // base minutes per subtask
 
-        this.dailyCredits = 960.0; // 16 hours of task execution per day
+        this.dailyCredits = 1920.0; // 32 hours of task execution per day
         this.dayDuration = 24 * 60;
         this.creditRate = 1.0;
 
@@ -148,7 +148,7 @@ class SimulationConfig {
         this.testWorkflowDuration = 10.0;
 
         // Manual test
-        this.manualTestDuration = 60.0; // 1 hour
+        this.manualTestDuration = 30.0; // 30 minutes
 
         // Universal outcome formula
         this.outcomeReduceRate = 0.25;           // probability of reduce branch
@@ -196,7 +196,8 @@ class Feature {
         this.hasTests = false;
         this.testResultPercent = null;
         this.testResultUpdated = null;
-        this.manualTestResult = null; // null | "incomplete" | "doc" | "code" | "tests" | "pass"
+        this.manualTestResult = null; // null | "pass"
+        this.manualReviewIssues = null; // null | { doc: N, code: N, tests: N }
 
         // Graph
         this.upstreamIds = new Set();
@@ -268,6 +269,9 @@ class Task {
 
         // Retry tracking
         this._retried = false;
+
+        // Manual review data
+        this._manualReviewEvents = [];
     }
 
     get subtasks() {
@@ -395,13 +399,14 @@ class GameState {
         this.creditsRemaining = this.config.dailyCredits;
         this.creditDayStart = 0;
         this.testWorkflow = null;
-        this.manualTestFeatureId = null;
-        this.manualTestStartedAt = null;
         this.rng = new SeededRandom();
         this.log = [];
         this.paused = true;
         this.speedMultiplier = 1;
         this.autoAccept = false;
+        this.autoTest = false;
+        this.autoRewind = false;
+        this._testsDirty = false;
 
         // Review state
         this.activeReviewTaskId = null;   // task being reviewed
@@ -410,6 +415,9 @@ class GameState {
 
         // Index mapping for region graph
         this.indexToFeatureId = {};
+
+        // Task pruning
+        this.clearedTaskCount = 0;
 
         this.onStateChanged = null;
         this.onLogEntry = null;
@@ -467,7 +475,16 @@ class GameState {
     // --- Queries ---
 
     get isManualTestActive() {
-        return this.manualTestFeatureId !== null;
+        return this.tasks.some(t => t.type === TaskType.MANUAL_TEST && t.status === TaskStatus.RUNNING);
+    }
+
+    get manualTestFeatureId() {
+        const t = this.tasks.find(t => t.type === TaskType.MANUAL_TEST && t.status === TaskStatus.RUNNING);
+        return t ? t.targetFeatureId : null;
+    }
+
+    get activeManualTestTask() {
+        return this.tasks.find(t => t.type === TaskType.MANUAL_TEST && t.status === TaskStatus.RUNNING) || null;
     }
 
     get reviewBudgetRemaining() {
@@ -475,7 +492,7 @@ class GameState {
     }
 
     get isReviewActive() {
-        return this.activeReviewTaskId !== null || this.isManualTestActive;
+        return this.activeReviewTaskId !== null;
     }
 
     getRunningTasks() {
@@ -622,15 +639,77 @@ class GameState {
 
     _startManualTest(featureId) {
         if (this.isManualTestActive) return null;
-        // Manual test uses review budget
         if (this.reviewBudgetRemaining <= 0) return null;
-        this.manualTestFeatureId = featureId;
-        this.manualTestStartedAt = this.simulatedTime;
-        // Cancel any active task review
-        this.activeReviewTaskId = null;
-        this._addLog(`Manual test started: ${featureId}`);
+        const feat = this.features.get(featureId);
+        if (!feat) return null;
+
+        const task = new Task(TaskType.MANUAL_TEST, featureId);
+        task.createdAt = this.simulatedTime;
+        task.startedAt = this.simulatedTime;
+        task.subtaskDurations = [this.config.manualTestDuration];
+        task.subtaskLabels = [SubtaskLabel.MANUAL_TESTING];
+        task.events.push(new TaskEvent(0, 'step', 'Started: manual review', null));
+
+        // Pre-generate review events based on completeness gaps
+        task._manualReviewEvents = this._generateManualReviewEvents(feat, task);
+
+        // Reset feature review state
+        feat.manualReviewIssues = { doc: 0, code: 0, tests: 0 };
+
+        this.tasks.push(task);
+        this.activeReviewTaskId = task.id;
+        this._addLog(`Manual review started: ${featureId}`);
         this._notify();
-        return { type: TaskType.MANUAL_TEST, featureId };
+        return task;
+    }
+
+    _generateManualReviewEvents(feat, task) {
+        const events = [];
+        const duration = task.totalDuration;
+        const categories = [
+            { key: 'doc', completeness: feat.docCompleteness },
+            { key: 'code', completeness: feat.codeCompleteness },
+            { key: 'tests', completeness: feat.testCompleteness },
+        ];
+        const descriptions = {
+            doc: [
+                'Missing edge case documentation', 'Incomplete API specification',
+                'Outdated architecture notes', 'Missing error handling docs',
+                'Ambiguous requirement description', 'Missing integration notes',
+                'Incomplete data model docs', 'Unclear success criteria',
+                'Missing deployment notes', 'Outdated dependency docs',
+            ],
+            code: [
+                'Unhandled error path discovered', 'Race condition in async flow',
+                'Missing input validation', 'Incorrect boundary check',
+                'Memory leak in event handler', 'Hardcoded configuration value',
+                'Missing null check', 'Incorrect state transition',
+                'Unused code path', 'Missing retry logic',
+            ],
+            tests: [
+                'Missing edge case test', 'Flaky assertion in test suite',
+                'Incomplete mock coverage', 'Missing integration test',
+                'Test does not verify error path', 'Missing boundary value test',
+                'Incomplete fixture setup', 'Missing concurrency test',
+                'Stale test expectations', 'Missing regression test',
+            ],
+        };
+
+        for (const cat of categories) {
+            const potentialCount = Math.ceil((1 - cat.completeness) * 10);
+            if (potentialCount === 0) continue;
+            for (let i = 0; i < potentialCount; i++) {
+                // First event per category guaranteed, rest ~50% chance
+                if (i > 0 && this.rng.random() >= 0.5) continue;
+                const descList = descriptions[cat.key];
+                const desc = descList[i % descList.length];
+                const minute = Math.floor(this.rng.random() * duration);
+                events.push({ minute, category: cat.key, description: desc });
+            }
+        }
+
+        events.sort((a, b) => a.minute - b.minute);
+        return events;
     }
 
     cancelTask(taskId) {
@@ -638,6 +717,9 @@ class GameState {
         if (!task || (task.status !== TaskStatus.RUNNING && task.status !== TaskStatus.PENDING_REVIEW)) return false;
         task.status = TaskStatus.CANCELLED;
         task.completedAt = this.simulatedTime;
+        if (task.type === TaskType.MANUAL_TEST && this.activeReviewTaskId === task.id) {
+            this.activeReviewTaskId = null;
+        }
         this._addLog(`Cancelled: ${task.label}`);
         this._updatePendingMerges();
         this._notify();
@@ -793,6 +875,7 @@ class GameState {
 
         this._rollOutcomeEvent(task);
         conflict.status = TaskStatus.FAILED;
+        conflict.completedAt = this.simulatedTime;
         this.tasks.push(task);
         this._addLog(`Resolving merge conflict: ${task.targetFeatureId}`);
         this._notify();
@@ -930,15 +1013,9 @@ class GameState {
             }
         }
 
-        // Update manual test
-        if (this.isManualTestActive) {
-            // Manual test uses review budget
-            this.reviewUsedToday += dt;
-            if (this.reviewBudgetRemaining <= 0 ||
-                this.simulatedTime - this.manualTestStartedAt >= this.config.manualTestDuration) {
-                this._completeManualTest();
-                changed = true;
-            }
+        // Auto-test: start test workflow if code/tests changed
+        if (this.autoTest && this._testsDirty && (!this.testWorkflow || this.testWorkflow.complete)) {
+            this.startTestWorkflow();
         }
 
         if (changed) {
@@ -948,6 +1025,7 @@ class GameState {
     }
 
     _tickTask(task, dt) {
+        if (task.type === TaskType.MANUAL_TEST) return false; // advances via _tickReview
         if (this.creditsRemaining <= 0) return false;
         const creditCost = dt * this.config.creditRate;
         this.creditsRemaining = Math.max(0, this.creditsRemaining - creditCost);
@@ -971,8 +1049,8 @@ class GameState {
                 }
             }
 
-            // Roll for random event this minute
-            if (task.elapsedMinutes <= task.totalDuration) {
+            // Roll for random event this minute (not at the exact final minute)
+            if (task.elapsedMinutes < task.totalDuration) {
                 this._rollMinuteEvent(task);
             }
 
@@ -1072,6 +1150,12 @@ class GameState {
             return;
         }
 
+        // Manual review tasks advance via their own method
+        if (task.type === TaskType.MANUAL_TEST) {
+            this._tickManualReview(task, dt);
+            return;
+        }
+
         // Don't consume review budget if review is already complete
         const maxMinute = task.elapsedMinutes;
         const maxFrac = task.fractionalMinute;
@@ -1082,6 +1166,7 @@ class GameState {
             return;
         }
 
+        const prevReviewMinute = task.reviewMinute;
         const reviewDt = dt * this.config.reviewSpeedMultiplier;
         this.reviewUsedToday += dt;
 
@@ -1096,6 +1181,67 @@ class GameState {
             (task.reviewMinute === maxMinute && task.reviewFractional > maxFrac)) {
             task.reviewMinute = maxMinute;
             task.reviewFractional = maxFrac;
+        }
+
+        // Auto-rewind: if review just revealed a negative event, rewind to it
+        if (this.autoRewind && task.reviewMinute > prevReviewMinute) {
+            const newNeg = task.events.some(e =>
+                (e.type === 'quality' || e.type === 'outcome') && !e.positive &&
+                e.minute > prevReviewMinute && e.minute <= task.reviewMinute);
+            if (newNeg) {
+                this.rewindToFirstNegative(task.id);
+            }
+        }
+    }
+
+    _tickManualReview(task, dt) {
+        if (task.status !== TaskStatus.RUNNING) return;
+
+        const reviewDt = dt * this.config.reviewSpeedMultiplier;
+        this.reviewUsedToday += dt;
+        const totalDur = task.totalDuration;
+
+        // Advance elapsed and review in lockstep
+        task.fractionalMinute += reviewDt;
+        const prevMinute = task.elapsedMinutes;
+        while (task.fractionalMinute >= 1) {
+            task.fractionalMinute -= 1;
+            task.elapsedMinutes += 1;
+        }
+        if (task.elapsedMinutes >= totalDur) {
+            task.elapsedMinutes = totalDur;
+            task.fractionalMinute = 0;
+        }
+        task.reviewMinute = task.elapsedMinutes;
+        task.reviewFractional = task.fractionalMinute;
+
+        // Reveal events and update feature issue counts
+        if (task.elapsedMinutes > prevMinute) {
+            const feat = this.features.get(task.targetFeatureId);
+            for (const evt of task._manualReviewEvents) {
+                if (!evt.revealed && evt.minute <= task.reviewMinute) {
+                    evt.revealed = true;
+                    if (feat && feat.manualReviewIssues) {
+                        feat.manualReviewIssues[evt.category] = (feat.manualReviewIssues[evt.category] || 0) + 1;
+                    }
+                }
+            }
+        }
+
+        // Complete when duration reached or budget exhausted
+        if (task.elapsedMinutes >= totalDur || this.reviewBudgetRemaining <= 0) {
+            if (task.elapsedMinutes >= totalDur) {
+                for (const evt of task._manualReviewEvents) {
+                    if (!evt.revealed) {
+                        evt.revealed = true;
+                        const feat = this.features.get(task.targetFeatureId);
+                        if (feat && feat.manualReviewIssues) {
+                            feat.manualReviewIssues[evt.category] = (feat.manualReviewIssues[evt.category] || 0) + 1;
+                        }
+                    }
+                }
+            }
+            this._completeManualReview(task);
         }
     }
 
@@ -1168,6 +1314,8 @@ class GameState {
 
         feat.hasCode = true;
         feat.manualTestResult = null; // invalidate previous manual test
+        feat.manualReviewIssues = null;
+        this._testsDirty = true;
         task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= ceiling);
         this._rollSideEffect(feat);
 
@@ -1198,6 +1346,8 @@ class GameState {
 
         feat.hasTests = true;
         feat.manualTestResult = null; // invalidate
+        feat.manualReviewIssues = null;
+        this._testsDirty = true;
         task.reportedSuccess = this._rollReportedSuccess(feat.testCompleteness >= ceiling);
     }
 
@@ -1208,6 +1358,8 @@ class GameState {
         this._applyUniversalOutcome(feat, 'codeCompleteness', feat.docCompleteness, task.pendingQuality);
         feat.hasCode = true;
         feat.manualTestResult = null;
+        feat.manualReviewIssues = null;
+        this._testsDirty = true;
         task.reportedSuccess = this._rollReportedSuccess(feat.codeCompleteness >= feat.docCompleteness);
         this._rollSideEffect(feat);
         if (feat.codeCompleteness >= 1.0) {
@@ -1316,6 +1468,7 @@ class GameState {
     _completeTestWorkflow() {
         if (!this.testWorkflow) return;
         this.testWorkflow.complete = true;
+        this._testsDirty = false;
         for (const [, feat] of this.features) {
             feat.testResultPercent = this._computeTestResult(feat);
             feat.testResultUpdated = this.simulatedTime;
@@ -1347,31 +1500,32 @@ class GameState {
         return maxVal > 0 ? Math.min(feat.codeCompleteness, feat.testCompleteness) / maxVal : 0;
     }
 
-    // --- Manual Test ---
+    // --- Manual Review ---
 
-    _completeManualTest() {
-        const feat = this.features.get(this.manualTestFeatureId);
-        if (!feat) {
-            this.manualTestFeatureId = null;
-            this.manualTestStartedAt = null;
-            return;
-        }
+    _completeManualReview(task) {
+        const feat = this.features.get(task.targetFeatureId);
+        if (!feat) return;
+
         const allComplete = feat.docCompleteness >= 1.0 && feat.codeCompleteness >= 1.0 && feat.testCompleteness >= 1.0;
         if (allComplete) {
             feat.manualTestResult = 'pass';
-            this._addLog(`Manual test PASSED: ${feat.id}`);
-        } else if (feat.manualTestResult === 'incomplete') {
-            if (feat.docCompleteness < 1.0) feat.manualTestResult = 'doc';
-            else if (feat.codeCompleteness < 1.0) feat.manualTestResult = 'code';
-            else feat.manualTestResult = 'tests';
-            this._addLog(`Manual test revealed: ${feat.id} — ${feat.manualTestResult} needs work`);
+            feat.manualReviewIssues = { doc: 0, code: 0, tests: 0 };
+            this._addLog(`Manual review PASSED: ${feat.id}`);
         } else {
-            feat.manualTestResult = 'incomplete';
-            this._addLog(`Manual test: ${feat.id} — something is incomplete`);
+            feat.manualTestResult = null;
+            // manualReviewIssues already updated during review progress
+            const issues = feat.manualReviewIssues || { doc: 0, code: 0, tests: 0 };
+            const total = issues.doc + issues.code + issues.tests;
+            this._addLog(`Manual review complete: ${feat.id} — ${total} issue(s) found`);
         }
-        this.manualTestFeatureId = null;
-        this.manualTestStartedAt = null;
+
+        task.status = TaskStatus.COMPLETED;
+        task.completedAt = this.simulatedTime;
+        if (this.activeReviewTaskId === task.id) {
+            this.activeReviewTaskId = null;
+        }
         this._updateDepsMetStatus();
+        this._notify();
     }
 
     // --- Utilities ---
@@ -1404,8 +1558,9 @@ class GameState {
     }
 
     get manualTestProgress() {
-        if (!this.isManualTestActive) return null;
-        return Math.min((this.simulatedTime - this.manualTestStartedAt) / this.config.manualTestDuration, 1);
+        const t = this.activeManualTestTask;
+        if (!t) return null;
+        return t.overallProgress;
     }
 
     _addLog(message) {
@@ -1416,7 +1571,21 @@ class GameState {
     }
 
     _notify() {
+        this._pruneCompletedTasks();
         if (this.onStateChanged) this.onStateChanged();
+    }
+
+    _pruneCompletedTasks() {
+        const maxCompleted = 100;
+        const completed = this.tasks.filter(t =>
+            t.status === TaskStatus.COMPLETED || t.status === TaskStatus.CANCELLED ||
+            t.status === TaskStatus.FAILED);
+        if (completed.length <= maxCompleted) return;
+        completed.sort((a, b) => (a.completedAt || a.createdAt || 0) - (b.completedAt || b.createdAt || 0));
+        const toRemove = completed.slice(0, completed.length - maxCompleted);
+        const removeIds = new Set(toRemove.map(t => t.id));
+        this.tasks = this.tasks.filter(t => !removeIds.has(t.id));
+        this.clearedTaskCount += toRemove.length;
     }
 
     setSeed(seed) {

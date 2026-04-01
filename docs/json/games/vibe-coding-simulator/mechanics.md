@@ -89,11 +89,17 @@ Both task review and manual testing consume the daily review budget (8 hours). O
 
 The review progress bar is visible on collapsed task cards when any review progress has been made. Event markers on the main progress bar only appear up to the reviewed position, even when collapsed.
 
+Expanding a completed or cancelled task card shows the event log at whatever review state was reached, but does not advance the review further.
+
+### Auto-Rewind
+
+When enabled, the auto-rewind option automatically triggers a "First Issue" rewind whenever the review progress crosses a negative event. This happens during `_tickReview` — the engine compares the previous and current `reviewMinute` and checks for newly-revealed negative events in that range.
+
 ## Rewind
 
 ### Player Rewind
 
-Three rewind options are available for running, pending review, and completed tasks:
+Three rewind options are available for running and pending review tasks (disabled for accepted/rejected tasks):
 
 - **First Issue** — rewinds to the start of the step containing the earliest negative event
 - **One Step** — rewinds to the start of the previous step
@@ -121,22 +127,48 @@ If a new task is started for the same feature/type while a merge conflict exists
 
 To resolve a merge conflict, the player clicks "Resolve," which starts a merge resolve task (with shorter subtask durations). The resolve task takes the higher of the current code completeness and branch completeness, then applies the universal outcome formula.
 
-## Manual Testing
+## Manual Review
 
-Manual testing is a separate mechanic from task review. It requires the feature to have both code and tests, and uses the review budget.
+Manual review creates a task card in the task list that advances only while expanded, using the same expand-to-review mechanic as agent task review. It requires the feature to have both code and tests, and uses the review budget.
 
-Manual test results follow a progressive reveal pattern:
+### Event Generation
 
-1. **First test** — reports "incomplete" (something isn't at 100%) or "pass" (all three at 100%)
-2. **Second test** (if first was "incomplete") — reveals which area needs work: "doc", "code", or "tests"
+When a manual review starts, events are pre-generated based on the feature's completeness gaps:
 
-A feature's dependencies are considered met when it passes a manual test. The win condition is all features passing manual testing.
+- For each of doc, code, and tests: `Math.ceil((1 - completeness) * 10)` potential events
+- The first event per category is guaranteed to appear; remaining events have a 50% chance
+- Events are placed at random positions across the review timeline
+- Each event has a descriptive text identifying the type of issue found
+
+### Review Progress
+
+- The review progress bar (purple) advances at `reviewSpeedMultiplier` speed while the card is expanded
+- As the bar crosses event positions, issues are revealed in the event log with their category (Doc/Code/Tests)
+- Discovered issues are immediately reflected on the feature card's D/C/T badges (red border) and issue counts
+- Expanding a different task pauses the manual review; re-expanding resumes it
+
+### Completion
+
+When review reaches 100% or the review budget is exhausted:
+- If all three completeness values are >= 1.0, the feature passes
+- Otherwise, the feature's `manualReviewIssues` records the discovered issue counts per category
+- The feature card shows the issue counts and the M badge reflects the result
+
+A feature's dependencies are considered met when it passes manual review. The win condition is all features passing manual review.
 
 ## Test Workflow
 
 The test workflow runs automated tests across all features. It takes `testWorkflowDuration` simulated minutes and produces a pass percentage for each feature that has both code and tests.
 
 The test result formula: `min(code, test) / max(code, test)`, chained with upstream features' results. Features without code or tests show no result.
+
+### Auto-Test
+
+When the auto-test option is enabled, the test workflow is automatically started whenever code or test changes are accepted (from Implement, Write Tests, or Merge Resolve tasks) and no workflow is currently running. A `_testsDirty` flag tracks whether changes have been made since the last workflow run.
+
+## Task Pruning
+
+Completed, cancelled, and failed tasks are pruned when their count exceeds 100, removing the oldest first (by `completedAt`). A counter card at the bottom of the task list shows how many tasks have been cleared. Tasks that are superseded merge conflict markers (FAILED status) are hidden from the task list entirely.
 
 ## Cross-Feature Side Effects
 
