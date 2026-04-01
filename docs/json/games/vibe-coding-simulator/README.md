@@ -1,5 +1,7 @@
 # Vibe Coding Simulator
 
+**[Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=vibecoding)**
+
 A project management simulation where you oversee AI coding agents working on a software project. Each feature in your project's dependency graph is a location to complete. Agents are unreliable — their work has hidden quality values that you can only discover through review, testing, and manual inspection.
 
 ## Overview
