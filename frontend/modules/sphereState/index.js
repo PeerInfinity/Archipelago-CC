@@ -24,6 +24,7 @@ function log(level, message, ...data) {
 export const moduleInfo = {
   name: 'sphereState',
   description: 'Manages sphere log data and player progression through spheres.',
+  requires: ['stateManager'],
   // NO componentType - this is a non-UI module
 };
 

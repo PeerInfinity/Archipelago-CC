@@ -27,6 +27,7 @@ export const moduleInfo = {
     icon: '',
     column: 2,
     description: 'Step-through debugger for JTA cost generation via simulated playthrough.',
+    requires: ['jtaGameDataPanel'],
 };
 
 // Module-level references

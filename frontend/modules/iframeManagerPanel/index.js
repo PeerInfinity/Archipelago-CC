@@ -11,6 +11,7 @@ export const moduleInfo = {
   icon: '🖼️',
   column: 2, // Middle column
   description: 'Iframe Manager display panel.',
+  requires: ['iframeAdapter', 'iframePanel'],
 };
 
 // Helper function for logging with fallback

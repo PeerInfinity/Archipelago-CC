@@ -301,9 +301,6 @@ async function applyModuleConfig(newModuleConfig) {
     if (newDef.path !== currentDef.path) {
       deferredChanges.push(`path changed for ${moduleId}`);
     }
-    if (JSON.stringify(newDef.requires || []) !== JSON.stringify(currentDef.requires || [])) {
-      deferredChanges.push(`requires changed for ${moduleId}`);
-    }
   }
 
   // --- Diff enabled flags ---
@@ -351,7 +348,7 @@ async function applyModuleConfig(newModuleConfig) {
 
   for (const moduleId of enableOrder) {
     // Check that required modules are enabled (or being enabled)
-    const requires = newDefs[moduleId]?.requires || currentDefs[moduleId]?.requires || [];
+    const requires = moduleManager.getModuleRequires(moduleId);
     const allStates = moduleManager.getAllModuleStates();
     const missingReqs = requires.filter(reqId => {
       // OK if already enabled or in our toEnable list

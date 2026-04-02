@@ -18,6 +18,7 @@ export const moduleInfo = {
   icon: 'fn',
   column: 3, // Right column
   description: 'Helper functions display panel.',
+  requires: ['stateManager', 'commonUI'],
 };
 
 let _moduleEventBus = null;

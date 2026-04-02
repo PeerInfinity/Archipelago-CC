@@ -30,6 +30,7 @@ export const moduleInfo = {
   icon: '',
   column: 1,
   description: 'Step-through debugger for Loops cost generation algorithm.',
+  requires: ['loops', 'sphereState'],
 };
 
 // Module-level references

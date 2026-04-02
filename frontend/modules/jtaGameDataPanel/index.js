@@ -10,6 +10,7 @@ export const moduleInfo = {
   icon: '',
   column: 2,
   description: 'View and control Journey to Ascension game data.',
+  requires: ['iframeAdapter', 'iframePanel'],
 };
 
 // Helper function for logging with fallback

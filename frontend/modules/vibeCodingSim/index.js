@@ -17,6 +17,7 @@ export const moduleInfo = {
     icon: '🤖',
     column: 1,
     description: 'Simulate managing an AI-assisted coding project',
+    requires: ['stateManager'],
 };
 
 let panelInstance = null;

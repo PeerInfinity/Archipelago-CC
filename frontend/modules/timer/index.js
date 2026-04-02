@@ -17,6 +17,7 @@ function log(level, message, ...data) {
 export const moduleInfo = {
   name: 'timer',
   description: 'Manages the location check timer and related UI elements.',
+  requires: ['stateManager'],
 };
 
 let timerLogicInstance = null;

@@ -26,6 +26,7 @@ export const moduleInfo = {
   icon: '\u{1F517}', // link emoji
   column: 3,
   description: 'Reconstruct proof dependency edges in a graph puzzle.',
+  requires: ['stateManager'],
 };
 
 // ─── Module State ───────────────────────────────────────────

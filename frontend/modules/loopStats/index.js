@@ -28,6 +28,7 @@ export const moduleInfo = {
   icon: '📊',
   column: 1, // Left column (narrow width design)
   description: 'Detailed action queue analysis with mana cost predictions.',
+  requires: ['loops'],
 };
 
 // Store module references

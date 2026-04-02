@@ -36,6 +36,7 @@ export const moduleInfo = {
   icon: '📊',
   column: 2, // Middle column,
   description: 'Panel container for hosting progress bars.',
+  requires: ['progressBar'],
 };
 
 // --- Registration Function ---

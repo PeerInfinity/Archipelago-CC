@@ -21,6 +21,7 @@ export const moduleInfo = {
   icon: '🚪',
   column: 3, // Right column,
   description: 'Exits display panel.',
+  requires: ['stateManager', 'commonUI'],
 };
 
 // Store module-level references

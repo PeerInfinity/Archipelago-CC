@@ -43,6 +43,7 @@ let _settings = {
 export const moduleInfo = {
   name: 'discovery', // Use ID for consistency
   description: 'Manages discovery state in loop mode.',
+  requires: ['stateManager'],
 };
 
 /**

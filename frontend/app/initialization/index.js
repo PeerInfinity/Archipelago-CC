@@ -1134,6 +1134,28 @@ function createModuleManagerApi(options) {
     return states;
   };
 
+  /**
+   * Returns the requires array for a module, sourced from moduleInfo.
+   * Works for both enabled and disabled modules in bundled mode.
+   * @param {string} moduleId
+   * @returns {string[]} Array of required module IDs, or empty array.
+   */
+  api.getModuleRequires = (moduleId) => {
+    // 1. Already-imported module (enabled)
+    const mod = importedModules.get(moduleId);
+    if (mod?.moduleInfo?.requires) return mod.moduleInfo.requires;
+
+    // 2. Bundled module (disabled, but code in memory)
+    const bundled = typeof window !== 'undefined' && window.__BUNDLED_MODULES__;
+    if (bundled?.[moduleId]) {
+      const bm = bundled[moduleId].default || bundled[moduleId];
+      if (bm?.moduleInfo?.requires) return bm.moduleInfo.requires;
+    }
+
+    // 3. Fallback (unbundled + disabled — not available)
+    return [];
+  };
+
   api.getLoadPriority = () => combinedModeData.moduleConfig?.loadPriority || [];
 
   api.getCurrentLoadPriority = async () => {

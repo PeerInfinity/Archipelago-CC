@@ -16,6 +16,7 @@ import { stateManagerProxySingleton } from '../stateManager/index.js';
 export const moduleInfo = {
   name: 'commonUI',
   description: 'Provides shared UI utility functions and components.',
+  requires: ['stateManager'],
 };
 
 // --- Module Scope Variables ---

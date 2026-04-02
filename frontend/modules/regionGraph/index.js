@@ -11,6 +11,7 @@ export const moduleInfo = {
   icon: '🌐',
   column: 2, // Middle column,
   description: 'Interactive visualization of region connectivity graph with deterministic layout',
+  requires: ['stateManager', 'playerState'],
 };
 
 // Store module-level references
