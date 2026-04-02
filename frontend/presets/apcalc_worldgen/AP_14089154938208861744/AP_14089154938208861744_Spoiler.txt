@@ -1,0 +1,78 @@
+﻿Archipelago Version 0.6.7  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            APCalc WorldGen
+Location Count:                  15
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+
+
+Starting Items:
+
+Button: 2
+Button: 3
+Button: 7
+
+Locations:
+
+Reach 7: Button: 1
+Reach 3: Button: -
+Reach 2: Button: 8
+Reach -6: Button: 3
+Reach -4: Button: *
+Reach -1: Button: -
+Reach -9: Button: +
+Reach -63: Button: /
+Reach -12: Button: 4
+Reach -5: Button: +
+Reach 1: Button: +
+Reach 8: Button: -
+Reach -7: Button: 6
+Reach -2: Button: *
+Reach -11: Button: -
+Victory: Victory
+
+Playthrough:
+
+0: {
+  Button: 2
+  Button: 3
+  Button: 7
+}
+1: {
+  Reach 2: Button: 8
+  Reach 3: Button: -
+  Reach 7: Button: 1
+}
+2: {
+  Reach -1: Button: -
+  Reach -4: Button: *
+  Reach -6: Button: 3
+}
+3: {
+  Reach -12: Button: 4
+  Reach -63: Button: /
+  Reach -7: Button: 6
+  Reach -9: Button: +
+}
+4: {
+  Reach -11: Button: -
+  Reach -2: Button: *
+  Reach -5: Button: +
+  Reach 1: Button: +
+  Reach 8: Button: -
+  Victory: Victory
+}

@@ -654,5 +654,70 @@
         }
       ]
     }
+  },
+  "apcalc": {
+    "settings": {
+      "showPopoutIcon": false,
+      "reorderEnabled": true
+    },
+    "root": {
+      "type": "row",
+      "content": [
+        {
+          "type": "stack",
+          "width": 50,
+          "id": "left-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "regionGraphPanel",
+              "title": "Region Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "clientPanel",
+              "title": "Console"
+            },
+            {
+              "type": "component",
+              "componentType": "presetsPanel",
+              "title": "Presets"
+            },
+            {
+              "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "width": 50,
+          "id": "right-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "apcalcPanel",
+              "title": "APCalc"
+            },
+            {
+              "type": "component",
+              "componentType": "optionsPanel",
+              "title": "Options"
+            },
+            {
+              "type": "component",
+              "componentType": "jsonPanel",
+              "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "modulesPanel",
+              "title": "Modules"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

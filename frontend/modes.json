@@ -143,6 +143,27 @@
       "enabled": true
     }
   },
+  "apcalc": {
+    "moduleConfig": {
+      "path": "./module-configs/modules-apcalc.json",
+      "enabled": true
+    },
+    "rulesConfig": {
+      "path": "./presets/apcalc_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "enabled": true
+    },
+    "layoutConfig": {
+      "path": "./layout-configs/layout_presets.json",
+      "enabled": true
+    },
+    "userSettings": {
+      "paths": [
+        "./settings/settings.json",
+        "./settings/settings-apcalc.json"
+      ],
+      "enabled": true
+    }
+  },
   "jta": {
     "moduleConfig": {
       "path": "./module-configs/modules-jta.json",

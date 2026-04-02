@@ -1,0 +1,16 @@
+{
+  "activeLayout": "apcalc",
+  "moduleSettings": {
+    "regionGraph": {
+      "checkAllLocationsInRegion": false,
+      "addToPath": false,
+      "overwritePath": false,
+      "addLocationsToPath": false,
+      "movePlayerOneStep": false,
+      "movePlayerDirectly": false,
+      "showRegionInPanel": false,
+      "forceHideLocations": true,
+      "forceHideEdgeLabels": true
+    }
+  }
+}

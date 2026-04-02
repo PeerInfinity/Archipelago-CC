@@ -1,4 +1,4 @@
-import { getModuleEventBus, registerPanelInstance, unregisterPanelInstance, getPendingOverlayProvider } from './index.js';
+import { getModuleEventBus, registerPanelInstance, unregisterPanelInstance, getPendingOverlayProvider, getNodeLabelProvider } from './index.js';
 import { NodeOverlayManager } from './nodeOverlayManager.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -161,8 +161,16 @@ export class RegionGraphUI {
   }
 
   getRegionDisplayText(regionData, regionName) {
-    const parts = [];
     const rawName = regionName || (typeof regionData === 'string' ? regionData : regionData?.name);
+
+    // Check for external label provider first
+    const labelProvider = getNodeLabelProvider();
+    if (labelProvider) {
+      const customLabel = labelProvider(rawName, regionData);
+      if (customLabel != null) return customLabel;
+    }
+
+    const parts = [];
     const name = (this.useSubstitutedNames && regionData?.displayName) ? regionData.displayName : rawName;
 
     if (this.showName && name) {

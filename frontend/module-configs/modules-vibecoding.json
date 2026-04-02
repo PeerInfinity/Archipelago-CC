@@ -219,6 +219,10 @@
     "vibeCodingSim": {
       "path": "./modules/vibeCodingSim/index.js",
       "enabled": true
+    },
+    "apcalc": {
+      "path": "./modules/apcalc/index.js",
+      "enabled": false
     }
   },
   "loadPriority": [
@@ -276,6 +280,7 @@
     "jtaQueueEngine",
     "jtaActionQueue",
     "jtaArchipelago",
-    "vibeCodingSim"
+    "vibeCodingSim",
+    "apcalc"
   ]
 }

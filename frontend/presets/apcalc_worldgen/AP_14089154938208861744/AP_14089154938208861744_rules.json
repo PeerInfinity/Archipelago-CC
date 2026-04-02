@@ -1,0 +1,1093 @@
+{
+  "schema_version": 3,
+  "game_name": "APCalc WorldGen",
+  "game_directory": "apcalc_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "14089154938208861744",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu to Node 7",
+            "connected_region": "Node 7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Button: 7"
+              }
+            }
+          },
+          {
+            "name": "Menu to Node 3",
+            "connected_region": "Node 3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Button: 3"
+              }
+            }
+          },
+          {
+            "name": "Menu to Node 2",
+            "connected_region": "Node 2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Button: 2"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Node 7": {
+        "name": "Node 7",
+        "exits": [
+          {
+            "name": "Node 7 to Node -1",
+            "connected_region": "Node -1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: -",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 7",
+            "id": 1,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node 3": {
+        "name": "Node 3",
+        "exits": [
+          {
+            "name": "Node 3 to Node -4",
+            "connected_region": "Node -4",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: -",
+                  "Button: 3",
+                  "Button: 7"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 3",
+            "id": 2,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: -",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node 2": {
+        "name": "Node 2",
+        "exits": [
+          {
+            "name": "Node 2 to Node -6",
+            "connected_region": "Node -6",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 2 to Node 8",
+            "connected_region": "Node 8",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: 2",
+                  "Button: 4"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 2",
+            "id": 3,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 8",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -6": {
+        "name": "Node -6",
+        "exits": [
+          {
+            "name": "Node -6 to Node -9",
+            "connected_region": "Node -9",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: -": 2,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node -6 to Node -5",
+            "connected_region": "Node -5",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 1",
+                  "Button: 2",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node -6 to Node 1",
+            "connected_region": "Node 1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -6",
+            "id": 4,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -4": {
+        "name": "Node -4",
+        "exits": [
+          {
+            "name": "Node -4 to Node -12",
+            "connected_region": "Node -12",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: -": 2,
+                  "Button: 3": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node -4 to Node -7",
+            "connected_region": "Node -7",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: -": 2,
+                  "Button: 3": 2,
+                  "Button: 7": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node -4 to Node -2",
+            "connected_region": "Node -2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 7"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -4",
+            "id": 5,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: *",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -1": {
+        "name": "Node -1",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -1",
+            "id": 6,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: -",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -9": {
+        "name": "Node -9",
+        "exits": [
+          {
+            "name": "Node -9 to Node -63",
+            "connected_region": "Node -63",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: -": 2,
+                  "Button: *": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -9",
+            "id": 7,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: +",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -63": {
+        "name": "Node -63",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -63",
+            "id": 8,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: /",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -12": {
+        "name": "Node -12",
+        "exits": [
+          {
+            "name": "Node -12 to Node -11",
+            "connected_region": "Node -11",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: -": 2,
+                  "Button: +": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -12",
+            "id": 9,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -5": {
+        "name": "Node -5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -5",
+            "id": 10,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: +",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node 1": {
+        "name": "Node 1",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 1",
+            "id": 11,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: +",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node 8": {
+        "name": "Node 8",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 8",
+            "id": 12,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: -",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -7": {
+        "name": "Node -7",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -7",
+            "id": 13,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 6",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -2": {
+        "name": "Node -2",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -2",
+            "id": 14,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: *",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Node -11": {
+        "name": "Node -11",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -11",
+            "id": 15,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: -",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Victory",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Button: *": {
+        "name": "Button: *",
+        "id": 1,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 2
+      },
+      "Button: +": {
+        "name": "Button: +",
+        "id": 2,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
+      },
+      "Button: -": {
+        "name": "Button: -",
+        "hint_text": "Button:  ",
+        "id": 3,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 4
+      },
+      "Button: /": {
+        "name": "Button: /",
+        "id": 4,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 1": {
+        "name": "Button: 1",
+        "id": 5,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 2": {
+        "name": "Button: 2",
+        "id": 6,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 3": {
+        "name": "Button: 3",
+        "id": 7,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 2
+      },
+      "Button: 4": {
+        "name": "Button: 4",
+        "id": 8,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 6": {
+        "name": "Button: 6",
+        "id": 9,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 7": {
+        "name": "Button: 7",
+        "id": 10,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 8": {
+        "name": "Button: 8",
+        "id": 11,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Buttons",
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Button: *": 2,
+      "Button: +": 3,
+      "Button: -": 4,
+      "Button: /": 1,
+      "Button: 1": 1,
+      "Button: 2": 1,
+      "Button: 3": 2,
+      "Button: 4": 1,
+      "Button: 6": 1,
+      "Button: 7": 1,
+      "Button: 8": 1,
+      "Victory": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "Reach 7": "Button: 1",
+      "Reach -1": "Button: -",
+      "Reach -11": "Button: -",
+      "Reach 3": "Button: -",
+      "Reach 8": "Button: -",
+      "Reach 2": "Button: 8",
+      "Reach -6": "Button: 3",
+      "Reach -2": "Button: *",
+      "Reach -4": "Button: *",
+      "Reach -5": "Button: +",
+      "Reach -9": "Button: +",
+      "Reach 1": "Button: +",
+      "Reach -63": "Button: /",
+      "Reach -12": "Button: 4",
+      "Reach -7": "Button: 6",
+      "Victory": "Victory"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": [
+      "Button: 2",
+      "Button: 3",
+      "Button: 7"
+    ]
+  },
+  "world": {
+    "1": {
+      "game": "APCalc WorldGen",
+      "world_class_name": "APCalcWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "APCalc is a calculator-themed puzzle game. Collect number and operation buttons, then budget your presses to navigate a graph of target numbers.",
+      "slot_data": {
+        "nodes": {
+          "Node 7": {
+            "value": 7,
+            "parent": null,
+            "sphere": 0,
+            "operation": null,
+            "operand": null,
+            "button_sequence": [
+              "7",
+              "="
+            ],
+            "item": "1"
+          },
+          "Node 3": {
+            "value": 3,
+            "parent": null,
+            "sphere": 0,
+            "operation": null,
+            "operand": null,
+            "button_sequence": [
+              "3",
+              "="
+            ],
+            "item": "-"
+          },
+          "Node 2": {
+            "value": 2,
+            "parent": null,
+            "sphere": 0,
+            "operation": null,
+            "operand": null,
+            "button_sequence": [
+              "2",
+              "="
+            ],
+            "item": "8"
+          },
+          "Node -6": {
+            "value": -6,
+            "parent": "Node 2",
+            "sphere": 1,
+            "operation": "-",
+            "operand": 8,
+            "button_sequence": [
+              "2",
+              "=",
+              "-",
+              "8",
+              "="
+            ],
+            "item": "3"
+          },
+          "Node -4": {
+            "value": -4,
+            "parent": "Node 3",
+            "sphere": 1,
+            "operation": "-",
+            "operand": 7,
+            "button_sequence": [
+              "3",
+              "=",
+              "-",
+              "7",
+              "="
+            ],
+            "item": "*"
+          },
+          "Node -1": {
+            "value": -1,
+            "parent": "Node 7",
+            "sphere": 1,
+            "operation": "-",
+            "operand": 8,
+            "button_sequence": [
+              "7",
+              "=",
+              "-",
+              "8",
+              "="
+            ],
+            "item": "-"
+          },
+          "Node -9": {
+            "value": -9,
+            "parent": "Node -6",
+            "sphere": 2,
+            "operation": "-",
+            "operand": 3,
+            "button_sequence": [
+              "2",
+              "=",
+              "-",
+              "8",
+              "=",
+              "-",
+              "3",
+              "="
+            ],
+            "item": "+"
+          },
+          "Node -63": {
+            "value": -63,
+            "parent": "Node -9",
+            "sphere": 2,
+            "operation": "*",
+            "operand": 7,
+            "button_sequence": [
+              "2",
+              "=",
+              "-",
+              "8",
+              "=",
+              "-",
+              "3",
+              "=",
+              "*",
+              "7",
+              "="
+            ],
+            "item": "/"
+          },
+          "Node -12": {
+            "value": -12,
+            "parent": "Node -4",
+            "sphere": 2,
+            "operation": "-",
+            "operand": 8,
+            "button_sequence": [
+              "3",
+              "=",
+              "-",
+              "7",
+              "=",
+              "-",
+              "8",
+              "="
+            ],
+            "item": "4"
+          },
+          "Node -5": {
+            "value": -5,
+            "parent": "Node -6",
+            "sphere": 3,
+            "operation": "+",
+            "operand": 1,
+            "button_sequence": [
+              "2",
+              "=",
+              "-",
+              "8",
+              "=",
+              "+",
+              "1",
+              "="
+            ],
+            "item": "+"
+          },
+          "Node 1": {
+            "value": 1,
+            "parent": "Node -6",
+            "sphere": 3,
+            "operation": "+",
+            "operand": 7,
+            "button_sequence": [
+              "2",
+              "=",
+              "-",
+              "8",
+              "=",
+              "+",
+              "7",
+              "="
+            ],
+            "item": "+"
+          },
+          "Node 8": {
+            "value": 8,
+            "parent": "Node 2",
+            "sphere": 3,
+            "operation": "*",
+            "operand": 4,
+            "button_sequence": [
+              "2",
+              "=",
+              "*",
+              "4",
+              "="
+            ],
+            "item": "-"
+          },
+          "Node -7": {
+            "value": -7,
+            "parent": "Node -4",
+            "sphere": 4,
+            "operation": "-",
+            "operand": 3,
+            "button_sequence": [
+              "3",
+              "=",
+              "-",
+              "7",
+              "=",
+              "-",
+              "3",
+              "="
+            ],
+            "item": "6"
+          },
+          "Node -2": {
+            "value": -2,
+            "parent": "Node -4",
+            "sphere": 4,
+            "operation": "+",
+            "operand": 2,
+            "button_sequence": [
+              "3",
+              "=",
+              "-",
+              "7",
+              "=",
+              "+",
+              "2",
+              "="
+            ],
+            "item": "*"
+          },
+          "Node -11": {
+            "value": -11,
+            "parent": "Node -12",
+            "sphere": 4,
+            "operation": "+",
+            "operand": 1,
+            "button_sequence": [
+              "3",
+              "=",
+              "-",
+              "7",
+              "=",
+              "-",
+              "8",
+              "=",
+              "+",
+              "1",
+              "="
+            ],
+            "item": "-"
+          }
+        },
+        "starting_buttons": {
+          "7": 1,
+          "3": 1,
+          "2": 1
+        },
+        "operations": [
+          "+",
+          "-",
+          "*",
+          "/"
+        ],
+        "num_spheres": 5,
+        "goal_node": "Node -11"
+      },
+      "web": {
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "APCalc Setup Guide",
+            "description": "A guide to setting up APCalc.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "PeerInfinity"
+            ]
+          }
+        ]
+      },
+      "world_directory": "apcalc_worldgen"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "is_canonical": true
+}

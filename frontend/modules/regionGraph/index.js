@@ -19,6 +19,7 @@ export let moduleDispatcher = null; // Export the dispatcher
 let moduleId = 'regionGraph'; // Store module ID
 let _moduleEventBus = null;
 let _pendingOverlayProvider = null;  // stored until a panel instance picks it up
+let _nodeLabelProvider = null;       // (nodeId, nodeData) => string | null
 let _panelInstances = new Set();     // all live RegionGraphUI instances
 
 export function registerPanelInstance(instance) { _panelInstances.add(instance); }
@@ -28,6 +29,7 @@ export function getPendingOverlayProvider() {
   _pendingOverlayProvider = null;
   return p;
 }
+export function getNodeLabelProvider() { return _nodeLabelProvider; }
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -66,6 +68,20 @@ export function register(registrationApi) {
 
   registrationApi.registerPublicFunction('regionGraph', 'refreshNodeOverlays', () => {
     for (const panel of _panelInstances) panel.overlayManager.refresh();
+  });
+
+  registrationApi.registerPublicFunction('regionGraph', 'registerNodeLabelProvider', (callback) => {
+    _nodeLabelProvider = callback;
+    // Refresh labels on any existing panels
+    for (const panel of _panelInstances) {
+      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+    }
+  });
+
+  registrationApi.registerPublicFunction('regionGraph', 'refreshNodeLabels', () => {
+    for (const panel of _panelInstances) {
+      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+    }
   });
 }
 

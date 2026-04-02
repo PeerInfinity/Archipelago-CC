@@ -1,0 +1,292 @@
+/* APCalc panel styles */
+
+.apcalc-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    color: #e0e0e0;
+    background: #1e1e1e;
+    overflow: hidden;
+}
+
+.apcalc-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-style: italic;
+}
+
+/* Main layout: calculator + sidebar */
+.apcalc-main {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    flex-shrink: 0;
+}
+
+/* Calculator */
+.apcalc-calculator {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+}
+
+.apcalc-display {
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 8px 12px;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.apcalc-display-node {
+    font-size: 10px;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.apcalc-display-value {
+    font-size: 20px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    text-align: right;
+    color: #fff;
+    min-height: 24px;
+}
+
+.apcalc-display-op {
+    color: #e6a817;
+    margin-right: 4px;
+}
+
+.apcalc-flash {
+    color: #ff6b6b !important;
+    transition: color 0.3s;
+}
+
+/* Calculator body: numpad + ops */
+.apcalc-calc-body {
+    display: flex;
+    gap: 4px;
+}
+
+.apcalc-pad {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.apcalc-row {
+    display: flex;
+    gap: 3px;
+}
+
+.apcalc-ops {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+/* Buttons */
+.apcalc-btn {
+    width: 42px;
+    height: 36px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.1s;
+}
+
+.apcalc-btn:hover:not(.apcalc-btn-disabled) {
+    background: #3a3a3a;
+    border-color: #777;
+}
+
+.apcalc-btn:active:not(.apcalc-btn-disabled) {
+    background: #4a4a4a;
+}
+
+.apcalc-btn-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.apcalc-btn-eq {
+    background: #2d5a2d;
+    border-color: #4a8a4a;
+}
+
+.apcalc-btn-eq:hover {
+    background: #3d6a3d;
+}
+
+.apcalc-btn-clear {
+    background: #5a2d2d;
+    border-color: #8a4a4a;
+}
+
+.apcalc-btn-clear:hover {
+    background: #6a3d3d;
+}
+
+/* Remaining buttons sidebar */
+.apcalc-sidebar {
+    min-width: 140px;
+    max-width: 180px;
+    background: #252525;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 6px;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+.apcalc-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+    color: #aaa;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.apcalc-hide-btn,
+.apcalc-show-sidebar-btn,
+.apcalc-filter-clear {
+    background: none;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: #aaa;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px 6px;
+}
+
+.apcalc-hide-btn:hover,
+.apcalc-show-sidebar-btn:hover,
+.apcalc-filter-clear:hover {
+    background: #333;
+    color: #ddd;
+}
+
+.apcalc-btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+}
+
+.apcalc-btn-row-empty {
+    opacity: 0.35;
+}
+
+.apcalc-btn-label {
+    font-weight: bold;
+    min-width: 20px;
+}
+
+.apcalc-btn-bar {
+    color: #888;
+    font-size: 11px;
+}
+
+/* Status bar */
+.apcalc-status {
+    display: flex;
+    gap: 16px;
+    padding: 4px 8px;
+    background: #252525;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    font-size: 11px;
+    color: #aaa;
+    flex-shrink: 0;
+}
+
+.apcalc-status-pos {
+    font-weight: bold;
+    color: #e6a817;
+}
+
+.apcalc-status-progress {
+    margin-left: auto;
+    color: #2d8a4e;
+}
+
+/* Discovered paths */
+.apcalc-paths {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0 8px 8px;
+}
+
+.apcalc-paths-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-weight: bold;
+    font-size: 12px;
+    color: #aaa;
+    flex-shrink: 0;
+}
+
+.apcalc-paths-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.apcalc-paths-empty {
+    color: #666;
+    font-style: italic;
+    padding: 8px 0;
+}
+
+.apcalc-path-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.apcalc-path-row:hover {
+    background: #2a2a2a;
+}
+
+.apcalc-path-label {
+    font-weight: bold;
+    font-family: 'Consolas', 'Courier New', monospace;
+    min-width: 40px;
+    color: #e0e0e0;
+}
+
+.apcalc-path-seq {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    color: #888;
+}

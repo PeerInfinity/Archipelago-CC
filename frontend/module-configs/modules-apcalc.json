@@ -10,7 +10,7 @@
     },
     "events": {
       "path": "./modules/events/index.js",
-      "enabled": true
+      "enabled": false
     },
     "stateManager": {
       "path": "./modules/stateManager/index.js",
@@ -30,19 +30,19 @@
     },
     "inventory": {
       "path": "./modules/inventory/index.js",
-      "enabled": true
+      "enabled": false
     },
     "editorCore": {
       "path": "./modules/editorCore/index.js",
-      "enabled": false
+      "enabled": true
     },
     "editor": {
       "path": "./modules/editor/index.js",
-      "enabled": true
+      "enabled": false
     },
     "editorCodeMirror6": {
       "path": "./modules/editorCodeMirror6/index.js",
-      "enabled": false
+      "enabled": true
     },
     "settings": {
       "path": "./modules/settings/index.js",
@@ -50,31 +50,31 @@
     },
     "optionsPanel": {
       "path": "./modules/optionsPanel/index.js",
-      "enabled": false
+      "enabled": true
     },
     "commonUI": {
       "path": "./modules/commonUI/index.js",
-      "enabled": true
+      "enabled": false
     },
     "locations": {
       "path": "./modules/locations/index.js",
-      "enabled": true
+      "enabled": false
     },
     "exits": {
       "path": "./modules/exits/index.js",
-      "enabled": true
+      "enabled": false
     },
     "pathAnalyzer": {
       "path": "./modules/pathAnalyzer/index.js",
-      "enabled": true
+      "enabled": false
     },
     "pathAnalyzerPanel": {
       "path": "./modules/pathAnalyzerPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "regions": {
       "path": "./modules/regions/index.js",
-      "enabled": true
+      "enabled": false
     },
     "helpers": {
       "path": "./modules/helpers/index.js",
@@ -82,15 +82,15 @@
     },
     "dungeons": {
       "path": "./modules/dungeons/index.js",
-      "enabled": true
+      "enabled": false
     },
     "regionGraph": {
       "path": "./modules/regionGraph/index.js",
-      "enabled": false
+      "enabled": true
     },
     "discovery": {
       "path": "./modules/discovery/index.js",
-      "enabled": true
+      "enabled": false
     },
     "discoveryPanel": {
       "path": "./modules/discoveryPanel/index.js",
@@ -102,11 +102,11 @@
     },
     "playerStatePanel": {
       "path": "./modules/playerStatePanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "loops": {
       "path": "./modules/loops/index.js",
-      "enabled": true
+      "enabled": false
     },
     "loopStats": {
       "path": "./modules/loopStats/index.js",
@@ -122,51 +122,51 @@
     },
     "spoilerTest": {
       "path": "./modules/spoilerTest/index.js",
-      "enabled": true
+      "enabled": false
     },
     "sphereState": {
       "path": "./modules/sphereState/index.js",
-      "enabled": true
+      "enabled": false
     },
     "spoilerChecklist": {
       "path": "./modules/spoilerChecklist/index.js",
-      "enabled": true
+      "enabled": false
     },
     "textAdventure": {
       "path": "./modules/textAdventure/index.js",
-      "enabled": true
+      "enabled": false
     },
     "tests": {
       "path": "./modules/tests/index.js",
-      "enabled": true
+      "enabled": false
     },
     "progressBar": {
       "path": "./modules/progressBar/index.js",
-      "enabled": true
+      "enabled": false
     },
     "progressBarPanel": {
       "path": "./modules/progressBarPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGame": {
       "path": "./modules/metaGame/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGamePanel": {
       "path": "./modules/metaGamePanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
-      "enabled": true
+      "enabled": false
     },
     "iframePanel": {
       "path": "./modules/iframePanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "mazeGameDataPanel": {
       "path": "./modules/mazeGameDataPanel/index.js",
@@ -182,15 +182,15 @@
     },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
-      "enabled": true
+      "enabled": false
     },
     "windowPanel": {
       "path": "./modules/windowPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "windowManagerPanel": {
       "path": "./modules/windowManagerPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "ruleConverter": {
       "path": "./modules/ruleConverter/index.js",
@@ -222,7 +222,7 @@
     },
     "apcalc": {
       "path": "./modules/apcalc/index.js",
-      "enabled": false
+      "enabled": true
     }
   },
   "loadPriority": [
