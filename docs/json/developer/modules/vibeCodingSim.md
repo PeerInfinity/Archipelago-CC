@@ -84,6 +84,22 @@ Engine callbacks (`onStateChanged`, `onLogEntry`) set a `renderDirty` flag rathe
 
 The simulation tick handles credit/review budget refresh, task progress, review advancement (including auto-rewind), merge conflict updates, auto-test triggering, and test workflow completion.
 
+## Settings Panel
+
+The settings panel is a column view mode (`columnView === 'settings'`) that replaces the feature/task columns. It is rendered by `_renderSettingsPanel(gs)` in the UI class.
+
+### CONFIG_SCHEMA
+
+`CONFIG_SCHEMA` is an exported constant from `simEngine.js` — an array of groups, each containing field descriptors with `key`, `label`, and `step`. The UI iterates this to generate labeled number inputs grouped by category.
+
+### Staging and Apply
+
+When the settings panel opens, the current config is snapshotted into `_pendingConfig`. Inputs modify the staging object. Clicking Apply copies it into `gs.config` via `Object.assign`. This gives explicit-apply semantics.
+
+### Persistence
+
+Save/Load buttons use `localStorage` key `'vcs-config'`. Only config fields described in `CONFIG_SCHEMA` are saved/loaded, and values are validated as numbers before applying.
+
 ## Integration Points
 
 - **Region Graph** — provides the dependency graph structure via `slotData.graph_structure`

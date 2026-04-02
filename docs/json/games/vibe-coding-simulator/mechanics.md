@@ -26,7 +26,9 @@ Each task type has a fixed sequence of subtask phases:
 | Write Doc / Evaluate Doc / Write Tests | investigating → reading code → writing |
 | Merge Conflict Resolve | investigating → resolving conflict → testing |
 
-Each subtask has a randomized duration: `baseTaskDuration * durationMult * exp(gauss(0, durationLogSigma))`, with a minimum of 1 minute. Merge/retest subtasks use `mergeTaskDurationScale` (0.5x) of the base duration. When a feature's dependencies aren't met, `depsNotMetMultiplier` (2x) applies.
+Each subtask has a randomized duration: `baseTaskDuration * durationMult * exp(gauss(0, durationLogSigma))`, with a minimum of 1 minute. Merge/retest subtasks use `mergeTaskDurationScale` (0.5x) of the base duration.
+
+The duration multiplier is `depsNotMetMultiplier ^ unmetDepLayers`, where `unmetDepLayers` is the depth of the longest chain of unmet upstream dependencies. For example, if C depends on B depends on A, and neither A nor B has passed manual review, C has 2 unmet layers and tasks take 4x longer (2^2). The layer count is shown as ⏳N on the feature card.
 
 ### Task Execution
 

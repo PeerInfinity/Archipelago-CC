@@ -170,7 +170,7 @@ All values are defined in `SimulationConfig` and can be overridden.
 |------------|---------|-------------|
 | `baseTaskDuration` | 10.0 | Base minutes per subtask |
 | `durationLogSigma` | 0.6 | Log-normal variance for subtask duration |
-| `depsNotMetMultiplier` | 2.0 | Duration multiplier when dependencies unmet |
+| `depsNotMetMultiplier` | 2.0 | Duration multiplier per unmet dependency layer (2^layers) |
 | `mergeTaskDurationScale` | 0.5 | Duration scale for merge/retest subtasks |
 | `manualTestDuration` | 30.0 | Duration of manual review (30 minutes) |
 | `testWorkflowDuration` | 10.0 | Duration of automated test workflow |

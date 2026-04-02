@@ -103,6 +103,10 @@ A feature is complete when it passes a manual review — all three completeness 
 
 ## Archipelago Integration
 
-Each feature in the dependency graph corresponds to a node in a DepGraph world. Completing a feature (passing manual test) checks the corresponding Archipelago location. Features have upstream dependencies — a feature whose dependencies aren't all complete takes twice as long to work on.
+Each feature in the dependency graph corresponds to a node in a DepGraph world. Completing a feature (passing manual review) checks the corresponding Archipelago location. Features have upstream dependencies — each layer of unmet dependencies doubles the task duration (shown as ⏳N on the feature card, where N is the layer count).
+
+## Settings
+
+Click the gear button (⚙) next to the column view selector to open the settings panel. All simulation parameters are adjustable, grouped by category. Changes require clicking Apply to take effect. Settings can be saved to and loaded from browser localStorage.
 
 The dependency structure comes from the DepGraph preset loaded into the Region Graph module, which provides both the visual graph and the game data for the simulation.
