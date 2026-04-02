@@ -360,7 +360,7 @@ export class LayoutControlsManager {
     this.ui.updateStatus('Running layout...');
 
     // Pre-size nodes for overlays so layout spaces them correctly
-    if (this.ui._nodeOverlayProvider) this.ui._presizeNodesForOverlays();
+    this.ui.overlayManager.presizeNodes();
 
     // Auto-detect DAG structure for hierarchical layout
     const dagResult = this.detectDAGStructure();
@@ -378,7 +378,6 @@ export class LayoutControlsManager {
       logger.debug(`DAG detected, using hierarchical layout`);
     } else {
       // Use COSE for non-DAG graphs
-      const hasOverlays = !!this.ui._nodeOverlayProvider;
       layoutOptions = {
         name: 'cose',
         randomize: false,
@@ -386,14 +385,14 @@ export class LayoutControlsManager {
         animationDuration: 1000,
         fit: true,
         padding: 50,
-        nodeRepulsion: hasOverlays ? 800000 : 400000,
-        nodeOverlap: hasOverlays ? 20 : 10,
-        idealEdgeLength: hasOverlays ? 180 : 100,
+        nodeRepulsion: 400000,
+        nodeOverlap: 10,
+        idealEdgeLength: 100,
         edgeElasticity: 100,
         nestingFactor: 5,
         gravity: 80,
         numIter: 1000,
-        componentSpacing: hasOverlays ? 180 : 100,
+        componentSpacing: 100,
       };
     }
 

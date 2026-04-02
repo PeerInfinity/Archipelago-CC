@@ -17,11 +17,16 @@ export const moduleInfo = {
 export let moduleDispatcher = null; // Export the dispatcher
 let moduleId = 'regionGraph'; // Store module ID
 let _moduleEventBus = null;
-let _nodeOverlayProvider = null;
-let _panelInstance = null;
+let _pendingOverlayProvider = null;  // stored until a panel instance picks it up
+let _panelInstances = new Set();     // all live RegionGraphUI instances
 
-export function setPanelInstance(instance) { _panelInstance = instance; }
-export function getNodeOverlayProvider() { return _nodeOverlayProvider; }
+export function registerPanelInstance(instance) { _panelInstances.add(instance); }
+export function unregisterPanelInstance(instance) { _panelInstances.delete(instance); }
+export function getPendingOverlayProvider() {
+  const p = _pendingOverlayProvider;
+  _pendingOverlayProvider = null;
+  return p;
+}
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -49,13 +54,17 @@ export function register(registrationApi) {
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
   registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
 
-  registrationApi.registerPublicFunction('regionGraph', 'registerNodeOverlayProvider', (callback) => {
-    _nodeOverlayProvider = callback;
-    if (_panelInstance) _panelInstance.setNodeOverlayProvider(callback);
+  registrationApi.registerPublicFunction('regionGraph', 'registerNodeOverlayProvider', (providerOrCallback) => {
+    // If panels already exist, register directly; otherwise stash for later
+    if (_panelInstances.size > 0) {
+      for (const panel of _panelInstances) panel.overlayManager.registerProvider(providerOrCallback);
+    } else {
+      _pendingOverlayProvider = providerOrCallback;
+    }
   });
 
   registrationApi.registerPublicFunction('regionGraph', 'refreshNodeOverlays', () => {
-    if (_panelInstance) _panelInstance.refreshOverlays();
+    for (const panel of _panelInstances) panel.overlayManager.refresh();
   });
 }
 
