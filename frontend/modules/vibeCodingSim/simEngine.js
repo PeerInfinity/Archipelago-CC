@@ -96,6 +96,62 @@ class SeededRandom {
 
 // --- Config ---
 
+const CONFIG_SCHEMA = [
+    { group: 'Time & Resources', fields: [
+        { key: 'timeScale', label: 'Time scale (sim min/real sec)', step: 1 },
+        { key: 'dailyCredits', label: 'Daily credits', step: 10 },
+        { key: 'dayDuration', label: 'Day duration (minutes)', step: 1 },
+        { key: 'creditRate', label: 'Credit rate (per minute)', step: 0.1 },
+        { key: 'dailyReviewBudget', label: 'Daily review budget (minutes)', step: 1 },
+        { key: 'reviewSpeedMultiplier', label: 'Review speed multiplier', step: 0.1 },
+    ]},
+    { group: 'Task Duration', fields: [
+        { key: 'baseTaskDuration', label: 'Base subtask duration (min)', step: 1 },
+        { key: 'durationLogSigma', label: 'Duration variance (log sigma)', step: 0.1 },
+        { key: 'depsNotMetMultiplier', label: 'Deps-not-met multiplier', step: 0.1 },
+        { key: 'mergeTaskDurationScale', label: 'Merge task duration scale', step: 0.1 },
+        { key: 'manualTestDuration', label: 'Manual review duration (min)', step: 1 },
+        { key: 'testWorkflowDuration', label: 'Test workflow duration (min)', step: 1 },
+    ]},
+    { group: 'Events', fields: [
+        { key: 'eventProbability', label: 'Event probability (per min)', step: 0.01 },
+        { key: 'eventPositiveWeight', label: 'Positive event weight', step: 0.05 },
+        { key: 'eventQualityDelta', label: 'Event quality delta', step: 0.01 },
+        { key: 'outcomeEventQualityRange', label: 'Outcome event quality range', step: 0.01 },
+    ]},
+    { group: 'Doc Writing', fields: [
+        { key: 'docSuccessRate', label: 'Doc success rate', step: 0.05 },
+        { key: 'docPartialMin', label: 'Doc partial min', step: 0.05 },
+        { key: 'docPartialMax', label: 'Doc partial max', step: 0.05 },
+        { key: 'docBaseQuality', label: 'Doc base quality', step: 0.05 },
+        { key: 'docSuccessBonus', label: 'Doc success bonus', step: 0.05 },
+    ]},
+    { group: 'First Implementation', fields: [
+        { key: 'firstImplExactMatchRate', label: 'Exact match rate', step: 0.05 },
+        { key: 'firstImplPartialMin', label: 'Partial min', step: 0.05 },
+        { key: 'firstImplPartialMax', label: 'Partial max', step: 0.05 },
+    ]},
+    { group: 'Outcome Formula', fields: [
+        { key: 'outcomeReduceRate', label: 'Reduce probability', step: 0.05 },
+        { key: 'outcomeNothingRate', label: 'Nothing probability', step: 0.05 },
+        { key: 'outcomeMaxLossFraction', label: 'Max loss fraction', step: 0.05 },
+        { key: 'outcomeMaxGainFraction', label: 'Max gain fraction', step: 0.05 },
+        { key: 'qualityBonusReduceScale', label: 'Quality bonus (reduce)', step: 0.05 },
+        { key: 'qualityBonusNothingScale', label: 'Quality bonus (nothing)', step: 0.05 },
+        { key: 'qualityBonusImproveScale', label: 'Quality bonus (improve)', step: 0.05 },
+        { key: 'qualityBonusFirstImplScale', label: 'Quality bonus (first impl)', step: 0.05 },
+    ]},
+    { group: 'Other', fields: [
+        { key: 'investigationDocRevalRate', label: 'Investigation doc reval rate', step: 0.05 },
+        { key: 'reportAccuracyRate', label: 'Report accuracy rate', step: 0.05 },
+        { key: 'sideEffectRate', label: 'Side effect rate', step: 0.05 },
+        { key: 'sideEffectMaxChange', label: 'Side effect max change', step: 0.05 },
+        { key: 'sideEffectUpstreamWeight', label: 'Side effect upstream weight', step: 0.05 },
+        { key: 'regressionCatchRate', label: 'Regression catch rate', step: 0.05 },
+        { key: 'maxTaskHistory', label: 'Max completed tasks', step: 10 },
+    ]},
+];
+
 class SimulationConfig {
     constructor(overrides = {}) {
         this.timeScale = 60.0;
@@ -203,11 +259,11 @@ class Feature {
         this.upstreamIds = new Set();
         this.downstreamIds = new Set();
         this.dependsOn = []; // node IDs from the graph (for determining upstream features)
-        this._depsAreMet = true;
+        this._unmetDepLayers = 0;
     }
 
-    get depsAreMet() { return this._depsAreMet; }
-    set depsAreMet(val) { this._depsAreMet = val; }
+    get depsAreMet() { return this._unmetDepLayers === 0; }
+    get unmetDepLayers() { return this._unmetDepLayers; }
 }
 
 // --- Task Event ---
@@ -459,16 +515,26 @@ class GameState {
     }
 
     _updateDepsMetStatus() {
-        for (const [, feat] of this.features) {
-            let met = true;
+        const cache = new Map();
+        const computeLayers = (feat) => {
+            if (cache.has(feat.id)) return cache.get(feat.id);
+            cache.set(feat.id, 0); // guard against cycles
+            let maxUpstream = 0;
+            let anyUnmet = false;
             for (const upId of feat.upstreamIds) {
                 const up = this.features.get(upId);
                 if (!up || up.manualTestResult !== 'pass') {
-                    met = false;
-                    break;
+                    anyUnmet = true;
+                    const upLayers = up ? computeLayers(up) : 0;
+                    maxUpstream = Math.max(maxUpstream, upLayers);
                 }
             }
-            feat.depsAreMet = met;
+            const layers = anyUnmet ? 1 + maxUpstream : 0;
+            cache.set(feat.id, layers);
+            return layers;
+        };
+        for (const [, feat] of this.features) {
+            feat._unmetDepLayers = computeLayers(feat);
         }
     }
 
@@ -566,7 +632,7 @@ class GameState {
         task.startedAt = this.simulatedTime;
 
         const subtaskList = task.subtasks;
-        const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
+        const durationMult = Math.pow(this.config.depsNotMetMultiplier, feat.unmetDepLayers);
 
         for (const label of subtaskList) {
             const dur = Math.max(1, Math.round(
@@ -857,7 +923,7 @@ class GameState {
         task.branchCodeCompleteness = Math.max(
             feat.codeCompleteness, conflict.branchCodeCompleteness ?? 0);
 
-        const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
+        const durationMult = Math.pow(this.config.depsNotMetMultiplier, feat.unmetDepLayers);
         for (const label of MERGE_SUBTASKS) {
             const dur = Math.max(1, Math.round(
                 this.config.baseTaskDuration * this.config.mergeTaskDurationScale * durationMult *
@@ -893,7 +959,7 @@ class GameState {
         task.startedAt = this.simulatedTime;
         task.branchCodeCompleteness = prev.branchCodeCompleteness ?? feat.codeCompleteness;
 
-        const durationMult = feat.depsAreMet ? 1 : this.config.depsNotMetMultiplier;
+        const durationMult = Math.pow(this.config.depsNotMetMultiplier, feat.unmetDepLayers);
         for (const label of MERGE_SUBTASKS) {
             const dur = Math.max(1, Math.round(
                 this.config.baseTaskDuration * this.config.mergeTaskDurationScale * durationMult *
@@ -1280,11 +1346,15 @@ class GameState {
                 this.rng.uniform(this.config.docPartialMin, this.config.docPartialMax) + task.pendingQuality));
         }
         feat.hasDoc = true;
+        feat.manualTestResult = null;
+        feat.manualReviewIssues = null;
         task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
     }
 
     _applyEvaluateDoc(task, feat) {
         this._applyUniversalOutcome(feat, 'docCompleteness', 1.0, task.pendingQuality);
+        feat.manualTestResult = null;
+        feat.manualReviewIssues = null;
         task.reportedSuccess = this._rollReportedSuccess(feat.docCompleteness >= 1.0);
     }
 
@@ -1576,7 +1646,7 @@ class GameState {
     }
 
     _pruneCompletedTasks() {
-        const maxCompleted = 100;
+        const maxCompleted = this.config.maxTaskHistory;
         const completed = this.tasks.filter(t =>
             t.status === TaskStatus.COMPLETED || t.status === TaskStatus.CANCELLED ||
             t.status === TaskStatus.FAILED);
@@ -1596,6 +1666,7 @@ class GameState {
 export {
     GameState,
     SimulationConfig,
+    CONFIG_SCHEMA,
     TaskType,
     TaskStatus,
     SubtaskLabel,

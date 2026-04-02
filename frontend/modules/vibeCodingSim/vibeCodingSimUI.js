@@ -7,7 +7,7 @@
  */
 
 import { setPanelInstance, getModuleApis } from './index.js';
-import { TaskStatus, TaskType } from './simEngine.js';
+import { TaskStatus, TaskType, SimulationConfig, CONFIG_SCHEMA } from './simEngine.js';
 
 function testColor(pct) {
     if (pct === null || pct === undefined) return '#555';
@@ -40,10 +40,12 @@ export class VibeCodingSimUI {
         this.expandedTaskId = null; // only one task expanded at a time
         this.expandedTestWorkflow = false;
         this.featureSearch = '';
-        this.visibleColumns = { features: true, tasks: true };
+        this.columnView = 'both'; // 'features' | 'both' | 'tasks'
         this.autoSkipTesting = false;
         this.autoTest = false;
         this.autoRewind = false;
+        this._prevColumnView = 'both';
+        this._pendingConfig = null;
         this._dyn = {};
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'vcs-panel';
@@ -74,11 +76,15 @@ export class VibeCodingSimUI {
         }
         this.rootElement.appendChild(this._renderToolbar(gs));
         this.rootElement.appendChild(this._renderColumnToggles());
-        const cols = document.createElement('div');
-        cols.className = 'vcs-columns';
-        if (this.visibleColumns.features) cols.appendChild(this._renderFeatureColumn(gs));
-        if (this.visibleColumns.tasks) cols.appendChild(this._renderTaskColumn(gs));
-        this.rootElement.appendChild(cols);
+        if (this.columnView === 'settings') {
+            this.rootElement.appendChild(this._renderSettingsPanel(gs));
+        } else {
+            const cols = document.createElement('div');
+            cols.className = 'vcs-columns';
+            if (this.columnView === 'features' || this.columnView === 'both') cols.appendChild(this._renderFeatureColumn(gs));
+            if (this.columnView === 'tasks' || this.columnView === 'both') cols.appendChild(this._renderTaskColumn(gs));
+            this.rootElement.appendChild(cols);
+        }
         for (const list of this.rootElement.querySelectorAll('.vcs-card-list')) {
             const col = list.closest('.vcs-column');
             if (col) {
@@ -291,15 +297,141 @@ export class VibeCodingSimUI {
     _renderColumnToggles() {
         const row = document.createElement('div');
         row.className = 'vcs-column-toggles';
-        for (const [key, label] of [['features', 'Features'], ['tasks', 'Tasks']]) {
+        for (const [key, label] of [['features', 'Features'], ['both', 'Both'], ['tasks', 'Tasks']]) {
             const btn = document.createElement('button');
             btn.className = 'vcs-btn vcs-btn-toggle';
-            if (this.visibleColumns[key]) btn.classList.add('vcs-btn-active');
+            if (this.columnView === key) btn.classList.add('vcs-btn-active');
             btn.textContent = label;
-            btn.addEventListener('click', () => { this.visibleColumns[key] = !this.visibleColumns[key]; this.render(); });
+            btn.addEventListener('click', () => { this.columnView = key; this.render(); });
             row.appendChild(btn);
         }
+
+        const gear = document.createElement('button');
+        gear.className = 'vcs-btn vcs-settings-gear';
+        if (this.columnView === 'settings') gear.classList.add('vcs-btn-active');
+        gear.textContent = '\u2699';
+        gear.title = 'Settings';
+        gear.addEventListener('click', () => {
+            if (this.columnView === 'settings') {
+                this.columnView = this._prevColumnView;
+            } else {
+                this._prevColumnView = this.columnView;
+                this.columnView = 'settings';
+                this._pendingConfig = { ...this.gameState.config };
+            }
+            this.render();
+        });
+        row.appendChild(gear);
+
         return row;
+    }
+
+    // ========== Settings Panel ==========
+
+    _renderSettingsPanel(gs) {
+        const panel = document.createElement('div');
+        panel.className = 'vcs-settings-panel';
+
+        const header = document.createElement('div');
+        header.className = 'vcs-settings-header';
+        header.innerHTML = '<strong>Settings</strong>';
+        const backBtn = document.createElement('button');
+        backBtn.className = 'vcs-btn vcs-btn-small';
+        backBtn.textContent = 'Back';
+        backBtn.addEventListener('click', () => { this.columnView = this._prevColumnView; this.render(); });
+        header.appendChild(backBtn);
+        panel.appendChild(header);
+
+        const body = document.createElement('div');
+        body.className = 'vcs-settings-body';
+
+        const inputs = {};
+        for (const group of CONFIG_SCHEMA) {
+            const heading = document.createElement('div');
+            heading.className = 'vcs-settings-group';
+            heading.textContent = group.group;
+            body.appendChild(heading);
+
+            for (const field of group.fields) {
+                const row = document.createElement('div');
+                row.className = 'vcs-settings-row';
+                const label = document.createElement('label');
+                label.textContent = field.label;
+                row.appendChild(label);
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.step = field.step;
+                input.value = this._pendingConfig[field.key];
+                input.addEventListener('change', () => {
+                    this._pendingConfig[field.key] = parseFloat(input.value) || 0;
+                });
+                row.appendChild(input);
+                inputs[field.key] = input;
+                body.appendChild(row);
+            }
+        }
+        panel.appendChild(body);
+
+        const footer = document.createElement('div');
+        footer.className = 'vcs-settings-footer';
+
+        const applyBtn = document.createElement('button');
+        applyBtn.className = 'vcs-btn vcs-btn-action';
+        applyBtn.textContent = 'Apply';
+        applyBtn.addEventListener('click', () => {
+            Object.assign(gs.config, this._pendingConfig);
+            this.render();
+        });
+        footer.appendChild(applyBtn);
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'vcs-btn';
+        resetBtn.textContent = 'Reset to Defaults';
+        resetBtn.addEventListener('click', () => {
+            const defaults = new SimulationConfig();
+            this._pendingConfig = { ...defaults };
+            for (const group of CONFIG_SCHEMA) {
+                for (const field of group.fields) {
+                    inputs[field.key].value = defaults[field.key];
+                }
+            }
+        });
+        footer.appendChild(resetBtn);
+
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'vcs-btn';
+        saveBtn.textContent = 'Save';
+        saveBtn.addEventListener('click', () => {
+            try {
+                localStorage.setItem('vcs-config', JSON.stringify(this._pendingConfig));
+                saveBtn.textContent = 'Saved!';
+                setTimeout(() => { saveBtn.textContent = 'Save'; }, 1500);
+            } catch (e) { /* localStorage may be unavailable */ }
+        });
+        footer.appendChild(saveBtn);
+
+        const loadBtn = document.createElement('button');
+        loadBtn.className = 'vcs-btn';
+        loadBtn.textContent = 'Load';
+        loadBtn.addEventListener('click', () => {
+            try {
+                const raw = localStorage.getItem('vcs-config');
+                if (!raw) return;
+                const loaded = JSON.parse(raw);
+                for (const group of CONFIG_SCHEMA) {
+                    for (const field of group.fields) {
+                        if (typeof loaded[field.key] === 'number') {
+                            this._pendingConfig[field.key] = loaded[field.key];
+                            inputs[field.key].value = loaded[field.key];
+                        }
+                    }
+                }
+            } catch (e) { /* invalid JSON or localStorage unavailable */ }
+        });
+        footer.appendChild(loadBtn);
+
+        panel.appendChild(footer);
+        return panel;
     }
 
     // ========== Feature Column ==========
@@ -348,7 +480,7 @@ export class VibeCodingSimUI {
 
         const name = document.createElement('div');
         name.className = 'vcs-card-name';
-        name.textContent = `${feat.depsAreMet ? '' : '⏳ '}${feat.name}`;
+        name.textContent = `${feat.unmetDepLayers > 0 ? `⏳${feat.unmetDepLayers} ` : ''}${feat.name}`;
         left.appendChild(name);
 
         const meta = document.createElement('div');
@@ -471,7 +603,9 @@ export class VibeCodingSimUI {
         if (!feat.depsAreMet) {
             const warn = document.createElement('div');
             warn.className = 'vcs-warning';
-            warn.textContent = '⏳ Upstream deps not verified — tasks take 2× longer';
+            const layers = feat.unmetDepLayers;
+            const mult = Math.pow(2, layers);
+            warn.textContent = `⏳${layers} Upstream deps not verified — tasks take ${mult}× longer`;
             details.appendChild(warn);
         }
         if (feat.upstreamIds.size > 0) details.appendChild(this._depLinks(gs, 'Depends on', feat.upstreamIds));

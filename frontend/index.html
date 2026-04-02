@@ -31,6 +31,27 @@
       const forceBundled = params.has('bundled');
       const isLocalDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
+      function showLoadError(message, details) {
+        const screen = document.getElementById('loading-screen');
+        if (!screen) return;
+        const content = screen.querySelector('.loading-content');
+        if (!content) return;
+        // Hide spinner
+        const spinner = content.querySelector('.loading-spinner');
+        if (spinner) spinner.style.display = 'none';
+        // Replace "Loading..." text
+        const loadingText = content.querySelector('p');
+        if (loadingText) loadingText.textContent = 'Loading failed';
+        // Add error details
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = 'color: #ff6b6b; padding: 1rem; margin-top: 1rem; max-width: 400px;';
+        errorDiv.innerHTML =
+          `<p style="margin-bottom: 0.5rem;">${message}</p>` +
+          (details ? `<p style="font-size: 0.8rem; color: #999;">${details}</p>` : '') +
+          '<p style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Try refreshing, or check your network connection.</p>';
+        content.appendChild(errorDiv);
+      }
+
       async function loadApp() {
         if (forceUnbundled) {
           console.log('[Loader] Using unbundled mode (ES modules)');
@@ -52,22 +73,36 @@
         }
 
         // Deployed: try bundled first, fall back to unbundled
+        // Only fall back to unbundled if the bundle doesn't exist (404).
+        // On network errors, don't fall back — unbundled mode makes 200+ requests
+        // which will be even worse on a flaky connection.
+        let bundleExists = false;
         try {
-          // Check if bundle exists by fetching with HEAD request
           const response = await fetch('./dist/bundle.js', { method: 'HEAD' });
-          if (response.ok) {
-            console.log('[Loader] Using bundled mode (auto-detected)');
-            await import('./dist/bundle.js');
-          } else {
-            throw new Error('Bundle not found');
-          }
+          bundleExists = response.ok;
         } catch (e) {
-          console.log('[Loader] Using unbundled mode (bundle not available)');
+          // Network error on HEAD request — can't determine if bundle exists.
+          // Try importing it directly (the browser may have it cached).
+          console.warn('[Loader] HEAD request failed, attempting bundle import anyway:', e.message);
+          bundleExists = true;
+        }
+
+        if (bundleExists) {
+          console.log('[Loader] Using bundled mode (auto-detected)');
+          await import('./dist/bundle.js');
+        } else {
+          console.log('[Loader] Bundle not found (404), using unbundled mode');
           await import('./init.js');
         }
       }
 
-      loadApp();
+      loadApp().catch(e => {
+        console.error('[Loader] Failed to load application:', e);
+        showLoadError(
+          'Could not load the application.',
+          e.message || 'Unknown error'
+        );
+      });
     </script>
 
     <link rel="icon" href="data:," type="image/x-icon" />
@@ -82,6 +117,7 @@
         <div class="loading-counter">
           <span id="files-loaded-count">0</span> files loaded
         </div>
+        <div id="network-status" style="font-size: 0.8rem; margin-top: 0.3rem; color: #999; display: none;"></div>
         <div class="loading-file-list">
           <div class="file-list-header">Files loaded:</div>
           <div id="file-list-container" class="file-list-scroll">
@@ -90,6 +126,31 @@
         </div>
       </div>
     </div>
+
+    <script>
+      // Inline network monitor — runs before module scripts load
+      (function() {
+        var el = document.getElementById('network-status');
+        if (!el) return;
+        function update() {
+          if (!navigator.onLine) {
+            el.style.display = 'block';
+            el.style.color = '#ff6b6b';
+            el.textContent = 'No network connection';
+          } else {
+            // Only show if it was previously visible (went offline then back)
+            if (el.style.display === 'block') {
+              el.style.color = '#90ee90';
+              el.textContent = 'Connection restored — refreshing may help';
+            }
+          }
+        }
+        window.addEventListener('offline', update);
+        window.addEventListener('online', update);
+        // Check on load in case we started offline
+        if (!navigator.onLine) update();
+      })();
+    </script>
 
     <div
       id="goldenlayout-container"
