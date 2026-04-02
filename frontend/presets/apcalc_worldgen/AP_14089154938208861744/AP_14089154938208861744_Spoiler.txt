@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            APCalc WorldGen
-Location Count:                  15
+Location Count:                  19
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     
@@ -28,22 +28,45 @@ Button: 7
 
 Locations:
 
-Reach 7: Button: 1
-Reach 3: Button: -
-Reach 2: Button: 8
-Reach -6: Button: 3
-Reach -4: Button: *
-Reach -1: Button: -
-Reach -9: Button: +
-Reach -63: Button: /
-Reach -12: Button: 4
-Reach -5: Button: +
-Reach 1: Button: +
-Reach 8: Button: -
-Reach -7: Button: 6
-Reach -2: Button: *
-Reach -11: Button: -
 Victory: Victory
+Reach 7: Button: 0
+Checked Reach 7: Checked Reach 7
+Reach 3: Junk
+Checked Reach 3: Checked Reach 3
+Reach 2: Button: -
+Checked Reach 2: Checked Reach 2
+Reach -5: Button: 3
+Checked Reach -5: Checked Reach -5
+Reach -4: Button: +
+Checked Reach -4: Checked Reach -4
+Reach -1: Junk
+Checked Reach -1: Checked Reach -1
+Reach 5: Button: 4
+Checked Reach 5: Checked Reach 5
+Reach 4: Button: /
+Checked Reach 4: Checked Reach 4
+Reach 6: Junk
+Checked Reach 6: Checked Reach 6
+Reach 1: Button: 0
+Checked Reach 1: Checked Reach 1
+Reach 10: Junk
+Checked Reach 10: Checked Reach 10
+Reach 8: Button: +
+Checked Reach 8: Checked Reach 8
+Reach -2: Junk
+Checked Reach -2: Checked Reach -2
+Reach 9: Junk
+Checked Reach 9: Checked Reach 9
+Reach 12: Junk
+Checked Reach 12: Checked Reach 12
+Reach 13: Junk
+Checked Reach 13: Checked Reach 13
+Reach 0: Junk
+Checked Reach 0: Checked Reach 0
+Reach 11: Junk
+Checked Reach 11: Checked Reach 11
+Reach 14: Junk
+Checked Reach 14: Checked Reach 14
 
 Playthrough:
 
@@ -53,26 +76,40 @@ Playthrough:
   Button: 7
 }
 1: {
-  Reach 2: Button: 8
-  Reach 3: Button: -
-  Reach 7: Button: 1
+  Checked Reach 2: Checked Reach 2
+  Checked Reach 3: Checked Reach 3
+  Checked Reach 7: Checked Reach 7
+  Reach 2: Button: -
+  Reach 7: Button: 0
 }
 2: {
-  Reach -1: Button: -
-  Reach -4: Button: *
-  Reach -6: Button: 3
+  Checked Reach -1: Checked Reach -1
+  Checked Reach -4: Checked Reach -4
+  Checked Reach -5: Checked Reach -5
+  Checked Reach 4: Checked Reach 4
+  Reach -4: Button: +
+  Reach -5: Button: 3
+  Reach 4: Button: /
 }
 3: {
-  Reach -12: Button: 4
-  Reach -63: Button: /
-  Reach -7: Button: 6
-  Reach -9: Button: +
+  Checked Reach -2: Checked Reach -2
+  Checked Reach 0: Checked Reach 0
+  Checked Reach 10: Checked Reach 10
+  Checked Reach 5: Checked Reach 5
+  Checked Reach 6: Checked Reach 6
+  Checked Reach 8: Checked Reach 8
+  Checked Reach 9: Checked Reach 9
+  Reach 5: Button: 4
+  Reach 8: Button: +
 }
 4: {
-  Reach -11: Button: -
-  Reach -2: Button: *
-  Reach -5: Button: +
-  Reach 1: Button: +
-  Reach 8: Button: -
+  Checked Reach 1: Checked Reach 1
+  Checked Reach 11: Checked Reach 11
+  Checked Reach 12: Checked Reach 12
+  Checked Reach 13: Checked Reach 13
+  Checked Reach 14: Checked Reach 14
+  Reach 1: Button: 0
+}
+5: {
   Victory: Victory
 }

@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Node 7", "Node 3", "Node 2", "Node -6", "Node -4", "Node -1", "Node -9", "Node -63", "Node -12", "Node -5", "Node 1", "Node 8", "Node -7", "Node -2", "Node -11"]
+    region_names = ["C", "Node 7", "Node 3", "Node 2", "Node -5", "Node -4", "Node -1", "Node 5", "Node 4", "Node 6", "Node 1", "Node 10", "Node 8", "Node -2", "Node 9", "Node 12", "Node 13", "Node 0", "Node 11", "Node 14"]
 
     regions = {}
     for region_name in region_names:
@@ -51,21 +51,25 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Node 7"], "Menu to Node 7")
-    _create_entrance(regions["Menu"], regions["Node 3"], "Menu to Node 3")
-    _create_entrance(regions["Menu"], regions["Node 2"], "Menu to Node 2")
-    _create_entrance(regions["Node 7"], regions["Node -1"], "Node 7 to Node -1")
+    _create_entrance(regions["C"], regions["Node 7"], "Menu to Node 7")
+    _create_entrance(regions["C"], regions["Node 3"], "Menu to Node 3")
+    _create_entrance(regions["C"], regions["Node 2"], "Menu to Node 2")
+    _create_entrance(regions["Node 7"], regions["Node 4"], "Node 7 to Node 4")
+    _create_entrance(regions["Node 7"], regions["Node 9"], "Node 7 to Node 9")
     _create_entrance(regions["Node 3"], regions["Node -4"], "Node 3 to Node -4")
-    _create_entrance(regions["Node 2"], regions["Node -6"], "Node 2 to Node -6")
-    _create_entrance(regions["Node 2"], regions["Node 8"], "Node 2 to Node 8")
-    _create_entrance(regions["Node -6"], regions["Node -9"], "Node -6 to Node -9")
-    _create_entrance(regions["Node -6"], regions["Node -5"], "Node -6 to Node -5")
-    _create_entrance(regions["Node -6"], regions["Node 1"], "Node -6 to Node 1")
-    _create_entrance(regions["Node -4"], regions["Node -12"], "Node -4 to Node -12")
-    _create_entrance(regions["Node -4"], regions["Node -7"], "Node -4 to Node -7")
-    _create_entrance(regions["Node -4"], regions["Node -2"], "Node -4 to Node -2")
-    _create_entrance(regions["Node -9"], regions["Node -63"], "Node -9 to Node -63")
-    _create_entrance(regions["Node -12"], regions["Node -11"], "Node -12 to Node -11")
+    _create_entrance(regions["Node 3"], regions["Node 10"], "Node 3 to Node 10")
+    _create_entrance(regions["Node 3"], regions["Node 0"], "Node 3 to Node 0")
+    _create_entrance(regions["Node 2"], regions["Node -5"], "Node 2 to Node -5")
+    _create_entrance(regions["Node 2"], regions["Node -1"], "Node 2 to Node -1")
+    _create_entrance(regions["Node 2"], regions["Node 5"], "Node 2 to Node 5")
+    _create_entrance(regions["Node -5"], regions["Node -2"], "Node -5 to Node -2")
+    _create_entrance(regions["Node -1"], regions["Node 6"], "Node -1 to Node 6")
+    _create_entrance(regions["Node 4"], regions["Node 1"], "Node 4 to Node 1")
+    _create_entrance(regions["Node 10"], regions["Node 8"], "Node 10 to Node 8")
+    _create_entrance(regions["Node 10"], regions["Node 14"], "Node 10 to Node 14")
+    _create_entrance(regions["Node 8"], regions["Node 11"], "Node 8 to Node 11")
+    _create_entrance(regions["Node 9"], regions["Node 12"], "Node 9 to Node 12")
+    _create_entrance(regions["Node 9"], regions["Node 13"], "Node 9 to Node 13")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

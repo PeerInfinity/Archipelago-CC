@@ -2,7 +2,7 @@
 
 import json
 from collections import Counter
-from .generator import Node, compute_path_cost
+from .generator import Node, TRASH_ITEM, compute_path_cost
 
 
 def make_has_rule(item_name: str, count: int = 1) -> dict:
@@ -38,19 +38,24 @@ def export_rules_json(game_data: dict) -> dict:
     nodes: list[Node] = game_data['nodes']
     starting_buttons: dict[str, int] = game_data['starting_buttons']
 
-    # Collect all unique button items used in the game
+    # Collect all unique button items used in the game (excluding trash)
     all_button_labels: set[str] = set()
+    trash_count = 0
     for node in nodes:
-        if node.item:
+        if node.item and node.item != TRASH_ITEM:
             all_button_labels.add(node.item)
+        elif node.item == TRASH_ITEM:
+            trash_count += 1
     for label in starting_buttons:
         all_button_labels.add(label)
 
     # Count item occurrences for the pool (excludes starting items)
     pool_counts: Counter = Counter()
     for node in nodes:
-        if node.item:
+        if node.item and node.item != TRASH_ITEM:
             pool_counts[button_item_name(node.item)] += 1
+    if trash_count > 0:
+        pool_counts[TRASH_ITEM] = trash_count
 
     # Build regions
     regions = {}
@@ -65,8 +70,8 @@ def export_rules_json(game_data: dict) -> dict:
                 'connected_region': node.region_name,
                 'access_rule': path_cost_to_rule(cost),
             })
-    regions['Menu'] = {
-        'name': 'Menu',
+    regions['C'] = {
+        'name': 'C',
         'exits': menu_exits,
         'locations': [],
     }
@@ -77,10 +82,8 @@ def export_rules_json(game_data: dict) -> dict:
         if node.parent_index is not None:
             children_by_parent.setdefault(node.parent_index, []).append(node)
 
-    # Determine the last node (Victory location)
-    last_node = nodes[-1]
-
-    # Node regions
+    # Node regions — each gets a check location + a locked "Checked" event
+    all_checked_events = []
     for node in nodes:
         exits = []
         children = children_by_parent.get(node.index, [])
@@ -93,42 +96,62 @@ def export_rules_json(game_data: dict) -> dict:
             })
 
         # Regular check location
+        is_trash = node.item == TRASH_ITEM
+        item_name = TRASH_ITEM if is_trash else button_item_name(node.item)
+        event_name = f'Checked {node.location_name}'
+        all_checked_events.append(event_name)
+
         locations = [
             {
                 'name': node.location_name,
                 'id': node.index + 1,  # 1-based IDs
                 'access_rule': {'rule': 'True_'},
                 'item': {
-                    'name': button_item_name(node.item),
+                    'name': item_name,
                     'player': 1,
-                    'advancement': True,
+                    'advancement': not is_trash,
                     'type': 'None',
                 },
                 'locked': False,
             },
-        ]
-
-        # Victory event on the last node
-        if node is last_node:
-            locations.append({
-                'name': 'Victory',
+            {
+                'name': event_name,
                 'id': None,
                 'access_rule': {'rule': 'True_'},
                 'item': {
-                    'name': 'Victory',
+                    'name': event_name,
                     'player': 1,
                     'advancement': True,
                     'type': 'None',
                 },
                 'locked': True,
                 'event': True,
-            })
+            },
+        ]
 
         regions[node.region_name] = {
             'name': node.region_name,
             'exits': exits,
             'locations': locations,
         }
+
+    # Victory event on the start region, requiring all locations checked
+    goal_rule = make_and_rule([
+        make_has_rule(evt) for evt in all_checked_events
+    ])
+    regions['C']['locations'].append({
+        'name': 'Victory',
+        'id': None,
+        'access_rule': goal_rule,
+        'item': {
+            'name': 'Victory',
+            'player': 1,
+            'advancement': True,
+            'type': 'None',
+        },
+        'locked': True,
+        'event': True,
+    })
 
     # Build items dict
     items = {}
@@ -146,6 +169,29 @@ def export_rules_json(game_data: dict) -> dict:
         }
         item_id += 1
 
+    if trash_count > 0:
+        items[TRASH_ITEM] = {
+            'name': TRASH_ITEM,
+            'id': item_id,
+            'groups': ['Filler'],
+            'classification': 'filler',
+            'type': None,
+            'max_count': trash_count,
+        }
+        item_id += 1
+
+    # Checked event items (one per node)
+    for evt in all_checked_events:
+        items[evt] = {
+            'name': evt,
+            'id': None,
+            'groups': ['Event'],
+            'classification': 'progression',
+            'event': True,
+            'type': 'Event',
+            'max_count': 1,
+        }
+
     items['Victory'] = {
         'name': 'Victory',
         'id': None,
@@ -158,6 +204,8 @@ def export_rules_json(game_data: dict) -> dict:
 
     # Build itempool_counts (pool items only, not starting items)
     itempool_counts = dict(pool_counts)
+    for evt in all_checked_events:
+        itempool_counts[evt] = 1
     itempool_counts['Victory'] = 1
 
     # Build starting_items list
@@ -192,7 +240,7 @@ def export_rules_json(game_data: dict) -> dict:
         'regions': {'1': regions},
         'start_regions': {
             '1': {
-                'default': ['Menu'],
+                'default': ['C'],
                 'available': [],
             },
         },
@@ -218,7 +266,7 @@ def export_rules_json(game_data: dict) -> dict:
                     'starting_buttons': starting_buttons,
                     'operations': ['+', '-', '*', '/'],
                     'num_spheres': config.num_spheres,
-                    'goal_node': last_node.region_name,
+                    'goal': 'all_locations',
                 },
                 'web': {
                     'theme': 'dirt',

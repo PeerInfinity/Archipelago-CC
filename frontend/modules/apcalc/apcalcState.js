@@ -61,22 +61,15 @@ export class APCalcState {
     /** Sync with Archipelago inventory snapshot — add received button items.
      *  snapshot.inventory = { itemName: count, ... }
      *  snapshot.checkedLocations = [ locationName, ... ]
+     *
+     *  The inventory already includes starting items, so we don't need to
+     *  add sphere 0 values separately.
      */
     syncFromSnapshot(snapshot) {
         if (!snapshot) return;
 
-        // Rebuild totalPresses from starting buttons (sphere 0 node values)
-        const slotStarting = {};
-        for (const [, info] of Object.entries(this.nodes)) {
-            if (info.sphere === 0) {
-                const label = String(info.value);
-                slotStarting[label] = (slotStarting[label] || 0) + 1;
-            }
-        }
-
-        this.totalPresses = { ...slotStarting };
-
-        // Add items from inventory (items named "Button: X")
+        // Rebuild totalPresses purely from inventory (includes starting items)
+        this.totalPresses = {};
         const inventory = snapshot.inventory || {};
         for (const [itemName, count] of Object.entries(inventory)) {
             if (count <= 0) continue;

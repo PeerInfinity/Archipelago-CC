@@ -36,8 +36,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 7 to Node -1", player),
-        HasAll('Button: -', 'Button: 7', 'Button: 8')
+        multiworld.get_entrance("Node 7 to Node 4", player),
+        HasAll('Button: -', 'Button: 3', 'Button: 7')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 7 to Node 9", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 7')
     )
 
     world.set_rule(
@@ -46,51 +51,71 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 2 to Node -6", player),
-        HasAll('Button: -', 'Button: 2', 'Button: 8')
+        multiworld.get_entrance("Node 3 to Node 10", player),
+        HasAll('Button: +', 'Button: 3', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 2 to Node 8", player),
-        HasAll('Button: *', 'Button: 2', 'Button: 4')
+        multiworld.get_entrance("Node 3 to Node 0", player),
+        And(Has('Button: 3', 2), Has('Button: -'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -6 to Node -9", player),
-        And(Has('Button: -', 2), HasAll('Button: 2', 'Button: 3', 'Button: 8'))
+        multiworld.get_entrance("Node 2 to Node -5", player),
+        HasAll('Button: -', 'Button: 2', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -6 to Node -5", player),
-        HasAll('Button: +', 'Button: -', 'Button: 1', 'Button: 2', 'Button: 8')
+        multiworld.get_entrance("Node 2 to Node -1", player),
+        HasAll('Button: -', 'Button: 2', 'Button: 3')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -6 to Node 1", player),
-        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 7', 'Button: 8')
+        multiworld.get_entrance("Node 2 to Node 5", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 3')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -4 to Node -12", player),
-        And(Has('Button: -', 2), HasAll('Button: 3', 'Button: 7', 'Button: 8'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Node -4 to Node -7", player),
-        And(Has('Button: -', 2), Has('Button: 3', 2), Has('Button: 7'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Node -4 to Node -2", player),
+        multiworld.get_entrance("Node -5 to Node -2", player),
         HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -9 to Node -63", player),
-        And(Has('Button: -', 2), HasAll('Button: *', 'Button: 2', 'Button: 3', 'Button: 7', 'Button: 8'))
+        multiworld.get_entrance("Node -1 to Node 6", player),
+        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -12 to Node -11", player),
-        And(Has('Button: -', 2), HasAll('Button: +', 'Button: 1', 'Button: 3', 'Button: 7', 'Button: 8'))
+        multiworld.get_entrance("Node 4 to Node 1", player),
+        HasAll('Button: -', 'Button: /', 'Button: 3', 'Button: 4', 'Button: 7')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 10 to Node 8", player),
+        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 10 to Node 14", player),
+        And(Has('Button: +', 2), HasAll('Button: 3', 'Button: 4', 'Button: 7'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 8 to Node 11", player),
+        And(Has('Button: +', 2), Has('Button: 3', 2), HasAll('Button: -', 'Button: 2', 'Button: 7'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 9 to Node 12", player),
+        And(Has('Button: +', 2), HasAll('Button: 2', 'Button: 3', 'Button: 7'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 9 to Node 13", player),
+        And(Has('Button: +', 2), HasAll('Button: 2', 'Button: 4', 'Button: 7'))
+    )
+    # Location rules
+    world.set_rule(
+        multiworld.get_location("Victory", player),
+        HasAll('Checked Reach 7', 'Checked Reach 3', 'Checked Reach 2', 'Checked Reach -5', 'Checked Reach -4', 'Checked Reach -1', 'Checked Reach 5', 'Checked Reach 4', 'Checked Reach 6', 'Checked Reach 1', 'Checked Reach 10', 'Checked Reach 8', 'Checked Reach -2', 'Checked Reach 9', 'Checked Reach 12', 'Checked Reach 13', 'Checked Reach 0', 'Checked Reach 11', 'Checked Reach 14')
     )

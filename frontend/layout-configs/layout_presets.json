@@ -702,6 +702,11 @@
             },
             {
               "type": "component",
+              "componentType": "apcalcGeneratorPanel",
+              "title": "APCalc Generator"
+            },
+            {
+              "type": "component",
               "componentType": "optionsPanel",
               "title": "Options"
             },

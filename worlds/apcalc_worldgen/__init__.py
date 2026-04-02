@@ -23,19 +23,36 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Button: 1": 1,
-    "Button: -": 4,
-    "Button: 8": 1,
-    "Button: *": 2,
-    "Button: +": 3,
-    "Button: /": 1,
+    "Button: 0": 2,
+    "Button: -": 1,
+    "Button: +": 2,
     "Button: 4": 1,
-    "Button: 6": 1,
+    "Button: /": 1,
+    "Junk": 11,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
     "Victory": "Victory",
+    "Checked Reach 7": "Checked Reach 7",
+    "Checked Reach 3": "Checked Reach 3",
+    "Checked Reach 2": "Checked Reach 2",
+    "Checked Reach -5": "Checked Reach -5",
+    "Checked Reach -4": "Checked Reach -4",
+    "Checked Reach -1": "Checked Reach -1",
+    "Checked Reach 5": "Checked Reach 5",
+    "Checked Reach 4": "Checked Reach 4",
+    "Checked Reach 6": "Checked Reach 6",
+    "Checked Reach 1": "Checked Reach 1",
+    "Checked Reach 10": "Checked Reach 10",
+    "Checked Reach 8": "Checked Reach 8",
+    "Checked Reach -2": "Checked Reach -2",
+    "Checked Reach 9": "Checked Reach 9",
+    "Checked Reach 12": "Checked Reach 12",
+    "Checked Reach 13": "Checked Reach 13",
+    "Checked Reach 0": "Checked Reach 0",
+    "Checked Reach 11": "Checked Reach 11",
+    "Checked Reach 14": "Checked Reach 14",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -73,6 +90,7 @@ class APCalcWorld(RuleWorldMixin, World):
     options_dataclass = APCalcWorldGenOptions
     options: APCalcWorldGenOptions
 
+    origin_region_name: str = "C"
     # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
@@ -90,7 +108,8 @@ class APCalcWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Buttons": frozenset(["Button: *", "Button: +", "Button: -", "Button: /", "Button: 1", "Button: 2", "Button: 3", "Button: 4", "Button: 6", "Button: 7", "Button: 8"]),
+        "Buttons": frozenset(["Button: +", "Button: -", "Button: /", "Button: 0", "Button: 2", "Button: 3", "Button: 4", "Button: 7"]),
+        "Filler": frozenset(["Junk"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -99,64 +118,133 @@ class APCalcWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Reach 7": "Button: 1",
-        "Reach -1": "Button: -",
-        "Reach -11": "Button: -",
-        "Reach 3": "Button: -",
-        "Reach 8": "Button: -",
-        "Reach 2": "Button: 8",
-        "Reach -6": "Button: 3",
-        "Reach -2": "Button: *",
-        "Reach -4": "Button: *",
-        "Reach -5": "Button: +",
-        "Reach -9": "Button: +",
-        "Reach 1": "Button: +",
-        "Reach -63": "Button: /",
-        "Reach -12": "Button: 4",
-        "Reach -7": "Button: 6",
         "Victory": "Victory",
+        "Reach 1": "Button: 0",
+        "Reach 7": "Button: 0",
+        "Checked Reach 7": "Checked Reach 7",
+        "Reach -1": "Junk",
+        "Reach -2": "Junk",
+        "Reach 0": "Junk",
+        "Reach 10": "Junk",
+        "Reach 11": "Junk",
+        "Reach 12": "Junk",
+        "Reach 13": "Junk",
+        "Reach 14": "Junk",
+        "Reach 3": "Junk",
+        "Reach 6": "Junk",
+        "Reach 9": "Junk",
+        "Checked Reach 3": "Checked Reach 3",
+        "Reach 2": "Button: -",
+        "Checked Reach 2": "Checked Reach 2",
+        "Reach -5": "Button: 3",
+        "Checked Reach -5": "Checked Reach -5",
+        "Reach -4": "Button: +",
+        "Reach 8": "Button: +",
+        "Checked Reach -4": "Checked Reach -4",
+        "Checked Reach -1": "Checked Reach -1",
+        "Reach 5": "Button: 4",
+        "Checked Reach 5": "Checked Reach 5",
+        "Reach 4": "Button: /",
+        "Checked Reach 4": "Checked Reach 4",
+        "Checked Reach 6": "Checked Reach 6",
+        "Checked Reach 1": "Checked Reach 1",
+        "Checked Reach 10": "Checked Reach 10",
+        "Checked Reach 8": "Checked Reach 8",
+        "Checked Reach -2": "Checked Reach -2",
+        "Checked Reach 9": "Checked Reach 9",
+        "Checked Reach 12": "Checked Reach 12",
+        "Checked Reach 13": "Checked Reach 13",
+        "Checked Reach 0": "Checked Reach 0",
+        "Checked Reach 11": "Checked Reach 11",
+        "Checked Reach 14": "Checked Reach 14",
     }
 
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
-        "Reach 7": "Button: 1",
-        "Reach -1": "Button: -",
-        "Reach -11": "Button: -",
-        "Reach 3": "Button: -",
-        "Reach 8": "Button: -",
-        "Reach 2": "Button: 8",
-        "Reach -6": "Button: 3",
-        "Reach -2": "Button: *",
-        "Reach -4": "Button: *",
-        "Reach -5": "Button: +",
-        "Reach -9": "Button: +",
-        "Reach 1": "Button: +",
-        "Reach -63": "Button: /",
-        "Reach -12": "Button: 4",
-        "Reach -7": "Button: 6",
         "Victory": "Victory",
+        "Reach 1": "Button: 0",
+        "Reach 7": "Button: 0",
+        "Checked Reach 7": "Checked Reach 7",
+        "Reach -1": "Junk",
+        "Reach -2": "Junk",
+        "Reach 0": "Junk",
+        "Reach 10": "Junk",
+        "Reach 11": "Junk",
+        "Reach 12": "Junk",
+        "Reach 13": "Junk",
+        "Reach 14": "Junk",
+        "Reach 3": "Junk",
+        "Reach 6": "Junk",
+        "Reach 9": "Junk",
+        "Checked Reach 3": "Checked Reach 3",
+        "Reach 2": "Button: -",
+        "Checked Reach 2": "Checked Reach 2",
+        "Reach -5": "Button: 3",
+        "Checked Reach -5": "Checked Reach -5",
+        "Reach -4": "Button: +",
+        "Reach 8": "Button: +",
+        "Checked Reach -4": "Checked Reach -4",
+        "Checked Reach -1": "Checked Reach -1",
+        "Reach 5": "Button: 4",
+        "Checked Reach 5": "Checked Reach 5",
+        "Reach 4": "Button: /",
+        "Checked Reach 4": "Checked Reach 4",
+        "Checked Reach 6": "Checked Reach 6",
+        "Checked Reach 1": "Checked Reach 1",
+        "Checked Reach 10": "Checked Reach 10",
+        "Checked Reach 8": "Checked Reach 8",
+        "Checked Reach -2": "Checked Reach -2",
+        "Checked Reach 9": "Checked Reach 9",
+        "Checked Reach 12": "Checked Reach 12",
+        "Checked Reach 13": "Checked Reach 13",
+        "Checked Reach 0": "Checked Reach 0",
+        "Checked Reach 11": "Checked Reach 11",
+        "Checked Reach 14": "Checked Reach 14",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Reach 7": True,
-        "Reach 3": True,
-        "Reach 2": True,
-        "Reach -6": True,
-        "Reach -4": True,
-        "Reach -1": True,
-        "Reach -9": True,
-        "Reach -63": True,
-        "Reach -12": True,
-        "Reach -5": True,
-        "Reach 1": True,
-        "Reach 8": True,
-        "Reach -7": True,
-        "Reach -2": True,
-        "Reach -11": True,
         "Victory": True,
+        "Reach 7": True,
+        "Checked Reach 7": True,
+        "Reach 3": False,
+        "Checked Reach 3": True,
+        "Reach 2": True,
+        "Checked Reach 2": True,
+        "Reach -5": True,
+        "Checked Reach -5": True,
+        "Reach -4": True,
+        "Checked Reach -4": True,
+        "Reach -1": False,
+        "Checked Reach -1": True,
+        "Reach 5": True,
+        "Checked Reach 5": True,
+        "Reach 4": True,
+        "Checked Reach 4": True,
+        "Reach 6": False,
+        "Checked Reach 6": True,
+        "Reach 1": True,
+        "Checked Reach 1": True,
+        "Reach 10": False,
+        "Checked Reach 10": True,
+        "Reach 8": True,
+        "Checked Reach 8": True,
+        "Reach -2": False,
+        "Checked Reach -2": True,
+        "Reach 9": False,
+        "Checked Reach 9": True,
+        "Reach 12": False,
+        "Checked Reach 12": True,
+        "Reach 13": False,
+        "Checked Reach 13": True,
+        "Reach 0": False,
+        "Checked Reach 0": True,
+        "Reach 11": False,
+        "Checked Reach 11": True,
+        "Reach 14": False,
+        "Checked Reach 14": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -164,7 +252,7 @@ class APCalcWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'APCalcWorld'
         self.world_description = 'APCalc is a calculator-themed puzzle game. Collect number and operation buttons, then budget your presses to navigate a graph of target numbers.'
-        self.slot_data = {'nodes': {'Node 7': {'value': 7, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['7', '='], 'item': '1'}, 'Node 3': {'value': 3, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['3', '='], 'item': '-'}, 'Node 2': {'value': 2, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['2', '='], 'item': '8'}, 'Node -6': {'value': -6, 'parent': 'Node 2', 'sphere': 1, 'operation': '-', 'operand': 8, 'button_sequence': ['2', '=', '-', '8', '='], 'item': '3'}, 'Node -4': {'value': -4, 'parent': 'Node 3', 'sphere': 1, 'operation': '-', 'operand': 7, 'button_sequence': ['3', '=', '-', '7', '='], 'item': '*'}, 'Node -1': {'value': -1, 'parent': 'Node 7', 'sphere': 1, 'operation': '-', 'operand': 8, 'button_sequence': ['7', '=', '-', '8', '='], 'item': '-'}, 'Node -9': {'value': -9, 'parent': 'Node -6', 'sphere': 2, 'operation': '-', 'operand': 3, 'button_sequence': ['2', '=', '-', '8', '=', '-', '3', '='], 'item': '+'}, 'Node -63': {'value': -63, 'parent': 'Node -9', 'sphere': 2, 'operation': '*', 'operand': 7, 'button_sequence': ['2', '=', '-', '8', '=', '-', '3', '=', '*', '7', '='], 'item': '/'}, 'Node -12': {'value': -12, 'parent': 'Node -4', 'sphere': 2, 'operation': '-', 'operand': 8, 'button_sequence': ['3', '=', '-', '7', '=', '-', '8', '='], 'item': '4'}, 'Node -5': {'value': -5, 'parent': 'Node -6', 'sphere': 3, 'operation': '+', 'operand': 1, 'button_sequence': ['2', '=', '-', '8', '=', '+', '1', '='], 'item': '+'}, 'Node 1': {'value': 1, 'parent': 'Node -6', 'sphere': 3, 'operation': '+', 'operand': 7, 'button_sequence': ['2', '=', '-', '8', '=', '+', '7', '='], 'item': '+'}, 'Node 8': {'value': 8, 'parent': 'Node 2', 'sphere': 3, 'operation': '*', 'operand': 4, 'button_sequence': ['2', '=', '*', '4', '='], 'item': '-'}, 'Node -7': {'value': -7, 'parent': 'Node -4', 'sphere': 4, 'operation': '-', 'operand': 3, 'button_sequence': ['3', '=', '-', '7', '=', '-', '3', '='], 'item': '6'}, 'Node -2': {'value': -2, 'parent': 'Node -4', 'sphere': 4, 'operation': '+', 'operand': 2, 'button_sequence': ['3', '=', '-', '7', '=', '+', '2', '='], 'item': '*'}, 'Node -11': {'value': -11, 'parent': 'Node -12', 'sphere': 4, 'operation': '+', 'operand': 1, 'button_sequence': ['3', '=', '-', '7', '=', '-', '8', '=', '+', '1', '='], 'item': '-'}}, 'starting_buttons': {7: 1, 3: 1, 2: 1}, 'operations': ['+', '-', '*', '/'], 'num_spheres': 5, 'goal_node': 'Node -11'}
+        self.slot_data = {'nodes': {'Node 7': {'value': 7, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['7', '='], 'item': '0'}, 'Node 3': {'value': 3, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['3', '='], 'item': 'Junk'}, 'Node 2': {'value': 2, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['2', '='], 'item': '-'}, 'Node -5': {'value': -5, 'parent': 'Node 2', 'sphere': 1, 'operation': '-', 'operand': 7, 'button_sequence': ['2', '=', '-', '7', '='], 'item': '3'}, 'Node -4': {'value': -4, 'parent': 'Node 3', 'sphere': 1, 'operation': '-', 'operand': 7, 'button_sequence': ['3', '=', '-', '7', '='], 'item': '+'}, 'Node -1': {'value': -1, 'parent': 'Node 2', 'sphere': 1, 'operation': '-', 'operand': 3, 'button_sequence': ['2', '=', '-', '3', '='], 'item': 'Junk'}, 'Node 5': {'value': 5, 'parent': 'Node 2', 'sphere': 2, 'operation': '+', 'operand': 3, 'button_sequence': ['2', '=', '+', '3', '='], 'item': '4'}, 'Node 4': {'value': 4, 'parent': 'Node 7', 'sphere': 2, 'operation': '-', 'operand': 3, 'button_sequence': ['7', '=', '-', '3', '='], 'item': '/'}, 'Node 6': {'value': 6, 'parent': 'Node -1', 'sphere': 2, 'operation': '+', 'operand': 7, 'button_sequence': ['2', '=', '-', '3', '=', '+', '7', '='], 'item': 'Junk'}, 'Node 1': {'value': 1, 'parent': 'Node 4', 'sphere': 3, 'operation': '/', 'operand': 4, 'button_sequence': ['7', '=', '-', '3', '=', '/', '4', '='], 'item': '0'}, 'Node 10': {'value': 10, 'parent': 'Node 3', 'sphere': 3, 'operation': '+', 'operand': 7, 'button_sequence': ['3', '=', '+', '7', '='], 'item': 'Junk'}, 'Node 8': {'value': 8, 'parent': 'Node 10', 'sphere': 3, 'operation': '-', 'operand': 2, 'button_sequence': ['3', '=', '+', '7', '=', '-', '2', '='], 'item': '+'}, 'Node -2': {'value': -2, 'parent': 'Node -5', 'sphere': 4, 'operation': '+', 'operand': 3, 'button_sequence': ['2', '=', '-', '7', '=', '+', '3', '='], 'item': 'Junk'}, 'Node 9': {'value': 9, 'parent': 'Node 7', 'sphere': 4, 'operation': '+', 'operand': 2, 'button_sequence': ['7', '=', '+', '2', '='], 'item': 'Junk'}, 'Node 12': {'value': 12, 'parent': 'Node 9', 'sphere': 4, 'operation': '+', 'operand': 3, 'button_sequence': ['7', '=', '+', '2', '=', '+', '3', '='], 'item': 'Junk'}, 'Node 13': {'value': 13, 'parent': 'Node 9', 'sphere': 4, 'operation': '+', 'operand': 4, 'button_sequence': ['7', '=', '+', '2', '=', '+', '4', '='], 'item': 'Junk'}, 'Node 0': {'value': 0, 'parent': 'Node 3', 'sphere': 4, 'operation': '-', 'operand': 3, 'button_sequence': ['3', '=', '-', '3', '='], 'item': 'Junk'}, 'Node 11': {'value': 11, 'parent': 'Node 8', 'sphere': 4, 'operation': '+', 'operand': 3, 'button_sequence': ['3', '=', '+', '7', '=', '-', '2', '=', '+', '3', '='], 'item': 'Junk'}, 'Node 14': {'value': 14, 'parent': 'Node 10', 'sphere': 4, 'operation': '+', 'operand': 4, 'button_sequence': ['3', '=', '+', '7', '=', '+', '4', '='], 'item': 'Junk'}}, 'starting_buttons': {7: 1, 3: 1, 2: 1}, 'operations': ['+', '-', '*', '/'], 'num_spheres': 5, 'goal': 'all_locations'}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -433,9 +521,9 @@ class APCalcWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "nodes": {'Node 7': {'value': 7, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['7', '='], 'item': '1'}, 'Node 3': {'value': 3, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['3', '='], 'item': '-'}, 'Node 2': {'value': 2, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['2', '='], 'item': '8'}, 'Node -6': {'value': -6, 'parent': 'Node 2', 'sphere': 1, 'operation': '-', 'operand': 8, 'button_sequence': ['2', '=', '-', '8', '='], 'item': '3'}, 'Node -4': {'value': -4, 'parent': 'Node 3', 'sphere': 1, 'operation': '-', 'operand': 7, 'button_sequence': ['3', '=', '-', '7', '='], 'item': '*'}, 'Node -1': {'value': -1, 'parent': 'Node 7', 'sphere': 1, 'operation': '-', 'operand': 8, 'button_sequence': ['7', '=', '-', '8', '='], 'item': '-'}, 'Node -9': {'value': -9, 'parent': 'Node -6', 'sphere': 2, 'operation': '-', 'operand': 3, 'button_sequence': ['2', '=', '-', '8', '=', '-', '3', '='], 'item': '+'}, 'Node -63': {'value': -63, 'parent': 'Node -9', 'sphere': 2, 'operation': '*', 'operand': 7, 'button_sequence': ['2', '=', '-', '8', '=', '-', '3', '=', '*', '7', '='], 'item': '/'}, 'Node -12': {'value': -12, 'parent': 'Node -4', 'sphere': 2, 'operation': '-', 'operand': 8, 'button_sequence': ['3', '=', '-', '7', '=', '-', '8', '='], 'item': '4'}, 'Node -5': {'value': -5, 'parent': 'Node -6', 'sphere': 3, 'operation': '+', 'operand': 1, 'button_sequence': ['2', '=', '-', '8', '=', '+', '1', '='], 'item': '+'}, 'Node 1': {'value': 1, 'parent': 'Node -6', 'sphere': 3, 'operation': '+', 'operand': 7, 'button_sequence': ['2', '=', '-', '8', '=', '+', '7', '='], 'item': '+'}, 'Node 8': {'value': 8, 'parent': 'Node 2', 'sphere': 3, 'operation': '*', 'operand': 4, 'button_sequence': ['2', '=', '*', '4', '='], 'item': '-'}, 'Node -7': {'value': -7, 'parent': 'Node -4', 'sphere': 4, 'operation': '-', 'operand': 3, 'button_sequence': ['3', '=', '-', '7', '=', '-', '3', '='], 'item': '6'}, 'Node -2': {'value': -2, 'parent': 'Node -4', 'sphere': 4, 'operation': '+', 'operand': 2, 'button_sequence': ['3', '=', '-', '7', '=', '+', '2', '='], 'item': '*'}, 'Node -11': {'value': -11, 'parent': 'Node -12', 'sphere': 4, 'operation': '+', 'operand': 1, 'button_sequence': ['3', '=', '-', '7', '=', '-', '8', '=', '+', '1', '='], 'item': '-'}},
+            "nodes": {'Node 7': {'value': 7, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['7', '='], 'item': '0'}, 'Node 3': {'value': 3, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['3', '='], 'item': 'Junk'}, 'Node 2': {'value': 2, 'parent': None, 'sphere': 0, 'operation': None, 'operand': None, 'button_sequence': ['2', '='], 'item': '-'}, 'Node -5': {'value': -5, 'parent': 'Node 2', 'sphere': 1, 'operation': '-', 'operand': 7, 'button_sequence': ['2', '=', '-', '7', '='], 'item': '3'}, 'Node -4': {'value': -4, 'parent': 'Node 3', 'sphere': 1, 'operation': '-', 'operand': 7, 'button_sequence': ['3', '=', '-', '7', '='], 'item': '+'}, 'Node -1': {'value': -1, 'parent': 'Node 2', 'sphere': 1, 'operation': '-', 'operand': 3, 'button_sequence': ['2', '=', '-', '3', '='], 'item': 'Junk'}, 'Node 5': {'value': 5, 'parent': 'Node 2', 'sphere': 2, 'operation': '+', 'operand': 3, 'button_sequence': ['2', '=', '+', '3', '='], 'item': '4'}, 'Node 4': {'value': 4, 'parent': 'Node 7', 'sphere': 2, 'operation': '-', 'operand': 3, 'button_sequence': ['7', '=', '-', '3', '='], 'item': '/'}, 'Node 6': {'value': 6, 'parent': 'Node -1', 'sphere': 2, 'operation': '+', 'operand': 7, 'button_sequence': ['2', '=', '-', '3', '=', '+', '7', '='], 'item': 'Junk'}, 'Node 1': {'value': 1, 'parent': 'Node 4', 'sphere': 3, 'operation': '/', 'operand': 4, 'button_sequence': ['7', '=', '-', '3', '=', '/', '4', '='], 'item': '0'}, 'Node 10': {'value': 10, 'parent': 'Node 3', 'sphere': 3, 'operation': '+', 'operand': 7, 'button_sequence': ['3', '=', '+', '7', '='], 'item': 'Junk'}, 'Node 8': {'value': 8, 'parent': 'Node 10', 'sphere': 3, 'operation': '-', 'operand': 2, 'button_sequence': ['3', '=', '+', '7', '=', '-', '2', '='], 'item': '+'}, 'Node -2': {'value': -2, 'parent': 'Node -5', 'sphere': 4, 'operation': '+', 'operand': 3, 'button_sequence': ['2', '=', '-', '7', '=', '+', '3', '='], 'item': 'Junk'}, 'Node 9': {'value': 9, 'parent': 'Node 7', 'sphere': 4, 'operation': '+', 'operand': 2, 'button_sequence': ['7', '=', '+', '2', '='], 'item': 'Junk'}, 'Node 12': {'value': 12, 'parent': 'Node 9', 'sphere': 4, 'operation': '+', 'operand': 3, 'button_sequence': ['7', '=', '+', '2', '=', '+', '3', '='], 'item': 'Junk'}, 'Node 13': {'value': 13, 'parent': 'Node 9', 'sphere': 4, 'operation': '+', 'operand': 4, 'button_sequence': ['7', '=', '+', '2', '=', '+', '4', '='], 'item': 'Junk'}, 'Node 0': {'value': 0, 'parent': 'Node 3', 'sphere': 4, 'operation': '-', 'operand': 3, 'button_sequence': ['3', '=', '-', '3', '='], 'item': 'Junk'}, 'Node 11': {'value': 11, 'parent': 'Node 8', 'sphere': 4, 'operation': '+', 'operand': 3, 'button_sequence': ['3', '=', '+', '7', '=', '-', '2', '=', '+', '3', '='], 'item': 'Junk'}, 'Node 14': {'value': 14, 'parent': 'Node 10', 'sphere': 4, 'operation': '+', 'operand': 4, 'button_sequence': ['3', '=', '+', '7', '=', '+', '4', '='], 'item': 'Junk'}},
             "starting_buttons": {7: 1, 3: 1, 2: 1},
             "operations": ['+', '-', '*', '/'],
             "num_spheres": 5,
-            "goal_node": "Node -11",
+            "goal": "all_locations",
         }
