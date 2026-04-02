@@ -41,6 +41,7 @@ export class GraphDataManager {
       logger.info('Building graph from regions', { count: staticData.regions.size });
       this.buildGraphFromRegions(staticData.regions, staticData.exits);
       this.ui.graphInitialized = true; // Mark as successfully loaded
+      if (this.ui._nodeOverlayProvider) this.ui._rebuildOverlays();
 
       // Force a re-layout when loading new rules
       if (isReload && this.ui.cy) {

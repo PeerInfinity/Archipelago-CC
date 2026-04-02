@@ -82,6 +82,19 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         }
     });
 
+    // Register node overlay provider for the region graph
+    const registerOverlay = initializationApi.getModuleFunction('regionGraph', 'registerNodeOverlayProvider');
+    if (registerOverlay) {
+        const { createFeatureOverlay } = await import('./vibeCodingSimUI.js');
+        registerOverlay((nodeId, nodeData) => createFeatureOverlay(nodeId, gameState));
+    }
+
+    // Listen for state changes to refresh overlays
+    eventBus.subscribe('vibeCodingSim:stateChanged', () => {
+        const refreshOverlays = initializationApi.getModuleFunction('regionGraph', 'refreshNodeOverlays');
+        if (refreshOverlays) refreshOverlays();
+    });
+
     // Also check if data is already loaded
     const existingData = stateManager.getStaticData();
     if (existingData) {

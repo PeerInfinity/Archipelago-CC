@@ -1,4 +1,4 @@
-import { getModuleEventBus } from './index.js';
+import { getModuleEventBus, setPanelInstance, getNodeOverlayProvider } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -112,11 +112,21 @@ export class RegionGraphUI {
     this.controlPanel.style.maxWidth = '400px';
     this.controlPanel.innerHTML = '';
     
+    this.overlayContainer = document.createElement('div');
+    this.overlayContainer.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;overflow:visible;pointer-events:none;z-index:5';
+    this._nodeOverlayProvider = null;
+    this._overlayElements = new Map(); // nodeId -> DOM element
+
     this.rootElement.appendChild(this.statusBar);
     this.rootElement.appendChild(this.controlPanel);
     this.rootElement.appendChild(this.graphContainer);
+    this.rootElement.appendChild(this.overlayContainer);
     this.container.element.appendChild(this.rootElement);
-    
+
+    setPanelInstance(this);
+    const existingProvider = getNodeOverlayProvider();
+    if (existingProvider) this.setNodeOverlayProvider(existingProvider);
+
     this.container.on('show', () => this.onPanelShow());
     this.container.on('resize', () => this.onPanelResize());
     this.container.on('destroy', () => this.destroy());
@@ -760,6 +770,9 @@ export class RegionGraphUI {
     this.interactionManager.setupEventHandlers();
     this.subscribeToEvents();
     this.interactionManager.setupZoomBasedVisibility(); // Setup zoom-based visibility
+    this.cy.on('viewport', () => this._syncOverlayViewport());
+    this.cy.on('layoutstop', () => { this._updateOverlayPositions(); this._syncOverlayViewport(); });
+    this.cy.on('position', 'node', () => this._updateOverlayPositions());
     this.graphInitialized = false; // Track if data has been loaded
     
     this.updateStatus('Graph initialized, waiting for data...');
@@ -974,6 +987,126 @@ export class RegionGraphUI {
     }
   }
 
+  // --- Node Overlay System ---
+
+  setNodeOverlayProvider(callback) {
+    this._nodeOverlayProvider = callback;
+    if (this.cy && this.graphInitialized) {
+      this._presizeNodesForOverlays();
+      this._rebuildOverlays();
+    }
+  }
+
+  _presizeNodesForOverlays() {
+    if (!this.cy || !this._nodeOverlayProvider) return;
+    // Set node dimensions large enough for overlays so layout algorithms space them properly
+    this.cy.nodes('.region').forEach(node => {
+      if (node.hasClass('player')) return;
+      node.style({ width: 114, height: 65, shape: 'rectangle' });
+    });
+  }
+
+  _syncOverlayViewport() {
+    if (!this.cy || !this.overlayContainer) return;
+    const zoom = this.cy.zoom();
+    const pan = this.cy.pan();
+    this.overlayContainer.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
+  }
+
+  _rebuildOverlays() {
+    if (!this._nodeOverlayProvider || !this.cy) return;
+    this.overlayContainer.innerHTML = '';
+    this._overlayElements.clear();
+
+    const regionNodes = this.cy.nodes('.region');
+    regionNodes.forEach(node => {
+      const nodeId = node.data('regionName') || node.id();
+      const el = this._nodeOverlayProvider(nodeId, node.data());
+      if (!el) return;
+      el.style.position = 'absolute';
+      el.dataset.nodeId = nodeId;
+      // Forward drag to Cytoscape: on mousedown, disable overlay pointer events
+      // so subsequent mousemove/mouseup go directly to the canvas, then re-dispatch
+      // the initial mousedown to the canvas so Cytoscape picks up the drag
+      el.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        this.overlayContainer.style.pointerEvents = 'none';
+        const canvas = this.graphContainer.querySelector('canvas');
+        if (canvas) {
+          canvas.dispatchEvent(new MouseEvent('mousedown', {
+            clientX: e.clientX, clientY: e.clientY,
+            button: e.button, bubbles: true,
+          }));
+        }
+        const onUp = () => {
+          this.overlayContainer.style.pointerEvents = '';
+          document.removeEventListener('mouseup', onUp);
+        };
+        document.addEventListener('mouseup', onUp);
+      });
+      // Click on overlay body → select the region node
+      el.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        this.eventBus.publish('regionGraph:nodeSelected', { nodeId, data: node.data() });
+      });
+      this.overlayContainer.appendChild(el);
+      this._overlayElements.set(nodeId, el);
+    });
+
+    this._syncOverlayViewport();
+    this._applyOverlayStyleOverrides();
+    // Defer position/size sync until browser has laid out the overlay elements
+    requestAnimationFrame(() => this._updateOverlayPositions());
+  }
+
+  _updateOverlayPositions() {
+    if (!this.cy) return;
+    this.cy.startBatch();
+    this._overlayElements.forEach((el, nodeId) => {
+      const node = this.cy.getElementById(nodeId);
+      if (!node || node.length === 0) return;
+      const pos = node.position();
+      // offsetWidth/Height are in model-space (unaffected by parent CSS transforms)
+      const w = el.offsetWidth || 114;
+      const h = el.offsetHeight || 65;
+      el.style.left = `${pos.x - w / 2}px`;
+      el.style.top = `${pos.y - h / 2}px`;
+      // Match Cytoscape node size so edges connect at the overlay boundary
+      node.data('overlayWidth', w);
+      node.data('overlayHeight', h);
+      node.style({ width: w, height: h, shape: 'rectangle' });
+    });
+    this.cy.endBatch();
+  }
+
+  refreshOverlays() {
+    if (this._nodeOverlayProvider) this._rebuildOverlays();
+  }
+
+  _applyOverlayStyleOverrides() {
+    if (!this.cy || this._overlayElements.size === 0) return;
+
+    // Add a stylesheet rule for overlay nodes if not already present
+    if (!this._overlayStyleApplied) {
+      this._overlayStyleApplied = true;
+      this.cy.style().selector('node.has-overlay').style({
+        'text-opacity': 0,
+        'background-opacity': 0,
+        'border-width': 0,
+        'shape': 'rectangle',
+        'width': 114,
+        'height': 65,
+      }).update();
+    }
+
+    // Tag nodes that have overlays
+    this.cy.nodes('.region').forEach(node => {
+      if (this._overlayElements.has(node.data('regionName') || node.id())) {
+        node.addClass('has-overlay');
+      }
+    });
+  }
+
   onPanelShow() {
     logger.debug('Panel shown', { hasCytoscape: !!this.cy });
     if (this.cy) {
@@ -1001,6 +1134,7 @@ export class RegionGraphUI {
   onPanelResize() {
     if (this.cy) {
       this.cy.resize();
+      this._syncOverlayViewport();
     }
   }
 
@@ -1129,6 +1263,7 @@ export class RegionGraphUI {
   }
 
   destroy() {
+    setPanelInstance(null);
     if (this.unsubscribeStateUpdate) {
       this.unsubscribeStateUpdate();
     }

@@ -17,6 +17,11 @@ export const moduleInfo = {
 export let moduleDispatcher = null; // Export the dispatcher
 let moduleId = 'regionGraph'; // Store module ID
 let _moduleEventBus = null;
+let _nodeOverlayProvider = null;
+let _panelInstance = null;
+
+export function setPanelInstance(instance) { _panelInstance = instance; }
+export function getNodeOverlayProvider() { return _nodeOverlayProvider; }
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -43,6 +48,15 @@ export function register(registrationApi) {
   registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
   registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
+
+  registrationApi.registerPublicFunction('regionGraph', 'registerNodeOverlayProvider', (callback) => {
+    _nodeOverlayProvider = callback;
+    if (_panelInstance) _panelInstance.setNodeOverlayProvider(callback);
+  });
+
+  registrationApi.registerPublicFunction('regionGraph', 'refreshNodeOverlays', () => {
+    if (_panelInstance) _panelInstance.refreshOverlays();
+  });
 }
 
 export function initialize(mId, priorityIndex, initializationApi) {

@@ -1223,3 +1223,110 @@ export class VibeCodingSimUI {
         if (gs.features.has(regionNodeId)) this.selectFeature(regionNodeId, true);
     }
 }
+
+// --- Graph Node Overlay ---
+
+export function createFeatureOverlay(nodeId, gs) {
+    if (!gs) return null;
+    // Map region node ID to feature ID
+    const match = nodeId.match(/(\d+)/);
+    let featureId = null;
+    if (match) featureId = gs.indexToFeatureId[parseInt(match[1])];
+    if (!featureId && gs.features.has(nodeId)) featureId = nodeId;
+    if (!featureId) return null;
+
+    const feat = gs.features.get(featureId);
+    if (!feat) return null;
+
+    const card = document.createElement('div');
+    card.className = 'vcs-node-overlay';
+    card.style.borderLeftColor = testColor(feat.testResultPercent);
+
+    // Row 1: name
+    const nameRow = document.createElement('div');
+    nameRow.className = 'vcs-node-overlay-name';
+    nameRow.textContent = `${feat.unmetDepLayers > 0 ? `\u23f3${feat.unmetDepLayers} ` : ''}${feat.name}`;
+    card.appendChild(nameRow);
+
+    // Row 2: meta (test %, review issues)
+    const metaRow = document.createElement('div');
+    metaRow.className = 'vcs-node-overlay-meta';
+    if (feat.testResultPercent !== null) {
+        const pct = document.createElement('span');
+        pct.style.color = testColor(feat.testResultPercent);
+        pct.textContent = `${feat.testResultPercent}%`;
+        metaRow.appendChild(pct);
+    }
+    const mtLabel = manualResultLabel(feat);
+    if (mtLabel) {
+        const mt = document.createElement('span');
+        mt.className = feat.manualTestResult === 'pass' ? 'vcs-manual-pass' : 'vcs-manual-issues';
+        mt.textContent = mtLabel;
+        metaRow.appendChild(mt);
+    }
+    if (metaRow.childNodes.length > 0) card.appendChild(metaRow);
+
+    // Row 3: badges
+    const badgeRow = document.createElement('div');
+    badgeRow.className = 'vcs-node-overlay-badges';
+    badgeRow.appendChild(_overlayBadge(gs, feat, 'D', feat.hasDoc, TaskType.WRITE_DOC, TaskType.EVALUATE_DOC));
+    badgeRow.appendChild(_overlayBadge(gs, feat, 'C', feat.hasCode, TaskType.IMPLEMENT, TaskType.IMPLEMENT));
+    badgeRow.appendChild(_overlayBadge(gs, feat, 'T', feat.hasTests, TaskType.WRITE_TESTS, TaskType.WRITE_TESTS));
+    badgeRow.appendChild(_overlayManualBadge(gs, feat));
+    card.appendChild(badgeRow);
+
+    return card;
+}
+
+function _overlayBadge(gs, feat, letter, exists, createType, improveType) {
+    const btn = document.createElement('button');
+    const taskType = exists ? improveType : createType;
+    const canAct = taskType === TaskType.WRITE_DOC ? !feat.hasDoc : taskType === TaskType.EVALUATE_DOC ? feat.hasDoc : feat.hasDoc;
+    const actionTaskTypes = letter === 'D' ? [TaskType.WRITE_DOC, TaskType.EVALUATE_DOC] : letter === 'C' ? [TaskType.IMPLEMENT] : [TaskType.WRITE_TESTS];
+    const inProgress = gs.getRunningTasks().some(t => t.targetFeatureId === feat.id && actionTaskTypes.includes(t.type));
+    const colors = { D: '#4a7a5a', C: '#4a5a7a', T: '#7a5a4a' };
+
+    btn.className = 'vcs-badge vcs-badge-btn';
+    if (inProgress) { btn.classList.add('vcs-badge-in-progress'); btn.style.background = colors[letter]; }
+    else if (exists) { btn.classList.add('vcs-badge-active'); btn.style.background = colors[letter]; }
+    else btn.classList.add('vcs-badge-empty');
+
+    const issueKey = { D: 'doc', C: 'code', T: 'tests' }[letter];
+    if (feat.manualReviewIssues && feat.manualReviewIssues[issueKey] > 0) btn.classList.add('vcs-badge-issue');
+
+    btn.textContent = letter;
+    if (canAct) {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            gs.assignTask(feat.id, taskType);
+        });
+    } else { btn.disabled = true; btn.classList.add('vcs-badge-disabled'); }
+    return btn;
+}
+
+function _overlayManualBadge(gs, feat) {
+    const btn = document.createElement('button');
+    const canTest = feat.hasCode && feat.hasTests && !gs.isManualTestActive;
+    let bgColor = null;
+    if (feat.manualTestResult === 'pass') bgColor = '#2d8a4e';
+    else if (feat.manualReviewIssues) {
+        const total = feat.manualReviewIssues.doc + feat.manualReviewIssues.code + feat.manualReviewIssues.tests;
+        bgColor = total > 0 ? '#c04030' : '#2d8a4e';
+    }
+
+    btn.className = 'vcs-badge vcs-badge-btn';
+    if (bgColor) { btn.classList.add('vcs-badge-active'); btn.style.background = bgColor; }
+    else btn.classList.add('vcs-badge-empty');
+
+    const hasWork = feat.hasDoc || feat.hasCode || feat.hasTests;
+    if (hasWork && feat.manualTestResult !== 'pass') btn.classList.add('vcs-badge-needs-review');
+
+    btn.textContent = 'M';
+    if (canTest) {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            gs.assignTask(feat.id, TaskType.MANUAL_TEST);
+        });
+    } else { btn.disabled = true; btn.classList.add('vcs-badge-disabled'); }
+    return btn;
+}
