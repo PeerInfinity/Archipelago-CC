@@ -39,6 +39,9 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('vibeCodingSim:featureSelected');
     registrationApi.registerEventBusPublisher('vibeCodingSim:stateChanged');
 
+    // Dispatcher events we send
+    registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+
     // Events we subscribe to
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
@@ -89,6 +92,11 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         registerOverlay((nodeId, nodeData) => createFeatureOverlay(nodeId, gameState));
     }
 
+    // Sync received items from Archipelago inventory
+    eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
+        if (gameState) gameState.syncFromSnapshot(data?.snapshot);
+    });
+
     // Listen for state changes to refresh overlays
     eventBus.subscribe('vibeCodingSim:stateChanged', () => {
         const refreshOverlays = initializationApi.getModuleFunction('regionGraph', 'refreshNodeOverlays');
@@ -135,6 +143,20 @@ function initializeGame(staticData) {
 
     gameState.onLogEntry = () => {
         renderDirty = true;
+    };
+
+    // Initial sync from current snapshot (items may already be in inventory)
+    const currentSnapshot = stateManager.getLatestStateSnapshot();
+    if (currentSnapshot) gameState.syncFromSnapshot(currentSnapshot);
+
+    gameState.onLocationCheck = (locationName, regionName) => {
+        if (!dispatcher) return;
+        dispatcher.publish('user:locationCheck', {
+            locationName,
+            regionName,
+            originator: 'VibeCodingSimCheck',
+            originalDOMEvent: true,
+        }, { initialTarget: 'bottom' });
     };
 
     // Combined game tick + UI render loop using requestAnimationFrame

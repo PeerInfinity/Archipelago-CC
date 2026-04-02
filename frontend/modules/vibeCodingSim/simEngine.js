@@ -469,14 +469,19 @@ class GameState {
         this.reviewUsedToday = 0;         // minutes used today
         this.reviewDayStart = 0;          // when the current day started
 
-        // Index mapping for region graph
+        // Index mapping for region graph / location checks
         this.indexToFeatureId = {};
+        this.featureIdToIndex = {};
+
+        // Tracks which features are accessible per Archipelago's reachability engine
+        this._reachableFeatures = new Set(); // feature IDs whose locations are reachable or checked
 
         // Task pruning
         this.clearedTaskCount = 0;
 
         this.onStateChanged = null;
         this.onLogEntry = null;
+        this.onLocationCheck = null;  // (locationName, regionName) => void
     }
 
     // --- Data Loading ---
@@ -493,7 +498,9 @@ class GameState {
         // Each node in the graph becomes a feature
         for (const [idx, step] of Object.entries(graphStructure)) {
             const featureId = step.label;
-            this.indexToFeatureId[parseInt(idx)] = featureId;
+            const nodeIndex = parseInt(idx);
+            this.indexToFeatureId[nodeIndex] = featureId;
+            this.featureIdToIndex[featureId] = nodeIndex;
             const displayName = step.expression || featureId;
             const depNodeIds = (step.dependencies || []).map(i => indexToLabel[i]).filter(Boolean);
 
@@ -514,22 +521,57 @@ class GameState {
         this._updateDepsMetStatus();
     }
 
+    /**
+     * Sync dependency state from a stateManager snapshot.
+     * Uses locationReachability (computed by the reachability engine from the
+     * actual DepGraph access rules, including entrance_rule_mode) to determine
+     * which features have their dependencies satisfied.
+     */
+    syncFromSnapshot(snapshot) {
+        if (!snapshot?.locationReachability) return;
+        let changed = false;
+        for (const [nodeIndex, featureId] of Object.entries(this.indexToFeatureId)) {
+            const locationName = `Complete Node ${nodeIndex}`;
+            const status = snapshot.locationReachability[locationName];
+            const wasReachable = this._reachableFeatures.has(featureId);
+            const isReachable = status === 'reachable' || status === 'checked';
+            if (isReachable !== wasReachable) {
+                if (isReachable) {
+                    this._reachableFeatures.add(featureId);
+                } else {
+                    this._reachableFeatures.delete(featureId);
+                }
+                changed = true;
+            }
+        }
+        if (changed) {
+            this._updateDepsMetStatus();
+            if (this.onStateChanged) this.onStateChanged();
+        }
+    }
+
     _updateDepsMetStatus() {
         const cache = new Map();
         const computeLayers = (feat) => {
             if (cache.has(feat.id)) return cache.get(feat.id);
             cache.set(feat.id, 0); // guard against cycles
+
+            // Dependencies are met iff the feature's location is reachable
+            // per Archipelago's reachability engine (which evaluates the real
+            // DepGraph access rules including entrance_rule_mode)
+            if (this._reachableFeatures.has(feat.id)) {
+                cache.set(feat.id, 0);
+                return 0;
+            }
+
+            // Not reachable — count layers of unmet upstream dependencies
             let maxUpstream = 0;
-            let anyUnmet = false;
             for (const upId of feat.upstreamIds) {
                 const up = this.features.get(upId);
-                if (!up || up.manualTestResult !== 'pass') {
-                    anyUnmet = true;
-                    const upLayers = up ? computeLayers(up) : 0;
-                    maxUpstream = Math.max(maxUpstream, upLayers);
-                }
+                const upLayers = up ? computeLayers(up) : 0;
+                maxUpstream = Math.max(maxUpstream, upLayers);
             }
-            const layers = anyUnmet ? 1 + maxUpstream : 0;
+            const layers = 1 + maxUpstream;
             cache.set(feat.id, layers);
             return layers;
         };
@@ -1470,11 +1512,17 @@ class GameState {
     }
 
     _awardLocationCheck(feat) {
-        // Location check placeholder — in Archipelago integration this would
-        // dispatch a location check event
-        if (!feat._locationChecked) {
-            feat._locationChecked = true;
-            this._addLog(`LOCATION CHECK: ${feat.id} — code at 100%!`);
+        if (feat._locationChecked) return;
+        feat._locationChecked = true;
+
+        const nodeIndex = this.featureIdToIndex[feat.id];
+        if (nodeIndex === undefined) return;
+
+        const locationName = `Complete Node ${nodeIndex}`;
+        this._addLog(`LOCATION CHECK: ${locationName}`);
+
+        if (this.onLocationCheck) {
+            this.onLocationCheck(locationName, 'Graph');
         }
     }
 
