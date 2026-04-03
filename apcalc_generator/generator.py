@@ -184,9 +184,13 @@ def generate(config: APCalcConfig, log=None) -> dict:
             # Final sphere: keep generating single-step trash nodes until
             # no more can be created, to use up all remaining buttons
             log(f'  Generating final sphere chains to consume remaining buttons...')
+            log(f'  Inventory at start: {dict(inventory)}')
             consecutive_failures = 0
             max_failures = 500
+            total_attempts = 0
+            chains_created = 0
             while consecutive_failures < max_failures:
+                total_attempts += 1
                 chain = _generate_chain_partial(
                     sphere, nodes, node_values, inventory,
                     sphere_items, config, rng, log,
@@ -196,13 +200,22 @@ def generate(config: APCalcConfig, log=None) -> dict:
                     consecutive_failures += 1
                     continue
                 consecutive_failures = 0
+                chains_created += 1
                 for chain_node in chain:
                     chain_node.item = TRASH_ITEM
                     nodes.append(chain_node)
                     node_values.add(chain_node.value)
                     sphere_node_indices.append(chain_node.index)
                     trash_created += 1
-            log(f'  Final sphere: created {trash_created} nodes')
+            # Report unconsumed buttons
+            all_used = Counter()
+            for node in nodes:
+                if node.sphere == sphere:
+                    cost = compute_path_cost(node, nodes)
+                    for btn, cnt in cost.items():
+                        all_used[btn] = max(all_used[btn], cnt)
+            log(f'  Final sphere: created {trash_created} nodes in {chains_created} chains '
+                f'({total_attempts} attempts)')
         else:
             # Generate chains for each real item
             for item_idx, real_item in enumerate(real_items):
@@ -244,7 +257,11 @@ def generate(config: APCalcConfig, log=None) -> dict:
         for item in all_items:
             if item != TRASH_ITEM:
                 inventory[item] += 1
-        log(f'  Sphere {sphere} complete: {len(sphere_node_indices)} nodes, items={all_items}')
+        actual_count = len(sphere_node_indices)
+        if actual_count != target_count:
+            log(f'  Sphere {sphere} complete: {actual_count} nodes (target was {target_count}), items={all_items}')
+        else:
+            log(f'  Sphere {sphere} complete: {actual_count} nodes, items={all_items}')
         log(f'  Inventory after sphere {sphere}: {dict(inventory)}')
 
     # Build starting buttons
@@ -352,7 +369,8 @@ def _generate_chain(
         reserve_ops = 0 if is_final_sphere else 1
         chain_target = max(1, min(total_ops - reserve_ops, total_nums))
 
-        log(f'    Parent: {parent.region_name} (sphere {parent.sphere})')
+        log(f'    Parent: {parent.region_name} (sphere {parent.sphere}), '
+            f'path: {" ".join(parent.button_sequence)}')
         log(f'    Path cost: {dict(path_cost)}')
         log(f'    Remaining: ops={total_ops}, nums={total_nums}')
         log(f'    Chain target: {chain_target} nodes '
@@ -473,6 +491,12 @@ def _generate_chain_partial(
     reserve_ops = 0 if is_final_sphere else 1
     chain_target = max(1, min(total_ops - reserve_ops, total_nums))
 
+    log(f'    Parent: {parent.region_name} (sphere {parent.sphere}), '
+        f'path: {" ".join(parent.button_sequence)}')
+    log(f'    Path cost: {dict(path_cost)}')
+    log(f'    Remaining: ops={total_ops}, nums={total_nums}')
+    log(f'    Chain target: {chain_target} nodes')
+
     # Build chain, keeping whatever succeeds
     chain_nodes = []
     chain_remaining = remaining.copy()
@@ -483,6 +507,7 @@ def _generate_chain_partial(
         step_ops = [op for op in OPERATIONS if chain_remaining[op] > 0]
         step_nums = [n for n in range(10) if chain_remaining[str(n)] > 0]
         if not step_ops or not step_nums:
+            log(f'    Chain broke at step {step}: no ops/nums available')
             break
 
         if step == 0:
@@ -501,6 +526,7 @@ def _generate_chain_partial(
             step_retries -= 1
 
         if child_value is None or child_value in chain_values:
+            log(f'    Chain broke at step {step}: no valid value found')
             break  # Accept what we have so far
 
         sequence = chain_parent.button_sequence + [op, str(num), '=']
@@ -519,14 +545,22 @@ def _generate_chain_partial(
         chain_remaining[str(num)] -= 1
         chain_parent = new_node
 
+        log(f'    Step {step}: {op} {num} = {child_value}')
+
     if chain_nodes:
         base_index = len(nodes)
         for i, cn in enumerate(chain_nodes):
             cn.index = base_index + i
             if i > 0:
                 cn.parent_index = base_index + i - 1
-        log(f'    Chain of {len(chain_nodes)} from {parent.region_name}: '
-            + ' → '.join(str(cn.value) for cn in chain_nodes))
+        if len(chain_nodes) < chain_target:
+            log(f'    Chain of {len(chain_nodes)}/{chain_target} from {parent.region_name}: '
+                + ' → '.join(str(cn.value) for cn in chain_nodes))
+        else:
+            log(f'    Chain of {len(chain_nodes)} from {parent.region_name}: '
+                + ' → '.join(str(cn.value) for cn in chain_nodes))
+    else:
+        log(f'    No chain produced from {parent.region_name}')
 
     return chain_nodes
 

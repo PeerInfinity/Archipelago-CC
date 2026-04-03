@@ -170,14 +170,19 @@ export async function generate(config, log) {
         if (isFinal) {
             // Final sphere: keep generating chains (accepting partial) to consume all buttons
             log('  Generating final sphere chains to consume remaining buttons...');
+            log(`  Inventory at start: ${JSON.stringify(inventory)}`);
             let consecutiveFailures = 0;
             const maxFailures = 500;
+            let totalAttempts = 0;
+            let chainsCreated = 0;
             while (consecutiveFailures < maxFailures) {
+                totalAttempts++;
                 const chain = generateChainPartial(
                     sphere, nodes, nodeValues, inventory, sphereItems, config, rng, log, true,
                 );
                 if (!chain.length) { consecutiveFailures++; continue; }
                 consecutiveFailures = 0;
+                chainsCreated++;
                 for (const cn of chain) {
                     cn.item = TRASH_ITEM;
                     nodes.push(cn);
@@ -186,7 +191,7 @@ export async function generate(config, log) {
                     trashCreated++;
                 }
             }
-            log(`  Final sphere: created ${trashCreated} nodes`);
+            log(`  Final sphere: created ${trashCreated} nodes in ${chainsCreated} chains (${totalAttempts} attempts)`);
         } else {
             // Generate chains for each real item
             for (let itemIdx = 0; itemIdx < realItems.length; itemIdx++) {
@@ -227,7 +232,12 @@ export async function generate(config, log) {
         for (const item of allItems) {
             if (item !== TRASH_ITEM) counterInc(inventory, item);
         }
-        log(`  Sphere ${sphere} complete: ${sphereNodeIndices.length} nodes, items=[${allItems.join(', ')}]`);
+        const actualCount = sphereNodeIndices.length;
+        if (actualCount !== targetCount) {
+            log(`  Sphere ${sphere} complete: ${actualCount} nodes (target was ${targetCount}), items=[${allItems.join(', ')}]`);
+        } else {
+            log(`  Sphere ${sphere} complete: ${actualCount} nodes, items=[${allItems.join(', ')}]`);
+        }
         log(`  Inventory after sphere ${sphere}: ${JSON.stringify(inventory)}`);
 
         // Yield to browser
@@ -311,7 +321,7 @@ function generateChain(sphere, nodes, nodeValues, inventory, sphereItems, config
         const reserveOps = isFinalSphere ? 0 : 1;
         let chainTarget = Math.max(1, Math.min(totalOps - reserveOps, totalNums));
 
-        log(`    Parent: ${parent.regionName} (sphere ${parent.sphere})`);
+        log(`    Parent: ${parent.regionName} (sphere ${parent.sphere}), path: ${parent.buttonSequence.join(' ')}`);
         log(`    Path cost: ${JSON.stringify(pathCost)}`);
         log(`    Remaining: ops=${totalOps}, nums=${totalNums}`);
         log(`    Chain target: ${chainTarget} nodes (${chainTarget - 1} trash + 1 real)`);
@@ -425,6 +435,11 @@ function generateChainPartial(sphere, nodes, nodeValues, inventory, sphereItems,
     const reserveOps = isFinalSphere ? 0 : 1;
     const chainTarget = Math.max(1, Math.min(totalOps - reserveOps, totalNums));
 
+    log(`    Parent: ${parent.regionName} (sphere ${parent.sphere}), path: ${parent.buttonSequence.join(' ')}`);
+    log(`    Path cost: ${JSON.stringify(pathCost)}`);
+    log(`    Remaining: ops=${totalOps}, nums=${totalNums}`);
+    log(`    Chain target: ${chainTarget} nodes`);
+
     const chainNodes = [];
     const chainRemaining = { ...remaining };
     let chainParent = parent;
@@ -436,7 +451,10 @@ function generateChainPartial(sphere, nodes, nodeValues, inventory, sphereItems,
         for (let n = 0; n < 10; n++) {
             if (counterGet(chainRemaining, String(n)) > 0) stepNums.push(n);
         }
-        if (!stepOps.length || !stepNums.length) break;
+        if (!stepOps.length || !stepNums.length) {
+            log(`    Chain broke at step ${step}: no ops/nums available`);
+            break;
+        }
 
         let op, num, childValue;
         if (step === 0) {
@@ -454,7 +472,10 @@ function generateChainPartial(sphere, nodes, nodeValues, inventory, sphereItems,
             stepRetries--;
         }
 
-        if (childValue === null || chainValues.has(childValue)) break;
+        if (childValue === null || chainValues.has(childValue)) {
+            log(`    Chain broke at step ${step}: no valid value found`);
+            break;
+        }
 
         const sequence = [...chainParent.buttonSequence, op, String(num), '='];
         const newNode = makeNode(
@@ -467,6 +488,8 @@ function generateChainPartial(sphere, nodes, nodeValues, inventory, sphereItems,
         chainRemaining[op] = (chainRemaining[op] || 0) - 1;
         chainRemaining[String(num)] = (chainRemaining[String(num)] || 0) - 1;
         chainParent = newNode;
+
+        log(`    Step ${step}: ${op} ${num} = ${childValue}`);
     }
 
     if (chainNodes.length) {
@@ -475,8 +498,15 @@ function generateChainPartial(sphere, nodes, nodeValues, inventory, sphereItems,
             chainNodes[i].index = baseIndex + i;
             if (i > 0) chainNodes[i].parentIndex = baseIndex + i - 1;
         }
-        log(`    Chain of ${chainNodes.length} from ${parent.regionName}: `
-            + chainNodes.map(cn => cn.value).join(' → '));
+        if (chainNodes.length < chainTarget) {
+            log(`    Chain of ${chainNodes.length}/${chainTarget} from ${parent.regionName}: `
+                + chainNodes.map(cn => cn.value).join(' → '));
+        } else {
+            log(`    Chain of ${chainNodes.length} from ${parent.regionName}: `
+                + chainNodes.map(cn => cn.value).join(' → '));
+        }
+    } else {
+        log(`    No chain produced from ${parent.regionName}`);
     }
     return chainNodes;
 }
