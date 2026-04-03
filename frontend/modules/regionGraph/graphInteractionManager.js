@@ -1,4 +1,4 @@
-import { getModuleEventBus } from './index.js';
+import { getModuleEventBus, getNodeLabelProvider } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -682,6 +682,7 @@ export class GraphInteractionManager {
     const staticData = stateManager.getStaticData();
     const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
     const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
+    const hasLabelProvider = !!getNodeLabelProvider();
     this.ui.cy.nodes().forEach(node => {
       if (!node.hasClass('location-node') && !node.hasClass('player')) {
         const regionName = node.data('regionName') || node.id();
@@ -693,6 +694,9 @@ export class GraphInteractionManager {
           } else {
             node.data('label', '???');
           }
+        } else if (hasLabelProvider) {
+          // External label provider controls the label — don't add counts
+          // (label already set by onStateUpdate)
         } else {
           const regionData = staticData?.regions?.get(regionName);
           const locationCounts = node.data('locationCounts');
