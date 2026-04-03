@@ -655,6 +655,9 @@ export class GraphDataManager {
     const snapshot = data.snapshot;
     if (!snapshot) return;
 
+    // Cache for refreshLabels() fallback when no live snapshot is available
+    this._lastSnapshot = snapshot;
+
     const staticData = stateManager.getStaticData();
     if (!staticData) return;
 
@@ -1334,7 +1337,7 @@ export class GraphDataManager {
 
   /** Re-run label generation for all nodes (called when a label provider changes). */
   refreshLabels() {
-    const snapshot = stateManager.getLatestStateSnapshot();
+    const snapshot = stateManager.getLatestStateSnapshot() || this._lastSnapshot;
     if (snapshot) {
       this.onStateUpdate({ snapshot });
     }
