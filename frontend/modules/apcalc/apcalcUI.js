@@ -1,8 +1,8 @@
 /**
- * APCalc — Calculator panel UI
+ * APCalc v2 — Calculator panel UI
  *
- * Calculator with button-press tracking, discovered paths list,
- * and remaining-buttons sidebar.
+ * Calculator with multi-digit input, button-press tracking,
+ * discovered paths list, remaining-buttons sidebar, and difficulty selector.
  */
 
 import { setPanelInstance, getModuleApis } from './index.js';
@@ -15,7 +15,7 @@ export class APCalcUI {
         this.container = container;
         this.apis = APCalcUI.moduleApis || getModuleApis();
         this.showRemainingList = true;
-        this.pathFilter = null; // region name to filter paths by
+        this.pathFilter = null;
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'apcalc-panel';
         this.rootElement.innerHTML = '<div class="apcalc-empty">Waiting for game data...</div>';
@@ -38,21 +38,44 @@ export class APCalcUI {
             return;
         }
 
-        // Main layout: calculator + sidebar
+        // Difficulty selector + main layout
+        this.rootElement.appendChild(this._renderDifficulty(gs));
+
         const main = document.createElement('div');
         main.className = 'apcalc-main';
-
         main.appendChild(this._renderCalculator(gs));
         if (this.showRemainingList) {
             main.appendChild(this._renderRemainingButtons(gs));
         }
         this.rootElement.appendChild(main);
 
-        // Status bar
         this.rootElement.appendChild(this._renderStatus(gs));
-
-        // Discovered paths
         this.rootElement.appendChild(this._renderPaths(gs));
+    }
+
+    _renderDifficulty(gs) {
+        const bar = document.createElement('div');
+        bar.className = 'apcalc-difficulty-bar';
+
+        for (const mode of ['easy', 'medium', 'hard']) {
+            const btn = document.createElement('button');
+            btn.className = 'apcalc-difficulty-btn';
+            if (gs.difficulty === mode) btn.classList.add('apcalc-difficulty-active');
+            btn.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+            btn.title = {
+                easy: 'Show all edges and accessibility colors',
+                medium: 'Hide edges until discovered',
+                hard: 'Hide edges and accessibility colors',
+            }[mode];
+            btn.addEventListener('click', () => {
+                gs.difficulty = mode;
+                this._notify();
+                this.render();
+            });
+            bar.appendChild(btn);
+        }
+
+        return bar;
     }
 
     _renderCalculator(gs) {
@@ -65,8 +88,9 @@ export class APCalcUI {
         const opIndicator = gs.getPendingOpText();
         const displayText = gs.getDisplayText();
         const nodeLabel = gs.currentNode || 'Start';
+        const layerText = gs.currentNode ? ` (L${gs.currentLayer})` : '';
         display.innerHTML = `
-            <div class="apcalc-display-node">${this._esc(nodeLabel)}</div>
+            <div class="apcalc-display-node">${this._esc(nodeLabel)}${this._esc(layerText)}</div>
             <div class="apcalc-display-value">
                 <span class="apcalc-display-op">${this._esc(opIndicator)}</span>
                 ${this._esc(displayText) || '&nbsp;'}
@@ -78,17 +102,12 @@ export class APCalcUI {
         const pad = document.createElement('div');
         pad.className = 'apcalc-pad';
 
-        // Row 1: 7 8 9
-        // Row 2: 4 5 6
-        // Row 3: 1 2 3
-        // Row 4: 0 = C
         const numRows = [[7, 8, 9], [4, 5, 6], [1, 2, 3], [0, '=', 'C']];
         for (const row of numRows) {
             const rowDiv = document.createElement('div');
             rowDiv.className = 'apcalc-row';
             for (const key of row) {
-                const btn = this._makeButton(gs, key);
-                rowDiv.appendChild(btn);
+                rowDiv.appendChild(this._makeButton(gs, key));
             }
             pad.appendChild(rowDiv);
         }
@@ -121,7 +140,6 @@ export class APCalcUI {
                 if (key === '=') {
                     const result = gs.pressEquals();
                     if (result && !result.moved && result.success) {
-                        // Flash display to show the computed value briefly
                         this._flashResult(result.value);
                     }
                 } else {
@@ -137,7 +155,6 @@ export class APCalcUI {
                 if (gs.pressOperation(label)) this.render();
             });
         } else {
-            // Number button
             const num = Number(key);
             const remaining = gs.remainingPresses[label] || 0;
             btn.dataset.remaining = remaining;
@@ -156,7 +173,7 @@ export class APCalcUI {
 
         const header = document.createElement('div');
         header.className = 'apcalc-sidebar-header';
-        header.innerHTML = `<span>Buttons</span>`;
+        header.innerHTML = '<span>Buttons</span>';
         const hideBtn = document.createElement('button');
         hideBtn.className = 'apcalc-hide-btn';
         hideBtn.textContent = 'Hide';
@@ -167,7 +184,6 @@ export class APCalcUI {
         header.appendChild(hideBtn);
         sidebar.appendChild(header);
 
-        // Sort: operations first, then numbers
         const allLabels = Object.keys(gs.totalPresses).sort((a, b) => {
             const aIsOp = gs.operations.includes(a);
             const bIsOp = gs.operations.includes(b);
@@ -209,10 +225,18 @@ export class APCalcUI {
         const status = document.createElement('div');
         status.className = 'apcalc-status';
 
-        const neighbors = gs.getNeighbors();
-        const neighborText = neighbors.length > 0
-            ? `Targets: ${neighbors.map(n => n.value).join(', ')}`
-            : 'No targets from here';
+        // In medium/hard modes, don't show neighbor values (player must discover)
+        let neighborText;
+        if (gs.difficulty === 'easy') {
+            const neighbors = gs.getNeighbors();
+            neighborText = neighbors.length > 0
+                ? `Targets: ${neighbors.map(n => n.value).join(', ')}`
+                : 'No targets from here';
+        } else {
+            const neighbors = gs.getNeighbors();
+            neighborText = `${neighbors.length} target${neighbors.length !== 1 ? 's' : ''} at layer ${gs.currentLayer + 1}`;
+        }
+
         const checkedCount = gs.checkedLocations.size;
         const totalNodes = Object.keys(gs.nodes).length;
 
@@ -258,18 +282,13 @@ export class APCalcUI {
 
         let paths = gs.discoveredPaths;
         if (this.pathFilter) {
-            paths = paths.filter(p => {
-                // Show paths that pass through the filtered node
-                if (p.node === this.pathFilter) return true;
-                // Check intermediate nodes in the sequence
-                return this._pathPassesThrough(gs, p, this.pathFilter);
-            });
+            paths = paths.filter(p => p.node === this.pathFilter);
         }
 
         if (paths.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'apcalc-paths-empty';
-            empty.textContent = this.pathFilter ? 'No paths through this node' : 'No paths discovered yet';
+            empty.textContent = this.pathFilter ? 'No paths to this node' : 'No paths discovered yet';
             list.appendChild(empty);
         }
 
@@ -282,6 +301,9 @@ export class APCalcUI {
             const label = document.createElement('span');
             label.className = 'apcalc-path-label';
             label.textContent = nodeInfo ? `${nodeInfo.value}` : path.node;
+            if (nodeInfo && nodeInfo.layer > 0) {
+                label.textContent += ` L${nodeInfo.layer}`;
+            }
 
             const seq = document.createElement('span');
             seq.className = 'apcalc-path-seq';
@@ -296,10 +318,8 @@ export class APCalcUI {
         return section;
     }
 
-    /** Load a discovered path: replay the button sequence. */
     _loadPath(gs, path) {
         gs.reset();
-        // Replay the sequence up to the node
         for (const label of path.sequence) {
             if (label === '=') {
                 gs.pressEquals();
@@ -312,19 +332,6 @@ export class APCalcUI {
         this.render();
     }
 
-    /** Check if a path passes through a given node. */
-    _pathPassesThrough(gs, path, regionName) {
-        // Walk the path's node chain backward
-        let nodeName = path.node;
-        while (nodeName) {
-            if (nodeName === regionName) return true;
-            const info = gs.nodes[nodeName];
-            nodeName = info?.parent || null;
-        }
-        return false;
-    }
-
-    /** Flash a result value on the display briefly (for non-move results). */
     _flashResult(value) {
         const display = this.rootElement.querySelector('.apcalc-display-value');
         if (!display) return;
@@ -336,10 +343,14 @@ export class APCalcUI {
         }, 800);
     }
 
-    /** Set the path filter to a specific node (called from region graph clicks). */
     setPathFilter(regionName) {
         this.pathFilter = regionName;
         this.render();
+    }
+
+    _notify() {
+        const gs = this.gameState;
+        if (gs?.onStateChanged) gs.onStateChanged();
     }
 
     _esc(text) {

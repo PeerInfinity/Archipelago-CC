@@ -70,12 +70,30 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         }
     });
 
-    // Register node label provider for the region graph (just changes text, no DOM overlay)
+    // Register node label provider for the region graph
     const registerLabelProvider = initializationApi.getModuleFunction('regionGraph', 'registerNodeLabelProvider');
     if (registerLabelProvider) {
         registerLabelProvider((nodeId, nodeData) => {
             if (!gameState || !gameState.nodes[nodeId]) return null;
             return String(gameState.nodes[nodeId].value);
+        });
+    }
+
+    // Register edge visibility filter for difficulty modes
+    const registerEdgeFilter = initializationApi.getModuleFunction('regionGraph', 'registerEdgeVisibilityFilter');
+    if (registerEdgeFilter) {
+        registerEdgeFilter((sourceId, targetId) => {
+            if (!gameState) return true;
+            return gameState.isEdgeVisible(sourceId, targetId);
+        });
+    }
+
+    // Register accessibility visibility for hard mode
+    const registerAccessibilityFilter = initializationApi.getModuleFunction('regionGraph', 'registerAccessibilityVisibilityFilter');
+    if (registerAccessibilityFilter) {
+        registerAccessibilityFilter(() => {
+            if (!gameState) return true;
+            return gameState.showAccessibility();
         });
     }
 

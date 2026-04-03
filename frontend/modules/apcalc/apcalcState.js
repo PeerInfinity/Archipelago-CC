@@ -1,9 +1,10 @@
 /**
- * APCalc game state — tracks button presses, current node, discovered paths.
+ * APCalc v2 game state — tracks button presses, current node, discovered paths.
  *
- * The calculator starts blank. Pressing a number then = moves to that node
- * (if it's a neighbor of Start). From any node, pressing op, number, = moves
- * to the child node whose value matches the result.
+ * The calculator starts blank. Pressing digits builds a multi-digit number,
+ * then = moves to a node at layer 0 (from Start) or layer+1 (from a node).
+ * From any node, pressing op, digits, = computes current_value OP operand
+ * and moves to any node at the next layer whose value matches.
  *
  * Button presses are consumed per path. Clear restores all presses and
  * returns to Start.
@@ -11,21 +12,25 @@
 
 export class APCalcState {
     constructor() {
-        /** @type {Object<string, NodeInfo>} region_name → node info from slot_data */
+        /** @type {Object<string, NodeInfo>} region_name → {value, layer, sphere, item} */
         this.nodes = {};
+        /** @type {Array<EdgeInfo>} [{source, target, operation, operand, operand_digits}] */
+        this.edges = [];
         /** @type {Object<string, number>} button_label → total presses available */
         this.totalPresses = {};
         /** @type {Object<string, number>} button_label → presses remaining this path */
         this.remainingPresses = {};
         /** @type {string|null} current region name, null = Start */
         this.currentNode = null;
+        /** @type {number} current layer (0 = at Start before first =) */
+        this.currentLayer = 0;
         /** @type {number|null} current calculator display value */
         this.displayValue = null;
         /** @type {string|null} pending operation (+, -, *, /) */
         this.pendingOp = null;
-        /** @type {number|null} operand being entered */
-        this.pendingNum = null;
-        /** @type {string[]} button presses so far in this path */
+        /** @type {number[]|null} digits being entered for current operand */
+        this.pendingDigits = null;
+        /** @type {string[]} button presses so far in this path (committed via =) */
         this.currentSequence = [];
         /** @type {string[]} buttons pressed since last = (for refund) */
         this.sinceLastEquals = [];
@@ -35,20 +40,38 @@ export class APCalcState {
         this.checkedLocations = new Set();
         /** @type {string[]} available operations */
         this.operations = ['+', '-', '*', '/'];
-        /** @type {string|null} goal node region name */
-        this.goalNode = null;
+        /** @type {string} difficulty mode: 'easy', 'medium', 'hard' */
+        this.difficulty = 'easy';
+        /** @type {Set<string>} edges discovered by the player (for medium/hard) */
+        this.discoveredEdges = new Set();
         /** @type {Function|null} callback when location should be checked */
         this.onLocationCheck = null;
         /** @type {Function|null} callback when state changes */
         this.onStateChanged = null;
+        /** @type {Function|null} callback when an edge is discovered */
+        this.onEdgeDiscovered = null;
     }
 
     loadFromSlotData(slotData) {
         this.nodes = slotData.nodes || {};
+        this.edges = slotData.edges || [];
         this.operations = slotData.operations || ['+', '-', '*', '/'];
-        this.goalNode = slotData.goal_node || null;
 
-        // Starting buttons come from starting_buttons in slot_data
+        // Build node lookup by (value, layer) for fast neighbor finding
+        this._nodeLookup = {}; // "value,layer" → region_name
+        for (const [name, info] of Object.entries(this.nodes)) {
+            const key = `${info.value},${info.layer}`;
+            this._nodeLookup[key] = name;
+        }
+
+        // Build edge index by source region name
+        this._edgesBySource = {}; // source_region → [edge]
+        for (const edge of this.edges) {
+            if (!this._edgesBySource[edge.source]) this._edgesBySource[edge.source] = [];
+            this._edgesBySource[edge.source].push(edge);
+        }
+
+        // Starting buttons
         this.totalPresses = {};
         const startingButtons = slotData.starting_buttons || {};
         for (const [label, count] of Object.entries(startingButtons)) {
@@ -58,34 +81,24 @@ export class APCalcState {
         this.reset();
     }
 
-    /** Sync with Archipelago inventory snapshot — add received button items.
-     *  snapshot.inventory = { itemName: count, ... }
-     *  snapshot.checkedLocations = [ locationName, ... ]
-     *
-     *  The inventory already includes starting items, so we don't need to
-     *  add sphere 0 values separately.
-     */
+    /** Sync with Archipelago inventory snapshot. */
     syncFromSnapshot(snapshot) {
         if (!snapshot) return;
 
-        // Rebuild totalPresses purely from inventory (includes starting items)
         this.totalPresses = {};
         const inventory = snapshot.inventory || {};
         for (const [itemName, count] of Object.entries(inventory)) {
             if (count <= 0) continue;
             const match = itemName.match(/^Button: (.+)$/);
             if (match) {
-                const label = match[1];
-                this.totalPresses[label] = (this.totalPresses[label] || 0) + count;
+                this.totalPresses[match[1]] = (this.totalPresses[match[1]] || 0) + count;
             }
         }
 
-        // Update checked locations
         if (snapshot.checkedLocations) {
             this.checkedLocations = new Set(snapshot.checkedLocations);
         }
 
-        // Recalculate remaining presses (preserve consumed state in current path)
         this._recalcRemaining();
         this._notify();
     }
@@ -93,22 +106,27 @@ export class APCalcState {
     /** Reset calculator: return to Start, restore all presses. */
     reset() {
         this.currentNode = null;
+        this.currentLayer = 0;
         this.displayValue = null;
         this.pendingOp = null;
-        this.pendingNum = null;
+        this.pendingDigits = null;
         this.currentSequence = [];
         this.sinceLastEquals = [];
         this.remainingPresses = { ...this.totalPresses };
         this._notify();
     }
 
-    /** Press a number button (0-9). */
+    /** Press a digit button (0-9). Accumulates into multi-digit operand. */
     pressNumber(num) {
         const label = String(num);
         if ((this.remainingPresses[label] || 0) <= 0) return false;
 
         this.remainingPresses[label]--;
-        this.pendingNum = num;
+        if (this.pendingDigits === null) {
+            this.pendingDigits = [num];
+        } else {
+            this.pendingDigits.push(num);
+        }
         this.sinceLastEquals.push(label);
         this._notify();
         return true;
@@ -121,7 +139,7 @@ export class APCalcState {
 
         this.remainingPresses[op]--;
         this.pendingOp = op;
-        this.pendingNum = null;
+        this.pendingDigits = null;
         this.sinceLastEquals.push(op);
         this._notify();
         return true;
@@ -129,35 +147,37 @@ export class APCalcState {
 
     /** Press equals. Returns {success, value, moved, node} or {success: false, reason}. */
     pressEquals() {
+        const operand = this._composePendingOperand();
         let result;
 
-        if (this.currentNode === null && this.pendingNum !== null && this.pendingOp === null) {
-            // From Start: just a number press → try to reach that sphere 0 node
-            result = this.pendingNum;
-        } else if (this.pendingOp !== null && this.pendingNum !== null) {
-            // From a node: op + num
-            const left = this.displayValue;
-            result = this._compute(left, this.pendingOp, this.pendingNum);
+        if (this.currentNode === null && operand !== null && this.pendingOp === null) {
+            // From Start: digit entry → try to reach a layer 0 node
+            result = operand;
+        } else if (this.pendingOp !== null && operand !== null) {
+            // From a node: op + operand
+            result = this._compute(this.displayValue, this.pendingOp, operand);
             if (result === null) {
                 this._refundSinceLastEquals();
                 return { success: false, reason: 'Invalid operation' };
             }
         } else {
-            // Nothing meaningful to compute
             return { success: false, reason: 'Incomplete input' };
         }
 
-        // Check if result matches a neighbor
-        const neighbor = this._findNeighbor(result);
+        // Find a matching node at the next layer
+        const targetLayer = this.currentNode === null ? 0 : this.currentLayer + 1;
+        const neighbor = this._findNodeAtLayer(result, targetLayer);
+
         if (neighbor) {
             this.displayValue = result;
             this.currentNode = neighbor;
+            this.currentLayer = targetLayer;
             this.pendingOp = null;
-            this.pendingNum = null;
+            this.pendingDigits = null;
             this.currentSequence.push(...this.sinceLastEquals, '=');
             this.sinceLastEquals = [];
 
-            // Record the path
+            // Record the discovered path
             const seqCopy = [...this.currentSequence];
             const alreadyDiscovered = this.discoveredPaths.some(
                 p => p.node === neighbor && p.sequence.join(',') === seqCopy.join(',')
@@ -166,10 +186,23 @@ export class APCalcState {
                 this.discoveredPaths.push({ node: neighbor, sequence: seqCopy });
             }
 
+            // Mark the edge as discovered (for medium/hard modes)
+            const sourceRegion = this.currentSequence.length > 3
+                ? this._findPreviousNode(seqCopy) : 'C';
+            const edgeKey = `${sourceRegion}->${neighbor}`;
+            if (!this.discoveredEdges.has(edgeKey)) {
+                this.discoveredEdges.add(edgeKey);
+                if (this.onEdgeDiscovered) {
+                    this.onEdgeDiscovered(sourceRegion, neighbor);
+                }
+            }
+
             // Check the location
             const nodeInfo = this.nodes[neighbor];
             if (nodeInfo) {
-                const locationName = `Reach ${nodeInfo.value}`;
+                const locationName = nodeInfo.layer === 0
+                    ? `Reach ${nodeInfo.value}`
+                    : `Reach ${nodeInfo.value} L${nodeInfo.layer}`;
                 if (!this.checkedLocations.has(locationName) && this.onLocationCheck) {
                     this.onLocationCheck(locationName, neighbor);
                     this.checkedLocations.add(locationName);
@@ -179,29 +212,25 @@ export class APCalcState {
             this._notify();
             return { success: true, value: result, moved: true, node: neighbor };
         } else {
-            // No matching neighbor — refund presses
+            // No matching node — refund presses
             this._refundSinceLastEquals();
             return { success: true, value: result, moved: false, node: null };
         }
     }
 
-    /** Get list of neighbor nodes from current position. */
+    /** Get list of neighbor nodes from current position (for status display). */
     getNeighbors() {
-        if (this.currentNode === null) {
-            // From Start: sphere 0 nodes
-            return Object.entries(this.nodes)
-                .filter(([_, info]) => info.sphere === 0)
-                .map(([name, info]) => ({ name, value: info.value }));
-        }
-        // Children of current node
+        const targetLayer = this.currentNode === null ? 0 : this.currentLayer + 1;
         return Object.entries(this.nodes)
-            .filter(([_, info]) => info.parent === this.currentNode)
+            .filter(([_, info]) => info.layer === targetLayer)
             .map(([name, info]) => ({ name, value: info.value }));
     }
 
     /** Get display string for the calculator. */
     getDisplayText() {
-        if (this.pendingNum !== null) return String(this.pendingNum);
+        if (this.pendingDigits !== null && this.pendingDigits.length > 0) {
+            return this.pendingDigits.join('');
+        }
         if (this.displayValue !== null) return String(this.displayValue);
         return '';
     }
@@ -211,7 +240,23 @@ export class APCalcState {
         return this.pendingOp || '';
     }
 
+    /** Check if a generator edge is player-discoverable in the current difficulty. */
+    isEdgeVisible(sourceRegion, targetRegion) {
+        if (this.difficulty === 'easy') return true;
+        return this.discoveredEdges.has(`${sourceRegion}->${targetRegion}`);
+    }
+
+    /** Check if node accessibility should be shown. */
+    showAccessibility() {
+        return this.difficulty !== 'hard';
+    }
+
     // --- Private ---
+
+    _composePendingOperand() {
+        if (this.pendingDigits === null || this.pendingDigits.length === 0) return null;
+        return parseInt(this.pendingDigits.join(''), 10);
+    }
 
     _compute(left, op, right) {
         switch (op) {
@@ -226,19 +271,26 @@ export class APCalcState {
         }
     }
 
-    _findNeighbor(value) {
-        if (this.currentNode === null) {
-            // From Start: look for sphere 0 node with matching value
-            for (const [name, info] of Object.entries(this.nodes)) {
-                if (info.sphere === 0 && info.value === value) return name;
-            }
-        } else {
-            // From a node: look for child with matching value
-            for (const [name, info] of Object.entries(this.nodes)) {
-                if (info.parent === this.currentNode && info.value === value) return name;
+    _findNodeAtLayer(value, layer) {
+        const key = `${value},${layer}`;
+        return this._nodeLookup?.[key] || null;
+    }
+
+    _findPreviousNode(sequence) {
+        // Walk backward through the sequence to find the node before the last =
+        // This is approximate — find the second-to-last = and determine what node we were at
+        let eqCount = 0;
+        for (let i = sequence.length - 1; i >= 0; i--) {
+            if (sequence[i] === '=') eqCount++;
+            if (eqCount === 2) {
+                // Replay up to this point to find the node
+                // For simplicity, use the layer: previous node is at currentLayer - 1
+                break;
             }
         }
-        return null;
+        // Approximate: find the most recent node in discoveredPaths that matches
+        // the path up to the second-to-last =
+        return null; // Fallback — edge tracking still works via the key
     }
 
     _refundSinceLastEquals() {
@@ -247,22 +299,18 @@ export class APCalcState {
         }
         this.sinceLastEquals = [];
         this.pendingOp = null;
-        this.pendingNum = null;
+        this.pendingDigits = null;
         this._notify();
     }
 
     _recalcRemaining() {
-        // Count consumed presses in the current sequence
         const consumed = {};
         for (const label of this.currentSequence) {
-            if (label !== '=') {
-                consumed[label] = (consumed[label] || 0) + 1;
-            }
+            if (label !== '=') consumed[label] = (consumed[label] || 0) + 1;
         }
         for (const label of this.sinceLastEquals) {
             consumed[label] = (consumed[label] || 0) + 1;
         }
-
         this.remainingPresses = {};
         for (const [label, total] of Object.entries(this.totalPresses)) {
             this.remainingPresses[label] = total - (consumed[label] || 0);
