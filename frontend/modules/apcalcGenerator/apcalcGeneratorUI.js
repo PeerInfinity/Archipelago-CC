@@ -12,12 +12,12 @@ const LS_KEY = 'apcalcGenerator_params';
 
 const DEFAULT_PARAMS = {
     seed: 42,
-    numSpheres: 5,
+    numSpheres: 8,
     opsPerSphere: 1,
-    numsPerSphere: 1,
+    numsPerSphere: 2,
     trashPerSphere: 1,
-    maxBranches: 3,
-    divideSphere: '',  // '' = auto
+    maxBranches: 5,
+    reuseAttempts: 0,  // 0 = auto
 };
 
 export class APCalcGeneratorUI {
@@ -67,10 +67,10 @@ export class APCalcGeneratorUI {
             { key: 'seed', label: 'Seed', type: 'number' },
             { key: 'numSpheres', label: 'Spheres', type: 'number', min: 2, max: 20 },
             { key: 'opsPerSphere', label: 'Ops / sphere', type: 'number', min: 1, max: 5 },
-            { key: 'numsPerSphere', label: 'Nums / sphere', type: 'number', min: 1, max: 5 },
+            { key: 'numsPerSphere', label: 'Digits / sphere', type: 'number', min: 1, max: 5 },
             { key: 'trashPerSphere', label: 'Min trash / sphere', type: 'number', min: 0, max: 10 },
             { key: 'maxBranches', label: 'Max branches', type: 'number', min: 1, max: 10 },
-            { key: 'divideSphere', label: 'Divide sphere', type: 'text', placeholder: 'auto' },
+            { key: 'reuseAttempts', label: 'Reuse edges/sphere', type: 'number', min: 0, max: 50, placeholder: '0=auto' },
         ];
 
         for (const f of fields) {
@@ -193,12 +193,12 @@ export class APCalcGeneratorUI {
         section.appendChild(btnRow);
 
         // Summary
-        const nodeCount = this.generatedRulesJson.regions?.['1']
-            ? Object.keys(this.generatedRulesJson.regions['1']).length - 1  // minus start region
-            : 0;
+        const slotData = this.generatedRulesJson.world?.['1']?.slot_data;
+        const nodeCount = slotData?.nodes ? Object.keys(slotData.nodes).length : 0;
+        const edgeCount = slotData?.edges ? slotData.edges.length : 0;
         const summary = document.createElement('div');
         summary.className = 'apcalc-gen-summary';
-        summary.textContent = `${nodeCount} nodes generated, seed ${this.params.seed}`;
+        summary.textContent = `${nodeCount} nodes, ${edgeCount} edges, seed ${this.params.seed}`;
         section.appendChild(summary);
 
         return section;
@@ -266,7 +266,7 @@ export class APCalcGeneratorUI {
             numsPerSphere: this.params.numsPerSphere,
             trashPerSphere: this.params.trashPerSphere,
             maxBranches: this.params.maxBranches,
-            divideSphere: this.params.divideSphere === '' ? null : parseInt(this.params.divideSphere, 10),
+            reuseAttempts: this.params.reuseAttempts || 0,
         };
 
         const log = (msg) => {
