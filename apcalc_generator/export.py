@@ -1,8 +1,8 @@
-"""Export APCalc game data to rules.json format."""
+"""Export APCalc v2 game data to rules.json format."""
 
 import json
 from collections import Counter
-from .generator import Node, TRASH_ITEM, compute_path_cost
+from .generator import Node, Edge, TRASH_ITEM
 
 
 def make_has_rule(item_name: str, count: int = 1) -> dict:
@@ -20,13 +20,44 @@ def make_and_rule(children: list[dict]) -> dict:
     return {'rule': 'And', 'children': children}
 
 
+def make_or_rule(children: list[dict]) -> dict:
+    if len(children) == 0:
+        return {'rule': 'True_'}
+    if len(children) == 1:
+        return children[0]
+    return {'rule': 'Or', 'children': children}
+
+
 def path_cost_to_rule(path_cost: Counter) -> dict:
     """Convert a button-press cost Counter to an access rule."""
     rules = []
     for button in sorted(path_cost):
         count = path_cost[button]
-        rules.append(make_has_rule(f'Button: {button}', count))
+        if count > 0:
+            rules.append(make_has_rule(f'Button: {button}', count))
     return make_and_rule(rules)
+
+
+def path_costs_to_rule(path_costs: list[Counter]) -> dict:
+    """Convert multiple alternative path costs to an Or-of-And rule."""
+    if not path_costs:
+        return {'rule': 'True_'}
+    if len(path_costs) == 1:
+        return path_cost_to_rule(path_costs[0])
+
+    # Deduplicate identical path costs
+    unique = []
+    seen = set()
+    for pc in path_costs:
+        key = tuple(sorted(pc.items()))
+        if key not in seen:
+            seen.add(key)
+            unique.append(pc)
+
+    if len(unique) == 1:
+        return path_cost_to_rule(unique[0])
+
+    return make_or_rule([path_cost_to_rule(pc) for pc in unique])
 
 
 def button_item_name(button: str) -> str:
@@ -34,11 +65,12 @@ def button_item_name(button: str) -> str:
 
 
 def export_rules_json(game_data: dict) -> dict:
-    """Convert generated APCalc data to a complete rules.json dict."""
+    """Convert generated APCalc v2 data to a complete rules.json dict."""
     nodes: list[Node] = game_data['nodes']
+    edges: list[Edge] = game_data['edges']
     starting_buttons: dict[str, int] = game_data['starting_buttons']
 
-    # Collect all unique button items used in the game (excluding trash)
+    # Collect all unique button items (excluding trash)
     all_button_labels: set[str] = set()
     trash_count = 0
     for node in nodes:
@@ -49,7 +81,7 @@ def export_rules_json(game_data: dict) -> dict:
     for label in starting_buttons:
         all_button_labels.add(label)
 
-    # Count item occurrences for the pool (excludes starting items)
+    # Count item occurrences for the pool
     pool_counts: Counter = Counter()
     for node in nodes:
         if node.item and node.item != TRASH_ITEM:
@@ -57,45 +89,52 @@ def export_rules_json(game_data: dict) -> dict:
     if trash_count > 0:
         pool_counts[TRASH_ITEM] = trash_count
 
-    # Build regions
+    # --- Build regions ---
     regions = {}
 
-    # Menu region: exits to all sphere 0 nodes
+    # Index edges by source
+    edges_by_source: dict[int | None, list[Edge]] = {}
+    for edge in edges:
+        edges_by_source.setdefault(edge.source_index, []).append(edge)
+
+    # Start region "C": exits to all layer 0 nodes
     menu_exits = []
-    for node in nodes:
-        if node.sphere == 0:
-            cost = compute_path_cost(node, nodes)
-            menu_exits.append({
-                'name': f'Menu to {node.region_name}',
-                'connected_region': node.region_name,
-                'access_rule': path_cost_to_rule(cost),
-            })
+    for edge in edges_by_source.get(None, []):
+        target = nodes[edge.target_index]
+        menu_exits.append({
+            'name': f'C to {target.region_name}',
+            'connected_region': target.region_name,
+            'access_rule': path_costs_to_rule(edge.path_costs),
+        })
     regions['C'] = {
         'name': 'C',
         'exits': menu_exits,
         'locations': [],
     }
 
-    # Build child index: parent_index -> list of child nodes
-    children_by_parent: dict[int, list[Node]] = {}
-    for node in nodes:
-        if node.parent_index is not None:
-            children_by_parent.setdefault(node.parent_index, []).append(node)
-
-    # Node regions — each gets a check location + a locked "Checked" event
+    # Node regions
     all_checked_events = []
     for node in nodes:
+        # Build exits from this node
         exits = []
-        children = children_by_parent.get(node.index, [])
-        for child in children:
-            cost = compute_path_cost(child, nodes)
+        # Group edges by target for one exit per target
+        target_edges: dict[int, list[Edge]] = {}
+        for edge in edges_by_source.get(node.index, []):
+            target_edges.setdefault(edge.target_index, []).append(edge)
+
+        for target_idx, tedges in target_edges.items():
+            target = nodes[target_idx]
+            # Collect all path costs across all edges to this target
+            all_costs = []
+            for te in tedges:
+                all_costs.extend(te.path_costs)
             exits.append({
-                'name': f'{node.region_name} to {child.region_name}',
-                'connected_region': child.region_name,
-                'access_rule': path_cost_to_rule(cost),
+                'name': f'{node.region_name} to {target.region_name}',
+                'connected_region': target.region_name,
+                'access_rule': path_costs_to_rule(all_costs),
             })
 
-        # Regular check location
+        # Location + checked event
         is_trash = node.item == TRASH_ITEM
         item_name = TRASH_ITEM if is_trash else button_item_name(node.item)
         event_name = f'Checked {node.location_name}'
@@ -104,7 +143,7 @@ def export_rules_json(game_data: dict) -> dict:
         locations = [
             {
                 'name': node.location_name,
-                'id': node.index + 1,  # 1-based IDs
+                'id': node.index + 1,
                 'access_rule': {'rule': 'True_'},
                 'item': {
                     'name': item_name,
@@ -135,7 +174,7 @@ def export_rules_json(game_data: dict) -> dict:
             'locations': locations,
         }
 
-    # Victory event on the start region, requiring all locations checked
+    # Victory event requiring all locations checked
     goal_rule = make_and_rule([
         make_has_rule(evt) for evt in all_checked_events
     ])
@@ -153,7 +192,7 @@ def export_rules_json(game_data: dict) -> dict:
         'event': True,
     })
 
-    # Build items dict
+    # --- Build items ---
     items = {}
     item_id = 1
     for label in sorted(all_button_labels):
@@ -180,7 +219,6 @@ def export_rules_json(game_data: dict) -> dict:
         }
         item_id += 1
 
-    # Checked event items (one per node)
     for evt in all_checked_events:
         items[evt] = {
             'name': evt,
@@ -202,30 +240,38 @@ def export_rules_json(game_data: dict) -> dict:
         'max_count': 1,
     }
 
-    # Build itempool_counts (pool items only, not starting items)
+    # --- Itempool, starting items ---
     itempool_counts = dict(pool_counts)
     for evt in all_checked_events:
         itempool_counts[evt] = 1
     itempool_counts['Victory'] = 1
 
-    # Build starting_items list
     starting_items_list = []
     for label, count in sorted(starting_buttons.items()):
         for _ in range(count):
             starting_items_list.append(button_item_name(label))
 
-    # Build slot_data with node info and button sequences
+    # --- Slot data ---
     slot_nodes = {}
     for node in nodes:
         slot_nodes[node.region_name] = {
             'value': node.value,
-            'parent': nodes[node.parent_index].region_name if node.parent_index is not None else None,
+            'layer': node.layer,
             'sphere': node.sphere,
-            'operation': node.operation,
-            'operand': node.operand,
-            'button_sequence': node.button_sequence,
             'item': node.item,
         }
+
+    slot_edges = []
+    for edge in edges:
+        source_name = nodes[edge.source_index].region_name if edge.source_index is not None else 'C'
+        target_name = nodes[edge.target_index].region_name
+        slot_edges.append({
+            'source': source_name,
+            'target': target_name,
+            'operation': edge.operation,
+            'operand': edge.operand,
+            'operand_digits': edge.operand_digits,
+        })
 
     config = game_data['config']
 
@@ -263,6 +309,7 @@ def export_rules_json(game_data: dict) -> dict:
                 ),
                 'slot_data': {
                     'nodes': slot_nodes,
+                    'edges': slot_edges,
                     'starting_buttons': starting_buttons,
                     'operations': ['+', '-', '*', '/'],
                     'num_spheres': config.num_spheres,

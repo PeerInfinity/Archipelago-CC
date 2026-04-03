@@ -1,13 +1,15 @@
-"""Core APCalc generation algorithm.
+"""Core APCalc v2 generation algorithm.
 
-Generates a graph of target-number nodes organized into spheres.
-Each node is a region with one location (check). Items are calculator buttons.
+Generates a layered graph of target-number nodes organized into spheres.
+Nodes are (value, layer) pairs. Multiple edges to the same node are encouraged.
 Button presses are consumed per path; Clear restores all presses.
 
-Key behaviors:
-- Path extension: chains extend until only 1 operation button remains
-- Division planning: `/` is placed in a planned sphere with pre-built divisible paths
-- Trash items: intermediate chain nodes get filler items
+Key behaviors (v2):
+- Layer-based structure: nodes gated by equals-press depth
+- Multi-digit operands: digits composed from individual button items
+- Multi-path nodes: same (value, layer) reachable via different routes
+- One new operation per sphere for first four spheres (+, -, *, /)
+- Reuse edges: after chains, add alternative paths to existing nodes
 - Detailed logging via callback
 """
 
@@ -16,6 +18,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 
 OPERATIONS = ['+', '-', '*', '/']
+OPERATION_ORDER = ['+', '-', '*', '/']  # introduction order across spheres 0-3
 TRASH_ITEM = 'Junk'
 
 
@@ -23,56 +26,60 @@ TRASH_ITEM = 'Junk'
 class Node:
     index: int
     value: int
-    parent_index: int | None
-    sphere: int
-    operation: str | None       # op used from parent to reach this node
-    operand: int | None         # number button used from parent to reach this node
-    button_sequence: list[str]  # full sequence from Start, e.g. ["3", "=", "+", "7", "="]
-    item: str = ''              # button awarded at this location, assigned after creation
+    layer: int                  # number of = presses from Start
+    sphere: int                 # which generation sphere created this node
+    item: str = ''
+    path_costs: list = field(default_factory=list)  # list[Counter] full paths from Start
 
     @property
     def region_name(self):
-        return f"Node {self.value}"
+        if self.layer == 0:
+            return f"Node {self.value}"
+        return f"Node {self.value} L{self.layer}"
 
     @property
     def location_name(self):
-        return f"Reach {self.value}"
+        if self.layer == 0:
+            return f"Reach {self.value}"
+        return f"Reach {self.value} L{self.layer}"
+
+
+@dataclass
+class Edge:
+    index: int
+    source_index: int | None    # None for Start → layer 0
+    target_index: int
+    operation: str | None       # None for layer 0 (digit entry)
+    operand: int | None
+    operand_digits: list[int]   # individual digits for cost
+    sphere: int
+    path_costs: list = field(default_factory=list)  # list[Counter]
 
 
 @dataclass
 class APCalcConfig:
-    num_spheres: int = 5
+    num_spheres: int = 8
     ops_per_sphere: int = 1
-    nums_per_sphere: int = 1
+    nums_per_sphere: int = 2
     trash_per_sphere: int = 1
-    max_branches: int = 3
+    max_branches: int = 5
     seed: int = 42
-    divide_sphere: int | None = None  # auto-pick if None (sphere 2+ preferred)
+    reuse_attempts: int = 0     # reuse edges per sphere (0 = auto based on node count)
 
 
-def compute_path_cost(node: Node, nodes: list[Node]) -> Counter:
-    """Compute total button press counts for the entire path from Start to node."""
-    cost = Counter()
-    current = node
-    while current is not None:
-        if current.parent_index is None:
-            cost[str(current.value)] += 1
-        else:
-            cost[current.operation] += 1
-            cost[str(current.operand)] += 1
-        current = nodes[current.parent_index] if current.parent_index is not None else None
-    return cost
-
+# ---------------------------------------------------------------------------
+# Utility
+# ---------------------------------------------------------------------------
 
 def apply_op(parent_value: int, op: str, num: int) -> int | None:
     """Apply operation. Returns result or None if invalid."""
     if op == '+':
         return parent_value + num
-    elif op == '-':
+    if op == '-':
         return parent_value - num
-    elif op == '*':
+    if op == '*':
         return parent_value * num
-    elif op == '/':
+    if op == '/':
         if num == 0:
             return None
         if parent_value % num != 0:
@@ -81,14 +88,100 @@ def apply_op(parent_value: int, op: str, num: int) -> int | None:
     return None
 
 
+def reverse_op(parent_value: int, target_value: int, op: str) -> int | None:
+    """Compute operand such that parent OP operand = target.
+
+    Returns non-negative int or None.
+    """
+    if op == '+':
+        operand = target_value - parent_value
+    elif op == '-':
+        operand = parent_value - target_value
+    elif op == '*':
+        if parent_value == 0:
+            return 0 if target_value == 0 else None
+        if target_value % parent_value != 0:
+            return None
+        operand = target_value // parent_value
+    elif op == '/':
+        if target_value == 0:
+            return None
+        if parent_value % target_value != 0:
+            return None
+        operand = parent_value // target_value
+        if operand == 0:
+            return None
+    else:
+        return None
+
+    return operand if operand >= 0 else None
+
+
+def compose_operand(
+    available_digits: list[int], rng: random.Random,
+    target_avg: int, remaining: Counter,
+) -> tuple[int, list[int]] | None:
+    """Compose a multi-digit operand from available digits.
+
+    Returns (operand_value, chosen_digits) or None.
+    """
+    if not available_digits:
+        return None
+
+    max_possible = sum(remaining[str(d)] for d in set(available_digits))
+    if max_possible == 0:
+        return None
+
+    # Pick digit count: 1 to 2*target_avg, capped by budget
+    if target_avg <= 1:
+        num_digits = 1
+    else:
+        upper = min(max_possible, target_avg * 2)
+        num_digits = rng.randint(1, max(1, upper))
+
+    # Pick digits respecting budget
+    chosen = []
+    temp = Counter(remaining)
+    for _ in range(num_digits):
+        candidates = [d for d in available_digits if temp[str(d)] > 0]
+        if not candidates:
+            break
+        d = rng.choice(candidates)
+        chosen.append(d)
+        temp[str(d)] -= 1
+
+    if not chosen:
+        return None
+
+    # Avoid leading zeros for multi-digit operands
+    if len(chosen) > 1 and chosen[0] == 0:
+        for i in range(1, len(chosen)):
+            if chosen[i] != 0:
+                chosen[0], chosen[i] = chosen[i], chosen[0]
+                break
+        else:
+            chosen = [0]  # all zeros → single 0
+
+    operand = int(''.join(str(d) for d in chosen))
+    return operand, chosen
+
+
+def operand_digit_cost(digits: list[int]) -> Counter:
+    """Compute button cost for an operand's digits."""
+    cost = Counter()
+    for d in digits:
+        cost[str(d)] += 1
+    return cost
+
+
+# ---------------------------------------------------------------------------
+# Main generation
+# ---------------------------------------------------------------------------
+
 def generate(config: APCalcConfig, log=None) -> dict:
-    """Generate APCalc game data.
+    """Generate APCalc v2 game data.
 
-    Args:
-        config: Generation parameters.
-        log: Optional callback(message: str) for detailed logging.
-
-    Returns dict with keys: nodes, starting_buttons, sphere_items, config, log_entries.
+    Returns dict with keys: nodes, edges, starting_buttons, sphere_items, config.
     """
     if log is None:
         log_entries = []
@@ -99,22 +192,18 @@ def generate(config: APCalcConfig, log=None) -> dict:
     rng = random.Random(config.seed)
 
     nodes: list[Node] = []
-    node_values: set[int] = set()
+    edges: list[Edge] = []
+    node_lookup: dict[tuple[int, int], int] = {}   # (value, layer) → node index
+    outgoing_counts: Counter = Counter()             # node_index → count
     inventory = Counter()
     sphere_items: dict[int, list[str]] = {}
 
-    # --- Pre-plan division sphere ---
-    divide_sphere = config.divide_sphere
-    if divide_sphere is None:
-        divide_sphere = min(2, config.num_spheres - 1) if config.num_spheres > 2 else None
-    if divide_sphere is not None and divide_sphere < 1:
-        divide_sphere = max(1, divide_sphere)  # never sphere 0
-    log(f'=== Pre-planning ===')
-    log(f'  Divide sphere: {divide_sphere}')
+    log('=== Pre-planning ===')
     log(f'  Spheres: {config.num_spheres}, ops/sphere: {config.ops_per_sphere}, '
         f'nums/sphere: {config.nums_per_sphere}, trash/sphere: {config.trash_per_sphere}')
+    log(f'  Operation order: {OPERATION_ORDER[:min(config.num_spheres, len(OPERATION_ORDER))]}')
 
-    # --- Sphere 0: single-digit nodes ---
+    # --- Sphere 0: single-digit layer-0 nodes ---
     sphere_0_count = config.ops_per_sphere + config.nums_per_sphere + config.trash_per_sphere
     sphere_0_count = min(sphere_0_count, 10)
 
@@ -125,22 +214,27 @@ def generate(config: APCalcConfig, log=None) -> dict:
 
     for i in range(sphere_0_count):
         value = available_digits[i]
-        node = Node(
-            index=len(nodes), value=value, parent_index=None, sphere=0,
-            operation=None, operand=None, button_sequence=[str(value), '='],
-        )
+        path_cost = Counter({str(value): 1})
+
+        node = Node(index=len(nodes), value=value, layer=0, sphere=0)
+        node.path_costs.append(path_cost)
         nodes.append(node)
-        node_values.add(value)
+        node_lookup[(value, 0)] = node.index
+
+        edge = Edge(
+            index=len(edges), source_index=None, target_index=node.index,
+            operation=None, operand=value, operand_digits=[value], sphere=0,
+        )
+        edge.path_costs.append(path_cost)
+        edges.append(edge)
+
         inventory[str(value)] += 1
-        log(f'  Node {node.index}: value={value}, sequence=[{value}, =], connected to Start')
+        log(f'  Node {node.index}: value={value}, layer=0, connected to Start')
 
     log(f'  Starting inventory: {dict(inventory)}')
 
-    # Assign sphere 0 items (no / allowed)
-    s0_items = _assign_items_for_sphere(
-        sphere=0, count=sphere_0_count, config=config,
-        divide_sphere=divide_sphere, rng=rng, log=log,
-    )
+    # Assign sphere 0 items
+    s0_items = _assign_items_for_sphere(0, sphere_0_count, config, rng)
     sphere_items[0] = s0_items
     for item in s0_items:
         inventory[item] += 1
@@ -154,20 +248,15 @@ def generate(config: APCalcConfig, log=None) -> dict:
         is_final = (sphere == config.num_spheres - 1)
 
         if is_final:
-            # Final sphere: all trash, focused on consuming remaining buttons
-            items_for_sphere = []
             real_items = []
-            trash_count_target = 1  # minimum; chains will extend to use all ops
-            target_count = trash_count_target
+            trash_count_target = 1
+            target_count = 1
         else:
-            # Determine items for this sphere
             target_count = config.ops_per_sphere + config.nums_per_sphere + config.trash_per_sphere
-            items_for_sphere = _assign_items_for_sphere(
-                sphere=sphere, count=target_count, config=config,
-                divide_sphere=divide_sphere, rng=rng, log=log,
-            )
+            items_for_sphere = _assign_items_for_sphere(sphere, target_count, config, rng)
             real_items = [it for it in items_for_sphere if it != TRASH_ITEM]
             trash_count_target = items_for_sphere.count(TRASH_ITEM)
+
         log(f'\n=== Sphere {sphere} (target: {target_count} locations, '
             f'real items: {real_items}, trash: {trash_count_target}'
             f'{", FINAL" if is_final else ""}) ===')
@@ -175,25 +264,40 @@ def generate(config: APCalcConfig, log=None) -> dict:
         sphere_node_indices = []
         trash_created = 0
 
-        # Before the divide sphere, ensure divisible paths exist
-        if divide_sphere is not None and sphere == divide_sphere:
-            _ensure_divisible_paths(nodes, node_values, inventory,
-                                    sphere_items, sphere, config, rng, log)
+        # Division planning: ensure divisible paths before first sphere that can use /
+        # / is awarded in sphere 3 (index 3), first usable in sphere 4
+        if sphere == min(4, config.num_spheres - 1) and len(OPERATION_ORDER) >= 4:
+            _ensure_divisible_paths(
+                nodes, edges, node_lookup, outgoing_counts,
+                inventory, sphere, config, rng, log,
+            )
 
         if is_final:
-            # Final sphere: keep generating single-step trash nodes until
-            # no more can be created, to use up all remaining buttons
-            log(f'  Generating final sphere chains to consume remaining buttons...')
+            max_new_nodes = len(nodes)  # don't more than double existing graph
+            log(f'  Generating final sphere (max {max_new_nodes} new nodes)...')
             log(f'  Inventory at start: {dict(inventory)}')
+
+            # Phase 1: aggressively add reuse edges to consume buttons
+            reuse_added = 0
+            reuse_max_attempts = max_new_nodes * 10
+            for _ in range(reuse_max_attempts):
+                if _try_add_reuse_edge(
+                    nodes, edges, node_lookup, outgoing_counts,
+                    inventory, sphere_items, sphere, config, rng, log,
+                ):
+                    reuse_added += 1
+            log(f'  Final sphere reuse edges: {reuse_added}')
+
+            # Phase 2: create new trash nodes up to the cap
             consecutive_failures = 0
             max_failures = 500
             total_attempts = 0
             chains_created = 0
-            while consecutive_failures < max_failures:
+            while consecutive_failures < max_failures and trash_created < max_new_nodes:
                 total_attempts += 1
                 chain = _generate_chain_partial(
-                    sphere, nodes, node_values, inventory,
-                    sphere_items, config, rng, log,
+                    sphere, nodes, edges, node_lookup, outgoing_counts,
+                    inventory, sphere_items, config, rng, log,
                     is_final_sphere=True,
                 )
                 if not chain:
@@ -201,57 +305,58 @@ def generate(config: APCalcConfig, log=None) -> dict:
                     continue
                 consecutive_failures = 0
                 chains_created += 1
-                for chain_node in chain:
-                    chain_node.item = TRASH_ITEM
-                    nodes.append(chain_node)
-                    node_values.add(chain_node.value)
-                    sphere_node_indices.append(chain_node.index)
+                for cn in chain:
+                    cn.item = TRASH_ITEM
+                    sphere_node_indices.append(cn.index)
                     trash_created += 1
-            # Report unconsumed buttons
-            all_used = Counter()
-            for node in nodes:
-                if node.sphere == sphere:
-                    cost = compute_path_cost(node, nodes)
-                    for btn, cnt in cost.items():
-                        all_used[btn] = max(all_used[btn], cnt)
+                    if trash_created >= max_new_nodes:
+                        break
             log(f'  Final sphere: created {trash_created} nodes in {chains_created} chains '
-                f'({total_attempts} attempts)')
+                f'({total_attempts} attempts), {reuse_added} reuse edges')
         else:
             # Generate chains for each real item
             for item_idx, real_item in enumerate(real_items):
                 log(f'  --- Location {item_idx + 1}/{len(real_items)} (item: {real_item}) ---')
-
                 chain = _generate_chain(
-                    sphere=sphere, nodes=nodes, node_values=node_values,
-                    inventory=inventory, sphere_items=sphere_items,
-                    config=config, rng=rng, log=log,
+                    sphere, nodes, edges, node_lookup, outgoing_counts,
+                    inventory, sphere_items, config, rng, log,
                     real_item=real_item,
                 )
-
-                for i, chain_node in enumerate(chain):
-                    nodes.append(chain_node)
-                    node_values.add(chain_node.value)
-                    sphere_node_indices.append(chain_node.index)
-                    if chain_node.item == TRASH_ITEM:
+                for cn in chain:
+                    sphere_node_indices.append(cn.index)
+                    if cn.item == TRASH_ITEM:
                         trash_created += 1
 
             # Fill remaining trash slots
             while trash_created < trash_count_target:
                 log(f'  --- Filling trash slot {trash_created + 1}/{trash_count_target} ---')
                 chain = _generate_chain(
-                    sphere=sphere, nodes=nodes, node_values=node_values,
-                    inventory=inventory, sphere_items=sphere_items,
-                    config=config, rng=rng, log=log,
+                    sphere, nodes, edges, node_lookup, outgoing_counts,
+                    inventory, sphere_items, config, rng, log,
                     real_item=TRASH_ITEM,
                 )
-                for chain_node in chain:
-                    nodes.append(chain_node)
-                    node_values.add(chain_node.value)
-                    sphere_node_indices.append(chain_node.index)
-                    if chain_node.item == TRASH_ITEM:
+                for cn in chain:
+                    sphere_node_indices.append(cn.index)
+                    if cn.item == TRASH_ITEM:
                         trash_created += 1
 
-        # Record sphere items (all items for all nodes in this sphere)
+            # Add reuse edges for graph density
+            reuse_count = config.reuse_attempts
+            if reuse_count == 0:
+                reuse_count = max(1, len(sphere_node_indices) // 2)
+            reuse_added = 0
+            for _ in range(reuse_count * 5):  # allow some failures
+                if reuse_added >= reuse_count:
+                    break
+                if _try_add_reuse_edge(
+                    nodes, edges, node_lookup, outgoing_counts,
+                    inventory, sphere_items, sphere, config, rng, log,
+                ):
+                    reuse_added += 1
+            if reuse_added > 0:
+                log(f'  Reuse edges added: {reuse_added}')
+
+        # Record sphere items
         all_items = [nodes[idx].item for idx in sphere_node_indices]
         sphere_items[sphere] = all_items
         for item in all_items:
@@ -259,7 +364,8 @@ def generate(config: APCalcConfig, log=None) -> dict:
                 inventory[item] += 1
         actual_count = len(sphere_node_indices)
         if actual_count != target_count:
-            log(f'  Sphere {sphere} complete: {actual_count} nodes (target was {target_count}), items={all_items}')
+            log(f'  Sphere {sphere} complete: {actual_count} nodes (target was {target_count}), '
+                f'items={all_items}')
         else:
             log(f'  Sphere {sphere} complete: {actual_count} nodes, items={all_items}')
         log(f'  Inventory after sphere {sphere}: {dict(inventory)}')
@@ -267,12 +373,13 @@ def generate(config: APCalcConfig, log=None) -> dict:
     # Build starting buttons
     starting_buttons: dict[str, int] = {}
     for node in nodes:
-        if node.sphere == 0:
+        if node.layer == 0 and node.sphere == 0:
             key = str(node.value)
             starting_buttons[key] = starting_buttons.get(key, 0) + 1
 
     result = {
         'nodes': nodes,
+        'edges': edges,
         'starting_buttons': starting_buttons,
         'sphere_items': sphere_items,
         'config': config,
@@ -280,42 +387,37 @@ def generate(config: APCalcConfig, log=None) -> dict:
     if log_entries is not None:
         result['log_entries'] = log_entries
 
-    log(f'\n=== Generation complete: {len(nodes)} nodes ===')
+    log(f'\n=== Generation complete: {len(nodes)} nodes, {len(edges)} edges ===')
     return result
 
 
+# ---------------------------------------------------------------------------
+# Item assignment
+# ---------------------------------------------------------------------------
+
 def _assign_items_for_sphere(
-    sphere: int, count: int, config: APCalcConfig,
-    divide_sphere: int | None, rng: random.Random, log,
+    sphere: int, count: int, config: APCalcConfig, rng: random.Random,
 ) -> list[str]:
     """Assign button items for a sphere's locations.
 
-    Returns list of item labels. Guaranteed at least 1 operation (+ or -).
-    Division (/) only appears in the designated divide_sphere.
+    Spheres 0-3 each introduce one new operation in OPERATION_ORDER.
+    Later spheres award random duplicate operations.
     """
     items = []
 
-    # Operations
-    ops_count = config.ops_per_sphere
-    for i in range(ops_count):
-        if sphere == 0:
-            # Sphere 0: only + or -
-            items.append(rng.choice(['+', '-']))
-        elif divide_sphere is not None and sphere == divide_sphere and i == 0:
-            # Divide sphere: first op is /
-            items.append('/')
-        else:
-            # Guarantee first op is + or - for reliability
+    for i in range(config.ops_per_sphere):
+        if sphere < len(OPERATION_ORDER):
             if i == 0:
-                items.append(rng.choice(['+', '-']))
+                items.append(OPERATION_ORDER[sphere])
             else:
-                items.append(rng.choice([op for op in OPERATIONS if op != '/']))
+                available = OPERATION_ORDER[:sphere + 1]
+                items.append(rng.choice(available))
+        else:
+            items.append(rng.choice(OPERATIONS))
 
-    # Numbers
     for _ in range(config.nums_per_sphere):
         items.append(str(rng.randint(0, 9)))
 
-    # Trash
     for _ in range(config.trash_per_sphere):
         items.append(TRASH_ITEM)
 
@@ -323,310 +425,549 @@ def _assign_items_for_sphere(
     return items
 
 
-def _generate_chain(
-    sphere: int, nodes: list[Node], node_values: set[int],
-    inventory: Counter, sphere_items: dict[int, list[str]],
-    config: APCalcConfig, rng: random.Random, log,
-    real_item: str,
-    is_final_sphere: bool = False,
-) -> list[Node]:
-    """Generate a chain of nodes from a parent.
+# ---------------------------------------------------------------------------
+# Chain generation
+# ---------------------------------------------------------------------------
 
-    Extends until only 1 operation button remains in the path budget
-    (or 0 if is_final_sphere, to use all remaining buttons).
-    Intermediate nodes get trash items; the final node gets real_item.
+def _pick_step(
+    chain_parent: Node, chain_remaining: Counter,
+    available_ops: list[str], available_digits: list[int],
+    config: APCalcConfig, rng: random.Random,
+) -> tuple[str, int, list[int], int | None] | None:
+    """Pick an operation + operand for one chain step.
+
+    Returns (op, operand, operand_digits, result_value) or None.
+    """
+    op = rng.choice(available_ops)
+    result = compose_operand(available_digits, rng, config.nums_per_sphere, chain_remaining)
+    if result is None:
+        return None
+    operand, operand_digits = result
+
+    # Check we have budget for op + digits
+    test_remaining = Counter(chain_remaining)
+    test_remaining[op] -= 1
+    if test_remaining[op] < 0:
+        return None
+    for d in operand_digits:
+        test_remaining[str(d)] -= 1
+        if test_remaining[str(d)] < 0:
+            return None
+
+    target_value = apply_op(chain_parent.value, op, operand)
+    if target_value is None:
+        return None
+
+    return op, operand, operand_digits, target_value
+
+
+def _generate_chain(
+    sphere: int, nodes: list[Node], edges: list[Edge],
+    node_lookup: dict, outgoing_counts: Counter,
+    inventory: Counter, sphere_items: dict,
+    config: APCalcConfig, rng: random.Random, log,
+    real_item: str, is_final_sphere: bool = False,
+) -> list[Node]:
+    """Generate a chain of new nodes from a parent.
+
+    Each step creates a new (value, layer) node. Intermediate nodes get trash;
+    the final node gets real_item. Retries on (value, layer) collision.
+    Returns list of newly created nodes.
     """
     max_attempts = 500
 
     for attempt in range(max_attempts):
         parent = rng.choice(nodes)
 
-        # Respect max branches
-        children_count = sum(1 for n in nodes if n.parent_index == parent.index)
-        if children_count >= config.max_branches:
+        if outgoing_counts[parent.index] >= config.max_branches:
             continue
 
-        path_cost = compute_path_cost(parent, nodes)
-        remaining = inventory - path_cost
+        if not parent.path_costs:
+            continue
+        parent_cost = rng.choice(parent.path_costs)
+        remaining = inventory - parent_cost
 
         available_ops = [op for op in OPERATIONS if remaining[op] > 0]
-        available_nums = [n for n in range(10) if remaining[str(n)] > 0]
-
-        if not available_ops or not available_nums:
+        available_digits = [d for d in range(10) if remaining[str(d)] > 0]
+        if not available_ops or not available_digits:
             continue
 
-        # Sphere constraint: first step must use an item from previous sphere
+        # Sphere constraint: first step must use item from previous sphere
         prev_items = sphere_items.get(sphere - 1, [])
-        first_op = rng.choice(available_ops)
-        first_num = rng.choice(available_nums)
-        if first_op not in prev_items and str(first_num) not in prev_items:
+        if prev_items:
+            prev_ops = [op for op in available_ops if op in prev_items]
+            prev_digits = [d for d in available_digits if str(d) in prev_items]
+            if not prev_ops and not prev_digits:
+                continue
+            # Bias first step toward prev sphere items
+            if prev_ops and (not prev_digits or rng.random() < 0.5):
+                first_op = rng.choice(prev_ops)
+            else:
+                first_op = rng.choice(available_ops)
+            first_result = compose_operand(available_digits, rng, config.nums_per_sphere, remaining)
+            if first_result is None:
+                continue
+            first_operand, first_digits = first_result
+            # Verify constraint
+            has_prev = first_op in prev_items or any(str(d) in prev_items for d in first_digits)
+            if not has_prev:
+                continue
+        else:
+            first_op = rng.choice(available_ops)
+            first_result = compose_operand(available_digits, rng, config.nums_per_sphere, remaining)
+            if first_result is None:
+                continue
+            first_operand, first_digits = first_result
+
+        # Check first step is valid
+        first_value = apply_op(parent.value, first_op, first_operand)
+        if first_value is None:
             continue
 
-        # Compute chain length: extend until 1 op remains
+        # Compute chain length
         total_ops = sum(remaining[op] for op in OPERATIONS)
-        total_nums = sum(remaining[str(n)] for n in range(10) if remaining[str(n)] > 0)
-        # We use (total_ops - 1) ops in the chain, but need at least 1 step
+        total_digits = sum(max(0, remaining[str(d)]) for d in range(10))
         reserve_ops = 0 if is_final_sphere else 1
-        chain_target = max(1, min(total_ops - reserve_ops, total_nums))
+        avg_digits_per_step = max(1, config.nums_per_sphere)
+        chain_target = max(1, min(total_ops - reserve_ops, total_digits // avg_digits_per_step))
 
-        log(f'    Parent: {parent.region_name} (sphere {parent.sphere}), '
-            f'path: {" ".join(parent.button_sequence)}')
-        log(f'    Path cost: {dict(path_cost)}')
-        log(f'    Remaining: ops={total_ops}, nums={total_nums}')
+        log(f'    Parent: {parent.region_name} (sphere {parent.sphere}, layer {parent.layer})')
+        log(f'    Path cost: {dict(parent_cost)}')
+        log(f'    Remaining: ops={total_ops}, digits={total_digits}')
         log(f'    Chain target: {chain_target} nodes '
             f'({chain_target - 1} trash + 1 real)')
 
-        # Try to build the chain
+        # Build chain
         chain_nodes = []
-        chain_remaining = remaining.copy()
+        chain_edges = []
+        chain_remaining = Counter(remaining)
+        chain_cost = Counter(parent_cost)
         chain_parent = parent
-        chain_values = set(node_values)
+        chain_used_keys: set[tuple[int, int]] = set()  # (value, layer) created in this chain
         success = True
 
         for step in range(chain_target):
             is_last = (step == chain_target - 1)
 
-            # Pick op and num from chain_remaining
             step_ops = [op for op in OPERATIONS if chain_remaining[op] > 0]
-            step_nums = [n for n in range(10) if chain_remaining[str(n)] > 0]
-
-            if not step_ops or not step_nums:
-                log(f'    Chain broke at step {step}: no ops/nums available')
+            step_digits = [d for d in range(10) if chain_remaining[str(d)] > 0]
+            if not step_ops or not step_digits:
+                log(f'    Chain broke at step {step}: no ops/digits available')
                 success = False
                 break
 
-            # For the first step, use the pre-validated op/num
+            # Pick op and operand
             if step == 0:
-                op, num = first_op, first_num
+                op, operand, op_digits = first_op, first_operand, first_digits
+                target_value = first_value
             else:
-                op = rng.choice(step_ops)
-                num = rng.choice(step_nums)
+                step_result = _pick_step(
+                    chain_parent, chain_remaining,
+                    step_ops, step_digits, config, rng,
+                )
+                if step_result is None:
+                    log(f'    Chain broke at step {step}: could not pick step')
+                    success = False
+                    break
+                op, operand, op_digits, target_value = step_result
 
-            child_value = apply_op(chain_parent.value, op, num)
+            target_layer = chain_parent.layer + 1
+            key = (target_value, target_layer)
 
-            # Retry this step if invalid
+            # Retry if collision (must create new nodes)
             step_retries = 50
-            while (child_value is None or child_value in chain_values) and step_retries > 0:
-                op = rng.choice(step_ops)
-                num = rng.choice(step_nums)
-                child_value = apply_op(chain_parent.value, op, num)
+            while (key in node_lookup or key in chain_used_keys) and step_retries > 0:
+                step_result = _pick_step(
+                    chain_parent, chain_remaining,
+                    step_ops, step_digits, config, rng,
+                )
+                if step_result is None:
+                    break
+                op, operand, op_digits, target_value = step_result
+                key = (target_value, chain_parent.layer + 1)
                 step_retries -= 1
 
-            if child_value is None or child_value in chain_values:
-                log(f'    Chain broke at step {step}: no valid value found')
+            if key in node_lookup or key in chain_used_keys or target_value is None:
+                log(f'    Chain broke at step {step}: no unique value found')
                 success = False
                 break
 
+            # Compute costs
+            inc_cost = Counter({op: 1})
+            inc_cost += operand_digit_cost(op_digits)
+            new_path_cost = chain_cost + inc_cost
+
+            # Create tentative node and edge
             item = real_item if is_last else TRASH_ITEM
-            sequence = chain_parent.button_sequence + [op, str(num), '=']
             new_node = Node(
                 index=len(nodes) + len(chain_nodes),
-                value=child_value,
-                parent_index=chain_parent.index if step == 0 else chain_nodes[-1].index,
-                sphere=sphere,
-                operation=op,
-                operand=num,
-                button_sequence=sequence,
+                value=target_value, layer=target_layer, sphere=sphere,
                 item=item,
             )
+            new_node.path_costs.append(new_path_cost)
             chain_nodes.append(new_node)
-            chain_values.add(child_value)
+            chain_used_keys.add(key)
+
+            new_edge = Edge(
+                index=len(edges) + len(chain_edges),
+                source_index=chain_parent.index if step == 0 else chain_nodes[-2].index,
+                target_index=new_node.index,
+                operation=op, operand=operand, operand_digits=list(op_digits),
+                sphere=sphere,
+            )
+            new_edge.path_costs.append(new_path_cost)
+            chain_edges.append(new_edge)
+
+            # Consume from budget
             chain_remaining[op] -= 1
-            chain_remaining[str(num)] -= 1
+            for d in op_digits:
+                chain_remaining[str(d)] -= 1
+            chain_cost = new_path_cost
             chain_parent = new_node
 
             item_label = item if item == TRASH_ITEM else f'Button: {item}'
-            log(f'    Step {step}: {op} {num} = {child_value} '
-                f'(item: {item_label})')
+            log(f'    Step {step}: {op} {operand} (digits {op_digits}) = {target_value} '
+                f'L{target_layer} (item: {item_label})')
 
         if success and chain_nodes:
-            # Fix indices (they were tentative)
-            base_index = len(nodes)
+            # Fix indices and commit
+            base_node = len(nodes)
+            base_edge = len(edges)
+
             for i, cn in enumerate(chain_nodes):
-                cn.index = base_index + i
+                cn.index = base_node + i
+            for i, ce in enumerate(chain_edges):
+                ce.index = base_edge + i
+                if ce.source_index is not None and ce.source_index >= base_node:
+                    ce.source_index = base_node + (ce.source_index - (base_node - len(chain_nodes)) - len(chain_nodes))
+                # Fix target index
+                for j, cn in enumerate(chain_nodes):
+                    if ce.target_index == base_node - len(chain_nodes) + len(chain_nodes) + j:
+                        pass  # already correct if we used tentative indices
+
+            # Simpler: rebuild references
+            old_to_new = {}
+            for i, cn in enumerate(chain_nodes):
+                old_idx = len(nodes) - len(chain_nodes) + len(chain_nodes) + i  # tentative
+                old_to_new[base_node - len(chain_nodes) + len(chain_nodes) + i] = base_node + i
+
+            # Actually, tentative indices were already len(nodes) + i at creation time,
+            # and len(nodes) hasn't changed yet, so they should be correct.
+            # Just verify source_index references within the chain are correct.
+            for i, ce in enumerate(chain_edges):
                 if i > 0:
-                    cn.parent_index = base_index + i - 1
+                    # Source should be the previous chain node
+                    ce.source_index = chain_nodes[i - 1].index
+                else:
+                    # Source is the parent (already set correctly)
+                    pass
+                ce.target_index = chain_nodes[i].index
+
+            # Commit nodes
+            for cn in chain_nodes:
+                nodes.append(cn)
+                node_lookup[(cn.value, cn.layer)] = cn.index
+            # Commit edges
+            for ce in chain_edges:
+                edges.append(ce)
+                if ce.source_index is not None:
+                    outgoing_counts[ce.source_index] += 1
+
             return chain_nodes
 
     raise RuntimeError(
         f"Failed to generate chain for sphere {sphere} after {max_attempts} attempts. "
-        f"inventory={dict(inventory)}, existing_values={sorted(node_values)}"
+        f"inventory={dict(inventory)}"
     )
 
 
 def _generate_chain_partial(
-    sphere: int, nodes: list[Node], node_values: set[int],
-    inventory: Counter, sphere_items: dict[int, list[str]],
+    sphere: int, nodes: list[Node], edges: list[Edge],
+    node_lookup: dict, outgoing_counts: Counter,
+    inventory: Counter, sphere_items: dict,
     config: APCalcConfig, rng: random.Random, log,
     is_final_sphere: bool = False,
 ) -> list[Node]:
-    """Like _generate_chain but accepts partial chains on break.
+    """Like _generate_chain but accepts partial chains.
 
-    Returns whatever nodes were successfully built (may be empty).
-    Used by the final sphere to greedily extend paths.
+    Returns whatever new nodes were created (may be empty).
     """
     parent = rng.choice(nodes)
 
-    children_count = sum(1 for n in nodes if n.parent_index == parent.index)
-    if children_count >= config.max_branches:
+    if outgoing_counts[parent.index] >= config.max_branches:
         return []
 
-    path_cost = compute_path_cost(parent, nodes)
-    remaining = inventory - path_cost
+    if not parent.path_costs:
+        return []
+    parent_cost = rng.choice(parent.path_costs)
+    remaining = inventory - parent_cost
 
     available_ops = [op for op in OPERATIONS if remaining[op] > 0]
-    available_nums = [n for n in range(10) if remaining[str(n)] > 0]
-    if not available_ops or not available_nums:
+    available_digits = [d for d in range(10) if remaining[str(d)] > 0]
+    if not available_ops or not available_digits:
         return []
 
     # Sphere constraint
     prev_items = sphere_items.get(sphere - 1, [])
-    first_op = rng.choice(available_ops)
-    first_num = rng.choice(available_nums)
-    if prev_items and first_op not in prev_items and str(first_num) not in prev_items:
+    if prev_items:
+        first_op = rng.choice(available_ops)
+        first_result = compose_operand(available_digits, rng, config.nums_per_sphere, remaining)
+        if first_result is None:
+            return []
+        first_operand, first_digits = first_result
+        has_prev = first_op in prev_items or any(str(d) in prev_items for d in first_digits)
+        if not has_prev:
+            return []
+    else:
+        first_op = rng.choice(available_ops)
+        first_result = compose_operand(available_digits, rng, config.nums_per_sphere, remaining)
+        if first_result is None:
+            return []
+        first_operand, first_digits = first_result
+
+    first_value = apply_op(parent.value, first_op, first_operand)
+    if first_value is None:
         return []
 
-    total_ops = sum(remaining[op] for op in OPERATIONS)
-    total_nums = sum(remaining[str(n)] for n in range(10) if remaining[str(n)] > 0)
+    total_ops = sum(max(0, remaining[op]) for op in OPERATIONS)
+    total_digits = sum(max(0, remaining[str(d)]) for d in range(10))
     reserve_ops = 0 if is_final_sphere else 1
-    chain_target = max(1, min(total_ops - reserve_ops, total_nums))
+    avg_digits_per_step = max(1, config.nums_per_sphere)
+    chain_target = max(1, min(total_ops - reserve_ops, total_digits // avg_digits_per_step))
 
-    log(f'    Parent: {parent.region_name} (sphere {parent.sphere}), '
-        f'path: {" ".join(parent.button_sequence)}')
-    log(f'    Path cost: {dict(path_cost)}')
-    log(f'    Remaining: ops={total_ops}, nums={total_nums}')
+    log(f'    Parent: {parent.region_name} (sphere {parent.sphere}, layer {parent.layer})')
+    log(f'    Path cost: {dict(parent_cost)}')
+    log(f'    Remaining: ops={total_ops}, digits={total_digits}')
     log(f'    Chain target: {chain_target} nodes')
 
-    # Build chain, keeping whatever succeeds
     chain_nodes = []
-    chain_remaining = remaining.copy()
+    chain_edges = []
+    chain_remaining = Counter(remaining)
+    chain_cost = Counter(parent_cost)
     chain_parent = parent
-    chain_values = set(node_values)
+    chain_used_keys: set[tuple[int, int]] = set()
 
     for step in range(chain_target):
         step_ops = [op for op in OPERATIONS if chain_remaining[op] > 0]
-        step_nums = [n for n in range(10) if chain_remaining[str(n)] > 0]
-        if not step_ops or not step_nums:
-            log(f'    Chain broke at step {step}: no ops/nums available')
+        step_digits = [d for d in range(10) if chain_remaining[str(d)] > 0]
+        if not step_ops or not step_digits:
+            log(f'    Chain broke at step {step}: no ops/digits available')
             break
 
         if step == 0:
-            op, num = first_op, first_num
+            op, operand, op_digits = first_op, first_operand, first_digits
+            target_value = first_value
         else:
-            op = rng.choice(step_ops)
-            num = rng.choice(step_nums)
+            step_result = _pick_step(
+                chain_parent, chain_remaining, step_ops, step_digits, config, rng,
+            )
+            if step_result is None:
+                log(f'    Chain broke at step {step}: could not pick step')
+                break
+            op, operand, op_digits, target_value = step_result
 
-        child_value = apply_op(chain_parent.value, op, num)
+        target_layer = chain_parent.layer + 1
+        key = (target_value, target_layer)
 
+        # Retry if collision
         step_retries = 50
-        while (child_value is None or child_value in chain_values) and step_retries > 0:
-            op = rng.choice(step_ops)
-            num = rng.choice(step_nums)
-            child_value = apply_op(chain_parent.value, op, num)
+        while (key in node_lookup or key in chain_used_keys) and step_retries > 0:
+            step_result = _pick_step(
+                chain_parent, chain_remaining, step_ops, step_digits, config, rng,
+            )
+            if step_result is None:
+                break
+            op, operand, op_digits, target_value = step_result
+            key = (target_value, chain_parent.layer + 1)
             step_retries -= 1
 
-        if child_value is None or child_value in chain_values:
-            log(f'    Chain broke at step {step}: no valid value found')
-            break  # Accept what we have so far
+        if key in node_lookup or key in chain_used_keys or target_value is None:
+            log(f'    Chain broke at step {step}: no unique value found')
+            break
 
-        sequence = chain_parent.button_sequence + [op, str(num), '=']
+        inc_cost = Counter({op: 1}) + operand_digit_cost(op_digits)
+        new_path_cost = chain_cost + inc_cost
+
         new_node = Node(
             index=len(nodes) + len(chain_nodes),
-            value=child_value,
-            parent_index=chain_parent.index if step == 0 else chain_nodes[-1].index,
-            sphere=sphere,
-            operation=op,
-            operand=num,
-            button_sequence=sequence,
+            value=target_value, layer=target_layer, sphere=sphere,
         )
+        new_node.path_costs.append(new_path_cost)
         chain_nodes.append(new_node)
-        chain_values.add(child_value)
+        chain_used_keys.add(key)
+
+        new_edge = Edge(
+            index=len(edges) + len(chain_edges),
+            source_index=chain_parent.index if step == 0 else chain_nodes[-2].index,
+            target_index=new_node.index,
+            operation=op, operand=operand, operand_digits=list(op_digits),
+            sphere=sphere,
+        )
+        new_edge.path_costs.append(new_path_cost)
+        chain_edges.append(new_edge)
+
         chain_remaining[op] -= 1
-        chain_remaining[str(num)] -= 1
+        for d in op_digits:
+            chain_remaining[str(d)] -= 1
+        chain_cost = new_path_cost
         chain_parent = new_node
 
-        log(f'    Step {step}: {op} {num} = {child_value}')
+        log(f'    Step {step}: {op} {operand} (digits {op_digits}) = {target_value} L{target_layer}')
 
     if chain_nodes:
-        base_index = len(nodes)
+        # Fix indices and commit
+        base_node = len(nodes)
+        base_edge = len(edges)
         for i, cn in enumerate(chain_nodes):
-            cn.index = base_index + i
+            cn.index = base_node + i
+        for i, ce in enumerate(chain_edges):
+            ce.index = base_edge + i
             if i > 0:
-                cn.parent_index = base_index + i - 1
+                ce.source_index = chain_nodes[i - 1].index
+            ce.target_index = chain_nodes[i].index
+
+        for cn in chain_nodes:
+            nodes.append(cn)
+            node_lookup[(cn.value, cn.layer)] = cn.index
+        for ce in chain_edges:
+            edges.append(ce)
+            if ce.source_index is not None:
+                outgoing_counts[ce.source_index] += 1
+
         if len(chain_nodes) < chain_target:
             log(f'    Chain of {len(chain_nodes)}/{chain_target} from {parent.region_name}: '
-                + ' → '.join(str(cn.value) for cn in chain_nodes))
+                + ' → '.join(f'{cn.value}L{cn.layer}' for cn in chain_nodes))
         else:
             log(f'    Chain of {len(chain_nodes)} from {parent.region_name}: '
-                + ' → '.join(str(cn.value) for cn in chain_nodes))
+                + ' → '.join(f'{cn.value}L{cn.layer}' for cn in chain_nodes))
     else:
         log(f'    No chain produced from {parent.region_name}')
 
     return chain_nodes
 
 
-def _try_single_step(
-    sphere: int, nodes: list[Node], node_values: set[int],
-    inventory: Counter, sphere_items: dict[int, list[str]],
-    config: APCalcConfig, rng: random.Random,
-) -> Node | None:
-    """Try to create a single new node from a random parent. Returns None on failure."""
+# ---------------------------------------------------------------------------
+# Reuse edges
+# ---------------------------------------------------------------------------
+
+def _try_add_reuse_edge(
+    nodes: list[Node], edges: list[Edge],
+    node_lookup: dict, outgoing_counts: Counter,
+    inventory: Counter, sphere_items: dict,
+    sphere: int, config: APCalcConfig,
+    rng: random.Random, log,
+) -> bool:
+    """Try to add a reuse edge from a random parent to an existing node.
+
+    Picks a random parent, picks a random target at parent.layer + 1,
+    finds operation+operand to reach target, creates edge if valid.
+    Returns True if edge was created.
+    """
+    if len(nodes) < 2:
+        return False
+
     parent = rng.choice(nodes)
+    if outgoing_counts[parent.index] >= config.max_branches:
+        return False
+    if not parent.path_costs:
+        return False
 
-    children_count = sum(1 for n in nodes if n.parent_index == parent.index)
-    if children_count >= config.max_branches:
-        return None
+    parent_cost = rng.choice(parent.path_costs)
+    remaining = inventory - parent_cost
 
-    path_cost = compute_path_cost(parent, nodes)
-    remaining = inventory - path_cost
+    target_layer = parent.layer + 1
 
+    # Find existing nodes at target_layer
+    candidates = [n for n in nodes if n.layer == target_layer]
+    if not candidates:
+        return False
+
+    target = rng.choice(candidates)
+
+    # Check we don't already have this exact edge
+    for e in edges:
+        if e.source_index == parent.index and e.target_index == target.index:
+            return False  # edge already exists
+
+    # Try each operation to see if it reaches target.value
     available_ops = [op for op in OPERATIONS if remaining[op] > 0]
-    available_nums = [n for n in range(10) if remaining[str(n)] > 0]
+    rng.shuffle(available_ops)
 
-    if not available_ops or not available_nums:
-        return None
+    for op in available_ops:
+        needed_operand = reverse_op(parent.value, target.value, op)
+        if needed_operand is None:
+            continue
 
-    # Sphere constraint for final sphere: need item from previous sphere
-    prev_items = sphere_items.get(sphere - 1, [])
-    op = rng.choice(available_ops)
-    num = rng.choice(available_nums)
-    if prev_items and op not in prev_items and str(num) not in prev_items:
-        return None
+        # Check operand digits are in budget
+        op_digits = [int(d) for d in str(needed_operand)] if needed_operand > 0 else [0]
+        digit_cost = operand_digit_cost(op_digits)
 
-    child_value = apply_op(parent.value, op, num)
-    if child_value is None or child_value in node_values:
-        return None
+        test_remaining = Counter(remaining)
+        test_remaining[op] -= 1
+        if test_remaining[op] < 0:
+            continue
+        can_afford = True
+        for btn, cnt in digit_cost.items():
+            test_remaining[btn] -= cnt
+            if test_remaining[btn] < 0:
+                can_afford = False
+                break
+        if not can_afford:
+            continue
 
-    sequence = parent.button_sequence + [op, str(num), '=']
-    return Node(
-        index=len(nodes), value=child_value, parent_index=parent.index,
-        sphere=sphere, operation=op, operand=num, button_sequence=sequence,
-    )
+        # Verify the operation produces the expected result
+        check = apply_op(parent.value, op, needed_operand)
+        if check != target.value:
+            continue
 
+        # Create the reuse edge
+        inc_cost = Counter({op: 1}) + digit_cost
+        new_path_cost = parent_cost + inc_cost
+
+        new_edge = Edge(
+            index=len(edges),
+            source_index=parent.index, target_index=target.index,
+            operation=op, operand=needed_operand, operand_digits=op_digits,
+            sphere=sphere,
+        )
+        new_edge.path_costs.append(new_path_cost)
+        edges.append(new_edge)
+        outgoing_counts[parent.index] += 1
+        target.path_costs.append(new_path_cost)
+
+        log(f'    Reuse edge: {parent.region_name} {op} {needed_operand} → {target.region_name}')
+        return True
+
+    return False
+
+
+# ---------------------------------------------------------------------------
+# Division planning
+# ---------------------------------------------------------------------------
 
 def _ensure_divisible_paths(
-    nodes: list[Node], node_values: set[int], inventory: Counter,
-    sphere_items: dict[int, list[str]], sphere: int,
+    nodes: list[Node], edges: list[Edge],
+    node_lookup: dict, outgoing_counts: Counter,
+    inventory: Counter, sphere: int,
     config: APCalcConfig, rng: random.Random, log,
 ):
-    """Ensure at least 2 existing nodes have values divisible by available number buttons.
+    """Ensure at least 2 nodes have values divisible by available digits.
 
-    Called just before the divide sphere generates its nodes, to guarantee
-    that / will be usable in future spheres.
+    Called before the first sphere that can use /.
     """
-    # Find which number buttons are available (excluding 0 and 1 which are trivial)
     available_divisors = [n for n in range(2, 10) if inventory[str(n)] > 0]
     if not available_divisors:
         log(f'  Division planning: no useful divisors available, skipping')
         return
 
-    # Count existing divisible nodes
     divisible_nodes = []
     for node in nodes:
         for d in available_divisors:
-            if node.value != 0 and node.value % d == 0 and node.value // d not in node_values:
-                divisible_nodes.append((node, d))
-                break
+            if node.value != 0 and node.value % d == 0:
+                result = node.value // d
+                if (result, node.layer + 1) not in node_lookup:
+                    divisible_nodes.append((node, d))
+                    break
 
     log(f'  Division planning: {len(divisible_nodes)} existing divisible nodes, '
         f'divisors available: {available_divisors}')
@@ -638,38 +979,57 @@ def _ensure_divisible_paths(
                 f'→ {node.value // d}')
         return
 
-    # Need to create more divisible nodes in earlier spheres
-    # We do this by adding nodes using * to create multiples
     needed = 2 - len(divisible_nodes)
     log(f'  Division planning: need {needed} more divisible paths')
 
     for _ in range(needed):
         target_divisor = rng.choice(available_divisors)
-        # Find a parent where parent_value * target_divisor (or similar) gives a new value
         created = False
+
         for attempt in range(200):
             parent = rng.choice(nodes)
-            path_cost = compute_path_cost(parent, nodes)
-            remaining = inventory - path_cost
+            if not parent.path_costs:
+                continue
+            parent_cost = rng.choice(parent.path_costs)
+            remaining = inventory - parent_cost
 
             if remaining['*'] <= 0 and remaining['+'] <= 0:
                 continue
-            if remaining[str(target_divisor)] <= 0:
+
+            td_digits = [int(d) for d in str(target_divisor)]
+            can_afford_digits = all(remaining[str(d)] > 0 for d in td_digits)
+            if not can_afford_digits:
                 continue
 
-            # Try multiplication first (creates clean multiples)
+            # Try multiplication first
             if remaining['*'] > 0:
                 candidate = parent.value * target_divisor
-                if candidate != 0 and candidate not in node_values:
-                    sequence = parent.button_sequence + ['*', str(target_divisor), '=']
+                target_layer = parent.layer + 1
+                key = (candidate, target_layer)
+                if candidate != 0 and key not in node_lookup:
+                    op_digits = td_digits
+                    inc_cost = Counter({'*': 1}) + operand_digit_cost(op_digits)
+                    new_path_cost = parent_cost + inc_cost
+
                     new_node = Node(
                         index=len(nodes), value=candidate,
-                        parent_index=parent.index, sphere=sphere - 1,
-                        operation='*', operand=target_divisor,
-                        button_sequence=sequence, item=TRASH_ITEM,
+                        layer=target_layer, sphere=sphere - 1,
+                        item=TRASH_ITEM,
                     )
+                    new_node.path_costs.append(new_path_cost)
                     nodes.append(new_node)
-                    node_values.add(candidate)
+                    node_lookup[key] = new_node.index
+
+                    new_edge = Edge(
+                        index=len(edges), source_index=parent.index,
+                        target_index=new_node.index,
+                        operation='*', operand=target_divisor,
+                        operand_digits=op_digits, sphere=sphere - 1,
+                    )
+                    new_edge.path_costs.append(new_path_cost)
+                    edges.append(new_edge)
+                    outgoing_counts[parent.index] += 1
+
                     log(f'  Division planning: created {new_node.region_name} '
                         f'(= {parent.value} * {target_divisor}, divisible by {target_divisor})')
                     created = True
@@ -681,16 +1041,32 @@ def _ensure_divisible_paths(
                     if remaining[str(num)] <= 0:
                         continue
                     candidate = parent.value + num
-                    if candidate != 0 and candidate % target_divisor == 0 and candidate not in node_values:
-                        sequence = parent.button_sequence + ['+', str(num), '=']
+                    target_layer = parent.layer + 1
+                    key = (candidate, target_layer)
+                    if candidate != 0 and candidate % target_divisor == 0 and key not in node_lookup:
+                        op_digits = [num]
+                        inc_cost = Counter({'+': 1}) + operand_digit_cost(op_digits)
+                        new_path_cost = parent_cost + inc_cost
+
                         new_node = Node(
                             index=len(nodes), value=candidate,
-                            parent_index=parent.index, sphere=sphere - 1,
-                            operation='+', operand=num,
-                            button_sequence=sequence, item=TRASH_ITEM,
+                            layer=target_layer, sphere=sphere - 1,
+                            item=TRASH_ITEM,
                         )
+                        new_node.path_costs.append(new_path_cost)
                         nodes.append(new_node)
-                        node_values.add(candidate)
+                        node_lookup[key] = new_node.index
+
+                        new_edge = Edge(
+                            index=len(edges), source_index=parent.index,
+                            target_index=new_node.index,
+                            operation='+', operand=num,
+                            operand_digits=op_digits, sphere=sphere - 1,
+                        )
+                        new_edge.path_costs.append(new_path_cost)
+                        edges.append(new_edge)
+                        outgoing_counts[parent.index] += 1
+
                         log(f'  Division planning: created {new_node.region_name} '
                             f'(= {parent.value} + {num}, divisible by {target_divisor})')
                         created = True
