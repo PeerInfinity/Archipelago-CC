@@ -20,6 +20,8 @@ let moduleId = 'regionGraph'; // Store module ID
 let _moduleEventBus = null;
 let _pendingOverlayProvider = null;  // stored until a panel instance picks it up
 let _nodeLabelProvider = null;       // (nodeId, nodeData) => string | null
+let _edgeVisibilityFilter = null;    // (sourceId, targetId) => boolean (true = visible)
+let _accessibilityVisibilityFilter = null; // () => boolean (true = show colors)
 let _panelInstances = new Set();     // all live RegionGraphUI instances
 
 export function registerPanelInstance(instance) { _panelInstances.add(instance); }
@@ -30,6 +32,8 @@ export function getPendingOverlayProvider() {
   return p;
 }
 export function getNodeLabelProvider() { return _nodeLabelProvider; }
+export function getEdgeVisibilityFilter() { return _edgeVisibilityFilter; }
+export function getAccessibilityVisibilityFilter() { return _accessibilityVisibilityFilter; }
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -79,6 +83,20 @@ export function register(registrationApi) {
   });
 
   registrationApi.registerPublicFunction('regionGraph', 'refreshNodeLabels', () => {
+    for (const panel of _panelInstances) {
+      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+    }
+  });
+
+  registrationApi.registerPublicFunction('regionGraph', 'registerEdgeVisibilityFilter', (callback) => {
+    _edgeVisibilityFilter = callback;
+    for (const panel of _panelInstances) {
+      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+    }
+  });
+
+  registrationApi.registerPublicFunction('regionGraph', 'registerAccessibilityVisibilityFilter', (callback) => {
+    _accessibilityVisibilityFilter = callback;
     for (const panel of _panelInstances) {
       if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
     }

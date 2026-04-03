@@ -5,7 +5,7 @@ import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
-import { getNodeLabelProvider } from './index.js';
+import { getNodeLabelProvider, getEdgeVisibilityFilter, getAccessibilityVisibilityFilter } from './index.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -802,18 +802,24 @@ export class GraphDataManager {
         node.addClass('discovery-hidden');
       }
 
-      // Apply base accessibility class
-      if (isReachable) {
-        node.addClass('accessible');
-      } else {
-        node.addClass('inaccessible');
-        return; // Don't apply interior colors for inaccessible regions
-      }
+      // Check external accessibility visibility filter (e.g., APCalc hard mode)
+      const accessibilityFilter = getAccessibilityVisibilityFilter();
+      const showAccessibility = !accessibilityFilter || accessibilityFilter();
 
-      // Determine and apply interior color based on location status
-      const interiorColorClass = this.determineNodeInteriorColor(locationCounts, isReachable);
-      if (interiorColorClass) {
-        node.addClass(interiorColorClass);
+      // Apply base accessibility class
+      if (showAccessibility) {
+        if (isReachable) {
+          node.addClass('accessible');
+        } else {
+          node.addClass('inaccessible');
+          return; // Don't apply interior colors for inaccessible regions
+        }
+
+        // Determine and apply interior color based on location status
+        const interiorColorClass = this.determineNodeInteriorColor(locationCounts, isReachable);
+        if (interiorColorClass) {
+          node.addClass(interiorColorClass);
+        }
       }
     });
 
@@ -903,6 +909,14 @@ export class GraphDataManager {
           if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
             shouldHideEdge = true;
           }
+        }
+      }
+
+      // Apply external edge visibility filter (e.g., APCalc difficulty modes)
+      const edgeVisibilityFilter = getEdgeVisibilityFilter();
+      if (edgeVisibilityFilter && !shouldHideEdge) {
+        if (!edgeVisibilityFilter(sourceRegion, targetRegion)) {
+          shouldHideEdge = true;
         }
       }
 
