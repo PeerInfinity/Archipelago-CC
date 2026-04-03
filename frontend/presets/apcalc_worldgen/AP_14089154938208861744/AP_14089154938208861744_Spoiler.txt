@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            APCalc WorldGen
-Location Count:                  19
+Location Count:                  58
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     
@@ -25,48 +25,127 @@ Starting Items:
 Button: 2
 Button: 3
 Button: 7
+Button: 8
 
 Locations:
 
 Victory: Victory
-Reach 7: Button: 0
+Reach 7: Button: 9
 Checked Reach 7: Checked Reach 7
-Reach 3: Junk
+Reach 3: Button: 6
 Checked Reach 3: Checked Reach 3
-Reach 2: Button: -
+Reach 2: Junk
 Checked Reach 2: Checked Reach 2
-Reach -5: Button: 3
-Checked Reach -5: Checked Reach -5
-Reach -4: Button: +
-Checked Reach -4: Checked Reach -4
-Reach -1: Junk
-Checked Reach -1: Checked Reach -1
-Reach 5: Button: 4
-Checked Reach 5: Checked Reach 5
-Reach 4: Button: /
-Checked Reach 4: Checked Reach 4
-Reach 6: Junk
-Checked Reach 6: Checked Reach 6
-Reach 1: Button: 0
-Checked Reach 1: Checked Reach 1
-Reach 10: Junk
-Checked Reach 10: Checked Reach 10
 Reach 8: Button: +
 Checked Reach 8: Checked Reach 8
-Reach -2: Junk
-Checked Reach -2: Checked Reach -2
-Reach 9: Junk
-Checked Reach 9: Checked Reach 9
-Reach 12: Junk
-Checked Reach 12: Checked Reach 12
-Reach 13: Junk
-Checked Reach 13: Checked Reach 13
-Reach 0: Junk
-Checked Reach 0: Checked Reach 0
-Reach 11: Junk
-Checked Reach 11: Checked Reach 11
-Reach 14: Junk
-Checked Reach 14: Checked Reach 14
+Reach 11 L1: Button: 3
+Checked Reach 11 L1: Checked Reach 11 L1
+Reach 245 L1: Button: 3
+Checked Reach 245 L1: Checked Reach 245 L1
+Reach 15 L1: Button: -
+Checked Reach 15 L1: Checked Reach 15 L1
+Reach 31 L1: Junk
+Checked Reach 31 L1: Checked Reach 31 L1
+Reach -94 L1: Button: *
+Checked Reach -94 L1: Checked Reach -94 L1
+Reach -54 L2: Button: 3
+Checked Reach -54 L2: Checked Reach -54 L2
+Reach -3124 L2: Button: 0
+Checked Reach -3124 L2: Checked Reach -3124 L2
+Reach -278 L2: Junk
+Checked Reach -278 L2: Checked Reach -278 L2
+Reach 72 L1: Junk
+Checked Reach 72 L1: Checked Reach 72 L1
+Reach 65 L2: Button: 0
+Checked Reach 65 L2: Checked Reach 65 L2
+Reach 7308 L2: Button: 7
+Checked Reach 7308 L2: Checked Reach 7308 L2
+Reach 101 L3: Button: /
+Checked Reach 101 L3: Checked Reach 101 L3
+Reach 305 L3: Button: 0
+Checked Reach 305 L3: Checked Reach 305 L3
+Reach -3600 L2: Junk
+Checked Reach -3600 L2: Checked Reach -3600 L2
+Reach -3300 L3: Button: 7
+Checked Reach -3300 L3: Checked Reach -3300 L3
+Reach -1200 L3: Button: /
+Checked Reach -1200 L3: Checked Reach -1200 L3
+Reach 0 L2: Junk
+Checked Reach 0 L2: Checked Reach 0 L2
+Reach 0 L3: Junk
+Checked Reach 0 L3: Checked Reach 0 L3
+Reach 2307 L4: Button: 4
+Checked Reach 2307 L4: Checked Reach 2307 L4
+Reach 769 L5: Button: 5
+Checked Reach 769 L5: Checked Reach 769 L5
+Reach 0 L4: Button: /
+Checked Reach 0 L4: Checked Reach 0 L4
+Reach 4537 L5: Button: /
+Checked Reach 4537 L5: Checked Reach 4537 L5
+Reach 4053 L4: Junk
+Checked Reach 4053 L4: Checked Reach 4053 L4
+Reach 1351 L5: Button: 5
+Checked Reach 1351 L5: Checked Reach 1351 L5
+Reach 0 L5: Button: 4
+Checked Reach 0 L5: Checked Reach 0 L5
+Reach 89 L3: Junk
+Checked Reach 89 L3: Checked Reach 89 L3
+Reach 12250 L2: Junk
+Checked Reach 12250 L2: Checked Reach 12250 L2
+Reach -34 L2: Junk
+Checked Reach -34 L2: Checked Reach -34 L2
+Reach -204 L3: Junk
+Checked Reach -204 L3: Checked Reach -204 L3
+Reach -51 L4: Junk
+Checked Reach -51 L4: Checked Reach -51 L4
+Reach 8055 L2: Junk
+Checked Reach 8055 L2: Checked Reach 8055 L2
+Reach 8029 L3: Junk
+Checked Reach 8029 L3: Checked Reach 8029 L3
+Reach -376 L2: Junk
+Checked Reach -376 L2: Checked Reach -376 L2
+Reach -1598 L3: Junk
+Checked Reach -1598 L3: Checked Reach -1598 L3
+Reach 6 L3: Junk
+Checked Reach 6 L3: Checked Reach 6 L3
+Reach 5432 L3: Junk
+Checked Reach 5432 L3: Checked Reach 5432 L3
+Reach 1611 L3: Junk
+Checked Reach 1611 L3: Checked Reach 1611 L3
+Reach 1519 L4: Junk
+Checked Reach 1519 L4: Checked Reach 1519 L4
+Reach -3053 L3: Junk
+Checked Reach -3053 L3: Checked Reach -3053 L3
+Reach -1402232 L3: Junk
+Checked Reach -1402232 L3: Checked Reach -1402232 L3
+Reach 28 L1: Junk
+Checked Reach 28 L1: Checked Reach 28 L1
+Reach -234360 L3: Junk
+Checked Reach -234360 L3: Checked Reach -234360 L3
+Reach 1493030 L2: Junk
+Checked Reach 1493030 L2: Checked Reach 1493030 L2
+Reach 3231 L3: Junk
+Checked Reach 3231 L3: Checked Reach 3231 L3
+Reach 17300 L1: Junk
+Checked Reach 17300 L1: Checked Reach 17300 L1
+Reach 17837 L2: Junk
+Checked Reach 17837 L2: Checked Reach 17837 L2
+Reach 17747 L3: Junk
+Checked Reach 17747 L3: Checked Reach 17747 L3
+Reach -78120 L4: Junk
+Checked Reach -78120 L4: Checked Reach -78120 L4
+Reach -2604 L5: Junk
+Checked Reach -2604 L5: Checked Reach -2604 L5
+Reach 3 L5: Junk
+Checked Reach 3 L5: Checked Reach 3 L5
+Reach 177940 L2: Junk
+Checked Reach 177940 L2: Checked Reach 177940 L2
+Reach 0 L6: Junk
+Checked Reach 0 L6: Checked Reach 0 L6
+Reach 20 L7: Junk
+Checked Reach 20 L7: Checked Reach 20 L7
+Reach 2972 L3: Junk
+Checked Reach 2972 L3: Checked Reach 2972 L3
 
 Playthrough:
 
@@ -74,42 +153,103 @@ Playthrough:
   Button: 2
   Button: 3
   Button: 7
+  Button: 8
 }
 1: {
   Checked Reach 2: Checked Reach 2
   Checked Reach 3: Checked Reach 3
   Checked Reach 7: Checked Reach 7
-  Reach 2: Button: -
-  Reach 7: Button: 0
-}
-2: {
-  Checked Reach -1: Checked Reach -1
-  Checked Reach -4: Checked Reach -4
-  Checked Reach -5: Checked Reach -5
-  Checked Reach 4: Checked Reach 4
-  Reach -4: Button: +
-  Reach -5: Button: 3
-  Reach 4: Button: /
-}
-3: {
-  Checked Reach -2: Checked Reach -2
-  Checked Reach 0: Checked Reach 0
-  Checked Reach 10: Checked Reach 10
-  Checked Reach 5: Checked Reach 5
-  Checked Reach 6: Checked Reach 6
   Checked Reach 8: Checked Reach 8
-  Checked Reach 9: Checked Reach 9
-  Reach 5: Button: 4
+  Reach 3: Button: 6
+  Reach 7: Button: 9
   Reach 8: Button: +
 }
+2: {
+  Checked Reach 11 L1: Checked Reach 11 L1
+  Checked Reach 15 L1: Checked Reach 15 L1
+  Checked Reach 245 L1: Checked Reach 245 L1
+  Checked Reach 31 L1: Checked Reach 31 L1
+  Reach 11 L1: Button: 3
+  Reach 15 L1: Button: -
+  Reach 245 L1: Button: 3
+}
+3: {
+  Checked Reach -278 L2: Checked Reach -278 L2
+  Checked Reach -3124 L2: Checked Reach -3124 L2
+  Checked Reach -54 L2: Checked Reach -54 L2
+  Checked Reach -94 L1: Checked Reach -94 L1
+  Reach -3124 L2: Button: 0
+  Reach -54 L2: Button: 3
+  Reach -94 L1: Button: *
+}
 4: {
-  Checked Reach 1: Checked Reach 1
-  Checked Reach 11: Checked Reach 11
-  Checked Reach 12: Checked Reach 12
-  Checked Reach 13: Checked Reach 13
-  Checked Reach 14: Checked Reach 14
-  Reach 1: Button: 0
+  Checked Reach -3600 L2: Checked Reach -3600 L2
+  Checked Reach 0 L2: Checked Reach 0 L2
+  Checked Reach 0 L3: Checked Reach 0 L3
+  Checked Reach 101 L3: Checked Reach 101 L3
+  Checked Reach 6 L3: Checked Reach 6 L3
+  Checked Reach 65 L2: Checked Reach 65 L2
+  Checked Reach 72 L1: Checked Reach 72 L1
+  Checked Reach 7308 L2: Checked Reach 7308 L2
+  Reach 101 L3: Button: /
+  Reach 65 L2: Button: 0
+  Reach 7308 L2: Button: 7
 }
 5: {
+  Checked Reach -1200 L3: Checked Reach -1200 L3
+  Checked Reach -3300 L3: Checked Reach -3300 L3
+  Checked Reach 2307 L4: Checked Reach 2307 L4
+  Checked Reach 305 L3: Checked Reach 305 L3
+  Reach -1200 L3: Button: /
+  Reach -3300 L3: Button: 7
+  Reach 2307 L4: Button: 4
+  Reach 305 L3: Button: 0
+}
+6: {
+  Checked Reach -204 L3: Checked Reach -204 L3
+  Checked Reach -34 L2: Checked Reach -34 L2
+  Checked Reach -376 L2: Checked Reach -376 L2
+  Checked Reach 0 L4: Checked Reach 0 L4
+  Checked Reach 1493030 L2: Checked Reach 1493030 L2
+  Checked Reach 28 L1: Checked Reach 28 L1
+  Checked Reach 3 L5: Checked Reach 3 L5
+  Checked Reach 3231 L3: Checked Reach 3231 L3
+  Checked Reach 769 L5: Checked Reach 769 L5
+  Checked Reach 89 L3: Checked Reach 89 L3
+  Reach 0 L4: Button: /
+  Reach 769 L5: Button: 5
+}
+7: {
+  Checked Reach -3053 L3: Checked Reach -3053 L3
+  Checked Reach 0 L5: Checked Reach 0 L5
+  Checked Reach 12250 L2: Checked Reach 12250 L2
+  Checked Reach 1351 L5: Checked Reach 1351 L5
+  Checked Reach 17300 L1: Checked Reach 17300 L1
+  Checked Reach 177940 L2: Checked Reach 177940 L2
+  Checked Reach 4053 L4: Checked Reach 4053 L4
+  Checked Reach 4537 L5: Checked Reach 4537 L5
+  Checked Reach 5432 L3: Checked Reach 5432 L3
+  Checked Reach 8029 L3: Checked Reach 8029 L3
+  Checked Reach 8055 L2: Checked Reach 8055 L2
+  Reach 0 L5: Button: 4
+  Reach 1351 L5: Button: 5
+  Reach 4537 L5: Button: /
+}
+8: {
+  Checked Reach -1402232 L3: Checked Reach -1402232 L3
+  Checked Reach -1598 L3: Checked Reach -1598 L3
+  Checked Reach -234360 L3: Checked Reach -234360 L3
+  Checked Reach -2604 L5: Checked Reach -2604 L5
+  Checked Reach -51 L4: Checked Reach -51 L4
+  Checked Reach -78120 L4: Checked Reach -78120 L4
+  Checked Reach 0 L6: Checked Reach 0 L6
+  Checked Reach 1519 L4: Checked Reach 1519 L4
+  Checked Reach 1611 L3: Checked Reach 1611 L3
+  Checked Reach 17747 L3: Checked Reach 17747 L3
+  Checked Reach 17837 L2: Checked Reach 17837 L2
+  Checked Reach 20 L7: Checked Reach 20 L7
+  Checked Reach 2972 L3: Checked Reach 2972 L3
+}
+9: {
   Victory: Victory
 }

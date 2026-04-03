@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-03-28 17:13:11 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T06:06:18.834443+00:00
 
-**Source Data Last Updated:** 2026-03-22T06:06:18.834452+00:00
+**Source Data Last Updated:** 2026-04-03T22:56:14.748898+00:00
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -29,7 +29,7 @@ Additional information:
 
 ### Individual Test Results
 
-- **Minimal Test:** 82/88 passed (93.2%)
+- **Minimal Test:** 83/89 passed (93.3%)
 - **Full Test:** 83/88 passed (94.3%)
 - **Multiclient Test:** 80/88 passed (90.9%)
 - **Multiworld Test:** 75/75 passed (100.0%)
@@ -43,11 +43,11 @@ Additional information:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 75/88 (85.2%)
-- **Templates passing 3 tests:** 5/88 (5.7%)
-- **Templates passing 2 tests:** 2/88 (2.3%)
-- **Templates passing 1 test:** 1/88 (1.1%)
-- **Templates passing 0 tests:** 5/88 (5.7%)
+- **Templates passing all 4 tests:** 75/89 (84.3%)
+- **Templates passing 3 tests:** 5/89 (5.6%)
+- **Templates passing 2 tests:** 2/89 (2.2%)
+- **Templates passing 1 test:** 2/89 (2.2%)
+- **Templates passing 0 tests:** 5/89 (5.6%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -70,6 +70,7 @@ Of the 75 templates passing all 4 tests:
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.2KB | ✅ | 230.2KB |
 | A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 664.0KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 74.4KB |
+| APCalc WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | 149.3KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 25.7KB |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 277.3KB |

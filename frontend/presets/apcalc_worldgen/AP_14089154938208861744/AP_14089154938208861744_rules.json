@@ -14,7 +14,7 @@
         "name": "C",
         "exits": [
           {
-            "name": "Menu to Node 7",
+            "name": "C to Node 7",
             "connected_region": "Node 7",
             "access_rule": {
               "rule": "Has",
@@ -24,7 +24,7 @@
             }
           },
           {
-            "name": "Menu to Node 3",
+            "name": "C to Node 3",
             "connected_region": "Node 3",
             "access_rule": {
               "rule": "Has",
@@ -34,12 +34,22 @@
             }
           },
           {
-            "name": "Menu to Node 2",
+            "name": "C to Node 2",
             "connected_region": "Node 2",
             "access_rule": {
               "rule": "Has",
               "args": {
                 "item_name": "Button: 2"
+              }
+            }
+          },
+          {
+            "name": "C to Node 8",
+            "connected_region": "Node 8",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Button: 8"
               }
             }
           }
@@ -52,25 +62,64 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Checked Reach -1",
-                  "Checked Reach -2",
-                  "Checked Reach -4",
-                  "Checked Reach -5",
-                  "Checked Reach 0",
-                  "Checked Reach 1",
-                  "Checked Reach 10",
-                  "Checked Reach 11",
-                  "Checked Reach 12",
-                  "Checked Reach 13",
-                  "Checked Reach 14",
+                  "Checked Reach -1200 L3",
+                  "Checked Reach -1402232 L3",
+                  "Checked Reach -1598 L3",
+                  "Checked Reach -204 L3",
+                  "Checked Reach -234360 L3",
+                  "Checked Reach -2604 L5",
+                  "Checked Reach -278 L2",
+                  "Checked Reach -3053 L3",
+                  "Checked Reach -3124 L2",
+                  "Checked Reach -3300 L3",
+                  "Checked Reach -34 L2",
+                  "Checked Reach -3600 L2",
+                  "Checked Reach -376 L2",
+                  "Checked Reach -51 L4",
+                  "Checked Reach -54 L2",
+                  "Checked Reach -78120 L4",
+                  "Checked Reach -94 L1",
+                  "Checked Reach 0 L2",
+                  "Checked Reach 0 L3",
+                  "Checked Reach 0 L4",
+                  "Checked Reach 0 L5",
+                  "Checked Reach 0 L6",
+                  "Checked Reach 101 L3",
+                  "Checked Reach 11 L1",
+                  "Checked Reach 12250 L2",
+                  "Checked Reach 1351 L5",
+                  "Checked Reach 1493030 L2",
+                  "Checked Reach 15 L1",
+                  "Checked Reach 1519 L4",
+                  "Checked Reach 1611 L3",
+                  "Checked Reach 17300 L1",
+                  "Checked Reach 17747 L3",
+                  "Checked Reach 177940 L2",
+                  "Checked Reach 17837 L2",
                   "Checked Reach 2",
+                  "Checked Reach 20 L7",
+                  "Checked Reach 2307 L4",
+                  "Checked Reach 245 L1",
+                  "Checked Reach 28 L1",
+                  "Checked Reach 2972 L3",
                   "Checked Reach 3",
-                  "Checked Reach 4",
-                  "Checked Reach 5",
-                  "Checked Reach 6",
+                  "Checked Reach 3 L5",
+                  "Checked Reach 305 L3",
+                  "Checked Reach 31 L1",
+                  "Checked Reach 3231 L3",
+                  "Checked Reach 4053 L4",
+                  "Checked Reach 4537 L5",
+                  "Checked Reach 5432 L3",
+                  "Checked Reach 6 L3",
+                  "Checked Reach 65 L2",
                   "Checked Reach 7",
+                  "Checked Reach 72 L1",
+                  "Checked Reach 7308 L2",
+                  "Checked Reach 769 L5",
                   "Checked Reach 8",
-                  "Checked Reach 9"
+                  "Checked Reach 8029 L3",
+                  "Checked Reach 8055 L2",
+                  "Checked Reach 89 L3"
                 ]
               }
             },
@@ -89,28 +138,43 @@
         "name": "Node 7",
         "exits": [
           {
-            "name": "Node 7 to Node 4",
-            "connected_region": "Node 4",
+            "name": "Node 7 to Node 15 L1",
+            "connected_region": "Node 15 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Button: -",
-                  "Button: 3",
-                  "Button: 7"
+                  "Button: +",
+                  "Button: 7",
+                  "Button: 8"
                 ]
               }
             }
           },
           {
-            "name": "Node 7 to Node 9",
-            "connected_region": "Node 9",
+            "name": "Node 7 to Node 31 L1",
+            "connected_region": "Node 31 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Button: +",
                   "Button: 2",
+                  "Button: 4",
+                  "Button: 7"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 7 to Node 28 L1",
+            "connected_region": "Node 28 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: 4",
                   "Button: 7"
                 ]
               }
@@ -125,7 +189,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 0",
+              "name": "Button: 9",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -153,43 +217,61 @@
         "name": "Node 3",
         "exits": [
           {
-            "name": "Node 3 to Node -4",
-            "connected_region": "Node -4",
+            "name": "Node 3 to Node -94 L1",
+            "connected_region": "Node -94 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Button: -",
                   "Button: 3",
-                  "Button: 7"
+                  "Button: 7",
+                  "Button: 9"
                 ]
               }
             }
           },
           {
-            "name": "Node 3 to Node 10",
-            "connected_region": "Node 10",
+            "name": "Node 3 to Node 31 L1",
+            "connected_region": "Node 31 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 3 to Node 11 L1",
+            "connected_region": "Node 11 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Button: +",
                   "Button: 3",
-                  "Button: 7"
+                  "Button: 8"
                 ]
               }
             }
           },
           {
-            "name": "Node 3 to Node 0",
-            "connected_region": "Node 0",
+            "name": "Node 3 to Node 72 L1",
+            "connected_region": "Node 72 L1",
             "access_rule": {
-              "rule": "HasAllCounts",
+              "rule": "HasAll",
               "args": {
-                "items": {
-                  "Button: 3": 2,
-                  "Button: -": 1
-                }
+                "items": [
+                  "Button: *",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 4"
+                ]
               }
             }
           }
@@ -202,9 +284,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 6",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -230,13 +312,28 @@
         "name": "Node 2",
         "exits": [
           {
-            "name": "Node 2 to Node -5",
-            "connected_region": "Node -5",
+            "name": "Node 2 to Node 11 L1",
+            "connected_region": "Node 11 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Button: -",
+                  "Button: +",
+                  "Button: 2",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 2 to Node 72 L1",
+            "connected_region": "Node 72 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 0",
                   "Button: 2",
                   "Button: 7"
                 ]
@@ -244,29 +341,33 @@
             }
           },
           {
-            "name": "Node 2 to Node -1",
-            "connected_region": "Node -1",
+            "name": "Node 2 to Node -94 L1",
+            "connected_region": "Node -94 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Button: -",
                   "Button: 2",
-                  "Button: 3"
+                  "Button: 6",
+                  "Button: 9"
                 ]
               }
             }
           },
           {
-            "name": "Node 2 to Node 5",
-            "connected_region": "Node 5",
+            "name": "Node 2 to Node 17300 L1",
+            "connected_region": "Node 17300 L1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Button: +",
+                  "Button: *",
+                  "Button: 0",
                   "Button: 2",
-                  "Button: 3"
+                  "Button: 5",
+                  "Button: 6",
+                  "Button: 8"
                 ]
               }
             }
@@ -280,9 +381,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: -",
+              "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -304,385 +405,79 @@
           }
         ]
       },
-      "Node -5": {
-        "name": "Node -5",
-        "exits": [
-          {
-            "name": "Node -5 to Node -2",
-            "connected_region": "Node -2",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 2",
-                  "Button: 3",
-                  "Button: 7"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Reach -5",
-            "id": 4,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Button: 3",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach -5",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach -5",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node -4": {
-        "name": "Node -4",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Reach -4",
-            "id": 5,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Button: +",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach -4",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach -4",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node -1": {
-        "name": "Node -1",
-        "exits": [
-          {
-            "name": "Node -1 to Node 6",
-            "connected_region": "Node 6",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 2",
-                  "Button: 3",
-                  "Button: 7"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Reach -1",
-            "id": 6,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Junk",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach -1",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach -1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node 5": {
-        "name": "Node 5",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Reach 5",
-            "id": 7,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Button: 4",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach 5",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach 5",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node 4": {
-        "name": "Node 4",
-        "exits": [
-          {
-            "name": "Node 4 to Node 1",
-            "connected_region": "Node 1",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: -",
-                  "Button: /",
-                  "Button: 3",
-                  "Button: 4",
-                  "Button: 7"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Reach 4",
-            "id": 8,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Button: /",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach 4",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach 4",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node 6": {
-        "name": "Node 6",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Reach 6",
-            "id": 9,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Junk",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach 6",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach 6",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node 1": {
-        "name": "Node 1",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Reach 1",
-            "id": 10,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Button: 0",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach 1",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach 1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Node 10": {
-        "name": "Node 10",
-        "exits": [
-          {
-            "name": "Node 10 to Node 8",
-            "connected_region": "Node 8",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 2",
-                  "Button: 3",
-                  "Button: 7"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Node 10 to Node 14",
-            "connected_region": "Node 14",
-            "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 2,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 7": 1
-                }
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Reach 10",
-            "id": 11,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Junk",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Checked Reach 10",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Checked Reach 10",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
       "Node 8": {
         "name": "Node 8",
         "exits": [
           {
-            "name": "Node 8 to Node 11",
-            "connected_region": "Node 11",
+            "name": "Node 8 to Node 11 L1",
+            "connected_region": "Node 11 L1",
             "access_rule": {
-              "rule": "HasAllCounts",
+              "rule": "HasAll",
               "args": {
-                "items": {
-                  "Button: +": 2,
-                  "Button: 3": 2,
-                  "Button: -": 1,
-                  "Button: 2": 1,
-                  "Button: 7": 1
-                }
+                "items": [
+                  "Button: +",
+                  "Button: 3",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 8 to Node 245 L1",
+            "connected_region": "Node 245 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 8 to Node 31 L1",
+            "connected_region": "Node 31 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 8 to Node 72 L1",
+            "connected_region": "Node 72 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 8 to Node 15 L1",
+            "connected_region": "Node 15 L1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 7",
+                  "Button: 8"
+                ]
               }
             }
           }
@@ -690,7 +485,7 @@
         "locations": [
           {
             "name": "Reach 8",
-            "id": 12,
+            "id": 4,
             "access_rule": {
               "rule": "True_"
             },
@@ -719,12 +514,780 @@
           }
         ]
       },
-      "Node -2": {
-        "name": "Node -2",
-        "exits": [],
+      "Node 11 L1": {
+        "name": "Node 11 L1",
+        "exits": [
+          {
+            "name": "Node 11 L1 to Node -54 L2",
+            "connected_region": "Node -54 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 5",
+                  "Button: 6",
+                  "Button: 9"
+                ]
+              }
+            }
+          }
+        ],
         "locations": [
           {
-            "name": "Reach -2",
+            "name": "Reach 11 L1",
+            "id": 5,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 11 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 11 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 245 L1": {
+        "name": "Node 245 L1",
+        "exits": [
+          {
+            "name": "Node 245 L1 to Node -3124 L2",
+            "connected_region": "Node -3124 L2",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 3,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 245 L1 to Node 0 L2",
+            "connected_region": "Node 0 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 245 L1 to Node 12250 L2",
+            "connected_region": "Node 12250 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 5",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 245 L1 to Node 1493030 L2",
+            "connected_region": "Node 1493030 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 4",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 245 L1",
+            "id": 6,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 245 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 245 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 15 L1": {
+        "name": "Node 15 L1",
+        "exits": [
+          {
+            "name": "Node 15 L1 to Node -54 L2",
+            "connected_region": "Node -54 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 15 L1 to Node -278 L2",
+            "connected_region": "Node -278 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 15 L1 to Node 0 L2",
+            "connected_region": "Node 0 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 15 L1 to Node -34 L2",
+            "connected_region": "Node -34 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 4",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 15 L1 to Node 8055 L2",
+            "connected_region": "Node 8055 L2",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: 3": 1,
+                  "Button: 5": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 15 L1",
+            "id": 7,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: -",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 15 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 15 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 31 L1": {
+        "name": "Node 31 L1",
+        "exits": [
+          {
+            "name": "Node 31 L1 to Node 0 L2",
+            "connected_region": "Node 0 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 31 L1 to Node -54 L2",
+            "connected_region": "Node -54 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 4",
+                  "Button: 5",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 31 L1 to Node -278 L2",
+            "connected_region": "Node -278 L2",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 31 L1 to Node 177940 L2",
+            "connected_region": "Node 177940 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 4",
+                  "Button: 5",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 31 L1",
+            "id": 8,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 31 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 31 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -94 L1": {
+        "name": "Node -94 L1",
+        "exits": [
+          {
+            "name": "Node -94 L1 to Node 0 L2",
+            "connected_region": "Node 0 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: -",
+                  "Button: 0",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node -94 L1 to Node 7308 L2",
+            "connected_region": "Node 7308 L2",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 7": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node -94 L1 to Node -376 L2",
+            "connected_region": "Node -376 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: -",
+                  "Button: 3",
+                  "Button: 4",
+                  "Button: 7",
+                  "Button: 9"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -94 L1",
+            "id": 9,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: *",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -94 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -94 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -54 L2": {
+        "name": "Node -54 L2",
+        "exits": [
+          {
+            "name": "Node -54 L2 to Node 0 L3",
+            "connected_region": "Node 0 L3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 0",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node -54 L2 to Node -234360 L3",
+            "connected_region": "Node -234360 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 4": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -54 L2",
+            "id": 10,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -54 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -54 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -3124 L2": {
+        "name": "Node -3124 L2",
+        "exits": [
+          {
+            "name": "Node -3124 L2 to Node 0 L3",
+            "connected_region": "Node 0 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 3,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -3124 L2",
+            "id": 11,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 0",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -3124 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -3124 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -278 L2": {
+        "name": "Node -278 L2",
+        "exits": [
+          {
+            "name": "Node -278 L2 to Node 0 L3",
+            "connected_region": "Node 0 L3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node -278 L2 to Node -1402232 L3",
+            "connected_region": "Node -1402232 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 4": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 5": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -278 L2",
+            "id": 12,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -278 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -278 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 72 L1": {
+        "name": "Node 72 L1",
+        "exits": [
+          {
+            "name": "Node 72 L1 to Node 65 L2",
+            "connected_region": "Node 65 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: -",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 72 L1 to Node 7308 L2",
+            "connected_region": "Node 7308 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 72 L1 to Node -3600 L2",
+            "connected_region": "Node -3600 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 72 L1 to Node 0 L2",
+            "connected_region": "Node 0 L2",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 72 L1",
             "id": 13,
             "access_rule": {
               "rule": "True_"
@@ -738,13 +1301,13 @@
             "locked": false
           },
           {
-            "name": "Checked Reach -2",
+            "name": "Checked Reach 72 L1",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach -2",
+              "name": "Checked Reach 72 L1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -754,35 +1317,83 @@
           }
         ]
       },
-      "Node 9": {
-        "name": "Node 9",
+      "Node 65 L2": {
+        "name": "Node 65 L2",
         "exits": [
           {
-            "name": "Node 9 to Node 12",
-            "connected_region": "Node 12",
+            "name": "Node 65 L2 to Node 101 L3",
+            "connected_region": "Node 101 L3",
             "access_rule": {
-              "rule": "HasAllCounts",
+              "rule": "HasAll",
               "args": {
-                "items": {
-                  "Button: +": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 7": 1
-                }
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
               }
             }
           },
           {
-            "name": "Node 9 to Node 13",
-            "connected_region": "Node 13",
+            "name": "Node 65 L2 to Node 305 L3",
+            "connected_region": "Node 305 L3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 0",
+                  "Button: 2",
+                  "Button: 4",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 65 L2 to Node 89 L3",
+            "connected_region": "Node 89 L3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 4",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node 65 L2 to Node 5432 L3",
+            "connected_region": "Node 5432 L3",
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
                 "items": {
-                  "Button: +": 2,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 7": 1
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 3": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
                 }
               }
             }
@@ -790,27 +1401,27 @@
         ],
         "locations": [
           {
-            "name": "Reach 9",
+            "name": "Reach 65 L2",
             "id": 14,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 0",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           },
           {
-            "name": "Checked Reach 9",
+            "name": "Checked Reach 65 L2",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach 9",
+              "name": "Checked Reach 65 L2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -820,32 +1431,96 @@
           }
         ]
       },
-      "Node 12": {
-        "name": "Node 12",
-        "exits": [],
+      "Node 7308 L2": {
+        "name": "Node 7308 L2",
+        "exits": [
+          {
+            "name": "Node 7308 L2 to Node 305 L3",
+            "connected_region": "Node 305 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 2,
+                  "Button: 3": 2,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 7308 L2 to Node 0 L3",
+            "connected_region": "Node 0 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 2,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 7308 L2 to Node 3231 L3",
+            "connected_region": "Node 3231 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 7": 3,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
         "locations": [
           {
-            "name": "Reach 12",
+            "name": "Reach 7308 L2",
             "id": 15,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 7",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           },
           {
-            "name": "Checked Reach 12",
+            "name": "Checked Reach 7308 L2",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach 12",
+              "name": "Checked Reach 7308 L2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -855,32 +1530,32 @@
           }
         ]
       },
-      "Node 13": {
-        "name": "Node 13",
+      "Node 101 L3": {
+        "name": "Node 101 L3",
         "exits": [],
         "locations": [
           {
-            "name": "Reach 13",
+            "name": "Reach 101 L3",
             "id": 16,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: /",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           },
           {
-            "name": "Checked Reach 13",
+            "name": "Checked Reach 101 L3",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach 13",
+              "name": "Checked Reach 101 L3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -890,32 +1565,32 @@
           }
         ]
       },
-      "Node 0": {
-        "name": "Node 0",
+      "Node 305 L3": {
+        "name": "Node 305 L3",
         "exits": [],
         "locations": [
           {
-            "name": "Reach 0",
+            "name": "Reach 305 L3",
             "id": 17,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 0",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           },
           {
-            "name": "Checked Reach 0",
+            "name": "Checked Reach 305 L3",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach 0",
+              "name": "Checked Reach 305 L3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -925,12 +1600,76 @@
           }
         ]
       },
-      "Node 11": {
-        "name": "Node 11",
-        "exits": [],
+      "Node -3600 L2": {
+        "name": "Node -3600 L2",
+        "exits": [
+          {
+            "name": "Node -3600 L2 to Node -3300 L3",
+            "connected_region": "Node -3300 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 2,
+                  "Button: 3": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node -3600 L2 to Node -1200 L3",
+            "connected_region": "Node -1200 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 2,
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node -3600 L2 to Node -3053 L3",
+            "connected_region": "Node -3053 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
         "locations": [
           {
-            "name": "Reach 11",
+            "name": "Reach -3600 L2",
             "id": 18,
             "access_rule": {
               "rule": "True_"
@@ -944,13 +1683,13 @@
             "locked": false
           },
           {
-            "name": "Checked Reach 11",
+            "name": "Checked Reach -3600 L2",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach 11",
+              "name": "Checked Reach -3600 L2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -960,13 +1699,165 @@
           }
         ]
       },
-      "Node 14": {
-        "name": "Node 14",
+      "Node -3300 L3": {
+        "name": "Node -3300 L3",
         "exits": [],
         "locations": [
           {
-            "name": "Reach 14",
+            "name": "Reach -3300 L3",
             "id": 19,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 7",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -3300 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -3300 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -1200 L3": {
+        "name": "Node -1200 L3",
+        "exits": [
+          {
+            "name": "Node -1200 L3 to Node 2307 L4",
+            "connected_region": "Node 2307 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 3,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -1200 L3",
+            "id": 20,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: /",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -1200 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -1200 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 0 L2": {
+        "name": "Node 0 L2",
+        "exits": [
+          {
+            "name": "Node 0 L2 to Node 0 L3",
+            "connected_region": "Node 0 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 2,
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 0 L2 to Node -3300 L3",
+            "connected_region": "Node -3300 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 3,
+                  "Button: 3": 3,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 0 L2 to Node 6 L3",
+            "connected_region": "Node 6 L3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 2",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 0 L2",
+            "id": 21,
             "access_rule": {
               "rule": "True_"
             },
@@ -979,13 +1870,1765 @@
             "locked": false
           },
           {
-            "name": "Checked Reach 14",
+            "name": "Checked Reach 0 L2",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Checked Reach 14",
+              "name": "Checked Reach 0 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 0 L3": {
+        "name": "Node 0 L3",
+        "exits": [
+          {
+            "name": "Node 0 L3 to Node 2307 L4",
+            "connected_region": "Node 2307 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 2,
+                  "Button: 3": 3,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 0 L3 to Node 0 L4",
+            "connected_region": "Node 0 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 2,
+                  "Button: 0": 2,
+                  "Button: 3": 2,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 0 L3 to Node 4053 L4",
+            "connected_region": "Node 4053 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 2,
+                  "Button: 3": 3,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 4": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 0 L3",
+            "id": 22,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 0 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 0 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 2307 L4": {
+        "name": "Node 2307 L4",
+        "exits": [
+          {
+            "name": "Node 2307 L4 to Node 769 L5",
+            "connected_region": "Node 769 L5",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 2,
+                  "Button: 0": 2,
+                  "Button: 3": 4,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 2307 L4",
+            "id": 23,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 2307 L4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 2307 L4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 769 L5": {
+        "name": "Node 769 L5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 769 L5",
+            "id": 24,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 769 L5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 769 L5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 0 L4": {
+        "name": "Node 0 L4",
+        "exits": [
+          {
+            "name": "Node 0 L4 to Node 4537 L5",
+            "connected_region": "Node 4537 L5",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 2,
+                  "Button: 0": 2,
+                  "Button: 3": 3,
+                  "Button: 7": 3,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 4": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 0 L4 to Node 0 L5",
+            "connected_region": "Node 0 L5",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 3,
+                  "Button: 0": 2,
+                  "Button: 3": 2,
+                  "Button: 7": 3,
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 0 L4 to Node 3 L5",
+            "connected_region": "Node 3 L5",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 2,
+                  "Button: 0": 2,
+                  "Button: 3": 3,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 0 L4",
+            "id": 25,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: /",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 0 L4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 0 L4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 4537 L5": {
+        "name": "Node 4537 L5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 4537 L5",
+            "id": 26,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: /",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 4537 L5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 4537 L5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 4053 L4": {
+        "name": "Node 4053 L4",
+        "exits": [
+          {
+            "name": "Node 4053 L4 to Node 1351 L5",
+            "connected_region": "Node 1351 L5",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 2,
+                  "Button: 0": 2,
+                  "Button: 3": 4,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 4": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 4053 L4",
+            "id": 27,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 4053 L4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 4053 L4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 1351 L5": {
+        "name": "Node 1351 L5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 1351 L5",
+            "id": 28,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 1351 L5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 1351 L5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 0 L5": {
+        "name": "Node 0 L5",
+        "exits": [
+          {
+            "name": "Node 0 L5 to Node 0 L6",
+            "connected_region": "Node 0 L6",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 4,
+                  "Button: 0": 2,
+                  "Button: 3": 3,
+                  "Button: 7": 3,
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: 4": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 0 L5",
+            "id": 29,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Button: 4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 0 L5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 0 L5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 89 L3": {
+        "name": "Node 89 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 89 L3",
+            "id": 30,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 89 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 89 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 12250 L2": {
+        "name": "Node 12250 L2",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 12250 L2",
+            "id": 31,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 12250 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 12250 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -34 L2": {
+        "name": "Node -34 L2",
+        "exits": [
+          {
+            "name": "Node -34 L2 to Node -204 L3",
+            "connected_region": "Node -204 L3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: +",
+                  "Button: -",
+                  "Button: 4",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Node -34 L2 to Node -1598 L3",
+            "connected_region": "Node -1598 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 4": 2,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -34 L2",
+            "id": 32,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -34 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -34 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -204 L3": {
+        "name": "Node -204 L3",
+        "exits": [
+          {
+            "name": "Node -204 L3 to Node -51 L4",
+            "connected_region": "Node -51 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 4": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -204 L3",
+            "id": 33,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -204 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -204 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -51 L4": {
+        "name": "Node -51 L4",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -51 L4",
+            "id": 34,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -51 L4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -51 L4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 8055 L2": {
+        "name": "Node 8055 L2",
+        "exits": [
+          {
+            "name": "Node 8055 L2 to Node 8029 L3",
+            "connected_region": "Node 8029 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "Node 8055 L2 to Node 1611 L3",
+            "connected_region": "Node 1611 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 5": 2,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: /": 1,
+                  "Button: 3": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 8055 L2",
+            "id": 35,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 8055 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 8055 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 8029 L3": {
+        "name": "Node 8029 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 8029 L3",
+            "id": 36,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 8029 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 8029 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -376 L2": {
+        "name": "Node -376 L2",
+        "exits": [
+          {
+            "name": "Node -376 L2 to Node 2972 L3",
+            "connected_region": "Node 2972 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 3,
+                  "Button: 4": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -376 L2",
+            "id": 37,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -376 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -376 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -1598 L3": {
+        "name": "Node -1598 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -1598 L3",
+            "id": 38,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -1598 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -1598 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 6 L3": {
+        "name": "Node 6 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 6 L3",
+            "id": 39,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 6 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 6 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 5432 L3": {
+        "name": "Node 5432 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 5432 L3",
+            "id": 40,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 5432 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 5432 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 1611 L3": {
+        "name": "Node 1611 L3",
+        "exits": [
+          {
+            "name": "Node 1611 L3 to Node 1519 L4",
+            "connected_region": "Node 1519 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 5": 2,
+                  "Button: 7": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 1611 L3",
+            "id": 41,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 1611 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 1611 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 1519 L4": {
+        "name": "Node 1519 L4",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 1519 L4",
+            "id": 42,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 1519 L4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 1519 L4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -3053 L3": {
+        "name": "Node -3053 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -3053 L3",
+            "id": 43,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -3053 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -3053 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -1402232 L3": {
+        "name": "Node -1402232 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -1402232 L3",
+            "id": 44,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -1402232 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -1402232 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 28 L1": {
+        "name": "Node 28 L1",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 28 L1",
+            "id": 45,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 28 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 28 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -234360 L3": {
+        "name": "Node -234360 L3",
+        "exits": [
+          {
+            "name": "Node -234360 L3 to Node -78120 L4",
+            "connected_region": "Node -78120 L4",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -234360 L3",
+            "id": 46,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -234360 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -234360 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 1493030 L2": {
+        "name": "Node 1493030 L2",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 1493030 L2",
+            "id": 47,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 1493030 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 1493030 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 3231 L3": {
+        "name": "Node 3231 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 3231 L3",
+            "id": 48,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 3231 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 3231 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 17300 L1": {
+        "name": "Node 17300 L1",
+        "exits": [
+          {
+            "name": "Node 17300 L1 to Node 17837 L2",
+            "connected_region": "Node 17837 L2",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 5": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: 0": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 17300 L1",
+            "id": 49,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 17300 L1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 17300 L1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 17837 L2": {
+        "name": "Node 17837 L2",
+        "exits": [
+          {
+            "name": "Node 17837 L2 to Node 17747 L3",
+            "connected_region": "Node 17747 L3",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: 0": 2,
+                  "Button: 5": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 17837 L2",
+            "id": 50,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 17837 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 17837 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 17747 L3": {
+        "name": "Node 17747 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 17747 L3",
+            "id": 51,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 17747 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 17747 L3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -78120 L4": {
+        "name": "Node -78120 L4",
+        "exits": [
+          {
+            "name": "Node -78120 L4 to Node -2604 L5",
+            "connected_region": "Node -2604 L5",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 2,
+                  "Button: 0": 2,
+                  "Button: 3": 3,
+                  "Button: 4": 2,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach -78120 L4",
+            "id": 52,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -78120 L4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -78120 L4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node -2604 L5": {
+        "name": "Node -2604 L5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach -2604 L5",
+            "id": 53,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach -2604 L5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach -2604 L5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 3 L5": {
+        "name": "Node 3 L5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 3 L5",
+            "id": 54,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 3 L5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 3 L5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 177940 L2": {
+        "name": "Node 177940 L2",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 177940 L2",
+            "id": 55,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 177940 L2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 177940 L2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 0 L6": {
+        "name": "Node 0 L6",
+        "exits": [
+          {
+            "name": "Node 0 L6 to Node 20 L7",
+            "connected_region": "Node 20 L7",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: /": 4,
+                  "Button: 0": 3,
+                  "Button: 3": 3,
+                  "Button: 7": 3,
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 2": 1,
+                  "Button: 4": 1,
+                  "Button: 5": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Reach 0 L6",
+            "id": 56,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 0 L6",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 0 L6",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 20 L7": {
+        "name": "Node 20 L7",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 20 L7",
+            "id": 57,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 20 L7",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 20 L7",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Node 2972 L3": {
+        "name": "Node 2972 L3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Reach 2972 L3",
+            "id": 58,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Junk",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Checked Reach 2972 L3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Checked Reach 2972 L3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1007,8 +3650,8 @@
   },
   "items": {
     "1": {
-      "Button: +": {
-        "name": "Button: +",
+      "Button: *": {
+        "name": "Button: *",
         "id": 1,
         "groups": [
           "Buttons",
@@ -1016,12 +3659,23 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 2
+        "max_count": 1
+      },
+      "Button: +": {
+        "name": "Button: +",
+        "id": 2,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
       },
       "Button: -": {
         "name": "Button: -",
         "hint_text": "Button:  ",
-        "id": 2,
+        "id": 3,
         "groups": [
           "Buttons",
           "Everything"
@@ -1032,17 +3686,6 @@
       },
       "Button: /": {
         "name": "Button: /",
-        "id": 3,
-        "groups": [
-          "Buttons",
-          "Everything"
-        ],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Button: 0": {
-        "name": "Button: 0",
         "id": 4,
         "groups": [
           "Buttons",
@@ -1050,11 +3693,22 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 2
+        "max_count": 4
+      },
+      "Button: 0": {
+        "name": "Button: 0",
+        "id": 5,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
       },
       "Button: 2": {
         "name": "Button: 2",
-        "id": 5,
+        "id": 6,
         "groups": [
           "Buttons",
           "Everything"
@@ -1065,7 +3719,18 @@
       },
       "Button: 3": {
         "name": "Button: 3",
-        "id": 6,
+        "id": 7,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 4
+      },
+      "Button: 4": {
+        "name": "Button: 4",
+        "id": 8,
         "groups": [
           "Buttons",
           "Everything"
@@ -1074,9 +3739,20 @@
         "type": null,
         "max_count": 2
       },
-      "Button: 4": {
-        "name": "Button: 4",
-        "id": 7,
+      "Button: 5": {
+        "name": "Button: 5",
+        "id": 9,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 2
+      },
+      "Button: 6": {
+        "name": "Button: 6",
+        "id": 10,
         "groups": [
           "Buttons",
           "Everything"
@@ -1087,7 +3763,29 @@
       },
       "Button: 7": {
         "name": "Button: 7",
-        "id": 8,
+        "id": 11,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
+      },
+      "Button: 8": {
+        "name": "Button: 8",
+        "id": 12,
+        "groups": [
+          "Buttons",
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Button: 9": {
+        "name": "Button: 9",
+        "id": 13,
         "groups": [
           "Buttons",
           "Everything"
@@ -1098,14 +3796,14 @@
       },
       "Junk": {
         "name": "Junk",
-        "id": 9,
+        "id": 14,
         "groups": [
           "Everything",
           "Filler"
         ],
         "classification": "filler",
         "type": null,
-        "max_count": 11
+        "max_count": 37
       },
       "Victory": {
         "name": "Victory",
@@ -1151,97 +3849,6 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach -5": {
-        "name": "Checked Reach -5",
-        "hint_text": "Checked Reach  5",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach -4": {
-        "name": "Checked Reach -4",
-        "hint_text": "Checked Reach  4",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach -1": {
-        "name": "Checked Reach -1",
-        "hint_text": "Checked Reach  1",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach 5": {
-        "name": "Checked Reach 5",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach 4": {
-        "name": "Checked Reach 4",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach 6": {
-        "name": "Checked Reach 6",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach 1": {
-        "name": "Checked Reach 1",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Checked Reach 10": {
-        "name": "Checked Reach 10",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Checked Reach 8": {
         "name": "Checked Reach 8",
         "id": null,
@@ -1253,9 +3860,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach -2": {
-        "name": "Checked Reach -2",
-        "hint_text": "Checked Reach  2",
+      "Checked Reach 11 L1": {
+        "name": "Checked Reach 11 L1",
         "id": null,
         "groups": [
           "Event"
@@ -1265,8 +3871,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach 9": {
-        "name": "Checked Reach 9",
+      "Checked Reach 245 L1": {
+        "name": "Checked Reach 245 L1",
         "id": null,
         "groups": [
           "Event"
@@ -1276,8 +3882,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach 12": {
-        "name": "Checked Reach 12",
+      "Checked Reach 15 L1": {
+        "name": "Checked Reach 15 L1",
         "id": null,
         "groups": [
           "Event"
@@ -1287,8 +3893,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach 13": {
-        "name": "Checked Reach 13",
+      "Checked Reach 31 L1": {
+        "name": "Checked Reach 31 L1",
         "id": null,
         "groups": [
           "Event"
@@ -1298,8 +3904,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach 0": {
-        "name": "Checked Reach 0",
+      "Checked Reach -94 L1": {
+        "name": "Checked Reach -94 L1",
+        "hint_text": "Checked Reach  94 L1",
         "id": null,
         "groups": [
           "Event"
@@ -1309,8 +3916,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach 11": {
-        "name": "Checked Reach 11",
+      "Checked Reach -54 L2": {
+        "name": "Checked Reach -54 L2",
+        "hint_text": "Checked Reach  54 L2",
         "id": null,
         "groups": [
           "Event"
@@ -1320,8 +3928,540 @@
         "type": "Event",
         "max_count": 1
       },
-      "Checked Reach 14": {
-        "name": "Checked Reach 14",
+      "Checked Reach -3124 L2": {
+        "name": "Checked Reach -3124 L2",
+        "hint_text": "Checked Reach  3124 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -278 L2": {
+        "name": "Checked Reach -278 L2",
+        "hint_text": "Checked Reach  278 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 72 L1": {
+        "name": "Checked Reach 72 L1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 65 L2": {
+        "name": "Checked Reach 65 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 7308 L2": {
+        "name": "Checked Reach 7308 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 101 L3": {
+        "name": "Checked Reach 101 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 305 L3": {
+        "name": "Checked Reach 305 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -3600 L2": {
+        "name": "Checked Reach -3600 L2",
+        "hint_text": "Checked Reach  3600 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -3300 L3": {
+        "name": "Checked Reach -3300 L3",
+        "hint_text": "Checked Reach  3300 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -1200 L3": {
+        "name": "Checked Reach -1200 L3",
+        "hint_text": "Checked Reach  1200 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 0 L2": {
+        "name": "Checked Reach 0 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 0 L3": {
+        "name": "Checked Reach 0 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 2307 L4": {
+        "name": "Checked Reach 2307 L4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 769 L5": {
+        "name": "Checked Reach 769 L5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 0 L4": {
+        "name": "Checked Reach 0 L4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 4537 L5": {
+        "name": "Checked Reach 4537 L5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 4053 L4": {
+        "name": "Checked Reach 4053 L4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 1351 L5": {
+        "name": "Checked Reach 1351 L5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 0 L5": {
+        "name": "Checked Reach 0 L5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 89 L3": {
+        "name": "Checked Reach 89 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 12250 L2": {
+        "name": "Checked Reach 12250 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -34 L2": {
+        "name": "Checked Reach -34 L2",
+        "hint_text": "Checked Reach  34 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -204 L3": {
+        "name": "Checked Reach -204 L3",
+        "hint_text": "Checked Reach  204 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -51 L4": {
+        "name": "Checked Reach -51 L4",
+        "hint_text": "Checked Reach  51 L4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 8055 L2": {
+        "name": "Checked Reach 8055 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 8029 L3": {
+        "name": "Checked Reach 8029 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -376 L2": {
+        "name": "Checked Reach -376 L2",
+        "hint_text": "Checked Reach  376 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -1598 L3": {
+        "name": "Checked Reach -1598 L3",
+        "hint_text": "Checked Reach  1598 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 6 L3": {
+        "name": "Checked Reach 6 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 5432 L3": {
+        "name": "Checked Reach 5432 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 1611 L3": {
+        "name": "Checked Reach 1611 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 1519 L4": {
+        "name": "Checked Reach 1519 L4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -3053 L3": {
+        "name": "Checked Reach -3053 L3",
+        "hint_text": "Checked Reach  3053 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -1402232 L3": {
+        "name": "Checked Reach -1402232 L3",
+        "hint_text": "Checked Reach  1402232 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 28 L1": {
+        "name": "Checked Reach 28 L1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -234360 L3": {
+        "name": "Checked Reach -234360 L3",
+        "hint_text": "Checked Reach  234360 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 1493030 L2": {
+        "name": "Checked Reach 1493030 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 3231 L3": {
+        "name": "Checked Reach 3231 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 17300 L1": {
+        "name": "Checked Reach 17300 L1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 17837 L2": {
+        "name": "Checked Reach 17837 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 17747 L3": {
+        "name": "Checked Reach 17747 L3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -78120 L4": {
+        "name": "Checked Reach -78120 L4",
+        "hint_text": "Checked Reach  78120 L4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach -2604 L5": {
+        "name": "Checked Reach -2604 L5",
+        "hint_text": "Checked Reach  2604 L5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 3 L5": {
+        "name": "Checked Reach 3 L5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 177940 L2": {
+        "name": "Checked Reach 177940 L2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 0 L6": {
+        "name": "Checked Reach 0 L6",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 20 L7": {
+        "name": "Checked Reach 20 L7",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Checked Reach 2972 L3": {
+        "name": "Checked Reach 2972 L3",
         "id": null,
         "groups": [
           "Event"
@@ -1342,78 +4482,200 @@
   },
   "itempool_counts": {
     "1": {
-      "Button: +": 2,
+      "Button: *": 1,
+      "Button: +": 1,
       "Button: -": 1,
-      "Button: /": 1,
-      "Button: 0": 2,
+      "Button: /": 4,
+      "Button: 0": 3,
       "Button: 2": 1,
-      "Button: 3": 2,
-      "Button: 4": 1,
-      "Button: 7": 1,
-      "Checked Reach -1": 1,
-      "Checked Reach -2": 1,
-      "Checked Reach -4": 1,
-      "Checked Reach -5": 1,
-      "Checked Reach 0": 1,
-      "Checked Reach 1": 1,
-      "Checked Reach 10": 1,
-      "Checked Reach 11": 1,
-      "Checked Reach 12": 1,
-      "Checked Reach 13": 1,
-      "Checked Reach 14": 1,
+      "Button: 3": 4,
+      "Button: 4": 2,
+      "Button: 5": 2,
+      "Button: 6": 1,
+      "Button: 7": 3,
+      "Button: 8": 1,
+      "Button: 9": 1,
+      "Checked Reach -1200 L3": 1,
+      "Checked Reach -1402232 L3": 1,
+      "Checked Reach -1598 L3": 1,
+      "Checked Reach -204 L3": 1,
+      "Checked Reach -234360 L3": 1,
+      "Checked Reach -2604 L5": 1,
+      "Checked Reach -278 L2": 1,
+      "Checked Reach -3053 L3": 1,
+      "Checked Reach -3124 L2": 1,
+      "Checked Reach -3300 L3": 1,
+      "Checked Reach -34 L2": 1,
+      "Checked Reach -3600 L2": 1,
+      "Checked Reach -376 L2": 1,
+      "Checked Reach -51 L4": 1,
+      "Checked Reach -54 L2": 1,
+      "Checked Reach -78120 L4": 1,
+      "Checked Reach -94 L1": 1,
+      "Checked Reach 0 L2": 1,
+      "Checked Reach 0 L3": 1,
+      "Checked Reach 0 L4": 1,
+      "Checked Reach 0 L5": 1,
+      "Checked Reach 0 L6": 1,
+      "Checked Reach 101 L3": 1,
+      "Checked Reach 11 L1": 1,
+      "Checked Reach 12250 L2": 1,
+      "Checked Reach 1351 L5": 1,
+      "Checked Reach 1493030 L2": 1,
+      "Checked Reach 15 L1": 1,
+      "Checked Reach 1519 L4": 1,
+      "Checked Reach 1611 L3": 1,
+      "Checked Reach 17300 L1": 1,
+      "Checked Reach 17747 L3": 1,
+      "Checked Reach 177940 L2": 1,
+      "Checked Reach 17837 L2": 1,
       "Checked Reach 2": 1,
+      "Checked Reach 20 L7": 1,
+      "Checked Reach 2307 L4": 1,
+      "Checked Reach 245 L1": 1,
+      "Checked Reach 28 L1": 1,
+      "Checked Reach 2972 L3": 1,
       "Checked Reach 3": 1,
-      "Checked Reach 4": 1,
-      "Checked Reach 5": 1,
-      "Checked Reach 6": 1,
+      "Checked Reach 3 L5": 1,
+      "Checked Reach 305 L3": 1,
+      "Checked Reach 31 L1": 1,
+      "Checked Reach 3231 L3": 1,
+      "Checked Reach 4053 L4": 1,
+      "Checked Reach 4537 L5": 1,
+      "Checked Reach 5432 L3": 1,
+      "Checked Reach 6 L3": 1,
+      "Checked Reach 65 L2": 1,
       "Checked Reach 7": 1,
+      "Checked Reach 72 L1": 1,
+      "Checked Reach 7308 L2": 1,
+      "Checked Reach 769 L5": 1,
       "Checked Reach 8": 1,
-      "Checked Reach 9": 1,
-      "Junk": 11,
+      "Checked Reach 8029 L3": 1,
+      "Checked Reach 8055 L2": 1,
+      "Checked Reach 89 L3": 1,
+      "Junk": 37,
       "Victory": 1
     }
   },
   "canonical_placements": {
     "1": {
       "Victory": "Victory",
-      "Reach 1": "Button: 0",
-      "Reach 7": "Button: 0",
+      "Reach 7": "Button: 9",
       "Checked Reach 7": "Checked Reach 7",
-      "Reach -1": "Junk",
-      "Reach -2": "Junk",
-      "Reach 0": "Junk",
-      "Reach 10": "Junk",
-      "Reach 11": "Junk",
-      "Reach 12": "Junk",
-      "Reach 13": "Junk",
-      "Reach 14": "Junk",
-      "Reach 3": "Junk",
-      "Reach 6": "Junk",
-      "Reach 9": "Junk",
+      "Reach 3": "Button: 6",
       "Checked Reach 3": "Checked Reach 3",
-      "Reach 2": "Button: -",
+      "Reach -1402232 L3": "Junk",
+      "Reach -1598 L3": "Junk",
+      "Reach -204 L3": "Junk",
+      "Reach -234360 L3": "Junk",
+      "Reach -2604 L5": "Junk",
+      "Reach -278 L2": "Junk",
+      "Reach -3053 L3": "Junk",
+      "Reach -34 L2": "Junk",
+      "Reach -3600 L2": "Junk",
+      "Reach -376 L2": "Junk",
+      "Reach -51 L4": "Junk",
+      "Reach -78120 L4": "Junk",
+      "Reach 0 L2": "Junk",
+      "Reach 0 L3": "Junk",
+      "Reach 0 L6": "Junk",
+      "Reach 12250 L2": "Junk",
+      "Reach 1493030 L2": "Junk",
+      "Reach 1519 L4": "Junk",
+      "Reach 1611 L3": "Junk",
+      "Reach 17300 L1": "Junk",
+      "Reach 17747 L3": "Junk",
+      "Reach 177940 L2": "Junk",
+      "Reach 17837 L2": "Junk",
+      "Reach 2": "Junk",
+      "Reach 20 L7": "Junk",
+      "Reach 28 L1": "Junk",
+      "Reach 2972 L3": "Junk",
+      "Reach 3 L5": "Junk",
+      "Reach 31 L1": "Junk",
+      "Reach 3231 L3": "Junk",
+      "Reach 4053 L4": "Junk",
+      "Reach 5432 L3": "Junk",
+      "Reach 6 L3": "Junk",
+      "Reach 72 L1": "Junk",
+      "Reach 8029 L3": "Junk",
+      "Reach 8055 L2": "Junk",
+      "Reach 89 L3": "Junk",
       "Checked Reach 2": "Checked Reach 2",
-      "Reach -5": "Button: 3",
-      "Checked Reach -5": "Checked Reach -5",
-      "Reach -4": "Button: +",
       "Reach 8": "Button: +",
-      "Checked Reach -4": "Checked Reach -4",
-      "Checked Reach -1": "Checked Reach -1",
-      "Reach 5": "Button: 4",
-      "Checked Reach 5": "Checked Reach 5",
-      "Reach 4": "Button: /",
-      "Checked Reach 4": "Checked Reach 4",
-      "Checked Reach 6": "Checked Reach 6",
-      "Checked Reach 1": "Checked Reach 1",
-      "Checked Reach 10": "Checked Reach 10",
       "Checked Reach 8": "Checked Reach 8",
-      "Checked Reach -2": "Checked Reach -2",
-      "Checked Reach 9": "Checked Reach 9",
-      "Checked Reach 12": "Checked Reach 12",
-      "Checked Reach 13": "Checked Reach 13",
-      "Checked Reach 0": "Checked Reach 0",
-      "Checked Reach 11": "Checked Reach 11",
-      "Checked Reach 14": "Checked Reach 14"
+      "Reach -54 L2": "Button: 3",
+      "Reach 11 L1": "Button: 3",
+      "Reach 245 L1": "Button: 3",
+      "Checked Reach 11 L1": "Checked Reach 11 L1",
+      "Checked Reach 245 L1": "Checked Reach 245 L1",
+      "Reach 15 L1": "Button: -",
+      "Checked Reach 15 L1": "Checked Reach 15 L1",
+      "Checked Reach 31 L1": "Checked Reach 31 L1",
+      "Reach -94 L1": "Button: *",
+      "Checked Reach -94 L1": "Checked Reach -94 L1",
+      "Checked Reach -54 L2": "Checked Reach -54 L2",
+      "Reach -3124 L2": "Button: 0",
+      "Reach 305 L3": "Button: 0",
+      "Reach 65 L2": "Button: 0",
+      "Checked Reach -3124 L2": "Checked Reach -3124 L2",
+      "Checked Reach -278 L2": "Checked Reach -278 L2",
+      "Checked Reach 72 L1": "Checked Reach 72 L1",
+      "Checked Reach 65 L2": "Checked Reach 65 L2",
+      "Reach -3300 L3": "Button: 7",
+      "Reach 7308 L2": "Button: 7",
+      "Checked Reach 7308 L2": "Checked Reach 7308 L2",
+      "Reach -1200 L3": "Button: /",
+      "Reach 0 L4": "Button: /",
+      "Reach 101 L3": "Button: /",
+      "Reach 4537 L5": "Button: /",
+      "Checked Reach 101 L3": "Checked Reach 101 L3",
+      "Checked Reach 305 L3": "Checked Reach 305 L3",
+      "Checked Reach -3600 L2": "Checked Reach -3600 L2",
+      "Checked Reach -3300 L3": "Checked Reach -3300 L3",
+      "Checked Reach -1200 L3": "Checked Reach -1200 L3",
+      "Checked Reach 0 L2": "Checked Reach 0 L2",
+      "Checked Reach 0 L3": "Checked Reach 0 L3",
+      "Reach 0 L5": "Button: 4",
+      "Reach 2307 L4": "Button: 4",
+      "Checked Reach 2307 L4": "Checked Reach 2307 L4",
+      "Reach 1351 L5": "Button: 5",
+      "Reach 769 L5": "Button: 5",
+      "Checked Reach 769 L5": "Checked Reach 769 L5",
+      "Checked Reach 0 L4": "Checked Reach 0 L4",
+      "Checked Reach 4537 L5": "Checked Reach 4537 L5",
+      "Checked Reach 4053 L4": "Checked Reach 4053 L4",
+      "Checked Reach 1351 L5": "Checked Reach 1351 L5",
+      "Checked Reach 0 L5": "Checked Reach 0 L5",
+      "Checked Reach 89 L3": "Checked Reach 89 L3",
+      "Checked Reach 12250 L2": "Checked Reach 12250 L2",
+      "Checked Reach -34 L2": "Checked Reach -34 L2",
+      "Checked Reach -204 L3": "Checked Reach -204 L3",
+      "Checked Reach -51 L4": "Checked Reach -51 L4",
+      "Checked Reach 8055 L2": "Checked Reach 8055 L2",
+      "Checked Reach 8029 L3": "Checked Reach 8029 L3",
+      "Checked Reach -376 L2": "Checked Reach -376 L2",
+      "Checked Reach -1598 L3": "Checked Reach -1598 L3",
+      "Checked Reach 6 L3": "Checked Reach 6 L3",
+      "Checked Reach 5432 L3": "Checked Reach 5432 L3",
+      "Checked Reach 1611 L3": "Checked Reach 1611 L3",
+      "Checked Reach 1519 L4": "Checked Reach 1519 L4",
+      "Checked Reach -3053 L3": "Checked Reach -3053 L3",
+      "Checked Reach -1402232 L3": "Checked Reach -1402232 L3",
+      "Checked Reach 28 L1": "Checked Reach 28 L1",
+      "Checked Reach -234360 L3": "Checked Reach -234360 L3",
+      "Checked Reach 1493030 L2": "Checked Reach 1493030 L2",
+      "Checked Reach 3231 L3": "Checked Reach 3231 L3",
+      "Checked Reach 17300 L1": "Checked Reach 17300 L1",
+      "Checked Reach 17837 L2": "Checked Reach 17837 L2",
+      "Checked Reach 17747 L3": "Checked Reach 17747 L3",
+      "Checked Reach -78120 L4": "Checked Reach -78120 L4",
+      "Checked Reach -2604 L5": "Checked Reach -2604 L5",
+      "Checked Reach 3 L5": "Checked Reach 3 L5",
+      "Checked Reach 177940 L2": "Checked Reach 177940 L2",
+      "Checked Reach 0 L6": "Checked Reach 0 L6",
+      "Checked Reach 20 L7": "Checked Reach 20 L7",
+      "Checked Reach 2972 L3": "Checked Reach 2972 L3"
     }
   },
   "progression_mapping": {
@@ -1423,7 +4685,8 @@
     "1": [
       "Button: 2",
       "Button: 3",
-      "Button: 7"
+      "Button: 7",
+      "Button: 8"
     ]
   },
   "world": {
@@ -1479,312 +4742,1185 @@
         "nodes": {
           "Node 7": {
             "value": 7,
-            "parent": null,
+            "layer": 0,
             "sphere": 0,
-            "operation": null,
-            "operand": null,
-            "button_sequence": [
-              "7",
-              "="
-            ],
-            "item": "0"
+            "item": "9"
           },
           "Node 3": {
             "value": 3,
-            "parent": null,
+            "layer": 0,
             "sphere": 0,
-            "operation": null,
-            "operand": null,
-            "button_sequence": [
-              "3",
-              "="
-            ],
-            "item": "Junk"
+            "item": "6"
           },
           "Node 2": {
             "value": 2,
-            "parent": null,
+            "layer": 0,
             "sphere": 0,
-            "operation": null,
-            "operand": null,
-            "button_sequence": [
-              "2",
-              "="
-            ],
-            "item": "-"
-          },
-          "Node -5": {
-            "value": -5,
-            "parent": "Node 2",
-            "sphere": 1,
-            "operation": "-",
-            "operand": 7,
-            "button_sequence": [
-              "2",
-              "=",
-              "-",
-              "7",
-              "="
-            ],
-            "item": "3"
-          },
-          "Node -4": {
-            "value": -4,
-            "parent": "Node 3",
-            "sphere": 1,
-            "operation": "-",
-            "operand": 7,
-            "button_sequence": [
-              "3",
-              "=",
-              "-",
-              "7",
-              "="
-            ],
-            "item": "+"
-          },
-          "Node -1": {
-            "value": -1,
-            "parent": "Node 2",
-            "sphere": 1,
-            "operation": "-",
-            "operand": 3,
-            "button_sequence": [
-              "2",
-              "=",
-              "-",
-              "3",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 5": {
-            "value": 5,
-            "parent": "Node 2",
-            "sphere": 2,
-            "operation": "+",
-            "operand": 3,
-            "button_sequence": [
-              "2",
-              "=",
-              "+",
-              "3",
-              "="
-            ],
-            "item": "4"
-          },
-          "Node 4": {
-            "value": 4,
-            "parent": "Node 7",
-            "sphere": 2,
-            "operation": "-",
-            "operand": 3,
-            "button_sequence": [
-              "7",
-              "=",
-              "-",
-              "3",
-              "="
-            ],
-            "item": "/"
-          },
-          "Node 6": {
-            "value": 6,
-            "parent": "Node -1",
-            "sphere": 2,
-            "operation": "+",
-            "operand": 7,
-            "button_sequence": [
-              "2",
-              "=",
-              "-",
-              "3",
-              "=",
-              "+",
-              "7",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 1": {
-            "value": 1,
-            "parent": "Node 4",
-            "sphere": 3,
-            "operation": "/",
-            "operand": 4,
-            "button_sequence": [
-              "7",
-              "=",
-              "-",
-              "3",
-              "=",
-              "/",
-              "4",
-              "="
-            ],
-            "item": "0"
-          },
-          "Node 10": {
-            "value": 10,
-            "parent": "Node 3",
-            "sphere": 3,
-            "operation": "+",
-            "operand": 7,
-            "button_sequence": [
-              "3",
-              "=",
-              "+",
-              "7",
-              "="
-            ],
             "item": "Junk"
           },
           "Node 8": {
             "value": 8,
-            "parent": "Node 10",
-            "sphere": 3,
-            "operation": "-",
-            "operand": 2,
-            "button_sequence": [
-              "3",
-              "=",
-              "+",
-              "7",
-              "=",
-              "-",
-              "2",
-              "="
-            ],
+            "layer": 0,
+            "sphere": 0,
             "item": "+"
           },
-          "Node -2": {
-            "value": -2,
-            "parent": "Node -5",
-            "sphere": 4,
-            "operation": "+",
-            "operand": 3,
-            "button_sequence": [
-              "2",
-              "=",
-              "-",
-              "7",
-              "=",
-              "+",
-              "3",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 9": {
-            "value": 9,
-            "parent": "Node 7",
-            "sphere": 4,
-            "operation": "+",
-            "operand": 2,
-            "button_sequence": [
-              "7",
-              "=",
-              "+",
-              "2",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 12": {
-            "value": 12,
-            "parent": "Node 9",
-            "sphere": 4,
-            "operation": "+",
-            "operand": 3,
-            "button_sequence": [
-              "7",
-              "=",
-              "+",
-              "2",
-              "=",
-              "+",
-              "3",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 13": {
-            "value": 13,
-            "parent": "Node 9",
-            "sphere": 4,
-            "operation": "+",
-            "operand": 4,
-            "button_sequence": [
-              "7",
-              "=",
-              "+",
-              "2",
-              "=",
-              "+",
-              "4",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 0": {
-            "value": 0,
-            "parent": "Node 3",
-            "sphere": 4,
-            "operation": "-",
-            "operand": 3,
-            "button_sequence": [
-              "3",
-              "=",
-              "-",
-              "3",
-              "="
-            ],
-            "item": "Junk"
-          },
-          "Node 11": {
+          "Node 11 L1": {
             "value": 11,
-            "parent": "Node 8",
-            "sphere": 4,
-            "operation": "+",
-            "operand": 3,
-            "button_sequence": [
-              "3",
-              "=",
-              "+",
-              "7",
-              "=",
-              "-",
-              "2",
-              "=",
-              "+",
-              "3",
-              "="
-            ],
+            "layer": 1,
+            "sphere": 1,
+            "item": "3"
+          },
+          "Node 245 L1": {
+            "value": 245,
+            "layer": 1,
+            "sphere": 1,
+            "item": "3"
+          },
+          "Node 15 L1": {
+            "value": 15,
+            "layer": 1,
+            "sphere": 1,
+            "item": "-"
+          },
+          "Node 31 L1": {
+            "value": 31,
+            "layer": 1,
+            "sphere": 1,
             "item": "Junk"
           },
-          "Node 14": {
-            "value": 14,
-            "parent": "Node 10",
+          "Node -94 L1": {
+            "value": -94,
+            "layer": 1,
+            "sphere": 2,
+            "item": "*"
+          },
+          "Node -54 L2": {
+            "value": -54,
+            "layer": 2,
+            "sphere": 2,
+            "item": "3"
+          },
+          "Node -3124 L2": {
+            "value": -3124,
+            "layer": 2,
+            "sphere": 2,
+            "item": "0"
+          },
+          "Node -278 L2": {
+            "value": -278,
+            "layer": 2,
+            "sphere": 2,
+            "item": "Junk"
+          },
+          "Node 72 L1": {
+            "value": 72,
+            "layer": 1,
+            "sphere": 3,
+            "item": "Junk"
+          },
+          "Node 65 L2": {
+            "value": 65,
+            "layer": 2,
+            "sphere": 3,
+            "item": "0"
+          },
+          "Node 7308 L2": {
+            "value": 7308,
+            "layer": 2,
+            "sphere": 3,
+            "item": "7"
+          },
+          "Node 101 L3": {
+            "value": 101,
+            "layer": 3,
+            "sphere": 3,
+            "item": "/"
+          },
+          "Node 305 L3": {
+            "value": 305,
+            "layer": 3,
             "sphere": 4,
-            "operation": "+",
-            "operand": 4,
-            "button_sequence": [
-              "3",
-              "=",
-              "+",
-              "7",
-              "=",
-              "+",
-              "4",
-              "="
-            ],
+            "item": "0"
+          },
+          "Node -3600 L2": {
+            "value": -3600,
+            "layer": 2,
+            "sphere": 4,
+            "item": "Junk"
+          },
+          "Node -3300 L3": {
+            "value": -3300,
+            "layer": 3,
+            "sphere": 4,
+            "item": "7"
+          },
+          "Node -1200 L3": {
+            "value": -1200,
+            "layer": 3,
+            "sphere": 4,
+            "item": "/"
+          },
+          "Node 0 L2": {
+            "value": 0,
+            "layer": 2,
+            "sphere": 5,
+            "item": "Junk"
+          },
+          "Node 0 L3": {
+            "value": 0,
+            "layer": 3,
+            "sphere": 5,
+            "item": "Junk"
+          },
+          "Node 2307 L4": {
+            "value": 2307,
+            "layer": 4,
+            "sphere": 5,
+            "item": "4"
+          },
+          "Node 769 L5": {
+            "value": 769,
+            "layer": 5,
+            "sphere": 5,
+            "item": "5"
+          },
+          "Node 0 L4": {
+            "value": 0,
+            "layer": 4,
+            "sphere": 5,
+            "item": "/"
+          },
+          "Node 4537 L5": {
+            "value": 4537,
+            "layer": 5,
+            "sphere": 6,
+            "item": "/"
+          },
+          "Node 4053 L4": {
+            "value": 4053,
+            "layer": 4,
+            "sphere": 6,
+            "item": "Junk"
+          },
+          "Node 1351 L5": {
+            "value": 1351,
+            "layer": 5,
+            "sphere": 6,
+            "item": "5"
+          },
+          "Node 0 L5": {
+            "value": 0,
+            "layer": 5,
+            "sphere": 6,
+            "item": "4"
+          },
+          "Node 89 L3": {
+            "value": 89,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 12250 L2": {
+            "value": 12250,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -34 L2": {
+            "value": -34,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -204 L3": {
+            "value": -204,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -51 L4": {
+            "value": -51,
+            "layer": 4,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 8055 L2": {
+            "value": 8055,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 8029 L3": {
+            "value": 8029,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -376 L2": {
+            "value": -376,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -1598 L3": {
+            "value": -1598,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 6 L3": {
+            "value": 6,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 5432 L3": {
+            "value": 5432,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 1611 L3": {
+            "value": 1611,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 1519 L4": {
+            "value": 1519,
+            "layer": 4,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -3053 L3": {
+            "value": -3053,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -1402232 L3": {
+            "value": -1402232,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 28 L1": {
+            "value": 28,
+            "layer": 1,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -234360 L3": {
+            "value": -234360,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 1493030 L2": {
+            "value": 1493030,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 3231 L3": {
+            "value": 3231,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 17300 L1": {
+            "value": 17300,
+            "layer": 1,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 17837 L2": {
+            "value": 17837,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 17747 L3": {
+            "value": 17747,
+            "layer": 3,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -78120 L4": {
+            "value": -78120,
+            "layer": 4,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node -2604 L5": {
+            "value": -2604,
+            "layer": 5,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 3 L5": {
+            "value": 3,
+            "layer": 5,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 177940 L2": {
+            "value": 177940,
+            "layer": 2,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 0 L6": {
+            "value": 0,
+            "layer": 6,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 20 L7": {
+            "value": 20,
+            "layer": 7,
+            "sphere": 7,
+            "item": "Junk"
+          },
+          "Node 2972 L3": {
+            "value": 2972,
+            "layer": 3,
+            "sphere": 7,
             "item": "Junk"
           }
         },
+        "edges": [
+          {
+            "source": "C",
+            "target": "Node 7",
+            "operation": null,
+            "operand": 7,
+            "operand_digits": [
+              7
+            ]
+          },
+          {
+            "source": "C",
+            "target": "Node 3",
+            "operation": null,
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "C",
+            "target": "Node 2",
+            "operation": null,
+            "operand": 2,
+            "operand_digits": [
+              2
+            ]
+          },
+          {
+            "source": "C",
+            "target": "Node 8",
+            "operation": null,
+            "operand": 8,
+            "operand_digits": [
+              8
+            ]
+          },
+          {
+            "source": "Node 8",
+            "target": "Node 11 L1",
+            "operation": "+",
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "Node 8",
+            "target": "Node 245 L1",
+            "operation": "+",
+            "operand": 237,
+            "operand_digits": [
+              2,
+              3,
+              7
+            ]
+          },
+          {
+            "source": "Node 7",
+            "target": "Node 15 L1",
+            "operation": "+",
+            "operand": 8,
+            "operand_digits": [
+              8
+            ]
+          },
+          {
+            "source": "Node 8",
+            "target": "Node 31 L1",
+            "operation": "+",
+            "operand": 23,
+            "operand_digits": [
+              2,
+              3
+            ]
+          },
+          {
+            "source": "Node 3",
+            "target": "Node -94 L1",
+            "operation": "-",
+            "operand": 97,
+            "operand_digits": [
+              9,
+              7
+            ]
+          },
+          {
+            "source": "Node 15 L1",
+            "target": "Node -54 L2",
+            "operation": "-",
+            "operand": 69,
+            "operand_digits": [
+              6,
+              9
+            ]
+          },
+          {
+            "source": "Node 245 L1",
+            "target": "Node -3124 L2",
+            "operation": "-",
+            "operand": 3369,
+            "operand_digits": [
+              3,
+              3,
+              6,
+              9
+            ]
+          },
+          {
+            "source": "Node 15 L1",
+            "target": "Node -278 L2",
+            "operation": "-",
+            "operand": 293,
+            "operand_digits": [
+              2,
+              9,
+              3
+            ]
+          },
+          {
+            "source": "Node 3",
+            "target": "Node 31 L1",
+            "operation": "+",
+            "operand": 28,
+            "operand_digits": [
+              2,
+              8
+            ]
+          },
+          {
+            "source": "Node 8",
+            "target": "Node 72 L1",
+            "operation": "*",
+            "operand": 9,
+            "operand_digits": [
+              9
+            ]
+          },
+          {
+            "source": "Node 72 L1",
+            "target": "Node 65 L2",
+            "operation": "-",
+            "operand": 7,
+            "operand_digits": [
+              7
+            ]
+          },
+          {
+            "source": "Node 72 L1",
+            "target": "Node 7308 L2",
+            "operation": "+",
+            "operand": 7236,
+            "operand_digits": [
+              7,
+              2,
+              3,
+              6
+            ]
+          },
+          {
+            "source": "Node 65 L2",
+            "target": "Node 101 L3",
+            "operation": "+",
+            "operand": 36,
+            "operand_digits": [
+              3,
+              6
+            ]
+          },
+          {
+            "source": "Node 2",
+            "target": "Node 11 L1",
+            "operation": "+",
+            "operand": 9,
+            "operand_digits": [
+              9
+            ]
+          },
+          {
+            "source": "Node 7308 L2",
+            "target": "Node 305 L3",
+            "operation": "-",
+            "operand": 7003,
+            "operand_digits": [
+              7,
+              0,
+              0,
+              3
+            ]
+          },
+          {
+            "source": "Node 72 L1",
+            "target": "Node -3600 L2",
+            "operation": "-",
+            "operand": 3672,
+            "operand_digits": [
+              3,
+              6,
+              7,
+              2
+            ]
+          },
+          {
+            "source": "Node -3600 L2",
+            "target": "Node -3300 L3",
+            "operation": "+",
+            "operand": 300,
+            "operand_digits": [
+              3,
+              0,
+              0
+            ]
+          },
+          {
+            "source": "Node -3600 L2",
+            "target": "Node -1200 L3",
+            "operation": "/",
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "Node -94 L1",
+            "target": "Node 0 L2",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 0 L2",
+            "target": "Node 0 L3",
+            "operation": "/",
+            "operand": 836,
+            "operand_digits": [
+              8,
+              3,
+              6
+            ]
+          },
+          {
+            "source": "Node 0 L3",
+            "target": "Node 2307 L4",
+            "operation": "+",
+            "operand": 2307,
+            "operand_digits": [
+              2,
+              3,
+              0,
+              7
+            ]
+          },
+          {
+            "source": "Node 2307 L4",
+            "target": "Node 769 L5",
+            "operation": "/",
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "Node 0 L3",
+            "target": "Node 0 L4",
+            "operation": "/",
+            "operand": 70,
+            "operand_digits": [
+              7,
+              0
+            ]
+          },
+          {
+            "source": "Node 0 L4",
+            "target": "Node 4537 L5",
+            "operation": "+",
+            "operand": 4537,
+            "operand_digits": [
+              4,
+              5,
+              3,
+              7
+            ]
+          },
+          {
+            "source": "Node 0 L3",
+            "target": "Node 4053 L4",
+            "operation": "+",
+            "operand": 4053,
+            "operand_digits": [
+              4,
+              0,
+              5,
+              3
+            ]
+          },
+          {
+            "source": "Node 4053 L4",
+            "target": "Node 1351 L5",
+            "operation": "/",
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "Node 0 L4",
+            "target": "Node 0 L5",
+            "operation": "/",
+            "operand": 74,
+            "operand_digits": [
+              7,
+              4
+            ]
+          },
+          {
+            "source": "Node 8",
+            "target": "Node 15 L1",
+            "operation": "+",
+            "operand": 7,
+            "operand_digits": [
+              7
+            ]
+          },
+          {
+            "source": "Node 2",
+            "target": "Node 72 L1",
+            "operation": "+",
+            "operand": 70,
+            "operand_digits": [
+              7,
+              0
+            ]
+          },
+          {
+            "source": "Node -1200 L3",
+            "target": "Node 2307 L4",
+            "operation": "+",
+            "operand": 3507,
+            "operand_digits": [
+              3,
+              5,
+              0,
+              7
+            ]
+          },
+          {
+            "source": "Node 3",
+            "target": "Node 11 L1",
+            "operation": "+",
+            "operand": 8,
+            "operand_digits": [
+              8
+            ]
+          },
+          {
+            "source": "Node 72 L1",
+            "target": "Node 0 L2",
+            "operation": "-",
+            "operand": 72,
+            "operand_digits": [
+              7,
+              2
+            ]
+          },
+          {
+            "source": "Node 31 L1",
+            "target": "Node 0 L2",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 7",
+            "target": "Node 31 L1",
+            "operation": "+",
+            "operand": 24,
+            "operand_digits": [
+              2,
+              4
+            ]
+          },
+          {
+            "source": "Node -278 L2",
+            "target": "Node 0 L3",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node -3124 L2",
+            "target": "Node 0 L3",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 0 L2",
+            "target": "Node -3300 L3",
+            "operation": "-",
+            "operand": 3300,
+            "operand_digits": [
+              3,
+              3,
+              0,
+              0
+            ]
+          },
+          {
+            "source": "Node -54 L2",
+            "target": "Node 0 L3",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 15 L1",
+            "target": "Node 0 L2",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 3",
+            "target": "Node 72 L1",
+            "operation": "*",
+            "operand": 24,
+            "operand_digits": [
+              2,
+              4
+            ]
+          },
+          {
+            "source": "Node 245 L1",
+            "target": "Node 0 L2",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 65 L2",
+            "target": "Node 305 L3",
+            "operation": "+",
+            "operand": 240,
+            "operand_digits": [
+              2,
+              4,
+              0
+            ]
+          },
+          {
+            "source": "Node 31 L1",
+            "target": "Node -54 L2",
+            "operation": "-",
+            "operand": 85,
+            "operand_digits": [
+              8,
+              5
+            ]
+          },
+          {
+            "source": "Node 31 L1",
+            "target": "Node -278 L2",
+            "operation": "-",
+            "operand": 309,
+            "operand_digits": [
+              3,
+              0,
+              9
+            ]
+          },
+          {
+            "source": "Node -94 L1",
+            "target": "Node 7308 L2",
+            "operation": "+",
+            "operand": 7402,
+            "operand_digits": [
+              7,
+              4,
+              0,
+              2
+            ]
+          },
+          {
+            "source": "Node 2",
+            "target": "Node -94 L1",
+            "operation": "-",
+            "operand": 96,
+            "operand_digits": [
+              9,
+              6
+            ]
+          },
+          {
+            "source": "Node 11 L1",
+            "target": "Node -54 L2",
+            "operation": "-",
+            "operand": 65,
+            "operand_digits": [
+              6,
+              5
+            ]
+          },
+          {
+            "source": "Node 7308 L2",
+            "target": "Node 0 L3",
+            "operation": "*",
+            "operand": 0,
+            "operand_digits": [
+              0
+            ]
+          },
+          {
+            "source": "Node 65 L2",
+            "target": "Node 89 L3",
+            "operation": "+",
+            "operand": 24,
+            "operand_digits": [
+              2,
+              4
+            ]
+          },
+          {
+            "source": "Node 245 L1",
+            "target": "Node 12250 L2",
+            "operation": "*",
+            "operand": 50,
+            "operand_digits": [
+              5,
+              0
+            ]
+          },
+          {
+            "source": "Node 15 L1",
+            "target": "Node -34 L2",
+            "operation": "-",
+            "operand": 49,
+            "operand_digits": [
+              4,
+              9
+            ]
+          },
+          {
+            "source": "Node -34 L2",
+            "target": "Node -204 L3",
+            "operation": "*",
+            "operand": 6,
+            "operand_digits": [
+              6
+            ]
+          },
+          {
+            "source": "Node -204 L3",
+            "target": "Node -51 L4",
+            "operation": "/",
+            "operand": 4,
+            "operand_digits": [
+              4
+            ]
+          },
+          {
+            "source": "Node 15 L1",
+            "target": "Node 8055 L2",
+            "operation": "*",
+            "operand": 537,
+            "operand_digits": [
+              5,
+              3,
+              7
+            ]
+          },
+          {
+            "source": "Node 8055 L2",
+            "target": "Node 8029 L3",
+            "operation": "-",
+            "operand": 26,
+            "operand_digits": [
+              2,
+              6
+            ]
+          },
+          {
+            "source": "Node -94 L1",
+            "target": "Node -376 L2",
+            "operation": "*",
+            "operand": 4,
+            "operand_digits": [
+              4
+            ]
+          },
+          {
+            "source": "Node -34 L2",
+            "target": "Node -1598 L3",
+            "operation": "*",
+            "operand": 47,
+            "operand_digits": [
+              4,
+              7
+            ]
+          },
+          {
+            "source": "Node 0 L2",
+            "target": "Node 6 L3",
+            "operation": "+",
+            "operand": 6,
+            "operand_digits": [
+              6
+            ]
+          },
+          {
+            "source": "Node 65 L2",
+            "target": "Node 5432 L3",
+            "operation": "+",
+            "operand": 5367,
+            "operand_digits": [
+              5,
+              3,
+              6,
+              7
+            ]
+          },
+          {
+            "source": "Node 8055 L2",
+            "target": "Node 1611 L3",
+            "operation": "/",
+            "operand": 5,
+            "operand_digits": [
+              5
+            ]
+          },
+          {
+            "source": "Node 1611 L3",
+            "target": "Node 1519 L4",
+            "operation": "-",
+            "operand": 92,
+            "operand_digits": [
+              9,
+              2
+            ]
+          },
+          {
+            "source": "Node -3600 L2",
+            "target": "Node -3053 L3",
+            "operation": "+",
+            "operand": 547,
+            "operand_digits": [
+              5,
+              4,
+              7
+            ]
+          },
+          {
+            "source": "Node -278 L2",
+            "target": "Node -1402232 L3",
+            "operation": "*",
+            "operand": 5044,
+            "operand_digits": [
+              5,
+              0,
+              4,
+              4
+            ]
+          },
+          {
+            "source": "Node 7",
+            "target": "Node 28 L1",
+            "operation": "*",
+            "operand": 4,
+            "operand_digits": [
+              4
+            ]
+          },
+          {
+            "source": "Node -54 L2",
+            "target": "Node -234360 L3",
+            "operation": "*",
+            "operand": 4340,
+            "operand_digits": [
+              4,
+              3,
+              4,
+              0
+            ]
+          },
+          {
+            "source": "Node 245 L1",
+            "target": "Node 1493030 L2",
+            "operation": "*",
+            "operand": 6094,
+            "operand_digits": [
+              6,
+              0,
+              9,
+              4
+            ]
+          },
+          {
+            "source": "Node 7308 L2",
+            "target": "Node 3231 L3",
+            "operation": "-",
+            "operand": 4077,
+            "operand_digits": [
+              4,
+              0,
+              7,
+              7
+            ]
+          },
+          {
+            "source": "Node 2",
+            "target": "Node 17300 L1",
+            "operation": "*",
+            "operand": 8650,
+            "operand_digits": [
+              8,
+              6,
+              5,
+              0
+            ]
+          },
+          {
+            "source": "Node 17300 L1",
+            "target": "Node 17837 L2",
+            "operation": "+",
+            "operand": 537,
+            "operand_digits": [
+              5,
+              3,
+              7
+            ]
+          },
+          {
+            "source": "Node 17837 L2",
+            "target": "Node 17747 L3",
+            "operation": "-",
+            "operand": 90,
+            "operand_digits": [
+              9,
+              0
+            ]
+          },
+          {
+            "source": "Node -234360 L3",
+            "target": "Node -78120 L4",
+            "operation": "/",
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "Node -78120 L4",
+            "target": "Node -2604 L5",
+            "operation": "/",
+            "operand": 30,
+            "operand_digits": [
+              3,
+              0
+            ]
+          },
+          {
+            "source": "Node 0 L4",
+            "target": "Node 3 L5",
+            "operation": "+",
+            "operand": 3,
+            "operand_digits": [
+              3
+            ]
+          },
+          {
+            "source": "Node 31 L1",
+            "target": "Node 177940 L2",
+            "operation": "*",
+            "operand": 5740,
+            "operand_digits": [
+              5,
+              7,
+              4,
+              0
+            ]
+          },
+          {
+            "source": "Node 0 L5",
+            "target": "Node 0 L6",
+            "operation": "/",
+            "operand": 35,
+            "operand_digits": [
+              3,
+              5
+            ]
+          },
+          {
+            "source": "Node 0 L6",
+            "target": "Node 20 L7",
+            "operation": "+",
+            "operand": 20,
+            "operand_digits": [
+              2,
+              0
+            ]
+          },
+          {
+            "source": "Node -376 L2",
+            "target": "Node 2972 L3",
+            "operation": "+",
+            "operand": 3348,
+            "operand_digits": [
+              3,
+              3,
+              4,
+              8
+            ]
+          }
+        ],
         "starting_buttons": {
           "7": 1,
           "3": 1,
-          "2": 1
+          "2": 1,
+          "8": 1
         },
         "operations": [
           "+",
@@ -1792,7 +5928,7 @@
           "*",
           "/"
         ],
-        "num_spheres": 5,
+        "num_spheres": 8,
         "goal": "all_locations"
       },
       "web": {

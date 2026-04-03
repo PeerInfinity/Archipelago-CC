@@ -120,6 +120,17 @@
     "template_file": "A Short Hike WorldGen2.yaml",
     "world_directory": "shorthike_worldgen2"
   },
+  "APCalc WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "APCalc WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "APCalc WorldGen.yaml",
+    "world_directory": "apcalc_worldgen"
+  },
   "APQuest": {
     "exporter_path": null,
     "exporter_size": 0,

@@ -21,101 +21,411 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Menu to Node 7", player),
+        multiworld.get_entrance("C to Node 7", player),
         Has('Button: 7', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Menu to Node 3", player),
+        multiworld.get_entrance("C to Node 3", player),
         Has('Button: 3', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Menu to Node 2", player),
+        multiworld.get_entrance("C to Node 2", player),
         Has('Button: 2', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 7 to Node 4", player),
-        HasAll('Button: -', 'Button: 3', 'Button: 7')
+        multiworld.get_entrance("C to Node 8", player),
+        Has('Button: 8', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 7 to Node 9", player),
-        HasAll('Button: +', 'Button: 2', 'Button: 7')
+        multiworld.get_entrance("Node 7 to Node 15 L1", player),
+        HasAll('Button: +', 'Button: 7', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 3 to Node -4", player),
-        HasAll('Button: -', 'Button: 3', 'Button: 7')
+        multiworld.get_entrance("Node 7 to Node 31 L1", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 4', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 3 to Node 10", player),
-        HasAll('Button: +', 'Button: 3', 'Button: 7')
+        multiworld.get_entrance("Node 7 to Node 28 L1", player),
+        HasAll('Button: *', 'Button: 4', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 3 to Node 0", player),
-        And(Has('Button: 3', 2), Has('Button: -'))
+        multiworld.get_entrance("Node 3 to Node -94 L1", player),
+        HasAll('Button: -', 'Button: 3', 'Button: 7', 'Button: 9')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 2 to Node -5", player),
-        HasAll('Button: -', 'Button: 2', 'Button: 7')
+        multiworld.get_entrance("Node 3 to Node 31 L1", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 3', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 2 to Node -1", player),
-        HasAll('Button: -', 'Button: 2', 'Button: 3')
+        multiworld.get_entrance("Node 3 to Node 11 L1", player),
+        HasAll('Button: +', 'Button: 3', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 2 to Node 5", player),
-        HasAll('Button: +', 'Button: 2', 'Button: 3')
+        multiworld.get_entrance("Node 3 to Node 72 L1", player),
+        HasAll('Button: *', 'Button: 2', 'Button: 3', 'Button: 4')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -5 to Node -2", player),
-        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7')
+        multiworld.get_entrance("Node 2 to Node 11 L1", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 9')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node -1 to Node 6", player),
-        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7')
+        multiworld.get_entrance("Node 2 to Node 72 L1", player),
+        HasAll('Button: +', 'Button: 0', 'Button: 2', 'Button: 7')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 4 to Node 1", player),
-        HasAll('Button: -', 'Button: /', 'Button: 3', 'Button: 4', 'Button: 7')
+        multiworld.get_entrance("Node 2 to Node -94 L1", player),
+        HasAll('Button: -', 'Button: 2', 'Button: 6', 'Button: 9')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 10 to Node 8", player),
-        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7')
+        multiworld.get_entrance("Node 2 to Node 17300 L1", player),
+        HasAll('Button: *', 'Button: 0', 'Button: 2', 'Button: 5', 'Button: 6', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 10 to Node 14", player),
-        And(Has('Button: +', 2), HasAll('Button: 3', 'Button: 4', 'Button: 7'))
+        multiworld.get_entrance("Node 8 to Node 11 L1", player),
+        HasAll('Button: +', 'Button: 3', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 8 to Node 11", player),
-        And(Has('Button: +', 2), Has('Button: 3', 2), HasAll('Button: -', 'Button: 2', 'Button: 7'))
+        multiworld.get_entrance("Node 8 to Node 245 L1", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 3', 'Button: 7', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 9 to Node 12", player),
-        And(Has('Button: +', 2), HasAll('Button: 2', 'Button: 3', 'Button: 7'))
+        multiworld.get_entrance("Node 8 to Node 31 L1", player),
+        HasAll('Button: +', 'Button: 2', 'Button: 3', 'Button: 8')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Node 9 to Node 13", player),
-        And(Has('Button: +', 2), HasAll('Button: 2', 'Button: 4', 'Button: 7'))
+        multiworld.get_entrance("Node 8 to Node 72 L1", player),
+        HasAll('Button: *', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 8 to Node 15 L1", player),
+        HasAll('Button: +', 'Button: 7', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 11 L1 to Node -54 L2", player),
+        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 5', 'Button: 6', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 245 L1 to Node -3124 L2", player),
+        And(Has('Button: 3', 3), HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 245 L1 to Node 0 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 7', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 245 L1 to Node 12250 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 5', 'Button: 7', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 245 L1 to Node 1493030 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 4', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 15 L1 to Node -54 L2", player),
+        HasAll('Button: +', 'Button: -', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 15 L1 to Node -278 L2", player),
+        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 15 L1 to Node 0 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 7', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 15 L1 to Node -34 L2", player),
+        HasAll('Button: +', 'Button: -', 'Button: 4', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 15 L1 to Node 8055 L2", player),
+        And(Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: 3', 'Button: 5', 'Button: 8'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 31 L1 to Node 0 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 31 L1 to Node -54 L2", player),
+        HasAll('Button: +', 'Button: -', 'Button: 2', 'Button: 4', 'Button: 5', 'Button: 7', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 31 L1 to Node -278 L2", player),
+        And(Has('Button: 3', 2), HasAll('Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 31 L1 to Node 177940 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 4', 'Button: 5', 'Button: 7', 'Button: 8')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -94 L1 to Node 0 L2", player),
+        HasAll('Button: *', 'Button: -', 'Button: 0', 'Button: 3', 'Button: 7', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -94 L1 to Node 7308 L2", player),
+        And(Has('Button: 7', 2), HasAll('Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 4', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -94 L1 to Node -376 L2", player),
+        HasAll('Button: *', 'Button: -', 'Button: 3', 'Button: 4', 'Button: 7', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -54 L2 to Node 0 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -54 L2 to Node -234360 L3", player),
+        And(Has('Button: 4', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 3', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -3124 L2 to Node 0 L3", player),
+        And(Has('Button: 3', 3), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -278 L2 to Node 0 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -278 L2 to Node -1402232 L3", player),
+        And(Has('Button: 4', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 5', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 72 L1 to Node 65 L2", player),
+        HasAll('Button: *', 'Button: -', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 72 L1 to Node 7308 L2", player),
+        HasAll('Button: *', 'Button: +', 'Button: 2', 'Button: 3', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 72 L1 to Node -3600 L2", player),
+        HasAll('Button: *', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 72 L1 to Node 0 L2", player),
+        HasAll('Button: *', 'Button: -', 'Button: 2', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 65 L2 to Node 101 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 3', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 65 L2 to Node 305 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 4', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 65 L2 to Node 89 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 4', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 65 L2 to Node 5432 L3", player),
+        And(Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 3', 'Button: 5', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 7308 L2 to Node 305 L3", player),
+        And(Has('Button: 0', 2), Has('Button: 3', 2), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 7308 L2 to Node 0 L3", player),
+        And(Has('Button: 0', 2), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 4', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 7308 L2 to Node 3231 L3", player),
+        And(Has('Button: 7', 3), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 4', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -3600 L2 to Node -3300 L3", player),
+        And(Has('Button: 0', 2), Has('Button: 3', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -3600 L2 to Node -1200 L3", player),
+        And(Has('Button: 3', 2), HasAll('Button: *', 'Button: -', 'Button: /', 'Button: 2', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -3600 L2 to Node -3053 L3", player),
+        And(Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 4', 'Button: 5', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -1200 L3 to Node 2307 L4", player),
+        And(Has('Button: 3', 3), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: /', 'Button: 0', 'Button: 2', 'Button: 5', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L2 to Node 0 L3", player),
+        And(Has('Button: 3', 2), HasAll('Button: *', 'Button: -', 'Button: /', 'Button: 0', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L2 to Node -3300 L3", player),
+        And(Has('Button: 0', 3), Has('Button: 3', 3), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 8'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L2 to Node 6 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L3 to Node 2307 L4", player),
+        And(Has('Button: 0', 2), Has('Button: 3', 3), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: /', 'Button: 2', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L3 to Node 0 L4", player),
+        And(Has('Button: /', 2), Has('Button: 0', 2), Has('Button: 3', 2), Has('Button: 7', 2), HasAll('Button: *', 'Button: -', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L3 to Node 4053 L4", player),
+        And(Has('Button: 0', 2), Has('Button: 3', 3), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: /', 'Button: 4', 'Button: 5', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 2307 L4 to Node 769 L5", player),
+        And(Has('Button: /', 2), Has('Button: 0', 2), Has('Button: 3', 4), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L4 to Node 4537 L5", player),
+        And(Has('Button: /', 2), Has('Button: 0', 2), Has('Button: 3', 3), Has('Button: 7', 3), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 4', 'Button: 5', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L4 to Node 0 L5", player),
+        And(Has('Button: /', 3), Has('Button: 0', 2), Has('Button: 3', 2), Has('Button: 7', 3), HasAll('Button: *', 'Button: -', 'Button: 4', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L4 to Node 3 L5", player),
+        And(Has('Button: /', 2), Has('Button: 0', 2), Has('Button: 3', 3), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 4053 L4 to Node 1351 L5", player),
+        And(Has('Button: /', 2), Has('Button: 0', 2), Has('Button: 3', 4), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 4', 'Button: 5', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L5 to Node 0 L6", player),
+        And(Has('Button: /', 4), Has('Button: 0', 2), Has('Button: 3', 3), Has('Button: 7', 3), HasAll('Button: *', 'Button: -', 'Button: 4', 'Button: 5', 'Button: 6', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -34 L2 to Node -204 L3", player),
+        HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 4', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -34 L2 to Node -1598 L3", player),
+        And(Has('Button: 4', 2), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -204 L3 to Node -51 L4", player),
+        And(Has('Button: 4', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: /', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 8055 L2 to Node 8029 L3", player),
+        And(Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 5', 'Button: 6', 'Button: 8'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 8055 L2 to Node 1611 L3", player),
+        And(Has('Button: 5', 2), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: /', 'Button: 3', 'Button: 8'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -376 L2 to Node 2972 L3", player),
+        And(Has('Button: 3', 3), Has('Button: 4', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 1611 L3 to Node 1519 L4", player),
+        And(Has('Button: 5', 2), Has('Button: 7', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: /', 'Button: 2', 'Button: 3', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -234360 L3 to Node -78120 L4", player),
+        And(Has('Button: 3', 2), Has('Button: 4', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: /', 'Button: 0', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 17300 L1 to Node 17837 L2", player),
+        And(Has('Button: 5', 2), HasAll('Button: *', 'Button: +', 'Button: 0', 'Button: 2', 'Button: 3', 'Button: 6', 'Button: 7', 'Button: 8'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 17837 L2 to Node 17747 L3", player),
+        And(Has('Button: 0', 2), Has('Button: 5', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 3', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node -78120 L4 to Node -2604 L5", player),
+        And(Has('Button: /', 2), Has('Button: 0', 2), Has('Button: 3', 3), Has('Button: 4', 2), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 6', 'Button: 7', 'Button: 8', 'Button: 9'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Node 0 L6 to Node 20 L7", player),
+        And(Has('Button: /', 4), Has('Button: 0', 3), Has('Button: 3', 3), Has('Button: 7', 3), HasAll('Button: *', 'Button: +', 'Button: -', 'Button: 2', 'Button: 4', 'Button: 5', 'Button: 6', 'Button: 8', 'Button: 9'))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Victory", player),
-        HasAll('Checked Reach 7', 'Checked Reach 3', 'Checked Reach 2', 'Checked Reach -5', 'Checked Reach -4', 'Checked Reach -1', 'Checked Reach 5', 'Checked Reach 4', 'Checked Reach 6', 'Checked Reach 1', 'Checked Reach 10', 'Checked Reach 8', 'Checked Reach -2', 'Checked Reach 9', 'Checked Reach 12', 'Checked Reach 13', 'Checked Reach 0', 'Checked Reach 11', 'Checked Reach 14')
+        HasAll('Checked Reach 7', 'Checked Reach 3', 'Checked Reach 2', 'Checked Reach 8', 'Checked Reach 11 L1', 'Checked Reach 245 L1', 'Checked Reach 15 L1', 'Checked Reach 31 L1', 'Checked Reach -94 L1', 'Checked Reach -54 L2', 'Checked Reach -3124 L2', 'Checked Reach -278 L2', 'Checked Reach 72 L1', 'Checked Reach 65 L2', 'Checked Reach 7308 L2', 'Checked Reach 101 L3', 'Checked Reach 305 L3', 'Checked Reach -3600 L2', 'Checked Reach -3300 L3', 'Checked Reach -1200 L3', 'Checked Reach 0 L2', 'Checked Reach 0 L3', 'Checked Reach 2307 L4', 'Checked Reach 769 L5', 'Checked Reach 0 L4', 'Checked Reach 4537 L5', 'Checked Reach 4053 L4', 'Checked Reach 1351 L5', 'Checked Reach 0 L5', 'Checked Reach 89 L3', 'Checked Reach 12250 L2', 'Checked Reach -34 L2', 'Checked Reach -204 L3', 'Checked Reach -51 L4', 'Checked Reach 8055 L2', 'Checked Reach 8029 L3', 'Checked Reach -376 L2', 'Checked Reach -1598 L3', 'Checked Reach 6 L3', 'Checked Reach 5432 L3', 'Checked Reach 1611 L3', 'Checked Reach 1519 L4', 'Checked Reach -3053 L3', 'Checked Reach -1402232 L3', 'Checked Reach 28 L1', 'Checked Reach -234360 L3', 'Checked Reach 1493030 L2', 'Checked Reach 3231 L3', 'Checked Reach 17300 L1', 'Checked Reach 17837 L2', 'Checked Reach 17747 L3', 'Checked Reach -78120 L4', 'Checked Reach -2604 L5', 'Checked Reach 3 L5', 'Checked Reach 177940 L2', 'Checked Reach 0 L6', 'Checked Reach 20 L7', 'Checked Reach 2972 L3')
     )

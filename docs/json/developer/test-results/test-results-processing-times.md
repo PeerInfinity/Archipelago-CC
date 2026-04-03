@@ -1,10 +1,10 @@
 # Processing Times Chart
 
-**Generated:** 2026-03-28 17:13:11 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T06:06:18.834443+00:00
 
-**Source Data Last Updated:** 2026-03-22T06:06:18.834452+00:00
+**Source Data Last Updated:** 2026-04-03T22:56:14.748898+00:00
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -18,8 +18,8 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 521.8s | 2133.5s | 2759.1s | 3328.6s |
-| Average | 5.9s | 24.2s | 31.4s | 37.8s |
+| Total | 528.8s | 2145.6s | 2759.1s | 3328.6s |
+| Average | 5.9s | 24.1s | 31.4s | 37.8s |
 | Max | 20.5s | 300.1s | 300.1s | 425.6s |
 | Min | 3.7s | 5.7s | 5.7s | 11.7s |
 
@@ -37,6 +37,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | A Hat in Time | 6.4s | 9.7s | 12.3s | 17.7s |
 | A Link to the Past | 8.5s | 12.9s | 16.8s | 27.3s |
 | A Short Hike | 4.3s | 5.9s | 5.7s | 13.6s |
+| APCalc WorldGen | 7.0s | 12.1s | - | - |
 | APQuest | 4.0s | 5.8s | 5.7s | 14.1s |
 | Adventure | 4.3s | 5.8s | 5.7s | 17.5s |
 | Aquaria | 5.6s | 6.8s | 11.7s | 16.6s |
