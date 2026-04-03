@@ -105,7 +105,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         }
     });
 
-    // Refresh region graph labels when state changes
+    // Refresh region graph when state changes (difficulty mode, etc.)
     eventBus.subscribe('apcalc:stateChanged', () => {
         const refreshLabels = initializationApi.getModuleFunction('regionGraph', 'refreshNodeLabels');
         if (refreshLabels) refreshLabels();

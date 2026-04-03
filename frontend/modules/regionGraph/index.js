@@ -78,27 +78,27 @@ export function register(registrationApi) {
     _nodeLabelProvider = callback;
     // Refresh labels on any existing panels
     for (const panel of _panelInstances) {
-      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+      if (panel.dataManager) panel.dataManager.refreshLabels();
     }
   });
 
   registrationApi.registerPublicFunction('regionGraph', 'refreshNodeLabels', () => {
     for (const panel of _panelInstances) {
-      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+      if (panel.dataManager) panel.dataManager.refreshLabels();
     }
   });
 
   registrationApi.registerPublicFunction('regionGraph', 'registerEdgeVisibilityFilter', (callback) => {
     _edgeVisibilityFilter = callback;
     for (const panel of _panelInstances) {
-      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+      if (panel.dataManager) panel.dataManager.refreshLabels();
     }
   });
 
   registrationApi.registerPublicFunction('regionGraph', 'registerAccessibilityVisibilityFilter', (callback) => {
     _accessibilityVisibilityFilter = callback;
     for (const panel of _panelInstances) {
-      if (panel.graphDataManager) panel.graphDataManager.refreshLabels();
+      if (panel.dataManager) panel.dataManager.refreshLabels();
     }
   });
 }

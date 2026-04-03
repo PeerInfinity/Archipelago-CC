@@ -918,7 +918,8 @@ export class GraphDataManager {
       // Apply external edge visibility filter (e.g., APCalc difficulty modes)
       const edgeVisibilityFilter = getEdgeVisibilityFilter();
       if (edgeVisibilityFilter && !shouldHideEdge) {
-        if (!edgeVisibilityFilter(sourceRegion, targetRegion)) {
+        const filterResult = edgeVisibilityFilter(sourceRegion, targetRegion);
+        if (!filterResult) {
           shouldHideEdge = true;
         }
       }
