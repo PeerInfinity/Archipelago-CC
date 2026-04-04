@@ -49,6 +49,7 @@ class APCalcWorld(RuleWorldMixin, World):
     options: APCalcOptions
     web = APCalcWeb()
     rule_caching_enabled = False
+    origin_region_name = "C"
 
     item_name_to_id = item_name_to_id
     location_name_to_id = location_name_to_id
@@ -121,8 +122,8 @@ class APCalcWorld(RuleWorldMixin, World):
 
     def create_regions(self):
         """Build regions and entrances from the generated graph."""
-        # Menu region (start)
-        menu_region = Region("Menu", self.player, self.multiworld)
+        # Start region
+        menu_region = Region("C", self.player, self.multiworld)
 
         # Build index for edges by source
         edges_by_source: Dict[int | None, List[Edge]] = {}
@@ -165,12 +166,12 @@ class APCalcWorld(RuleWorldMixin, World):
 
             node_regions[node.index] = region
 
-        # Connect Menu -> layer 0 nodes
+        # Connect C -> layer 0 nodes
         for edge in edges_by_source.get(None, []):
             target_region = node_regions[edge.target_index]
             menu_region.connect(
                 target_region,
-                f"Menu to {target_region.name}",
+                f"C to {target_region.name}",
             )
 
         # Connect node -> node edges
@@ -241,11 +242,11 @@ class APCalcWorld(RuleWorldMixin, World):
         for edge in self.generated_edges:
             edges_by_source.setdefault(edge.source_index, []).append(edge)
 
-        # Menu -> layer 0 entrance rules
+        # C -> layer 0 entrance rules
         for edge in edges_by_source.get(None, []):
             tgt_gi = self._node_to_generic[edge.target_index]
             tgt_region = generic_region_name(tgt_gi)
-            entrance_name = f"Menu to {tgt_region}"
+            entrance_name = f"C to {tgt_region}"
             rule = self._path_costs_to_rule(edge.path_costs)
             entrance = self.multiworld.get_entrance(entrance_name, self.player)
             self.set_rule(entrance, rule)

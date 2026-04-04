@@ -358,7 +358,28 @@ export class APCalcUI {
 
     setPathFilter(regionName) {
         this.pathFilter = regionName;
+        this._loadFilteredPath(regionName);
         this.render();
+    }
+
+    _loadFilteredPath(regionName) {
+        const gs = this.gameState;
+        if (!gs) return;
+
+        const paths = gs.discoveredPaths.filter(p => p.node === regionName);
+        if (paths.length === 0) return;
+
+        // If clicking the same node again, cycle to the next path
+        let index = 0;
+        if (regionName === this._lastFilterNode) {
+            this._lastFilterIndex = ((this._lastFilterIndex ?? -1) + 1) % paths.length;
+            index = this._lastFilterIndex;
+        } else {
+            this._lastFilterIndex = 0;
+        }
+        this._lastFilterNode = regionName;
+
+        this._loadPath(gs, paths[index]);
     }
 
     _notify() {

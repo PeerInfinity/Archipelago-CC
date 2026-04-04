@@ -64,10 +64,14 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         if (staticData) initializeGame(staticData);
     });
 
-    // Listen for region graph node clicks → filter paths
+    // Listen for region graph node clicks → filter paths, or clear on C click
     eventBus.subscribe('regionGraph:nodeSelected', (data) => {
         const nodeId = data?.nodeId;
-        if (nodeId && panelInstance) {
+        if (!nodeId) return;
+        if (nodeId === 'C' && gameState) {
+            gameState.reset();
+            if (panelInstance) panelInstance.render();
+        } else if (panelInstance) {
             panelInstance.setPathFilter(nodeId);
         }
     });

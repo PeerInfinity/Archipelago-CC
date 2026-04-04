@@ -10,11 +10,11 @@
   },
   "regions": {
     "1": {
-      "Menu": {
-        "name": "Menu",
+      "C": {
+        "name": "C",
         "exits": [
           {
-            "name": "Menu to Region 1",
+            "name": "C to Region 1",
             "connected_region": "Region 1",
             "access_rule": {
               "rule": "Has",
@@ -24,7 +24,7 @@
             }
           },
           {
-            "name": "Menu to Region 2",
+            "name": "C to Region 2",
             "connected_region": "Region 2",
             "access_rule": {
               "rule": "Has",
@@ -34,7 +34,7 @@
             }
           },
           {
-            "name": "Menu to Region 3",
+            "name": "C to Region 3",
             "connected_region": "Region 3",
             "access_rule": {
               "rule": "Has",
@@ -44,7 +44,7 @@
             }
           },
           {
-            "name": "Menu to Region 4",
+            "name": "C to Region 4",
             "connected_region": "Region 4",
             "access_rule": {
               "rule": "Has",
@@ -5146,7 +5146,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "C"
       ],
       "available": []
     }

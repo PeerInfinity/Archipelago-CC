@@ -1,0 +1,324 @@
+﻿Archipelago Version 0.6.7  -  Seed: 3
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            APCalc
+Location Count:                  77
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Number of Spheres:               8
+Operations Per Sphere:           1
+Digits Per Sphere:               2
+Junk Per Sphere:                 1
+Max Branches:                    5
+Randomize Items:                 Yes
+
+
+Starting Items:
+
+Button: 1
+Button: 5
+Button: 6
+Button: 0
+
+Locations:
+
+Check 1: Button: 7
+Checked 1: Checked 1
+Check 2: Button: -
+Checked 2: Checked 2
+Check 3: Button: 9
+Checked 3: Checked 3
+Check 4: Button: *
+Checked 4: Checked 4
+Check 5: Button: 1
+Checked 5: Checked 5
+Check 6: Junk
+Checked 6: Checked 6
+Check 7: Junk
+Checked 7: Checked 7
+Check 8: Junk
+Checked 8: Checked 8
+Check 9: Junk
+Checked 9: Checked 9
+Check 10: Button: *
+Checked 10: Checked 10
+Check 11: Junk
+Checked 11: Checked 11
+Check 12: Button: 4
+Checked 12: Checked 12
+Check 13: Junk
+Checked 13: Checked 13
+Check 14: Button: 1
+Checked 14: Checked 14
+Check 15: Junk
+Checked 15: Checked 15
+Check 16: Junk
+Checked 16: Checked 16
+Check 17: Junk
+Checked 17: Checked 17
+Check 18: Button: +
+Checked 18: Checked 18
+Check 19: Button: 2
+Checked 19: Checked 19
+Check 20: Junk
+Checked 20: Checked 20
+Check 21: Junk
+Checked 21: Checked 21
+Check 22: Junk
+Checked 22: Checked 22
+Check 23: Button: 5
+Checked 23: Checked 23
+Check 24: Button: -
+Checked 24: Checked 24
+Check 25: Button: 1
+Checked 25: Checked 25
+Check 26: Junk
+Checked 26: Checked 26
+Check 27: Junk
+Checked 27: Checked 27
+Check 28: Junk
+Checked 28: Checked 28
+Check 29: Junk
+Checked 29: Checked 29
+Check 30: Junk
+Checked 30: Checked 30
+Check 31: Button: 3
+Checked 31: Checked 31
+Check 32: Junk
+Checked 32: Checked 32
+Check 33: Button: 8
+Checked 33: Checked 33
+Check 34: Junk
+Checked 34: Checked 34
+Check 35: Junk
+Checked 35: Checked 35
+Check 36: Junk
+Checked 36: Checked 36
+Check 37: Junk
+Checked 37: Checked 37
+Check 38: Junk
+Checked 38: Checked 38
+Check 39: Junk
+Checked 39: Checked 39
+Check 40: Button: 1
+Checked 40: Checked 40
+Check 41: Button: /
+Checked 41: Checked 41
+Check 42: Junk
+Checked 42: Checked 42
+Check 43: Junk
+Checked 43: Checked 43
+Check 44: Junk
+Checked 44: Checked 44
+Check 45: Button: /
+Checked 45: Checked 45
+Check 46: Junk
+Checked 46: Checked 46
+Check 47: Junk
+Checked 47: Checked 47
+Check 48: Junk
+Checked 48: Checked 48
+Check 49: Junk
+Checked 49: Checked 49
+Check 50: Junk
+Checked 50: Checked 50
+Check 51: Junk
+Checked 51: Checked 51
+Check 52: Junk
+Checked 52: Checked 52
+Check 53: Junk
+Checked 53: Checked 53
+Check 54: Junk
+Checked 54: Checked 54
+Check 55: Junk
+Checked 55: Checked 55
+Check 56: Junk
+Checked 56: Checked 56
+Check 57: Junk
+Checked 57: Checked 57
+Check 58: Junk
+Checked 58: Checked 58
+Check 59: Junk
+Checked 59: Checked 59
+Check 60: Button: 6
+Checked 60: Checked 60
+Check 61: Junk
+Checked 61: Checked 61
+Check 62: Junk
+Checked 62: Checked 62
+Check 63: Junk
+Checked 63: Checked 63
+Check 64: Junk
+Checked 64: Checked 64
+Check 65: Button: 8
+Checked 65: Checked 65
+Check 66: Button: 9
+Checked 66: Checked 66
+Check 67: Junk
+Checked 67: Checked 67
+Check 68: Junk
+Checked 68: Checked 68
+Check 69: Junk
+Checked 69: Checked 69
+Check 70: Junk
+Checked 70: Checked 70
+Check 71: Junk
+Checked 71: Checked 71
+Check 72: Junk
+Checked 72: Checked 72
+Check 73: Junk
+Checked 73: Checked 73
+Check 74: Junk
+Checked 74: Checked 74
+Check 75: Junk
+Checked 75: Checked 75
+Check 76: Junk
+Checked 76: Checked 76
+Check 77: Junk
+Checked 77: Checked 77
+Victory: Victory
+
+Playthrough:
+
+0: {
+  Button: 0
+  Button: 1
+  Button: 5
+  Button: 6
+}
+1: {
+  Check 1: Button: 7
+  Check 2: Button: -
+  Check 3: Button: 9
+  Check 4: Button: *
+  Checked 1: Checked 1
+  Checked 2: Checked 2
+  Checked 3: Checked 3
+  Checked 4: Checked 4
+}
+2: {
+  Check 10: Button: *
+  Check 18: Button: +
+  Check 33: Button: 8
+  Checked 10: Checked 10
+  Checked 18: Checked 18
+  Checked 33: Checked 33
+}
+3: {
+  Check 12: Button: 4
+  Check 5: Button: 1
+  Checked 12: Checked 12
+  Checked 13: Checked 13
+  Checked 21: Checked 21
+  Checked 5: Checked 5
+  Checked 6: Checked 6
+  Checked 7: Checked 7
+  Checked 71: Checked 71
+  Checked 9: Checked 9
+}
+4: {
+  Check 23: Button: 5
+  Check 24: Button: -
+  Check 25: Button: 1
+  Checked 16: Checked 16
+  Checked 17: Checked 17
+  Checked 22: Checked 22
+  Checked 23: Checked 23
+  Checked 24: Checked 24
+  Checked 25: Checked 25
+  Checked 54: Checked 54
+  Checked 8: Checked 8
+}
+5: {
+  Check 19: Button: 2
+  Checked 15: Checked 15
+  Checked 19: Checked 19
+  Checked 34: Checked 34
+}
+6: {
+  Check 31: Button: 3
+  Checked 31: Checked 31
+}
+7: {
+  Check 45: Button: /
+  Check 65: Button: 8
+  Checked 28: Checked 28
+  Checked 45: Checked 45
+  Checked 64: Checked 64
+  Checked 65: Checked 65
+}
+8: {
+  Check 14: Button: 1
+  Checked 11: Checked 11
+  Checked 14: Checked 14
+  Checked 20: Checked 20
+  Checked 29: Checked 29
+  Checked 30: Checked 30
+  Checked 55: Checked 55
+}
+9: {
+  Check 66: Button: 9
+  Checked 66: Checked 66
+}
+10: {
+  Check 60: Button: 6
+  Checked 38: Checked 38
+  Checked 56: Checked 56
+  Checked 59: Checked 59
+  Checked 60: Checked 60
+  Checked 72: Checked 72
+  Checked 73: Checked 73
+}
+11: {
+  Check 40: Button: 1
+  Check 41: Button: /
+  Checked 26: Checked 26
+  Checked 27: Checked 27
+  Checked 32: Checked 32
+  Checked 37: Checked 37
+  Checked 39: Checked 39
+  Checked 40: Checked 40
+  Checked 41: Checked 41
+  Checked 42: Checked 42
+  Checked 43: Checked 43
+  Checked 46: Checked 46
+  Checked 47: Checked 47
+  Checked 48: Checked 48
+  Checked 49: Checked 49
+  Checked 50: Checked 50
+  Checked 52: Checked 52
+  Checked 53: Checked 53
+  Checked 57: Checked 57
+  Checked 61: Checked 61
+  Checked 67: Checked 67
+  Checked 68: Checked 68
+  Checked 69: Checked 69
+  Checked 70: Checked 70
+  Checked 74: Checked 74
+  Checked 76: Checked 76
+  Checked 77: Checked 77
+}
+12: {
+  Checked 35: Checked 35
+  Checked 36: Checked 36
+  Checked 44: Checked 44
+  Checked 51: Checked 51
+  Checked 58: Checked 58
+  Checked 62: Checked 62
+  Checked 63: Checked 63
+  Checked 75: Checked 75
+}
+13: {
+  Victory: Victory
+}
