@@ -25,7 +25,7 @@ from .generator.generator import TRASH_ITEM
 
 
 class APCalcWeb(WebWorld):
-    game_info_languages = []
+    game_info_languages = ['en']
     tutorials = [Tutorial(
         "APCalc Setup Guide",
         "A guide to setting up APCalc for MultiWorld.",

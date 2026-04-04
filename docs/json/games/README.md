@@ -23,6 +23,7 @@ These are standalone Archipelago worlds with their own items, locations, and rul
 | **MetaMath** | Turns MetaMath theorem proofs into playable Archipelago worlds. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=metamath) | [metamath/](metamath/) |
 | **DepGraph** | Turn any directed acyclic graph into a playable Archipelago world — nodes become items and locations, edges become access rules. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=depgraph) | [depgraph/](depgraph/) |
 | **Journey to Ascension** | Archipelago integration for the incremental/idle game Journey to Ascension. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta) | [journey-to-ascension/](journey-to-ascension/) |
+| **APCalc** | Calculator-themed puzzle game — collect number and operation buttons, budget presses to navigate a procedurally generated graph of target numbers. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=apcalc) | [apcalc/](apcalc/) |
 
 ## DepGraph Games
 

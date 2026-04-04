@@ -28,8 +28,12 @@ def generic_location_name(index: int) -> str:
 
 
 def generic_region_name(index: int) -> str:
-    """Get the generic region name for a node index (1-based)."""
-    return f"Node {index}"
+    """Get the generic region name for a node index (1-based).
+
+    Uses 'Region N' prefix to avoid collisions with meaningful names like 'Node 7'
+    when name_substitutions are applied by the world generator.
+    """
+    return f"Region {index}"
 
 
 def meaningful_location_name(value: int, layer: int) -> str:
