@@ -394,14 +394,24 @@ export class NavigationManager {
     const playerState = getPlayerStateSingleton();
     const currentPath = playerState.getPath();
 
+    // If no existing path, publish region move and let playerState handle the path
     if (!currentPath || currentPath.length === 0) {
-      logger.warn('No current path to add to');
-      this.ui.updateStatus(`No existing path`);
+      const currentRegion = playerState.getCurrentRegion();
+      if (currentRegion === targetRegion) return;
+      import('./index.js').then(({ moduleDispatcher }) => {
+        if (moduleDispatcher) {
+          moduleDispatcher.publish('user:regionMove', {
+            targetRegion: targetRegion,
+            sourceRegion: currentRegion,
+            source: 'regionGraph-addToPath'
+          }, 'bottom');
+        }
+      });
       return;
     }
 
     // Start from the last region in the current path
-    const startRegion = currentPath[currentPath.length - 1].destinationRegion;
+    const startRegion = playerState.getLastRegionInPath() || playerState.getCurrentRegion();
 
     if (startRegion === targetRegion) {
       logger.debug(`Target region ${targetRegion} is already at end of path`);

@@ -21,6 +21,7 @@ export const moduleInfo = {
   icon: '📍',
   column: 3, // Right column,
   description: 'Locations display panel.',
+  requires: ['stateManager', 'commonUI'],
 };
 
 let moduleDispatcher = null;

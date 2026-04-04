@@ -329,6 +329,7 @@ EXTRA_SEED_TEMPLATES=(
   "Adventure"
   "A Short Hike"
   "A Hat in Time"
+  "APCalc"
   "Journey to Ascension"
   "Baking Adventure"
   "Coding Adventure"
@@ -457,6 +458,8 @@ if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
   generate_depgraph_seed "tech_tree" 3 "  vanilla_placement: true"            # tech_tree, seed 3
   generate_depgraph_seed "skill_tree" 4 "  vanilla_placement: true"           # skill_tree, seed 4
   generate_depgraph_seed "recipe_chain" 5 "  vanilla_placement: true"         # recipe_chain, seed 5
+  generate_depgraph_seed "swfrecomp_vibe_coding" 6 "  vanilla_placement: true"
+  generate_depgraph_seed "taskflow_example" 7 "  vanilla_placement: true"
 fi
 
 # --- Main seeds ---
@@ -485,6 +488,18 @@ generate_depgraph_seed "recipe_chain" 13
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   generate_depgraph_seed "recipe_chain" 14
   generate_depgraph_seed "recipe_chain" 15
+fi
+# swfrecomp_vibe_coding: seeds 16-18
+generate_depgraph_seed "swfrecomp_vibe_coding" 16
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "swfrecomp_vibe_coding" 17
+  generate_depgraph_seed "swfrecomp_vibe_coding" 18
+fi
+# taskflow_example: seeds 19-21
+generate_depgraph_seed "taskflow_example" 19
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "taskflow_example" 20
+  generate_depgraph_seed "taskflow_example" 21
 fi
 
 # --- Multiworld ---

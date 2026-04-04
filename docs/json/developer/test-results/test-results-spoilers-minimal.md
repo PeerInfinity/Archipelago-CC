@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T06:06:18.834443+00:00
 
-**Source Data Last Updated:** 2026-03-22T06:06:18.834452+00:00
+**Source Data Last Updated:** 2026-04-03T22:56:14.748898+00:00
 
 ## Summary
 
-- **Total Games:** 88
-- **Passed:** 82 (93.2%)
-- **Failed:** 6 (6.8%)
+- **Total Games:** 89
+- **Passed:** 83 (93.3%)
+- **Failed:** 6 (6.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 43/82 (52.4% of passed)
-- **Passing with Generic Logic:** 73/82 (89.0% of passed)
-- **Passing with Both Generic:** 43/82 (52.4% of passed)
+- **Passing with Generic Exporter:** 44/83 (53.0% of passed)
+- **Passing with Generic Logic:** 74/83 (89.2% of passed)
+- **Passing with Both Generic:** 44/83 (53.0% of passed)
 
 ## Test Results
 
@@ -37,6 +37,7 @@
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.11 | 5.11 | 🟢 Complete | 18.2KB | ✅ |
 | A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 14.0KB | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| APCalc WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 6.2 | 6.2 | 🟢 Complete | 1.8KB | ✅ |

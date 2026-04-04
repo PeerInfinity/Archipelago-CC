@@ -5,6 +5,7 @@ import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { getNodeLabelProvider, getEdgeVisibilityFilter, getAccessibilityVisibilityFilter } from './index.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -41,6 +42,7 @@ export class GraphDataManager {
       logger.info('Building graph from regions', { count: staticData.regions.size });
       this.buildGraphFromRegions(staticData.regions, staticData.exits);
       this.ui.graphInitialized = true; // Mark as successfully loaded
+      this.ui.overlayManager.onGraphRebuilt();
 
       // Force a re-layout when loading new rules
       if (isReload && this.ui.cy) {
@@ -241,8 +243,11 @@ export class GraphDataManager {
       }
 
       // Add location counts if there are locations (only for discovered regions)
+      // Skip counts when an external label provider is active (it controls the full label)
       let fullLabel;
-      if (isDiscoveryModeActive && !isRegionDiscovered) {
+      if (getNodeLabelProvider()) {
+        fullLabel = displayText;
+      } else if (isDiscoveryModeActive && !isRegionDiscovered) {
         fullLabel = displayText; // Just "???" for undiscovered regions
       } else {
         const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
@@ -650,6 +655,9 @@ export class GraphDataManager {
     const snapshot = data.snapshot;
     if (!snapshot) return;
 
+    // Cache for refreshLabels() fallback when no live snapshot is available
+    this._lastSnapshot = snapshot;
+
     const staticData = stateManager.getStaticData();
     if (!staticData) return;
 
@@ -757,8 +765,11 @@ export class GraphDataManager {
       }
 
       // Add location counts if there are locations (only for discovered regions)
+      // Skip counts when an external label provider is active (it controls the full label)
       let fullLabel;
-      if (isDiscoveryModeActive && !isRegionDiscovered) {
+      if (getNodeLabelProvider()) {
+        fullLabel = displayText;
+      } else if (isDiscoveryModeActive && !isRegionDiscovered) {
         fullLabel = displayText; // Just the placeholder text for undiscovered regions
       } else {
         const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
@@ -794,18 +805,24 @@ export class GraphDataManager {
         node.addClass('discovery-hidden');
       }
 
-      // Apply base accessibility class
-      if (isReachable) {
-        node.addClass('accessible');
-      } else {
-        node.addClass('inaccessible');
-        return; // Don't apply interior colors for inaccessible regions
-      }
+      // Check external accessibility visibility filter (e.g., APCalc hard mode)
+      const accessibilityFilter = getAccessibilityVisibilityFilter();
+      const showAccessibility = !accessibilityFilter || accessibilityFilter();
 
-      // Determine and apply interior color based on location status
-      const interiorColorClass = this.determineNodeInteriorColor(locationCounts, isReachable);
-      if (interiorColorClass) {
-        node.addClass(interiorColorClass);
+      // Apply base accessibility class
+      if (showAccessibility) {
+        if (isReachable) {
+          node.addClass('accessible');
+        } else {
+          node.addClass('inaccessible');
+          return; // Don't apply interior colors for inaccessible regions
+        }
+
+        // Determine and apply interior color based on location status
+        const interiorColorClass = this.determineNodeInteriorColor(locationCounts, isReachable);
+        if (interiorColorClass) {
+          node.addClass(interiorColorClass);
+        }
       }
     });
 
@@ -895,6 +912,15 @@ export class GraphDataManager {
           if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
             shouldHideEdge = true;
           }
+        }
+      }
+
+      // Apply external edge visibility filter (e.g., APCalc difficulty modes)
+      const edgeVisibilityFilter = getEdgeVisibilityFilter();
+      if (edgeVisibilityFilter && !shouldHideEdge) {
+        const filterResult = edgeVisibilityFilter(sourceRegion, targetRegion);
+        if (!filterResult) {
+          shouldHideEdge = true;
         }
       }
 
@@ -1308,5 +1334,13 @@ export class GraphDataManager {
         edge.style('z-index', zIndex - 1); // Edges slightly below their nodes
       });
     });
+  }
+
+  /** Re-run label generation for all nodes (called when a label provider changes). */
+  refreshLabels() {
+    const snapshot = stateManager.getLatestStateSnapshot() || this._lastSnapshot;
+    if (snapshot) {
+      this.onStateUpdate({ snapshot });
+    }
   }
 }

@@ -2,7 +2,8 @@ import { MetaGameLogic } from './metaGameLogic.js';
 
 export const moduleInfo = {
   name: 'metaGame',
-  description: 'Meta-game features and event orchestration system'
+  description: 'Meta-game features and event orchestration system',
+  requires: ['progressBar', 'progressBarPanel'],
 };
 
 let metaGameLogic = null;

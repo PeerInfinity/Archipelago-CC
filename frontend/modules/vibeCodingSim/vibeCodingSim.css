@@ -1,0 +1,753 @@
+/* Vibe Coding Simulator — Panel Styles (v3) */
+
+.vcs-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: #e0e0e0;
+    background: #1e1e1e;
+}
+
+.vcs-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-style: italic;
+}
+
+/* --- Toolbar --- */
+
+.vcs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: #252525;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.vcs-toolbar-item {
+    color: #ccc;
+    font-weight: 500;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+
+/* Toolbar items with background progress bars */
+.vcs-toolbar-bar-item {
+    position: relative;
+    padding: 3px 8px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #333;
+}
+
+.vcs-toolbar-bar-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 3px;
+    opacity: 0.5;
+    transition: none;
+}
+
+.vcs-toolbar-bar-label {
+    position: relative;
+    z-index: 1;
+}
+
+.vcs-manual-test-active {
+    color: #e0a030;
+    font-weight: 600;
+}
+
+/* --- Column toggles --- */
+
+.vcs-column-toggles {
+    display: flex;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #222;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.vcs-settings-gear {
+    margin-left: auto;
+    font-size: 14px;
+}
+
+/* --- Settings Panel --- */
+
+.vcs-settings-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.vcs-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #252525;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.vcs-settings-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+}
+
+.vcs-settings-group {
+    font-size: 12px;
+    font-weight: 700;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 12px 0 4px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #333;
+}
+
+.vcs-settings-group:first-child {
+    margin-top: 0;
+}
+
+.vcs-settings-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    max-width: 400px;
+}
+
+.vcs-settings-row label {
+    font-size: 12px;
+    color: #ccc;
+    flex: 1;
+}
+
+.vcs-settings-row input {
+    width: 80px;
+    background: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 12px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.vcs-settings-footer {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #252525;
+    border-top: 1px solid #333;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+/* --- Columns --- */
+
+.vcs-columns {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.vcs-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-right: 1px solid #333;
+}
+
+.vcs-column:last-child {
+    border-right: none;
+}
+
+.vcs-column-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #252525;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.vcs-column-header strong {
+    flex-shrink: 0;
+}
+
+/* --- Search --- */
+
+.vcs-search {
+    flex: 1;
+    min-width: 60px;
+    padding: 3px 6px;
+    background: #333;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #e0e0e0;
+    font-size: 12px;
+}
+
+.vcs-search:focus {
+    outline: none;
+    border-color: #666;
+}
+
+/* --- Card list --- */
+
+.vcs-card-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+/* --- Cards --- */
+
+.vcs-card {
+    background: #2a2a2a;
+    border: 1px solid #383838;
+    border-left: 3px solid #555;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.vcs-card:hover {
+    background: #303030;
+}
+
+.vcs-card-selected {
+    background: #2a3040;
+    border-color: #4a6080;
+}
+
+.vcs-card-workflow {
+    border-left-color: #8e44ad;
+    background: #2a2535;
+}
+
+.vcs-card-cleared {
+    border-left-color: #555;
+    background: #252525;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.vcs-card-manual-test {
+    border-left-color: #e0a030;
+    background: #2a2820;
+}
+
+/* --- Feature card summary layout --- */
+
+.vcs-card-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vcs-card-left {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.vcs-card-name {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vcs-card-meta {
+    color: #999;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.vcs-card-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.vcs-card-pct {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* --- Badges (D/C/T/M as clickable buttons) --- */
+
+.vcs-badge-row {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.vcs-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.vcs-badge-btn {
+    padding: 0;
+}
+
+.vcs-badge-btn:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: scale(1.1);
+}
+
+.vcs-badge-active {
+    /* color set inline */
+}
+
+.vcs-badge-issue {
+    border: 2px solid #c0392b;
+}
+
+.vcs-badge-needs-review {
+    border: 2px solid #e0a030;
+}
+
+.vcs-badge-empty {
+    background: #444;
+    color: #777;
+}
+
+.vcs-badge-in-progress {
+    animation: vcs-pulse 1.5s ease-in-out infinite;
+    outline: 2px solid #fff;
+    outline-offset: -1px;
+}
+
+@keyframes vcs-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.vcs-badge-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.vcs-badge-task-action {
+    font-size: 11px;
+}
+
+/* --- Card right side (badges/buttons aligned right) --- */
+
+.vcs-card-right {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: auto;
+    align-items: center;
+}
+
+.vcs-btn-small {
+    padding: 2px 8px;
+    font-size: 11px;
+}
+
+/* --- Manual test result --- */
+
+.vcs-manual-result {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.vcs-manual-pass { color: #2d8a4e; }
+.vcs-manual-issues { color: #e0a030; }
+
+/* --- Card details (expanded) --- */
+
+.vcs-card-details {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #383838;
+}
+
+.vcs-detail-label {
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
+    margin-bottom: 3px;
+}
+
+.vcs-warning {
+    color: #e0a030;
+    font-size: 12px;
+    padding: 4px 0;
+}
+
+.vcs-dep-link {
+    display: inline-block;
+    color: #6ea8d9;
+    text-decoration: none;
+    font-size: 12px;
+    margin-right: 8px;
+}
+
+.vcs-dep-link:hover {
+    text-decoration: underline;
+}
+
+.vcs-task-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 2px 0;
+}
+
+.vcs-history-row {
+    font-size: 12px;
+    color: #aaa;
+    padding: 1px 0;
+}
+
+.vcs-merge-conflict {
+    color: #e67e22;
+    font-weight: 500;
+}
+
+/* --- Test result list (expanded test workflow) --- */
+
+.vcs-test-result-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 6px 0;
+    padding: 4px;
+    background: #222;
+    border-radius: 3px;
+}
+
+.vcs-test-result-row {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
+.vcs-test-result-name {
+    color: #bbb;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vcs-expand-toggle {
+    color: #888;
+    font-size: 11px;
+    flex-shrink: 0;
+    padding: 0 4px 0 0;
+}
+
+/* --- Progress bar --- */
+
+.vcs-progress-bar {
+    position: relative;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 40px;
+    margin: 3px 0;
+}
+
+.vcs-progress-fill {
+    height: 100%;
+    background: #3498db;
+    border-radius: 3px;
+    transition: none;
+}
+
+.vcs-progress-marker {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+}
+
+.vcs-progress-skip-marker {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #e0a030;
+    pointer-events: none;
+}
+
+/* Event markers on progress bars */
+.vcs-progress-event-marker {
+    position: absolute;
+    top: -1px;
+    width: 3px;
+    height: calc(100% + 2px);
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+.vcs-event-marker-pos {
+    background: #2d8a4e;
+}
+
+.vcs-event-marker-neg {
+    background: #c0392b;
+}
+
+/* Review progress bar */
+.vcs-task-bar-container {
+    margin: 3px 0;
+}
+
+.vcs-review-bar {
+    height: 4px;
+    margin-bottom: 2px;
+}
+
+.vcs-review-bar .vcs-progress-fill {
+    background: #8e44ad;
+}
+
+.vcs-card-manual-test .vcs-progress-fill {
+    background: #8e44ad;
+}
+
+.vcs-card-workflow .vcs-progress-fill {
+    background: #27ae60;
+}
+
+/* Event log */
+.vcs-event-log {
+}
+
+.vcs-event-entries {
+    padding: 4px 0;
+}
+
+.vcs-event-entry {
+    font-size: 11px;
+    padding: 2px 4px;
+    color: #aaa;
+}
+
+.vcs-event-positive {
+    color: #4a9a5a;
+}
+
+.vcs-event-negative {
+    color: #c05040;
+}
+
+.vcs-event-outcome {
+    font-weight: 600;
+    font-style: italic;
+}
+
+.vcs-review-summary {
+    font-weight: 600;
+    padding-top: 4px;
+    margin-top: 4px;
+    border-top: 1px solid #383838;
+}
+
+/* Rewind controls */
+.vcs-rewind-controls {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+    border-bottom: 1px solid #333;
+    margin-bottom: 4px;
+}
+
+/* Location checked star */
+.vcs-location-checked {
+    font-size: 12px;
+}
+
+/* Pending review border */
+.vcs-card[style*="border-left-color: rgb(142, 68, 173)"] {
+    /* purple accent for pending review */
+}
+
+/* --- Action area --- */
+
+.vcs-action-area {
+    min-height: 36px;
+    padding: 6px 10px;
+    background: #252525;
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.vcs-action-msg {
+    color: #888;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* --- Buttons --- */
+
+.vcs-btn {
+    padding: 4px 10px;
+    background: #383838;
+    border: 1px solid #4a4a4a;
+    border-radius: 3px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.vcs-btn:hover {
+    background: #444;
+}
+
+.vcs-btn-active {
+    background: #3a5070;
+    border-color: #4a6090;
+    color: #fff;
+}
+
+.vcs-btn-action {
+    background: #2a5a3a;
+    border-color: #3a7a4a;
+}
+
+.vcs-btn-action:hover {
+    background: #3a7a4a;
+}
+
+.vcs-btn-danger {
+    background: #5a2a2a;
+    border-color: #7a3a3a;
+}
+
+.vcs-btn-danger:hover {
+    background: #7a3a3a;
+}
+
+.vcs-btn-disabled,
+.vcs-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.vcs-btn:disabled:hover {
+    background: #383838;
+}
+
+.vcs-btn-speed {
+    padding: 4px 8px;
+    min-width: 32px;
+    text-align: center;
+}
+
+.vcs-btn-toggle {
+    padding: 3px 8px;
+}
+
+/* --- Auto-skip checkbox --- */
+
+.vcs-auto-skip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    font-size: 11px;
+    flex-shrink: 0;
+    color: #aaa;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.vcs-auto-skip:first-of-type {
+    margin-left: auto;
+}
+
+.vcs-auto-skip input {
+    cursor: pointer;
+}
+
+/* --- Graph Node Overlays --- */
+
+.vcs-node-overlay {
+    position: absolute;
+    background: #2a2a2a;
+    border: 1px solid #383838;
+    border-left: 3px solid #555;
+    border-radius: 4px;
+    padding: 4px 6px;
+    pointer-events: auto;
+    cursor: grab;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 11px;
+    color: #e0e0e0;
+    width: 102px;
+    user-select: none;
+}
+
+.vcs-node-overlay-name {
+    font-weight: 500;
+    margin-bottom: 2px;
+    word-break: break-word;
+}
+
+.vcs-node-overlay-meta {
+    display: flex;
+    gap: 6px;
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.vcs-node-overlay-badges {
+    display: flex;
+    gap: 2px;
+}

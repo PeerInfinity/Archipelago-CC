@@ -6,6 +6,7 @@ export const moduleInfo = {
     name: 'jtaQueueEngine',
     title: 'JTA Queue Engine',
     description: 'Headless engine for JTA action queue execution, strategy, and predictions.',
+    requires: ['iframeAdapter', 'iframePanel'],
 };
 
 function log(level, message, ...data) {

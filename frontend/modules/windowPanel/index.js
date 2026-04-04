@@ -10,6 +10,7 @@ export const moduleInfo = {
   icon: '🪟',
   column: 3, // Right column
   description: 'Window Panel display panel.',
+  requires: ['windowAdapter'],
 };
 
 // Helper function for logging with fallback

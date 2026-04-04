@@ -976,14 +976,7 @@ export class TextAdventureLogic {
     handleRegionChange(data) {
         log('info', 'Region changed:', data);
 
-        // Skip display if this is from a reset (oldRegion is null)
-        // handleRulesLoaded will display the region after showing "Rules loaded!"
-        if (data && data.oldRegion === null) {
-            log('debug', 'Skipping region display - this is from reset, handleRulesLoaded will display');
-            return;
-        }
-
-        // Only display if the region is different from the last one we displayed
+        // Display if the region is different from the last one we displayed
         // This prevents duplicate messages when sync events fire
         if (data && data.newRegion && data.newRegion !== this.lastDisplayedRegion) {
             this.lastDisplayedRegion = data.newRegion;

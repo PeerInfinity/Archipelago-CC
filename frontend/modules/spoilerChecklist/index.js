@@ -44,6 +44,7 @@ export const moduleInfo = {
   icon: '📋',
   column: 2, // Middle column
   description: 'Displays sphere log data as an interactive checklist.',
+  requires: ['stateManager', 'commonUI', 'sphereState', 'locations'],
 };
 
 /**

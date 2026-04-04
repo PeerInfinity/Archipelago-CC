@@ -10,6 +10,7 @@ export const moduleInfo = {
   icon: '📖',
   column: 3, // Right column
   description: 'Text Adventure display panel.',
+  requires: ['stateManager', 'playerState', 'discovery'],
 };
 
 // Helper function for logging with fallback
@@ -74,6 +75,11 @@ export async function register(registrationApi) {
             type: 'boolean',
             default: false,
             description: 'Enable discovery mode for text adventure'
+        },
+        autoLoadCustomData: {
+            type: 'string',
+            default: '',
+            description: 'Automatically load this custom data file on startup (e.g., "adventure")'
         }
     });
 

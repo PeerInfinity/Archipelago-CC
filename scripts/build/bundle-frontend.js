@@ -129,6 +129,36 @@ function validateBundledModules() {
   }
 }
 
+/**
+ * Validates that no module config JSON files still contain 'requires' entries.
+ * The requires field should only exist in each module's moduleInfo export.
+ */
+function validateNoRequiresInConfigs() {
+  const configDir = path.join(frontendDir, 'module-configs');
+  const configFiles = fs.readdirSync(configDir).filter(f => f.startsWith('modules') && f.endsWith('.json'));
+  let found = false;
+
+  for (const file of configFiles) {
+    const config = JSON.parse(fs.readFileSync(path.join(configDir, file), 'utf8'));
+    const modulesWithRequires = Object.entries(config.moduleDefinitions || {})
+      .filter(([, def]) => def.requires)
+      .map(([id]) => id);
+
+    if (modulesWithRequires.length > 0) {
+      if (!found) {
+        console.warn('');
+        console.warn('⚠️  WARNING: Config JSON files still contain "requires" entries (should be in moduleInfo only):');
+        found = true;
+      }
+      console.warn(`   ${file}: ${modulesWithRequires.join(', ')}`);
+    }
+  }
+
+  if (!found) {
+    console.log('✅ No config JSON files contain "requires" entries (correctly in moduleInfo).');
+  }
+}
+
 async function build() {
   console.log(`\n📦 Building frontend bundle...`);
   console.log(`   Entry: ${buildOptions.entryPoints[0]}`);
@@ -141,6 +171,7 @@ async function build() {
     // Validate module coverage before building
     console.log('🔍 Validating bundled module coverage...');
     validateBundledModules();
+    validateNoRequiresInConfigs();
 
     // Copy required files (workers, etc.)
     console.log('📋 Copying required files...');

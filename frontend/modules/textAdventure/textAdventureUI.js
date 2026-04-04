@@ -2,6 +2,7 @@
 import { TextAdventureParser } from './textAdventureParser.js';
 import { TextAdventureLogic } from './textAdventureLogic.js';
 import { moduleDispatcher, getModuleEventBus } from './index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -36,7 +37,8 @@ export class TextAdventureUI {
         
         this.initialize();
         this.setupEventSubscriptions();
-        
+        this._autoLoadCustomData();
+
         log('info', 'TextAdventureUI initialized');
     }
 
@@ -283,6 +285,21 @@ Load a rules file to begin your adventure.`;
 
         // Execute command
         this.executeCommand(command);
+    }
+
+    async _autoLoadCustomData() {
+        try {
+            const settings = await settingsManager.getModuleSettings('textAdventure');
+            if (settings.autoLoadCustomData) {
+                log('info', 'Auto-loading custom data:', settings.autoLoadCustomData);
+                await this.handleCustomDataSelection(settings.autoLoadCustomData);
+                if (this.customDataSelect) {
+                    this.customDataSelect.value = settings.autoLoadCustomData;
+                }
+            }
+        } catch (e) {
+            log('error', 'Failed to auto-load custom data:', e);
+        }
     }
 
     async handleCustomDataSelection(value) {

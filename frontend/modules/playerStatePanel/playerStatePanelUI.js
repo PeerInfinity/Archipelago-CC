@@ -31,10 +31,15 @@ export class PlayerStatePanelUI {
                 <div class="current-region">
                     <strong>Current Region:</strong> <span class="region-name">Loading...</span>
                 </div>
+                <div class="path-section">
+                    <strong>Path:</strong>
+                    <div class="path-entries"></div>
+                </div>
             </div>
         `;
-        
+
         this.currentRegionElement = this.rootElement.querySelector('.region-name');
+        this.pathEntriesElement = this.rootElement.querySelector('.path-entries');
         return this.rootElement;
     }
 
@@ -48,6 +53,12 @@ export class PlayerStatePanelUI {
             this.updateDisplay();
         });
         this.unsubscribeHandles.push(handle);
+
+        // Listen for path updates
+        const pathHandle = this.eventBus.subscribe('playerState:pathUpdated', () => {
+            this.updateDisplay();
+        });
+        this.unsubscribeHandles.push(pathHandle);
 
         // Also listen for rules loaded to get initial state
         const rulesHandle = this.eventBus.subscribe('stateManager:rulesLoaded', () => {
@@ -66,6 +77,32 @@ export class PlayerStatePanelUI {
         if (getCurrentRegion) {
             const currentRegion = getCurrentRegion();
             this.currentRegionElement.textContent = currentRegion || 'Unknown';
+        }
+
+        // Get and display path
+        if (this.pathEntriesElement) {
+            const getPath = centralRegistry.getPublicFunction('playerState', 'getPath');
+            const path = getPath ? getPath() : [];
+            if (path.length === 0) {
+                this.pathEntriesElement.textContent = '(empty)';
+            } else {
+                this.pathEntriesElement.innerHTML = '';
+                for (const entry of path) {
+                    const el = document.createElement('div');
+                    el.className = 'path-entry';
+                    if (entry.type === 'regionMove') {
+                        el.textContent = `→ ${entry.destinationRegion}`;
+                        if (entry.exitUsed) el.textContent += ` (via ${entry.exitUsed})`;
+                    } else if (entry.type === 'locationCheck') {
+                        el.textContent = `  ✓ ${entry.locationName}`;
+                        el.style.color = '#6ea8d9';
+                    } else if (entry.type === 'customAction') {
+                        el.textContent = `  ⚡ ${entry.actionName}`;
+                        el.style.color = '#e0a030';
+                    }
+                    this.pathEntriesElement.appendChild(el);
+                }
+            }
         }
     }
 

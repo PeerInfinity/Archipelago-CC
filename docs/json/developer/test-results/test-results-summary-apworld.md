@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (APWorld)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T00:10:03.442853+00:00
 
@@ -56,9 +56,9 @@ Of the 13 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 404.6KB
+- **Total Exporter Code:** 387.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 404.6KB
+- **Combined Total:** 387.6KB
 
 ## Test Results
 
@@ -120,7 +120,7 @@ Of the 13 templates passing all 4 tests:
 | Kirby Super Star | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | League of Legends | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| *Lingo 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 17.1KB | ✅ | N/A |
+| *Lingo 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ⚫ | ✅ | N/A |
 | Little Witch Nobeta | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Lunacid* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 8.2KB | ✅ | N/A |
@@ -195,29 +195,28 @@ Of the 13 templates passing all 4 tests:
 | 6 | Tetris Attack | 23.1KB |
 | 7 | Wordipelago | 19.5KB |
 | 8 | Star Fox 64 | 17.2KB |
-| 9 | Lingo 2 | 17.1KB |
-| 10 | Pseudoregalia | 17.1KB |
-| 11 | Spyro 3 | 15.3KB |
-| 12 | System Shock 2 | 15.1KB |
-| 13 | Stacklands | 12.7KB |
-| 14 | Rain World | 11.8KB |
-| 15 | Anodyne | 10.7KB |
-| 16 | Soul Blazer | 10.5KB |
-| 17 | Majora's Mask Recompiled | 10.4KB |
-| 18 | Sonic the Hedgehog 1 | 9.4KB |
-| 19 | Crystalis | 9.2KB |
-| 20 | Autopelago | 9.2KB |
-| 21 | Watery Words | 9.1KB |
-| 22 | An Untitled Story | 8.7KB |
-| 23 | Lunacid | 8.2KB |
-| 24 | Rift Wizard | 7.7KB |
-| 25 | Pizza Tower | 7.0KB |
-| 26 | Air Delivery | 6.6KB |
-| 27 | Star Wars Episode I Racer | 5.7KB |
-| 28 | The Sims 4 | 5.5KB |
-| 29 | Another Crabs Treasure | 3.1KB |
-| 30 | Jigsaw | 1.6KB |
-| 31 | ANIMAL WELL | 1.5KB |
+| 9 | Pseudoregalia | 17.1KB |
+| 10 | Spyro 3 | 15.3KB |
+| 11 | System Shock 2 | 15.1KB |
+| 12 | Stacklands | 12.7KB |
+| 13 | Rain World | 11.8KB |
+| 14 | Anodyne | 10.7KB |
+| 15 | Soul Blazer | 10.5KB |
+| 16 | Majora's Mask Recompiled | 10.4KB |
+| 17 | Sonic the Hedgehog 1 | 9.4KB |
+| 18 | Crystalis | 9.2KB |
+| 19 | Autopelago | 9.2KB |
+| 20 | Watery Words | 9.1KB |
+| 21 | An Untitled Story | 8.7KB |
+| 22 | Lunacid | 8.2KB |
+| 23 | Rift Wizard | 7.7KB |
+| 24 | Pizza Tower | 7.0KB |
+| 25 | Air Delivery | 6.6KB |
+| 26 | Star Wars Episode I Racer | 5.7KB |
+| 27 | The Sims 4 | 5.5KB |
+| 28 | Another Crabs Treasure | 3.1KB |
+| 29 | Jigsaw | 1.6KB |
+| 30 | ANIMAL WELL | 1.5KB |
 
 ## Excluded Templates
 

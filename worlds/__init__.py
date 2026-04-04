@@ -56,11 +56,8 @@ class WorldSource:
     def load(self) -> bool:
         try:
             start = time.perf_counter()
-            module_name = Path(self.path).stem
-            print(f"[worlds] Loading {module_name}...", flush=True)
-            importlib.import_module(f".{module_name}", "worlds")
+            importlib.import_module(f".{Path(self.path).stem}", "worlds")
             self.time_taken = time.perf_counter()-start
-            print(f"[worlds] Loaded {module_name} in {self.time_taken:.1f}s", flush=True)
             return True
 
         except Exception:

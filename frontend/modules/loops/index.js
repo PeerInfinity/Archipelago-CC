@@ -16,6 +16,7 @@ export const moduleInfo = {
   icon: '🔄',
   column: 3, // Right column
   description: 'Loop mode logic and UI panel.',
+  requires: ['stateManager', 'discovery'],
 };
 
 // Other dependencies

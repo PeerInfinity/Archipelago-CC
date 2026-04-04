@@ -18,6 +18,7 @@ export const moduleInfo = {
   icon: '🏰',
   column: 3, // Right column
   description: 'Dungeons display panel.',
+  requires: ['stateManager', 'commonUI'],
 };
 
 class DungeonsModule {

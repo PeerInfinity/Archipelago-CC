@@ -1,0 +1,111 @@
+{
+  "title": "Vibe Coding Simulator — TaskFlow App",
+  "nodes": {
+    "DATABASE.1": {
+      "label": "Database: Schema design",
+      "description": "Define tables for users, tasks, tags, and relationships",
+      "depends_on": []
+    },
+    "DATABASE.2": {
+      "label": "Database: Query builder",
+      "description": "Type-safe query construction with parameterized queries",
+      "depends_on": ["DATABASE.1"]
+    },
+    "DATABASE.3": {
+      "label": "Database: Migration system",
+      "description": "Version-tracked schema migrations with rollback support",
+      "depends_on": ["DATABASE.2"]
+    },
+
+    "AUTH.1": {
+      "label": "Auth: User model",
+      "description": "User registration, profile storage, role definitions",
+      "depends_on": []
+    },
+    "AUTH.2": {
+      "label": "Auth: Password hashing & verification",
+      "description": "bcrypt hashing, timing-safe comparison, password reset tokens",
+      "depends_on": ["AUTH.1"]
+    },
+    "AUTH.3": {
+      "label": "Auth: Session management",
+      "description": "JWT tokens, refresh rotation, session invalidation",
+      "depends_on": ["AUTH.2"]
+    },
+
+    "API.1": {
+      "label": "REST API: Route framework",
+      "description": "HTTP server, routing, request/response lifecycle",
+      "depends_on": ["DATABASE.3", "AUTH.3"]
+    },
+    "API.2": {
+      "label": "REST API: Middleware stack",
+      "description": "Auth middleware, rate limiting, error handling, request logging",
+      "depends_on": ["API.1"]
+    },
+    "API.3": {
+      "label": "REST API: Input validation",
+      "description": "Schema validation, sanitization, error messages",
+      "depends_on": ["API.2"]
+    },
+
+    "TASKS.1": {
+      "label": "Task Engine: CRUD operations",
+      "description": "Create, read, update, delete tasks with ownership checks",
+      "depends_on": ["DATABASE.3"]
+    },
+    "TASKS.2": {
+      "label": "Task Engine: Status workflow",
+      "description": "State machine for task lifecycle: open → in_progress → review → done",
+      "depends_on": ["TASKS.1"]
+    },
+    "TASKS.3": {
+      "label": "Task Engine: Due dates & recurrence",
+      "description": "Due date tracking, overdue detection, recurring task generation",
+      "depends_on": ["TASKS.2"]
+    },
+
+    "NOTIFY.1": {
+      "label": "Notifications: Email & webhooks",
+      "description": "Template rendering, SMTP dispatch, webhook POST with retry",
+      "depends_on": ["TASKS.2", "AUTH.2"]
+    },
+    "NOTIFY.2": {
+      "label": "Notifications: In-app feed",
+      "description": "Notification storage, read/unread tracking, real-time push",
+      "depends_on": ["NOTIFY.1"]
+    },
+
+    "FRONTEND.1": {
+      "label": "Frontend: Component library",
+      "description": "Buttons, forms, modals, tables, toast notifications",
+      "depends_on": ["API.3"]
+    },
+    "FRONTEND.2": {
+      "label": "Frontend: State management",
+      "description": "Client-side store, optimistic updates, cache invalidation",
+      "depends_on": ["FRONTEND.1"]
+    },
+    "FRONTEND.3": {
+      "label": "Frontend: Pages & routing",
+      "description": "Dashboard, task detail, settings, login/signup flows",
+      "depends_on": ["FRONTEND.2"]
+    },
+
+    "SEARCH.1": {
+      "label": "Search: Full-text indexing",
+      "description": "Index task titles, descriptions, and comments for search",
+      "depends_on": ["TASKS.1", "DATABASE.2"]
+    },
+    "SEARCH.2": {
+      "label": "Search: Query parsing",
+      "description": "Parse user queries with filters: status:open, assignee:me, due:tomorrow",
+      "depends_on": ["SEARCH.1"]
+    },
+    "SEARCH.3": {
+      "label": "Search: Result ranking",
+      "description": "Relevance scoring, recency boost, personalized ranking",
+      "depends_on": ["SEARCH.2"]
+    }
+  }
+}

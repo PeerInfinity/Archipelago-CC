@@ -1,0 +1,2481 @@
+{
+  "title": "SWFRecomp AVM1 \u2014 Vibe Coding Simulator",
+  "nodes": {
+    "ARRAY_METHODS.4": {
+      "label": "Array Methods: array_prototyping \u2014 addProperty Numeric Ke...",
+      "description": "Status: DONE | Tests: array_call_method, array_prototyping, array_sort, array_sort_random",
+      "depends_on": [
+        "CALL_SEMANTICS.3"
+      ]
+    },
+    "ASBROADCASTER": {
+      "label": "Asbroadcaster",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "ASNATIVE_ASNEW": {
+      "label": "Asnative Asnew",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "BITMAPDATA_APPLYFILTER": {
+      "label": "Bitmapdata Applyfilter",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "BUTTON.1": {
+      "label": "Button: Button Children Initialization (no input.json)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS.D"
+      ]
+    },
+    "BUTTON.2": {
+      "label": "Button: Input Event Infrastructure (foundation for all 9 ...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BUTTON.1"
+      ]
+    },
+    "BUTTON.3": {
+      "label": "Button: Mouse Events + Button State Machine",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BUTTON.2"
+      ]
+    },
+    "BUTTON.4": {
+      "label": "Button: Key Events",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BUTTON.3"
+      ]
+    },
+    "BUTTON.5": {
+      "label": "Button: Focus + Tab Navigation",
+      "description": "Status: DONE | Tests: button_children, button_goto, button_key_events, button_key_events_special, button_keypress, button_keypress_vs_press, button_keypress_vs_tab, button_keypress_vs_textinput, button_order, button_properties_special_cases, button_v5, button_v6, movieclip_in_removed_button, root_button_mode",
+      "depends_on": [
+        "BUTTON.4"
+      ]
+    },
+    "CALL_SEMANTICS.2": {
+      "label": "Call Semantics: Frame label lookup",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "CALL_SEMANTICS.3": {
+      "label": "Call Semantics: Target path resolution",
+      "description": "Status: DONE | Tests: call, removed_target_clip_scope",
+      "depends_on": [
+        "CALL_SEMANTICS.2"
+      ]
+    },
+    "CLONE_DUPLICATE.1": {
+      "label": "Clone Duplicate: Core Clone/Duplicate \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOVIECLIP.10"
+      ]
+    },
+    "CLONE_DUPLICATE.2": {
+      "label": "Clone Duplicate: EditText Clones \u2014 SUBSTANTIALLY",
+      "description": "Status: DONE | Tests: duplicate_movie_clip, clone_sprite_types, clone_sprite_edittext, clone_sprite_edittext_dynamic, duplicate_movie_clip_drawing, clip_events, clip_event_propagation_order, on_construct",
+      "depends_on": [
+        "CLONE_DUPLICATE.1"
+      ]
+    },
+    "CLOSURE_CAPTURE": {
+      "label": "Closure Capture",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "COLOR_OBJECT.1": {
+      "label": "Color Object: AVM1 Color Object",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "COLOR_OBJECT.2": {
+      "label": "Color Object: flash.geom.ColorTransform",
+      "description": "Status: DONE",
+      "depends_on": [
+        "COLOR_OBJECT.1"
+      ]
+    },
+    "COLOR_OBJECT.3": {
+      "label": "Color Object: flash.geom.Matrix (toString improvement)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "COLOR_OBJECT.2"
+      ]
+    },
+    "COLOR_OBJECT.4": {
+      "label": "Color Object: Transform Object with Live Clip Data",
+      "description": "Status: DONE",
+      "depends_on": [
+        "COLOR_OBJECT.3"
+      ]
+    },
+    "COLOR_OBJECT.Dependency": {
+      "label": "Color Object: Graph",
+      "description": "Status: DONE | Tests: color, color_transform, transform, issue_1906, matrix",
+      "depends_on": [
+        "COLOR_OBJECT.4"
+      ]
+    },
+    "CROSS_MOVIE_EXPORT_ISOLATION.1": {
+      "label": "Cross Movie Export Isolation: Character Dictionary (`dict...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.7"
+      ]
+    },
+    "CROSS_MOVIE_EXPORT_ISOLATION.2": {
+      "label": "Cross Movie Export Isolation: Export Symbol Registry (`ng...",
+      "description": "Status: DONE | Tests: loadmovie_registerclass",
+      "depends_on": [
+        "CROSS_MOVIE_EXPORT_ISOLATION.1"
+      ]
+    },
+    "CROSS_VERSION_ISOLATION.1": {
+      "label": "Cross Version Isolation: Child SWF Version Restoration \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "SWF_VERSION_SEMANTICS.4"
+      ]
+    },
+    "CROSS_VERSION_ISOLATION.2": {
+      "label": "Cross Version Isolation: Per-Version Global Object \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CROSS_VERSION_ISOLATION.1"
+      ]
+    },
+    "CROSS_VERSION_ISOLATION.3": {
+      "label": "Cross Version Isolation: Per-Function SWF Version Trackin...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CROSS_VERSION_ISOLATION.2"
+      ]
+    },
+    "CROSS_VERSION_ISOLATION.4": {
+      "label": "Cross Version Isolation: DoInitAction Context for Child S...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CROSS_VERSION_ISOLATION.3"
+      ]
+    },
+    "CROSS_VERSION_ISOLATION.5": {
+      "label": "Cross Version Isolation: RegisterClass in Child SWFs (Small)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CROSS_VERSION_ISOLATION.4"
+      ]
+    },
+    "CROSS_VERSION_ISOLATION.6": {
+      "label": "Cross Version Isolation: Variable Clearing on Reload \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CROSS_VERSION_ISOLATION.5"
+      ]
+    },
+    "CUSTOM_CLIP_METHODS": {
+      "label": "Custom Clip Methods",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "DATE": {
+      "label": "Date",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "DEFAULT_NAMES": {
+      "label": "Default Names",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "DEVICE_FONT_RENDERING": {
+      "label": "Device Font Rendering",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "DRAG_DROP.A": {
+      "label": "Drag Drop: `startDrag` / `stopDrag` Methods",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS.D"
+      ]
+    },
+    "DRAG_DROP.B": {
+      "label": "Drag Drop: Hit Test for Drop Target",
+      "description": "Status: DONE",
+      "depends_on": [
+        "DRAG_DROP.A"
+      ]
+    },
+    "DRAG_DROP.C": {
+      "label": "Drag Drop: `mouse_hover_events_while_dragging`",
+      "description": "Status: DONE",
+      "depends_on": [
+        "DRAG_DROP.B"
+      ]
+    },
+    "DRAG_DROP.D": {
+      "label": "Drag Drop: `drag_over_from_outside` and `drag_over_withou...",
+      "description": "Status: DONE | Tests: drag_drop, drag_over_from_outside, drag_over_without_startdrag, mouse_hover_events_while_dragging",
+      "depends_on": [
+        "DRAG_DROP.C"
+      ]
+    },
+    "EDITTEXT_DRAG_SELECT": {
+      "label": "Edittext Drag Select",
+      "description": "Status: complete",
+      "depends_on": [
+        "SELECTION.2"
+      ]
+    },
+    "EDITTEXT_RESTRICT.1": {
+      "label": "Edittext Restrict: Pattern Tokenizer",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.7"
+      ]
+    },
+    "EDITTEXT_RESTRICT.2": {
+      "label": "Edittext Restrict: Pattern Parser",
+      "description": "Status: DONE",
+      "depends_on": [
+        "EDITTEXT_RESTRICT.1"
+      ]
+    },
+    "EDITTEXT_RESTRICT.3": {
+      "label": "Edittext Restrict: Character Filter",
+      "description": "Status: DONE",
+      "depends_on": [
+        "EDITTEXT_RESTRICT.2"
+      ]
+    },
+    "EDITTEXT_RESTRICT.4": {
+      "label": "Edittext Restrict: Integration",
+      "description": "Status: DONE",
+      "depends_on": [
+        "EDITTEXT_RESTRICT.3"
+      ]
+    },
+    "EDITTEXT_RESTRICT.5": {
+      "label": "Edittext Restrict: Edge Cases",
+      "description": "Status: DONE",
+      "depends_on": [
+        "EDITTEXT_RESTRICT.4"
+      ]
+    },
+    "ENTERFRAME_DISPATCH": {
+      "label": "Enterframe Dispatch",
+      "description": "Status: complete",
+      "depends_on": [
+        "FRAME_NAVIGATION"
+      ]
+    },
+    "ENUMERATION.1": {
+      "label": "Enumeration: Fix actionEnumerate Segfault + Type Safety",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.8"
+      ]
+    },
+    "ENUMERATION.2": {
+      "label": "Enumeration: Fix Enumeration Order",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ENUMERATION.1"
+      ]
+    },
+    "ENUMERATION.3": {
+      "label": "Enumeration: Fix Array Enumeration Order",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ENUMERATION.2"
+      ]
+    },
+    "ENUMERATION.4": {
+      "label": "Enumeration: Fix `__proto__` and `constructor` DontEnum",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ENUMERATION.3"
+      ]
+    },
+    "ENUMERATION.5": {
+      "label": "Enumeration: Enumerate `addProperty` Virtual Properties",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ENUMERATION.4"
+      ]
+    },
+    "ENUMERATION.6": {
+      "label": "Enumeration: Enumerate MovieClip Child Instance Names",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ENUMERATION.5"
+      ]
+    },
+    "ENUMERATION.7": {
+      "label": "Enumeration: Null Terminator (Minor)",
+      "description": "Status: DONE | Tests: enumerate, array_enumerate, new_object_enumerate, prototype_enumerate, stage_object_enumerate, globals_swf5, globals_swf6, globals_swf7, globals_swf8, stage_object_properties, as_set_prop_flags, prototype_properties, object_prototypes, is_prototype_of",
+      "depends_on": [
+        "ENUMERATION.6"
+      ]
+    },
+    "EXTERNAL_INTERFACE.1": {
+      "label": "External Interface: String Escaping/Quoting (3 tests, 87 ...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "XML.7"
+      ]
+    },
+    "EXTERNAL_INTERFACE.2": {
+      "label": "External Interface: Value-to-XML Serialization (2 tests, ...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "EXTERNAL_INTERFACE.1"
+      ]
+    },
+    "EXTERNAL_INTERFACE.3": {
+      "label": "External Interface: XML-to-Value Deserialization (1 test,...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "EXTERNAL_INTERFACE.2"
+      ]
+    },
+    "EXTERNAL_INTERFACE.4": {
+      "label": "External Interface: Bridge Methods (1 test, 84 lines) \u2014",
+      "description": "Status: DONE | Tests: external_interface_escapexml, external_interface_unescapexml, external_interface_toxml_basic, external_interface_toxml_array, external_interface_jsquotestring, external_interface_toas_basic, external_interface",
+      "depends_on": [
+        "EXTERNAL_INTERFACE.3"
+      ]
+    },
+    "FOCUS_FOCUSRECT": {
+      "label": "Focus Focusrect",
+      "description": "Status: complete",
+      "depends_on": [
+        "FOCUS_SYSTEM"
+      ]
+    },
+    "FOCUS_SYSTEM": {
+      "label": "Focus System",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "FRAME_NAVIGATION": {
+      "label": "Frame Navigation",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "FUNCTION_EDGE_CASES": {
+      "label": "Function Edge Cases",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "GEOMETRY_CLASSES": {
+      "label": "Geometry Classes",
+      "description": "Status: complete",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.6"
+      ]
+    },
+    "GETTEXTSNAPSHOT_CONSTRUCTOR.1": {
+      "label": "Gettextsnapshot Constructor: Invoke user constructor",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "GETTEXTSNAPSHOT_CONSTRUCTOR.2": {
+      "label": "Gettextsnapshot Constructor: Dynamically created MC support",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GETTEXTSNAPSHOT_CONSTRUCTOR.1"
+      ]
+    },
+    "GETTEXTSNAPSHOT_CONSTRUCTOR.3": {
+      "label": "Gettextsnapshot Constructor: Child MC context",
+      "description": "Status: DONE | Tests: movieclip_gettextsnapshot",
+      "depends_on": [
+        "GETTEXTSNAPSHOT_CONSTRUCTOR.2"
+      ]
+    },
+    "INPUT_DEAD_KEYS": {
+      "label": "Input Dead Keys",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "LOADMOVIE.0": {
+      "label": "Loadmovie: Child SWF compilation (verify_output.py) \u2014",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "LOADMOVIE.1": {
+      "label": "Loadmovie: _level management (runtime) \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.0"
+      ]
+    },
+    "LOADMOVIE.2": {
+      "label": "Loadmovie: Core loadMovie (runtime) \u2014 PARTIAL \u2705",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.1"
+      ]
+    },
+    "LOADMOVIE.3": {
+      "label": "Loadmovie: actionGetURL2 routing \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.2"
+      ]
+    },
+    "LOADMOVIE.4": {
+      "label": "Loadmovie: MovieClipLoader class \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.3"
+      ]
+    },
+    "LOADMOVIE.5": {
+      "label": "Loadmovie: unloadMovie \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.4"
+      ]
+    },
+    "LOADMOVIE.6": {
+      "label": "Loadmovie: Cross-version global isolation",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.5"
+      ]
+    },
+    "LOADMOVIE.7": {
+      "label": "Loadmovie: loadVariables \u2014",
+      "description": "Status: DONE | Tests: loadmovie, loadmovie_fail, loadmovie_flashvars, loadmovie_method, loadmovie_registerclass, loadmovie_replace_root, loadmovie_var_persistence, loadmovienum, loadmovienum_cross_version_prototype, loadvariables, loadvariables2, loadvariables_method, loadvariablesnum, mcl_as_broadcaster, mcl_events_swf_version, mcl_getprogress, mcl_loadclip, mcl_unloadclip, moviecliploader_flashvars, mcl_loadclip_properties, mcl_loadclip_replace_root, mcl_mislabeled_target, mcl_replace_root_swf7_to_swf5, mcl_replace_root_swf7_to_swf6, mcl_target_gif87a, mcl_target_gif89a, mcl_target_jpg, mcl_target_png, loading_avm2, unloadmovie, unloadmovie_method, unloadmovienum, movieclip_invalid_get_bounds_1, movieclip_invalid_get_bounds_2, movieclip_invalid_get_bounds_3, movieclip_invalid_get_bounds_4, movieclip_invalid_get_bounds_5, movieclip_invalid_get_bounds_6, movieclip_invalid_get_bounds_7, movieclip_invalid_get_bounds_8, root_button_mode, movieclip_state_values, movieclip_library_state_values, movieclip_methods_with_loaded_image, do_init_action_child, register_class, register_class_swf6, global_swf5_6_7_8_9, global_swf6_7_8",
+      "depends_on": [
+        "LOADMOVIE.6"
+      ]
+    },
+    "LOADVARIABLES.1": {
+      "label": "Loadvariables: Build Pipeline \u2014 Pre-bundle Data Files",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.7"
+      ]
+    },
+    "LOADVARIABLES.2": {
+      "label": "Loadvariables: Runtime \u2014 Parse and Set Variables",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADVARIABLES.1"
+      ]
+    },
+    "LOADVARIABLES.3": {
+      "label": "Loadvariables: actionGetURL Routing",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADVARIABLES.2"
+      ]
+    },
+    "LOADVARIABLES.4": {
+      "label": "Loadvariables: MC.loadVariables() Method",
+      "description": "Status: DONE | Tests: loadvariables, loadvariables2, loadvariables_method, loadvariablesnum",
+      "depends_on": [
+        "LOADVARIABLES.3"
+      ]
+    },
+    "LOCKROOT.2": {
+      "label": "Lockroot: Path resolution \u2014 NOT NEEDED for this test",
+      "description": "Status: DONE | Tests: movieclip_lockroot",
+      "depends_on": [
+        "LOADMOVIE.7"
+      ]
+    },
+    "MATH.1": {
+      "label": "Math: Core Math object (2026-02-15)",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "MATH.2": {
+      "label": "Math: ASnative(200, index) dispatch (2026-02-20)",
+      "description": "Status: DONE | Tests: math_min_max, math_swf6, math_swf7, math_swf8",
+      "depends_on": [
+        "MATH.1"
+      ]
+    },
+    "MC_REMOVAL_LIFECYCLE.1": {
+      "label": "Mc Removal Lifecycle: base_clip Removal Detection (",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOVIECLIP.10"
+      ]
+    },
+    "MC_REMOVAL_LIFECYCLE.2": {
+      "label": "Mc Removal Lifecycle: _parent Resolution on Removed MCs (...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MC_REMOVAL_LIFECYCLE.1"
+      ]
+    },
+    "MC_REMOVAL_LIFECYCLE.3": {
+      "label": "Mc Removal Lifecycle: Path Resolution with Removed MCs (",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MC_REMOVAL_LIFECYCLE.2"
+      ]
+    },
+    "MC_REMOVAL_LIFECYCLE.4": {
+      "label": "Mc Removal Lifecycle: SetTarget with Removed MCs (PARTIAL)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MC_REMOVAL_LIFECYCLE.3"
+      ]
+    },
+    "MC_REMOVAL_LIFECYCLE.5": {
+      "label": "Mc Removal Lifecycle: Unload Handler Timing (",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MC_REMOVAL_LIFECYCLE.4"
+      ]
+    },
+    "MORPH_INTERPOLATION.1": {
+      "label": "Morph Interpolation: End bounds extraction (recompiler)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_01_RUNTIME_TRANSFORMS"
+      ]
+    },
+    "MORPH_INTERPOLATION.2": {
+      "label": "Morph Interpolation: Interpolated bounds lookup",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MORPH_INTERPOLATION.1"
+      ]
+    },
+    "MORPH_INTERPOLATION.3": {
+      "label": "Morph Interpolation: Interpolated shape hit testing",
+      "description": "Status: DONE | Tests: hittest_morph",
+      "depends_on": [
+        "MORPH_INTERPOLATION.2"
+      ]
+    },
+    "MOUSE_EVENTS_ADVANCED.1": {
+      "label": "Mouse Events Advanced: Text Field Hit Testing (focus_mouse)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS.D"
+      ]
+    },
+    "MOUSE_EVENTS_ADVANCED.2": {
+      "label": "Mouse Events Advanced: Dynamic MC Roll Dispatch + Focus E...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS_ADVANCED.1"
+      ]
+    },
+    "MOUSE_EVENTS_ADVANCED.3": {
+      "label": "Mouse Events Advanced: Button Key Simulation + Tab Roll E...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS_ADVANCED.2"
+      ]
+    },
+    "MOUSE_EVENTS_ADVANCED.4": {
+      "label": "Mouse Events Advanced: Named Shape Scriptability (frame_s...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS_ADVANCED.3"
+      ]
+    },
+    "MOUSE_EVENTS_ADVANCED.5": {
+      "label": "Mouse Events Advanced: Highlight Bounds for Tab Sort (tab...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS_ADVANCED.4"
+      ]
+    },
+    "MOUSE_EVENTS_ADVANCED.6": {
+      "label": "Mouse Events Advanced: TextField onChanged Callback (butt...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS_ADVANCED.5"
+      ]
+    },
+    "MOUSE_EVENTS.A": {
+      "label": "Mouse Events: _xmouse/_ymouse)",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "MOUSE_EVENTS.B": {
+      "label": "Mouse Events: mouse_events)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS.A"
+      ]
+    },
+    "MOUSE_EVENTS.C": {
+      "label": "Mouse Events: _visible/_enabled)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOUSE_EVENTS.B"
+      ]
+    },
+    "MOUSE_EVENTS.D": {
+      "label": "Mouse Events: click_block)",
+      "description": "Status: DONE | Tests: mouse_pos, mouse_pos_with_scale_factor, mouse_events, mouse_events_visible_enabled, click_block",
+      "depends_on": [
+        "MOUSE_EVENTS.C"
+      ]
+    },
+    "MOVIECLIPLOADER.1": {
+      "label": "Moviecliploader: MCL constructor \u2014 auto-add self as listener",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.7"
+      ]
+    },
+    "MOVIECLIPLOADER.2": {
+      "label": "Moviecliploader: Register MCL methods on prototype",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOVIECLIPLOADER.1"
+      ]
+    },
+    "MOVIECLIPLOADER.3": {
+      "label": "Moviecliploader: Implement getProgress()",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOVIECLIPLOADER.2"
+      ]
+    },
+    "MOVIECLIPLOADER.4": {
+      "label": "Moviecliploader: Implement loadClip()",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOVIECLIPLOADER.3"
+      ]
+    },
+    "MOVIECLIPLOADER.5": {
+      "label": "Moviecliploader: Deferred onLoadInit firing",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MOVIECLIPLOADER.4"
+      ]
+    },
+    "MOVIECLIPLOADER.6": {
+      "label": "Moviecliploader: Implement unloadClip()",
+      "description": "Status: DONE | Tests: mcl_as_broadcaster, mcl_events_swf_version, mcl_getprogress, mcl_loadclip, mcl_unloadclip, moviecliploader_flashvars, mcl_loadclip_properties, mcl_loadclip_replace_root, mcl_mislabeled_target, mcl_replace_root_swf7_to_swf5, mcl_replace_root_swf7_to_swf6, mcl_target_gif87a, mcl_target_gif89a, mcl_target_jpg, mcl_target_png, loadmovie_fail",
+      "depends_on": [
+        "MOVIECLIPLOADER.5"
+      ]
+    },
+    "MOVIECLIP.10": {
+      "label": "Movieclip: AS-Level Event Dispatch + Ordering \u2014",
+      "description": "Status: DONE | Tests: movieclip_default_state, movieclip_blend_mode_property, movieclip_focusenabled, movieclip_lockroot, movieclip_depth_methods, movieclip_get_instance_at_depth, create_empty_movie_clip, default_names, place_and_lookup, placeobject_occupied_depth, attach_movie, attach_movie_stop, export_assets, movieclip_init_object, empty_movieclip_can_attach_movies, duplicate_movie_clip, clone_sprite_types, remove_movie_clip, rewind_depth, clip_events, clip_event_propagation_order, on_construct, clip_constructors, do_init_action_child, execution_order4, movieclip_getbounds, movieclip_invalid_get_bounds_1, movieclip_invalid_get_bounds_2, movieclip_invalid_get_bounds_3, movieclip_invalid_get_bounds_4, movieclip_invalid_get_bounds_5, movieclip_invalid_get_bounds_6, movieclip_invalid_get_bounds_7, movieclip_invalid_get_bounds_8, movieclip_hittest, movieclip_hittest_shapeflag, local_to_global, custom_clip_methods, movieclip_state_values, movieclip_library_state_values, movieclip_methods_with_loaded_image, movieclip_create_text_field, movieclip_gettextsnapshot, movieclip_setmask, clone_sprite_edittext, clone_sprite_edittext_dynamic, duplicate_movie_clip_drawing, unload, unload_clip_event, unload_nested_child, removed_base_clip_tell_target, removed_clip_halts_script, removed_target_clip_scope, stage_object_children, swf7_case_sensitive, movieclip_name_from_timeline, register_class, register_and_init_order",
+      "depends_on": []
+    },
+    "NATIVE_INTROSPECTION.0": {
+      "label": "Native Introspection: Fix Zero-Output Crash in native_obj...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.8"
+      ]
+    },
+    "NATIVE_INTROSPECTION.1": {
+      "label": "Native Introspection: Register Missing Stub Constructors \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "NATIVE_INTROSPECTION.0"
+      ]
+    },
+    "NATIVE_INTROSPECTION.2": {
+      "label": "Native Introspection: Native Backing + __initializeNative...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "NATIVE_INTROSPECTION.1"
+      ]
+    },
+    "NATIVE_INTROSPECTION.3": {
+      "label": "Native Introspection: super() Call Mechanism \u2014 **",
+      "description": "Status: DONE",
+      "depends_on": [
+        "NATIVE_INTROSPECTION.2"
+      ]
+    },
+    "NATIVE_INTROSPECTION.4": {
+      "label": "Native Introspection: Double-Construct Protection \u2014 **",
+      "description": "Status: DONE",
+      "depends_on": [
+        "NATIVE_INTROSPECTION.3"
+      ]
+    },
+    "NATIVE_INTROSPECTION.5": {
+      "label": "Native Introspection: Class-Specific Constructor Properti...",
+      "description": "Status: DONE | Tests: native_objects_swf6, native_objects_swf7, native_objects_swf8, native_subclasses, native_double_construct, as2_oop, as2_super_and_this_v6, as2_super_and_this_v8, extends_chain, extends_native_type, super_edge_cases, as2_super_via_manual_prototype, globals_swf5, globals_swf6, globals_swf7, globals_swf8, bitmap_filters",
+      "depends_on": [
+        "NATIVE_INTROSPECTION.4"
+      ]
+    },
+    "OBJECT_WATCH.1": {
+      "label": "Object Watch: Recursive watch prevention",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CALL_SEMANTICS.3"
+      ]
+    },
+    "OBJECT_WATCH.2": {
+      "label": "Object Watch: Exception handling in callback",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OBJECT_WATCH.1"
+      ]
+    },
+    "OBJECT_WATCH.3": {
+      "label": "Object Watch: `this` context for watch callbacks",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OBJECT_WATCH.2"
+      ]
+    },
+    "OBJECT_WATCH.4": {
+      "label": "Object Watch: Boolean return encoding",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OBJECT_WATCH.3"
+      ]
+    },
+    "OBJECT_WATCH.5": {
+      "label": "Object Watch: Watch survives `delete`",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OBJECT_WATCH.4"
+      ]
+    },
+    "OBJECT_WATCH.6": {
+      "label": "Object Watch: Property name case sensitivity",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OBJECT_WATCH.5"
+      ]
+    },
+    "OBJECT_WATCH.7": {
+      "label": "Object Watch: Virtual property interaction (low priority)",
+      "description": "Status: DONE | Tests: watch, watch_textfield, watch_virtual_property, watch_virtual_property_proto",
+      "depends_on": [
+        "OBJECT_WATCH.6"
+      ]
+    },
+    "OOP_SUPER_EXTENDS.1": {
+      "label": "Oop Super Extends: Fix ImplementsOp and InstanceOf for AS...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "THIS_BINDING.6",
+        "CALL_SEMANTICS.3"
+      ]
+    },
+    "OOP_SUPER_EXTENDS.2": {
+      "label": "Oop Super Extends: Add __constructor__ in actionExtends",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.1"
+      ]
+    },
+    "OOP_SUPER_EXTENDS.3": {
+      "label": "Oop Super Extends: Super Context Tracking Infrastructure",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.2"
+      ]
+    },
+    "OOP_SUPER_EXTENDS.4": {
+      "label": "Oop Super Extends: Super for DefineFunction2 (Preload Sup...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.3"
+      ]
+    },
+    "OOP_SUPER_EXTENDS.5": {
+      "label": "Oop Super Extends: Super for DefineFunction / SWF6 (Patte...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.4"
+      ]
+    },
+    "OOP_SUPER_EXTENDS.6": {
+      "label": "Oop Super Extends: Edge Cases and Remaining Tests",
+      "description": "Status: DONE | Tests: as2_oop, as2_super_and_this_v6, as2_super_and_this_v8, as2_super_via_manual_prototype, extends_chain, extends_native_type, super_edge_cases, interface_implements_op",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.5"
+      ]
+    },
+    "PARSING_FUNCTIONS.1": {
+      "label": "Parsing Functions: Fix `arguments` Object for DefineFunction",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "PARSING_FUNCTIONS.2": {
+      "label": "Parsing Functions: Fix parseInt Edge Cases",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PARSING_FUNCTIONS.1"
+      ]
+    },
+    "PARSING_FUNCTIONS.3": {
+      "label": "Parsing Functions: Rewrite parseFloat",
+      "description": "Status: DONE | Tests: parse_int, parse_float, arguments",
+      "depends_on": [
+        "PARSING_FUNCTIONS.2"
+      ]
+    },
+    "PER_MOVIE_GLOBAL_ISOLATION": {
+      "label": "Per Movie Global Isolation",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "PLAN_01_RUNTIME_TRANSFORMS": {
+      "label": "Plan 01 Runtime Transforms",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "PLAN_02_TEXTFIELD_RENDERING.1": {
+      "label": "Plan 02 Textfield Rendering: Background + Border Only (Qu...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.7"
+      ]
+    },
+    "PLAN_02_TEXTFIELD_RENDERING.2": {
+      "label": "Plan 02 Textfield Rendering: Static Text Content",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_02_TEXTFIELD_RENDERING.1"
+      ]
+    },
+    "PLAN_02_TEXTFIELD_RENDERING.3": {
+      "label": "Plan 02 Textfield Rendering: Advanced Text Features",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_02_TEXTFIELD_RENDERING.2"
+      ]
+    },
+    "PLAN_03_DRAWING_API.1": {
+      "label": "Plan 03 Drawing Api: Solid Fill Polygons \u2014 **",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_01_RUNTIME_TRANSFORMS"
+      ]
+    },
+    "PLAN_03_DRAWING_API.2": {
+      "label": "Plan 03 Drawing Api: Curve Segments \u2014 **",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_03_DRAWING_API.1"
+      ]
+    },
+    "PLAN_03_DRAWING_API.3": {
+      "label": "Plan 03 Drawing Api: Gradient Fills \u2014 **",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_03_DRAWING_API.2"
+      ]
+    },
+    "PLAN_03_DRAWING_API.4": {
+      "label": "Plan 03 Drawing Api: Line Styles \u2014 **",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_03_DRAWING_API.3"
+      ]
+    },
+    "PLAN_04_FOCUS_RECT": {
+      "label": "Plan 04 Focus Rect",
+      "description": "Status: complete",
+      "depends_on": [
+        "FOCUS_SYSTEM"
+      ]
+    },
+    "PLAN_05_BITMAP_AND_MEDIA.1": {
+      "label": "Plan 05 Bitmap And Media: fillRect Only",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_03_DRAWING_API.4"
+      ]
+    },
+    "PLAN_05_BITMAP_AND_MEDIA.2": {
+      "label": "Plan 05 Bitmap And Media: copyPixels + colorTransform",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_05_BITMAP_AND_MEDIA.1"
+      ]
+    },
+    "PLAN_05_BITMAP_AND_MEDIA.3": {
+      "label": "Plan 05 Bitmap And Media: Procedural Operations",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PLAN_05_BITMAP_AND_MEDIA.2"
+      ]
+    },
+    "PRIMITIVE_COERCION_ADDPROPERTY": {
+      "label": "Primitive Coercion Addproperty",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "PROTOTYPE_OBJECT.1": {
+      "label": "Prototype Object: Per-Object addProperty (Getter/Setter o...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "OOP_SUPER_EXTENDS.6"
+      ]
+    },
+    "PROTOTYPE_OBJECT.2": {
+      "label": "Prototype Object: ASSetPropFlags Fix (ECMA Flags)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.1"
+      ]
+    },
+    "PROTOTYPE_OBJECT.3": {
+      "label": "Prototype Object: isPrototypeOf Method",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.2"
+      ]
+    },
+    "PROTOTYPE_OBJECT.4": {
+      "label": "Prototype Object: __proto__ Virtual Property + Object.pro...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.3"
+      ]
+    },
+    "PROTOTYPE_OBJECT.5": {
+      "label": "Prototype Object: Enumeration Order Fix",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.4"
+      ]
+    },
+    "PROTOTYPE_OBJECT.6": {
+      "label": "Prototype Object: __resolve Support",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.5"
+      ]
+    },
+    "PROTOTYPE_OBJECT.7": {
+      "label": "Prototype Object: Boxed Primitives Fix",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.6"
+      ]
+    },
+    "PROTOTYPE_OBJECT.8": {
+      "label": "Prototype Object: InitObject Setter Invocation",
+      "description": "Status: DONE | Tests: is_prototype_of, object_prototypes, prototype_enumerate, prototype_properties, add_property, object_properties, as_set_prop_flags, as_set_prop_flags_version, object_resolve, coerce_to_primitive_resolve, boxed_primitives, init_object_order",
+      "depends_on": [
+        "PROTOTYPE_OBJECT.7"
+      ]
+    },
+    "REGISTERCLASS.0": {
+      "label": "Registerclass: VM Register Fixes \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "THIS_BINDING.6"
+      ]
+    },
+    "REGISTERCLASS.1": {
+      "label": "Registerclass: ExportAssets Parsing \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "REGISTERCLASS.0"
+      ]
+    },
+    "REGISTERCLASS.2": {
+      "label": "Registerclass: attachMovie Implementation \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "REGISTERCLASS.1"
+      ]
+    },
+    "REGISTERCLASS.3": {
+      "label": "Registerclass: Object.registerClass \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "REGISTERCLASS.2"
+      ]
+    },
+    "REGISTERCLASS.4": {
+      "label": "Registerclass: Constructor Invocation \u2014",
+      "description": "Status: DONE",
+      "depends_on": [
+        "REGISTERCLASS.3"
+      ]
+    },
+    "REGISTERCLASS.5": {
+      "label": "Registerclass: DoInitAction Ordering + on(construct) \u2014",
+      "description": "Status: DONE | Tests: register_class_return_value, register_class, register_class_swf6, register_class_with_sound, register_and_init_order, register_globals_across_frames, register_underflow, attach_movie, attach_movie_stop, export_assets, clip_constructors, on_construct, movieclip_init_object, empty_movieclip_can_attach_movies, do_init_action_child",
+      "depends_on": [
+        "REGISTERCLASS.4"
+      ]
+    },
+    "ROOT_REPLACEMENT.1": {
+      "label": "Root Replacement: Root State Clearing",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE.7"
+      ]
+    },
+    "ROOT_REPLACEMENT.2": {
+      "label": "Root Replacement: Stage Dimensions Update",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ROOT_REPLACEMENT.1"
+      ]
+    },
+    "ROOT_REPLACEMENT.3": {
+      "label": "Root Replacement: Metadata Update",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ROOT_REPLACEMENT.2"
+      ]
+    },
+    "ROOT_REPLACEMENT.4": {
+      "label": "Root Replacement: _global Persistence",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ROOT_REPLACEMENT.3"
+      ]
+    },
+    "ROOT_REPLACEMENT.5": {
+      "label": "Root Replacement: MCL Root Replacement Timing",
+      "description": "Status: DONE | Tests: loadmovie_replace_root, mcl_loadclip_replace_root, mcl_replace_root_swf7_to_swf5, mcl_replace_root_swf7_to_swf6",
+      "depends_on": [
+        "ROOT_REPLACEMENT.4"
+      ]
+    },
+    "SCRIPT_HALTING.1": {
+      "label": "Script Halting: avm1_removed flag + actionBaseClipRemoved(",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MC_REMOVAL_LIFECYCLE.5"
+      ]
+    },
+    "SCRIPT_HALTING.2": {
+      "label": "Script Halting: SetTarget(\"\") keeps dead base clip",
+      "description": "Status: DONE",
+      "depends_on": [
+        "SCRIPT_HALTING.1"
+      ]
+    },
+    "SCRIPT_HALTING.3": {
+      "label": "Script Halting: ng_executeGotoTagsOnly(",
+      "description": "Status: DONE",
+      "depends_on": [
+        "SCRIPT_HALTING.2"
+      ]
+    },
+    "SCRIPT_HALTING.4": {
+      "label": "Script Halting: Outer retry loop for deferred-triggered g...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "SCRIPT_HALTING.3"
+      ]
+    },
+    "SCRIPT_HALTING.5": {
+      "label": "Script Halting: Recompiler loop-back guard",
+      "description": "Status: DONE | Tests: removed_clip_halts_script, target_clip_removed",
+      "depends_on": [
+        "SCRIPT_HALTING.4"
+      ]
+    },
+    "SELECTION.1": {
+      "label": "Selection: Core Focus Tracking + setFocus/getFocus + List...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.7",
+        "FOCUS_SYSTEM"
+      ]
+    },
+    "SELECTION.2": {
+      "label": "Selection: replaceSel on TextField",
+      "description": "Status: DONE | Tests: selection, selection_handlers, edittext_focus_selection, edittext_programmatic_focus",
+      "depends_on": [
+        "SELECTION.1"
+      ]
+    },
+    "SOUND_CLASS": {
+      "label": "Sound Class",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "STAGE_FRAME_PROPS.Plan": {
+      "label": "Stage Frame Props: ### Phase 1: Fix actionSetProperty F64...",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "STAGE_FRAME_PROPS.2": {
+      "label": "Stage Frame Props: Shape bounds in trace mode",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.Plan"
+      ]
+    },
+    "STAGE_FRAME_PROPS.3": {
+      "label": "Stage Frame Props: Content bounds for `_root._width`/`_he...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.2"
+      ]
+    },
+    "STAGE_FRAME_PROPS.4": {
+      "label": "Stage Frame Props: Extract rotation/scale from PlaceObjec...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.3"
+      ]
+    },
+    "STAGE_FRAME_PROPS.5": {
+      "label": "Stage Frame Props: Stage object properties initialization...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.4"
+      ]
+    },
+    "STAGE_FRAME_PROPS.6": {
+      "label": "Stage Frame Props: Sprite context tracking for GetPropert...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.5"
+      ]
+    },
+    "STAGE_FRAME_PROPS.7": {
+      "label": "Stage Frame Props: `_visible` returns boolean not float",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.6"
+      ]
+    },
+    "STAGE_FRAME_PROPS.8": {
+      "label": "Stage Frame Props: Stage children enumeration",
+      "description": "Status: DONE | Tests: stage_property_representation, frame_size_translated_positive, frame_size_translated_negative, stage_scale_mode, stage_display_state, stage_object_properties, stage_object_properties_swf6, stage_object_enumerate, stage_object_children",
+      "depends_on": [
+        "STAGE_FRAME_PROPS.7"
+      ]
+    },
+    "STAGE.0": {
+      "label": "Stage: Fix Build (Prerequisite)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "ASBROADCASTER"
+      ]
+    },
+    "STAGE.1": {
+      "label": "Stage: Stage Global Object",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE.0"
+      ]
+    },
+    "STAGE.2": {
+      "label": "Stage: MovieClip Property Precision and Width\u2194Scale Inter...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE.1"
+      ]
+    },
+    "STAGE.3": {
+      "label": "Stage: Value Representation and Scale/Rotation Ranges",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE.2"
+      ]
+    },
+    "STAGE.4": {
+      "label": "Stage: _level Addressing and Child Clip Resolution",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STAGE.3"
+      ]
+    },
+    "STAGE.5": {
+      "label": "Stage: Child Clip Enumeration in for-in",
+      "description": "Status: DONE | Tests: stage_object_properties, stage_object_properties_swf6, stage_object_children, stage_object_enumerate, stage_display_state, stage_property_representation, stage_scale_mode",
+      "depends_on": [
+        "STAGE.4"
+      ]
+    },
+    "STRING.1": {
+      "label": "String: Fix Buffer Limits + Argument Coercion + Missing M...",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "STRING.2": {
+      "label": "String: Switch to UTF-16 Internal String Storage \u2705",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STRING.1"
+      ]
+    },
+    "STRING.3": {
+      "label": "String: SWF4/6 String Operations (string_ops_swf6) \u2705",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STRING.2"
+      ]
+    },
+    "STRING.4": {
+      "label": "String: Unicode Case Mapping (toUpperCase/toLowerCase) \u2705",
+      "description": "Status: DONE",
+      "depends_on": [
+        "STRING.3"
+      ]
+    },
+    "STRING.5": {
+      "label": "String: String Paths (Deferred)",
+      "description": "Status: DONE | Tests: string_methods_negative_args, string_methods_swfv5, string_methods, string_ops_swf6, string_paths_basic, string_paths_eval, string_paths_eval2, string_paths_hidden, string_paths_other, string_paths_reference_launder, string_paths_unload, string_paths_variable_alias, string_paths_variable_scopes",
+      "depends_on": [
+        "STRING.4"
+      ]
+    },
+    "STYLESHEET": {
+      "label": "Stylesheet",
+      "description": "Status: complete",
+      "depends_on": [
+        "TEXTFIELD.7"
+      ]
+    },
+    "SWF_VERSION_SEMANTICS.1": {
+      "label": "Swf Version Semantics: SWF6 Case-Insensitive Property Loo...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "PER_MOVIE_GLOBAL_ISOLATION"
+      ]
+    },
+    "SWF_VERSION_SEMANTICS.2": {
+      "label": "Swf Version Semantics: SWF6 String-to-Boolean Coercion (s...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "SWF_VERSION_SEMANTICS.1"
+      ]
+    },
+    "SWF_VERSION_SEMANTICS.3": {
+      "label": "Swf Version Semantics: SWF4 Operator Coercion Order (swf4...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "SWF_VERSION_SEMANTICS.2"
+      ]
+    },
+    "SWF_VERSION_SEMANTICS.4": {
+      "label": "Swf Version Semantics: Cross-Version Function Calls (",
+      "description": "Status: DONE | Tests: swf6_case_insensitive, swf6_string_as_bool, swf4_actions_coercion_order, swf5_to_6_cross_call, swf6_to_5_cross_call",
+      "depends_on": [
+        "SWF_VERSION_SEMANTICS.3"
+      ]
+    },
+    "TAB_ORDERING": {
+      "label": "Tab Ordering",
+      "description": "Status: complete",
+      "depends_on": [
+        "FOCUS_SYSTEM"
+      ]
+    },
+    "TAB_ORDERING_PROPERTIES.1": {
+      "label": "Tab Ordering Properties: TextField `tabIndex` u32 coercio...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TAB_ORDERING"
+      ]
+    },
+    "TAB_ORDERING_PROPERTIES.2": {
+      "label": "Tab Ordering Properties: Button/MC `tabIndex` i32 coercio...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TAB_ORDERING_PROPERTIES.1"
+      ]
+    },
+    "TAB_ORDERING_PROPERTIES.3": {
+      "label": "Tab Ordering Properties: MC `tabIndex` non-enumerable (Is...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TAB_ORDERING_PROPERTIES.2"
+      ]
+    },
+    "TAB_ORDERING_PROPERTIES.4": {
+      "label": "Tab Ordering Properties: Button `tabIndex` default enumer...",
+      "description": "Status: DONE | Tests: tab_ordering_properties",
+      "depends_on": [
+        "TAB_ORDERING_PROPERTIES.3"
+      ]
+    },
+    "TEXTFIELD.1": {
+      "label": "Textfield: Tests \u2014 TextField Prototype + Core Properties ...",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "TEXTFIELD.2": {
+      "label": "Textfield: Tests \u2014 TextFormat Class (~8 tests)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.1"
+      ]
+    },
+    "TEXTFIELD.3": {
+      "label": "Textfield: Tests \u2014 Variable Binding + Geometry (~8 tests)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.2"
+      ]
+    },
+    "TEXTFIELD.4": {
+      "label": "Textfield: Tests \u2014 Scroll Properties (~3 tests)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.3"
+      ]
+    },
+    "TEXTFIELD.5": {
+      "label": "Textfield: Tests \u2014 HTML Text (~11 tests)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.4"
+      ]
+    },
+    "TEXTFIELD.6": {
+      "label": "Textfield: Tests \u2014 Text Layout Properties (~10 tests)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.5"
+      ]
+    },
+    "TEXTFIELD.7": {
+      "label": "Textfield: Tests \u2014 StyleSheet + TextSnapshot (~9 tests)",
+      "description": "Status: DONE | Tests: text_format, text_format_rounding_swf7, text_format_rounding_swf8, edittext_default_format_font_style, edittext_antialiastype, edittext_default_format, edittext_default_format_empty, textfield_variable, textfield_properties, text_format_display, edittext_autosize_setter, textfield_background_color, textfield_border_color, textfield_text, edittext_password, textfield_maxchars, text_format_font_max_length, textfield_props_swf5, textfield_props_swf6, textfield_props_swf7, textfield_props_swf8, edittext_width_height, edittext_html_align_swf7, edittext_html_align_swf8, textfield_cache_as_bitmap, edittext_newline_stripping, edittext_newlines, edittext_programmatic_focus, edittext_autosize, edittext_font_size, edittext_text_height_leading, edittext_scroll, edittext_hscroll, edittext_html_roundtrip, edittext_html_color, edittext_html_condensewhite_swf7, edittext_html_condensewhite_swf8, edittext_html_entity, edittext_html_swf6, edittext_html_swf7, edittext_html_swf8, edittext_align, edittext_align_trailing_spaces_swf7, edittext_align_trailing_spaces_swf8, edittext_leading, edittext_margins, edittext_letter_spacing, edittext_tag_indent, edittext_bullet, edittext_underline, edittext_tab_stops, edittext_stylesheet, textsnapshot_available_text, textsnapshot_findtext, textsnapshot_gettext, textsnapshot_props_swf5, textsnapshot_props_swf6, textsnapshot_text_order, edittext_drag_select, edittext_focus_selection, edittext_ime_focus_lost, edittext_input, edittext_input_newlines, edittext_password_copy, edittext_paste_empty, edittext_place_caret, edittext_restrict, edittext_restrict_paste, edittext_tab_focus, movieclip_create_text_field",
+      "depends_on": [
+        "TEXTFIELD.6"
+      ]
+    },
+    "TEXTSNAPSHOT.0": {
+      "label": "Textsnapshot: Recompiler \u2014 Emit Character Codes",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTFIELD.7"
+      ]
+    },
+    "TEXTSNAPSHOT.1": {
+      "label": "Textsnapshot: Runtime \u2014 TextSnapshot Content Capture",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTSNAPSHOT.0"
+      ]
+    },
+    "TEXTSNAPSHOT.2": {
+      "label": "Textsnapshot: Core Methods",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TEXTSNAPSHOT.1"
+      ]
+    },
+    "TEXTSNAPSHOT.3": {
+      "label": "Textsnapshot: Dynamic Text (duplicateMovieClip",
+      "description": "Status: DONE | Tests: textsnapshot_gettext, textsnapshot_findtext, textsnapshot_available_text, textsnapshot_text_order",
+      "depends_on": [
+        "TEXTSNAPSHOT.2"
+      ]
+    },
+    "THIS_BINDING.1": {
+      "label": "This Binding: Set `this` on type 1 function local scope i...",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "THIS_BINDING.2": {
+      "label": "This Binding: Set `this` on type 1 function local scope i...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "THIS_BINDING.1"
+      ]
+    },
+    "THIS_BINDING.3": {
+      "label": "This Binding: Fix `this` resolution in `actionGetVariable...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "THIS_BINDING.2"
+      ]
+    },
+    "THIS_BINDING.4": {
+      "label": "This Binding: Fix MC dynamic_props method call path",
+      "description": "Status: DONE",
+      "depends_on": [
+        "THIS_BINDING.3"
+      ]
+    },
+    "THIS_BINDING.5": {
+      "label": "This Binding: Fix `this` scoping in WITH blocks (this_sco...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "THIS_BINDING.4"
+      ]
+    },
+    "THIS_BINDING.6": {
+      "label": "This Binding: Fix gotoAndStop via string path (this_scoping)",
+      "description": "Status: DONE | Tests: this_swf5, this_swf6, this_scoping, mutable_this, swf5_no_closure",
+      "depends_on": [
+        "THIS_BINDING.5"
+      ]
+    },
+    "TIMER.1": {
+      "label": "Timer: Timer Data Structures and Registration",
+      "description": "Status: DONE",
+      "depends_on": [
+        "FRAME_NAVIGATION"
+      ]
+    },
+    "TIMER.2": {
+      "label": "Timer: Timer Execution Engine",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TIMER.1"
+      ]
+    },
+    "TIMER.3": {
+      "label": "Timer: Timer + Display List Interaction",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TIMER.2"
+      ]
+    },
+    "TIMER.4": {
+      "label": "Timer: (Deferred): Script Execution Timeout",
+      "description": "Status: DONE | Tests: set_interval, timer_run_actions, timeout",
+      "depends_on": [
+        "TIMER.3"
+      ]
+    },
+    "TRY_CATCH_FINALLY": {
+      "label": "Try Catch Finally",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "UNLOAD.1": {
+      "label": "Unload: Fix PlaceObject2WithClipActions + Store Clip Actions",
+      "description": "Status: DONE",
+      "depends_on": [
+        "MC_REMOVAL_LIFECYCLE.5"
+      ]
+    },
+    "UNLOAD.2": {
+      "label": "Unload: Fire Unload Events on Removal",
+      "description": "Status: DONE",
+      "depends_on": [
+        "UNLOAD.1"
+      ]
+    },
+    "UNLOAD.3": {
+      "label": "Unload: Depth Tracking (getDepth / getNextHighestDepth)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "UNLOAD.2"
+      ]
+    },
+    "UNLOAD.4": {
+      "label": "Unload: removeMovieClip Implementation",
+      "description": "Status: DONE",
+      "depends_on": [
+        "UNLOAD.3"
+      ]
+    },
+    "UNLOAD.5": {
+      "label": "Unload: Investigate Recompiler Issue (clip_actions not at...",
+      "description": "Status: DONE | Tests: unload_clip_event, unload_nested_child, unload, unloadmovie, unloadmovie_method, unloadmovienum, clip_events, clip_event_propagation_order, movieclip_depth_methods, remove_movie_clip, attach_movie, empty_movieclip_can_attach_movies",
+      "depends_on": [
+        "UNLOAD.4"
+      ]
+    },
+    "VARIABLE_PROPS_UNIFICATION": {
+      "label": "Variable Props Unification",
+      "description": "Status: complete",
+      "depends_on": []
+    },
+    "WITH_SCOPE.1": {
+      "label": "With Scope: Distinguish function scopes from with scopes",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "WITH_SCOPE.2": {
+      "label": "With Scope: MovieClip identity in scope chain",
+      "description": "Status: DONE",
+      "depends_on": [
+        "WITH_SCOPE.1"
+      ]
+    },
+    "WITH_SCOPE.3": {
+      "label": "With Scope: with(undefined/null) skip",
+      "description": "Status: DONE",
+      "depends_on": [
+        "WITH_SCOPE.2"
+      ]
+    },
+    "WITH_SCOPE.4": {
+      "label": "With Scope: addProperty getters in scope chain lookup",
+      "description": "Status: DONE",
+      "depends_on": [
+        "WITH_SCOPE.3"
+      ]
+    },
+    "WITH_SCOPE.5": {
+      "label": "With Scope: Primitive wrapping (string/number/boolean)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "WITH_SCOPE.4"
+      ]
+    },
+    "WITH_SCOPE.Dependencies": {
+      "label": "With Scope: ```",
+      "description": "Status: DONE | Tests: with, with_variable_scopes, define_local, this_scoping, closure_scope",
+      "depends_on": [
+        "WITH_SCOPE.5"
+      ]
+    },
+    "XML.1": {
+      "label": "Xml: XML/XMLNode Constructors + Core Properties + Parser",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "XML.2": {
+      "label": "Xml: Tree Manipulation \u2014 appendChild, removeNode, insertB...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "XML.1"
+      ]
+    },
+    "XML.3": {
+      "label": "Xml: toString Serialization",
+      "description": "Status: DONE",
+      "depends_on": [
+        "XML.2"
+      ]
+    },
+    "XML.4": {
+      "label": "Xml: Parser Features \u2014 CDATA, Comments, DOCTYPE, xmlDecl,...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "XML.3"
+      ]
+    },
+    "XML.5": {
+      "label": "Xml: Attributes + cloneNode",
+      "description": "Status: DONE",
+      "depends_on": [
+        "XML.4"
+      ]
+    },
+    "XML.6": {
+      "label": "Xml: idMap + XMLNode Prototype Chain",
+      "description": "Status: DONE",
+      "depends_on": [
+        "XML.5"
+      ]
+    },
+    "XML.7": {
+      "label": "Xml: Namespace Support",
+      "description": "Status: DONE | Tests: xml, xml_append_child, xml_append_child_with_parent, xml_attributes_read, xml_cdata, xml_child_nodes_edge_cases, xml_clone_expandos, xml_first_last_child, xml_has_child_nodes, xml_idmap, xml_ignore_comments, xml_ignore_white, xml_insert_before, xml_inspect_createmethods, xml_inspect_doctype, xml_inspect_parsexml, xml_inspect_xmldecl, xml_namespaces, xml_parent_and_child, xml_remove_node, xml_reparenting, xml_siblings, xml_to_string, xml_to_string_comment, xml_unescaping, xmlnode_proto, xml_load, xml_socket, xml_socket_close_in_handler, xml_socket_on_data, xml_socket_segmented, xml_getbytes, swf5_xml_event_handler_context",
+      "depends_on": [
+        "XML.6"
+      ]
+    },
+    "BITMAPDATA_PERLINNOISE.1": {
+      "label": "Bitmapdata Perlinnoise: Port LCG and initialization",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "BITMAPDATA_PERLINNOISE.2": {
+      "label": "Bitmapdata Perlinnoise: Port noise2 function",
+      "description": "Status: TODO",
+      "depends_on": [
+        "BITMAPDATA_PERLINNOISE.1"
+      ]
+    },
+    "BITMAPDATA_PERLINNOISE.3": {
+      "label": "Bitmapdata Perlinnoise: Port turbulence function",
+      "description": "Status: TODO",
+      "depends_on": [
+        "BITMAPDATA_PERLINNOISE.2"
+      ]
+    },
+    "BITMAPDATA_PERLINNOISE.4": {
+      "label": "Bitmapdata Perlinnoise: Implement bitmapDataPerlinNoise",
+      "description": "Status: TODO | Tests: bitmap_data_perlinnoise (image)",
+      "depends_on": [
+        "BITMAPDATA_PERLINNOISE.3"
+      ]
+    },
+    "BITMAPDATA_PIXELDISSOLVE.1": {
+      "label": "Bitmapdata Pixeldissolve: Argument validation and extraction",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "BITMAPDATA_PIXELDISSOLVE.2": {
+      "label": "Bitmapdata Pixeldissolve: Feistel PRNG",
+      "description": "Status: TODO",
+      "depends_on": [
+        "BITMAPDATA_PIXELDISSOLVE.1"
+      ]
+    },
+    "BITMAPDATA_PIXELDISSOLVE.3": {
+      "label": "Bitmapdata Pixeldissolve: Pixel iteration",
+      "description": "Status: TODO",
+      "depends_on": [
+        "BITMAPDATA_PIXELDISSOLVE.2"
+      ]
+    },
+    "BITMAPDATA_PIXELDISSOLVE.4": {
+      "label": "Bitmapdata Pixeldissolve: Pixel writing",
+      "description": "Status: TODO | Tests: bitmap_data_pixeldissolve_image (image)",
+      "depends_on": [
+        "BITMAPDATA_PIXELDISSOLVE.3"
+      ]
+    },
+    "BITMAPDATA_RENDERING.1": {
+      "label": "Bitmapdata Rendering: Dynamic bitmap texture layer alloca...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAPDATA_PERLINNOISE.4",
+        "BITMAPDATA_APPLYFILTER",
+        "BITMAPDATA_PIXELDISSOLVE.4"
+      ]
+    },
+    "BITMAPDATA_RENDERING.2": {
+      "label": "Bitmapdata Rendering: render_webgpu_draw_bitmap_quad() fu...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.1"
+      ]
+    },
+    "BITMAPDATA_RENDERING.3": {
+      "label": "Bitmapdata Rendering: actionIterateAttachedBitmaps() call...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.2"
+      ]
+    },
+    "BITMAPDATA_RENDERING.4": {
+      "label": "Bitmapdata Rendering: tag.c rendering hook",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.3"
+      ]
+    },
+    "BITMAPDATA_RENDERING.5": {
+      "label": "Bitmapdata Rendering: MovieClip struct extension",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.4"
+      ]
+    },
+    "BITMAPDATA_RENDERING.6": {
+      "label": "Bitmapdata Rendering: Premultiplied alpha blend pipeline",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.5"
+      ]
+    },
+    "BITMAPDATA_RENDERING.7": {
+      "label": "Bitmapdata Rendering: Implement missing BitmapData methods",
+      "description": "Status: BLOCKED",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.6"
+      ]
+    },
+    "BITMAPDATA_RENDERING.8": {
+      "label": "Bitmapdata Rendering: Fix precision issue for bitmap_data...",
+      "description": "Status: TODO | Tests: bitmap_data_colortransform, bitmap_data_copypixels, bitmap_data_fillrect, bitmap_data_perlinnoise, bitmap_data_pixeldissolve_image, bitmapdata_applyfilter_colormatrix",
+      "depends_on": [
+        "BITMAPDATA_RENDERING.7"
+      ]
+    },
+    "BITMAP_FILTERS.1": {
+      "label": "Bitmap Filters: Implement filter.clone()",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "BITMAP_FILTERS.2": {
+      "label": "Bitmap Filters: Fix mc.filters round-trip storage/retrieval",
+      "description": "Status: TODO",
+      "depends_on": [
+        "BITMAP_FILTERS.1"
+      ]
+    },
+    "BITMAP_FILTERS.3": {
+      "label": "Bitmap Filters: Property coercion native getters/setters",
+      "description": "Status: TODO",
+      "depends_on": [
+        "BITMAP_FILTERS.2"
+      ]
+    },
+    "BITMAP_FILTERS.4": {
+      "label": "Bitmap Filters: Gradient array synchronization",
+      "description": "Status: TODO | Tests: bitmap_filters",
+      "depends_on": [
+        "BITMAP_FILTERS.3"
+      ]
+    },
+    "DISPLACEMENTMAPFILTER.1": {
+      "label": "Displacementmapfilter: Native property setter for mapPoint",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "DISPLACEMENTMAPFILTER.2": {
+      "label": "Displacementmapfilter: valueOf error propagation",
+      "description": "Status: TODO",
+      "depends_on": [
+        "DISPLACEMENTMAPFILTER.1"
+      ]
+    },
+    "DISPLACEMENTMAPFILTER.3": {
+      "label": "Displacementmapfilter: toString for Point display",
+      "description": "Status: TODO | Tests: displacementmapfilter_mappoint_throw_error",
+      "depends_on": [
+        "DISPLACEMENTMAPFILTER.2"
+      ]
+    },
+    "DRAWING_API_RENDERING.1": {
+      "label": "Drawing Api Rendering: Test existing infrastructure in he...",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "DRAWING_API_RENDERING.2": {
+      "label": "Drawing Api Rendering: Fix headless mode guards",
+      "description": "Status: TODO",
+      "depends_on": [
+        "DRAWING_API_RENDERING.1"
+      ]
+    },
+    "DRAWING_API_RENDERING.3": {
+      "label": "Drawing Api Rendering: Verify gradient rendering",
+      "description": "Status: TODO",
+      "depends_on": [
+        "DRAWING_API_RENDERING.2"
+      ]
+    },
+    "DRAWING_API_RENDERING.4": {
+      "label": "Drawing Api Rendering: Test all affected tests",
+      "description": "Status: TODO | Tests: movieclip_begin_gradient_fill, movieclip_line_gradient_style, mask_with_drawing, movieclip_setmask",
+      "depends_on": [
+        "DRAWING_API_RENDERING.3"
+      ]
+    },
+    "FOCUS_RECT_RENDERING.1": {
+      "label": "Focus Rect Rendering: Investigate expected appearance fro...",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "FOCUS_RECT_RENDERING.2": {
+      "label": "Focus Rect Rendering: Implement focus rect drawing function",
+      "description": "Status: TODO",
+      "depends_on": [
+        "FOCUS_RECT_RENDERING.1"
+      ]
+    },
+    "FOCUS_RECT_RENDERING.3": {
+      "label": "Focus Rect Rendering: Integrate into render pass",
+      "description": "Status: TODO",
+      "depends_on": [
+        "FOCUS_RECT_RENDERING.2"
+      ]
+    },
+    "FOCUS_RECT_RENDERING.4": {
+      "label": "Focus Rect Rendering: Handle SWF version differences",
+      "description": "Status: TODO | Tests: focusrect_focuslost, focusrect_mouse_swf8, focusrect_mouse_swf9, focusrect_swf5, focusrect_swf6",
+      "depends_on": [
+        "FOCUS_RECT_RENDERING.3"
+      ]
+    },
+    "FROM_GNASH_DEJAGNU.1": {
+      "label": "From Gnash Dejagnu: actionscript.all Dejagnu framework",
+      "description": "Status: IN PROGRESS",
+      "depends_on": []
+    },
+    "FROM_GNASH_DEJAGNU.2": {
+      "label": "From Gnash Dejagnu: misc-mtasc typeof fix",
+      "description": "Status: IN PROGRESS",
+      "depends_on": [
+        "FROM_GNASH_DEJAGNU.1"
+      ]
+    },
+    "FROM_GNASH_DEJAGNU.3": {
+      "label": "From Gnash Dejagnu: misc-ming / misc-swfc init action ord...",
+      "description": "Status: BLOCKED",
+      "depends_on": [
+        "FROM_GNASH_DEJAGNU.2"
+      ]
+    },
+    "FROM_GNASH_DEJAGNU.4": {
+      "label": "From Gnash Dejagnu: misc-swfmill.all",
+      "description": "Status: IN PROGRESS",
+      "depends_on": [
+        "FROM_GNASH_DEJAGNU.3"
+      ]
+    },
+    "GLOBALS.1": {
+      "label": "Globals: Register missing global constructors (stubs)",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "GLOBALS.2": {
+      "label": "Globals: Math object methods",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.1"
+      ]
+    },
+    "GLOBALS.3": {
+      "label": "Globals: Fix parseInt",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.2"
+      ]
+    },
+    "GLOBALS.4": {
+      "label": "Globals: Fix parseFloat and isFinite",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.3"
+      ]
+    },
+    "GLOBALS.5": {
+      "label": "Globals: flash.* namespace (SWF8+)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.4"
+      ]
+    },
+    "GLOBALS.6": {
+      "label": "Globals: Primitive type improvements",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.5"
+      ]
+    },
+    "GLOBALS.7": {
+      "label": "Globals: Prototype methods for stub classes",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.6"
+      ]
+    },
+    "GLOBALS.8a": {
+      "label": "Globals: Match global registration order",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.7"
+      ]
+    },
+    "GLOBALS.8b": {
+      "label": "Globals: Add missing global stubs",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.8a"
+      ]
+    },
+    "GLOBALS.8c-2": {
+      "label": "Globals: Populate own_props on every constructor",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.8b"
+      ]
+    },
+    "GLOBALS.8c-2.5": {
+      "label": "Globals: DONT_DELETE flags and actionDelete fix",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.8c-2"
+      ]
+    },
+    "GLOBALS.8c-3": {
+      "label": "Globals: Register System + flash + textRenderer on _global",
+      "description": "Status: DONE",
+      "depends_on": [
+        "GLOBALS.8c-2.5"
+      ]
+    },
+    "GLOBALS.8c-4": {
+      "label": "Globals: Add missing properties on existing objects",
+      "description": "Status: BLOCKED",
+      "depends_on": [
+        "GLOBALS.8c-3"
+      ]
+    },
+    "GLOBALS.8c-5": {
+      "label": "Globals: Property flags cleanup",
+      "description": "Status: BLOCKED",
+      "depends_on": [
+        "GLOBALS.8c-4"
+      ]
+    },
+    "GLOBALS.8c-6": {
+      "label": "Globals: flash.* constructor own_props property order",
+      "description": "Status: BLOCKED",
+      "depends_on": [
+        "GLOBALS.8c-5"
+      ]
+    },
+    "GLOBALS.8d": {
+      "label": "Globals: Instance construction differences",
+      "description": "Status: BLOCKED | Tests: globals_swf5, globals_swf6, globals_swf7, globals_swf8, global_swf5_6_7_8_9, global_swf6_7_8, global_instance_decls, global_proto_decls, global_proto_decls_delete, swf5_global_funcs, swf6_global_funcs, swf7_global_funcs, math_min_max, parse_int, parse_float, is_finite, is_finite_swf6, primitive_type_globals, printjob_props_swf5, printjob_props_swf6, printjob_props_swf7, context_menu, context_menu_item, localconnection_properties, sound_props_swf5, sound_props_swf6, native_objects_swf6, native_objects_swf7, native_objects_swf8, native_subclasses, as_set_prop_flags",
+      "depends_on": [
+        "GLOBALS.8c-6"
+      ]
+    },
+    "HIT_TESTING.1": {
+      "label": "Hit Testing: localToGlobal / globalToLocal",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "HIT_TESTING.2": {
+      "label": "Hit Testing: Shape bounds in NO_GRAPHICS mode",
+      "description": "Status: DONE",
+      "depends_on": [
+        "HIT_TESTING.1"
+      ]
+    },
+    "HIT_TESTING.3": {
+      "label": "Hit Testing: getBounds / getRect",
+      "description": "Status: DONE",
+      "depends_on": [
+        "HIT_TESTING.2"
+      ]
+    },
+    "HIT_TESTING.4": {
+      "label": "Hit Testing: hitTest(x, y, shapeFlag=false)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "HIT_TESTING.3"
+      ]
+    },
+    "HIT_TESTING.5": {
+      "label": "Hit Testing: hitTest(clip) / hitTest(stringPath)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "HIT_TESTING.4"
+      ]
+    },
+    "HIT_TESTING.6": {
+      "label": "Hit Testing: hitTest(x, y, shapeFlag=true)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "HIT_TESTING.5"
+      ]
+    },
+    "HIT_TESTING.7": {
+      "label": "Hit Testing: Morph input hit testing",
+      "description": "Status: DONE | Tests: hittest_lockroot, hittest_morph, hittest_morph_input, hittest_winding_rule, text_blocks_clicks, movieclip_hittest, movieclip_hittest_shapeflag, local_to_global, movieclip_getbounds, movieclip_invalid_get_bounds_1, movieclip_invalid_get_bounds_2, movieclip_invalid_get_bounds_3, movieclip_invalid_get_bounds_4, movieclip_invalid_get_bounds_5, movieclip_invalid_get_bounds_6, movieclip_invalid_get_bounds_7, movieclip_invalid_get_bounds_8",
+      "depends_on": [
+        "HIT_TESTING.6"
+      ]
+    },
+    "NETCONNECTION.1": {
+      "label": "Netconnection: NetConnection state machine (connect/close)",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "NETCONNECTION.2": {
+      "label": "Netconnection: onStatus dispatch helper",
+      "description": "Status: TODO",
+      "depends_on": [
+        "NETCONNECTION.1"
+      ]
+    },
+    "NETCONNECTION.3": {
+      "label": "Netconnection: Register real methods",
+      "description": "Status: TODO",
+      "depends_on": [
+        "NETCONNECTION.2"
+      ]
+    },
+    "NETCONNECTION.4": {
+      "label": "Netconnection: netconnection_send_remote (AMF + HTTP)",
+      "description": "Status: BLOCKED | Tests: netconnection_close, netconnection_send_remote",
+      "depends_on": [
+        "NETCONNECTION.3"
+      ]
+    },
+    "RUNTIME_CXFORM_GPU.1": {
+      "label": "Runtime Cxform Gpu: Verify existing per-frame upload works",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "RUNTIME_CXFORM_GPU.2": {
+      "label": "Runtime Cxform Gpu: Fix parent-child cxform composition",
+      "description": "Status: TODO",
+      "depends_on": [
+        "RUNTIME_CXFORM_GPU.1"
+      ]
+    },
+    "RUNTIME_CXFORM_GPU.3": {
+      "label": "Runtime Cxform Gpu: Extend child_mc_cache scanning",
+      "description": "Status: TODO | Tests: color, display_object_properties",
+      "depends_on": [
+        "RUNTIME_CXFORM_GPU.2"
+      ]
+    },
+    "RUNTIME_SETMASK.1": {
+      "label": "Runtime Setmask: Implement masked_drawing_render_cb",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "RUNTIME_SETMASK.2": {
+      "label": "Runtime Setmask: Handle stencil clear",
+      "description": "Status: TODO",
+      "depends_on": [
+        "RUNTIME_SETMASK.1"
+      ]
+    },
+    "RUNTIME_SETMASK.3": {
+      "label": "Runtime Setmask: Extend to tag-placed display objects",
+      "description": "Status: TODO",
+      "depends_on": [
+        "RUNTIME_SETMASK.2"
+      ]
+    },
+    "RUNTIME_SETMASK.4": {
+      "label": "Runtime Setmask: Test and debug",
+      "description": "Status: TODO | Tests: mask_reapply, mask_with_drawing, movieclip_setmask",
+      "depends_on": [
+        "RUNTIME_SETMASK.3"
+      ]
+    },
+    "RUNTIME_TRANSFORM_GPU.1": {
+      "label": "Runtime Transform Gpu: Build transform matrix from MovieC...",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "RUNTIME_TRANSFORM_GPU.2": {
+      "label": "Runtime Transform Gpu: Detect runtime-modified transforms...",
+      "description": "Status: TODO",
+      "depends_on": [
+        "RUNTIME_TRANSFORM_GPU.1"
+      ]
+    },
+    "RUNTIME_TRANSFORM_GPU.3": {
+      "label": "Runtime Transform Gpu: Handle non-sprite display objects",
+      "description": "Status: TODO",
+      "depends_on": [
+        "RUNTIME_TRANSFORM_GPU.2"
+      ]
+    },
+    "RUNTIME_TRANSFORM_GPU.4": {
+      "label": "Runtime Transform Gpu: Test with display_object_properties",
+      "description": "Status: TODO | Tests: display_object_properties, color",
+      "depends_on": [
+        "RUNTIME_TRANSFORM_GPU.3"
+      ]
+    },
+    "SOUND_DURATION_POSITION.1": {
+      "label": "Sound Duration Position: getPosition() implementation",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_LOADING.1",
+        "SOUND_LOADING.2",
+        "SOUND_LOADING.3"
+      ]
+    },
+    "SOUND_DURATION_POSITION.2": {
+      "label": "Sound Duration Position: duration/position property getters",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_DURATION_POSITION.1"
+      ]
+    },
+    "SOUND_DURATION_POSITION.3": {
+      "label": "Sound Duration Position: Playback lifecycle integration",
+      "description": "Status: TODO | Tests: sound_duration_position_props",
+      "depends_on": [
+        "SOUND_DURATION_POSITION.2"
+      ]
+    },
+    "SOUND_LOADING.1": {
+      "label": "Sound Loading: loadSound() with embedded data",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "SOUND_LOADING.2": {
+      "label": "Sound Loading: onLoad callback dispatch",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_LOADING.1"
+      ]
+    },
+    "SOUND_LOADING.3": {
+      "label": "Sound Loading: Sound playback simulation (onSoundComplete)",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_LOADING.2"
+      ]
+    },
+    "SOUND_LOADING.4": {
+      "label": "Sound Loading: Integrate with frame loop",
+      "description": "Status: TODO | Tests: sound_load_start, sound_multiple_load",
+      "depends_on": [
+        "SOUND_LOADING.3"
+      ]
+    },
+    "TELLTARGET.1": {
+      "label": "Telltarget: g_base_clip tracking + actionSetTarget rewrite",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "TELLTARGET.2": {
+      "label": "Telltarget: ActionSetTarget2 UNDEFINED handling + slash-p...",
+      "description": "Status: DONE | Tests: tell_target, tell_target_invalid, tell_target_invalid_swf6, target_clip_swf5, target_clip_swf6, target_clip_removed, path_string, slash_syntax, string_paths_basic, string_paths_eval, string_paths_eval2, string_paths_hidden, string_paths_other, string_paths_reference_launder, string_paths_unload, string_paths_variable_alias, string_paths_variable_scopes, removed_base_clip_tell_target, removed_target_clip_scope",
+      "depends_on": [
+        "TELLTARGET.1"
+      ]
+    },
+    "BITMAP_DATA.1": {
+      "label": "Bitmap Data: Core pixel buffer implementation",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "BITMAP_DATA.2": {
+      "label": "Bitmap Data: Pixel operations (get/setPixel)",
+      "description": "Status: DONE",
+      "depends_on": [
+        "BITMAP_DATA.1"
+      ]
+    },
+    "BITMAP_DATA.3": {
+      "label": "Bitmap Data: Methods (fillRect, clone, dispose, etc.)",
+      "description": "Status: DONE | Tests: bitmap_data, bitmap_data_colortransform, bitmap_data_compare, bitmap_data_copypixels, bitmap_data_fillrect, bitmap_data_hittest, bitmap_data_max_size_swf9, bitmap_data_max_size_swf10, bitmap_data_noise, bitmap_data_perlinnoise, bitmap_data_pixeldissolve, bitmap_data_pixeldissolve_image, bitmap_data_threshold, bitmap_filters, bitmapdata_applyfilter_colormatrix, bitmapdata_channels, textfield_cache_as_bitmap",
+      "depends_on": [
+        "BITMAP_DATA.2"
+      ]
+    },
+    "CREATETEXTFIELD_RENDERING.1": {
+      "label": "Createtextfield Rendering: Background/border rendering",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "CREATETEXTFIELD_RENDERING.2": {
+      "label": "Createtextfield Rendering: Negative dimension positioning",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CREATETEXTFIELD_RENDERING.1"
+      ]
+    },
+    "CREATETEXTFIELD_RENDERING.3": {
+      "label": "Createtextfield Rendering: Glyph rendering pipeline",
+      "description": "Status: DONE",
+      "depends_on": [
+        "CREATETEXTFIELD_RENDERING.2"
+      ]
+    },
+    "CREATETEXTFIELD_RENDERING.4": {
+      "label": "Createtextfield Rendering: Text layout (HTML colors, word...",
+      "description": "Status: BLOCKED | Tests: frame_size_translated_negative, frame_size_translated_positive, edittext_stylesheet, edittext_tag_indent, movieclip_create_text_field",
+      "depends_on": [
+        "CREATETEXTFIELD_RENDERING.3"
+      ]
+    },
+    "FLV_PLAYBACK.1": {
+      "label": "Flv Playback: FLV container demuxer",
+      "description": "Status: TODO",
+      "depends_on": [
+        "NETCONNECTION.2",
+        "SOUND_LOADING.1",
+        "BITMAPDATA_RENDERING.8"
+      ]
+    },
+    "FLV_PLAYBACK.2": {
+      "label": "Flv Playback: Video codec (Screen Video or Sorenson H.263)",
+      "description": "Status: TODO",
+      "depends_on": [
+        "FLV_PLAYBACK.1"
+      ]
+    },
+    "FLV_PLAYBACK.3": {
+      "label": "Flv Playback: NetStream state machine",
+      "description": "Status: TODO",
+      "depends_on": [
+        "FLV_PLAYBACK.2"
+      ]
+    },
+    "FLV_PLAYBACK.4": {
+      "label": "Flv Playback: onStatus/onMetaData dispatch",
+      "description": "Status: TODO",
+      "depends_on": [
+        "FLV_PLAYBACK.3"
+      ]
+    },
+    "FLV_PLAYBACK.5": {
+      "label": "Flv Playback: Video rendering",
+      "description": "Status: TODO | Tests: netstream_play_flv, netstream_seek_flv, netstream_play_flv_screen",
+      "depends_on": [
+        "FLV_PLAYBACK.4"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.0": {
+      "label": "Loadmovie Multi Swf: Child SWF discovery and compilation",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "LOADMOVIE_MULTI_SWF.1": {
+      "label": "Loadmovie Multi Swf: _level management",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.0"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.2": {
+      "label": "Loadmovie Multi Swf: Core loadMovie",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.1"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.3": {
+      "label": "Loadmovie Multi Swf: actionGetURL2 routing",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.2"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.4": {
+      "label": "Loadmovie Multi Swf: MovieClipLoader class",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.3"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.5": {
+      "label": "Loadmovie Multi Swf: unloadMovie",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.4"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.7": {
+      "label": "Loadmovie Multi Swf: loadVariables",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.5"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.8": {
+      "label": "Loadmovie Multi Swf: Failed load state",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.7"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.10": {
+      "label": "Loadmovie Multi Swf: Sequential MCL dispatch",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.8"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.11": {
+      "label": "Loadmovie Multi Swf: Child RegisterClass",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.10"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.12": {
+      "label": "Loadmovie Multi Swf: Root button mode / mouse events",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.11"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.13": {
+      "label": "Loadmovie Multi Swf: _root scope in loaded SWFs",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.12"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.14": {
+      "label": "Loadmovie Multi Swf: MCL loadClip replace root",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.13"
+      ]
+    },
+    "LOADMOVIE_MULTI_SWF.15": {
+      "label": "Loadmovie Multi Swf: MCL root replace cross-version",
+      "description": "Status: DONE | Tests: issue_2870, cross_movie_root",
+      "depends_on": [
+        "LOADMOVIE_MULTI_SWF.14"
+      ]
+    },
+    "LOADMOVIE_REMAINING.1": {
+      "label": "Loadmovie Remaining: Recompiler nested function ordering",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "LOADMOVIE_REMAINING.2": {
+      "label": "Loadmovie Remaining: objectToPrimitive ASArray crash fix",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_REMAINING.1"
+      ]
+    },
+    "LOADMOVIE_REMAINING.3": {
+      "label": "Loadmovie Remaining: Deferred unloadMovie state",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_REMAINING.2"
+      ]
+    },
+    "LOADMOVIE_REMAINING.4": {
+      "label": "Loadmovie Remaining: Per-MC byte_size tracking",
+      "description": "Status: DONE",
+      "depends_on": [
+        "LOADMOVIE_REMAINING.3"
+      ]
+    },
+    "LOADMOVIE_REMAINING.5": {
+      "label": "Loadmovie Remaining: SWF_URL test name inclusion",
+      "description": "Status: DONE | Tests: loadmovie_var_persistence, loadmovienum_cross_version_prototype, mcl_events_swf_version, movieclip_state_values, movieclip_library_state_values",
+      "depends_on": [
+        "LOADMOVIE_REMAINING.4"
+      ]
+    },
+    "LOCALCONNECTION.1": {
+      "label": "Localconnection: Core LocalConnection protocol",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "LOCALCONNECTION.2": {
+      "label": "Localconnection: Message dispatch",
+      "description": "Status: TODO",
+      "depends_on": [
+        "LOCALCONNECTION.1"
+      ]
+    },
+    "LOCALCONNECTION.3": {
+      "label": "Localconnection: Multi-SWF child loading",
+      "description": "Status: BLOCKED",
+      "depends_on": [
+        "LOCALCONNECTION.2"
+      ]
+    },
+    "LOCALCONNECTION.4": {
+      "label": "Localconnection: Advanced features (allowDomain, AMF, isP...",
+      "description": "Status: TODO | Tests: localconnection",
+      "depends_on": [
+        "LOCALCONNECTION.3"
+      ]
+    },
+    "PIXEL_TEXT_LAYOUT.0": {
+      "label": "Pixel Text Layout: Character layout engine (prerequisite)",
+      "description": "Status: TODO",
+      "depends_on": [
+        "CREATETEXTFIELD_RENDERING.3"
+      ]
+    },
+    "PIXEL_TEXT_LAYOUT.1": {
+      "label": "Pixel Text Layout: asfunction handler",
+      "description": "Status: TODO",
+      "depends_on": [
+        "PIXEL_TEXT_LAYOUT.0"
+      ]
+    },
+    "PIXEL_TEXT_LAYOUT.2": {
+      "label": "Pixel Text Layout: Drag selection",
+      "description": "Status: TODO",
+      "depends_on": [
+        "PIXEL_TEXT_LAYOUT.1"
+      ]
+    },
+    "PIXEL_TEXT_LAYOUT.3": {
+      "label": "Pixel Text Layout: IME composition",
+      "description": "Status: TODO | Tests: edittext_drag_select, asfunction, edittext_ime_focus_lost",
+      "depends_on": [
+        "PIXEL_TEXT_LAYOUT.2"
+      ]
+    },
+    "SOUND_ID3.1": {
+      "label": "Sound Id3: ID3v1 parser",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_LOADING.1"
+      ]
+    },
+    "SOUND_ID3.2": {
+      "label": "Sound Id3: ID3v2 parser",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_ID3.1"
+      ]
+    },
+    "SOUND_ID3.3": {
+      "label": "Sound Id3: ID3 object construction",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_ID3.2"
+      ]
+    },
+    "SOUND_ID3.4": {
+      "label": "Sound Id3: onID3 callback dispatch",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SOUND_ID3.3"
+      ]
+    },
+    "SOUND_ID3.5": {
+      "label": "Sound Id3: Integration with loadSound",
+      "description": "Status: TODO | Tests: sound_id3, sound_id3_prop",
+      "depends_on": [
+        "SOUND_ID3.4"
+      ]
+    },
+    "SWF5_XML_EVENT_HANDLER_CONTEXT.1": {
+      "label": "Swf5 Xml Event Handler Context: XML.load() implementation",
+      "description": "Status: TODO",
+      "depends_on": []
+    },
+    "SWF5_XML_EVENT_HANDLER_CONTEXT.2": {
+      "label": "Swf5 Xml Event Handler Context: Child SWF recompilation",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SWF5_XML_EVENT_HANDLER_CONTEXT.1"
+      ]
+    },
+    "SWF5_XML_EVENT_HANDLER_CONTEXT.3": {
+      "label": "Swf5 Xml Event Handler Context: Async callback dispatch",
+      "description": "Status: TODO",
+      "depends_on": [
+        "SWF5_XML_EVENT_HANDLER_CONTEXT.2"
+      ]
+    },
+    "SWF5_XML_EVENT_HANDLER_CONTEXT.4": {
+      "label": "Swf5 Xml Event Handler Context: SWF5 context handling",
+      "description": "Status: TODO | Tests: swf5_xml_event_handler_context",
+      "depends_on": [
+        "SWF5_XML_EVENT_HANDLER_CONTEXT.3"
+      ]
+    },
+    "TYPE_COERCION_ADVANCED.1": {
+      "label": "Type Coercion Advanced: tryAutoBoxPrimitive() primitive b...",
+      "description": "Status: DONE",
+      "depends_on": []
+    },
+    "TYPE_COERCION_ADVANCED.2": {
+      "label": "Type Coercion Advanced: instanceOfCoercing() instanceof/C...",
+      "description": "Status: DONE",
+      "depends_on": [
+        "TYPE_COERCION_ADVANCED.1"
+      ]
+    },
+    "TYPE_COERCION_ADVANCED.3": {
+      "label": "Type Coercion Advanced: Object.addProperty as built-in",
+      "description": "Status: DONE | Tests: coerce_to_object_monkeypatch, instanceof_coercions",
+      "depends_on": [
+        "TYPE_COERCION_ADVANCED.2"
+      ]
+    }
+  }
+}

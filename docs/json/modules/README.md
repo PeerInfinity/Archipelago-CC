@@ -47,6 +47,7 @@ Each file below links to the available documentation for that module. See the [u
 - [Spoiler Test](./spoilerTest.md)
 - [Text Adventure](./textAdventure.md)
 - [Timer Panel](./timerPanel.md)
+- [Vibe Coding Simulator](./vibeCodingSim.md)
 - [Proof Queue](./proofQueue.md)
 - [Proof Graph](./proofGraph.md)
 - [Meta Game Panel](./metaGamePanel.md)

@@ -38,13 +38,11 @@
     },
     "editor": {
       "path": "./modules/editor/index.js",
-      "enabled": false,
-      "requires": ["editorCore"]
+      "enabled": false
     },
     "editorCodeMirror6": {
       "path": "./modules/editorCodeMirror6/index.js",
-      "enabled": true,
-      "requires": ["editorCore"]
+      "enabled": true
     },
     "settings": {
       "path": "./modules/settings/index.js",
@@ -60,13 +58,11 @@
     },
     "locations": {
       "path": "./modules/locations/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": false
     },
     "exits": {
       "path": "./modules/exits/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": false
     },
     "pathAnalyzer": {
       "path": "./modules/pathAnalyzer/index.js",
@@ -78,23 +74,19 @@
     },
     "regions": {
       "path": "./modules/regions/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": false
     },
     "helpers": {
       "path": "./modules/helpers/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": false
     },
     "dungeons": {
       "path": "./modules/dungeons/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": false
     },
     "regionGraph": {
       "path": "./modules/regionGraph/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "playerState"]
+      "enabled": true
     },
     "discovery": {
       "path": "./modules/discovery/index.js",
@@ -102,8 +94,7 @@
     },
     "discoveryPanel": {
       "path": "./modules/discoveryPanel/index.js",
-      "enabled": false,
-      "requires": ["discovery"]
+      "enabled": false
     },
     "playerState": {
       "path": "./modules/playerState/index.js",
@@ -119,8 +110,11 @@
     },
     "loopStats": {
       "path": "./modules/loopStats/index.js",
-      "enabled": false,
-      "requires": ["loops"]
+      "enabled": false
+    },
+    "loopsCostDebugger": {
+      "path": "./modules/loopsCostDebugger/index.js",
+      "enabled": false
     },
     "presets": {
       "path": "./modules/presets/index.js",
@@ -132,18 +126,15 @@
     },
     "sphereState": {
       "path": "./modules/sphereState/index.js",
-      "enabled": false,
-      "requires": ["stateManager"]
+      "enabled": false
     },
     "spoilerChecklist": {
       "path": "./modules/spoilerChecklist/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "commonUI", "sphereState", "locations"]
+      "enabled": false
     },
     "textAdventure": {
       "path": "./modules/textAdventure/index.js",
-      "enabled": false,
-      "requires": ["stateManager", "playerState", "discovery"]
+      "enabled": false
     },
     "tests": {
       "path": "./modules/tests/index.js",
@@ -155,18 +146,15 @@
     },
     "progressBarPanel": {
       "path": "./modules/progressBarPanel/index.js",
-      "enabled": false,
-      "requires": ["progressBar"]
+      "enabled": false
     },
     "metaGame": {
       "path": "./modules/metaGame/index.js",
-      "enabled": false,
-      "requires": ["progressBar", "progressBarPanel"]
+      "enabled": false
     },
     "metaGamePanel": {
       "path": "./modules/metaGamePanel/index.js",
-      "enabled": false,
-      "requires": ["metaGame"]
+      "enabled": false
     },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
@@ -174,28 +162,23 @@
     },
     "iframePanel": {
       "path": "./modules/iframePanel/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter"]
+      "enabled": true
     },
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": true
     },
     "mazeGameDataPanel": {
       "path": "./modules/mazeGameDataPanel/index.js",
-      "enabled": false,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": false
     },
     "jtaGameDataPanel": {
       "path": "./modules/jtaGameDataPanel/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": true
     },
     "jtaCostDebugger": {
       "path": "./modules/jtaCostDebugger/index.js",
-      "enabled": true,
-      "requires": ["jtaGameDataPanel"]
+      "enabled": true
     },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
@@ -203,13 +186,11 @@
     },
     "windowPanel": {
       "path": "./modules/windowPanel/index.js",
-      "enabled": true,
-      "requires": ["windowAdapter"]
+      "enabled": true
     },
     "windowManagerPanel": {
       "path": "./modules/windowManagerPanel/index.js",
-      "enabled": true,
-      "requires": ["windowAdapter", "windowPanel"]
+      "enabled": true
     },
     "ruleConverter": {
       "path": "./modules/ruleConverter/index.js",
@@ -217,28 +198,31 @@
     },
     "proofQueue": {
       "path": "./modules/proofQueue/index.js",
-      "enabled": false,
-      "requires": ["stateManager"]
+      "enabled": false
     },
     "proofGraph": {
       "path": "./modules/proofGraph/index.js",
-      "enabled": false,
-      "requires": ["stateManager"]
+      "enabled": false
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": true
     },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",
-      "enabled": true,
-      "requires": ["jtaQueueEngine"]
+      "enabled": true
     },
     "jtaArchipelago": {
       "path": "./modules/jtaArchipelago/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "client", "iframeAdapter", "iframePanel"]
+      "enabled": true
+    },
+    "vibeCodingSim": {
+      "path": "./modules/vibeCodingSim/index.js",
+      "enabled": false
+    },
+    "apcalc": {
+      "path": "./modules/apcalc/index.js",
+      "enabled": false
     }
   },
   "loadPriority": [
@@ -270,6 +254,7 @@
     "playerStatePanel",
     "loops",
     "loopStats",
+    "loopsCostDebugger",
     "presets",
     "spoilerTest",
     "sphereState",
@@ -294,6 +279,8 @@
     "proofGraph",
     "jtaQueueEngine",
     "jtaActionQueue",
-    "jtaArchipelago"
+    "jtaArchipelago",
+    "vibeCodingSim",
+    "apcalc"
   ]
 }

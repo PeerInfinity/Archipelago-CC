@@ -315,6 +315,8 @@ def parse_depgraph(graph_key: str) -> GraphStructure:
         "recipe_chain": ("recipe_chain.csv", parse_csv_graph),
         "baking_adventure": ("baking_adventure.json", parse_json_graph),
         "coding_adventure": ("coding_adventure.json", parse_json_graph),
+        "swfrecomp_vibe_coding": ("swfrecomp_vibe_coding.json", parse_json_graph),
+        "taskflow_example": ("taskflow_example.json", parse_json_graph),
     }
     if graph_key in bundled_graphs:
         filename, parser = bundled_graphs[graph_key]

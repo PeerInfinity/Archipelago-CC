@@ -12,6 +12,7 @@ export const moduleInfo = {
     icon: '',
     column: 2,
     description: 'Queue and execute actions for Journey to Ascension.',
+    requires: ['jtaQueueEngine'],
 };
 
 function log(level, message, ...data) {

@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-03-28 17:13:11 UTC
 
 **Source Data Created:** 2026-03-21T18:02:52.341913+00:00
 

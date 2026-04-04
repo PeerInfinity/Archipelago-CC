@@ -8,6 +8,7 @@ export const moduleInfo = {
   icon: '🎯',
   column: 2, // Middle column,
   description: 'UI panel for metaGame module configuration and management',
+  requires: ['metaGame'],
 };
 
 export function register(registrationApi) {

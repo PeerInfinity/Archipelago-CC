@@ -24,6 +24,7 @@ export const moduleInfo = {
   icon: '🗺️',
   column: 3, // Right column
   description: 'Regions display panel.',
+  requires: ['stateManager', 'commonUI'],
 };
 
 // Store module-level references

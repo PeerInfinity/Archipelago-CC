@@ -64,13 +64,19 @@ This section is for developers who want to understand, modify, or contribute to 
   - [Full Spoiler Test Results](./developer/test-results/test-results-spoilers-full.md): Tests with all locations
   - [Multiclient Test Results](./developer/test-results/test-results-multiclient.md): Tests in multiclient mode
 
-### 3. Module Reference
+### 3. Playable Games
+
+Documentation for the playable games and game modes included in this project. Each game has its own documentation covering how to play, mechanics, and configuration.
+
+- **[Games Index](./games/README.md)**: An overview and index of all playable games.
+
+### 4. Module Reference
 
 This section provides detailed, auto-generated, or manually written documentation for each individual frontend module. It is an essential technical reference for understanding the specific responsibilities and interactions of each component in the application.
 
 - **[Module Index](./modules/README.md)**: An overview and index of all documented frontend modules.
 
-### 4. Source-Level Documentation
+### 5. Source-Level Documentation
 
 READMEs in the source directories provide quick-start guides for each major component:
 

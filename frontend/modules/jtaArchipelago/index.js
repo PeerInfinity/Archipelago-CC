@@ -12,6 +12,7 @@ export const moduleInfo = {
   componentType: null, // No UI panel
   icon: '',
   description: 'Bridges JTA game events to Archipelago location checks and item grants.',
+  requires: ['stateManager', 'client', 'iframeAdapter', 'iframePanel'],
 };
 
 function log(level, message, ...data) {

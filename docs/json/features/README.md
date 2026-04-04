@@ -22,10 +22,4 @@ An overview of the major features in the Archipelago JSON Export Tools project.
 
 ## New Games & Modes
 
-| Feature | Description | Overview |
-|---------|-------------|----------|
-| **MetaMath APWorld** | Turns MetaMath theorem proofs into playable Archipelago worlds — each proof step is a location, each proven statement is an item. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=metamath) | [worlds/metamath/docs/README.md](../../../worlds/metamath/docs/README.md) |
-| **DepGraph APWorld** | Converts any directed acyclic graph into an Archipelago world — bundled examples include tech trees, skill trees, and recipe chains. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=depgraph) | [depgraph.md](depgraph.md) |
-| **Journey to Ascension APWorld** | Archipelago integration for the incremental/idle game Journey to Ascension, with automatic cost rebalancing for randomized perk placement. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta) | [worlds/jta/docs/en_Journey to Ascension.md](../../../worlds/jta/docs/en_Journey%20to%20Ascension.md) |
-| **Loops Mode** | Incremental/idle game mode layered on the tracker — queue actions, spend mana, earn XP, optimize your loops. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=loops) | [loops.md](loops.md) |
-| **Maze Metagame** | A-Mazing-Idle as a meta-progression layer — solve mazes before checking locations or moving to new regions. Live demo: [standard](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegame), [with Loops](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegameloops) | [maze-metagame.md](maze-metagame.md) |
+See the **[Playable Games Index](../games/README.md)** for all games and game modes, including DepGraph, Loops, MetaMath, Journey to Ascension, Maze Metagame, Text Adventure, and Vibe Coding Simulator.

@@ -1,6 +1,6 @@
 {
   "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-  "generated": "2026-03-24T18:27:28.326197+00:00",
+  "generated": "2026-03-28T04:08:32.303856+00:00",
   "fallback_order": [
     "worldgen",
     "pickle",
@@ -370,6 +370,9 @@
       "Another Crabs Treasure": [
         "pickle"
       ],
+      "Ape Escape": [
+        "pickle"
+      ],
       "Ape Escape 3": [
         "pickle",
         "original"
@@ -427,6 +430,10 @@
       "Frogmonster": [
         "pickle"
       ],
+      "Garfield Kart - Furious Racing": [
+        "worldgen",
+        "pickle"
+      ],
       "Golden Sun The Lost Age": [
         "worldgen"
       ],
@@ -475,15 +482,16 @@
         "pickle",
         "original"
       ],
+      "Kingdom Hearts RE Chain of Memories": [
+        "worldgen",
+        "pickle"
+      ],
       "League of Legends": [
         "worldgen",
         "pickle"
       ],
       "Lego Star Wars: The Complete Saga": [
         "original"
-      ],
-      "Lingo 2": [
-        "pickle"
       ],
       "Little Witch Nobeta": [
         "worldgen",
@@ -529,9 +537,6 @@
         "pickle",
         "original"
       ],
-      "Ori and the Blind Forest": [
-        "pickle"
-      ],
       "Pizza Tower": [
         "pickle"
       ],
@@ -567,6 +572,9 @@
         "worldgen",
         "pickle",
         "original"
+      ],
+      "Sonic Adventure DX": [
+        "pickle"
       ],
       "Sonic Heroes": [
         "worldgen",
@@ -623,6 +631,11 @@
       ],
       "Tetris Attack": [
         "pickle"
+      ],
+      "Tevi": [
+        "worldgen",
+        "pickle",
+        "original"
       ],
       "The Sims 4": [
         "worldgen",

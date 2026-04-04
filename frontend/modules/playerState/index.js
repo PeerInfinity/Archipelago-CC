@@ -5,6 +5,7 @@ import { stateManagerProxySingleton } from '../stateManager/index.js';
 export const moduleInfo = {
   name: 'playerState',
   description: 'Manages player state including current region, path history, and movement.',
+  requires: ['stateManager'],
 };
 
 // Helper function for logging with fallback

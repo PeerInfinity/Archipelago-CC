@@ -25,6 +25,7 @@ export const moduleInfo = {
   icon: '\u{1F9E0}', // brain emoji
   column: 3, // Right column
   description: 'Arrange MetaMath proof steps in dependency order.',
+  requires: ['stateManager'],
 };
 
 // ─── Module State ───────────────────────────────────────────

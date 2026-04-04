@@ -21,6 +21,7 @@ export const moduleInfo = {
   icon: '🔍',
   column: 2, // Middle column
   description: 'Discovery mode settings and discovered items display.',
+  requires: ['discovery'],
 };
 
 // Store module-level references

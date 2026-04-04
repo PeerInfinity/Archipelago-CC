@@ -37,6 +37,7 @@ export const moduleInfo = {
   icon: '💻',
   column: 2, // Middle column,
   description: 'Handles Archipelago client connection and communication.',
+  requires: ['stateManager'],
 };
 
 // --- Settings Schema --- //

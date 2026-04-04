@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T01:12:52.632821+00:00
 
@@ -88,7 +88,7 @@
 | Kirby Super Star | ❌ Failed | 0 | ❌ | 21/138 | 20/131 | 1/7 | ❌ | 20/138 | ✅ | ✅ |
 | League of Legends | ✅ Passed | 0 | ✅ | 158/158 | 158/158 | 0/0 | ✅ | 158/158 | ✅ | ✅ |
 | Lil Gator Game | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Lingo 2 | ❌ Failed | 0 | ❌ | 0/563 | 0/476 | 0/87 | ❌ | 0/563 | 17.1KB | ✅ |
+| Lingo 2 | ❌ Failed | 0 | ❌ | 0/563 | 0/476 | 0/87 | ❌ | 0/563 | ⚫ | ✅ |
 | Little Witch Nobeta | ❌ Failed | 0 | ❌ | 55/56 | 55/55 | 0/1 | ❌ | 55/56 | ✅ | ✅ |
 | Luigi's Mansion | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/158 | ✅ | ✅ |
 | Lunacid | ✅ Passed | 0 | ✅ | 230/230 | 229/229 | 1/1 | ✅ | 230/230 | 8.2KB | ✅ |

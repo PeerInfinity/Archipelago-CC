@@ -11,6 +11,7 @@ export const moduleInfo = {
   column: 3, // Right column
   description: 'Iframe Panel display panel.',
   allowMultipleInstances: true,
+  requires: ['iframeAdapter'],
 };
 
 // Helper function for logging with fallback

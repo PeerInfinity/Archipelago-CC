@@ -507,5 +507,222 @@
         }
       ]
     }
+  },
+  "textadventure": {
+    "settings": {
+      "showPopoutIcon": false,
+      "reorderEnabled": true
+    },
+    "root": {
+      "type": "row",
+      "content": [
+        {
+          "type": "stack",
+          "width": 20,
+          "id": "left-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "inventoryPanel",
+              "title": "Inventory"
+            },
+            {
+              "type": "component",
+              "componentType": "jsonPanel",
+              "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "modulesPanel",
+              "title": "Modules"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "width": 40,
+          "id": "center-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "regionGraphPanel",
+              "title": "Region Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "clientPanel",
+              "title": "Console"
+            },
+            {
+              "type": "component",
+              "componentType": "presetsPanel",
+              "title": "Presets"
+            },
+            {
+              "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor"
+            },
+            {
+              "type": "component",
+              "componentType": "playerStatePanel",
+              "title": "Player State"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "width": 40,
+          "id": "right-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "textAdventurePanel",
+              "title": "Text Adventure"
+            },
+            {
+              "type": "component",
+              "componentType": "optionsPanel",
+              "title": "Options"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "vibecoding": {
+    "settings": {
+      "showPopoutIcon": false,
+      "reorderEnabled": true
+    },
+    "root": {
+      "type": "row",
+      "content": [
+        {
+          "type": "stack",
+          "width": 50,
+          "id": "left-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "regionGraphPanel",
+              "title": "Dependency Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "clientPanel",
+              "title": "Console"
+            },
+            {
+              "type": "component",
+              "componentType": "presetsPanel",
+              "title": "Presets"
+            },
+            {
+              "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "width": 50,
+          "id": "right-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "vibeCodingSimPanel",
+              "title": "Vibe Coding Simulator"
+            },
+            {
+              "type": "component",
+              "componentType": "optionsPanel",
+              "title": "Options"
+            },
+            {
+              "type": "component",
+              "componentType": "jsonPanel",
+              "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "modulesPanel",
+              "title": "Modules"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "apcalc": {
+    "settings": {
+      "showPopoutIcon": false,
+      "reorderEnabled": true
+    },
+    "root": {
+      "type": "row",
+      "content": [
+        {
+          "type": "stack",
+          "width": 50,
+          "id": "left-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "regionGraphPanel",
+              "title": "Region Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "clientPanel",
+              "title": "Console"
+            },
+            {
+              "type": "component",
+              "componentType": "presetsPanel",
+              "title": "Presets"
+            },
+            {
+              "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "width": 50,
+          "id": "right-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "apcalcPanel",
+              "title": "APCalc"
+            },
+            {
+              "type": "component",
+              "componentType": "apcalcGeneratorPanel",
+              "title": "APCalc Generator"
+            },
+            {
+              "type": "component",
+              "componentType": "optionsPanel",
+              "title": "Options"
+            },
+            {
+              "type": "component",
+              "componentType": "jsonPanel",
+              "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "modulesPanel",
+              "title": "Modules"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -36,6 +36,7 @@ export const moduleInfo = {
   icon: '✏️',
   column: 2, // Middle column,
   description: 'Text Editor panel.',
+  requires: ['editorCore'],
 };
 
 /**

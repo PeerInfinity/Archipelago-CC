@@ -345,6 +345,12 @@ export class LayoutControlsManager {
         logger.debug(`Positioning player with saved positions at ${this.ui.initialPlayerRegion}`);
         this.ui.updatePlayerLocation(this.ui.initialPlayerRegion);
         this.ui.initialPlayerRegion = null;
+
+        // Refresh node colors now that player positioning is complete
+        const snapshot = stateManager.getLatestStateSnapshot();
+        if (snapshot) {
+          this.ui.dataManager.onStateUpdate({ snapshot });
+        }
       }
 
       return;
@@ -352,6 +358,9 @@ export class LayoutControlsManager {
 
     this.ui.isLayoutRunning = true;
     this.ui.updateStatus('Running layout...');
+
+    // Pre-size nodes for overlays so layout spaces them correctly
+    this.ui.overlayManager.presizeNodes();
 
     // Auto-detect DAG structure for hierarchical layout
     const dagResult = this.detectDAGStructure();
@@ -383,7 +392,7 @@ export class LayoutControlsManager {
         nestingFactor: 5,
         gravity: 80,
         numIter: 1000,
-        componentSpacing: 100
+        componentSpacing: 100,
       };
     }
 

@@ -1,4 +1,4 @@
-import { getModuleEventBus } from './index.js';
+import { getModuleEventBus, getNodeLabelProvider } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -37,7 +37,7 @@ export class GraphInteractionManager {
     });
 
     this.ui.cy.on('layoutstop', () => {
-      this.ui.isLayoutRunning = false;
+      // Keep isLayoutRunning true during animation to prevent premature player positioning
 
       // Capture the current layout generation so we can detect if the graph
       // was rebuilt before this timeout fires (stale layoutstop from a stopped layout)
@@ -52,6 +52,7 @@ export class GraphInteractionManager {
           return;
         }
 
+        this.ui.isLayoutRunning = false;
         this.ui.saveNodePositions();
         this.ui.updateStatus('Layout complete');
 
@@ -60,8 +61,14 @@ export class GraphInteractionManager {
           logger.debug(`Positioning player after layout animation at ${this.ui.initialPlayerRegion}`);
           this.ui.updatePlayerLocation(this.ui.initialPlayerRegion);
           this.ui.initialPlayerRegion = null; // Clear it so we don't reposition on subsequent layouts
+
+          // Refresh node colors now that layout and player positioning are complete
+          const snapshot = stateManager.getLatestStateSnapshot();
+          if (snapshot) {
+            this.ui.dataManager.onStateUpdate({ snapshot });
+          }
         }
-      }, 200); // Add small buffer to ensure animation is complete
+      }, 1050); // Wait for layout animation (1000ms) plus buffer
     });
 
     // Update location nodes when region nodes are dragged
@@ -439,6 +446,16 @@ export class GraphInteractionManager {
 
       if (!fullPath || fullPath.length < 1) return;
 
+      // Highlight edge from start region to first destination
+      if (this.ui.currentPath.length > 0 && this.ui.currentPath[0].sourceRegion) {
+        const firstSource = this.ui.currentPath[0].sourceRegion;
+        const firstDest = this.ui.currentPath[0].destinationRegion;
+        const firstEdge = this.ui.cy.edges(`[source="${firstSource}"][target="${firstDest}"], [source="${firstDest}"][target="${firstSource}"]`);
+        if (firstEdge && firstEdge.length > 0) {
+          firstEdge.addClass('in-path');
+        }
+      }
+
       // Highlight edges between consecutive regions in the path (regionMove entries)
       for (let i = 0; i < this.ui.currentPath.length - 1; i++) {
         const source = this.ui.currentPath[i].destinationRegion;
@@ -665,6 +682,7 @@ export class GraphInteractionManager {
     const staticData = stateManager.getStaticData();
     const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
     const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
+    const hasLabelProvider = !!getNodeLabelProvider();
     this.ui.cy.nodes().forEach(node => {
       if (!node.hasClass('location-node') && !node.hasClass('player')) {
         const regionName = node.data('regionName') || node.id();
@@ -676,6 +694,9 @@ export class GraphInteractionManager {
           } else {
             node.data('label', '???');
           }
+        } else if (hasLabelProvider) {
+          // External label provider controls the label — don't add counts
+          // (label already set by onStateUpdate)
         } else {
           const regionData = staticData?.regions?.get(regionName);
           const locationCounts = node.data('locationCounts');

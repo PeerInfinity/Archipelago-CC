@@ -38,13 +38,11 @@
     },
     "editor": {
       "path": "./modules/editor/index.js",
-      "enabled": false,
-      "requires": ["editorCore"]
+      "enabled": false
     },
     "editorCodeMirror6": {
       "path": "./modules/editorCodeMirror6/index.js",
-      "enabled": true,
-      "requires": ["editorCore"]
+      "enabled": true
     },
     "settings": {
       "path": "./modules/settings/index.js",
@@ -60,13 +58,11 @@
     },
     "locations": {
       "path": "./modules/locations/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": true
     },
     "exits": {
       "path": "./modules/exits/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": true
     },
     "pathAnalyzer": {
       "path": "./modules/pathAnalyzer/index.js",
@@ -78,23 +74,19 @@
     },
     "regions": {
       "path": "./modules/regions/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": true
     },
     "helpers": {
       "path": "./modules/helpers/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": true
     },
     "dungeons": {
       "path": "./modules/dungeons/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "commonUI"]
+      "enabled": true
     },
     "regionGraph": {
       "path": "./modules/regionGraph/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "playerState"]
+      "enabled": true
     },
     "discovery": {
       "path": "./modules/discovery/index.js",
@@ -102,8 +94,7 @@
     },
     "discoveryPanel": {
       "path": "./modules/discoveryPanel/index.js",
-      "enabled": true,
-      "requires": ["discovery"]
+      "enabled": true
     },
     "playerState": {
       "path": "./modules/playerState/index.js",
@@ -119,13 +110,11 @@
     },
     "loopStats": {
       "path": "./modules/loopStats/index.js",
-      "enabled": true,
-      "requires": ["loops"]
+      "enabled": true
     },
     "loopsCostDebugger": {
       "path": "./modules/loopsCostDebugger/index.js",
-      "enabled": true,
-      "requires": ["loops", "sphereState"]
+      "enabled": true
     },
     "presets": {
       "path": "./modules/presets/index.js",
@@ -137,18 +126,15 @@
     },
     "sphereState": {
       "path": "./modules/sphereState/index.js",
-      "enabled": true,
-      "requires": ["stateManager"]
+      "enabled": true
     },
     "spoilerChecklist": {
       "path": "./modules/spoilerChecklist/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "commonUI", "sphereState", "locations"]
+      "enabled": true
     },
     "textAdventure": {
       "path": "./modules/textAdventure/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "playerState", "discovery"]
+      "enabled": true
     },
     "tests": {
       "path": "./modules/tests/index.js",
@@ -160,47 +146,39 @@
     },
     "progressBarPanel": {
       "path": "./modules/progressBarPanel/index.js",
-      "enabled": true,
-      "requires": ["progressBar"]
+      "enabled": true
     },
     "metaGame": {
       "path": "./modules/metaGame/index.js",
-      "enabled": true,
-      "requires": ["progressBar", "progressBarPanel"]
+      "enabled": true
     },
     "metaGamePanel": {
       "path": "./modules/metaGamePanel/index.js",
-      "enabled": true,
-      "requires": ["metaGame"]
+      "enabled": true
     },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
       "enabled": true
     },
     "iframePanel": {
-      "path": "./modules/iframePanel/index.js", 
-      "enabled": true,
-      "requires": ["iframeAdapter"]
+      "path": "./modules/iframePanel/index.js",
+      "enabled": true
     },
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": true
     },
     "mazeGameDataPanel": {
       "path": "./modules/mazeGameDataPanel/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": true
     },
     "jtaGameDataPanel": {
       "path": "./modules/jtaGameDataPanel/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": false
     },
     "jtaCostDebugger": {
       "path": "./modules/jtaCostDebugger/index.js",
-      "enabled": true,
-      "requires": ["jtaGameDataPanel"]
+      "enabled": false
     },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
@@ -208,13 +186,11 @@
     },
     "windowPanel": {
       "path": "./modules/windowPanel/index.js",
-      "enabled": true,
-      "requires": ["windowAdapter"]
+      "enabled": true
     },
     "windowManagerPanel": {
       "path": "./modules/windowManagerPanel/index.js",
-      "enabled": true,
-      "requires": ["windowAdapter", "windowPanel"]
+      "enabled": true
     },
     "ruleConverter": {
       "path": "./modules/ruleConverter/index.js",
@@ -222,28 +198,31 @@
     },
     "proofQueue": {
       "path": "./modules/proofQueue/index.js",
-      "enabled": true,
-      "requires": ["stateManager"]
+      "enabled": false
     },
     "proofGraph": {
       "path": "./modules/proofGraph/index.js",
-      "enabled": true,
-      "requires": ["stateManager"]
+      "enabled": false
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "enabled": false
     },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",
-      "enabled": true,
-      "requires": ["jtaQueueEngine"]
+      "enabled": false
     },
     "jtaArchipelago": {
       "path": "./modules/jtaArchipelago/index.js",
-      "enabled": true,
-      "requires": ["stateManager", "client", "iframeAdapter", "iframePanel"]
+      "enabled": false
+    },
+    "vibeCodingSim": {
+      "path": "./modules/vibeCodingSim/index.js",
+      "enabled": false
+    },
+    "apcalc": {
+      "path": "./modules/apcalc/index.js",
+      "enabled": false
     }
   },
   "loadPriority": [
@@ -300,6 +279,8 @@
     "proofGraph",
     "jtaQueueEngine",
     "jtaActionQueue",
-    "jtaArchipelago"
+    "jtaArchipelago",
+    "vibeCodingSim",
+    "apcalc"
   ]
 }

@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-03-22T06:06:18.834443+00:00",
-    "last_updated": "2026-03-22T06:06:18.834452+00:00",
+    "last_updated": "2026-04-03T22:56:23.033081+00:00",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2330,6 +2330,55 @@
         "has_custom_game_logic": false,
         "template_file": "A Short Hike.yaml",
         "world_directory": "shorthike"
+      }
+    },
+    "APCalc WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "apcalc_worldgen",
+      "game_name_from_yaml": "APCalc WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 7.01,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/apcalc_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 152867,
+        "size_mb": 0.15
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 12.06,
+        "return_code": 0,
+        "sphere_reached": 8.1,
+        "success": true,
+        "total_spheres": 8.1,
+        "warning_count": 0
+      },
+      "template_filename": "APCalc WorldGen.yaml",
+      "timestamp": "2026-04-03T22:55:55.343698+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "APCalc WorldGen",
+        "game_name_from_filename": "apcalc_worldgen",
+        "game_name_from_yaml": "APCalc WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "APCalc WorldGen.yaml",
+        "world_directory": "apcalc_worldgen"
       }
     },
     "APQuest.yaml": {
