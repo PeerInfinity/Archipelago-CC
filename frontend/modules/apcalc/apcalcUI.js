@@ -73,6 +73,7 @@ export class APCalcUI {
         for (const mode of ['easy', 'medium', 'hard']) {
             const btn = document.createElement('button');
             btn.className = 'apcalc-difficulty-btn';
+            btn.addEventListener('mousedown', (e) => e.preventDefault());
             if (gs.difficulty === mode) btn.classList.add('apcalc-difficulty-active');
             btn.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
             btn.title = {
@@ -146,6 +147,7 @@ export class APCalcUI {
         const label = String(key);
         btn.className = 'apcalc-btn';
         btn.textContent = label;
+        btn.addEventListener('mousedown', (e) => e.preventDefault());
 
         if (key === '=' || key === 'C') {
             btn.classList.add(`apcalc-btn-${key === '=' ? 'eq' : 'clear'}`);
