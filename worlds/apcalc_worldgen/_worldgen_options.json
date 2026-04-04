@@ -1,0 +1,19 @@
+{
+  "accessibility": 0,
+  "exclude_locations": [],
+  "item_links": [],
+  "local_items": [],
+  "max_branches": 5,
+  "non_local_items": [],
+  "num_spheres": 8,
+  "nums_per_sphere": 2,
+  "ops_per_sphere": 1,
+  "plando_items": [],
+  "priority_locations": [],
+  "progression_balancing": 50,
+  "randomize_items": true,
+  "start_hints": [],
+  "start_inventory": {},
+  "start_location_hints": [],
+  "trash_per_sphere": 1
+}
