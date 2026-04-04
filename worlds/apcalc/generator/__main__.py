@@ -1,4 +1,4 @@
-"""CLI entry point: python -m apcalc_generator"""
+"""CLI entry point: python -m worlds.apcalc.generator"""
 
 import argparse
 import sys

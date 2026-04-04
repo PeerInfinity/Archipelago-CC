@@ -200,9 +200,12 @@ export class APCalcState {
             // Check the location
             const nodeInfo = this.nodes[neighbor];
             if (nodeInfo) {
-                const locationName = nodeInfo.layer === 0
-                    ? `Reach ${nodeInfo.value}`
-                    : `Reach ${nodeInfo.value} L${nodeInfo.layer}`;
+                // Use location_name from slot_data if available (normal apworld),
+                // otherwise construct from value/layer (worldgen version)
+                const locationName = nodeInfo.location_name
+                    || (nodeInfo.layer === 0
+                        ? `Reach ${nodeInfo.value}`
+                        : `Reach ${nodeInfo.value} L${nodeInfo.layer}`);
                 if (!this.checkedLocations.has(locationName) && this.onLocationCheck) {
                     this.onLocationCheck(locationName, neighbor);
                     this.checkedLocations.add(locationName);

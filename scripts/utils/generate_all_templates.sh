@@ -329,6 +329,7 @@ EXTRA_SEED_TEMPLATES=(
   "Adventure"
   "A Short Hike"
   "A Hat in Time"
+  "APCalc"
   "Journey to Ascension"
   "Baking Adventure"
   "Coding Adventure"
