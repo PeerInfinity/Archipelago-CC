@@ -30,6 +30,8 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
+    "Command Line": LocationData("Command Line", "Command Line", 234800001, False),
+    "Completed Node 1": LocationData("Command Line", "Completed Node 1", None, True),
     "Git": LocationData("Git", "Git", 234800002, False),
     "Completed Node 2": LocationData("Git", "Completed Node 2", None, True),
     "HTML": LocationData("HTML", "HTML", 234800003, False),

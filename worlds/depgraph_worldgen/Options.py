@@ -44,6 +44,8 @@ class GraphFile(Choice):
     option_recipe_chain = 2
     option_baking_adventure = 3
     option_coding_adventure = 4
+    option_swfrecomp_vibe_coding = 5
+    option_taskflow_example = 6
     default = 4
 
 class RandomizeStartingNodes(Toggle):
