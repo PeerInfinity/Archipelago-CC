@@ -3326,7 +3326,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-04Apr2026-042348_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-04Apr2026-050702_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -9882,7 +9882,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-04-04T04:40:09.223806+00:00",
+    "test_data_updated": "2026-04-04T05:23:12.060875+00:00",
     "games_with_test_data": 155,
     "total_games": 162,
     "games_without_test_data": 7,
@@ -9893,64 +9893,5 @@
       "multiworld",
       "spoiler_fuzz"
     ]
-  },
-  "apcalc_worldgen": {
-    "name": "APCalc WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "APCalc WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    }
-  },
-  "apcalc": {
-    "name": "APCalc",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "APCalc"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      },
-      "AP_02053695854357871005": {
-        "seed": 42,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "APCalc"
-          }
-        ],
-        "files": [
-          "AP_02053695854357871005.archipelago",
-          "AP_02053695854357871005_Spoiler.txt",
-          "AP_02053695854357871005_rules.json",
-          "AP_02053695854357871005_sphere_log.jsonl"
-        ]
-      }
-    }
   }
 }
