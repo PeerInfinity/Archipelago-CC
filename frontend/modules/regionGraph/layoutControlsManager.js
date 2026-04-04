@@ -32,6 +32,17 @@ export class LayoutControlsManager {
           </label>
         </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <div style="font-weight: bold; margin-bottom: 5px;">Zoom:</div>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Zoom level:</span>
+            <input type="number" id="zoomLevel" min="0.01" max="10" step="0.01" value="1" style="width: 60px; padding: 2px;">
+          </label>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
+            <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
+          </label>
+        </div>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Location Visibility:</div>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
             <input type="checkbox" id="forceShowLocations" style="margin-right: 5px;">
@@ -64,10 +75,6 @@ export class LayoutControlsManager {
           <label id="viewportDelayContainer" style="display: none; margin: 3px 0;">
             <span style="margin-right: 5px;">Viewport stabilize delay (ms):</span>
             <input type="number" id="viewportStabilizeDelay" min="100" max="5000" value="1000" style="width: 60px; padding: 2px;">
-          </label>
-          <label style="display: block; margin: 3px 0;">
-            <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
-            <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
           </label>
         </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
@@ -137,6 +144,9 @@ export class LayoutControlsManager {
       { id: '#viewportStabilizeDelay', setting: 'moduleSettings.regionGraph.viewportStabilizeDelay', default: 1000 },
       { id: '#wheelSensitivity', setting: 'moduleSettings.regionGraph.wheelSensitivity', default: 1, parse: parseFloat }
     ];
+
+    // Zoom level input — syncs with Cytoscape, not persisted to settings
+    this._setupZoomLevelInput();
 
     for (const input of numericInputs) {
       const element = this.ui.controlPanel.querySelector(input.id);
@@ -284,6 +294,45 @@ export class LayoutControlsManager {
     if (discoveryControls) {
       discoveryControls.style.display = this.ui.isDiscoveryModeActive ? 'block' : 'none';
     }
+  }
+
+  _setupZoomLevelInput() {
+    const zoomLevelInput = this.ui.controlPanel.querySelector('#zoomLevel');
+    if (!zoomLevelInput) return;
+    this._zoomLevelInput = zoomLevelInput;
+
+    // Apply zoom when the user changes the input
+    zoomLevelInput.addEventListener('change', (e) => {
+      const newZoom = parseFloat(e.target.value);
+      if (this.ui.cy && !isNaN(newZoom) && newZoom > 0) {
+        this.ui.cy.zoom({
+          level: newZoom,
+          renderedPosition: {
+            x: this.ui.cy.width() / 2,
+            y: this.ui.cy.height() / 2
+          }
+        });
+      }
+    });
+
+    // If Cytoscape is already initialized, connect now
+    if (this.ui.cy) {
+      this._connectZoomLevelToCy();
+    }
+  }
+
+  /** Called once Cytoscape is available to sync the zoom input with the graph. */
+  connectZoomInput() {
+    if (this._zoomLevelInput && this.ui.cy) {
+      this._connectZoomLevelToCy();
+    }
+  }
+
+  _connectZoomLevelToCy() {
+    this._zoomLevelInput.value = this.ui.cy.zoom().toFixed(2);
+    this.ui.cy.on('zoom', () => {
+      this._zoomLevelInput.value = this.ui.cy.zoom().toFixed(2);
+    });
   }
 
   async saveCheckboxSetting(checkboxId, settingKey, value) {

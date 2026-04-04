@@ -41,8 +41,10 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
     registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
 
-    // Dispatcher: send location checks
+    // Dispatcher: send region moves, location checks, and path clearing
+    registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+    registrationApi.registerDispatcherSender('playerState:trimPath', 'bottom', 'first');
 
     // Public functions
     registrationApi.registerPublicFunction(moduleInfo.name, 'getGameState', () => gameState);
@@ -97,6 +99,14 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         });
     }
 
+    // Forward keyboard events from the Region Graph to the APCalc panel
+    const registerKeyForwarder = initializationApi.getModuleFunction('regionGraph', 'registerKeyForwarder');
+    if (registerKeyForwarder) {
+        registerKeyForwarder((event) => {
+            if (panelInstance) panelInstance._handleKeyDown(event);
+        });
+    }
+
     // Sync received items from Archipelago
     eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
         if (gameState) {
@@ -136,6 +146,19 @@ function initializeGame(staticData) {
     gameState.onStateChanged = () => {
         if (eventBus) eventBus.publish('apcalc:stateChanged', { gameState });
         if (panelInstance) panelInstance.render();
+    };
+
+    gameState.onRegionMove = (regionName) => {
+        if (!dispatcher) return;
+        dispatcher.publish('user:regionMove', {
+            targetRegion: regionName,
+            source: 'apcalc',
+        }, { initialTarget: 'bottom' });
+    };
+
+    gameState.onPathClear = () => {
+        if (!dispatcher) return;
+        dispatcher.publish('playerState:trimPath', {}, { initialTarget: 'bottom' });
     };
 
     gameState.onLocationCheck = (locationName, regionName) => {

@@ -665,7 +665,7 @@
       "content": [
         {
           "type": "stack",
-          "width": 50,
+          "width": 75,
           "id": "left-stack",
           "content": [
             {
@@ -692,7 +692,7 @@
         },
         {
           "type": "stack",
-          "width": 50,
+          "width": 25,
           "id": "right-stack",
           "content": [
             {

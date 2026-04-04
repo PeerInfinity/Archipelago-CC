@@ -46,6 +46,10 @@ export class APCalcState {
         this.discoveredEdges = new Set();
         /** @type {Function|null} callback when location should be checked */
         this.onLocationCheck = null;
+        /** @type {Function|null} callback when player moves to a node (every = press) */
+        this.onRegionMove = null;
+        /** @type {Function|null} callback when player clears (returns to Start) */
+        this.onPathClear = null;
         /** @type {Function|null} callback when state changes */
         this.onStateChanged = null;
         /** @type {Function|null} callback when an edge is discovered */
@@ -95,9 +99,9 @@ export class APCalcState {
             }
         }
 
-        if (snapshot.checkedLocations) {
-            this.checkedLocations = new Set(snapshot.checkedLocations);
-        }
+        // Don't sync checkedLocations from the snapshot — the tracker auto-checks
+        // accessible locations, but APCalc should only count locations the player
+        // has actually navigated to via the calculator.
 
         this._recalcRemaining();
         this._notify();
@@ -113,6 +117,9 @@ export class APCalcState {
         this.currentSequence = [];
         this.sinceLastEquals = [];
         this.remainingPresses = { ...this.totalPresses };
+        if (this.onPathClear) {
+            this.onPathClear();
+        }
         this._notify();
     }
 
@@ -195,6 +202,11 @@ export class APCalcState {
                 if (this.onEdgeDiscovered) {
                     this.onEdgeDiscovered(sourceRegion, neighbor);
                 }
+            }
+
+            // Notify region move
+            if (this.onRegionMove) {
+                this.onRegionMove(neighbor);
             }
 
             // Check the location

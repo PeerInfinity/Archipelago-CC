@@ -16,14 +16,27 @@ export class APCalcUI {
         this.apis = APCalcUI.moduleApis || getModuleApis();
         this.showRemainingList = true;
         this.pathFilter = null;
+        this._boundKeyDown = this._handleKeyDown.bind(this);
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'apcalc-panel';
+        this.rootElement.tabIndex = 0;
         this.rootElement.innerHTML = '<div class="apcalc-empty">Waiting for game data...</div>';
+        this.rootElement.addEventListener('keydown', this._boundKeyDown);
         setPanelInstance(this);
     }
 
     getRootElement() { return this.rootElement; }
-    destroy() { setPanelInstance(null); }
+
+    onMount() {
+        // Delay focus to ensure GoldenLayout has finished rendering
+        setTimeout(() => this.rootElement.focus(), 500);
+    }
+
+    destroy() {
+        this.rootElement.removeEventListener('keydown', this._boundKeyDown);
+        setPanelInstance(null);
+    }
+
     onPanelShow() { this.render(); }
     onPanelResize() {}
     get gameState() { return this.apis?.getGameState?.(); }
@@ -357,5 +370,45 @@ export class APCalcUI {
         const div = document.createElement('div');
         div.textContent = text || '';
         return div.innerHTML;
+    }
+
+    // --- Keyboard shortcuts ---
+
+    _handleKeyDown(event) {
+        const gs = this.gameState;
+        if (!gs) return;
+
+        // Don't capture modified keys (Ctrl+C, Alt+Tab, etc.)
+        if (event.ctrlKey || event.altKey || event.metaKey) return;
+
+        const key = event.key;
+        let handled = false;
+
+        // Digit buttons: 0-9
+        if (key >= '0' && key <= '9') {
+            handled = gs.pressNumber(Number(key));
+        }
+        // Operation buttons
+        else if (key === '+' || key === '-' || key === '*' || key === '/') {
+            handled = gs.pressOperation(key);
+        }
+        // Equals: Enter or =
+        else if (key === 'Enter' || key === '=') {
+            const result = gs.pressEquals();
+            if (result && !result.moved && result.success) {
+                this._flashResult(result.value);
+            }
+            handled = true;
+        }
+        // Clear: Escape or c
+        else if (key === 'Escape' || key === 'c' || key === 'C') {
+            gs.reset();
+            handled = true;
+        }
+
+        if (handled) {
+            event.preventDefault();
+            this.render();
+        }
     }
 }

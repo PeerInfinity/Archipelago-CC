@@ -524,6 +524,21 @@ export class PlayerState {
         }
 
         if (trimIndex === -1) {
+            // If trimming to a start region and it's not in the path,
+            // clear the entire path (return to start)
+            if (this.startRegions.includes(targetRegion)) {
+                this.path = [];
+                this.regionInstanceCounts.clear();
+                this.currentRegion = targetRegion;
+                if (this.eventBus) {
+                    this.eventBus.publish('playerState:regionChanged', {
+                        oldRegion: null,
+                        newRegion: targetRegion
+                    });
+                }
+                this.emitPathUpdated();
+                return;
+            }
             console.warn(`[PlayerState] Region ${targetRegion} instance ${instanceNumber} not found in path`);
             return;
         }

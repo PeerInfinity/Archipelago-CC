@@ -22,6 +22,7 @@ let _pendingOverlayProvider = null;  // stored until a panel instance picks it u
 let _nodeLabelProvider = null;       // (nodeId, nodeData) => string | null
 let _edgeVisibilityFilter = null;    // (sourceId, targetId) => boolean (true = visible)
 let _accessibilityVisibilityFilter = null; // () => boolean (true = show colors)
+let _keyForwarder = null;            // (event) => void — forward keydown events to another module
 let _panelInstances = new Set();     // all live RegionGraphUI instances
 
 export function registerPanelInstance(instance) { _panelInstances.add(instance); }
@@ -34,6 +35,7 @@ export function getPendingOverlayProvider() {
 export function getNodeLabelProvider() { return _nodeLabelProvider; }
 export function getEdgeVisibilityFilter() { return _edgeVisibilityFilter; }
 export function getAccessibilityVisibilityFilter() { return _accessibilityVisibilityFilter; }
+export function getKeyForwarder() { return _keyForwarder; }
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -100,6 +102,10 @@ export function register(registrationApi) {
     for (const panel of _panelInstances) {
       if (panel.dataManager) panel.dataManager.refreshLabels();
     }
+  });
+
+  registrationApi.registerPublicFunction('regionGraph', 'registerKeyForwarder', (callback) => {
+    _keyForwarder = callback;
   });
 }
 

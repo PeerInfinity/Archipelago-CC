@@ -1,4 +1,4 @@
-import { getModuleEventBus, registerPanelInstance, unregisterPanelInstance, getPendingOverlayProvider, getNodeLabelProvider } from './index.js';
+import { getModuleEventBus, registerPanelInstance, unregisterPanelInstance, getPendingOverlayProvider, getNodeLabelProvider, getKeyForwarder } from './index.js';
 import { NodeOverlayManager } from './nodeOverlayManager.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -99,6 +99,21 @@ export class RegionGraphUI {
     this.graphContainer.id = 'cy-' + Math.random().toString(36).substr(2, 9);
     this.graphContainer.style.width = '100%';
     this.graphContainer.style.height = '100%';
+    this._graphHasFocus = false;
+    this._onGraphKeyDown = (event) => {
+      if (!this._graphHasFocus) return;
+      const forwarder = getKeyForwarder();
+      if (forwarder) forwarder(event);
+    };
+    this.graphContainer.addEventListener('mousedown', () => {
+      this._graphHasFocus = true;
+    });
+    document.addEventListener('mousedown', (event) => {
+      if (!this.graphContainer.contains(event.target)) {
+        this._graphHasFocus = false;
+      }
+    });
+    document.addEventListener('keydown', this._onGraphKeyDown);
     
     this.controlPanel = document.createElement('div');
     this.controlPanel.style.position = 'absolute';
