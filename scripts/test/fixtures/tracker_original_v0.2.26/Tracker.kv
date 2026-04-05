@@ -88,7 +88,6 @@
     hinted_glitched:"ff9f20"
     excluded: "CFCFCF"
     unconnected: "89F336"
-    error: "FF0000"
 <ApAsyncImage>:
 
 <ApLocationIcon>:
@@ -114,6 +113,7 @@
 <ApLocationDeferred>:
     text: "Server:"
     size_hint_x: None
+    size: (app.loc_size, app.loc_size)
     canvas.before:
         PushMatrix:
         Rotate:
@@ -141,6 +141,7 @@
 <ApLocationMixed>:
     text: "Server:"
     size_hint_x: None
+    size: (app.loc_size, app.loc_size)
     canvas:
         Color:
             rgb: 0,0,0 
@@ -156,6 +157,7 @@
 <ApLocationSplit>:
     text: "Server:"
     size_hint_x: None
+    size: (app.loc_size, app.loc_size)
     color_2: (1, 0, 0)
     color_4: (1, 1, 0)
     color_1: (0, 1, 0)

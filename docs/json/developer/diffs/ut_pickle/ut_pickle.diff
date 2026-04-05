@@ -1,5 +1,5 @@
---- scripts/test/fixtures/tracker_original/__init__.py	2026-02-03 19:26:13.854716434 -0800
-+++ worlds/ut_pickle/__init__.py	2026-04-05 10:58:24.519724057 -0700
+--- scripts/test/fixtures/tracker_original/__init__.py	2026-04-05 12:28:34.438301003 -0700
++++ worlds/ut_pickle/__init__.py	2026-04-05 12:29:51.033370101 -0700
 @@ -1,7 +1,7 @@
  from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
  from settings import Group, Bool, UserFolderPath, _world_settings_name_cache
@@ -13,8 +13,8 @@
      from .TrackerClient import launch as TCMain
      launch(TCMain, name="Universal Tracker client", args=args)
  
--UT_VERSION = "v0.2.26"
-+UT_VERSION = "v0.2.26-pickle"
+-UT_VERSION = "v0.2.27"
++UT_VERSION = "v0.2.27-pickle"
  
  class CurrentTrackerState(NamedTuple):
      all_items: Counter
@@ -109,9 +109,9 @@
 +        auto_install()
 +    except Exception:
 +        pass
---- scripts/test/fixtures/tracker_original/TrackerClient.py	2026-02-04 11:18:49.849972890 -0800
-+++ worlds/ut_pickle/TrackerClient.py	2026-04-05 10:59:26.189638740 -0700
-@@ -371,6 +371,7 @@
+--- scripts/test/fixtures/tracker_original/TrackerClient.py	2026-04-05 12:28:34.438301003 -0700
++++ worlds/ut_pickle/TrackerClient.py	2026-04-05 12:29:43.795437755 -0700
+@@ -374,6 +374,7 @@
          self.tracker_core.set_log_to_tab(self.log_to_tab)
          self.tracker_core.set_clear_page(self.clear_page)
          self.tracker_core.set_get_ut_color(get_ut_color)
@@ -119,7 +119,7 @@
  
      def updateTracker(self) -> CurrentTrackerState:
          if self.disconnected_intentionally: return CurrentTrackerState.init_empty_state()
-@@ -1284,7 +1285,9 @@
+@@ -1298,7 +1299,9 @@
  
      def on_package(self, cmd: str, args: dict):
          try:
@@ -130,10 +130,10 @@
                  self.game = args["slot_info"][str(args["slot"])][1]
                  slot_name = args["slot_info"][str(args["slot"])][0]
                  self.tracker_core.set_slot_params(self.game,self.slot,slot_name,self.team)
-@@ -1294,6 +1297,10 @@
-                     return
+@@ -1309,6 +1312,10 @@
                  if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
                      logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
+                     logger.error(f"Local checksum = {self.checksums[self.game]} | remote checksum = {connected_cls.get_data_package_data()['checksum']}")
 +                # Auto-discover pickle for pickle-based tracking
 +                if hasattr(self, 'seed_name') and self.seed_name:
 +                    self.tracker_core.seed_name = self.seed_name
@@ -141,7 +141,7 @@
                  self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
                  if not self.tracker_core.multiworld:
                      logger.error("Internal generation failed, something has gone wrong")
---- scripts/test/fixtures/tracker_original/fuzzer_hook.py	2026-02-03 19:26:14.490714741 -0800
+--- scripts/test/fixtures/tracker_original/fuzzer_hook.py	2026-04-05 12:28:34.438301003 -0700
 +++ worlds/ut_pickle/fuzzer_hook.py	2026-04-05 10:59:43.444959808 -0700
 @@ -27,20 +27,26 @@
              return
@@ -777,7 +777,7 @@
 +++ b/requirements.txt
 @@ -0,0 +1 @@
 +dill>=0.3.8
---- scripts/test/fixtures/tracker_original/archipelago.json	2026-02-03 19:26:17.158715676 -0800
+--- scripts/test/fixtures/tracker_original/archipelago.json	2026-04-05 12:28:34.438301003 -0700
 +++ worlds/ut_pickle/archipelago.json	2026-04-05 10:59:47.207647463 -0700
 @@ -1,6 +1 @@
 -{

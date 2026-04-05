@@ -2,7 +2,7 @@ import asyncio
 import logging
 import traceback
 from collections.abc import Callable
-from CommonClient import CommonContext, get_base_parser, server_loop, ClientCommandProcessor, handle_url_arg
+from CommonClient import CommonContext, gui_enabled, get_base_parser, server_loop, ClientCommandProcessor, handle_url_arg
 import os
 import time
 import sys
@@ -11,7 +11,7 @@ from typing import Union, Any, TYPE_CHECKING
 
 from BaseClasses import CollectionState, MultiWorld, LocationProgressType, ItemClassification, Location
 from worlds.generic.Rules import exclusion_rules
-from Utils import __version__, output_path, open_filename,async_start, gui_enabled
+from Utils import __version__, output_path, open_filename,async_start
 from worlds import AutoWorld
 from . import TrackerWorld, UTMapTabData, CurrentTrackerState,UT_VERSION
 from .TrackerCore import TrackerCore
@@ -37,31 +37,28 @@ ITEMS_HANDLING = 0b111
 UT_MAP_TAB_KEY = "UT_MAP"
 
 def get_ut_color(color: str)->str:
-    if not gui_enabled:
-        return "DD00FF"
     from kvui import Widget
     from typing import ClassVar
     from kivy.properties import StringProperty
     class UTTextColor(Widget):
         in_logic: ClassVar[str] = StringProperty("")
-        glitched: ClassVar[str] = StringProperty("")
-        out_of_logic: ClassVar[str] = StringProperty("")
-        collected: ClassVar[str] = StringProperty("")
-        in_logic_glitched: ClassVar[str] = StringProperty("")
-        out_of_logic_glitched: ClassVar[str] = StringProperty("")
-        mixed_logic: ClassVar[str] = StringProperty("")
-        collected_light: ClassVar[str] = StringProperty("")
-        hinted: ClassVar[str] = StringProperty("")
-        hinted_in_logic: ClassVar[str] = StringProperty("")
-        hinted_out_of_logic: ClassVar[str] = StringProperty("")
-        hinted_glitched: ClassVar[str] = StringProperty("")
+        glitched: ClassVar[str] = StringProperty("") 
+        out_of_logic: ClassVar[str] = StringProperty("") 
+        collected: ClassVar[str] = StringProperty("") 
+        in_logic_glitched: ClassVar[str] = StringProperty("") 
+        out_of_logic_glitched: ClassVar[str] = StringProperty("") 
+        mixed_logic: ClassVar[str] = StringProperty("") 
+        collected_light: ClassVar[str] = StringProperty("") 
+        hinted: ClassVar[str] = StringProperty("") 
+        hinted_in_logic: ClassVar[str] = StringProperty("") 
+        hinted_out_of_logic: ClassVar[str] = StringProperty("") 
+        hinted_glitched: ClassVar[str] = StringProperty("") 
         excluded: ClassVar[str] = StringProperty("")
         unconnected: ClassVar[str] = StringProperty("")
-        error: ClassVar[str] = StringProperty("")
     if not hasattr(get_ut_color,"utTextColor"):
         get_ut_color.utTextColor = UTTextColor()
     return str(getattr(get_ut_color.utTextColor,color,"DD00FF"))
-
+    
 class TrackerCommandProcessor(ClientCommandProcessor):
     ctx: "TrackerGameContext"
 
@@ -235,7 +232,7 @@ class TrackerCommandProcessor(ClientCommandProcessor):
         if self.ctx.ui:
             self.ctx.ui.last_autofillable_command = "/get_logical_path"
         get_logical_path(self.ctx, dest_name)
-
+    
     @mark_raw
     def _cmd_explain(self,lookup_name:str=""):
         """Explains the rule for a location, if the world supports it"""
@@ -415,7 +412,7 @@ class TrackerGameContext(CommonContext):
                 relevent_coords = self.coord_dict.get(location, [])
                 if not relevent_coords:
                     continue
-
+                
                 if location in self.checked_locations or location in self.tracker_core.ignored_locations:
                     status = "collected"
                 elif location in self.tracker_core.locations_available:
@@ -478,11 +475,11 @@ class TrackerGameContext(CommonContext):
             self.tracker_hinted_locs_label.text = f"Hinted: [color={get_ut_color('hinted_in_logic')}]{len(updateTracker_ret.hinted_locations)}[/color]"
         if hasattr(self, "tracker_go_mode_label"):
             if self.tracker_core.multiworld.has_beaten_game(updateTracker_ret.state,current_world.player):
-                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"
+                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color('in_logic')}]Yes[/color]"
             elif updateTracker_ret.glitches_state and self.tracker_core.multiworld.has_beaten_game(updateTracker_ret.glitches_state,current_world.player):
-                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color("glitched")}]Glitched[/color]"
+                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color('glitched')}]Glitched[/color]"
             else:
-                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color("out_of_logic")}]No[/color]"
+                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color('out_of_logic')}]No[/color]"
 
         return updateTracker_ret
 
@@ -688,11 +685,10 @@ class TrackerGameContext(CommonContext):
                 temp_locs.extend(temp_loc["children"])
         coords = {
             (map_loc["x"], map_loc["y"]):
-                ([location_name_to_id[section["name"]] for section in location["sections"]
-                  if "name" in section and section["name"] in location_name_to_id
-                  and location_name_to_id[section["name"]] in self.server_locations
-                  and not location_name_to_id[section["name"]] in current_hidden_locs],
-                 map_loc.get("size"))
+                [location_name_to_id[section["name"]] for section in location["sections"]
+                    if "name" in section and section["name"] in location_name_to_id
+                    and location_name_to_id[section["name"]] in self.server_locations
+                    and not location_name_to_id[section["name"]] in current_hidden_locs]
             for location in map_locs
             for map_loc in location["map_locations"]
             if map_loc["map"] == m["name"] and any(
@@ -706,11 +702,10 @@ class TrackerGameContext(CommonContext):
         if poptracker_name_mapping:
             tempCoords = {  # compat coords
                 (map_loc["x"], map_loc["y"]):
-                    ([poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] for section in location["sections"]
-                      if "name" in section and f'{location["name"]}/{section["name"]}' in poptracker_name_mapping
-                      and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] in self.server_locations
-                      and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] not in current_hidden_locs],
-                     map_loc.get("size"))
+                    [poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] for section in location["sections"]
+                        if "name" in section and f'{location["name"]}/{section["name"]}' in poptracker_name_mapping
+                        and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] in self.server_locations
+                        and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] not in current_hidden_locs]
                 for location in map_locs
                 for map_loc in location["map_locations"]
                 if map_loc["map"] == m["name"]
@@ -719,19 +714,18 @@ class TrackerGameContext(CommonContext):
                            and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] not in current_hidden_locs
                            for section in location["sections"])
             }
-            for maploc, (seclist, size) in tempCoords.items():
+            for maploc, seclist in tempCoords.items():
                 if maploc in coords:
-                    coords[maploc] = (coords[maploc][0] + seclist, coords[maploc][1] or size)
+                    coords[maploc] += seclist
                 else:
-                    coords[maploc] = (seclist, size)
+                    coords[maploc] = seclist
         entrance_cache = list(self.tracker_core.multiworld.regions.entrance_cache[self.tracker_core.player_id].keys())
         hidden_entrances = getattr(self.tracker_core.get_current_world(), "ut_map_page_hidden_entrances", {})
         current_hidden_entrances = hidden_entrances.get(m["name"], [])
         dcoords = {
-            (map_loc["x"], map_loc["y"]): ([section["name"] for section in location["sections"]
-                                            if "name" in section and section["name"] in entrance_cache
-                                            and section["name"] not in current_hidden_entrances],
-                                           map_loc.get("size"))
+            (map_loc["x"], map_loc["y"]): [section["name"] for section in location["sections"]
+                if "name" in section and section["name"] in entrance_cache
+                and section["name"] not in current_hidden_entrances]
             for location in map_locs
             for map_loc in location["map_locations"]
             if map_loc["map"] == m["name"] and any(
@@ -742,11 +736,10 @@ class TrackerGameContext(CommonContext):
         poptracker_entrance_mapping = self.tracker_world.poptracker_entrance_mapping
         if poptracker_entrance_mapping:
             tempCoords = {
-                (map_loc["x"], map_loc["y"]): ([poptracker_entrance_mapping[section["name"]] for section in location["sections"]
-                                                if "name" in section and section["name"] in poptracker_entrance_mapping
-                                                and poptracker_entrance_mapping[section["name"]] in entrance_cache
-                                                and poptracker_entrance_mapping[section["name"]] not in current_hidden_entrances],
-                                               map_loc.get("size"))
+                (map_loc["x"], map_loc["y"]): [poptracker_entrance_mapping[section["name"]] for section in location["sections"]
+                    if "name" in section and section["name"] in poptracker_entrance_mapping
+                    and poptracker_entrance_mapping[section["name"]] in entrance_cache
+                    and poptracker_entrance_mapping[section["name"]] not in current_hidden_entrances]
                 for location in map_locs
                 for map_loc in location["map_locations"]
                 if map_loc["map"] == m["name"] and any(
@@ -756,18 +749,16 @@ class TrackerGameContext(CommonContext):
                     for section in location["sections"]
                 )
             }
-            for maploc, (seclist, size) in tempCoords.items():
+            for maploc, seclist in tempCoords.items():
                 if maploc in dcoords:
-                    dcoords[maploc] = (dcoords[maploc][0] + seclist, dcoords[maploc][1] or size)
+                    dcoords[maploc] += seclist
                 else:
-                    dcoords[maploc] = (seclist, size)
+                    dcoords[maploc] = seclist
         event_loc_cache = [loc.name for loc in self.tracker_core.get_current_world().get_locations() if loc.address is None and loc.parent_region is not None]
         hidden_events = getattr(self.tracker_core.get_current_world(), "ut_map_page_hidden_events", {})
         current_hidden_events = hidden_events.get(m["name"], [])
         dlcoords = {
-            (map_loc["x"], map_loc["y"]): ([section["name"] for section in location["sections"] if
-                                            "name" in section and section["name"] in event_loc_cache and section["name"] not in current_hidden_events],
-                                           map_loc.get("size"))
+            (map_loc["x"], map_loc["y"]): [section["name"] for section in location["sections"] if "name" in section and section["name"] in event_loc_cache and section["name"] not in current_hidden_events]
             for location in map_locs
             for map_loc in location["map_locations"]
             if map_loc["map"] == m["name"] and any(
@@ -778,16 +769,16 @@ class TrackerGameContext(CommonContext):
         }
         both_dcoords = set(entrance_cache).intersection(set(event_loc_cache))
         if both_dcoords:
-            for _, (temp_names, _) in dcoords.items():
-                if both_dcoords.intersection(temp_names):
+            for _,temp_coord in dcoords.items():
+                if both_dcoords.intersection(set(temp_coord)):
                     logger.error("Mixing of entrance and event names, map will refuse to load")
                     return
-            for _, (temp_names, _) in dlcoords.items():
-                if both_dcoords.intersection(temp_names):
+            for _,temp_coord in dlcoords.items():
+                if both_dcoords.intersection(set(temp_coord)):
                     logger.error("Mixing of entrance and event names, map will refuse to load")
                     return
         self.coord_dict, self.deferred_dict, self.ldeferred_dict = self.map_page_coords_func(coords, dcoords, dlcoords,
-                                                                                             self.use_split, self.ui.loc_size)
+                                                                                             self.use_split)
         if self.tracker_world.location_setting_key:
             self.update_location_icon_coords()
 
@@ -834,7 +825,7 @@ class TrackerGameContext(CommonContext):
 
         class TrackerTooltip(ToolTip):
             pass
-
+    
         class TrackerView(MDRecycleView):
             def __init__(self, **kwargs):
                 super().__init__(**kwargs)
@@ -864,14 +855,14 @@ class TrackerGameContext(CommonContext):
                 super().__init__(**kwargs)
                 self._tooltip = TrackerTooltip(text="Test")
                 self._tooltip.markup = True
-
+            
             def on_enter(self):
                 self._tooltip.text = self.get_text()
                 self.display_tooltip()
 
             def on_leave(self):
                 self.animation_tooltip_dismiss()
-
+            
             def transform_to_pop_coords(self,x,y):
                 x2 = (x)
                 y2 = (self.tracker_page.height - y)
@@ -882,7 +873,7 @@ class TrackerGameContext(CommonContext):
                 x5 = x4 + self.width/2
                 y5 = y4 + self.width/2
                 return (x5,y5)
-
+            
             def on_mouse_pos(self, window, pos): #this does nothing, but it's kept here to make adding debug prints easier
                 return super().on_mouse_pos(window, pos)
 
@@ -891,7 +882,7 @@ class TrackerGameContext(CommonContext):
                     return self.border_point
                 else:
                     return self.tracker_page.to_window(x,y)
-
+            
             def to_widget(self, x, y):
                 return self.transform_to_pop_coords(*self.tracker_page.to_widget(x,y))
 
@@ -899,7 +890,7 @@ class TrackerGameContext(CommonContext):
                 if location in self.locationDict:
                     if self.locationDict[location] != status:
                         self.locationDict[location] = status
-
+            
             def get_text(self):
                 ctx = manager.get_running_app().ctx
                 location_id_to_name = AutoWorld.AutoWorldRegister.world_types[ctx.game].location_id_to_name
@@ -908,12 +899,12 @@ class TrackerGameContext(CommonContext):
                     color = get_ut_color("collected_light")
                     if status in ["in_logic","out_of_logic","glitched","hinted_in_logic","hinted_out_of_logic","hinted_glitched"]:
                         color = get_ut_color(status)
-                    sReturn.append(f"{location_id_to_name[loc]} : [color={color}]{status}[/color]")
+                    sReturn.append(f"{location_id_to_name[loc]} : [color={color}]{status}[/color]") 
                 return "\n".join(sReturn)
 
             def update_color(self, locationDict):
                 return
-
+            
         class ApLocationDeferred(ApLocation):
             from kivy.properties import ColorProperty
             color = ColorProperty("#"+get_ut_color("error"))
@@ -931,7 +922,7 @@ class TrackerGameContext(CommonContext):
                     self.color = "#"+get_ut_color("out_of_logic")
                 else:
                     self.color = "#"+get_ut_color("collected")
-
+            
             def get_text(self):
                 ctx = manager.get_running_app().ctx
                 host_world:AutoWorld.World = ctx.tracker_core.get_current_world()
@@ -958,7 +949,7 @@ class TrackerGameContext(CommonContext):
                                 sReturn.append(f" - connects to ({real_entrance.connected_region.name})")
                 return "\n".join(sReturn)
 
-
+            
         class APLocationMixed(ApLocation):
             from kivy.properties import ColorProperty
             color = ColorProperty("#"+get_ut_color("error"))
@@ -1034,31 +1025,26 @@ class TrackerGameContext(CommonContext):
 
         class VisualTracker(BoxLayout):
             location_icon: ApLocationIcon
-
-            def load_coords(self, coords: dict[tuple, tuple[list[int], int | None]], defered_coords: dict[tuple, tuple[list[str], int | None]],
-                            ldefered_coords: dict[tuple, tuple[list[str], int | None]], use_split, default_loc_size: int = 65) \
-                    -> tuple[dict[int, list], dict[str, list], dict[str, list]]:
+            def load_coords(self,  coords: dict[tuple,list[int]], defered_coords: dict[tuple, list[str]],
+                             ldefered_coords: dict[tuple, list[str]], use_split) -> tuple[dict[int,list], dict[str,list], dict[str,list]]:
                 self.ids.location_canvas.clear_widgets()
-                returnDict: dict[int, list] = defaultdict(list)
-                deferredDict: dict[str, list] = defaultdict(list)
-                ldeferredDict: dict[str, list] = defaultdict(list)
-                for coord, (sections, size) in coords.items():
+                returnDict: dict[int,list] = defaultdict(list)
+                deferredDict: dict[str,list] = defaultdict(list)
+                ldeferredDict: dict[str,list] = defaultdict(list)
+                for coord, sections in coords.items():
                     # https://discord.com/channels/731205301247803413/1170094879142051912/1272327822630977727
                     ap_location_class = APLocationSplit if use_split else APLocationMixed
-                    loc_size = size if size is not None else default_loc_size
-                    temp_loc = ap_location_class(sections, self.ids.tracker_map, pos=coord, size=(loc_size, loc_size))
+                    temp_loc = ap_location_class(sections, self.ids.tracker_map, pos=(coord))
                     self.ids.location_canvas.add_widget(temp_loc)
                     for location_id in sections:
                         returnDict[location_id].append(temp_loc)
-                for coord, (sections, size) in defered_coords.items():
-                    loc_size = size if size is not None else default_loc_size
-                    temp_loc = ApLocationDeferred(sections, self.ids.tracker_map, True, pos=coord, size=(loc_size, loc_size))
+                for coord, sections in defered_coords.items():
+                    temp_loc = ApLocationDeferred(sections, self.ids.tracker_map, True, pos=(coord))
                     self.ids.location_canvas.add_widget(temp_loc)
                     for entrance_name in sections:
                         deferredDict[entrance_name].append(temp_loc)
-                for coord, (sections, size) in ldefered_coords.items():
-                    loc_size = size if size is not None else default_loc_size
-                    temp_loc = ApLocationDeferred(sections, self.ids.tracker_map, False, pos=coord, size=(loc_size, loc_size))
+                for coord, sections in ldefered_coords.items():
+                    temp_loc = ApLocationDeferred(sections, self.ids.tracker_map, False, pos=(coord))
                     self.ids.location_canvas.add_widget(temp_loc)
                     for event_name in sections:
                         ldeferredDict[event_name].append(temp_loc)
@@ -1308,7 +1294,6 @@ class TrackerGameContext(CommonContext):
                     return
                 if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
                     logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
-                    logger.error(f"Local checksum = {self.checksums[self.game]} | remote checksum = {connected_cls.get_data_package_data()['checksum']}")
                 self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
                 if not self.tracker_core.multiworld:
                     logger.error("Internal generation failed, something has gone wrong")
@@ -1356,7 +1341,7 @@ class TrackerGameContext(CommonContext):
                     self.updateTracker()
                 else:
                     asyncio.create_task(wait_for_items(self),name="UT Delay function") #if we don't get new items, delay for a bit first
-                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically
+                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically 
             elif cmd == 'RoomUpdate':
                 if not (self.items_handling & 0b010):
                     self.scout_checked_locations()
@@ -1390,7 +1375,7 @@ class TrackerGameContext(CommonContext):
                              "Then try to reproduce with the debug launcher and post in the Discord channel")
             self.disconnected_intentionally = True
             raise e
-
+        
     def update_location_icon_coords(self):
         icon_key = self.tracker_world.location_setting_key
         temp_ret = self.tracker_world.location_icon_coords(self.map_id,self.stored_data.get(icon_key, ""))
@@ -1415,9 +1400,9 @@ class TrackerGameContext(CommonContext):
                 self.ui.show_map = False
             if self.tracker_world:
                 if "load_map" in self.command_processor.commands:
-                    del self.command_processor.commands["load_map"]
+                    self.command_processor.commands["load_map"] = None
                 if "list_maps" in self.command_processor.commands:
-                    del self.command_processor.commands["list_maps"]
+                    self.command_processor.commands["list_maps"] = None
                 self.map_id = None
                 self.root_pack_path = None
                 self.coord_dict.clear()
@@ -1479,7 +1464,7 @@ def explain_more(ctx: TrackerGameContext, argument: str):
             return
         logger.info("Nothing to explain")
     logger.error("Current world to track doesn't support command /explain_more")
-
+    
 
 def explain(ctx: TrackerGameContext, dest_name: str):
     from NetUtils import JSONMessagePart
@@ -1537,7 +1522,7 @@ def explain(ctx: TrackerGameContext, dest_name: str):
                     ctx.ui.print_json(returned_json)
                 else:
                     ctx.ui.print_json([{"type":"text","text":f"{entrance.parent_region.name} ({entrance.parent_region.can_reach(state)}): {entrance.name} : {entrance.access_rule(state)}"}])
-
+        
 
 def get_logical_path(ctx: TrackerGameContext, dest_name: str):
     if ctx.tracker_core.player_id is None or ctx.tracker_core.multiworld is None:
@@ -1545,7 +1530,6 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
         ctx.set_page(f"Check Player YAMLs for error; Tracker {UT_VERSION} for AP version {__version__}")
         return
     relevent_region = None
-    relevent_location = None
     state = None
     current_world = ctx.tracker_core.get_current_world()
     assert current_world
@@ -1571,7 +1555,6 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
         if not state: return
         if location.can_reach(state):
             relevent_region = location.parent_region
-            relevent_location = location
     elif dest_name in region_names:
         relevent_region = ctx.tracker_core.multiworld.get_region(dest_name,ctx.tracker_core.player_id)
         state = ctx.updateTracker().state
@@ -1604,26 +1587,7 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
             paths = get_path(state=state, region=relevent_region)
             for k, v in paths:
                 if v:
-                    ent = current_world.get_entrance(v)
-                    if hasattr(current_world,"explain_path"):
-                        returned_json = current_world.explain_path(ent,state)
-                        if returned_json is None:
-                            continue
-                        if returned_json:
-                            ctx.ui.print_json(returned_json)
-                            continue
-                    returned_json = [{"type":"color","color":"blue","text":v}]
-                    if hasattr(ent.access_rule,"explain_json"):
-                        returned_json.append({"type":"text","text":":\n    "})
-                        returned_json.extend(ent.access_rule.explain_json(state))
-                    ctx.ui.print_json(returned_json)
-            if relevent_location:
-                returned_json = [{"type":"text","text":"->"},{"type":"color","color":"green","text":relevent_location.name}]
-                if hasattr(relevent_location.access_rule,"explain_json"):
-                    returned_json.append({"type":"text","text":":\n    "})
-                    returned_json.extend(relevent_location.access_rule.explain_json(state))
-                ctx.ui.print_json(returned_json)
-        
+                    logger.info(v)
         else:
             logger.info(f"{dest_name} not in logic")
 

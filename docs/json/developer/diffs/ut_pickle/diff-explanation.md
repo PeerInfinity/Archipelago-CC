@@ -20,7 +20,7 @@ These files are verbatim copies with no modifications:
 | Change | Purpose |
 |--------|---------|
 | Added `WebWorld` import and `TrackerWorldWeb` class | Required for compatibility with newer AP versions that expect `web` on World classes |
-| `UT_VERSION` → `"v0.2.26-pickle"` | Distinguish from original UT |
+| `UT_VERSION` → `"v0.2.27-pickle"` | Distinguish from original UT |
 | Added `EnabledBool` setting (`enabled: bool = False`) | Allows disabling ut_pickle so it doesn't interfere with the existing tracker. Disabled by default — user must manually enable. |
 | Added `PickleModeBool` setting (`pickle_mode: bool = True`) | Toggle between pickle-based tracking and original YAML-based tracking |
 | `game` → `"UT Pickle Mode"` | Prevents conflict with the original "Universal Tracker" world registration |
