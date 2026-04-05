@@ -19,6 +19,8 @@ from collections import Counter, defaultdict
 from MultiServer import mark_raw
 from NetUtils import NetworkItem
 
+from . import TrackerCore
+
 from Generate import main as GMain, mystery_argparse
 
 if TYPE_CHECKING:
@@ -35,35 +37,27 @@ ITEMS_HANDLING = 0b111
 UT_MAP_TAB_KEY = "UT_MAP"
 
 def get_ut_color(color: str)->str:
-    # Return default color if GUI is disabled (e.g., in CI or nogui mode)
-    if not gui_enabled:
-        return "DD00FF"
-    try:
-        from kvui import Widget
-        from typing import ClassVar
-        from kivy.properties import StringProperty
-        class UTTextColor(Widget):
-            in_logic: ClassVar[str] = StringProperty("")
-            glitched: ClassVar[str] = StringProperty("")
-            out_of_logic: ClassVar[str] = StringProperty("")
-            collected: ClassVar[str] = StringProperty("")
-            in_logic_glitched: ClassVar[str] = StringProperty("")
-            out_of_logic_glitched: ClassVar[str] = StringProperty("")
-            mixed_logic: ClassVar[str] = StringProperty("")
-            collected_light: ClassVar[str] = StringProperty("")
-            hinted: ClassVar[str] = StringProperty("")
-            hinted_in_logic: ClassVar[str] = StringProperty("")
-            hinted_out_of_logic: ClassVar[str] = StringProperty("")
-            hinted_glitched: ClassVar[str] = StringProperty("")
-            excluded: ClassVar[str] = StringProperty("")
-            unconnected: ClassVar[str] = StringProperty("")
-        if not hasattr(get_ut_color,"utTextColor"):
-            get_ut_color.utTextColor = UTTextColor()
-        return str(getattr(get_ut_color.utTextColor,color,"DD00FF"))
-    except Exception:
-        # Fallback if kivy/kvui can't be imported (e.g., in headless environment)
-        return "DD00FF"
-    
+    from kvui import Widget
+    from typing import ClassVar
+    from kivy.properties import StringProperty
+    class UTTextColor(Widget):
+        in_logic: ClassVar[str] = StringProperty("")
+        glitched: ClassVar[str] = StringProperty("") 
+        out_of_logic: ClassVar[str] = StringProperty("") 
+        collected: ClassVar[str] = StringProperty("") 
+        in_logic_glitched: ClassVar[str] = StringProperty("") 
+        out_of_logic_glitched: ClassVar[str] = StringProperty("") 
+        mixed_logic: ClassVar[str] = StringProperty("") 
+        collected_light: ClassVar[str] = StringProperty("") 
+        hinted: ClassVar[str] = StringProperty("") 
+        hinted_in_logic: ClassVar[str] = StringProperty("") 
+        hinted_out_of_logic: ClassVar[str] = StringProperty("") 
+        hinted_glitched: ClassVar[str] = StringProperty("") 
+        excluded: ClassVar[str] = StringProperty("")
+        unconnected: ClassVar[str] = StringProperty("")
+    if not hasattr(get_ut_color,"utTextColor"):
+        get_ut_color.utTextColor = UTTextColor()
+    return str(getattr(get_ut_color.utTextColor,color,"DD00FF"))
     
 class TrackerCommandProcessor(ClientCommandProcessor):
     ctx: "TrackerGameContext"
@@ -85,6 +79,15 @@ class TrackerCommandProcessor(ClientCommandProcessor):
         for item, count in sorted(currentState.prog_items.items()):
             if filter_text in item:
                 logger.info(str(count) + "x: " + item)
+
+    if not gui_enabled:
+        @mark_raw
+        def _cmd_locations_in_logic(self, filter_text: str = ""):
+            """Print the list of locations currently accessible in logic"""
+            currentState = self.ctx.updateTracker()
+            for location in sorted(currentState.in_logic_locations):
+                if filter_text in location:
+                    logger.info(location)
 
     @mark_raw
     def _cmd_event_inventory(self, filter_text: str = ""):
@@ -226,6 +229,8 @@ class TrackerCommandProcessor(ClientCommandProcessor):
         if self.ctx.stored_data and "_read_race_mode" in self.ctx.stored_data and self.ctx.stored_data["_read_race_mode"]:
             logger.info("Logical Path is disabled during Race Mode")
             return
+        if self.ctx.ui:
+            self.ctx.ui.last_autofillable_command = "/get_logical_path"
         get_logical_path(self.ctx, dest_name)
     
     @mark_raw
@@ -237,11 +242,13 @@ class TrackerCommandProcessor(ClientCommandProcessor):
         if self.ctx.stored_data and "_read_race_mode" in self.ctx.stored_data and self.ctx.stored_data["_read_race_mode"]:
             logger.info("Explain is disabled during Race Mode")
             return
+        if self.ctx.ui:
+            self.ctx.ui.last_autofillable_command = "/explain"
         explain(self.ctx, lookup_name)
 
     @mark_raw
     def _cmd_explain_more(self, argument:str=""):
-        """Asks the internal world to explain more, used to expland on /explain and /get_logical_path"""
+        """Asks the internal world to explain more, used to expand on /explain and /get_logical_path"""
         if not self.ctx.game:
             logger.info("Not yet loaded into a game")
             return
@@ -308,16 +315,6 @@ class TrackerGameContext(CommonContext):
     re_gen_passthrough = None
     local_items: list[NetworkItem] = []
 
-    # UT Test Sync attributes for sphere log comparison testing
-    sphere_log_mode: bool = False  # Enable sphere logging for UT comparison tests
-    sphere_log_output_path: str | None = None  # Path to write sphere_log_ut.jsonl
-    sphere_log_verbose: bool = False  # Use verbose (full state) vs delta format
-    _sphere_log_file = None  # File handle for sphere log output
-    _prev_accessible_locations: set = None  # Previous accessible locations for delta
-    _prev_accessible_regions: set = None  # Previous accessible regions for delta
-    _prev_items: dict = None  # Previous inventory for delta
-    _debug_log_file = None  # File handle for debug log output (all messages + full state)
-
     _auto_tab = True
 
     @property
@@ -369,11 +366,12 @@ class TrackerGameContext(CommonContext):
         self.map_id = None
         self.defered_entrance_datastorage_keys = []
         self.defered_entrance_callback = None
-        self.tracker_core = TrackerCore(logger,print_list,print_count)
+        self.tracker_core = TrackerCore.TrackerCore(logger,print_list,print_count)
         self.tracker_core.set_set_page(self.set_page)
         self.tracker_core.set_log_to_tab(self.log_to_tab)
         self.tracker_core.set_clear_page(self.clear_page)
         self.tracker_core.set_get_ut_color(get_ut_color)
+        self.seed_name = None
 
     def updateTracker(self) -> CurrentTrackerState:
         if self.disconnected_intentionally: return CurrentTrackerState.init_empty_state()
@@ -387,22 +385,14 @@ class TrackerGameContext(CommonContext):
         try:
             updateTracker_ret = self.tracker_core.updateTracker()
         except Exception as e:
-            if self.sphere_log_mode:
-                # In sphere_log_mode: Log the error but don't disconnect - this allows the tracker
-                # to continue operating even if there's a temporary issue (e.g., invalid item ID)
-                # This is especially important during UT comparison testing where a disconnect
-                # would cause the test driver to timeout waiting for READY
-                logger.error(f"[UT] updateTracker failed: {e}")
-                import traceback
-                traceback.print_exc()
-                return CurrentTrackerState.init_empty_state()
-            else:
-                # Normal mode: disconnect on error (original behavior)
-                self.disconnected_intentionally = True
-                async_start(self.disconnect(False), name="disconnecting")
-                raise e
+            self.disconnected_intentionally = True
+            async_start(self.disconnect(False), name="disconnecting")
+            raise e
         if updateTracker_ret.state is None:
             return updateTracker_ret # core.updateTracker failed, just pass it along
+        current_world = self.tracker_core.get_current_world()
+        if current_world is None:
+            return updateTracker_ret #something has gone VERY badly, should never happen but makes the type checker happy
         if self.tracker_page:
             self.tracker_page.refresh_from_data()
         if self.update_callback is not None:
@@ -441,7 +431,7 @@ class TrackerGameContext(CommonContext):
                 relevent_coords = self.deferred_dict.get(entrance_name,[])
                 if not relevent_coords:
                     continue
-                temp_entrance = self.tracker_core.get_current_world().get_entrance(entrance_name)
+                temp_entrance = current_world.get_entrance(entrance_name)
                 if temp_entrance.can_reach(updateTracker_ret.state):
                     if temp_entrance.connected_region:
                         status = "passed"
@@ -451,7 +441,7 @@ class TrackerGameContext(CommonContext):
                     status = "impassable"
                 for coord in relevent_coords:
                     coord.update_status(entrance_name, status)
-            event_loc_cache = [loc for loc in self.tracker_core.get_current_world().get_locations() if loc.address is None and loc.parent_region is not None]
+            event_loc_cache = [loc for loc in current_world.get_locations() if loc.address is None and loc.parent_region is not None]
             for loc in event_loc_cache:
                 relevent_coords = self.ldeferred_dict.get(loc.name,[])
                 if not relevent_coords:
@@ -484,6 +474,13 @@ class TrackerGameContext(CommonContext):
             self.tracker_glitched_locs_label.text = f"Glitched: [color={get_ut_color('glitched')}]{len(updateTracker_ret.glitched_locations)}[/color]"
         if hasattr(self, "tracker_hinted_locs_label"):
             self.tracker_hinted_locs_label.text = f"Hinted: [color={get_ut_color('hinted_in_logic')}]{len(updateTracker_ret.hinted_locations)}[/color]"
+        if hasattr(self, "tracker_go_mode_label"):
+            if self.tracker_core.multiworld.has_beaten_game(updateTracker_ret.state,current_world.player):
+                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color('in_logic')}]Yes[/color]"
+            elif updateTracker_ret.glitches_state and self.tracker_core.multiworld.has_beaten_game(updateTracker_ret.glitches_state,current_world.player):
+                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color('glitched')}]Glitched[/color]"
+            else:
+                self.tracker_go_mode_label.text = f"Go mode: [color={get_ut_color('out_of_logic')}]No[/color]"
 
         return updateTracker_ret
 
@@ -584,12 +581,21 @@ class TrackerGameContext(CommonContext):
                     if is_zipfile(packRef):
                         current_world.settings.update({self.tracker_world.external_pack_key: packRef})
                         current_world.settings._changed = True
-                        for map_page in self.tracker_world.map_page_maps:
-                            self.maps += load_json_zip(packRef, f"{map_page}")
-                        for loc_page in self.tracker_world.map_page_locations:
-                            self.locs += load_json_zip(packRef, f"{loc_page}")
-                        for layout_page in self.tracker_world.map_page_layouts:
-                            self.layouts.append(load_json_zip(packRef, f"{layout_page}"))
+                        if self.tracker_world.map_page_folder:
+                            PACK_NAME = current_world.__class__.__module__
+                            for map_page in self.tracker_world.map_page_maps:
+                                self.maps += load_json(PACK_NAME, f"/{self.tracker_world.map_page_folder}/{map_page}")
+                            for loc_page in self.tracker_world.map_page_locations:
+                                self.locs += load_json(PACK_NAME, f"/{self.tracker_world.map_page_folder}/{loc_page}")
+                            for layout_page in self.tracker_world.map_page_layouts:
+                                self.layouts.append(load_json(PACK_NAME, f"/{self.tracker_world.map_page_folder}/{layout_page}"))
+                        else:
+                            for map_page in self.tracker_world.map_page_maps:
+                                self.maps += load_json_zip(packRef, f"{map_page}")
+                            for loc_page in self.tracker_world.map_page_locations:
+                                self.locs += load_json_zip(packRef, f"{loc_page}")
+                            for layout_page in self.tracker_world.map_page_layouts:
+                                self.layouts.append(load_json_zip(packRef, f"{layout_page}"))
                     else:
                         current_world.settings.update({self.tracker_world.external_pack_key: ""}) #failed to find a pack, prompt next launch
                         current_world.settings._changed = True
@@ -668,6 +674,8 @@ class TrackerGameContext(CommonContext):
         self.ui.loc_border = m["location_border_thickness"] if "location_border_thickness" in m else 8  # default location size per poptracker/src/core/map.h
         temp_locs = [location for location in self.locs]
         map_locs = []
+        hidden_locations = getattr(self.tracker_core.get_current_world(), "ut_map_page_hidden_locations", {})
+        current_hidden_locs = hidden_locations.get(m["name"], [])
         while temp_locs:
             temp_loc = temp_locs.pop()
             if "map_locations" in temp_loc:
@@ -679,30 +687,33 @@ class TrackerGameContext(CommonContext):
         coords = {
             (map_loc["x"], map_loc["y"]):
                 [location_name_to_id[section["name"]] for section in location["sections"]
-                 if "name" in section and section["name"] in location_name_to_id
-                 and location_name_to_id[section["name"]] in self.server_locations]
-
+                    if "name" in section and section["name"] in location_name_to_id
+                    and location_name_to_id[section["name"]] in self.server_locations
+                    and not location_name_to_id[section["name"]] in current_hidden_locs]
             for location in map_locs
             for map_loc in location["map_locations"]
             if map_loc["map"] == m["name"] and any(
                 "name" in section and section["name"] in location_name_to_id
-                and location_name_to_id[section["name"]] in self.server_locations for section in location["sections"]
-                )
+                and location_name_to_id[section["name"]] in self.server_locations
+                and location_name_to_id[section["name"]] not in current_hidden_locs
+                for section in location["sections"]
+            )
         }
         poptracker_name_mapping = self.tracker_world.poptracker_name_mapping
         if poptracker_name_mapping:
             tempCoords = {  # compat coords
                 (map_loc["x"], map_loc["y"]):
-                    [poptracker_name_mapping[f'{location["name"]}/{section["name"]}']
-                    for section in location["sections"] if "name" in section
-                    and f'{location["name"]}/{section["name"]}' in poptracker_name_mapping
-                    and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] in self.server_locations]
+                    [poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] for section in location["sections"]
+                        if "name" in section and f'{location["name"]}/{section["name"]}' in poptracker_name_mapping
+                        and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] in self.server_locations
+                        and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] not in current_hidden_locs]
                 for location in map_locs
                 for map_loc in location["map_locations"]
                 if map_loc["map"] == m["name"]
-                and any("name" in section and f'{location["name"]}/{section["name"]}' in poptracker_name_mapping
-                        and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] in self.server_locations
-                        for section in location["sections"])
+                   and any("name" in section and f'{location["name"]}/{section["name"]}' in poptracker_name_mapping
+                           and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] in self.server_locations
+                           and poptracker_name_mapping[f'{location["name"]}/{section["name"]}'] not in current_hidden_locs
+                           for section in location["sections"])
             }
             for maploc, seclist in tempCoords.items():
                 if maploc in coords:
@@ -710,24 +721,33 @@ class TrackerGameContext(CommonContext):
                 else:
                     coords[maploc] = seclist
         entrance_cache = list(self.tracker_core.multiworld.regions.entrance_cache[self.tracker_core.player_id].keys())
+        hidden_entrances = getattr(self.tracker_core.get_current_world(), "ut_map_page_hidden_entrances", {})
+        current_hidden_entrances = hidden_entrances.get(m["name"], [])
         dcoords = {
-            (map_loc["x"],map_loc["y"]):[section["name"] for section in location["sections"]
-                if "name" in section and section["name"] in entrance_cache ]
+            (map_loc["x"], map_loc["y"]): [section["name"] for section in location["sections"]
+                if "name" in section and section["name"] in entrance_cache
+                and section["name"] not in current_hidden_entrances]
             for location in map_locs
             for map_loc in location["map_locations"]
             if map_loc["map"] == m["name"] and any(
-                "name" in section and section["name"] in entrance_cache for section in location["sections"]
+                "name" in section and section["name"] in entrance_cache
+                and section["name"] not in current_hidden_entrances for section in location["sections"]
             )
         }
         poptracker_entrance_mapping = self.tracker_world.poptracker_entrance_mapping
         if poptracker_entrance_mapping:
             tempCoords = {
-                (map_loc["x"],map_loc["y"]):[poptracker_entrance_mapping[section["name"]] for section in location["sections"]
-                    if "name" in section and  section["name"] in poptracker_entrance_mapping and poptracker_entrance_mapping[section["name"]] in entrance_cache]
+                (map_loc["x"], map_loc["y"]): [poptracker_entrance_mapping[section["name"]] for section in location["sections"]
+                    if "name" in section and section["name"] in poptracker_entrance_mapping
+                    and poptracker_entrance_mapping[section["name"]] in entrance_cache
+                    and poptracker_entrance_mapping[section["name"]] not in current_hidden_entrances]
                 for location in map_locs
                 for map_loc in location["map_locations"]
                 if map_loc["map"] == m["name"] and any(
-                    "name" in section and  section["name"] in poptracker_entrance_mapping and poptracker_entrance_mapping[section["name"]] in entrance_cache for section in location["sections"]
+                    "name" in section and section["name"] in poptracker_entrance_mapping
+                    and poptracker_entrance_mapping[section["name"]] in entrance_cache
+                    and poptracker_entrance_mapping[section["name"]] not in current_hidden_entrances
+                    for section in location["sections"]
                 )
             }
             for maploc, seclist in tempCoords.items():
@@ -736,13 +756,16 @@ class TrackerGameContext(CommonContext):
                 else:
                     dcoords[maploc] = seclist
         event_loc_cache = [loc.name for loc in self.tracker_core.get_current_world().get_locations() if loc.address is None and loc.parent_region is not None]
+        hidden_events = getattr(self.tracker_core.get_current_world(), "ut_map_page_hidden_events", {})
+        current_hidden_events = hidden_events.get(m["name"], [])
         dlcoords = {
-            (map_loc["x"],map_loc["y"]):[section["name"] for section in location["sections"]
-                if "name" in section and section["name"] in event_loc_cache ]
+            (map_loc["x"], map_loc["y"]): [section["name"] for section in location["sections"] if "name" in section and section["name"] in event_loc_cache and section["name"] not in current_hidden_events]
             for location in map_locs
             for map_loc in location["map_locations"]
             if map_loc["map"] == m["name"] and any(
-                "name" in section and section["name"] in event_loc_cache for section in location["sections"]
+                "name" in section and section["name"] in event_loc_cache
+                and section["name"] not in current_hidden_events
+                for section in location["sections"]
             )
         }
         both_dcoords = set(entrance_cache).intersection(set(event_loc_cache))
@@ -755,7 +778,8 @@ class TrackerGameContext(CommonContext):
                 if both_dcoords.intersection(set(temp_coord)):
                     logger.error("Mixing of entrance and event names, map will refuse to load")
                     return
-        self.coord_dict,self.deferred_dict,self.ldeferred_dict = self.map_page_coords_func(coords,dcoords,dlcoords,self.use_split)
+        self.coord_dict, self.deferred_dict, self.ldeferred_dict = self.map_page_coords_func(coords, dcoords, dlcoords,
+                                                                                             self.use_split)
         if self.tracker_world.location_setting_key:
             self.update_location_icon_coords()
 
@@ -1040,12 +1064,15 @@ class TrackerGameContext(CommonContext):
             self.tracker_logic_locs_label = MDLabel(text="In Logic: 0", halign="center")
             self.tracker_glitched_locs_label = MDLabel(text=f"Glitched: [color={get_ut_color('glitched')}]0[/color]",  halign="center")
             self.tracker_hinted_locs_label = MDLabel(text=f"Hinted: [color={get_ut_color('hinted_in_logic')}]0[/color]", halign="center")
+            self.tracker_go_mode_label = MDLabel(text=f"Go Mode: [color={get_ut_color('out_of_logic')}]No[/color]", halign="center")
             self.tracker_glitched_locs_label.markup = True
             self.tracker_hinted_locs_label.markup = True
+            self.tracker_go_mode_label.markup = True
             tracker_header.add_widget(self.tracker_total_locs_label)
             tracker_header.add_widget(self.tracker_logic_locs_label)
             tracker_header.add_widget(self.tracker_glitched_locs_label)
             tracker_header.add_widget(self.tracker_hinted_locs_label)
+            tracker_header.add_widget(self.tracker_go_mode_label)
 
             # Adds the tracker list at the bottom
             tracker.add_widget(tracker_header)
@@ -1257,23 +1284,8 @@ class TrackerGameContext(CommonContext):
         self.use_split = self.tracker_core.use_split #fancy hack
 
     def on_package(self, cmd: str, args: dict):
-        # Log all messages to debug log if sphere_log_mode is enabled
-        if self.sphere_log_mode:
-            self._open_debug_log()
-            # Create a sanitized version of args for logging (avoid huge data)
-            log_args = {}
-            for key, value in args.items():
-                if key in ('slot_info', 'slot_data', 'players'):
-                    log_args[key] = f"<{type(value).__name__} len={len(value) if hasattr(value, '__len__') else '?'}>"
-                elif isinstance(value, (list, set)) and len(value) > 20:
-                    log_args[key] = f"<{type(value).__name__} len={len(value)}>"
-                else:
-                    log_args[key] = value
-            self._log_debug_message(f"recv_{cmd}", {"cmd": cmd, "args": log_args})
-
         try:
             if cmd == 'RoomInfo':
-                # Capture seed_name for auto-discovery of rules JSON
                 self.seed_name = args.get('seed_name')
             elif cmd == 'Connected':
                 self.game = args["slot_info"][str(args["slot"])][1]
@@ -1285,17 +1297,15 @@ class TrackerGameContext(CommonContext):
                     return
                 if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
                     logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
-                # Auto-discover pickle BEFORE initializing tracker core
-                # This allows pickle-based tracking to be used when available
-                if self.seed_name:
-                    # Set up debug logger for tracker_core to use the same debug log file
-                    self.tracker_core.set_debug_logger(self._log_debug_message)
-                    self.tracker_core.set_seed_name(self.seed_name)
+                # Auto-discover pickle for pickle-based tracking
+                if hasattr(self, 'seed_name') and self.seed_name:
+                    self.tracker_core.seed_name = self.seed_name
                     self.tracker_core.auto_discover_pickle()
                 self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
                 if not self.tracker_core.multiworld:
                     logger.error("Internal generation failed, something has gone wrong")
                     logger.error("Run the /faris_asked command and post the results in the discord")
+                    return #if this has failed we don't want to even try anything else
                 if self.ui is not None and hasattr(connected_cls, "tracker_world"):
                     self.tracker_world = UTMapTabData(self.slot, self.team, **getattr(connected_cls,"tracker_world",{}))
                 elif self.ui is not None and hasattr(self.tracker_core.get_current_world(),"tracker_world"):
@@ -1317,7 +1327,8 @@ class TrackerGameContext(CommonContext):
                     if "list_maps" not in self.command_processor.commands or not self.command_processor.commands["list_maps"]:
                         self.command_processor.commands["list_maps"] = cmd_list_maps
                 self.defered_entrance_datastorage_keys = getattr(self.tracker_core.get_current_world(),"found_entrances_datastorage_key",None)
-                if self.defered_entrance_datastorage_keys:
+                from . import DeferredEntranceMode
+                if self.defered_entrance_datastorage_keys and self.tracker_core.enforce_deferred_connections != DeferredEntranceMode.disabled:
                     if isinstance(self.defered_entrance_datastorage_keys,str):
                         self.defered_entrance_datastorage_keys = [self.defered_entrance_datastorage_keys]
                     self.defered_entrance_datastorage_keys = [key.format(player=self.slot, team=self.team) for key in self.defered_entrance_datastorage_keys]
@@ -1337,21 +1348,20 @@ class TrackerGameContext(CommonContext):
                     self.updateTracker()
                 else:
                     asyncio.create_task(wait_for_items(self),name="UT Delay function") #if we don't get new items, delay for a bit first
-                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically
-
+                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically 
             elif cmd == 'RoomUpdate':
                 if not (self.items_handling & 0b010):
                     self.scout_checked_locations()
                 self.updateTracker()
             elif cmd == 'SetReply' or cmd == 'Retrieved':
-                if self.ui is not None and hasattr(AutoWorld.AutoWorldRegister.world_types.get(self.game), "tracker_world") and self.tracker_world:
+                if self.ui is not None and self.tracker_world:
                     key = self.tracker_world.map_page_setting_key or f"{self.slot}_{self.team}_{UT_MAP_TAB_KEY}"
                     icon_key = self.tracker_world.location_setting_key
                     if "key" in args:
                         if args["key"] == key:
                             self.load_map(None)
                             self.updateTracker()
-                        elif args["key"] == icon_key:
+                        if args["key"] == icon_key:
                             self.update_location_icon_coords()
                     elif "keys" in args:
                         if icon_key in args["keys"]:
@@ -1367,9 +1377,6 @@ class TrackerGameContext(CommonContext):
                 if not (self.items_handling & 0b010):
                     self.update_tracker_items()
                     self.updateTracker()
-            elif cmd == 'Bounced':
-                # Handle UT_TEST_SYNC bounce messages for sphere log comparison testing
-                self._handle_ut_test_sync_bounce(args)
         except Exception as e:
             e.args = e.args+("This is likely a UT error, make sure you have the correct tracker.apworld version and no duplicates",
                              "Then try to reproduce with the debug launcher and post in the Discord channel")
@@ -1393,292 +1400,7 @@ class TrackerGameContext(CommonContext):
             self.defered_entrance_callback(key,self.stored_data.get(key,None))
             self.updateTracker()
 
-    def _handle_ut_test_sync_bounce(self, args: dict):
-        """
-        Handle UT_TEST_SYNC bounce messages for sphere log comparison testing.
-
-        Protocol:
-        1. Test driver sends Bounce with data: {"type": "UT_TEST_SYNC", "action": "STEP", "sphere": "0.1"}
-        2. UT receives STEP, logs current state to sphere_log_ut.jsonl
-        3. UT sends Bounce with data: {"type": "UT_TEST_SYNC", "action": "READY", "sphere": "0.1"}
-        4. Test driver waits for READY before proceeding to next step
-        """
-        data = args.get("data", {})
-
-        # Only handle UT_TEST_SYNC messages
-        if data.get("type") != "UT_TEST_SYNC":
-            return
-
-        action = data.get("action")
-        sphere = data.get("sphere")
-
-        if action == "STEP":
-            logger.info(f"[UT_TEST_SYNC] Received STEP for sphere {sphere}")
-
-            # Log current state if sphere logging is enabled
-            if self.sphere_log_mode:
-                self._log_sphere_state(sphere)
-                # Also log full state to debug log
-                self._log_debug_full_state(sphere)
-
-            # Send READY response
-            async_start(self._send_ut_ready_bounce(sphere), name=f"UT_READY_{sphere}")
-
-        elif action == "READY":
-            # This is received by the test driver, not UT
-            # UT doesn't need to handle this
-            pass
-
-        elif action == "COMPLETE":
-            # Test is complete, close sphere log file if open
-            # (debug log stays open to capture any remaining messages until disconnect)
-            logger.info("[UT_TEST_SYNC] Received COMPLETE signal, test finished")
-            self._close_sphere_log()
-
-    async def _send_ut_ready_bounce(self, sphere: str):
-        """Send a READY bounce message to signal that UT has processed the STEP."""
-        if self.server and self.server.socket:
-            await self.send_msgs([{
-                "cmd": "Bounce",
-                "tags": ["AP"],  # Target the test driver client (which has AP tag)
-                "data": {
-                    "type": "UT_TEST_SYNC",
-                    "action": "READY",
-                    "sphere": sphere
-                }
-            }])
-            logger.info(f"[UT_TEST_SYNC] Sent READY for sphere {sphere}")
-
-    def _log_sphere_state(self, sphere: str):
-        """Log the current tracker state to the sphere log file."""
-        import json
-
-        if not self.sphere_log_output_path:
-            logger.warning("[UT_TEST_SYNC] sphere_log_output_path not set, skipping logging")
-            return
-
-        # Open file if not already open
-        if self._sphere_log_file is None:
-            try:
-                self._sphere_log_file = open(self.sphere_log_output_path, 'w', encoding='utf-8')
-                logger.info(f"[UT_TEST_SYNC] Opened sphere log file: {self.sphere_log_output_path}")
-                # Initialize previous state tracking
-                self._prev_accessible_locations = set()
-                self._prev_accessible_regions = set()
-                self._prev_items = {}
-
-                # Write metadata line (same format as Python sphere_logger)
-                multiworld = self.tracker_core.multiworld
-                if multiworld:
-                    metadata_entry = {
-                        "type": "metadata",
-                        "seed": multiworld.seed,
-                        "seed_name": str(multiworld.seed_name),
-                        "source": "universal_tracker"
-                    }
-                    self._sphere_log_file.write(json.dumps(metadata_entry) + '\n')
-                    self._sphere_log_file.flush()
-                    logger.info(f"[UT_TEST_SYNC] Wrote metadata: seed={multiworld.seed}, seed_name={multiworld.seed_name}")
-            except Exception as e:
-                logger.error(f"[UT_TEST_SYNC] Failed to open sphere log file: {e}")
-                return
-
-        # Get current state from tracker
-        if not self.tracker_core.multiworld:
-            logger.warning("[UT_TEST_SYNC] Multiworld not initialized, skipping logging")
-            return
-
-        try:
-            # Call updateTracker to get the current state - this creates a fresh CollectionState
-            # and returns a CurrentTrackerState with all the computed values
-            tracker_state = self.tracker_core.updateTracker()
-
-            # Get accessible locations (names, not IDs)
-            current_locations = set()
-            for loc_id in self.tracker_core.locations_available:
-                loc_name = self.tracker_core.multiworld.worlds[self.tracker_core.player_id].location_id_to_name.get(loc_id)
-                if loc_name:
-                    current_locations.add(loc_name)
-
-            # Get reachable regions from the CollectionState
-            current_regions = set()
-            if tracker_state.state and hasattr(tracker_state.state, 'reachable_regions'):
-                player_id = self.tracker_core.player_id
-                if player_id in tracker_state.state.reachable_regions:
-                    current_regions = set(region.name for region in tracker_state.state.reachable_regions[player_id])
-
-            # Get inventory details from CurrentTrackerState
-            # all_items is a Counter of all items by name
-            # prog_items is a Counter of progression items by name
-            current_base_items = dict(tracker_state.all_items) if tracker_state.all_items else {}
-            current_resolved_items = dict(tracker_state.prog_items) if tracker_state.prog_items else {}
-
-            # Compute deltas (new items in this sphere)
-            new_locations = sorted(current_locations - self._prev_accessible_locations)
-            new_regions = sorted(current_regions - self._prev_accessible_regions)
-
-            # Compute new items (items that were added or increased in count)
-            new_base_items = {}
-            for item, count in current_base_items.items():
-                prev_count = self._prev_items.get(item, 0)
-                if count > prev_count:
-                    new_base_items[item] = count - prev_count
-
-            new_resolved_items = {}
-            for item, count in current_resolved_items.items():
-                prev_count = self._prev_items.get(item, 0)
-                if count > prev_count:
-                    new_resolved_items[item] = count - prev_count
-
-            # Build log entry in same format as Python sphere_logger
-            log_entry = {
-                "type": "state_update",
-                "sphere_index": sphere,
-                "player_data": {
-                    str(self.tracker_core.player_id): {
-                        "new_inventory_details": {
-                            "base_items": new_base_items,
-                            "resolved_items": new_resolved_items
-                        },
-                        "new_accessible_locations": new_locations,
-                        "new_accessible_regions": new_regions,
-                        "sphere_locations": []  # Test driver will fill this in
-                    }
-                }
-            }
-
-            # Update previous state for next delta computation
-            self._prev_accessible_locations = current_locations
-            self._prev_accessible_regions = current_regions
-            self._prev_items = current_base_items.copy()
-
-            # Write to file
-            self._sphere_log_file.write(json.dumps(log_entry) + '\n')
-            self._sphere_log_file.flush()
-            logger.info(f"[UT_TEST_SYNC] Logged state for sphere {sphere}: {len(new_locations)} new locations, {len(new_regions)} new regions")
-
-        except Exception as e:
-            logger.error(f"[UT_TEST_SYNC] Error logging sphere state: {e}")
-            import traceback
-            traceback.print_exc()
-
-    def _close_sphere_log(self):
-        """Close the sphere log file if open."""
-        if self._sphere_log_file is not None:
-            try:
-                self._sphere_log_file.close()
-                logger.info(f"[UT_TEST_SYNC] Closed sphere log file")
-            except Exception as e:
-                logger.error(f"[UT_TEST_SYNC] Error closing sphere log file: {e}")
-            finally:
-                self._sphere_log_file = None
-
-    def _open_debug_log(self):
-        """Open the debug log file if sphere_log_mode is enabled."""
-        if not self.sphere_log_mode or not self.sphere_log_output_path:
-            return
-        if self._debug_log_file is not None:
-            return
-        try:
-            # Derive debug log path from sphere log path
-            # e.g., "foo_sphere_log_ut.jsonl" -> "foo_debug_log_ut.jsonl"
-            debug_path = self.sphere_log_output_path.replace("_sphere_log_ut.jsonl", "_debug_log_ut.jsonl")
-            if debug_path == self.sphere_log_output_path:
-                # Fallback if pattern didn't match
-                debug_path = self.sphere_log_output_path.replace(".jsonl", "_debug.jsonl")
-            self._debug_log_file = open(debug_path, 'w', encoding='utf-8')
-            logger.info(f"[UT_TEST_SYNC] Opened debug log file: {debug_path}")
-        except Exception as e:
-            logger.error(f"[UT_TEST_SYNC] Failed to open debug log file: {e}")
-
-    def _log_debug_message(self, event_type: str, data: dict):
-        """Log a message to the debug log file."""
-        if self._debug_log_file is None:
-            return
-        try:
-            import json
-            from datetime import datetime
-            entry = {
-                "timestamp": datetime.now().isoformat(),
-                "event_type": event_type,
-                "data": data
-            }
-            self._debug_log_file.write(json.dumps(entry) + '\n')
-            self._debug_log_file.flush()
-        except Exception as e:
-            logger.error(f"[UT_TEST_SYNC] Error writing to debug log: {e}")
-
-    def _log_debug_full_state(self, sphere: str):
-        """Log the full tracker state (not deltas) to the debug log."""
-        if self._debug_log_file is None or not self.tracker_core.multiworld:
-            return
-        try:
-            import json
-            from datetime import datetime
-            tracker_state = self.tracker_core.updateTracker()
-
-            # Get ALL accessible locations (cumulative, not delta)
-            all_locations = []
-            for loc_id in self.tracker_core.locations_available:
-                loc_name = self.tracker_core.multiworld.worlds[self.tracker_core.player_id].location_id_to_name.get(loc_id)
-                if loc_name:
-                    all_locations.append(loc_name)
-            all_locations.sort()
-
-            # Get ALL reachable regions
-            all_regions = []
-            if tracker_state.state and hasattr(tracker_state.state, 'reachable_regions'):
-                player_id = self.tracker_core.player_id
-                if player_id in tracker_state.state.reachable_regions:
-                    all_regions = sorted([region.name for region in tracker_state.state.reachable_regions[player_id]])
-
-            # Get in_logic_regions
-            in_logic_regions = sorted(tracker_state.in_logic_regions) if tracker_state.in_logic_regions else []
-
-            # Get full inventory
-            all_items = dict(tracker_state.all_items) if tracker_state.all_items else {}
-            prog_items = dict(tracker_state.prog_items) if tracker_state.prog_items else {}
-
-            # Get checked locations
-            checked_locations = list(self.checked_locations) if self.checked_locations else []
-
-            entry = {
-                "timestamp": datetime.now().isoformat(),
-                "event_type": "full_state",
-                "sphere": sphere,
-                "player_id": self.tracker_core.player_id,
-                "all_accessible_locations": all_locations,
-                "all_accessible_locations_count": len(all_locations),
-                "all_reachable_regions": all_regions,
-                "all_reachable_regions_count": len(all_regions),
-                "in_logic_regions": in_logic_regions,
-                "inventory": {
-                    "all_items": all_items,
-                    "prog_items": prog_items
-                },
-                "checked_locations_count": len(checked_locations),
-                "missing_locations_count": len(self.missing_locations) if self.missing_locations else 0
-            }
-            self._debug_log_file.write(json.dumps(entry) + '\n')
-            self._debug_log_file.flush()
-        except Exception as e:
-            logger.error(f"[UT_TEST_SYNC] Error logging full state to debug log: {e}")
-
-    def _close_debug_log(self):
-        """Close the debug log file if open."""
-        if self._debug_log_file is not None:
-            try:
-                self._debug_log_file.close()
-                logger.info(f"[UT_TEST_SYNC] Closed debug log file")
-            except Exception as e:
-                logger.error(f"[UT_TEST_SYNC] Error closing debug log file: {e}")
-            finally:
-                self._debug_log_file = None
-
     async def disconnect(self, allow_autoreconnect: bool = False):
-        # Close sphere log and debug log files if open (before any other cleanup)
-        self._close_sphere_log()
-        self._close_debug_log()
         if "Tracker" in self.tags:
             self.game = ""
             if self.ui:
@@ -1707,6 +1429,8 @@ class TrackerGameContext(CommonContext):
                 self.tracker_glitched_locs_label.text = f"Glitched: [color={get_ut_color('glitched')}]0[/color]"
             if hasattr(self, "tracker_hinted_locs_label"):
                 self.tracker_hinted_locs_label.text = f"Hinted: [color={get_ut_color('hinted_in_logic')}]0[/color]"
+            if hasattr(self, "tracker_go_mode_label"):
+                self.tracker_go_mode_label.text = f"Go Mode: [color={get_ut_color('out_of_logic')}]No[/color]"
             self.tracker_core.disconnect()
         self.local_items.clear()
 
@@ -1765,9 +1489,18 @@ def explain(ctx: TrackerGameContext, dest_name: str):
         if returned_json:
             ctx.ui.print_json(returned_json)
             return
+
+    from Utils import get_intended_text
+    location_names = set(ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id])
+    region_names = set(ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id])
+    result, usable, response = get_intended_text(dest_name, location_names.union(region_names))
+    if not usable:
+        logger.error(response)
+        return
+    dest_name = result
     parent_region = None
     location = None
-    if dest_name in ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id]:
+    if dest_name in location_names:
         dest_id = current_world.location_name_to_id[dest_name]
         if dest_id not in ctx.server_locations:
             logger.error("Location not found")
@@ -1776,16 +1509,14 @@ def explain(ctx: TrackerGameContext, dest_name: str):
         if hasattr(location.access_rule,"explain_json"):
             ctx.ui.print_json(location.access_rule.explain_json(state))
         elif location.access_rule is Location.access_rule:
-            logger.info("Location has a default access rule (always accessible): True")
+            logger.info("Location has a default access rule")
         else:
             logger.info("Location doesn't have a rule that supports explanation")
         parent_region = location.parent_region
-    elif dest_name in ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id]:
+    elif dest_name in region_names:
         parent_region = ctx.tracker_core.multiworld.get_region(dest_name,ctx.tracker_core.player_id)
     else:
-        from Utils import get_fuzzy_results
-        results = get_fuzzy_results(dest_name,set(ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id].keys()).union(set(ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id].keys())),limit=1)[0]
-        logger.error(f"Did you mean '{results[0]}' ({results[1]}% sure)? ")
+        logger.error(response)
         return
     if parent_region:
         if location:
@@ -1817,28 +1548,28 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
             ctx.ui.print_json(returned_json)
             return
 
-    if dest_name in [loc.name for loc in ctx.tracker_core.multiworld.get_locations(ctx.tracker_core.player_id)]:
+    from Utils import get_intended_text
+    location_names = set(ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id])
+    region_names = set(ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id])
+    result, usable, response = get_intended_text(dest_name, location_names.union(region_names))
+    if not usable:
+        logger.error(response)
+        return
+    dest_name = result
+    if dest_name in location_names:
         location = ctx.tracker_core.multiworld.get_location(dest_name, ctx.tracker_core.player_id)
         state = ctx.updateTracker().state
         if not state: return
         if location.can_reach(state):
             relevent_region = location.parent_region
-    elif dest_name in ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id]:
+    elif dest_name in region_names:
         relevent_region = ctx.tracker_core.multiworld.get_region(dest_name,ctx.tracker_core.player_id)
         state = ctx.updateTracker().state
         if not state: return
         if not relevent_region.can_reach(state):
             relevent_region = None
-    elif dest_name in ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id]:
-        location = ctx.tracker_core.multiworld.get_location(dest_name,ctx.tracker_core.player_id)
-        state = ctx.updateTracker().state
-        if not state: return
-        if location.can_reach(state):
-            relevent_region = location.parent_region
     else:
-        from Utils import get_fuzzy_results
-        results = get_fuzzy_results(dest_name,set(ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id].keys()).union(set(ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id].keys())),limit=1)[0]
-        logger.error(f"Did you mean '{results[0]}' ({results[1]}% sure)? ")
+        logger.error(response)
         return
     if state:
         if relevent_region:
@@ -1879,15 +1610,8 @@ async def game_watcher(ctx: TrackerGameContext) -> None:
         except Exception as e:
             tb = traceback.format_exc()
             print(tb)
-            if ctx.sphere_log_mode:
-                # In sphere_log_mode: Log the error but don't crash the watcher - this allows UT
-                # to continue receiving messages even if updateTracker fails temporarily
-                logger.error(f"[game_watcher] updateTracker failed: {e}")
-                # Continue the loop instead of re-raising - the tracker can recover
-            else:
-                # Normal mode: re-raise the exception (original behavior)
-                logger.error("".join(traceback.format_exception_only(sys.exception())))
-                raise e
+            logger.error("".join(traceback.format_exception_only(sys.exception())))
+            raise e
 
 async def wait_for_items(ctx: TrackerGameContext)-> None:
     try:
@@ -1899,20 +1623,6 @@ async def wait_for_items(ctx: TrackerGameContext)-> None:
 async def main(args):
     ctx = TrackerGameContext(args.connect, args.password, print_count=args.count, print_list=args.list)
     ctx.auth = args.name
-
-    # Set sphere log mode attributes if enabled
-    if hasattr(args, 'sphere_log_mode') and args.sphere_log_mode:
-        ctx.sphere_log_mode = True
-        ctx.tracker_core.sphere_log_mode = True  # Propagate to TrackerCore for lenient error handling
-        ctx.sphere_log_output_path = args.sphere_log_output
-        ctx.sphere_log_verbose = getattr(args, 'sphere_log_verbose', False)
-        logger.info(f"[UT_TEST_SYNC] Sphere log mode enabled, output: {ctx.sphere_log_output_path}")
-
-    # Set seed override for internal generation (for UT comparison testing)
-    if hasattr(args, 'seed') and args.seed is not None:
-        ctx.tracker_core.seed_override = args.seed
-        logger.info(f"[UT_TEST_SYNC] Seed override set to: {args.seed}")
-
     ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
     ctx.run_generator()
 
@@ -1930,15 +1640,6 @@ def launch(*args):
     if sys.stdout:  # If terminal output exists, offer gui-less mode
         parser.add_argument('--count', default=False, action='store_true', help="just return a count of in logic checks")
         parser.add_argument('--list', default=False, action='store_true', help="just return a list of in logic checks")
-    # Sphere log mode arguments for UT comparison testing
-    parser.add_argument('--sphere-log-mode', default=False, action='store_true',
-                        help="Enable sphere logging for UT comparison testing")
-    parser.add_argument('--sphere-log-output', default=None, type=str,
-                        help="Path to write sphere_log_ut.jsonl (required with --sphere-log-mode)")
-    parser.add_argument('--sphere-log-verbose', default=False, action='store_true',
-                        help="Use verbose (full state) format instead of deltas")
-    parser.add_argument('--seed', default=None, type=int,
-                        help="Seed number to use for internal generation (for UT comparison testing)")
     parser.add_argument("url", nargs="?", help="Archipelago connection url")
     args = handle_url_arg(parser.parse_args(args))
 
@@ -1948,11 +1649,6 @@ def launch(*args):
             return
         from logging import ERROR
         logger.setLevel(ERROR)
-
-    # Validate sphere log mode arguments
-    if args.sphere_log_mode and not args.sphere_log_output:
-        logger.error("--sphere-log-output is required when using --sphere-log-mode")
-        return
 
     asyncio.run(main(args))
 

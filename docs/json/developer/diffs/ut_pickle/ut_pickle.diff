@@ -1,0 +1,790 @@
+--- scripts/test/fixtures/tracker_original/__init__.py	2026-02-03 19:26:13.854716434 -0800
++++ worlds/ut_pickle/__init__.py	2026-04-05 10:58:24.519724057 -0700
+@@ -1,7 +1,7 @@
+ from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
+ from settings import Group, Bool, UserFolderPath, _world_settings_name_cache
+ from typing import Any, ClassVar, NamedTuple, Callable,Optional
+-from worlds.AutoWorld import World
++from worlds.AutoWorld import WebWorld, World
+ from BaseClasses import CollectionState,Entrance
+ from collections import Counter
+ from enum import Enum
+@@ -20,7 +20,7 @@
+     from .TrackerClient import launch as TCMain
+     launch(TCMain, name="Universal Tracker client", args=args)
+ 
+-UT_VERSION = "v0.2.26"
++UT_VERSION = "v0.2.26-pickle"
+ 
+ class CurrentTrackerState(NamedTuple):
+     all_items: Counter
+@@ -52,6 +52,10 @@
+     disabled = "off"
+ 
+ class TrackerSettings(Group):
++    class EnabledBool(Bool):
++        """Enable UT Pickle Mode. When disabled, this world does nothing.
++        Must be manually set to true to activate pickle-based tracking."""
++
+     class TrackerPlayersPath(UserFolderPath):
+         """Players folder for UT look for YAMLs"""
+ 
+@@ -63,13 +67,18 @@
+ 
+     class HideExcluded(Bool):
+         """Have the UT tab ignore excluded locations"""
+-    
++
+     class UseSplitMapIcons(Bool):
+         """Use split icons rather then mixed for the UT map tab"""
+-    
++
+     class DisplayGlitchedLogic(Bool):
+         """Enable showing Glitched/yellow logic in tracker tab"""
+-    
++
++    class PickleModeBool(Bool):
++        """Enable pickle-based tracking for improved accuracy.
++        When enabled, exports a pickle of the multiworld during generation
++        and uses it for tracking. When disabled, uses original YAML-based tracking."""
++
+     class SettingDeferredEntranceMode(str):
+         """Determines how worlds should be allowed to use deferred entrances
+         on: Force worlds to disconnect entrances
+@@ -77,6 +86,7 @@
+         off: Force worlds to connect all entrances
+         """
+ 
++    enabled: EnabledBool | bool = False
+     player_files_path: TrackerPlayersPath = TrackerPlayersPath("Players")
+     include_region_name: RegionNameBool | bool = False
+     include_location_name: LocationNameBool | bool = True
+@@ -84,15 +94,22 @@
+     use_split_map_icons: UseSplitMapIcons | bool = True
+     enforce_deferred_entrances: SettingDeferredEntranceMode | str = "default"
+     display_glitched_logic: DisplayGlitchedLogic | bool = True
++    pickle_mode: PickleModeBool | bool = True
++
++
++class TrackerWorldWeb(WebWorld):
++    tutorials = []
++    game_info_languages = []
+ 
+ 
+ class TrackerWorld(World):
+     settings: ClassVar[TrackerSettings]
+-    settings_key = "universal_tracker"
++    settings_key = "ut_pickle"
+ 
+     # to make auto world register happy so we can register our settings
+-    game = "Universal Tracker"
++    game = "UT Pickle Mode"
+     hidden = True
++    web = TrackerWorldWeb()
+     item_name_to_id = {}
+     location_name_to_id = {}
+ 
+@@ -187,5 +204,22 @@
+             self.location_icon_coords = lambda _,__: None
+ 
+ 
+-icon_paths["ut_ico"] = f"ap:{__name__}/icon.png"
+-components.append(Component("Universal Tracker", None, func=launch_client, component_type=Type.CLIENT, icon="ut_ico"))
++def _is_enabled() -> bool:
++    """Check if ut_pickle is enabled in host.yaml settings."""
++    try:
++        from settings import get_settings
++        return bool(getattr(get_settings().ut_pickle, 'enabled', False))
++    except Exception:
++        return False
++
++
++if _is_enabled():
++    icon_paths["ut_pickle_ico"] = f"ap:{__name__}/icon.png"
++    components.append(Component("UT Pickle Mode", None, func=launch_client, component_type=Type.CLIENT, icon="ut_pickle_ico"))
++
++    # Auto-install monkey patches for pickle export
++    try:
++        from .monkey_patches import auto_install
++        auto_install()
++    except Exception:
++        pass
+--- scripts/test/fixtures/tracker_original/TrackerClient.py	2026-02-04 11:18:49.849972890 -0800
++++ worlds/ut_pickle/TrackerClient.py	2026-04-05 10:59:26.189638740 -0700
+@@ -371,6 +371,7 @@
+         self.tracker_core.set_log_to_tab(self.log_to_tab)
+         self.tracker_core.set_clear_page(self.clear_page)
+         self.tracker_core.set_get_ut_color(get_ut_color)
++        self.seed_name = None
+ 
+     def updateTracker(self) -> CurrentTrackerState:
+         if self.disconnected_intentionally: return CurrentTrackerState.init_empty_state()
+@@ -1284,7 +1285,9 @@
+ 
+     def on_package(self, cmd: str, args: dict):
+         try:
+-            if cmd == 'Connected':
++            if cmd == 'RoomInfo':
++                self.seed_name = args.get('seed_name')
++            elif cmd == 'Connected':
+                 self.game = args["slot_info"][str(args["slot"])][1]
+                 slot_name = args["slot_info"][str(args["slot"])][0]
+                 self.tracker_core.set_slot_params(self.game,self.slot,slot_name,self.team)
+@@ -1294,6 +1297,10 @@
+                     return
+                 if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
+                     logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
++                # Auto-discover pickle for pickle-based tracking
++                if hasattr(self, 'seed_name') and self.seed_name:
++                    self.tracker_core.seed_name = self.seed_name
++                    self.tracker_core.auto_discover_pickle()
+                 self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
+                 if not self.tracker_core.multiworld:
+                     logger.error("Internal generation failed, something has gone wrong")
+--- scripts/test/fixtures/tracker_original/fuzzer_hook.py	2026-02-03 19:26:14.490714741 -0800
++++ worlds/ut_pickle/fuzzer_hook.py	2026-04-05 10:59:43.444959808 -0700
+@@ -27,20 +27,26 @@
+             return
+         assert self.player_files_path
+         self.status = GenOutcome.Success
+-        import zipfile
+-        with zipfile.ZipFile(output_path+"/AP_"+mw.seed_name+".zip") as zf:
+-            for file in zf.namelist():
+-                if file.endswith(".archipelago"):
+-                    data = zf.read(file)
+-                    break
+-            else:
+-                raise Exception("No .archipelago found in archive.")
+-        from MultiServer import Context
+-        temp = Context.decompress(data)
+-
+-        slot_data = temp["slot_data"][1] #slot 0 is reserved
++        # Extract slot_data from the generated archive (if available)
++        slot_data = {}
++        try:
++            import zipfile
++            with zipfile.ZipFile(output_path+"/AP_"+mw.seed_name+".zip") as zf:
++                for file in zf.namelist():
++                    if file.endswith(".archipelago"):
++                        data = zf.read(file)
++                        break
++                else:
++                    raise Exception("No .archipelago found in archive.")
++            from MultiServer import Context
++            temp = Context.decompress(data)
++            slot_data = temp["slot_data"][1]
++        except (FileNotFoundError, Exception):
++            pass  # No archive available (e.g., --skip-output)
+ 
+         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
++        self.ut_core.seed_name = mw.seed_name
++        self.ut_core.auto_discover_pickle()
+         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
+         assert self.ut_core.multiworld, self.ut_core.gen_error
+ 
+--- a/TrackerCore.py
++++ b/TrackerCore.py
+@@ -0,0 +1,97 @@
++"""
++TrackerCore with Pickle Mode Support
++
++Extends the original TrackerCore with pickle-based multiworld loading.
++When pickle mode is enabled and a pickle file is found, tracking uses the
++exact multiworld from generation instead of regenerating from YAML.
++"""
++
++import logging
++from typing import Callable, Optional
++
++from .TrackerCoreOriginal import TrackerCore as TrackerCoreOriginal
++from .pickle_mixin import PickleMixin
++
++
++class TrackerCore(PickleMixin, TrackerCoreOriginal):
++    """TrackerCore with pickle mode support."""
++
++    def __init__(self, logger: logging.Logger, print_list: bool, print_count: bool) -> None:
++        super().__init__(logger, print_list, print_count)
++        self._init_pickle_mixin()
++        self.seed_name: Optional[str] = None
++        # Compatibility attributes for TrackerClient
++        self.sphere_log_mode: bool = False
++        self.seed_override: Optional[int] = None
++        self._debug_logger: Optional[Callable] = None
++
++    def disconnect(self):
++        self._disconnect_pickle_mixin()
++        self.seed_name = None
++        super().disconnect()
++
++    def set_seed_name(self, seed_name: str):
++        """Set the seed name (from RoomInfo) for auto-discovery."""
++        self.seed_name = seed_name
++
++    def set_debug_logger(self, debug_logger: Optional[Callable]):
++        """Set callback for debug logging."""
++        self._debug_logger = debug_logger
++
++    def initalize_tracker_core(self, connected_cls, raw_slot_data):
++        """
++        Initialize tracker core with pickle mode support.
++
++        Tries pickle mode first (if enabled and pickle found), then falls
++        back to the original YAML-based tracking.
++        """
++        if getattr(connected_cls, "disable_ut", False):
++            self.log_to_tab("World Author has requested UT be disabled on this world, please respect their decision")
++            return
++
++        # Try pickle mode
++        if self._is_pickle_mode_enabled() and self.pickle_path:
++            if self._try_pickle_tracking():
++                return
++            self.logger.warning("Pickle tracking failed, falling back to original mode")
++
++        # Fall back to original UT mode
++        super().initalize_tracker_core(connected_cls, raw_slot_data)
++
++    def _is_pickle_mode_enabled(self) -> bool:
++        """Check if pickle mode is enabled in settings."""
++        try:
++            from . import TrackerWorld
++            settings = TrackerWorld.settings
++            return getattr(settings, 'pickle_mode', True)
++        except Exception:
++            return True
++
++    def _try_pickle_tracking(self) -> bool:
++        """Attempt to initialize pickle-based tracking."""
++        if not self.pickle_path:
++            return False
++
++        self.logger.info(f"Attempting pickle-based tracking from {self.pickle_path}")
++
++        if self.load_multiworld_from_pickle(self.pickle_path):
++            # Set host settings that are normally set by run_generator().
++            try:
++                yaml_path, self.output_format, self.hide_excluded, self.use_split, \
++                    enforce_deferred_connections, self.enable_glitched_logic = self._set_host_settings()
++                if self.enforce_deferred_connections is None:
++                    self.enforce_deferred_connections = enforce_deferred_connections
++            except Exception:
++                self.output_format = "Both"
++                self.hide_excluded = False
++                self.use_split = True
++
++            if self.initialize_tracking_from_pickle():
++                self.logger.info("Using pickle-based tracking")
++                return True
++            else:
++                self.logger.warning("Failed to initialize tracking from pickle")
++        else:
++            self.logger.warning("Failed to load pickle")
++
++        return False
+--- a/pickle_exporter.py
++++ b/pickle_exporter.py
+@@ -0,0 +1,174 @@
++"""
++Pickle-based multiworld exporter for Universal Tracker.
++
++Exports the multiworld object as a gzip-compressed dill pickle,
++which preserves lambdas and functions used in access rules. This allows
++the tracker to load the multiworld directly without needing to regenerate.
++"""
++
++import gzip
++import json
++import logging
++import os
++import sys
++from pathlib import Path
++from typing import Any, Dict, Optional, TYPE_CHECKING
++
++import dill
++
++import Utils
++
++if TYPE_CHECKING:
++    from BaseClasses import MultiWorld
++
++logger = logging.getLogger(__name__)
++
++# File extension for pickle exports
++PICKLE_EXTENSION = ".pkl.gz"
++
++# Metadata file extension (JSON sidecar with info for discovery)
++METADATA_EXTENSION = "_pickle_meta.json"
++
++
++def export_multiworld_pickle(
++    multiworld: "MultiWorld",
++    output_dir: str,
++    filename_base: str,
++) -> Dict[str, str]:
++    """
++    Export the multiworld as a gzip-compressed dill pickle for tracker use.
++
++    Args:
++        multiworld: MultiWorld instance to export
++        output_dir: Directory to write output files
++        filename_base: Base name for output files (e.g., "AP_14089154938208861744")
++
++    Returns:
++        Dict containing paths to generated files
++    """
++    os.makedirs(output_dir, exist_ok=True)
++
++    result_paths = {}
++
++    pickle_filename = f"{filename_base}{PICKLE_EXTENSION}"
++    metadata_filename = f"{filename_base}{METADATA_EXTENSION}"
++    pickle_path = os.path.join(output_dir, pickle_filename)
++    metadata_path = os.path.join(output_dir, metadata_filename)
++
++    # Collect metadata for discovery
++    metadata = _collect_metadata(multiworld)
++
++    # Export the multiworld with dill and gzip compression
++    logger.info(f"Exporting multiworld pickle to {pickle_path}")
++    try:
++        _export_pickle(multiworld, pickle_path)
++        result_paths['pickle'] = pickle_path
++        logger.info(f"Successfully exported multiworld pickle ({_get_file_size_str(pickle_path)})")
++    except Exception as e:
++        logger.error(f"Failed to export multiworld pickle: {e}")
++        raise
++
++    # Write metadata JSON
++    try:
++        with open(metadata_path, 'w', encoding='utf-8') as f:
++            json.dump(metadata, f, indent=2)
++        result_paths['metadata'] = metadata_path
++        logger.debug(f"Wrote metadata to {metadata_path}")
++    except Exception as e:
++        logger.error(f"Failed to write metadata: {e}")
++
++    return result_paths
++
++
++def _export_pickle(multiworld: "MultiWorld", path: str) -> None:
++    """Export the multiworld to a gzip-compressed dill pickle file."""
++    # Prepare multiworld for pickling by replacing unpicklable objects
++    _prepare_multiworld_for_pickle(multiworld)
++
++    # Increase recursion limit for complex worlds (e.g., ALttP)
++    original_limit = sys.getrecursionlimit()
++    try:
++        sys.setrecursionlimit(max(original_limit, 10000))
++        with gzip.open(path, 'wb', compresslevel=6) as f:
++            dill.dump(multiworld, f, protocol=dill.HIGHEST_PROTOCOL)
++    finally:
++        sys.setrecursionlimit(original_limit)
++
++
++def _prepare_multiworld_for_pickle(multiworld: "MultiWorld") -> None:
++    """
++    Prepare a multiworld for pickling by replacing unpicklable objects.
++
++    The main issue is ThreadBarrierProxy which wraps multiworld.random.
++    """
++    from BaseClasses import ThreadBarrierProxy
++
++    if hasattr(multiworld, 'random') and isinstance(multiworld.random, ThreadBarrierProxy):
++        multiworld.random = multiworld.random.obj
++        logger.debug("Replaced ThreadBarrierProxy with underlying random.Random")
++
++    if hasattr(multiworld, 'spoiler'):
++        multiworld.spoiler = None
++        logger.debug("Cleared spoiler object for pickling")
++
++
++def _collect_metadata(multiworld: "MultiWorld") -> Dict[str, Any]:
++    """Collect metadata about the multiworld for discovery and validation."""
++    metadata = {
++        'schema_version': 1,
++        'archipelago_version': Utils.__version__,
++        'generation_seed': multiworld.seed,
++        'seed_name': multiworld.seed_name,
++        'players': {},
++    }
++
++    for player_id in multiworld.player_ids:
++        world = multiworld.worlds.get(player_id)
++        if world:
++            player_name = multiworld.player_name.get(player_id, f"Player{player_id}")
++            metadata['players'][str(player_id)] = {
++                'name': player_name,
++                'game': world.game,
++            }
++            try:
++                module_path = type(world).__module__
++                parts = module_path.split('.')
++                if len(parts) >= 2 and parts[0] == 'worlds':
++                    metadata['players'][str(player_id)]['world_directory'] = parts[1]
++            except Exception:
++                pass
++
++    return metadata
++
++
++def _get_file_size_str(path: str) -> str:
++    """Get a human-readable file size string."""
++    size = os.path.getsize(path)
++    for unit in ['B', 'KB', 'MB', 'GB']:
++        if size < 1024:
++            return f"{size:.1f} {unit}"
++        size /= 1024
++    return f"{size:.1f} TB"
++
++
++def load_multiworld_pickle(path: str) -> "MultiWorld":
++    """Load a multiworld from a gzip-compressed dill pickle file."""
++    if not os.path.exists(path):
++        raise FileNotFoundError(f"Pickle file not found: {path}")
++
++    logger.info(f"Loading multiworld from pickle: {path}")
++
++    with gzip.open(path, 'rb') as f:
++        multiworld = dill.load(f)
++
++    logger.info("Successfully loaded multiworld from pickle")
++    return multiworld
++
++
++def load_pickle_metadata(path: str) -> Optional[Dict[str, Any]]:
++    """Load metadata from a pickle metadata JSON file."""
++    if not os.path.exists(path):
++        return None
++
++    with open(path, 'r', encoding='utf-8') as f:
++        return json.load(f)
+--- a/pickle_mixin.py
++++ b/pickle_mixin.py
+@@ -0,0 +1,210 @@
++"""
++Pickle Mixin for Universal Tracker
++
++Adds pickle-based multiworld loading to TrackerCore. Loads a pre-generated
++multiworld from a gzip-compressed dill pickle file, preserving lambdas
++and functions in access rules.
++"""
++
++import json
++import logging
++from pathlib import Path
++from typing import Optional, TYPE_CHECKING
++
++if TYPE_CHECKING:
++    from BaseClasses import MultiWorld
++
++
++class PickleMixin:
++    """
++    Mixin that adds pickle-based multiworld loading to TrackerCore.
++
++    Required attributes from base class:
++    - logger: logging.Logger
++    - multiworld: Optional[MultiWorld]
++    - player_id: Optional[int]
++    - game: Optional[str]
++    - seed_name: Optional[str]
++    """
++
++    pickle_multiworld: Optional["MultiWorld"] = None
++    pickle_path: Optional[str] = None
++    pickle_metadata: Optional[dict] = None
++    _tracking_from_pickle: bool = False
++
++    def _init_pickle_mixin(self):
++        """Initialize pickle mixin attributes."""
++        self.pickle_multiworld = None
++        self.pickle_path = None
++        self.pickle_metadata = None
++        self._tracking_from_pickle = False
++
++    def _disconnect_pickle_mixin(self):
++        """Clear pickle mixin state."""
++        self.pickle_multiworld = None
++        self.pickle_path = None
++        self.pickle_metadata = None
++        self._tracking_from_pickle = False
++
++    def load_multiworld_from_pickle(self, pickle_path: str) -> bool:
++        """
++        Load a multiworld from a gzip-compressed dill pickle file.
++
++        Returns True if successful, False otherwise.
++        """
++        try:
++            from .pickle_exporter import load_multiworld_pickle, load_pickle_metadata, METADATA_EXTENSION
++
++            self.logger.info(f"Loading multiworld from pickle: {pickle_path}")
++
++            self.pickle_multiworld = load_multiworld_pickle(pickle_path)
++            self.pickle_path = pickle_path
++
++            # Try to load metadata if available
++            metadata_path = pickle_path.rsplit('.pkl.gz', 1)[0] + METADATA_EXTENSION
++            self.pickle_metadata = load_pickle_metadata(metadata_path)
++
++            self.logger.info("Loaded multiworld from pickle successfully")
++            return True
++
++        except Exception as e:
++            self.logger.warning(f"Failed to load multiworld from pickle: {e}")
++            import traceback
++            self.logger.debug(traceback.format_exc())
++            self.pickle_multiworld = None
++            self.pickle_path = None
++            self.pickle_metadata = None
++            return False
++
++    def initialize_tracking_from_pickle(self) -> bool:
++        """
++        Initialize tracking using the pickled multiworld.
++
++        The pickled multiworld already has all regions, rules, and items set up,
++        so no generation steps are needed.
++
++        Returns True if successful, False otherwise.
++        """
++        if not self.pickle_multiworld:
++            self.logger.debug("No pickle multiworld available for tracking")
++            return False
++
++        try:
++            self.multiworld = self.pickle_multiworld
++            self.player_id = 1
++            self._tracking_from_pickle = True
++
++            # Clear precollected items with codes to avoid double-counting.
++            # Items will be added via set_items_received() during tracking.
++            # Keep items without codes (events).
++            temp_precollect = {}
++            for player_id, items in self.multiworld.precollected_items.items():
++                temp_items = [item for item in items if item.code is None]
++                temp_precollect[player_id] = temp_items
++            self.multiworld.precollected_items = temp_precollect
++
++            # Convert list-address locations to events.
++            # Some games (e.g., ALttP) use list addresses for dungeon prizes.
++            list_address_count = 0
++            for location in self.multiworld.get_locations(self.player_id):
++                if isinstance(location.address, list):
++                    location.address = None
++                    location.event = True
++                    list_address_count += 1
++
++            if list_address_count > 0:
++                self.logger.debug(
++                    f"Converted {list_address_count} list-address locations to events"
++                )
++
++            self.logger.info("Initialized tracking from pickle multiworld")
++            return True
++
++        except Exception as e:
++            self.logger.warning(f"Failed to initialize tracking from pickle: {e}")
++            import traceback
++            self.logger.debug(traceback.format_exc())
++            self._tracking_from_pickle = False
++            return False
++
++    def auto_discover_pickle(self) -> bool:
++        """
++        Auto-discover and load the pickle file based on game name and seed name.
++
++        Searches for pickle files in:
++        1. output/ directory
++        2. User data directory
++
++        Returns True if pickle was loaded successfully, False otherwise.
++        """
++        if not self.game or not self.seed_name:
++            self.logger.debug("Cannot auto-discover pickle: game or seed_name not set")
++            return False
++
++        from Utils import output_path
++        from .pickle_exporter import PICKLE_EXTENSION, METADATA_EXTENSION
++
++        # Build the expected seed folder name
++        seed_folder = f"AP_{self.seed_name}" if not self.seed_name.startswith('AP_') else self.seed_name
++        pickle_filename = f"{seed_folder}{PICKLE_EXTENSION}"
++
++        # Build list of candidate paths
++        candidates = []
++
++        # 1. output/ directory
++        output_dir = Path(output_path())
++        candidates.append(output_dir / pickle_filename)
++
++        # 2. User data directory
++        try:
++            from Utils import user_path
++            user_data_dir = Path(user_path())
++            candidates.append(user_data_dir / pickle_filename)
++        except Exception:
++            pass
++
++        # Try each candidate
++        for pickle_path in candidates:
++            if not pickle_path.exists():
++                self.logger.debug(f"Pickle not found: {pickle_path}")
++                continue
++
++            self.logger.debug(f"Found pickle candidate: {pickle_path}")
++
++            # Validate by loading metadata
++            metadata_path = str(pickle_path).rsplit('.pkl.gz', 1)[0] + METADATA_EXTENSION
++            if Path(metadata_path).exists():
++                try:
++                    with open(metadata_path) as f:
++                        metadata = json.load(f)
++
++                    # Validate seed name matches
++                    meta_seed_name = metadata.get('seed_name', '')
++                    if meta_seed_name != self.seed_name and meta_seed_name != f"AP_{self.seed_name}":
++                        self.logger.debug(
++                            f"Seed name mismatch: expected {self.seed_name}, got {meta_seed_name}"
++                        )
++                        continue
++
++                    # Validate game matches
++                    players = metadata.get('players', {})
++                    game_found = any(
++                        p.get('game') == self.game for p in players.values()
++                    )
++                    if not game_found:
++                        games = [p.get('game') for p in players.values()]
++                        self.logger.debug(
++                            f"Game mismatch: expected {self.game}, found {games}"
++                        )
++                        continue
++
++                except Exception as e:
++                    self.logger.debug(f"Failed to validate metadata: {e}")
++
++            # Try to load the pickle
++            if self.load_multiworld_from_pickle(str(pickle_path)):
++                self.logger.info(f"Auto-discovered and loaded pickle: {pickle_path}")
++                return True
++
++        self.logger.debug("No valid pickle file found")
++        return False
+--- a/monkey_patches/__init__.py
++++ b/monkey_patches/__init__.py
+@@ -0,0 +1,10 @@
++"""
++Monkey patching module for pickle tracker.
++
++Provides a runtime patch for Main.main to export a pickle of the multiworld
++after seed generation, without modifying any source files.
++"""
++
++from .hooks import install_hooks, auto_install
++
++__all__ = ["install_hooks", "auto_install"]
+--- a/monkey_patches/hooks.py
++++ b/monkey_patches/hooks.py
+@@ -0,0 +1,85 @@
++"""
++Runtime monkey patch: wrap Main.main to export pickle after generation.
++
++This is the only hook needed for pickle tracker. It wraps Main.main()
++so that after seed generation completes, the multiworld is exported
++as a gzip-compressed dill pickle file.
++"""
++
++import functools
++import logging
++
++logger = logging.getLogger(__name__)
++
++_installed = False
++_original_main = None
++
++
++def install_hooks() -> bool:
++    """Install the Main.main wrapper hook."""
++    global _installed, _original_main
++
++    if _installed:
++        logger.warning("Pickle export hook already installed")
++        return True
++
++    try:
++        import Main
++
++        _original_main = Main.main
++
++        @functools.wraps(_original_main)
++        def hooked_main(*args, **kwargs):
++            """Wrapped Main.main that exports pickle after generation."""
++            result = _original_main(*args, **kwargs)
++            if result is not None:
++                _export_pickle_from_multiworld(result)
++            return result
++
++        Main.main = hooked_main
++        _installed = True
++        logger.info("Installed pickle export hook on Main.main")
++        return True
++
++    except ImportError as e:
++        logger.error(f"Could not import Main module: {e}")
++        return False
++    except Exception as e:
++        logger.error(f"Failed to install pickle export hook: {e}")
++        return False
++
++
++def _export_pickle_from_multiworld(multiworld):
++    """Export pickle from the multiworld returned by Main.main."""
++    # Check if pickle mode is enabled
++    try:
++        from .. import TrackerWorld
++        settings = TrackerWorld.settings
++        if not getattr(settings, 'pickle_mode', True):
++            logger.debug("Pickle mode disabled in settings, skipping export")
++            return
++    except Exception:
++        pass  # If settings can't be loaded, export anyway
++
++    seed_name = getattr(multiworld, 'seed_name', None)
++    if not seed_name:
++        logger.warning("Cannot export pickle: multiworld has no seed_name")
++        return
++
++    filename_base = f"AP_{seed_name}"
++
++    try:
++        from Utils import output_path
++        output_dir = output_path()
++
++        from ..pickle_exporter import export_multiworld_pickle
++        export_multiworld_pickle(multiworld, output_dir, filename_base)
++    except Exception as e:
++        logger.warning(f"Pickle export failed: {e}")
++        import traceback
++        logger.debug(traceback.format_exc())
++
++
++def auto_install():
++    """Auto-install hooks at import time."""
++    install_hooks()
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -0,0 +1 @@
++dill>=0.3.8
+--- scripts/test/fixtures/tracker_original/archipelago.json	2026-02-03 19:26:17.158715676 -0800
++++ worlds/ut_pickle/archipelago.json	2026-04-05 10:59:47.207647463 -0700
+@@ -1,6 +1 @@
+-{
+-    "version": 7,
+-    "compatible_version": 7,
+-    "game": "Universal Tracker",
+-    "minimum_ap_version": "0.6.2"
+-}
+\ No newline at end of file
++{"game": "UT Pickle Mode", "minimum_ap_version": "0.6.2"}

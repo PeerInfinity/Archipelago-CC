@@ -52,6 +52,9 @@ class DeferredEntranceMode(Enum):
     disabled = "off"
 
 class TrackerSettings(Group):
+    class EnabledBool(Bool):
+        """Enable Universal Tracker. Set to false to disable the launcher component."""
+
     class TrackerPlayersPath(UserFolderPath):
         """Players folder for UT look for YAMLs"""
 
@@ -63,13 +66,13 @@ class TrackerSettings(Group):
 
     class HideExcluded(Bool):
         """Have the UT tab ignore excluded locations"""
-    
+
     class UseSplitMapIcons(Bool):
         """Use split icons rather then mixed for the UT map tab"""
-    
+
     class DisplayGlitchedLogic(Bool):
         """Enable showing Glitched/yellow logic in tracker tab"""
-    
+
     class SettingDeferredEntranceMode(str):
         """Determines how worlds should be allowed to use deferred entrances
         on: Force worlds to disconnect entrances
@@ -77,6 +80,7 @@ class TrackerSettings(Group):
         off: Force worlds to connect all entrances
         """
 
+    enabled: EnabledBool | bool = True
     player_files_path: TrackerPlayersPath = TrackerPlayersPath("Players")
     include_region_name: RegionNameBool | bool = False
     include_location_name: LocationNameBool | bool = True
@@ -192,5 +196,15 @@ class UTMapTabData:
             self.location_icon_coords = lambda _,__: None
 
 
+def _is_enabled() -> bool:
+    """Check if Universal Tracker is enabled in host.yaml settings."""
+    try:
+        from settings import get_settings
+        return bool(getattr(get_settings().universal_tracker, 'enabled', True))
+    except Exception:
+        return True
+
+
 icon_paths["ut_ico"] = f"ap:{__name__}/icon.png"
-components.append(Component("Universal Tracker", None, func=launch_client, component_type=Type.CLIENT, icon="ut_ico"))
+if _is_enabled():
+    components.append(Component("Universal Tracker", None, func=launch_client, component_type=Type.CLIENT, icon="ut_ico"))

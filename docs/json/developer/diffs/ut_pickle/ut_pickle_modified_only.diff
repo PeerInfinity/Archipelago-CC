@@ -1,0 +1,195 @@
+--- scripts/test/fixtures/tracker_original/__init__.py	2026-02-03 19:26:13.854716434 -0800
++++ worlds/ut_pickle/__init__.py	2026-04-05 10:58:24.519724057 -0700
+@@ -1,7 +1,7 @@
+ from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
+ from settings import Group, Bool, UserFolderPath, _world_settings_name_cache
+ from typing import Any, ClassVar, NamedTuple, Callable,Optional
+-from worlds.AutoWorld import World
++from worlds.AutoWorld import WebWorld, World
+ from BaseClasses import CollectionState,Entrance
+ from collections import Counter
+ from enum import Enum
+@@ -20,7 +20,7 @@
+     from .TrackerClient import launch as TCMain
+     launch(TCMain, name="Universal Tracker client", args=args)
+ 
+-UT_VERSION = "v0.2.26"
++UT_VERSION = "v0.2.26-pickle"
+ 
+ class CurrentTrackerState(NamedTuple):
+     all_items: Counter
+@@ -52,6 +52,10 @@
+     disabled = "off"
+ 
+ class TrackerSettings(Group):
++    class EnabledBool(Bool):
++        """Enable UT Pickle Mode. When disabled, this world does nothing.
++        Must be manually set to true to activate pickle-based tracking."""
++
+     class TrackerPlayersPath(UserFolderPath):
+         """Players folder for UT look for YAMLs"""
+ 
+@@ -63,13 +67,18 @@
+ 
+     class HideExcluded(Bool):
+         """Have the UT tab ignore excluded locations"""
+-    
++
+     class UseSplitMapIcons(Bool):
+         """Use split icons rather then mixed for the UT map tab"""
+-    
++
+     class DisplayGlitchedLogic(Bool):
+         """Enable showing Glitched/yellow logic in tracker tab"""
+-    
++
++    class PickleModeBool(Bool):
++        """Enable pickle-based tracking for improved accuracy.
++        When enabled, exports a pickle of the multiworld during generation
++        and uses it for tracking. When disabled, uses original YAML-based tracking."""
++
+     class SettingDeferredEntranceMode(str):
+         """Determines how worlds should be allowed to use deferred entrances
+         on: Force worlds to disconnect entrances
+@@ -77,6 +86,7 @@
+         off: Force worlds to connect all entrances
+         """
+ 
++    enabled: EnabledBool | bool = False
+     player_files_path: TrackerPlayersPath = TrackerPlayersPath("Players")
+     include_region_name: RegionNameBool | bool = False
+     include_location_name: LocationNameBool | bool = True
+@@ -84,15 +94,22 @@
+     use_split_map_icons: UseSplitMapIcons | bool = True
+     enforce_deferred_entrances: SettingDeferredEntranceMode | str = "default"
+     display_glitched_logic: DisplayGlitchedLogic | bool = True
++    pickle_mode: PickleModeBool | bool = True
++
++
++class TrackerWorldWeb(WebWorld):
++    tutorials = []
++    game_info_languages = []
+ 
+ 
+ class TrackerWorld(World):
+     settings: ClassVar[TrackerSettings]
+-    settings_key = "universal_tracker"
++    settings_key = "ut_pickle"
+ 
+     # to make auto world register happy so we can register our settings
+-    game = "Universal Tracker"
++    game = "UT Pickle Mode"
+     hidden = True
++    web = TrackerWorldWeb()
+     item_name_to_id = {}
+     location_name_to_id = {}
+ 
+@@ -187,5 +204,22 @@
+             self.location_icon_coords = lambda _,__: None
+ 
+ 
+-icon_paths["ut_ico"] = f"ap:{__name__}/icon.png"
+-components.append(Component("Universal Tracker", None, func=launch_client, component_type=Type.CLIENT, icon="ut_ico"))
++def _is_enabled() -> bool:
++    """Check if ut_pickle is enabled in host.yaml settings."""
++    try:
++        from settings import get_settings
++        return bool(getattr(get_settings().ut_pickle, 'enabled', False))
++    except Exception:
++        return False
++
++
++if _is_enabled():
++    icon_paths["ut_pickle_ico"] = f"ap:{__name__}/icon.png"
++    components.append(Component("UT Pickle Mode", None, func=launch_client, component_type=Type.CLIENT, icon="ut_pickle_ico"))
++
++    # Auto-install monkey patches for pickle export
++    try:
++        from .monkey_patches import auto_install
++        auto_install()
++    except Exception:
++        pass
+--- scripts/test/fixtures/tracker_original/TrackerClient.py	2026-02-04 11:18:49.849972890 -0800
++++ worlds/ut_pickle/TrackerClient.py	2026-04-05 10:59:26.189638740 -0700
+@@ -371,6 +371,7 @@
+         self.tracker_core.set_log_to_tab(self.log_to_tab)
+         self.tracker_core.set_clear_page(self.clear_page)
+         self.tracker_core.set_get_ut_color(get_ut_color)
++        self.seed_name = None
+ 
+     def updateTracker(self) -> CurrentTrackerState:
+         if self.disconnected_intentionally: return CurrentTrackerState.init_empty_state()
+@@ -1284,7 +1285,9 @@
+ 
+     def on_package(self, cmd: str, args: dict):
+         try:
+-            if cmd == 'Connected':
++            if cmd == 'RoomInfo':
++                self.seed_name = args.get('seed_name')
++            elif cmd == 'Connected':
+                 self.game = args["slot_info"][str(args["slot"])][1]
+                 slot_name = args["slot_info"][str(args["slot"])][0]
+                 self.tracker_core.set_slot_params(self.game,self.slot,slot_name,self.team)
+@@ -1294,6 +1297,10 @@
+                     return
+                 if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
+                     logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
++                # Auto-discover pickle for pickle-based tracking
++                if hasattr(self, 'seed_name') and self.seed_name:
++                    self.tracker_core.seed_name = self.seed_name
++                    self.tracker_core.auto_discover_pickle()
+                 self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
+                 if not self.tracker_core.multiworld:
+                     logger.error("Internal generation failed, something has gone wrong")
+--- scripts/test/fixtures/tracker_original/fuzzer_hook.py	2026-02-03 19:26:14.490714741 -0800
++++ worlds/ut_pickle/fuzzer_hook.py	2026-04-05 10:59:43.444959808 -0700
+@@ -27,20 +27,26 @@
+             return
+         assert self.player_files_path
+         self.status = GenOutcome.Success
+-        import zipfile
+-        with zipfile.ZipFile(output_path+"/AP_"+mw.seed_name+".zip") as zf:
+-            for file in zf.namelist():
+-                if file.endswith(".archipelago"):
+-                    data = zf.read(file)
+-                    break
+-            else:
+-                raise Exception("No .archipelago found in archive.")
+-        from MultiServer import Context
+-        temp = Context.decompress(data)
+-
+-        slot_data = temp["slot_data"][1] #slot 0 is reserved
++        # Extract slot_data from the generated archive (if available)
++        slot_data = {}
++        try:
++            import zipfile
++            with zipfile.ZipFile(output_path+"/AP_"+mw.seed_name+".zip") as zf:
++                for file in zf.namelist():
++                    if file.endswith(".archipelago"):
++                        data = zf.read(file)
++                        break
++                else:
++                    raise Exception("No .archipelago found in archive.")
++            from MultiServer import Context
++            temp = Context.decompress(data)
++            slot_data = temp["slot_data"][1]
++        except (FileNotFoundError, Exception):
++            pass  # No archive available (e.g., --skip-output)
+ 
+         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
++        self.ut_core.seed_name = mw.seed_name
++        self.ut_core.auto_discover_pickle()
+         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
+         assert self.ut_core.multiworld, self.ut_core.gen_error
+ 
+--- scripts/test/fixtures/tracker_original/archipelago.json	2026-02-03 19:26:17.158715676 -0800
++++ worlds/ut_pickle/archipelago.json	2026-04-05 10:59:47.207647463 -0700
+@@ -1,6 +1 @@
+-{
+-    "version": 7,
+-    "compatible_version": 7,
+-    "game": "Universal Tracker",
+-    "minimum_ap_version": "0.6.2"
+-}
+\ No newline at end of file
++{"game": "UT Pickle Mode", "minimum_ap_version": "0.6.2"}

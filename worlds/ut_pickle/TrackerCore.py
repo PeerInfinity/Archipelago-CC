@@ -1,30 +1,26 @@
 """
 TrackerCore with Pickle Mode Support
 
-Extends TrackerCoreBase (upstream UT) with pickle-based multiworld loading.
+Extends the original TrackerCore with pickle-based multiworld loading.
 When pickle mode is enabled and a pickle file is found, tracking uses the
 exact multiworld from generation instead of regenerating from YAML.
-
-Tracking mode priority:
-1. Pickle mode (if enabled and pickle file found) - fastest, preserves exact rules
-2. Original YAML mode - standard UT behavior
 """
 
 import logging
 from typing import Callable, Optional
 
-from .TrackerCoreBase import TrackerCoreBase
+from .TrackerCoreOriginal import TrackerCore as TrackerCoreOriginal
 from .pickle_mixin import PickleMixin
 
 
-class TrackerCore(PickleMixin, TrackerCoreBase):
+class TrackerCore(PickleMixin, TrackerCoreOriginal):
     """TrackerCore with pickle mode support."""
 
     def __init__(self, logger: logging.Logger, print_list: bool, print_count: bool) -> None:
         super().__init__(logger, print_list, print_count)
         self._init_pickle_mixin()
         self.seed_name: Optional[str] = None
-        # Compatibility attributes for TrackerClient sphere_log_mode / testing
+        # Compatibility attributes for TrackerClient
         self.sphere_log_mode: bool = False
         self.seed_override: Optional[int] = None
         self._debug_logger: Optional[Callable] = None
@@ -39,7 +35,7 @@ class TrackerCore(PickleMixin, TrackerCoreBase):
         self.seed_name = seed_name
 
     def set_debug_logger(self, debug_logger: Optional[Callable]):
-        """Set callback for debug logging (used by TrackerClient)."""
+        """Set callback for debug logging."""
         self._debug_logger = debug_logger
 
     def initalize_tracker_core(self, connected_cls, raw_slot_data):
@@ -69,7 +65,7 @@ class TrackerCore(PickleMixin, TrackerCoreBase):
             settings = TrackerWorld.settings
             return getattr(settings, 'pickle_mode', True)
         except Exception:
-            return True  # Default to enabled
+            return True
 
     def _try_pickle_tracking(self) -> bool:
         """Attempt to initialize pickle-based tracking."""
@@ -80,14 +76,12 @@ class TrackerCore(PickleMixin, TrackerCoreBase):
 
         if self.load_multiworld_from_pickle(self.pickle_path):
             # Set host settings that are normally set by run_generator().
-            # Pickle mode skips run_generator, so we need defaults.
             try:
                 yaml_path, self.output_format, self.hide_excluded, self.use_split, \
                     enforce_deferred_connections, self.enable_glitched_logic = self._set_host_settings()
                 if self.enforce_deferred_connections is None:
                     self.enforce_deferred_connections = enforce_deferred_connections
             except Exception:
-                # Fallback defaults if settings can't be loaded
                 self.output_format = "Both"
                 self.hide_excluded = False
                 self.use_split = True

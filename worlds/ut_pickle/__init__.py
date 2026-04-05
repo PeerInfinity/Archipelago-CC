@@ -1,23 +1,10 @@
-"""
-Universal Tracker (Pickle Mode) - Improved tracking accuracy via pickle export.
-
-This APWorld provides:
-- Pickle-based multiworld export during seed generation (via monkey-patched Main.main)
-- Universal Tracker client with pickle mode for improved tracking accuracy
-- Toggle between pickle mode and original YAML-based tracking via host.yaml settings
-
-This is a replacement for the standard Universal Tracker APWorld.
-Do not install both at the same time.
-"""
-
-from worlds.LauncherComponents import Component, components, Type, icon_paths
-from settings import Group, Bool, UserFolderPath
-from typing import Any, ClassVar, NamedTuple, Callable, Optional
+from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
+from settings import Group, Bool, UserFolderPath, _world_settings_name_cache
+from typing import Any, ClassVar, NamedTuple, Callable,Optional
 from worlds.AutoWorld import WebWorld, World
-from BaseClasses import CollectionState, Entrance
+from BaseClasses import CollectionState,Entrance
 from collections import Counter
 from enum import Enum
-
 
 def launch_client(*args):
     from Utils import messagebox, version_tuple
@@ -33,9 +20,7 @@ def launch_client(*args):
     from .TrackerClient import launch as TCMain
     launch(TCMain, name="Universal Tracker client", args=args)
 
-
-UT_VERSION = "v0.2.23-pickle"
-
+UT_VERSION = "v0.2.26-pickle"
 
 class CurrentTrackerState(NamedTuple):
     all_items: Counter
@@ -53,8 +38,7 @@ class CurrentTrackerState(NamedTuple):
 
     @staticmethod
     def init_empty_state() -> "CurrentTrackerState":
-        return CurrentTrackerState(Counter(), Counter(), [], [], [], [], [], [], [], [], None, None)
-
+        return CurrentTrackerState(Counter(),Counter(),[],[],[],[],[],[],[],[],None,None)
 
 class DeferredEntranceMode(Enum):
     """Determines how worlds should be allowed to use deferred entrances
@@ -62,14 +46,18 @@ class DeferredEntranceMode(Enum):
     default: Allow worlds to decide if entrances should be deferred
     off: Force worlds to connect all entrances
     """
+
     forced = "on"
     default = "default"
     disabled = "off"
 
-
 class TrackerSettings(Group):
+    class EnabledBool(Bool):
+        """Enable UT Pickle Mode. When disabled, this world does nothing.
+        Must be manually set to true to activate pickle-based tracking."""
+
     class TrackerPlayersPath(UserFolderPath):
-        """Players folder for UT to look for YAMLs"""
+        """Players folder for UT look for YAMLs"""
 
     class RegionNameBool(Bool):
         """Show Region names in the UT tab"""
@@ -81,7 +69,7 @@ class TrackerSettings(Group):
         """Have the UT tab ignore excluded locations"""
 
     class UseSplitMapIcons(Bool):
-        """Use split icons rather than mixed for the UT map tab"""
+        """Use split icons rather then mixed for the UT map tab"""
 
     class DisplayGlitchedLogic(Bool):
         """Enable showing Glitched/yellow logic in tracker tab"""
@@ -98,6 +86,7 @@ class TrackerSettings(Group):
         off: Force worlds to connect all entrances
         """
 
+    enabled: EnabledBool | bool = False
     player_files_path: TrackerPlayersPath = TrackerPlayersPath("Players")
     include_region_name: RegionNameBool | bool = False
     include_location_name: LocationNameBool | bool = True
@@ -115,10 +104,10 @@ class TrackerWorldWeb(WebWorld):
 
 class TrackerWorld(World):
     settings: ClassVar[TrackerSettings]
-    settings_key = "universal_tracker"
+    settings_key = "ut_pickle"
 
     # to make auto world register happy so we can register our settings
-    game = "Universal Tracker"
+    game = "UT Pickle Mode"
     hidden = True
     web = TrackerWorldWeb()
     item_name_to_id = {}
@@ -129,27 +118,50 @@ class UTMapTabData:
     """The holding class for all the poptracker integration values"""
 
     map_page_folder: str
+    """The name of the folder within the .apworld that contains the poptracker pack"""
+
     map_page_maps: list[str]
+    """The relative paths within the map_page_folder of the map.json"""
+
     map_page_locations: list[str]
+    """The relative paths within the map_page_folder of the location.json"""
+
     map_page_layouts: list[str]
+    """The relative paths within the map_page_folder of the layout.json. Mutually exclusive with map_page_groups"""
+
     map_page_groups: list[tuple[str, list]]
+    """Map page groups. Mutually exclusive with map_page_layouts"""
+
     map_page_setting_key: str
+    """Data storage key used to determine which page should be loaded"""
+
     map_page_index: Callable[[Any], int]
+    """Function that gets called to map the data storage string to the map index"""
+
     external_pack_key: str
+    """Settings key to get the path reference of the poptracker pack on user's filesystem"""
+
     poptracker_name_mapping: dict[str, int]
+    """Mapping from [poptracker name : datapackage location id] """
+
     poptracker_entrance_mapping: dict[str, str]
+    """Mapping from [poptracker name : ap entrance name] used for entrance tracking"""
+
     location_setting_key: str
-    location_icon_coords: Callable[[int, Any], tuple[int, int, str] | None]
+    """Data storage key used to determine where to place the location indicator"""
+
+    location_icon_coords: Callable[[int, Any], tuple[int,int,str]|None]
+    """Function used to convert between the map and the value in data storage into coords (or none to hide it) the return is [x, y, override path string]"""
 
     def __init__(
             self, player_id, team_id, map_page_folder: str = "", map_page_maps: list[str] | str = "",
             map_page_locations: list[str] | str = "", map_page_layouts: list[str] | str | None = None,
-            map_page_groups: list[tuple[str, list]] | None = None,
+            map_page_groups: list[tuple[str, list]] | None  = None,
             map_page_setting_key: str | None = None, map_page_index: Callable[[Any], int] | None = None,
             external_pack_key: str = "", poptracker_name_mapping: dict[str, int] | None = None,
-            location_setting_key: str | None = None,
-            location_icon_coords: Callable[[int, Any], tuple[int, int]] | None = None,
-            poptracker_entrance_mapping: dict[str, str] | None = None, **kwargs):
+            location_setting_key: str|None = None,
+            location_icon_coords: Callable[[int, Any], tuple[int,int]]|None= None,
+            poptracker_entrance_mapping: dict[str, str]|None = None, **kwargs):
         self.map_page_folder = map_page_folder
         if isinstance(map_page_maps, str):
             self.map_page_maps = [map_page_maps]
@@ -185,19 +197,29 @@ class UTMapTabData:
         self.location_setting_key = location_setting_key
         if isinstance(self.location_setting_key, str):
             self.location_setting_key = self.location_setting_key.format(player=player_id, team=team_id)
+        print(self.location_setting_key)
         if location_icon_coords and callable(location_icon_coords):
             self.location_icon_coords = location_icon_coords
         else:
-            self.location_icon_coords = lambda _, __: None
+            self.location_icon_coords = lambda _,__: None
 
 
-# Register launcher component
-icon_paths["ut_ico"] = f"ap:{__name__}/icon.png"
-components.append(Component("Universal Tracker", None, func=launch_client, component_type=Type.CLIENT, icon="ut_ico"))
+def _is_enabled() -> bool:
+    """Check if ut_pickle is enabled in host.yaml settings."""
+    try:
+        from settings import get_settings
+        return bool(getattr(get_settings().ut_pickle, 'enabled', False))
+    except Exception:
+        return False
 
-# Auto-install monkey patches for pickle export
-try:
-    from .monkey_patches import auto_install
-    auto_install()
-except Exception:
-    pass
+
+if _is_enabled():
+    icon_paths["ut_pickle_ico"] = f"ap:{__name__}/icon.png"
+    components.append(Component("UT Pickle Mode", None, func=launch_client, component_type=Type.CLIENT, icon="ut_pickle_ico"))
+
+    # Auto-install monkey patches for pickle export
+    try:
+        from .monkey_patches import auto_install
+        auto_install()
+    except Exception:
+        pass

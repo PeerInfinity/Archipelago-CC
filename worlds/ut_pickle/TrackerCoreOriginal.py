@@ -22,7 +22,7 @@ from NetUtils import NetworkItem, HintStatus
     
 REGEN_WORLDS = {name for name, world in AutoWorld.AutoWorldRegister.world_types.items() if getattr(world, "ut_can_gen_without_yaml", False)}
 
-class TrackerCoreBase():
+class TrackerCore():
     cached_multiworlds: list[MultiWorld] = []
     cached_slot_data: list[dict[str, Any]] = []
 
@@ -209,10 +209,6 @@ class TrackerCoreBase():
             if self.quit_after_update:
                 from logging import ERROR
                 args.log_level = ERROR
-
-            # Allow subclasses to inject a seed number for deterministic generation
-            if getattr(self, 'seed_override', None) is not None:
-                args.seed = self.seed_override
 
             g_args, seed = GMain(args)
             if slot_data or override_yaml_path:
