@@ -19,22 +19,22 @@ Full results: [Fuzz Summary (official games)](../../test-results/test-results-fu
 
 ### APWorld
 
-- [ut_pickle.apworld](../../../../apworlds/ut_pickle.apworld) — packaged APWorld for installation
+- [ut_pickle.apworld](../../../../../apworlds/ut_pickle.apworld) — packaged APWorld for installation
 
 ### Source Code
 
-All source files are in [`worlds/ut_pickle/`](../../../../worlds/ut_pickle/):
+All source files are in [`worlds/ut_pickle/`](../../../../../worlds/ut_pickle/):
 
 | File | Description |
 |------|-------------|
-| [`__init__.py`](../../../../worlds/ut_pickle/__init__.py) | World registration, settings, launcher component |
-| [`TrackerCore.py`](../../../../worlds/ut_pickle/TrackerCore.py) | Thin wrapper extending original TrackerCore with pickle support |
-| [`TrackerCoreOriginal.py`](../../../../worlds/ut_pickle/TrackerCoreOriginal.py) | Verbatim copy of original UT TrackerCore (v0.2.27) |
-| [`TrackerClient.py`](../../../../worlds/ut_pickle/TrackerClient.py) | Original UT client with 7 lines added for pickle discovery |
-| [`pickle_exporter.py`](../../../../worlds/ut_pickle/pickle_exporter.py) | Exports/loads multiworld as gzip-compressed dill pickle |
-| [`pickle_mixin.py`](../../../../worlds/ut_pickle/pickle_mixin.py) | Mixin for pickle loading and auto-discovery |
-| [`monkey_patches/hooks.py`](../../../../worlds/ut_pickle/monkey_patches/hooks.py) | Wraps Main.main to export pickle after generation |
-| [`fuzzer_hook.py`](../../../../worlds/ut_pickle/fuzzer_hook.py) | Fuzz test hook for validating pickle tracking accuracy |
+| [`__init__.py`](../../../../../worlds/ut_pickle/__init__.py) | World registration, settings, launcher component |
+| [`TrackerCore.py`](../../../../../worlds/ut_pickle/TrackerCore.py) | Thin wrapper extending original TrackerCore with pickle support |
+| [`TrackerCoreOriginal.py`](../../../../../worlds/ut_pickle/TrackerCoreOriginal.py) | Verbatim copy of original UT TrackerCore (v0.2.27) |
+| [`TrackerClient.py`](../../../../../worlds/ut_pickle/TrackerClient.py) | Original UT client with 7 lines added for pickle discovery |
+| [`pickle_exporter.py`](../../../../../worlds/ut_pickle/pickle_exporter.py) | Exports/loads multiworld as gzip-compressed dill pickle |
+| [`pickle_mixin.py`](../../../../../worlds/ut_pickle/pickle_mixin.py) | Mixin for pickle loading and auto-discovery |
+| [`monkey_patches/hooks.py`](../../../../../worlds/ut_pickle/monkey_patches/hooks.py) | Wraps Main.main to export pickle after generation |
+| [`fuzzer_hook.py`](../../../../../worlds/ut_pickle/fuzzer_hook.py) | Fuzz test hook for validating pickle tracking accuracy |
 
 Unchanged from original UT: `Tracker.kv`, `TrackerKivy.py`, `icon.png`, `archipelago.json`
 
@@ -63,7 +63,7 @@ Unchanged from original UT: `Tracker.kv`, `TrackerKivy.py`, `icon.png`, `archipe
 
 | Directory | Description |
 |-----------|-------------|
-| [`scripts/test/fixtures/tracker_original/`](../../../../scripts/test/fixtures/tracker_original/) | Current baseline (v0.2.27) |
-| [`scripts/test/fixtures/tracker_original_v0.2.26/`](../../../../scripts/test/fixtures/tracker_original_v0.2.26/) | Previous version |
-| [`scripts/test/fixtures/tracker_original_v0.2.27/`](../../../../scripts/test/fixtures/tracker_original_v0.2.27/) | Explicit v0.2.27 snapshot |
-| [`scripts/test/fixtures/fuzzer_original/`](../../../../scripts/test/fixtures/fuzzer_original/) | Original fuzzer used for testing |
+| [`scripts/test/fixtures/tracker_original/`](../../../../../scripts/test/fixtures/tracker_original/) | Current baseline (v0.2.27) |
+| [`scripts/test/fixtures/tracker_original_v0.2.26/`](../../../../../scripts/test/fixtures/tracker_original_v0.2.26/) | Previous version |
+| [`scripts/test/fixtures/tracker_original_v0.2.27/`](../../../../../scripts/test/fixtures/tracker_original_v0.2.27/) | Explicit v0.2.27 snapshot |
+| [`scripts/test/fixtures/fuzzer_original/`](../../../../../scripts/test/fixtures/fuzzer_original/) | Original fuzzer used for testing |
