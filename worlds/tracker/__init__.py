@@ -200,7 +200,10 @@ def _is_enabled() -> bool:
     """Check if Universal Tracker is enabled in host.yaml settings."""
     try:
         from settings import get_settings
-        return bool(getattr(get_settings().universal_tracker, 'enabled', True))
+        ut = get_settings().universal_tracker
+        if isinstance(ut, dict):
+            return bool(ut.get('enabled', True))
+        return bool(getattr(ut, 'enabled', True))
     except Exception:
         return True
 

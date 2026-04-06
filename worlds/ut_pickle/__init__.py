@@ -208,7 +208,10 @@ def _is_enabled() -> bool:
     """Check if ut_pickle is enabled in host.yaml settings."""
     try:
         from settings import get_settings
-        return bool(getattr(get_settings().ut_pickle, 'enabled', False))
+        ut = get_settings().ut_pickle
+        if isinstance(ut, dict):
+            return bool(ut.get('enabled', False))
+        return bool(getattr(ut, 'enabled', False))
     except Exception:
         return False
 

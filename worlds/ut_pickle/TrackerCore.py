@@ -63,7 +63,9 @@ class TrackerCore(PickleMixin, TrackerCoreOriginal):
         try:
             from . import TrackerWorld
             settings = TrackerWorld.settings
-            return getattr(settings, 'pickle_mode', True)
+            if isinstance(settings, dict):
+                return bool(settings.get('pickle_mode', True))
+            return bool(getattr(settings, 'pickle_mode', True))
         except Exception:
             return True
 

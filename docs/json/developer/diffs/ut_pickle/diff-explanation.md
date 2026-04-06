@@ -25,6 +25,7 @@ These files are verbatim copies with no modifications:
 | Added `PickleModeBool` setting (`pickle_mode: bool = True`) | Toggle between pickle-based tracking and original YAML-based tracking |
 | `game` → `"UT Pickle Mode"` | Prevents conflict with the original "Universal Tracker" world registration |
 | `settings_key` → `"ut_pickle"` | Separate host.yaml section so settings don't conflict with original UT |
+| `_is_enabled()` handles both dict and Group settings | AP's settings system may return a raw dict or a Group object depending on timing; the check handles both |
 | Wrapped launcher component in `_is_enabled()` guard | When disabled, no launcher component is registered and no monkey patches are installed |
 | Added monkey patch auto-install | Installs the `Main.main` wrapper that exports pickle files during generation |
 | Icon key → `"ut_pickle_ico"` | Prevents collision with original UT's `"ut_ico"` icon key |
@@ -50,7 +51,7 @@ Total: **7 lines added**, 1 line changed (`if` → `elif`)
 
 ### `TrackerCore.py` (~100 lines)
 
-Thin wrapper that extends the original `TrackerCore` (via `TrackerCoreOriginal`) with `PickleMixin`. Overrides `initalize_tracker_core()` to try pickle mode first, then fall back to original YAML-based tracking. Also sets host settings defaults that are normally set by `run_generator()` (which pickle mode skips).
+Thin wrapper that extends the original `TrackerCore` (via `TrackerCoreOriginal`) with `PickleMixin`. Overrides `initalize_tracker_core()` to try pickle mode first, then fall back to original YAML-based tracking. Also sets host settings defaults that are normally set by `run_generator()` (which pickle mode skips). Settings checks handle both dict and Group objects.
 
 ### `pickle_exporter.py` (~170 lines)
 
@@ -69,7 +70,7 @@ Mixin that adds pickle loading and auto-discovery to TrackerCore:
 
 ### `monkey_patches/hooks.py` (~80 lines)
 
-Wraps `Main.main()` to export a pickle after seed generation completes. Only the `Main.main` wrapper is used (no `Spoiler.to_file` wrapper needed since pickle export doesn't require spoiler data).
+Wraps `Main.main()` to export a pickle after seed generation completes. Only the `Main.main` wrapper is used (no `Spoiler.to_file` wrapper needed since pickle export doesn't require spoiler data). The `pickle_mode` settings check handles both dict and Group objects.
 
 ### `monkey_patches/__init__.py` (~10 lines)
 

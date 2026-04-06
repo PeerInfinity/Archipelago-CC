@@ -55,7 +55,8 @@ def _export_pickle_from_multiworld(multiworld):
     try:
         from .. import TrackerWorld
         settings = TrackerWorld.settings
-        if not getattr(settings, 'pickle_mode', True):
+        pickle_mode = settings.get('pickle_mode', True) if isinstance(settings, dict) else getattr(settings, 'pickle_mode', True)
+        if not pickle_mode:
             logger.debug("Pickle mode disabled in settings, skipping export")
             return
     except Exception:
