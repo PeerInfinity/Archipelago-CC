@@ -73,7 +73,7 @@ From the project's fuzz test data, pickle mode significantly improves tracking a
 
 | Mode | Pass rate (official games) |
 |------|--------------------------|
-| Original UT | 37/88 (42%) |
-| UT Pickle Mode | 74/88 (84%) |
+| Original UT | 33/81 (41%) |
+| UT Pickle Mode | 69/81 (85%) |
 
 Games like Factorio, A Link to the Past, and Mega Man 3 go from 0% pass rate to 100% with pickle mode.

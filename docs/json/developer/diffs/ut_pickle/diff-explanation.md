@@ -2,7 +2,7 @@
 
 This document explains every difference between the original Universal Tracker (`scripts/test/fixtures/tracker_original/`) and UT Pickle Mode (`worlds/ut_pickle/`).
 
-See [ut_pickle.diff](ut_pickle.diff) for the full unified diff.
+See [ut_pickle.diff](ut_pickle.diff) for the full unified diff, or [ut_pickle_modified_only.diff](ut_pickle_modified_only.diff) for just the modified files.
 
 ## Files unchanged from original
 
