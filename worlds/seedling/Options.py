@@ -1,6 +1,6 @@
-from typing import Dict
+from dataclasses import dataclass
 
-from Options import Choice, Option, Toggle, Range, DeathLink
+from Options import Choice, Toggle, Range, DeathLink, PerGameCommonOptions
 
 class Difficulty(Choice):
     """Game Difficulty"""
@@ -27,6 +27,10 @@ class DeathLinkAmnesty(Range):
     range_end = 30
     default = 15
 
-seedling_options: Dict[str, type(Option)] = {
-    "difficulty": Difficulty, "boss_locations": BossLocations, "ending": Ending, "deathlink": DeathLink, "deathlink_amnesty": DeathLinkAmnesty
-}
+@dataclass
+class SeedlingOptions(PerGameCommonOptions):
+    difficulty: Difficulty
+    boss_locations: BossLocations
+    ending: Ending
+    death_link: DeathLink
+    deathlink_amnesty: DeathLinkAmnesty

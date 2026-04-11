@@ -4,20 +4,20 @@ from .Options import Difficulty
 
 def has_item(state: CollectionState, player: int, item: str):
     if item == "Conch":
-        return state.item_count("Progressive Swim", player) >= 1
+        return state.count("Progressive Swim", player) >= 1
     elif item == "Penguin's Feather":
-        return state.item_count("Progressive Swim", player) >= 2
+        return state.count("Progressive Swim", player) >= 2
     elif item == "Sword":
-        return state.item_count("Progressive Sword", player) >= 1
+        return state.count("Progressive Sword", player) >= 1
     elif item == "Shield":
-        return state.item_count("Progressive Shield", player) >= 1
+        return state.count("Progressive Shield", player) >= 1
     elif item == "Dark Shield":
-        return state.item_count("Progressive Shield", player) >= 2
+        return state.count("Progressive Shield", player) >= 2
     elif item == "Shards":
-        return state.item_count("Totem Shard", player) >= 5
+        return state.count("Totem Shard", player) >= 5
     elif item == "Ghost Sword":
         return (
-            state.item_count("Progressive Sword", player) >= 1
+            state.count("Progressive Sword", player) >= 1
             and state.has("Ghost Spear", player)
             and state.has("Ghost Sword Fusion", player)
         )
@@ -31,7 +31,9 @@ def has_item(state: CollectionState, player: int, item: str):
         return state.has(item, player)
 
 
-def generated_rules(multiworld: MultiWorld, player: int):
+def generated_rules(multiworld: MultiWorld, player: int, options=None):
+    boss_locations = options.boss_locations.value if options else False
+    difficulty = options.difficulty.value if options else 0
     multiworld.get_location("Penguin's Feather", player).access_rule = lambda state: (
         (
             has_item(state, player, "Conch")
@@ -102,7 +104,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
         )
         or (
             (
-                state.multiworld.difficulty[player].value
+                difficulty
                 >= Difficulty.option_unreasonable
             )
             and (
@@ -132,14 +134,14 @@ def generated_rules(multiworld: MultiWorld, player: int):
         )
     )
 
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("Owl", player).access_rule = lambda state: (
             (
                 has_item(state, player, "Ghost Sword")
                 and has_item(state, player, "Conch")
             )
             or (
-                (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+                (difficulty >= Difficulty.option_tricky)
                 and (has_item(state, player, "Ghost Sword"))
             )
         )
@@ -152,7 +154,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Red Key")
                 and (
@@ -174,7 +176,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
     multiworld.get_location("Red Key", player).access_rule = lambda state: (
         (has_item(state, player, "Sword") or has_item(state, player, "Ghost Spear"))
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 (
                     has_item(state, player, "Wand")
@@ -195,7 +197,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
     ).access_rule = lambda state: (
         (has_item(state, player, "Conch"))
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (has_item(state, player, "Sword"))
         )
     )
@@ -208,15 +210,15 @@ def generated_rules(multiworld: MultiWorld, player: int):
             or has_item(state, player, "Ghost Spear")
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (has_item(state, player, "Conch"))
         )
     )
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("Shieldspire", player).access_rule = lambda state: (
             (has_item(state, player, "Sword") or has_item(state, player, "Ghost Spear"))
             or (
-                (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+                (difficulty >= Difficulty.option_tricky)
                 and (
                     (
                         has_item(state, player, "Wand")
@@ -412,7 +414,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
     )
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("Times", player).access_rule = lambda state: (
             (
                 has_item(state, player, "Green Key")
@@ -485,7 +487,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
         (has_item(state, player, "Fire") and has_item(state, player, "Conch"))
         or (
             (
-                state.multiworld.difficulty[player].value
+                difficulty
                 >= Difficulty.option_unreasonable
             )
             and (has_item(state, player, "Fire") and has_item(state, player, "Sword"))
@@ -505,7 +507,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
     )
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("Tentacled Beast", player).access_rule = lambda state: (
             (
                 has_item(state, player, "Fire")
@@ -520,7 +522,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
             or (
                 (
-                    state.multiworld.difficulty[player].value
+                    difficulty
                     >= Difficulty.option_unreasonable
                 )
                 and (
@@ -550,7 +552,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Fire")
                 and has_item(state, player, "Purple Key")
@@ -570,7 +572,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Fire")
                 and has_item(state, player, "Purple Key")
@@ -590,7 +592,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Fire")
                 and has_item(state, player, "Purple Key")
@@ -607,7 +609,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Fire")
                 and (
@@ -651,11 +653,11 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (has_item(state, player, "Fire"))
         )
     )
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("Totem of Lacste", player).access_rule = lambda state: (
             (
                 has_item(state, player, "Wand")
@@ -681,7 +683,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             )
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Conch")
                 and has_item(state, player, "Dark Suit")
@@ -699,7 +701,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
         )
         or (
             (
-                state.multiworld.difficulty[player].value
+                difficulty
                 >= Difficulty.option_unreasonable
             )
             and (
@@ -737,7 +739,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
         )
     )
 
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("Lights", player).access_rule = lambda state: (
             (
                 has_item(state, player, "Conch")
@@ -762,7 +764,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             and (has_item(state, player, "Fire") or has_item(state, player, "Conch"))
         )
         or (
-            (state.multiworld.difficulty[player].value >= Difficulty.option_tricky)
+            (difficulty >= Difficulty.option_tricky)
             and (
                 has_item(state, player, "Dark Suit")
                 and has_item(state, player, "Yellow Key")
@@ -795,7 +797,7 @@ def generated_rules(multiworld: MultiWorld, player: int):
             and (has_item(state, player, "Fire") or has_item(state, player, "Conch"))
         )
     )
-    if getattr(multiworld, "boss_locations")[player].value:
+    if boss_locations:
         multiworld.get_location("King of Fire", player).access_rule = lambda state: (
             (
                 has_item(state, player, "Dark Suit")

@@ -4,7 +4,7 @@ from worlds.AutoWorld import WebWorld, World
 from .Items import SeedlingItem, item_data_table, item_table
 from .Regions import region_data_table
 from .Locations import SeedlingLocation, location_data_table, location_table
-from .Options import seedling_options, Difficulty, Ending
+from .Options import SeedlingOptions, Difficulty, Ending
 from .Rules import generated_rules, has_item
 
 
@@ -22,7 +22,8 @@ class SeedlingWebWorld(WebWorld):
 
 class SeedlingWorld(World):
     game = "Seedling"
-    option_definitions = seedling_options
+    options_dataclass = SeedlingOptions
+    options: SeedlingOptions
     location_name_to_id = location_table
     item_name_to_id = item_table
     web = SeedlingWebWorld()
@@ -37,7 +38,7 @@ class SeedlingWorld(World):
         for name, item in item_data_table.items():
             if name == "Seal":
                 item_pool.extend([self.create_item(name) for _ in range(16)])
-                if getattr(self.multiworld, "boss_locations")[self.player]:
+                if self.options.boss_locations:
                     item_pool.extend([self.create_item(name) for _ in range(7)])
             elif name == "Totem Shard":
                 item_pool.extend([self.create_item(name) for _ in range(5)])
@@ -69,7 +70,7 @@ class SeedlingWorld(World):
                     for location_name, location_data in location_data_table.items()
                     if location_data.region == region_name
                     and (
-                        getattr(self.multiworld, "boss_locations")[self.player]
+                        self.options.boss_locations
                         or not location_data.is_boss
                     )
                 },
@@ -78,14 +79,14 @@ class SeedlingWorld(World):
             region.add_exits(dict.fromkeys(region_data.connecting_regions))
 
     def set_rules(self) -> None:
-        generated_rules(self.multiworld, self.player)
+        generated_rules(self.multiworld, self.player, self.options)
 
         if (
-            getattr(self.multiworld, "ending")[self.player].value
+            self.options.ending.value
             == Ending.option_bloody
         ):
             if (
-                getattr(self.multiworld, "difficulty")[self.player].value
+                self.options.difficulty.value
                 == Difficulty.option_standard
             ):
                 self.multiworld.completion_condition[self.player] = lambda state: (
@@ -101,7 +102,7 @@ class SeedlingWorld(World):
                 has_item(state, self.player, "Ghost Sword")
                 and has_item(state, self.player, "Conch")
                 and has_item(state, self.player, "Penguin's Feather")
-                and (state.item_count("Seal", self.player) >= 16)
+                and (state.count("Seal", self.player) >= 16)
             )
 
     def get_filler_item_name(self) -> str:
@@ -109,12 +110,8 @@ class SeedlingWorld(World):
 
     def fill_slot_data(self):
         return {
-            "ending": getattr(self.multiworld, "ending")[self.player].value,
-            "boss_locations": getattr(self.multiworld, "boss_locations")[
-                self.player
-            ].value,
-            "deathlink": getattr(self.multiworld, "deathlink")[self.player].value,
-            "deathlink_amnesty": getattr(self.multiworld, "deathlink_amnesty")[
-                self.player
-            ].value
+            "ending": self.options.ending.value,
+            "boss_locations": self.options.boss_locations.value,
+            "deathlink": self.options.death_link.value,
+            "deathlink_amnesty": self.options.deathlink_amnesty.value,
         }
