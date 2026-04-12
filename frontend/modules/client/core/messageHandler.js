@@ -1,6 +1,6 @@
 // client/core/messageHandler.js - Updated to handle data package properly
 
-import connection from './connection.js';
+import connection from './apClient.js';
 import storage from './storage.js';
 import Config from './config.js';
 import {
@@ -8,7 +8,6 @@ import {
   getLocationNameFromServerId,
   getServerLocationId,
   initializeMappingsFromDataPackage,
-  loadMappingsFromStorage,
 } from '../utils/idMapping.js';
 import {
   generateInaccessibleLocationSphereLog,
@@ -36,7 +35,6 @@ function log(level, message, ...data) {
 export class MessageHandler {
   constructor() {
     // Minimal state - only what's needed for server connection
-    this.dataPackageVersion = null;
     this.clientSlotName = null;
     this.clientSlot = null;
     this.clientTeam = null;
@@ -64,15 +62,9 @@ export class MessageHandler {
 
   initialize() {
     // Reset core state
-    this.dataPackageVersion = null;
     this.clientSlot = null;
     this.clientTeam = null;
     this.players = [];
-
-    // Try to load mappings from local storage
-    if (loadMappingsFromStorage()) {
-      log('info', 'Successfully loaded mappings from cached data package');
-    }
 
     // Defer subscriptions until eventBus is injected via setEventBus
     // eventBus.subscribe('connection:message', ...);
@@ -159,14 +151,11 @@ export class MessageHandler {
   _handleRoomInfo(data) {
     log('info', '[MessageHandler] Received RoomInfo:', data);
 
-    // Check if we need to request a new data package
-    const needNewDataPackage = this._checkIfDataPackageNeeded(data);
-
-    // Request data package if needed
-    if (needNewDataPackage) {
-      log('info', 'Requesting new data package from server...');
-      this._requestDataPackage();
-    }
+    // Always request a fresh data package on connect. The localStorage cache
+    // was removed in the archipelago.js migration (see
+    // CC/docs/plans/client-archipelago-js-migration.md).
+    log('info', 'Requesting data package from server...');
+    this._requestDataPackage();
 
     // Use injected eventBus
     this.eventBus?.publish('game:roomInfo', data);
@@ -249,58 +238,6 @@ export class MessageHandler {
     };
 
     connection.send([connectionData]);
-  }
-
-  /**
-   * Check if we need to request a new data package
-   * @param {Object} roomInfo - The RoomInfo data from server
-   * @returns {boolean} - Whether a new data package is needed
-   */
-  _checkIfDataPackageNeeded(roomInfo) {
-    // Case 1: No data package in storage
-    if (
-      !storage.getItem('dataPackage') ||
-      !storage.getItem('dataPackageVersion')
-    ) {
-      return true;
-    }
-
-    // Case 2: Checksums don't match
-    if (roomInfo.datapackage_checksums) {
-      try {
-        const storedPackage = JSON.parse(storage.getItem('dataPackage'));
-
-        // Check if any game checksums don't match
-        if (storedPackage && storedPackage.games) {
-          for (const [gameName, checksum] of Object.entries(
-            roomInfo.datapackage_checksums
-          )) {
-            if (
-              !storedPackage.games[gameName] ||
-              storedPackage.games[gameName].checksum !== checksum
-            ) {
-              return true;
-            }
-          }
-        } else {
-          return true;
-        }
-      } catch (e) {
-        log('warn', 'Error checking data package checksums:', e);
-        return true;
-      }
-    }
-
-    // Case 3: Version mismatch
-    const storedVersion = storage.getItem('dataPackageVersion');
-    if (
-      roomInfo.datapackage_version &&
-      storedVersion !== roomInfo.datapackage_version
-    ) {
-      return true;
-    }
-
-    return false;
   }
 
   async _handleConnected(data) {
@@ -641,26 +578,16 @@ export class MessageHandler {
   _handleDataPackage(data) {
     log('info', 'Received data package from server');
 
-    // Save to storage
-    if (data.data.version !== 0) {
-      storage.setItem('dataPackageVersion', data.data.version);
-      // Full data package storage is optional - it may exceed localStorage quota
-      // for large games or multiworld sessions. The app fetches fresh data each connection,
-      // so this is just a cache optimization. Use silent mode to avoid warning on quota errors.
-      storage.setItem('dataPackage', JSON.stringify(data.data), { silent: true });
-
-      // Initialize mappings, passing the client's game name to avoid ID collisions in multiworld
-      const initSuccess = initializeMappingsFromDataPackage(data.data, this.clientGameName);
-      if (initSuccess) {
-        log('info', 'Successfully initialized mappings from new data package');
-      } else {
-        log('warn', 'Failed to initialize mappings from new data package');
-      }
+    // Initialize in-memory mappings, passing the client's game name to avoid
+    // ID collisions in multiworld. The cache is not persisted — it is rebuilt
+    // from the server on every connection.
+    const initSuccess = initializeMappingsFromDataPackage(data.data, this.clientGameName);
+    if (initSuccess) {
+      log('info', 'Successfully initialized mappings from new data package');
     } else {
-      log('warn', 'Received data package with version 0, not storing');
+      log('warn', 'Failed to initialize mappings from new data package');
     }
 
-    // Use injected eventBus if needed
     this.eventBus?.publish('game:dataPackageReceived', data.data);
   }
 

@@ -1,6 +1,6 @@
 // client/core/locationManager.js - Updated to handle null ID locations locally
 
-import connection from './connection.js';
+import connection from './apClient.js';
 import messageHandler from './messageHandler.js';
 import { getServerLocationId } from '../utils/idMapping.js';
 

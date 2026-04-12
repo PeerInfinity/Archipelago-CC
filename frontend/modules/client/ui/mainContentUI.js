@@ -3,7 +3,7 @@
 import ConsoleUI from './consoleUI.js';
 import { stateManagerProxySingleton as stateManager } from '../../stateManager/index.js';
 import messageHandler from '../core/messageHandler.js';
-import connection from '../core/connection.js';
+import connection from '../core/apClient.js';
 import storage from '../core/storage.js';
 import {
   setMainContentUIInstance,

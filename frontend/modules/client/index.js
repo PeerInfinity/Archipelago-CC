@@ -2,8 +2,12 @@
 
 import MainContentUI from './ui/mainContentUI.js';
 import storage from './core/storage.js';
-import connection from './core/connection.js';
-import { loadMappingsFromStorage, getServerLocationId } from './utils/idMapping.js';
+// The `connection` singleton is the archipelago.js-backed transport adapter
+// (see CC/docs/plans/client-archipelago-js-migration.md). The hand-rolled
+// connection.js was removed in Phase 5 of the migration. Also exposes
+// window.__apSpike for manual browser-console testing.
+import connection from './core/apClient.js';
+import { getServerLocationId } from './utils/idMapping.js';
 import messageHandler, {
   handleUserLocationCheckForClient,
   handleUserItemCheckForClient,
@@ -369,7 +373,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   coreStorage.initialize();
   coreConnection.initialize();
-  coreConnection.setEventBus(moduleEventBus); // connection.js still uses eventBus for its own outgoing events
+  coreConnection.setEventBus(moduleEventBus);
+
   coreMessageHandler.initialize();
   coreMessageHandler.setEventBus(moduleEventBus);
   // messageHandler will need dispatcher for propagation, set it if it has a method for it
@@ -384,7 +389,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   coreLocationManager.setEventBus(moduleEventBus);
   // coreTimerState.initialize(); // Removed
   // coreTimerState.setEventBus(moduleEventBus); // Removed
-  loadMappingsFromStorage();
 
   log('info', '[Client Module] Core components initialized.');
   log('info', '[Client Module] Settings retrieved:', moduleSettings);

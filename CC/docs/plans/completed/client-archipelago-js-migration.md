@@ -1,8 +1,46 @@
 # Client Module Migration to archipelago.js
 
 **Created:** 2026-04-12
-**Status:** Pending
+**Status:** Completed 2026-04-12
 **Priority:** Medium
+
+## Outcome
+
+Implemented as Option A (packet-level bridge). The original Phase 3 — porting
+multiworld stateManager logic into archipelago.js manager-event subscribers —
+was skipped once we learned archipelago.js exposes a generic `receivedPacket`
+socket event. This let us keep messageHandler as the application-logic layer
+(unchanged) and use apClient purely as a transport adapter. See the
+"Architecture decision" section below.
+
+- `frontend/libs/archipelago.js/archipelago.js` — vendored v2.1.0 browser-ESM build
+- `frontend/modules/client/core/apClient.js` — new transport adapter (~280 lines)
+- `frontend/modules/client/core/connection.js` — **deleted** (282 lines)
+- localStorage DataPackage cache — **removed** from messageHandler.js and idMapping.js
+- Net deletion: ~350 lines across client/utils/client/core
+- All spoiler tests pass (seedling, apcalc, alttp, aquaria, adventure, ahit)
+- Regression suite passes (Super Quick Test, Test Simple Event Wait, Rules Reload Test)
+- Manual browser smoke test passes (Seedling autoconnect, 6 items resolve correctly)
+
+## Architecture decision
+
+The original plan assumed we'd subscribe to archipelago.js manager events
+(`client.items.on("itemsReceived")`, `client.room.on("locationsChecked")`,
+etc.) and port messageHandler's `_handle*` methods — including the multiworld
+stateManager integration — into apClient-native handlers.
+
+While building Phase 2, we discovered archipelago.js's `SocketManager` emits a
+generic `receivedPacket` event for every inbound packet in addition to the
+type-specific ones. This enables a much simpler architecture: apClient
+subscribes to `receivedPacket` and republishes each packet as the existing
+`connection:message` eventBus event. messageHandler's `processMessage` switch
+and `_handle*` methods run unchanged, preserving every payload shape and all
+stateManager interplay for free.
+
+This reduced the refactor from ~4 days to ~2 and eliminated the regression
+risk around multiworld item routing. messageHandler stays as the "application
+logic" layer; apClient is the "transport" layer — a cleaner separation than
+squeezing both into one file.
 
 ## Overview
 
@@ -203,12 +241,12 @@ archipelago.js manager events deliver resolved objects (Item, Location) rather t
 
 | Phase | Status | Notes |
 |---|---|---|
-| 1. Vendor + spike | ☐ Not started | |
-| 2. Event bridge | ☐ Not started | |
-| 3. Multiworld item routing | ☐ Not started | |
-| 4. Remove localStorage DataPackage | ☐ Not started | |
-| 5. Flip default + delete | ☐ Not started | |
-| 6. Regression testing | ☐ Not started | |
+| 1. Vendor + spike | ✅ Complete | archipelago.js v2.1.0 vendored; manual login verified against real server |
+| 2. Event bridge | ✅ Complete | Packet-level bridge via `socket.on("receivedPacket")` → `connection:message` |
+| 3. Multiworld item routing | ⏭ Skipped | Not needed — packet bridge preserves messageHandler's existing logic |
+| 4. Remove localStorage DataPackage | ✅ Complete | `loadMappingsFromStorage`, `_checkIfDataPackageNeeded`, storage writes all removed |
+| 5. Flip default + delete | ✅ Complete | Feature flag removed, 4 import paths flipped, `connection.js` deleted |
+| 6. Regression testing | ✅ Complete | 6 spoiler tests pass, regression suite passes, manual smoke test passes |
 
 ## References
 

@@ -12,24 +12,14 @@ function log(level, message, ...data) {
 }
 
 /**
- * Cache for mapping between server IDs and names.
- * Populated from dataPackage for faster lookup.
+ * In-memory cache for mapping between server IDs and names. Populated from
+ * the DataPackage packet on each connection; not persisted across reloads.
  */
 const mappingCache = {
-  // Item mappings: serverId -> itemName
-  itemMappings: new Map(),
-
-  // Location mappings: serverId -> locationName
-  locationMappings: new Map(),
-
-  // Reverse mappings: itemName -> serverId
-  itemNameToId: new Map(),
-
-  // Reverse mappings: locationName -> serverId
-  locationNameToId: new Map(),
-
-  // Version tracking
-  dataPackageVersion: null,
+  itemMappings: new Map(),        // serverId -> itemName
+  locationMappings: new Map(),    // serverId -> locationName
+  itemNameToId: new Map(),        // itemName -> serverId
+  locationNameToId: new Map(),    // locationName -> serverId
 };
 
 /**
@@ -49,9 +39,6 @@ export function initializeMappingsFromDataPackage(dataPackage, clientGameName = 
     mappingCache.locationMappings.clear();
     mappingCache.itemNameToId.clear();
     mappingCache.locationNameToId.clear();
-
-    // Store version
-    mappingCache.dataPackageVersion = dataPackage.version;
 
     // If clientGameName is provided, only load mappings for that game
     // Otherwise, load all games (legacy behavior, but can cause ID collisions in multiworld)
@@ -98,30 +85,6 @@ export function initializeMappingsFromDataPackage(dataPackage, clientGameName = 
     return true;
   } catch (error) {
     log('error', 'Error initializing mappings from data package:', error);
-    return false;
-  }
-}
-
-/**
- * Try to load and initialize mappings from localStorage
- * @returns {boolean} - Whether initialization was successful
- */
-export function loadMappingsFromStorage() {
-  try {
-    const dataPackageStr = localStorage.getItem('dataPackage');
-    if (!dataPackageStr) {
-      return false;
-    }
-
-    const dataPackage = JSON.parse(dataPackageStr);
-    if (!dataPackage || !dataPackage.games) {
-      return false;
-    }
-
-    const success = initializeMappingsFromDataPackage(dataPackage);
-    return success;
-  } catch (error) {
-    log('warn', 'Error loading mappings from storage:', error);
     return false;
   }
 }
