@@ -156,6 +156,10 @@
       "path": "./modules/metaGamePanel/index.js",
       "enabled": true
     },
+    "flashPanel": {
+      "path": "./modules/flashPanel/index.js",
+      "enabled": true
+    },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
       "enabled": true
@@ -265,6 +269,7 @@
     "progressBarPanel",
     "metaGame",
     "metaGamePanel",
+    "flashPanel",
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",

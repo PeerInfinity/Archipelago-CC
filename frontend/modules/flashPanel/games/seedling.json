@@ -1,0 +1,172 @@
+{
+  "game": "Seedling",
+  "swf": "598977_Seedling.swf",
+  "flash_object_id": "GameSWF",
+  "stage_size": [480, 480],
+  "ap_id_offset": 20000000,
+  "reset_on_connect": true,
+
+  "classes": {
+    "main": {
+      "name": "Main",
+      "deferred": true
+    }
+  },
+
+  "state_properties": [
+    { "class": "main", "property": "hasSword",      "type": "boolean" },
+    { "class": "main", "property": "hasDarkSword",   "type": "boolean" },
+    { "class": "main", "property": "hasGhostSword",  "type": "boolean" },
+    { "class": "main", "property": "hasShield",      "type": "boolean" },
+    { "class": "main", "property": "hasDarkShield",  "type": "boolean" },
+    { "class": "main", "property": "hasFire",        "type": "boolean" },
+    { "class": "main", "property": "hasWand",        "type": "boolean" },
+    { "class": "main", "property": "hasFireWand",    "type": "boolean" },
+    { "class": "main", "property": "canSwim",        "type": "boolean" },
+    { "class": "main", "property": "hasFeather",     "type": "boolean" },
+    { "class": "main", "property": "hasSpear",       "type": "boolean" },
+    { "class": "main", "property": "hasDarkSuit",    "type": "boolean" },
+    { "class": "main", "property": "hasTorch",       "type": "boolean" },
+    { "class": "main", "property": "hitsMax",        "type": "int" }
+  ],
+
+  "ap_items": [
+    { "id": 0,  "ap_name": "Progressive Sword",  "flash_name": "!sword" },
+    { "id": 1,  "ap_name": "Progressive Shield", "flash_name": "!shield" },
+    { "id": 2,  "ap_name": "Red Key",            "flash_name": "key0" },
+    { "id": 3,  "ap_name": "Light",              "flash_name": "torch" },
+    { "id": 4,  "ap_name": "Green Key",          "flash_name": "key1" },
+    { "id": 5,  "ap_name": "Fire",               "flash_name": "fire" },
+    { "id": 6,  "ap_name": "Progressive Swim",   "flash_name": "!swim" },
+    { "id": 7,  "ap_name": "Blue Key",           "flash_name": "key3" },
+    { "id": 8,  "ap_name": "Totem Shard",        "flash_name": "!totem" },
+    { "id": 9,  "ap_name": "Purple Key",         "flash_name": "key2" },
+    { "id": 10, "ap_name": "Wand",               "flash_name": "wand" },
+    { "id": 11, "ap_name": "Ghost Spear",        "flash_name": "spear" },
+    { "id": 12, "ap_name": "Yellow Key",         "flash_name": "key4" },
+    { "id": 13, "ap_name": "Health",             "flash_name": "health" },
+    { "id": 14, "ap_name": "Dark Suit",          "flash_name": "darksuit" },
+    { "id": 15, "ap_name": "Ghost Sword Fusion", "flash_name": "!ghostsword" },
+    { "id": 16, "ap_name": "Fire Wand Fusion",   "flash_name": "!firewand" },
+    { "id": 17, "ap_name": "Seal",               "flash_name": "!seal" },
+    { "id": 18, "ap_name": "Nothing",            "flash_name": "!nothing" }
+  ],
+
+  "ap_locations": [
+    { "id": 0,  "flash_name": "feather" },
+    { "id": 1,  "flash_name": "darksword" },
+    { "id": 2,  "flash_name": "chest86" },
+    { "id": 3,  "flash_name": "chest90" },
+    { "id": 4,  "flash_name": "chest36" },
+    { "id": 5,  "flash_name": "chest12" },
+    { "id": 6,  "flash_name": "sword" },
+    { "id": 7,  "flash_name": "chest11" },
+    { "id": 8,  "flash_name": "owl" },
+    { "id": 9,  "flash_name": "shield" },
+    { "id": 10, "flash_name": "key0" },
+    { "id": 11, "flash_name": "chest15" },
+    { "id": 12, "flash_name": "chest17" },
+    { "id": 13, "flash_name": "shieldspire" },
+    { "id": 14, "flash_name": "torch" },
+    { "id": 15, "flash_name": "key1" },
+    { "id": 16, "flash_name": "fire" },
+    { "id": 17, "flash_name": "chest25" },
+    { "id": 18, "flash_name": "times" },
+    { "id": 19, "flash_name": "conch" },
+    { "id": 20, "flash_name": "key3" },
+    { "id": 21, "flash_name": "chest48" },
+    { "id": 22, "flash_name": "chest46" },
+    { "id": 23, "flash_name": "tentacledbeast" },
+    { "id": 24, "flash_name": "totem2" },
+    { "id": 25, "flash_name": "totem1" },
+    { "id": 26, "flash_name": "totem0" },
+    { "id": 27, "flash_name": "totem3" },
+    { "id": 28, "flash_name": "totem4" },
+    { "id": 29, "flash_name": "key2" },
+    { "id": 30, "flash_name": "wand" },
+    { "id": 31, "flash_name": "chest38" },
+    { "id": 32, "flash_name": "chest40" },
+    { "id": 33, "flash_name": "totem" },
+    { "id": 34, "flash_name": "ghostspear" },
+    { "id": 35, "flash_name": "key4" },
+    { "id": 36, "flash_name": "health" },
+    { "id": 37, "flash_name": "chest63" },
+    { "id": 38, "flash_name": "lights" },
+    { "id": 39, "flash_name": "darkshield" },
+    { "id": 40, "flash_name": "darksuit" },
+    { "id": 41, "flash_name": "chest71" },
+    { "id": 42, "flash_name": "chest80" },
+    { "id": 43, "flash_name": "kingoffire" },
+    { "id": 44, "flash_name": "ghostsword" },
+    { "id": 45, "flash_name": "firewand" },
+    { "id": 46, "flash_name": "chest98" }
+  ],
+
+  "boss_locations": [
+    "owl", "shieldspire", "times", "tentacledbeast",
+    "totem", "lights", "kingoffire"
+  ],
+
+  "locations": [
+    { "property": "hasSword",     "flash_name": "sword" },
+    { "property": "hasShield",    "flash_name": "shield" },
+    { "property": "hasFire",      "flash_name": "fire" },
+    { "property": "hasWand",      "flash_name": "wand" },
+    { "property": "canSwim",      "flash_name": "conch" },
+    { "property": "hasFeather",   "flash_name": "feather" },
+    { "property": "hasSpear",     "flash_name": "ghostspear" },
+    { "property": "hasDarkSuit",  "flash_name": "darksuit" },
+    { "property": "hasTorch",     "flash_name": "torch" },
+    { "property": "hasDarkSword", "flash_name": "darksword" },
+    { "property": "hasDarkShield","flash_name": "darkshield" }
+  ],
+
+  "items": [
+    { "flash_name": "sword",       "class": "main", "property": "hasSword",      "value": true },
+    { "flash_name": "darksword",   "class": "main", "property": "hasDarkSword",  "value": true },
+    { "flash_name": "ghostsword",  "class": "main", "property": "hasGhostSword", "value": true },
+    { "flash_name": "shield",      "class": "main", "property": "hasShield",     "value": true },
+    { "flash_name": "darkshield",  "class": "main", "property": "hasDarkShield", "value": true },
+    { "flash_name": "fire",        "class": "main", "property": "hasFire",       "value": true },
+    { "flash_name": "wand",        "class": "main", "property": "hasWand",       "value": true },
+    { "flash_name": "firewand",    "class": "main", "property": "hasFireWand",   "value": true },
+    { "flash_name": "conch",       "class": "main", "property": "canSwim",       "value": true },
+    { "flash_name": "feather",     "class": "main", "property": "hasFeather",    "value": true },
+    { "flash_name": "spear",       "class": "main", "property": "hasSpear",      "value": true },
+    { "flash_name": "darksuit",    "class": "main", "property": "hasDarkSuit",   "value": true },
+    { "flash_name": "torch",       "class": "main", "property": "hasTorch",      "value": true },
+    { "flash_name": "health",      "class": "main", "property": "hitsMax",       "op": "add", "value": 1, "base": 3 }
+  ],
+
+  "progressive_items": {
+    "!sword":  ["sword", "darksword"],
+    "!shield": ["shield", "darkshield"],
+    "!swim":   ["conch", "feather"],
+    "!totem":  ["totem0", "totem1", "totem2", "totem3", "totem4"]
+  },
+
+  "fusion_items": [
+    {
+      "result": "ghostsword",
+      "requires_flags": ["!ghostsword"],
+      "requires_items": ["spear"],
+      "requires_progressive": { "!sword": 1 }
+    },
+    {
+      "result": "firewand",
+      "requires_flags": ["!firewand"],
+      "requires_items": ["wand", "fire"]
+    }
+  ],
+
+  "death_detection": {
+    "class": "main",
+    "property": "hits",
+    "condition": "<= 0",
+    "kill_value": 0
+  },
+
+  "ui_counters": [
+    { "label": "Seals", "flash_name": "!seal" }
+  ]
+}

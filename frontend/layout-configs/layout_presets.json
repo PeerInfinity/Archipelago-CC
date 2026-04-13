@@ -215,6 +215,11 @@
               "type": "component",
               "componentType": "proofQueuePanel",
               "title": "Proof Queue"
+            },
+            {
+              "type": "component",
+              "componentType": "flashPanel",
+              "title": "Flash Game"
             }
           ]
         }
