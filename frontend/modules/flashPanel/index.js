@@ -3,6 +3,7 @@ import eventBus from '../../app/core/eventBus.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
+let activePanelInstance = null;
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -30,12 +31,53 @@ export function register(registrationApi) {
 
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
 
+  // Observe user:locationCheck as it flows through the dispatcher
+  // chain, so the panel's "TP on UI click" feature can react to
+  // clicks in the Regions/Locations/etc. panels without gating on
+  // the event-bus layer (which doesn't carry this event). The
+  // handler always propagates — it's observation-only.
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name,
+    'user:locationCheck',
+    handleUserLocationCheckForFlashPanel,
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
+  );
+
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
+  registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
 
   log('info', '[FlashPanel Module] Registration complete.');
+}
+
+/**
+ * Dispatcher receiver for user:locationCheck. Observes the event
+ * (handing it to the active panel so it can teleport on UI click),
+ * then propagates up the chain so the normal client/stateManager
+ * flow continues.
+ */
+function handleUserLocationCheckForFlashPanel(eventData) {
+  try {
+    if (activePanelInstance && typeof activePanelInstance.handleUserLocationCheck === 'function') {
+      activePanelInstance.handleUserLocationCheck(eventData);
+    }
+  } catch (e) {
+    log('error', '[FlashPanel Module] handleUserLocationCheck error:', e);
+  }
+  if (moduleDispatcher && typeof moduleDispatcher.publishToNextModule === 'function') {
+    moduleDispatcher.publishToNextModule(
+      moduleInfo.name,
+      'user:locationCheck',
+      eventData,
+      { direction: 'up' }
+    );
+  }
+}
+
+export function setActivePanelInstance(instance) {
+  activePanelInstance = instance;
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {

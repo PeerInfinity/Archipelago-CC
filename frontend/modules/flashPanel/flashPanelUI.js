@@ -1,5 +1,5 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { getDispatcher, getModuleEventBus } from './index.js';
+import { getDispatcher, getModuleEventBus, setActivePanelInstance } from './index.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 
 function log(level, message, ...data) {
@@ -82,6 +82,12 @@ export class FlashPanelUI {
 
     this._createBaseUI();
 
+    // Make this instance available to the dispatcher receivers
+    // registered at module scope (index.js). Only one flash panel
+    // is expected to be visible at a time, so last-writer-wins
+    // here is fine.
+    setActivePanelInstance(this);
+
     this.container.on('destroy', () => this.destroy());
 
     const readyHandler = async () => {
@@ -126,12 +132,35 @@ export class FlashPanelUI {
         <button class="flash-panel-readstate" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Read State</button>
         <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;">Configure Bridge</button>
       </div>
+      <div class="flash-panel-teleport" style="flex-shrink: 0; margin-top: 6px; font-size: 12px; display: none;">
+        <span style="color:#aaa;margin-right:4px;">Teleport:</span>
+        <input class="flash-panel-tp-level" type="number" placeholder="level" style="width:55px;background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;" />
+        <input class="flash-panel-tp-x" type="number" placeholder="x" style="width:55px;background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;" />
+        <input class="flash-panel-tp-y" type="number" placeholder="y" style="width:55px;background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;" />
+        <button class="flash-panel-tp-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
+        <span class="flash-panel-tp-region-wrap" style="display:none;">
+          <span style="margin-left:10px;color:#aaa;">Region:</span>
+          <select class="flash-panel-tp-region" style="background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;"></select>
+          <button class="flash-panel-tp-region-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
+        </span>
+        <span style="margin-left:10px;color:#aaa;">Location:</span>
+        <select class="flash-panel-tp-location" style="background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;"></select>
+        <button class="flash-panel-tp-location-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
+        <label style="margin-left:10px;color:#aaa;"><input class="flash-panel-tp-on-click" type="checkbox" /> TP on UI click</label>
+      </div>
       <div class="flash-panel-log" style="flex-grow: 1; margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; white-space: pre-wrap;"></div>
     `;
 
     this.swfContainer = this.rootElement.querySelector('.flash-panel-swf');
     this.statusElement = this.rootElement.querySelector('.flash-panel-status');
     this.logElement = this.rootElement.querySelector('.flash-panel-log');
+    this.teleportRow = this.rootElement.querySelector('.flash-panel-teleport');
+    this.teleportLevelInput = this.rootElement.querySelector('.flash-panel-tp-level');
+    this.teleportXInput = this.rootElement.querySelector('.flash-panel-tp-x');
+    this.teleportYInput = this.rootElement.querySelector('.flash-panel-tp-y');
+    this.teleportRegionSelect = this.rootElement.querySelector('.flash-panel-tp-region');
+    this.teleportLocationSelect = this.rootElement.querySelector('.flash-panel-tp-location');
+    this.teleportOnClickCheckbox = this.rootElement.querySelector('.flash-panel-tp-on-click');
 
     this.rootElement.querySelector('.flash-panel-wirecheck')
       .addEventListener('click', () => this._wireCheck());
@@ -139,8 +168,106 @@ export class FlashPanelUI {
       .addEventListener('click', () => this._readState());
     this.rootElement.querySelector('.flash-panel-configure')
       .addEventListener('click', () => this._configureBridge());
+    this.rootElement.querySelector('.flash-panel-tp-go')
+      .addEventListener('click', () => this._manualTeleport());
+    this.rootElement.querySelector('.flash-panel-tp-region-go')
+      .addEventListener('click', () => this._regionTeleport());
+    this.rootElement.querySelector('.flash-panel-tp-location-go')
+      .addEventListener('click', () => this._locationTeleport());
 
     this.container.element.appendChild(this.rootElement);
+  }
+
+  _setupTeleportUI() {
+    if (!this.gameConfig?.teleport) return;
+    this.teleportRow.style.display = '';
+
+    // Populate region dropdown (hidden by default but wired in
+    // case we ever want to re-enable it without editing HTML).
+    const regionCoords = this.gameConfig.region_coords || {};
+    this.teleportRegionSelect.innerHTML = '';
+    for (const name of Object.keys(regionCoords).sort()) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      this.teleportRegionSelect.appendChild(opt);
+    }
+
+    // Populate location dropdown from location_coords config.
+    const locationCoords = this.gameConfig.location_coords || {};
+    this.teleportLocationSelect.innerHTML = '';
+    for (const name of Object.keys(locationCoords).sort()) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      this.teleportLocationSelect.appendChild(opt);
+    }
+
+    // Subscribe to region-graph node clicks (eventBus). The "TP on
+    // UI click" checkbox gates whether the click triggers a
+    // teleport; we always subscribe so toggling the checkbox
+    // starts working immediately.
+    const unsub = this.eventBus.subscribe('regionGraph:nodeSelected', (payload) => {
+      if (!this.teleportOnClickCheckbox?.checked) return;
+      if (!payload?.nodeId) return;
+      this._teleportToRegion(payload.nodeId);
+    });
+    this._teleportUnsub = unsub;
+  }
+
+  /**
+   * Called by index.js when user:locationCheck fires through the
+   * dispatcher chain. Gated on the "TP on UI click" checkbox.
+   * Ignores events originating from this panel so we don't
+   * re-teleport when Flash itself reports a pickup.
+   */
+  handleUserLocationCheck(eventData) {
+    if (!this.teleportOnClickCheckbox?.checked) return;
+    if (!eventData?.locationName) return;
+    if (eventData.originator === 'FlashPanel') return;
+    this._teleportToLocation(eventData.locationName);
+  }
+
+  _manualTeleport() {
+    if (!this.adapter) return;
+    const level = parseInt(this.teleportLevelInput.value, 10);
+    const x = parseInt(this.teleportXInput.value, 10);
+    const y = parseInt(this.teleportYInput.value, 10);
+    if (Number.isNaN(level) || Number.isNaN(x) || Number.isNaN(y)) {
+      this._panelLog('teleport: level/x/y must be numbers', 'error');
+      return;
+    }
+    this.adapter.teleport({ level, x, y });
+  }
+
+  _regionTeleport() {
+    if (!this.adapter) return;
+    const name = this.teleportRegionSelect.value;
+    if (!name) return;
+    this._teleportToRegion(name);
+  }
+
+  _teleportToRegion(regionName) {
+    if (!this.adapter) return;
+    const ok = this.adapter.teleportToRegion(regionName);
+    if (!ok) {
+      this._panelLog(`teleport: no coords for region "${regionName}"`);
+    }
+  }
+
+  _locationTeleport() {
+    if (!this.adapter) return;
+    const name = this.teleportLocationSelect.value;
+    if (!name) return;
+    this._teleportToLocation(name);
+  }
+
+  _teleportToLocation(locationName) {
+    if (!this.adapter) return;
+    const ok = this.adapter.teleportToLocation(locationName);
+    if (!ok) {
+      this._panelLog(`teleport: no coords for location "${locationName}"`);
+    }
   }
 
   _embedSwf(width, height) {
@@ -164,6 +291,7 @@ export class FlashPanelUI {
       this._setStatus('loading config…');
       this.gameConfig = await this._loadConfig(this.configPath);
       this._panelLog(`config loaded: ${this.gameConfig.game}`);
+      this._setupTeleportUI();
 
       const [w, h] = this.gameConfig.stage_size || [480, 480];
 
@@ -190,13 +318,16 @@ export class FlashPanelUI {
         this._panelLog('bridge ready');
         this._setStatus('bridge ready');
 
-        // Give Clean Flash / native messaging extensions time to
-        // finish registering all ExternalInterface.addCallback stubs
-        // on the JS side. Without this delay, the first
-        // flash.configure(json) call is sometimes dropped — the
-        // stub exists but the round-trip to Flash isn't fully wired
-        // yet, and the call is lost silently.
-        await new Promise((r) => setTimeout(r, 500));
+        // Give Clean Flash / native-messaging extensions time to
+        // finish wiring the round-trip for ExternalInterface.addCallback
+        // stubs. Without this delay, the first flash.configure(json)
+        // call is silently dropped — the JS-side stub exists (which
+        // is why waitForBridge already resolved) but the Flash side
+        // of the channel for inbound calls with arguments isn't
+        // reliably ready yet. Empirically 1500ms is enough to skip
+        // the retry path on Chrome + Clean Flash, while the retry
+        // below handles the rare case where it isn't.
+        await new Promise((r) => setTimeout(r, 1500));
 
         this._configureRetries = 0;
         this._configureBridge();
@@ -255,7 +386,8 @@ export class FlashPanelUI {
     // counter. If it's still zero 1.5s after configure, the call
     // was lost — retry up to 3 times with increasing delay.
     const shimCalls = (typeof window !== 'undefined' && window.__flashShimGetItemQueueCalls) || 0;
-    this._panelLog(`diag: shim getItemQueue calls=${shimCalls}`);
+    const stateChangedCalls = (typeof window !== 'undefined' && window.__flashShimStateChangedCalls) || 0;
+    this._panelLog(`diag: shim getItemQueue=${shimCalls}  stateChanged=${stateChangedCalls}`);
 
     if (shimCalls === 0) {
       const maxRetries = 3;
@@ -308,7 +440,12 @@ export class FlashPanelUI {
       this.adapter.detach();
       this.adapter = null;
     }
+    if (this._teleportUnsub) {
+      this._teleportUnsub();
+      this._teleportUnsub = null;
+    }
     this.unsubscribeHandles.forEach((u) => typeof u === 'function' && u());
     this.unsubscribeHandles = [];
+    setActivePanelInstance(null);
   }
 }

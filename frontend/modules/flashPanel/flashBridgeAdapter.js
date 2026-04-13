@@ -76,13 +76,43 @@ export class FlashBridgeAdapter {
     this.locationFlashToApId = {};
     this.flashItemDefs = {};
     this.propertyToLocationFlash = {};
+    this.flashLocationToApName = {};
     this.bossList = new Set();
 
     // Runtime state
     this.undoQueue = [];
-    this.pendingWrites = {};
+    this.invokeQueue = [];        // one-shot invocations (teleport, etc.)
     this.gameState = {};
     this.checkedApLocations = new Set();
+
+    // Property writes we've pushed into the queue that we expect
+    // to see a stateChanged echo for. Keyed by property → expected
+    // value. We only register an entry when the write will
+    // actually change the value (gameState !== write value) —
+    // redundant writes don't produce echoes, so they shouldn't
+    // block us from detecting real player actions later.
+    this.expectedEchoValue = {};
+
+    // Seedling's Main.hasX setters proxy to SAVE_FILE.data.hasX,
+    // and SAVE_FILE is null until the preloader initializes it on
+    // Play. Writes that land before then throw #1009 once per
+    // property per frame and flood the bridge log. We gate all
+    // writes on having seen at least one stateChanged from the
+    // bridge — which can only fire after a successful Main.*
+    // read, i.e. after SAVE_FILE is non-null. Invocations
+    // (teleport) bypass this gate because they don't touch
+    // SAVE_FILE.
+    this.gameReady = false;
+
+    // Properties we've seen at least one stateChanged for. The
+    // first stateChanged for each property represents the bridge
+    // establishing baseline state — typically values loaded from
+    // the game's own save file — not a real player action. We
+    // suppress location-check dispatches for those first reads,
+    // so stale save-file data can't mistakenly send checks to
+    // the AP server. After baseline is established, subsequent
+    // stateChanged events *are* treated as player actions.
+    this.seenProperties = new Set();
 
     // Diagnostics
     this._queueTickCount = 0;
@@ -127,6 +157,12 @@ export class FlashBridgeAdapter {
     if (config.locations) {
       for (const loc of config.locations) {
         this.propertyToLocationFlash[loc.property] = loc.flash_name;
+        // ap_name is the canonical Archipelago location name (as it
+        // appears in the seed / server). The client module's
+        // user:locationCheck handler uses this to look up the server
+        // protocol id. Fall back to flash_name for configs that
+        // haven't been updated yet.
+        this.flashLocationToApName[loc.flash_name] = loc.ap_name || loc.flash_name;
       }
     }
     if (config.boss_locations) {
@@ -180,6 +216,89 @@ export class FlashBridgeAdapter {
   }
 
   // --------------------------------------------------------------
+  // Teleport (and related invocations)
+  // --------------------------------------------------------------
+
+  /**
+   * Queue a teleport based on the game config's `teleport` block
+   * and the given parameter values. The config defines which
+   * constructor / assignTo target to use and which parameter
+   * names are expected; this method substitutes them into the
+   * argTemplate and pushes the resolved invocation onto the
+   * per-frame queue.
+   *
+   * Example for Seedling:
+   *   config.teleport = {
+   *     params: ["level", "x", "y"],
+   *     invocation: "new_instance",
+   *     className: "Game",
+   *     argTemplate: ["$level", "$x", "$y"],
+   *     assignTo: { class: "net.flashpunk.FP", property: "world" }
+   *   }
+   *   adapter.teleport({ level: 30, x: 64, y: 128 })
+   */
+  teleport(params) {
+    const spec = this.config.teleport;
+    if (!spec) {
+      this.log('teleport: no teleport config', 'error');
+      return false;
+    }
+
+    // Optional preWrites let the config set class statics before
+    // the teleport invocation runs — e.g. Seedling needs
+    // Game.menu = false so the new Game doesn't come up in menu
+    // state. These are plain property-write items and flow
+    // through the bridge's existing applyItem path.
+    if (Array.isArray(spec.preWrites)) {
+      for (const w of spec.preWrites) {
+        this.invokeQueue.push(w);
+      }
+    }
+
+    const resolved = {
+      invocation: spec.invocation,
+      className: spec.className,
+      args: (spec.argTemplate || []).map((tok) => {
+        if (typeof tok !== 'string' || tok[0] !== '$') return tok;
+        const key = tok.slice(1);
+        return params[key];
+      }),
+      assignTo: spec.assignTo,
+    };
+    this.invokeQueue.push(resolved);
+    this.log(`teleport queued: ${JSON.stringify(params)}`, 'item');
+    return true;
+  }
+
+  /**
+   * Teleport to a named region using the config's `region_coords`
+   * lookup table. Returns true if the region was found and
+   * teleport was queued.
+   */
+  teleportToRegion(regionName) {
+    const coords = this.config.region_coords?.[regionName];
+    if (!coords) {
+      this.log(`no coords for region "${regionName}"`);
+      return false;
+    }
+    return this.teleport(coords);
+  }
+
+  /**
+   * Teleport to a named location using the config's
+   * `location_coords` lookup table. Returns true if the location
+   * was found and teleport was queued.
+   */
+  teleportToLocation(locationName) {
+    const coords = this.config.location_coords?.[locationName];
+    if (!coords) {
+      this.log(`no coords for location "${locationName}"`);
+      return false;
+    }
+    return this.teleport(coords);
+  }
+
+  // --------------------------------------------------------------
   // Attach / detach — subscribe to event bus
   // --------------------------------------------------------------
   attach() {
@@ -218,21 +337,46 @@ export class FlashBridgeAdapter {
   _onStateChanged(property, value) {
     this.gameState[property] = value;
 
-    // Skip client-initiated writes (undo or AP-given items)
-    if (this.pendingWrites[property] > 0) {
-      this.pendingWrites[property]--;
-      if (this.pendingWrites[property] <= 0) delete this.pendingWrites[property];
+    // Any stateChanged at all proves the bridge is successfully
+    // reading Main.* properties, which only happens after
+    // SAVE_FILE is initialized. Flip the write gate the first
+    // time we see one.
+    if (!this.gameReady) {
+      this.gameReady = true;
+      this.log('game ready — starting to send writes');
+    }
+
+    // Consume the echo of a write we just pushed. If this
+    // stateChanged matches the value we asked to be written, it's
+    // our own echo — swallow it and don't treat as a player
+    // action. If the value differs, it really is a player change
+    // (the write we queued hasn't landed yet, or the game
+    // overrode it), so fall through to normal handling and clear
+    // the stale expectation.
+    if (property in this.expectedEchoValue) {
+      if (this.expectedEchoValue[property] === value) {
+        delete this.expectedEchoValue[property];
+        return;
+      }
+      delete this.expectedEchoValue[property];
+    }
+
+    // Suppress the first stateChanged per property — it's the
+    // bridge's initial read, not a player action. Real player
+    // pickups show up as the *second* stateChanged (or later)
+    // for a given property.
+    const isInitialRead = !this.seenProperties.has(property);
+    if (isInitialRead) {
+      this.seenProperties.add(property);
+      this.log(`initial read: ${property} = ${value}`);
       return;
     }
+
+    this.log(`stateChanged (player action): ${property} = ${value}`);
 
     // Location detection: property going true -> player found a location
     const locFlash = this.propertyToLocationFlash[property];
     if (locFlash && value === true) {
-      if (this.bossList.has(locFlash) /* && !slotData?.boss_locations */) {
-        // Boss gating: without access to slotData yet, let them through.
-        // Future: subscribe to game:roomInfo / game:connected to receive slotData.
-      }
-
       // Undo: take the game-given item back so the AP item can arrive clean
       const propDef = this._findPropertyDef(property);
       if (propDef) {
@@ -241,19 +385,18 @@ export class FlashBridgeAdapter {
           property,
           value: false,
         });
+        this.log(`queued undo: ${property} = false`);
       }
 
-      // Dispatch the location check
       this._dispatchLocationCheck(locFlash);
-      this.log(`location: ${locFlash}`, 'location');
     }
   }
 
   _dispatchLocationCheck(flashName) {
     if (!this.dispatcher) return;
-    const locationName = this._flashLocationToAp(flashName);
+    const locationName = this.flashLocationToApName[flashName];
     if (!locationName) {
-      this.log(`no AP mapping for ${flashName}`);
+      this.log(`no AP mapping for flash location ${flashName}`);
       return;
     }
     const payload = {
@@ -264,20 +407,7 @@ export class FlashBridgeAdapter {
     this.dispatcher.publish('user:locationCheck', payload, {
       initialTarget: 'bottom',
     });
-  }
-
-  /**
-   * Map a flash_name location to the AP location *name* (not id).
-   * The dispatcher pipeline expects locationName; the client module
-   * resolves that to a server id.
-   */
-  _flashLocationToAp(flashName) {
-    // flash_name and the AP location name are typically identical in
-    // the existing seedling config. If the config provides a mapping,
-    // use it; otherwise fall back to flashName.
-    const mapping = this.config.flash_to_ap_location_names;
-    if (mapping && mapping[flashName]) return mapping[flashName];
-    return flashName;
+    this.log(`dispatched user:locationCheck for "${locationName}"`, 'location');
   }
 
   _findPropertyDef(property) {
@@ -290,26 +420,38 @@ export class FlashBridgeAdapter {
   // --------------------------------------------------------------
   _buildQueue() {
     this._queueTickCount++;
-    // Heartbeat: log once every ~2s of ticks so we can see whether
-    // Flash is actively polling getItemQueue.
-    if (this._queueTickCount % 60 === 1) {
-      this.log(`queue tick ${this._queueTickCount}`);
-    }
 
-    const writes = this._buildItemWritesFromInventory();
+    // Drain pending invocations (teleport etc.) on every tick —
+    // they don't touch SAVE_FILE and can run even before the
+    // game is ready, so they're gated independently.
+    const invocations = this.invokeQueue;
+    this.invokeQueue = [];
 
-    // Undo writes go first so game-given items disappear before AP
+    // Only compute property writes once the game has initialized
+    // enough to accept them. Before then, the bridge will throw
+    // #1009 on every write attempt and flood its log.
+    const writes = this.gameReady ? this._buildItemWritesFromInventory() : [];
+    const undoForThisTick = this.gameReady ? this.undoQueue : [];
+    if (this.gameReady) this.undoQueue = [];
+
+    // Undo writes go next, so game-given items disappear before AP
     // items arrive in the same frame.
-    const combined = this.undoQueue.concat(writes);
-    this.undoQueue = [];
+    const combined = invocations.concat(undoForThisTick).concat(writes);
 
     if (combined.length === 0) return [];
 
-    // Mark each write as pending so the stateChanged callback
-    // doesn't interpret our write as a player pickup.
+    // Register expected echoes for property writes. Only count a
+    // write as producing an echo if its value differs from what
+    // we last observed — otherwise the bridge's change detect
+    // won't fire stateChanged at all, and a counter-based
+    // pendingWrites model would accumulate stale entries that
+    // block real player-action events later.
+    // (Invocations are skipped — they don't produce stateChanged
+    // events at all.)
     for (const item of combined) {
-      const p = item.property;
-      this.pendingWrites[p] = (this.pendingWrites[p] || 0) + 1;
+      if (item.property && this.gameState[item.property] !== item.value) {
+        this.expectedEchoValue[item.property] = item.value;
+      }
     }
     return combined;
   }

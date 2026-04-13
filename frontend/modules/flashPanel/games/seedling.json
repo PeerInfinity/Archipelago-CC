@@ -10,6 +10,10 @@
     "main": {
       "name": "Main",
       "deferred": true
+    },
+    "game": {
+      "name": "Game",
+      "deferred": true
     }
   },
 
@@ -108,17 +112,17 @@
   ],
 
   "locations": [
-    { "property": "hasSword",     "flash_name": "sword" },
-    { "property": "hasShield",    "flash_name": "shield" },
-    { "property": "hasFire",      "flash_name": "fire" },
-    { "property": "hasWand",      "flash_name": "wand" },
-    { "property": "canSwim",      "flash_name": "conch" },
-    { "property": "hasFeather",   "flash_name": "feather" },
-    { "property": "hasSpear",     "flash_name": "ghostspear" },
-    { "property": "hasDarkSuit",  "flash_name": "darksuit" },
-    { "property": "hasTorch",     "flash_name": "torch" },
-    { "property": "hasDarkSword", "flash_name": "darksword" },
-    { "property": "hasDarkShield","flash_name": "darkshield" }
+    { "property": "hasSword",     "flash_name": "sword",       "ap_name": "Sword" },
+    { "property": "hasShield",    "flash_name": "shield",      "ap_name": "Shield" },
+    { "property": "hasFire",      "flash_name": "fire",        "ap_name": "Fire" },
+    { "property": "hasWand",      "flash_name": "wand",        "ap_name": "Wand" },
+    { "property": "canSwim",      "flash_name": "conch",       "ap_name": "Conch" },
+    { "property": "hasFeather",   "flash_name": "feather",     "ap_name": "Penguin's Feather" },
+    { "property": "hasSpear",     "flash_name": "ghostspear",  "ap_name": "Ghost Spear" },
+    { "property": "hasDarkSuit",  "flash_name": "darksuit",    "ap_name": "Dark Suit" },
+    { "property": "hasTorch",     "flash_name": "torch",       "ap_name": "Light" },
+    { "property": "hasDarkSword", "flash_name": "darksword",   "ap_name": "Dark Sword" },
+    { "property": "hasDarkShield","flash_name": "darkshield",  "ap_name": "Dark Shield" }
   ],
 
   "items": [
@@ -164,6 +168,43 @@
     "property": "hits",
     "condition": "<= 0",
     "kill_value": 0
+  },
+
+  "teleport": {
+    "params": ["level", "x", "y"],
+    "preWrites": [
+      { "class": "game", "property": "menu", "value": false }
+    ],
+    "invocation": "new_instance",
+    "className": "Game",
+    "argTemplate": ["$level", "$x", "$y"],
+    "assignTo": { "class": "net.flashpunk.FP", "property": "world" }
+  },
+
+  "region_coords": {
+    "Overworld":  { "level": 1,   "x": 48,  "y": 32  },
+    "Owl's Nest": { "level": 2,   "x": 48,  "y": 32  },
+    "Gundernourd": { "level": 19, "x": 16,  "y": 144 },
+    "Rostef":     { "level": 30,  "x": 64,  "y": 128 },
+    "Trohn":      { "level": 56,  "x": 96,  "y": 32  },
+    "Lacste":     { "level": 40,  "x": 400, "y": 432 },
+    "Woshad":     { "level": 69,  "x": 32,  "y": 32  },
+    "Bosiniad":   { "level": 71,  "x": 208, "y": 224 },
+    "Ghethis":    { "level": 113, "x": 64,  "y": 80  }
+  },
+
+  "location_coords": {
+    "Sword":             { "level":  10, "x":  48, "y":  64 },
+    "Shield":            { "level":  20, "x": 112, "y":  64 },
+    "Light":             { "level":  30, "x":  64, "y":  80 },
+    "Wand":              { "level":  43, "x": 144, "y": 240 },
+    "Conch":             { "level":  49, "x":  32, "y":  64 },
+    "Ghost Spear":       { "level":  64, "x":  72, "y":  40 },
+    "Dark Shield":       { "level":  74, "x":  48, "y":  48 },
+    "Dark Suit":         { "level":  79, "x":  40, "y": 168 },
+    "Penguin's Feather": { "level":  89, "x": 160, "y": 112 },
+    "Ghost Sword":       { "level": 106, "x":  64, "y":  88 },
+    "Fire Wand":         { "level": 109, "x": 160, "y":  88 }
   },
 
   "ui_counters": [

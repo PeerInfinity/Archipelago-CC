@@ -240,6 +240,7 @@ test-results/*
 set.mm
 *.pkl.gz
 *_pickle_meta.json
+*.swf
 
 !scripts/build/
 !scripts/lib/
