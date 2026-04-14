@@ -160,6 +160,10 @@
       "path": "./modules/flashPanel/index.js",
       "enabled": true
     },
+    "tileMapAnalyzer": {
+      "path": "./modules/tileMapAnalyzer/index.js",
+      "enabled": true
+    },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
       "enabled": true
@@ -270,6 +274,7 @@
     "metaGame",
     "metaGamePanel",
     "flashPanel",
+    "tileMapAnalyzer",
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",

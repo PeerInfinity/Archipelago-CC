@@ -9914,5 +9914,25 @@
         ]
       }
     }
+  },
+  "robotkitty_tilemap": {
+    "name": "Robot Wants Kitty (Tile Map Analyzer)",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Robot Wants Kitty"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744_rules.json",
+          "robotkitty_tilemap.json",
+          "robotkitty_tiles.json"
+        ]
+      }
+    }
   }
 }

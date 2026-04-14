@@ -220,6 +220,11 @@
               "type": "component",
               "componentType": "flashPanel",
               "title": "Flash Game"
+            },
+            {
+              "type": "component",
+              "componentType": "tileMapAnalyzer",
+              "title": "Tile Map Analyzer"
             }
           ]
         }

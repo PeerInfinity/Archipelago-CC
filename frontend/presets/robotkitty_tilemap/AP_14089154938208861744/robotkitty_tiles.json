@@ -1,0 +1,293 @@
+{
+  "_doc": "Per-game tile categorization and ability table for Robot Wants Kitty. Consumed by the TileMapAnalyzer frontend module. Sources: ~/CC/jpexs/output/robotkitty/scripts/xplor/{Player.as, PlayState.as, Missile.as}. The analyzer treats the raw byte stream from the SWF binary asset and maps each tile id to a category here. Multiple raw ids that share runtime behavior (e.g. all solid stone variants) map to the same category.",
+
+  "game": "Robot Wants Kitty",
+  "tile_size": 16,
+
+  "categories": {
+    "air": {
+      "_doc": "Empty tile. Player passes through, no floor.",
+      "color": "#111111",
+      "walkable": true,
+      "solid": false
+    },
+    "scenery": {
+      "_doc": "Decorative non-colliding tile (background variants, draw-only).",
+      "color": "#1a1a2a",
+      "walkable": true,
+      "solid": false
+    },
+    "hazard_acid": {
+      "_doc": "Acid. Player dies on contact (Player.as: Die() if tile in 16..23). Tile id 6 is the spawn marker that PlayState.LoadMap transforms into 16 or 20 at runtime; v1 treats it as the same hazard.",
+      "color": "#44aa44",
+      "walkable": true,
+      "solid": false,
+      "lethal": true
+    },
+    "save_point": {
+      "_doc": "Save point. Both 30 (inactive) and 31 (active/respawn) have the same traversal meaning.",
+      "color": "#ffaa00",
+      "walkable": true,
+      "solid": false,
+      "is_region": true
+    },
+    "player_start": {
+      "_doc": "Player initial spawn marker (255). PlayState.LoadMap clears it to air at runtime; we treat it as air for traversal but keep the marker for the analyzer to find the start location.",
+      "color": "#00ffff",
+      "walkable": true,
+      "solid": false,
+      "is_player_start": true
+    },
+    "goal_kitty": {
+      "_doc": "Kitty (the rescue target, tile 254). PlayState.LoadMap clears the tile and spawns a Kitty sprite. Win condition is touching the kitty sprite. We model it as a location.",
+      "color": "#ffffff",
+      "walkable": true,
+      "solid": false,
+      "is_region": true,
+      "is_location": true,
+      "ap_name": "Kitty"
+    },
+
+    "collectable_jump": {
+      "color": "#88ccff",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Jump",
+      "grants_ability": "jump"
+    },
+    "collectable_shoot": {
+      "color": "#ffcc00",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Shoot",
+      "grants_ability": "shoot"
+    },
+    "collectable_double_jump": {
+      "color": "#aa88ff",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Double Jump",
+      "grants_ability": "double_jump"
+    },
+    "collectable_rocket": {
+      "color": "#ff6644",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Rocket",
+      "grants_ability": "rocket"
+    },
+    "collectable_dash": {
+      "color": "#ff44aa",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Dash",
+      "grants_ability": "dash"
+    },
+    "collectable_red_key": {
+      "color": "#ff4444",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Red Key",
+      "grants_ability": "red_key"
+    },
+    "collectable_green_key": {
+      "color": "#44ff44",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Green Key",
+      "grants_ability": "green_key"
+    },
+    "collectable_blue_key": {
+      "color": "#4488ff",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Blue Key",
+      "grants_ability": "blue_key"
+    },
+    "collectable_rapid_fire": {
+      "color": "#ffff44",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Rapid Fire",
+      "grants_ability": "rapid_fire"
+    },
+    "collectable_missile": {
+      "color": "#cc8844",
+      "walkable": true, "solid": false,
+      "is_region": true, "is_location": true,
+      "ap_name": "Missile",
+      "grants_ability": "missile"
+    },
+
+    "enemy_alien": {
+      "_doc": "Enemy spawn (Alien). PlayState clears the tile to 0 at load time and spawns the enemy sprite. v1 treats as air; later versions will model enemies as obstacles.",
+      "color": "#aa3333", "walkable": true, "solid": false
+    },
+    "enemy_alien2": {
+      "color": "#aa5533", "walkable": true, "solid": false
+    },
+    "enemy_drip": {
+      "color": "#aa7733", "walkable": true, "solid": false
+    },
+    "enemy_boss": {
+      "_doc": "Boss spawn (tile 14). v1 treats as air. Boss could later become a location if we add bossfight modeling.",
+      "color": "#aa1111", "walkable": true, "solid": false
+    },
+
+    "floor_solid": {
+      "_doc": "Solid stone wall. Tiles 50-54 (50 is the base; PlayState transforms 2x2 blocks of 50 into the 51/52/53/54 quad-variant randomly). Music zone 0.",
+      "color": "#666666",
+      "walkable": false, "solid": true
+    },
+    "floor_solid_yellow": {
+      "_doc": "Yellow stone wall variants. 58 is the base; PlayState transforms 58 to 59-62 if surrounded by other yellows. Music zone 1.",
+      "color": "#776622",
+      "walkable": false, "solid": true
+    },
+    "floor_solid_third": {
+      "_doc": "Third-color stone wall (63 base, randomized to 63-65). Music zone 2.",
+      "color": "#553377",
+      "walkable": false, "solid": true
+    },
+    "destructible_brick": {
+      "_doc": "Tile 66. Destroyed by a missile collision (Missile.hitTop: clears the 3x3 around the impact for any tile == 66). Treated as a solid wall that the missile ability turns into air.",
+      "color": "#993333",
+      "walkable": false, "solid": true
+    },
+
+    "door_red": {
+      "_doc": "Tile 55. Red door. Contiguous vertical column, opened by walking into it with red key (Player.hitWall).",
+      "color": "#cc2222",
+      "walkable": false, "solid": true
+    },
+    "door_green": {
+      "_doc": "Tile 56. Green door, opened by green key.",
+      "color": "#22cc22",
+      "walkable": false, "solid": true
+    },
+    "door_blue": {
+      "_doc": "Tile 57. Blue door, opened by blue key.",
+      "color": "#2266cc",
+      "walkable": false, "solid": true
+    },
+
+    "unknown": {
+      "_doc": "Catch-all for raw byte values not present in tile_ids. Rendered loudly so missing mappings are visually obvious. Treated as solid for safety so the analyzer doesn't try to walk through an unidentified tile.",
+      "color": "#ff00ff",
+      "walkable": false,
+      "solid": true
+    }
+  },
+
+  "tile_ids": {
+    "_doc": "Raw byte value -> category name. Any byte not listed here uses default_category.",
+    "0": "air",
+    "1": "scenery",
+    "2": "scenery",
+    "3": "enemy_alien",
+    "4": "collectable_jump",
+    "5": "collectable_shoot",
+    "6": "hazard_acid",
+    "7": "collectable_double_jump",
+    "8": "collectable_rocket",
+    "9": "collectable_dash",
+    "10": "enemy_alien2",
+    "11": "collectable_red_key",
+    "12": "collectable_green_key",
+    "13": "collectable_blue_key",
+    "14": "enemy_boss",
+    "15": "collectable_rapid_fire",
+    "16": "hazard_acid",
+    "17": "hazard_acid",
+    "18": "hazard_acid",
+    "19": "hazard_acid",
+    "20": "hazard_acid",
+    "21": "hazard_acid",
+    "22": "hazard_acid",
+    "23": "hazard_acid",
+    "24": "enemy_drip",
+    "25": "collectable_missile",
+    "26": "scenery",
+    "27": "scenery",
+    "28": "scenery",
+    "29": "scenery",
+    "30": "save_point",
+    "31": "save_point",
+    "50": "floor_solid",
+    "51": "floor_solid",
+    "52": "floor_solid",
+    "53": "floor_solid",
+    "54": "floor_solid",
+    "55": "door_red",
+    "56": "door_green",
+    "57": "door_blue",
+    "58": "floor_solid_yellow",
+    "59": "floor_solid_yellow",
+    "60": "floor_solid_yellow",
+    "61": "floor_solid_yellow",
+    "62": "floor_solid_yellow",
+    "63": "floor_solid_third",
+    "64": "floor_solid_third",
+    "65": "floor_solid_third",
+    "66": "destructible_brick",
+    "254": "goal_kitty",
+    "255": "player_start"
+  },
+
+  "default_category": "unknown",
+
+  "basic_abilities": ["walk", "jump"],
+
+  "abilities": {
+    "walk": {
+      "_doc": "Move horizontally across adjacent floor tiles.",
+      "movement": "walk_horizontal"
+    },
+    "jump": {
+      "_doc": "Basic jump: 2 tiles vertical, 2 tiles horizontal from a floor tile. Per the user's instruction, treated as a basic ability (the player is assumed to start with jump already collected).",
+      "movement": "jump_2_2"
+    },
+    "double_jump": {
+      "_doc": "Doubles the jump reach: 4 tiles vertical, 4 tiles horizontal.",
+      "movement": "jump_4_4"
+    },
+    "rocket": {
+      "_doc": "Vertical boost. v1 treats as another reach-extender (4 tiles vertical, 2 tiles horizontal). Refinement deferred.",
+      "movement": "jump_4_2"
+    },
+    "dash": {
+      "_doc": "Long horizontal dash. v1 treats as a reach-extender (2 tiles vertical, 6 tiles horizontal). Refinement deferred.",
+      "movement": "jump_2_6"
+    },
+    "shoot": {
+      "_doc": "Shoots enemies. v1 has no effect (enemies are not modeled as obstacles in v1). Listed for completeness; later versions will add enemy_shootable transforms.",
+      "tile_transforms": {}
+    },
+    "rapid_fire": {
+      "_doc": "Faster shooting. v1 has no traversal effect.",
+      "tile_transforms": {}
+    },
+    "missile": {
+      "_doc": "Destroys destructible_brick tiles (id 66). Modeled as turning destructible_brick into air.",
+      "tile_transforms": { "destructible_brick": "air" }
+    },
+    "red_key": {
+      "tile_transforms": { "door_red": "air" }
+    },
+    "green_key": {
+      "tile_transforms": { "door_green": "air" }
+    },
+    "blue_key": {
+      "tile_transforms": { "door_blue": "air" }
+    }
+  },
+
+  "movement_models": {
+    "_doc": "Reference list of the movement primitives the analyzer needs to support. Implemented in reachabilityAnalyzer.js. The 'jump_DV_DH' shorthand means 'from a floor tile, reach any walkable tile within DV vertical and DH horizontal tiles'. The union of all enabled movement primitives in the current ability set is taken.",
+    "walk_horizontal": "1-tile horizontal step on adjacent floor",
+    "jump_2_2":        "2x2 jump from floor",
+    "jump_4_4":        "4x4 jump (double jump)",
+    "jump_4_2":        "4 vertical x 2 horizontal (rocket boost)",
+    "jump_2_6":        "2 vertical x 6 horizontal (dash)"
+  }
+}
