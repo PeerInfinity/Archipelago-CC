@@ -2,6 +2,10 @@
   "schema_version": 3,
   "game_name": "Seedling",
   "game_directory": "seedling",
+  "flash_panel": {
+    "config": "seedling.json",
+    "swf": "seedling_injected.swf"
+  },
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",

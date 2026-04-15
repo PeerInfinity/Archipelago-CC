@@ -252,8 +252,8 @@
       "movement": "jump_2_5"
     },
     "double_jump": {
-      "_doc": "Double jump: 5 tiles vertical (user-measured), 8 tiles horizontal (reasonable middle-ground guess pending refinement).",
-      "movement": "jump_5_8"
+      "_doc": "Double jump: 5 tiles vertical, 9 tiles horizontal (user-measured; 10 is arguably possible but we round down).",
+      "movement": "jump_5_9"
     },
     "rocket": {
       "_doc": "Vertical boost from ducking. v1 treats as a taller reach-extender (5 tiles vertical, 2 tiles horizontal) — rocket has less horizontal reach than jump because the player must duck first. Refinement deferred.",

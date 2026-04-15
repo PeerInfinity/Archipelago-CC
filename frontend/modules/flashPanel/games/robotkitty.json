@@ -1,0 +1,131 @@
+{
+  "game": "Robot Wants Kitty",
+  "swf": "529817_max_robotkitty.swf",
+  "_doc_stage_size": "Xplor extends FlxGame and calls super(320, 240, LogoState, 2) — the final arg is zoom, so the actual rendered stage is 320*2 x 240*2.",
+  "stage_size": [640, 480],
+  "ap_id_offset": 21000000,
+
+  "_doc_classes": "Kitty's state lives on instance fields of the live Player inside PlayState, not on class statics. The classes block only gates readState / onEnterFrame until xplor.PlayState is loaded — actual path reads and writes use getDefinitionByName inside the bridge path walker, not the registered aliases.",
+  "classes": {
+    "playstate": { "name": "xplor.PlayState", "deferred": true }
+  },
+
+  "state_properties": [],
+
+  "_doc_path_reads": "player_x and player_y are instance-field reads through the runtime object graph: FlxG.state -> defaultGroup -> first Player in members -> x/y. In this version of Flixel (used by Kitty) FlxState extends Sprite, not FlxGroup — children live in FlxState.defaultGroup, a public FlxGroup field, whose members array holds the added sprites. The filter step uses getQualifiedClassName normalized to dot form.",
+  "path_reads": [
+    {
+      "name": "player_x",
+      "type": "number",
+      "path": [
+        { "class": "org.flixel.FlxG" },
+        { "property": "state" },
+        { "property": "defaultGroup" },
+        { "filter": { "class": "xplor.Player" }, "container": "members" },
+        { "property": "x" }
+      ]
+    },
+    {
+      "name": "player_y",
+      "type": "number",
+      "path": [
+        { "class": "org.flixel.FlxG" },
+        { "property": "state" },
+        { "property": "defaultGroup" },
+        { "filter": { "class": "xplor.Player" }, "container": "members" },
+        { "property": "y" }
+      ]
+    }
+  ],
+
+  "ap_items": [
+    { "id": 0,  "ap_name": "Jump",        "flash_name": "jump" },
+    { "id": 1,  "ap_name": "Shoot",       "flash_name": "shoot" },
+    { "id": 2,  "ap_name": "Double Jump", "flash_name": "double_jump" },
+    { "id": 3,  "ap_name": "Rocket",      "flash_name": "rocket" },
+    { "id": 4,  "ap_name": "Dash",        "flash_name": "dash" },
+    { "id": 5,  "ap_name": "Red Key",     "flash_name": "red_key" },
+    { "id": 6,  "ap_name": "Green Key",   "flash_name": "green_key" },
+    { "id": 7,  "ap_name": "Blue Key",    "flash_name": "blue_key" },
+    { "id": 8,  "ap_name": "Rapid Fire",  "flash_name": "rapid_fire" },
+    { "id": 9,  "ap_name": "Missile",     "flash_name": "missile" },
+    { "id": 10, "ap_name": "Kitty",       "flash_name": "kitty" }
+  ],
+
+  "ap_locations": [
+    { "id": 0,  "flash_name": "jump" },
+    { "id": 1,  "flash_name": "shoot" },
+    { "id": 2,  "flash_name": "double_jump" },
+    { "id": 3,  "flash_name": "rocket" },
+    { "id": 4,  "flash_name": "dash" },
+    { "id": 5,  "flash_name": "red_key" },
+    { "id": 6,  "flash_name": "green_key" },
+    { "id": 7,  "flash_name": "blue_key" },
+    { "id": 8,  "flash_name": "rapid_fire" },
+    { "id": 9,  "flash_name": "missile" },
+    { "id": 10, "flash_name": "kitty" }
+  ],
+
+  "_doc_teleport": "Kitty has no level concept — the entire game is one tilemap owned by a single PlayState. Teleport is two path writes into the live Player's x and y fields. Pixel coords come from tile coords via px = tile * 16, matching Player's constructor which does startx = param1 * 16. pre_invocations fire only when the adapter hasn't yet seen a successful path read (i.e. still on the LogoState title screen) — they construct a fresh xplor.PlayState and assign it to FlxG.state, which synchronously runs PlayState.create() and spawns the Player, so the following path writes land on a live instance.",
+  "teleport": {
+    "params": ["x", "y"],
+    "pre_invocations": [
+      {
+        "_doc": "LogoState adds its intro logoBitmap directly to FlxG._game via addChild, outside the _buffer that holds the active FlxState. switchState() only clears _buffer, so the logoBitmap would linger on screen after we force-transition to PlayState. Strip the topmost child from _game — LogoState's logoBitmap is always the most-recently-added child because the Flixel engine is done initializing by the time LogoState.create() runs, so it's at the highest index. remove_last_child avoids hardcoding an index that would break if the engine adds more debug children on some setups.",
+        "invocation": "remove_last_child",
+        "path": [
+          { "class": "org.flixel.FlxG" },
+          { "property": "_game" }
+        ]
+      },
+      {
+        "invocation": "new_instance",
+        "className": "xplor.PlayState",
+        "args": [],
+        "assignTo": { "class": "org.flixel.FlxG", "property": "state" }
+      }
+    ],
+    "preWrites": [],
+    "invocation": "path_write",
+    "writes": [
+      {
+        "path": [
+          { "class": "org.flixel.FlxG" },
+          { "property": "state" },
+          { "property": "defaultGroup" },
+          { "filter": { "class": "xplor.Player" }, "container": "members" },
+          { "property": "x" }
+        ],
+        "value": "$x"
+      },
+      {
+        "path": [
+          { "class": "org.flixel.FlxG" },
+          { "property": "state" },
+          { "property": "defaultGroup" },
+          { "filter": { "class": "xplor.Player" }, "container": "members" },
+          { "property": "y" }
+        ],
+        "value": "$y"
+      }
+    ]
+  },
+
+  "_doc_location_coords": "Pixel coordinates for the Location dropdown teleport. Computed from the tilemap extractor output under frontend/presets/robotkitty_tilemap/. Heuristic, in priority order: (1) pickup tile itself if it's a floor tile — the player lands exactly on the pickup and Player.update() collects it on the next frame; (2) tile south; (3) tile north; (4) nearest floor within radius 5; (5) pickup tile unconditionally. Kitty is placed on the kitty sprite so PlayState's distance-check win condition fires immediately.",
+  "location_coords": {
+    "Jump":         { "x": 160,  "y": 1312 },
+    "Shoot":        { "x": 704,  "y": 1168 },
+    "Double Jump":  { "x": 752,  "y": 1104 },
+    "Rocket":       { "x": 1248, "y": 1216 },
+    "Dash":         { "x": 1104, "y": 896  },
+    "Red Key":      { "x": 1504, "y": 672  },
+    "Green Key":    { "x": 80,   "y": 768  },
+    "Blue Key":     { "x": 2016, "y": 560  },
+    "Rapid Fire":   { "x": 2848, "y": 1088 },
+    "Missile":      { "x": 448,  "y": 496  },
+    "Kitty":        { "x": 160,  "y": 1024 },
+    "Save Point 1": { "x": 608,  "y": 736  },
+    "Save Point 2": { "x": 1072, "y": 1200 },
+    "Save Point 3": { "x": 448,  "y": 1264 }
+  }
+}

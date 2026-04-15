@@ -974,6 +974,7 @@ export function getStaticGameData(sm) {
   return {
     game_name: sm.rules?.game_name,
     game_directory: sm.rules?.game_directory,
+    flash_panel: sm.rules?.flash_panel,
     playerId: sm.playerId, // String player ID
     locations: sm.locations || new Map(),  // Return Map directly
     regions: sm.regions || new Map(),      // Return Map directly

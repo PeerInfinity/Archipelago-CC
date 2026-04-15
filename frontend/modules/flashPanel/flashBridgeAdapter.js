@@ -193,6 +193,7 @@ export class FlashBridgeAdapter {
     const bridgeConfig = {
       classes: this.config.classes,
       state_properties: this.config.state_properties,
+      path_reads: this.config.path_reads,
     };
     try {
       const result = flash.configure(JSON.stringify(bridgeConfig));
@@ -221,27 +222,47 @@ export class FlashBridgeAdapter {
 
   /**
    * Queue a teleport based on the game config's `teleport` block
-   * and the given parameter values. The config defines which
-   * constructor / assignTo target to use and which parameter
-   * names are expected; this method substitutes them into the
-   * argTemplate and pushes the resolved invocation onto the
-   * per-frame queue.
+   * and the given parameter values.
    *
-   * Example for Seedling:
-   *   config.teleport = {
-   *     params: ["level", "x", "y"],
-   *     invocation: "new_instance",
-   *     className: "Game",
-   *     argTemplate: ["$level", "$x", "$y"],
-   *     assignTo: { class: "net.flashpunk.FP", property: "world" }
-   *   }
-   *   adapter.teleport({ level: 30, x: 64, y: 128 })
+   * Two teleport invocation modes are supported:
+   *
+   *   - "new_instance" (Seedling): the config supplies `className`,
+   *     `argTemplate`, and optional `assignTo`. The resolved args
+   *     (with $-prefixed placeholders substituted from `params`)
+   *     are sent to the bridge as a single new_instance queue item.
+   *
+   *   - "path_write" (Kitty): the config supplies `writes`, an
+   *     array of `{ path, value }` entries where `value` is either
+   *     a literal or a $-prefixed placeholder. Each write becomes
+   *     a separate path-write queue item on the bridge. Used for
+   *     games whose player state lives on a live instance (reached
+   *     via the bridge's path walker) rather than class statics.
    */
   teleport(params) {
     const spec = this.config.teleport;
     if (!spec) {
       this.log('teleport: no teleport config', 'error');
       return false;
+    }
+
+    // Optional pre_invocations run before anything else in the
+    // teleport sequence, but only when the game hasn't reached a
+    // state where path reads produce values yet. Use case: Kitty
+    // starts on a LogoState title screen where no Player exists,
+    // so teleport path writes fail with "parent not resolvable".
+    // Pre-invocations let the config unconditionally transition
+    // into the gameplay state (e.g. `new_instance PlayState -> FlxG.state`)
+    // before the teleport lands, so the player appears at the
+    // target location without having to click through menus.
+    //
+    // Gated on !gameReady so they don't run when the user is
+    // already playing — which would wipe in-progress state by
+    // rebuilding the world from scratch.
+    if (!this.gameReady && Array.isArray(spec.pre_invocations)) {
+      for (const inv of spec.pre_invocations) {
+        this.invokeQueue.push(inv);
+      }
+      this.log('teleport: queued pre_invocations (game not ready)');
     }
 
     // Optional preWrites let the config set class statics before
@@ -255,14 +276,30 @@ export class FlashBridgeAdapter {
       }
     }
 
+    const substitute = (tok) => {
+      if (typeof tok !== 'string' || tok[0] !== '$') return tok;
+      return params[tok.slice(1)];
+    };
+
+    if (spec.invocation === 'path_write') {
+      if (!Array.isArray(spec.writes)) {
+        this.log('teleport: path_write mode requires writes array', 'error');
+        return false;
+      }
+      for (const w of spec.writes) {
+        this.invokeQueue.push({
+          path: w.path,
+          value: substitute(w.value),
+        });
+      }
+      this.log(`teleport queued (path_write): ${JSON.stringify(params)}`, 'item');
+      return true;
+    }
+
     const resolved = {
       invocation: spec.invocation,
       className: spec.className,
-      args: (spec.argTemplate || []).map((tok) => {
-        if (typeof tok !== 'string' || tok[0] !== '$') return tok;
-        const key = tok.slice(1);
-        return params[key];
-      }),
+      args: (spec.argTemplate || []).map(substitute),
       assignTo: spec.assignTo,
     };
     this.invokeQueue.push(resolved);
@@ -368,14 +405,25 @@ export class FlashBridgeAdapter {
     const isInitialRead = !this.seenProperties.has(property);
     if (isInitialRead) {
       this.seenProperties.add(property);
-      this.log(`initial read: ${property} = ${value}`);
+      // Only log the initial read for location-relevant properties.
+      // Continuously-changing values (player_x/y, velocity, etc.)
+      // would otherwise produce a useless "initial read" line too.
+      if (this.propertyToLocationFlash[property]) {
+        this.log(`initial read: ${property} = ${value}`);
+      }
       return;
     }
 
-    this.log(`stateChanged (player action): ${property} = ${value}`);
-
     // Location detection: property going true -> player found a location
     const locFlash = this.propertyToLocationFlash[property];
+
+    // Only log player-action state changes for properties that map
+    // to AP locations. Path reads like player_x / player_y fire
+    // every frame the player moves and would otherwise flood the
+    // panel log with useless position updates.
+    if (locFlash) {
+      this.log(`stateChanged (player action): ${property} = ${value}`);
+    }
     if (locFlash && value === true) {
       // Undo: take the game-given item back so the AP item can arrive clean
       const propDef = this._findPropertyDef(property);

@@ -13,6 +13,8 @@ function log(level, message, ...data) {
 
 const DEFAULT_CONFIG_PATH = './modules/flashPanel/games/seedling.json';
 const DEFAULT_SWF_PATH = './modules/flashPanel/swf/seedling_injected.swf';
+const GAMES_DIR = './modules/flashPanel/games/';
+const SWF_DIR = './modules/flashPanel/swf/';
 const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
 
 let instanceCounter = 0;
@@ -67,8 +69,13 @@ export class FlashPanelUI {
 
     this.instanceId = ++instanceCounter;
     this.flashObjectId = `FlashPanelSWF_${this.instanceId}`;
-    this.configPath = this.componentState.configPath || DEFAULT_CONFIG_PATH;
-    this.swfPath = this.componentState.swfPath || DEFAULT_SWF_PATH;
+    // Pick per-game paths by looking up the current AP game name in
+    // GAME_CONFIG_MAP. componentState overrides win; a missing game
+    // name falls back to the default (Seedling). The actual lookup
+    // happens in _initializeAdapter because stateManager.getGameName
+    // may not be populated yet when the component is constructed.
+    this.configPath = this.componentState.configPath || null;
+    this.swfPath = this.componentState.swfPath || null;
 
     this.rootElement = null;
     this.swfContainer = null;
@@ -90,14 +97,27 @@ export class FlashPanelUI {
 
     this.container.on('destroy', () => this.destroy());
 
+    // Wait for rules to actually finish loading before picking the
+    // config. `app:readyForUiDataLoad` fires during app init, often
+    // before the state manager has deserialized the preset's
+    // rules.json — at that moment `staticData.flash_panel` is still
+    // undefined and the panel would fall through to the Seedling
+    // default. `stateManager:rulesLoaded` fires after the worker
+    // confirms rules + snapshot are ready, which is when
+    // `staticData.flash_panel` becomes authoritative.
     const readyHandler = async () => {
-      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
       await this._initializeAdapter();
     };
-    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    this.eventBus.subscribe('stateManager:rulesLoaded', readyHandler);
 
-    if (stateManager.getStaticData()?.items) {
-      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+    // Fast path: if rules were already loaded before this panel
+    // was constructed (e.g. created by a layout change after
+    // startup), skip the event wait and initialize immediately.
+    // game_name is populated in staticDataCache alongside
+    // flash_panel, so it's a reliable "rules ready" signal.
+    if (stateManager.getStaticData?.()?.game_name) {
+      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
       this._initializeAdapter();
     }
   }
@@ -228,16 +248,26 @@ export class FlashPanelUI {
     this._teleportToLocation(eventData.locationName);
   }
 
+  // Note: Clean Flash pauses the SWF when any click lands outside
+  // the game area, and DOM focus() on the <object> doesn't resume
+  // it — the plugin tracks its own activation state. After a
+  // teleport button click the user needs to click back inside the
+  // game to resume play; the queued path write is already applied
+  // by the time that happens, so the player shows at the new
+  // position as soon as the game unpauses.
+
   _manualTeleport() {
     if (!this.adapter) return;
     const level = parseInt(this.teleportLevelInput.value, 10);
     const x = parseInt(this.teleportXInput.value, 10);
     const y = parseInt(this.teleportYInput.value, 10);
-    if (Number.isNaN(level) || Number.isNaN(x) || Number.isNaN(y)) {
-      this._panelLog('teleport: level/x/y must be numbers', 'error');
+    if (Number.isNaN(x) || Number.isNaN(y)) {
+      this._panelLog('teleport: x/y must be numbers', 'error');
       return;
     }
-    this.adapter.teleport({ level, x, y });
+    const params = { x, y };
+    if (!Number.isNaN(level)) params.level = level;
+    this.adapter.teleport(params);
   }
 
   _regionTeleport() {
@@ -288,6 +318,27 @@ export class FlashPanelUI {
     this.isInitialized = true;
 
     try {
+      // Resolve config/SWF paths from the active preset's
+      // rules.json `flash_panel` section, which is threaded through
+      // stateManager.getStaticData(). componentState overrides win;
+      // a missing flash_panel section falls back to the default
+      // (Seedling). This is how the panel picks Kitty vs Seedling
+      // at runtime without needing separate layout presets.
+      if (!this.configPath || !this.swfPath) {
+        const fp = stateManager.getStaticData?.()?.flash_panel;
+        if (fp && (fp.config || fp.swf)) {
+          if (!this.configPath && fp.config) {
+            this.configPath = GAMES_DIR + fp.config;
+          }
+          if (!this.swfPath && fp.swf) {
+            this.swfPath = SWF_DIR + fp.swf;
+          }
+          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf}`);
+        }
+        this.configPath = this.configPath || DEFAULT_CONFIG_PATH;
+        this.swfPath = this.swfPath || DEFAULT_SWF_PATH;
+      }
+
       this._setStatus('loading config…');
       this.gameConfig = await this._loadConfig(this.configPath);
       this._panelLog(`config loaded: ${this.gameConfig.game}`);
