@@ -16,6 +16,12 @@ import {
   DEFAULT_TILEMAP_PATH,
   DEFAULT_CONFIG_PATH,
 } from './tileMapDataManager.js';
+import { buildEffectiveGrids } from './tileCategorizer.js';
+import {
+  computeReachable,
+  findPlayerStart,
+  findPointsOfInterest,
+} from './reachabilityAnalyzer.js';
 import { TileMapCanvasRenderer } from './canvasRenderer.js';
 
 function log(level, message, ...data) {
@@ -69,16 +75,39 @@ export class TileMapAnalyzerUI {
     toolbar.style.cssText =
       'flex:0 0 auto;padding:6px 8px;border-bottom:1px solid #333;display:flex;gap:8px;align-items:center;';
 
-    const reloadBtn = document.createElement('button');
-    reloadBtn.textContent = 'Reload';
-    reloadBtn.style.cssText = 'background:#333;color:#ddd;border:1px solid #555;padding:3px 8px;cursor:pointer;';
-    reloadBtn.addEventListener('click', () => {
+    const mkBtn = (text, onClick) => {
+      const b = document.createElement('button');
+      b.textContent = text;
+      b.style.cssText = 'background:#333;color:#ddd;border:1px solid #555;padding:3px 8px;cursor:pointer;';
+      b.addEventListener('click', onClick);
+      return b;
+    };
+
+    toolbar.appendChild(mkBtn('Reload', () => {
       this._loadAndRender().catch((e) => {
         log('error', 'reload failed', e);
         this._setStatus(`error: ${e.message}`);
       });
-    });
-    toolbar.appendChild(reloadBtn);
+    }));
+
+    toolbar.appendChild(mkBtn('Reach (basic)', () => {
+      this._runReachability('basic').catch((e) => {
+        log('error', 'basic reachability failed', e);
+        this._setStatus(`error: ${e.message}`);
+      });
+    }));
+
+    toolbar.appendChild(mkBtn('Reach (full)', () => {
+      this._runReachability('full').catch((e) => {
+        log('error', 'full reachability failed', e);
+        this._setStatus(`error: ${e.message}`);
+      });
+    }));
+
+    toolbar.appendChild(mkBtn('Clear', () => {
+      if (this.renderer) this.renderer.clearOverlays();
+      this._setStatus(this._summary || 'idle');
+    }));
 
     const zoomLabel = document.createElement('span');
     zoomLabel.textContent = 'Zoom:';
@@ -136,8 +165,69 @@ export class TileMapAnalyzerUI {
 
     const counts = this._countCategories();
     const summary = `${tilemap.map_width}×${tilemap.map_height}, ${counts.unique} categories`;
+    this._summary = summary;
     this._setStatus(summary);
     log('info', 'loaded', summary, counts.byName);
+
+    // Drop POIs onto the canvas as outline markers so save points
+    // and pickups are easy to locate even at low zoom. This is a
+    // static overlay — the Clear button wipes it along with the
+    // reachability overlay.
+    const pois = findPointsOfInterest(this.categoryGrid, this.config);
+    const markers = pois.map((p) => ({
+      x: p.x,
+      y: p.y,
+      color: '#ffffff',
+      label: p.ap_name || p.categoryName,
+    }));
+    this.renderer.setMarkers(markers);
+  }
+
+  async _runReachability(mode) {
+    if (!this.categoryGrid || !this.config) {
+      throw new Error('tilemap not loaded yet');
+    }
+    const abilitySet = new Set(this.config.basic_abilities || []);
+    if (mode === 'full') {
+      // Add every ability defined in the config.
+      for (const name of Object.keys(this.config.abilities || {})) {
+        abilitySet.add(name);
+      }
+    }
+
+    const { effectiveGrid, floorFlags } = buildEffectiveGrids(
+      this.categoryGrid, abilitySet, this.config
+    );
+
+    const start = findPlayerStart(this.categoryGrid, this.config);
+    if (!start) {
+      throw new Error('no player_start tile found in map');
+    }
+
+    // If player_start itself isn't floor_below (rare — the tile
+    // above a solid) try the tile directly below, which is almost
+    // certainly where Flixel's gravity lands the player on frame 1.
+    let sx = start.x;
+    let sy = start.y;
+    if (!floorFlags[sy][sx]) {
+      if (sy + 1 < floorFlags.length && floorFlags[sy + 1][sx]) {
+        sy = sy + 1;
+      }
+    }
+
+    const t0 = performance.now();
+    const { reachable } = computeReachable(
+      sx, sy, effectiveGrid, floorFlags, abilitySet, this.config
+    );
+    const t1 = performance.now();
+
+    this.renderer.setReachableOverlay(reachable, mode === 'full'
+      ? 'rgba(80, 180, 255, 0.35)'
+      : 'rgba(80, 220, 80, 0.35)'
+    );
+    const status = `${mode}: ${reachable.size} tiles reachable from (${sx},${sy}) in ${Math.round(t1 - t0)}ms`;
+    this._setStatus(status);
+    log('info', status, { abilities: [...abilitySet] });
   }
 
   _countCategories() {

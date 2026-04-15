@@ -238,26 +238,30 @@
 
   "basic_abilities": ["walk", "jump"],
 
+  "fall_distance": 12,
+  "_doc_fall_distance": "Maximum vertical drop in tiles the analyzer will model for a 'fall' from a floor tile. Used only by the v1 bounding-box reachability approximation. 12 is chosen to cover the tallest vertical gap on Kitty's map (the map is 84 tiles tall and platforms are typically ~8 apart). Phase 6's physics model will replace this with a real integrator.",
+
+
   "abilities": {
     "walk": {
       "_doc": "Move horizontally across adjacent floor tiles.",
       "movement": "walk_horizontal"
     },
     "jump": {
-      "_doc": "Basic jump: 2 tiles vertical, 2 tiles horizontal from a floor tile. Per the user's instruction, treated as a basic ability (the player is assumed to start with jump already collected).",
-      "movement": "jump_2_2"
+      "_doc": "Basic jump: 2 tiles vertical (2.5 rounded down), 5 tiles horizontal from a floor tile. Measured from in-game reach. Per the user's instruction, treated as a basic ability (the player is assumed to start with jump already collected).",
+      "movement": "jump_2_5"
     },
     "double_jump": {
-      "_doc": "Doubles the jump reach: 4 tiles vertical, 4 tiles horizontal.",
-      "movement": "jump_4_4"
+      "_doc": "Double jump: 5 tiles vertical (user-measured), 8 tiles horizontal (reasonable middle-ground guess pending refinement).",
+      "movement": "jump_5_8"
     },
     "rocket": {
-      "_doc": "Vertical boost. v1 treats as another reach-extender (4 tiles vertical, 2 tiles horizontal). Refinement deferred.",
-      "movement": "jump_4_2"
+      "_doc": "Vertical boost from ducking. v1 treats as a taller reach-extender (5 tiles vertical, 2 tiles horizontal) — rocket has less horizontal reach than jump because the player must duck first. Refinement deferred.",
+      "movement": "jump_5_2"
     },
     "dash": {
-      "_doc": "Long horizontal dash. v1 treats as a reach-extender (2 tiles vertical, 6 tiles horizontal). Refinement deferred.",
-      "movement": "jump_2_6"
+      "_doc": "Long horizontal dash. v1 treats as a reach-extender (2 tiles vertical, 10 tiles horizontal). Dash moves at 5x run speed for 1 second, so it covers far more horizontal ground than jump. Refinement deferred.",
+      "movement": "jump_2_10"
     },
     "shoot": {
       "_doc": "Shoots enemies. v1 has no effect (enemies are not modeled as obstacles in v1). Listed for completeness; later versions will add enemy_shootable transforms.",

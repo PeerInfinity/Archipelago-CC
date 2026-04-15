@@ -16,7 +16,13 @@ export class TileMapCanvasRenderer {
     this.tilemap = null;
     this.categoryGrid = null;
     this.config = null;
-    this.tilePixelSize = 4;  // start zoomed out so 188x84 fits in a typical panel
+    this.tilePixelSize = 4;
+
+    // Optional overlay state — set by the panel when analysis runs.
+    this.reachableSet = null;    // Set<"y,x">
+    this.reachableColor = 'rgba(80, 220, 80, 0.35)';
+    this.floorFlags = null;       // optional [y][x] bool; if set, drawn as a subtle marker
+    this.markers = [];            // [{ x, y, color, label }]
   }
 
   setData(tilemap, categoryGrid, config) {
@@ -30,6 +36,38 @@ export class TileMapCanvasRenderer {
   setTilePixelSize(size) {
     this.tilePixelSize = Math.max(1, Math.floor(size));
     this._resizeCanvas();
+    this.draw();
+  }
+
+  setReachableOverlay(reachableSet, color) {
+    this.reachableSet = reachableSet || null;
+    if (color) this.reachableColor = color;
+    this.draw();
+  }
+
+  setFloorFlags(floorFlags) {
+    this.floorFlags = floorFlags || null;
+    this.draw();
+  }
+
+  setMarkers(markers) {
+    this.markers = Array.isArray(markers) ? markers : [];
+    this.draw();
+  }
+
+  clearOverlays() {
+    // Clears the reachability tint and the floor-flag debug layer.
+    // POI markers are preserved — they're static per-tilemap metadata,
+    // not analysis output, and the user always wants them visible.
+    this.reachableSet = null;
+    this.floorFlags = null;
+    this.draw();
+  }
+
+  clearAll() {
+    this.reachableSet = null;
+    this.floorFlags = null;
+    this.markers = [];
     this.draw();
   }
 
@@ -57,6 +95,29 @@ export class TileMapCanvasRenderer {
         const cat = cats[name];
         ctx.fillStyle = (cat && cat.color) || FALLBACK_COLOR;
         ctx.fillRect(x * ts, y * ts, ts, ts);
+      }
+    }
+
+    if (this.reachableSet && this.reachableSet.size > 0) {
+      ctx.fillStyle = this.reachableColor;
+      for (const k of this.reachableSet) {
+        const comma = k.indexOf(',');
+        const y = parseInt(k.slice(0, comma), 10);
+        const x = parseInt(k.slice(comma + 1), 10);
+        ctx.fillRect(x * ts, y * ts, ts, ts);
+      }
+    }
+
+    if (this.markers.length && ts >= 3) {
+      for (const m of this.markers) {
+        ctx.strokeStyle = m.color || '#fff';
+        ctx.lineWidth = Math.max(1, Math.floor(ts / 4));
+        ctx.strokeRect(
+          m.x * ts + 0.5,
+          m.y * ts + 0.5,
+          ts - 1,
+          ts - 1
+        );
       }
     }
   }
