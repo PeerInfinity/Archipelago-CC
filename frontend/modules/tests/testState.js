@@ -1,5 +1,7 @@
 // frontend/modules/tests/testState.js
 
+import { createRng } from '../shared/rng.js';
+
 // Holds the core state for the testing module.
 // Functions here are simple accessors or direct mutators of this state.
 
@@ -82,39 +84,18 @@ export function shouldRandomizeOrder() {
   return testLogicState.randomizeOrder;
 }
 
-// Simple seeded random number generator (Mulberry32)
-function seededRandom(seed) {
-  return function() {
-    let t = seed += 0x6D2B79F5;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
-
-// Shuffle array using Fisher-Yates algorithm
-// If a seed is provided, uses seeded random; otherwise uses Math.random
 function shuffleArray(array) {
-  const shuffled = [...array];
-  let rng;
-
-  if (testLogicState.randomSeed !== null) {
-    rng = seededRandom(testLogicState.randomSeed);
-    console.log(`[TestState] Shuffling tests with seed: ${testLogicState.randomSeed}`);
-  } else {
-    // Generate a random seed for this run
+  if (testLogicState.randomSeed === null) {
     const newSeed = Math.floor(Math.random() * 2147483647);
     testLogicState.randomSeed = newSeed;
-    rng = seededRandom(newSeed);
     console.log(`[TestState] Shuffling tests with generated seed: ${newSeed}`);
     console.log(`[TestState] To reproduce this order, add &testOrderSeed=${newSeed} to the URL`);
+  } else {
+    console.log(`[TestState] Shuffling tests with seed: ${testLogicState.randomSeed}`);
   }
 
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+  const rng = createRng(testLogicState.randomSeed);
+  return rng.shuffle([...array]);
 }
 
 export function getTestsForExecution() {

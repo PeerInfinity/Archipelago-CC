@@ -11,8 +11,6 @@ function log(level, message, ...data) {
   }
 }
 
-const DEFAULT_CONFIG_PATH = './modules/flashPanel/games/seedling.json';
-const DEFAULT_SWF_PATH = './modules/flashPanel/swf/seedling_injected.swf';
 const GAMES_DIR = './modules/flashPanel/games/';
 const SWF_DIR = './modules/flashPanel/swf/';
 const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
@@ -69,11 +67,10 @@ export class FlashPanelUI {
 
     this.instanceId = ++instanceCounter;
     this.flashObjectId = `FlashPanelSWF_${this.instanceId}`;
-    // Pick per-game paths by looking up the current AP game name in
-    // GAME_CONFIG_MAP. componentState overrides win; a missing game
-    // name falls back to the default (Seedling). The actual lookup
-    // happens in _initializeAdapter because stateManager.getGameName
-    // may not be populated yet when the component is constructed.
+    // Pick per-game paths from componentState or rules.json's
+    // flash_panel section. The actual lookup happens in
+    // _initializeAdapter because stateManager.getStaticData may not
+    // be populated yet when the component is constructed.
     this.configPath = this.componentState.configPath || null;
     this.swfPath = this.componentState.swfPath || null;
 
@@ -98,11 +95,7 @@ export class FlashPanelUI {
     this.container.on('destroy', () => this.destroy());
 
     // Wait for rules to actually finish loading before picking the
-    // config. `app:readyForUiDataLoad` fires during app init, often
-    // before the state manager has deserialized the preset's
-    // rules.json — at that moment `staticData.flash_panel` is still
-    // undefined and the panel would fall through to the Seedling
-    // default. `stateManager:rulesLoaded` fires after the worker
+    // config. `stateManager:rulesLoaded` fires after the worker
     // confirms rules + snapshot are ready, which is when
     // `staticData.flash_panel` becomes authoritative.
     const readyHandler = async () => {
@@ -321,9 +314,7 @@ export class FlashPanelUI {
       // Resolve config/SWF paths from the active preset's
       // rules.json `flash_panel` section, which is threaded through
       // stateManager.getStaticData(). componentState overrides win;
-      // a missing flash_panel section falls back to the default
-      // (Seedling). This is how the panel picks Kitty vs Seedling
-      // at runtime without needing separate layout presets.
+      // if neither source specifies a game, the panel stays idle.
       if (!this.configPath || !this.swfPath) {
         const fp = stateManager.getStaticData?.()?.flash_panel;
         if (fp && (fp.config || fp.swf)) {
@@ -335,8 +326,12 @@ export class FlashPanelUI {
           }
           this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf}`);
         }
-        this.configPath = this.configPath || DEFAULT_CONFIG_PATH;
-        this.swfPath = this.swfPath || DEFAULT_SWF_PATH;
+      }
+
+      if (!this.configPath || !this.swfPath) {
+        this._panelLog('no flash game configured in rules data');
+        this._setStatus('no game configured');
+        return;
       }
 
       this._setStatus('loading config…');

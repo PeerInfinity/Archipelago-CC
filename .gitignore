@@ -241,6 +241,8 @@ set.mm
 *.pkl.gz
 *_pickle_meta.json
 *.swf
+*_tilemap.json
+*_tiles.json
 
 !scripts/build/
 !scripts/lib/
