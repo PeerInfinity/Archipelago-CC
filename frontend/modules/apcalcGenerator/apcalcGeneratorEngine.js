@@ -7,6 +7,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
+import { makeHasRule, makeAndRule, makeOrRule } from '../shared/rulesJsonBuilder.js';
 
 const OPERATIONS = ['+', '-', '*', '/'];
 const OPERATION_ORDER = ['+', '-', '*', '/'];
@@ -850,23 +851,6 @@ export async function generate(config, log) {
 
 function buttonItemName(button) { return `Button: ${button}`; }
 
-function makeHasRule(itemName, count = 1) {
-    const rule = { rule: 'Has', args: { item_name: itemName } };
-    if (count > 1) rule.args.count = count;
-    return rule;
-}
-
-function makeAndRule(children) {
-    if (!children.length) return { rule: 'True_' };
-    if (children.length === 1) return children[0];
-    return { rule: 'And', children };
-}
-
-function makeOrRule(children) {
-    if (!children.length) return { rule: 'True_' };
-    if (children.length === 1) return children[0];
-    return { rule: 'Or', children };
-}
 
 function pathCostToRule(pathCost) {
     const rules = [];

@@ -111,8 +111,12 @@
     ]
   },
 
-  "_doc_location_coords": "Pixel coordinates for the Location dropdown teleport. Teleports directly onto the collectible tile (pixel = tile * 16). Player.update() detects the tile and collects it on the next frame. Kitty's coordinate is on the Kitty sprite so PlayState's distance-check win condition fires immediately.",
+  "_doc_location_coords": "Pixel coordinates for the Location dropdown teleport. Save points listed first in gameplay discovery order, then collectibles. Teleports directly onto the tile (pixel = tile * 16).",
   "location_coords": {
+    "Player Start": { "x": 160,  "y": 1088 },
+    "Save Point 1": { "x": 448,  "y": 1264 },
+    "Save Point 2": { "x": 608,  "y": 736  },
+    "Save Point 3": { "x": 1072, "y": 1200 },
     "Jump":         { "x": 160,  "y": 1312 },
     "Shoot":        { "x": 704,  "y": 1168 },
     "Double Jump":  { "x": 752,  "y": 1104 },
@@ -123,9 +127,6 @@
     "Blue Key":     { "x": 2016, "y": 560  },
     "Rapid Fire":   { "x": 2880, "y": 1056 },
     "Missile":      { "x": 448,  "y": 480  },
-    "Kitty":        { "x": 160,  "y": 1024 },
-    "Save Point 1": { "x": 608,  "y": 736  },
-    "Save Point 2": { "x": 1072, "y": 1200 },
-    "Save Point 3": { "x": 448,  "y": 1264 }
+    "Kitty":        { "x": 160,  "y": 1024 }
   }
 }

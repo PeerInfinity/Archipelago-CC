@@ -37,22 +37,22 @@ function parseMovementBox(name) {
 
 /**
  * Given an ability set, compute the union bounding box of all
- * movement primitives the player has access to. For v1 we take the
- * max over (dv, dh) pairs independently, which is a loose union
- * (allows combinations not strictly supported by any single ability,
- * e.g. max-dv of jump + max-dh of dash). Good enough for the v1
- * approximation; phase 6 will do real per-ability reach tables.
+ * movement primitives plus a list of individual per-ability boxes.
  *
- * maxDv is the upward reach (jump-up distance). maxFall is a
- * separate downward bound from config.fall_distance, modeling
- * "player walks off an edge / jumps down" without actually
- * integrating gravity. Without this, the bounding box model can't
- * represent any descent bigger than maxDv, and real maps become
- * nearly unreachable.
+ * The union box (maxDv, maxDh) is used for the BFS neighbor
+ * enumeration loop — it determines which (dx, dy) offsets to try.
+ * The per-ability boxes are used for arc validation: a neighbor at
+ * (dx, dy) is valid if ANY individual ability's box contains it AND
+ * the arc is clear with that ability's dv for the hop height.
+ *
+ * This prevents the "dash hops over walls" bug: the dash box has
+ * dv=0, so its hop peak equals the source tile — it can only clear
+ * obstacles at floor level, not jump over them.
  */
 export function computeMovementBox(abilitySet, config) {
   let maxDv = 0;
   let maxDh = 0;
+  const boxes = [];
   for (const ability of abilitySet) {
     const def = config.abilities && config.abilities[ability];
     if (!def || !def.movement) continue;
@@ -60,11 +60,12 @@ export function computeMovementBox(abilitySet, config) {
     if (!box) continue;
     if (box.dv > maxDv) maxDv = box.dv;
     if (box.dh > maxDh) maxDh = box.dh;
+    boxes.push(box);
   }
   // Always at least walk.
   if (maxDh < 1) maxDh = 1;
   const maxFall = Math.max(maxDv, config.fall_distance || maxDv);
-  return { maxDv, maxDh, maxFall };
+  return { maxDv, maxDh, maxFall, boxes };
 }
 
 function isBlockingArcTile(categoryName, config) {
@@ -151,42 +152,45 @@ function arcIsClear(x0, y0, x1, y1, effectiveGrid, config, maxDv = 0) {
     return true;
   };
 
-  // For horizontal moves (dy == 0), try the straight horizontal
-  // first, then a "hop" arc that jumps up by maxDv, crosses
-  // horizontally at the elevated height, and comes back down. The
-  // hop handles ground-level enemies the player can jump over.
+  // For horizontal moves, only need diagonal + hop.
+  // For non-horizontal, try both L-arcs + diagonal.
   if (y0 === y1) {
     if (checkDiag()) return true;
-    if (maxDv > 0) {
-      // Hop: up maxDv at x0, across at y0 - maxDv, down maxDv at x1.
-      const peakY = y0 - maxDv;
-      if (peakY >= 0) {
-        let clear = true;
-        // Phase 1: go up at x0
-        for (let y = y0 - 1; y >= peakY; y--) {
-          if (blocked(x0, y)) { clear = false; break; }
-        }
-        if (clear) {
-          // Phase 2: go across at peakY
+  } else {
+    if (checkL(true) || checkL(false) || checkDiag()) return true;
+  }
+
+  // High hop arc: go up by maxDv at x0, across horizontally at the
+  // peak height, then down to y1 at x1. This handles jumping over
+  // ground-level enemies with sufficient ceiling clearance — the
+  // player's jump arc peaks above the enemy tile.
+  if (maxDv > 0) {
+    const peakY = y0 - maxDv;
+    if (peakY >= 0) {
+      let clear = true;
+      // Phase 1: go up at x0 from y0 to peakY
+      for (let y = y0 - 1; y >= peakY; y--) {
+        if (blocked(x0, y)) { clear = false; break; }
+      }
+      if (clear) {
+        // Phase 2: go across at peakY
+        if (x0 !== x1) {
           const dxSign = x1 > x0 ? 1 : -1;
           for (let x = x0 + dxSign; x !== x1 + dxSign; x += dxSign) {
             if (blocked(x, peakY)) { clear = false; break; }
           }
         }
-        if (clear) {
-          // Phase 3: go down at x1
-          for (let y = peakY + 1; y <= y1; y++) {
-            if (blocked(x1, y)) { clear = false; break; }
-          }
-        }
-        if (clear) return true;
       }
+      if (clear) {
+        // Phase 3: go down at x1 from peakY to y1
+        for (let y = peakY + 1; y <= y1; y++) {
+          if (blocked(x1, y)) { clear = false; break; }
+        }
+      }
+      if (clear) return true;
     }
-    return false;
   }
-
-  // Try all three; accept if any succeeds.
-  return checkL(true) || checkL(false) || checkDiag();
+  return false;
 }
 
 function key(x, y) { return `${y},${x}`; }
@@ -250,7 +254,7 @@ function edgeFallNeighbors(x, y, effectiveGrid, floorFlags, maxFall, config) {
 }
 
 export function computeReachable(startX, startY, effectiveGrid, floorFlags, abilitySet, config) {
-  const { maxDv, maxDh, maxFall } = computeMovementBox(abilitySet, config);
+  const { maxDv, maxDh, maxFall, boxes } = computeMovementBox(abilitySet, config);
   const h = effectiveGrid.length;
   const w = effectiveGrid[0].length;
   const reachable = new Set();
@@ -276,6 +280,34 @@ export function computeReachable(startX, startY, effectiveGrid, floorFlags, abil
     queue.push([nx, ny]);
   };
 
+  /**
+   * Check if (dx, dy) is reachable via ANY individual ability's
+   * movement box, using that ability's own dv for the hop arc.
+   * Falls (dy > maxDv for all boxes) are allowed if within maxFall.
+   */
+  const canReach = (cx, cy, nx, ny) => {
+    const adx = Math.abs(nx - cx);
+    const ady_up = cy - ny;  // positive = going up
+    const ady_down = ny - cy;  // positive = going down
+
+    for (const box of boxes) {
+      // Check if this ability's box contains the offset
+      if (adx > box.dh) continue;
+      if (ady_up > box.dv) continue;  // can't jump this high with this ability
+      // Downward: any ability can fall (gravity), so no dv check for going down
+      // Use this ability's dv for the hop arc
+      if (arcIsClear(cx, cy, nx, ny, effectiveGrid, config, box.dv)) return true;
+    }
+
+    // Fall-only case: if no ability's box matched the upward component
+    // but the target is below (pure fall within maxFall), check with
+    // dv=0 (no hop available — just falling).
+    if (ady_up <= 0 && ady_down <= maxFall && adx <= maxDh) {
+      return arcIsClear(cx, cy, nx, ny, effectiveGrid, config, 0);
+    }
+    return false;
+  };
+
   // Neighbor box is asymmetric: up by maxDv (jump), down by maxFall
   // (fall). Horizontal reach is symmetric maxDh.
   while (head < queue.length) {
@@ -290,7 +322,7 @@ export function computeReachable(startX, startY, effectiveGrid, floorFlags, abil
         if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
         if (!floorFlags[ny][nx]) continue;
         if (reachable.has(key(nx, ny))) continue;
-        if (!arcIsClear(cx, cy, nx, ny, effectiveGrid, config, maxDv)) continue;
+        if (!canReach(cx, cy, nx, ny)) continue;
         visit(nx, ny, cx, cy);
       }
     }
@@ -340,6 +372,27 @@ export function filterReachableByCategory(reachable, categoryGrid, config, predi
 }
 
 /**
+ * Order save points according to config.save_point_order if present.
+ * Each entry in the order array is { x, y }. Save points matching
+ * those coordinates are placed first in that order; any remaining
+ * save points (not in the order list) are appended at the end in
+ * their original order.
+ */
+export function orderSavePoints(savePoints, config) {
+  const order = config.save_point_order;
+  if (!Array.isArray(order) || order.length === 0) return savePoints;
+  const ordered = [];
+  const remaining = [...savePoints];
+  for (const entry of order) {
+    const idx = remaining.findIndex(sp => sp.x === entry.x && sp.y === entry.y);
+    if (idx !== -1) {
+      ordered.push(remaining.splice(idx, 1)[0]);
+    }
+  }
+  return ordered.concat(remaining);
+}
+
+/**
  * Collect all the collectable and save-point tiles on the map
  * (regardless of reachability). Used for overlays and later for
  * region discovery. Returns an array of { x, y, categoryName, ap_name }.
@@ -376,7 +429,7 @@ export function findPointsOfInterest(categoryGrid, config) {
  * plus any midair POI tiles that are reachable.
  */
 export function addMidairPOIs(reachable, effectiveGrid, floorFlags, categoryGrid, abilitySet, config) {
-  const { maxDv, maxDh, maxFall } = computeMovementBox(abilitySet, config);
+  const { maxDv, maxDh, maxFall, boxes } = computeMovementBox(abilitySet, config);
   const cats = config.categories;
   const h = effectiveGrid.length;
   const w = effectiveGrid[0].length;
@@ -391,8 +444,8 @@ export function addMidairPOIs(reachable, effectiveGrid, floorFlags, categoryGrid
       const cat = cats[name];
       if (!cat) continue;
       if (!(cat.is_region || cat.is_location)) continue;
-      if (floorFlags[y][x]) continue;              // it's a floor tile, BFS handles it
-      if (augmented.has(key(x, y))) continue;       // already reached
+      if (floorFlags[y][x]) continue;
+      if (augmented.has(key(x, y))) continue;
       midairPOIs.push({ x, y });
     }
   }
@@ -400,19 +453,31 @@ export function addMidairPOIs(reachable, effectiveGrid, floorFlags, categoryGrid
   if (midairPOIs.length === 0) return augmented;
 
   // For each midair POI, check if any reachable floor tile can
-  // reach it. We invert the search: for each midair POI, scan the
-  // reachable set for tiles within jump range.
+  // reach it via any individual ability's box.
   for (const poi of midairPOIs) {
     let found = false;
     for (const k of reachable) {
       const comma = k.indexOf(',');
       const fy = parseInt(k.slice(0, comma), 10);
       const fx = parseInt(k.slice(comma + 1), 10);
-      const dx = poi.x - fx;
-      const dy = poi.y - fy;
-      if (Math.abs(dx) > maxDh) continue;
-      if (dy < -maxDv || dy > maxFall) continue;
-      if (arcIsClear(fx, fy, poi.x, poi.y, effectiveGrid, config, maxDv)) {
+      const adx = Math.abs(poi.x - fx);
+      const ady_up = fy - poi.y;
+      const ady_down = poi.y - fy;
+
+      // Check each ability's box individually
+      let matched = false;
+      for (const box of boxes) {
+        if (adx > box.dh) continue;
+        if (ady_up > box.dv) continue;
+        if (arcIsClear(fx, fy, poi.x, poi.y, effectiveGrid, config, box.dv)) {
+          matched = true; break;
+        }
+      }
+      // Fall-only case
+      if (!matched && ady_up <= 0 && ady_down <= maxFall && adx <= maxDh) {
+        matched = arcIsClear(fx, fy, poi.x, poi.y, effectiveGrid, config, 0);
+      }
+      if (matched) {
         augmented.add(key(poi.x, poi.y));
         found = true;
         break;

@@ -22,7 +22,9 @@ import {
   addMidairPOIs,
   findPlayerStart,
   findPointsOfInterest,
+  orderSavePoints,
 } from './reachabilityAnalyzer.js';
+import { exportRulesJson } from './rulesExporter.js';
 import { TileMapCanvasRenderer } from './canvasRenderer.js';
 
 function log(level, message, ...data) {
@@ -91,16 +93,16 @@ export class TileMapAnalyzerUI {
       });
     }));
 
-    toolbar.appendChild(mkBtn('Reach (basic)', () => {
-      this._runReachability('basic').catch((e) => {
-        log('error', 'basic reachability failed', e);
+    toolbar.appendChild(mkBtn('Compute', () => {
+      this._runReachabilityFromControls().catch((e) => {
+        log('error', 'reachability failed', e);
         this._setStatus(`error: ${e.message}`);
       });
     }));
 
-    toolbar.appendChild(mkBtn('Reach (full)', () => {
-      this._runReachability('full').catch((e) => {
-        log('error', 'full reachability failed', e);
+    toolbar.appendChild(mkBtn('Export', () => {
+      this._exportRulesJson().catch((e) => {
+        log('error', 'export failed', e);
         this._setStatus(`error: ${e.message}`);
       });
     }));
@@ -134,6 +136,48 @@ export class TileMapAnalyzerUI {
     toolbar.appendChild(this.statusElement);
 
     this.rootElement.appendChild(toolbar);
+
+    // Controls row: start point selector + ability checkboxes
+    const controls = document.createElement('div');
+    controls.style.cssText =
+      'flex:0 0 auto;padding:4px 8px;border-bottom:1px solid #333;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px;';
+
+    const startLabel = document.createElement('span');
+    startLabel.textContent = 'Start:';
+    controls.appendChild(startLabel);
+
+    this._startSelect = document.createElement('select');
+    this._startSelect.style.cssText = 'background:#222;color:#ddd;border:1px solid #555;font-size:11px;';
+    controls.appendChild(this._startSelect);
+
+    const sep = document.createElement('span');
+    sep.textContent = '|';
+    sep.style.cssText = 'color:#555;';
+    controls.appendChild(sep);
+
+    const abLabel = document.createElement('span');
+    abLabel.textContent = 'Abilities:';
+    controls.appendChild(abLabel);
+
+    this._abilityCheckboxes = document.createElement('span');
+    this._abilityCheckboxes.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;';
+    controls.appendChild(this._abilityCheckboxes);
+
+    const presetBtns = document.createElement('span');
+    presetBtns.style.cssText = 'display:flex;gap:4px;margin-left:4px;';
+    const mkSmallBtn = (text, onClick) => {
+      const b = document.createElement('button');
+      b.textContent = text;
+      b.style.cssText = 'background:#333;color:#aaa;border:1px solid #555;padding:1px 5px;cursor:pointer;font-size:10px;';
+      b.addEventListener('click', onClick);
+      return b;
+    };
+    presetBtns.appendChild(mkSmallBtn('Basic', () => this._setAbilityPreset('basic')));
+    presetBtns.appendChild(mkSmallBtn('All', () => this._setAbilityPreset('all')));
+    presetBtns.appendChild(mkSmallBtn('None', () => this._setAbilityPreset('none')));
+    controls.appendChild(presetBtns);
+
+    this.rootElement.appendChild(controls);
 
     const canvasWrap = document.createElement('div');
     canvasWrap.style.cssText = 'flex:1 1 auto;overflow:auto;background:#000;';
@@ -182,32 +226,96 @@ export class TileMapAnalyzerUI {
       label: p.ap_name || p.categoryName,
     }));
     this.renderer.setMarkers(markers);
+
+    // Populate the start-point dropdown and ability checkboxes
+    this._populateControls();
   }
 
-  async _runReachability(mode) {
+  _populateControls() {
+    if (!this.config || !this.categoryGrid) return;
+    const cats = this.config.categories;
+
+    // Start-point dropdown: player start + all save points
+    const sel = this._startSelect;
+    sel.innerHTML = '';
+    const playerStart = findPlayerStart(this.categoryGrid, this.config);
+    if (playerStart) {
+      const opt = document.createElement('option');
+      opt.value = JSON.stringify({ x: playerStart.x, y: playerStart.y });
+      opt.textContent = `Player Start (${playerStart.x}, ${playerStart.y})`;
+      sel.appendChild(opt);
+    }
+    const pois = findPointsOfInterest(this.categoryGrid, this.config);
+    let saves = pois.filter(p => {
+      const cat = cats[p.categoryName];
+      return cat && cat.is_region && !cat.is_location && !cat.is_player_start;
+    });
+    saves = orderSavePoints(saves, this.config);
+    saves.forEach((sp, i) => {
+      const opt = document.createElement('option');
+      opt.value = JSON.stringify({ x: sp.x, y: sp.y });
+      opt.textContent = `Save Point ${i + 1} (${sp.x}, ${sp.y})`;
+      sel.appendChild(opt);
+    });
+
+    // Ability checkboxes
+    const wrap = this._abilityCheckboxes;
+    wrap.innerHTML = '';
+    this._abilityBoxes = {};
+    const abilities = Object.keys(this.config.abilities || {});
+    const basicSet = new Set(this.config.basic_abilities || []);
+    for (const name of abilities) {
+      const label = document.createElement('label');
+      label.style.cssText = 'display:flex;align-items:center;gap:2px;cursor:pointer;';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = basicSet.has(name);
+      const span = document.createElement('span');
+      span.textContent = name;
+      if (basicSet.has(name)) span.style.fontWeight = 'bold';
+      label.appendChild(cb);
+      label.appendChild(span);
+      wrap.appendChild(label);
+      this._abilityBoxes[name] = cb;
+    }
+  }
+
+  _setAbilityPreset(preset) {
+    if (!this._abilityBoxes) return;
+    const basicSet = new Set(this.config?.basic_abilities || []);
+    for (const [name, cb] of Object.entries(this._abilityBoxes)) {
+      if (preset === 'all') cb.checked = true;
+      else if (preset === 'none') cb.checked = false;
+      else if (preset === 'basic') cb.checked = basicSet.has(name);
+    }
+  }
+
+  _getSelectedAbilities() {
+    const set = new Set();
+    if (!this._abilityBoxes) return set;
+    for (const [name, cb] of Object.entries(this._abilityBoxes)) {
+      if (cb.checked) set.add(name);
+    }
+    return set;
+  }
+
+  _getSelectedStart() {
+    if (!this._startSelect || !this._startSelect.value) return null;
+    return JSON.parse(this._startSelect.value);
+  }
+
+  async _runReachabilityFromControls() {
     if (!this.categoryGrid || !this.config) {
       throw new Error('tilemap not loaded yet');
     }
-    const abilitySet = new Set(this.config.basic_abilities || []);
-    if (mode === 'full') {
-      // Add every ability defined in the config.
-      for (const name of Object.keys(this.config.abilities || {})) {
-        abilitySet.add(name);
-      }
-    }
+    const abilitySet = this._getSelectedAbilities();
+    const start = this._getSelectedStart();
+    if (!start) throw new Error('no start point selected');
 
     const { effectiveGrid, floorFlags } = buildEffectiveGrids(
       this.categoryGrid, abilitySet, this.config
     );
 
-    const start = findPlayerStart(this.categoryGrid, this.config);
-    if (!start) {
-      throw new Error('no player_start tile found in map');
-    }
-
-    // If player_start itself isn't floor_below (rare — the tile
-    // above a solid) try the tile directly below, which is almost
-    // certainly where Flixel's gravity lands the player on frame 1.
     let sx = start.x;
     let sy = start.y;
     if (!floorFlags[sy][sx]) {
@@ -220,19 +328,75 @@ export class TileMapAnalyzerUI {
     const { reachable } = computeReachable(
       sx, sy, effectiveGrid, floorFlags, abilitySet, this.config
     );
-    // Post-BFS: check midair collectables reachable via jump arcs.
     const augmented = addMidairPOIs(
       reachable, effectiveGrid, floorFlags, this.categoryGrid, abilitySet, this.config
     );
     const t1 = performance.now();
 
-    this.renderer.setReachableOverlay(augmented, mode === 'full'
-      ? 'rgba(80, 180, 255, 0.35)'
-      : 'rgba(80, 220, 80, 0.35)'
-    );
-    const status = `${mode}: ${augmented.size} tiles reachable from (${sx},${sy}) in ${Math.round(t1 - t0)}ms`;
+    // Color based on how many abilities are selected vs total
+    const totalAbilities = Object.keys(this.config.abilities || {}).length;
+    const selectedCount = abilitySet.size;
+    const ratio = totalAbilities > 0 ? selectedCount / totalAbilities : 0;
+    const r = Math.round(80 + 100 * (1 - ratio));
+    const g = Math.round(180 + 40 * ratio);
+    const b = Math.round(80 + 175 * ratio);
+    const color = `rgba(${r}, ${g}, ${b}, 0.35)`;
+
+    this.renderer.setReachableOverlay(augmented, color);
+    const abNames = [...abilitySet].sort().join(', ') || 'none';
+    const status = `${augmented.size} tiles from (${sx},${sy}) [${abNames}] in ${Math.round(t1 - t0)}ms`;
     this._setStatus(status);
-    log('info', status, { abilities: [...abilitySet] });
+    log('info', status);
+  }
+
+  async _exportRulesJson() {
+    if (!this.categoryGrid || !this.config) {
+      throw new Error('tilemap not loaded yet');
+    }
+    this._setStatus('exporting rules.json...');
+    const t0 = performance.now();
+    const { rules, debugLog } = exportRulesJson(this.categoryGrid, this.config, (msg) => {
+      this._setStatus(`export: ${msg}`);
+      log('info', `export: ${msg}`);
+    });
+    const t1 = performance.now();
+
+    const regionCount = Object.keys(rules.regions['1']).length;
+    let exitCount = 0;
+    for (const r of Object.values(rules.regions['1'])) {
+      exitCount += r.exits.length;
+    }
+
+    // Publish via event bus so the editor and other modules pick it up
+    this.eventBus.publish('files:jsonLoaded', {
+      jsonData: rules,
+      selectedPlayerId: '1',
+      sourceName: 'tileMapAnalyzer',
+    });
+
+    // Download rules.json
+    const json = JSON.stringify(rules, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${rules.seed_name || 'tilemap'}_rules.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    // Download debug log
+    const logText = debugLog.join('\n');
+    const logBlob = new Blob([logText], { type: 'text/plain' });
+    const logUrl = URL.createObjectURL(logBlob);
+    const a2 = document.createElement('a');
+    a2.href = logUrl;
+    a2.download = `${rules.seed_name || 'tilemap'}_export_debug.txt`;
+    a2.click();
+    URL.revokeObjectURL(logUrl);
+
+    const status = `exported: ${regionCount} regions, ${exitCount} exits in ${Math.round(t1 - t0)}ms`;
+    this._setStatus(status);
+    log('info', status);
   }
 
   _countCategories() {

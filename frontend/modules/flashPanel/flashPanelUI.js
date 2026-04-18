@@ -209,7 +209,7 @@ export class FlashPanelUI {
     // Populate location dropdown from location_coords config.
     const locationCoords = this.gameConfig.location_coords || {};
     this.teleportLocationSelect.innerHTML = '';
-    for (const name of Object.keys(locationCoords).sort()) {
+    for (const name of Object.keys(locationCoords)) {
       const opt = document.createElement('option');
       opt.value = name;
       opt.textContent = name;
