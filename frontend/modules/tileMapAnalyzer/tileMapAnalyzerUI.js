@@ -112,23 +112,18 @@ export class TileMapAnalyzerUI {
       this._setStatus(this._summary || 'idle');
     }));
 
-    const zoomLabel = document.createElement('span');
-    zoomLabel.textContent = 'Zoom:';
-    toolbar.appendChild(zoomLabel);
+    toolbar.appendChild(mkBtn('-', () => {
+      if (this.renderer) this.renderer.zoomOut();
+    }));
 
-    const zoomSelect = document.createElement('select');
-    zoomSelect.style.cssText = 'background:#222;color:#ddd;border:1px solid #555;';
-    [2, 3, 4, 6, 8, 12].forEach((px) => {
-      const opt = document.createElement('option');
-      opt.value = String(px);
-      opt.textContent = `${px}px`;
-      if (px === 4) opt.selected = true;
-      zoomSelect.appendChild(opt);
-    });
-    zoomSelect.addEventListener('change', () => {
-      if (this.renderer) this.renderer.setTilePixelSize(parseInt(zoomSelect.value, 10));
-    });
-    toolbar.appendChild(zoomSelect);
+    this._zoomLabel = document.createElement('span');
+    this._zoomLabel.textContent = '4px';
+    this._zoomLabel.style.cssText = 'min-width:30px;text-align:center;';
+    toolbar.appendChild(this._zoomLabel);
+
+    toolbar.appendChild(mkBtn('+', () => {
+      if (this.renderer) this.renderer.zoomIn();
+    }));
 
     this.statusElement = document.createElement('span');
     this.statusElement.style.cssText = 'margin-left:auto;color:#888;';
@@ -179,12 +174,19 @@ export class TileMapAnalyzerUI {
 
     this.rootElement.appendChild(controls);
 
-    const canvasWrap = document.createElement('div');
-    canvasWrap.style.cssText = 'flex:1 1 auto;overflow:auto;background:#000;';
+    this._canvasWrap = document.createElement('div');
+    this._canvasWrap.style.cssText = 'flex:1 1 auto;overflow:hidden;background:#000;position:relative;';
     this.canvas = document.createElement('canvas');
-    this.canvas.style.cssText = 'image-rendering:pixelated;display:block;';
-    canvasWrap.appendChild(this.canvas);
-    this.rootElement.appendChild(canvasWrap);
+    this.canvas.style.cssText = 'image-rendering:pixelated;display:block;cursor:crosshair;';
+    this._canvasWrap.appendChild(this.canvas);
+    this.rootElement.appendChild(this._canvasWrap);
+
+    // Tile info bar at the bottom
+    this._tileInfoBar = document.createElement('div');
+    this._tileInfoBar.style.cssText =
+      'flex:0 0 auto;padding:4px 8px;border-top:1px solid #333;color:#aaa;font-size:11px;min-height:18px;';
+    this._tileInfoBar.textContent = 'Click a tile for details';
+    this.rootElement.appendChild(this._tileInfoBar);
 
     this.container.getElement().append(this.rootElement);
   }
@@ -204,7 +206,22 @@ export class TileMapAnalyzerUI {
     this.categoryGrid = buildCategoryGrid(tilemap, config);
 
     if (!this.renderer) {
-      this.renderer = new TileMapCanvasRenderer(this.canvas);
+      this.renderer = new TileMapCanvasRenderer(this.canvas, this._canvasWrap);
+      this.renderer.onZoomChanged = (size) => {
+        if (this._zoomLabel) this._zoomLabel.textContent = `${size}px`;
+      };
+      this.renderer.onTileSelected = (x, y, info) => {
+        const catDef = this.config.categories[info.category] || {};
+        const parts = [`(${x}, ${y})`, `raw=${info.rawId}`, info.category];
+        if (catDef.ap_name) parts.push(`ap: ${catDef.ap_name}`);
+        if (catDef.solid) parts.push('solid');
+        if (catDef.lethal) parts.push('lethal');
+        if (catDef.blocks_floor) parts.push('enemy');
+        if (catDef.is_region) parts.push('region');
+        if (catDef.is_location) parts.push('location');
+        if (info.inReachable) parts.push('REACHABLE');
+        this._tileInfoBar.textContent = parts.join(' | ');
+      };
     }
     this.renderer.setData(tilemap, this.categoryGrid, config);
 
