@@ -70,36 +70,123 @@ export function computeMovementBox(abilitySet, config) {
 function isBlockingArcTile(categoryName, config) {
   const cat = config.categories[categoryName];
   if (!cat) return true;
-  return !!cat.solid || !!cat.lethal;
+  return !!cat.solid || !!cat.lethal || !!cat.blocks_floor;
 }
 
 /**
- * Walk the straight line from (x0, y0) to (x1, y1) in tile space and
- * return false if any tile on the path (excluding the source) is
- * solid or lethal. Uses Bresenham with supercover-ish handling: we
- * include every tile whose center the line passes through. For the
- * v1 approximation we're generous — the arc isn't a real arc
- * anyway — so a simple midpoint interpolation is fine.
+ * Check whether a jump arc from (x0, y0) to (x1, y1) is traversable.
  *
- * Source tile is NOT checked (the player is standing on it). Dest
- * tile IS checked: it must be non-blocking and the caller separately
- * requires it to be a floor tile.
+ * Tries **three arc shapes** and accepts if ANY is clear. A real
+ * jump trajectory is a parabola, which none of the three shapes
+ * model exactly, but together they cover the cases that matter:
+ *
+ * 1. **L-arc "vertical first"**: go straight up/down at source
+ *    column, then horizontally to destination. Handles shafts
+ *    (player jumps up through a vertical opening, then drifts over).
+ * 2. **L-arc "horizontal first"**: go horizontally at source height,
+ *    then up/down at destination column. Handles ledges with walls
+ *    directly above (player runs sideways off a ledge, then
+ *    rises/falls).
+ * 3. **Diagonal**: step-by-step interpolation from source to
+ *    destination. Handles open-air jumps where neither L-shape
+ *    fits.
+ *
+ * Source tile is NOT checked. Dest tile IS checked.
+ * Phase 6's physics reach table will replace all of this.
+ *
+ * @param maxDv - maximum upward jump reach in tiles (needed for the
+ *   "hop" arc on horizontal jumps). Pass 0 to skip the hop check.
  */
-function arcIsClear(x0, y0, x1, y1, effectiveGrid, config) {
-  const dx = x1 - x0;
-  const dy = y1 - y0;
-  const steps = Math.max(Math.abs(dx), Math.abs(dy));
-  if (steps === 0) return true;
+function arcIsClear(x0, y0, x1, y1, effectiveGrid, config, maxDv = 0) {
+  if (x0 === x1 && y0 === y1) return true;
   const h = effectiveGrid.length;
   const w = effectiveGrid[0].length;
-  for (let i = 1; i <= steps; i++) {
-    const t = i / steps;
-    const x = Math.round(x0 + dx * t);
-    const y = Math.round(y0 + dy * t);
-    if (x < 0 || y < 0 || x >= w || y >= h) return false;
-    if (isBlockingArcTile(effectiveGrid[y][x], config)) return false;
+
+  const blocked = (x, y) => {
+    if (x < 0 || y < 0 || x >= w || y >= h) return true;
+    return isBlockingArcTile(effectiveGrid[y][x], config);
+  };
+
+  // Helper: check an L-shaped path (phase1 then phase2).
+  // Each phase is a list of (x, y) to check.
+  const checkL = (vertFirst) => {
+    const dxSign = x1 > x0 ? 1 : x1 < x0 ? -1 : 0;
+    const dySign = y1 > y0 ? 1 : y1 < y0 ? -1 : 0;
+    if (vertFirst) {
+      // Phase 1: vertical at x0
+      for (let y = y0 + dySign; y !== y1 + dySign; y += dySign) {
+        if (blocked(x0, y)) return false;
+      }
+      // Phase 2: horizontal at y1
+      for (let x = x0 + dxSign; x !== x1 + dxSign; x += dxSign) {
+        if (blocked(x, y1)) return false;
+      }
+    } else {
+      // Phase 1: horizontal at y0
+      for (let x = x0 + dxSign; x !== x1 + dxSign; x += dxSign) {
+        if (blocked(x, y0)) return false;
+      }
+      // Phase 2: vertical at x1
+      for (let y = y0 + dySign; y !== y1 + dySign; y += dySign) {
+        if (blocked(x1, y)) return false;
+      }
+    }
+    return true;
+  };
+
+  // Helper: check a straight diagonal path.
+  const checkDiag = () => {
+    const adx = Math.abs(x1 - x0);
+    const ady = Math.abs(y1 - y0);
+    const steps = Math.max(adx, ady);
+    if (steps === 0) return true;
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    for (let i = 1; i <= steps; i++) {
+      const t = i / steps;
+      const x = Math.round(x0 + dx * t);
+      const y = Math.round(y0 + dy * t);
+      if (blocked(x, y)) return false;
+    }
+    return true;
+  };
+
+  // For horizontal moves (dy == 0), try the straight horizontal
+  // first, then a "hop" arc that jumps up by maxDv, crosses
+  // horizontally at the elevated height, and comes back down. The
+  // hop handles ground-level enemies the player can jump over.
+  if (y0 === y1) {
+    if (checkDiag()) return true;
+    if (maxDv > 0) {
+      // Hop: up maxDv at x0, across at y0 - maxDv, down maxDv at x1.
+      const peakY = y0 - maxDv;
+      if (peakY >= 0) {
+        let clear = true;
+        // Phase 1: go up at x0
+        for (let y = y0 - 1; y >= peakY; y--) {
+          if (blocked(x0, y)) { clear = false; break; }
+        }
+        if (clear) {
+          // Phase 2: go across at peakY
+          const dxSign = x1 > x0 ? 1 : -1;
+          for (let x = x0 + dxSign; x !== x1 + dxSign; x += dxSign) {
+            if (blocked(x, peakY)) { clear = false; break; }
+          }
+        }
+        if (clear) {
+          // Phase 3: go down at x1
+          for (let y = peakY + 1; y <= y1; y++) {
+            if (blocked(x1, y)) { clear = false; break; }
+          }
+        }
+        if (clear) return true;
+      }
+    }
+    return false;
   }
-  return true;
+
+  // Try all three; accept if any succeeds.
+  return checkL(true) || checkL(false) || checkDiag();
 }
 
 function key(x, y) { return `${y},${x}`; }
@@ -109,10 +196,19 @@ function key(x, y) { return `${y},${x}`; }
  * { reachable, parents } where reachable is a Set<key> and parents is
  * a Map<key, key>.
  */
+/**
+ * Check if a tile is passable for traversal (edge-fall drops, etc.).
+ * A tile is passable if it is not solid, not lethal, and not
+ * blocks_floor. Note: the ARC check uses isBlockingArcTile which
+ * does NOT check blocks_floor — that's intentional, because the
+ * player can jump OVER enemies. But for edge-fall (vertical drop),
+ * passing through an enemy tile means touching it, which kills the
+ * player.
+ */
 function isPassableTile(categoryName, config) {
   const cat = config.categories[categoryName];
   if (!cat) return false;
-  return !cat.solid && !cat.lethal;
+  return !cat.solid && !cat.lethal && !cat.blocks_floor;
 }
 
 /**
@@ -194,7 +290,7 @@ export function computeReachable(startX, startY, effectiveGrid, floorFlags, abil
         if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
         if (!floorFlags[ny][nx]) continue;
         if (reachable.has(key(nx, ny))) continue;
-        if (!arcIsClear(cx, cy, nx, ny, effectiveGrid, config)) continue;
+        if (!arcIsClear(cx, cy, nx, ny, effectiveGrid, config, maxDv)) continue;
         visit(nx, ny, cx, cy);
       }
     }
@@ -265,4 +361,64 @@ export function findPointsOfInterest(categoryGrid, config) {
     }
   }
   return out;
+}
+
+/**
+ * Post-BFS pass: find midair POIs reachable via jump arcs from the
+ * already-computed reachable floor set. Some collectables are placed
+ * in midair — the player collects them by jumping through the tile,
+ * not by standing on it. These tiles aren't floor tiles so the main
+ * BFS never visits them, but they should count as "reachable" if
+ * any reached floor tile has a clear jump arc that passes through
+ * them.
+ *
+ * Returns a new Set that is the union of the original reachable set
+ * plus any midair POI tiles that are reachable.
+ */
+export function addMidairPOIs(reachable, effectiveGrid, floorFlags, categoryGrid, abilitySet, config) {
+  const { maxDv, maxDh, maxFall } = computeMovementBox(abilitySet, config);
+  const cats = config.categories;
+  const h = effectiveGrid.length;
+  const w = effectiveGrid[0].length;
+  const augmented = new Set(reachable);
+
+  // Collect midair POIs: POI tiles that are NOT floor tiles and
+  // are NOT already in the reachable set.
+  const midairPOIs = [];
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const name = categoryGrid[y][x];
+      const cat = cats[name];
+      if (!cat) continue;
+      if (!(cat.is_region || cat.is_location)) continue;
+      if (floorFlags[y][x]) continue;              // it's a floor tile, BFS handles it
+      if (augmented.has(key(x, y))) continue;       // already reached
+      midairPOIs.push({ x, y });
+    }
+  }
+
+  if (midairPOIs.length === 0) return augmented;
+
+  // For each midair POI, check if any reachable floor tile can
+  // reach it. We invert the search: for each midair POI, scan the
+  // reachable set for tiles within jump range.
+  for (const poi of midairPOIs) {
+    let found = false;
+    for (const k of reachable) {
+      const comma = k.indexOf(',');
+      const fy = parseInt(k.slice(0, comma), 10);
+      const fx = parseInt(k.slice(comma + 1), 10);
+      const dx = poi.x - fx;
+      const dy = poi.y - fy;
+      if (Math.abs(dx) > maxDh) continue;
+      if (dy < -maxDv || dy > maxFall) continue;
+      if (arcIsClear(fx, fy, poi.x, poi.y, effectiveGrid, config, maxDv)) {
+        augmented.add(key(poi.x, poi.y));
+        found = true;
+        break;
+      }
+    }
+  }
+
+  return augmented;
 }

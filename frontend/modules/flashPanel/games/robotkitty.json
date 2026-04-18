@@ -111,7 +111,7 @@
     ]
   },
 
-  "_doc_location_coords": "Pixel coordinates for the Location dropdown teleport. Computed from the tilemap extractor output under frontend/presets/robotkitty_tilemap/. Heuristic, in priority order: (1) pickup tile itself if it's a floor tile — the player lands exactly on the pickup and Player.update() collects it on the next frame; (2) tile south; (3) tile north; (4) nearest floor within radius 5; (5) pickup tile unconditionally. Kitty is placed on the kitty sprite so PlayState's distance-check win condition fires immediately.",
+  "_doc_location_coords": "Pixel coordinates for the Location dropdown teleport. Teleports directly onto the collectible tile (pixel = tile * 16). Player.update() detects the tile and collects it on the next frame. Kitty's coordinate is on the Kitty sprite so PlayState's distance-check win condition fires immediately.",
   "location_coords": {
     "Jump":         { "x": 160,  "y": 1312 },
     "Shoot":        { "x": 704,  "y": 1168 },
@@ -121,8 +121,8 @@
     "Red Key":      { "x": 1504, "y": 672  },
     "Green Key":    { "x": 80,   "y": 768  },
     "Blue Key":     { "x": 2016, "y": 560  },
-    "Rapid Fire":   { "x": 2848, "y": 1088 },
-    "Missile":      { "x": 448,  "y": 496  },
+    "Rapid Fire":   { "x": 2880, "y": 1056 },
+    "Missile":      { "x": 448,  "y": 480  },
     "Kitty":        { "x": 160,  "y": 1024 },
     "Save Point 1": { "x": 608,  "y": 736  },
     "Save Point 2": { "x": 1072, "y": 1200 },

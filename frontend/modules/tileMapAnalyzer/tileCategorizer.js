@@ -54,11 +54,13 @@ export function applyTileTransforms(baseGrid, abilitySet, config) {
 
 /**
  * Build the floor-flag grid. floorFlags[y][x] === true iff:
- *   - (x, y) is non-solid
+ *   - (x, y) is non-solid, non-lethal, and not blocks_floor
  *   - (x, y+1) exists and is solid
  *
- * Lethal tiles are not floor tiles even if the cell below is solid
- * — the player dies on contact, so they can't be stood on.
+ * Lethal tiles (acid) can't be stood on — the player dies.
+ * blocks_floor tiles (enemies) can't be stood on — the enemy
+ * blocks ground movement. But blocks_floor tiles are still
+ * passable for jump arcs (the player can jump over them).
  */
 export function deriveFloorFlags(categoryGrid, config) {
   const cats = config.categories;
@@ -68,13 +70,14 @@ export function deriveFloorFlags(categoryGrid, config) {
 
   const isSolid = (name) => !!(cats[name] && cats[name].solid);
   const isLethal = (name) => !!(cats[name] && cats[name].lethal);
+  const blocksFloor = (name) => !!(cats[name] && cats[name].blocks_floor);
 
   for (let y = 0; y < h; y++) {
     const row = categoryGrid[y];
     const flagRow = new Array(w).fill(false);
     for (let x = 0; x < w; x++) {
       const here = row[x];
-      if (isSolid(here) || isLethal(here)) continue;
+      if (isSolid(here) || isLethal(here) || blocksFloor(here)) continue;
       if (y + 1 >= h) continue;
       const below = categoryGrid[y + 1][x];
       if (isSolid(below)) flagRow[x] = true;

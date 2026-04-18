@@ -19,6 +19,7 @@ import {
 import { buildEffectiveGrids } from './tileCategorizer.js';
 import {
   computeReachable,
+  addMidairPOIs,
   findPlayerStart,
   findPointsOfInterest,
 } from './reachabilityAnalyzer.js';
@@ -219,13 +220,17 @@ export class TileMapAnalyzerUI {
     const { reachable } = computeReachable(
       sx, sy, effectiveGrid, floorFlags, abilitySet, this.config
     );
+    // Post-BFS: check midair collectables reachable via jump arcs.
+    const augmented = addMidairPOIs(
+      reachable, effectiveGrid, floorFlags, this.categoryGrid, abilitySet, this.config
+    );
     const t1 = performance.now();
 
-    this.renderer.setReachableOverlay(reachable, mode === 'full'
+    this.renderer.setReachableOverlay(augmented, mode === 'full'
       ? 'rgba(80, 180, 255, 0.35)'
       : 'rgba(80, 220, 80, 0.35)'
     );
-    const status = `${mode}: ${reachable.size} tiles reachable from (${sx},${sy}) in ${Math.round(t1 - t0)}ms`;
+    const status = `${mode}: ${augmented.size} tiles reachable from (${sx},${sy}) in ${Math.round(t1 - t0)}ms`;
     this._setStatus(status);
     log('info', status, { abilities: [...abilitySet] });
   }
