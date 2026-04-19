@@ -19,7 +19,6 @@ import {
 import { buildEffectiveGrids } from './tileCategorizer.js';
 import {
   computeReachable,
-  addMidairPOIs,
   findPlayerStart,
   findPointsOfInterest,
   orderSavePoints,
@@ -112,6 +111,8 @@ export class TileMapAnalyzerUI {
     toolbar.appendChild(mkBtn('Clear', () => {
       if (this.renderer) this.renderer.clearOverlays();
       this._lastClick = null;
+      this._lastAirPre = null;
+      this._lastAirPost = null;
       this._setStatus(this._summary || 'idle');
     }));
 
@@ -195,6 +196,40 @@ export class TileMapAnalyzerUI {
     physicsText.textContent = 'Physics';
     physicsLabel.appendChild(physicsText);
     controls.appendChild(physicsLabel);
+
+    // Midair overlay toggles. "Pre" = air tiles reached before any
+    // midair ability (DJ / dash / rocket) is used; "post" = after.
+    const mkAirCheckbox = (label, title, color, defaultChecked) => {
+      const wrap = document.createElement('label');
+      wrap.style.cssText = 'display:flex;align-items:center;gap:3px;cursor:pointer;';
+      wrap.title = title;
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!defaultChecked;
+      cb.style.cssText = 'margin:0;';
+      cb.addEventListener('change', () => this._applyAirOverlayVisibility());
+      wrap.appendChild(cb);
+      const swatch = document.createElement('span');
+      swatch.style.cssText = `display:inline-block;width:9px;height:9px;background:${color};border:1px solid #555;`;
+      wrap.appendChild(swatch);
+      const txt = document.createElement('span');
+      txt.textContent = label;
+      wrap.appendChild(txt);
+      controls.appendChild(wrap);
+      return cb;
+    };
+    this._airPreCheckbox = mkAirCheckbox(
+      'Midair pre',
+      'Show air tiles reachable before any midair ability (DJ / dash / rocket) is used.',
+      'rgba(120, 180, 255, 0.7)',
+      true,
+    );
+    this._airPostCheckbox = mkAirCheckbox(
+      'Midair post',
+      'Show air tiles reachable only after a midair ability (DJ / dash / rocket) has been used.',
+      'rgba(220, 140, 220, 0.7)',
+      true,
+    );
 
     this.rootElement.appendChild(controls);
 
@@ -411,7 +446,9 @@ export class TileMapAnalyzerUI {
       if (!found) {
         this._setStatus(`(${clickX}, ${clickY}) — no floor tile here`);
         this.renderer.setReachableOverlay(null);
-        this.renderer.setAirOverlay(null);
+        this._lastAirPre = null;
+        this._lastAirPost = null;
+        this._applyAirOverlayVisibility();
         return;
       }
     }
@@ -429,15 +466,31 @@ export class TileMapAnalyzerUI {
     const floorSet = new Set();
     floorSet.add(`${sy},${sx}`);  // source tile itself, for visual anchor
     for (const l of probe.landings) floorSet.add(`${l.y},${l.x}`);
-    const airSet = probe.sweptTiles && probe.sweptTiles.size ? probe.sweptTiles : null;
 
     this.renderer.setReachableOverlay(floorSet, 'rgba(80, 220, 80, 0.45)');
-    this.renderer.setAirOverlay(airSet, 'rgba(120, 180, 255, 0.22)');
+    this._lastAirPre = probe.sweptPre || null;
+    this._lastAirPost = probe.sweptPost || null;
+    this._applyAirOverlayVisibility();
 
     const tag = usePhysics ? 'physics' : 'bbox';
-    const airPart = airSet ? `, ${airSet.size} air` : '';
+    const preSize = this._lastAirPre ? this._lastAirPre.size : 0;
+    const postSize = this._lastAirPost ? this._lastAirPost.size : 0;
     this._setStatus(
-      `from (${sx},${sy}): ${probe.landings.length} neighbors${airPart} [${tag}] in ${Math.round(t1 - t0)}ms`
+      `from (${sx},${sy}): ${probe.landings.length} neighbors, ${preSize} pre-air, ${postSize} post-air [${tag}] in ${Math.round(t1 - t0)}ms`
+    );
+  }
+
+  /**
+   * Re-apply the renderer's air overlays using the most recent
+   * pre/post sweep sets, filtered by the two midair checkboxes.
+   */
+  _applyAirOverlayVisibility() {
+    if (!this.renderer) return;
+    const showPre = !!(this._airPreCheckbox && this._airPreCheckbox.checked);
+    const showPost = !!(this._airPostCheckbox && this._airPostCheckbox.checked);
+    this.renderer.setAirOverlays(
+      showPre ? this._lastAirPre : null,
+      showPost ? this._lastAirPost : null,
     );
   }
 
@@ -467,13 +520,14 @@ export class TileMapAnalyzerUI {
       : this.config;
 
     const t0 = performance.now();
-    const { reachable } = computeReachable(
-      sx, sy, effectiveGrid, floorFlags, abilitySet, effectiveConfig
+    const { reachable, midairPOIs, sweptPre, sweptPost } = computeReachable(
+      sx, sy, effectiveGrid, floorFlags, this.categoryGrid, abilitySet, effectiveConfig
     );
-    const augmented = addMidairPOIs(
-      reachable, effectiveGrid, floorFlags, this.categoryGrid, abilitySet, effectiveConfig
-    );
+    const augmented = new Set([...reachable, ...midairPOIs]);
     const t1 = performance.now();
+    this._lastAirPre = sweptPre || null;
+    this._lastAirPost = sweptPost || null;
+    this._applyAirOverlayVisibility();
 
     // Color based on how many abilities are selected vs total
     const totalAbilities = Object.keys(this.config.abilities || {}).length;

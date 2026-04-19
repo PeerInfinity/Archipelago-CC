@@ -12,7 +12,6 @@
 import { buildEffectiveGrids } from './tileCategorizer.js';
 import {
   computeReachable,
-  addMidairPOIs,
   findPlayerStart,
   findPointsOfInterest,
   orderSavePoints,
@@ -65,15 +64,13 @@ function precomputeReachableSets(savePoints, abilitySets, categoryGrid, config, 
       const cacheKey = `${si}:${setKey}`;
       const { effectiveGrid, floorFlags } =
         buildEffectiveGrids(categoryGrid, abilitySet, config);
-      const { reachable } = computeReachable(
-        sp.x, sp.y, effectiveGrid, floorFlags, abilitySet, config
+      const { reachable, midairPOIs } = computeReachable(
+        sp.x, sp.y, effectiveGrid, floorFlags, categoryGrid, abilitySet, config
       );
-      const augmented = addMidairPOIs(
-        reachable, effectiveGrid, floorFlags, categoryGrid, abilitySet, config
-      );
+      const augmented = new Set([...reachable, ...midairPOIs]);
       cache.set(cacheKey, augmented);
 
-      const midairCount = augmented.size - reachable.size;
+      const midairCount = midairPOIs.size;
       const msg = `BFS ${cache.size}/${savePoints.length * abilitySets.length}: SP${si + 1} (${sp.x},${sp.y}) ${setKey} → ${reachable.size} tiles + ${midairCount} midair = ${augmented.size}`;
       log(msg);
       debugLog.push(msg);

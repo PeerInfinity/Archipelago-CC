@@ -289,28 +289,38 @@ export function probeOneTilePhysics(cx, cy, effectiveGrid, floorFlags, abilitySe
   const w = effectiveGrid[0].length;
   const grid = gridAccessor(effectiveGrid, floorFlags, config);
   if (cx < 0 || cy < 0 || cx >= w || cy >= h || !floorFlags[cy][cx]) {
-    return { landings: [], sweptTiles: new Set() };
+    return { landings: [], sweptPre: new Set(), sweptPost: new Set() };
   }
-  return probeFromTile(cx, cy, abilitySet, grid, phys, floorFlags, w, h);
+  const res = probeFromTile(cx, cy, abilitySet, grid, phys, floorFlags, w, h);
+  // Physics model doesn't yet tag per-simulator which side of the
+  // midair-jump the sweep belongs to — see step 5. For now, everything
+  // goes in sweptPre (populated) and sweptPost is empty.
+  return { landings: res.landings, sweptPre: res.sweptTiles, sweptPost: new Set() };
 }
 
 /**
  * Physics-accurate BFS. Signature matches computeReachable() in
- * reachabilityAnalyzer.js for drop-in dispatch.
+ * reachabilityAnalyzer.js for drop-in dispatch. Returns
+ * { reachable, parents, sweptPre, sweptPost, midairPOIs }. Until
+ * step 5 tags simulator output by midair-jump state, sweptPost is
+ * always empty and sweptPre contains every tile the physics hitbox
+ * swept.
  */
-export function computeReachablePhysics(startX, startY, effectiveGrid, floorFlags, abilitySet, config) {
+export function computeReachablePhysics(startX, startY, effectiveGrid, floorFlags, categoryGrid, abilitySet, config) {
   const phys = getPhysics(config);
   const h = effectiveGrid.length;
   const w = effectiveGrid[0].length;
   const reachable = new Set();
   const parents = new Map();
-  const sweptByTile = new Map();  // used later by midair POI pass
+  const sweptPre = new Set();
+  const sweptPost = new Set();
+  const midairPOIs = new Set();
 
   if (startX < 0 || startY < 0 || startX >= w || startY >= h) {
-    return { reachable, parents, sweptByTile };
+    return { reachable, parents, sweptPre, sweptPost, midairPOIs };
   }
   if (!floorFlags[startY][startX]) {
-    return { reachable, parents, sweptByTile };
+    return { reachable, parents, sweptPre, sweptPost, midairPOIs };
   }
 
   // Build the reach-table envelope (unused for now, but available
@@ -328,7 +338,7 @@ export function computeReachablePhysics(startX, startY, effectiveGrid, floorFlag
     const { landings, sweptTiles } = probeFromTile(
       cx, cy, abilitySet, grid, phys, floorFlags, w, h,
     );
-    sweptByTile.set(key(cx, cy), sweptTiles);
+    for (const t of sweptTiles) sweptPre.add(t);
     for (const l of landings) {
       const k = key(l.x, l.y);
       if (reachable.has(k)) continue;
@@ -338,65 +348,19 @@ export function computeReachablePhysics(startX, startY, effectiveGrid, floorFlag
     }
   }
 
-  return { reachable, parents, sweptByTile };
-}
-
-/**
- * Midair POI pass. Any POI tile swept by a probe from a reachable
- * floor tile counts as reachable.
- *
- * If `sweptByTile` is provided (from computeReachablePhysics), we
- * reuse it. Otherwise we re-run probes for every reachable floor
- * tile — slower, but keeps the API consistent with the old model.
- */
-export function addMidairPOIsPhysics(
-  reachable, effectiveGrid, floorFlags, categoryGrid, abilitySet, config, sweptByTile = null,
-) {
-  const phys = getPhysics(config);
+  // Midair POI pass: any POI tile that a probe's hitbox swept counts
+  // as reachable.
   const cats = config.categories;
-  const h = effectiveGrid.length;
-  const w = effectiveGrid[0].length;
-  const augmented = new Set(reachable);
-
-  // Enumerate POI tiles not already reachable and not floor tiles.
-  const midairPOIs = [];
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      const name = categoryGrid[y][x];
-      const cat = cats[name];
-      if (!cat) continue;
-      if (!(cat.is_region || cat.is_location)) continue;
+      const cat = cats[categoryGrid[y][x]];
+      if (!cat || !(cat.is_region || cat.is_location)) continue;
       if (floorFlags[y][x]) continue;
-      if (augmented.has(key(x, y))) continue;
-      midairPOIs.push({ x, y });
-    }
-  }
-  if (midairPOIs.length === 0) return augmented;
-
-  // Ensure we have swept-tile sets for every reachable floor tile.
-  let swept = sweptByTile;
-  if (!swept) {
-    swept = new Map();
-    const grid = gridAccessor(effectiveGrid, floorFlags, config);
-    for (const k of reachable) {
-      const [fy, fx] = k.split(',').map(Number);
-      if (!floorFlags[fy][fx]) continue;
-      const { sweptTiles } = probeFromTile(
-        fx, fy, abilitySet, grid, phys, floorFlags, w, h,
-      );
-      swept.set(k, sweptTiles);
+      const poiKey = key(x, y);
+      if (reachable.has(poiKey)) continue;
+      if (sweptPre.has(poiKey)) midairPOIs.add(poiKey);
     }
   }
 
-  // Union all swept tiles; POIs inside the union are reachable.
-  const allSwept = new Set();
-  for (const s of swept.values()) {
-    for (const t of s) allSwept.add(t);
-  }
-  for (const poi of midairPOIs) {
-    if (allSwept.has(key(poi.x, poi.y))) {
-      augmented.add(key(poi.x, poi.y));
-    }
-  }
-  return augmented;
+  return { reachable, parents, sweptPre, sweptPost, midairPOIs };
 }

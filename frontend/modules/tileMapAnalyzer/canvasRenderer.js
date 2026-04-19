@@ -25,8 +25,12 @@ export class TileMapCanvasRenderer {
     // Overlay state
     this.reachableSet = null;
     this.reachableColor = 'rgba(80, 220, 80, 0.35)';
-    this.airSet = null;
-    this.airColor = 'rgba(120, 180, 255, 0.18)';
+    // Air overlays are split by midair-jump state so pre-DJ and post-DJ
+    // swept tiles can be toggled independently.
+    this.airPreSet = null;
+    this.airPreColor = 'rgba(120, 180, 255, 0.22)';   // pale blue
+    this.airPostSet = null;
+    this.airPostColor = 'rgba(220, 140, 220, 0.22)';  // violet
     this.floorFlags = null;
     this.markers = [];
 
@@ -185,9 +189,16 @@ export class TileMapCanvasRenderer {
     this.draw();
   }
 
-  setAirOverlay(airSet, color) {
-    this.airSet = airSet || null;
-    if (color) this.airColor = color;
+  /**
+   * Set both air overlays at once. Either set may be null to hide
+   * that layer. Colors use the defaults unless preColor / postColor
+   * are supplied.
+   */
+  setAirOverlays(preSet, postSet, preColor, postColor) {
+    this.airPreSet = (preSet && preSet.size) ? preSet : null;
+    this.airPostSet = (postSet && postSet.size) ? postSet : null;
+    if (preColor) this.airPreColor = preColor;
+    if (postColor) this.airPostColor = postColor;
     this.draw();
   }
 
@@ -203,14 +214,16 @@ export class TileMapCanvasRenderer {
 
   clearOverlays() {
     this.reachableSet = null;
-    this.airSet = null;
+    this.airPreSet = null;
+    this.airPostSet = null;
     this.floorFlags = null;
     this.draw();
   }
 
   clearAll() {
     this.reachableSet = null;
-    this.airSet = null;
+    this.airPreSet = null;
+    this.airPostSet = null;
     this.floorFlags = null;
     this.markers = [];
     this.draw();
@@ -262,19 +275,23 @@ export class TileMapCanvasRenderer {
       }
     }
 
-    // Air-reach overlay (tiles the hitbox passes through, not
-    // necessarily landable on). Drawn below the floor overlay so
-    // landable tiles stay visually dominant.
-    if (this.airSet && this.airSet.size > 0) {
-      ctx.fillStyle = this.airColor;
-      for (const k of this.airSet) {
+    // Air-reach overlays — pre (no midair ability consumed yet) and
+    // post (DJ / dash / rocket used). Drawn below the floor overlay
+    // so landable tiles stay visually dominant. Post is drawn last
+    // so it shows on tiles that are in both sets.
+    const drawAirSet = (set, color) => {
+      if (!set || !set.size) return;
+      ctx.fillStyle = color;
+      for (const k of set) {
         const comma = k.indexOf(',');
         const y = parseInt(k.slice(0, comma), 10);
         const x = parseInt(k.slice(comma + 1), 10);
         if (x < startCol || x >= endCol || y < startRow || y >= endRow) continue;
         ctx.fillRect(x * ts - this.panX, y * ts - this.panY, ts, ts);
       }
-    }
+    };
+    drawAirSet(this.airPreSet, this.airPreColor);
+    drawAirSet(this.airPostSet, this.airPostColor);
 
     // Reachable overlay
     if (this.reachableSet && this.reachableSet.size > 0) {
