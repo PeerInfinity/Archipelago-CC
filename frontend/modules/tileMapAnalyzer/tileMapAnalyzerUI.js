@@ -23,7 +23,9 @@ import {
   findPlayerStart,
   findPointsOfInterest,
   orderSavePoints,
+  probeOneTileOld,
 } from './reachabilityAnalyzer.js';
+import { probeOneTilePhysics } from './reachabilityPhysics.js';
 import { exportRulesJson } from './rulesExporter.js';
 import { TileMapCanvasRenderer } from './canvasRenderer.js';
 
@@ -109,6 +111,7 @@ export class TileMapAnalyzerUI {
 
     toolbar.appendChild(mkBtn('Clear', () => {
       if (this.renderer) this.renderer.clearOverlays();
+      this._lastClick = null;
       this._setStatus(this._summary || 'idle');
     }));
 
@@ -172,6 +175,27 @@ export class TileMapAnalyzerUI {
     presetBtns.appendChild(mkSmallBtn('None', () => this._setAbilityPreset('none')));
     controls.appendChild(presetBtns);
 
+    const modelSep = document.createElement('span');
+    modelSep.textContent = '|';
+    modelSep.style.cssText = 'color:#555;';
+    controls.appendChild(modelSep);
+
+    const physicsLabel = document.createElement('label');
+    physicsLabel.style.cssText = 'display:flex;align-items:center;gap:3px;cursor:pointer;';
+    physicsLabel.title =
+      'Use the physics-accurate trajectory simulator instead of the ' +
+      'bounding-box heuristic. Slower (seconds for full abilities) but ' +
+      'rejects impossible paths that the bounding-box model accepts.';
+    this._physicsCheckbox = document.createElement('input');
+    this._physicsCheckbox.type = 'checkbox';
+    this._physicsCheckbox.style.cssText = 'margin:0;';
+    this._physicsCheckbox.addEventListener('change', () => this._reExploreIfSelected());
+    physicsLabel.appendChild(this._physicsCheckbox);
+    const physicsText = document.createElement('span');
+    physicsText.textContent = 'Physics';
+    physicsLabel.appendChild(physicsText);
+    controls.appendChild(physicsLabel);
+
     this.rootElement.appendChild(controls);
 
     this._canvasWrap = document.createElement('div');
@@ -221,6 +245,15 @@ export class TileMapAnalyzerUI {
         if (catDef.is_location) parts.push('location');
         if (info.inReachable) parts.push('REACHABLE');
         this._tileInfoBar.textContent = parts.join(' | ');
+        // Click also triggers a one-step "where can I go from here"
+        // overlay: every tile reachable in one movement primitive,
+        // without landing on any other floor tile first.
+        try {
+          this._exploreFromTile(x, y);
+        } catch (e) {
+          log('error', 'explore failed', e);
+          this._setStatus(`error: ${e.message}`);
+        }
       };
     }
     this.renderer.setData(tilemap, this.categoryGrid, config);
@@ -287,6 +320,7 @@ export class TileMapAnalyzerUI {
       const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.checked = basicSet.has(name);
+      cb.addEventListener('change', () => this._reExploreIfSelected());
       const span = document.createElement('span');
       span.textContent = name;
       if (basicSet.has(name)) span.style.fontWeight = 'bold';
@@ -305,6 +339,22 @@ export class TileMapAnalyzerUI {
       else if (preset === 'none') cb.checked = false;
       else if (preset === 'basic') cb.checked = basicSet.has(name);
     }
+    this._reExploreIfSelected();
+  }
+
+  /**
+   * If a tile was previously clicked for exploration, re-run the
+   * one-step probe with the current ability set and model choice
+   * so the overlay stays in sync with the checkboxes.
+   */
+  _reExploreIfSelected() {
+    if (!this._lastClick) return;
+    try {
+      this._exploreFromTile(this._lastClick.x, this._lastClick.y);
+    } catch (e) {
+      log('error', 're-explore failed', e);
+      this._setStatus(`error: ${e.message}`);
+    }
   }
 
   _getSelectedAbilities() {
@@ -319,6 +369,76 @@ export class TileMapAnalyzerUI {
   _getSelectedStart() {
     if (!this._startSelect || !this._startSelect.value) return null;
     return JSON.parse(this._startSelect.value);
+  }
+
+  /**
+   * Single-step "where can I go from here" probe. Given a clicked
+   * tile, enumerate every tile directly reachable by one movement
+   * primitive (walk, jump, double jump, dash, rocket, fall) WITHOUT
+   * landing on any other floor tile first — i.e. the tile's
+   * immediate BFS neighbors plus the hitbox-swept air column for
+   * physics mode.
+   *
+   * Much faster than a full BFS and more useful for diagnosing
+   * "why can the player reach X from here?" questions.
+   */
+  _exploreFromTile(clickX, clickY) {
+    if (!this.categoryGrid || !this.config) return;
+    // Remember the raw click so we can re-run when the ability set
+    // or model choice changes.
+    this._lastClick = { x: clickX, y: clickY };
+
+    const abilitySet = this._getSelectedAbilities();
+    const { effectiveGrid, floorFlags } = buildEffectiveGrids(
+      this.categoryGrid, abilitySet, this.config
+    );
+
+    // Snap the click to a floor tile: if the clicked tile itself
+    // isn't a floor, try a few rows below.
+    let sx = clickX;
+    let sy = clickY;
+    const h = floorFlags.length;
+    if (!floorFlags[sy] || !floorFlags[sy][sx]) {
+      let found = false;
+      for (let dy = 1; dy <= 4; dy++) {
+        if (sy + dy >= h) break;
+        if (floorFlags[sy + dy] && floorFlags[sy + dy][sx]) {
+          sy += dy;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        this._setStatus(`(${clickX}, ${clickY}) — no floor tile here`);
+        this.renderer.setReachableOverlay(null);
+        this.renderer.setAirOverlay(null);
+        return;
+      }
+    }
+
+    const usePhysics = !!(this._physicsCheckbox && this._physicsCheckbox.checked);
+    const cfg = usePhysics ? { ...this.config, use_physics_model: true } : this.config;
+
+    const t0 = performance.now();
+    const probe = usePhysics
+      ? probeOneTilePhysics(sx, sy, effectiveGrid, floorFlags, abilitySet, cfg)
+      : probeOneTileOld(sx, sy, effectiveGrid, floorFlags, abilitySet, cfg);
+    const t1 = performance.now();
+
+    // Build overlays.
+    const floorSet = new Set();
+    floorSet.add(`${sy},${sx}`);  // source tile itself, for visual anchor
+    for (const l of probe.landings) floorSet.add(`${l.y},${l.x}`);
+    const airSet = probe.sweptTiles && probe.sweptTiles.size ? probe.sweptTiles : null;
+
+    this.renderer.setReachableOverlay(floorSet, 'rgba(80, 220, 80, 0.45)');
+    this.renderer.setAirOverlay(airSet, 'rgba(120, 180, 255, 0.22)');
+
+    const tag = usePhysics ? 'physics' : 'bbox';
+    const airPart = airSet ? `, ${airSet.size} air` : '';
+    this._setStatus(
+      `from (${sx},${sy}): ${probe.landings.length} neighbors${airPart} [${tag}] in ${Math.round(t1 - t0)}ms`
+    );
   }
 
   async _runReachabilityFromControls() {
@@ -341,12 +461,17 @@ export class TileMapAnalyzerUI {
       }
     }
 
+    const usePhysics = !!(this._physicsCheckbox && this._physicsCheckbox.checked);
+    const effectiveConfig = usePhysics
+      ? { ...this.config, use_physics_model: true }
+      : this.config;
+
     const t0 = performance.now();
     const { reachable } = computeReachable(
-      sx, sy, effectiveGrid, floorFlags, abilitySet, this.config
+      sx, sy, effectiveGrid, floorFlags, abilitySet, effectiveConfig
     );
     const augmented = addMidairPOIs(
-      reachable, effectiveGrid, floorFlags, this.categoryGrid, abilitySet, this.config
+      reachable, effectiveGrid, floorFlags, this.categoryGrid, abilitySet, effectiveConfig
     );
     const t1 = performance.now();
 
@@ -361,7 +486,8 @@ export class TileMapAnalyzerUI {
 
     this.renderer.setReachableOverlay(augmented, color);
     const abNames = [...abilitySet].sort().join(', ') || 'none';
-    const status = `${augmented.size} tiles from (${sx},${sy}) [${abNames}] in ${Math.round(t1 - t0)}ms`;
+    const modelTag = usePhysics ? ' physics' : '';
+    const status = `${augmented.size} tiles from (${sx},${sy}) [${abNames}]${modelTag} in ${Math.round(t1 - t0)}ms`;
     this._setStatus(status);
     log('info', status);
   }

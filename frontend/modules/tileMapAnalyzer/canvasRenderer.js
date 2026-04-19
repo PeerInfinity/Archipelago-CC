@@ -25,6 +25,8 @@ export class TileMapCanvasRenderer {
     // Overlay state
     this.reachableSet = null;
     this.reachableColor = 'rgba(80, 220, 80, 0.35)';
+    this.airSet = null;
+    this.airColor = 'rgba(120, 180, 255, 0.18)';
     this.floorFlags = null;
     this.markers = [];
 
@@ -183,6 +185,12 @@ export class TileMapCanvasRenderer {
     this.draw();
   }
 
+  setAirOverlay(airSet, color) {
+    this.airSet = airSet || null;
+    if (color) this.airColor = color;
+    this.draw();
+  }
+
   setFloorFlags(floorFlags) {
     this.floorFlags = floorFlags || null;
     this.draw();
@@ -195,12 +203,14 @@ export class TileMapCanvasRenderer {
 
   clearOverlays() {
     this.reachableSet = null;
+    this.airSet = null;
     this.floorFlags = null;
     this.draw();
   }
 
   clearAll() {
     this.reachableSet = null;
+    this.airSet = null;
     this.floorFlags = null;
     this.markers = [];
     this.draw();
@@ -248,6 +258,20 @@ export class TileMapCanvasRenderer {
         const name = row[x];
         const cat = cats[name];
         ctx.fillStyle = (cat && cat.color) || FALLBACK_COLOR;
+        ctx.fillRect(x * ts - this.panX, y * ts - this.panY, ts, ts);
+      }
+    }
+
+    // Air-reach overlay (tiles the hitbox passes through, not
+    // necessarily landable on). Drawn below the floor overlay so
+    // landable tiles stay visually dominant.
+    if (this.airSet && this.airSet.size > 0) {
+      ctx.fillStyle = this.airColor;
+      for (const k of this.airSet) {
+        const comma = k.indexOf(',');
+        const y = parseInt(k.slice(0, comma), 10);
+        const x = parseInt(k.slice(comma + 1), 10);
+        if (x < startCol || x >= endCol || y < startRow || y >= endRow) continue;
         ctx.fillRect(x * ts - this.panX, y * ts - this.panY, ts, ts);
       }
     }

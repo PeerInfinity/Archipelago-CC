@@ -7,6 +7,15 @@
 // physics-accurate reach table; the BFS scaffolding here stays the
 // same.
 //
+// When config.use_physics_model is true, the exported entry points
+// delegate to reachabilityPhysics.js. This lets us diff the two
+// models on the same map before flipping the default.
+
+import {
+  computeReachablePhysics,
+  addMidairPOIsPhysics,
+} from './reachabilityPhysics.js';
+//
 // Inputs:
 //   - effectiveGrid : categorized tile grid after tile_transforms
 //   - floorFlags    : [y][x] boolean — can the player stand here?
@@ -53,15 +62,54 @@ export function computeMovementBox(abilitySet, config) {
   let maxDv = 0;
   let maxDh = 0;
   const boxes = [];
+  const perAbility = {};
   for (const ability of abilitySet) {
     const def = config.abilities && config.abilities[ability];
     if (!def || !def.movement) continue;
     const box = parseMovementBox(def.movement);
     if (!box) continue;
+    perAbility[ability] = box;
     if (box.dv > maxDv) maxDv = box.dv;
     if (box.dh > maxDh) maxDh = box.dh;
     boxes.push(box);
   }
+
+  // Composite boxes: some abilities compose into a larger reach
+  // when owned together. The in-game archetype is "jump, then
+  // dash mid-arc": jump contributes its vertical reach, dash
+  // adds its horizontal reach on top of the jump's own
+  // horizontal. Without this, the per-ability model treats the
+  // dash and the jump as separate rectangles and the combined
+  // reach is missed.
+  //
+  // Rules derived from Player.as:
+  //   - dash can follow jump or double_jump (either sets
+  //     airjump=1 after; dash only checks dashed==false).
+  //   - double_jump already models the jump+DJ composition via
+  //     its own (dv, dh) entry, so no composite needed there.
+  //   - rocket+dash is technically legal (dash checks
+  //     rocketTime==0), but in practice rocket ends high up with
+  //     upward momentum and the bounding-box approximation for
+  //     the combination tends to over-reach. Skipping it; physics
+  //     mode handles the real case if needed.
+  const dashBox = perAbility['dash'];
+  if (dashBox) {
+    const jumpBox = perAbility['jump'];
+    if (jumpBox) {
+      boxes.push({ dv: jumpBox.dv, dh: jumpBox.dh + dashBox.dh });
+    }
+    const djBox = perAbility['double_jump'];
+    if (djBox) {
+      boxes.push({ dv: djBox.dv, dh: djBox.dh + dashBox.dh });
+    }
+  }
+
+  // Recompute the union box from (possibly enlarged) boxes list.
+  for (const b of boxes) {
+    if (b.dv > maxDv) maxDv = b.dv;
+    if (b.dh > maxDh) maxDh = b.dh;
+  }
+
   // Always at least walk.
   if (maxDh < 1) maxDh = 1;
   const maxFall = Math.max(maxDv, config.fall_distance || maxDv);
@@ -135,19 +183,38 @@ function arcIsClear(x0, y0, x1, y1, effectiveGrid, config, maxDv = 0) {
     return true;
   };
 
-  // Helper: check a straight diagonal path.
+  // Helper: check a straight diagonal path, with corner-cut
+  // prevention.
+  //
+  // The original implementation sampled Math.round at fractional
+  // steps, which skipped intermediate tiles. A move from (20, 48)
+  // to (22, 49), for instance, would sample (21, 49) but never
+  // (21, 48) — so a wall at (21, 48) went undetected and the arc
+  // was falsely accepted.
+  //
+  // Fix: oversample (2× steps), and whenever a sample advances
+  // both x and y relative to the previous sample, require at
+  // least one of the two "corner" tiles — (newX, prevY) or
+  // (prevX, newY) — to be clear. Blocking both corners means the
+  // diagonal can't squeeze through.
   const checkDiag = () => {
     const adx = Math.abs(x1 - x0);
     const ady = Math.abs(y1 - y0);
-    const steps = Math.max(adx, ady);
+    const steps = Math.max(adx, ady) * 2;
     if (steps === 0) return true;
     const dx = x1 - x0;
     const dy = y1 - y0;
+    let prevX = x0, prevY = y0;
     for (let i = 1; i <= steps; i++) {
       const t = i / steps;
       const x = Math.round(x0 + dx * t);
       const y = Math.round(y0 + dy * t);
+      if (x === prevX && y === prevY) continue;
+      if (x !== prevX && y !== prevY) {
+        if (blocked(x, prevY) && blocked(prevX, y)) return false;
+      }
       if (blocked(x, y)) return false;
+      prevX = x; prevY = y;
     }
     return true;
   };
@@ -254,6 +321,9 @@ function edgeFallNeighbors(x, y, effectiveGrid, floorFlags, maxFall, config) {
 }
 
 export function computeReachable(startX, startY, effectiveGrid, floorFlags, abilitySet, config) {
+  if (config && config.use_physics_model) {
+    return computeReachablePhysics(startX, startY, effectiveGrid, floorFlags, abilitySet, config);
+  }
   const { maxDv, maxDh, maxFall, boxes } = computeMovementBox(abilitySet, config);
   const h = effectiveGrid.length;
   const w = effectiveGrid[0].length;
@@ -340,6 +410,69 @@ export function computeReachable(startX, startY, effectiveGrid, floorFlags, abil
  * Locate the player_start tile (category with is_player_start flag).
  * Returns {x, y} or null.
  */
+/**
+ * Single-step probe under the bounding-box model: enumerate every
+ * floor tile reachable from (cx, cy) by one movement primitive
+ * (walk, jump, fall, or walk-off-edge) without passing through
+ * any intermediate floor tile.
+ *
+ * Mirrors the inner body of computeReachable() but skips BFS
+ * expansion. Used by the "click to explore" diagnostic overlay.
+ *
+ * Returns { landings: [{x, y}], sweptTiles: null }. sweptTiles is
+ * null because the bounding-box model does not track per-arc air
+ * tiles — use probeOneTilePhysics for that.
+ */
+export function probeOneTileOld(cx, cy, effectiveGrid, floorFlags, abilitySet, config) {
+  const h = effectiveGrid.length;
+  const w = effectiveGrid[0].length;
+  if (cx < 0 || cy < 0 || cx >= w || cy >= h || !floorFlags[cy][cx]) {
+    return { landings: [], sweptTiles: null };
+  }
+  const { maxDv, maxDh, maxFall, boxes } = computeMovementBox(abilitySet, config);
+  const seen = new Set();
+  const landings = [];
+  const addLanding = (nx, ny) => {
+    const k = key(nx, ny);
+    if (seen.has(k)) return;
+    seen.add(k);
+    landings.push({ x: nx, y: ny });
+  };
+
+  const canReachOffset = (nx, ny) => {
+    const adx = Math.abs(nx - cx);
+    const ady_up = cy - ny;
+    const ady_down = ny - cy;
+    for (const box of boxes) {
+      if (adx > box.dh) continue;
+      if (ady_up > box.dv) continue;
+      if (arcIsClear(cx, cy, nx, ny, effectiveGrid, config, box.dv)) return true;
+    }
+    if (ady_up <= 0 && ady_down <= maxFall && adx <= maxDh) {
+      return arcIsClear(cx, cy, nx, ny, effectiveGrid, config, 0);
+    }
+    return false;
+  };
+
+  for (let dy = -maxDv; dy <= maxFall; dy++) {
+    for (let dx = -maxDh; dx <= maxDh; dx++) {
+      if (dx === 0 && dy === 0) continue;
+      const nx = cx + dx;
+      const ny = cy + dy;
+      if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+      if (!floorFlags[ny][nx]) continue;
+      if (!canReachOffset(nx, ny)) continue;
+      addLanding(nx, ny);
+    }
+  }
+
+  for (const t of edgeFallNeighbors(cx, cy, effectiveGrid, floorFlags, maxFall, config)) {
+    addLanding(t.x, t.y);
+  }
+
+  return { landings, sweptTiles: null };
+}
+
 export function findPlayerStart(categoryGrid, config) {
   const h = categoryGrid.length;
   const w = categoryGrid[0].length;
@@ -429,6 +562,9 @@ export function findPointsOfInterest(categoryGrid, config) {
  * plus any midair POI tiles that are reachable.
  */
 export function addMidairPOIs(reachable, effectiveGrid, floorFlags, categoryGrid, abilitySet, config) {
+  if (config && config.use_physics_model) {
+    return addMidairPOIsPhysics(reachable, effectiveGrid, floorFlags, categoryGrid, abilitySet, config);
+  }
   const { maxDv, maxDh, maxFall, boxes } = computeMovementBox(abilitySet, config);
   const cats = config.categories;
   const h = effectiveGrid.length;
