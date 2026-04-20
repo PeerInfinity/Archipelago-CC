@@ -108,6 +108,13 @@ export class TileMapAnalyzerUI {
       });
     }));
 
+    toolbar.appendChild(mkBtn('Load', () => {
+      this._loadRulesJson().catch((e) => {
+        log('error', 'load failed', e);
+        this._setStatus(`error: ${e.message}`);
+      });
+    }));
+
     toolbar.appendChild(mkBtn('Clear', () => {
       if (this.renderer) this.renderer.clearOverlays();
       this._lastClick = null;
@@ -546,30 +553,44 @@ export class TileMapAnalyzerUI {
     log('info', status);
   }
 
-  async _exportRulesJson() {
+  async _buildRulesJson(label) {
     if (!this.categoryGrid || !this.config) {
       throw new Error('tilemap not loaded yet');
     }
-    this._setStatus('exporting rules.json...');
+    this._setStatus(`${label}: building rules.json...`);
+    this._setProgress(`${label}: starting…`);
     const t0 = performance.now();
-    const { rules, debugLog } = exportRulesJson(this.categoryGrid, this.config, (msg) => {
-      this._setStatus(`export: ${msg}`);
-      log('info', `export: ${msg}`);
-    });
+    const { rules, debugLog } = await exportRulesJson(
+      this.categoryGrid, this.config, (msg, info) => {
+        this._setStatus(`${label}: ${msg}`);
+        if (info && typeof info.done === 'number' && info.total) {
+          const pct = Math.round((info.done / info.total) * 100);
+          this._setProgress(`${label} [${info.done}/${info.total} · ${pct}%] ${msg}`);
+        } else {
+          this._setProgress(`${label}: ${msg}`);
+        }
+        log('info', `${label}: ${msg}`);
+      },
+    );
     const t1 = performance.now();
-
     const regionCount = Object.keys(rules.regions['1']).length;
     let exitCount = 0;
     for (const r of Object.values(rules.regions['1'])) {
       exitCount += r.exits.length;
     }
+    return {
+      rules,
+      debugLog,
+      stats: { regionCount, exitCount, ms: Math.round(t1 - t0) },
+    };
+  }
 
-    // Publish via event bus so the editor and other modules pick it up
-    this.eventBus.publish('files:jsonLoaded', {
-      jsonData: rules,
-      selectedPlayerId: '1',
-      sourceName: 'tileMapAnalyzer',
-    });
+  _setProgress(text) {
+    if (this._tileInfoBar) this._tileInfoBar.textContent = text;
+  }
+
+  async _exportRulesJson() {
+    const { rules, debugLog, stats } = await this._buildRulesJson('export');
 
     // Download rules.json
     const json = JSON.stringify(rules, null, 2);
@@ -591,8 +612,29 @@ export class TileMapAnalyzerUI {
     a2.click();
     URL.revokeObjectURL(logUrl);
 
-    const status = `exported: ${regionCount} regions, ${exitCount} exits in ${Math.round(t1 - t0)}ms`;
+    const status = `exported: ${stats.regionCount} regions, ${stats.exitCount} exits in ${stats.ms}ms`;
     this._setStatus(status);
+    this._setProgress(status);
+    log('info', status);
+  }
+
+  async _loadRulesJson() {
+    const { rules, stats } = await this._buildRulesJson('load');
+
+    // Deep-clone via JSON to strip any non-plain-object references before the
+    // rules are sent to the state-manager worker (postMessage requires
+    // structured-cloneable data).
+    const safeRules = JSON.parse(JSON.stringify(rules));
+
+    this.eventBus.publish('files:jsonLoaded', {
+      jsonData: safeRules,
+      selectedPlayerId: '1',
+      sourceName: 'tileMapAnalyzer',
+    });
+
+    const status = `loaded: ${stats.regionCount} regions, ${stats.exitCount} exits in ${stats.ms}ms`;
+    this._setStatus(status);
+    this._setProgress(status);
     log('info', status);
   }
 

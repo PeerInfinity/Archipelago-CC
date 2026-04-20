@@ -28,6 +28,13 @@ import {
 
 function tileKey(x, y) { return `${y},${x}`; }
 
+// Yield back to the browser so it can paint the current progress update and
+// process input events. Used between BFS iterations to keep the panel
+// responsive during long exports.
+function yieldToBrowser() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
 /**
  * Map an ability name to an AP item name via the config's categories.
  */
@@ -55,8 +62,9 @@ function abilitiesToRule(abilities, config) {
  * cached by a string key. Returns a lookup function
  * getReachable(savePointIndex, abilitySetKey) → Set<tileKey>.
  */
-function precomputeReachableSets(savePoints, abilitySets, categoryGrid, config, log, debugLog) {
+async function precomputeReachableSets(savePoints, abilitySets, categoryGrid, config, log, debugLog) {
   const cache = new Map();
+  const total = savePoints.length * abilitySets.length;
 
   for (let si = 0; si < savePoints.length; si++) {
     const sp = savePoints[si];
@@ -71,8 +79,8 @@ function precomputeReachableSets(savePoints, abilitySets, categoryGrid, config, 
       cache.set(cacheKey, augmented);
 
       const midairCount = midairPOIs.size;
-      const msg = `BFS ${cache.size}/${savePoints.length * abilitySets.length}: SP${si + 1} (${sp.x},${sp.y}) ${setKey} → ${reachable.size} tiles + ${midairCount} midair = ${augmented.size}`;
-      log(msg);
+      const msg = `BFS ${cache.size}/${total}: SP${si + 1} (${sp.x},${sp.y}) ${setKey} → ${reachable.size} tiles + ${midairCount} midair = ${augmented.size}`;
+      log(msg, { done: cache.size, total });
       debugLog.push(msg);
 
       // Log which POIs are in this reachable set
@@ -92,6 +100,10 @@ function precomputeReachableSets(savePoints, abilitySets, categoryGrid, config, 
         debugLog.push(`  POIs reached: ${poiHits.length}`);
         poiHits.forEach(h => debugLog.push(h));
       }
+
+      // Let the browser paint the status update and handle input events
+      // before kicking off the next BFS run.
+      await yieldToBrowser();
     }
   }
 
@@ -100,8 +112,12 @@ function precomputeReachableSets(savePoints, abilitySets, categoryGrid, config, 
 
 /**
  * Run the full BFS-twice analysis and export a rules.json object.
+ *
+ * The onProgress callback is invoked with (message, info) where `info` is
+ * an optional `{done, total}` object for BFS iterations. The function
+ * yields to the browser between BFS runs so the UI stays responsive.
  */
-export function exportRulesJson(categoryGrid, config, onProgress) {
+export async function exportRulesJson(categoryGrid, config, onProgress) {
   const log = onProgress || (() => {});
 
   const basicSet = new Set(config.basic_abilities || []);
@@ -127,6 +143,16 @@ export function exportRulesJson(categoryGrid, config, onProgress) {
   for (const loc of locations) {
     loc.regionName = loc.ap_name || loc.categoryName;
   }
+
+  // A location is "goal" if its category doesn't grant an ability — it's the
+  // win condition, not a collectible. For Robot Wants Kitty this is the
+  // `goal_kitty` tile. Treat the first such location as the Victory location.
+  const goalLocation = locations.find(
+    (loc) => !cats[loc.categoryName]?.grants_ability
+  );
+  const collectibleLocations = locations.filter(
+    (loc) => cats[loc.categoryName]?.grants_ability
+  );
 
   // Build the set of ability combinations we need to BFS:
   // - "basic" (basic abilities only)
@@ -154,7 +180,7 @@ export function exportRulesJson(categoryGrid, config, onProgress) {
   debugLog.push(`--- Precomputing ${savePoints.length * abilitySets.length} BFS runs ---`);
 
   log(`precomputing ${savePoints.length * abilitySets.length} BFS runs...`);
-  const getReachable = precomputeReachableSets(
+  const getReachable = await precomputeReachableSets(
     savePoints, abilitySets, categoryGrid, config, log, debugLog
   );
 
@@ -223,14 +249,33 @@ export function exportRulesJson(categoryGrid, config, onProgress) {
     regions[sp.regionName].position = { x: sp.x, y: sp.y };
   }
 
-  // Location regions (each has one AP location, no exits)
-  for (const loc of locations) {
+  // Location regions (each has one AP location, no exits).
+  // Collectible locations map to an AP location that grants the ability's
+  // item. The goal location is instead an event location that places the
+  // Victory event item — this is what the completion condition checks.
+  for (const loc of collectibleLocations) {
     const locEntry = makeLocation(
       loc.ap_name || loc.categoryName,
       null,
     );
     regions[loc.regionName] = makeRegion(loc.regionName, [], [locEntry]);
     regions[loc.regionName].position = { x: loc.x, y: loc.y };
+  }
+  if (goalLocation) {
+    const victoryEvent = {
+      name: 'Victory',
+      id: null,
+      access_rule: makeTrueRule(),
+      item: { name: 'Victory', player: 1, advancement: true, type: 'Event' },
+      locked: true,
+      event: true,
+    };
+    regions[goalLocation.regionName] = makeRegion(
+      goalLocation.regionName, [], [victoryEvent]
+    );
+    regions[goalLocation.regionName].position = {
+      x: goalLocation.x, y: goalLocation.y,
+    };
   }
 
   // Menu → first save point
@@ -245,20 +290,26 @@ export function exportRulesJson(categoryGrid, config, onProgress) {
 
   log(`${Object.keys(regions).length} regions, ${exitCount} exits`);
 
-  // Build scaffold
+  // Resolve game identifiers. These are currently hardcoded per game until
+  // the tileMapAnalyzer gets a generalized config layer.
   const gameName = config.game || 'Unknown';
+  const gameDirectory = GAME_DIRECTORY_OVERRIDES[gameName]
+    || gameName.toLowerCase().replace(/\s+/g, '');
+  const worldClassName = gameName.replace(/\s+/g, '') + 'World';
+
+  // Build scaffold
   const rules = makeRulesJsonScaffold({
     gameName,
-    gameDirectory: gameName.toLowerCase().replace(/\s+/g, ''),
-    worldClassName: gameName.replace(/\s+/g, '') + 'World',
+    gameDirectory,
+    worldClassName,
     seed: 1,
     seedName: 'AP_14089154938208861744',
     startRegions: ['Menu'],
   });
 
-  // Items (one per collectable)
+  // Items: one per collectible ability, plus a Victory event item.
   const items = {};
-  for (const loc of locations) {
+  for (const loc of collectibleLocations) {
     const name = loc.ap_name || loc.categoryName;
     items[name] = {
       name,
@@ -266,18 +317,48 @@ export function exportRulesJson(categoryGrid, config, onProgress) {
       groups: [],
       classification: 'progression',
       type: null,
+      max_count: 1,
     };
   }
+  items['Victory'] = {
+    name: 'Victory',
+    id: null,
+    groups: ['Event'],
+    classification: 'progression',
+    event: true,
+    type: 'Event',
+    max_count: 1,
+  };
+
+  // Itempool counts: each collectible appears once; Victory is an event.
+  const itempoolCounts = {};
+  for (const loc of collectibleLocations) {
+    const name = loc.ap_name || loc.categoryName;
+    itempoolCounts[name] = (itempoolCounts[name] || 0) + 1;
+  }
+  itempoolCounts['Victory'] = 1;
 
   rules.items = { '1': items };
+  rules.itempool_counts = { '1': itempoolCounts };
   rules.regions = { '1': regions };
+
+  // World-generator metadata the scaffold doesn't set
+  rules.world['1'].world_directory = gameDirectory;
+  rules.game_info['1'].completion_condition = { type: 'item_check', item: 'Victory' };
 
   if (config.game) {
     rules.flash_panel = {
-      config: config.game.toLowerCase().replace(/\s+/g, '') + '.json',
-      swf: config.game.toLowerCase().replace(/\s+/g, '') + '_injected.swf',
+      config: gameDirectory + '.json',
+      swf: gameDirectory + '_injected.swf',
     };
   }
 
   return { rules, debugLog };
 }
+
+// Map of hardcoded per-game directory overrides. The exporter auto-derives a
+// directory from the game name otherwise. TODO: lift into config once more
+// than one game is supported.
+const GAME_DIRECTORY_OVERRIDES = {
+  'Robot Wants Kitty': 'robotkitty',
+};

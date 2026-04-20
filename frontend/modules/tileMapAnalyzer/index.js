@@ -35,6 +35,7 @@ let activePanelInstance = null;
 export function register(registrationApi) {
   log('info', `[${moduleInfo.name} Module] Registering...`);
   registrationApi.registerPanelComponent(moduleInfo.componentType, TileMapAnalyzerUI);
+  registrationApi.registerEventBusPublisher('files:jsonLoaded');
   log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }
 

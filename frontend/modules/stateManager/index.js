@@ -233,6 +233,26 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
     // Subscribe to editor snapshot Apply events
     eventBus.subscribe('editor:snapshotApply', handleEditorSnapshotApply);
     log('info', '[StateManager Module] Subscribed to editor:snapshotApply events');
+
+    // Re-emit stateManager:rawJsonDataLoaded on every files:jsonLoaded so
+    // downstream subscribers (editorDataService, apworldEditor, spoilerTest,
+    // ...) see subsequent reloads, not just the initial startup load that
+    // postInitialize emits.
+    eventBus.subscribe('files:jsonLoaded', (eventData) => {
+      if (!eventData || !eventData.jsonData || eventData.selectedPlayerId === undefined) {
+        return;
+      }
+      const selectedPlayerInfo = eventData.playerInfo || {
+        playerId: String(eventData.selectedPlayerId),
+        playerName: `Player${eventData.selectedPlayerId}`,
+      };
+      eventBus.publish('stateManager:rawJsonDataLoaded', {
+        source: eventData.sourceName || eventData.filename || eventData.source || 'userLoadedFile',
+        rawJsonData: eventData.jsonData,
+        selectedPlayerInfo,
+      });
+    });
+    log('info', '[StateManager Module] Subscribed to files:jsonLoaded events (for rawJsonDataLoaded re-emit)');
   }
 
   log(
