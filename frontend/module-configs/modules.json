@@ -231,6 +231,10 @@
     "apcalc": {
       "path": "./modules/apcalc/index.js",
       "enabled": false
+    },
+    "apworldEditor": {
+      "path": "./modules/apworldEditor/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -291,6 +295,7 @@
     "jtaActionQueue",
     "jtaArchipelago",
     "vibeCodingSim",
-    "apcalc"
+    "apcalc",
+    "apworldEditor"
   ]
 }

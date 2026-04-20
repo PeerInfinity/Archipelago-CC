@@ -225,6 +225,11 @@
               "type": "component",
               "componentType": "tileMapAnalyzer",
               "title": "Tile Map Analyzer"
+            },
+            {
+              "type": "component",
+              "componentType": "apworldEditorPanel",
+              "title": "APWorld Editor"
             }
           ]
         }

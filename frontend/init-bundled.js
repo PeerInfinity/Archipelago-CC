@@ -117,6 +117,7 @@ import * as jtaArchipelagoModule from './modules/jtaArchipelago/index.js';
 import * as vibeCodingSimModule from './modules/vibeCodingSim/index.js';
 import * as apcalcModule from './modules/apcalc/index.js';
 import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
+import * as apworldEditorModule from './modules/apworldEditor/index.js';
 
 // ============================================================================
 // STATIC TEST CASE IMPORTS - These get bundled and self-register on import
@@ -203,6 +204,7 @@ const BUNDLED_MODULES = {
   vibeCodingSim: vibeCodingSimModule,
   apcalc: apcalcModule,
   apcalcGenerator: apcalcGeneratorModule,
+  apworldEditor: apworldEditorModule,
 };
 
 // Make bundled modules available globally for the module loader
