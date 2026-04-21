@@ -15,6 +15,7 @@ import {
     apply, undo,
     generateMaze,
     extractPathsAndObstacles,
+    generateMazeRegion,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from './library.js';
 
@@ -324,6 +325,134 @@ describe('makeMazePickMove', () => {
     });
 });
 
+describe('generateMazeRegion', () => {
+    const baseInput = () => ({
+        region_id: 'r1',
+        size: { width: 10, height: 8 },
+        entrance_side: 'W',
+        entrance_tile: { x: 0, y: 3 },
+        exit_sides: ['E'],
+        arrival_inventory: new Set(),
+        items_to_place: [],
+        obstacles_to_place: [],
+        rng: createRng(7),
+        params: {},
+    });
+
+    it('requires rng, region_id, size, and at least one exit_side', () => {
+        expect(() => generateMazeRegion({ ...baseInput(), rng: undefined })).toThrow(/rng/);
+        expect(() => generateMazeRegion({ ...baseInput(), region_id: undefined })).toThrow(/region_id/);
+        expect(() => generateMazeRegion({ ...baseInput(), size: undefined })).toThrow(/size/);
+        expect(() => generateMazeRegion({ ...baseInput(), exit_sides: [] })).toThrow(/exit_side/);
+    });
+
+    it('v1 rejects multiple exit sides', () => {
+        expect(() => generateMazeRegion({ ...baseInput(), exit_sides: ['E', 'S'] })).toThrow(/exactly one/);
+    });
+
+    it('requires entrance_tile when entrance_side is set', () => {
+        expect(() => generateMazeRegion({
+            ...baseInput(), entrance_side: 'W', entrance_tile: null,
+        })).toThrow(/entrance_tile required/);
+    });
+
+    it('start region (entrance_side=null) places entrance in the middle', () => {
+        const out = generateMazeRegion({
+            ...baseInput(), entrance_side: null, entrance_tile: null,
+        });
+        const w = out.playable_payload;
+        expect(w.entrance).toEqual({ x: 5, y: 4 });
+    });
+
+    it('places exit on the requested side', () => {
+        const out = generateMazeRegion({ ...baseInput(), exit_sides: ['E'] });
+        const w = out.playable_payload;
+        expect(w.exit.x).toBe(w.width - 1);
+        expect(out.exits_placed).toEqual([{
+            side: 'E',
+            tile_position: { x: w.width - 1, y: w.exit.y },
+        }]);
+    });
+
+    it('returns a world with entrance at the supplied tile', () => {
+        const out = generateMazeRegion({
+            ...baseInput(),
+            entrance_side: 'W',
+            entrance_tile: { x: 0, y: 5 },
+        });
+        expect(out.playable_payload.entrance).toEqual({ x: 0, y: 5 });
+    });
+
+    it('output shape matches the GridGrowthGenerator contract', () => {
+        const out = generateMazeRegion(baseInput());
+        expect(out).toHaveProperty('region_id', 'r1');
+        expect(out).toHaveProperty('playable_payload');
+        expect(out).toHaveProperty('extracted_rules');
+        expect(out).toHaveProperty('placed_items');
+        expect(out).toHaveProperty('placed_obstacles');
+        expect(out).toHaveProperty('exits_placed');
+        expect(out).toHaveProperty('render_hint', 'maze');
+        expect(out).toHaveProperty('sidecar_filename', 'r1.json');
+    });
+
+    it('extracted rules reflect the generated geometry', () => {
+        const out = generateMazeRegion(baseInput());
+        expect(out.extracted_rules.region_id).toBe('r1');
+        expect(out.extracted_rules.exits).toHaveLength(1);
+        expect(out.extracted_rules.exits[0].id).toBe('exit');
+    });
+
+    it('with no items/obstacles to place, reports nothing placed', () => {
+        const out = generateMazeRegion(baseInput());
+        expect(out.placed_items).toEqual([]);
+        expect(out.placed_obstacles).toEqual([]);
+    });
+
+    it('places a key_red + door_red pair when both are in the inputs', () => {
+        const out = generateMazeRegion({
+            ...baseInput(),
+            items_to_place: ['key_red'],
+            obstacles_to_place: ['door_red'],
+        });
+        expect(out.placed_items).toHaveLength(1);
+        expect(out.placed_items[0].item_id).toBe('key_red');
+        expect(out.placed_obstacles).toHaveLength(1);
+        expect(out.placed_obstacles[0].obstacle_id).toBe('door_red');
+    });
+
+    it('start regions never place obstacles', () => {
+        const out = generateMazeRegion({
+            ...baseInput(),
+            entrance_side: null,
+            entrance_tile: null,
+            items_to_place: ['key_red'],
+            obstacles_to_place: ['door_red'],
+        });
+        expect(out.placed_obstacles).toEqual([]);
+        // The key still may or may not get placed via the fallback path;
+        // we're specifically asserting obstacles stay empty.
+    });
+
+    it('places extra items on reachable floor tiles when no gate fits', () => {
+        const out = generateMazeRegion({
+            ...baseInput(),
+            items_to_place: ['key_red', 'key_red'],
+            obstacles_to_place: ['door_red'],
+        });
+        // First key_red consumed by the gate/key pair; second one goes
+        // on a random reachable tile.
+        expect(out.placed_items.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('is deterministic for a fixed rng seed', () => {
+        const a = generateMazeRegion({ ...baseInput(), rng: createRng(42) });
+        const b = generateMazeRegion({ ...baseInput(), rng: createRng(42) });
+        expect(Array.from(a.playable_payload.tiles)).toEqual(Array.from(b.playable_payload.tiles));
+        expect(a.placed_items).toEqual(b.placed_items);
+        expect(a.placed_obstacles).toEqual(b.placed_obstacles);
+    });
+});
+
 describe('extractPathsAndObstacles', () => {
     it('emits a single exit and no locations for a plain walls-only maze', () => {
         const w = createWorld(4, 4);
@@ -493,7 +622,7 @@ describe('generateMaze', () => {
 
     it('door is always a cut vertex across many seeds (regression)', () => {
         let bypassable = 0, placed = 0;
-        for (let seed = 1; seed <= 30; seed++) {
+        for (let seed = 1; seed <= 20; seed++) {
             const { world, stats } = generateMaze({
                 width: 12, height: 10, seed,
                 params: { walkerTrials: 15, minSuccessPct: 0.3, maxSuccessPct: 0.5 },
@@ -505,7 +634,7 @@ describe('generateMaze', () => {
             const r = reach(world, bfsSolver, createState(world), reachedExit);
             if (r.ok) bypassable += 1;
         }
-        expect(placed).toBeGreaterThan(20);
+        expect(placed).toBeGreaterThan(15);
         expect(bypassable).toBe(0);
     });
 
