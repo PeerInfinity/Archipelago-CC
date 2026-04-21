@@ -265,6 +265,12 @@
       "enabled": true
     }
   },
+  "flash": {
+    "moduleConfig": {
+      "path": "./module-configs/modules-flash.json",
+      "enabled": true
+    }
+  },
   "test-multiclient-client1": {
     "moduleConfig": {
       "path": "./module-configs/modules-nograph.json",
