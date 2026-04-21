@@ -8,7 +8,11 @@
     font-size: 13px;
     color: #e0e0e0;
     background: #1e1e1e;
-    overflow: hidden;
+    /* Whole panel scrolls as a single column: params/actions/stats at
+       top, canvas at natural size, rules below. This is simpler than
+       giving each section its own scroll behavior and avoids the
+       expanded-details-eats-canvas problem. */
+    overflow-y: auto;
     outline: none;
 }
 
@@ -133,8 +137,7 @@
 
 /* Canvas */
 .maze-room-canvas-wrap {
-    flex: 1;
-    overflow: auto;
+    flex: 0 0 auto;
     padding: 8px;
     display: flex;
     align-items: flex-start;
@@ -151,4 +154,48 @@
     color: #888;
     font-size: 12px;
     padding: 12px;
+}
+
+/* Rules panel */
+.maze-room-rules-container {
+    flex: 0 0 auto;
+    border-top: 1px solid #333;
+}
+
+.maze-room-rules {
+    padding: 6px 8px;
+    border-bottom: 1px solid #222;
+}
+
+.maze-room-rules:last-child {
+    border-bottom: none;
+}
+
+.maze-room-rules summary {
+    font-size: 12px;
+    color: #aaa;
+    cursor: pointer;
+    padding: 2px 0;
+    user-select: none;
+}
+
+.maze-room-rules summary:hover {
+    color: #ddd;
+}
+
+.maze-room-rules-json {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 6px 8px;
+    margin: 4px 0 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #aaa;
+    white-space: pre;
+    /* Bound the JSON block's own height — long rules output scrolls
+       within the block instead of expanding the whole panel. */
+    max-height: 300px;
+    overflow: auto;
 }

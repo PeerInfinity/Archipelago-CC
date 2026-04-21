@@ -14,6 +14,7 @@ import {
     walkerSolver, makeMazePickMove,
     apply, undo,
     generateMaze,
+    extractPathsAndObstacles,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from './library.js';
 
@@ -320,6 +321,57 @@ describe('makeMazePickMove', () => {
         ];
         const chosen = pick({ world, state, legalMoves, visited, rng: createRng(1) });
         expect(chosen).toBe(INPUT_S);
+    });
+});
+
+describe('extractPathsAndObstacles', () => {
+    it('emits a single exit and no locations for a plain walls-only maze', () => {
+        const w = createWorld(4, 4);
+        const result = extractPathsAndObstacles(w);
+        expect(result.entrance).toEqual({ x: 0, y: 0 });
+        expect(result.locations).toEqual([]);
+        expect(result.exits.length).toBe(1);
+        expect(result.exits[0].id).toBe('exit');
+        expect(result.exits[0].target_region).toBeNull();
+        expect(result.exits[0].paths).toEqual([{ path_id: 'p1', obstacles: [] }]);
+    });
+
+    it('lists obstacles along a gated path', () => {
+        const w = createWorld(4, 2, { entrance: { x: 0, y: 0 }, exit: { x: 3, y: 0 } });
+        setItem(w, 1, 0, 'key_red');
+        setObstacle(w, 2, 0, 'door_red');
+        const result = extractPathsAndObstacles(w);
+        const exit = result.exits.find((e) => e.id === 'exit');
+        expect(exit.paths).toEqual([{ path_id: 'p1', obstacles: ['door_red'] }]);
+        const key = result.locations.find((l) => l.id === 'key_red_pickup');
+        expect(key.item).toBe('key_red');
+        expect(key.paths).toEqual([{ path_id: 'p1', obstacles: [] }]);
+    });
+
+    it('still annotates the path even when the player cannot currently clear the obstacles', () => {
+        // The generated paths-and-obstacles form reflects geometry, not
+        // solvability under the current inventory.
+        const w = createWorld(4, 2, { entrance: { x: 0, y: 0 }, exit: { x: 3, y: 0 } });
+        setObstacle(w, 2, 0, 'door_red');
+        const result = extractPathsAndObstacles(w);
+        const exit = result.exits.find((e) => e.id === 'exit');
+        expect(exit.paths[0].obstacles).toEqual(['door_red']);
+    });
+
+    it('on a generated maze, the exit path lists door_red and the key path is empty', () => {
+        const { world, stats } = generateMaze({ width: 10, height: 8, seed: 17 });
+        expect(stats.gateKeyPlaced).toBe(true);
+        const result = extractPathsAndObstacles(world);
+        const exit = result.exits.find((e) => e.id === 'exit');
+        const key = result.locations.find((l) => l.id === 'key_red_pickup');
+        expect(exit.paths[0].obstacles).toContain('door_red');
+        expect(key.paths[0].obstacles).toEqual([]);
+    });
+
+    it('accepts a regionId override', () => {
+        const w = createWorld(3, 3);
+        const result = extractPathsAndObstacles(w, { regionId: 'forest_entrance' });
+        expect(result.region_id).toBe('forest_entrance');
     });
 });
 

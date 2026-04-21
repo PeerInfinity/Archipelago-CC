@@ -13,8 +13,10 @@ import {
     getObstacle, getItem,
     step,
     generateMaze,
+    extractPathsAndObstacles,
 } from './mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from './library.js';
+import { compileRegion } from '../shared/pathsAndObstaclesCompiler.js';
 
 const LS_KEY = 'mazeRoom_params';
 
@@ -83,6 +85,7 @@ export class MazeRoomUI {
         this.rootElement.appendChild(this._renderActions());
         this.rootElement.appendChild(this._renderStats());
         this.rootElement.appendChild(this._renderMaze());
+        this.rootElement.appendChild(this._renderRules());
     }
 
     // --- Parameter UI ---
@@ -247,6 +250,76 @@ export class MazeRoomUI {
             inv.textContent = `inventory: ${itemNames.join(', ')}`;
             section.appendChild(inv);
         }
+        return section;
+    }
+
+    // --- Rules (paths-and-obstacles) ---
+
+    _renderRules() {
+        const container = document.createElement('div');
+        container.className = 'maze-room-rules-container';
+        if (!this.world) {
+            container.style.display = 'none';
+            return container;
+        }
+
+        const extracted = extractPathsAndObstacles(this.world);
+        const compiled = compileRegion(extracted, {
+            obstacleLib: this.world.obstacleLib ?? DEFAULT_OBSTACLES,
+        });
+
+        container.appendChild(this._renderJsonBlock(
+            'Paths & obstacles (extracted)',
+            extracted,
+        ));
+        container.appendChild(this._renderJsonBlock(
+            'Compiled rules (Rule Builder JSON)',
+            compiled,
+        ));
+        return container;
+    }
+
+    _renderJsonBlock(title, data) {
+        const section = document.createElement('details');
+        section.className = 'maze-room-rules';
+
+        const summary = document.createElement('summary');
+        summary.textContent = title;
+        section.appendChild(summary);
+
+        const json = JSON.stringify(data, null, 2);
+
+        const btnRow = document.createElement('div');
+        btnRow.className = 'maze-room-btn-row';
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'maze-room-btn';
+        copyBtn.textContent = 'Copy JSON';
+        copyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Fall back to the legacy execCommand path if clipboard API
+            // isn't available — some embedded contexts (iframes without
+            // focus, older browsers) don't expose navigator.clipboard.
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(json)
+                    .then(() => { copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); })
+                    .catch(() => { copyBtn.textContent = 'Copy failed'; });
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = json;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); }
+                catch (err) { copyBtn.textContent = 'Copy failed'; }
+                document.body.removeChild(ta);
+            }
+        });
+        btnRow.appendChild(copyBtn);
+        section.appendChild(btnRow);
+
+        const pre = document.createElement('pre');
+        pre.className = 'maze-room-rules-json';
+        pre.textContent = json;
+        section.appendChild(pre);
         return section;
     }
 

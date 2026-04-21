@@ -176,6 +176,100 @@ export const bfsSolver = makeBfsSolver({
     visitedKey: mazeVisitedKey,
 });
 
+// Obstacle-transparent step used by path/obstacle extraction: walls
+// still block, but obstacles are passable (we want to reconstruct the
+// geometric route and then annotate it with the obstacles it crossed,
+// independently of whether the player could clear them at run time).
+function ghostStep(world, state, input) {
+    const delta = DELTAS[input];
+    if (!delta) return null;
+    const nx = state.player_pos.x + delta.dx;
+    const ny = state.player_pos.y + delta.dy;
+    if (!isFloor(world, nx, ny)) return null;
+    const next = cloneState(state);
+    next.player_pos.x = nx;
+    next.player_pos.y = ny;
+    next.turn += 1;
+    return next;
+}
+
+const ghostBfsSolver = makeBfsSolver({
+    step: ghostStep,
+    inputs: INPUTS,
+    visitedKey: (s) => `${s.player_pos.x},${s.player_pos.y}`,
+});
+
+// --- Paths-and-obstacles extraction ---
+//
+// Produces the central data representation from the pipeline overview
+// (NewDocs/plans/procedural-generation/pipeline-overview.md §"Authored
+// rules: paths and obstacles"). For each target location (the exit +
+// every item pickup), we walk an obstacle-transparent BFS from the
+// entrance, then annotate the path with the obstacles it crossed. v1
+// emits a single path per location; multi-path via BFS-removal analysis
+// is deferred (pipeline-overview §"What's new" / tile-map-analyzer
+// pattern).
+
+function obstaclesAlongPath(world, startState, plan) {
+    const seen = [];
+    const seenSet = new Set();
+    let s = startState;
+    for (const input of plan) {
+        s = ghostStep(world, s, input);
+        if (!s) break;
+        const obstacleId = getObstacle(world, s.player_pos.x, s.player_pos.y);
+        if (obstacleId && !seenSet.has(obstacleId)) {
+            seen.push(obstacleId);
+            seenSet.add(obstacleId);
+        }
+    }
+    return seen;
+}
+
+function pathsToTarget(world, position) {
+    const start = createState(world);
+    const result = reach(world, ghostBfsSolver, start,
+        (s) => s.player_pos.x === position.x && s.player_pos.y === position.y);
+    if (!result.ok) return [];
+    const obstacles = obstaclesAlongPath(world, start, result.plan);
+    return [{ path_id: 'p1', obstacles }];
+}
+
+export function extractPathsAndObstacles(world, opts = {}) {
+    const regionId = opts.regionId ?? 'maze_room';
+
+    // Exits are region-to-region connections with a placeholder target
+    // region — the maze room's "exit" tile becomes a named exit with
+    // no known destination until the region graph stitches it in.
+    const exits = [{
+        id: 'exit',
+        position: { x: world.exit.x, y: world.exit.y },
+        target_region: null,
+        paths: pathsToTarget(world, world.exit),
+    }];
+
+    // Locations are Archipelago check slots; in v1 each item pickup
+    // position is a location whose canonical item is what the generator
+    // placed there.
+    const locations = [];
+    for (const [key, itemId] of world.items) {
+        const [x, y] = key.split(',').map(Number);
+        locations.push({
+            id: `${itemId}_pickup`,
+            position: { x, y },
+            item: itemId,
+            paths: pathsToTarget(world, { x, y }),
+        });
+    }
+
+    return {
+        region_id: regionId,
+        entrance: { x: world.entrance.x, y: world.entrance.y },
+        exits,
+        locations,
+    };
+}
+
 // --- Heuristic walker (difficulty gate) ---
 
 // Move scoring: weighted toward unvisited tiles, with a softened bias
