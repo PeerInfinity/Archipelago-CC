@@ -7,6 +7,10 @@
  * grow per the v1 punch list in the plan doc.
  */
 
+import { createRng } from '../shared/rng.js';
+import { generateMazeRegion } from '../mazeRoom/mazeRoomEngine.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../mazeRoom/library.js';
+
 // --- Grid direction constants ---
 
 export const SIDE_N = 'N';
@@ -135,6 +139,229 @@ export function accumulatedInventory(grid) {
         }
     }
     return inv;
+}
+
+// Drop exits whose target_region is null from the extracted rules.
+// Unused exits (grid-edge, or never-built neighbor) get quietly
+// omitted from the final rules so the compiler doesn't see dangling
+// targets. The playable tile itself stays as-is; only the exit entry
+// goes away.
+export function wallOffUnusedExits(grid) {
+    for (const region of grid.allRegions()) {
+        if (!region.extracted_rules) continue;
+        region.extracted_rules.exits = (region.extracted_rules.exits ?? [])
+            .filter((e) => e.target_region != null);
+    }
+}
+
+// --- Growth loop helpers ---
+
+function regionIdForCell(cell) {
+    return `region_${cell.gx}_${cell.gy}`;
+}
+
+function mirrorTileAcrossSide(parentTile, parentSide, regionSize) {
+    switch (parentSide) {
+        case SIDE_E: return { x: 0, y: parentTile.y };
+        case SIDE_W: return { x: regionSize.width - 1, y: parentTile.y };
+        case SIDE_N: return { x: parentTile.x, y: regionSize.height - 1 };
+        case SIDE_S: return { x: parentTile.x, y: 0 };
+        default: throw new Error(`mirrorTileAcrossSide: unknown side '${parentSide}'`);
+    }
+}
+
+function pickStartExitSide(cell, grid, rng) {
+    const candidates = SIDES.filter((s) => {
+        const n = grid.neighborCell(cell, s);
+        return n !== null;
+    });
+    if (candidates.length === 0) return null;
+    return candidates[Math.floor(rng.next() * candidates.length)];
+}
+
+function pickChildExitSide(cell, grid, entranceSide, rng) {
+    // Prefer in-bounds unbuilt-neighbor sides, excluding the entrance.
+    // If none available (dead-end corner), return null — caller skips
+    // the cell and the parent's exit gets walled off.
+    const candidates = SIDES
+        .filter((s) => s !== entranceSide)
+        .filter((s) => {
+            const n = grid.neighborCell(cell, s);
+            return n !== null && !grid.hasRegion(n);
+        });
+    if (candidates.length === 0) return null;
+    return candidates[Math.floor(rng.next() * candidates.length)];
+}
+
+// --- Growth loop ---
+//
+// Builds a grid of regions starting from the center, expanding
+// BFS-style. v1 constraints:
+//   - One exit per region (including start). Multi-exit starts and
+//     branching from any region are growth-path items.
+//   - Tree shape only — no shortcuts between grid-adjacent regions.
+//   - No reciprocal exit entries on the "back" direction (traversing
+//     from B back to A is the caller's concern for v1).
+//
+// Termination: when the scenario pool is exhausted OR the frontier is
+// empty OR the maxRegions cap (if set) is hit.
+
+export function growMaze(config) {
+    const {
+        gridDims,
+        regionSize,
+        itemPool = {},
+        obstaclePool = {},
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        seed = 1,
+        regionParams = {},
+        growthParams = {},
+    } = config;
+
+    if (!gridDims || !gridDims.width || !gridDims.height) {
+        throw new Error('growMaze: gridDims.{width,height} required');
+    }
+    if (!regionSize || !regionSize.width || !regionSize.height) {
+        throw new Error('growMaze: regionSize.{width,height} required');
+    }
+
+    const {
+        maxItemsPerRegion = 2,
+        maxRegions = null,
+    } = growthParams;
+
+    const rng = createRng(seed);
+    const pool = new ScenarioPool({
+        items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
+    });
+    const grid = new Grid(gridDims);
+
+    const stats = {
+        regionsBuilt: 0,
+        regionsSkipped: 0,
+        stopReason: null,
+    };
+
+    // --- Start region ---
+    const startCell = {
+        gx: Math.floor(gridDims.width / 2),
+        gy: Math.floor(gridDims.height / 2),
+    };
+    const startExitSide = pickStartExitSide(startCell, grid, rng);
+    if (!startExitSide) {
+        throw new Error('growMaze: start cell has no in-bounds neighbors (grid too small?)');
+    }
+    const startRegion = generateMazeRegion({
+        region_id: regionIdForCell(startCell),
+        size: regionSize,
+        entrance_side: null,
+        entrance_tile: null,
+        exit_sides: [startExitSide],
+        arrival_inventory: new Set(),
+        items_to_place: [],
+        obstacles_to_place: [],
+        item_lib: itemLib,
+        obstacle_lib: obstacleLib,
+        rng,
+        params: regionParams,
+    });
+    grid.placeRegion(startCell, startRegion);
+    pool.markPlaced({
+        placed_items: startRegion.placed_items,
+        placed_obstacles: startRegion.placed_obstacles,
+    });
+    stitchGrid(grid);
+    stats.regionsBuilt += 1;
+
+    // --- Frontier init ---
+    const frontier = [];
+    for (const placed of startRegion.exits_placed) {
+        const childCell = grid.neighborCell(startCell, placed.side);
+        if (childCell && !grid.hasRegion(childCell)) {
+            frontier.push({ childCell, parentCell: startCell, parentSide: placed.side });
+        }
+    }
+
+    // --- Main loop ---
+    while (frontier.length > 0) {
+        if (pool.itemsRemaining() === 0) {
+            stats.stopReason = 'pool_empty';
+            break;
+        }
+        if (maxRegions != null && stats.regionsBuilt >= maxRegions) {
+            stats.stopReason = 'max_regions';
+            break;
+        }
+
+        const pickIdx = Math.floor(rng.next() * frontier.length);
+        const entry = frontier.splice(pickIdx, 1)[0];
+        const { childCell, parentCell, parentSide } = entry;
+
+        // Already built via another frontier path (shouldn't happen
+        // under tree shape, but guard against it).
+        if (grid.hasRegion(childCell)) continue;
+
+        const parentRegion = grid.getRegion(parentCell);
+        const parentExitPlaced = parentRegion.exits_placed.find((e) => e.side === parentSide);
+        if (!parentExitPlaced) {
+            stats.regionsSkipped += 1;
+            continue;
+        }
+
+        const entranceSide = OPPOSITE_SIDE[parentSide];
+        const entranceTile = mirrorTileAcrossSide(parentExitPlaced.tile_position, parentSide, regionSize);
+        const exitSide = pickChildExitSide(childCell, grid, entranceSide, rng);
+        if (!exitSide) {
+            // Dead-end cell with no outgoing direction — parent's exit
+            // becomes walled off in the final pass.
+            stats.regionsSkipped += 1;
+            continue;
+        }
+
+        const arrival = accumulatedInventory(grid);
+        const plan = pool.planPlacement({
+            arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
+        });
+
+        const region = generateMazeRegion({
+            region_id: regionIdForCell(childCell),
+            size: regionSize,
+            entrance_side: entranceSide,
+            entrance_tile: entranceTile,
+            exit_sides: [exitSide],
+            arrival_inventory: arrival,
+            items_to_place: plan.items_to_place,
+            obstacles_to_place: plan.obstacles_to_place,
+            item_lib: itemLib,
+            obstacle_lib: obstacleLib,
+            rng,
+            params: regionParams,
+        });
+
+        grid.placeRegion(childCell, region);
+        pool.markPlaced({
+            placed_items: region.placed_items,
+            placed_obstacles: region.placed_obstacles,
+        });
+        stitchGrid(grid);
+        stats.regionsBuilt += 1;
+
+        for (const placed of region.exits_placed) {
+            const newChild = grid.neighborCell(childCell, placed.side);
+            if (newChild && !grid.hasRegion(newChild)) {
+                frontier.push({ childCell: newChild, parentCell: childCell, parentSide: placed.side });
+            }
+        }
+    }
+
+    if (!stats.stopReason) {
+        stats.stopReason = 'frontier_empty';
+    }
+
+    wallOffUnusedExits(grid);
+
+    return { grid, pool, stats, startCell };
 }
 
 // --- Scenario pool ---

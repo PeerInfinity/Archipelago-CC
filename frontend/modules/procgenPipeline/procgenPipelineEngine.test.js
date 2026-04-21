@@ -5,6 +5,7 @@ import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
+    wallOffUnusedExits, growMaze,
 } from './procgenPipelineEngine.js';
 
 const TEST_ITEM_LIB = {
@@ -346,5 +347,148 @@ describe('cellKey', () => {
     it('produces a stable string for a cell', () => {
         expect(cellKey({ gx: 0, gy: 0 })).toBe('0,0');
         expect(cellKey({ gx: 3, gy: 7 })).toBe('3,7');
+    });
+});
+
+describe('wallOffUnusedExits', () => {
+    it('removes exits whose target_region is null', () => {
+        const g = new Grid({ width: 2, height: 1 });
+        g.placeRegion({ gx: 0, gy: 0 }, makeRegionStub({
+            region_id: 'A',
+            exits: [
+                { id: 'exit_a', position: { x: 0, y: 0 } },
+                { id: 'exit_b', position: { x: 1, y: 1 } },
+            ],
+            exits_placed: [
+                { side: 'E', tile_position: { x: 0, y: 0 } },
+                { side: 'S', tile_position: { x: 1, y: 1 } },
+            ],
+        }));
+        // stitchGrid leaves both target_region null (no neighbors built).
+        stitchGrid(g);
+        wallOffUnusedExits(g);
+        expect(g.getRegion({ gx: 0, gy: 0 }).extracted_rules.exits).toEqual([]);
+    });
+
+    it('preserves exits whose target_region is resolved', () => {
+        const g = new Grid({ width: 2, height: 1 });
+        g.placeRegion({ gx: 0, gy: 0 }, makeRegionStub({
+            region_id: 'A',
+            exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
+            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+        }));
+        g.placeRegion({ gx: 1, gy: 0 }, makeRegionStub({ region_id: 'B' }));
+        stitchGrid(g);
+        wallOffUnusedExits(g);
+        expect(g.getRegion({ gx: 0, gy: 0 }).extracted_rules.exits).toHaveLength(1);
+        expect(g.getRegion({ gx: 0, gy: 0 }).extracted_rules.exits[0].target_region).toBe('B');
+    });
+});
+
+describe('growMaze', () => {
+    it('requires gridDims and regionSize', () => {
+        expect(() => growMaze({})).toThrow(/gridDims/);
+        expect(() => growMaze({ gridDims: { width: 3, height: 3 } })).toThrow(/regionSize/);
+    });
+
+    it('builds at least the start region', () => {
+        const { grid, stats } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: {}, obstaclePool: {},
+            seed: 1,
+        });
+        expect(stats.regionsBuilt).toBeGreaterThanOrEqual(1);
+        expect(grid.hasRegion({ gx: 1, gy: 1 })).toBe(true);
+    });
+
+    it('stops when the scenario pool is empty', () => {
+        // 2 keys + 2 doors — should build ~2-3 regions.
+        const { stats, pool } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 7,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+        expect(['pool_empty', 'frontier_empty']).toContain(stats.stopReason);
+        // Pool may be fully drained or partially — but not over-drained.
+        expect(pool.itemsRemaining()).toBeGreaterThanOrEqual(0);
+    });
+
+    it('respects maxRegions cap', () => {
+        const { stats } = growMaze({
+            gridDims: { width: 5, height: 5 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 99 },
+            obstaclePool: { door_red: 99 },
+            seed: 1,
+            growthParams: { maxRegions: 3 },
+        });
+        expect(stats.regionsBuilt).toBe(3);
+        expect(stats.stopReason).toBe('max_regions');
+    });
+
+    it('all placed exits resolve to a built region (or get walled off)', () => {
+        const { grid } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
+            seed: 11,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+        for (const region of grid.allRegions()) {
+            for (const exit of region.extracted_rules.exits) {
+                expect(exit.target_region).not.toBeNull();
+                expect(grid.cells.has(/* cellKey — look up target_region */
+                    [...grid.cells.values()]
+                        .find((r) => r.region_id === exit.target_region)
+                        ?.cell
+                        ? cellKey([...grid.cells.values()]
+                            .find((r) => r.region_id === exit.target_region).cell)
+                        : 'nonexistent',
+                )).toBe(true);
+            }
+        }
+    });
+
+    it('is deterministic for a fixed seed', () => {
+        const cfg = {
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 42,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        };
+        const a = growMaze(cfg);
+        const b = growMaze(cfg);
+        expect(a.stats).toEqual(b.stats);
+        expect(a.grid.cells.size).toBe(b.grid.cells.size);
+        for (const [key, regA] of a.grid.cells) {
+            const regB = b.grid.cells.get(key);
+            expect(regB).toBeDefined();
+            expect(regA.placed_items).toEqual(regB.placed_items);
+            expect(regA.placed_obstacles).toEqual(regB.placed_obstacles);
+        }
+    });
+
+    it('regions grow out from the center', () => {
+        const { grid, startCell } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
+            seed: 3,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+        expect(startCell).toEqual({ gx: 1, gy: 1 });
+        expect(grid.hasRegion(startCell)).toBe(true);
+        // Start region has no items or obstacles.
+        const startRegion = grid.getRegion(startCell);
+        expect(startRegion.placed_items).toEqual([]);
+        expect(startRegion.placed_obstacles).toEqual([]);
     });
 });
