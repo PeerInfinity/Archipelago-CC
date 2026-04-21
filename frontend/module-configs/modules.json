@@ -239,6 +239,10 @@
     "mazeRoom": {
       "path": "./modules/mazeRoom/index.js",
       "enabled": true
+    },
+    "procgenPipeline": {
+      "path": "./modules/procgenPipeline/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -301,6 +305,7 @@
     "vibeCodingSim",
     "apcalc",
     "apworldEditor",
-    "mazeRoom"
+    "mazeRoom",
+    "procgenPipeline"
   ]
 }

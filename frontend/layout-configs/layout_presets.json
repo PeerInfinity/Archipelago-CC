@@ -235,6 +235,11 @@
               "type": "component",
               "componentType": "mazeRoomPanel",
               "title": "Maze Room"
+            },
+            {
+              "type": "component",
+              "componentType": "procgenPipelinePanel",
+              "title": "Procgen Pipeline"
             }
           ]
         }

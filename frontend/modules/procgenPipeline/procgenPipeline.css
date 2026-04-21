@@ -1,0 +1,30 @@
+/* procgenPipeline panel styles. Mirrors mazeRoom / apcalcGenerator
+   conventions. */
+
+.procgen-pipeline-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    color: #e0e0e0;
+    background: #1e1e1e;
+    overflow-y: auto;
+    outline: none;
+}
+
+.procgen-pipeline-section-title {
+    font-weight: bold;
+    font-size: 12px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 8px 4px;
+}
+
+.procgen-pipeline-placeholder {
+    padding: 12px;
+    color: #888;
+    font-size: 12px;
+    line-height: 1.5;
+}
