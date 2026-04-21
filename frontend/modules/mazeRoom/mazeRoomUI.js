@@ -10,9 +10,11 @@ import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     createState,
     getTile,
+    getObstacle, getItem,
     step,
     generateMaze,
 } from './mazeRoomEngine.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from './library.js';
 
 const LS_KEY = 'mazeRoom_params';
 
@@ -221,11 +223,30 @@ export class MazeRoomUI {
         if (this.stats.difficultyGateOn && this.stats.finalSuccessFraction != null) {
             parts.push(`walker ${(this.stats.finalSuccessFraction * 100).toFixed(0)}%`);
         }
+        if (this.stats.gateKeyPlaced) {
+            parts.push('gate+key');
+        } else if (this.stats.gateKeyReason && this.stats.gateKeyReason !== 'disabled') {
+            parts.push(`no-gate (${this.stats.gateKeyReason})`);
+        }
         let status = 'complete';
         if (this.stats.stalled) status = 'stalled';
         else if (this.stats.reachedTarget) status = 'target';
         parts.push(status);
-        section.textContent = parts.join(' · ');
+
+        const line = document.createElement('div');
+        line.textContent = parts.join(' · ');
+        section.appendChild(line);
+
+        if (this.state && this.state.inventory.size > 0) {
+            const inv = document.createElement('div');
+            inv.className = 'maze-room-inventory';
+            const itemNames = [...this.state.inventory].map((id) => {
+                const item = (this.world?.itemLib ?? DEFAULT_ITEMS)[id];
+                return item?.name ?? id;
+            });
+            inv.textContent = `inventory: ${itemNames.join(', ')}`;
+            section.appendChild(inv);
+        }
         return section;
     }
 
@@ -255,6 +276,8 @@ export class MazeRoomUI {
     _drawWorld(canvas) {
         const ctx = canvas.getContext('2d');
         const w = this.world;
+        const itemLib = w.itemLib ?? DEFAULT_ITEMS;
+        const obstacleLib = w.obstacleLib ?? DEFAULT_OBSTACLES;
 
         for (let y = 0; y < w.height; y++) {
             for (let x = 0; x < w.width; x++) {
@@ -269,6 +292,35 @@ export class MazeRoomUI {
 
         ctx.fillStyle = COLORS.exit;
         ctx.fillRect(w.exit.x * TILE_PX, w.exit.y * TILE_PX, TILE_PX, TILE_PX);
+
+        // Obstacles — filled tile in the library's color, with a darker
+        // border so they read as "solid thing sitting on floor."
+        for (const [posKey, obstacleId] of w.obstacles) {
+            const [x, y] = posKey.split(',').map(Number);
+            const obstacle = obstacleLib[obstacleId];
+            const color = obstacle?.color ?? '#b84040';
+            ctx.fillStyle = color;
+            ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+        }
+
+        // Items — a smaller filled circle in the library's color, skipped
+        // if the player has already collected the item.
+        for (const [posKey, itemId] of w.items) {
+            if (this.state?.inventory.has(itemId)) continue;
+            const [x, y] = posKey.split(',').map(Number);
+            const item = itemLib[itemId];
+            const color = item?.color ?? '#e6a817';
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
 
         ctx.strokeStyle = COLORS.grid;
         ctx.lineWidth = 1;

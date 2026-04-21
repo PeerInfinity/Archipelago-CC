@@ -7,12 +7,15 @@ import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     createWorld, createState,
     getTile, setTile, isFloor,
+    getObstacle, setObstacle,
+    getItem, setItem,
     step,
     bfsSolver, reachedExit,
     walkerSolver, makeMazePickMove,
     apply, undo,
     generateMaze,
 } from './mazeRoomEngine.js';
+import { isObstacleCleared, DEFAULT_OBSTACLES } from './library.js';
 
 function runPlan(world, startState, plan) {
     let s = startState;
@@ -75,6 +78,97 @@ describe('step', () => {
         step(world, before, INPUT_E);
         expect(before.player_pos).toEqual({ x: 0, y: 0 });
         expect(before.turn).toBe(0);
+    });
+});
+
+describe('library / obstacle gating', () => {
+    it('isObstacleCleared: unknown obstacle id is permissive', () => {
+        expect(isObstacleCleared('nonexistent', new Set())).toBe(true);
+    });
+
+    it('isObstacleCleared: door_red requires key_red', () => {
+        expect(isObstacleCleared('door_red', new Set())).toBe(false);
+        expect(isObstacleCleared('door_red', new Set(['key_red']))).toBe(true);
+    });
+
+    it('isObstacleCleared: any one combination clears an OR-of-AND clear_set', () => {
+        const lib = { gap: { id: 'gap', clear_set: [['jump'], ['fly']] } };
+        expect(isObstacleCleared('gap', new Set(), lib)).toBe(false);
+        expect(isObstacleCleared('gap', new Set(['jump']), lib)).toBe(true);
+        expect(isObstacleCleared('gap', new Set(['fly']), lib)).toBe(true);
+    });
+
+    it('isObstacleCleared: multi-item AND combination requires all items', () => {
+        const lib = { both: { id: 'both', clear_set: [['a', 'b']] } };
+        expect(isObstacleCleared('both', new Set(['a']), lib)).toBe(false);
+        expect(isObstacleCleared('both', new Set(['b']), lib)).toBe(false);
+        expect(isObstacleCleared('both', new Set(['a', 'b']), lib)).toBe(true);
+    });
+});
+
+describe('step with obstacles and items', () => {
+    it('blocks movement onto a door without the matching key', () => {
+        const w = createWorld(4, 4);
+        setObstacle(w, 1, 0, 'door_red');
+        const s = createState(w);
+        expect(step(w, s, INPUT_E)).toBeNull();
+    });
+
+    it('allows movement onto a door when inventory clears it', () => {
+        const w = createWorld(4, 4);
+        setObstacle(w, 1, 0, 'door_red');
+        const s = createState(w);
+        s.inventory.add('key_red');
+        const next = step(w, s, INPUT_E);
+        expect(next).not.toBeNull();
+        expect(next.player_pos).toEqual({ x: 1, y: 0 });
+    });
+
+    it('picks up an item on successful move', () => {
+        const w = createWorld(4, 4);
+        setItem(w, 1, 0, 'key_red');
+        const s = createState(w);
+        expect(s.inventory.has('key_red')).toBe(false);
+        const next = step(w, s, INPUT_E);
+        expect(next.inventory.has('key_red')).toBe(true);
+    });
+
+    it('does not pollute the input state when picking up an item', () => {
+        const w = createWorld(4, 4);
+        setItem(w, 1, 0, 'key_red');
+        const before = createState(w);
+        step(w, before, INPUT_E);
+        expect(before.inventory.has('key_red')).toBe(false);
+    });
+});
+
+describe('BFS on obstacle-gated worlds', () => {
+    it('finds a path that grabs the key before the door', () => {
+        // 4x1 corridor: entrance at (0,0), door at (2,0), exit at (3,0),
+        // key at (1,0). Player must step E to pick up key, then pass door.
+        const w = createWorld(4, 2, {
+            entrance: { x: 0, y: 0 }, exit: { x: 3, y: 0 },
+        });
+        setItem(w, 1, 0, 'key_red');
+        setObstacle(w, 2, 0, 'door_red');
+        const r = reach(w, bfsSolver, createState(w), reachedExit);
+        expect(r.ok).toBe(true);
+    });
+
+    it('reports unreachable when the key is placed behind its own door', () => {
+        const w = createWorld(5, 2, {
+            entrance: { x: 0, y: 0 }, exit: { x: 4, y: 0 },
+        });
+        // Wall off the upper row so there's a single corridor.
+        setTile(w, 0, 1, TILE_WALL);
+        setTile(w, 1, 1, TILE_WALL);
+        setTile(w, 2, 1, TILE_WALL);
+        setTile(w, 3, 1, TILE_WALL);
+        setTile(w, 4, 1, TILE_WALL);
+        setObstacle(w, 2, 0, 'door_red');
+        setItem(w, 3, 0, 'key_red');
+        const r = reach(w, bfsSolver, createState(w), reachedExit);
+        expect(r.ok).toBe(false);
     });
 });
 
@@ -219,10 +313,10 @@ describe('makeMazePickMove', () => {
         const pick = makeMazePickMove({ unvisitedBonus: 1000, towardExitBonus: 1 });
         const world = createWorld(3, 3);
         const state = createState(world);
-        const visited = new Set(['1,0']); // east already visited
+        const visited = new Set(['1,0|']); // east already visited
         const legalMoves = [
-            { input: INPUT_E, nextState: { player_pos: { x: 1, y: 0 } } },
-            { input: INPUT_S, nextState: { player_pos: { x: 0, y: 1 } } },
+            { input: INPUT_E, nextState: { player_pos: { x: 1, y: 0 }, inventory: new Set() } },
+            { input: INPUT_S, nextState: { player_pos: { x: 0, y: 1 }, inventory: new Set() } },
         ];
         const chosen = pick({ world, state, legalMoves, visited, rng: createRng(1) });
         expect(chosen).toBe(INPUT_S);
@@ -308,6 +402,66 @@ describe('generateMaze', () => {
         const b = generateMaze(cfg);
         expect(Array.from(a.world.tiles)).toEqual(Array.from(b.world.tiles));
         expect(a.stats).toEqual(b.stats);
+    });
+
+    it('places a gate-and-key pair by default and keeps the maze solvable', () => {
+        const { world, stats } = generateMaze({ width: 10, height: 8, seed: 17 });
+        expect(stats.gateKeyPlaced).toBe(true);
+        expect(stats.doorPos).not.toBeNull();
+        expect(stats.keyPos).not.toBeNull();
+        expect(getObstacle(world, stats.doorPos.x, stats.doorPos.y)).toBe('door_red');
+        expect(getItem(world, stats.keyPos.x, stats.keyPos.y)).toBe('key_red');
+        // Reachable with key, not reachable without — but bfsSolver will
+        // pick up the key en route, so just confirm the positive case.
+        const solved = reach(world, bfsSolver, createState(world), reachedExit);
+        expect(solved.ok).toBe(true);
+    });
+
+    it('door is on the critical path: exit unreachable without the key', () => {
+        const { world, stats } = generateMaze({ width: 10, height: 8, seed: 17 });
+        expect(stats.gateKeyPlaced).toBe(true);
+        // Temporarily remove the key so we can test the gate.
+        const keyId = getItem(world, stats.keyPos.x, stats.keyPos.y);
+        world.items.delete(`${stats.keyPos.x},${stats.keyPos.y}`);
+        const r = reach(world, bfsSolver, createState(world), reachedExit);
+        expect(r.ok).toBe(false);
+        // Restore
+        setItem(world, stats.keyPos.x, stats.keyPos.y, keyId);
+    });
+
+    it('placeGateAndKey=false leaves the maze walls-only', () => {
+        const { world, stats } = generateMaze({
+            width: 8, height: 8, seed: 1, params: { placeGateAndKey: false },
+        });
+        expect(stats.gateKeyPlaced).toBe(false);
+        expect(stats.gateKeyReason).toBe('disabled');
+        expect(world.obstacles.size).toBe(0);
+        expect(world.items.size).toBe(0);
+    });
+
+    it('door is always a cut vertex across many seeds (regression)', () => {
+        let bypassable = 0, placed = 0;
+        for (let seed = 1; seed <= 30; seed++) {
+            const { world, stats } = generateMaze({
+                width: 12, height: 10, seed,
+                params: { walkerTrials: 15, minSuccessPct: 0.3, maxSuccessPct: 0.5 },
+            });
+            if (!stats.gateKeyPlaced) continue;
+            placed += 1;
+            // Remove the key — exit should then be unreachable.
+            world.items.delete(`${stats.keyPos.x},${stats.keyPos.y}`);
+            const r = reach(world, bfsSolver, createState(world), reachedExit);
+            if (r.ok) bypassable += 1;
+        }
+        expect(placed).toBeGreaterThan(20);
+        expect(bypassable).toBe(0);
+    });
+
+    it('gate-and-key placement is deterministic for a fixed seed', () => {
+        const a = generateMaze({ width: 10, height: 8, seed: 17 });
+        const b = generateMaze({ width: 10, height: 8, seed: 17 });
+        expect(a.stats.doorPos).toEqual(b.stats.doorPos);
+        expect(a.stats.keyPos).toEqual(b.stats.keyPos);
     });
 
     it('terminates on stall_limit when the grid gets crowded', () => {

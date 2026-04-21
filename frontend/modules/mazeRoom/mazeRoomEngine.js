@@ -9,6 +9,7 @@
 
 import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver, makeRandomWalkerSolver } from '../shared/simulatorCore.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from './library.js';
 
 // --- Tile types ---
 
@@ -41,7 +42,42 @@ export function createWorld(width, height, opts = {}) {
     const exit = opts.exit ?? { x: width - 1, y: height - 1 };
     assertInBounds(width, height, entrance, 'entrance');
     assertInBounds(width, height, exit, 'exit');
-    return { width, height, tiles, entrance, exit };
+    return {
+        width, height, tiles, entrance, exit,
+        // Sparse overlays keyed by "x,y". Obstacles block entry unless
+        // inventory clears them; items add themselves to inventory on
+        // successful entry. Both sit on top of floor tiles.
+        obstacles: new Map(),
+        items: new Map(),
+        itemLib: opts.itemLib ?? DEFAULT_ITEMS,
+        obstacleLib: opts.obstacleLib ?? DEFAULT_OBSTACLES,
+    };
+}
+
+function posKey(x, y) { return `${x},${y}`; }
+
+export function getObstacle(world, x, y) {
+    return world.obstacles.get(posKey(x, y));
+}
+
+export function setObstacle(world, x, y, obstacleId) {
+    world.obstacles.set(posKey(x, y), obstacleId);
+}
+
+export function clearObstacle(world, x, y) {
+    world.obstacles.delete(posKey(x, y));
+}
+
+export function getItem(world, x, y) {
+    return world.items.get(posKey(x, y));
+}
+
+export function setItem(world, x, y, itemId) {
+    world.items.set(posKey(x, y), itemId);
+}
+
+export function clearItem(world, x, y) {
+    world.items.delete(posKey(x, y));
 }
 
 function assertInBounds(width, height, pt, label) {
@@ -81,9 +117,6 @@ export function createState(world) {
     return {
         player_pos: { x: world.entrance.x, y: world.entrance.y },
         turn: 0,
-        // Plumbed but unused in v1 — preserved so reach() signature matches
-        // the shared-core contract and ability-gated growth doesn't force
-        // an interface change.
         inventory: new Set(),
     };
 }
@@ -104,10 +137,16 @@ export function step(world, state, input) {
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
+    const obstacleId = getObstacle(world, nx, ny);
+    if (obstacleId && !isObstacleCleared(obstacleId, state.inventory, world.obstacleLib)) {
+        return null;
+    }
     const next = cloneState(state);
     next.player_pos.x = nx;
     next.player_pos.y = ny;
     next.turn += 1;
+    const itemId = getItem(world, nx, ny);
+    if (itemId) next.inventory.add(itemId);
     return next;
 }
 
@@ -119,11 +158,16 @@ export function reachedExit(state, world) {
 
 // --- BFS solver for the maze simulator ---
 
-// Visited key in v1 is just (x, y). When ability-gated tiles land, the
-// key must grow to include an inventory hash, because reachability then
-// becomes a function of (position, inventory).
+// Reachability is a function of (position, inventory) once ability-gated
+// tiles exist — two states at the same tile with different inventories
+// can reach different parts of the world, so BFS must treat them as
+// distinct nodes.
 function mazeVisitedKey(state) {
-    return `${state.player_pos.x},${state.player_pos.y}`;
+    if (state.inventory.size === 0) {
+        return `${state.player_pos.x},${state.player_pos.y}|`;
+    }
+    const inv = [...state.inventory].sort().join(',');
+    return `${state.player_pos.x},${state.player_pos.y}|${inv}`;
 }
 
 export const bfsSolver = makeBfsSolver({
@@ -205,13 +249,20 @@ export function undo(world, token) {
 const DEFAULT_PARAMS = Object.freeze({
     maxIterations: 2000,
     stallLimit: 200,
-    // Walker / difficulty-gate knobs. The gate is active only when both
-    // minSuccessPct and maxSuccessPct are non-null; leaving them unset
+    // Walker / difficulty-gate knobs. The gate is active only when
+    // minSuccessPct or maxSuccessPct is non-null; leaving them unset
     // gives feasibility-only behavior (v1 walls-only baseline).
     walkerTrials: 20,
     walkerStepBudget: null, // null → auto: 4 * width * height
     minSuccessPct: null,
     maxSuccessPct: null,
+    // Gate-and-key placement. Set false to get a walls-only maze.
+    placeGateAndKey: true,
+    gateKeyMaxAttempts: 20,
+    // Minimum number of non-entrance, non-door floor tiles that must be
+    // reachable from the entrance with the door as a wall — ensures
+    // there's somewhere meaningful to put the key.
+    gateKeyMinBeforeDoor: 2,
 });
 
 function floorTilesExcluding(world, exclude) {
@@ -228,6 +279,94 @@ function floorTilesExcluding(world, exclude) {
         }
     }
     return out;
+}
+
+function tracePath(world, startState, plan) {
+    const positions = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
+    let s = startState;
+    for (const input of plan) {
+        s = step(world, s, input);
+        if (!s) return null;
+        positions.push({ x: s.player_pos.x, y: s.player_pos.y });
+    }
+    return positions;
+}
+
+// Enumerate tiles the player can reach from startState with the
+// current world and inventory. Stand-alone from bfsSolver because we
+// want the full set, not a single goal-directed plan.
+function reachableTiles(world, startState) {
+    const visited = new Set([mazeVisitedKey(startState)]);
+    const queue = [startState];
+    const out = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
+    while (queue.length > 0) {
+        const s = queue.shift();
+        for (const input of INPUTS) {
+            const next = step(world, s, input);
+            if (!next) continue;
+            const k = mazeVisitedKey(next);
+            if (visited.has(k)) continue;
+            visited.add(k);
+            queue.push(next);
+            out.push({ x: next.player_pos.x, y: next.player_pos.y });
+        }
+    }
+    return out;
+}
+
+function placeGateAndKey(world, rng, params) {
+    const pathResult = reach(world, bfsSolver, createState(world), reachedExit);
+    if (!pathResult.ok) return { placed: false, reason: 'no_path' };
+    const pathPositions = tracePath(world, createState(world), pathResult.plan);
+    if (!pathPositions || pathPositions.length < 3) {
+        return { placed: false, reason: 'path_too_short' };
+    }
+    // Door candidates: path positions strictly between entrance and exit.
+    const doorCandidates = pathPositions.slice(1, -1);
+
+    for (let attempt = 0; attempt < params.gateKeyMaxAttempts; attempt++) {
+        const doorPos = doorCandidates[Math.floor(rng.next() * doorCandidates.length)];
+        setObstacle(world, doorPos.x, doorPos.y, 'door_red');
+
+        // With empty inventory the door acts as a wall, so `reachableTiles`
+        // returns exactly the pre-door region.
+        const beforeDoor = reachableTiles(world, createState(world));
+
+        // Door must be a *cut vertex* — a position that every entrance→
+        // exit route passes through. If the exit is still reachable with
+        // the door as a wall, the door is bypassable and we retry.
+        const exitBypassable = beforeDoor.some(
+            (p) => p.x === world.exit.x && p.y === world.exit.y,
+        );
+        if (exitBypassable) {
+            clearObstacle(world, doorPos.x, doorPos.y);
+            continue;
+        }
+
+        const keyCandidates = beforeDoor.filter((p) =>
+            !(p.x === world.entrance.x && p.y === world.entrance.y)
+            && !(p.x === doorPos.x && p.y === doorPos.y),
+        );
+        if (keyCandidates.length < params.gateKeyMinBeforeDoor) {
+            clearObstacle(world, doorPos.x, doorPos.y);
+            continue;
+        }
+
+        const keyPos = keyCandidates[Math.floor(rng.next() * keyCandidates.length)];
+        setItem(world, keyPos.x, keyPos.y, 'key_red');
+
+        // Sanity check: exit reachable when the player has the key.
+        const final = reach(world, bfsSolver, createState(world), reachedExit);
+        if (!final.ok) {
+            clearObstacle(world, doorPos.x, doorPos.y);
+            clearItem(world, keyPos.x, keyPos.y);
+            continue;
+        }
+
+        return { placed: true, doorPos, keyPos };
+    }
+
+    return { placed: false, reason: 'no_suitable_placement' };
 }
 
 export function generateMaze(config) {
@@ -313,6 +452,10 @@ export function generateMaze(config) {
         }
     }
 
+    const gateKeyResult = params.placeGateAndKey
+        ? placeGateAndKey(world, rng, params)
+        : { placed: false, reason: 'disabled' };
+
     const finalReach = reach(world, bfsSolver, createState(world), reachedExit);
     const finalWalker = difficultyGateOn
         ? reach(world, walkerSolver, createState(world), reachedExit, {
@@ -333,6 +476,10 @@ export function generateMaze(config) {
         difficultyGateOn,
         finalSuccessFraction: finalWalker ? finalWalker.successFraction : null,
         lastProposalSuccessFraction: lastWalker ? lastWalker.successFraction : null,
+        gateKeyPlaced: gateKeyResult.placed,
+        gateKeyReason: gateKeyResult.reason ?? null,
+        doorPos: gateKeyResult.doorPos ?? null,
+        keyPos: gateKeyResult.keyPos ?? null,
     };
 
     return { world, stats };
