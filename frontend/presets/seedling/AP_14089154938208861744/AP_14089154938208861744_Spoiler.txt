@@ -1,0 +1,124 @@
+﻿Archipelago Version 0.6.7  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Seedling
+Location Count:                  40
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Game Difficulty:                 Standard
+Boss Locations:                  No
+ending:                          Bloody
+Death Link:                      No
+deathlink_amnesty:               15
+
+
+Locations:
+
+Penguin's Feather: Yellow Key
+Dark Sword: Seal
+Chest (Spawn House): Purple Key
+Chest (Waterfall): Blue Key
+Chest (Adnan's cave): Progressive Swim
+Chest (South Rocks): Seal
+Sword: Ghost Spear
+Chest (Owl's Nest): Dark Suit
+Shield: Seal
+Red Key: Seal
+Chest (Gundernourd Water): Progressive Swim
+Chest (Gundernourd Pit): Seal
+Light: Seal
+Green Key: Totem Shard
+Fire: Fire Wand Fusion
+Chest (Rostef): Seal
+Conch: Seal
+Blue Key: Totem Shard
+Chest (Trohn Inside): Seal
+Chest (Trohn Outside): Progressive Sword
+Totem Shard (Three Blocks Puzzle): Seal
+Totem Shard (Main Room Left): Totem Shard
+Totem Shard (Mortar): Ghost Sword Fusion
+Totem Shard (One Moving Block Puzzle): Seal
+Totem Shard (Two Moving Blocks Puzzle): Progressive Shield
+Purple Key: Green Key
+Wand: Seal
+Chest (Lacste Entrance): Fire
+Chest (Lacste Main Room): Red Key
+Ghost Spear: Seal
+Yellow Key: Totem Shard
+Health: Health
+Chest (Woshad): Wand
+Dark Shield: Seal
+Dark Suit: Totem Shard
+Chest (Bosiniad Main Room): Progressive Shield
+Chest (Bosiniad Lava): Progressive Sword
+Ghost Sword: Seal
+Fire Wand: Seal
+Chest (Ghethis): Light
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Chest (Owl's Nest): Dark Suit
+  Chest (Spawn House): Purple Key
+  Sword: Ghost Spear
+}
+2: {
+  Chest (Adnan's cave): Progressive Swim
+  Chest (Gundernourd Pit): Seal
+  Red Key: Seal
+  Yellow Key: Totem Shard
+}
+3: {
+  Chest (Gundernourd Water): Progressive Swim
+  Chest (Lacste Entrance): Fire
+  Chest (Rostef): Seal
+  Chest (South Rocks): Seal
+  Chest (Trohn Outside): Progressive Sword
+  Chest (Waterfall): Blue Key
+  Chest (Woshad): Wand
+  Ghost Spear: Seal
+  Green Key: Totem Shard
+  Light: Seal
+  Penguin's Feather: Yellow Key
+}
+4: {
+  Blue Key: Totem Shard
+  Chest (Bosiniad Lava): Progressive Sword
+  Chest (Bosiniad Main Room): Progressive Shield
+  Chest (Lacste Main Room): Red Key
+  Chest (Trohn Inside): Seal
+  Conch: Seal
+  Dark Shield: Seal
+  Dark Sword: Seal
+  Ghost Sword: Seal
+  Health: Health
+  Purple Key: Green Key
+  Totem Shard (Main Room Left): Totem Shard
+  Totem Shard (Mortar): Ghost Sword Fusion
+  Totem Shard (One Moving Block Puzzle): Seal
+  Totem Shard (Three Blocks Puzzle): Seal
+  Totem Shard (Two Moving Blocks Puzzle): Progressive Shield
+}
+5: {
+  Dark Suit: Totem Shard
+  Fire: Fire Wand Fusion
+  Fire Wand: Seal
+  Shield: Seal
+}
+6: {
+  Wand: Seal
+}
