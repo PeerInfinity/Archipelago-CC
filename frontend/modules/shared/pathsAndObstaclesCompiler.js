@@ -85,6 +85,7 @@ export function compileRegion(extracted, opts = {}) {
     const locations = (extracted.locations ?? []).map((loc) => ({
         id: loc.id,
         item: loc.item ?? null,
+        position: loc.position ?? null,
         rule: compileAccessRule(loc.paths, obstacleLib),
     }));
 

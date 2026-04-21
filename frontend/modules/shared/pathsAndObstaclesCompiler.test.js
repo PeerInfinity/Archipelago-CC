@@ -173,6 +173,7 @@ describe('compileRegion', () => {
             {
                 id: 'key_red_pickup',
                 item: 'key_red',
+                position: { x: 7, y: 3 },
                 rule: { rule: 'True_' },
             },
         ]);

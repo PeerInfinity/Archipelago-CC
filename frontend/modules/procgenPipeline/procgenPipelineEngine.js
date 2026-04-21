@@ -10,6 +10,7 @@
 import { createRng } from '../shared/rng.js';
 import { generateMazeRegion } from '../mazeRoom/mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../mazeRoom/library.js';
+import { compileRegion } from '../shared/pathsAndObstaclesCompiler.js';
 
 // --- Grid direction constants ---
 
@@ -362,6 +363,97 @@ export function growMaze(config) {
     wallOffUnusedExits(grid);
 
     return { grid, pool, stats, startCell };
+}
+
+// --- Stage-4 full compile ---
+//
+// Run compileRegion across every built region in the grid and stitch
+// the results into the pieces of rules.json. Returns the substructures
+// a caller (UI, test) can plug into makeRulesJsonScaffold:
+//   - regions:              rules.json["regions"]["1"]-ready dict
+//   - items:                rules.json["items"]["1"]-ready dict
+//   - itempool_counts:      rules.json["itempool_counts"]["1"]
+//   - canonical_placements: rules.json["canonical_placements"]["1"]
+//   - start_region_name:    name of the start region for start_regions
+//
+// Location names are region-scoped (region__location_id) to stay
+// globally unique. Numeric location ids start at LOCATION_ID_BASE and
+// increment in deterministic region-iteration order.
+
+const LOCATION_ID_BASE = 1000;
+
+export function compileRegionGraph(grid, opts = {}) {
+    const {
+        obstacleLib = DEFAULT_OBSTACLES,
+        itemLib = DEFAULT_ITEMS,
+        startCell,
+    } = opts;
+
+    if (!startCell) throw new Error('compileRegionGraph: startCell required');
+    const startRegion = grid.getRegion(startCell);
+    if (!startRegion) throw new Error('compileRegionGraph: startCell has no region');
+
+    const regions = {};
+    const items = {};
+    const itempool_counts = {};
+    const canonical_placements = {};
+    let nextLocationId = LOCATION_ID_BASE;
+
+    // Iterate regions in deterministic order so assigned location ids
+    // don't jitter across runs.
+    const orderedRegions = [...grid.allRegions()].sort((a, b) => {
+        if (a.cell.gy !== b.cell.gy) return a.cell.gy - b.cell.gy;
+        return a.cell.gx - b.cell.gx;
+    });
+
+    for (const region of orderedRegions) {
+        const compiled = compileRegion(region.extracted_rules, { obstacleLib });
+
+        const regionExits = compiled.exits.map((e) => ({
+            name: e.id,
+            connected_region: e.target_region,
+            access_rule: e.rule,
+        }));
+
+        const regionLocations = compiled.locations.map((loc) => {
+            // Disambiguate multiple same-id locations in a region (two
+            // key_red_pickup entries at different positions would collide
+            // otherwise) by appending position to the global name.
+            const suffix = loc.position
+                ? `__${loc.position.x}_${loc.position.y}`
+                : '';
+            const globalName = `${compiled.region_name}__${loc.id}${suffix}`;
+            const numericId = nextLocationId++;
+            if (loc.item) {
+                // Register the item and tally the canonical placement.
+                items[loc.item] = items[loc.item] ?? {
+                    name: loc.item,
+                    classification: itemLib[loc.item]?.classification ?? 'progression',
+                };
+                itempool_counts[loc.item] = (itempool_counts[loc.item] || 0) + 1;
+                canonical_placements[globalName] = loc.item;
+            }
+            return {
+                name: globalName,
+                id: numericId,
+                access_rule: loc.rule,
+            };
+        });
+
+        regions[compiled.region_name] = {
+            name: compiled.region_name,
+            exits: regionExits,
+            locations: regionLocations,
+        };
+    }
+
+    return {
+        regions,
+        items,
+        itempool_counts,
+        canonical_placements,
+        start_region_name: startRegion.region_id,
+    };
 }
 
 // --- Scenario pool ---

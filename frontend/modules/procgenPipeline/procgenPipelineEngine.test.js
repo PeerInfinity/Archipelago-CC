@@ -5,7 +5,7 @@ import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
-    wallOffUnusedExits, growMaze,
+    wallOffUnusedExits, growMaze, compileRegionGraph,
 } from './procgenPipelineEngine.js';
 
 const TEST_ITEM_LIB = {
@@ -490,5 +490,97 @@ describe('growMaze', () => {
         const startRegion = grid.getRegion(startCell);
         expect(startRegion.placed_items).toEqual([]);
         expect(startRegion.placed_obstacles).toEqual([]);
+    });
+});
+
+describe('compileRegionGraph', () => {
+    function smallGridWithItems() {
+        return growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 17,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+    }
+
+    it('requires startCell', () => {
+        const { grid } = smallGridWithItems();
+        expect(() => compileRegionGraph(grid, {})).toThrow(/startCell/);
+    });
+
+    it('emits one regions entry per built region', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        expect(Object.keys(out.regions).length).toBe(grid.cells.size);
+    });
+
+    it('start_region_name matches the start cell region', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        expect(out.start_region_name).toBe(grid.getRegion(startCell).region_id);
+    });
+
+    it('every exit references a region that exists in regions dict', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        for (const region of Object.values(out.regions)) {
+            for (const ex of region.exits) {
+                expect(ex.connected_region).not.toBeNull();
+                expect(out.regions[ex.connected_region]).toBeDefined();
+            }
+        }
+    });
+
+    it('location names are globally unique', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        const names = [];
+        for (const region of Object.values(out.regions)) {
+            for (const loc of region.locations) names.push(loc.name);
+        }
+        expect(new Set(names).size).toBe(names.length);
+    });
+
+    it('itempool_counts matches the total items placed across the grid', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        const totalPlaced = [...grid.cells.values()]
+            .reduce((sum, r) => sum + r.placed_items.length, 0);
+        const totalInPool = Object.values(out.itempool_counts).reduce((a, b) => a + b, 0);
+        expect(totalInPool).toBe(totalPlaced);
+    });
+
+    it('canonical_placements has one entry per placed item location', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        const placements = Object.keys(out.canonical_placements).length;
+        const totalPlaced = [...grid.cells.values()]
+            .reduce((sum, r) => sum + r.placed_items.length, 0);
+        expect(placements).toBe(totalPlaced);
+    });
+
+    it('compiled exit rules are Rule Builder JSON', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+        // At least one exit should have a Has or True_ rule.
+        let sawRule = false;
+        for (const region of Object.values(out.regions)) {
+            for (const ex of region.exits) {
+                expect(ex.access_rule).toBeTypeOf('object');
+                expect(ex.access_rule).toHaveProperty('rule');
+                if (ex.access_rule.rule === 'Has' || ex.access_rule.rule === 'True_') sawRule = true;
+            }
+        }
+        expect(sawRule).toBe(true);
+    });
+
+    it('is deterministic for a fixed seed', () => {
+        const a = smallGridWithItems();
+        const b = smallGridWithItems();
+        const outA = compileRegionGraph(a.grid, { startCell: a.startCell });
+        const outB = compileRegionGraph(b.grid, { startCell: b.startCell });
+        expect(outA).toEqual(outB);
     });
 });
