@@ -22,6 +22,121 @@ export const OPPOSITE_SIDE = Object.freeze({
     [SIDE_W]: SIDE_E,
 });
 
+const SIDE_DELTAS = Object.freeze({
+    [SIDE_N]: { dx: 0, dy: -1 },
+    [SIDE_S]: { dx: 0, dy: 1 },
+    [SIDE_E]: { dx: 1, dy: 0 },
+    [SIDE_W]: { dx: -1, dy: 0 },
+});
+
+export function cellKey(cell) {
+    return `${cell.gx},${cell.gy}`;
+}
+
+// --- Grid data model ---
+//
+// Cell-to-region storage for the grid-growth pipeline. Each cell holds
+// a Region = the output of a substrate generator (generateMazeRegion
+// etc.) augmented with its grid position.
+
+export class Grid {
+    constructor({ width, height }) {
+        if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
+            throw new Error(`Grid: invalid dimensions ${width}x${height}`);
+        }
+        this.width = width;
+        this.height = height;
+        this.cells = new Map();
+    }
+
+    isInBounds(cell) {
+        return cell.gx >= 0 && cell.gx < this.width
+            && cell.gy >= 0 && cell.gy < this.height;
+    }
+
+    hasRegion(cell) {
+        return this.cells.has(cellKey(cell));
+    }
+
+    getRegion(cell) {
+        return this.cells.get(cellKey(cell));
+    }
+
+    placeRegion(cell, region) {
+        if (!this.isInBounds(cell)) {
+            throw new Error(`Grid.placeRegion: cell (${cell.gx},${cell.gy}) out of bounds`);
+        }
+        if (this.hasRegion(cell)) {
+            throw new Error(`Grid.placeRegion: cell (${cell.gx},${cell.gy}) already occupied`);
+        }
+        this.cells.set(cellKey(cell), { ...region, cell: { gx: cell.gx, gy: cell.gy } });
+    }
+
+    neighborCell(cell, side) {
+        const d = SIDE_DELTAS[side];
+        if (!d) throw new Error(`Grid.neighborCell: unknown side '${side}'`);
+        const next = { gx: cell.gx + d.dx, gy: cell.gy + d.dy };
+        return this.isInBounds(next) ? next : null;
+    }
+
+    allRegions() {
+        return [...this.cells.values()];
+    }
+
+    // Sides of `cell` that point to an unbuilt cell within bounds.
+    // Useful for the growth loop's frontier tracking.
+    openSides(cell) {
+        const out = [];
+        for (const side of SIDES) {
+            const neighbor = this.neighborCell(cell, side);
+            if (neighbor && !this.hasRegion(neighbor)) out.push(side);
+        }
+        return out;
+    }
+}
+
+// --- Incremental re-stitcher ---
+//
+// Resolves each built region's exit target_region values by consulting
+// grid adjacency. Mutates the stored regions' extracted_rules in place;
+// callers that need an immutable snapshot should clone before calling.
+//
+// Under tree shape (v1), an exit on side `s` of region at cell `c`
+// points to the region at cell `c + delta(s)`. If that neighbor cell
+// is unbuilt or outside the grid, target_region stays null.
+
+export function stitchGrid(grid) {
+    for (const region of grid.allRegions()) {
+        const exitsBySide = new Map();
+        for (const placed of region.exits_placed ?? []) {
+            exitsBySide.set(posKey(placed.tile_position), placed.side);
+        }
+        for (const exit of region.extracted_rules?.exits ?? []) {
+            const side = exitsBySide.get(posKey(exit.position));
+            if (!side) { exit.target_region = null; continue; }
+            const neighborCell = grid.neighborCell(region.cell, side);
+            const neighbor = neighborCell ? grid.getRegion(neighborCell) : null;
+            exit.target_region = neighbor ? neighbor.region_id : null;
+        }
+    }
+}
+
+function posKey(p) { return `${p.x},${p.y}`; }
+
+// Union of placed items across all built regions. Valid as an
+// arrival_inventory approximation under v1's tree shape + local
+// keys-before-doors invariant: every placed item is reachable from
+// every built region.
+export function accumulatedInventory(grid) {
+    const inv = new Set();
+    for (const region of grid.allRegions()) {
+        for (const p of region.placed_items ?? []) {
+            inv.add(p.item_id);
+        }
+    }
+    return inv;
+}
+
 // --- Scenario pool ---
 //
 // Tracks remaining items and obstacles for the current scenario. Hands
