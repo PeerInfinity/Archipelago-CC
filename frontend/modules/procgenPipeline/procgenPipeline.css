@@ -28,3 +28,261 @@
     font-size: 12px;
     line-height: 1.5;
 }
+
+/* Scenario pool picker */
+.procgen-pipeline-scenario {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+}
+
+.procgen-pipeline-scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.procgen-pipeline-scenario-library,
+.procgen-pipeline-scenario-selected {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.procgen-pipeline-scenario-subheader {
+    font-size: 11px;
+    color: #888;
+    padding: 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.procgen-pipeline-library-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.procgen-pipeline-library-row:hover {
+    background: #3a3a3a;
+}
+
+.procgen-pipeline-library-row-obstacle {
+    border-color: #553030;
+}
+
+.procgen-pipeline-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid #000;
+    flex-shrink: 0;
+}
+
+.procgen-pipeline-library-name {
+    flex: 1;
+}
+
+.procgen-pipeline-selected-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.procgen-pipeline-selected-name {
+    flex: 1;
+}
+
+.procgen-pipeline-count-input {
+    width: 50px;
+    padding: 2px 4px;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #e0e0e0;
+    font-family: 'Consolas', monospace;
+    font-size: 12px;
+}
+
+.procgen-pipeline-btn-small {
+    padding: 1px 8px;
+    background: none;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.procgen-pipeline-btn-small:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+.procgen-pipeline-scenario-empty {
+    color: #666;
+    font-style: italic;
+    font-size: 12px;
+    padding: 6px;
+}
+
+/* Parameters */
+.procgen-pipeline-params {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+}
+
+.procgen-pipeline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+}
+
+.procgen-pipeline-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.procgen-pipeline-field label {
+    font-size: 12px;
+    color: #bbb;
+    min-width: 120px;
+}
+
+.procgen-pipeline-field input {
+    width: 70px;
+    padding: 3px 6px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #e0e0e0;
+    font-family: 'Consolas', monospace;
+    font-size: 12px;
+}
+
+.procgen-pipeline-btn-row {
+    display: flex;
+    gap: 6px;
+    padding: 6px 0;
+    flex-wrap: wrap;
+}
+
+.procgen-pipeline-btn {
+    padding: 4px 10px;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.procgen-pipeline-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+.procgen-pipeline-btn-primary {
+    background: #2d5a2d;
+    border-color: #4a8a4a;
+    color: #e0e0e0;
+}
+
+.procgen-pipeline-btn-primary:hover {
+    background: #3d6a3d;
+}
+
+.procgen-pipeline-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Actions and stats */
+.procgen-pipeline-actions {
+    padding: 6px 8px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.procgen-pipeline-message {
+    font-size: 12px;
+    color: #e6a817;
+}
+
+.procgen-pipeline-stats {
+    padding: 4px 8px;
+    border-bottom: 1px solid #333;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: #888;
+    min-height: 18px;
+}
+
+/* Canvas */
+.procgen-pipeline-canvas-wrap {
+    padding: 8px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.procgen-pipeline-canvas {
+    image-rendering: pixelated;
+    background: #000;
+    border: 1px solid #333;
+}
+
+.procgen-pipeline-hint {
+    color: #888;
+    font-size: 12px;
+    padding: 12px;
+}
+
+/* Rules */
+.procgen-pipeline-rules-container {
+    border-top: 1px solid #333;
+}
+
+.procgen-pipeline-rules {
+    padding: 6px 8px;
+}
+
+.procgen-pipeline-rules summary {
+    font-size: 12px;
+    color: #aaa;
+    cursor: pointer;
+    padding: 2px 0;
+    user-select: none;
+}
+
+.procgen-pipeline-rules summary:hover {
+    color: #ddd;
+}
+
+.procgen-pipeline-rules-json {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 6px 8px;
+    margin: 4px 0 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #aaa;
+    white-space: pre;
+    max-height: 300px;
+    overflow: auto;
+}
