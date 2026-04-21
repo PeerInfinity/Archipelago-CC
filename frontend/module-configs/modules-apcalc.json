@@ -227,6 +227,10 @@
     "apcalcGenerator": {
       "path": "./modules/apcalcGenerator/index.js",
       "enabled": true
+    },
+    "mazeRoom": {
+      "path": "./modules/mazeRoom/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -286,6 +290,7 @@
     "jtaArchipelago",
     "vibeCodingSim",
     "apcalc",
-    "apcalcGenerator"
+    "apcalcGenerator",
+    "mazeRoom"
   ]
 }

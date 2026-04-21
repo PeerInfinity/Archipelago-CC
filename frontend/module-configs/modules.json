@@ -235,6 +235,10 @@
     "apworldEditor": {
       "path": "./modules/apworldEditor/index.js",
       "enabled": true
+    },
+    "mazeRoom": {
+      "path": "./modules/mazeRoom/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -296,6 +300,7 @@
     "jtaArchipelago",
     "vibeCodingSim",
     "apcalc",
-    "apworldEditor"
+    "apworldEditor",
+    "mazeRoom"
   ]
 }

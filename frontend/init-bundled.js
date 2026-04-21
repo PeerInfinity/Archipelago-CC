@@ -120,6 +120,7 @@ import * as vibeCodingSimModule from './modules/vibeCodingSim/index.js';
 import * as apcalcModule from './modules/apcalc/index.js';
 import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
 import * as apworldEditorModule from './modules/apworldEditor/index.js';
+import * as mazeRoomModule from './modules/mazeRoom/index.js';
 
 // ============================================================================
 // STATIC TEST CASE IMPORTS - These get bundled and self-register on import
@@ -209,6 +210,7 @@ const BUNDLED_MODULES = {
   apcalc: apcalcModule,
   apcalcGenerator: apcalcGeneratorModule,
   apworldEditor: apworldEditorModule,
+  mazeRoom: mazeRoomModule,
 };
 
 // Make bundled modules available globally for the module loader

@@ -1,0 +1,149 @@
+/* mazeRoom panel styles. Mirrors apcalcGenerator conventions. */
+
+.maze-room-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    color: #e0e0e0;
+    background: #1e1e1e;
+    overflow: hidden;
+    outline: none;
+}
+
+.maze-room-section-title {
+    font-weight: bold;
+    font-size: 12px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 0 4px;
+}
+
+/* Parameters */
+.maze-room-params {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.maze-room-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+}
+
+.maze-room-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.maze-room-field label {
+    font-size: 12px;
+    color: #bbb;
+    min-width: 100px;
+}
+
+.maze-room-field input {
+    width: 70px;
+    padding: 3px 6px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #e0e0e0;
+    font-family: 'Consolas', monospace;
+    font-size: 12px;
+}
+
+.maze-room-field input:focus {
+    border-color: #666;
+    outline: none;
+}
+
+/* Button rows */
+.maze-room-btn-row {
+    display: flex;
+    gap: 6px;
+    padding: 6px 0;
+    flex-wrap: wrap;
+}
+
+.maze-room-btn {
+    padding: 4px 10px;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.maze-room-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+.maze-room-btn-primary {
+    background: #2d5a2d;
+    border-color: #4a8a4a;
+    color: #e0e0e0;
+}
+
+.maze-room-btn-primary:hover {
+    background: #3d6a3d;
+}
+
+.maze-room-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Actions */
+.maze-room-actions {
+    padding: 6px 8px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.maze-room-message {
+    font-size: 12px;
+    color: #e6a817;
+}
+
+/* Stats */
+.maze-room-stats {
+    padding: 4px 8px;
+    border-bottom: 1px solid #333;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: #888;
+    flex-shrink: 0;
+    min-height: 18px;
+}
+
+/* Canvas */
+.maze-room-canvas-wrap {
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.maze-room-canvas {
+    image-rendering: pixelated;
+    background: #000;
+    border: 1px solid #333;
+}
+
+.maze-room-hint {
+    color: #888;
+    font-size: 12px;
+    padding: 12px;
+}

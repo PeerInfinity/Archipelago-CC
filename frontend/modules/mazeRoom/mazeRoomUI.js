@@ -1,0 +1,371 @@
+/**
+ * mazeRoom UI panel — generator controls + canvas renderer + keyboard
+ * play for the walls-only maze. The engine (mazeRoomEngine.js) is
+ * headless; this file is the thin DOM wrapper over it.
+ */
+
+import { setPanelInstance, getModuleApis } from './index.js';
+import {
+    TILE_WALL,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
+    createState,
+    getTile,
+    step,
+    generateMaze,
+} from './mazeRoomEngine.js';
+
+const LS_KEY = 'mazeRoom_params';
+
+const DEFAULT_PARAMS = {
+    seed: 1,
+    width: 16,
+    height: 12,
+    maxIterations: 2000,
+    stallLimit: 200,
+    walkerTrials: 20,
+    walkerStepBudget: null, // null = auto (4 * width * height)
+    minSuccessPct: 30,      // percent; null disables the difficulty gate
+    maxSuccessPct: 90,      // percent; null disables the difficulty gate
+};
+
+const TILE_PX = 20;
+const COLORS = {
+    floor: '#2a2a2a',
+    wall: '#000000',
+    entrance: '#3aa85a',
+    exit: '#d04040',
+    player: '#4aa8ff',
+    grid: '#1a1a1a',
+};
+
+const KEY_MAP = {
+    ArrowUp: INPUT_N, w: INPUT_N, W: INPUT_N,
+    ArrowDown: INPUT_S, s: INPUT_S, S: INPUT_S,
+    ArrowLeft: INPUT_W, a: INPUT_W, A: INPUT_W,
+    ArrowRight: INPUT_E, d: INPUT_E, D: INPUT_E,
+};
+
+export class MazeRoomUI {
+    static moduleApis = null;
+    static setModuleApis(apis) { MazeRoomUI.moduleApis = apis; }
+
+    constructor(container, componentState) {
+        this.container = container;
+        this.params = { ...DEFAULT_PARAMS };
+        this.world = null;
+        this.state = null;
+        this.stats = null;
+        this.isGenerating = false;
+        this.message = '';
+
+        this.rootElement = document.createElement('div');
+        this.rootElement.className = 'maze-room-panel';
+        this.rootElement.tabIndex = 0;
+        this.rootElement.addEventListener('keydown', (e) => this._handleKeydown(e));
+
+        setPanelInstance(this);
+        this._loadFromLocalStorage();
+        this.render();
+    }
+
+    get apis() { return MazeRoomUI.moduleApis || getModuleApis(); }
+
+    getRootElement() { return this.rootElement; }
+    destroy() { setPanelInstance(null); }
+    onPanelShow() { this.render(); this.rootElement.focus(); }
+    onPanelResize() {}
+
+    render() {
+        this.rootElement.innerHTML = '';
+        this.rootElement.appendChild(this._renderParams());
+        this.rootElement.appendChild(this._renderActions());
+        this.rootElement.appendChild(this._renderStats());
+        this.rootElement.appendChild(this._renderMaze());
+    }
+
+    // --- Parameter UI ---
+
+    _renderParams() {
+        const section = document.createElement('div');
+        section.className = 'maze-room-params';
+        section.innerHTML = '<div class="maze-room-section-title">Parameters</div>';
+
+        const grid = document.createElement('div');
+        grid.className = 'maze-room-grid';
+
+        const fields = [
+            { key: 'seed',             label: 'Seed',              min: 0 },
+            { key: 'width',            label: 'Width',             min: 2,   max: 80 },
+            { key: 'height',           label: 'Height',            min: 2,   max: 80 },
+            { key: 'maxIterations',    label: 'Max iterations',    min: 1,   max: 100000 },
+            { key: 'stallLimit',       label: 'Stall limit',       min: 1,   max: 10000 },
+            { key: 'walkerTrials',     label: 'Walker trials',     min: 1,   max: 500 },
+            { key: 'walkerStepBudget', label: 'Step budget',       min: 1,   max: 100000, nullable: true, placeholder: 'auto' },
+            { key: 'minSuccessPct',    label: 'Min success %',     min: 0,   max: 100,    nullable: true, placeholder: 'off' },
+            { key: 'maxSuccessPct',    label: 'Max success %',     min: 0,   max: 100,    nullable: true, placeholder: 'off' },
+        ];
+
+        for (const f of fields) {
+            const row = document.createElement('div');
+            row.className = 'maze-room-field';
+
+            const label = document.createElement('label');
+            label.textContent = f.label;
+            label.htmlFor = `maze-room-${f.key}`;
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.id = `maze-room-${f.key}`;
+            const currentValue = this.params[f.key];
+            input.value = currentValue == null ? '' : currentValue;
+            if (f.min !== undefined) input.min = f.min;
+            if (f.max !== undefined) input.max = f.max;
+            if (f.placeholder) input.placeholder = f.placeholder;
+            input.addEventListener('change', () => {
+                if (input.value === '' && f.nullable) {
+                    this.params[f.key] = null;
+                    return;
+                }
+                const v = parseInt(input.value, 10);
+                if (Number.isFinite(v)) this.params[f.key] = v;
+            });
+
+            row.appendChild(label);
+            row.appendChild(input);
+            grid.appendChild(row);
+        }
+
+        section.appendChild(grid);
+
+        const btnRow = document.createElement('div');
+        btnRow.className = 'maze-room-btn-row';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'maze-room-btn';
+        saveBtn.textContent = 'Save Params';
+        saveBtn.addEventListener('click', () => this._saveToLocalStorage());
+
+        const loadBtn = document.createElement('button');
+        loadBtn.className = 'maze-room-btn';
+        loadBtn.textContent = 'Load Params';
+        loadBtn.addEventListener('click', () => {
+            this._loadFromLocalStorage();
+            this.render();
+        });
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'maze-room-btn';
+        resetBtn.textContent = 'Reset Defaults';
+        resetBtn.addEventListener('click', () => {
+            this.params = { ...DEFAULT_PARAMS };
+            this.render();
+        });
+
+        btnRow.appendChild(saveBtn);
+        btnRow.appendChild(loadBtn);
+        btnRow.appendChild(resetBtn);
+        section.appendChild(btnRow);
+
+        return section;
+    }
+
+    // --- Actions ---
+
+    _renderActions() {
+        const section = document.createElement('div');
+        section.className = 'maze-room-actions';
+
+        const genBtn = document.createElement('button');
+        genBtn.className = 'maze-room-btn maze-room-btn-primary';
+        genBtn.textContent = this.isGenerating ? 'Generating…' : 'Generate';
+        genBtn.disabled = this.isGenerating;
+        genBtn.addEventListener('click', () => this._runGeneration());
+        section.appendChild(genBtn);
+
+        if (this.world) {
+            const resetPlayerBtn = document.createElement('button');
+            resetPlayerBtn.className = 'maze-room-btn';
+            resetPlayerBtn.textContent = 'Reset Player';
+            resetPlayerBtn.addEventListener('click', () => {
+                this.state = createState(this.world);
+                this.message = '';
+                this.render();
+                this.rootElement.focus();
+            });
+            section.appendChild(resetPlayerBtn);
+        }
+
+        if (this.message) {
+            const msg = document.createElement('span');
+            msg.className = 'maze-room-message';
+            msg.textContent = this.message;
+            section.appendChild(msg);
+        }
+
+        return section;
+    }
+
+    // --- Stats ---
+
+    _renderStats() {
+        const section = document.createElement('div');
+        section.className = 'maze-room-stats';
+        if (!this.stats) return section;
+
+        const parts = [
+            `iter ${this.stats.iterations}`,
+            `accepted ${this.stats.accepted}`,
+            `rej ${this.stats.rejected} (feas ${this.stats.rejectedFeasibility}, diff ${this.stats.rejectedDifficulty})`,
+            `path ${this.stats.shortestPath ?? '—'}`,
+        ];
+        if (this.stats.difficultyGateOn && this.stats.finalSuccessFraction != null) {
+            parts.push(`walker ${(this.stats.finalSuccessFraction * 100).toFixed(0)}%`);
+        }
+        let status = 'complete';
+        if (this.stats.stalled) status = 'stalled';
+        else if (this.stats.reachedTarget) status = 'target';
+        parts.push(status);
+        section.textContent = parts.join(' · ');
+        return section;
+    }
+
+    // --- Canvas rendering ---
+
+    _renderMaze() {
+        const section = document.createElement('div');
+        section.className = 'maze-room-canvas-wrap';
+
+        if (!this.world) {
+            const hint = document.createElement('div');
+            hint.className = 'maze-room-hint';
+            hint.textContent = 'Click Generate to build a maze. Use arrow keys or WASD to play.';
+            section.appendChild(hint);
+            return section;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'maze-room-canvas';
+        canvas.width = this.world.width * TILE_PX;
+        canvas.height = this.world.height * TILE_PX;
+        this._drawWorld(canvas);
+        section.appendChild(canvas);
+        return section;
+    }
+
+    _drawWorld(canvas) {
+        const ctx = canvas.getContext('2d');
+        const w = this.world;
+
+        for (let y = 0; y < w.height; y++) {
+            for (let x = 0; x < w.width; x++) {
+                const tile = getTile(w, x, y);
+                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
+                ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
+            }
+        }
+
+        ctx.fillStyle = COLORS.entrance;
+        ctx.fillRect(w.entrance.x * TILE_PX, w.entrance.y * TILE_PX, TILE_PX, TILE_PX);
+
+        ctx.fillStyle = COLORS.exit;
+        ctx.fillRect(w.exit.x * TILE_PX, w.exit.y * TILE_PX, TILE_PX, TILE_PX);
+
+        ctx.strokeStyle = COLORS.grid;
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= w.width; x++) {
+            ctx.beginPath();
+            ctx.moveTo(x * TILE_PX + 0.5, 0);
+            ctx.lineTo(x * TILE_PX + 0.5, w.height * TILE_PX);
+            ctx.stroke();
+        }
+        for (let y = 0; y <= w.height; y++) {
+            ctx.beginPath();
+            ctx.moveTo(0, y * TILE_PX + 0.5);
+            ctx.lineTo(w.width * TILE_PX, y * TILE_PX + 0.5);
+            ctx.stroke();
+        }
+
+        if (this.state) {
+            const { x, y } = this.state.player_pos;
+            ctx.fillStyle = COLORS.player;
+            ctx.beginPath();
+            ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // --- Generation ---
+
+    _runGeneration() {
+        if (this.isGenerating) return;
+        this.isGenerating = true;
+        this.message = '';
+        this.render();
+
+        try {
+            const { world, stats } = generateMaze({
+                width: this.params.width,
+                height: this.params.height,
+                seed: this.params.seed,
+                params: {
+                    maxIterations: this.params.maxIterations,
+                    stallLimit: this.params.stallLimit,
+                    walkerTrials: this.params.walkerTrials,
+                    walkerStepBudget: this.params.walkerStepBudget,
+                    minSuccessPct: this.params.minSuccessPct == null ? null : this.params.minSuccessPct / 100,
+                    maxSuccessPct: this.params.maxSuccessPct == null ? null : this.params.maxSuccessPct / 100,
+                },
+            });
+            this.world = world;
+            this.state = createState(world);
+            this.stats = stats;
+        } catch (e) {
+            this.message = `ERROR: ${e.message}`;
+        }
+
+        this.isGenerating = false;
+        this.render();
+        this.rootElement.focus();
+    }
+
+    // --- Play ---
+
+    _handleKeydown(e) {
+        if (!this.world || !this.state) return;
+        const input = KEY_MAP[e.key];
+        if (!input) return;
+        e.preventDefault();
+        const next = step(this.world, this.state, input);
+        if (next === null) return;
+        this.state = next;
+        if (this.state.player_pos.x === this.world.exit.x && this.state.player_pos.y === this.world.exit.y) {
+            this.message = `Reached exit in ${this.state.turn} steps.`;
+        }
+        this.render();
+    }
+
+    // --- localStorage ---
+
+    _saveToLocalStorage() {
+        try {
+            localStorage.setItem(LS_KEY, JSON.stringify(this.params));
+            this.message = 'Parameters saved.';
+            this.render();
+        } catch (e) {
+            this.message = `ERROR saving params: ${e.message}`;
+            this.render();
+        }
+    }
+
+    _loadFromLocalStorage() {
+        try {
+            const stored = localStorage.getItem(LS_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                this.params = { ...DEFAULT_PARAMS, ...parsed };
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+}

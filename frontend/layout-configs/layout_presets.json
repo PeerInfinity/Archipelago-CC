@@ -230,6 +230,11 @@
               "type": "component",
               "componentType": "apworldEditorPanel",
               "title": "APWorld Editor"
+            },
+            {
+              "type": "component",
+              "componentType": "mazeRoomPanel",
+              "title": "Maze Room"
             }
           ]
         }
