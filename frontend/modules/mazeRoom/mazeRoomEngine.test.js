@@ -17,7 +17,7 @@ import {
     extractPathsAndObstacles,
     generateMazeRegion,
 } from './mazeRoomEngine.js';
-import { isObstacleCleared, DEFAULT_OBSTACLES } from './library.js';
+import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 
 function runPlan(world, startState, plan) {
     let s = startState;

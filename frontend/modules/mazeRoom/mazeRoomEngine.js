@@ -9,7 +9,7 @@
 
 import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver, makeRandomWalkerSolver } from '../shared/simulatorCore.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from './library.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 
 // --- Tile types ---
 

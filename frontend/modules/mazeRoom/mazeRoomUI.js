@@ -15,8 +15,8 @@ import {
     generateMaze,
     extractPathsAndObstacles,
 } from './mazeRoomEngine.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from './library.js';
-import { compileRegion } from '../shared/pathsAndObstaclesCompiler.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 
 const LS_KEY = 'mazeRoom_params';
 

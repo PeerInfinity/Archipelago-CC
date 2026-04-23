@@ -12,7 +12,7 @@ import {
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../mazeRoom/library.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 
 const LS_KEY = 'procgenPipeline_params';
 const TILE_PX = 14;

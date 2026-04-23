@@ -17,7 +17,7 @@
  * rules.json (frontend/schema/rules.schema.json).
  */
 
-import { makeHasRule, makeAndRule, makeOrRule, makeTrueRule } from './rulesJsonBuilder.js';
+import { makeHasRule, makeAndRule, makeOrRule, makeTrueRule } from '../rulesJsonBuilder.js';
 
 function makeFalseRule() {
     return { rule: 'False_' };
