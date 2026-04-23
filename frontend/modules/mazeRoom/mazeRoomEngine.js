@@ -408,7 +408,7 @@ function reachableTiles(world, startState) {
     return out;
 }
 
-function placeGateAndKey(world, rng, params) {
+function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'key_red' } = {}) {
     const pathResult = reach(world, bfsSolver, createState(world), reachedExit);
     if (!pathResult.ok) return { placed: false, reason: 'no_path' };
     const pathPositions = tracePath(world, createState(world), pathResult.plan);
@@ -420,7 +420,7 @@ function placeGateAndKey(world, rng, params) {
 
     for (let attempt = 0; attempt < params.gateKeyMaxAttempts; attempt++) {
         const doorPos = doorCandidates[Math.floor(rng.next() * doorCandidates.length)];
-        setObstacle(world, doorPos.x, doorPos.y, 'door_red');
+        setObstacle(world, doorPos.x, doorPos.y, door_id);
 
         // With empty inventory the door acts as a wall, so `reachableTiles`
         // returns exactly the pre-door region.
@@ -447,7 +447,7 @@ function placeGateAndKey(world, rng, params) {
         }
 
         const keyPos = keyCandidates[Math.floor(rng.next() * keyCandidates.length)];
-        setItem(world, keyPos.x, keyPos.y, 'key_red');
+        setItem(world, keyPos.x, keyPos.y, key_id);
 
         // Sanity check: exit reachable when the player has the key.
         const final = reach(world, bfsSolver, createState(world), reachedExit);
@@ -579,22 +579,25 @@ export function generateMaze(config) {
     return { world, stats };
 }
 
-// --- Grid growth pipeline adapter ---
+// --- Substrate adapter ---
 //
-// generateMazeRegion wraps the maze substrate for use by the
-// grid-growth procgen pipeline. It accepts the GridGrowthGeneratorInput
-// shape from grid-growth-pipeline.md and returns the matching output.
+// Three pipeline-agnostic functions — generateRegionCore,
+// placeFromItems, and extractPathsAndObstacles (already defined
+// above) — compose into the full GridGrowthGenerator contract. See
+// NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
+// §"Substrate adapter contract".
 //
 // v1 scope:
+//   - Exactly one entrance (or none for start regions).
 //   - Exactly one exit side (multi-exit is a growth-path item).
-//   - One key+door pair via placeGateAndKey (when inputs include
-//     key_red + door_red); other items placed on random reachable
-//     tiles; other obstacles left unplaced and reported back.
-//   - Start regions (entrance_side === null) get the entrance in the
-//     middle of the region; per the plan, no obstacles are placed in
-//     the start region regardless of what the pipeline offers.
+//   - Colored key+door pairs via placeGateAndKey; other items
+//     placed on random reachable tiles; other obstacles left
+//     unplaced and reported back to the caller.
 //
-// generateMaze is not modified — this adapter sits alongside.
+// generateMazeRegion is kept as a thin composition wrapper for
+// backward compatibility with the grid-growth driver's current
+// flat-input shape. Landing step 4 replaces that caller with the
+// three-call sequence directly.
 
 const SIDE_N = 'N';
 const SIDE_S = 'S';
@@ -630,32 +633,161 @@ function pickReachableFloorTile(world, rng, excluded) {
     return candidates[Math.floor(rng.next() * candidates.length)];
 }
 
-function placeItemsAndObstaclesForPipeline(world, opts) {
+// Colored key/door pairs the placer tries to realise via the
+// cut-vertex gate-and-key flow. Entries not present in a given
+// region's inputs are silently skipped.
+const COLORED_KEY_DOOR_PAIRS = Object.freeze([
+    { key_id: 'key_red',   door_id: 'door_red' },
+    { key_id: 'key_green', door_id: 'door_green' },
+    { key_id: 'key_blue',  door_id: 'door_blue' },
+]);
+
+/**
+ * Substrate adapter — core.
+ *
+ * Produces an empty-but-valid walls-only maze honoring the given
+ * entrance and single exit side. No items or obstacles placed; that
+ * is the placer's job.
+ *
+ * Input:
+ *   {
+ *     region_id,
+ *     size: { width, height },
+ *     entrances: []                    // start region (substrate
+ *                                      //   picks middle tile), OR
+ *                [{ side, tile }],     // child region
+ *     exits: [{ side }],               // single exit in v1
+ *     item_lib, obstacle_lib,
+ *     rng,
+ *     params,                          // maze-specific knobs
+ *   }
+ *
+ * Output:
+ *   {
+ *     world,                           // walls-only, libs threaded
+ *     exits_placed: [{ side, tile_position }],
+ *     entrance_tile,                   // what the substrate resolved
+ *     wall_stats,                      // from generateMaze
+ *   }
+ */
+export function generateRegionCore(input) {
     const {
-        items_to_place, obstacles_to_place, allow_obstacles, rng, params,
-    } = opts;
+        region_id,
+        size,
+        entrances = [],
+        exits = [],
+        item_lib = DEFAULT_ITEMS,
+        obstacle_lib = DEFAULT_OBSTACLES,
+        rng,
+        params = {},
+    } = input;
+
+    if (!region_id) throw new Error('generateRegionCore: region_id required');
+    if (!size || !size.width || !size.height) throw new Error('generateRegionCore: size.{width,height} required');
+    if (!rng || typeof rng.next !== 'function') throw new Error('generateRegionCore: rng required');
+    if (entrances.length > 1) throw new Error('generateRegionCore v1: at most one entrance supported');
+    if (exits.length === 0) throw new Error('generateRegionCore: at least one exit required');
+    if (exits.length > 1) throw new Error('generateRegionCore v1: exactly one exit supported');
+
+    // Resolve entrance tile.
+    let entrance_tile;
+    if (entrances.length === 0) {
+        entrance_tile = entranceTileForStartRegion(size);
+    } else {
+        const ent = entrances[0];
+        if (!ent.tile) {
+            throw new Error('generateRegionCore: entrance tile required for non-start region');
+        }
+        entrance_tile = ent.tile;
+    }
+
+    const exitSpec = exits[0];
+    if (!exitSpec.side) throw new Error('generateRegionCore: exit side required');
+    const exit_tile = pickTileOnSide(exitSpec.side, size, rng);
+
+    const mazeSeed = Math.floor(rng.next() * 0x7fffffff);
+    const { world, stats: wall_stats } = generateMaze({
+        width: size.width,
+        height: size.height,
+        seed: mazeSeed,
+        entrance: entrance_tile,
+        exit: exit_tile,
+        params: { ...params, placeGateAndKey: false },
+    });
+
+    // Thread caller-supplied libs onto the world so step() and
+    // extractPathsAndObstacles consult the right clear_sets.
+    world.itemLib = item_lib;
+    world.obstacleLib = obstacle_lib;
+
+    return {
+        world,
+        exits_placed: [{ side: exitSpec.side, tile_position: exit_tile }],
+        entrance_tile,
+        wall_stats,
+    };
+}
+
+/**
+ * Substrate adapter — item-driven placement.
+ *
+ * Places the requested concrete items and obstacles into an existing
+ * `world` produced by generateRegionCore. The caller decides whether
+ * obstacles are appropriate for this region (e.g. start regions pass
+ * `obstacles_to_place: []`); placeFromItems always attempts to place
+ * everything it is given.
+ *
+ * Input:
+ *   world,
+ *   {
+ *     items_to_place: [item_id, ...],
+ *     obstacles_to_place: [obstacle_id, ...],
+ *     arrival_inventory: Set<item_id>,    // accepted, v1-unused
+ *     rng,
+ *     params,                             // gateKey* knobs
+ *   }
+ *
+ * Output:
+ *   { placed_items, placed_obstacles }
+ *
+ * Unplaced items/obstacles are reported by omission; the caller can
+ * compute the diff against its inputs.
+ */
+export function placeFromItems(world, input = {}) {
+    const {
+        items_to_place = [],
+        obstacles_to_place = [],
+        arrival_inventory: _arrival_inventory = new Set(),
+        rng,
+        params = {},
+    } = input;
+
+    if (!world) throw new Error('placeFromItems: world required');
+    if (!rng || typeof rng.next !== 'function') throw new Error('placeFromItems: rng required');
+
     const placed_items = [];
     const placed_obstacles = [];
     const remaining_items = [...items_to_place];
-    const remaining_obstacles = allow_obstacles ? [...obstacles_to_place] : [];
+    const remaining_obstacles = [...obstacles_to_place];
 
-    // v1: handle one key_red + door_red pair via placeGateAndKey.
-    if (remaining_obstacles.includes('door_red') && remaining_items.includes('key_red')) {
-        const pgParams = {
-            gateKeyMaxAttempts: params.gateKeyMaxAttempts ?? 20,
-            gateKeyMinBeforeDoor: params.gateKeyMinBeforeDoor ?? 2,
-        };
-        const result = placeGateAndKey(world, rng, pgParams);
-        if (result.placed) {
-            placed_obstacles.push({ obstacle_id: 'door_red', position: result.doorPos });
-            placed_items.push({ item_id: 'key_red', position: result.keyPos });
-            remaining_obstacles.splice(remaining_obstacles.indexOf('door_red'), 1);
-            remaining_items.splice(remaining_items.indexOf('key_red'), 1);
-        }
+    const pgParams = {
+        gateKeyMaxAttempts: params.gateKeyMaxAttempts ?? 20,
+        gateKeyMinBeforeDoor: params.gateKeyMinBeforeDoor ?? 2,
+    };
+
+    // Try to place one key-and-door pair per color that has both
+    // sides of the pair in the inputs.
+    for (const { key_id, door_id } of COLORED_KEY_DOOR_PAIRS) {
+        if (!remaining_obstacles.includes(door_id) || !remaining_items.includes(key_id)) continue;
+        const result = placeGateAndKey(world, rng, pgParams, { key_id, door_id });
+        if (!result.placed) continue;
+        placed_obstacles.push({ obstacle_id: door_id, position: result.doorPos });
+        placed_items.push({ item_id: key_id, position: result.keyPos });
+        remaining_obstacles.splice(remaining_obstacles.indexOf(door_id), 1);
+        remaining_items.splice(remaining_items.indexOf(key_id), 1);
     }
 
-    // Place remaining items on random reachable tiles, excluding
-    // anything we've already placed.
+    // Remaining items land on random reachable floor tiles.
     for (const item_id of remaining_items) {
         const excluded = [
             ...placed_items.map((p) => p.position),
@@ -667,11 +799,21 @@ function placeItemsAndObstaclesForPipeline(world, opts) {
         placed_items.push({ item_id, position: tile });
     }
 
-    // Remaining obstacles go unplaced in v1. The pipeline returns them
-    // to the scenario pool via the diff between inputs and output.
+    // Remaining obstacles go unplaced in v1. The caller reclaims
+    // them by diffing inputs against output.
     return { placed_items, placed_obstacles };
 }
 
+/**
+ * generateMazeRegion — legacy composition wrapper.
+ *
+ * Accepts the flat grid-growth shape the procgen pipeline currently
+ * passes in, delegates to generateRegionCore + placeFromItems +
+ * extractPathsAndObstacles. Enforces the "start region gets no
+ * obstacles" rule on behalf of the current caller; once the driver
+ * is re-pointed at the three-call sequence (landing step 4), it can
+ * enforce the rule itself and this wrapper is deleted.
+ */
 export function generateMazeRegion(input) {
     const {
         region_id,
@@ -693,64 +835,41 @@ export function generateMazeRegion(input) {
     if (!rng || typeof rng.next !== 'function') throw new Error('generateMazeRegion: rng required');
     if (!exit_sides || exit_sides.length === 0) throw new Error('generateMazeRegion: at least one exit_side required');
     if (exit_sides.length > 1) throw new Error('generateMazeRegion v1: exactly one exit_side supported');
-
-    // Resolve entrance tile.
-    let entrance_tile;
-    if (entrance_side === null) {
-        entrance_tile = givenEntranceTile ?? entranceTileForStartRegion(size);
-    } else {
-        if (!givenEntranceTile) {
-            throw new Error('generateMazeRegion: entrance_tile required when entrance_side is set');
-        }
-        entrance_tile = givenEntranceTile;
+    if (entrance_side !== null && !givenEntranceTile) {
+        throw new Error('generateMazeRegion: entrance_tile required when entrance_side is set');
     }
 
-    const exit_side = exit_sides[0];
-    const exit_tile = pickTileOnSide(exit_side, size, rng);
+    const entrances = entrance_side === null
+        ? []
+        : [{ side: entrance_side, tile: givenEntranceTile }];
+    const exits = [{ side: exit_sides[0] }];
 
-    // Generate walls via the existing substrate, but skip its own
-    // placeGateAndKey step — the pipeline adapter does placement using
-    // the inputs it was given.
-    const mazeSeed = Math.floor(rng.next() * 0x7fffffff);
-    const { world, stats: wallStats } = generateMaze({
-        width: size.width,
-        height: size.height,
-        seed: mazeSeed,
-        entrance: entrance_tile,
-        exit: exit_tile,
-        params: {
-            ...params,
-            placeGateAndKey: false,
-        },
+    const core = generateRegionCore({
+        region_id, size, entrances, exits, item_lib, obstacle_lib, rng, params,
     });
-
-    // Thread the caller-supplied libraries onto the world so step()
-    // and extraction consult the right clear_sets.
-    world.itemLib = item_lib;
-    world.obstacleLib = obstacle_lib;
 
     // Start region gets no obstacles regardless of what the pipeline
     // offers — the player arrives with nothing and would be stranded.
     const allow_obstacles = entrance_side !== null;
-    const placement = placeItemsAndObstaclesForPipeline(world, {
+    const placement = placeFromItems(core.world, {
         items_to_place,
-        obstacles_to_place,
-        allow_obstacles,
+        obstacles_to_place: allow_obstacles ? obstacles_to_place : [],
+        arrival_inventory,
         rng,
         params,
     });
 
-    const extracted_rules = extractPathsAndObstacles(world, { regionId: region_id });
+    const extracted_rules = extractPathsAndObstacles(core.world, { regionId: region_id });
 
     return {
         region_id,
-        playable_payload: world,
+        playable_payload: core.world,
         extracted_rules,
         placed_items: placement.placed_items,
         placed_obstacles: placement.placed_obstacles,
-        exits_placed: [{ side: exit_side, tile_position: exit_tile }],
+        exits_placed: core.exits_placed,
         render_hint: 'maze',
         sidecar_filename: `${region_id}.json`,
-        wall_stats: wallStats,
+        wall_stats: core.wall_stats,
     };
 }

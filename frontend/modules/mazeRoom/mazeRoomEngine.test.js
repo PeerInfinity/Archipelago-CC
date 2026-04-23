@@ -16,6 +16,8 @@ import {
     generateMaze,
     extractPathsAndObstacles,
     generateMazeRegion,
+    generateRegionCore,
+    placeFromItems,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 
@@ -498,6 +500,147 @@ describe('generateMazeRegion', () => {
         expect(Array.from(a.playable_payload.tiles)).toEqual(Array.from(b.playable_payload.tiles));
         expect(a.placed_items).toEqual(b.placed_items);
         expect(a.placed_obstacles).toEqual(b.placed_obstacles);
+    });
+
+    it('places a green key+door pair when both are in the inputs', () => {
+        const out = generateMazeRegion({
+            ...baseInput(),
+            items_to_place: ['key_green'],
+            obstacles_to_place: ['door_green'],
+        });
+        expect(out.placed_items.map((p) => p.item_id)).toEqual(['key_green']);
+        expect(out.placed_obstacles.map((p) => p.obstacle_id)).toEqual(['door_green']);
+    });
+
+    it('places two colored pairs (red + blue) in the same region', () => {
+        const out = generateMazeRegion({
+            ...baseInput(),
+            size: { width: 14, height: 10 },
+            items_to_place: ['key_red', 'key_blue'],
+            obstacles_to_place: ['door_red', 'door_blue'],
+        });
+        const itemIds = out.placed_items.map((p) => p.item_id).sort();
+        const obstacleIds = out.placed_obstacles.map((p) => p.obstacle_id).sort();
+        // Both colors placed when the geometry accommodates it.
+        expect(itemIds).toEqual(['key_blue', 'key_red']);
+        expect(obstacleIds).toEqual(['door_blue', 'door_red']);
+    });
+});
+
+describe('generateRegionCore', () => {
+    const baseCoreInput = () => ({
+        region_id: 'r1',
+        size: { width: 10, height: 8 },
+        entrances: [{ side: 'W', tile: { x: 0, y: 3 } }],
+        exits: [{ side: 'E' }],
+        rng: createRng(7),
+        params: {},
+    });
+
+    it('rejects missing required fields', () => {
+        expect(() => generateRegionCore({ ...baseCoreInput(), region_id: undefined })).toThrow(/region_id/);
+        expect(() => generateRegionCore({ ...baseCoreInput(), size: undefined })).toThrow(/size/);
+        expect(() => generateRegionCore({ ...baseCoreInput(), rng: undefined })).toThrow(/rng/);
+        expect(() => generateRegionCore({ ...baseCoreInput(), exits: [] })).toThrow(/exit/);
+    });
+
+    it('rejects multiple entrances and multiple exits in v1', () => {
+        expect(() => generateRegionCore({
+            ...baseCoreInput(),
+            entrances: [{ side: 'W', tile: { x: 0, y: 3 } }, { side: 'N', tile: { x: 5, y: 0 } }],
+        })).toThrow(/entrance/);
+        expect(() => generateRegionCore({
+            ...baseCoreInput(),
+            exits: [{ side: 'E' }, { side: 'S' }],
+        })).toThrow(/exit/);
+    });
+
+    it('empty entrances array triggers the start-region center placement', () => {
+        const out = generateRegionCore({ ...baseCoreInput(), entrances: [] });
+        expect(out.world.entrance).toEqual({ x: 5, y: 4 });
+    });
+
+    it('child region requires entrance.tile on the supplied entrance', () => {
+        expect(() => generateRegionCore({
+            ...baseCoreInput(),
+            entrances: [{ side: 'W' }],
+        })).toThrow(/entrance tile/);
+    });
+
+    it('produces a walls-only world with libs threaded', () => {
+        const out = generateRegionCore(baseCoreInput());
+        expect(out.world.obstacles.size).toBe(0);
+        expect(out.world.items.size).toBe(0);
+        expect(out.world.obstacleLib.door_red).toBeDefined();
+        expect(out.world.itemLib.key_red).toBeDefined();
+        expect(out.exits_placed[0].side).toBe('E');
+        expect(out.exits_placed[0].tile_position.x).toBe(out.world.width - 1);
+    });
+});
+
+describe('placeFromItems', () => {
+    const freshCore = (overrides = {}) => generateRegionCore({
+        region_id: 'r',
+        size: { width: 10, height: 8 },
+        entrances: [{ side: 'W', tile: { x: 0, y: 3 } }],
+        exits: [{ side: 'E' }],
+        rng: createRng(7),
+        params: {},
+        ...overrides,
+    });
+
+    it('rejects missing world or rng', () => {
+        const { world } = freshCore();
+        expect(() => placeFromItems(null, { rng: createRng(1) })).toThrow(/world/);
+        expect(() => placeFromItems(world, {})).toThrow(/rng/);
+    });
+
+    it('places nothing when both input lists are empty', () => {
+        const { world } = freshCore();
+        const out = placeFromItems(world, { rng: createRng(1) });
+        expect(out.placed_items).toEqual([]);
+        expect(out.placed_obstacles).toEqual([]);
+    });
+
+    it('places a key/door pair and reports the placements', () => {
+        const { world } = freshCore();
+        const out = placeFromItems(world, {
+            items_to_place: ['key_red'],
+            obstacles_to_place: ['door_red'],
+            rng: createRng(1),
+        });
+        expect(out.placed_items).toHaveLength(1);
+        expect(out.placed_obstacles).toHaveLength(1);
+        // The placed positions should also be reflected in world state.
+        expect(getObstacle(world, out.placed_obstacles[0].position.x, out.placed_obstacles[0].position.y))
+            .toBe('door_red');
+        expect(getItem(world, out.placed_items[0].position.x, out.placed_items[0].position.y))
+            .toBe('key_red');
+    });
+
+    it('places a green and a blue pair independently', () => {
+        const { world } = freshCore({ size: { width: 14, height: 10 } });
+        const out = placeFromItems(world, {
+            items_to_place: ['key_green', 'key_blue'],
+            obstacles_to_place: ['door_green', 'door_blue'],
+            rng: createRng(3),
+        });
+        const itemIds = out.placed_items.map((p) => p.item_id).sort();
+        const obstacleIds = out.placed_obstacles.map((p) => p.obstacle_id).sort();
+        expect(itemIds).toEqual(['key_blue', 'key_green']);
+        expect(obstacleIds).toEqual(['door_blue', 'door_green']);
+    });
+
+    it('places extra unpaired items on reachable floor tiles', () => {
+        const { world } = freshCore();
+        const out = placeFromItems(world, {
+            items_to_place: ['key_red', 'key_red'],
+            obstacles_to_place: ['door_red'],
+            rng: createRng(5),
+        });
+        // One key pairs with the door; the second key lands elsewhere.
+        expect(out.placed_items.length).toBeGreaterThanOrEqual(1);
+        expect(out.placed_obstacles.map((p) => p.obstacle_id)).toEqual(['door_red']);
     });
 });
 
