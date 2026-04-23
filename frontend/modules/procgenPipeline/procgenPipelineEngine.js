@@ -8,7 +8,9 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { generateMazeRegion } from '../mazeRoom/mazeRoomEngine.js';
+import {
+    generateRegionCore, placeFromItems, extractPathsAndObstacles,
+} from '../mazeRoom/mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
@@ -46,9 +48,9 @@ export function cellKey(cell) {
 
 // --- Grid data model ---
 //
-// Cell-to-region storage for the grid-growth pipeline. Each cell holds
-// a Region = the output of a substrate generator (generateMazeRegion
-// etc.) augmented with its grid position.
+// Cell-to-region storage for the grid-growth pipeline. Each cell
+// holds a Region = the driver-composed output of a substrate (see
+// buildMazeRegion below) augmented with its grid position.
 
 export class Grid {
     constructor({ width, height }) {
@@ -200,6 +202,59 @@ function pickChildExitSide(cell, grid, entranceSide, rng) {
     return candidates[Math.floor(rng.next() * candidates.length)];
 }
 
+// --- Substrate composition ---
+//
+// Wraps the three maze-substrate adapter calls (generateRegionCore +
+// placeFromItems + extractPathsAndObstacles) into the region-object
+// shape the grid-growth driver and its downstream consumers expect.
+// Lives in the driver (not the substrate) because the
+// "start region → no obstacles" policy is a driver concern — the
+// caller passes `obstacles_to_place: []` for start regions.
+
+function buildMazeRegion({
+    region_id,
+    size,
+    entrances,
+    exit_side,
+    arrival_inventory,
+    items_to_place,
+    obstacles_to_place,
+    itemLib,
+    obstacleLib,
+    rng,
+    params,
+}) {
+    const core = generateRegionCore({
+        region_id,
+        size,
+        entrances,
+        exits: [{ side: exit_side }],
+        item_lib: itemLib,
+        obstacle_lib: obstacleLib,
+        rng,
+        params,
+    });
+    const placement = placeFromItems(core.world, {
+        items_to_place,
+        obstacles_to_place,
+        arrival_inventory,
+        rng,
+        params,
+    });
+    const extracted_rules = extractPathsAndObstacles(core.world, { regionId: region_id });
+    return {
+        region_id,
+        playable_payload: core.world,
+        extracted_rules,
+        placed_items: placement.placed_items,
+        placed_obstacles: placement.placed_obstacles,
+        exits_placed: core.exits_placed,
+        render_hint: 'maze',
+        sidecar_filename: `${region_id}.json`,
+        wall_stats: core.wall_stats,
+    };
+}
+
 // --- Growth loop ---
 //
 // Builds a grid of regions starting from the center, expanding
@@ -259,19 +314,15 @@ export function growMaze(config) {
     if (!startExitSide) {
         throw new Error('growMaze: start cell has no in-bounds neighbors (grid too small?)');
     }
-    const startRegion = generateMazeRegion({
+    const startRegion = buildMazeRegion({
         region_id: regionIdForCell(startCell),
         size: regionSize,
-        entrance_side: null,
-        entrance_tile: null,
-        exit_sides: [startExitSide],
+        entrances: [],                     // start region — substrate picks middle
+        exit_side: startExitSide,
         arrival_inventory: new Set(),
         items_to_place: [],
-        obstacles_to_place: [],
-        item_lib: itemLib,
-        obstacle_lib: obstacleLib,
-        rng,
-        params: regionParams,
+        obstacles_to_place: [],            // start region — no obstacles
+        itemLib, obstacleLib, rng, params: regionParams,
     });
     grid.placeRegion(startCell, startRegion);
     pool.markPlaced({
@@ -331,19 +382,15 @@ export function growMaze(config) {
             arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
         });
 
-        const region = generateMazeRegion({
+        const region = buildMazeRegion({
             region_id: regionIdForCell(childCell),
             size: regionSize,
-            entrance_side: entranceSide,
-            entrance_tile: entranceTile,
-            exit_sides: [exitSide],
+            entrances: [{ side: entranceSide, tile: entranceTile }],
+            exit_side: exitSide,
             arrival_inventory: arrival,
             items_to_place: plan.items_to_place,
             obstacles_to_place: plan.obstacles_to_place,
-            item_lib: itemLib,
-            obstacle_lib: obstacleLib,
-            rng,
-            params: regionParams,
+            itemLib, obstacleLib, rng, params: regionParams,
         });
 
         grid.placeRegion(childCell, region);

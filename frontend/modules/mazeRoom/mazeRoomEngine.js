@@ -583,7 +583,7 @@ export function generateMaze(config) {
 //
 // Three pipeline-agnostic functions — generateRegionCore,
 // placeFromItems, and extractPathsAndObstacles (already defined
-// above) — compose into the full GridGrowthGenerator contract. See
+// above) — compose into the full substrate-adapter contract. See
 // NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
 // §"Substrate adapter contract".
 //
@@ -593,11 +593,6 @@ export function generateMaze(config) {
 //   - Colored key+door pairs via placeGateAndKey; other items
 //     placed on random reachable tiles; other obstacles left
 //     unplaced and reported back to the caller.
-//
-// generateMazeRegion is kept as a thin composition wrapper for
-// backward compatibility with the grid-growth driver's current
-// flat-input shape. Landing step 4 replaces that caller with the
-// three-call sequence directly.
 
 const SIDE_N = 'N';
 const SIDE_S = 'S';
@@ -804,72 +799,3 @@ export function placeFromItems(world, input = {}) {
     return { placed_items, placed_obstacles };
 }
 
-/**
- * generateMazeRegion — legacy composition wrapper.
- *
- * Accepts the flat grid-growth shape the procgen pipeline currently
- * passes in, delegates to generateRegionCore + placeFromItems +
- * extractPathsAndObstacles. Enforces the "start region gets no
- * obstacles" rule on behalf of the current caller; once the driver
- * is re-pointed at the three-call sequence (landing step 4), it can
- * enforce the rule itself and this wrapper is deleted.
- */
-export function generateMazeRegion(input) {
-    const {
-        region_id,
-        size,
-        entrance_side = null,
-        entrance_tile: givenEntranceTile = null,
-        exit_sides,
-        arrival_inventory = new Set(),
-        items_to_place = [],
-        obstacles_to_place = [],
-        item_lib = DEFAULT_ITEMS,
-        obstacle_lib = DEFAULT_OBSTACLES,
-        rng,
-        params = {},
-    } = input;
-
-    if (!region_id) throw new Error('generateMazeRegion: region_id required');
-    if (!size || !size.width || !size.height) throw new Error('generateMazeRegion: size.{width,height} required');
-    if (!rng || typeof rng.next !== 'function') throw new Error('generateMazeRegion: rng required');
-    if (!exit_sides || exit_sides.length === 0) throw new Error('generateMazeRegion: at least one exit_side required');
-    if (exit_sides.length > 1) throw new Error('generateMazeRegion v1: exactly one exit_side supported');
-    if (entrance_side !== null && !givenEntranceTile) {
-        throw new Error('generateMazeRegion: entrance_tile required when entrance_side is set');
-    }
-
-    const entrances = entrance_side === null
-        ? []
-        : [{ side: entrance_side, tile: givenEntranceTile }];
-    const exits = [{ side: exit_sides[0] }];
-
-    const core = generateRegionCore({
-        region_id, size, entrances, exits, item_lib, obstacle_lib, rng, params,
-    });
-
-    // Start region gets no obstacles regardless of what the pipeline
-    // offers — the player arrives with nothing and would be stranded.
-    const allow_obstacles = entrance_side !== null;
-    const placement = placeFromItems(core.world, {
-        items_to_place,
-        obstacles_to_place: allow_obstacles ? obstacles_to_place : [],
-        arrival_inventory,
-        rng,
-        params,
-    });
-
-    const extracted_rules = extractPathsAndObstacles(core.world, { regionId: region_id });
-
-    return {
-        region_id,
-        playable_payload: core.world,
-        extracted_rules,
-        placed_items: placement.placed_items,
-        placed_obstacles: placement.placed_obstacles,
-        exits_placed: core.exits_placed,
-        render_hint: 'maze',
-        sidecar_filename: `${region_id}.json`,
-        wall_stats: core.wall_stats,
-    };
-}

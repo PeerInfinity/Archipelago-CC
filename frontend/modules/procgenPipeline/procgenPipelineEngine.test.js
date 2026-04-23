@@ -491,6 +491,27 @@ describe('growMaze', () => {
         expect(startRegion.placed_items).toEqual([]);
         expect(startRegion.placed_obstacles).toEqual([]);
     });
+
+    it('each built region carries the expected composition shape', () => {
+        const { grid } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 9,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+        for (const region of grid.allRegions()) {
+            expect(region).toHaveProperty('region_id');
+            expect(region).toHaveProperty('playable_payload');
+            expect(region).toHaveProperty('extracted_rules');
+            expect(region).toHaveProperty('placed_items');
+            expect(region).toHaveProperty('placed_obstacles');
+            expect(region).toHaveProperty('exits_placed');
+            expect(region.render_hint).toBe('maze');
+            expect(region.sidecar_filename).toBe(`${region.region_id}.json`);
+        }
+    });
 });
 
 describe('compileRegionGraph', () => {

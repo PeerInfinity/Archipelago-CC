@@ -2,11 +2,11 @@
  * procgenPipeline — grid-growth procedural-generation pipeline.
  * See NewDocs/plans/procedural-generation/grid-growth-pipeline.md.
  *
- * This module hosts the stage-3 growth loop, the scenario pool, the
- * grid data model, and the UI for running the pipeline end-to-end.
- * It consumes substrate generators (currently just the maze via
- * generateMazeRegion) and produces a compiled rules.json ready for
- * world_generator.
+ * This module hosts the stage-3 growth loop, the grid data model,
+ * and the UI for running the pipeline end-to-end. It consumes the
+ * maze substrate (generateRegionCore + placeFromItems +
+ * extractPathsAndObstacles) and produces a compiled rules.json ready
+ * for world_generator.
  */
 
 import { ProcgenPipelineUI } from './procgenPipelineUI.js';
