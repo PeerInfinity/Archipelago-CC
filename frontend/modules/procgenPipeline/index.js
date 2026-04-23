@@ -32,6 +32,10 @@ export function register(registrationApi) {
     document.head.appendChild(link);
 
     registrationApi.registerPanelComponent('procgenPipelinePanel', ProcgenPipelineUI);
+    // Published when the user clicks "Load into frontend" on a
+    // generated rules.json — same event + payload shape the editor's
+    // Apply button uses.
+    registrationApi.registerEventBusPublisher('files:jsonLoaded');
 }
 
 export async function initialize(moduleId, priorityIndex, initializationApi) {

@@ -14,6 +14,7 @@ import {
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
+import { makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
 
 // Re-export so existing callers (tests, UI) that imported ScenarioPool
 // from this module keep working. New callers should import from
@@ -434,6 +435,7 @@ export function growMaze(config) {
 // increment in deterministic region-iteration order.
 
 const LOCATION_ID_BASE = 1000;
+const ITEM_ID_BASE = 1;
 
 export function compileRegionGraph(grid, opts = {}) {
     const {
@@ -451,6 +453,7 @@ export function compileRegionGraph(grid, opts = {}) {
     const itempool_counts = {};
     const canonical_placements = {};
     let nextLocationId = LOCATION_ID_BASE;
+    let nextItemId = ITEM_ID_BASE;
 
     // Iterate regions in deterministic order so assigned location ids
     // don't jitter across runs.
@@ -479,10 +482,18 @@ export function compileRegionGraph(grid, opts = {}) {
             const numericId = nextLocationId++;
             if (loc.item) {
                 // Register the item and tally the canonical placement.
-                items[loc.item] = items[loc.item] ?? {
-                    name: loc.item,
-                    classification: itemLib[loc.item]?.classification ?? 'progression',
-                };
+                // Every non-event item belongs to the "Everything" group by
+                // convention (matches item_groups["1"] = ["Everything"]).
+                // First occurrence mints a numeric id that persists for
+                // the item's lifetime in this compile.
+                if (!items[loc.item]) {
+                    items[loc.item] = {
+                        name: loc.item,
+                        id: nextItemId++,
+                        classification: itemLib[loc.item]?.classification ?? 'progression',
+                        groups: ['Everything'],
+                    };
+                }
                 itempool_counts[loc.item] = (itempool_counts[loc.item] || 0) + 1;
                 canonical_placements[globalName] = loc.item;
             }
@@ -512,3 +523,168 @@ export function compileRegionGraph(grid, opts = {}) {
 // ScenarioPool now lives in shared/procgen/scenarioPool.js — it is
 // re-exported near the top of this file so existing import paths
 // continue to work.
+
+// --- Full rules.json assembly ---
+//
+// buildRulesJson composes:
+//   - makeRulesJsonScaffold (the Archipelago-required top-level shape)
+//   - compileRegionGraph output (regions, items, canonical_placements,
+//     itempool_counts — plugged into the scaffold's per-player slots)
+//   - preset_sidecars — per-region playable payloads, serialized into
+//     JSON-safe shapes (see
+//     NewDocs/plans/procedural-generation/substrate-pipeline-
+//     architecture.md §"Preset sidecars through the multiworld bridge"
+//     for the target shape).
+//
+// Output: a single JSON-serialisable object the frontend can write to
+// disk as rules.json. World_generator currently ignores unknown
+// top-level keys, so preset_sidecars rides along untouched in v1;
+// step 8 teaches it to preserve the field through the multiworld
+// bridge.
+
+// Serialize a maze world into the sidecar payload shape. Maps and
+// Int8Array aren't JSON-safe, so this flattens them.
+function serializeMazeWorld(world, baseObstacleLib = DEFAULT_OBSTACLES) {
+    const obstacles = [];
+    for (const [key, id] of world.obstacles) {
+        const [x, y] = key.split(',').map(Number);
+        obstacles.push({ x, y, id });
+    }
+    const items = [];
+    for (const [key, id] of world.items) {
+        const [x, y] = key.split(',').map(Number);
+        items.push({ x, y, id });
+    }
+    // Only include obstacleLib entries that aren't already in the
+    // base library — standard colored doors live there; per-instance
+    // logic_gate_<N> entries don't and must travel in the sidecar so
+    // the compiler / runtime can look them up.
+    const obstacleLibExtras = {};
+    for (const [id, def] of Object.entries(world.obstacleLib || {})) {
+        if (!(id in baseObstacleLib)) {
+            obstacleLibExtras[id] = def;
+        }
+    }
+    return {
+        width: world.width,
+        height: world.height,
+        tiles: Array.from(world.tiles),
+        entrance: { x: world.entrance.x, y: world.entrance.y },
+        exit: { x: world.exit.x, y: world.exit.y },
+        obstacles,
+        items,
+        obstacleLib: obstacleLibExtras,
+    };
+}
+
+export function buildPresetSidecars(grid, { playerId = '1', baseObstacleLib = DEFAULT_OBSTACLES } = {}) {
+    const regionMap = {};
+    for (const region of grid.allRegions()) {
+        regionMap[region.region_id] = {
+            substrate: 'maze',
+            render_hint: region.render_hint ?? 'maze',
+            playable_payload: serializeMazeWorld(region.playable_payload, baseObstacleLib),
+        };
+    }
+    return { [playerId]: regionMap };
+}
+
+/**
+ * JSON.stringify the rules.json with indent=2 for general readability,
+ * but collapse each sidecar's `tiles` array onto a single line. The
+ * default formatter puts every tile integer on its own line which makes
+ * the file ~10× larger than it needs to be.
+ */
+export function stringifyRulesJson(rulesJson, { indent = 2 } = {}) {
+    // Swap the tiles arrays for placeholder strings before stringifying,
+    // then splice the compact arrays back into the result. This is
+    // safer than a regex walk over the indented output — the placeholder
+    // is unambiguous and the compact-array substitution is a single
+    // string replace.
+    const MARKER = '__PROCGEN_TILES_';
+    const captured = [];
+    const patched = structuredClone
+        ? structuredClone(rulesJson)
+        : JSON.parse(JSON.stringify(rulesJson));
+    const sidecars = patched.preset_sidecars || {};
+    for (const regionMap of Object.values(sidecars)) {
+        for (const sidecar of Object.values(regionMap)) {
+            const pp = sidecar && sidecar.playable_payload;
+            if (pp && Array.isArray(pp.tiles)) {
+                const idx = captured.length;
+                captured.push(pp.tiles);
+                pp.tiles = `${MARKER}${idx}__`;
+            }
+        }
+    }
+    let out = JSON.stringify(patched, null, indent);
+    for (let i = 0; i < captured.length; i++) {
+        const placeholder = `"${MARKER}${i}__"`;
+        out = out.replace(placeholder, JSON.stringify(captured[i]));
+    }
+    return out;
+}
+
+export function buildRulesJson(grid, opts = {}) {
+    const {
+        startCell,
+        gameName = 'Procgen Maze',
+        gameDirectory = 'procgen_maze_worldgen',
+        worldClassName = 'ProcgenMazeWorld',
+        seed = 1,
+        seedName = '',
+        playerName = 'Player1',
+        playerId = '1',
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+    } = opts;
+
+    if (!startCell) throw new Error('buildRulesJson: startCell required');
+
+    const compiled = compileRegionGraph(grid, { startCell, itemLib, obstacleLib });
+
+    const scaffold = makeRulesJsonScaffold({
+        gameName,
+        gameDirectory,
+        worldClassName,
+        seed,
+        seedName,
+        playerName,
+        // Menu is the virtual start region — AP convention. Real
+        // starting geometry lives in compiled.start_region_name, which
+        // Menu connects to with an unconditional exit.
+        startRegions: ['Menu'],
+    });
+
+    // Synthetic Menu region prefixed in front of compiled regions.
+    // Object-literal insertion order is preserved in JSON output, so
+    // Menu appears first.
+    const menuRegion = {
+        name: 'Menu',
+        exits: [
+            {
+                name: 'GameStart',
+                connected_region: compiled.start_region_name,
+                access_rule: { rule: 'True_' },
+            },
+        ],
+        locations: [],
+    };
+    scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };
+    scaffold.items[playerId] = compiled.items;
+    scaffold.itempool_counts[playerId] = compiled.itempool_counts;
+    scaffold.canonical_placements[playerId] = compiled.canonical_placements;
+
+    // AP convention: `item_groups["1"]` is a list of group *names*.
+    // "Everything" is the standard group covering all non-event items.
+    // The inventoryUI warns when the list is empty; a single-entry
+    // list suffices.
+    scaffold.item_groups[playerId] = ['Everything'];
+
+    // Menu is virtual — no playable payload, no sidecar entry.
+    scaffold.preset_sidecars = buildPresetSidecars(grid, {
+        playerId, baseObstacleLib: obstacleLib,
+    });
+
+    return scaffold;
+}

@@ -6,6 +6,7 @@ import {
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
     wallOffUnusedExits, growMaze, compileRegionGraph,
+    buildPresetSidecars, buildRulesJson, stringifyRulesJson,
 } from './procgenPipelineEngine.js';
 
 const TEST_ITEM_LIB = {
@@ -603,5 +604,234 @@ describe('compileRegionGraph', () => {
         const outA = compileRegionGraph(a.grid, { startCell: a.startCell });
         const outB = compileRegionGraph(b.grid, { startCell: b.startCell });
         expect(outA).toEqual(outB);
+    });
+});
+
+describe('buildPresetSidecars', () => {
+    function smallGrid() {
+        return growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 5,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+    }
+
+    it('emits one sidecar per built region, keyed by region_id', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const regionNames = grid.allRegions().map((r) => r.region_id);
+        expect(Object.keys(sidecars['1']).sort()).toEqual(regionNames.sort());
+    });
+
+    it('each sidecar has substrate, render_hint, and playable_payload', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const side of Object.values(sidecars['1'])) {
+            expect(side.substrate).toBe('maze');
+            expect(side.render_hint).toBe('maze');
+            expect(side.playable_payload).toBeDefined();
+        }
+    });
+
+    it('playable_payload serializes tiles, obstacles, and items into JSON-safe shapes', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const side of Object.values(sidecars['1'])) {
+            const p = side.playable_payload;
+            // tiles is a plain array, not Int8Array
+            expect(Array.isArray(p.tiles)).toBe(true);
+            expect(p.tiles.length).toBe(p.width * p.height);
+            // obstacles/items are arrays of {x, y, id}
+            expect(Array.isArray(p.obstacles)).toBe(true);
+            for (const o of p.obstacles) {
+                expect(Number.isInteger(o.x)).toBe(true);
+                expect(Number.isInteger(o.y)).toBe(true);
+                expect(typeof o.id).toBe('string');
+            }
+            expect(Array.isArray(p.items)).toBe(true);
+            for (const i of p.items) {
+                expect(Number.isInteger(i.x)).toBe(true);
+                expect(Number.isInteger(i.y)).toBe(true);
+                expect(typeof i.id).toBe('string');
+            }
+            // obstacleLib extras — standard library entries must not
+            // be duplicated.
+            expect(p.obstacleLib.door_red).toBeUndefined();
+        }
+    });
+
+    it('whole sidecars payload round-trips through JSON.stringify', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const reparsed = JSON.parse(JSON.stringify(sidecars));
+        expect(reparsed).toEqual(sidecars);
+    });
+
+    it('uses a custom playerId when supplied', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid, { playerId: '2' });
+        expect(sidecars['2']).toBeDefined();
+        expect(sidecars['1']).toBeUndefined();
+    });
+});
+
+describe('buildRulesJson', () => {
+    function smallGrid() {
+        return growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 5,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+    }
+
+    it('requires startCell', () => {
+        const { grid } = smallGrid();
+        expect(() => buildRulesJson(grid, {})).toThrow(/startCell/);
+    });
+
+    it('produces a schema-v3 rules.json with the expected top-level fields', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(out.schema_version).toBe(3);
+        for (const key of [
+            'game_name', 'game_directory', 'archipelago_version',
+            'generation_seed', 'seed_name', 'player_names',
+            'world_classes', 'regions', 'start_regions', 'items',
+            'itempool_counts', 'canonical_placements', 'world',
+            'game_info', 'helpers', 'preset_sidecars',
+        ]) {
+            expect(out).toHaveProperty(key);
+        }
+    });
+
+    it('plugs compiled substructures under player id 1', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(Object.keys(out.regions['1']).length).toBeGreaterThan(0);
+        // Menu is the advertised start region.
+        expect(out.regions['1'][out.start_regions['1'].default[0]]).toBeDefined();
+    });
+
+    it('wraps the compiled graph in a virtual Menu start region', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(out.start_regions['1'].default).toEqual(['Menu']);
+        const menu = out.regions['1'].Menu;
+        expect(menu).toBeDefined();
+        expect(menu.locations).toEqual([]);
+        expect(menu.exits).toHaveLength(1);
+        expect(menu.exits[0].connected_region)
+            .toBe(grid.getRegion(startCell).region_id);
+        expect(menu.exits[0].access_rule).toEqual({ rule: 'True_' });
+        // Menu itself must show up first in the regions dict.
+        expect(Object.keys(out.regions['1'])[0]).toBe('Menu');
+    });
+
+    it('sets item_groups["1"] to ["Everything"]', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(out.item_groups['1']).toEqual(['Everything']);
+    });
+
+    it('tags every emitted item with groups: ["Everything"]', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        const items = out.items['1'];
+        expect(Object.keys(items).length).toBeGreaterThan(0);
+        for (const def of Object.values(items)) {
+            expect(def.groups).toEqual(['Everything']);
+        }
+    });
+
+    it('assigns numeric ids to every item (unique within the game)', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        const items = out.items['1'];
+        const ids = Object.values(items).map((def) => def.id);
+        expect(ids.length).toBeGreaterThan(0);
+        for (const id of ids) {
+            expect(Number.isInteger(id)).toBe(true);
+        }
+        expect(new Set(ids).size).toBe(ids.length);
+    });
+
+    it('embeds per-region sidecars keyed by region name (Menu excluded)', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        const regionNames = grid.allRegions().map((r) => r.region_id);
+        const sidecarNames = Object.keys(out.preset_sidecars['1']);
+        expect(sidecarNames.sort()).toEqual(regionNames.sort());
+        // Menu is virtual and must not have a sidecar.
+        expect(out.preset_sidecars['1'].Menu).toBeUndefined();
+    });
+
+    it('entire rules.json round-trips through JSON.stringify', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        const reparsed = JSON.parse(JSON.stringify(out));
+        expect(reparsed).toEqual(out);
+    });
+
+    it('is deterministic for a fixed seed', () => {
+        const a = smallGrid();
+        const b = smallGrid();
+        expect(buildRulesJson(a.grid, { startCell: a.startCell }))
+            .toEqual(buildRulesJson(b.grid, { startCell: b.startCell }));
+    });
+});
+
+describe('stringifyRulesJson', () => {
+    function smallGrid() {
+        return growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 5,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+        });
+    }
+
+    it('collapses each sidecar tiles array onto a single line', () => {
+        const { grid, startCell } = smallGrid();
+        const rules = buildRulesJson(grid, { startCell });
+        const out = stringifyRulesJson(rules);
+        // The default pretty-print puts each tile integer on its own
+        // line. The compact form keeps them all on one line each. Count
+        // lines that look like tile arrays.
+        const tilesLines = out.split('\n').filter((l) => /^\s*"tiles":\s*\[/.test(l));
+        expect(tilesLines.length).toBe(Object.keys(rules.preset_sidecars['1']).length);
+        for (const line of tilesLines) {
+            // Each tiles line must end with `]` or `],` on the same line.
+            expect(/\][,\s]*$/.test(line.trimEnd())).toBe(true);
+        }
+    });
+
+    it('output parses back to the same object', () => {
+        const { grid, startCell } = smallGrid();
+        const rules = buildRulesJson(grid, { startCell });
+        const reparsed = JSON.parse(stringifyRulesJson(rules));
+        expect(reparsed).toEqual(rules);
+    });
+
+    it('is meaningfully smaller than the default JSON.stringify(obj, null, 2)', () => {
+        const { grid, startCell } = smallGrid();
+        const rules = buildRulesJson(grid, { startCell });
+        const defaultOut = JSON.stringify(rules, null, 2);
+        const compactOut = stringifyRulesJson(rules);
+        // Not bit-exact, but should save a non-trivial number of bytes.
+        expect(compactOut.length).toBeLessThan(defaultOut.length);
+    });
+
+    it('handles missing preset_sidecars cleanly', () => {
+        const rules = { schema_version: 3, regions: {} };
+        const out = stringifyRulesJson(rules);
+        expect(JSON.parse(out)).toEqual(rules);
     });
 });

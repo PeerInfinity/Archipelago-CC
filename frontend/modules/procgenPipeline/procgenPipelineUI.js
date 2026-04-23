@@ -7,7 +7,8 @@
 import { setPanelInstance, getModuleApis } from './index.js';
 import {
     growMaze,
-    compileRegionGraph,
+    buildRulesJson,
+    stringifyRulesJson,
 } from './procgenPipelineEngine.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -402,7 +403,7 @@ export class ProcgenPipelineUI {
         }
     }
 
-    // --- Compiled rules JSON ---
+    // --- rules.json export ---
 
     _renderCompiled() {
         const container = document.createElement('div');
@@ -412,26 +413,29 @@ export class ProcgenPipelineUI {
         const details = document.createElement('details');
         details.className = 'procgen-pipeline-rules';
         const summary = document.createElement('summary');
-        summary.textContent = 'Compiled rules (Rule Builder JSON)';
+        summary.textContent = 'rules.json (with preset_sidecars)';
         details.appendChild(summary);
 
-        const json = JSON.stringify(this.result.compiled, null, 2);
+        const json = stringifyRulesJson(this.result.rulesJson);
+        const seedName = this.result.rulesJson?.seed_name || String(this.params.seed);
+        const filename = `AP_${seedName}_rules.json`;
+
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';
+        const loadBtn = this._btn('Load into frontend', (e) => {
+            e.preventDefault();
+            this._loadIntoFrontend(this.result.rulesJson, loadBtn);
+        });
+        const downloadBtn = this._btn('Download rules.json', (e) => {
+            e.preventDefault();
+            this._downloadText(json, filename);
+        });
         const copyBtn = this._btn('Copy JSON', (e) => {
             e.preventDefault();
-            if (navigator.clipboard?.writeText) {
-                navigator.clipboard.writeText(json)
-                    .then(() => { copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); })
-                    .catch(() => { copyBtn.textContent = 'Copy failed'; });
-            } else {
-                const ta = document.createElement('textarea');
-                ta.value = json; document.body.appendChild(ta); ta.select();
-                try { document.execCommand('copy'); copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); }
-                catch { copyBtn.textContent = 'Copy failed'; }
-                document.body.removeChild(ta);
-            }
+            this._copyToClipboard(json, copyBtn);
         });
+        btnRow.appendChild(loadBtn);
+        btnRow.appendChild(downloadBtn);
         btnRow.appendChild(copyBtn);
         details.appendChild(btnRow);
 
@@ -442,6 +446,56 @@ export class ProcgenPipelineUI {
 
         container.appendChild(details);
         return container;
+    }
+
+    _downloadText(text, filename) {
+        const blob = new Blob([text], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        // Revoke after a tick so the download has a chance to start.
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    _loadIntoFrontend(rulesJson, button) {
+        const restore = () => { button.textContent = 'Load into frontend'; };
+        const eventBus = this.apis?.eventBus;
+        if (!eventBus || typeof eventBus.publish !== 'function') {
+            button.textContent = 'No eventBus';
+            setTimeout(restore, 1500);
+            return;
+        }
+        // Matches the editor's Apply flow — same event name, same payload shape.
+        eventBus.publish('files:jsonLoaded', {
+            jsonData: rulesJson,
+            selectedPlayerId: '1',
+            sourceName: 'procgenPipeline',
+        });
+        button.textContent = 'Loaded';
+        setTimeout(restore, 1200);
+    }
+
+    _copyToClipboard(text, button) {
+        const restore = () => { button.textContent = 'Copy JSON'; };
+        if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(text)
+                .then(() => { button.textContent = 'Copied'; setTimeout(restore, 1200); })
+                .catch(() => { button.textContent = 'Copy failed'; });
+            return;
+        }
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try {
+            document.execCommand('copy');
+            button.textContent = 'Copied'; setTimeout(restore, 1200);
+        } catch {
+            button.textContent = 'Copy failed';
+        }
+        document.body.removeChild(ta);
     }
 
     // --- Run ---
@@ -473,13 +527,13 @@ export class ProcgenPipelineUI {
                     maxRegions: maxRegions ?? null,
                 },
             });
-            const compiled = compileRegionGraph(grid, { startCell });
+            const rulesJson = buildRulesJson(grid, { startCell, seed });
             this.result = {
                 grid,
                 regionSize: { width: regionWidth, height: regionHeight },
                 stats,
                 poolRemaining: pool.snapshot(),
-                compiled,
+                rulesJson,
             };
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
