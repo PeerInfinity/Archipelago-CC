@@ -799,3 +799,158 @@ export function placeFromItems(world, input = {}) {
     return { placed_items, placed_obstacles };
 }
 
+/**
+ * Substrate adapter — rule-driven placement.
+ *
+ * Top-down mode. Realises a pre-specified rule set as geometry by
+ * placing logic_gate tiles directly on target tiles — on the exit
+ * tile for each exit rule, on the item-pickup tile for each location
+ * rule. Simple, no cut-vertex search, no gate merging; see
+ * substrate-pipeline-architecture.md §"Logic-gate obstacle" for the
+ * rationale.
+ *
+ * Each placed gate becomes a per-instance obstacle entry in the
+ * world's `obstacleLib` with a unique id (`logic_gate_<N>`) and its
+ * own `clear_rule`. The compiler and runtime don't need special
+ * handling beyond the `clear_set_type: 'rule'` dispatch already in
+ * place.
+ *
+ * Input:
+ *   world,
+ *   {
+ *     exit_rules:      { [exit_id]:     <Rule Builder rule> },
+ *     location_rules:  { [location_id]: <Rule Builder rule> },
+ *     item_placements: [ { item_id, location_id } ],
+ *     rng,
+ *     params,
+ *   }
+ *
+ * Output:
+ *   { placed_logic_gates, placed_items, placed_locations }
+ *
+ * v1 scope:
+ *   - Exactly one exit per region — at most one entry in exit_rules.
+ *   - A location rule places a gate on the same tile as the location's
+ *     item, so the gate clearance also gates item pickup.
+ *   - item_placements entries with no matching location_rule land on
+ *     a random reachable tile with no gate.
+ *
+ * The **gate-of-arrival exception** from the architecture doc is a
+ * no-op in v1: `step()` only checks the target tile of a move, never
+ * the source, so a player placed on a gate tile (via createState or
+ * the future playback dispatcher's region-transition) is allowed to
+ * be there and can always step off. The exception becomes
+ * load-bearing once back-traversal / bidirectional exits land —
+ * re-entering the same gate then has to be a normal gated step
+ * again, and `State` will need a "gates I've arrived on and not
+ * stepped off" set. Deferred until that work.
+ */
+export function placeFromRules(world, input = {}) {
+    const {
+        exit_rules = {},
+        location_rules = {},
+        item_placements = [],
+        rng,
+        params: _params = {},
+    } = input;
+
+    if (!world) throw new Error('placeFromRules: world required');
+    if (!rng || typeof rng.next !== 'function') throw new Error('placeFromRules: rng required');
+
+    const exitIds = Object.keys(exit_rules);
+    if (exitIds.length > 1) {
+        throw new Error(`placeFromRules v1: at most one exit rule supported, got ${exitIds.length}`);
+    }
+
+    // Copy the obstacleLib so per-instance gate entries added here
+    // don't leak into other regions sharing the same reference.
+    world.obstacleLib = { ...world.obstacleLib };
+
+    const logicGateBase = world.obstacleLib.logic_gate ?? {
+        name: 'Logic Gate',
+        clear_set_type: 'rule',
+        color: '#b06eb8',
+        display: { mode: 'tree' },
+    };
+
+    let gateCounter = 0;
+    const newGateId = () => `logic_gate_${gateCounter++}`;
+    const registerGate = (rule) => {
+        const gate_id = newGateId();
+        world.obstacleLib[gate_id] = {
+            ...logicGateBase,
+            id: gate_id,
+            clear_set_type: 'rule',
+            clear_rule: rule,
+        };
+        return gate_id;
+    };
+
+    const placed_logic_gates = [];
+    const placed_items = [];
+    const placed_locations = [];
+
+    // Exit rule: gate the exit tile.
+    if (exitIds.length === 1) {
+        const exit_id = exitIds[0];
+        const rule = exit_rules[exit_id];
+        const gate_id = registerGate(rule);
+        setObstacle(world, world.exit.x, world.exit.y, gate_id);
+        placed_logic_gates.push({
+            gate_id,
+            exit_id,
+            position: { x: world.exit.x, y: world.exit.y },
+            clear_rule: rule,
+        });
+    }
+
+    // Location rules: pick a reachable floor tile per location, place
+    // the mapped item there, and put a gate on the same tile.
+    const itemByLocation = Object.fromEntries(
+        item_placements.map((p) => [p.location_id, p.item_id]),
+    );
+    const placedLocationIds = new Set();
+    for (const [location_id, rule] of Object.entries(location_rules)) {
+        const excluded = [
+            ...placed_logic_gates.map((g) => g.position),
+            ...placed_items.map((p) => p.position),
+        ];
+        const tile = pickReachableFloorTile(world, rng, excluded);
+        if (!tile) break;
+
+        const item_id = itemByLocation[location_id];
+        if (item_id) {
+            setItem(world, tile.x, tile.y, item_id);
+            placed_items.push({ item_id, location_id, position: tile });
+        }
+        const gate_id = registerGate(rule);
+        setObstacle(world, tile.x, tile.y, gate_id);
+        placed_logic_gates.push({
+            gate_id,
+            location_id,
+            position: tile,
+            clear_rule: rule,
+        });
+        placed_locations.push({ location_id, position: tile });
+        placedLocationIds.add(location_id);
+    }
+
+    // Rule-less item placements land on a random reachable tile, no
+    // gate. These locations are reachable via the region's ordinary
+    // paths-and-obstacles extraction (no placed obstacle → empty path).
+    for (const { item_id, location_id } of item_placements) {
+        if (placedLocationIds.has(location_id)) continue;
+        const excluded = [
+            ...placed_logic_gates.map((g) => g.position),
+            ...placed_items.map((p) => p.position),
+        ];
+        const tile = pickReachableFloorTile(world, rng, excluded);
+        if (!tile) break;
+        setItem(world, tile.x, tile.y, item_id);
+        placed_items.push({ item_id, location_id, position: tile });
+        placed_locations.push({ location_id, position: tile });
+        placedLocationIds.add(location_id);
+    }
+
+    return { placed_logic_gates, placed_items, placed_locations };
+}

@@ -17,8 +17,10 @@ import {
     extractPathsAndObstacles,
     generateRegionCore,
     placeFromItems,
+    placeFromRules,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 
 function runPlan(world, startState, plan) {
     let s = startState;
@@ -539,6 +541,132 @@ describe('extractPathsAndObstacles', () => {
         const w = createWorld(3, 3);
         const result = extractPathsAndObstacles(w, { regionId: 'forest_entrance' });
         expect(result.region_id).toBe('forest_entrance');
+    });
+});
+
+describe('placeFromRules', () => {
+    const freshCore = (overrides = {}) => generateRegionCore({
+        region_id: 'r1',
+        size: { width: 10, height: 8 },
+        entrances: [{ side: 'W', tile: { x: 0, y: 3 } }],
+        exits: [{ side: 'E' }],
+        rng: createRng(7),
+        params: {},
+        ...overrides,
+    });
+
+    it('rejects missing world or rng', () => {
+        const { world } = freshCore();
+        expect(() => placeFromRules(null, { rng: createRng(1) })).toThrow(/world/);
+        expect(() => placeFromRules(world, {})).toThrow(/rng/);
+    });
+
+    it('rejects more than one exit rule in v1', () => {
+        const { world } = freshCore();
+        expect(() => placeFromRules(world, {
+            exit_rules: {
+                exit_a: { rule: 'True_' },
+                exit_b: { rule: 'True_' },
+            },
+            rng: createRng(1),
+        })).toThrow(/exit/);
+    });
+
+    it('places nothing when inputs are empty', () => {
+        const { world } = freshCore();
+        const out = placeFromRules(world, { rng: createRng(1) });
+        expect(out.placed_logic_gates).toEqual([]);
+        expect(out.placed_items).toEqual([]);
+        expect(out.placed_locations).toEqual([]);
+    });
+
+    it('exit rule round-trips through extract + compile', () => {
+        const { world } = freshCore();
+        const exitRule = {
+            rule: 'Or', children: [
+                { rule: 'Has', args: { item_name: 'key_red' } },
+                { rule: 'Has', args: { item_name: 'key_blue' } },
+            ],
+        };
+        const out = placeFromRules(world, {
+            exit_rules: { exit: exitRule },
+            rng: createRng(1),
+        });
+        // Gate landed on the exit tile.
+        expect(out.placed_logic_gates).toHaveLength(1);
+        expect(out.placed_logic_gates[0].position).toEqual(world.exit);
+        expect(getObstacle(world, world.exit.x, world.exit.y))
+            .toBe(out.placed_logic_gates[0].gate_id);
+
+        // Extracting the region emits the gate on the exit's path.
+        const extracted = extractPathsAndObstacles(world, { regionId: 'r1' });
+        expect(extracted.exits).toHaveLength(1);
+        const exitPaths = extracted.exits[0].paths;
+        expect(exitPaths).toHaveLength(1);
+        expect(exitPaths[0].obstacles).toEqual([out.placed_logic_gates[0].gate_id]);
+
+        // Compiling emits the supplied rule verbatim.
+        const compiled = compileRegion(extracted, { obstacleLib: world.obstacleLib });
+        expect(compiled.exits[0].rule).toEqual(exitRule);
+    });
+
+    it('location rule places a gate on the item tile and compiles the same rule', () => {
+        const { world } = freshCore();
+        const locRule = { rule: 'Has', args: { item_name: 'key_red' } };
+        const out = placeFromRules(world, {
+            location_rules: { loc_boss_hint: locRule },
+            item_placements: [{ item_id: 'map', location_id: 'loc_boss_hint' }],
+            rng: createRng(1),
+        });
+        // Both the item and a gate sit on the same location tile.
+        expect(out.placed_items).toHaveLength(1);
+        expect(out.placed_logic_gates).toHaveLength(1);
+        const tile = out.placed_items[0].position;
+        expect(out.placed_logic_gates[0].position).toEqual(tile);
+        expect(getItem(world, tile.x, tile.y)).toBe('map');
+
+        // Compiled location rule matches input.
+        const extracted = extractPathsAndObstacles(world, { regionId: 'r1' });
+        const compiled = compileRegion(extracted, { obstacleLib: world.obstacleLib });
+        const mapLoc = compiled.locations.find((l) => l.item === 'map');
+        expect(mapLoc).toBeDefined();
+        expect(mapLoc.rule).toEqual(locRule);
+    });
+
+    it('rule-less item placements drop the item with no gate', () => {
+        const { world } = freshCore();
+        const out = placeFromRules(world, {
+            item_placements: [{ item_id: 'map', location_id: 'loc_free' }],
+            rng: createRng(1),
+        });
+        expect(out.placed_items).toHaveLength(1);
+        expect(out.placed_logic_gates).toHaveLength(0);
+        const tile = out.placed_items[0].position;
+        expect(getObstacle(world, tile.x, tile.y)).toBeUndefined();
+    });
+
+    it('per-instance gate ids are scoped to the region (no lib mutation leak)', () => {
+        const sharedLib = { ...DEFAULT_OBSTACLES };
+        const { world: worldA } = freshCore({ rng: createRng(1), region_id: 'A' });
+        const { world: worldB } = freshCore({ rng: createRng(2), region_id: 'B' });
+        worldA.obstacleLib = sharedLib;
+        worldB.obstacleLib = sharedLib;
+        placeFromRules(worldA, {
+            exit_rules: { exit: { rule: 'Has', args: { item_name: 'key_red' } } },
+            rng: createRng(10),
+        });
+        placeFromRules(worldB, {
+            exit_rules: { exit: { rule: 'Has', args: { item_name: 'key_blue' } } },
+            rng: createRng(11),
+        });
+        // The shared lib is untouched; each world has its own copy with
+        // its own gate entries.
+        expect(sharedLib.logic_gate_0).toBeUndefined();
+        expect(worldA.obstacleLib.logic_gate_0).toBeDefined();
+        expect(worldB.obstacleLib.logic_gate_0).toBeDefined();
+        expect(worldA.obstacleLib.logic_gate_0.clear_rule).not.toEqual(
+            worldB.obstacleLib.logic_gate_0.clear_rule,
+        );
     });
 });
 
