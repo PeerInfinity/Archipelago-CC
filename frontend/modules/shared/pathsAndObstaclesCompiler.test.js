@@ -50,6 +50,45 @@ describe('compileAccessRule — edge cases', () => {
         );
         expect(r).toEqual({ rule: 'False_' });
     });
+
+    it('obstacle with clear_set_type "rule" inlines its clear_rule', () => {
+        const gateRule = {
+            rule: 'And', children: [
+                { rule: 'Has', args: { item_name: 'key_red' } },
+                { rule: 'Has', args: { item_name: 'key_green' } },
+            ],
+        };
+        const lib = {
+            logic_gate_1: {
+                id: 'logic_gate_1',
+                clear_set_type: 'rule',
+                clear_rule: gateRule,
+            },
+        };
+        const r = compileAccessRule(
+            [{ path_id: 'p1', obstacles: ['logic_gate_1'] }],
+            lib,
+        );
+        // Single-obstacle path: path's AND degenerates to the obstacle
+        // rule, and the OR-over-paths also degenerates. The inlined
+        // rule should surface unchanged.
+        expect(r).toEqual(gateRule);
+    });
+
+    it('clear_set_type "rule" with null clear_rule compiles to False_', () => {
+        const lib = {
+            orphan_gate: {
+                id: 'orphan_gate',
+                clear_set_type: 'rule',
+                clear_rule: null,
+            },
+        };
+        const r = compileAccessRule(
+            [{ path_id: 'p1', obstacles: ['orphan_gate'] }],
+            lib,
+        );
+        expect(r).toEqual({ rule: 'False_' });
+    });
 });
 
 describe('compileAccessRule — clear_set shapes', () => {

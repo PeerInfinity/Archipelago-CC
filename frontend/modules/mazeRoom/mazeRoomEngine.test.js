@@ -106,6 +106,54 @@ describe('library / obstacle gating', () => {
         expect(isObstacleCleared('both', new Set(['b']), lib)).toBe(false);
         expect(isObstacleCleared('both', new Set(['a', 'b']), lib)).toBe(true);
     });
+
+    it('isObstacleCleared: door_green and door_blue check their matching keys', () => {
+        expect(isObstacleCleared('door_green', new Set())).toBe(false);
+        expect(isObstacleCleared('door_green', new Set(['key_green']))).toBe(true);
+        expect(isObstacleCleared('door_green', new Set(['key_red']))).toBe(false);
+        expect(isObstacleCleared('door_blue', new Set(['key_blue']))).toBe(true);
+    });
+
+    it('isObstacleCleared: logic_gate with no clear_rule is never cleared', () => {
+        // Base template: clear_rule is null until a per-instance clone fills it.
+        expect(isObstacleCleared('logic_gate', new Set(['key_red']))).toBe(false);
+    });
+
+    it('isObstacleCleared: logic_gate evaluates its clear_rule against inventory', () => {
+        const lib = {
+            gate_a: {
+                id: 'gate_a',
+                clear_set_type: 'rule',
+                clear_rule: { rule: 'Has', args: { item_name: 'key_red' } },
+            },
+            gate_b: {
+                id: 'gate_b',
+                clear_set_type: 'rule',
+                clear_rule: {
+                    rule: 'Or', children: [
+                        { rule: 'Has', args: { item_name: 'key_red' } },
+                        { rule: 'Has', args: { item_name: 'key_blue' } },
+                    ],
+                },
+            },
+            gate_c: {
+                id: 'gate_c',
+                clear_set_type: 'rule',
+                clear_rule: {
+                    rule: 'And', children: [
+                        { rule: 'Has', args: { item_name: 'key_red' } },
+                        { rule: 'Has', args: { item_name: 'key_green' } },
+                    ],
+                },
+            },
+        };
+        expect(isObstacleCleared('gate_a', new Set(), lib)).toBe(false);
+        expect(isObstacleCleared('gate_a', new Set(['key_red']), lib)).toBe(true);
+        expect(isObstacleCleared('gate_b', new Set(['key_blue']), lib)).toBe(true);
+        expect(isObstacleCleared('gate_b', new Set(['key_green']), lib)).toBe(false);
+        expect(isObstacleCleared('gate_c', new Set(['key_red']), lib)).toBe(false);
+        expect(isObstacleCleared('gate_c', new Set(['key_red', 'key_green']), lib)).toBe(true);
+    });
 });
 
 describe('step with obstacles and items', () => {

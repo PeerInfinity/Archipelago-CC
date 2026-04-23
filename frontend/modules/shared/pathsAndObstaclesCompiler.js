@@ -33,6 +33,13 @@ function compileObstacle(obstacleId, obstacleLib) {
     if (!obstacle) {
         throw new Error(`compileObstacle: unknown obstacle '${obstacleId}'`);
     }
+    const type = obstacle.clear_set_type ?? 'combo_list';
+    if (type === 'rule') {
+        // Logic-gate-style obstacle: the clear condition is already a
+        // Rule Builder rule. Inline it unchanged. Missing clear_rule ≡
+        // never clearable, same convention as an empty combo_list.
+        return obstacle.clear_rule ?? makeFalseRule();
+    }
     const clearSet = obstacle.clear_set ?? [];
     // Empty clear_set ≡ no item combination ever clears this obstacle
     // ≡ path through it is never valid. Emit False_ so the surrounding
