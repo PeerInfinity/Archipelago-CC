@@ -235,6 +235,10 @@
     "procgenPipeline": {
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
+    },
+    "procgenPlayer": {
+      "path": "./modules/procgenPlayer/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -296,6 +300,7 @@
     "apcalc",
     "apcalcGenerator",
     "mazeRoom",
-    "procgenPipeline"
+    "procgenPipeline",
+    "procgenPlayer"
   ]
 }

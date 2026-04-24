@@ -1,0 +1,102 @@
+/**
+ * Procgen player engine — pure helpers for the procgen player module.
+ * Headless: no DOM, no eventBus, no module wiring. The thin
+ * subscribe-and-route layer lives in index.js.
+ *
+ * See NewDocs/plans/procedural-generation/procgen-player.md for the
+ * architecture this implements.
+ */
+
+/**
+ * In-memory store of deserialized regions for the currently-loaded
+ * procgen world. Built from rules.json's `preset_sidecars` block.
+ *
+ * Each entry is { substrate, world, loadRegionEvent } — substrate id
+ * for routing decisions, world for the load event payload, and the
+ * substrate's eventBus event name so the caller doesn't need to
+ * re-look-up the registry to publish.
+ */
+export class WorldWarehouse {
+    constructor() {
+        this.regions = new Map();
+        this.playerId = null;
+    }
+
+    has(regionId) { return this.regions.has(regionId); }
+    get(regionId) { return this.regions.get(regionId); }
+    keys() { return [...this.regions.keys()]; }
+    size() { return this.regions.size; }
+    isEmpty() { return this.regions.size === 0; }
+    clear() { this.regions.clear(); this.playerId = null; }
+}
+
+/**
+ * Build a warehouse from a rules.json payload. Returns null when the
+ * payload doesn't contain a `preset_sidecars` block for the requested
+ * player — i.e. it isn't a procgen-emitted rules.json and the procgen
+ * player should stay out of the way.
+ *
+ * Skips (with a warning) sidecar entries whose substrate isn't in the
+ * registry or whose registry entry is missing `deserializeWorld`.
+ * That's a defensive log rather than an error so a partial warehouse
+ * can still drive the regions whose substrates are wired up.
+ */
+export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
+    const logger = opts.logger ?? console;
+    const sidecars = rulesJson?.preset_sidecars?.[playerId];
+    if (!sidecars || typeof sidecars !== 'object') return null;
+
+    const warehouse = new WorldWarehouse();
+    warehouse.playerId = playerId;
+    for (const [regionId, entry] of Object.entries(sidecars)) {
+        const adapter = registry.get(entry.substrate);
+        if (!adapter) {
+            logger.warn?.(`procgenPlayer: unknown substrate '${entry.substrate}' for region ${regionId}; skipping`);
+            continue;
+        }
+        if (typeof adapter.deserializeWorld !== 'function') {
+            logger.warn?.(`procgenPlayer: substrate '${entry.substrate}' has no deserializeWorld; skipping ${regionId}`);
+            continue;
+        }
+        warehouse.regions.set(regionId, {
+            substrate: entry.substrate,
+            world: adapter.deserializeWorld(entry.playable_payload),
+            loadRegionEvent: adapter.loadRegionEvent,
+        });
+    }
+    return warehouse;
+}
+
+/**
+ * Identify the region the procgen player should publish loadRegion
+ * for on initial load.
+ *
+ * Walks `start_regions[playerId]` (handling both array and object
+ * `{default: [...]}` shapes per AP convention). If the named start
+ * region has its own sidecar in the warehouse, that's the answer.
+ * Otherwise it's a synthetic AP region (e.g. the 'Menu' region the
+ * procgen pipeline emits) and we follow its first matching exit
+ * connected_region into the warehouse.
+ *
+ * Returns null when no warehoused region can be reached from the
+ * declared start.
+ */
+export function findStartRegion(rulesJson, playerId, warehouse) {
+    const startRegions = rulesJson?.start_regions?.[playerId];
+    let startName = null;
+    if (Array.isArray(startRegions?.default)) {
+        startName = startRegions.default[0];
+    } else if (Array.isArray(startRegions)) {
+        startName = startRegions[0];
+    }
+    if (!startName) return null;
+    if (warehouse.has(startName)) return startName;
+
+    const regionDef = rulesJson?.regions?.[playerId]?.[startName];
+    for (const exit of regionDef?.exits ?? []) {
+        if (exit?.connected_region && warehouse.has(exit.connected_region)) {
+            return exit.connected_region;
+        }
+    }
+    return null;
+}
