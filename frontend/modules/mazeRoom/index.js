@@ -28,18 +28,59 @@ export const moduleInfo = {
 let panelInstance = null;
 let eventBus = null;
 let dispatcher = null;
+let unsubLoadRegion = null;
+
+// Buffer for a maze:loadRegion event that arrived before the panel
+// was mounted. MazeRoomUI's constructor drains it on mount via
+// consumePendingLoadRegion(). See procgen-player.md §"Event flow".
+let pendingLoadRegion = null;
+
+function handleLoadRegion(payload) {
+    // Self-activate. No-op when the panel is already the active item
+    // in its stack; in any other case ui:activatePanel is what brings
+    // it (or causes it to be created) into focus.
+    if (eventBus?.publish) {
+        eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+    }
+    if (panelInstance && typeof panelInstance.applyLoadedRegion === 'function') {
+        panelInstance.applyLoadedRegion(payload);
+    } else {
+        // Panel will pick this up in its constructor on mount.
+        pendingLoadRegion = payload;
+    }
+}
+
+export function consumePendingLoadRegion() {
+    const p = pendingLoadRegion;
+    pendingLoadRegion = null;
+    return p;
+}
+
+// Test-only — reset module-scope state between cases.
+export function _testOnly_resetModuleState() {
+    panelInstance = null;
+    eventBus = null;
+    dispatcher = null;
+    pendingLoadRegion = null;
+    if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
+}
 
 export function register(registrationApi) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'modules/mazeRoom/mazeRoom.css';
-    document.head.appendChild(link);
+    // No-op under headless test environments; the stylesheet only
+    // matters when the panel is actually rendered.
+    if (typeof document !== 'undefined') {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'modules/mazeRoom/mazeRoom.css';
+        document.head.appendChild(link);
+    }
 
     registrationApi.registerPanelComponent('mazeRoomPanel', MazeRoomUI);
 
-    // Skeleton for step 7's procgen player. No consumer yet — this
-    // just makes the maze discoverable by the registry. See
-    // NewDocs/plans/procedural-generation/procgen-player.md.
+    // Self-activation on maze:loadRegion publishes ui:activatePanel.
+    registrationApi.registerEventBusPublisher('ui:activatePanel');
+
+    // Make the maze discoverable by the substrate registry.
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
     }
@@ -51,10 +92,23 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     MazeRoomUI.setModuleApis({ eventBus, dispatcher });
 
+    // The procgen player (step 8) is the eventual publisher of
+    // maze:loadRegion. Step 5 ships only the receiver side — the
+    // event can also be published manually (or by tests) to drive
+    // the maze panel directly.
+    if (eventBus?.subscribe) {
+        unsubLoadRegion = eventBus.subscribe(
+            substrateRegistryEntry.loadRegionEvent,
+            handleLoadRegion,
+        );
+    }
+
     return () => {
+        if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
         panelInstance = null;
         eventBus = null;
         dispatcher = null;
+        pendingLoadRegion = null;
     };
 }
 

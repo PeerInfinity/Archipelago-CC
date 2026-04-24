@@ -4,7 +4,7 @@
  * headless; this file is the thin DOM wrapper over it.
  */
 
-import { setPanelInstance, getModuleApis } from './index.js';
+import { setPanelInstance, getModuleApis, consumePendingLoadRegion } from './index.js';
 import {
     TILE_WALL,
     INPUT_N, INPUT_S, INPUT_E, INPUT_W,
@@ -69,7 +69,45 @@ export class MazeRoomUI {
 
         setPanelInstance(this);
         this._loadFromLocalStorage();
+
+        // If a maze:loadRegion event was published before this panel
+        // mounted, the index.js handler buffered the payload. Pick it
+        // up here so the panel comes up showing the loaded region
+        // instead of the empty "click Generate" hint.
+        const pending = consumePendingLoadRegion();
+        if (pending) {
+            this._adoptLoadedRegion(pending, { skipRender: true });
+        }
+
         this.render();
+    }
+
+    /**
+     * Apply a region payload published via maze:loadRegion. Called by
+     * the module-level handler when this panel is already mounted, and
+     * (via constructor) on initial mount with any buffered payload.
+     */
+    applyLoadedRegion(payload) {
+        this._adoptLoadedRegion(payload);
+    }
+
+    _adoptLoadedRegion(payload, { skipRender = false } = {}) {
+        // Payload shape (per procgen-player.md §"Event flow"):
+        //   { region_id, world, arrivedFrom }
+        // v1 maze ignores arrivedFrom — every region has exactly one
+        // entrance, so the player always spawns at world.entrance.
+        // arrivedFrom becomes meaningful when v2 substrates support
+        // multiple entrances per region.
+        this.world = payload.world;
+        this.state = createState(this.world);
+        this.stats = null;
+        this.message = payload.region_id
+            ? `Loaded region: ${payload.region_id}`
+            : 'Loaded region';
+        if (!skipRender) {
+            this.render();
+            this.rootElement?.focus();
+        }
     }
 
     get apis() { return MazeRoomUI.moduleApis || getModuleApis(); }
