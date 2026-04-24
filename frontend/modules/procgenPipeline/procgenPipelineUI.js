@@ -278,6 +278,32 @@ export class ProcgenPipelineUI {
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
         section.appendChild(gen);
+
+        // Post-generation export actions, shown next to Generate once
+        // a result is available. Hidden until then to keep the panel
+        // uncluttered before there's anything to export.
+        if (this.result) {
+            const json = stringifyRulesJson(this.result.rulesJson);
+            const seedName = this.result.rulesJson?.seed_name || String(this.params.seed);
+            const filename = `AP_${seedName}_rules.json`;
+
+            const loadBtn = this._btn('Load into frontend', (e) => {
+                e.preventDefault();
+                this._loadIntoFrontend(this.result.rulesJson, loadBtn);
+            });
+            const downloadBtn = this._btn('Download rules.json', (e) => {
+                e.preventDefault();
+                this._downloadText(json, filename);
+            });
+            const copyBtn = this._btn('Copy JSON', (e) => {
+                e.preventDefault();
+                this._copyToClipboard(json, copyBtn);
+            });
+            section.appendChild(loadBtn);
+            section.appendChild(downloadBtn);
+            section.appendChild(copyBtn);
+        }
+
         if (this.message) {
             const msg = document.createElement('span');
             msg.className = 'procgen-pipeline-message';
@@ -416,29 +442,9 @@ export class ProcgenPipelineUI {
         summary.textContent = 'rules.json (with preset_sidecars)';
         details.appendChild(summary);
 
+        // Export buttons (Load / Download / Copy) live next to Generate
+        // in _renderActions; this section is just the JSON preview now.
         const json = stringifyRulesJson(this.result.rulesJson);
-        const seedName = this.result.rulesJson?.seed_name || String(this.params.seed);
-        const filename = `AP_${seedName}_rules.json`;
-
-        const btnRow = document.createElement('div');
-        btnRow.className = 'procgen-pipeline-btn-row';
-        const loadBtn = this._btn('Load into frontend', (e) => {
-            e.preventDefault();
-            this._loadIntoFrontend(this.result.rulesJson, loadBtn);
-        });
-        const downloadBtn = this._btn('Download rules.json', (e) => {
-            e.preventDefault();
-            this._downloadText(json, filename);
-        });
-        const copyBtn = this._btn('Copy JSON', (e) => {
-            e.preventDefault();
-            this._copyToClipboard(json, copyBtn);
-        });
-        btnRow.appendChild(loadBtn);
-        btnRow.appendChild(downloadBtn);
-        btnRow.appendChild(copyBtn);
-        details.appendChild(btnRow);
-
         const pre = document.createElement('pre');
         pre.className = 'procgen-pipeline-rules-json';
         pre.textContent = json;
