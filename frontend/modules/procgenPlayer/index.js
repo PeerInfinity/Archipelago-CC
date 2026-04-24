@@ -61,8 +61,23 @@ function handleFilesJsonLoaded(data) {
         return;
     }
     warehouse = built;
-    const startRegion = findStartRegion(rulesJson, playerId, warehouse);
-    if (startRegion) publishLoadRegion(startRegion, null);
+
+    // Synthesize a user:regionMove for the initial load rather than
+    // calling publishLoadRegion directly. That keeps gameState's path
+    // + currentRegion in sync with what the maze is rendering (the
+    // "Menu -> first real region" transition is a real move in the
+    // AP-narrative sense) and collapses initial-load + subsequent-
+    // transition into a single code path — this handler's sibling,
+    // handleRegionMove, does the actual loadRegion publish when the
+    // event circulates back through the dispatcher chain.
+    const startTransition = findStartRegion(rulesJson, playerId, warehouse);
+    if (startTransition && dispatcher?.publish) {
+        dispatcher.publish('user:regionMove', {
+            sourceRegion: startTransition.sourceRegion,
+            targetRegion: startTransition.region,
+            exitName: startTransition.exitName,
+        }, { initialTarget: 'bottom' });
+    }
 }
 
 function handleRegionMove(data) {
@@ -87,6 +102,12 @@ export function register(registrationApi) {
         handleRegionMove,
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
     );
+
+    // On initial load we synthesize a user:regionMove ourselves to
+    // carry gameState through the Menu -> first real region transition.
+    if (typeof registrationApi.registerDispatcherSender === 'function') {
+        registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+    }
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {

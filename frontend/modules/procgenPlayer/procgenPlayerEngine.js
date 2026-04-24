@@ -68,15 +68,24 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
 }
 
 /**
- * Identify the region the procgen player should publish loadRegion
- * for on initial load.
+ * Identify how to transition into the procgen world on initial load.
+ *
+ * Returns the structured shape needed to synthesize a
+ * `user:regionMove` event that leaves gameState in a consistent
+ * state:
+ *
+ *   { region, sourceRegion, exitName }
+ *
+ * `region` is the warehoused region to actually load. `sourceRegion`
+ * is the AP-side declared start (e.g. 'Menu') — null when the start
+ * region has its own sidecar directly and there's no indirection.
+ * `exitName` is the exit the transition uses, or null.
  *
  * Walks `start_regions[playerId]` (handling both array and object
  * `{default: [...]}` shapes per AP convention). If the named start
- * region has its own sidecar in the warehouse, that's the answer.
- * Otherwise it's a synthetic AP region (e.g. the 'Menu' region the
- * procgen pipeline emits) and we follow its first matching exit
- * connected_region into the warehouse.
+ * region has its own sidecar it's the answer directly. Otherwise
+ * it's a synthetic AP region (e.g. 'Menu') and we follow its first
+ * matching exit's connected_region into the warehouse.
  *
  * Returns null when no warehoused region can be reached from the
  * declared start.
@@ -90,12 +99,18 @@ export function findStartRegion(rulesJson, playerId, warehouse) {
         startName = startRegions[0];
     }
     if (!startName) return null;
-    if (warehouse.has(startName)) return startName;
+    if (warehouse.has(startName)) {
+        return { region: startName, sourceRegion: null, exitName: null };
+    }
 
     const regionDef = rulesJson?.regions?.[playerId]?.[startName];
     for (const exit of regionDef?.exits ?? []) {
         if (exit?.connected_region && warehouse.has(exit.connected_region)) {
-            return exit.connected_region;
+            return {
+                region: exit.connected_region,
+                sourceRegion: startName,
+                exitName: exit.name ?? null,
+            };
         }
     }
     return null;

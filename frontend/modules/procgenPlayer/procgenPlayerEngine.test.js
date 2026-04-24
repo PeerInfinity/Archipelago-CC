@@ -96,12 +96,14 @@ describe('findStartRegion', () => {
         return findStartRegion(rules, '1', wh);
     }
 
-    it('returns the start region directly if it has a sidecar', () => {
+    it('returns a direct transition when the start region has a sidecar', () => {
         const rules = {
             start_regions: { 1: ['region_0_0'] },
             regions: { 1: { region_0_0: { exits: [] } } },
         };
-        expect(withWarehouse(rules, ['region_0_0'])).toBe('region_0_0');
+        expect(withWarehouse(rules, ['region_0_0'])).toEqual({
+            region: 'region_0_0', sourceRegion: null, exitName: null,
+        });
     });
 
     it('handles the AP {default: [...]} shape for start_regions', () => {
@@ -109,12 +111,14 @@ describe('findStartRegion', () => {
             start_regions: { 1: { default: ['region_0_0'] } },
             regions: { 1: { region_0_0: { exits: [] } } },
         };
-        expect(withWarehouse(rules, ['region_0_0'])).toBe('region_0_0');
+        expect(withWarehouse(rules, ['region_0_0']).region).toBe('region_0_0');
     });
 
-    it('walks Menu through its first exit to a warehoused region', () => {
+    it('walks Menu through its first exit, reporting Menu as sourceRegion', () => {
         const rules = makeRulesJson();
-        expect(withWarehouse(rules, ['region_0_0'])).toBe('region_0_0');
+        expect(withWarehouse(rules, ['region_0_0'])).toEqual({
+            region: 'region_0_0', sourceRegion: 'Menu', exitName: 'GameStart',
+        });
     });
 
     it('returns null when no warehoused region is reachable', () => {
@@ -141,6 +145,8 @@ describe('findStartRegion', () => {
                 },
             },
         };
-        expect(withWarehouse(rules, ['region_real'])).toBe('region_real');
+        expect(withWarehouse(rules, ['region_real'])).toEqual({
+            region: 'region_real', sourceRegion: 'Menu', exitName: 'GameStart',
+        });
     });
 });

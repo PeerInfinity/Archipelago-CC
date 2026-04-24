@@ -29,18 +29,25 @@ function makeMockEventBus() {
 
 function makeMockDispatcher() {
     const forwarded = [];
+    const published = [];
     return {
+        publish(eventName, data, options) {
+            published.push({ eventName, data, options });
+        },
         publishToNextModule(moduleId, eventName, data, opts) {
             forwarded.push({ moduleId, eventName, data, opts });
         },
-        forwarded,
+        forwarded, published,
     };
 }
 
 function makeMockRegistrationApi() {
-    const calls = { dispatcherReceivers: [] };
+    const calls = { dispatcherReceivers: [], dispatcherSenders: [] };
     return {
         registerDispatcherReceiver: (...args) => { calls.dispatcherReceivers.push(args); },
+        registerDispatcherSender: (eventName, direction, target) => {
+            calls.dispatcherSenders.push({ eventName, direction, target });
+        },
         _calls: calls,
     };
 }
@@ -98,6 +105,14 @@ describe('procgenPlayer index', () => {
         expect(events).toEqual(['user:regionMove']);
     });
 
+    it('registers as a dispatcher sender for user:regionMove (initial-load synthesis)', () => {
+        _testOnly_resetModuleState();
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        const senders = reg._calls.dispatcherSenders.map((s) => s.eventName);
+        expect(senders).toContain('user:regionMove');
+    });
+
     it('registers as publisher for every substrate loadRegion event', () => {
         expect(eventBus.registeredPublishers.has('maze:loadRegion')).toBe(true);
     });
@@ -109,15 +124,27 @@ describe('procgenPlayer index', () => {
         expect(loadEvents).toHaveLength(0);
     });
 
-    it('builds the warehouse and publishes loadRegion for the start region on procgen-shaped payloads', () => {
+    it('builds the warehouse and synthesizes user:regionMove(Menu -> start) on procgen-shaped payloads', () => {
         eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
         const wh = _testOnly_getWarehouse();
         expect(wh.size()).toBe(2);
+
+        // The initial-load path no longer calls publishLoadRegion
+        // directly — it publishes a user:regionMove on the dispatcher
+        // that the module's own handleRegionMove will route to
+        // maze:loadRegion when the chain visits it. The dispatcher
+        // publish is what the test asserts.
+        expect(dispatcher.published).toHaveLength(1);
+        expect(dispatcher.published[0].eventName).toBe('user:regionMove');
+        expect(dispatcher.published[0].data).toEqual({
+            sourceRegion: 'Menu',
+            targetRegion: 'region_0_0',
+            exitName: 'GameStart',
+        });
+
+        // loadRegion isn't published from handleFilesJsonLoaded itself.
         const loadEvents = eventBus.published.filter((p) => p.event === 'maze:loadRegion');
-        expect(loadEvents).toHaveLength(1);
-        expect(loadEvents[0].data.region_id).toBe('region_0_0');
-        expect(loadEvents[0].data.world).toEqual({ kind: 'world', tag: 'r00' });
-        expect(loadEvents[0].data.arrivedFrom).toBeNull();
+        expect(loadEvents).toHaveLength(0);
     });
 
     it('clears the warehouse on a subsequent non-procgen files:jsonLoaded', () => {
