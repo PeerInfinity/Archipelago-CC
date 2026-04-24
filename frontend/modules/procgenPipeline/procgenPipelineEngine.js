@@ -457,7 +457,9 @@ export function compileRegionGraph(grid, opts = {}) {
         obstacleLib = DEFAULT_OBSTACLES,
         itemLib = DEFAULT_ITEMS,
         startCell,
+        playerId = 1,
     } = opts;
+    const numericPlayerId = Number.isFinite(Number(playerId)) ? Number(playerId) : 1;
 
     if (!startCell) throw new Error('compileRegionGraph: startCell required');
     const startRegion = grid.getRegion(startCell);
@@ -489,27 +491,41 @@ export function compileRegionGraph(grid, opts = {}) {
         const regionLocations = compiled.locations.map((loc) => {
             const globalName = makeLocationName(compiled.region_name, loc.id, loc.position);
             const numericId = nextLocationId++;
+            let itemPlacement = null;
             if (loc.item) {
                 // Register the item and tally the canonical placement.
                 // Every non-event item belongs to the "Everything" group by
                 // convention (matches item_groups["1"] = ["Everything"]).
                 // First occurrence mints a numeric id that persists for
                 // the item's lifetime in this compile.
+                const classification = itemLib[loc.item]?.classification ?? 'progression';
                 if (!items[loc.item]) {
                     items[loc.item] = {
                         name: loc.item,
                         id: nextItemId++,
-                        classification: itemLib[loc.item]?.classification ?? 'progression',
+                        classification,
                         groups: ['Everything'],
                     };
                 }
                 itempool_counts[loc.item] = (itempool_counts[loc.item] || 0) + 1;
                 canonical_placements[globalName] = loc.item;
+
+                // Shape per rules.schema.json $defs/itemPlacement — what
+                // stateManager's checkLocation reads to add the item to
+                // inventory at runtime. canonical_placements alone isn't
+                // enough; stateManager looks at location.item directly.
+                itemPlacement = {
+                    name: loc.item,
+                    player: numericPlayerId,
+                    advancement: classification === 'progression',
+                    type: classification,
+                };
             }
             return {
                 name: globalName,
                 id: numericId,
                 access_rule: loc.rule,
+                ...(itemPlacement ? { item: itemPlacement } : {}),
             };
         });
 
@@ -681,7 +697,7 @@ export function buildRulesJson(grid, opts = {}) {
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
 
-    const compiled = compileRegionGraph(grid, { startCell, itemLib, obstacleLib });
+    const compiled = compileRegionGraph(grid, { startCell, itemLib, obstacleLib, playerId });
 
     const scaffold = makeRulesJsonScaffold({
         gameName,

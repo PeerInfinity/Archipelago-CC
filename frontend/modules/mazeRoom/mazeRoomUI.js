@@ -16,7 +16,7 @@ import {
     generateMaze,
     extractPathsAndObstacles,
 } from './mazeRoomEngine.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 
@@ -458,22 +458,37 @@ export class MazeRoomUI {
         ctx.fillStyle = COLORS.exit;
         ctx.fillRect(w.exit.x * TILE_PX, w.exit.y * TILE_PX, TILE_PX, TILE_PX);
 
-        // Obstacles — filled tile in the library's color, with a darker
-        // border so they read as "solid thing sitting on floor."
+        // Obstacles — filled tile in the library's color when still
+        // blocking, faded to an outlined ghost when the current
+        // inventory clears them (the player can walk through without
+        // further action).
+        const currentInv = this._currentInventory();
         for (const [posKey, obstacleId] of w.obstacles) {
             const [x, y] = posKey.split(',').map(Number);
             const obstacle = obstacleLib[obstacleId];
             const color = obstacle?.color ?? '#b84040';
-            ctx.fillStyle = color;
-            ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+            const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib);
+            if (cleared) {
+                // Open — dashed outline, no solid fill, so the tile
+                // reads as "was a door, now walk-through."
+                ctx.save();
+                ctx.globalAlpha = 0.4;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([3, 3]);
+                ctx.strokeRect(x * TILE_PX + 3, y * TILE_PX + 3, TILE_PX - 6, TILE_PX - 6);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = color;
+                ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+            }
         }
 
         // Items — a smaller filled circle in the library's color, skipped
         // if the player has already collected the item.
-        const currentInv = this._currentInventory();
         for (const [posKey, itemId] of w.items) {
             if (currentInv.has(itemId)) continue;
             const [x, y] = posKey.split(',').map(Number);

@@ -606,6 +606,41 @@ describe('compileRegionGraph', () => {
         const outB = compileRegionGraph(b.grid, { startCell: b.startCell });
         expect(outA).toEqual(outB);
     });
+
+    it('emits an itemPlacement object on each item-bearing location', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell });
+
+        let itemLocationsChecked = 0;
+        for (const region of Object.values(out.regions)) {
+            for (const loc of region.locations) {
+                if (!loc.item) continue;
+                // Shape must match rules.schema.json $defs/itemPlacement
+                // so stateManager's checkLocation can actually grant the
+                // item at runtime.
+                expect(loc.item).toMatchObject({
+                    name: expect.any(String),
+                    player: 1,
+                    advancement: expect.any(Boolean),
+                });
+                expect(loc.item.type).toBeDefined();
+                // Consistent with canonical_placements (same name).
+                expect(loc.item.name).toBe(out.canonical_placements[loc.name]);
+                itemLocationsChecked++;
+            }
+        }
+        expect(itemLocationsChecked).toBeGreaterThan(0);
+    });
+
+    it('uses the supplied playerId in itemPlacement.player', () => {
+        const { grid, startCell } = smallGridWithItems();
+        const out = compileRegionGraph(grid, { startCell, playerId: 3 });
+        for (const region of Object.values(out.regions)) {
+            for (const loc of region.locations) {
+                if (loc.item) expect(loc.item.player).toBe(3);
+            }
+        }
+    });
 });
 
 describe('buildPresetSidecars', () => {
