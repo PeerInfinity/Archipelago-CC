@@ -196,6 +196,56 @@ describe('step with obstacles and items', () => {
     });
 });
 
+describe('step inventoryOverride parameter', () => {
+    it('uses the override (not state.inventory) for clearance checks', () => {
+        const w = createWorld(4, 4);
+        setObstacle(w, 1, 0, 'door_red');
+        const s = createState(w);
+        // state.inventory is empty but the override has the key — door
+        // should clear.
+        const overridden = step(w, s, INPUT_E, new Set(['key_red']));
+        expect(overridden).not.toBeNull();
+        expect(overridden.player_pos).toEqual({ x: 1, y: 0 });
+
+        // Inverse: key in state.inventory but override is empty — door
+        // should block.
+        const s2 = createState(w);
+        s2.inventory.add('key_red');
+        const blocked = step(w, s2, INPUT_E, new Set());
+        expect(blocked).toBeNull();
+    });
+
+    it('does not mutate state.inventory on pickup when override is provided', () => {
+        const w = createWorld(4, 4);
+        setItem(w, 1, 0, 'key_red');
+        const s = createState(w);
+        const next = step(w, s, INPUT_E, new Set());
+        expect(next).not.toBeNull();
+        // Caller is managing inventory externally — the player moved
+        // onto the item but state.inventory stays empty.
+        expect(next.inventory.has('key_red')).toBe(false);
+    });
+
+    it('does not mutate the override Set on pickup', () => {
+        const w = createWorld(4, 4);
+        setItem(w, 1, 0, 'key_red');
+        const s = createState(w);
+        const override = new Set();
+        step(w, s, INPUT_E, override);
+        expect(override.has('key_red')).toBe(false);
+    });
+
+    it('falls back to state.inventory when override is undefined', () => {
+        // Sanity check that the historical behavior is preserved when
+        // the new parameter is omitted.
+        const w = createWorld(4, 4);
+        setItem(w, 1, 0, 'key_red');
+        const s = createState(w);
+        const next = step(w, s, INPUT_E);
+        expect(next.inventory.has('key_red')).toBe(true);
+    });
+});
+
 describe('BFS on obstacle-gated worlds', () => {
     it('finds a path that grabs the key before the door', () => {
         // 4x1 corridor: entrance at (0,0), door at (2,0), exit at (3,0),

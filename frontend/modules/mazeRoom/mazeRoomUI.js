@@ -17,6 +17,19 @@ import {
 } from './mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
+import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+
+// stateManager's snapshot.inventory is a plain object { itemName: count }.
+// Convert to a Set of item ids that the player currently holds (count > 0)
+// — that's what step() and the rendering code want.
+function inventoryFromSnapshot(snapshot) {
+    if (!snapshot || !snapshot.inventory) return new Set();
+    const set = new Set();
+    for (const [id, count] of Object.entries(snapshot.inventory)) {
+        if (count > 0) set.add(id);
+    }
+    return set;
+}
 
 const LS_KEY = 'mazeRoom_params';
 
@@ -62,6 +75,14 @@ export class MazeRoomUI {
         this.isGenerating = false;
         this.message = '';
 
+        // Inventory truth in playback mode (after a maze:loadRegion).
+        // null means we're in the standalone "Generate" dev flow and
+        // the panel should fall back to state.inventory — which step()
+        // continues to maintain in that mode (see mazeRoomEngine.js
+        // step's inventoryOverride contract).
+        this.externalInventory = null;
+        this._unsubSnapshot = null;
+
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'maze-room-panel';
         this.rootElement.tabIndex = 0;
@@ -69,6 +90,7 @@ export class MazeRoomUI {
 
         setPanelInstance(this);
         this._loadFromLocalStorage();
+        this._subscribeToSnapshotUpdates();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -80,6 +102,23 @@ export class MazeRoomUI {
         }
 
         this.render();
+    }
+
+    _subscribeToSnapshotUpdates() {
+        const eventBus = this.apis?.eventBus;
+        if (!eventBus?.subscribe) return;
+        this._unsubSnapshot = eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
+            // Only the playback flow cares about the snapshot's inventory;
+            // the Generate dev flow keeps using state.inventory directly.
+            if (this.externalInventory === null) return;
+            this.externalInventory = inventoryFromSnapshot(data?.snapshot);
+            this.render();
+        });
+    }
+
+    _currentInventory() {
+        if (this.externalInventory !== null) return this.externalInventory;
+        return this.state?.inventory ?? new Set();
     }
 
     /**
@@ -104,6 +143,11 @@ export class MazeRoomUI {
         this.message = payload.region_id
             ? `Loaded region: ${payload.region_id}`
             : 'Loaded region';
+        // Switch into playback mode: inventory truth comes from
+        // stateManager snapshots from now on. Seed from the current
+        // cached snapshot if one exists; further updates arrive via
+        // the snapshot subscription.
+        this.externalInventory = inventoryFromSnapshot(stateManagerProxySingleton.getSnapshot());
         if (!skipRender) {
             this.render();
             this.rootElement?.focus();
@@ -113,7 +157,10 @@ export class MazeRoomUI {
     get apis() { return MazeRoomUI.moduleApis || getModuleApis(); }
 
     getRootElement() { return this.rootElement; }
-    destroy() { setPanelInstance(null); }
+    destroy() {
+        if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
+        setPanelInstance(null);
+    }
     onPanelShow() { this.render(); this.rootElement.focus(); }
     onPanelResize() {}
 
@@ -278,10 +325,11 @@ export class MazeRoomUI {
         line.textContent = parts.join(' · ');
         section.appendChild(line);
 
-        if (this.state && this.state.inventory.size > 0) {
+        const currentInv = this._currentInventory();
+        if (this.state && currentInv.size > 0) {
             const inv = document.createElement('div');
             inv.className = 'maze-room-inventory';
-            const itemNames = [...this.state.inventory].map((id) => {
+            const itemNames = [...currentInv].map((id) => {
                 const item = (this.world?.itemLib ?? DEFAULT_ITEMS)[id];
                 return item?.name ?? id;
             });
@@ -419,8 +467,9 @@ export class MazeRoomUI {
 
         // Items — a smaller filled circle in the library's color, skipped
         // if the player has already collected the item.
+        const currentInv = this._currentInventory();
         for (const [posKey, itemId] of w.items) {
-            if (this.state?.inventory.has(itemId)) continue;
+            if (currentInv.has(itemId)) continue;
             const [x, y] = posKey.split(',').map(Number);
             const item = itemLib[itemId];
             const color = item?.color ?? '#e6a817';
@@ -482,6 +531,10 @@ export class MazeRoomUI {
             this.world = world;
             this.state = createState(world);
             this.stats = stats;
+            // Generate dev flow uses state.inventory directly — drop
+            // any external inventory left over from a prior LoadRegion
+            // session in this panel.
+            this.externalInventory = null;
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
         }
@@ -498,7 +551,11 @@ export class MazeRoomUI {
         const input = KEY_MAP[e.key];
         if (!input) return;
         e.preventDefault();
-        const next = step(this.world, this.state, input);
+        // In playback mode (externalInventory non-null) the snapshot is
+        // truth and step() must not mutate state.inventory; in Generate
+        // dev mode the override is undefined and step keeps its
+        // historical pickup-into-state.inventory behavior.
+        const next = step(this.world, this.state, input, this.externalInventory ?? undefined);
         if (next === null) return;
         this.state = next;
         if (this.state.player_pos.x === this.world.exit.x && this.state.player_pos.y === this.world.exit.y) {

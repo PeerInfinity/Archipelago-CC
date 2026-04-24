@@ -189,23 +189,40 @@ function cloneState(state) {
 }
 
 // --- step ---
+//
+// Accepts an optional `inventoryOverride` (a Set of item ids) for
+// clearance checks. When provided, the override is treated as truth
+// and state.inventory is left unchanged on pickup — the caller is
+// responsible for managing inventory externally (in playback this is
+// stateManager via user:locationCheck events; see procgen-player.md
+// step 6 + step 7).
+//
+// When `inventoryOverride` is undefined the function preserves its
+// historical behavior: clearance is checked against state.inventory
+// and items walked onto are added to state.inventory directly. This
+// keeps internal callers (BFS, walker, generation feasibility) and
+// the maze panel's standalone "Generate" dev flow working as they
+// always have.
 
-export function step(world, state, input) {
+export function step(world, state, input, inventoryOverride) {
     const delta = DELTAS[input];
     if (!delta) return null;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
+    const inv = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
     const obstacleId = getObstacle(world, nx, ny);
-    if (obstacleId && !isObstacleCleared(obstacleId, state.inventory, world.obstacleLib)) {
+    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib)) {
         return null;
     }
     const next = cloneState(state);
     next.player_pos.x = nx;
     next.player_pos.y = ny;
     next.turn += 1;
-    const itemId = getItem(world, nx, ny);
-    if (itemId) next.inventory.add(itemId);
+    if (inventoryOverride === undefined) {
+        const itemId = getItem(world, nx, ny);
+        if (itemId) next.inventory.add(itemId);
+    }
     return next;
 }
 
