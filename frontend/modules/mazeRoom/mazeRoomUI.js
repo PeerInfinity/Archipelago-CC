@@ -19,6 +19,11 @@ import {
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+// Imported directly so the panel can subscribe even when its
+// constructor runs before its module's initialize() (Golden Layout
+// may build panels during its own init, ahead of module init — at
+// which point `this.apis.eventBus` is still null).
+import eventBus from '../../app/core/eventBus.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -110,15 +115,19 @@ export class MazeRoomUI {
     }
 
     _subscribeToSnapshotUpdates() {
-        const eventBus = this.apis?.eventBus;
-        if (!eventBus?.subscribe) return;
-        this._unsubSnapshot = eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
+        // Subscribe through the raw eventBus with an explicit module
+        // name. Can't use this.apis.eventBus here: Golden Layout may
+        // build the panel before maze/index.js's initialize() has run,
+        // so the per-module wrapper isn't set up yet.
+        const handler = (data) => {
             // Only the playback flow cares about the snapshot's inventory;
             // the Generate dev flow keeps using state.inventory directly.
             if (this.externalInventory === null) return;
             this.externalInventory = inventoryFromSnapshot(data?.snapshot);
             this.render();
-        });
+        };
+        eventBus.subscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
+        this._unsubSnapshot = () => eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
     }
 
     _currentInventory() {
