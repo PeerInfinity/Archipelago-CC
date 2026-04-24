@@ -56,6 +56,65 @@ export function createWorld(width, height, opts = {}) {
 
 function posKey(x, y) { return `${x},${y}`; }
 
+/**
+ * Inverse of procgenPipeline's serializeMazeWorld. Reconstructs a
+ * playable maze world from a sidecar payload (JSON-safe arrays /
+ * plain objects) into the in-memory shape (Int8Array for tiles, Maps
+ * for obstacles and items).
+ *
+ * AP-canonical metadata baked into the sidecar by the pipeline at
+ * serialization time (per-item locationName, exit's exitName /
+ * targetRegion) is preserved on the deserialized world so the
+ * substrate can publish user:locationCheck and user:regionMove with
+ * the right names without consulting any external lookup at runtime.
+ *
+ *   sidecar.exit.exitName / .targetRegion → world.exit.exitName / .targetRegion
+ *   sidecar.items[].locationName          → world.itemLocationNames Map<"x,y", name>
+ *
+ * The sidecar's `obstacleLib` field carries only per-instance entries
+ * the pipeline added on top of the base library (typically
+ * logic_gate_<N> entries for top-down placements). They're merged
+ * with the supplied base library so the deserialized world has a
+ * complete obstacleLib.
+ */
+export function deserializeMazeWorld(sidecar, opts = {}) {
+    if (!sidecar || typeof sidecar !== 'object') {
+        throw new Error('deserializeMazeWorld: sidecar must be an object');
+    }
+    const { width, height, tiles, entrance, exit, obstacles, items } = sidecar;
+    if (!Array.isArray(tiles) || tiles.length !== width * height) {
+        throw new Error(`deserializeMazeWorld: tiles length ${tiles?.length} != ${width}*${height}`);
+    }
+
+    const itemLib = opts.itemLib ?? DEFAULT_ITEMS;
+    const baseObstacleLib = opts.baseObstacleLib ?? DEFAULT_OBSTACLES;
+    const obstacleLib = { ...baseObstacleLib, ...(sidecar.obstacleLib ?? {}) };
+
+    const world = createWorld(width, height, {
+        entrance: { x: entrance.x, y: entrance.y },
+        exit: { x: exit.x, y: exit.y, exitName: exit.exitName ?? null, targetRegion: exit.targetRegion ?? null },
+        itemLib,
+        obstacleLib,
+    });
+
+    world.tiles.set(tiles);
+
+    for (const o of obstacles ?? []) {
+        world.obstacles.set(posKey(o.x, o.y), o.id);
+    }
+
+    const itemLocationNames = new Map();
+    for (const i of items ?? []) {
+        world.items.set(posKey(i.x, i.y), i.id);
+        if (i.locationName) {
+            itemLocationNames.set(posKey(i.x, i.y), i.locationName);
+        }
+    }
+    world.itemLocationNames = itemLocationNames;
+
+    return world;
+}
+
 export function getObstacle(world, x, y) {
     return world.obstacles.get(posKey(x, y));
 }

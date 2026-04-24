@@ -18,6 +18,7 @@ import {
     generateRegionCore,
     placeFromItems,
     placeFromRules,
+    deserializeMazeWorld,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -819,5 +820,99 @@ describe('generateMaze', () => {
         // Either stall-terminated or fully-iterated; the grid is small
         // enough that stall is what we expect to see first.
         expect(stats.iterations).toBeLessThanOrEqual(10000);
+    });
+});
+
+describe('deserializeMazeWorld', () => {
+    // Hand-crafted minimal sidecar exercising every field the
+    // serializer produces. Round-trip via the real pipeline serializer
+    // is tested in procgenPipelineEngine.test.js.
+    function makeSidecar(overrides = {}) {
+        return {
+            width: 4,
+            height: 3,
+            tiles: [
+                TILE_WALL, TILE_WALL, TILE_WALL, TILE_WALL,
+                TILE_FLOOR, TILE_FLOOR, TILE_FLOOR, TILE_FLOOR,
+                TILE_WALL, TILE_WALL, TILE_WALL, TILE_WALL,
+            ],
+            entrance: { x: 0, y: 1 },
+            exit: { x: 3, y: 1, exitName: 'exit', targetRegion: 'region_1_1' },
+            obstacles: [{ x: 1, y: 1, id: 'door_red' }],
+            items: [{ x: 2, y: 1, id: 'key_red', locationName: 'region_0_1__key_red_pickup__2_1' }],
+            obstacleLib: {},
+            ...overrides,
+        };
+    }
+
+    it('reconstructs tiles as Int8Array of correct length', () => {
+        const world = deserializeMazeWorld(makeSidecar());
+        expect(world.tiles).toBeInstanceOf(Int8Array);
+        expect(world.tiles.length).toBe(12);
+        expect(getTile(world, 0, 0)).toBe(TILE_WALL);
+        expect(getTile(world, 0, 1)).toBe(TILE_FLOOR);
+    });
+
+    it('reconstructs obstacles and items as Maps keyed by "x,y"', () => {
+        const world = deserializeMazeWorld(makeSidecar());
+        expect(world.obstacles).toBeInstanceOf(Map);
+        expect(world.items).toBeInstanceOf(Map);
+        expect(getObstacle(world, 1, 1)).toBe('door_red');
+        expect(getItem(world, 2, 1)).toBe('key_red');
+    });
+
+    it('preserves entrance and exit coordinates', () => {
+        const world = deserializeMazeWorld(makeSidecar());
+        expect(world.entrance).toEqual({ x: 0, y: 1 });
+        expect(world.exit.x).toBe(3);
+        expect(world.exit.y).toBe(1);
+    });
+
+    it('preserves AP-canonical exitName and targetRegion on world.exit', () => {
+        const world = deserializeMazeWorld(makeSidecar());
+        expect(world.exit.exitName).toBe('exit');
+        expect(world.exit.targetRegion).toBe('region_1_1');
+    });
+
+    it('preserves AP-canonical locationName per item in world.itemLocationNames', () => {
+        const world = deserializeMazeWorld(makeSidecar());
+        expect(world.itemLocationNames).toBeInstanceOf(Map);
+        expect(world.itemLocationNames.get('2,1')).toBe('region_0_1__key_red_pickup__2_1');
+    });
+
+    it('null AP metadata when sidecar omits it (e.g. unstitched exit)', () => {
+        const world = deserializeMazeWorld(makeSidecar({
+            exit: { x: 3, y: 1 },
+            items: [{ x: 2, y: 1, id: 'key_red' }],
+        }));
+        expect(world.exit.exitName).toBeNull();
+        expect(world.exit.targetRegion).toBeNull();
+        expect(world.itemLocationNames.has('2,1')).toBe(false);
+    });
+
+    it('merges sidecar obstacleLib extras with the base library', () => {
+        const customLogicGate = {
+            id: 'logic_gate_0',
+            clear_set_type: 'rule',
+            clear_rule: { rule: 'True_' },
+        };
+        const world = deserializeMazeWorld(makeSidecar({
+            obstacles: [{ x: 1, y: 1, id: 'logic_gate_0' }],
+            obstacleLib: { logic_gate_0: customLogicGate },
+        }));
+        // Base entries still reachable
+        expect(world.obstacleLib.door_red).toBeDefined();
+        // Sidecar extra reachable
+        expect(world.obstacleLib.logic_gate_0).toEqual(customLogicGate);
+    });
+
+    it('rejects sidecars with mismatched tiles length', () => {
+        expect(() => deserializeMazeWorld(makeSidecar({ tiles: [0, 0, 0] })))
+            .toThrow(/tiles length/);
+    });
+
+    it('rejects non-object input', () => {
+        expect(() => deserializeMazeWorld(null)).toThrow(/must be an object/);
+        expect(() => deserializeMazeWorld(undefined)).toThrow(/must be an object/);
     });
 });

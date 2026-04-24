@@ -8,6 +8,7 @@ import {
     wallOffUnusedExits, growMaze, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
 } from './procgenPipelineEngine.js';
+import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
 const TEST_ITEM_LIB = {
     key_red: { id: 'key_red' },
@@ -708,6 +709,40 @@ describe('buildPresetSidecars', () => {
             }
         }
         expect(itemsChecked).toBeGreaterThan(0);
+    });
+
+    it('round-trips through deserializeMazeWorld back to a playable world shape', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const region of grid.allRegions()) {
+            const sidecar = sidecars['1'][region.region_id].playable_payload;
+            const restored = deserializeMazeWorld(sidecar);
+
+            const original = region.playable_payload;
+            expect(restored.width).toBe(original.width);
+            expect(restored.height).toBe(original.height);
+            expect(Array.from(restored.tiles)).toEqual(Array.from(original.tiles));
+            expect(restored.entrance).toEqual({ x: original.entrance.x, y: original.entrance.y });
+            expect(restored.exit.x).toBe(original.exit.x);
+            expect(restored.exit.y).toBe(original.exit.y);
+            // Maps content equal — same keys, same values
+            expect([...restored.obstacles.entries()].sort())
+                .toEqual([...original.obstacles.entries()].sort());
+            expect([...restored.items.entries()].sort())
+                .toEqual([...original.items.entries()].sort());
+            // AP metadata preserved through the round-trip
+            const expectedExit = region.extracted_rules.exits?.[0];
+            expect(restored.exit.exitName).toBe(expectedExit?.id ?? null);
+            expect(restored.exit.targetRegion).toBe(expectedExit?.target_region ?? null);
+            for (const [key] of restored.items) {
+                // For every item, the locationName Map should have an entry
+                // matching what the sidecar carried.
+                const sidecarItem = sidecar.items.find((i) => `${i.x},${i.y}` === key);
+                if (sidecarItem?.locationName) {
+                    expect(restored.itemLocationNames.get(key)).toBe(sidecarItem.locationName);
+                }
+            }
+        }
     });
 
     it('bakes exitName and targetRegion into the exit entry', () => {

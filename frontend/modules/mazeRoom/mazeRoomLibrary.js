@@ -10,10 +10,9 @@
  *
  * See NewDocs/plans/procedural-generation/procgen-player.md §"Substrate
  * registry" for the entry shape and the rationale for its fields.
- *
- * `deserializeWorld` is intentionally absent in step 2 — added in
- * step 4 alongside the deserializer implementation.
  */
+
+import { deserializeMazeWorld } from './mazeRoomEngine.js';
 
 export const substrateRegistryEntry = Object.freeze({
     id: 'maze',
@@ -24,4 +23,5 @@ export const substrateRegistryEntry = Object.freeze({
         'door_color',
         'key_color',
     ]),
+    deserializeWorld: deserializeMazeWorld,
 });
