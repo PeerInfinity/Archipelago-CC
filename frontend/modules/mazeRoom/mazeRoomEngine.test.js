@@ -19,6 +19,7 @@ import {
     placeFromItems,
     placeFromRules,
     deserializeMazeWorld,
+    detectStepEvents,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -243,6 +244,61 @@ describe('step inventoryOverride parameter', () => {
         const s = createState(w);
         const next = step(w, s, INPUT_E);
         expect(next.inventory.has('key_red')).toBe(true);
+    });
+});
+
+describe('detectStepEvents', () => {
+    function makeWorld({ exit = { x: 3, y: 3 }, items = {} } = {}) {
+        const w = createWorld(4, 4, { exit });
+        for (const [key, id] of Object.entries(items)) {
+            const [x, y] = key.split(',').map(Number);
+            setItem(w, x, y, id);
+        }
+        return w;
+    }
+
+    it('returns empty when oldPos === newPos', () => {
+        const w = makeWorld();
+        const events = detectStepEvents(w, { x: 1, y: 1 }, { x: 1, y: 1 }, new Set());
+        expect(events).toEqual([]);
+    });
+
+    it('emits a pickup when the player moves onto an uncollected item', () => {
+        const w = makeWorld({ items: { '1,0': 'key_red' } });
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events).toEqual([
+            { type: 'pickup', itemId: 'key_red', position: { x: 1, y: 0 } },
+        ]);
+    });
+
+    it('does not emit a pickup if the item is already in inventory', () => {
+        const w = makeWorld({ items: { '1,0': 'key_red' } });
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set(['key_red']));
+        expect(events).toEqual([]);
+    });
+
+    it('emits exit_cross when stepping onto the exit tile', () => {
+        const w = makeWorld({ exit: { x: 3, y: 3 } });
+        const events = detectStepEvents(w, { x: 2, y: 3 }, { x: 3, y: 3 }, new Set());
+        expect(events).toEqual([
+            { type: 'exit_cross', position: { x: 3, y: 3 } },
+        ]);
+    });
+
+    it('does not emit exit_cross when stepping off the exit tile', () => {
+        const w = makeWorld({ exit: { x: 3, y: 3 } });
+        const events = detectStepEvents(w, { x: 3, y: 3 }, { x: 2, y: 3 }, new Set());
+        expect(events).toEqual([]);
+    });
+
+    it('emits both pickup and exit_cross when an item sits on the exit tile', () => {
+        // Edge case: maze generator avoids putting items on the exit
+        // tile, but the helper should be robust if a substrate ever
+        // produces such a world.
+        const w = makeWorld({ exit: { x: 3, y: 3 }, items: { '3,3': 'goal_token' } });
+        const events = detectStepEvents(w, { x: 2, y: 3 }, { x: 3, y: 3 }, new Set());
+        expect(events).toContainEqual({ type: 'pickup', itemId: 'goal_token', position: { x: 3, y: 3 } });
+        expect(events).toContainEqual({ type: 'exit_cross', position: { x: 3, y: 3 } });
     });
 });
 

@@ -12,6 +12,7 @@ import {
     getTile,
     getObstacle, getItem,
     step,
+    detectStepEvents,
     generateMaze,
     extractPathsAndObstacles,
 } from './mazeRoomEngine.js';
@@ -81,6 +82,10 @@ export class MazeRoomUI {
         // continues to maintain in that mode (see mazeRoomEngine.js
         // step's inventoryOverride contract).
         this.externalInventory = null;
+        // AP-canonical region name for the currently-loaded region.
+        // Set in playback mode; null in Generate dev flow. Used as
+        // sourceRegion / regionName when publishing dispatcher events.
+        this.currentRegionId = null;
         this._unsubSnapshot = null;
 
         this.rootElement = document.createElement('div');
@@ -143,6 +148,7 @@ export class MazeRoomUI {
         this.message = payload.region_id
             ? `Loaded region: ${payload.region_id}`
             : 'Loaded region';
+        this.currentRegionId = payload.region_id ?? null;
         // Switch into playback mode: inventory truth comes from
         // stateManager snapshots from now on. Seed from the current
         // cached snapshot if one exists; further updates arrive via
@@ -535,6 +541,7 @@ export class MazeRoomUI {
             // any external inventory left over from a prior LoadRegion
             // session in this panel.
             this.externalInventory = null;
+            this.currentRegionId = null;
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
         }
@@ -555,13 +562,50 @@ export class MazeRoomUI {
         // truth and step() must not mutate state.inventory; in Generate
         // dev mode the override is undefined and step keeps its
         // historical pickup-into-state.inventory behavior.
+        const oldPos = { x: this.state.player_pos.x, y: this.state.player_pos.y };
         const next = step(this.world, this.state, input, this.externalInventory ?? undefined);
         if (next === null) return;
         this.state = next;
+        if (this.externalInventory !== null) {
+            this._publishPlaybackEvents(oldPos, next.player_pos);
+        }
         if (this.state.player_pos.x === this.world.exit.x && this.state.player_pos.y === this.world.exit.y) {
             this.message = `Reached exit in ${this.state.turn} steps.`;
         }
         this.render();
+    }
+
+    /**
+     * Translate substrate-internal step events into AP-level
+     * dispatcher events. Only called in playback mode (after a
+     * maze:loadRegion). Skips events that lack the AP metadata they
+     * would need (no locationName for a pickup, no targetRegion for
+     * an exit cross — both can be null when the sidecar didn't have
+     * them, e.g. unstitched grid-edge exits).
+     */
+    _publishPlaybackEvents(oldPos, newPos) {
+        const dispatcher = this.apis?.dispatcher;
+        if (!dispatcher?.publish) return;
+        const events = detectStepEvents(this.world, oldPos, newPos, this.externalInventory);
+        for (const ev of events) {
+            if (ev.type === 'pickup') {
+                const key = `${ev.position.x},${ev.position.y}`;
+                const locationName = this.world.itemLocationNames?.get(key);
+                if (!locationName) continue;
+                dispatcher.publish('user:locationCheck', {
+                    locationName,
+                    regionName: this.currentRegionId,
+                }, { initialTarget: 'bottom' });
+            } else if (ev.type === 'exit_cross') {
+                const targetRegion = this.world.exit.targetRegion;
+                if (!targetRegion) continue;
+                dispatcher.publish('user:regionMove', {
+                    sourceRegion: this.currentRegionId,
+                    targetRegion,
+                    exitName: this.world.exit.exitName ?? null,
+                }, { initialTarget: 'bottom' });
+            }
+        }
     }
 
     // --- localStorage ---

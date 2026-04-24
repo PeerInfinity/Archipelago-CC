@@ -29,9 +29,18 @@ function makeMockEventBus() {
 }
 
 function makeMockRegistrationApi() {
+    const calls = {
+        panelComponents: [],
+        eventBusPublishers: [],
+        dispatcherSenders: [],
+    };
     return {
-        registerPanelComponent: () => {},
-        registerEventBusPublisher: () => {},
+        registerPanelComponent: (type, ctor) => { calls.panelComponents.push({ type, ctor }); },
+        registerEventBusPublisher: (event) => { calls.eventBusPublishers.push(event); },
+        registerDispatcherSender: (event, direction, target) => {
+            calls.dispatcherSenders.push({ event, direction, target });
+        },
+        _calls: calls,
     };
 }
 
@@ -86,5 +95,24 @@ describe('mazeRoom index — maze:loadRegion wiring', () => {
         eventBus.publish('maze:loadRegion', { region_id: 'second' });
         const pending = consumePendingLoadRegion();
         expect(pending.region_id).toBe('second');
+    });
+});
+
+describe('mazeRoom index — dispatcher sender registration', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+    });
+
+    it('registers user:locationCheck and user:regionMove as dispatcher senders', () => {
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        const events = reg._calls.dispatcherSenders.map((s) => s.event);
+        expect(events).toContain('user:locationCheck');
+        expect(events).toContain('user:regionMove');
+        // Both registered with the same chain semantics regionGraph uses.
+        for (const sender of reg._calls.dispatcherSenders) {
+            expect(sender.direction).toBe('bottom');
+            expect(sender.target).toBe('first');
+        }
     });
 });

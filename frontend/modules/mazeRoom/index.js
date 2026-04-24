@@ -80,6 +80,16 @@ export function register(registrationApi) {
     // Self-activation on maze:loadRegion publishes ui:activatePanel.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
 
+    // The maze panel is the original source of these AP-level events
+    // when the player triggers them by walking around in playback
+    // mode. Both go on the dispatcher (chain-of-authority) so other
+    // modules (gameState, discovery, MetaGame, stateManager) can see
+    // and act on them in the standard order.
+    if (typeof registrationApi.registerDispatcherSender === 'function') {
+        registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+        registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+    }
+
     // Make the maze discoverable by the substrate registry.
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);

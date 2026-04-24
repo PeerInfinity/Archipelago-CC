@@ -232,6 +232,54 @@ export function reachedExit(state, world) {
     return state.player_pos.x === world.exit.x && state.player_pos.y === world.exit.y;
 }
 
+/**
+ * Detect substrate-level events that occurred during a single step.
+ * Pure helper consumed by the maze panel in playback mode to decide
+ * which AP-level dispatcher events (user:locationCheck,
+ * user:regionMove) to publish.
+ *
+ *   - 'pickup'      — moved onto an item tile that wasn't yet in
+ *                     `inventory`. Idempotent: walking back onto a
+ *                     collected tile fires nothing.
+ *   - 'exit_cross'  — moved onto the exit tile from elsewhere.
+ *                     Fires only on the step that arrives, not while
+ *                     the player is standing on the exit.
+ *
+ * No events when the player didn't move (oldPos === newPos), since
+ * step() only returns a new state on successful movement and a
+ * stationary "step" can't trigger a fresh pickup or transition.
+ *
+ * The helper does not consult AP names (locationName, exitName,
+ * targetRegion) — those are the panel's concern at publish time.
+ */
+export function detectStepEvents(world, oldPos, newPos, inventory) {
+    const events = [];
+    const moved = oldPos.x !== newPos.x || oldPos.y !== newPos.y;
+    if (!moved) return events;
+
+    const newKey = posKey(newPos.x, newPos.y);
+
+    const itemId = world.items.get(newKey);
+    if (itemId && !inventory.has(itemId)) {
+        events.push({
+            type: 'pickup',
+            itemId,
+            position: { x: newPos.x, y: newPos.y },
+        });
+    }
+
+    const wasOnExit = oldPos.x === world.exit.x && oldPos.y === world.exit.y;
+    const nowOnExit = newPos.x === world.exit.x && newPos.y === world.exit.y;
+    if (!wasOnExit && nowOnExit) {
+        events.push({
+            type: 'exit_cross',
+            position: { x: newPos.x, y: newPos.y },
+        });
+    }
+
+    return events;
+}
+
 // --- BFS solver for the maze simulator ---
 
 // Reachability is a function of (position, inventory) once ability-gated
