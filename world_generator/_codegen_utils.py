@@ -18,7 +18,7 @@ ANALYZER_BOOL_TYPES: frozenset[str] = frozenset({
     'compare', 'comparison',
 })
 
-# Subset: types that depend on runtime player state
+# Subset: types that depend on runtime game state
 # (cannot be evaluated at compile time, need lambda wrappers in conditionals)
 ANALYZER_RUNTIME_TYPES: frozenset[str] = frozenset({
     'state_method',

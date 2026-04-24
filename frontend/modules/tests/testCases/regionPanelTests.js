@@ -1528,7 +1528,7 @@ export async function testRegionMoveComplete(testController) {
     
     // Verify game state did NOT change
     const regionAfterDisabledSender = gameState.getCurrentRegion();
-    testController.reportCondition('Player state still Links House (sender disabled)', regionAfterDisabledSender === 'Links House');
+    testController.reportCondition('Game state still Links House (sender disabled)', regionAfterDisabledSender === 'Links House');
     
     // 20. Re-enable sender checkbox
     testController.log(`[${testRunId}] Re-enabling sender checkbox...`);
@@ -1631,7 +1631,7 @@ export async function testRegionMoveComplete(testController) {
     
     // Verify game state DID change (gameState module still processed it)
     const regionAfterDisabledReceiver = gameState.getCurrentRegion();
-    testController.reportCondition('Player state changed to Light World (receiver disabled)', regionAfterDisabledReceiver === 'Light World');
+    testController.reportCondition('Game state changed to Light World (receiver disabled)', regionAfterDisabledReceiver === 'Light World');
     
     // 22. Re-enable both receiver and subscriber checkboxes
     testController.log(`[${testRunId}] Re-enabling receiver and subscriber checkboxes...`);
@@ -1659,7 +1659,7 @@ export async function testRegionMoveComplete(testController) {
 
     // Verify game state still shows Light World
     const regionAfterBothEnabled = gameState.getCurrentRegion();
-    testController.reportCondition('Player state shows Light World (after re-enable)', regionAfterBothEnabled === 'Light World');
+    testController.reportCondition('Game state shows Light World (after re-enable)', regionAfterBothEnabled === 'Light World');
 
     testController.log(`[${testRunId}] Comprehensive region move test main logic completed successfully`);
 

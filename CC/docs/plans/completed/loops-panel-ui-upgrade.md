@@ -21,7 +21,7 @@ Upgrade the Loops panel UI to incorporate features from the JTA Action Queue pan
 | XP formulas | `frontend/modules/loops/xpFormulas.js` |
 | Queue analyzer | `frontend/modules/loopStats/queueAnalyzer.js` |
 | Loop stats UI | `frontend/modules/loopStats/loopStatsUI.js` |
-| Player state (path data) | `frontend/modules/gameState/state.js` |
+| Game state (path data) | `frontend/modules/gameState/state.js` |
 | JTA queue panel UI | `frontend/modules/jtaActionQueue/jtaQueuePanelUI.js` |
 | JTA queue CSS (in index.js) | `frontend/modules/jtaActionQueue/index.js` lines 69-427 |
 

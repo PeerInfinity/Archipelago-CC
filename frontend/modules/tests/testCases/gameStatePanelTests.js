@@ -200,7 +200,7 @@ export async function testGameStatePanelUpdate(testController) {
 
 // Register all tests
 registerTest({
-  id: 'test_playerstate_initial_region',
+  id: 'test_gamestate_initial_region',
   name: 'GameState Initial Region',
   category: 'Game State',
   testFunction: testGameStateInitialRegion,
@@ -209,7 +209,7 @@ registerTest({
 });
 
 registerTest({
-  id: 'test_playerstate_region_update',
+  id: 'test_gamestate_region_update',
   name: 'GameState Region Update',
   category: 'Game State',
   testFunction: testGameStateRegionUpdate,
@@ -218,7 +218,7 @@ registerTest({
 });
 
 registerTest({
-  id: 'test_playerstate_reset_on_rules',
+  id: 'test_gamestate_reset_on_rules',
   name: 'GameState Reset on Rules Loaded',
   category: 'Game State',
   testFunction: testGameStateResetOnRulesLoaded,
@@ -227,7 +227,7 @@ registerTest({
 });
 
 registerTest({
-  id: 'test_playerstate_event_publishing',
+  id: 'test_gamestate_event_publishing',
   name: 'GameState Event Publishing',
   category: 'Game State',
   testFunction: testGameStateEventPublishing,
@@ -236,7 +236,7 @@ registerTest({
 });
 
 registerTest({
-  id: 'test_playerstatepanel_display',
+  id: 'test_gamestatepanel_display',
   name: 'GameStatePanel Display',
   category: 'Game State',
   testFunction: testGameStatePanelDisplay,
@@ -245,7 +245,7 @@ registerTest({
 });
 
 registerTest({
-  id: 'test_playerstatepanel_update',
+  id: 'test_gamestatepanel_update',
   name: 'GameStatePanel Update',
   category: 'Game State',
   testFunction: testGameStatePanelUpdate,
