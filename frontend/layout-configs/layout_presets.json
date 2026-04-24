@@ -102,7 +102,7 @@
             {
               "type": "component",
               "componentType": "gameStatePanel",
-              "title": "Player State"
+              "title": "Game State"
             },
             {
               "type": "component",
@@ -591,7 +591,7 @@
             {
               "type": "component",
               "componentType": "gameStatePanel",
-              "title": "Player State"
+              "title": "Game State"
             }
           ]
         },
