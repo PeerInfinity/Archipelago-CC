@@ -119,21 +119,23 @@ describe('procgenPlayer index', () => {
 
     it('ignores files:jsonLoaded payloads without preset_sidecars', () => {
         eventBus.publish('files:jsonLoaded', { jsonData: { start_regions: { 1: ['Menu'] } }, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rulesLoaded', {});
         expect(_testOnly_getWarehouse()).toBeNull();
-        const loadEvents = eventBus.published.filter((p) => p.event === 'maze:loadRegion');
-        expect(loadEvents).toHaveLength(0);
+        expect(dispatcher.published).toHaveLength(0);
     });
 
-    it('builds the warehouse and synthesizes user:regionMove(Menu -> start) on procgen-shaped payloads', () => {
+    it('builds the warehouse on files:jsonLoaded but defers the publish until rulesLoaded', () => {
         eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
         const wh = _testOnly_getWarehouse();
         expect(wh.size()).toBe(2);
+        // Nothing published yet — the initial user:regionMove is
+        // deferred so it doesn't race gameState's reset() on rulesLoaded.
+        expect(dispatcher.published).toHaveLength(0);
+    });
 
-        // The initial-load path no longer calls publishLoadRegion
-        // directly — it publishes a user:regionMove on the dispatcher
-        // that the module's own handleRegionMove will route to
-        // maze:loadRegion when the chain visits it. The dispatcher
-        // publish is what the test asserts.
+    it('publishes the synthesized user:regionMove on stateManager:rulesLoaded', () => {
+        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rulesLoaded', {});
         expect(dispatcher.published).toHaveLength(1);
         expect(dispatcher.published[0].eventName).toBe('user:regionMove');
         expect(dispatcher.published[0].data).toEqual({
@@ -141,10 +143,13 @@ describe('procgenPlayer index', () => {
             targetRegion: 'region_0_0',
             exitName: 'GameStart',
         });
+    });
 
-        // loadRegion isn't published from handleFilesJsonLoaded itself.
-        const loadEvents = eventBus.published.filter((p) => p.event === 'maze:loadRegion');
-        expect(loadEvents).toHaveLength(0);
+    it('does not republish on subsequent stateManager:rulesLoaded firings', () => {
+        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rulesLoaded', {});
+        eventBus.publish('stateManager:rulesLoaded', {});
+        expect(dispatcher.published).toHaveLength(1);
     });
 
     it('clears the warehouse on a subsequent non-procgen files:jsonLoaded', () => {
@@ -155,10 +160,6 @@ describe('procgenPlayer index', () => {
     });
 
     it('publishes loadRegion for the target region on user:regionMove (when in warehouse)', () => {
-        // First load so warehouse exists
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
-        const before = eventBus.published.length;
-        // Get the receiver and call it directly (mimicking dispatcher)
         const reg = makeMockRegistrationApi();
         _testOnly_resetModuleState();
         register(reg);

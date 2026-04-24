@@ -35,7 +35,12 @@ let eventBus = null;
 let dispatcher = null;
 let logger = null;
 let unsubFilesLoaded = null;
+let unsubRulesLoaded = null;
 let warehouse = null;
+// The synthesized initial transition is deferred until
+// stateManager:rulesLoaded fires — see handleFilesJsonLoaded /
+// handleRulesLoaded for why.
+let pendingStartTransition = null;
 
 function publishLoadRegion(regionId, arrivedFrom) {
     if (!warehouse || !eventBus?.publish) return false;
@@ -58,26 +63,36 @@ function handleFilesJsonLoaded(data) {
         // Not a procgen rules.json — drop any prior warehouse so a
         // stale one can't accidentally answer a later regionMove.
         warehouse = null;
+        pendingStartTransition = null;
         return;
     }
     warehouse = built;
 
-    // Synthesize a user:regionMove for the initial load rather than
-    // calling publishLoadRegion directly. That keeps gameState's path
-    // + currentRegion in sync with what the maze is rendering (the
-    // "Menu -> first real region" transition is a real move in the
-    // AP-narrative sense) and collapses initial-load + subsequent-
-    // transition into a single code path — this handler's sibling,
-    // handleRegionMove, does the actual loadRegion publish when the
-    // event circulates back through the dispatcher chain.
-    const startTransition = findStartRegion(rulesJson, playerId, warehouse);
-    if (startTransition && dispatcher?.publish) {
-        dispatcher.publish('user:regionMove', {
-            sourceRegion: startTransition.sourceRegion,
-            targetRegion: startTransition.region,
-            exitName: startTransition.exitName,
-        }, { initialTarget: 'bottom' });
-    }
+    // Stash the initial transition. We can't publish user:regionMove
+    // yet because stateManager is still processing the rules.json
+    // asynchronously — once it finishes it fires
+    // stateManager:rulesLoaded, and gameState responds by calling
+    // reset() (clearing path, resetting currentRegion to the declared
+    // start). A regionMove published before that reset lands would
+    // be wiped out. Defer until handleRulesLoaded runs.
+    pendingStartTransition = findStartRegion(rulesJson, playerId, warehouse);
+}
+
+function handleRulesLoaded() {
+    if (!pendingStartTransition || !dispatcher?.publish) return;
+    // Synthesize a user:regionMove for the "Menu -> first real
+    // region" transition. This keeps gameState's path +
+    // currentRegion in sync with what the maze is rendering, and
+    // collapses initial-load + subsequent-transition into a single
+    // code path — this module's own handleRegionMove does the
+    // actual loadRegion publish when the event circulates back
+    // through the dispatcher chain.
+    dispatcher.publish('user:regionMove', {
+        sourceRegion: pendingStartTransition.sourceRegion,
+        targetRegion: pendingStartTransition.region,
+        exitName: pendingStartTransition.exitName,
+    }, { initialTarget: 'bottom' });
+    pendingStartTransition = null;
 }
 
 function handleRegionMove(data) {
@@ -128,11 +143,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
     if (eventBus?.subscribe) {
         unsubFilesLoaded = eventBus.subscribe('files:jsonLoaded', handleFilesJsonLoaded);
+        unsubRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
     }
 
     return () => {
         if (unsubFilesLoaded) { unsubFilesLoaded(); unsubFilesLoaded = null; }
+        if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
         warehouse = null;
+        pendingStartTransition = null;
         eventBus = null;
         dispatcher = null;
         logger = null;
@@ -142,7 +160,9 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 // Test-only — reset module-scope state between cases.
 export function _testOnly_resetModuleState() {
     if (unsubFilesLoaded) { unsubFilesLoaded(); unsubFilesLoaded = null; }
+    if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
     warehouse = null;
+    pendingStartTransition = null;
     eventBus = null;
     dispatcher = null;
     logger = null;
