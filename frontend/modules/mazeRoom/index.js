@@ -9,8 +9,11 @@
  */
 
 import { MazeRoomUI } from './mazeRoomUI.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 
 export * from './mazeRoomEngine.js';
+export { substrateRegistryEntry } from './mazeRoomLibrary.js';
 
 export const moduleInfo = {
     name: 'mazeRoom',
@@ -33,6 +36,13 @@ export function register(registrationApi) {
     document.head.appendChild(link);
 
     registrationApi.registerPanelComponent('mazeRoomPanel', MazeRoomUI);
+
+    // Skeleton for step 7's procgen player. No consumer yet — this
+    // just makes the maze discoverable by the registry. See
+    // NewDocs/plans/procedural-generation/procgen-player.md.
+    if (!substrateRegistry.has(substrateRegistryEntry.id)) {
+        substrateRegistry.register(substrateRegistryEntry);
+    }
 }
 
 export async function initialize(moduleId, priorityIndex, initializationApi) {
