@@ -437,6 +437,21 @@ export function growMaze(config) {
 const LOCATION_ID_BASE = 1000;
 const ITEM_ID_BASE = 1;
 
+// Construct a location's globally unique name from its region name,
+// extracted location id, and position. Position is appended so that
+// multiple same-id locations in one region (e.g. two key_red_pickup
+// entries) don't collide.
+//
+// Single source of truth for the naming convention — used by both
+// compileRegionGraph (to populate the regions block) and
+// serializeMazeWorld (to bake locationName into the sidecar so the
+// substrate panel can publish user:locationCheck without going through
+// a lookup table at runtime).
+export function makeLocationName(regionName, locId, position) {
+    const suffix = position ? `__${position.x}_${position.y}` : '';
+    return `${regionName}__${locId}${suffix}`;
+}
+
 export function compileRegionGraph(grid, opts = {}) {
     const {
         obstacleLib = DEFAULT_OBSTACLES,
@@ -472,13 +487,7 @@ export function compileRegionGraph(grid, opts = {}) {
         }));
 
         const regionLocations = compiled.locations.map((loc) => {
-            // Disambiguate multiple same-id locations in a region (two
-            // key_red_pickup entries at different positions would collide
-            // otherwise) by appending position to the global name.
-            const suffix = loc.position
-                ? `__${loc.position.x}_${loc.position.y}`
-                : '';
-            const globalName = `${compiled.region_name}__${loc.id}${suffix}`;
+            const globalName = makeLocationName(compiled.region_name, loc.id, loc.position);
             const numericId = nextLocationId++;
             if (loc.item) {
                 // Register the item and tally the canonical placement.
@@ -543,18 +552,45 @@ export function compileRegionGraph(grid, opts = {}) {
 // bridge.
 
 // Serialize a maze world into the sidecar payload shape. Maps and
-// Int8Array aren't JSON-safe, so this flattens them.
-function serializeMazeWorld(world, baseObstacleLib = DEFAULT_OBSTACLES) {
+// Int8Array aren't JSON-safe, so this flattens them. AP-canonical
+// names from the extracted_rules are baked in so the substrate panel
+// can publish user:locationCheck and user:regionMove with the right
+// names without consulting any other lookup at runtime.
+function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBSTACLES) {
     const obstacles = [];
     for (const [key, id] of world.obstacles) {
         const [x, y] = key.split(',').map(Number);
         obstacles.push({ x, y, id });
     }
+
+    // Lookup: position key "x,y" -> AP-canonical location name. Built
+    // from the extracted location list, which already names each item
+    // pickup. The lookup is keyed by position because that's how each
+    // item maps back to its location entry.
+    const locationNameByPos = new Map();
+    for (const loc of extractedRules?.locations ?? []) {
+        if (!loc.position) continue;
+        const key = `${loc.position.x},${loc.position.y}`;
+        locationNameByPos.set(key, makeLocationName(extractedRules.region_id, loc.id, loc.position));
+    }
+
     const items = [];
     for (const [key, id] of world.items) {
         const [x, y] = key.split(',').map(Number);
-        items.push({ x, y, id });
+        items.push({ x, y, id, locationName: locationNameByPos.get(key) ?? null });
     }
+
+    // v1 maze emits exactly one exit per region. Bake in the exit name
+    // and target region from the extracted rules so the substrate can
+    // publish user:regionMove directly.
+    const extractedExit = extractedRules?.exits?.[0] ?? null;
+    const exit = {
+        x: world.exit.x,
+        y: world.exit.y,
+        exitName: extractedExit?.id ?? null,
+        targetRegion: extractedExit?.target_region ?? null,
+    };
+
     // Only include obstacleLib entries that aren't already in the
     // base library — standard colored doors live there; per-instance
     // logic_gate_<N> entries don't and must travel in the sidecar so
@@ -570,7 +606,7 @@ function serializeMazeWorld(world, baseObstacleLib = DEFAULT_OBSTACLES) {
         height: world.height,
         tiles: Array.from(world.tiles),
         entrance: { x: world.entrance.x, y: world.entrance.y },
-        exit: { x: world.exit.x, y: world.exit.y },
+        exit,
         obstacles,
         items,
         obstacleLib: obstacleLibExtras,
@@ -583,7 +619,11 @@ export function buildPresetSidecars(grid, { playerId = '1', baseObstacleLib = DE
         regionMap[region.region_id] = {
             substrate: 'maze',
             render_hint: region.render_hint ?? 'maze',
-            playable_payload: serializeMazeWorld(region.playable_payload, baseObstacleLib),
+            playable_payload: serializeMazeWorld(
+                region.playable_payload,
+                region.extracted_rules,
+                baseObstacleLib,
+            ),
         };
     }
     return { [playerId]: regionMap };

@@ -676,6 +676,58 @@ describe('buildPresetSidecars', () => {
         expect(sidecars['2']).toBeDefined();
         expect(sidecars['1']).toBeUndefined();
     });
+
+    it('bakes locationName into each item entry, matching the compiled location name', () => {
+        const { grid, startCell } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const compiled = compileRegionGraph(grid, { startCell });
+
+        // Build a position-keyed lookup of compiled location names per
+        // region so we can cross-check what landed in the sidecar.
+        const nameLookup = new Map();
+        for (const region of grid.allRegions()) {
+            for (const loc of region.extracted_rules.locations ?? []) {
+                if (!loc.position || !loc.item) continue;
+                const compiledRegion = compiled.regions[region.region_id];
+                const expected = compiledRegion.locations.find((l) => l.name.endsWith(`__${loc.position.x}_${loc.position.y}`));
+                expect(expected).toBeDefined();
+                nameLookup.set(`${region.region_id}|${loc.position.x},${loc.position.y}`, expected.name);
+            }
+        }
+
+        // Smoke check: at least one item with an expected name was
+        // placed somewhere in the grid (otherwise this test would
+        // pass vacuously).
+        let itemsChecked = 0;
+        for (const [regionId, side] of Object.entries(sidecars['1'])) {
+            for (const item of side.playable_payload.items) {
+                expect(typeof item.locationName).toBe('string');
+                const expected = nameLookup.get(`${regionId}|${item.x},${item.y}`);
+                expect(item.locationName).toBe(expected);
+                itemsChecked++;
+            }
+        }
+        expect(itemsChecked).toBeGreaterThan(0);
+    });
+
+    it('bakes exitName and targetRegion into the exit entry', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+
+        // Locate at least one region whose exit was stitched to a
+        // neighbor (target_region != null) and check its sidecar.
+        let stitchedExitsChecked = 0;
+        for (const region of grid.allRegions()) {
+            const extractedExit = region.extracted_rules.exits?.[0];
+            const exit = sidecars['1'][region.region_id].playable_payload.exit;
+            expect(exit.x).toBe(region.playable_payload.exit.x);
+            expect(exit.y).toBe(region.playable_payload.exit.y);
+            expect(exit.exitName).toBe(extractedExit?.id ?? null);
+            expect(exit.targetRegion).toBe(extractedExit?.target_region ?? null);
+            if (extractedExit?.target_region) stitchedExitsChecked++;
+        }
+        expect(stitchedExitsChecked).toBeGreaterThan(0);
+    });
 });
 
 describe('buildRulesJson', () => {
