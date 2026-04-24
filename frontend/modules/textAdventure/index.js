@@ -10,7 +10,7 @@ export const moduleInfo = {
   icon: '📖',
   column: 3, // Right column
   description: 'Text Adventure display panel.',
-  requires: ['stateManager', 'playerState', 'discovery'],
+  requires: ['stateManager', 'gameState', 'discovery'],
 };
 
 // Helper function for logging with fallback

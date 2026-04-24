@@ -14,7 +14,7 @@
  *    c. For the location (if no cost assigned):
  *       - Calculate cost = floor(currentMana / 2)
  *       - Assign to costDataManager BEFORE queuing the action
- *    d. Queue actions via dispatcher/playerStateAPI
+ *    d. Queue actions via dispatcher/gameStateAPI
  *    e. Process through actual loop game mechanics
  *    f. Wait for completion, reset loop
  * 3. Assign default costs to any remaining unvisited regions/locations
@@ -39,7 +39,7 @@ export class CostGenerator {
     this.eventBus = dependencies.eventBus;
     this.costDataManager = dependencies.costDataManager;
     this.dispatcher = dependencies.dispatcher;
-    this.playerStateAPI = dependencies.playerStateAPI;
+    this.gameStateAPI = dependencies.gameStateAPI;
 
     // Generation state
     this.isGenerating = false;
@@ -266,7 +266,7 @@ export class CostGenerator {
     logger.debug(`Processing: ${locationName} in ${targetRegion}`);
 
     // Clear the current queue - trim path back to start region
-    this.playerStateAPI.trimPath?.(startRegion, 1);
+    this.gameStateAPI.trimPath?.(startRegion, 1);
 
     // Find path from start region to target region
     const path = this.pathFinder.findPathWithExits(startRegion, targetRegion);
@@ -327,7 +327,7 @@ export class CostGenerator {
     }
 
     // Add the location check at the end
-    this.playerStateAPI.addLocationCheck?.(locationName, targetRegion);
+    this.gameStateAPI.addLocationCheck?.(locationName, targetRegion);
 
     // Start processing if not already started
     if (!this.loopState.isProcessing) {

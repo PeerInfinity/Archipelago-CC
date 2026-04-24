@@ -263,12 +263,12 @@ Loops mode integrates tightly with the discovery system:
 - Exploring a region triggers discovery events, revealing locations and exits
 - The explore action publishes `loop:exploreCompleted` through the dispatcher chain
 
-### PlayerState Path
+### GameState Path
 
-The action queue is built on top of PlayerState's path system:
-- Region moves, location checks, and explore actions are stored as PlayerState path entries
+The action queue is built on top of GameState's path system:
+- Region moves, location checks, and explore actions are stored as GameState path entries
 - The `ActionQueueManager` maps path entries to loop action objects with progress/completion tracking
-- Queue modifications (add, remove, clear) delegate to PlayerState's API
+- Queue modifications (add, remove, clear) delegate to GameState's API
 
 ### Region Graph
 
@@ -292,7 +292,7 @@ The loops system is split across three frontend modules:
 | `loopUI.js` | Main UI controller, panel rendering, event coordination |
 | `loopRenderer.js` | Rendering orchestration, separating render logic from state |
 | `loopBlockBuilder.js` | Region block DOM construction, mana cost coloring |
-| `actionQueueManager.js` | Maps PlayerState path to action objects, tracks progress |
+| `actionQueueManager.js` | Maps GameState path to action objects, tracks progress |
 | `costDataManager.js` | Loads and caches per-region/per-location cost data |
 | `costGenerator.js` | Generates cost data by simulating sphere log playthrough |
 | `eventCoordinator.js` | Centralizes event subscriptions and routing |
@@ -332,7 +332,7 @@ The loops module uses a dispatcher-based event system:
 
 1. **User clicks location/exit** → Event captured by `loopEvents.js`
 2. **Pathfinding** → Route calculated from Menu to target
-3. **Queue built** → Region moves and action dispatched via PlayerState API
+3. **Queue built** → Region moves and action dispatched via GameState API
 4. **Processing** → `loopState._processFrame()` runs via `requestAnimationFrame`
 5. **Mana consumed** → Continuous deduction proportional to progress
 6. **XP awarded** → 1 XP per mana spent, applied to the action's source region

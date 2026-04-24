@@ -46,8 +46,8 @@
 | `stateManager:snapshotUpdated` | Updates graph accessibility coloring when game state changes |
 | `stateManager:rulesLoaded` | Loads graph data when new rules are loaded |
 | `stateManager:ready` | Ensures graph is loaded once state manager is ready |
-| `playerState:regionChanged` | Updates player location marker |
-| `playerState:pathUpdated` | Updates path highlighting |
+| `gameState:regionChanged` | Updates player location marker |
+| `gameState:pathUpdated` | Updates path highlighting |
 | `discovery:modeChanged` | Toggles discovery mode filtering |
 | `discovery:settingsChanged` | Updates discovery display settings |
 | `discovery:changed` | Updates graph visibility when discovery state changes |
@@ -63,7 +63,7 @@ This module does not register public functions in `centralRegistry`. It is prima
 - **`settingsManager`:** Loads and saves display settings and location visibility
 - **`eventBus`:** Primary communication mechanism with other modules
 - **`discoveryStateSingleton`:** Queries discovery state for regions, locations, and exits
-- **`playerState`:** Gets current player location and path data
+- **`gameState`:** Gets current player location and path data
 - **`Cytoscape.js`:** External graph visualization library (dynamically loaded)
 - **`ruleEngine`:** Evaluates location and exit access rules
 - **`commonUI`:** Shared UI utilities

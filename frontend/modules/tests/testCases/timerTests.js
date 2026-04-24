@@ -1627,15 +1627,15 @@ async function timerOfflineTestWithLoopsQueue(testController) {
       testController.log('WARNING: loopStats module not available, skipping analysis');
     }
 
-    // Get playerState API functions directly from the playerState module
-    const playerStateAPI = {
-      trimPath: window.centralRegistry.getPublicFunction('playerState', 'trimPath'),
-      addLocationCheck: window.centralRegistry.getPublicFunction('playerState', 'addLocationCheck'),
+    // Get gameState API functions directly from the gameState module
+    const gameStateAPI = {
+      trimPath: window.centralRegistry.getPublicFunction('gameState', 'trimPath'),
+      addLocationCheck: window.centralRegistry.getPublicFunction('gameState', 'addLocationCheck'),
     };
-    if (!playerStateAPI.trimPath || !playerStateAPI.addLocationCheck) {
-      throw new Error('playerState public functions not found in central registry');
+    if (!gameStateAPI.trimPath || !gameStateAPI.addLocationCheck) {
+      throw new Error('gameState public functions not found in central registry');
     }
-    testController.reportCondition('PlayerState API available', true);
+    testController.reportCondition('GameState API available', true);
 
     // Use global event dispatcher for publishing events
     const dispatcher = window.eventDispatcher;
@@ -1729,7 +1729,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
         }
 
         // Clear the current queue - trim path back to start region
-        playerStateAPI.trimPath?.(startRegion, 1);
+        gameStateAPI.trimPath?.(startRegion, 1);
 
         // Build path from start region to target region
         const path = pathFinder.findPathWithExits(startRegion, targetRegion);
@@ -1753,7 +1753,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
         }
 
         // Add the location check at the end
-        playerStateAPI.addLocationCheck?.(targetLocation.name, targetRegion);
+        gameStateAPI.addLocationCheck?.(targetLocation.name, targetRegion);
 
         // Get analysis from loopStats module if available
         if (queueAnalyzer) {

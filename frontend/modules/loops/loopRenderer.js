@@ -111,7 +111,7 @@ export class LoopRenderer {
       // Render each region block (normal view)
       regionGroups.forEach((actions, regionName) => {
         const regionStaticData = staticData?.regions?.get(regionName);
-        const isStartRegion = this.loopUI?.playerStateAPI?.isStartRegion?.(regionName);
+        const isStartRegion = this.loopUI?.gameStateAPI?.isStartRegion?.(regionName);
         if (!regionStaticData && !isStartRegion) {
           logger.warn(`No static data found for region: ${regionName}`);
           return;

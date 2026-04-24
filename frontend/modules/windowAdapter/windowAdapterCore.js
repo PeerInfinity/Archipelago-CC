@@ -6,7 +6,7 @@ import {
     safePostMessage,
     createErrorMessage
 } from './communicationProtocol.js';
-import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -141,7 +141,7 @@ export class WindowAdapterCore {
         if (this.registerDynamicPublisher) {
             const publisherId = `${windowId}`;
             // Register for common events that windows typically publish
-            this.registerDynamicPublisher(publisherId, 'playerState:regionChanged');
+            this.registerDynamicPublisher(publisherId, 'gameState:regionChanged');
             log('debug', `Registered dynamic publisher ${publisherId} for window events`);
         }
 
@@ -152,12 +152,12 @@ export class WindowAdapterCore {
             // Send current region to newly connected window so it can initialize its state
             // Use setTimeout to ensure window has finished setting up its event subscriptions
             setTimeout(() => {
-                const playerState = getPlayerStateSingleton();
-                const currentRegion = playerState?.getCurrentRegion();
+                const gameState = getGameStateSingleton();
+                const currentRegion = gameState?.getCurrentRegion();
                 if (currentRegion) {
                     log('debug', `Sending current region to window: ${currentRegion}`);
                     // Publish region changed event so window can sync
-                    this.eventBus.publish('playerState:regionChanged', {
+                    this.eventBus.publish('gameState:regionChanged', {
                         oldRegion: null,
                         newRegion: currentRegion
                     });

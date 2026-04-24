@@ -1,14 +1,14 @@
 /**
- * Tests for PlayerState and PlayerStatePanel modules
+ * Tests for GameState and GameStatePanel modules
  */
 
 import { registerTest } from '../testRegistry.js';
 
-export function testPlayerStateInitialRegion(testController) {
-  testController.log('Testing PlayerState initial region...');
+export function testGameStateInitialRegion(testController) {
+  testController.log('Testing GameState initial region...');
   
-  const playerState = testController.centralRegistry.getPublicFunction('playerState', 'getState')();
-  const currentRegion = playerState.getCurrentRegion();
+  const gameState = testController.centralRegistry.getPublicFunction('gameState', 'getState')();
+  const currentRegion = gameState.getCurrentRegion();
   
   testController.reportCondition(
     'Initial region should be Menu',
@@ -19,11 +19,11 @@ export function testPlayerStateInitialRegion(testController) {
   testController.completeTest();
 }
 
-export async function testPlayerStateRegionUpdate(testController) {
-  testController.log('Testing PlayerState region update via user:regionMove event...');
+export async function testGameStateRegionUpdate(testController) {
+  testController.log('Testing GameState region update via user:regionMove event...');
   
-  const playerState = testController.centralRegistry.getPublicFunction('playerState', 'getState')();
-  const initialRegion = playerState.getCurrentRegion();
+  const gameState = testController.centralRegistry.getPublicFunction('gameState', 'getState')();
+  const initialRegion = gameState.getCurrentRegion();
   
   testController.reportCondition(
     'Initial region should be Menu',
@@ -41,7 +41,7 @@ export async function testPlayerStateRegionUpdate(testController) {
   // Wait a bit for event processing
   await new Promise(resolve => setTimeout(resolve, 100));
   
-  const newRegion = playerState.getCurrentRegion();
+  const newRegion = gameState.getCurrentRegion();
   testController.reportCondition(
     'Region should update to Links House',
     newRegion === 'Links House',
@@ -51,10 +51,10 @@ export async function testPlayerStateRegionUpdate(testController) {
   testController.completeTest();
 }
 
-export async function testPlayerStateResetOnRulesLoaded(testController) {
-  testController.log('Testing PlayerState reset on rules loaded...');
+export async function testGameStateResetOnRulesLoaded(testController) {
+  testController.log('Testing GameState reset on rules loaded...');
   
-  const playerState = testController.centralRegistry.getPublicFunction('playerState', 'getState')();
+  const gameState = testController.centralRegistry.getPublicFunction('gameState', 'getState')();
   
   // Move to a different region first
   testController.eventDispatcher.dispatch('user:regionMove', {
@@ -65,7 +65,7 @@ export async function testPlayerStateResetOnRulesLoaded(testController) {
   
   await testController.waitForTimeout(100);
   
-  const movedRegion = playerState.getCurrentRegion();
+  const movedRegion = gameState.getCurrentRegion();
   testController.reportCondition(
     'Should be in Links House before reset',
     movedRegion === 'Links House',
@@ -77,7 +77,7 @@ export async function testPlayerStateResetOnRulesLoaded(testController) {
   
   await testController.waitForTimeout(100);
   
-  const resetRegion = playerState.getCurrentRegion();
+  const resetRegion = gameState.getCurrentRegion();
   testController.reportCondition(
     'Region should reset to Menu',
     resetRegion === 'Menu',
@@ -87,15 +87,15 @@ export async function testPlayerStateResetOnRulesLoaded(testController) {
   testController.completeTest();
 }
 
-export async function testPlayerStateEventPublishing(testController) {
-  testController.log('Testing PlayerState event publishing...');
+export async function testGameStateEventPublishing(testController) {
+  testController.log('Testing GameState event publishing...');
   
-  const playerState = testController.centralRegistry.getPublicFunction('playerState', 'getState')();
+  const gameState = testController.centralRegistry.getPublicFunction('gameState', 'getState')();
   let eventReceived = false;
   let eventData = null;
   
-  // Subscribe to playerState:regionChanged event
-  const unsubscribe = testController.eventBus.subscribe('playerState:regionChanged', (data) => {
+  // Subscribe to gameState:regionChanged event
+  const unsubscribe = testController.eventBus.subscribe('gameState:regionChanged', (data) => {
     eventReceived = true;
     eventData = data;
   });
@@ -110,7 +110,7 @@ export async function testPlayerStateEventPublishing(testController) {
   await testController.waitForTimeout(100);
   
   testController.reportCondition(
-    'playerState:regionChanged event should be received',
+    'gameState:regionChanged event should be received',
     eventReceived,
     `Event received: ${eventReceived}`
   );
@@ -127,13 +127,13 @@ export async function testPlayerStateEventPublishing(testController) {
   testController.completeTest();
 }
 
-export async function testPlayerStatePanelDisplay(testController) {
-  testController.log('Testing PlayerStatePanel display...');
+export async function testGameStatePanelDisplay(testController) {
+  testController.log('Testing GameStatePanel display...');
   
   // Check if panel exists
-  const panelElement = document.querySelector('.player-state-panel');
+  const panelElement = document.querySelector('.game-state-panel');
   testController.reportCondition(
-    'PlayerStatePanel should exist in DOM',
+    'GameStatePanel should exist in DOM',
     panelElement !== null,
     `Panel found: ${panelElement !== null}`
   );
@@ -159,13 +159,13 @@ export async function testPlayerStatePanelDisplay(testController) {
   testController.completeTest();
 }
 
-export async function testPlayerStatePanelUpdate(testController) {
-  testController.log('Testing PlayerStatePanel updates on region change...');
+export async function testGameStatePanelUpdate(testController) {
+  testController.log('Testing GameStatePanel updates on region change...');
   
-  const panelElement = document.querySelector('.player-state-panel');
+  const panelElement = document.querySelector('.game-state-panel');
   if (!panelElement) {
     testController.reportCondition(
-      'PlayerStatePanel should exist',
+      'GameStatePanel should exist',
       false,
       'Panel not found in DOM'
     );
@@ -201,54 +201,54 @@ export async function testPlayerStatePanelUpdate(testController) {
 // Register all tests
 registerTest({
   id: 'test_playerstate_initial_region',
-  name: 'PlayerState Initial Region',
+  name: 'GameState Initial Region',
   category: 'Player State',
-  testFunction: testPlayerStateInitialRegion,
+  testFunction: testGameStateInitialRegion,
   //enabled: true,
-  description: 'Tests that PlayerState initializes with Menu as the current region.'
+  description: 'Tests that GameState initializes with Menu as the current region.'
 });
 
 registerTest({
   id: 'test_playerstate_region_update',
-  name: 'PlayerState Region Update',
+  name: 'GameState Region Update',
   category: 'Player State',
-  testFunction: testPlayerStateRegionUpdate,
+  testFunction: testGameStateRegionUpdate,
   //enabled: true,
-  description: 'Tests that PlayerState updates region via user:regionMove events.'
+  description: 'Tests that GameState updates region via user:regionMove events.'
 });
 
 registerTest({
   id: 'test_playerstate_reset_on_rules',
-  name: 'PlayerState Reset on Rules Loaded',
+  name: 'GameState Reset on Rules Loaded',
   category: 'Player State',
-  testFunction: testPlayerStateResetOnRulesLoaded,
+  testFunction: testGameStateResetOnRulesLoaded,
   //enabled: true,
-  description: 'Tests that PlayerState resets to Menu when rules are loaded.'
+  description: 'Tests that GameState resets to Menu when rules are loaded.'
 });
 
 registerTest({
   id: 'test_playerstate_event_publishing',
-  name: 'PlayerState Event Publishing',
+  name: 'GameState Event Publishing',
   category: 'Player State',
-  testFunction: testPlayerStateEventPublishing,
+  testFunction: testGameStateEventPublishing,
   //enabled: true,
-  description: 'Tests that PlayerState publishes playerState:regionChanged events.'
+  description: 'Tests that GameState publishes gameState:regionChanged events.'
 });
 
 registerTest({
   id: 'test_playerstatepanel_display',
-  name: 'PlayerStatePanel Display',
+  name: 'GameStatePanel Display',
   category: 'Player State',
-  testFunction: testPlayerStatePanelDisplay,
+  testFunction: testGameStatePanelDisplay,
   //enabled: true,
-  description: 'Tests that PlayerStatePanel displays in the DOM.'
+  description: 'Tests that GameStatePanel displays in the DOM.'
 });
 
 registerTest({
   id: 'test_playerstatepanel_update',
-  name: 'PlayerStatePanel Update',
+  name: 'GameStatePanel Update',
   category: 'Player State',
-  testFunction: testPlayerStatePanelUpdate,
+  testFunction: testGameStatePanelUpdate,
   //enabled: true,
-  description: 'Tests that PlayerStatePanel updates when region changes.'
+  description: 'Tests that GameStatePanel updates when region changes.'
 });

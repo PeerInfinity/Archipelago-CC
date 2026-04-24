@@ -72,7 +72,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:navigateToLocation');
   registrationApi.registerEventBusPublisher('ui:navigateToDungeon');
   registrationApi.registerEventBusPublisher('ui:activatePanel');
-  registrationApi.registerEventBusPublisher('playerState:trimPath');
+  registrationApi.registerEventBusPublisher('gameState:trimPath');
   registrationApi.registerEventBusPublisher('ui:regionHeaderClicked');
 
   // Register Dispatcher sender intentions (used by RegionUI)
@@ -207,10 +207,10 @@ function handleExitClicked(data, propagationOptions) {
     // Normal mode - execute region move via dispatcher
     log('info', `[${moduleId} Module] Processing exit click: moving to ${destinationRegion} via ${exitName}`);
 
-    // Get the actual current region from playerState
-    import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
-      const playerState = getPlayerStateSingleton();
-      const currentRegion = playerState.getCurrentRegion();
+    // Get the actual current region from gameState
+    import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
+      const gameState = getGameStateSingleton();
+      const currentRegion = gameState.getCurrentRegion();
 
       if (moduleDispatcher) {
         moduleDispatcher.publish('user:regionMove', {
@@ -226,7 +226,7 @@ function handleExitClicked(data, propagationOptions) {
         log('error', `[${moduleId} Module] Dispatcher not available for publishing user:regionMove`);
       }
     }).catch(error => {
-      log('error', `[${moduleId} Module] Error importing playerState:`, error);
+      log('error', `[${moduleId} Module] Error importing gameState:`, error);
     });
   }
 

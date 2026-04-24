@@ -6,24 +6,24 @@ const logger = createUniversalLogger('loopUI:ActionQueue');
 /**
  * ActionQueueManager
  *
- * Manages the action queue by translating PlayerState path to loop action objects.
+ * Manages the action queue by translating GameState path to loop action objects.
  * Tracks progress and completion state for each action.
  *
  * Data Flow:
- * 1. PlayerState maintains the path (sequence of path entries)
+ * 1. GameState maintains the path (sequence of path entries)
  * 2. ActionQueueManager maps path entries to action objects for UI/processing
  * 3. Progress and completion tracked separately via Maps/Sets
- * 4. Queue modifications delegate to PlayerState API
+ * 4. Queue modifications delegate to GameState API
  *
  * Responsibilities:
- * - Map PlayerState path to action queue
+ * - Map GameState path to action queue
  * - Track action progress (0-100)
  * - Track action completion status
  * - Provide queue manipulation methods
  */
 export class ActionQueueManager {
-  constructor(playerStateAPI) {
-    this.playerStateAPI = playerStateAPI;
+  constructor(gameStateAPI) {
+    this.gameStateAPI = gameStateAPI;
 
     // Progress and completion tracking
     this.actionProgress = new Map(); // pathIndex -> progress (0-100)
@@ -33,16 +33,16 @@ export class ActionQueueManager {
   }
 
   /**
-   * Get the current action queue from playerState path
+   * Get the current action queue from gameState path
    * Maps path entries to action objects for processing
    * @returns {Array} Array of action objects
    */
   getActionQueue() {
-    if (!this.playerStateAPI || !this.playerStateAPI.getPath) {
+    if (!this.gameStateAPI || !this.gameStateAPI.getPath) {
       return [];
     }
 
-    const path = this.playerStateAPI.getPath();
+    const path = this.gameStateAPI.getPath();
     const actions = [];
 
     path.forEach((entry, index) => {
@@ -70,12 +70,12 @@ export class ActionQueueManager {
    * @param {boolean} repeat - Whether this is a repeating explore action
    */
   queueExploreAction(regionName, repeat = false) {
-    if (!this.playerStateAPI || !this.playerStateAPI.addCustomAction) {
-      logger.error('Cannot queue explore action: playerStateAPI not available');
+    if (!this.gameStateAPI || !this.gameStateAPI.addCustomAction) {
+      logger.error('Cannot queue explore action: gameStateAPI not available');
       return false;
     }
 
-    this.playerStateAPI.addCustomAction('explore', { repeat });
+    this.gameStateAPI.addCustomAction('explore', { repeat });
     logger.debug(`Queued explore action for ${regionName}, repeat: ${repeat}`);
     return true;
   }
@@ -86,12 +86,12 @@ export class ActionQueueManager {
    * @param {string} regionName - The region containing the location
    */
   queueLocationCheck(locationName, regionName) {
-    if (!this.playerStateAPI || !this.playerStateAPI.addLocationCheck) {
-      logger.error('Cannot queue location check: playerStateAPI not available');
+    if (!this.gameStateAPI || !this.gameStateAPI.addLocationCheck) {
+      logger.error('Cannot queue location check: gameStateAPI not available');
       return false;
     }
 
-    this.playerStateAPI.addLocationCheck(locationName, regionName);
+    this.gameStateAPI.addLocationCheck(locationName, regionName);
     logger.debug(`Queued location check for ${locationName} in ${regionName}`);
     return true;
   }
@@ -102,8 +102,8 @@ export class ActionQueueManager {
    * @returns {boolean} True if removed successfully
    */
   removeAction(actionIndex) {
-    if (!this.playerStateAPI) {
-      logger.error('Cannot remove action: playerStateAPI not available');
+    if (!this.gameStateAPI) {
+      logger.error('Cannot remove action: gameStateAPI not available');
       return false;
     }
 
@@ -115,15 +115,15 @@ export class ActionQueueManager {
 
     const actionToRemove = queue[actionIndex];
 
-    // Remove from playerState based on action type
+    // Remove from gameState based on action type
     if (actionToRemove.type === 'locationCheck') {
-      this.playerStateAPI.removeLocationCheckAt(
+      this.gameStateAPI.removeLocationCheckAt(
         actionToRemove.locationName,
         actionToRemove.sourceRegion,
         actionToRemove.instanceNumber
       );
     } else if (actionToRemove.type === 'customAction') {
-      this.playerStateAPI.removeCustomActionAt(
+      this.gameStateAPI.removeCustomActionAt(
         actionToRemove.actionName,
         actionToRemove.sourceRegion,
         actionToRemove.instanceNumber,
@@ -148,8 +148,8 @@ export class ActionQueueManager {
    * Clear all actions from the queue
    */
   clearQueue() {
-    if (!this.playerStateAPI) {
-      logger.error('Cannot clear queue: playerStateAPI not available');
+    if (!this.gameStateAPI) {
+      logger.error('Cannot clear queue: gameStateAPI not available');
       return;
     }
 
@@ -158,8 +158,8 @@ export class ActionQueueManager {
     this.actionCompleted.clear();
 
     // Remove all location checks and custom actions from the path
-    this.playerStateAPI.removeAllActionsOfType('locationCheck');
-    this.playerStateAPI.removeAllActionsOfType('customAction');
+    this.gameStateAPI.removeAllActionsOfType('locationCheck');
+    this.gameStateAPI.removeAllActionsOfType('customAction');
 
     logger.debug('Cleared action queue');
   }
@@ -169,12 +169,12 @@ export class ActionQueueManager {
    * @returns {number} Number of actions removed
    */
   clearExploreActions() {
-    if (!this.playerStateAPI) {
-      logger.error('Cannot clear explore actions: playerStateAPI not available');
+    if (!this.gameStateAPI) {
+      logger.error('Cannot clear explore actions: gameStateAPI not available');
       return 0;
     }
 
-    const removedCount = this.playerStateAPI.removeAllActionsOfType('customAction', 'explore');
+    const removedCount = this.gameStateAPI.removeAllActionsOfType('customAction', 'explore');
 
     // Note: We could clean up tracking for removed actions, but since path indices
     // change after removal, we let getActionQueue handle missing progress

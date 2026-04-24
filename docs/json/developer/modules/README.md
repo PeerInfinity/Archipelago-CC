@@ -23,7 +23,7 @@ These modules provide foundational services that other modules depend on. They t
 -   **[State Manager](./stateManager.md):** The most critical module. Manages all game state, logic evaluation, and accessibility in a background Web Worker.
 -   **[Client](./client.md):** Handles WebSocket communication with the Archipelago server.
 -   **[Discovery](./discovery.md):** Tracks the "discovered" state of regions, locations, and exits for game modes like Archipelago Loops.
--   **[PlayerState](./playerState.md):** Tracks the player's current region, primarily for UI-centric features like the Text Adventure.
+-   **[GameState](./gameState.md):** Tracks the player's current region, primarily for UI-centric features like the Text Adventure.
 -   **[Sphere State](./sphereState.md):** Manages sphere log data and progression tracking for games supporting the sphere system.
 -   **[Timer](./timer.md):** Manages the logic for the automated location checking timer.
 -   **[ProgressBar](./progressBar.md):** Provides the core logic for creating and managing generic, event-driven progress bars.
@@ -49,7 +49,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Loops](./loops.md):** The main UI panel for the Archipelago Loops incremental game mode.
 -   **[Modules](./modules.md):** A panel for viewing and managing the loaded frontend modules.
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
--   **[Player State Panel](./playerStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).
+-   **[Player State Panel](./gameStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).
 -   **[Presets](./presets.md):** Handles loading of pre-configured game files (`rules.json`).
 -   **[Region Graph](./regionGraph.md):** Interactive visualization of region connectivity using Cytoscape.js with real-time accessibility updates.
 -   **[Regions](./regions.md):** Displays the game world organized by regions and their connections.

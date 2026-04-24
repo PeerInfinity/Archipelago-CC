@@ -52,18 +52,18 @@ async function loadAdventureRulesAndPositionPlayer(testController, targetRegion 
   
   // Step 4: Verify player is in target region
   testController.log(`Verifying player is in ${targetRegion} region...`);
-  const { getPlayerStateSingleton } = await import('../../playerState/singleton.js');
+  const { getGameStateSingleton } = await import('../../gameState/singleton.js');
 
-  const playerStateReady = await testController.pollForCondition(
+  const gameStateReady = await testController.pollForCondition(
     () => {
-      const playerState = getPlayerStateSingleton();
-      return playerState && playerState.getCurrentRegion() === targetRegion;
+      const gameState = getGameStateSingleton();
+      return gameState && gameState.getCurrentRegion() === targetRegion;
     },
-    `PlayerState to be in ${targetRegion} region`,
+    `GameState to be in ${targetRegion} region`,
     2000,
     50
   );
-  testController.reportCondition(`Player positioned in ${targetRegion} region`, playerStateReady);
+  testController.reportCondition(`Player positioned in ${targetRegion} region`, gameStateReady);
 }
 
 export async function textAdventureBasicInitializationTest(testController) {
@@ -105,18 +105,18 @@ export async function textAdventureBasicInitializationTest(testController) {
 
     // Step 3: Verify player is in Menu region
     testController.log('Step 3: Verifying player is in Menu region...');
-    const { getPlayerStateSingleton } = await import('../../playerState/singleton.js');
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
 
-    const playerStateReady = await testController.pollForCondition(
+    const gameStateReady = await testController.pollForCondition(
       () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState && playerState.getCurrentRegion() === 'Menu';
+        const gameState = getGameStateSingleton();
+        return gameState && gameState.getCurrentRegion() === 'Menu';
       },
-      'PlayerState to be in Menu region',
+      'GameState to be in Menu region',
       2000,
       50
     );
-    testController.reportCondition('Player positioned in Menu region', playerStateReady);
+    testController.reportCondition('Player positioned in Menu region', gameStateReady);
 
     // Step 4: Check initial state
     testController.log('Step 4: Checking initial state...');
@@ -316,7 +316,7 @@ export async function textAdventureMovementCommandTest(testController) {
       testController.log('Step 5: Waiting for region change to Overworld...');
       
       // The textAdventure module handles movement internally and shows custom messages
-      // rather than going through the standard playerState event chain.
+      // rather than going through the standard gameState event chain.
       // We should test what actually happens rather than expecting standard events.
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief wait for processing
       testController.reportCondition('Move command processed', true);

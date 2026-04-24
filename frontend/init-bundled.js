@@ -84,8 +84,8 @@ import * as dungeonsModule from './modules/dungeons/index.js';
 import * as regionGraphModule from './modules/regionGraph/index.js';
 import * as discoveryModule from './modules/discovery/index.js';
 import * as discoveryPanelModule from './modules/discoveryPanel/index.js';
-import * as playerStateModule from './modules/playerState/index.js';
-import * as playerStatePanelModule from './modules/playerStatePanel/index.js';
+import * as gameStateModule from './modules/gameState/index.js';
+import * as gameStatePanelModule from './modules/gameStatePanel/index.js';
 import * as loopsModule from './modules/loops/index.js';
 import * as loopStatsModule from './modules/loopStats/index.js';
 import * as loopsCostDebuggerModule from './modules/loopsCostDebugger/index.js';
@@ -175,8 +175,8 @@ const BUNDLED_MODULES = {
   regionGraph: regionGraphModule,
   discovery: discoveryModule,
   discoveryPanel: discoveryPanelModule,
-  playerState: playerStateModule,
-  playerStatePanel: playerStatePanelModule,
+  gameState: gameStateModule,
+  gameStatePanel: gameStatePanelModule,
   loops: loopsModule,
   loopStats: loopStatsModule,
   loopsCostDebugger: loopsCostDebuggerModule,

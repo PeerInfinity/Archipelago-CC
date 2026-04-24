@@ -139,7 +139,7 @@ export function register(registrationApi) {
   );
 
   // Register dispatcher receiver for user:locationCheck
-  // Chain: Loops (intercepts if loop mode) → Discovery (discovers + blocks if discovery mode) → PlayerState → StateManager
+  // Chain: Loops (intercepts if loop mode) → Discovery (discovers + blocks if discovery mode) → GameState → StateManager
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,
     'user:locationCheck',
@@ -228,7 +228,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked),
       _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked),
       // user:locationCheck and user:exitClicked are handled via dispatcher chains
-      _moduleEventBus.subscribe('playerState:regionChanged', handlePlayerRegionChanged)
+      _moduleEventBus.subscribe('gameState:regionChanged', handlePlayerRegionChanged)
     );
   } else {
     log('error',
@@ -445,7 +445,7 @@ function handleRegionClicked(eventData) {
 /**
  * Handle user:locationCheck for discovery purposes.
  * If discovery mode is active, discovers the location before propagating.
- * Always propagates to the next handler (playerState → stateManager) — the
+ * Always propagates to the next handler (gameState → stateManager) — the
  * UI layer (locationUI, regionGraph) is responsible for blocking clicks that
  * shouldn't produce events during discovery mode.
  */
@@ -469,7 +469,7 @@ function handleLocationCheckForDiscovery(eventData) {
     }
   }
 
-  // Always propagate to playerState → stateManager
+  // Always propagate to gameState → stateManager
   if (_moduleDispatcher) {
     _moduleDispatcher.publishToNextModule(
       moduleInfo.name,

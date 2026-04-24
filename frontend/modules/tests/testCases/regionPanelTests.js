@@ -1178,7 +1178,7 @@ export async function testRegionMoveComplete(testController) {
 
     // Import modules we'll need
     const regionsModule = await import('../../regions/index.js');
-    const { getPlayerStateSingleton } = await import('../../playerState/singleton.js');
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
     
     // 1. Activate the Regions panel
     testController.log(`[${testRunId}] Activating regions panel...`);
@@ -1200,8 +1200,8 @@ export async function testRegionMoveComplete(testController) {
     testController.reportCondition('Regions panel activated', true);
     
     // 2. Verify initial state - should have "Menu" as current region
-    const playerState = getPlayerStateSingleton();
-    const currentRegion = playerState.getCurrentRegion();
+    const gameState = getGameStateSingleton();
+    const currentRegion = gameState.getCurrentRegion();
     testController.log(`[${testRunId}] Initial current region: ${currentRegion}`);
     testController.reportCondition('Menu is current region', currentRegion === 'Menu');
 
@@ -1319,27 +1319,27 @@ export async function testRegionMoveComplete(testController) {
       testController.log(`[${testRunId}] Clicking Move button...`);
       targetMoveButton.click();
 
-      // Wait for playerState to be updated
+      // Wait for gameState to be updated
       if (!(await testController.pollForCondition(
         () => {
-          const newCurrentRegion = playerState.getCurrentRegion();
+          const newCurrentRegion = gameState.getCurrentRegion();
           return newCurrentRegion === 'Links House';
         },
-        'PlayerState updated to Links House',
+        'GameState updated to Links House',
         5000,
         50
       ))) {
-        throw new Error('PlayerState was not updated to Links House');
+        throw new Error('GameState was not updated to Links House');
       }
 
       // 8. Verify event was dispatched
       testController.reportCondition('user:regionMove event dispatched to bottom', userRegionMoveDispatched);
       testController.reportCondition('Event contains target region', dispatchedEventData?.targetRegion === 'Links House');
 
-      // 9. Verify playerState was updated
-      const newCurrentRegion = playerState.getCurrentRegion();
+      // 9. Verify gameState was updated
+      const newCurrentRegion = gameState.getCurrentRegion();
       testController.log(`[${testRunId}] New current region: ${newCurrentRegion}`);
-      testController.reportCondition('playerState updated to Links House', newCurrentRegion === 'Links House');
+      testController.reportCondition('gameState updated to Links House', newCurrentRegion === 'Links House');
 
       // 10. Verify regions module received and processed the event
       testController.reportCondition('regions module received event', regionsModuleReceived);
@@ -1358,16 +1358,16 @@ export async function testRegionMoveComplete(testController) {
       }
       testController.reportCondition('Links House region appears in panel', true);
 
-      // 12. Verify playerState panel shows Links House as current location
-      const playerStatePanelElement = document.querySelector('.player-state-panel-container');
-      if (playerStatePanelElement) {
-        const currentRegionDisplay = playerStatePanelElement.querySelector('.current-region');
+      // 12. Verify gameState panel shows Links House as current location
+      const gameStatePanelElement = document.querySelector('.game-state-panel-container');
+      if (gameStatePanelElement) {
+        const currentRegionDisplay = gameStatePanelElement.querySelector('.current-region');
         const displayedRegion = currentRegionDisplay?.textContent || '';
-        testController.log(`[${testRunId}] PlayerState panel displays: ${displayedRegion}`);
-        testController.reportCondition('PlayerState panel shows Links House', displayedRegion.includes('Links House'));
+        testController.log(`[${testRunId}] GameState panel displays: ${displayedRegion}`);
+        testController.reportCondition('GameState panel shows Links House', displayedRegion.includes('Links House'));
       } else {
-        testController.log(`[${testRunId}] PlayerState panel not found - this is expected if not activated`);
-        testController.reportCondition('PlayerState panel shows Links House', true); // Skip this check
+        testController.log(`[${testRunId}] GameState panel not found - this is expected if not activated`);
+        testController.reportCondition('GameState panel shows Links House', true); // Skip this check
       }
     } finally {
       // Restore original methods - ALWAYS restore, even if test fails
@@ -1527,7 +1527,7 @@ export async function testRegionMoveComplete(testController) {
     testController.reportCondition('Light World region NOT appeared (sender disabled)', !lightWorldBlockAfterDisabledSender);
     
     // Verify player state did NOT change
-    const regionAfterDisabledSender = playerState.getCurrentRegion();
+    const regionAfterDisabledSender = gameState.getCurrentRegion();
     testController.reportCondition('Player state still Links House (sender disabled)', regionAfterDisabledSender === 'Links House');
     
     // 20. Re-enable sender checkbox
@@ -1547,29 +1547,29 @@ export async function testRegionMoveComplete(testController) {
     await new Promise(resolve => setTimeout(resolve, 100));
     testController.log(`[${testRunId}] Receiver checkbox after unchecking: ${regionsReceiverCheckbox.checked}`);
 
-    // Also disable the EventBus subscriber for playerState:pathUpdated
+    // Also disable the EventBus subscriber for gameState:pathUpdated
     // This is necessary because regions module also updates via this EventBus event
-    testController.log(`[${testRunId}] Finding EventBus section to disable playerState:pathUpdated...`);
+    testController.log(`[${testRunId}] Finding EventBus section to disable gameState:pathUpdated...`);
     const eventBusSection = eventsPanelElement.querySelector('.event-bus-section');
     if (!eventBusSection) {
       throw new Error('EventBus section not found');
     }
 
-    // Find playerState:pathUpdated event in EventBus section
+    // Find gameState:pathUpdated event in EventBus section
     let pathUpdatedEvent = null;
     const eventBusContainers = eventBusSection.querySelectorAll('.event-bus-event');
     for (const container of eventBusContainers) {
       const eventTitle = container.querySelector('h4');
-      if (eventTitle && eventTitle.textContent.trim() === 'playerState:pathUpdated') {
+      if (eventTitle && eventTitle.textContent.trim() === 'gameState:pathUpdated') {
         pathUpdatedEvent = container;
         break;
       }
     }
 
     if (!pathUpdatedEvent) {
-      throw new Error('playerState:pathUpdated event not found in EventBus section');
+      throw new Error('gameState:pathUpdated event not found in EventBus section');
     }
-    testController.log(`[${testRunId}] Found playerState:pathUpdated event`);
+    testController.log(`[${testRunId}] Found gameState:pathUpdated event`);
 
     // Find regions module subscriber checkbox
     const pathUpdatedModuleBlocks = pathUpdatedEvent.querySelectorAll('.module-block');
@@ -1588,9 +1588,9 @@ export async function testRegionMoveComplete(testController) {
     }
 
     if (!regionsSubscriberCheckbox) {
-      throw new Error('Regions module subscriber checkbox for playerState:pathUpdated not found');
+      throw new Error('Regions module subscriber checkbox for gameState:pathUpdated not found');
     }
-    testController.log(`[${testRunId}] Found regions subscriber checkbox for playerState:pathUpdated`);
+    testController.log(`[${testRunId}] Found regions subscriber checkbox for gameState:pathUpdated`);
 
     // Uncheck the subscriber checkbox
     regionsSubscriberCheckbox.checked = false;
@@ -1608,18 +1608,18 @@ export async function testRegionMoveComplete(testController) {
     testController.log(`[${testRunId}] moduleDispatcher.publish is function: ${typeof moduleDispatcher?.publish === 'function'}`);
     lightWorldMoveButton.click();
     
-    // Wait for playerState to be updated (it should still process the event)
+    // Wait for gameState to be updated (it should still process the event)
     if (!(await testController.pollForCondition(
       () => {
-        const currentRegion = playerState.getCurrentRegion();
+        const currentRegion = gameState.getCurrentRegion();
         return currentRegion === 'Light World';
       },
-      'PlayerState updated to Light World (receiver disabled)',
+      'GameState updated to Light World (receiver disabled)',
       5000,
       50
     ))) {
-      // This is acceptable - playerState might not process if event routing is disabled
-      testController.log(`[${testRunId}] PlayerState did not update - this may be expected`);
+      // This is acceptable - gameState might not process if event routing is disabled
+      testController.log(`[${testRunId}] GameState did not update - this may be expected`);
     }
     
     // Verify event WAS dispatched
@@ -1629,8 +1629,8 @@ export async function testRegionMoveComplete(testController) {
     const lightWorldBlockAfterDisabledReceiver = regionsContainer.querySelector('.region-block[data-region="Light World"]');
     testController.reportCondition('Light World region NOT appeared (receiver disabled)', !lightWorldBlockAfterDisabledReceiver);
     
-    // Verify player state DID change (playerState module still processed it)
-    const regionAfterDisabledReceiver = playerState.getCurrentRegion();
+    // Verify player state DID change (gameState module still processed it)
+    const regionAfterDisabledReceiver = gameState.getCurrentRegion();
     testController.reportCondition('Player state changed to Light World (receiver disabled)', regionAfterDisabledReceiver === 'Light World');
     
     // 22. Re-enable both receiver and subscriber checkboxes
@@ -1652,13 +1652,13 @@ export async function testRegionMoveComplete(testController) {
     }
 
     // Note: The Light World region block won't appear automatically after re-enabling
-    // because the playerState:pathUpdated event was already published when playerState
+    // because the gameState:pathUpdated event was already published when gameState
     // updated during the disabled state. The regions module would need to manually sync
-    // with playerState's current location when re-enabled, which it doesn't currently do.
+    // with gameState's current location when re-enabled, which it doesn't currently do.
     // This is acceptable behavior - the UI will sync on the next actual move event.
 
     // Verify player state still shows Light World
-    const regionAfterBothEnabled = playerState.getCurrentRegion();
+    const regionAfterBothEnabled = gameState.getCurrentRegion();
     testController.reportCondition('Player state shows Light World (after re-enable)', regionAfterBothEnabled === 'Light World');
 
     testController.log(`[${testRunId}] Comprehensive region move test main logic completed successfully`);
@@ -1724,7 +1724,7 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     testController.log(`[${testRunId}] Default rules loaded successfully`);
 
     // Import modules we'll need
-    const { getPlayerStateSingleton } = await import('../../playerState/singleton.js');
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
     
     // 1. Activate the Regions panel
     testController.log(`[${testRunId}] Activating regions panel...`);
@@ -1737,8 +1737,8 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     testController.reportCondition('Regions panel activated', true);
     
     // 2. Verify initial state - should have "Menu" as current region
-    const playerState = getPlayerStateSingleton();
-    const currentRegion = playerState.getCurrentRegion();
+    const gameState = getGameStateSingleton();
+    const currentRegion = gameState.getCurrentRegion();
     testController.log(`[${testRunId}] Initial current region: "${currentRegion}" (type: ${typeof currentRegion})`);
     testController.log(`[${testRunId}] Comparison result: ${currentRegion === 'Menu'} (expected: true)`);
     testController.reportCondition('Menu is current region', currentRegion === 'Menu');
@@ -1899,7 +1899,7 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     regionsReceiverCheckbox.dispatchEvent(new Event('change'));
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    // 11.5. Also disable the EventBus subscriber for playerState:pathUpdated
+    // 11.5. Also disable the EventBus subscriber for gameState:pathUpdated
     // This is necessary because regions module also updates via this EventBus event
     testController.log(`[${testRunId}] Finding EventBus section...`);
     const eventBusSection = eventsPanelElement.querySelector('.event-bus-section');
@@ -1907,21 +1907,21 @@ export async function testRegionMoveEventHandlerToggle(testController) {
       throw new Error('EventBus section not found');
     }
 
-    // Find playerState:pathUpdated event in EventBus section
+    // Find gameState:pathUpdated event in EventBus section
     let pathUpdatedEvent = null;
     const eventBusContainers = eventBusSection.querySelectorAll('.event-bus-event');
     for (const container of eventBusContainers) {
       const eventTitle = container.querySelector('h4');
-      if (eventTitle && eventTitle.textContent.trim() === 'playerState:pathUpdated') {
+      if (eventTitle && eventTitle.textContent.trim() === 'gameState:pathUpdated') {
         pathUpdatedEvent = container;
         break;
       }
     }
 
     if (!pathUpdatedEvent) {
-      throw new Error('playerState:pathUpdated event not found in EventBus section');
+      throw new Error('gameState:pathUpdated event not found in EventBus section');
     }
-    testController.log(`[${testRunId}] Found playerState:pathUpdated event`);
+    testController.log(`[${testRunId}] Found gameState:pathUpdated event`);
 
     // Find regions module subscriber checkbox
     const pathUpdatedModuleBlocks = pathUpdatedEvent.querySelectorAll('.module-block');
@@ -1940,9 +1940,9 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     }
 
     if (!regionsSubscriberCheckbox) {
-      throw new Error('Regions module subscriber checkbox for playerState:pathUpdated not found');
+      throw new Error('Regions module subscriber checkbox for gameState:pathUpdated not found');
     }
-    testController.log(`[${testRunId}] Found regions subscriber checkbox for playerState:pathUpdated`);
+    testController.log(`[${testRunId}] Found regions subscriber checkbox for gameState:pathUpdated`);
 
     // Uncheck the subscriber checkbox
     regionsSubscriberCheckbox.checked = false;
@@ -1961,10 +1961,10 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     const linksHouseBlockAfterDisabled = regionsContainer.querySelector('.region-block[data-region="Links House"]');
     testController.reportCondition('Links House region NOT appeared (receiver disabled)', !linksHouseBlockAfterDisabled);
     
-    // 15. Verify Player State panel shows "Current Region: Links House"
-    const newCurrentRegion = playerState.getCurrentRegion();
+    // 15. Verify Game State panel shows "Current Region: Links House"
+    const newCurrentRegion = gameState.getCurrentRegion();
     testController.log(`[${testRunId}] Current region after move: ${newCurrentRegion}`);
-    testController.reportCondition('Player State shows Links House', newCurrentRegion === 'Links House');
+    testController.reportCondition('Game State shows Links House', newCurrentRegion === 'Links House');
 
     testController.log(`[${testRunId}] Region move event handler toggle test main logic completed successfully`);
 

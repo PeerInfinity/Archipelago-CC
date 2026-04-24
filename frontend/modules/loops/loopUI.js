@@ -17,7 +17,7 @@ import { ExpansionStateManager } from './expansionStateManager.js';
 import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
 import { LoopBlockBuilder } from './loopBlockBuilder.js';
-import { getPlayerStateAPI, getLoopsModuleDispatcher, getCostDataManager, getModuleEventBus } from './index.js';
+import { getGameStateAPI, getLoopsModuleDispatcher, getCostDataManager, getModuleEventBus } from './index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 
@@ -65,8 +65,8 @@ export class LoopUI {
     // Initialization state flags
     this.structureBuilt = false; // Track if initial DOM structure is built
 
-    // PlayerState API (will be set during initialization)
-    this.playerStateAPI = null;
+    // GameState API (will be set during initialization)
+    this.gameStateAPI = null;
 
     // Create the loop block builder for rendering region blocks
     this.loopBlockBuilder = new LoopBlockBuilder(this);
@@ -547,9 +547,9 @@ export class LoopUI {
     ) {
       // Reset loopState properties
       loopState.regionXP = new Map();
-      // Clear the action queue using playerState API
-      if (this.playerStateAPI?.trimPath) {
-        this.playerStateAPI.trimPath(1); // Keep only Menu
+      // Clear the action queue using gameState API
+      if (this.gameStateAPI?.trimPath) {
+        this.gameStateAPI.trimPath(1); // Keep only Menu
       }
       loopState.currentAction = null;
       loopState.currentActionIndex = 0;
@@ -771,18 +771,18 @@ export class LoopUI {
       loopState.autoRemoveCompleted = autoRemoveCompleted; // Don't call setter here to avoid premature removal
     }
 
-    // Get and set the playerState API
-    const playerStateAPI = getPlayerStateAPI();
-    if (playerStateAPI) {
-      this.setPlayerStateAPI(playerStateAPI);
-      log('info', '[LoopUI] PlayerState API retrieved and set', playerStateAPI);
+    // Get and set the gameState API
+    const gameStateAPI = getGameStateAPI();
+    if (gameStateAPI) {
+      this.setGameStateAPI(gameStateAPI);
+      log('info', '[LoopUI] GameState API retrieved and set', gameStateAPI);
       // Test if we can get the path
-      if (playerStateAPI.getPath) {
-        const testPath = playerStateAPI.getPath();
+      if (gameStateAPI.getPath) {
+        const testPath = gameStateAPI.getPath();
         log('info', '[LoopUI] Test path retrieval:', testPath);
       }
     } else {
-      log('warn', '[LoopUI] PlayerState API not available during initialization - will retry later');
+      log('warn', '[LoopUI] GameState API not available during initialization - will retry later');
     }
 
     this.buildInitialStructure();
@@ -939,8 +939,8 @@ export class LoopUI {
    * Handle clearing explore actions from the queue
    */
   _handleClearExploreClick() {
-    if (this.playerStateAPI?.removeAllActionsOfType) {
-      this.playerStateAPI.removeAllActionsOfType('customAction', 'explore');
+    if (this.gameStateAPI?.removeAllActionsOfType) {
+      this.gameStateAPI.removeAllActionsOfType('customAction', 'explore');
       this.renderLoopPanel();
     }
   }
@@ -973,12 +973,12 @@ export class LoopUI {
    * Cleanup method called when the panel is destroyed.
    */
   /**
-   * Sets the playerState API functions for accessing the action queue
-   * @param {Object} api - Object containing playerState API functions
+   * Sets the gameState API functions for accessing the action queue
+   * @param {Object} api - Object containing gameState API functions
    */
-  setPlayerStateAPI(api) {
-    this.playerStateAPI = api;
-    log('info', 'LoopUI: PlayerState API set');
+  setGameStateAPI(api) {
+    this.gameStateAPI = api;
+    log('info', 'LoopUI: GameState API set');
   }
 
   /**
@@ -1002,7 +1002,7 @@ export class LoopUI {
   }
 
   /**
-   * Gets the current action queue from playerState
+   * Gets the current action queue from gameState
    * @returns {Array} The current path/action queue
    */
   getActionQueue() {
@@ -1032,15 +1032,15 @@ export class LoopUI {
     if (pathIndex >= 0 && pathIndex < path.length) {
       const entry = path[pathIndex];
       
-      // Use playerState API to remove the action
-      if (entry.type === 'locationCheck' && this.playerStateAPI?.removeLocationCheckAt) {
-        this.playerStateAPI.removeLocationCheckAt(
+      // Use gameState API to remove the action
+      if (entry.type === 'locationCheck' && this.gameStateAPI?.removeLocationCheckAt) {
+        this.gameStateAPI.removeLocationCheckAt(
           entry.locationName,
           entry.sourceRegion,
           entry.instanceNumber
         );
-      } else if (entry.type === 'customAction' && this.playerStateAPI?.removeCustomActionAt) {
-        this.playerStateAPI.removeCustomActionAt(
+      } else if (entry.type === 'customAction' && this.gameStateAPI?.removeCustomActionAt) {
+        this.gameStateAPI.removeCustomActionAt(
           entry.actionName,
           entry.sourceRegion,
           entry.instanceNumber
@@ -1054,8 +1054,8 @@ export class LoopUI {
    * Insert a location check at a specific region instance
    */
   insertLocationCheckAt(locationName, regionName, instanceNumber) {
-    if (this.playerStateAPI?.insertLocationCheckAt) {
-      this.playerStateAPI.insertLocationCheckAt(locationName, regionName, instanceNumber);
+    if (this.gameStateAPI?.insertLocationCheckAt) {
+      this.gameStateAPI.insertLocationCheckAt(locationName, regionName, instanceNumber);
       this.renderLoopPanel();
     }
   }
@@ -1064,8 +1064,8 @@ export class LoopUI {
    * Insert a custom action at a specific region instance
    */
   insertCustomActionAt(actionName, regionName, instanceNumber, params = {}) {
-    if (this.playerStateAPI?.insertCustomActionAt) {
-      this.playerStateAPI.insertCustomActionAt(actionName, regionName, instanceNumber, params);
+    if (this.gameStateAPI?.insertCustomActionAt) {
+      this.gameStateAPI.insertCustomActionAt(actionName, regionName, instanceNumber, params);
       this.renderLoopPanel();
     }
   }
@@ -1074,7 +1074,7 @@ export class LoopUI {
    * Update custom action parameters
    */
   updateCustomActionParams(pathIndex, params) {
-    // This would need to be implemented in playerState API
+    // This would need to be implemented in gameState API
     // For now, we'll just re-render
     this.renderLoopPanel();
   }
@@ -1709,15 +1709,15 @@ export class LoopUI {
           break;
         }
       }
-      if (prevMoveRegion && this.playerStateAPI?.trimPath) {
-        this.playerStateAPI.trimPath(prevMoveRegion, prevMoveInstance);
+      if (prevMoveRegion && this.gameStateAPI?.trimPath) {
+        this.gameStateAPI.trimPath(prevMoveRegion, prevMoveInstance);
         this.renderLoopPanel();
       }
-    } else if (entry.type === 'locationCheck' && this.playerStateAPI?.removeLocationCheckAt) {
-      this.playerStateAPI.removeLocationCheckAt(entry.locationName, entry.sourceRegion, entry.instanceNumber);
+    } else if (entry.type === 'locationCheck' && this.gameStateAPI?.removeLocationCheckAt) {
+      this.gameStateAPI.removeLocationCheckAt(entry.locationName, entry.sourceRegion, entry.instanceNumber);
       this.renderLoopPanel();
-    } else if (entry.type === 'customAction' && this.playerStateAPI?.removeCustomActionAt) {
-      this.playerStateAPI.removeCustomActionAt(entry.actionName, entry.sourceRegion, entry.instanceNumber);
+    } else if (entry.type === 'customAction' && this.gameStateAPI?.removeCustomActionAt) {
+      this.gameStateAPI.removeCustomActionAt(entry.actionName, entry.sourceRegion, entry.instanceNumber);
       this.renderLoopPanel();
     }
   }
@@ -1999,14 +1999,14 @@ export class LoopUI {
   toggleLoopMode() {
     this.isLoopModeActive = !this.isLoopModeActive;
 
-    // If entering loop mode and we don't have the playerState API yet, try to get it
-    if (this.isLoopModeActive && !this.playerStateAPI) {
-      const playerStateAPI = getPlayerStateAPI();
-      if (playerStateAPI) {
-        this.setPlayerStateAPI(playerStateAPI);
-        log('info', '[LoopUI] PlayerState API retrieved on mode toggle');
+    // If entering loop mode and we don't have the gameState API yet, try to get it
+    if (this.isLoopModeActive && !this.gameStateAPI) {
+      const gameStateAPI = getGameStateAPI();
+      if (gameStateAPI) {
+        this.setGameStateAPI(gameStateAPI);
+        log('info', '[LoopUI] GameState API retrieved on mode toggle');
       } else {
-        log('warn', '[LoopUI] PlayerState API still not available on mode toggle');
+        log('warn', '[LoopUI] GameState API still not available on mode toggle');
       }
     }
     

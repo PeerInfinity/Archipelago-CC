@@ -35,7 +35,7 @@
 #### Events Subscribed To
 
 -   **`eventBus`**:
-    -   `playerState:regionChanged`: This is the primary trigger for the module to display the description of a new region after the player moves.
+    -   `gameState:regionChanged`: This is the primary trigger for the module to display the description of a new region after the player moves.
     -   `stateManager:rulesLoaded`: Listens for this event to perform its initial setup and display the starting region message.
     -   `stateManager:snapshotUpdated`: Listens for any change in the game state to refresh the color-coding of all visible location and exit links.
 
@@ -45,7 +45,7 @@ This module is self-contained and does not register any public functions for oth
 
 #### Dependencies & Interactions
 
--   **`playerState` Module**: This is the source of truth for the player's current location. The `textAdventure` module queries `playerState.getCurrentRegion()` to determine what to display.
+-   **`gameState` Module**: This is the source of truth for the player's current location. The `textAdventure` module queries `gameState.getCurrentRegion()` to determine what to display.
 -   **`stateManager` Module**: Used extensively to get static data (the list of locations and exits within a region) and to evaluate the real-time accessibility of those locations and exits for color-coding the interactive links.
 -   **`discoveryState` Module**: If enabled via a custom data file, this module will query `discoveryState` to determine which locations and exits have been "discovered" and should be visible to the player.
 -   **`eventDispatcher`**: This is the primary output for user actions. When a user checks a location or moves through an exit, the `textAdventure` module dispatches the appropriate event into the system's prioritized chain of command for processing.

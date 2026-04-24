@@ -1,15 +1,15 @@
-### Module: `PlayerState`
+### Module: `GameState`
 
--   **ID:** `playerState`
+-   **ID:** `gameState`
 -   **Purpose:** Tracks the player's current region, path history through regions, and navigation configuration. This is the source of truth for all path data. Consumer modules (loops, regionGraph, regions) read from this module's public API and react to its events.
 
 ---
 
 #### Key Files
 
--   `frontend/modules/playerState/index.js`: Module entry point, event handling, and public API registration.
--   `frontend/modules/playerState/state.js`: Defines the `PlayerState` class with path data model and manipulation logic.
--   `frontend/modules/playerState/singleton.js`: Creates and exports a singleton instance of the `PlayerState` class.
+-   `frontend/modules/gameState/index.js`: Module entry point, event handling, and public API registration.
+-   `frontend/modules/gameState/state.js`: Defines the `GameState` class with path data model and manipulation logic.
+-   `frontend/modules/gameState/singleton.js`: Creates and exports a singleton instance of the `GameState` class.
 
 #### Responsibilities
 
@@ -32,8 +32,8 @@ These are path-structural settings. For queue execution settings, see the `loops
 
 #### Events Published
 
--   **`playerState:regionChanged`**: Published when the current region changes. Payload: `{ oldRegion, newRegion }`.
--   **`playerState:pathUpdated`**: Published when the path is modified. Payload: `{ path, currentRegion, regionCounts }`.
+-   **`gameState:regionChanged`**: Published when the current region changes. Payload: `{ oldRegion, newRegion }`.
+-   **`gameState:pathUpdated`**: Published when the path is modified. Payload: `{ path, currentRegion, regionCounts }`.
 
 #### Events Subscribed To
 
@@ -41,14 +41,14 @@ These are path-structural settings. For queue execution settings, see the `loops
     -   `user:regionMove`: Updates path and current region.
     -   `user:locationCheck`: Adds a location check entry to the path.
     -   `user:customAction`: Adds a custom action entry to the path.
-    -   `playerState:trimPath`: Trims the path at a specified region instance.
+    -   `gameState:trimPath`: Trims the path at a specified region instance.
 -   **`eventBus`**:
     -   `stateManager:rulesLoaded`: Resets state and sets start regions from static data.
 
 #### Public Functions (`centralRegistry`)
 
 -   **`getCurrentRegion()`**: Returns the player's current region name.
--   **`getState()`**: Returns the `PlayerState` singleton instance.
+-   **`getState()`**: Returns the `GameState` singleton instance.
 -   **`getPath()`**: Returns a copy of the full path array.
 -   **`getRegionCounts()`**: Returns a copy of the region instance count Map.
 -   **`setAllowLoops(boolean)`** / **`getAllowLoops()`**: Configure loop behavior.
@@ -65,5 +65,5 @@ These are path-structural settings. For queue execution settings, see the `loops
 
 -   **StateManager**: Listens for `stateManager:rulesLoaded` to reset state and read start regions from static data.
 -   **Loops Module**: Uses the public API to manipulate the path during queue building and execution. The loops module maintains its own execution settings (speed, pause, auto-restart) separately.
--   **RegionGraph / Regions Modules**: Subscribe to `playerState:pathUpdated` to display the path. Both use `getRegionMovesFromPath()` from `shared/pathUtils.js` to filter for regionMove entries.
+-   **RegionGraph / Regions Modules**: Subscribe to `gameState:pathUpdated` to display the path. Both use `getRegionMovesFromPath()` from `shared/pathUtils.js` to filter for regionMove entries.
 -   **EventDispatcher**: Participates in the `user:regionMove` event chain, updating path state before propagating.

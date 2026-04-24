@@ -166,7 +166,7 @@ export class LoopBlockBuilder {
       const staticData = stateManagerProxySingleton.getStaticData();
 
       // Add explore button if in loop mode (but not for start regions, which are already fully explored)
-      const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? false;
+      const isStartRegion = this.loopUI.gameStateAPI?.isStartRegion?.(regionName) ?? false;
       if (this.loopUI.isLoopModeActive && !isStartRegion) {
         this.addExploreButton(detailsEl, regionName);
       }
@@ -374,7 +374,7 @@ export class LoopBlockBuilder {
           if (e.target.classList.contains('region-link')) return;
           const dispatcher = getLoopsModuleDispatcher();
           if (dispatcher) {
-            const currentRegion = this.loopUI.playerStateAPI?.getCurrentRegion?.() || regionName;
+            const currentRegion = this.loopUI.gameStateAPI?.getCurrentRegion?.() || regionName;
             dispatcher.publish('user:regionMove', {
               sourceRegion: currentRegion,
               targetRegion: connectedRegionName,
@@ -495,8 +495,8 @@ export class LoopBlockBuilder {
       if (locAccessible && !locChecked && !showAsPlaceholder) {
         li.style.cursor = 'pointer';
         li.addEventListener('click', () => {
-          if (this.loopUI.playerStateAPI?.addLocationCheck) {
-            this.loopUI.playerStateAPI.addLocationCheck(locationDef.name, regionName);
+          if (this.loopUI.gameStateAPI?.addLocationCheck) {
+            this.loopUI.gameStateAPI.addLocationCheck(locationDef.name, regionName);
             this.loopUI.renderLoopPanel();
           }
         });
@@ -639,8 +639,8 @@ export class LoopBlockBuilder {
    * @param {string} regionName - The region to explore
    */
   queueExploreAction(regionName) {
-    if (this.loopUI.playerStateAPI?.addCustomAction) {
-      this.loopUI.playerStateAPI.addCustomAction('explore', { regionName });
+    if (this.loopUI.gameStateAPI?.addCustomAction) {
+      this.loopUI.gameStateAPI.addCustomAction('explore', { regionName });
       this.loopUI.renderLoopPanel();
     }
   }

@@ -221,12 +221,12 @@ export class CostDebuggerUI {
 
     // Get game APIs via centralRegistry
     const getLoopState = window.centralRegistry?.getPublicFunction?.('loops', 'getLoopState');
-    const getPlayerState = window.centralRegistry?.getPublicFunction?.('playerState', 'getState');
+    const getGameState = window.centralRegistry?.getPublicFunction?.('gameState', 'getState');
     const loopState = getLoopState?.();
-    const playerState = getPlayerState?.();
+    const gameState = getGameState?.();
 
-    if (!loopState || !playerState) {
-      this._setStatus('Game APIs not available. Ensure loops and playerState modules are loaded.');
+    if (!loopState || !gameState) {
+      this._setStatus('Game APIs not available. Ensure loops and gameState modules are loaded.');
       return;
     }
 
@@ -244,10 +244,10 @@ export class CostDebuggerUI {
     try {
       // Reset game state for a fresh playthrough
       loopState.resetForNewRules();
-      playerState.reset();
+      gameState.reset();
 
       // Get start region
-      const startRegion = playerState.getCurrentRegion();
+      const startRegion = gameState.getCurrentRegion();
 
       // Configure loopState for verification
       loopState.setAutoRestartQueue(false);
@@ -392,7 +392,7 @@ export class CostDebuggerUI {
   }
 
   /**
-   * Convert a CostPlanner step queue to playerState path format
+   * Convert a CostPlanner step queue to gameState path format
    */
   _convertQueueToPath(stepQueue) {
     const path = [];

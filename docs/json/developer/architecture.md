@@ -82,9 +82,9 @@ This is the most critical component of the frontend. It manages all game-related
 -   **`StateManagerProxy` (on Main Thread):** A singleton that acts as the sole interface for all other modules. It sends commands (like `addItem` or `checkLocation`) to the worker and receives state **snapshots** in return. It maintains a cached copy of the latest snapshot for the UI to read from instantly.
 -   **Snapshots:** Immutable, read-only copies of the game state that are passed from the worker to the main thread. This prevents the UI from directly modifying state and ensures data consistency.
 
-##### The `playerState` Module (Player-Specific State)
+##### The `gameState` Module (Player-Specific State)
 
-Complementing the core `stateManager`, the `playerState` module tracks player-centric information that is more closely tied to the user's interaction with the UI, such as the player's current region in the Text Adventure mode. This separation keeps the heavy game logic distinct from the more lightweight UI state.
+Complementing the core `stateManager`, the `gameState` module tracks player-centric information that is more closely tied to the user's interaction with the UI, such as the player's current region in the Text Adventure mode. This separation keeps the heavy game logic distinct from the more lightweight UI state.
 
 #### 3. UI and Layout Management
 

@@ -1,27 +1,27 @@
-import { createPlayerStateSingleton, getPlayerStateSingleton } from './singleton.js';
+import { createGameStateSingleton, getGameStateSingleton } from './singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 
 // --- Module Info ---
 export const moduleInfo = {
-  name: 'playerState',
-  description: 'Manages player state including current region, path history, and movement.',
+  name: 'gameState',
+  description: 'Manages game state including current region, path history, and movement.',
   requires: ['stateManager'],
 };
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('playerState', message, ...data);
+    window.logger[level]('gameState', message, ...data);
   } else {
     const consoleMethod =
       console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[playerState] ${message}`, ...data);
+    consoleMethod(`[gameState] ${message}`, ...data);
   }
 }
 
 // Store module-level references
 let moduleDispatcher = null;
-let moduleId = 'playerState';
+let moduleId = 'gameState';
 
 export async function register(registrationApi) {
     // Register dispatcher receivers for events
@@ -34,7 +34,7 @@ export async function register(registrationApi) {
     
     registrationApi.registerDispatcherReceiver(
         moduleId,
-        'playerState:trimPath',
+        'gameState:trimPath',
         handleTrimPath,
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
     );
@@ -54,103 +54,103 @@ export async function register(registrationApi) {
     );
 
     // Register event publishers
-    registrationApi.registerEventBusPublisher('playerState:regionChanged');
-    registrationApi.registerEventBusPublisher('playerState:pathUpdated');
+    registrationApi.registerEventBusPublisher('gameState:regionChanged');
+    registrationApi.registerEventBusPublisher('gameState:pathUpdated');
 
     // Export public functions
     registrationApi.registerPublicFunction(moduleId, 'getCurrentRegion', () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.getCurrentRegion();
+        const gameState = getGameStateSingleton();
+        return gameState.getCurrentRegion();
     });
 
     registrationApi.registerPublicFunction(moduleId, 'getState', () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState;
+        const gameState = getGameStateSingleton();
+        return gameState;
     });
     
     registrationApi.registerPublicFunction(moduleId, 'getPath', () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.getPath();
+        const gameState = getGameStateSingleton();
+        return gameState.getPath();
     });
     
     registrationApi.registerPublicFunction(moduleId, 'getRegionCounts', () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.getRegionCounts();
+        const gameState = getGameStateSingleton();
+        return gameState.getRegionCounts();
     });
     
     registrationApi.registerPublicFunction(moduleId, 'setAllowLoops', (allowLoops) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.setAllowLoops(allowLoops);
+        const gameState = getGameStateSingleton();
+        return gameState.setAllowLoops(allowLoops);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'getAllowLoops', () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.getAllowLoops();
+        const gameState = getGameStateSingleton();
+        return gameState.getAllowLoops();
     });
     
     registrationApi.registerPublicFunction(moduleId, 'trimPath', (regionName, instanceNumber) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.trimPath(regionName, instanceNumber);
+        const gameState = getGameStateSingleton();
+        return gameState.trimPath(regionName, instanceNumber);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'addLocationCheck', (locationName, regionName) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.addLocationCheck(locationName, regionName);
+        const gameState = getGameStateSingleton();
+        return gameState.addLocationCheck(locationName, regionName);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'addCustomAction', (actionName, params) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.addCustomAction(actionName, params);
+        const gameState = getGameStateSingleton();
+        return gameState.addCustomAction(actionName, params);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'insertLocationCheckAt', (locationName, targetRegionName, targetInstanceNumber, locationRegionName) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.insertLocationCheckAt(locationName, targetRegionName, targetInstanceNumber, locationRegionName);
+        const gameState = getGameStateSingleton();
+        return gameState.insertLocationCheckAt(locationName, targetRegionName, targetInstanceNumber, locationRegionName);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'insertCustomActionAt', (actionName, targetRegionName, targetInstanceNumber, params) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.insertCustomActionAt(actionName, targetRegionName, targetInstanceNumber, params);
+        const gameState = getGameStateSingleton();
+        return gameState.insertCustomActionAt(actionName, targetRegionName, targetInstanceNumber, params);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'removeLocationCheckAt', (locationName, targetRegionName, targetInstanceNumber) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.removeLocationCheckAt(locationName, targetRegionName, targetInstanceNumber);
+        const gameState = getGameStateSingleton();
+        return gameState.removeLocationCheckAt(locationName, targetRegionName, targetInstanceNumber);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'removeCustomActionAt', (actionName, targetRegionName, targetInstanceNumber) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.removeCustomActionAt(actionName, targetRegionName, targetInstanceNumber);
+        const gameState = getGameStateSingleton();
+        return gameState.removeCustomActionAt(actionName, targetRegionName, targetInstanceNumber);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'clearActionsAt', (targetRegionName, targetInstanceNumber) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.clearActionsAt(targetRegionName, targetInstanceNumber);
+        const gameState = getGameStateSingleton();
+        return gameState.clearActionsAt(targetRegionName, targetInstanceNumber);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'removeAllActionsOfType', (actionType, specificName) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.removeAllActionsOfType(actionType, specificName);
+        const gameState = getGameStateSingleton();
+        return gameState.removeAllActionsOfType(actionType, specificName);
     });
 
     registrationApi.registerPublicFunction(moduleId, 'setStartRegions', (regions) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.setStartRegions(regions);
+        const gameState = getGameStateSingleton();
+        return gameState.setStartRegions(regions);
     });
 
     registrationApi.registerPublicFunction(moduleId, 'isStartRegion', (regionName) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.isStartRegion(regionName);
+        const gameState = getGameStateSingleton();
+        return gameState.isStartRegion(regionName);
     });
 
     registrationApi.registerPublicFunction(moduleId, 'setPath', (pathArray, startRegion) => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.setPath(pathArray, startRegion);
+        const gameState = getGameStateSingleton();
+        return gameState.setPath(pathArray, startRegion);
     });
 
     registrationApi.registerPublicFunction(moduleId, 'reset', () => {
-        const playerState = getPlayerStateSingleton();
-        return playerState.reset();
+        const gameState = getGameStateSingleton();
+        return gameState.reset();
     });
 }
 
@@ -163,7 +163,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     
     // Create the singleton instance
     const eventBus = initializationApi.getEventBus();
-    createPlayerStateSingleton(eventBus);
+    createGameStateSingleton(eventBus);
     
     // Subscribe to stateManager:rulesLoaded via eventBus (not dispatcher)
     if (eventBus) {
@@ -182,18 +182,18 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 function handleRemoteAppReady(data, propagationOptions) {
     log('info', `[${moduleId} Module] Remote app ready, sending current region state`);
 
-    const playerState = getPlayerStateSingleton();
-    const currentRegion = playerState.getCurrentRegion();
+    const gameState = getGameStateSingleton();
+    const currentRegion = gameState.getCurrentRegion();
 
     if (currentRegion) {
         // Publish current region to the newly ready remote
         // No timeout needed - the remote app is fully initialized and subscribed
-        const eventBus = playerState.eventBus;
+        const eventBus = gameState.eventBus;
         if (eventBus) {
-            eventBus.publish('playerState:regionChanged', {
+            eventBus.publish('gameState:regionChanged', {
                 newRegion: currentRegion,
                 oldRegion: null,
-                source: 'playerState-init'
+                source: 'gameState-init'
             });
             log('info', `[${moduleId} Module] Published initial region: ${currentRegion}`);
         }
@@ -203,16 +203,16 @@ function handleRemoteAppReady(data, propagationOptions) {
 function handleRulesLoaded(data, propagationOptions) {
     log('info', `[${moduleId} Module] Received stateManager:rulesLoaded event`);
 
-    const playerState = getPlayerStateSingleton();
+    const gameState = getGameStateSingleton();
 
     // Set start regions from static data BEFORE reset
     const staticData = stateManagerProxySingleton.getStaticData();
     if (staticData?.startRegions) {
-        playerState.setStartRegions(staticData.startRegions);
+        gameState.setStartRegions(staticData.startRegions);
         log('info', `[${moduleId} Module] Set start regions:`, staticData.startRegions);
     }
 
-    playerState.reset();
+    gameState.reset();
     
     // Propagate event to the next module (up direction)
     if (moduleDispatcher) {
@@ -230,8 +230,8 @@ function handleRulesLoaded(data, propagationOptions) {
 function handleRegionMove(data, propagationOptions) {
     log('info', `[${moduleId} Module] Received user:regionMove event`, data);
     
-    const playerState = getPlayerStateSingleton();
-    const currentRegionBefore = playerState.getCurrentRegion();
+    const gameState = getGameStateSingleton();
+    const currentRegionBefore = gameState.getCurrentRegion();
     log('info', `[${moduleId} Module] Current region before processing: ${currentRegionBefore}`);
     
     if (data && data.targetRegion) {
@@ -242,7 +242,7 @@ function handleRegionMove(data, propagationOptions) {
         if (shouldUpdatePath) {
             // Update path with exit information BEFORE updating current region
             // This allows updatePath to properly detect the current vs target region
-            playerState.updatePath(
+            gameState.updatePath(
                 data.targetRegion,
                 data.exitName || null,
                 data.sourceRegion || null
@@ -250,7 +250,7 @@ function handleRegionMove(data, propagationOptions) {
         }
         
         // Always update current region
-        playerState.setCurrentRegion(data.targetRegion);
+        gameState.setCurrentRegion(data.targetRegion);
     }
     
     // Propagate event to the next module (up direction)
@@ -267,39 +267,39 @@ function handleRegionMove(data, propagationOptions) {
 }
 
 function handleTrimPath(data, propagationOptions) {
-    log('info', `[${moduleId} Module] Received playerState:trimPath event`, data);
+    log('info', `[${moduleId} Module] Received gameState:trimPath event`, data);
 
-    const playerState = getPlayerStateSingleton();
+    const gameState = getGameStateSingleton();
     // Use null to let trimPath use its default (first start region)
     const regionName = data?.regionName || null;
     const instanceNumber = data?.instanceNumber || 1;
 
-    playerState.trimPath(regionName, instanceNumber);
+    gameState.trimPath(regionName, instanceNumber);
     
     // Propagate event to the next module (up direction)
     if (moduleDispatcher) {
         moduleDispatcher.publishToNextModule(
             moduleId,
-            'playerState:trimPath',
+            'gameState:trimPath',
             data,
             { direction: 'up' }
         );
     } else {
-        log('error', `[${moduleId} Module] Dispatcher not available for propagation of playerState:trimPath event`);
+        log('error', `[${moduleId} Module] Dispatcher not available for propagation of gameState:trimPath event`);
     }
 }
 
 function handleLocationCheck(data, propagationOptions) {
     log('info', `[${moduleId} Module] Received user:locationCheck event`, data);
 
-    const playerState = getPlayerStateSingleton();
+    const gameState = getGameStateSingleton();
     if (data && data.locationName) {
         // Skip adding to path when the event comes from the loops module's
         // action queue completion — the path entry was already added when
         // the loop queue was initially built.
         if (!data.fromLoop) {
             const staticData = stateManagerProxySingleton.getStaticData();
-            playerState.addLocationCheck(data.locationName, data.regionName, staticData);
+            gameState.addLocationCheck(data.locationName, data.regionName, staticData);
         }
     }
 
@@ -319,9 +319,9 @@ function handleLocationCheck(data, propagationOptions) {
 function handleCustomAction(data, propagationOptions) {
     log('info', `[${moduleId} Module] Received user:customAction event`, data);
     
-    const playerState = getPlayerStateSingleton();
+    const gameState = getGameStateSingleton();
     if (data && data.actionName) {
-        playerState.addCustomAction(data.actionName, data.params || {});
+        gameState.addCustomAction(data.actionName, data.params || {});
     }
     
     // Propagate event to the next module (up direction)

@@ -434,11 +434,11 @@ export class RegionUI {
   }
   
   /**
-   * Update visitedRegions from playerState path data
-   * @param {Array} path - Path array from playerState
-   * @param {Map} regionCounts - Region instance counts from playerState
+   * Update visitedRegions from gameState path data
+   * @param {Array} path - Path array from gameState
+   * @param {Map} regionCounts - Region instance counts from gameState
    */
-  updateFromPlayerStatePath(path, regionCounts) {
+  updateFromGameStatePath(path, regionCounts) {
     if (!path || path.length === 0) {
       // Path is empty before any moves are made — this is normal at startup
       return;
@@ -565,9 +565,9 @@ export class RegionUI {
   }
 
   moveToRegion(oldRegionName, newRegionName, sourceUID) {
-    // The Regions module no longer directly manages the path - it's handled by playerState
+    // The Regions module no longer directly manages the path - it's handled by gameState
     // This method is called when the module receives a user:regionMove event
-    // The actual path update happens in playerState, and we'll receive the update via playerState:pathUpdated
+    // The actual path update happens in gameState, and we'll receive the update via gameState:pathUpdated
     
     log('info', `[RegionUI] moveToRegion called: ${oldRegionName} -> ${newRegionName} (UID: ${sourceUID})`);
     
@@ -600,7 +600,7 @@ export class RegionUI {
         // Navigating backwards - trim the path at this region
         log('info', `[RegionUI] Navigating backwards to ${oldRegionName} instance ${instanceNumber}`);
         if (this.eventBus) {
-          this.eventBus.publish('playerState:trimPath', {
+          this.eventBus.publish('gameState:trimPath', {
             regionName: oldRegionName,
             instanceNumber: instanceNumber
           });
@@ -609,8 +609,8 @@ export class RegionUI {
       }
     }
     
-    // For forward navigation or "Show All" mode, the playerState will handle the path update
-    // We'll receive the updated path via playerState:pathUpdated event
+    // For forward navigation or "Show All" mode, the gameState will handle the path update
+    // We'll receive the updated path via gameState:pathUpdated event
   }
 
   toggleRegionByUID(uid) {

@@ -48,14 +48,14 @@ createSnapshotInterface(snapshot, staticData, contextVariables)
 
 ### pathUtils.js
 
-Shared utility functions for modules that consume playerState path data.
+Shared utility functions for modules that consume gameState path data.
 
 **Key Export:**
 ```javascript
 getRegionMovesFromPath(path)  // Filter path to only regionMove entries
 ```
 
-Used by `regionGraph` and `regions` modules to derive display-ready paths from the raw playerState path.
+Used by `regionGraph` and `regions` modules to derive display-ready paths from the raw gameState path.
 
 ### pathfinder.js
 

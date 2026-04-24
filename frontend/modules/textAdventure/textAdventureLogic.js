@@ -1,6 +1,6 @@
 // Core logic for text adventure module
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
@@ -41,7 +41,7 @@ export class TextAdventureLogic {
     setupEventSubscriptions() {
         if (this.eventBus) {
             // Listen for player state changes
-            this.eventBus.subscribe('playerState:regionChanged', (data) => {
+            this.eventBus.subscribe('gameState:regionChanged', (data) => {
                 this.handleRegionChange(data);
             });
 
@@ -140,8 +140,8 @@ export class TextAdventureLogic {
         log('info', 'Initializing player with snapshot and static data');
         
         try {
-            const playerState = getPlayerStateSingleton();
-            const currentRegion = playerState ? playerState.getCurrentRegion() : null;
+            const gameState = getGameStateSingleton();
+            const currentRegion = gameState ? gameState.getCurrentRegion() : null;
             
             log('info', `Current player region: ${currentRegion}`);
             // Use Map methods
@@ -275,8 +275,8 @@ export class TextAdventureLogic {
      */
     getCurrentRegionInfo() {
         try {
-            const playerState = getPlayerStateSingleton();
-            const currentRegion = playerState.getCurrentRegion();
+            const gameState = getGameStateSingleton();
+            const currentRegion = gameState.getCurrentRegion();
             
             if (!currentRegion) {
                 return null;
@@ -482,8 +482,8 @@ export class TextAdventureLogic {
 
             // Check if current region is reachable
             const currentRegion = regionInfo.name;
-            const playerState = getPlayerStateSingleton();
-            const isStartRegion = playerState?.isStartRegion(currentRegion);
+            const gameState = getGameStateSingleton();
+            const isStartRegion = gameState?.isStartRegion(currentRegion);
             const regionIsReachable = snapshot.regionReachability?.[currentRegion] === true ||
                                     snapshot.regionReachability?.[currentRegion] === 'reachable' ||
                                     snapshot.regionReachability?.[currentRegion] === 'checked' ||
@@ -539,7 +539,7 @@ export class TextAdventureLogic {
             const connectedRegionReachable = snapshot.regionReachability?.[connectedRegionName] === true ||
                                            snapshot.regionReachability?.[connectedRegionName] === 'reachable' ||
                                            snapshot.regionReachability?.[connectedRegionName] === 'checked' ||
-                                           playerState?.isStartRegion(connectedRegionName); // Start regions are always reachable
+                                           gameState?.isStartRegion(connectedRegionName); // Start regions are always reachable
 
             // Exit is accessible if all conditions are met
             const result = exitAccessible && connectedRegionReachable;
@@ -720,8 +720,8 @@ export class TextAdventureLogic {
         // Perform the check via dispatcher
         if (moduleDispatcher) {
             // Get current region from player state to include in location check
-            const playerState = getPlayerStateSingleton();
-            const currentRegion = playerState ? playerState.getCurrentRegion() : null;
+            const gameState = getGameStateSingleton();
+            const currentRegion = gameState ? gameState.getCurrentRegion() : null;
 
             moduleDispatcher.publish('user:locationCheck', {
                 locationName: locationName,

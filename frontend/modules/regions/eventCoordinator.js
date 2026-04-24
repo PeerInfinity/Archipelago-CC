@@ -8,7 +8,7 @@ const logger = createUniversalLogger('regionUI:Events');
  * EventCoordinator
  *
  * Manages all event subscriptions and coordination for the regions panel.
- * Handles events from stateManager, playerState, UI navigation, settings, and more.
+ * Handles events from stateManager, gameState, UI navigation, settings, and more.
  *
  * Data Flow:
  * 1. Subscribe to all relevant events on initialization
@@ -105,11 +105,11 @@ export class EventCoordinator {
       }
     });
 
-    // --- playerState:pathUpdated handler ---
-    subscribe('playerState:pathUpdated', (eventPayload) => {
+    // --- gameState:pathUpdated handler ---
+    subscribe('gameState:pathUpdated', (eventPayload) => {
       if (eventPayload && eventPayload.path) {
-        logger.info(`Received playerState:pathUpdated with ${eventPayload.path.length} regions in path`);
-        this.regionUI.updateFromPlayerStatePath(eventPayload.path, eventPayload.regionCounts);
+        logger.info(`Received gameState:pathUpdated with ${eventPayload.path.length} regions in path`);
+        this.regionUI.updateFromGameStatePath(eventPayload.path, eventPayload.regionCounts);
       }
     });
 

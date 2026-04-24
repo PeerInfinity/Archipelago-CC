@@ -16,7 +16,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [MetaGame Panel](./metaGamePanel.md) — Loading and managing MetaGame configurations
 - [Modules](./modules.md) — Viewing and managing loaded frontend modules
 - [Path Analyzer Panel](./pathAnalyzerPanel.md) — Path analysis tool
-- [Player State Panel](./playerStatePanel.md) — Player's current state (e.g. current region)
+- [Player State Panel](./gameStatePanel.md) — Player's current state (e.g. current region)
 - [Presets](./presets.md) — Loading pre-configured game files
 - [Progress Bar Panel](./progressBarPanel.md) — Progress bar UI host panel
 - [Region Graph](./regionGraph.md) — Interactive region connectivity visualization
@@ -53,7 +53,7 @@ Lower priority — primarily useful to developers.
 - [ ] iframe-base.md
 - [ ] iframeAdapter.md
 - [ ] pathAnalyzer.md
-- [ ] playerState.md
+- [ ] gameState.md
 - [ ] progressBar.md
 - [ ] shared.md
 - [ ] window-base.md

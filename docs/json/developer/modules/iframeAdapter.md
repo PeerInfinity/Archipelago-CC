@@ -27,7 +27,7 @@
 -   **`eventBus`**:
     -   `iframe:connected`: Published when an iframe successfully completes the handshake and is registered with the adapter.
     -   `iframe:disconnected`: Published when an iframe is unregistered (either by timeout or explicit unload).
-    -   It also re-publishes any event it receives from a connected iframe (e.g., if an iframe publishes `playerState:regionChanged`, the adapter publishes that same event on the main `eventBus`).
+    -   It also re-publishes any event it receives from a connected iframe (e.g., if an iframe publishes `gameState:regionChanged`, the adapter publishes that same event on the main `eventBus`).
 
 #### Events Subscribed To
 

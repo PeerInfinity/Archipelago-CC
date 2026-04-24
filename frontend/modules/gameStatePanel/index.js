@@ -1,14 +1,14 @@
-import { PlayerStatePanelUI } from './playerStatePanelUI.js';
+import { GameStatePanelUI } from './gameStatePanelUI.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
 export const moduleInfo = {
-  name: 'playerStatePanel',
-  title: 'Player State',
-  componentType: 'playerStatePanel',
+  name: 'gameStatePanel',
+  title: 'Game State',
+  componentType: 'gameStatePanel',
   icon: '👤',
   column: 2, // Middle column
-  description: 'Player State display panel.',
+  description: 'Game State display panel.',
 };
 
 let _moduleEventBus = null;
@@ -17,9 +17,9 @@ export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
   // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
   return {
-    publish: (event, data) => eventBus.publish(event, data, 'playerStatePanel'),
-    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'playerStatePanel'),
-    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'playerStatePanel'),
+    publish: (event, data) => eventBus.publish(event, data, 'gameStatePanel'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'gameStatePanel'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'gameStatePanel'),
     publishAs: (event, data, source) => eventBus.publish(event, data, source),
     getAllPublishers: () => eventBus.getAllPublishers(),
     getAllSubscribers: () => eventBus.getAllSubscribers(),
@@ -29,7 +29,7 @@ export function getModuleEventBus() {
 
 export async function register(registrationApi) {
     // Register the panel component
-    registrationApi.registerPanelComponent('playerStatePanel', PlayerStatePanelUI);
+    registrationApi.registerPanelComponent('gameStatePanel', GameStatePanelUI);
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {

@@ -44,7 +44,7 @@ export function register(registrationApi) {
     // Dispatcher: send region moves, location checks, and path clearing
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
-    registrationApi.registerDispatcherSender('playerState:trimPath', 'bottom', 'first');
+    registrationApi.registerDispatcherSender('gameState:trimPath', 'bottom', 'first');
 
     // Public functions
     registrationApi.registerPublicFunction(moduleInfo.name, 'getGameState', () => gameState);
@@ -162,7 +162,7 @@ function initializeGame(staticData) {
 
     gameState.onPathClear = () => {
         if (!dispatcher) return;
-        dispatcher.publish('playerState:trimPath', {}, { initialTarget: 'bottom' });
+        dispatcher.publish('gameState:trimPath', {}, { initialTarget: 'bottom' });
     };
 
     gameState.onLocationCheck = (locationName, regionName) => {

@@ -217,7 +217,7 @@ Each subdirectory in `frontend/modules/` represents a distinct, self-contained f
 -   **`metaGame/` & `metaGamePanel/`**: An event orchestration system for creating scripted, narrative, or tutorial-like experiences.
 -   **`modules/`**: A panel for viewing and managing the loaded frontend modules.
 -   **`pathAnalyzer/` & `pathAnalyzerPanel/`**: Provides the core logic and UI for analyzing accessibility paths between regions.
--   **`playerState/` & `playerStatePanel/`**: Tracks player-specific state that is separate from core game logic, such as the current region in the Text Adventure.
+-   **`gameState/` & `gameStatePanel/`**: Tracks player-specific state that is separate from core game logic, such as the current region in the Text Adventure.
 -   **`presets/`**: Handles the loading of pre-configured `rules.json` game files.
 -   **`progressBar/` & `progressBarPanel/`**: Provides the core logic for creating and managing generic, event-driven progress bars.
 -   **`regions/`**: Displays the game world organized by regions and their connections.

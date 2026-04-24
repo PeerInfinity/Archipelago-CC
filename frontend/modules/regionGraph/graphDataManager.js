@@ -1,7 +1,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
-import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -586,9 +586,9 @@ export class GraphDataManager {
 
     // Try to get initial path data
     try {
-      const playerState = getPlayerStateSingleton();
-      if (playerState) {
-        const path = playerState.getPath();
+      const gameState = getGameStateSingleton();
+      if (gameState) {
+        const path = gameState.getPath();
         if (path && path.length > 0) {
           this.ui.currentPath = getRegionMovesFromPath(path);
           logger.debug(`Loaded initial path with ${this.ui.currentPath.length} regions`);

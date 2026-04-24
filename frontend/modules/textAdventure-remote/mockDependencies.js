@@ -73,15 +73,15 @@ export class ModuleDispatcherProxy {
 }
 
 /**
- * Mock PlayerState singleton
+ * Mock GameState singleton
  */
-export class PlayerStateProxy {
+export class GameStateProxy {
     constructor(iframeClient) {
         this.iframeClient = iframeClient;
         this.currentRegion = 'Menu'; // Default starting region
         
         // Listen for region change events
-        this.iframeClient.subscribeEventBus('playerState:regionChanged', (data) => {
+        this.iframeClient.subscribeEventBus('gameState:regionChanged', (data) => {
             if (data && data.newRegion) {
                 this.currentRegion = data.newRegion;
                 logger.debug(`Player region changed to: ${this.currentRegion}`);
@@ -98,7 +98,7 @@ export class PlayerStateProxy {
         this.currentRegion = region;
         
         // Publish region change event
-        this.iframeClient.publishEventBus('playerState:regionChanged', {
+        this.iframeClient.publishEventBus('gameState:regionChanged', {
             oldRegion,
             newRegion: region,
             source: 'textAdventure-remote'

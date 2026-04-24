@@ -24,7 +24,7 @@ describe('QueueAnalyzer', () => {
         }
         return this.regionXP.get(regionName);
       },
-      playerState: {
+      gameState: {
         isStartRegion: (region) => region === 'Menu',
       },
     };

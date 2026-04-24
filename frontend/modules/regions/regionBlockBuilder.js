@@ -887,15 +887,15 @@ export class RegionBlockBuilder {
                 log('info', `[Exit Block] Navigating to region: ${connectedRegionName} (Show All mode)`);
               } else {
                 // Normal mode - execute region move
-                // Import playerState to get current region instead of assuming regionName is current
+                // Import gameState to get current region instead of assuming regionName is current
                 Promise.all([
                   import('./index.js'),
-                  import('../playerState/singleton.js')
-                ]).then(([{ moduleDispatcher }, { getPlayerStateSingleton }]) => {
+                  import('../gameState/singleton.js')
+                ]).then(([{ moduleDispatcher }, { getGameStateSingleton }]) => {
                   if (moduleDispatcher) {
-                    // Get the actual current region from playerState
-                    const playerState = getPlayerStateSingleton();
-                    const currentRegion = playerState.getCurrentRegion();
+                    // Get the actual current region from gameState
+                    const gameState = getGameStateSingleton();
+                    const currentRegion = gameState.getCurrentRegion();
                     
                     moduleDispatcher.publish('user:regionMove', {
                       sourceRegion: currentRegion,
@@ -1070,10 +1070,10 @@ export class RegionBlockBuilder {
         // Check if location is queued in the path (only if the setting is enabled)
         settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
           if (addToPathEnabled) {
-            import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
+            import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
               try {
-                const playerState = getPlayerStateSingleton();
-                const fullPath = playerState.getPath();
+                const gameState = getGameStateSingleton();
+                const fullPath = gameState.getPath();
                 const isQueued = fullPath.some(entry => 
                   entry.type === 'locationCheck' && 
                   entry.locationName === locationDef.name &&
@@ -1171,9 +1171,9 @@ export class RegionBlockBuilder {
               if (shouldAddToPath) {
                 // Add location check to path
                 log('info', `Adding location ${locationDef.name} to path`);
-                const { getPlayerStateSingleton } = await import('../playerState/singleton.js');
-                const playerState = getPlayerStateSingleton();
-                playerState.addLocationCheck(locationDef.name, regionName);
+                const { getGameStateSingleton } = await import('../gameState/singleton.js');
+                const gameState = getGameStateSingleton();
+                gameState.addLocationCheck(locationDef.name, regionName);
                 log('info', `Added location ${locationDef.name} to player path`);
               } else {
                 // Original behavior - dispatch location check event
@@ -1323,12 +1323,12 @@ export class RegionBlockBuilder {
 
       log('info', `Trim path button clicked for region: ${regionName}, UID: ${uid}`);
 
-      // Import playerState singleton to perform the path trimming
-      import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
-        const playerState = getPlayerStateSingleton();
+      // Import gameState singleton to perform the path trimming
+      import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
+        const gameState = getGameStateSingleton();
         
         // Find this region instance in the current path to determine instance number
-        const currentPath = playerState.getPath();
+        const currentPath = gameState.getPath();
         let instanceNumber = 1;
         let found = false;
         
@@ -1359,8 +1359,8 @@ export class RegionBlockBuilder {
         log('info', `Trimming path at ${regionName}, instance ${instanceNumber}`);
         
         // Set player to this region without updating path, then trim
-        playerState.setCurrentRegion(regionName);
-        playerState.trimPath(regionName, instanceNumber);
+        gameState.setCurrentRegion(regionName);
+        gameState.trimPath(regionName, instanceNumber);
         
         log('info', `Path trimmed successfully to ${regionName}`);
       }).catch(error => {

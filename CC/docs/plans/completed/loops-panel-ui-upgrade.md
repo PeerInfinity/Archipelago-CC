@@ -21,7 +21,7 @@ Upgrade the Loops panel UI to incorporate features from the JTA Action Queue pan
 | XP formulas | `frontend/modules/loops/xpFormulas.js` |
 | Queue analyzer | `frontend/modules/loopStats/queueAnalyzer.js` |
 | Loop stats UI | `frontend/modules/loopStats/loopStatsUI.js` |
-| Player state (path data) | `frontend/modules/playerState/state.js` |
+| Player state (path data) | `frontend/modules/gameState/state.js` |
 | JTA queue panel UI | `frontend/modules/jtaActionQueue/jtaQueuePanelUI.js` |
 | JTA queue CSS (in index.js) | `frontend/modules/jtaActionQueue/index.js` lines 69-427 |
 
@@ -134,7 +134,7 @@ Also apply the same formatting anywhere else mana costs are displayed. The `_est
 
 ### 4a. Store Source Region in Path Entries
 
-**In `playerState/state.js` `updatePath()`** (line ~180): Add `sourceRegion` to the path entry:
+**In `gameState/state.js` `updatePath()`** (line ~180): Add `sourceRegion` to the path entry:
 
 ```javascript
 this.path.push({
@@ -584,7 +584,7 @@ renderLoopPanel()
 | `loopRenderer.js` | Remove mana color switching, update action text layout, pass analysis data, compact view toggle |
 | `loopBlockBuilder.js` | New action entry format, header XP bar, source region grouping, significant digits |
 | `loopUI.js` | Hide stats, compact view button, analysis integration |
-| `playerState/state.js` | Store `sourceRegion` in path entries |
+| `gameState/state.js` | Store `sourceRegion` in path entries |
 | `actionQueueManager.js` | Propagate `sourceRegion` through queue entries |
 
 ## Files Created

@@ -1,6 +1,6 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
-import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -240,8 +240,8 @@ export class NavigationManager {
 
   getCurrentPlayerLocation() {
     try {
-      const playerState = getPlayerStateSingleton();
-      return playerState ? playerState.getCurrentRegion() : null;
+      const gameState = getGameStateSingleton();
+      return gameState ? gameState.getCurrentRegion() : null;
     } catch (error) {
       logger.warn('Error getting player location:', error);
       return null;
@@ -390,13 +390,13 @@ export class NavigationManager {
   }
 
   addToPath(targetRegion, moveOnlyOneStep = false) {
-    // Get the current path from playerState
-    const playerState = getPlayerStateSingleton();
-    const currentPath = playerState.getPath();
+    // Get the current path from gameState
+    const gameState = getGameStateSingleton();
+    const currentPath = gameState.getPath();
 
-    // If no existing path, publish region move and let playerState handle the path
+    // If no existing path, publish region move and let gameState handle the path
     if (!currentPath || currentPath.length === 0) {
-      const currentRegion = playerState.getCurrentRegion();
+      const currentRegion = gameState.getCurrentRegion();
       if (currentRegion === targetRegion) return;
       import('./index.js').then(({ moduleDispatcher }) => {
         if (moduleDispatcher) {
@@ -411,7 +411,7 @@ export class NavigationManager {
     }
 
     // Start from the last region in the current path
-    const startRegion = playerState.getLastRegionInPath() || playerState.getCurrentRegion();
+    const startRegion = gameState.getLastRegionInPath() || gameState.getCurrentRegion();
 
     if (startRegion === targetRegion) {
       logger.debug(`Target region ${targetRegion} is already at end of path`);
@@ -453,7 +453,7 @@ export class NavigationManager {
       );
 
       // Manually update the path since we disabled automatic path updates
-      playerState.updatePath(stepRegion, exitName, sourceRegion);
+      gameState.updatePath(stepRegion, exitName, sourceRegion);
 
       // Import and use moduleDispatcher to send the event
       import('./index.js').then(({ moduleDispatcher }) => {
@@ -479,13 +479,13 @@ export class NavigationManager {
 
     // First, set player to start region and reset the path
     logger.debug(`Resetting player to ${startRegion} and clearing path`);
-    const playerState = getPlayerStateSingleton();
+    const gameState = getGameStateSingleton();
 
     // Set current region to start region first
-    playerState.setCurrentRegion(startRegion);
+    gameState.setCurrentRegion(startRegion);
 
     // Then trim the path (this will reset path to just start region)
-    playerState.trimPath(startRegion, 1);
+    gameState.trimPath(startRegion, 1);
 
     // Disable "Show All Regions" before executing moves
     this.setShowAllRegions(false);
@@ -526,7 +526,7 @@ export class NavigationManager {
       );
 
       // Manually update the path since we disabled automatic path updates
-      playerState.updatePath(stepRegion, exitName, sourceRegion);
+      gameState.updatePath(stepRegion, exitName, sourceRegion);
 
       // Import and use moduleDispatcher to send the event
       import('./index.js').then(({ moduleDispatcher }) => {

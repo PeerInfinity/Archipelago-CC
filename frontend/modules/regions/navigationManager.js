@@ -10,7 +10,7 @@ const logger = createUniversalLogger('regionUI:Navigation');
  * Provides helper methods for path manipulation, navigation, and computing visible regions.
  *
  * Data Flow:
- * 1. updateFromPlayerStatePath() - Receives path from playerState, converts to internal format
+ * 1. updateFromGameStatePath() - Receives path from gameState, converts to internal format
  * 2. computeVisiblePath() - Handles path truncation for very long paths
  * 3. Navigation actions - navigateToRegion, navigateToLocation publish events
  * 4. Path queries - getCurrentRegion, getPathLength, etc.
@@ -194,7 +194,7 @@ export class NavigationManager {
   trimPathAtRegion(regionName, instanceNumber) {
     logger.info(`Trimming path at: ${regionName} instance ${instanceNumber}`);
     if (this.eventBus) {
-      this.eventBus.publish('playerState:trimPath', {
+      this.eventBus.publish('gameState:trimPath', {
         regionName,
         instanceNumber
       }, 'regions');

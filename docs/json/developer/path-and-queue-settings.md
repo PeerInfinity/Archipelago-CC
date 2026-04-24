@@ -4,7 +4,7 @@ This document clarifies which modules own which path and queue-related settings.
 
 ## Settings by Category
 
-### 1. Path Data Model (owned by `playerState`)
+### 1. Path Data Model (owned by `gameState`)
 
 These settings affect how path entries are constructed and stored. They are the source of truth for path structure.
 
@@ -16,7 +16,7 @@ These settings affect how path entries are constructed and stored. They are the 
 | `path` | array | (initial regionMove) | Ordered sequence of regionMove, locationCheck, and customAction entries |
 | `regionInstanceCounts` | Map | (derived) | How many times each region appears in path |
 
-**Access:** Use `playerState` public functions directly (e.g., `centralRegistry.getPublicFunction('playerState', 'setAllowLoops')`).
+**Access:** Use `gameState` public functions directly (e.g., `centralRegistry.getPublicFunction('gameState', 'setAllowLoops')`).
 
 ### 2. Queue Execution Behavior (owned by `loops/loopState`)
 
@@ -70,9 +70,9 @@ These control how the path is rendered in the Regions panel. They do not modify 
 ## Data Flow
 
 ```
-playerState (path data model)
+gameState (path data model)
     │
-    ├──► eventBus: playerState:pathUpdated
+    ├──► eventBus: gameState:pathUpdated
     │       │
     │       ├──► regionGraph (filters to regionMoves for visualization)
     │       │

@@ -2,9 +2,9 @@ import { getModuleEventBus } from './index.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 /**
- * PlayerStatePanelUI - UI component for displaying player state information
+ * GameStatePanelUI - UI component for displaying game state information
  */
-export class PlayerStatePanelUI {
+export class GameStatePanelUI {
     constructor(container, componentState) {
         Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
         this.container = container;
@@ -24,10 +24,10 @@ export class PlayerStatePanelUI {
 
     createRootElement() {
         this.rootElement = document.createElement('div');
-        this.rootElement.className = 'player-state-panel';
+        this.rootElement.className = 'game-state-panel';
         this.rootElement.innerHTML = `
-            <h3>Player State</h3>
-            <div class="player-state-content">
+            <h3>Game State</h3>
+            <div class="game-state-content">
                 <div class="current-region">
                     <strong>Current Region:</strong> <span class="region-name">Loading...</span>
                 </div>
@@ -49,13 +49,13 @@ export class PlayerStatePanelUI {
 
     setupEventListeners() {
         // Listen for region changes
-        const handle = this.eventBus.subscribe('playerState:regionChanged', (data) => {
+        const handle = this.eventBus.subscribe('gameState:regionChanged', (data) => {
             this.updateDisplay();
         });
         this.unsubscribeHandles.push(handle);
 
         // Listen for path updates
-        const pathHandle = this.eventBus.subscribe('playerState:pathUpdated', () => {
+        const pathHandle = this.eventBus.subscribe('gameState:pathUpdated', () => {
             this.updateDisplay();
         });
         this.unsubscribeHandles.push(pathHandle);
@@ -72,8 +72,8 @@ export class PlayerStatePanelUI {
             return;
         }
 
-        // Get current region from playerState module
-        const getCurrentRegion = centralRegistry.getPublicFunction('playerState', 'getCurrentRegion');
+        // Get current region from gameState module
+        const getCurrentRegion = centralRegistry.getPublicFunction('gameState', 'getCurrentRegion');
         if (getCurrentRegion) {
             const currentRegion = getCurrentRegion();
             this.currentRegionElement.textContent = currentRegion || 'Unknown';
@@ -81,7 +81,7 @@ export class PlayerStatePanelUI {
 
         // Get and display path
         if (this.pathEntriesElement) {
-            const getPath = centralRegistry.getPublicFunction('playerState', 'getPath');
+            const getPath = centralRegistry.getPublicFunction('gameState', 'getPath');
             const path = getPath ? getPath() : [];
             if (path.length === 0) {
                 this.pathEntriesElement.textContent = '(empty)';

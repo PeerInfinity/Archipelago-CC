@@ -896,7 +896,7 @@ Used by:
 
 #### Queue Data Location
 
-**Decision**: Action queue data stays in `playerState` (used by regionGraph, Regions for display). Loop-specific processing logic stays in `loops` module.
+**Decision**: Action queue data stays in `gameState` (used by regionGraph, Regions for display). Loop-specific processing logic stays in `loops` module.
 
 #### Event Handling for Queue vs Immediate
 

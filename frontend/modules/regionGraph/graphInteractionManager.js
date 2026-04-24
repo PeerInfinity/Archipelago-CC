@@ -258,9 +258,9 @@ export class GraphInteractionManager {
         }
 
         // Then add the location check to the path
-        import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
-          const playerState = getPlayerStateSingleton();
-          playerState.addLocationCheck(locationName, parentRegion);
+        import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
+          const gameState = getGameStateSingleton();
+          gameState.addLocationCheck(locationName, parentRegion);
           logger.debug(`Added location ${locationName} to player path`);
           // The path update will automatically trigger highlightPathEdges via the event system
         }).catch(error => {
@@ -439,10 +439,10 @@ export class GraphInteractionManager {
     // Remove existing path highlighting from edges
     this.ui.cy.edges().removeClass('in-path');
 
-    // Get the full path including location checks from playerState
-    import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
-      const playerState = getPlayerStateSingleton();
-      const fullPath = playerState.getPath();
+    // Get the full path including location checks from gameState
+    import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
+      const gameState = getGameStateSingleton();
+      const fullPath = gameState.getPath();
 
       if (!fullPath || fullPath.length < 1) return;
 

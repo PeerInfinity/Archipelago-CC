@@ -20,9 +20,9 @@ When a module represents a collection or capability with a single-word name, use
 
 When a module name is a compound (modifier + noun), keep the **noun singular**:
 
-- **Module directory**: `regionGraph/`, `pathAnalyzer/`, `playerState/`, `spoilerChecklist/`
-- **Module name**: `"regionGraph"`, `"pathAnalyzer"`, `"playerState"`, `"spoilerChecklist"`
-- **Component type**: `"regionGraphPanel"`, `"pathAnalyzerPanel"`, `"playerStatePanel"`
+- **Module directory**: `regionGraph/`, `pathAnalyzer/`, `gameState/`, `spoilerChecklist/`
+- **Module name**: `"regionGraph"`, `"pathAnalyzer"`, `"gameState"`, `"spoilerChecklist"`
+- **Component type**: `"regionGraphPanel"`, `"pathAnalyzerPanel"`, `"gameStatePanel"`
 
 **Rationale**: In compound names, the noun is modified by another word, making it singular. For example:
 - "region graph" = a graph *of* regions (one graph, many regions)
@@ -45,7 +45,7 @@ Regardless of the module name, UI class names should always be **singular** with
 | Single-word | `regions/` | `regions` | `regionsPanel` | `regionUI.js` | `RegionUI` |
 | Single-word | `locations/` | `locations` | `locationsPanel` | `locationUI.js` | `LocationUI` |
 | Compound | `regionGraph/` | `regionGraph` | `regionGraphPanel` | `regionGraphUI.js` | `RegionGraphUI` |
-| Compound | `playerState/` | `playerState` | N/A (no panel) | N/A | N/A |
+| Compound | `gameState/` | `gameState` | N/A (no panel) | N/A | N/A |
 | Compound | `spoilerChecklist/` | `spoilerChecklist` | `spoilerChecklistPanel` | `spoilerChecklistUI.js` | `SpoilerChecklistUI` |
 
 ## Step 1: Create the Module Directory and Files

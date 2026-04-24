@@ -102,10 +102,10 @@ export const moduleMetadata = {
     name: 'settings',
     column: 2
   },
-  playerStatePanel: {
+  gameStatePanel: {
     title: 'Player State',
     icon: '👤',
-    name: 'playerState',
+    name: 'gameState',
     column: 2
   },
   progressBarPanel: {

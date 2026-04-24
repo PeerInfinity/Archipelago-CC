@@ -187,23 +187,23 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
     
     testController.reportCondition('Regions module shows as both sender and receiver', true);
 
-    // 11. Verify the playerState module also appears as a handler
-    let playerStateFound = false;
+    // 11. Verify the gameState module also appears as a handler
+    let gameStateFound = false;
     for (const block of moduleBlocks) {
       const moduleName = block.querySelector('.module-name');
-      if (moduleName && moduleName.textContent.trim() === 'playerState') {
-        const playerStateHandlerColumn = block.querySelector('.handler-symbol');
-        if (playerStateHandlerColumn && playerStateHandlerColumn.textContent.trim().length > 0) {
-          playerStateFound = true;
+      if (moduleName && moduleName.textContent.trim() === 'gameState') {
+        const gameStateHandlerColumn = block.querySelector('.handler-symbol');
+        if (gameStateHandlerColumn && gameStateHandlerColumn.textContent.trim().length > 0) {
+          gameStateFound = true;
           break;
         }
       }
     }
 
-    if (!playerStateFound) {
-      throw new Error('playerState module not found as handler for user:regionMove');
+    if (!gameStateFound) {
+      throw new Error('gameState module not found as handler for user:regionMove');
     }
-    testController.reportCondition('playerState module shows as handler', true);
+    testController.reportCondition('gameState module shows as handler', true);
 
     testController.log(`[${testRunId}] Events panel sender/receiver display test completed successfully`);
     testController.reportCondition('Test completed successfully', true);

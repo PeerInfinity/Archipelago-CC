@@ -4,7 +4,7 @@
 import { RemoteStateManager } from './RemoteStateManager.js';
 import { RemoteEventBus } from './RemoteEventBus.js';
 import { RemoteModuleDispatcher } from './RemoteModuleDispatcher.js';
-import { RemotePlayerState } from './RemotePlayerState.js';
+import { RemoteGameState } from './RemoteGameState.js';
 
 /**
  * RemoteDependencies creates a unified dependency container
@@ -35,7 +35,7 @@ export class RemoteDependencies {
         this.stateManager = new RemoteStateManager(client);
         this.eventBus = new RemoteEventBus(client);
         this.moduleDispatcher = new RemoteModuleDispatcher(client);
-        this.playerState = new RemotePlayerState(client);
+        this.gameState = new RemoteGameState(client);
 
         // discoveryState is not supported in remote mode
         // It's a feature specific to the main window
@@ -57,7 +57,7 @@ export class RemoteDependencies {
     requestDataRefresh() {
         this.stateManager.requestStateSnapshot();
         this.stateManager.requestStaticData();
-        this.playerState.requestUpdate();
+        this.gameState.requestUpdate();
     }
 
     /**

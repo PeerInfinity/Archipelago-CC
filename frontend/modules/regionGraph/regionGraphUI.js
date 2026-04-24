@@ -4,7 +4,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
-import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
 import { PathFinder } from './pathfinder.js';
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import { GraphDataManager } from './graphDataManager.js';
@@ -864,11 +864,11 @@ export class RegionGraphUI {
     this.unsubscribeStateUpdate = this.eventBus.subscribe('stateManager:snapshotUpdated',
       (data) => this.onStateUpdate(data));
 
-    this.unsubscribeRegionChange = this.eventBus.subscribe('playerState:regionChanged',
+    this.unsubscribeRegionChange = this.eventBus.subscribe('gameState:regionChanged',
       (data) => this.updatePlayerLocation(data.newRegion));
 
     // Subscribe to path updates to track the full path
-    this.unsubscribePathUpdate = this.eventBus.subscribe('playerState:pathUpdated',
+    this.unsubscribePathUpdate = this.eventBus.subscribe('gameState:pathUpdated',
       (data) => this.onPathUpdate(data));
 
     // Subscribe to rules loaded event (like Regions module)

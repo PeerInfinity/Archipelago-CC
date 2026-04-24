@@ -15,8 +15,8 @@ function log(level, message, ...data) {
 
 // Helper function to load Adventure rules and set up iframe
 async function loadAdventureRulesAndSetupIframe(testController, targetRegion = 'Menu') {
-  // Import playerState singleton once at the top
-  const { getPlayerStateSingleton } = await import('../../playerState/singleton.js');
+  // Import gameState singleton once at the top
+  const { getGameStateSingleton } = await import('../../gameState/singleton.js');
 
   // Step 1: Load Adventure rules in main app first
   testController.log('Loading Adventure rules file in main app...');
@@ -36,16 +36,16 @@ async function loadAdventureRulesAndSetupIframe(testController, targetRegion = '
 
   // Step 2: Verify player is in target region in main app
   testController.log(`Verifying player is in ${targetRegion} region...`);
-  const playerStateReady = await testController.pollForCondition(
+  const gameStateReady = await testController.pollForCondition(
     () => {
-      const playerState = getPlayerStateSingleton();
-      return playerState && playerState.getCurrentRegion() === targetRegion;
+      const gameState = getGameStateSingleton();
+      return gameState && gameState.getCurrentRegion() === targetRegion;
     },
-    `PlayerState to be in ${targetRegion} region`,
+    `GameState to be in ${targetRegion} region`,
     2000,
     50
   );
-  testController.reportCondition(`PlayerState positioned in ${targetRegion}`, playerStateReady);
+  testController.reportCondition(`GameState positioned in ${targetRegion}`, gameStateReady);
   
   // Step 3: Create iframe panel
   testController.log('Creating iframe panel...');
@@ -114,9 +114,9 @@ async function loadAdventureRulesAndSetupIframe(testController, targetRegion = '
   );
   testController.reportCondition('Iframe text adventure UI ready', true);
 
-  // Step 7: Verify player positioning using playerStateSingleton
-  const playerState = getPlayerStateSingleton();
-  const finalRegion = playerState.getCurrentRegion();
+  // Step 7: Verify player positioning using gameStateSingleton
+  const gameState = getGameStateSingleton();
+  const finalRegion = gameState.getCurrentRegion();
   testController.log(`Final player positioned in region: ${finalRegion}`);
   testController.reportCondition(`Player positioned in ${targetRegion} region`,
     finalRegion === targetRegion);
@@ -599,7 +599,7 @@ export async function textAdventureIframeManagerUITest(testController) {
     // Step 2: Position player in Menu region in main app
     testController.log('Positioning player in Menu region in main app...');
     if (window.eventDispatcher) {
-      const regionChangePromise = testController.waitForEvent('playerState:regionChanged', 5000);
+      const regionChangePromise = testController.waitForEvent('gameState:regionChanged', 5000);
       
       testController.log('Publishing user:regionMove event to move to Menu...');
       window.eventDispatcher.publish('tests', 'user:regionMove', {
@@ -611,7 +611,7 @@ export async function textAdventureIframeManagerUITest(testController) {
       
       try {
         const regionChangeData = await regionChangePromise;
-        testController.log('Successfully received playerState:regionChanged event:', regionChangeData);
+        testController.log('Successfully received gameState:regionChanged event:', regionChangeData);
         testController.reportCondition('Player region change event received', true);
       } catch (error) {
         testController.log(`WARNING: Region change event not received: ${error.message}`, 'warn');

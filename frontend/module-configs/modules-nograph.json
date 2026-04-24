@@ -96,12 +96,12 @@
       "path": "./modules/discoveryPanel/index.js",
       "enabled": false
     },
-    "playerState": {
-      "path": "./modules/playerState/index.js",
+    "gameState": {
+      "path": "./modules/gameState/index.js",
       "enabled": true
     },
-    "playerStatePanel": {
-      "path": "./modules/playerStatePanel/index.js",
+    "gameStatePanel": {
+      "path": "./modules/gameStatePanel/index.js",
       "enabled": true
     },
     "loops": {
@@ -250,8 +250,8 @@
     "regionGraph",
     "discovery",
     "discoveryPanel",
-    "playerState",
-    "playerStatePanel",
+    "gameState",
+    "gameStatePanel",
     "loops",
     "loopStats",
     "loopsCostDebugger",

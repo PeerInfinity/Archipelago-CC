@@ -105,8 +105,8 @@ export class EventCoordinator {
     // Loop mode toggle
     subscribe('loops:setLoopMode', this._handleSetLoopMode);
 
-    // PlayerState path updates (keeps loops panel in sync with regions panel)
-    subscribe('playerState:pathUpdated', this._handlePathUpdated);
+    // GameState path updates (keeps loops panel in sync with regions panel)
+    subscribe('gameState:pathUpdated', this._handlePathUpdated);
 
     logger.info(`Subscribed to ${this.eventSubscriptions.length} events`);
   }
@@ -409,7 +409,7 @@ export class EventCoordinator {
   }
 
   /**
-   * Handle playerState path updated event.
+   * Handle gameState path updated event.
    * Re-renders the loops panel when the path changes, and triggers
    * auto-resume when in the waiting state and new actions are appended.
    * @private
@@ -427,7 +427,7 @@ export class EventCoordinator {
       }
     }
 
-    logger.info('Received playerState:pathUpdated, re-rendering loop panel');
+    logger.info('Received gameState:pathUpdated, re-rendering loop panel');
     this.loopUI.renderLoopPanel();
   }
 

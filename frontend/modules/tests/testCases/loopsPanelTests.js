@@ -247,15 +247,15 @@ export async function testRealActionsProcessed(testController) {
       );
     }
 
-    // 4. Get playerState API to add a test action
+    // 4. Get gameState API to add a test action
     const centralRegistryModule = await import('../../../app/core/centralRegistry.js');
     const centralRegistry = centralRegistryModule.centralRegistry;
 
-    // Try to get playerState functions
-    const addLocationCheck = centralRegistry?.getPublicFunction?.('playerState', 'addLocationCheck');
+    // Try to get gameState functions
+    const addLocationCheck = centralRegistry?.getPublicFunction?.('gameState', 'addLocationCheck');
     if (!addLocationCheck) {
-      testController.log(`[${testRunId}] WARNING: Could not get playerState API, skipping action addition test`);
-      testController.reportCondition('PlayerState API available', false);
+      testController.log(`[${testRunId}] WARNING: Could not get gameState API, skipping action addition test`);
+      testController.reportCondition('GameState API available', false);
       return true; // Not a failure, just can't test this part
     }
 
@@ -280,8 +280,8 @@ export async function testRealActionsProcessed(testController) {
     );
 
     if (!actionBlockFound) {
-      // This is expected if the playerState API doesn't integrate with the loops module
-      testController.log(`[${testRunId}] Action not added - playerState/loops integration may not be available`);
+      // This is expected if the gameState API doesn't integrate with the loops module
+      testController.log(`[${testRunId}] Action not added - gameState/loops integration may not be available`);
       testController.reportCondition('Action queue test skipped (integration not available)', true);
       return true;
     } else {

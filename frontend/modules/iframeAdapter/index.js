@@ -37,7 +37,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('iframe:appReady');
     registrationApi.registerEventBusPublisher('iframe:error');
     registrationApi.registerEventBusPublisher('iframe:messageReceived');
-    registrationApi.registerEventBusPublisher('playerState:regionChanged');
+    registrationApi.registerEventBusPublisher('gameState:regionChanged');
 
     // Register EventBus subscribers - we need to listen to all events to bridge them
     registrationApi.registerEventBusSubscriberIntent(moduleId, '*'); // Listen to all events

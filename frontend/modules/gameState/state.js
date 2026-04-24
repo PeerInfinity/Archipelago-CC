@@ -1,8 +1,8 @@
 /**
- * PlayerState - Tracks player-specific state information
+ * GameState - Tracks player-specific state information
  * Tracks the player's current region and path through regions
  */
-export class PlayerState {
+export class GameState {
     constructor(eventBus) {
         this.eventBus = eventBus;
 
@@ -69,7 +69,7 @@ export class PlayerState {
             
             // Publish event about region change
             if (this.eventBus) {
-                this.eventBus.publish('playerState:regionChanged', {
+                this.eventBus.publish('gameState:regionChanged', {
                     oldRegion,
                     newRegion: regionName
                 });
@@ -116,13 +116,13 @@ export class PlayerState {
         if (targetRegion === lastPathRegion) {
             // Using console.log instead of console.warn since this is expected behavior
             // (prevents duplicate moves when events are processed multiple times)
-            console.log(`[PlayerState] Ignoring redundant move to same region: ${targetRegion}. Path ends at: ${lastPathRegion}`);
+            console.log(`[GameState] Ignoring redundant move to same region: ${targetRegion}. Path ends at: ${lastPathRegion}`);
             return;
         }
 
         // If sourceRegion is provided, validate it matches the last region in path
         if (sourceRegion && sourceRegion !== lastPathRegion) {
-            console.warn(`[PlayerState] Source region mismatch: path ends at ${lastPathRegion}, got sourceRegion ${sourceRegion}. Target: ${targetRegion}, Exit: ${exitUsed}. This may indicate multiple region move events or outdated event data.`);
+            console.warn(`[GameState] Source region mismatch: path ends at ${lastPathRegion}, got sourceRegion ${sourceRegion}. Target: ${targetRegion}, Exit: ${exitUsed}. This may indicate multiple region move events or outdated event data.`);
         }
         
         // Check if we should handle backward navigation (only if loops are disabled)
@@ -195,7 +195,7 @@ export class PlayerState {
         }
 
         if (!lastRegionMove) {
-            console.warn(`[PlayerState] Cannot add location check: no regionMove entries found in path`);
+            console.warn(`[GameState] Cannot add location check: no regionMove entries found in path`);
             return;
         }
 
@@ -232,7 +232,7 @@ export class PlayerState {
      */
     addCustomAction(actionName, params = {}) {
         if (!this.currentRegion) {
-            console.warn(`[PlayerState] Cannot add custom action when not in a valid region`);
+            console.warn(`[GameState] Cannot add custom action when not in a valid region`);
             return;
         }
         // Note: Removed the start region check to allow building paths from start regions
@@ -277,7 +277,7 @@ export class PlayerState {
         }
         
         if (insertIndex === -1) {
-            console.warn(`[PlayerState] Target region ${targetRegionName} instance ${targetInstanceNumber} not found in path`);
+            console.warn(`[GameState] Target region ${targetRegionName} instance ${targetInstanceNumber} not found in path`);
             return false;
         }
         
@@ -339,7 +339,7 @@ export class PlayerState {
         }
         
         if (insertIndex === -1) {
-            console.warn(`[PlayerState] Target region ${targetRegionName} instance ${targetInstanceNumber} not found in path`);
+            console.warn(`[GameState] Target region ${targetRegionName} instance ${targetInstanceNumber} not found in path`);
             return false;
         }
         
@@ -402,7 +402,7 @@ export class PlayerState {
             return true;
         }
         
-        console.warn(`[PlayerState] Location check ${locationName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
+        console.warn(`[GameState] Location check ${locationName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
         return false;
     }
     
@@ -433,7 +433,7 @@ export class PlayerState {
             return true;
         }
         
-        console.warn(`[PlayerState] Custom action ${actionName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
+        console.warn(`[GameState] Custom action ${actionName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
         return false;
     }
     
@@ -462,7 +462,7 @@ export class PlayerState {
             return true;
         }
         
-        console.warn(`[PlayerState] No actions found to clear in ${targetRegionName} instance ${targetInstanceNumber}`);
+        console.warn(`[GameState] No actions found to clear in ${targetRegionName} instance ${targetInstanceNumber}`);
         return false;
     }
     
@@ -531,7 +531,7 @@ export class PlayerState {
                 this.regionInstanceCounts.clear();
                 this.currentRegion = targetRegion;
                 if (this.eventBus) {
-                    this.eventBus.publish('playerState:regionChanged', {
+                    this.eventBus.publish('gameState:regionChanged', {
                         oldRegion: null,
                         newRegion: targetRegion
                     });
@@ -539,7 +539,7 @@ export class PlayerState {
                 this.emitPathUpdated();
                 return;
             }
-            console.warn(`[PlayerState] Region ${targetRegion} instance ${instanceNumber} not found in path`);
+            console.warn(`[GameState] Region ${targetRegion} instance ${instanceNumber} not found in path`);
             return;
         }
         
@@ -570,7 +570,7 @@ export class PlayerState {
                 const lastRemoved = removedEntries[removedEntries.length - 1];
                 const oldRegion = lastRemoved.type === 'regionMove'
                     ? lastRemoved.destinationRegion : lastRemoved.sourceRegion;
-                this.eventBus.publish('playerState:regionChanged', {
+                this.eventBus.publish('gameState:regionChanged', {
                     oldRegion,
                     newRegion: this.currentRegion
                 });
@@ -586,7 +586,7 @@ export class PlayerState {
      */
     emitPathUpdated() {
         if (this.eventBus) {
-            this.eventBus.publish('playerState:pathUpdated', {
+            this.eventBus.publish('gameState:pathUpdated', {
                 path: [...this.path], // Send a copy
                 currentRegion: this.currentRegion,
                 regionCounts: new Map(this.regionInstanceCounts)
@@ -637,7 +637,7 @@ export class PlayerState {
 
         // Emit events for the reset
         if (this.eventBus) {
-            this.eventBus.publish('playerState:regionChanged', {
+            this.eventBus.publish('gameState:regionChanged', {
                 oldRegion: null,
                 newRegion: firstStartRegion
             });

@@ -35,10 +35,10 @@ export class LoopState {
     this.eventBus = null;
     this.stateManager = null;
     this.dispatcher = null;
-    this.playerState = null; // NEW: playerState API
+    this.gameState = null; // NEW: gameState API
     this.costDataManager = null; // Cost data for per-region/per-location costs
 
-    // Action queue manager (will be initialized after playerState is set)
+    // Action queue manager (will be initialized after gameState is set)
     this.actionQueueManager = null;
 
     // Resources
@@ -49,8 +49,8 @@ export class LoopState {
     // Experience tracking
     this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
 
-    // Action processing - now based on playerState path
-    this.currentActionIndex = 0; // Index in the playerState path
+    // Action processing - now based on gameState path
+    this.currentActionIndex = 0; // Index in the gameState path
     this.currentAction = null; // Current action being processed
     this.isProcessing = false;
     this.isPaused = false; // Not paused — idle (no queue started yet)
@@ -87,7 +87,7 @@ export class LoopState {
    * @param {object} dependencies - Object containing dependencies.
    * @param {EventBus} dependencies.eventBus - The application's event bus instance.
    * @param {StateManager} dependencies.stateManager - The application's state manager instance.
-   * @param {Object} dependencies.playerState - The playerState API functions.
+   * @param {Object} dependencies.gameState - The gameState API functions.
    */
   setDependencies(dependencies) {
     if (!dependencies.eventBus || !dependencies.stateManager) {
@@ -101,11 +101,11 @@ export class LoopState {
     this.eventBus = dependencies.eventBus;
     this.stateManager = dependencies.stateManager;
     this.dispatcher = dependencies.dispatcher || null;
-    this.playerState = dependencies.playerState; // Store playerState API
+    this.gameState = dependencies.gameState; // Store gameState API
 
-    // Initialize ActionQueueManager now that we have playerState
-    if (this.playerState) {
-      this.actionQueueManager = new ActionQueueManager(this.playerState);
+    // Initialize ActionQueueManager now that we have gameState
+    if (this.gameState) {
+      this.actionQueueManager = new ActionQueueManager(this.gameState);
       log('info', '[LoopState] ActionQueueManager initialized');
     }
 
@@ -274,7 +274,7 @@ export class LoopState {
   }
 
   /**
-   * Get the current action queue from playerState path
+   * Get the current action queue from gameState path
    * Delegates to ActionQueueManager
    * @returns {Array} Array of action objects
    */
@@ -286,33 +286,33 @@ export class LoopState {
   }
 
   /**
-   * Queue an action by adding it to playerState path
+   * Queue an action by adding it to gameState path
    * @param {Object} action - Action to add
    * @param {string} targetRegion - Region to insert the action at (optional)
    * @param {number} targetInstance - Instance number to insert at (optional)
    */
   queueAction(action, targetRegion = null, targetInstance = null) {
-    if (!this.playerState) {
-      log('error', '[LoopState] Cannot queue action: playerState not available');
+    if (!this.gameState) {
+      log('error', '[LoopState] Cannot queue action: gameState not available');
       return;
     }
 
-    // Map action types to playerState path entries
+    // Map action types to gameState path entries
     if (action.type === 'customAction') {
       if (targetRegion && targetInstance) {
         // Insert at specific location
-        this.playerState.insertCustomActionAt(action.actionName, targetRegion, targetInstance, {});
+        this.gameState.insertCustomActionAt(action.actionName, targetRegion, targetInstance, {});
       } else {
         // Add to current location
-        this.playerState.addCustomAction(action.actionName, {});
+        this.gameState.addCustomAction(action.actionName, {});
       }
     } else if (action.type === 'locationCheck') {
       if (targetRegion && targetInstance) {
         // Insert at specific location
-        this.playerState.insertLocationCheckAt(action.locationName, targetRegion, targetInstance, action.sourceRegion);
+        this.gameState.insertLocationCheckAt(action.locationName, targetRegion, targetInstance, action.sourceRegion);
       } else {
         // Add to current location
-        this.playerState.addLocationCheck(action.locationName, action.sourceRegion);
+        this.gameState.addLocationCheck(action.locationName, action.sourceRegion);
       }
     } else if (action.type === 'regionMove') {
       // Movement is handled by the user:regionMove event, not added here
@@ -329,7 +329,7 @@ export class LoopState {
 
     // Start processing if not already running.
     // Auto-resume from waiting state is handled by EventCoordinator
-    // listening to playerState:pathUpdated.
+    // listening to gameState:pathUpdated.
     if (!this.isProcessing && !this.isPaused && !this._queueCompleted) {
       this.startProcessing();
     }
@@ -359,7 +359,7 @@ export class LoopState {
       return false;
     }
 
-    // Delegate removal to ActionQueueManager (handles playerState and tracking cleanup)
+    // Delegate removal to ActionQueueManager (handles gameState and tracking cleanup)
     const success = this.actionQueueManager.removeAction(index);
 
     if (!success) {
@@ -397,8 +397,8 @@ export class LoopState {
    * Clear all actions from the queue
    */
   clearQueue() {
-    if (!this.playerState) {
-      log('error', '[LoopState] Cannot clear queue: playerState not available');
+    if (!this.gameState) {
+      log('error', '[LoopState] Cannot clear queue: gameState not available');
       return;
     }
 
@@ -441,14 +441,14 @@ export class LoopState {
     }
     this.currentActionIndex = 0;
 
-    // Clear the entire playerState path
-    if (this.playerState) {
-      this.playerState.removeAllActionsOfType('locationCheck');
-      this.playerState.removeAllActionsOfType('customAction');
-      if (this.playerState.reset) {
-        this.playerState.reset();
+    // Clear the entire gameState path
+    if (this.gameState) {
+      this.gameState.removeAllActionsOfType('locationCheck');
+      this.gameState.removeAllActionsOfType('customAction');
+      if (this.gameState.reset) {
+        this.gameState.reset();
       } else {
-        this.playerState.trimPath();
+        this.gameState.trimPath();
       }
     }
 
@@ -463,13 +463,13 @@ export class LoopState {
    * Clear all explore actions from the queue
    */
   clearExploreActions() {
-    if (!this.playerState) {
-      log('error', '[LoopState] Cannot clear explore actions: playerState not available');
+    if (!this.gameState) {
+      log('error', '[LoopState] Cannot clear explore actions: gameState not available');
       return;
     }
     
     // Remove all explore custom actions
-    const removedCount = this.playerState.removeAllActionsOfType('customAction', 'explore');
+    const removedCount = this.gameState.removeAllActionsOfType('customAction', 'explore');
     
     if (removedCount > 0) {
       // Clean up tracking for removed actions
@@ -796,7 +796,7 @@ export class LoopState {
     this._lastFrameTime = timestamp;
 
     try {
-      // Get current queue from playerState
+      // Get current queue from gameState
       const queue = this.getActionQueue();
       
       // Verify we have a valid current action and index
@@ -990,9 +990,9 @@ export class LoopState {
         //  `Repeating explore action for ${regionName} (repeat state is true, no other explore actions pending)`
         //);
 
-        // Add a new explore action to playerState
-        if (this.playerState && this.playerState.addCustomAction) {
-          this.playerState.addCustomAction('explore', { repeat: true });
+        // Add a new explore action to gameState
+        if (this.gameState && this.gameState.addCustomAction) {
+          this.gameState.addCustomAction('explore', { repeat: true });
         }
 
         // Notify that a new explore action was added
@@ -1095,8 +1095,8 @@ export class LoopState {
         break;
       case 'locationCheck':
         // Propagate user:locationCheck through the normal dispatcher chain
-        // (discovery → playerState → stateManager), the same way it flows
-        // when loop mode is inactive. The fromLoop flag tells playerState
+        // (discovery → gameState → stateManager), the same way it flows
+        // when loop mode is inactive. The fromLoop flag tells gameState
         // to skip adding a duplicate path entry since the loop already
         // added it when the queue was built.
         this.dispatcher.publishToNextModule('loops', 'user:locationCheck', {
@@ -1390,7 +1390,7 @@ export class LoopState {
     // Reset progress on all actions
     this._resetActionsProgress();
 
-    // Get queue from playerState
+    // Get queue from gameState
     const queue = this.getActionQueue();
 
     // Start processing if there are actions
@@ -1424,7 +1424,7 @@ export class LoopState {
       max: this.maxMana,
     });
 
-    // Get queue from playerState
+    // Get queue from gameState
     const queue = this.getActionQueue();
 
     // Notify about queue update (so UI can refresh)

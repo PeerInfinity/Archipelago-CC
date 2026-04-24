@@ -28,7 +28,7 @@ export const moduleInfo = {
 let loopInstance = null;
 let _moduleEventBus = null;
 let moduleDispatcher = null; // To store the full dispatcher instance
-let _playerStateAPI = null; // Store playerState API for access by loopUI
+let _gameStateAPI = null; // Store gameState API for access by loopUI
 
 // Cost generation instances
 let _costGenerator = null;
@@ -40,9 +40,9 @@ export function getLoopsModuleDispatcher() {
   return moduleDispatcher;
 }
 
-// Export function to get playerState API for use by loopUI
-export function getPlayerStateAPI() {
-  return _playerStateAPI;
+// Export function to get gameState API for use by loopUI
+export function getGameStateAPI() {
+  return _gameStateAPI;
 }
 
 // Export cost generation components
@@ -96,10 +96,10 @@ function log(level, message, ...data) {
 function handleRulesLoaded(eventData) {
   log('info', '[Loops Module] Received stateManager:rulesLoaded');
 
-  // Set start regions on playerState from static data
+  // Set start regions on gameState from static data
   const staticData = stateManager.getStaticData();
-  if (staticData?.startRegions && _playerStateAPI?.setStartRegions) {
-    _playerStateAPI.setStartRegions(staticData.startRegions);
+  if (staticData?.startRegions && _gameStateAPI?.setStartRegions) {
+    _gameStateAPI.setStartRegions(staticData.startRegions);
     log('info', '[Loops Module] Set start regions:', staticData.startRegions);
   }
 
@@ -152,8 +152,8 @@ export function register(registrationApi) {
     return loopStateSingleton;
   });
 
-  // Note: playerState functions are accessed directly via the 'playerState' module's
-  // public API, not re-exported through loops. Internal loops code uses _playerStateAPI.
+  // Note: gameState functions are accessed directly via the 'gameState' module's
+  // public API, not re-exported through loops. Internal loops code uses _gameStateAPI.
 
   registrationApi.registerPublicFunction(moduleInfo.name, 'getLoopsModuleDispatcher', () => {
     return moduleDispatcher;
@@ -265,31 +265,31 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   const moduleSettings = await initializationApi.getModuleSettings(moduleId);
 
-  // Get playerState public API functions
-  const playerStateAPI = {
-    getPath: initializationApi.getModuleFunction('playerState', 'getPath'),
-    trimPath: initializationApi.getModuleFunction('playerState', 'trimPath'),
-    setAllowLoops: initializationApi.getModuleFunction('playerState', 'setAllowLoops'),
-    addLocationCheck: initializationApi.getModuleFunction('playerState', 'addLocationCheck'),
-    addCustomAction: initializationApi.getModuleFunction('playerState', 'addCustomAction'),
-    insertLocationCheckAt: initializationApi.getModuleFunction('playerState', 'insertLocationCheckAt'),
-    insertCustomActionAt: initializationApi.getModuleFunction('playerState', 'insertCustomActionAt'),
-    removeLocationCheckAt: initializationApi.getModuleFunction('playerState', 'removeLocationCheckAt'),
-    removeCustomActionAt: initializationApi.getModuleFunction('playerState', 'removeCustomActionAt'),
-    clearActionsAt: initializationApi.getModuleFunction('playerState', 'clearActionsAt'),
-    removeAllActionsOfType: initializationApi.getModuleFunction('playerState', 'removeAllActionsOfType'),
-    getCurrentRegion: initializationApi.getModuleFunction('playerState', 'getCurrentRegion'),
-    getRegionCounts: initializationApi.getModuleFunction('playerState', 'getRegionCounts'),
-    setStartRegions: initializationApi.getModuleFunction('playerState', 'setStartRegions'),
-    isStartRegion: initializationApi.getModuleFunction('playerState', 'isStartRegion'),
-    reset: initializationApi.getModuleFunction('playerState', 'reset')
+  // Get gameState public API functions
+  const gameStateAPI = {
+    getPath: initializationApi.getModuleFunction('gameState', 'getPath'),
+    trimPath: initializationApi.getModuleFunction('gameState', 'trimPath'),
+    setAllowLoops: initializationApi.getModuleFunction('gameState', 'setAllowLoops'),
+    addLocationCheck: initializationApi.getModuleFunction('gameState', 'addLocationCheck'),
+    addCustomAction: initializationApi.getModuleFunction('gameState', 'addCustomAction'),
+    insertLocationCheckAt: initializationApi.getModuleFunction('gameState', 'insertLocationCheckAt'),
+    insertCustomActionAt: initializationApi.getModuleFunction('gameState', 'insertCustomActionAt'),
+    removeLocationCheckAt: initializationApi.getModuleFunction('gameState', 'removeLocationCheckAt'),
+    removeCustomActionAt: initializationApi.getModuleFunction('gameState', 'removeCustomActionAt'),
+    clearActionsAt: initializationApi.getModuleFunction('gameState', 'clearActionsAt'),
+    removeAllActionsOfType: initializationApi.getModuleFunction('gameState', 'removeAllActionsOfType'),
+    getCurrentRegion: initializationApi.getModuleFunction('gameState', 'getCurrentRegion'),
+    getRegionCounts: initializationApi.getModuleFunction('gameState', 'getRegionCounts'),
+    setStartRegions: initializationApi.getModuleFunction('gameState', 'setStartRegions'),
+    isStartRegion: initializationApi.getModuleFunction('gameState', 'isStartRegion'),
+    reset: initializationApi.getModuleFunction('gameState', 'reset')
   };
   
   // Store the API for access by loopUI
-  _playerStateAPI = playerStateAPI;
+  _gameStateAPI = gameStateAPI;
   
-  if (!playerStateAPI.getPath) {
-    log('error', '[Loops Module] Could not get playerState API functions');
+  if (!gameStateAPI.getPath) {
+    log('error', '[Loops Module] Could not get gameState API functions');
   }
 
   // Initialize LoopState singleton (which might load from storage)
@@ -301,7 +301,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         eventBus: _moduleEventBus,
         stateManager: stateManager,
         dispatcher: moduleDispatcher, // Pass dispatcher to loopStateSingleton if needed
-        playerState: playerStateAPI.getPath ? playerStateAPI : null
+        gameState: gameStateAPI.getPath ? gameStateAPI : null
       });
 
       loopStateSingleton.initialize();
@@ -346,7 +346,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       eventBus: _moduleEventBus,
       costDataManager: _costDataManager,
       dispatcher: moduleDispatcher,
-      playerStateAPI: playerStateAPI,
+      gameStateAPI: gameStateAPI,
     });
 
     // Inject costDataManager into loopState for per-region/per-location cost lookups
@@ -364,7 +364,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         get costData() { return _costDataManager; },
         get costGenerator() { return _costGenerator; },
         get pathFinder() { return _pathFinder; },
-        get playerState() { return _playerStateAPI; },
+        get gameState() { return _gameStateAPI; },
 
         // Convenience accessors
         get mana() { return loopStateSingleton.currentMana; },
@@ -398,7 +398,7 @@ loops.state          - Full LoopState object
 loops.costData       - CostDataManager (region/location costs)
 loops.costGenerator  - CostGenerator instance
 loops.pathFinder     - PathFinder instance
-loops.playerState    - PlayerState API
+loops.gameState    - GameState API
 
 loops.mana           - Get/set current mana
 loops.maxMana        - Get/set max mana

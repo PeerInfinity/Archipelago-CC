@@ -1,5 +1,5 @@
 import loopStateSingleton from './loopStateSingleton.js';
-import { getLoopsModuleDispatcher, moduleInfo, getPlayerStateAPI, getPathFinder } from './index.js'; // Import the dispatcher getter, moduleInfo, and playerState API
+import { getLoopsModuleDispatcher, moduleInfo, getGameStateAPI, getPathFinder } from './index.js'; // Import the dispatcher getter, moduleInfo, and gameState API
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
@@ -105,9 +105,9 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
     return;
   }
 
-  const playerStateAPI = getPlayerStateAPI();
-  if (!playerStateAPI) {
-    log('error', '[LoopsModule] PlayerState API not available');
+  const gameStateAPI = getGameStateAPI();
+  if (!gameStateAPI) {
+    log('error', '[LoopsModule] GameState API not available');
     return;
   }
 
@@ -148,14 +148,14 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
 
   if (isLocationDiscovered) {
     // Discovered location: queue a location check
-    if (playerStateAPI.addLocationCheck) {
-      playerStateAPI.addLocationCheck(locationName, regionName);
+    if (gameStateAPI.addLocationCheck) {
+      gameStateAPI.addLocationCheck(locationName, regionName);
       log('info', `[LoopsModule] Added location check for ${locationName}`);
     }
   } else {
     // Undiscovered location: queue an explore action
-    if (playerStateAPI.addCustomAction) {
-      playerStateAPI.addCustomAction('explore', {
+    if (gameStateAPI.addCustomAction) {
+      gameStateAPI.addCustomAction('explore', {
         regionName: regionName,
         repeatExplore: true
       });
@@ -237,9 +237,9 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   const { exitName, sourceRegion, destinationRegion, isDiscovered } = eventData;
 
-  const playerStateAPI = getPlayerStateAPI();
-  if (!playerStateAPI) {
-    log('error', '[LoopEvents] PlayerState API not available');
+  const gameStateAPI = getGameStateAPI();
+  if (!gameStateAPI) {
+    log('error', '[LoopEvents] GameState API not available');
     return;
   }
 
@@ -291,8 +291,8 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   // Add explore action if exit is undiscovered
   if (!isDiscovered) {
-    if (playerStateAPI.addCustomAction) {
-      playerStateAPI.addCustomAction('explore', {
+    if (gameStateAPI.addCustomAction) {
+      gameStateAPI.addCustomAction('explore', {
         regionName: sourceRegion,
         repeatExplore: true
       });

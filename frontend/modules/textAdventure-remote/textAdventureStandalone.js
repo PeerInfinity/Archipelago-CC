@@ -17,7 +17,7 @@ export class TextAdventureStandalone {
         this.stateManager = deps.stateManager;
         this.eventBus = deps.eventBus;
         this.moduleDispatcher = deps.moduleDispatcher;
-        this.playerState = deps.playerState;
+        this.gameState = deps.gameState;
         this.discoveryState = deps.discoveryState; // null in remote mode
         
         // UI elements
@@ -164,7 +164,7 @@ export class TextAdventureStandalone {
             this.handleStateChange(data);
         }, 'textAdventureStandalone');
 
-        this.eventBus.subscribe('playerState:regionChanged', (data) => {
+        this.eventBus.subscribe('gameState:regionChanged', (data) => {
             this.handleRegionChange(data);
         }, 'textAdventureStandalone');
     }
@@ -188,7 +188,7 @@ Load a rules file in the main application to begin your adventure.`;
         this.clearDisplay();
         this.displayMessage('Rules loaded! Your adventure begins');
 
-        // Region display is handled by playerState:regionChanged events, no need to display here
+        // Region display is handled by gameState:regionChanged events, no need to display here
     }
 
     handleRegionChange(data) {
@@ -411,7 +411,7 @@ Load a rules file in the main application to begin your adventure.`;
         const sourceRegion = this.getCurrentRegionInfo()?.name;
 
         // Update iframe's player state to reflect the new region
-        this.playerState.setCurrentRegion(destinationRegion);
+        this.gameState.setCurrentRegion(destinationRegion);
 
         // Publish region move via dispatcher
         this.moduleDispatcher.publish('user:regionMove', {
@@ -465,7 +465,7 @@ Load a rules file in the main application to begin your adventure.`;
 
         // Perform the check via dispatcher
         // Get current region from player state to include in location check
-        const currentRegion = this.playerState ? this.playerState.getCurrentRegion() : null;
+        const currentRegion = this.gameState ? this.gameState.getCurrentRegion() : null;
 
         this.moduleDispatcher.publish('user:locationCheck', {
             locationName: actualLocationName,
@@ -537,7 +537,7 @@ Load a rules file in the main application to begin your adventure.`;
     // Helper methods (simplified versions of the original textAdventure logic)
 
     getCurrentRegionInfo() {
-        const currentRegion = this.playerState.getCurrentRegion();
+        const currentRegion = this.gameState.getCurrentRegion();
         if (!currentRegion) return null;
 
         const staticData = this.stateManager.getStaticData();
