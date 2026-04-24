@@ -47,7 +47,7 @@ The file defines named presets. Each preset specifies a tree of rows, columns, a
 | Column | Width | Panels |
 |--------|-------|--------|
 | Left stack | 20% | Inventory, Spoiler Checklist, JSON, Modules, Tests, Events |
-| Middle stack | 35% | Console, Region Graph, Timer, Presets, Editor, Editor (CM6), Settings, Path Analyzer, Spoiler Test, Player State, Discovery, Progress Bars, Meta Game, Iframe Manager, Window Manager, Rule Converter |
+| Middle stack | 35% | Console, Region Graph, Timer, Presets, Editor, Editor (CM6), Settings, Path Analyzer, Spoiler Test, Game State, Discovery, Progress Bars, Meta Game, Iframe Manager, Window Manager, Rule Converter |
 | Right stack | 45% | Regions, Locations, Exits, Helpers, Dungeons, Loops, Text Adventure, Iframe Panel, Window Panel |
 
 **`compact` preset** - 2-column layout:

@@ -1526,7 +1526,7 @@ export async function testRegionMoveComplete(testController) {
     const lightWorldBlockAfterDisabledSender = regionsContainer.querySelector('.region-block[data-region="Light World"]');
     testController.reportCondition('Light World region NOT appeared (sender disabled)', !lightWorldBlockAfterDisabledSender);
     
-    // Verify player state did NOT change
+    // Verify game state did NOT change
     const regionAfterDisabledSender = gameState.getCurrentRegion();
     testController.reportCondition('Player state still Links House (sender disabled)', regionAfterDisabledSender === 'Links House');
     
@@ -1629,7 +1629,7 @@ export async function testRegionMoveComplete(testController) {
     const lightWorldBlockAfterDisabledReceiver = regionsContainer.querySelector('.region-block[data-region="Light World"]');
     testController.reportCondition('Light World region NOT appeared (receiver disabled)', !lightWorldBlockAfterDisabledReceiver);
     
-    // Verify player state DID change (gameState module still processed it)
+    // Verify game state DID change (gameState module still processed it)
     const regionAfterDisabledReceiver = gameState.getCurrentRegion();
     testController.reportCondition('Player state changed to Light World (receiver disabled)', regionAfterDisabledReceiver === 'Light World');
     
@@ -1657,7 +1657,7 @@ export async function testRegionMoveComplete(testController) {
     // with gameState's current location when re-enabled, which it doesn't currently do.
     // This is acceptable behavior - the UI will sync on the next actual move event.
 
-    // Verify player state still shows Light World
+    // Verify game state still shows Light World
     const regionAfterBothEnabled = gameState.getCurrentRegion();
     testController.reportCondition('Player state shows Light World (after re-enable)', regionAfterBothEnabled === 'Light World');
 

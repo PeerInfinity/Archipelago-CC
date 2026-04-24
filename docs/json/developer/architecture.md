@@ -58,7 +58,7 @@ The frontend is a highly modular, single-page application designed for performan
 
 #### 2. State Management
 
-This is the most critical component of the frontend. It manages all game-related state and is split between a core logic engine and a more specific player state tracker.
+This is the most critical component of the frontend. It manages all game-related state and is split between a core logic engine and a more specific game state tracker.
 
 ##### The `stateManager` Module (Core Game Logic)
 

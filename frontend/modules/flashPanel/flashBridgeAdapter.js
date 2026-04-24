@@ -235,7 +235,7 @@ export class FlashBridgeAdapter {
    *     array of `{ path, value }` entries where `value` is either
    *     a literal or a $-prefixed placeholder. Each write becomes
    *     a separate path-write queue item on the bridge. Used for
-   *     games whose player state lives on a live instance (reached
+   *     games whose game state lives on a live instance (reached
    *     via the bridge's path walker) rather than class statics.
    */
   teleport(params) {

@@ -37,7 +37,7 @@ Each file below links to the available documentation for that module. See the [u
 - [Locations](./locations.md)
 - [Modules](./modules.md)
 - [Path Analyzer Panel](./pathAnalyzerPanel.md)
-- [Player State Panel](./gameStatePanel.md)
+- [Game State Panel](./gameStatePanel.md)
 - [Presets](./presets.md)
 - [Progress Bar Panel](./progressBarPanel.md)
 - [Region Graph](./regionGraph.md)

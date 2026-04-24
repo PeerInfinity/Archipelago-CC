@@ -44,10 +44,10 @@ A dropdown menu lets you load game-specific description files that add narrative
 
 The default text adventure layout has three columns:
 - **Left** — Inventory, JSON, Modules
-- **Center** — Region Graph, Console, Presets, Editor, Player State
+- **Center** — Region Graph, Console, Presets, Editor, Game State
 - **Right** — Text Adventure, Options
 
-The Region Graph shows your world as an interactive map with path highlighting as you move between regions. The Player State panel shows your current region and full path history.
+The Region Graph shows your world as an interactive map with path highlighting as you move between regions. The Game State panel shows your current region and full path history.
 
 ## Compatibility
 

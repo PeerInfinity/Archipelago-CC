@@ -202,7 +202,7 @@ export async function testGameStatePanelUpdate(testController) {
 registerTest({
   id: 'test_playerstate_initial_region',
   name: 'GameState Initial Region',
-  category: 'Player State',
+  category: 'Game State',
   testFunction: testGameStateInitialRegion,
   //enabled: true,
   description: 'Tests that GameState initializes with Menu as the current region.'
@@ -211,7 +211,7 @@ registerTest({
 registerTest({
   id: 'test_playerstate_region_update',
   name: 'GameState Region Update',
-  category: 'Player State',
+  category: 'Game State',
   testFunction: testGameStateRegionUpdate,
   //enabled: true,
   description: 'Tests that GameState updates region via user:regionMove events.'
@@ -220,7 +220,7 @@ registerTest({
 registerTest({
   id: 'test_playerstate_reset_on_rules',
   name: 'GameState Reset on Rules Loaded',
-  category: 'Player State',
+  category: 'Game State',
   testFunction: testGameStateResetOnRulesLoaded,
   //enabled: true,
   description: 'Tests that GameState resets to Menu when rules are loaded.'
@@ -229,7 +229,7 @@ registerTest({
 registerTest({
   id: 'test_playerstate_event_publishing',
   name: 'GameState Event Publishing',
-  category: 'Player State',
+  category: 'Game State',
   testFunction: testGameStateEventPublishing,
   //enabled: true,
   description: 'Tests that GameState publishes gameState:regionChanged events.'
@@ -238,7 +238,7 @@ registerTest({
 registerTest({
   id: 'test_playerstatepanel_display',
   name: 'GameStatePanel Display',
-  category: 'Player State',
+  category: 'Game State',
   testFunction: testGameStatePanelDisplay,
   //enabled: true,
   description: 'Tests that GameStatePanel displays in the DOM.'
@@ -247,7 +247,7 @@ registerTest({
 registerTest({
   id: 'test_playerstatepanel_update',
   name: 'GameStatePanel Update',
-  category: 'Player State',
+  category: 'Game State',
   testFunction: testGameStatePanelUpdate,
   //enabled: true,
   description: 'Tests that GameStatePanel updates when region changes.'

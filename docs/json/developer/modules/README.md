@@ -49,7 +49,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Loops](./loops.md):** The main UI panel for the Archipelago Loops incremental game mode.
 -   **[Modules](./modules.md):** A panel for viewing and managing the loaded frontend modules.
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
--   **[Player State Panel](./gameStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).
+-   **[Game State Panel](./gameStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).
 -   **[Presets](./presets.md):** Handles loading of pre-configured game files (`rules.json`).
 -   **[Region Graph](./regionGraph.md):** Interactive visualization of region connectivity using Cytoscape.js with real-time accessibility updates.
 -   **[Regions](./regions.md):** Displays the game world organized by regions and their connections.

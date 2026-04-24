@@ -103,7 +103,7 @@ export const moduleMetadata = {
     column: 2
   },
   gameStatePanel: {
-    title: 'Player State',
+    title: 'Game State',
     icon: '👤',
     name: 'gameState',
     column: 2

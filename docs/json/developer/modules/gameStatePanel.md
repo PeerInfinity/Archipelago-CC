@@ -1,4 +1,4 @@
-### Module: `Player State Panel`
+### Module: `Game State Panel`
 
 -   **ID:** `gameStatePanel`
 -   **Purpose:** Provides a simple UI panel to display the player's current state, such as their current region in the game world. It acts as a visual front-end for the `gameState` module.
@@ -12,7 +12,7 @@
 
 #### Responsibilities
 
--   Renders a Golden Layout panel to display player state information.
+-   Renders a Golden Layout panel to display game state information.
 -   Shows the player's current region in real-time.
 -   Automatically updates its display whenever the player's region changes.
 -   Resets its display to the starting region when a new game (`rules.json`) is loaded.
@@ -34,5 +34,5 @@ This module does not register any public functions.
 #### Dependencies & Interactions
 
 -   **`gameState` Module**: This is the panel's primary dependency. It uses the `centralRegistry` to call the `getCurrentRegion` public function provided by the `gameState` module to get the data it displays.
--   **`StateManager` Module**: It has an indirect dependency on the `StateManager`. It listens for the `stateManager:rulesLoaded` event to know when a new game has been loaded, which prompts it to display the initial player state.
+-   **`StateManager` Module**: It has an indirect dependency on the `StateManager`. It listens for the `stateManager:rulesLoaded` event to know when a new game has been loaded, which prompts it to display the initial game state.
 -   **Golden Layout**: As a UI panel, its lifecycle (creation, destruction, visibility) is managed by the Golden Layout framework.

@@ -40,7 +40,7 @@ export class TextAdventureLogic {
 
     setupEventSubscriptions() {
         if (this.eventBus) {
-            // Listen for player state changes
+            // Listen for game state changes
             this.eventBus.subscribe('gameState:regionChanged', (data) => {
                 this.handleRegionChange(data);
             });
@@ -719,7 +719,7 @@ export class TextAdventureLogic {
 
         // Perform the check via dispatcher
         if (moduleDispatcher) {
-            // Get current region from player state to include in location check
+            // Get current region from game state to include in location check
             const gameState = getGameStateSingleton();
             const currentRegion = gameState ? gameState.getCurrentRegion() : null;
 

@@ -31,7 +31,7 @@ Generated: 2026-01-10T19:59:58.329Z
 | metaGamePanel | metaGamePanel | Meta Game | metaGamePanel | 🎯 | Middle | UI panel for metaGame modul... | ❌ | ❌ | ❌ |
 | modules | modules | Modules | modulesPanel | 📦 | Left | Panel to manage modules. | ❌ | ❌ | ❌ |
 | pathAnalyzerPanel | pathAnalyzerPanel | Path Analyzer | pathAnalyzerPanel | 🛤️ | Middle | A dedicated panel for path ... | ❌ | ❌ | ❌ |
-| gameStatePanel | gameStatePanel | Player State | gameStatePanel | 👤 | Middle | Player State display panel. | ❌ | ❌ | ❌ |
+| gameStatePanel | gameStatePanel | Game State | gameStatePanel | 👤 | Middle | Game State display panel. | ❌ | ❌ | ❌ |
 | presets | presets | Presets | presetsPanel | ⚙️ | Middle | Provides UI for loading pre... | ❌ | ❌ | ❌ |
 | progressBarPanel | progressBarPanel | Progress Bars | progressBarPanel | 📊 | Middle | Panel container for hosting... | ❌ | ❌ | ❌ |
 | regionGraph | regionGraph | Region Graph | regionGraphPanel | 🌐 | Middle | Interactive visualization o... | ❌ | ❌ | ❌ |
@@ -56,7 +56,7 @@ Generated: 2026-01-10T19:59:58.329Z
 | iframeAdapter | iframeAdapter | ❌ | ❌ | ❌ | ❌ | Adapter for iframe-based mo... | ❌ | ❌ | ❌ |
 | metaGame | metaGame | ❌ | ❌ | ❌ | ❌ | Meta-game features and even... | ❌ | ❌ | ❌ |
 | pathAnalyzer | pathAnalyzer | ❌ | ❌ | ❌ | ❌ | Path analysis logic and UI ... | ✓ | ✓ | ✓ |
-| gameState | gameState | ❌ | ❌ | ❌ | ❌ | Manages player state includ... | ❌ | ❌ | ❌ |
+| gameState | gameState | ❌ | ❌ | ❌ | ❌ | Manages game state includ... | ❌ | ❌ | ❌ |
 | progressBar | progressBar | ❌ | ❌ | ❌ | ❌ | Progress bar component for ... | ❌ | ❌ | ❌ |
 | sphereState | sphereState | ❌ | ❌ | ❌ | ❌ | Manages sphere log data and... | ❌ | ❌ | ❌ |
 | stateManager | stateManager | ❌ | ❌ | ❌ | ❌ | Core game state management ... | ❌ | ❌ | ❌ |

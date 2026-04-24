@@ -410,7 +410,7 @@ Load a rules file in the main application to begin your adventure.`;
         // Get current region before updating
         const sourceRegion = this.getCurrentRegionInfo()?.name;
 
-        // Update iframe's player state to reflect the new region
+        // Update iframe's game state to reflect the new region
         this.gameState.setCurrentRegion(destinationRegion);
 
         // Publish region move via dispatcher
@@ -464,7 +464,7 @@ Load a rules file in the main application to begin your adventure.`;
         }
 
         // Perform the check via dispatcher
-        // Get current region from player state to include in location check
+        // Get current region from game state to include in location check
         const currentRegion = this.gameState ? this.gameState.getCurrentRegion() : null;
 
         this.moduleDispatcher.publish('user:locationCheck', {

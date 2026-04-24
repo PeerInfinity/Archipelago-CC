@@ -26,7 +26,7 @@ When a module name is a compound (modifier + noun), keep the **noun singular**:
 
 **Rationale**: In compound names, the noun is modified by another word, making it singular. For example:
 - "region graph" = a graph *of* regions (one graph, many regions)
-- "player state" = the state *of* a player (one state, one player)
+- "game state" = the state *of* a game (one state, one game)
 - "spoiler checklist" = a checklist *for* spoilers (one checklist, many spoilers)
 
 ### UI Class Names → Always Singular
