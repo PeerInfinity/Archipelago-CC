@@ -7,6 +7,7 @@ import {
     stitchGrid, accumulatedInventory,
     wallOffUnusedExits, growMaze, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
+    findDisconnectedCell,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
@@ -387,6 +388,99 @@ describe('wallOffUnusedExits', () => {
     });
 });
 
+describe('Grid teleporters', () => {
+    it('records and resolves a teleporter mapping', () => {
+        const g = new Grid({ width: 3, height: 3 });
+        g.setTeleporter({ gx: 0, gy: 0 }, 'E', { gx: 2, gy: 2 });
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'E')).toEqual({ gx: 2, gy: 2 });
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'N')).toBeNull();
+    });
+});
+
+describe('findDisconnectedCell', () => {
+    it('returns the grid center when no regions exist', () => {
+        const g = new Grid({ width: 5, height: 5 });
+        const cell = findDisconnectedCell(g, createRng(1));
+        expect(cell).toEqual({ gx: 2, gy: 2 });
+    });
+
+    it('only returns cells at least minGap=2 from any built region', () => {
+        const g = new Grid({ width: 7, height: 1 });
+        g.placeRegion({ gx: 0, gy: 0 }, { region_id: 'r', exits_placed: [] });
+        // Run a bunch of times to exercise rng — every result must be
+        // ≥ 2 cells from gx=0.
+        for (let i = 0; i < 20; i++) {
+            const cell = findDisconnectedCell(g, createRng(i));
+            expect(cell).toBeTruthy();
+            expect(cell.gx).toBeGreaterThanOrEqual(2);
+        }
+    });
+
+    it('returns null when no cell satisfies the minGap', () => {
+        const g = new Grid({ width: 2, height: 1 });
+        g.placeRegion({ gx: 0, gy: 0 }, { region_id: 'r', exits_placed: [] });
+        // Only cell left is (1,0), at distance 1 — fails minGap=2.
+        expect(findDisconnectedCell(g, createRng(1))).toBeNull();
+    });
+});
+
+describe('stitchGrid (teleporters)', () => {
+    it('routes target_region through grid.teleporters when set', () => {
+        const grid = new Grid({ width: 5, height: 1 });
+        // Two regions placed non-adjacently. A's east "exit" routes
+        // to B via teleporter (geographic east of A is empty).
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'A',
+            playable_payload: {
+                exits: new Map([['exit', { exit_id: 'exit', x: 5, y: 2, side: 'E', targetRegion: null }]]),
+            },
+            extracted_rules: {
+                exits: [{ id: 'exit', position: { x: 5, y: 2 }, target_region: null }],
+            },
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 5, y: 2 } }],
+        });
+        grid.placeRegion({ gx: 4, gy: 0 }, {
+            region_id: 'B',
+            playable_payload: { exits: new Map() },
+            extracted_rules: { exits: [] },
+            exits_placed: [],
+        });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'E', { gx: 4, gy: 0 });
+
+        stitchGrid(grid);
+
+        const a = grid.getRegion({ gx: 0, gy: 0 });
+        expect(a.extracted_rules.exits[0].target_region).toBe('B');
+        // isTeleporter flag rides on the world.exits entry too.
+        expect(a.playable_payload.exits.get('exit').isTeleporter).toBe(true);
+    });
+
+    it('does not flag normal adjacent exits as teleporters', () => {
+        const grid = new Grid({ width: 2, height: 1 });
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'A',
+            playable_payload: {
+                exits: new Map([['exit', { exit_id: 'exit', x: 5, y: 2, side: 'E', targetRegion: null }]]),
+            },
+            extracted_rules: {
+                exits: [{ id: 'exit', position: { x: 5, y: 2 }, target_region: null }],
+            },
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 5, y: 2 } }],
+        });
+        grid.placeRegion({ gx: 1, gy: 0 }, {
+            region_id: 'B',
+            playable_payload: { exits: new Map() },
+            extracted_rules: { exits: [] },
+            exits_placed: [],
+        });
+
+        stitchGrid(grid);
+
+        const a = grid.getRegion({ gx: 0, gy: 0 });
+        expect(a.playable_payload.exits.get('exit').isTeleporter).toBe(false);
+    });
+});
+
 describe('growMaze', () => {
     it('requires gridDims and regionSize', () => {
         expect(() => growMaze({})).toThrow(/gridDims/);
@@ -430,6 +524,62 @@ describe('growMaze', () => {
         });
         expect(stats.regionsBuilt).toBe(3);
         expect(stats.stopReason).toBe('max_regions');
+    });
+
+    it('produces multi-exit regions when branchProbability > 0', () => {
+        const { grid } = growMaze({
+            gridDims: { width: 5, height: 5 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 99 },
+            obstaclePool: { door_red: 99 },
+            seed: 1,
+            growthParams: { maxRegions: 6, branchProbability: 1.0 },
+        });
+        // With branchProbability=1, the start region offers all of
+        // its in-bounds sides — at least 2 exits given a 5×5 grid.
+        const start = grid.getRegion({ gx: 2, gy: 2 });
+        expect(start.exits_placed.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('collapses to single-exit regions when branchProbability = 0', () => {
+        const { grid } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 99 },
+            obstaclePool: { door_red: 99 },
+            seed: 1,
+            growthParams: { maxRegions: 4, branchProbability: 0 },
+        });
+        for (const region of grid.allRegions()) {
+            // Every region has exactly one exit (post-wallOff).
+            expect(region.extracted_rules.exits.length).toBeLessThanOrEqual(1);
+        }
+    });
+
+    it('routes via teleporter when the geographic neighbor is OOB', () => {
+        // Start at the center of a tight 3x3 grid with branchProbability=1
+        // so all sides are exited; the neighbor in (2, 2)'s east direction
+        // is out of bounds, so the corresponding child region must
+        // route via teleporter.
+        const { grid, stats } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 99 },
+            obstaclePool: { door_red: 99 },
+            seed: 1,
+            growthParams: { maxRegions: 9, branchProbability: 1.0 },
+        });
+        // Some teleporter mappings should have been recorded (at
+        // least one OOB child got placed elsewhere).
+        // It's possible no teleporter fires if every non-center cell
+        // gets built first; check by looking at the resolved targets
+        // of edge regions instead.
+        let teleportersSeen = stats.teleportersPlaced;
+        if (teleportersSeen === 0) {
+            // Fallback: check via the grid teleporter map.
+            teleportersSeen = grid.teleporters.size;
+        }
+        expect(teleportersSeen).toBeGreaterThan(0);
     });
 
     it('all placed exits resolve to a built region (or get walled off)', () => {
@@ -772,11 +922,18 @@ describe('buildPresetSidecars', () => {
                 .toEqual([...original.obstacles.entries()].sort());
             expect([...restored.items.entries()].sort())
                 .toEqual([...original.items.entries()].sort());
-            // AP metadata preserved through the round-trip
+            // AP metadata preserved through the round-trip. A region
+            // whose every exit got walled off has no exits at all,
+            // and that's fine — verify only when the original region
+            // still has at least one exit.
             const expectedExit = region.extracted_rules.exits?.[0];
-            const restoredFirstExit = restored.exits.values().next().value;
-            expect(restoredFirstExit.exitName).toBe(expectedExit?.id ?? null);
-            expect(restoredFirstExit.targetRegion).toBe(expectedExit?.target_region ?? null);
+            if (expectedExit) {
+                const restoredExit = restored.exits.get(expectedExit.id);
+                expect(restoredExit?.exitName).toBe(expectedExit.id);
+                expect(restoredExit?.targetRegion).toBe(expectedExit.target_region);
+            } else {
+                expect(restored.exits.size).toBe(0);
+            }
             for (const [key] of restored.items) {
                 // For every item, the locationName Map should have an entry
                 // matching what the sidecar carried.

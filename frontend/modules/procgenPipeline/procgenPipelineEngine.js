@@ -61,6 +61,13 @@ export class Grid {
         this.width = width;
         this.height = height;
         this.cells = new Map();
+        // Teleporter mappings keyed by `${fromCellKey}:${side}` →
+        // toCellKey. Used when an exit's geographic neighbor is
+        // invalid (out of bounds, or already built by another branch
+        // of growth); the driver places the new region in a cell
+        // disconnected from the geometric layout, and stitchGrid
+        // honors this mapping in place of grid.neighborCell.
+        this.teleporters = new Map();
     }
 
     isInBounds(cell) {
@@ -93,6 +100,18 @@ export class Grid {
         return this.isInBounds(next) ? next : null;
     }
 
+    setTeleporter(fromCell, fromSide, toCell) {
+        this.teleporters.set(`${cellKey(fromCell)}:${fromSide}`, cellKey(toCell));
+    }
+
+    /** Returns the target cell for a teleporter exit, or null. */
+    getTeleporter(fromCell, fromSide) {
+        const v = this.teleporters.get(`${cellKey(fromCell)}:${fromSide}`);
+        if (!v) return null;
+        const [gx, gy] = v.split(',').map(Number);
+        return { gx, gy };
+    }
+
     allRegions() {
         return [...this.cells.values()];
     }
@@ -107,6 +126,40 @@ export class Grid {
         }
         return out;
     }
+}
+
+/**
+ * Find an unbuilt grid cell at least `minGap` Manhattan-distance away
+ * from every built region. Used by the teleporter fallback when an
+ * exit's geographic neighbor is unusable. Returns null when no such
+ * cell exists (grid is too crowded). Choice among candidates is
+ * uniform via rng.
+ *
+ * Why ≥2: keeps the disconnected region visually distinct from the
+ * connected component when the procgen pipeline panel composites the
+ * full grid. A 1-cell gap reads as a missing connection rather than
+ * a deliberately-disconnected region.
+ */
+export function findDisconnectedCell(grid, rng, minGap = 2) {
+    const built = grid.allRegions();
+    if (built.length === 0) {
+        // Anywhere in the grid is fine; pick a deterministic cell.
+        return { gx: Math.floor(grid.width / 2), gy: Math.floor(grid.height / 2) };
+    }
+    const candidates = [];
+    for (let gx = 0; gx < grid.width; gx++) {
+        for (let gy = 0; gy < grid.height; gy++) {
+            if (grid.hasRegion({ gx, gy })) continue;
+            let minDist = Infinity;
+            for (const r of built) {
+                const d = Math.abs(gx - r.cell.gx) + Math.abs(gy - r.cell.gy);
+                if (d < minDist) minDist = d;
+            }
+            if (minDist >= minGap) candidates.push({ gx, gy });
+        }
+    }
+    if (candidates.length === 0) return null;
+    return candidates[Math.floor(rng.next() * candidates.length)];
 }
 
 // --- Incremental re-stitcher ---
@@ -128,13 +181,23 @@ export function stitchGrid(grid) {
         for (const exit of region.extracted_rules?.exits ?? []) {
             const side = exitsBySide.get(posKey(exit.position));
             if (!side) { exit.target_region = null; continue; }
-            const neighborCell = grid.neighborCell(region.cell, side);
-            const neighbor = neighborCell ? grid.getRegion(neighborCell) : null;
+
+            // Teleporter exits resolve to an explicit target cell
+            // recorded by the growth driver; ordinary exits resolve
+            // via geographic adjacency.
+            const teleTarget = grid.getTeleporter(region.cell, side);
+            const targetCell = teleTarget ?? grid.neighborCell(region.cell, side);
+            const neighbor = targetCell ? grid.getRegion(targetCell) : null;
             exit.target_region = neighbor ? neighbor.region_id : null;
+
             // Mirror onto world.exits so runtime transitions see the
-            // resolved target without going through extracted_rules.
+            // resolved target — and the teleporter flag, so the panel
+            // can render teleporter exits differently if it wants to.
             const worldExit = region.playable_payload?.exits?.get(exit.id);
-            if (worldExit) worldExit.targetRegion = exit.target_region;
+            if (worldExit) {
+                worldExit.targetRegion = exit.target_region;
+                worldExit.isTeleporter = teleTarget !== null;
+            }
         }
     }
 }
@@ -155,16 +218,28 @@ export function accumulatedInventory(grid) {
     return inv;
 }
 
-// Drop exits whose target_region is null from the extracted rules.
-// Unused exits (grid-edge, or never-built neighbor) get quietly
-// omitted from the final rules so the compiler doesn't see dangling
-// targets. The playable tile itself stays as-is; only the exit entry
-// goes away.
+// Drop exits whose target_region is null from the extracted rules,
+// from world.exits, and from exits_placed. Unused exits (grid-edge,
+// or a neighbor cell that never got built) get quietly omitted from
+// the final rules so the compiler doesn't see dangling targets, and
+// from the runtime view so the maze panel doesn't paint exit-color
+// tiles that go nowhere when stepped on.
 export function wallOffUnusedExits(grid) {
     for (const region of grid.allRegions()) {
         if (!region.extracted_rules) continue;
-        region.extracted_rules.exits = (region.extracted_rules.exits ?? [])
+        const validExits = (region.extracted_rules.exits ?? [])
             .filter((e) => e.target_region != null);
+        const validIds = new Set(validExits.map((e) => e.id));
+        region.extracted_rules.exits = validExits;
+
+        if (region.playable_payload?.exits) {
+            for (const id of [...region.playable_payload.exits.keys()]) {
+                if (!validIds.has(id)) region.playable_payload.exits.delete(id);
+            }
+        }
+        if (Array.isArray(region.exits_placed)) {
+            region.exits_placed = region.exits_placed.filter((e) => validIds.has(e.exit_id));
+        }
     }
 }
 
@@ -184,27 +259,49 @@ function mirrorTileAcrossSide(parentTile, parentSide, regionSize) {
     }
 }
 
-function pickStartExitSide(cell, grid, rng) {
-    const candidates = SIDES.filter((s) => {
-        const n = grid.neighborCell(cell, s);
-        return n !== null;
-    });
-    if (candidates.length === 0) return null;
-    return candidates[Math.floor(rng.next() * candidates.length)];
+/**
+ * Pick exit sides for the start region. Always returns the primary
+ * (random in-bounds side); each remaining in-bounds side is added
+ * with probability `branchProbability` (so 0 collapses to single-
+ * exit, 1 yields all-sides).
+ */
+function pickStartExitSides(cell, grid, rng, branchProbability) {
+    const inBounds = SIDES.filter((s) => grid.neighborCell(cell, s) !== null);
+    if (inBounds.length === 0) return [];
+    return pickSidesWithBranching(inBounds, rng, branchProbability);
 }
 
-function pickChildExitSide(cell, grid, entranceSide, rng) {
-    // Prefer in-bounds unbuilt-neighbor sides, excluding the entrance.
-    // If none available (dead-end corner), return null — caller skips
-    // the cell and the parent's exit gets walled off.
+/**
+ * Pick exit sides for a non-start region. Excludes the entrance side
+ * and any side whose neighbor cell is already built or out of bounds.
+ *
+ * The "out of bounds / built" check here is just for selecting which
+ * sides to *consider*; an exit on a side that later turns out to
+ * conflict (e.g. a sibling branch built into the geographic neighbor
+ * first) will route via teleporter at growth time. Returning [] is
+ * still possible if every non-entrance side is OOB or built — caller
+ * skips the cell.
+ */
+function pickChildExitSides(cell, grid, entranceSide, rng, branchProbability) {
     const candidates = SIDES
         .filter((s) => s !== entranceSide)
         .filter((s) => {
             const n = grid.neighborCell(cell, s);
             return n !== null && !grid.hasRegion(n);
         });
-    if (candidates.length === 0) return null;
-    return candidates[Math.floor(rng.next() * candidates.length)];
+    if (candidates.length === 0) return [];
+    return pickSidesWithBranching(candidates, rng, branchProbability);
+}
+
+/** Returns a random primary plus each non-primary at branchProbability. */
+function pickSidesWithBranching(candidates, rng, branchProbability) {
+    const primary = candidates[Math.floor(rng.next() * candidates.length)];
+    const out = [primary];
+    for (const s of candidates) {
+        if (s === primary) continue;
+        if (rng.next() < branchProbability) out.push(s);
+    }
+    return out;
 }
 
 // --- Substrate composition ---
@@ -220,7 +317,7 @@ function buildMazeRegion({
     region_id,
     size,
     entrances,
-    exit_side,
+    exit_sides,
     arrival_inventory,
     items_to_place,
     obstacles_to_place,
@@ -233,7 +330,7 @@ function buildMazeRegion({
         region_id,
         size,
         entrances,
-        exits: [{ side: exit_side }],
+        exits: exit_sides.map((side) => ({ side })),
         item_lib: itemLib,
         obstacle_lib: obstacleLib,
         rng,
@@ -296,6 +393,8 @@ export function growMaze(config) {
     const {
         maxItemsPerRegion = 2,
         maxRegions = null,
+        branchProbability = 0.5,
+        teleporterMinGap = 2,
     } = growthParams;
 
     const rng = createRng(seed);
@@ -307,6 +406,7 @@ export function growMaze(config) {
     const stats = {
         regionsBuilt: 0,
         regionsSkipped: 0,
+        teleportersPlaced: 0,
         stopReason: null,
     };
 
@@ -315,15 +415,15 @@ export function growMaze(config) {
         gx: Math.floor(gridDims.width / 2),
         gy: Math.floor(gridDims.height / 2),
     };
-    const startExitSide = pickStartExitSide(startCell, grid, rng);
-    if (!startExitSide) {
+    const startExitSides = pickStartExitSides(startCell, grid, rng, branchProbability);
+    if (startExitSides.length === 0) {
         throw new Error('growMaze: start cell has no in-bounds neighbors (grid too small?)');
     }
     const startRegion = buildMazeRegion({
         region_id: regionIdForCell(startCell),
         size: regionSize,
         entrances: [],                     // start region — substrate picks middle
-        exit_side: startExitSide,
+        exit_sides: startExitSides,
         arrival_inventory: new Set(),
         items_to_place: [],
         obstacles_to_place: [],            // start region — no obstacles
@@ -338,12 +438,12 @@ export function growMaze(config) {
     stats.regionsBuilt += 1;
 
     // --- Frontier init ---
+    // Each frontier entry represents an unbuilt parent-side that
+    // needs a child region. The child cell is resolved at pop time
+    // (geographic neighbor when free, teleporter target otherwise).
     const frontier = [];
     for (const placed of startRegion.exits_placed) {
-        const childCell = grid.neighborCell(startCell, placed.side);
-        if (childCell && !grid.hasRegion(childCell)) {
-            frontier.push({ childCell, parentCell: startCell, parentSide: placed.side });
-        }
+        frontier.push({ parentCell: startCell, parentSide: placed.side });
     }
 
     // --- Main loop ---
@@ -359,11 +459,7 @@ export function growMaze(config) {
 
         const pickIdx = Math.floor(rng.next() * frontier.length);
         const entry = frontier.splice(pickIdx, 1)[0];
-        const { childCell, parentCell, parentSide } = entry;
-
-        // Already built via another frontier path (shouldn't happen
-        // under tree shape, but guard against it).
-        if (grid.hasRegion(childCell)) continue;
+        const { parentCell, parentSide } = entry;
 
         const parentRegion = grid.getRegion(parentCell);
         const parentExitPlaced = parentRegion.exits_placed.find((e) => e.side === parentSide);
@@ -372,10 +468,36 @@ export function growMaze(config) {
             continue;
         }
 
+        // Resolve the child cell. Geographic neighbor wins when it's
+        // in-bounds and unbuilt. Otherwise (out of bounds, or built
+        // by another branch), find a disconnected cell ≥
+        // teleporterMinGap cells away and route as a teleporter.
+        const geoNeighbor = grid.neighborCell(parentCell, parentSide);
+        let childCell;
+        let isTeleporter = false;
+        if (geoNeighbor && !grid.hasRegion(geoNeighbor)) {
+            childCell = geoNeighbor;
+        } else {
+            const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+            if (!disc) {
+                // Nowhere to teleport to — this parent-side won't
+                // yield a region. The parent's exit gets walled off
+                // in the final pass.
+                stats.regionsSkipped += 1;
+                continue;
+            }
+            childCell = disc;
+            isTeleporter = true;
+        }
+
+        // Entrance side: opposite of parent's exit for adjacent
+        // children; for teleporters the geometry is fictional, so
+        // we still mirror the parent's exit position to keep the
+        // entrance tile well-defined on the child's perimeter.
         const entranceSide = OPPOSITE_SIDE[parentSide];
         const entranceTile = mirrorTileAcrossSide(parentExitPlaced.tile_position, parentSide, regionSize);
-        const exitSide = pickChildExitSide(childCell, grid, entranceSide, rng);
-        if (!exitSide) {
+        const exitSides = pickChildExitSides(childCell, grid, entranceSide, rng, branchProbability);
+        if (exitSides.length === 0) {
             // Dead-end cell with no outgoing direction — parent's exit
             // becomes walled off in the final pass.
             stats.regionsSkipped += 1;
@@ -391,7 +513,7 @@ export function growMaze(config) {
             region_id: regionIdForCell(childCell),
             size: regionSize,
             entrances: [{ side: entranceSide, tile: entranceTile }],
-            exit_side: exitSide,
+            exit_sides: exitSides,
             arrival_inventory: arrival,
             items_to_place: plan.items_to_place,
             obstacles_to_place: plan.obstacles_to_place,
@@ -399,6 +521,10 @@ export function growMaze(config) {
         });
 
         grid.placeRegion(childCell, region);
+        if (isTeleporter) {
+            grid.setTeleporter(parentCell, parentSide, childCell);
+            stats.teleportersPlaced += 1;
+        }
         pool.markPlaced({
             placed_items: region.placed_items,
             placed_obstacles: region.placed_obstacles,
@@ -407,10 +533,11 @@ export function growMaze(config) {
         stats.regionsBuilt += 1;
 
         for (const placed of region.exits_placed) {
-            const newChild = grid.neighborCell(childCell, placed.side);
-            if (newChild && !grid.hasRegion(newChild)) {
-                frontier.push({ childCell: newChild, parentCell: childCell, parentSide: placed.side });
-            }
+            // For teleporter children, every exit becomes a fresh
+            // frontier entry — geographic neighbors of a disconnected
+            // cell are still the natural growth target, even if those
+            // also turn out to need teleporters at pop time.
+            frontier.push({ parentCell: childCell, parentSide: placed.side });
         }
     }
 

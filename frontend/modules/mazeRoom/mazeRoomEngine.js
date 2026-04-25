@@ -64,6 +64,7 @@ export function createWorld(width, height, opts = {}) {
             isTeleporter: entry.isTeleporter ?? false,
         });
     };
+    const exitsProvided = Array.isArray(opts.exits) || !!opts.exit;
     if (Array.isArray(opts.exits)) {
         opts.exits.forEach((e, i) => addExit(e, `exit_${i}`));
     }
@@ -72,9 +73,11 @@ export function createWorld(width, height, opts = {}) {
         // what the old extractPathsAndObstacles emitted.
         addExit(opts.exit, 'exit');
     }
-    if (exits.size === 0) {
-        // Default for callers that pass nothing — preserves the old
-        // "exit at bottom-right" behavior.
+    if (!exitsProvided) {
+        // Caller didn't specify any exit shape — default to the old
+        // "exit at bottom-right" for ergonomics. Explicit `exits: []`
+        // is respected as "this region has no exits" (e.g. when
+        // wallOffUnusedExits stripped them all).
         addExit({ x: width - 1, y: height - 1 }, 'exit');
     }
 
