@@ -21,6 +21,7 @@ import {
     deserializeMazeWorld,
     detectStepEvents,
     getDefaultExit,
+    clockwisePerimeterTiles,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -489,6 +490,37 @@ describe('makeMazePickMove', () => {
     });
 });
 
+describe('clockwisePerimeterTiles', () => {
+    it('walks E → S → W → N starting at the top-right corner with no duplicates', () => {
+        const tiles = clockwisePerimeterTiles(4, 3);
+        // Perimeter for 4×3 is 2*4 + 2*3 - 4 = 10 tiles.
+        expect(tiles).toHaveLength(10);
+        // First tile is the top-right corner on the E side.
+        expect(tiles[0]).toEqual({ x: 3, y: 0, side: 'E' });
+        // Sides advance E → S → W → N (clockwise).
+        const sideOrder = tiles.map((t) => t.side);
+        const firstS = sideOrder.indexOf('S');
+        const firstW = sideOrder.indexOf('W');
+        const firstN = sideOrder.indexOf('N');
+        expect(firstS).toBeGreaterThan(0);
+        expect(firstW).toBeGreaterThan(firstS);
+        expect(firstN).toBeGreaterThan(firstW);
+        // No duplicates — every (x,y) appears exactly once.
+        const keys = new Set(tiles.map((t) => `${t.x},${t.y}`));
+        expect(keys.size).toBe(tiles.length);
+    });
+
+    it('handles a 2×2 region (perimeter = all 4 cells, one per side)', () => {
+        const tiles = clockwisePerimeterTiles(2, 2);
+        expect(tiles).toHaveLength(4);
+        expect(tiles.map((t) => t.side)).toEqual(['E', 'E', 'S', 'W']);
+        // (0,0) belongs to W (last side reached in the walk), not N.
+        // For 2×2 the N range (1..W-2 = 1..0) is empty.
+        const wTile = tiles.find((t) => t.side === 'W');
+        expect(wTile).toEqual({ x: 0, y: 0, side: 'W' });
+    });
+});
+
 describe('generateRegionCore', () => {
     const baseCoreInput = () => ({
         region_id: 'r1',
@@ -545,6 +577,88 @@ describe('generateRegionCore', () => {
         expect(out.world.itemLib.key_red).toBeDefined();
         expect(out.exits_placed[0].side).toBe('E');
         expect(out.exits_placed[0].tile_position.x).toBe(out.world.width - 1);
+    });
+
+    it('assigns clockwise from east when exits omit a side', () => {
+        // No spec.side on any exit → substrate walks the perimeter
+        // clockwise from E and assigns each exit to the next free
+        // slot. Exits are deterministic for a fixed-seed rng.
+        const out = generateRegionCore({
+            ...baseCoreInput(),
+            entrances: [{ side: 'W', tile: { x: 0, y: 3 } }],
+            exits: [{}, {}, {}],
+        });
+        expect(out.exits_placed).toHaveLength(3);
+        // First clockwise tile is the top-right corner — first exit
+        // lands there, on side E.
+        expect(out.exits_placed[0].tile_position).toEqual({ x: out.world.width - 1, y: 0 });
+        expect(out.exits_placed[0].side).toBe('E');
+        // Subsequent exits sit later in the clockwise walk; their
+        // sides advance E → S → W → N as the perimeter rolls over.
+        expect(out.exits_placed[1].tile_position.x).toBe(out.world.width - 1);
+        expect(out.exits_placed[1].side).toBe('E');
+    });
+
+    it('mixes specified sides with clockwise (cursor advances after each clockwise placement)', () => {
+        // First exit sits on the W side via random-on-side; second
+        // (no side) starts the clockwise walk fresh from E.
+        const out = generateRegionCore({
+            ...baseCoreInput(),
+            entrances: [{ side: 'N', tile: { x: 5, y: 0 } }],
+            exits: [{ side: 'W' }, {}],
+        });
+        expect(out.exits_placed).toHaveLength(2);
+        expect(out.exits_placed[0].side).toBe('W');
+        expect(out.exits_placed[1].side).toBe('E');
+    });
+
+    it('preserves caller-supplied exit_id and AP metadata fields', () => {
+        const out = generateRegionCore({
+            ...baseCoreInput(),
+            exits: [
+                { exit_id: 'east_door', side: 'E', exitName: 'east_door', targetRegion: 'r2' },
+                { exit_id: 'south_door', exitName: 'south_door', targetRegion: 'r3' },
+            ],
+        });
+        const ids = out.exits_placed.map((e) => e.exit_id).sort();
+        expect(ids).toEqual(['east_door', 'south_door']);
+        const eastWorldExit = out.world.exits.get('east_door');
+        expect(eastWorldExit.exitName).toBe('east_door');
+        expect(eastWorldExit.targetRegion).toBe('r2');
+    });
+
+    it('grows the region when the current size cannot fit all exits', () => {
+        // Tight 3×3 region has perimeter 8 tiles; with the entrance
+        // claiming one and 8 more exits requested, capacity is
+        // exhausted and the substrate must auto-grow.
+        const out = generateRegionCore({
+            region_id: 'tight',
+            size: { width: 3, height: 3 },
+            entrances: [{ side: 'W', tile: { x: 0, y: 1 } }],
+            // Eight unsided exits — needs more perimeter than 3×3 has.
+            exits: [{}, {}, {}, {}, {}, {}, {}, {}],
+            rng: createRng(11),
+            params: {},
+        });
+        // Region grew: width and height are at least one grow-step
+        // larger than the input (REGION_GROW_STEP=2).
+        expect(out.world.width).toBeGreaterThan(3);
+        expect(out.world.height).toBeGreaterThan(3);
+        expect(out.exits_placed).toHaveLength(8);
+        expect(out.size_used).toEqual({ width: out.world.width, height: out.world.height });
+    });
+
+    it('throws when even max-grow can not fit all exits', () => {
+        // Far more exits than even the grown region's perimeter
+        // could ever hold for the bounded number of grow attempts.
+        expect(() => generateRegionCore({
+            region_id: 'impossible',
+            size: { width: 3, height: 3 },
+            entrances: [{ side: 'W', tile: { x: 0, y: 1 } }],
+            exits: new Array(200).fill({}),
+            rng: createRng(7),
+            params: {},
+        })).toThrow(/cannot place/);
     });
 });
 

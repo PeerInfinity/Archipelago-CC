@@ -821,7 +821,12 @@ export function generateMaze(config) {
 //
 // v1 scope:
 //   - Exactly one entrance (or none for start regions).
-//   - Exactly one exit side (multi-exit is a growth-path item).
+//   - Multi-exit: caller may specify spec.side (random tile on that
+//     side) or omit it (substrate picks via clockwise wall
+//     assignment, starting from east).
+//   - Auto-grow: if not all exits can be placed at the input size
+//     (entrance + exits exceed perimeter capacity), the substrate
+//     grows the region and retries up to a small budget.
 //   - Colored key+door pairs via placeGateAndKey; other items
 //     placed on random reachable tiles; other obstacles left
 //     unplaced and reported back to the caller.
@@ -830,6 +835,38 @@ const SIDE_N = 'N';
 const SIDE_S = 'S';
 const SIDE_E = 'E';
 const SIDE_W = 'W';
+
+// Auto-grow knobs for generateRegionCore. Cap retries so a
+// pathologically over-constrained input fails loudly instead of
+// looping; grow uniformly so per-side capacity goes up evenly.
+const REGION_GROW_STEP = 2;
+const REGION_GROW_MAX_ATTEMPTS = 4;
+
+/**
+ * Returns the perimeter tiles in clockwise order starting from the
+ * top-right corner: E (top→bottom), S (right→left), W (bottom→top),
+ * N (left→right). Each corner is assigned to the side that first
+ * reaches it along the walk — so the corner tile appears exactly
+ * once in the sequence.
+ *
+ * Used by the multi-exit assignment in generateRegionCore: when the
+ * caller doesn't specify `spec.side`, the next clockwise slot from
+ * the cursor is assigned. See NewDocs/plans/procedural-generation/
+ * top-down-driver.md §1.
+ */
+export function clockwisePerimeterTiles(width, height) {
+    const tiles = [];
+    // E: top to bottom (includes both E corners).
+    for (let y = 0; y < height; y++) tiles.push({ x: width - 1, y, side: SIDE_E });
+    // S: right to left (skipping the E-corner already placed).
+    for (let x = width - 2; x >= 0; x--) tiles.push({ x, y: height - 1, side: SIDE_S });
+    // W: bottom to top (skipping the S-corner already placed).
+    for (let y = height - 2; y >= 0; y--) tiles.push({ x: 0, y, side: SIDE_W });
+    // N: left to right (skipping both N corners — already placed by
+    // E and W's traversal).
+    for (let x = 1; x < width - 1; x++) tiles.push({ x, y: 0, side: SIDE_N });
+    return tiles;
+}
 
 function pickTileOnSide(side, size, rng) {
     switch (side) {
@@ -915,7 +952,8 @@ export function generateRegionCore(input) {
     if (entrances.length > 1) throw new Error('generateRegionCore v1: at most one entrance supported');
     if (exits.length === 0) throw new Error('generateRegionCore: at least one exit required');
 
-    // Resolve entrance tile.
+    // Resolve entrance tile (independent of size growth — the same
+    // tile coords stay valid across the auto-grow attempts).
     let entrance_tile;
     if (entrances.length === 0) {
         entrance_tile = entranceTileForStartRegion(size);
@@ -927,41 +965,36 @@ export function generateRegionCore(input) {
         entrance_tile = ent.tile;
     }
 
-    // Resolve a tile per exit. v1 picks a random border tile on the
-    // requested side; clockwise wall assignment + collision avoidance
-    // for multi-exit on the same side comes in §1B.
-    //
     // Default exit_id: 'exit' for the single-exit case (preserves the
     // legacy id and keeps already-serialized rules.json files
     // round-tripping); 'exit_<i>' otherwise.
-    const usedKeys = new Set([`${entrance_tile.x},${entrance_tile.y}`]);
     const defaultExitId = (i) => exits.length === 1 ? 'exit' : `exit_${i}`;
-    const resolvedExits = exits.map((spec, i) => {
-        if (!spec.side) throw new Error('generateRegionCore: exit side required');
-        let tile = pickTileOnSide(spec.side, size, rng);
-        // Avoid colliding with an already-claimed tile (entrance or
-        // a sibling exit). Naive resample loop; clockwise assignment
-        // (§1B) replaces this.
-        let attempts = 0;
-        while (usedKeys.has(`${tile.x},${tile.y}`) && attempts < 50) {
-            tile = pickTileOnSide(spec.side, size, rng);
-            attempts++;
+
+    // Auto-grow loop: try to assign all exit tiles at the current
+    // size; if assignment fails (exits ran out of perimeter slots),
+    // grow the region uniformly and retry.
+    let currentSize = { width: size.width, height: size.height };
+    let resolvedExits = null;
+    for (let attempt = 0; attempt <= REGION_GROW_MAX_ATTEMPTS; attempt++) {
+        resolvedExits = tryAssignExitTiles(currentSize, exits, entrance_tile, rng, defaultExitId);
+        if (resolvedExits) break;
+        if (attempt === REGION_GROW_MAX_ATTEMPTS) {
+            throw new Error(
+                `generateRegionCore: cannot place ${exits.length} exit(s) in `
+                + `${size.width}x${size.height} after ${REGION_GROW_MAX_ATTEMPTS} `
+                + `grow attempts (final ${currentSize.width}x${currentSize.height})`,
+            );
         }
-        usedKeys.add(`${tile.x},${tile.y}`);
-        return {
-            exit_id: spec.exit_id ?? defaultExitId(i),
-            side: spec.side,
-            x: tile.x,
-            y: tile.y,
-            exitName: spec.exitName ?? null,
-            targetRegion: spec.targetRegion ?? null,
+        currentSize = {
+            width: currentSize.width + REGION_GROW_STEP,
+            height: currentSize.height + REGION_GROW_STEP,
         };
-    });
+    }
 
     const mazeSeed = Math.floor(rng.next() * 0x7fffffff);
     const { world, stats: wall_stats } = generateMaze({
-        width: size.width,
-        height: size.height,
+        width: currentSize.width,
+        height: currentSize.height,
         seed: mazeSeed,
         entrance: entrance_tile,
         exits: resolvedExits,
@@ -981,8 +1014,79 @@ export function generateRegionCore(input) {
             tile_position: { x: e.x, y: e.y },
         })),
         entrance_tile,
+        size_used: { width: currentSize.width, height: currentSize.height },
         wall_stats,
     };
+}
+
+/**
+ * Resolve a tile per exit at the given size. Returns the resolved
+ * list, or null if any exit can't be placed (caller's signal to
+ * auto-grow and retry).
+ *
+ * Per-exit rules:
+ *   - spec.side specified → pick a random tile on that side, with
+ *     collision avoidance (used by grid-growth, which targets
+ *     specific sides for parent/child alignment).
+ *   - spec.side omitted   → take the next clockwise slot from the
+ *     cursor (used by top-down, which doesn't care which wall an
+ *     exit lives on). Skips occupied slots and advances the cursor
+ *     past each placement so subsequent unspecified-side exits move
+ *     forward through the perimeter.
+ */
+function tryAssignExitTiles(size, exits, entrance_tile, rng, defaultExitId) {
+    const usedKeys = new Set([`${entrance_tile.x},${entrance_tile.y}`]);
+    const perimeter = clockwisePerimeterTiles(size.width, size.height);
+    let cwCursor = 0;
+
+    const resolved = [];
+    for (let i = 0; i < exits.length; i++) {
+        const spec = exits[i];
+        let tile = null;
+        let resolvedSide = spec.side ?? null;
+
+        if (spec.side) {
+            // Random on the requested side, retry on collision.
+            let attempts = 0;
+            while (attempts < 50) {
+                const candidate = pickTileOnSide(spec.side, size, rng);
+                if (!usedKeys.has(`${candidate.x},${candidate.y}`)) {
+                    tile = candidate;
+                    break;
+                }
+                attempts++;
+            }
+            if (!tile) return null; // every random pick collided — likely too-small side
+        } else {
+            // Clockwise: walk from cursor until we find an unused
+            // slot. Bound the walk by the full perimeter; if every
+            // slot is used, signal failure.
+            let placed = false;
+            for (let step = 0; step < perimeter.length; step++) {
+                const idx = (cwCursor + step) % perimeter.length;
+                const candidate = perimeter[idx];
+                if (!usedKeys.has(`${candidate.x},${candidate.y}`)) {
+                    tile = candidate;
+                    resolvedSide = candidate.side;
+                    cwCursor = idx + 1;
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) return null;
+        }
+
+        usedKeys.add(`${tile.x},${tile.y}`);
+        resolved.push({
+            exit_id: spec.exit_id ?? defaultExitId(i),
+            side: resolvedSide,
+            x: tile.x,
+            y: tile.y,
+            exitName: spec.exitName ?? null,
+            targetRegion: spec.targetRegion ?? null,
+        });
+    }
+    return resolved;
 }
 
 /**
