@@ -275,10 +275,18 @@ describe('detectStepEvents', () => {
         ]);
     });
 
-    it('does not emit a pickup if the item is already in inventory', () => {
+    it('emits a pickup even when the item id is already in inventory', () => {
+        // Multi-instance items (Adventure has 12 Freeincarnates):
+        // each location holding the same item id needs its own
+        // pickup event so user:locationCheck fires for every visit
+        // until that specific location's been checked. Per-location
+        // idempotency is enforced by the panel via stateManager's
+        // checkedLocations, not by detectStepEvents.
         const w = makeWorld({ items: { '1,0': 'key_red' } });
         const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set(['key_red']));
-        expect(events).toEqual([]);
+        expect(events).toEqual([
+            { type: 'pickup', itemId: 'key_red', position: { x: 1, y: 0 } },
+        ]);
     });
 
     it('emits exit_cross when stepping onto the exit tile', () => {
@@ -491,12 +499,14 @@ describe('makeMazePickMove', () => {
 });
 
 describe('clockwisePerimeterTiles', () => {
-    it('walks E → S → W → N starting at the top-right corner with no duplicates', () => {
+    it('walks E → S → W → N skipping corners with no duplicates', () => {
         const tiles = clockwisePerimeterTiles(4, 3);
-        // Perimeter for 4×3 is 2*4 + 2*3 - 4 = 10 tiles.
-        expect(tiles).toHaveLength(10);
-        // First tile is the top-right corner on the E side.
-        expect(tiles[0]).toEqual({ x: 3, y: 0, side: 'E' });
+        // Corner-excluded perimeter for 4×3 is 2*(4-2) + 2*(3-2) = 6.
+        // Corner exclusion keeps exits/entrances unambiguous about
+        // which side they belong to.
+        expect(tiles).toHaveLength(6);
+        // First tile is on the E side, one row below the top corner.
+        expect(tiles[0]).toEqual({ x: 3, y: 1, side: 'E' });
         // Sides advance E → S → W → N (clockwise).
         const sideOrder = tiles.map((t) => t.side);
         const firstS = sideOrder.indexOf('S');
@@ -508,16 +518,28 @@ describe('clockwisePerimeterTiles', () => {
         // No duplicates — every (x,y) appears exactly once.
         const keys = new Set(tiles.map((t) => `${t.x},${t.y}`));
         expect(keys.size).toBe(tiles.length);
+        // No corners present.
+        const cornerKeys = new Set(['0,0', '0,2', '3,0', '3,2']);
+        for (const t of tiles) expect(cornerKeys.has(`${t.x},${t.y}`)).toBe(false);
     });
 
-    it('handles a 2×2 region (perimeter = all 4 cells, one per side)', () => {
-        const tiles = clockwisePerimeterTiles(2, 2);
+    it('returns no tiles for a 2×2 region (corners only)', () => {
+        // Every cell of a 2×2 is a corner; corner exclusion leaves
+        // nothing usable. Callers in the substrate path require a
+        // minimum 3×3 (topDownRegionSize bakes that in).
+        expect(clockwisePerimeterTiles(2, 2)).toHaveLength(0);
+    });
+
+    it('returns just one tile per side for a 3×3 region', () => {
+        const tiles = clockwisePerimeterTiles(3, 3);
+        // 3×3 has exactly one non-corner tile per side: the midpoint.
         expect(tiles).toHaveLength(4);
-        expect(tiles.map((t) => t.side)).toEqual(['E', 'E', 'S', 'W']);
-        // (0,0) belongs to W (last side reached in the walk), not N.
-        // For 2×2 the N range (1..W-2 = 1..0) is empty.
-        const wTile = tiles.find((t) => t.side === 'W');
-        expect(wTile).toEqual({ x: 0, y: 0, side: 'W' });
+        expect(tiles).toEqual([
+            { x: 2, y: 1, side: 'E' },
+            { x: 1, y: 2, side: 'S' },
+            { x: 0, y: 1, side: 'W' },
+            { x: 1, y: 0, side: 'N' },
+        ]);
     });
 });
 
@@ -586,17 +608,18 @@ describe('generateRegionCore', () => {
 
     it('assigns clockwise from east when exits omit a side', () => {
         // No spec.side on any exit → substrate walks the perimeter
-        // clockwise from E and assigns each exit to the next free
-        // slot. Exits are deterministic for a fixed-seed rng.
+        // clockwise from E (skipping corners) and assigns each exit
+        // to the next free slot. Exits are deterministic for a fixed-
+        // seed rng.
         const out = generateRegionCore({
             ...baseCoreInput(),
             entrances: [{ side: 'W', tile: { x: 0, y: 3 } }],
             exits: [{}, {}, {}],
         });
         expect(out.exits_placed).toHaveLength(3);
-        // First clockwise tile is the top-right corner — first exit
-        // lands there, on side E.
-        expect(out.exits_placed[0].tile_position).toEqual({ x: out.world.width - 1, y: 0 });
+        // First clockwise non-corner tile is one row below the top-
+        // right corner — first exit lands there, on side E.
+        expect(out.exits_placed[0].tile_position).toEqual({ x: out.world.width - 1, y: 1 });
         expect(out.exits_placed[0].side).toBe('E');
         // Subsequent exits sit later in the clockwise walk; their
         // sides advance E → S → W → N as the perimeter rolls over.

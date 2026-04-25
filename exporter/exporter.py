@@ -37,6 +37,53 @@ auto_enable_from_env()
 logger = logging.getLogger(__name__)
 
 
+def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
+    """Serialize a rules.json-shaped dict to a string with `indent`,
+    but collapse each sidecar's `tiles` array onto a single line.
+
+    Procgen output carries per-region playable_payload.tiles arrays
+    of width*height integers; the default json.dump(indent=2) puts
+    each integer on its own line, blowing the file up ~10×. This
+    helper extracts each tiles array, replaces it with a placeholder
+    string, runs the standard pretty-print, then string-substitutes
+    the compact array back in.
+
+    Mirrors stringifyRulesJson in
+    frontend/modules/procgenPipeline/procgenPipelineEngine.js so
+    files written here look the same as files downloaded from the
+    procgen panel.
+
+    No-op for inputs without a `preset_sidecars` key.
+    """
+    if not isinstance(data, dict) or 'preset_sidecars' not in data:
+        return json.dumps(data, indent=indent)
+
+    import copy as _copy
+    marker = '__PROCGEN_TILES_'
+    captured: List[List[int]] = []
+    patched = _copy.deepcopy(data)
+    sidecars = patched.get('preset_sidecars') or {}
+    if isinstance(sidecars, dict):
+        for region_map in sidecars.values():
+            if not isinstance(region_map, dict):
+                continue
+            for sidecar in region_map.values():
+                if not isinstance(sidecar, dict):
+                    continue
+                pp = sidecar.get('playable_payload')
+                if isinstance(pp, dict) and isinstance(pp.get('tiles'), list):
+                    idx = len(captured)
+                    captured.append(pp['tiles'])
+                    pp['tiles'] = f'{marker}{idx}__'
+
+    text = json.dumps(patched, indent=indent)
+    for i, tiles in enumerate(captured):
+        placeholder = f'"{marker}{i}__"'
+        compact = json.dumps(tiles)
+        text = text.replace(placeholder, compact, 1)
+    return text
+
+
 def classification_to_string(classification: ItemClassification) -> str:
     """Convert an ItemClassification enum to its string name.
 
@@ -2719,9 +2766,15 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     global_excluded_fields=EXCLUDED_FIELDS
                 )
 
-            # Write to file
+            # Write to file. For procgen output (rules.json with
+            # preset_sidecars), collapse each sidecar's `tiles` array
+            # onto a single line — Python's default json.dump puts
+            # every tile integer on its own line, which makes the
+            # file ~10× larger than it needs to be. Mirrors
+            # stringifyRulesJson in
+            # frontend/modules/procgenPipeline/procgenPipelineEngine.js.
             with open(filepath, 'w', encoding='utf-8') as f:
-                json.dump(filtered_data, f, indent=2)
+                f.write(_dump_with_compact_sidecar_tiles(filtered_data, indent=2))
 
             # Check final file size against limit
             file_size_bytes = os.path.getsize(filepath)

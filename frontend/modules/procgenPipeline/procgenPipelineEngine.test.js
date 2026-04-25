@@ -1331,6 +1331,344 @@ describe('topDownFromRulesJson', () => {
         // All 6 regions placed.
         expect(grid.allRegions().length).toBe(6);
     });
+
+    it('reports stopReason=all_placed when every non-Menu region is realised', () => {
+        // Regression: regionsTotal used to count Menu, so the
+        // BFS-stripped result with regionsBuilt = N-1 would always
+        // mis-report partial_layout even when every realised region
+        // was placed.
+        const rulesJson = makeGridGrowthRulesJson();
+        const { stats } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        expect(stats.stopReason).toBe('all_placed');
+        expect(stats.regionsBuilt).toBe(stats.regionsTotal);
+    });
+
+    it('preserves all locations in dense regions (regression)', () => {
+        // Regression: placeFromRules used to `break` the location-rules
+        // loop on a single tile-pick failure, silently dropping every
+        // remaining location. Combined with too-aggressive mazegen
+        // walling, dense source regions (e.g. Adventure's Overworld
+        // with 11 locations in a 6×6) lost most of their locations on
+        // round-trip. Top-down now defaults to maxIterations=0 (open
+        // rooms) so locations have somewhere to land, and the loop
+        // continues past tile-pick failures rather than breaking.
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'big', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    big: {
+                        name: 'big',
+                        exits: [],
+                        locations: Array.from({ length: 11 }, (_, i) => ({
+                            name: `loc_${i}`,
+                            id: 100 + i,
+                            access_rule: i === 5
+                                ? { rule: 'Has', args: { item_name: 'Yellow Key' } }
+                                : { rule: 'True_' },
+                            item: { name: `Item${i}`, player: 1, advancement: false, type: 'filler' },
+                        })),
+                    },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 3, height: 3 }, seed: 1,
+        });
+        const out = buildRulesJson(grid, { startCell, seed: 1, assumeBidirectional: true });
+        const dstBig = out.regions['1'].big;
+        expect(dstBig.locations.length).toBe(11);
+        const itemNames = dstBig.locations.map((l) => l.item?.name).sort();
+        const srcItemNames = Array.from({ length: 11 }, (_, i) => `Item${i}`).sort();
+        expect(itemNames).toEqual(srcItemNames);
+    });
+
+    it('lines up BFS-tree-edge exit tiles across the shared wall', () => {
+        // For each BFS-tree edge A→B, A's exit tile and B's reverse
+        // exit tile sit on opposite sides of the same wall AT THE
+        // SAME POSITION ALONG THE WALL (same y for E↔W pairs, same
+        // x for N↔S pairs). The driver pins B's reverse to the
+        // entrance tile, which is the mirror of A's exit position;
+        // the substrate honors the pin via spec.tile.
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'A', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    A: {
+                        name: 'A',
+                        exits: [
+                            { name: 'A_to_B', connected_region: 'B', access_rule: { rule: 'True_' } },
+                            { name: 'A_to_C', connected_region: 'C', access_rule: { rule: 'True_' } },
+                        ],
+                        locations: [],
+                    },
+                    B: {
+                        name: 'B',
+                        exits: [{ name: 'B_to_A', connected_region: 'A', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    C: {
+                        name: 'C',
+                        exits: [{ name: 'C_to_A', connected_region: 'A', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 3, height: 3 }, seed: 1,
+        });
+        const A = grid.allRegions().find((r) => r.region_id === 'A');
+        const B = grid.allRegions().find((r) => r.region_id === 'B');
+        const C = grid.allRegions().find((r) => r.region_id === 'C');
+        const aToB = A.playable_payload.exits.get('A_to_B');
+        const bToA = B.playable_payload.exits.get('B_to_A');
+        const aToC = A.playable_payload.exits.get('A_to_C');
+        const cToA = C.playable_payload.exits.get('C_to_A');
+        // Sides are opposite (one of E↔W or N↔S).
+        const opposite = { N: 'S', S: 'N', E: 'W', W: 'E' };
+        expect(bToA.side).toBe(opposite[aToB.side]);
+        expect(cToA.side).toBe(opposite[aToC.side]);
+        // Same coordinate along the wall.
+        if (aToB.side === 'E' || aToB.side === 'W') {
+            expect(bToA.y).toBe(aToB.y);
+        } else {
+            expect(bToA.x).toBe(aToB.x);
+        }
+        if (aToC.side === 'E' || aToC.side === 'W') {
+            expect(cToA.y).toBe(aToC.y);
+        } else {
+            expect(cToA.x).toBe(aToC.x);
+        }
+    });
+
+    it('links each exit to its reverse exit via targetExitId', () => {
+        // Without targetExitId, all arrivals fall back to a single
+        // world.entrance, so the player always spawns at the BFS-
+        // parent-mirrored tile regardless of which exit they crossed.
+        // Linking lets the maze panel spawn on the matching reverse
+        // exit's tile (per top-down-driver.md §4 + §7).
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'A', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    A: {
+                        name: 'A',
+                        exits: [
+                            { name: 'A_to_B', connected_region: 'B', access_rule: { rule: 'True_' } },
+                            { name: 'A_to_C', connected_region: 'C', access_rule: { rule: 'True_' } },
+                        ],
+                        locations: [],
+                    },
+                    B: {
+                        name: 'B',
+                        exits: [{ name: 'B_to_A', connected_region: 'A', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    C: {
+                        name: 'C',
+                        exits: [{ name: 'C_to_A', connected_region: 'A', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 3, height: 3 }, seed: 1,
+        });
+        const A = grid.allRegions().find((r) => r.region_id === 'A');
+        const B = grid.allRegions().find((r) => r.region_id === 'B');
+        const C = grid.allRegions().find((r) => r.region_id === 'C');
+        expect(A.playable_payload.exits.get('A_to_B').targetExitId).toBe('B_to_A');
+        expect(A.playable_payload.exits.get('A_to_C').targetExitId).toBe('C_to_A');
+        expect(B.playable_payload.exits.get('B_to_A').targetExitId).toBe('A_to_B');
+        expect(C.playable_payload.exits.get('C_to_A').targetExitId).toBe('A_to_C');
+        // For non-start regions, world.entrance overlaps with the
+        // BFS-parent's reverse exit tile so it renders as exit (per
+        // §5) and there's no orphan green border on a leftover tile.
+        const bExit = B.playable_payload.exits.get('B_to_A');
+        expect(B.playable_payload.entrance).toEqual({ x: bExit.x, y: bExit.y });
+        const cExit = C.playable_payload.exits.get('C_to_A');
+        expect(C.playable_payload.entrance).toEqual({ x: cExit.x, y: cExit.y });
+    });
+
+    it('uses the source location name verbatim as the round-tripped location name', () => {
+        // Round-trip emits location names exactly as they appeared
+        // in the source (e.g. "Slay Yorgle"), not the prior
+        // Region__id__x_y mangling. Source AP location names are
+        // unique within a player so the prefix isn't needed; the
+        // verbatim name lets save files / sphere logs / external
+        // tooling correlate round-tripped locations with their
+        // sources.
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'r1', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    r1: {
+                        name: 'r1',
+                        exits: [],
+                        locations: [
+                            { name: 'Slay Yorgle', id: 1, access_rule: { rule: 'True_' },
+                              item: { name: 'Trophy', player: 1, advancement: false, type: 'filler' } },
+                        ],
+                    },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 3, height: 3 }, seed: 1,
+        });
+        const out = buildRulesJson(grid, { startCell, seed: 1, assumeBidirectional: true });
+        const loc = out.regions['1'].r1.locations[0];
+        expect(loc.name).toBe('Slay Yorgle');
+        // Sidecar's per-tile locationName matches the regions block.
+        const sidecar = out.preset_sidecars['1'].r1.playable_payload;
+        const item = sidecar.items.find((i) => i.locationName);
+        expect(item?.locationName).toBe('Slay Yorgle');
+    });
+
+    it('preserves source location names and access rules in the output', () => {
+        // Regression: extracted_rules used to derive both location ids
+        // (`${itemId}_pickup`) and access rules (BFS-walked from
+        // entrance) from the maze geometry. That collapsed multi-
+        // instance items (Adventure has 12 Freeincarnates) under one
+        // logical name, AND polluted location rules whenever a gate
+        // placed for one location landed on another's BFS path. Top-
+        // down now overrides both with the source data.
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'r1', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    r1: {
+                        name: 'r1',
+                        exits: [],
+                        locations: [
+                            // Two locations sharing the same item name
+                            // — round-trip must keep them distinct.
+                            { name: 'Junk Pile A', id: 1, access_rule: { rule: 'True_' },
+                              item: { name: 'Coin', player: 1, advancement: false, type: 'filler' } },
+                            { name: 'Junk Pile B', id: 2, access_rule: { rule: 'True_' },
+                              item: { name: 'Coin', player: 1, advancement: false, type: 'filler' } },
+                            // A location with a real rule — must
+                            // round-trip with that exact rule.
+                            { name: 'Boss Drop', id: 3,
+                              access_rule: { rule: 'HasAll', args: { items: ['Sword', 'Key'] } },
+                              item: { name: 'Trophy', player: 1, advancement: true, type: 'progression' } },
+                        ],
+                    },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 3, height: 3 }, seed: 1,
+        });
+        const out = buildRulesJson(grid, { startCell, seed: 1, assumeBidirectional: true });
+        const locs = out.regions['1'].r1.locations;
+        // All three source locations present and distinguishable.
+        const namesContaining = (substr) => locs.filter((l) => l.name.includes(substr)).length;
+        expect(namesContaining('Junk Pile A')).toBe(1);
+        expect(namesContaining('Junk Pile B')).toBe(1);
+        expect(namesContaining('Boss Drop')).toBe(1);
+        // Boss Drop's rule is the exact source rule, not a BFS-derived
+        // approximation that could pick up other gates.
+        const bossDrop = locs.find((l) => l.name.includes('Boss Drop'));
+        expect(bossDrop.access_rule).toEqual({
+            rule: 'HasAll',
+            args: { items: ['Sword', 'Key'] },
+        });
+        // Junk Piles keep their True_ rules — even though Boss Drop's
+        // gate was placed in the same region, the path to a Junk Pile
+        // doesn't accidentally inherit it.
+        for (const name of ['Junk Pile A', 'Junk Pile B']) {
+            const loc = locs.find((l) => l.name.includes(name));
+            expect(loc.access_rule).toEqual({ rule: 'True_' });
+        }
+    });
+
+    it('places no exits or entrances on corner tiles', () => {
+        // Corner placement makes it visually ambiguous which side the
+        // exit/entrance belongs to (a corner tile is on two walls at
+        // once). Substrate's clockwise wall assignment skips corners;
+        // the entrance is mirrored from the parent's exit so it
+        // inherits non-corner-ness too. Use a multi-exit hub to
+        // exercise the clockwise walk across multiple sides.
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'hub', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    hub: {
+                        name: 'hub',
+                        exits: [
+                            { name: 'to_a', connected_region: 'a', access_rule: { rule: 'True_' } },
+                            { name: 'to_b', connected_region: 'b', access_rule: { rule: 'True_' } },
+                            { name: 'to_c', connected_region: 'c', access_rule: { rule: 'True_' } },
+                        ],
+                        locations: [],
+                    },
+                    a: { name: 'a', exits: [], locations: [] },
+                    b: { name: 'b', exits: [], locations: [] },
+                    c: { name: 'c', exits: [], locations: [] },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        for (const region of grid.allRegions()) {
+            const w = region.playable_payload.width;
+            const h = region.playable_payload.height;
+            const isCorner = (x, y) =>
+                (x === 0 || x === w - 1) && (y === 0 || y === h - 1);
+            const ent = region.playable_payload.entrance;
+            expect(isCorner(ent.x, ent.y)).toBe(false);
+            for (const e of region.exits_placed ?? []) {
+                expect(isCorner(e.tile_position.x, e.tile_position.y)).toBe(false);
+            }
+        }
+    });
 });
 
 describe('stringifyRulesJson', () => {

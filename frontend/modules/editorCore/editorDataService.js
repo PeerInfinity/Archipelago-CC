@@ -10,6 +10,10 @@ import { getModuleEventBus } from './index.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { EDITOR_EVENTS } from './editorEvents.js';
 import { defaultContentSources } from './editorConfig.js';
+// stringifyRulesJson collapses procgen sidecars' `tiles` arrays onto
+// a single line. No-op for non-procgen rules.json, so safe to use
+// anywhere a rules.json blob is rendered.
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -121,10 +125,8 @@ class EditorDataService {
     // Populate Active Rules JSON view
     if (window.G_combinedModeData.rulesConfig) {
       try {
-        this.contentSources.rules.text = JSON.stringify(
+        this.contentSources.rules.text = stringifyRulesJson(
           window.G_combinedModeData.rulesConfig,
-          null,
-          2
         );
         this.contentSources.rules.loaded = true;
         log('info', 'Populated rules from window.G_combinedModeData.rulesConfig.');
@@ -150,7 +152,7 @@ class EditorDataService {
       } else {
         log('info', `Received raw rules data from: ${eventData.source || 'unknown'}`);
         try {
-          this.contentSources.rules.text = JSON.stringify(eventData.rawJsonData, null, 2);
+          this.contentSources.rules.text = stringifyRulesJson(eventData.rawJsonData);
         } catch (e) {
           log('error', 'Error stringifying rules JSON:', e);
           this.contentSources.rules.text = 'Error: Could not display rules JSON.';

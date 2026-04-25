@@ -43,6 +43,16 @@ function inventoryFromSnapshot(snapshot) {
     return set;
 }
 
+// Snapshot's checkedLocations is a Set in some code paths, an Array
+// in others (depends on how the snapshot was constructed). Normalise
+// to a Set for fast membership testing during render.
+function checkedLocationsFromSnapshot(snapshot) {
+    const v = snapshot?.checkedLocations;
+    if (v instanceof Set) return v;
+    if (Array.isArray(v)) return new Set(v);
+    return new Set();
+}
+
 const LS_KEY = 'mazeRoom_params';
 
 const DEFAULT_PARAMS = {
@@ -101,6 +111,14 @@ export class MazeRoomUI {
         // continues to maintain in that mode (see mazeRoomEngine.js
         // step's inventoryOverride contract).
         this.externalInventory = null;
+        // Per-location pickup truth in playback mode. Tracks which
+        // AP-canonical location names have been checked, so the
+        // renderer can hide the item sprite for THIS tile when it's
+        // checked without hiding sprites for other tiles that hold
+        // the same item id. (Adventure has 12 Freeincarnate locations
+        // — using inventory as a proxy for "collected" makes them all
+        // disappear after the first pickup.)
+        this.externalCheckedLocations = null;
         // AP-canonical region name for the currently-loaded region.
         // Set in playback mode; null in Generate dev flow. Used as
         // sourceRegion / regionName when publishing dispatcher events.
@@ -138,6 +156,7 @@ export class MazeRoomUI {
             // the Generate dev flow keeps using state.inventory directly.
             if (this.externalInventory === null) return;
             this.externalInventory = inventoryFromSnapshot(data?.snapshot);
+            this.externalCheckedLocations = checkedLocationsFromSnapshot(data?.snapshot);
             this.render();
         };
         eventBus.subscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
@@ -147,6 +166,14 @@ export class MazeRoomUI {
     _currentInventory() {
         if (this.externalInventory !== null) return this.externalInventory;
         return this.state?.inventory ?? new Set();
+    }
+
+    // Per-location pickup tracking for playback mode. The Generate
+    // dev flow doesn't use locationName at all (state.inventory keys
+    // by item id), so the local-collected check there continues to
+    // use _currentInventory.has(itemId).
+    _currentCheckedLocations() {
+        return this.externalCheckedLocations ?? new Set();
     }
 
     /**
@@ -204,7 +231,9 @@ export class MazeRoomUI {
         // stateManager snapshots from now on. Seed from the current
         // cached snapshot if one exists; further updates arrive via
         // the snapshot subscription.
-        this.externalInventory = inventoryFromSnapshot(stateManagerProxySingleton.getSnapshot());
+        const snapshot = stateManagerProxySingleton.getSnapshot();
+        this.externalInventory = inventoryFromSnapshot(snapshot);
+        this.externalCheckedLocations = checkedLocationsFromSnapshot(snapshot);
         if (!skipRender) {
             this.render();
             this.rootElement?.focus();
@@ -520,6 +549,13 @@ export class MazeRoomUI {
             exitAt.set(`${e.x},${e.y}`, e);
         }
 
+        // Per-location pickup truth in playback mode — see
+        // _currentCheckedLocations for why inventory-keyed checks
+        // can't stand in for this (multi-instance items, e.g.
+        // Adventure's 12 Freeincarnates).
+        const isPlayback = this.externalInventory !== null;
+        const checkedLocations = this._currentCheckedLocations();
+
         // §5 rendering pass — exits, entrance border, combo-list
         // obstacles, items, and gate borders, in an order that gets
         // each tile's stack of overlays right.
@@ -535,7 +571,16 @@ export class MazeRoomUI {
                 const isExit = !!exit;
                 const isEntrance = (x === w.entrance.x && y === w.entrance.y);
                 const itemId = w.items.get(key);
-                const itemHere = itemId && !currentInv.has(itemId);
+                // Playback mode tracks pickups per-location (locationName
+                // baked into the sidecar) so multi-instance items only
+                // disappear at the specific tile that was checked.
+                // Generate dev flow has no locationNames — falls back
+                // to the inventory-keyed check.
+                const locationName = isPlayback ? w.itemLocationNames?.get(key) : null;
+                const itemCollected = isPlayback
+                    ? (locationName ? checkedLocations.has(locationName) : false)
+                    : currentInv.has(itemId);
+                const itemHere = itemId && !itemCollected;
 
                 // Exit fill: green by default, red when a logic gate
                 // sits on the tile and isn't cleared. (Both-row of
@@ -599,16 +644,23 @@ export class MazeRoomUI {
                         ctx.fillText(hints.label, cx, cy);
                         ctx.restore();
                     }
+                }
 
-                    // Closed logic gate ON a location: 2px red
-                    // border around the item. Open or no gate: no
-                    // border (per the §5 decision to keep the
-                    // rendering clean once the gate is open).
-                    if (isLogicGate && gateClosed) {
-                        ctx.strokeStyle = COLORS.locationBlocked;
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                    }
+                // Closed logic gate marker: 2px red border. Drawn
+                // independently of the item sprite so the gate stays
+                // visible even after its underlying location's item
+                // has been "collected" — which can happen for any
+                // tile sharing an item id with an already-checked
+                // location, since `currentInv` is keyed by item name
+                // not location name. (See §5 — the spec's "Location
+                // closed" row anticipated only the item-present case;
+                // this fallback covers the no-item case too.) Skipped
+                // on exit tiles, which already render their closed
+                // state via the full red fill above.
+                if (isLogicGate && gateClosed && !isExit) {
+                    ctx.strokeStyle = COLORS.locationBlocked;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
                 }
 
                 // Entrance border: 2px solid green, only when the
@@ -675,6 +727,7 @@ export class MazeRoomUI {
             // any external inventory left over from a prior LoadRegion
             // session in this panel.
             this.externalInventory = null;
+            this.externalCheckedLocations = null;
             this.currentRegionId = null;
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
@@ -727,11 +780,17 @@ export class MazeRoomUI {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
         const events = detectStepEvents(this.world, oldPos, newPos, this.externalInventory);
+        const checkedLocations = this._currentCheckedLocations();
         for (const ev of events) {
             if (ev.type === 'pickup') {
                 const key = `${ev.position.x},${ev.position.y}`;
                 const locationName = this.world.itemLocationNames?.get(key);
                 if (!locationName) continue;
+                // Idempotency is per-location, not per-item: stepping
+                // onto a second instance of an already-collected item
+                // (Adventure has 12 Freeincarnates) must still fire
+                // a check for THIS location.
+                if (checkedLocations.has(locationName)) continue;
                 dispatcher.publish('user:locationCheck', {
                     locationName,
                     regionName: this.currentRegionId,

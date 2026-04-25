@@ -78,6 +78,13 @@ export function compileAccessRule(paths, obstacleLib) {
  *   input:  { region_id, entrance, exits, locations }  // extracted form
  *   output: { region_name, exits: [{id, target_region, rule}],
  *             locations: [{id, item, rule}] }
+ *
+ * If an exit or location entry carries an `access_rule` field (a
+ * Rule Builder rule), it's used verbatim and the path-walked
+ * derivation is skipped. The top-down driver uses this to emit the
+ * source's rules unchanged, sidestepping the cut-vertex problem that
+ * BFS-derived rules suffer when a gate placed for one location lands
+ * on another's path.
  */
 export function compileRegion(extracted, opts = {}) {
     const obstacleLib = opts.obstacleLib;
@@ -86,14 +93,19 @@ export function compileRegion(extracted, opts = {}) {
     const exits = (extracted.exits ?? []).map((exit) => ({
         id: exit.id,
         target_region: exit.target_region ?? null,
-        rule: compileAccessRule(exit.paths, obstacleLib),
+        rule: exit.access_rule ?? compileAccessRule(exit.paths, obstacleLib),
     }));
 
     const locations = (extracted.locations ?? []).map((loc) => ({
         id: loc.id,
         item: loc.item ?? null,
         position: loc.position ?? null,
-        rule: compileAccessRule(loc.paths, obstacleLib),
+        rule: loc.access_rule ?? compileAccessRule(loc.paths, obstacleLib),
+        // Top-down sets global_name to the AP-canonical source
+        // location name so the round-tripped rules.json uses the
+        // original naming verbatim (e.g. "Slay Yorgle"). Grid-growth
+        // omits it; compileRegionGraph falls back to Region__id__x_y.
+        ...(loc.global_name ? { global_name: loc.global_name } : {}),
     }));
 
     return {

@@ -346,9 +346,16 @@ export function reachedExit(state, world) {
  * which AP-level dispatcher events (user:locationCheck,
  * user:regionMove) to publish.
  *
- *   - 'pickup'      — moved onto an item tile that wasn't yet in
- *                     `inventory`. Idempotent: walking back onto a
- *                     collected tile fires nothing.
+ *   - 'pickup'      — moved onto an item tile. Always fires when an
+ *                     item tile is stepped onto, even if the same
+ *                     item id is already in `inventory` (multi-
+ *                     instance items, e.g. Adventure's 12
+ *                     Freeincarnates: each Freeincarnate location
+ *                     check needs its own pickup event). Idempotency
+ *                     across visits is the caller's concern — the
+ *                     panel filters using stateManager's per-location
+ *                     `checkedLocations` set, which is keyed by AP-
+ *                     canonical location name.
  *   - 'exit_cross'  — moved onto the exit tile from elsewhere.
  *                     Fires only on the step that arrives, not while
  *                     the player is standing on the exit.
@@ -359,8 +366,12 @@ export function reachedExit(state, world) {
  *
  * The helper does not consult AP names (locationName, exitName,
  * targetRegion) — those are the panel's concern at publish time.
+ *
+ * The `inventory` parameter is unused for the pickup filter (kept
+ * for signature stability with older callers); leave it as the
+ * empty Set if you don't have one to hand.
  */
-export function detectStepEvents(world, oldPos, newPos, inventory) {
+export function detectStepEvents(world, oldPos, newPos, _inventory) {
     const events = [];
     const moved = oldPos.x !== newPos.x || oldPos.y !== newPos.y;
     if (!moved) return events;
@@ -368,7 +379,7 @@ export function detectStepEvents(world, oldPos, newPos, inventory) {
     const newKey = posKey(newPos.x, newPos.y);
 
     const itemId = world.items.get(newKey);
-    if (itemId && !inventory.has(itemId)) {
+    if (itemId) {
         events.push({
             type: 'pickup',
             itemId,
@@ -902,10 +913,12 @@ const REGION_GROW_MAX_ATTEMPTS = 4;
 
 /**
  * Returns the perimeter tiles in clockwise order starting from the
- * top-right corner: E (top→bottom), S (right→left), W (bottom→top),
- * N (left→right). Each corner is assigned to the side that first
- * reaches it along the walk — so the corner tile appears exactly
- * once in the sequence.
+ * top edge of the east wall: E (top→bottom), S (right→left), W
+ * (bottom→top), N (left→right). Corners are excluded — a tile in a
+ * corner is on two walls at once and the rendering can't disambiguate
+ * which side an exit/entrance there belongs to (which direction does
+ * stepping off it lead?). Region size is required to be at least 3×3
+ * so each side has at least one non-corner tile.
  *
  * Used by the multi-exit assignment in generateRegionCore: when the
  * caller doesn't specify `spec.side`, the next clockwise slot from
@@ -914,24 +927,28 @@ const REGION_GROW_MAX_ATTEMPTS = 4;
  */
 export function clockwisePerimeterTiles(width, height) {
     const tiles = [];
-    // E: top to bottom (includes both E corners).
-    for (let y = 0; y < height; y++) tiles.push({ x: width - 1, y, side: SIDE_E });
-    // S: right to left (skipping the E-corner already placed).
-    for (let x = width - 2; x >= 0; x--) tiles.push({ x, y: height - 1, side: SIDE_S });
-    // W: bottom to top (skipping the S-corner already placed).
-    for (let y = height - 2; y >= 0; y--) tiles.push({ x: 0, y, side: SIDE_W });
-    // N: left to right (skipping both N corners — already placed by
-    // E and W's traversal).
+    // E: top to bottom, skipping the two E corners (y=0 and y=height-1).
+    for (let y = 1; y < height - 1; y++) tiles.push({ x: width - 1, y, side: SIDE_E });
+    // S: right to left, skipping the two S corners.
+    for (let x = width - 2; x >= 1; x--) tiles.push({ x, y: height - 1, side: SIDE_S });
+    // W: bottom to top, skipping the two W corners.
+    for (let y = height - 2; y >= 1; y--) tiles.push({ x: 0, y, side: SIDE_W });
+    // N: left to right, skipping the two N corners.
     for (let x = 1; x < width - 1; x++) tiles.push({ x, y: 0, side: SIDE_N });
     return tiles;
 }
 
+// Pick a random non-corner tile on the requested side. Region size
+// must be at least 3 along the relevant axis so a non-corner choice
+// exists; tryAssignExitTiles (and topDownRegionSize) bake that in.
 function pickTileOnSide(side, size, rng) {
+    const xInner = () => 1 + Math.floor(rng.next() * (size.width - 2));
+    const yInner = () => 1 + Math.floor(rng.next() * (size.height - 2));
     switch (side) {
-        case SIDE_N: return { x: Math.floor(rng.next() * size.width), y: 0 };
-        case SIDE_S: return { x: Math.floor(rng.next() * size.width), y: size.height - 1 };
-        case SIDE_E: return { x: size.width - 1, y: Math.floor(rng.next() * size.height) };
-        case SIDE_W: return { x: 0, y: Math.floor(rng.next() * size.height) };
+        case SIDE_N: return { x: xInner(), y: 0 };
+        case SIDE_S: return { x: xInner(), y: size.height - 1 };
+        case SIDE_E: return { x: size.width - 1, y: yInner() };
+        case SIDE_W: return { x: 0, y: yInner() };
         default: throw new Error(`pickTileOnSide: unknown side '${side}'`);
     }
 }
@@ -1086,6 +1103,11 @@ export function generateRegionCore(input) {
  * auto-grow and retry).
  *
  * Per-exit rules:
+ *   - spec.tile specified → pin to that exact tile (caller-controlled
+ *     placement). Used by top-down to line up an exit with the
+ *     entrance tile so cross-region walls match. Allowed to coincide
+ *     with the entrance — the driver opts into this — but collisions
+ *     with another already-placed exit fail the layout.
  *   - spec.side specified → pick a random tile on that side, with
  *     collision avoidance (used by grid-growth, which targets
  *     specific sides for parent/child alignment).
@@ -1096,7 +1118,8 @@ export function generateRegionCore(input) {
  *     forward through the perimeter.
  */
 function tryAssignExitTiles(size, exits, entrance_tile, rng, defaultExitId) {
-    const usedKeys = new Set([`${entrance_tile.x},${entrance_tile.y}`]);
+    const entranceKey = `${entrance_tile.x},${entrance_tile.y}`;
+    const usedKeys = new Set([entranceKey]);
     const perimeter = clockwisePerimeterTiles(size.width, size.height);
     let cwCursor = 0;
 
@@ -1106,7 +1129,18 @@ function tryAssignExitTiles(size, exits, entrance_tile, rng, defaultExitId) {
         let tile = null;
         let resolvedSide = spec.side ?? null;
 
-        if (spec.side) {
+        if (spec.tile) {
+            // Pinned tile (caller-controlled placement). Allowed to
+            // overlap with the entrance — top-down uses this to put
+            // the BFS-parent's reverse exit on the entrance tile so
+            // it lines up with the parent's exit across the shared
+            // wall. A collision with another already-placed exit's
+            // tile is still a hard failure.
+            const key = `${spec.tile.x},${spec.tile.y}`;
+            if (usedKeys.has(key) && key !== entranceKey) return null;
+            tile = spec.tile;
+            resolvedSide = spec.side ?? null;
+        } else if (spec.side) {
             // Random on the requested side, retry on collision.
             let attempts = 0;
             while (attempts < 50) {
@@ -1346,7 +1380,7 @@ export function placeFromRules(world, input = {}) {
             ...placed_items.map((p) => p.position),
         ];
         const tile = pickReachableFloorTile(world, rng, excluded);
-        if (!tile) break;
+        if (!tile) continue;
 
         const item_id = itemByLocation[location_id];
         if (item_id) {
@@ -1381,7 +1415,7 @@ export function placeFromRules(world, input = {}) {
             ...placed_items.map((p) => p.position),
         ];
         const tile = pickReachableFloorTile(world, rng, excluded);
-        if (!tile) break;
+        if (!tile) continue;
         setItem(world, tile.x, tile.y, item_id);
         placed_items.push({ item_id, location_id, position: tile });
         placed_locations.push({ location_id, position: tile });

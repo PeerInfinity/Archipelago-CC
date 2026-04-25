@@ -629,25 +629,29 @@ function findAdjacentEmptyCell(grid, fromCell, rng) {
  * locations. Both substrate-side auto-grow (§1B) and the size we pick
  * here can absorb under-provisioned input — picking a sensible
  * starting size keeps auto-grow from firing on every region.
+ *
+ * Top-down regions skip mazegen walling by default (see
+ * topDownFromRulesJson's regionParams default), so total area is
+ * usable as floor area. The slack term covers walking room + the
+ * substrate's collision-avoidance during clockwise wall assignment.
  */
 function topDownRegionSize(base, exitCount, locationCount) {
     let width = base.width;
     let height = base.height;
-    const perimeter = (w, h) => 2 * w + 2 * h - 4;
-    // Each exit needs a perimeter slot, plus 1 for the entrance on a
-    // non-start region, plus a couple of slack tiles for the substrate's
-    // collision-avoidance during clockwise assignment.
+    // Corners are excluded from the usable perimeter (see
+    // clockwisePerimeterTiles): a 6x6 has 16 non-corner border tiles,
+    // not 20. Slack = 2 covers retries for the substrate's collision-
+    // avoidance during clockwise wall assignment.
+    const perimeter = (w, h) => 2 * (w - 2) + 2 * (h - 2);
     const perimNeeded = exitCount + 1 + 2;
     while (perimeter(width, height) < perimNeeded) {
         width += 2;
         height += 2;
     }
-    // Locations live on floor tiles; ensure enough floor area for them
-    // plus entrance/exit/walking room.
-    const floorNeeded = locationCount + 4;
-    while (width * height < floorNeeded) {
-        width += 1;
-        height += 1;
+    const slack = 4;
+    const tilesNeeded = locationCount + exitCount + 1 + slack;
+    while (width * height < tilesNeeded) {
+        if (width <= height) width += 1; else height += 1;
     }
     return { width, height };
 }
@@ -681,7 +685,14 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         seed = 1,
         itemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
-        regionParams = {},
+        // maxIterations: 0 disables wall-add iterations in mazegen.
+        // Top-down regions exist to host the source's logic gates, not
+        // to be walking puzzles — leaving them as open rooms maximises
+        // floor space for locations + exits + entrance, which is what
+        // a dense source region (e.g. Adventure's Overworld with 11
+        // locations) needs to round-trip cleanly. Callers can override
+        // by passing their own regionParams.
+        regionParams = { maxIterations: 0 },
         teleporterMinGap = 2,
         // Honor the source's flag, default true. When set, every
         // BFS-tree-edge gets a back-exit on the child for round-
@@ -717,7 +728,10 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         regionsBuilt: 0,
         regionsSkipped: 0,
         teleportersPlaced: 0,
-        regionsTotal: Object.keys(sourceRegions).length,
+        // Menu is stripped from the source-region BFS (we don't
+        // realize it; buildRulesJson re-emits it on emit), so the
+        // total to compare against regionsBuilt also excludes it.
+        regionsTotal: Object.keys(sourceRegions).length - (menuName ? 1 : 0),
         stopReason: null,
     };
 
@@ -830,6 +844,9 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // the exit on that side so stitchGrid's geographic resolution
         // matches. When the target is not adjacent (teleporter
         // case), omit the side and the substrate clockwise-assigns.
+        // The exit pointing back to the BFS parent gets pinned to
+        // the entrance tile so the two regions' exit tiles line up
+        // across the shared wall.
         const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
             const targetName = srcExit.connected_region;
             const targetCell = targetName ? cellsByName.get(targetName) : null;
@@ -843,11 +860,15 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
                     }
                 }
             }
+            const isParentReverse = parent && targetName === parent.name && entrances.length > 0;
+            const tile = isParentReverse ? entrances[0].tile : null;
+            const resolvedSide = isParentReverse ? entrances[0].side : side;
             return {
                 exit_id: srcExit.name,
                 exitName: srcExit.name,
                 targetRegion: targetName ?? null,
-                ...(side ? { side } : {}),
+                ...(resolvedSide ? { side: resolvedSide } : {}),
+                ...(tile ? { tile } : {}),
             };
         });
 
@@ -887,6 +908,38 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             rng,
         });
         const extracted_rules = extractPathsAndObstacles(core.world, { regionId: name });
+
+        // Top-down knows the source's location IDs and access rules
+        // directly. Override the BFS-derived names+rules from
+        // extractPathsAndObstacles with the source data — names so
+        // round-tripped locations match the source (e.g. "Slay Yorgle"
+        // not "Freeincarnate_pickup"), rules so cut-vertex pollution
+        // (a gate placed for one location showing up on another's BFS
+        // path) doesn't conflate access rules across locations.
+        const locationIdByPos = new Map();
+        for (const placed of placement.placed_locations ?? []) {
+            const k = `${placed.position.x},${placed.position.y}`;
+            locationIdByPos.set(k, placed.location_id);
+        }
+        for (const loc of extracted_rules.locations) {
+            const k = `${loc.position.x},${loc.position.y}`;
+            const sourceLocId = locationIdByPos.get(k);
+            if (sourceLocId) {
+                loc.id = sourceLocId;
+                // AP-canonical location names are unique within a
+                // player's rules.json, so use the source name verbatim
+                // as the round-tripped location's global name. Skips
+                // the Region__locId__x_y mangling makeLocationName
+                // applies to grid-growth's auto-derived ids.
+                loc.global_name = sourceLocId;
+                if (location_rules[sourceLocId]) {
+                    loc.access_rule = location_rules[sourceLocId];
+                }
+            }
+        }
+        for (const ex of extracted_rules.exits) {
+            if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
+        }
 
         for (const placed of core.exits_placed) {
             exitSidesByExit.set(`${name}:${placed.exit_id}`, {
@@ -973,6 +1026,36 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
     stitchGrid(grid);
     wallOffUnusedExits(grid);
 
+    // ----- Phase 5: per-exit entrance resolution -----
+    // Each exit A.X with target B should know its counterpart B.Y
+    // (where Y.target = A) so the maze panel can spawn the player on
+    // Y's tile when crossing A.X. Without this link, all arrivals
+    // fall back to world.entrance — which is the BFS-parent-mirrored
+    // tile, not the matching reverse exit. Bidirectional source
+    // rules.json (Adventure et al.) always supplies these reverses;
+    // the §2 synthetic back-exit phase above only fires when the
+    // source DOESN'T declare one, and that path already linked
+    // targetExitId itself.
+    linkReverseExits(grid);
+    // For non-start regions, align world.entrance with the BFS-
+    // parent's matching reverse-exit tile so the rendered green
+    // border doesn't sit on a meaningless leftover tile (the §1
+    // mirror-from-parent's-exit-position landing). The substrate's
+    // BFS already finished placement, so changing world.entrance now
+    // is just bookkeeping for the renderer + initial-spawn fallback.
+    for (const { name, cell, parent } of placementOrder) {
+        if (!parent) continue;
+        const region = grid.getRegion(cell);
+        const exits = region?.playable_payload?.exits;
+        if (!exits) continue;
+        for (const e of exits.values()) {
+            if (e.targetRegion === parent.name) {
+                region.playable_payload.entrance = { x: e.x, y: e.y };
+                break;
+            }
+        }
+    }
+
     if (!stats.stopReason) {
         stats.stopReason = stats.regionsBuilt === stats.regionsTotal
             ? 'all_placed'
@@ -980,6 +1063,35 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
     }
 
     return { grid, startCell, stats };
+}
+
+// Walk every exit in every region and set targetExitId to the
+// matching reverse exit (the exit in the destination region that
+// points back to this one). Idempotent: skips exits that already
+// have targetExitId set (e.g. synthetic back-exits added by the
+// bidirectional phase). When a destination has multiple exits back
+// to this region (rare; AP source rules.json normally pairs them
+// 1:1), the first match wins.
+function linkReverseExits(grid) {
+    const regionByName = new Map();
+    for (const r of grid.allRegions()) regionByName.set(r.region_id, r);
+    for (const region of grid.allRegions()) {
+        const exits = region.playable_payload?.exits;
+        if (!exits) continue;
+        for (const exit of exits.values()) {
+            if (exit.targetExitId) continue;
+            if (!exit.targetRegion) continue;
+            const target = regionByName.get(exit.targetRegion);
+            const targetExits = target?.playable_payload?.exits;
+            if (!targetExits) continue;
+            for (const reverse of targetExits.values()) {
+                if (reverse.targetRegion === region.region_id) {
+                    exit.targetExitId = reverse.exit_id;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 // --- Stage-4 full compile ---
@@ -1058,7 +1170,8 @@ export function compileRegionGraph(grid, opts = {}) {
         }));
 
         const regionLocations = compiled.locations.map((loc) => {
-            const globalName = makeLocationName(compiled.region_name, loc.id, loc.position);
+            const globalName = loc.global_name
+                ?? makeLocationName(compiled.region_name, loc.id, loc.position);
             const numericId = nextLocationId++;
             let itemPlacement = null;
             if (loc.item) {
@@ -1156,7 +1269,9 @@ function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBS
     for (const loc of extractedRules?.locations ?? []) {
         if (!loc.position) continue;
         const key = `${loc.position.x},${loc.position.y}`;
-        locationNameByPos.set(key, makeLocationName(extractedRules.region_id, loc.id, loc.position));
+        const name = loc.global_name
+            ?? makeLocationName(extractedRules.region_id, loc.id, loc.position);
+        locationNameByPos.set(key, name);
     }
 
     const items = [];
@@ -1244,41 +1359,11 @@ export function buildPresetSidecars(grid, {
     return { [playerId]: regionMap };
 }
 
-/**
- * JSON.stringify the rules.json with indent=2 for general readability,
- * but collapse each sidecar's `tiles` array onto a single line. The
- * default formatter puts every tile integer on its own line which makes
- * the file ~10× larger than it needs to be.
- */
-export function stringifyRulesJson(rulesJson, { indent = 2 } = {}) {
-    // Swap the tiles arrays for placeholder strings before stringifying,
-    // then splice the compact arrays back into the result. This is
-    // safer than a regex walk over the indented output — the placeholder
-    // is unambiguous and the compact-array substitution is a single
-    // string replace.
-    const MARKER = '__PROCGEN_TILES_';
-    const captured = [];
-    const patched = structuredClone
-        ? structuredClone(rulesJson)
-        : JSON.parse(JSON.stringify(rulesJson));
-    const sidecars = patched.preset_sidecars || {};
-    for (const regionMap of Object.values(sidecars)) {
-        for (const sidecar of Object.values(regionMap)) {
-            const pp = sidecar && sidecar.playable_payload;
-            if (pp && Array.isArray(pp.tiles)) {
-                const idx = captured.length;
-                captured.push(pp.tiles);
-                pp.tiles = `${MARKER}${idx}__`;
-            }
-        }
-    }
-    let out = JSON.stringify(patched, null, indent);
-    for (let i = 0; i < captured.length; i++) {
-        const placeholder = `"${MARKER}${i}__"`;
-        out = out.replace(placeholder, JSON.stringify(captured[i]));
-    }
-    return out;
-}
+// stringifyRulesJson lives in shared/rulesJsonBuilder.js so the
+// editor (and any other module that displays rules.json content) can
+// use it without depending on the procgen pipeline. Re-exported here
+// to keep existing import paths working.
+export { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
 export function buildRulesJson(grid, opts = {}) {
     const {

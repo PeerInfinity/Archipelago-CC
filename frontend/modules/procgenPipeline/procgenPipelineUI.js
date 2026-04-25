@@ -195,6 +195,7 @@ export class ProcgenPipelineUI {
                 const parsed = JSON.parse(text);
                 this.topDownSource = parsed;
                 this.topDownSourceLabel = file.name;
+                this._applyGridDimsFromSource(parsed);
                 this.message = `Loaded source: ${file.name}`;
             } catch (e) {
                 this.topDownSource = null;
@@ -213,6 +214,7 @@ export class ProcgenPipelineUI {
             if (!this.loadedRulesJson) return;
             this.topDownSource = this.loadedRulesJson;
             this.topDownSourceLabel = `loaded (${this.loadedRulesJsonLabel})`;
+            this._applyGridDimsFromSource(this.loadedRulesJson);
             this.message = `Using currently-loaded rules.json`;
             this.render();
         });
@@ -793,6 +795,24 @@ export class ProcgenPipelineUI {
             poolRemaining: null,
             rulesJson,
         };
+    }
+
+    // Auto-size the grid to fit the source rules.json's region count.
+    // Top-down places one grid cell per non-Menu region (plus extra
+    // for teleporter targets that can't fit adjacent), so a square
+    // grid sized to ceil(sqrt(N * 1.5)) gives BFS room to lay out
+    // without immediately falling back to teleporters. Floor at the
+    // panel's defaults so a small source doesn't shrink the grid.
+    _applyGridDimsFromSource(rulesJson) {
+        const regions = rulesJson?.regions?.['1'] ?? {};
+        const count = Object.keys(regions).length;
+        if (count === 0) return;
+        const dim = Math.max(
+            DEFAULT_PARAMS.gridWidth,
+            Math.ceil(Math.sqrt(count * 1.5)),
+        );
+        this.params.gridWidth = dim;
+        this.params.gridHeight = dim;
     }
 
     // --- helpers ---
