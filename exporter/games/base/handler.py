@@ -12,7 +12,9 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
 import importlib
+import json
 import logging
+import os
 
 from exporter.games.base.rule_expansion import RuleExpansionMixin
 from exporter.games.base.world_data import WorldDataMixin
@@ -1998,6 +2000,40 @@ class BaseGameExportHandler(
         # helpers like "has_fire_arrows" to Has("Fire_Arrows") via pattern matching.
         if self.is_worldgen_world(world):
             self._discover_worldgen_helpers_for_preservation(world)
+            self._inject_worldgen_sidecars(world, export_data, player)
+
+    def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
+        """Load `_worldgen_sidecars.json` from the worldgen world's package
+        directory and merge it into export_data['preset_sidecars'][str(player)].
+
+        The procgen pipeline emits per-region playable payloads under the
+        top-level `preset_sidecars` key of its rules.json. The world generator
+        writes the per-player slice to `_worldgen_sidecars.json` next to the
+        generated world. This hook reads it back at export time and threads it
+        through, so multiworld rules.json reaches every player's frontend with
+        the data needed to render their procgen regions.
+
+        See NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
+        §"Preset sidecars through the multiworld bridge".
+        """
+        try:
+            world_module = type(world).__module__
+            module = importlib.import_module(world_module)
+        except ImportError:
+            return
+        module_file = getattr(module, '__file__', None)
+        if not module_file:
+            return
+        sidecars_path = os.path.join(os.path.dirname(module_file), '_worldgen_sidecars.json')
+        if not os.path.exists(sidecars_path):
+            return
+        try:
+            with open(sidecars_path, encoding='utf-8') as f:
+                sidecars = json.load(f)
+        except (json.JSONDecodeError, OSError) as exc:
+            logger.warning(f"Failed to read worldgen sidecars at {sidecars_path}: {exc}")
+            return
+        export_data.setdefault('preset_sidecars', {})[str(player)] = sidecars
 
     def _discover_worldgen_helpers_for_preservation(self, world) -> None:
         """Discover helper function names from a worldgen Rules.py and auto-preserve them.

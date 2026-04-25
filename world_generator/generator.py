@@ -239,6 +239,26 @@ class WorldGenerator:
                 options_path.write_text(json.dumps(options_data, indent=2), encoding='utf-8')
                 logger.info(f"Wrote worldgen options to {options_path}")
 
+        # Preserve preset_sidecars (per-region playable payloads emitted
+        # by the procgen pipeline) into a package-local JSON file. The
+        # generated __init__.py reads it back at export time and
+        # injects it into export_data so multiworld rules.json carries
+        # the sidecar through to every player's frontend. See
+        # NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
+        # §"Preset sidecars through the multiworld bridge".
+        sidecars_all = source_json.get('preset_sidecars', {})
+        player_sidecars = sidecars_all.get(self.player_id, {})
+        if player_sidecars:
+            sidecars_path = output_dir / '_worldgen_sidecars.json'
+            if not dry_run:
+                sidecars_path.write_text(
+                    json.dumps(player_sidecars, indent=2),
+                    encoding='utf-8',
+                )
+                logger.info(f"Wrote worldgen sidecars to {sidecars_path}")
+            else:
+                logger.info(f"Would write: {sidecars_path}")
+
         for filename, content in files.items():
             file_path = output_dir / filename
 

@@ -963,6 +963,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
         'canonical_placements': {},  # Canonical item placements by player (vanilla/original locations)
+        'preset_sidecars': {},  # Per-region playable payloads by player (procgen substrates)
     }
     
     # Dungeons will only be added if there's data to include
@@ -2565,6 +2566,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'canonical_placements',
         'progression_mapping',
         'starting_items',
+        'preset_sidecars',
         'world',
         'exporter',
         'game_info',
@@ -2575,7 +2577,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
         'world', 'exporter', 'start_regions', 'itempool_counts',
-        'canonical_placements', 'game_info', 'starting_items'
+        'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars'
     ]
 
     # Prepare the combined export data for all players using the helper
