@@ -5,11 +5,17 @@
  * design.
  *
  * Two responsibilities:
- *   1. On files:jsonLoaded, recognize procgen-shaped rules.json
- *      (presence of preset_sidecars), build a warehouse of
- *      deserialized regions via the substrate registry, and publish
- *      <substrate>:loadRegion for the start region so the substrate's
- *      panel comes up rendering it.
+ *   1. On stateManager:rawJsonDataLoaded, recognize procgen-shaped
+ *      rules.json (presence of preset_sidecars), build a warehouse
+ *      of deserialized regions via the substrate registry, and
+ *      publish <substrate>:loadRegion for the start region so the
+ *      substrate's panel comes up rendering it.
+ *      We listen to rawJsonDataLoaded rather than files:jsonLoaded
+ *      because the former covers BOTH load paths: the Presets-panel
+ *      flow (where files:jsonLoaded fires and stateManager re-emits
+ *      rawJsonDataLoaded), and the URL-load init flow (?game=... ;
+ *      stateManager loads rules during postInitialize and publishes
+ *      rawJsonDataLoaded directly, never publishing files:jsonLoaded).
  *   2. As a dispatcher receiver for user:regionMove, look up the
  *      target region in the warehouse and publish the corresponding
  *      <substrate>:loadRegion before forwarding the event up the
@@ -34,7 +40,7 @@ export const moduleInfo = {
 let eventBus = null;
 let dispatcher = null;
 let logger = null;
-let unsubFilesLoaded = null;
+let unsubRawJsonLoaded = null;
 let unsubRulesLoaded = null;
 let warehouse = null;
 // The synthesized initial transition is deferred until
@@ -54,10 +60,10 @@ function publishLoadRegion(regionId, arrivedFrom) {
     return true;
 }
 
-function handleFilesJsonLoaded(data) {
-    const rulesJson = data?.jsonData;
+function handleRawJsonLoaded(data) {
+    const rulesJson = data?.rawJsonData;
     if (!rulesJson) return;
-    const playerId = data?.selectedPlayerId ?? '1';
+    const playerId = data?.selectedPlayerInfo?.playerId ?? '1';
     const built = buildWarehouse(rulesJson, playerId, substrateRegistry, { logger });
     if (!built) {
         // Not a procgen rules.json — drop any prior warehouse so a
@@ -142,12 +148,12 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     }
 
     if (eventBus?.subscribe) {
-        unsubFilesLoaded = eventBus.subscribe('files:jsonLoaded', handleFilesJsonLoaded);
+        unsubRawJsonLoaded = eventBus.subscribe('stateManager:rawJsonDataLoaded', handleRawJsonLoaded);
         unsubRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
     }
 
     return () => {
-        if (unsubFilesLoaded) { unsubFilesLoaded(); unsubFilesLoaded = null; }
+        if (unsubRawJsonLoaded) { unsubRawJsonLoaded(); unsubRawJsonLoaded = null; }
         if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
         warehouse = null;
         pendingStartTransition = null;
@@ -159,7 +165,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
 // Test-only — reset module-scope state between cases.
 export function _testOnly_resetModuleState() {
-    if (unsubFilesLoaded) { unsubFilesLoaded(); unsubFilesLoaded = null; }
+    if (unsubRawJsonLoaded) { unsubRawJsonLoaded(); unsubRawJsonLoaded = null; }
     if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
     warehouse = null;
     pendingStartTransition = null;

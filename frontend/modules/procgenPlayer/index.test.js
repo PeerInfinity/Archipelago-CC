@@ -117,15 +117,15 @@ describe('procgenPlayer index', () => {
         expect(eventBus.registeredPublishers.has('maze:loadRegion')).toBe(true);
     });
 
-    it('ignores files:jsonLoaded payloads without preset_sidecars', () => {
-        eventBus.publish('files:jsonLoaded', { jsonData: { start_regions: { 1: ['Menu'] } }, selectedPlayerId: '1' });
+    it('ignores rawJsonDataLoaded payloads without preset_sidecars', () => {
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: { start_regions: { 1: ['Menu'] } }, selectedPlayerInfo: { playerId: '1' } });
         eventBus.publish('stateManager:rulesLoaded', {});
         expect(_testOnly_getWarehouse()).toBeNull();
         expect(dispatcher.published).toHaveLength(0);
     });
 
-    it('builds the warehouse on files:jsonLoaded but defers the publish until rulesLoaded', () => {
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+    it('builds the warehouse on rawJsonDataLoaded but defers the publish until rulesLoaded', () => {
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         const wh = _testOnly_getWarehouse();
         expect(wh.size()).toBe(2);
         // Nothing published yet — the initial user:regionMove is
@@ -134,7 +134,7 @@ describe('procgenPlayer index', () => {
     });
 
     it('publishes the synthesized user:regionMove on stateManager:rulesLoaded', () => {
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         eventBus.publish('stateManager:rulesLoaded', {});
         expect(dispatcher.published).toHaveLength(1);
         expect(dispatcher.published[0].eventName).toBe('user:regionMove');
@@ -146,16 +146,16 @@ describe('procgenPlayer index', () => {
     });
 
     it('does not republish on subsequent stateManager:rulesLoaded firings', () => {
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         eventBus.publish('stateManager:rulesLoaded', {});
         eventBus.publish('stateManager:rulesLoaded', {});
         expect(dispatcher.published).toHaveLength(1);
     });
 
-    it('clears the warehouse on a subsequent non-procgen files:jsonLoaded', () => {
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+    it('clears the warehouse on a subsequent non-procgen rawJsonDataLoaded', () => {
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         expect(_testOnly_getWarehouse()).not.toBeNull();
-        eventBus.publish('files:jsonLoaded', { jsonData: { start_regions: { 1: ['Menu'] } }, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: { start_regions: { 1: ['Menu'] } }, selectedPlayerInfo: { playerId: '1' } });
         expect(_testOnly_getWarehouse()).toBeNull();
     });
 
@@ -166,7 +166,7 @@ describe('procgenPlayer index', () => {
         eventBus = makeMockEventBus();
         dispatcher = makeMockDispatcher();
         initialize('procgenPlayer', 0, makeMockInitApi(eventBus, dispatcher));
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         const handler = reg._calls.dispatcherReceivers[0][2];
 
         const baseline = eventBus.published.length;
@@ -188,7 +188,7 @@ describe('procgenPlayer index', () => {
         eventBus = makeMockEventBus();
         dispatcher = makeMockDispatcher();
         initialize('procgenPlayer', 0, makeMockInitApi(eventBus, dispatcher));
-        eventBus.publish('files:jsonLoaded', { jsonData: SAMPLE_RULES, selectedPlayerId: '1' });
+        eventBus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         const baseline = eventBus.published.length;
         const handler = reg._calls.dispatcherReceivers[0][2];
         handler({ targetRegion: 'Menu', exitName: null, sourceRegion: 'region_0_0' });
