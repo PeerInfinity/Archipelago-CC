@@ -172,16 +172,24 @@ export function getItemRenderHints(itemId, itemLib = DEFAULT_ITEMS) {
  * `clear_set_type`:
  *   - 'combo_list' (default): any one AND-combination fully present
  *     in inventory.
- *   - 'rule': the obstacle's `clear_rule` evaluates to true under
- *     inventory.
+ *   - 'rule': the obstacle's `clear_rule` is evaluated. By default
+ *     this uses the local Rule-Builder subset evaluator
+ *     (`evaluateRuleAgainstInventory`); for foreign rules.json
+ *     files that use constructs the local evaluator doesn't
+ *     understand (CountItem, helpers, …), the caller can pass
+ *     `opts.evaluateRule` — a function `(rule, inventory) => bool`
+ *     — to delegate to a richer evaluator (typically one wired up
+ *     to stateManager's snapshot interface + the shared rule
+ *     engine). See top-down-driver.md §8.
  */
-export function isObstacleCleared(obstacleId, inventory, obstacleLib = DEFAULT_OBSTACLES) {
+export function isObstacleCleared(obstacleId, inventory, obstacleLib = DEFAULT_OBSTACLES, opts = {}) {
     const obstacle = obstacleLib[obstacleId];
     if (!obstacle) return true; // Unknown obstacle id ≡ no gate; permissive for robustness.
     const type = obstacle.clear_set_type ?? 'combo_list';
     if (type === 'rule') {
         if (!obstacle.clear_rule) return false; // No rule attached ≡ never clearable.
-        return evaluateRuleAgainstInventory(obstacle.clear_rule, inventory);
+        const evaluator = opts.evaluateRule ?? evaluateRuleAgainstInventory;
+        return evaluator(obstacle.clear_rule, inventory);
     }
     // combo_list
     for (const combination of obstacle.clear_set ?? []) {

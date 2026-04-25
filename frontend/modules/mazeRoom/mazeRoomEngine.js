@@ -294,8 +294,13 @@ function cloneState(state) {
 // keeps internal callers (BFS, walker, generation feasibility) and
 // the maze panel's standalone "Generate" dev flow working as they
 // always have.
+//
+// `clearanceOpts` is forwarded to isObstacleCleared so the panel can
+// inject a stateManager-backed rule evaluator for logic-gate
+// obstacles. See library.js's isObstacleCleared and top-down-driver.md
+// §8.
 
-export function step(world, state, input, inventoryOverride) {
+export function step(world, state, input, inventoryOverride, clearanceOpts) {
     const delta = DELTAS[input];
     if (!delta) return null;
     const nx = state.player_pos.x + delta.dx;
@@ -303,7 +308,7 @@ export function step(world, state, input, inventoryOverride) {
     if (!isFloor(world, nx, ny)) return null;
     const inv = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
     const obstacleId = getObstacle(world, nx, ny);
-    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib)) {
+    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts)) {
         return null;
     }
     const next = cloneState(state);

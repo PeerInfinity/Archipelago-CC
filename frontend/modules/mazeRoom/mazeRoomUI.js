@@ -23,6 +23,8 @@ import {
 } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 // Imported directly so the panel can subscribe even when its
 // constructor runs before its module's initialize() (Golden Layout
 // may build panels during its own init, ahead of module init — at
@@ -145,6 +147,28 @@ export class MazeRoomUI {
     _currentInventory() {
         if (this.externalInventory !== null) return this.externalInventory;
         return this.state?.inventory ?? new Set();
+    }
+
+    /**
+     * Build an evaluator for `clear_set_type: 'rule'` obstacles that
+     * dispatches through stateManager's snapshot interface and the
+     * shared Rule-Builder engine. This handles the full schema —
+     * CountItem, helpers, count_check, etc. — that the procgen-local
+     * `evaluateRuleAgainstInventory` doesn't understand.
+     *
+     * Returns null when stateManager isn't loaded yet (no snapshot or
+     * no static data); callers fall back to the local subset
+     * evaluator. See top-down-driver.md §8.
+     */
+    _currentRuleEvaluator() {
+        const snapshot = stateManagerProxySingleton.getSnapshot();
+        const staticData = stateManagerProxySingleton.getStaticData();
+        if (!snapshot || !staticData) return null;
+        const snapshotInterface = createSnapshotInterface(snapshot, staticData);
+        // The library's evaluator signature is (rule, inventory) — we
+        // ignore the inventory argument here because the snapshot
+        // interface already encapsulates the player's inventory.
+        return (rule) => evaluateRule(rule, snapshotInterface);
     }
 
     /**
@@ -471,6 +495,13 @@ export class MazeRoomUI {
         const itemLib = w.itemLib ?? DEFAULT_ITEMS;
         const obstacleLib = w.obstacleLib ?? DEFAULT_OBSTACLES;
         const currentInv = this._currentInventory();
+        // Build a clearance options bag once. When stateManager has
+        // a snapshot ready, isObstacleCleared dispatches rule-typed
+        // obstacles through the shared rule engine (full Rule Builder
+        // schema). When it doesn't (dev/standalone), the local subset
+        // evaluator handles Has/And/Or/True_/False_ as before.
+        const ruleEvaluator = this._currentRuleEvaluator();
+        const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
 
         // Tile base layer: floor / wall.
         for (let y = 0; y < w.height; y++) {
@@ -499,7 +530,7 @@ export class MazeRoomUI {
                 const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
                 const isLogicGate = obstacle?.clear_set_type === 'rule';
                 const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, currentInv, obstacleLib);
+                    && !isObstacleCleared(obstacleId, currentInv, obstacleLib, clearOpts);
                 const exit = exitAt.get(key);
                 const isExit = !!exit;
                 const isEntrance = (x === w.entrance.x && y === w.entrance.y);
@@ -522,7 +553,10 @@ export class MazeRoomUI {
                 // through the exit-fill / location-border paths.
                 if (obstacle && !isLogicGate) {
                     const color = obstacle.color ?? '#b84040';
-                    const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib);
+                    // combo_list obstacles (colored doors) don't use
+                    // the rule engine — clearOpts is harmless here
+                    // but unnecessary; pass it for symmetry.
+                    const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib, clearOpts);
                     if (cleared) {
                         ctx.save();
                         ctx.globalAlpha = 0.4;
@@ -663,7 +697,13 @@ export class MazeRoomUI {
         // dev mode the override is undefined and step keeps its
         // historical pickup-into-state.inventory behavior.
         const oldPos = { x: this.state.player_pos.x, y: this.state.player_pos.y };
-        const next = step(this.world, this.state, input, this.externalInventory ?? undefined);
+        // Use the same clearance evaluator path as the renderer so a
+        // visibly-open logic gate is also walkable (and a closed one
+        // blocks). Falls through to the local subset evaluator when
+        // no snapshot is loaded.
+        const ruleEvaluator = this._currentRuleEvaluator();
+        const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
+        const next = step(this.world, this.state, input, this.externalInventory ?? undefined, clearOpts);
         if (next === null) return;
         this.state = next;
         if (this.externalInventory !== null) {

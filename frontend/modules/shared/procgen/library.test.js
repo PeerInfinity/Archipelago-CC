@@ -55,6 +55,60 @@ describe('getItemRenderHints', () => {
     });
 });
 
+describe('isObstacleCleared evaluator injection (§8)', () => {
+    it('uses opts.evaluateRule for rule-typed obstacles when supplied', () => {
+        const lib = {
+            gate_compass: {
+                clear_set_type: 'rule',
+                // The local evaluator throws on this construct ('CountItem'
+                // is not in its supported set); injection must replace it.
+                clear_rule: { rule: 'CountItem', args: { item_name: 'compass', count: 2 } },
+            },
+        };
+        let calls = 0;
+        const customEval = (rule, _inv) => {
+            calls += 1;
+            // Pretend we counted compasses and saw two.
+            return rule.rule === 'CountItem' && rule.args.count === 2;
+        };
+        const cleared = isObstacleCleared(
+            'gate_compass',
+            new Set(),
+            lib,
+            { evaluateRule: customEval },
+        );
+        expect(cleared).toBe(true);
+        expect(calls).toBe(1);
+    });
+
+    it('does not use opts.evaluateRule for combo_list obstacles', () => {
+        let calls = 0;
+        const customEval = () => { calls += 1; return false; };
+        // Standard colored door — combo_list type — should bypass the
+        // injected evaluator entirely.
+        const cleared = isObstacleCleared(
+            'door_red',
+            new Set(['key_red']),
+            DEFAULT_OBSTACLES,
+            { evaluateRule: customEval },
+        );
+        expect(cleared).toBe(true);
+        expect(calls).toBe(0);
+    });
+
+    it('falls back to the local evaluator when no opts are supplied', () => {
+        // Simple Has rule the local evaluator handles natively.
+        const lib = {
+            simple: {
+                clear_set_type: 'rule',
+                clear_rule: { rule: 'Has', args: { item_name: 'compass' } },
+            },
+        };
+        expect(isObstacleCleared('simple', new Set(['compass']), lib)).toBe(true);
+        expect(isObstacleCleared('simple', new Set(), lib)).toBe(false);
+    });
+});
+
 describe('isObstacleCleared / evaluateRuleAgainstInventory smoke (covered indirectly)', () => {
     it('combo_list door clears when the matching key is in inventory', () => {
         expect(isObstacleCleared('door_red', new Set(['key_red']), DEFAULT_OBSTACLES)).toBe(true);
