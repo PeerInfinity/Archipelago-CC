@@ -92,11 +92,15 @@ export const DEFAULT_OBSTACLES = Object.freeze({
 /**
  * Evaluate a Rule Builder rule against a Set<item_id> inventory.
  *
- * Supports the subset of rules the v1 maze pipeline produces: Has,
- * And, Or, True_, False_. The substrate-agnostic runtime ruleEngine
- * (`frontend/modules/shared/ruleEngine.js`) handles the full schema
- * but wants a StateManager/snapshot context; this headless variant
- * takes a plain Set.
+ * Supports the subset of rules the v1 maze pipeline produces and a
+ * few common AP-side constructs: Has, HasAll, HasAny, And, Or,
+ * True_, False_. Anything outside this set is treated as unsatisfied
+ * (returns false) — per top-down-driver.md §8's degradation
+ * strategy: rather than throwing on a foreign rules.json, fall back
+ * to "blocked" so the substrate's path-extraction / placement BFS
+ * keeps working. The full Rule-Builder schema is handled by the
+ * runtime evaluator (`shared/ruleEngine.js`) when stateManager has
+ * a snapshot context — see mazeRoomUI._currentRuleEvaluator.
  *
  * `count > 1` on Has is treated as present-iff-in-inventory (Set
  * membership has no count). v1 keys are singletons so this is
@@ -111,6 +115,20 @@ export function evaluateRuleAgainstInventory(rule, inventory) {
             const itemName = rule.args?.item_name;
             return itemName != null && inventory.has(itemName);
         }
+        case 'HasAll': {
+            const items = rule.args?.items ?? [];
+            for (const item of items) {
+                if (!inventory.has(item)) return false;
+            }
+            return true;
+        }
+        case 'HasAny': {
+            const items = rule.args?.items ?? [];
+            for (const item of items) {
+                if (inventory.has(item)) return true;
+            }
+            return false;
+        }
         case 'And': {
             for (const child of rule.children ?? []) {
                 if (!evaluateRuleAgainstInventory(child, inventory)) return false;
@@ -124,7 +142,12 @@ export function evaluateRuleAgainstInventory(rule, inventory) {
             return false;
         }
         default:
-            throw new Error(`evaluateRuleAgainstInventory: unsupported rule '${rule.rule}'`);
+            // Unsupported construct (CountItem, helpers, count_check, …).
+            // Treat as unsatisfied so substrate placement / path
+            // extraction keeps working without snapshot context. The
+            // shared rule engine is the right answer at runtime when
+            // the player is actually playing the loaded rules.json.
+            return false;
     }
 }
 

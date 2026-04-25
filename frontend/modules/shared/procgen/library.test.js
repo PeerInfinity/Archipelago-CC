@@ -60,8 +60,10 @@ describe('isObstacleCleared evaluator injection (§8)', () => {
         const lib = {
             gate_compass: {
                 clear_set_type: 'rule',
-                // The local evaluator throws on this construct ('CountItem'
-                // is not in its supported set); injection must replace it.
+                // The local evaluator returns false on this construct
+                // (`CountItem` is outside its supported set — see
+                // evaluateRuleAgainstInventory's default branch);
+                // injection replaces it with a richer evaluator.
                 clear_rule: { rule: 'CountItem', args: { item_name: 'compass', count: 2 } },
             },
         };
@@ -138,5 +140,24 @@ describe('isObstacleCleared / evaluateRuleAgainstInventory smoke (covered indire
         };
         expect(evaluateRuleAgainstInventory(and, new Set(['a', 'b']))).toBe(true);
         expect(evaluateRuleAgainstInventory(and, new Set(['a']))).toBe(false);
+    });
+
+    it('evaluates HasAll / HasAny natively', () => {
+        const all = { rule: 'HasAll', args: { items: ['a', 'b'] } };
+        expect(evaluateRuleAgainstInventory(all, new Set(['a', 'b']))).toBe(true);
+        expect(evaluateRuleAgainstInventory(all, new Set(['a']))).toBe(false);
+        const any = { rule: 'HasAny', args: { items: ['a', 'b'] } };
+        expect(evaluateRuleAgainstInventory(any, new Set(['a']))).toBe(true);
+        expect(evaluateRuleAgainstInventory(any, new Set())).toBe(false);
+    });
+
+    it('treats unsupported rule constructs as unsatisfied (graceful degradation)', () => {
+        // CountItem isn't in the local subset; instead of throwing,
+        // the evaluator returns false so substrate placement / path
+        // extraction keeps working.
+        expect(evaluateRuleAgainstInventory(
+            { rule: 'CountItem', args: { item_name: 'x', count: 2 } },
+            new Set(),
+        )).toBe(false);
     });
 });
