@@ -20,6 +20,7 @@ import {
     placeFromRules,
     deserializeMazeWorld,
     detectStepEvents,
+    getDefaultExit,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -48,7 +49,9 @@ describe('createWorld', () => {
     it('defaults entrance to top-left and exit to bottom-right', () => {
         const w = createWorld(5, 4);
         expect(w.entrance).toEqual({ x: 0, y: 0 });
-        expect(w.exit).toEqual({ x: 4, y: 3 });
+        const exit = getDefaultExit(w);
+        expect(exit.x).toBe(4);
+        expect(exit.y).toBe(3);
         expect(w.tiles.length).toBe(20);
         for (let i = 0; i < w.tiles.length; i++) expect(w.tiles[i]).toBe(TILE_FLOOR);
     });
@@ -281,7 +284,7 @@ describe('detectStepEvents', () => {
         const w = makeWorld({ exit: { x: 3, y: 3 } });
         const events = detectStepEvents(w, { x: 2, y: 3 }, { x: 3, y: 3 }, new Set());
         expect(events).toEqual([
-            { type: 'exit_cross', position: { x: 3, y: 3 } },
+            { type: 'exit_cross', exit_id: 'exit', position: { x: 3, y: 3 } },
         ]);
     });
 
@@ -298,7 +301,7 @@ describe('detectStepEvents', () => {
         const w = makeWorld({ exit: { x: 3, y: 3 }, items: { '3,3': 'goal_token' } });
         const events = detectStepEvents(w, { x: 2, y: 3 }, { x: 3, y: 3 }, new Set());
         expect(events).toContainEqual({ type: 'pickup', itemId: 'goal_token', position: { x: 3, y: 3 } });
-        expect(events).toContainEqual({ type: 'exit_cross', position: { x: 3, y: 3 } });
+        expect(events).toContainEqual({ type: 'exit_cross', exit_id: 'exit', position: { x: 3, y: 3 } });
     });
 });
 
@@ -348,7 +351,8 @@ describe('reach + bfsSolver', () => {
         // Manhattan distance from (0,0) to (4,4)
         expect(r.steps).toBe(8);
         const final = runPlan(w, createState(w), r.plan);
-        expect(final.player_pos).toEqual(w.exit);
+        const exit = getDefaultExit(w);
+        expect(final.player_pos).toEqual({ x: exit.x, y: exit.y });
     });
 
     it('returns unreachable when the exit is walled off', () => {
@@ -375,7 +379,8 @@ describe('reach + bfsSolver', () => {
         const r = reach(w, bfsSolver, createState(w), reachedExit);
         expect(r.ok).toBe(true);
         const final = runPlan(w, createState(w), r.plan);
-        expect(final.player_pos).toEqual(w.exit);
+        const exit = getDefaultExit(w);
+        expect(final.player_pos).toEqual({ x: exit.x, y: exit.y });
     });
 });
 
@@ -464,7 +469,8 @@ describe('walkerSolver', () => {
 describe('makeMazePickMove', () => {
     it('returns null when no legal moves', () => {
         const pick = makeMazePickMove();
-        expect(pick({ world: { exit: { x: 0, y: 0 } }, state: createState(createWorld(2, 2)), legalMoves: [], visited: new Set(), rng: createRng(1) })).toBeNull();
+        const w = createWorld(2, 2);
+        expect(pick({ world: w, state: createState(w), legalMoves: [], visited: new Set(), rng: createRng(1) })).toBeNull();
     });
 
     it('picks an unvisited move over a visited one when weights dominate', () => {
@@ -500,15 +506,23 @@ describe('generateRegionCore', () => {
         expect(() => generateRegionCore({ ...baseCoreInput(), exits: [] })).toThrow(/exit/);
     });
 
-    it('rejects multiple entrances and multiple exits in v1', () => {
+    it('rejects multiple entrances in v1 (multi-entrance is a growth path)', () => {
         expect(() => generateRegionCore({
             ...baseCoreInput(),
             entrances: [{ side: 'W', tile: { x: 0, y: 3 } }, { side: 'N', tile: { x: 5, y: 0 } }],
         })).toThrow(/entrance/);
-        expect(() => generateRegionCore({
+    });
+
+    it('accepts multiple exits and emits one entry per placed border tile', () => {
+        const out = generateRegionCore({
             ...baseCoreInput(),
             exits: [{ side: 'E' }, { side: 'S' }],
-        })).toThrow(/exit/);
+        });
+        expect(out.exits_placed).toHaveLength(2);
+        expect(out.world.exits.size).toBe(2);
+        // Both placed tiles are at distinct positions on the requested sides.
+        const sides = out.exits_placed.map((e) => e.side).sort();
+        expect(sides).toEqual(['E', 'S']);
     });
 
     it('empty entrances array triggers the start-region center placement', () => {
@@ -668,15 +682,14 @@ describe('placeFromRules', () => {
         expect(() => placeFromRules(world, {})).toThrow(/rng/);
     });
 
-    it('rejects more than one exit rule in v1', () => {
+    it('throws when an exit_rule references an unknown exit_id', () => {
         const { world } = freshCore();
         expect(() => placeFromRules(world, {
-            exit_rules: {
-                exit_a: { rule: 'True_' },
-                exit_b: { rule: 'True_' },
-            },
+            // freshCore produces a single exit with id 'exit'; 'phantom'
+            // does not exist on the world.
+            exit_rules: { phantom: { rule: 'True_' } },
             rng: createRng(1),
-        })).toThrow(/exit/);
+        })).toThrow(/unknown exit_id/);
     });
 
     it('places nothing when inputs are empty', () => {
@@ -701,8 +714,9 @@ describe('placeFromRules', () => {
         });
         // Gate landed on the exit tile.
         expect(out.placed_logic_gates).toHaveLength(1);
-        expect(out.placed_logic_gates[0].position).toEqual(world.exit);
-        expect(getObstacle(world, world.exit.x, world.exit.y))
+        const defaultExit = getDefaultExit(world);
+        expect(out.placed_logic_gates[0].position).toEqual({ x: defaultExit.x, y: defaultExit.y });
+        expect(getObstacle(world, defaultExit.x, defaultExit.y))
             .toBe(out.placed_logic_gates[0].gate_id);
 
         // Extracting the region emits the gate on the exit's path.
@@ -787,7 +801,8 @@ describe('generateMaze', () => {
     it('leaves entrance and exit as floor', () => {
         const { world } = generateMaze({ width: 8, height: 8, seed: 42 });
         expect(getTile(world, world.entrance.x, world.entrance.y)).toBe(TILE_FLOOR);
-        expect(getTile(world, world.exit.x, world.exit.y)).toBe(TILE_FLOOR);
+        const exit = getDefaultExit(world);
+        expect(getTile(world, exit.x, exit.y)).toBe(TILE_FLOOR);
     });
 
     it('is deterministic for the same seed', () => {
@@ -970,14 +985,16 @@ describe('deserializeMazeWorld', () => {
     it('preserves entrance and exit coordinates', () => {
         const world = deserializeMazeWorld(makeSidecar());
         expect(world.entrance).toEqual({ x: 0, y: 1 });
-        expect(world.exit.x).toBe(3);
-        expect(world.exit.y).toBe(1);
+        const exit = getDefaultExit(world);
+        expect(exit.x).toBe(3);
+        expect(exit.y).toBe(1);
     });
 
-    it('preserves AP-canonical exitName and targetRegion on world.exit', () => {
+    it('preserves AP-canonical exitName and targetRegion on each exit', () => {
         const world = deserializeMazeWorld(makeSidecar());
-        expect(world.exit.exitName).toBe('exit');
-        expect(world.exit.targetRegion).toBe('region_1_1');
+        const exit = getDefaultExit(world);
+        expect(exit.exitName).toBe('exit');
+        expect(exit.targetRegion).toBe('region_1_1');
     });
 
     it('preserves AP-canonical locationName per item in world.itemLocationNames', () => {
@@ -991,8 +1008,9 @@ describe('deserializeMazeWorld', () => {
             exit: { x: 3, y: 1 },
             items: [{ x: 2, y: 1, id: 'key_red' }],
         }));
-        expect(world.exit.exitName).toBeNull();
-        expect(world.exit.targetRegion).toBeNull();
+        const exit = getDefaultExit(world);
+        expect(exit.exitName).toBeNull();
+        expect(exit.targetRegion).toBeNull();
         expect(world.itemLocationNames.has('2,1')).toBe(false);
     });
 

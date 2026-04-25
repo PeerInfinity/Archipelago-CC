@@ -405,7 +405,9 @@ export class ProcgenPipelineUI {
         ctx.fillStyle = COLORS.entrance;
         ctx.fillRect(offX + world.entrance.x * TILE_PX, offY + world.entrance.y * TILE_PX, TILE_PX, TILE_PX);
         ctx.fillStyle = COLORS.exit;
-        ctx.fillRect(offX + world.exit.x * TILE_PX, offY + world.exit.y * TILE_PX, TILE_PX, TILE_PX);
+        for (const e of world.exits.values()) {
+            ctx.fillRect(offX + e.x * TILE_PX, offY + e.y * TILE_PX, TILE_PX, TILE_PX);
+        }
         // Obstacles
         const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
         for (const [posKey, obstacleId] of world.obstacles) {

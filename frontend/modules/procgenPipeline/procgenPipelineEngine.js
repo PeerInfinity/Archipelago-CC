@@ -131,6 +131,10 @@ export function stitchGrid(grid) {
             const neighborCell = grid.neighborCell(region.cell, side);
             const neighbor = neighborCell ? grid.getRegion(neighborCell) : null;
             exit.target_region = neighbor ? neighbor.region_id : null;
+            // Mirror onto world.exits so runtime transitions see the
+            // resolved target without going through extracted_rules.
+            const worldExit = region.playable_payload?.exits?.get(exit.id);
+            if (worldExit) worldExit.targetRegion = exit.target_region;
         }
     }
 }
@@ -596,16 +600,26 @@ function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBS
         items.push({ x, y, id, locationName: locationNameByPos.get(key) ?? null });
     }
 
-    // v1 maze emits exactly one exit per region. Bake in the exit name
-    // and target region from the extracted rules so the substrate can
-    // publish user:regionMove directly.
-    const extractedExit = extractedRules?.exits?.[0] ?? null;
-    const exit = {
-        x: world.exit.x,
-        y: world.exit.y,
-        exitName: extractedExit?.id ?? null,
-        targetRegion: extractedExit?.target_region ?? null,
-    };
+    // Bake in each exit's AP-canonical name and target region. The
+    // sidecar carries the multi-exit `exits` array; deserializeMaze-
+    // World builds world.exits back from it. (Old single-exit
+    // sidecars used `exit: {...}`; the deserializer accepts both.)
+    const extractedExitsById = new Map();
+    for (const e of extractedRules?.exits ?? []) {
+        extractedExitsById.set(e.id, e);
+    }
+    const exitsOut = [];
+    for (const e of world.exits.values()) {
+        const ext = extractedExitsById.get(e.exit_id);
+        exitsOut.push({
+            exit_id: e.exit_id,
+            x: e.x,
+            y: e.y,
+            side: e.side,
+            exitName: ext?.id ?? e.exitName ?? null,
+            targetRegion: ext?.target_region ?? e.targetRegion ?? null,
+        });
+    }
 
     // Only include obstacleLib entries that aren't already in the
     // base library — standard colored doors live there; per-instance
@@ -622,7 +636,7 @@ function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBS
         height: world.height,
         tiles: Array.from(world.tiles),
         entrance: { x: world.entrance.x, y: world.entrance.y },
-        exit,
+        exits: exitsOut,
         obstacles,
         items,
         obstacleLib: obstacleLibExtras,

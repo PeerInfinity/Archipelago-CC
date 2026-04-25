@@ -15,6 +15,7 @@ import {
     detectStepEvents,
     generateMaze,
     extractPathsAndObstacles,
+    isExit,
 } from './mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -465,7 +466,9 @@ export class MazeRoomUI {
         ctx.fillRect(w.entrance.x * TILE_PX, w.entrance.y * TILE_PX, TILE_PX, TILE_PX);
 
         ctx.fillStyle = COLORS.exit;
-        ctx.fillRect(w.exit.x * TILE_PX, w.exit.y * TILE_PX, TILE_PX, TILE_PX);
+        for (const e of w.exits.values()) {
+            ctx.fillRect(e.x * TILE_PX, e.y * TILE_PX, TILE_PX, TILE_PX);
+        }
 
         // Obstacles — filled tile in the library's color when still
         // blocking, faded to an outlined ghost when the current
@@ -593,7 +596,7 @@ export class MazeRoomUI {
         if (this.externalInventory !== null) {
             this._publishPlaybackEvents(oldPos, next.player_pos);
         }
-        if (this.state.player_pos.x === this.world.exit.x && this.state.player_pos.y === this.world.exit.y) {
+        if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
             this.message = `Reached exit in ${this.state.turn} steps.`;
         }
         this.render();
@@ -621,12 +624,12 @@ export class MazeRoomUI {
                     regionName: this.currentRegionId,
                 }, { initialTarget: 'bottom' });
             } else if (ev.type === 'exit_cross') {
-                const targetRegion = this.world.exit.targetRegion;
-                if (!targetRegion) continue;
+                const exit = this.world.exits.get(ev.exit_id);
+                if (!exit?.targetRegion) continue;
                 dispatcher.publish('user:regionMove', {
                     sourceRegion: this.currentRegionId,
-                    targetRegion,
-                    exitName: this.world.exit.exitName ?? null,
+                    targetRegion: exit.targetRegion,
+                    exitName: exit.exitName ?? null,
                 }, { initialTarget: 'bottom' });
             }
         }

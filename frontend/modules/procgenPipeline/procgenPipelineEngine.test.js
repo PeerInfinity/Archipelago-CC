@@ -758,8 +758,15 @@ describe('buildPresetSidecars', () => {
             expect(restored.height).toBe(original.height);
             expect(Array.from(restored.tiles)).toEqual(Array.from(original.tiles));
             expect(restored.entrance).toEqual({ x: original.entrance.x, y: original.entrance.y });
-            expect(restored.exit.x).toBe(original.exit.x);
-            expect(restored.exit.y).toBe(original.exit.y);
+            // Compare exits Map content. v1 grid-growth still emits one
+            // exit per region so the keys match exactly.
+            expect([...restored.exits.keys()].sort())
+                .toEqual([...original.exits.keys()].sort());
+            for (const [id, originalExit] of original.exits) {
+                const restoredExit = restored.exits.get(id);
+                expect(restoredExit.x).toBe(originalExit.x);
+                expect(restoredExit.y).toBe(originalExit.y);
+            }
             // Maps content equal — same keys, same values
             expect([...restored.obstacles.entries()].sort())
                 .toEqual([...original.obstacles.entries()].sort());
@@ -767,8 +774,9 @@ describe('buildPresetSidecars', () => {
                 .toEqual([...original.items.entries()].sort());
             // AP metadata preserved through the round-trip
             const expectedExit = region.extracted_rules.exits?.[0];
-            expect(restored.exit.exitName).toBe(expectedExit?.id ?? null);
-            expect(restored.exit.targetRegion).toBe(expectedExit?.target_region ?? null);
+            const restoredFirstExit = restored.exits.values().next().value;
+            expect(restoredFirstExit.exitName).toBe(expectedExit?.id ?? null);
+            expect(restoredFirstExit.targetRegion).toBe(expectedExit?.target_region ?? null);
             for (const [key] of restored.items) {
                 // For every item, the locationName Map should have an entry
                 // matching what the sidecar carried.
@@ -780,7 +788,7 @@ describe('buildPresetSidecars', () => {
         }
     });
 
-    it('bakes exitName and targetRegion into the exit entry', () => {
+    it('bakes exitName and targetRegion into each exit entry', () => {
         const { grid } = smallGrid();
         const sidecars = buildPresetSidecars(grid);
 
@@ -788,13 +796,18 @@ describe('buildPresetSidecars', () => {
         // neighbor (target_region != null) and check its sidecar.
         let stitchedExitsChecked = 0;
         for (const region of grid.allRegions()) {
-            const extractedExit = region.extracted_rules.exits?.[0];
-            const exit = sidecars['1'][region.region_id].playable_payload.exit;
-            expect(exit.x).toBe(region.playable_payload.exit.x);
-            expect(exit.y).toBe(region.playable_payload.exit.y);
-            expect(exit.exitName).toBe(extractedExit?.id ?? null);
-            expect(exit.targetRegion).toBe(extractedExit?.target_region ?? null);
-            if (extractedExit?.target_region) stitchedExitsChecked++;
+            const exits = sidecars['1'][region.region_id].playable_payload.exits;
+            // Build a quick lookup from extracted_rules to compare against.
+            const extractedById = new Map();
+            for (const e of region.extracted_rules.exits ?? []) {
+                extractedById.set(e.id, e);
+            }
+            for (const sideExit of exits) {
+                const ext = extractedById.get(sideExit.exit_id);
+                expect(sideExit.exitName).toBe(ext?.id ?? null);
+                expect(sideExit.targetRegion).toBe(ext?.target_region ?? null);
+                if (ext?.target_region) stitchedExitsChecked++;
+            }
         }
         expect(stitchedExitsChecked).toBeGreaterThan(0);
     });

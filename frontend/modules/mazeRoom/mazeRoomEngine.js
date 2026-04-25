@@ -39,11 +39,47 @@ export function createWorld(width, height, opts = {}) {
     }
     const tiles = new Int8Array(width * height);
     const entrance = opts.entrance ?? { x: 0, y: 0 };
-    const exit = opts.exit ?? { x: width - 1, y: height - 1 };
     assertInBounds(width, height, entrance, 'entrance');
-    assertInBounds(width, height, exit, 'exit');
+
+    // world.exits: Map<exit_id, { exit_id, x, y, side, exitName,
+    // targetRegion, ... }>. Multi-exit support — replaces the older
+    // singular world.exit. Two input shorthands accepted:
+    //   opts.exits: [...]  (preferred)
+    //   opts.exit:  {x,y}  (legacy single-exit; converted to a Map
+    //                       entry with exit_id 'exit')
+    // Order of insertion is preserved so the "default exit" for
+    // single-exit code paths is well-defined.
+    const exits = new Map();
+    const addExit = (entry, fallbackId) => {
+        assertInBounds(width, height, entry, 'exit');
+        const id = entry.exit_id ?? fallbackId;
+        exits.set(id, {
+            exit_id: id,
+            x: entry.x,
+            y: entry.y,
+            side: entry.side ?? null,
+            exitName: entry.exitName ?? null,
+            targetRegion: entry.targetRegion ?? null,
+            targetExitId: entry.targetExitId ?? null,
+            isTeleporter: entry.isTeleporter ?? false,
+        });
+    };
+    if (Array.isArray(opts.exits)) {
+        opts.exits.forEach((e, i) => addExit(e, `exit_${i}`));
+    }
+    if (opts.exit) {
+        // Legacy single-exit shorthand. Default id is 'exit' to match
+        // what the old extractPathsAndObstacles emitted.
+        addExit(opts.exit, 'exit');
+    }
+    if (exits.size === 0) {
+        // Default for callers that pass nothing — preserves the old
+        // "exit at bottom-right" behavior.
+        addExit({ x: width - 1, y: height - 1 }, 'exit');
+    }
+
     return {
-        width, height, tiles, entrance, exit,
+        width, height, tiles, entrance, exits,
         // Sparse overlays keyed by "x,y". Obstacles block entry unless
         // inventory clears them; items add themselves to inventory on
         // successful entry. Both sit on top of floor tiles.
@@ -52,6 +88,26 @@ export function createWorld(width, height, opts = {}) {
         itemLib: opts.itemLib ?? DEFAULT_ITEMS,
         obstacleLib: opts.obstacleLib ?? DEFAULT_OBSTACLES,
     };
+}
+
+/**
+ * Returns the exit at (x, y), or null if no exit sits there.
+ */
+export function getExitAt(world, x, y) {
+    for (const e of world.exits.values()) {
+        if (e.x === x && e.y === y) return e;
+    }
+    return null;
+}
+
+/**
+ * The first exit in insertion order. Used by single-exit code paths
+ * (gate-and-key placement, walker manhattan scoring) that haven't yet
+ * been generalised to multi-exit. New consumers should iterate
+ * `world.exits` directly.
+ */
+export function getDefaultExit(world) {
+    return world.exits.values().next().value ?? null;
 }
 
 function posKey(x, y) { return `${x},${y}`; }
@@ -63,13 +119,18 @@ function posKey(x, y) { return `${x},${y}`; }
  * for obstacles and items).
  *
  * AP-canonical metadata baked into the sidecar by the pipeline at
- * serialization time (per-item locationName, exit's exitName /
+ * serialization time (per-item locationName, per-exit exitName /
  * targetRegion) is preserved on the deserialized world so the
  * substrate can publish user:locationCheck and user:regionMove with
  * the right names without consulting any external lookup at runtime.
  *
- *   sidecar.exit.exitName / .targetRegion → world.exit.exitName / .targetRegion
- *   sidecar.items[].locationName          → world.itemLocationNames Map<"x,y", name>
+ *   sidecar.exits[].{exitName,targetRegion} → world.exits Map entries
+ *   sidecar.items[].locationName            → world.itemLocationNames
+ *                                             Map<"x,y", name>
+ *
+ * Backward-compat: a sidecar emitted before multi-exit shipped
+ * carries a singular `exit: {x, y, exitName, targetRegion}` field.
+ * Read that as a one-element `exits` list with id 'exit'.
  *
  * The sidecar's `obstacleLib` field carries only per-instance entries
  * the pipeline added on top of the base library (typically
@@ -81,7 +142,7 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (!sidecar || typeof sidecar !== 'object') {
         throw new Error('deserializeMazeWorld: sidecar must be an object');
     }
-    const { width, height, tiles, entrance, exit, obstacles, items } = sidecar;
+    const { width, height, tiles, entrance, obstacles, items } = sidecar;
     if (!Array.isArray(tiles) || tiles.length !== width * height) {
         throw new Error(`deserializeMazeWorld: tiles length ${tiles?.length} != ${width}*${height}`);
     }
@@ -90,9 +151,31 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     const baseObstacleLib = opts.baseObstacleLib ?? DEFAULT_OBSTACLES;
     const obstacleLib = { ...baseObstacleLib, ...(sidecar.obstacleLib ?? {}) };
 
+    // Multi-exit-aware load with legacy single-exit shorthand.
+    let exitsInput;
+    if (Array.isArray(sidecar.exits)) {
+        exitsInput = sidecar.exits.map((e) => ({
+            exit_id: e.exit_id ?? 'exit',
+            x: e.x,
+            y: e.y,
+            side: e.side ?? null,
+            exitName: e.exitName ?? null,
+            targetRegion: e.targetRegion ?? null,
+        }));
+    } else if (sidecar.exit) {
+        exitsInput = [{
+            exit_id: 'exit',
+            x: sidecar.exit.x,
+            y: sidecar.exit.y,
+            side: sidecar.exit.side ?? null,
+            exitName: sidecar.exit.exitName ?? null,
+            targetRegion: sidecar.exit.targetRegion ?? null,
+        }];
+    }
+
     const world = createWorld(width, height, {
         entrance: { x: entrance.x, y: entrance.y },
-        exit: { x: exit.x, y: exit.y, exitName: exit.exitName ?? null, targetRegion: exit.targetRegion ?? null },
+        exits: exitsInput,
         itemLib,
         obstacleLib,
     });
@@ -167,7 +250,7 @@ export function isEntrance(world, x, y) {
 }
 
 export function isExit(world, x, y) {
-    return world.exit.x === x && world.exit.y === y;
+    return getExitAt(world, x, y) !== null;
 }
 
 // --- State ---
@@ -229,7 +312,7 @@ export function step(world, state, input, inventoryOverride) {
 // --- Goal predicates ---
 
 export function reachedExit(state, world) {
-    return state.player_pos.x === world.exit.x && state.player_pos.y === world.exit.y;
+    return isExit(world, state.player_pos.x, state.player_pos.y);
 }
 
 /**
@@ -268,11 +351,12 @@ export function detectStepEvents(world, oldPos, newPos, inventory) {
         });
     }
 
-    const wasOnExit = oldPos.x === world.exit.x && oldPos.y === world.exit.y;
-    const nowOnExit = newPos.x === world.exit.x && newPos.y === world.exit.y;
-    if (!wasOnExit && nowOnExit) {
+    const oldExit = getExitAt(world, oldPos.x, oldPos.y);
+    const newExit = getExitAt(world, newPos.x, newPos.y);
+    if (!oldExit && newExit) {
         events.push({
             type: 'exit_cross',
+            exit_id: newExit.exit_id,
             position: { x: newPos.x, y: newPos.y },
         });
     }
@@ -362,15 +446,18 @@ function pathsToTarget(world, position) {
 export function extractPathsAndObstacles(world, opts = {}) {
     const regionId = opts.regionId ?? 'maze_room';
 
-    // Exits are region-to-region connections with a placeholder target
-    // region — the maze room's "exit" tile becomes a named exit with
-    // no known destination until the region graph stitches it in.
-    const exits = [{
-        id: 'exit',
-        position: { x: world.exit.x, y: world.exit.y },
-        target_region: null,
-        paths: pathsToTarget(world, world.exit),
-    }];
+    // Exits are region-to-region connections; one entry per exit tile
+    // in `world.exits`. Target region resolution (for multi-region
+    // graphs) happens during stitching.
+    const exits = [];
+    for (const exit of world.exits.values()) {
+        exits.push({
+            id: exit.exit_id,
+            position: { x: exit.x, y: exit.y },
+            target_region: exit.targetRegion ?? null,
+            paths: pathsToTarget(world, { x: exit.x, y: exit.y }),
+        });
+    }
 
     // Locations are Archipelago check slots; in v1 each item pickup
     // position is a location whose canonical item is what the generator
@@ -410,15 +497,26 @@ function manhattan(a, b) {
     return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
 
+function nearestExitDist(pos, world) {
+    let best = Infinity;
+    for (const e of world.exits.values()) {
+        const d = manhattan(pos, e);
+        if (d < best) best = d;
+    }
+    return best;
+}
+
 export function makeMazePickMove(weights = DEFAULT_WALKER_WEIGHTS) {
     const { unvisitedBonus, towardExitBonus } = { ...DEFAULT_WALKER_WEIGHTS, ...weights };
     return function mazePickMove({ world, state, legalMoves, visited, rng }) {
         if (legalMoves.length === 0) return null;
-        const curDist = manhattan(state.player_pos, world.exit);
+        // For multi-exit worlds, score moves toward the nearest exit;
+        // single-exit worlds collapse to "toward THE exit" naturally.
+        const curDist = nearestExitDist(state.player_pos, world);
         const weighted = legalMoves.map((m) => {
             let w = 1;
             if (!visited.has(mazeVisitedKey(m.nextState))) w *= unvisitedBonus;
-            const newDist = manhattan(m.nextState.player_pos, world.exit);
+            const newDist = nearestExitDist(m.nextState.player_pos, world);
             if (newDist < curDist) w *= towardExitBonus;
             return { input: m.input, weight: w };
         });
@@ -533,7 +631,15 @@ function reachableTiles(world, startState) {
 }
 
 function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'key_red' } = {}) {
-    const pathResult = reach(world, bfsSolver, createState(world), reachedExit);
+    // v1 gate-and-key targets a single exit. For multi-exit worlds we
+    // pick the default (first-inserted) exit; the cut-vertex check
+    // still demands the door blocks every route to it. Generalising
+    // across all exits simultaneously is a growth path tied to
+    // multi-exit grid growth.
+    const targetExit = getDefaultExit(world);
+    if (!targetExit) return { placed: false, reason: 'no_exit' };
+    const pathResult = reach(world, bfsSolver, createState(world),
+        (s) => s.player_pos.x === targetExit.x && s.player_pos.y === targetExit.y);
     if (!pathResult.ok) return { placed: false, reason: 'no_path' };
     const pathPositions = tracePath(world, createState(world), pathResult.plan);
     if (!pathPositions || pathPositions.length < 3) {
@@ -554,7 +660,7 @@ function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'k
         // exit route passes through. If the exit is still reachable with
         // the door as a wall, the door is bypassable and we retry.
         const exitBypassable = beforeDoor.some(
-            (p) => p.x === world.exit.x && p.y === world.exit.y,
+            (p) => p.x === targetExit.x && p.y === targetExit.y,
         );
         if (exitBypassable) {
             clearObstacle(world, doorPos.x, doorPos.y);
@@ -595,10 +701,12 @@ export function generateMaze(config) {
 
     const world = createWorld(width, height, {
         entrance: config.entrance,
+        exits: config.exits,
+        // Legacy single-exit shorthand still accepted by createWorld.
         exit: config.exit,
     });
 
-    const exclude = [world.entrance, world.exit];
+    const exclude = [world.entrance, ...world.exits.values()];
 
     const start = createState(world);
     const baseline = reach(world, bfsSolver, start, reachedExit);
@@ -742,7 +850,7 @@ function pickReachableFloorTile(world, rng, excluded) {
     const tiles = reachableTiles(world, createState(world));
     const candidates = tiles.filter((t) => {
         if (t.x === world.entrance.x && t.y === world.entrance.y) return false;
-        if (t.x === world.exit.x && t.y === world.exit.y) return false;
+        if (isExit(world, t.x, t.y)) return false;
         if (excludedKeys.has(`${t.x},${t.y}`)) return false;
         if (getItem(world, t.x, t.y)) return false;
         if (getObstacle(world, t.x, t.y)) return false;
@@ -806,7 +914,6 @@ export function generateRegionCore(input) {
     if (!rng || typeof rng.next !== 'function') throw new Error('generateRegionCore: rng required');
     if (entrances.length > 1) throw new Error('generateRegionCore v1: at most one entrance supported');
     if (exits.length === 0) throw new Error('generateRegionCore: at least one exit required');
-    if (exits.length > 1) throw new Error('generateRegionCore v1: exactly one exit supported');
 
     // Resolve entrance tile.
     let entrance_tile;
@@ -820,9 +927,36 @@ export function generateRegionCore(input) {
         entrance_tile = ent.tile;
     }
 
-    const exitSpec = exits[0];
-    if (!exitSpec.side) throw new Error('generateRegionCore: exit side required');
-    const exit_tile = pickTileOnSide(exitSpec.side, size, rng);
+    // Resolve a tile per exit. v1 picks a random border tile on the
+    // requested side; clockwise wall assignment + collision avoidance
+    // for multi-exit on the same side comes in §1B.
+    //
+    // Default exit_id: 'exit' for the single-exit case (preserves the
+    // legacy id and keeps already-serialized rules.json files
+    // round-tripping); 'exit_<i>' otherwise.
+    const usedKeys = new Set([`${entrance_tile.x},${entrance_tile.y}`]);
+    const defaultExitId = (i) => exits.length === 1 ? 'exit' : `exit_${i}`;
+    const resolvedExits = exits.map((spec, i) => {
+        if (!spec.side) throw new Error('generateRegionCore: exit side required');
+        let tile = pickTileOnSide(spec.side, size, rng);
+        // Avoid colliding with an already-claimed tile (entrance or
+        // a sibling exit). Naive resample loop; clockwise assignment
+        // (§1B) replaces this.
+        let attempts = 0;
+        while (usedKeys.has(`${tile.x},${tile.y}`) && attempts < 50) {
+            tile = pickTileOnSide(spec.side, size, rng);
+            attempts++;
+        }
+        usedKeys.add(`${tile.x},${tile.y}`);
+        return {
+            exit_id: spec.exit_id ?? defaultExitId(i),
+            side: spec.side,
+            x: tile.x,
+            y: tile.y,
+            exitName: spec.exitName ?? null,
+            targetRegion: spec.targetRegion ?? null,
+        };
+    });
 
     const mazeSeed = Math.floor(rng.next() * 0x7fffffff);
     const { world, stats: wall_stats } = generateMaze({
@@ -830,7 +964,7 @@ export function generateRegionCore(input) {
         height: size.height,
         seed: mazeSeed,
         entrance: entrance_tile,
-        exit: exit_tile,
+        exits: resolvedExits,
         params: { ...params, placeGateAndKey: false },
     });
 
@@ -841,7 +975,11 @@ export function generateRegionCore(input) {
 
     return {
         world,
-        exits_placed: [{ side: exitSpec.side, tile_position: exit_tile }],
+        exits_placed: resolvedExits.map((e) => ({
+            exit_id: e.exit_id,
+            side: e.side,
+            tile_position: { x: e.x, y: e.y },
+        })),
         entrance_tile,
         wall_stats,
     };
@@ -981,11 +1119,6 @@ export function placeFromRules(world, input = {}) {
     if (!world) throw new Error('placeFromRules: world required');
     if (!rng || typeof rng.next !== 'function') throw new Error('placeFromRules: rng required');
 
-    const exitIds = Object.keys(exit_rules);
-    if (exitIds.length > 1) {
-        throw new Error(`placeFromRules v1: at most one exit rule supported, got ${exitIds.length}`);
-    }
-
     // Copy the obstacleLib so per-instance gate entries added here
     // don't leak into other regions sharing the same reference.
     world.obstacleLib = { ...world.obstacleLib };
@@ -1014,16 +1147,19 @@ export function placeFromRules(world, input = {}) {
     const placed_items = [];
     const placed_locations = [];
 
-    // Exit rule: gate the exit tile.
-    if (exitIds.length === 1) {
-        const exit_id = exitIds[0];
-        const rule = exit_rules[exit_id];
+    // Exit rules: gate each exit tile by exit_id. Each exit_rules
+    // entry must reference an exit_id that's already in world.exits.
+    for (const [exit_id, rule] of Object.entries(exit_rules)) {
+        const exit = world.exits.get(exit_id);
+        if (!exit) {
+            throw new Error(`placeFromRules: exit_rules references unknown exit_id '${exit_id}'`);
+        }
         const gate_id = registerGate(rule);
-        setObstacle(world, world.exit.x, world.exit.y, gate_id);
+        setObstacle(world, exit.x, exit.y, gate_id);
         placed_logic_gates.push({
             gate_id,
             exit_id,
-            position: { x: world.exit.x, y: world.exit.y },
+            position: { x: exit.x, y: exit.y },
             clear_rule: rule,
         });
     }
