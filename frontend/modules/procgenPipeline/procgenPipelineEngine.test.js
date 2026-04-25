@@ -970,6 +970,42 @@ describe('buildPresetSidecars', () => {
         }
     });
 
+    it('serializes only itemLib entries that are not in the base library', () => {
+        // Construct a world where we manually add a foreign-item
+        // entry to itemLib (mirrors what the top-down driver will
+        // do when consuming a rules.json that uses items the maze
+        // doesn't know about). The base-library entries must not
+        // be re-emitted; the foreign one must travel.
+        const { grid } = smallGrid();
+        const region = grid.allRegions()[0];
+        region.playable_payload.itemLib = {
+            ...region.playable_payload.itemLib,
+            ancient_compass: {
+                id: 'ancient_compass',
+                name: 'Ancient Compass',
+                color: '#cc8866',
+                symbol: 'compass',
+                classification: 'progression',
+            },
+        };
+        const sidecars = buildPresetSidecars(grid);
+        const sidecar = sidecars['1'][region.region_id].playable_payload;
+        // Standard items don't redundantly appear.
+        expect(sidecar.itemLib.key_red).toBeUndefined();
+        // The foreign one survived.
+        expect(sidecar.itemLib.ancient_compass).toEqual({
+            id: 'ancient_compass',
+            name: 'Ancient Compass',
+            color: '#cc8866',
+            symbol: 'compass',
+            classification: 'progression',
+        });
+        // Round-trips through deserialize back into the world's itemLib.
+        const restored = deserializeMazeWorld(sidecar);
+        expect(restored.itemLib.ancient_compass).toBeDefined();
+        expect(restored.itemLib.key_red).toBeDefined(); // base library still merged in
+    });
+
     it('bakes exitName and targetRegion into each exit entry', () => {
         const { grid } = smallGrid();
         const sidecars = buildPresetSidecars(grid);

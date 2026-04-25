@@ -13,7 +13,10 @@ import {
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
+import {
+    DEFAULT_ITEMS, DEFAULT_OBSTACLES,
+    isObstacleCleared, getItemRenderHints,
+} from '../shared/procgen/library.js';
 
 const LS_KEY = 'procgenPipeline_params';
 const TILE_PX = 14;
@@ -443,14 +446,25 @@ export class ProcgenPipelineUI {
                     ctx.fillRect(offX + x * TILE_PX + 2, offY + y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
                 }
                 if (itemId) {
-                    const color = itemLib[itemId]?.color ?? '#e6a817';
-                    ctx.fillStyle = color;
+                    const hints = getItemRenderHints(itemId, itemLib);
+                    const cx = offX + x * TILE_PX + TILE_PX / 2;
+                    const cy = offY + y * TILE_PX + TILE_PX / 2;
+                    ctx.fillStyle = hints.color;
                     ctx.beginPath();
-                    ctx.arc(offX + x * TILE_PX + TILE_PX / 2, offY + y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
+                    ctx.arc(cx, cy, TILE_PX * 0.3, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.strokeStyle = '#000';
                     ctx.lineWidth = 1;
                     ctx.stroke();
+                    if (hints.label) {
+                        ctx.save();
+                        ctx.fillStyle = '#000';
+                        ctx.font = `bold ${Math.floor(TILE_PX * 0.55)}px sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(hints.label, cx, cy);
+                        ctx.restore();
+                    }
                     if (isLogicGate && gateClosed) {
                         ctx.strokeStyle = COLORS.locationBlocked;
                         ctx.lineWidth = 2;

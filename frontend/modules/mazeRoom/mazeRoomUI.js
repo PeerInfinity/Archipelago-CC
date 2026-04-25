@@ -17,7 +17,10 @@ import {
     extractPathsAndObstacles,
     isExit,
 } from './mazeRoomEngine.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
+import {
+    DEFAULT_ITEMS, DEFAULT_OBSTACLES,
+    isObstacleCleared, getItemRenderHints,
+} from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 // Imported directly so the panel can subscribe even when its
@@ -538,17 +541,30 @@ export class MazeRoomUI {
                 }
 
                 // Items: a circle in the library's color. Skipped
-                // when the player already collected the item.
+                // when the player already collected the item. Foreign
+                // items (no library entry) get a hash-derived color
+                // and a first-letter label so they're visually
+                // distinguishable from each other and from known items.
                 if (itemHere) {
-                    const item = itemLib[itemId];
-                    const color = item?.color ?? '#e6a817';
-                    ctx.fillStyle = color;
+                    const hints = getItemRenderHints(itemId, itemLib);
+                    ctx.fillStyle = hints.color;
+                    const cx = x * TILE_PX + TILE_PX / 2;
+                    const cy = y * TILE_PX + TILE_PX / 2;
                     ctx.beginPath();
-                    ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
+                    ctx.arc(cx, cy, TILE_PX * 0.3, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.strokeStyle = '#000';
                     ctx.lineWidth = 1.5;
                     ctx.stroke();
+                    if (hints.label) {
+                        ctx.save();
+                        ctx.fillStyle = '#000';
+                        ctx.font = `bold ${Math.floor(TILE_PX * 0.45)}px sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(hints.label, cx, cy);
+                        ctx.restore();
+                    }
 
                     // Closed logic gate ON a location: 2px red
                     // border around the item. Open or no gate: no

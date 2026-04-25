@@ -129,6 +129,45 @@ export function evaluateRuleAgainstInventory(rule, inventory) {
 }
 
 /**
+ * Render hints for an item id. Looks the item up in `itemLib`; when
+ * absent (a "foreign" item from a top-down driver consuming another
+ * game's rules.json), derives a hash-based HSL color and uses the
+ * first character of the id as a label, so different unknown items
+ * remain visually distinguishable.
+ *
+ *   { color, label, name }
+ *
+ * Both maze-substrate panels (mazeRoomUI, procgenPipelineUI) call
+ * this when drawing an item tile. label is null when the library
+ * entry has no symbol — known items keep their plain colored-circle
+ * rendering; unknown items get the letter overlay.
+ */
+export function getItemRenderHints(itemId, itemLib = DEFAULT_ITEMS) {
+    const item = itemLib?.[itemId];
+    if (item) {
+        return {
+            color: item.color ?? '#e6a817',
+            label: item.symbol ?? null,
+            name: item.name ?? itemId,
+        };
+    }
+    // Foreign item: hash the id for color, take the first character
+    // (uppercased) as a label, and fall back to the id itself for
+    // the display name.
+    let hash = 0;
+    for (let i = 0; i < itemId.length; i++) {
+        hash = ((hash << 5) - hash) + itemId.charCodeAt(i);
+        hash |= 0;
+    }
+    const hue = Math.abs(hash) % 360;
+    return {
+        color: `hsl(${hue}, 65%, 55%)`,
+        label: (itemId[0] ?? '?').toUpperCase(),
+        name: itemId,
+    };
+}
+
+/**
  * True iff the player's inventory clears the obstacle. Dispatches on
  * `clear_set_type`:
  *   - 'combo_list' (default): any one AND-combination fully present

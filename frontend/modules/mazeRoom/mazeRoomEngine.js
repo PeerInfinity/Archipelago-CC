@@ -151,7 +151,8 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
         throw new Error(`deserializeMazeWorld: tiles length ${tiles?.length} != ${width}*${height}`);
     }
 
-    const itemLib = opts.itemLib ?? DEFAULT_ITEMS;
+    const baseItemLib = opts.baseItemLib ?? opts.itemLib ?? DEFAULT_ITEMS;
+    const itemLib = { ...baseItemLib, ...(sidecar.itemLib ?? {}) };
     const baseObstacleLib = opts.baseObstacleLib ?? DEFAULT_OBSTACLES;
     const obstacleLib = { ...baseObstacleLib, ...(sidecar.obstacleLib ?? {}) };
 

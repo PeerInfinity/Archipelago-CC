@@ -750,7 +750,7 @@ export function compileRegionGraph(grid, opts = {}) {
 // names from the extracted_rules are baked in so the substrate panel
 // can publish user:locationCheck and user:regionMove with the right
 // names without consulting any other lookup at runtime.
-function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBSTACLES) {
+function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBSTACLES, baseItemLib = DEFAULT_ITEMS) {
     const obstacles = [];
     for (const [key, id] of world.obstacles) {
         const [x, y] = key.split(',').map(Number);
@@ -801,14 +801,22 @@ function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBS
         });
     }
 
-    // Only include obstacleLib entries that aren't already in the
-    // base library — standard colored doors live there; per-instance
-    // logic_gate_<N> entries don't and must travel in the sidecar so
-    // the compiler / runtime can look them up.
+    // Only include obstacleLib / itemLib entries that aren't already
+    // in the base library. Standard colored doors and the maze's own
+    // keys live in the base; per-instance logic_gate_<N> entries
+    // (from placeFromRules) and any foreign-item metadata baked in
+    // by a top-down driver need to travel in the sidecar so the
+    // compiler / renderer / runtime can look them up.
     const obstacleLibExtras = {};
     for (const [id, def] of Object.entries(world.obstacleLib || {})) {
         if (!(id in baseObstacleLib)) {
             obstacleLibExtras[id] = def;
+        }
+    }
+    const itemLibExtras = {};
+    for (const [id, def] of Object.entries(world.itemLib || {})) {
+        if (!(id in baseItemLib)) {
+            itemLibExtras[id] = def;
         }
     }
     return {
@@ -820,10 +828,15 @@ function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBS
         obstacles,
         items,
         obstacleLib: obstacleLibExtras,
+        itemLib: itemLibExtras,
     };
 }
 
-export function buildPresetSidecars(grid, { playerId = '1', baseObstacleLib = DEFAULT_OBSTACLES } = {}) {
+export function buildPresetSidecars(grid, {
+    playerId = '1',
+    baseObstacleLib = DEFAULT_OBSTACLES,
+    baseItemLib = DEFAULT_ITEMS,
+} = {}) {
     const regionMap = {};
     for (const region of grid.allRegions()) {
         regionMap[region.region_id] = {
@@ -833,6 +846,7 @@ export function buildPresetSidecars(grid, { playerId = '1', baseObstacleLib = DE
                 region.playable_payload,
                 region.extracted_rules,
                 baseObstacleLib,
+                baseItemLib,
             ),
         };
     }
@@ -971,7 +985,7 @@ export function buildRulesJson(grid, opts = {}) {
 
     // Menu is virtual — no playable payload, no sidecar entry.
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
-        playerId, baseObstacleLib: obstacleLib,
+        playerId, baseObstacleLib: obstacleLib, baseItemLib: itemLib,
     });
 
     return scaffold;
