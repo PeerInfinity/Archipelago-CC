@@ -535,7 +535,12 @@ describe('generateRegionCore', () => {
         expect(() => generateRegionCore({ ...baseCoreInput(), region_id: undefined })).toThrow(/region_id/);
         expect(() => generateRegionCore({ ...baseCoreInput(), size: undefined })).toThrow(/size/);
         expect(() => generateRegionCore({ ...baseCoreInput(), rng: undefined })).toThrow(/rng/);
-        expect(() => generateRegionCore({ ...baseCoreInput(), exits: [] })).toThrow(/exit/);
+    });
+
+    it('accepts exits: [] (terminal region — caller adds back-exit later)', () => {
+        const out = generateRegionCore({ ...baseCoreInput(), exits: [] });
+        expect(out.world.exits.size).toBe(0);
+        expect(out.exits_placed).toEqual([]);
     });
 
     it('rejects multiple entrances in v1 (multi-entrance is a growth path)', () => {

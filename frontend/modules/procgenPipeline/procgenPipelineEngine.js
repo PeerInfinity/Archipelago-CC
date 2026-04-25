@@ -1,15 +1,18 @@
 /**
- * procgenPipeline engine — headless grid-growth pipeline logic.
- * See NewDocs/plans/procedural-generation/grid-growth-pipeline.md.
+ * procgenPipeline engine — headless grid-growth pipeline logic plus
+ * the top-down driver. See NewDocs/plans/procedural-generation/
+ * grid-growth-pipeline.md and top-down-driver.md.
  *
  * This file hosts the scenario pool, grid model, growth loop,
- * incremental re-stitcher, and full-world Boolean compile. Contents
- * grow per the v1 punch list in the plan doc.
+ * incremental re-stitcher, full-world Boolean compile, and the
+ * top-down driver that consumes an existing rules.json. Contents
+ * grow per the v1 punch list in the plan docs.
  */
 
 import { createRng } from '../shared/rng.js';
 import {
-    generateRegionCore, placeFromItems, extractPathsAndObstacles,
+    generateRegionCore, placeFromItems, placeFromRules,
+    extractPathsAndObstacles,
 } from '../mazeRoom/mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -597,6 +600,388 @@ export function growMaze(config) {
     return { grid, pool, stats, startCell };
 }
 
+// --- Top-down driver ---
+//
+// Consume an existing rules.json and realise its region graph as
+// maze-substrate regions on a grid. Produces the same {grid, startCell,
+// stats} shape as growMaze so the existing compile/emit tail
+// (compileRegionGraph, buildRulesJson, buildPresetSidecars) handles
+// the output unchanged. See top-down-driver.md.
+
+function cellsAreAdjacent(a, b) {
+    if (!a || !b) return false;
+    const dx = Math.abs(a.gx - b.gx);
+    const dy = Math.abs(a.gy - b.gy);
+    return (dx + dy) === 1;
+}
+
+function findAdjacentEmptyCell(grid, fromCell, rng) {
+    const candidates = SIDES
+        .map((s) => grid.neighborCell(fromCell, s))
+        .filter((c) => c !== null && !grid.hasRegion(c));
+    if (candidates.length === 0) return null;
+    return candidates[Math.floor(rng.next() * candidates.length)];
+}
+
+/**
+ * Per-region size for top-down: enough perimeter to fit the source
+ * region's exits + entrance + slack, and enough floor area to fit the
+ * locations. Both substrate-side auto-grow (§1B) and the size we pick
+ * here can absorb under-provisioned input — picking a sensible
+ * starting size keeps auto-grow from firing on every region.
+ */
+function topDownRegionSize(base, exitCount, locationCount) {
+    let width = base.width;
+    let height = base.height;
+    const perimeter = (w, h) => 2 * w + 2 * h - 4;
+    // Each exit needs a perimeter slot, plus 1 for the entrance on a
+    // non-start region, plus a couple of slack tiles for the substrate's
+    // collision-avoidance during clockwise assignment.
+    const perimNeeded = exitCount + 1 + 2;
+    while (perimeter(width, height) < perimNeeded) {
+        width += 2;
+        height += 2;
+    }
+    // Locations live on floor tiles; ensure enough floor area for them
+    // plus entrance/exit/walking room.
+    const floorNeeded = locationCount + 4;
+    while (width * height < floorNeeded) {
+        width += 1;
+        height += 1;
+    }
+    return { width, height };
+}
+
+/**
+ * Resolve which source region is the "actual" start. Most rules.json
+ * files (including the procgen-emitted ones) wrap the playable start
+ * in a synthetic Menu region whose only exit is unconditional and
+ * points at the real start. Top-down strips Menu and starts BFS from
+ * the connected_region; buildRulesJson re-wraps the output in a
+ * fresh Menu region on emit.
+ */
+function resolveTopDownStart(sourceRegions, declaredStart) {
+    if (!declaredStart) return null;
+    const region = sourceRegions[declaredStart];
+    if (!region) return null;
+    if (/^menu$/i.test(declaredStart) && (region.exits ?? []).length > 0) {
+        const firstExit = region.exits[0];
+        if (firstExit?.connected_region && sourceRegions[firstExit.connected_region]) {
+            return { actualStart: firstExit.connected_region, menuName: declaredStart };
+        }
+    }
+    return { actualStart: declaredStart, menuName: null };
+}
+
+export function topDownFromRulesJson(rulesJson, opts = {}) {
+    const {
+        playerId = '1',
+        gridDims = { width: 12, height: 12 },
+        regionSizeBase = { width: 6, height: 6 },
+        seed = 1,
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        regionParams = {},
+        teleporterMinGap = 2,
+        // Honor the source's flag, default true. When set, every
+        // BFS-tree-edge gets a back-exit on the child for round-
+        // tripping back through the entrance.
+        assumeBidirectional = rulesJson?.assume_bidirectional_exits !== false,
+    } = opts;
+
+    const rng = createRng(seed);
+    const grid = new Grid(gridDims);
+
+    if (!rulesJson || typeof rulesJson !== 'object') {
+        throw new Error('topDownFromRulesJson: rulesJson required');
+    }
+
+    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
+    if (Object.keys(sourceRegions).length === 0) {
+        throw new Error(`topDownFromRulesJson: no regions for player '${playerId}'`);
+    }
+
+    // Locate the declared start.
+    const startField = rulesJson?.start_regions?.[playerId];
+    let declaredStart = null;
+    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
+    else if (Array.isArray(startField)) declaredStart = startField[0];
+    const resolved = resolveTopDownStart(sourceRegions, declaredStart);
+    if (!resolved) {
+        throw new Error(`topDownFromRulesJson: no usable start region for player '${playerId}'`);
+    }
+    const actualStartName = resolved.actualStart;
+    const menuName = resolved.menuName;
+
+    const stats = {
+        regionsBuilt: 0,
+        regionsSkipped: 0,
+        teleportersPlaced: 0,
+        regionsTotal: Object.keys(sourceRegions).length,
+        stopReason: null,
+    };
+
+    // ----- Phase 1: layout -----
+    // Walk the source region graph in BFS order from actualStartName,
+    // assigning each region a grid cell. When the desired adjacent
+    // cell is unavailable, fall back to a disconnected cell ≥ minGap
+    // away and mark the connecting source-exit as needing a teleporter.
+    // Stub-place each region in the Grid as we go so neighborCell
+    // queries work; phase 2 mutates each stub in place with the
+    // realised substrate world.
+    const startCell = {
+        gx: Math.floor(gridDims.width / 2),
+        gy: Math.floor(gridDims.height / 2),
+    };
+    const cellsByName = new Map();
+    const placementOrder = []; // [{ name, cell, parent: {name, exit_id} | null }]
+    const teleporterEdges = []; // [{ from_name, exit_id }]
+
+    cellsByName.set(actualStartName, startCell);
+    placementOrder.push({ name: actualStartName, cell: startCell, parent: null });
+    grid.placeRegion(startCell, { region_id: actualStartName });
+
+    const bfsQueue = [actualStartName];
+    while (bfsQueue.length > 0) {
+        const fromName = bfsQueue.shift();
+        const fromCell = cellsByName.get(fromName);
+        const fromRegion = sourceRegions[fromName];
+        if (!fromRegion) continue;
+        for (const exit of fromRegion.exits ?? []) {
+            const targetName = exit.connected_region;
+            if (!targetName) continue;
+            // Skip the synthetic Menu region everywhere — it's a
+            // wrapper, not a playable region. buildRulesJson re-emits
+            // it on the output side.
+            if (menuName && targetName === menuName) continue;
+            if (!sourceRegions[targetName]) continue;
+
+            if (cellsByName.has(targetName)) {
+                // Target already placed. If not adjacent, mark this
+                // source-exit as a teleporter; if adjacent, no-op
+                // (the existing geometric edge will be honored).
+                const targetCell = cellsByName.get(targetName);
+                if (!cellsAreAdjacent(fromCell, targetCell)) {
+                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                }
+                continue;
+            }
+
+            // Target not yet placed. Try a geographic neighbor first.
+            const adj = findAdjacentEmptyCell(grid, fromCell, rng);
+            if (adj) {
+                cellsByName.set(targetName, adj);
+                placementOrder.push({
+                    name: targetName, cell: adj,
+                    parent: { name: fromName, exit_id: exit.name },
+                });
+                grid.placeRegion(adj, { region_id: targetName });
+                bfsQueue.push(targetName);
+            } else {
+                const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+                if (disc) {
+                    cellsByName.set(targetName, disc);
+                    placementOrder.push({
+                        name: targetName, cell: disc,
+                        parent: { name: fromName, exit_id: exit.name },
+                    });
+                    grid.placeRegion(disc, { region_id: targetName });
+                    bfsQueue.push(targetName);
+                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                } else {
+                    // Grid is too cramped — drop this edge. The exit
+                    // will dangle (target_region: null) and get walled
+                    // off in the final pass.
+                    stats.regionsSkipped += 1;
+                }
+            }
+        }
+    }
+
+    // ----- Phase 2: realise each region -----
+    // exitSidesByExit lets a child resolve its entrance tile from its
+    // parent's exit position — populated as we go through phase 2 in
+    // BFS-placement order, so parents always realise before children.
+    const exitSidesByExit = new Map(); // "name:exit_id" -> {side, tile_position}
+
+    for (const { name, cell, parent } of placementOrder) {
+        const sourceRegion = sourceRegions[name];
+        if (!sourceRegion) continue;
+        const exitCount = (sourceRegion.exits ?? []).length;
+        const locationCount = (sourceRegion.locations ?? []).length;
+        const size = topDownRegionSize(regionSizeBase, exitCount, locationCount);
+
+        let entrances = [];
+        if (parent) {
+            const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
+            if (parentExit) {
+                const entranceTile = mirrorTileAcrossSide(
+                    parentExit.tile_position, parentExit.side, size,
+                );
+                entrances = [{
+                    side: OPPOSITE_SIDE[parentExit.side],
+                    tile: entranceTile,
+                }];
+            }
+        }
+
+        // Forward exits from source. When the target region was
+        // placed at a geographic neighbor, hint the substrate to put
+        // the exit on that side so stitchGrid's geographic resolution
+        // matches. When the target is not adjacent (teleporter
+        // case), omit the side and the substrate clockwise-assigns.
+        const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
+            const targetName = srcExit.connected_region;
+            const targetCell = targetName ? cellsByName.get(targetName) : null;
+            let side = null;
+            if (targetCell) {
+                for (const s of SIDES) {
+                    const neighbor = grid.neighborCell(cell, s);
+                    if (neighbor && neighbor.gx === targetCell.gx && neighbor.gy === targetCell.gy) {
+                        side = s;
+                        break;
+                    }
+                }
+            }
+            return {
+                exit_id: srcExit.name,
+                exitName: srcExit.name,
+                targetRegion: targetName ?? null,
+                ...(side ? { side } : {}),
+            };
+        });
+
+        // Rules to realise via placeFromRules. True_ rules are skipped
+        // by the substrate (§6) — no gate appears on the tile, but
+        // the exit/location is still emitted in extracted_rules.
+        const exit_rules = {};
+        for (const srcExit of sourceRegion.exits ?? []) {
+            if (srcExit.access_rule) exit_rules[srcExit.name] = srcExit.access_rule;
+        }
+        const location_rules = {};
+        const item_placements = [];
+        for (const srcLoc of sourceRegion.locations ?? []) {
+            const locId = srcLoc.name ?? String(srcLoc.id ?? '');
+            if (!locId) continue;
+            if (srcLoc.access_rule) location_rules[locId] = srcLoc.access_rule;
+            const itemName = srcLoc.item?.name;
+            if (itemName) {
+                item_placements.push({ item_id: itemName, location_id: locId });
+            }
+        }
+
+        const core = generateRegionCore({
+            region_id: name,
+            size,
+            entrances,
+            exits: exitSpecs,
+            item_lib: itemLib,
+            obstacle_lib: obstacleLib,
+            rng,
+            params: regionParams,
+        });
+        const placement = placeFromRules(core.world, {
+            exit_rules,
+            location_rules,
+            item_placements,
+            rng,
+        });
+        const extracted_rules = extractPathsAndObstacles(core.world, { regionId: name });
+
+        for (const placed of core.exits_placed) {
+            exitSidesByExit.set(`${name}:${placed.exit_id}`, {
+                side: placed.side,
+                tile_position: placed.tile_position,
+            });
+        }
+
+        // Mutate the stub in place — Grid doesn't have a replaceRegion
+        // method and placeRegion would throw on the second call.
+        const stub = grid.getRegion(cell);
+        Object.assign(stub, {
+            playable_payload: core.world,
+            extracted_rules,
+            placed_items: placement.placed_items,
+            placed_obstacles: [],
+            placed_logic_gates: placement.placed_logic_gates,
+            exits_placed: core.exits_placed,
+            render_hint: 'maze',
+            sidecar_filename: `${name}.json`,
+        });
+
+        stats.regionsBuilt += 1;
+    }
+
+    // ----- Phase 3: teleporters and back-exits -----
+    // Setting teleporter mappings was waiting on the substrate-assigned
+    // sides from phase 2; now we can stitch them in.
+    for (const tele of teleporterEdges) {
+        const fromCell = cellsByName.get(tele.from_name);
+        const exitInfo = exitSidesByExit.get(`${tele.from_name}:${tele.exit_id}`);
+        const targetName = sourceRegions[tele.from_name]?.exits?.find(
+            (e) => e.name === tele.exit_id,
+        )?.connected_region;
+        const targetCell = targetName ? cellsByName.get(targetName) : null;
+        if (fromCell && exitInfo && targetCell) {
+            grid.setTeleporter(fromCell, exitInfo.side, targetCell);
+            stats.teleportersPlaced += 1;
+        }
+    }
+
+    if (assumeBidirectional) {
+        // Add a back-exit on each non-start region pointing to its
+        // BFS parent. Mirrors the grid-growth driver's pattern in §2.
+        for (const { name, cell, parent } of placementOrder) {
+            if (!parent) continue;
+            const region = grid.getRegion(cell);
+            if (!region?.playable_payload) continue;
+            const parentRegion = grid.getRegion(cellsByName.get(parent.name));
+            const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
+            if (!parentRegion || !parentExit) continue;
+            const entranceTile = region.playable_payload.entrance;
+            const entranceSide = OPPOSITE_SIDE[parentExit.side];
+            const backExitId = parent.name;
+            // Skip the synthetic back-exit when the source already
+            // declared a reverse exit pointing at the parent (under
+            // any name) — we'd just be duplicating an existing route.
+            const hasExplicitReverse = [...region.playable_payload.exits.values()]
+                .some((e) => e.targetRegion === parent.name);
+            if (region.playable_payload.exits.has(backExitId) || hasExplicitReverse) continue;
+            region.playable_payload.exits.set(backExitId, {
+                exit_id: backExitId,
+                x: entranceTile.x,
+                y: entranceTile.y,
+                side: entranceSide,
+                exitName: backExitId,
+                targetRegion: parent.name,
+                targetExitId: parent.exit_id,
+                isBackExit: true,
+                isTeleporter: false,
+            });
+            region.extracted_rules.exits.push({
+                id: backExitId,
+                position: { x: entranceTile.x, y: entranceTile.y },
+                target_region: parent.name,
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            });
+            const parentWorldExit = parentRegion.playable_payload?.exits?.get(parent.exit_id);
+            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
+        }
+    }
+
+    // ----- Phase 4: stitch + clean up -----
+    stitchGrid(grid);
+    wallOffUnusedExits(grid);
+
+    if (!stats.stopReason) {
+        stats.stopReason = stats.regionsBuilt === stats.regionsTotal
+            ? 'all_placed'
+            : 'partial_layout';
+    }
+
+    return { grid, startCell, stats };
+}
+
 // --- Stage-4 full compile ---
 //
 // Run compileRegion across every built region in the grid and stitch
@@ -658,7 +1043,13 @@ export function compileRegionGraph(grid, opts = {}) {
     });
 
     for (const region of orderedRegions) {
-        const compiled = compileRegion(region.extracted_rules, { obstacleLib });
+        // Top-down's placeFromRules registers per-instance logic_gate
+        // entries on the region's local obstacleLib. The compiler
+        // needs to see those alongside the base library, otherwise
+        // their ids resolve to undefined and compileObstacle throws.
+        const localLib = region.playable_payload?.obstacleLib;
+        const mergedLib = localLib ? { ...obstacleLib, ...localLib } : obstacleLib;
+        const compiled = compileRegion(region.extracted_rules, { obstacleLib: mergedLib });
 
         const regionExits = compiled.exits.map((e) => ({
             name: e.id,

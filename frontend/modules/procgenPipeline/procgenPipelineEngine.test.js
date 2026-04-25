@@ -8,6 +8,7 @@ import {
     wallOffUnusedExits, growMaze, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
     findDisconnectedCell,
+    topDownFromRulesJson,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
@@ -1179,6 +1180,156 @@ describe('buildRulesJson', () => {
         const b = smallGrid();
         expect(buildRulesJson(a.grid, { startCell: a.startCell }))
             .toEqual(buildRulesJson(b.grid, { startCell: b.startCell }));
+    });
+});
+
+describe('topDownFromRulesJson', () => {
+    // Build a small grid-growth output we can re-feed through top-down.
+    function makeGridGrowthRulesJson() {
+        const { grid, startCell } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 7,
+            growthParams: { branchProbability: 0.5, assumeBidirectional: true },
+        });
+        return buildRulesJson(grid, { startCell });
+    }
+
+    it('rejects an empty rules.json', () => {
+        expect(() => topDownFromRulesJson(null)).toThrow();
+        expect(() => topDownFromRulesJson({})).toThrow(/regions/);
+    });
+
+    it('builds a region per non-Menu source region', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        const sourceCount = Object.keys(rulesJson.regions['1']).length;
+        // Source has Menu + N realised regions; top-down skips Menu.
+        const expectedRealised = sourceCount - 1;
+        const { grid } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        expect(grid.allRegions().length).toBe(expectedRealised);
+    });
+
+    it('places the BFS-resolved actual start at the grid center', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        const expectedStart = rulesJson.regions['1'].Menu.exits[0].connected_region;
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        expect(startCell).toEqual({ gx: 2, gy: 2 });
+        expect(grid.getRegion(startCell).region_id).toBe(expectedStart);
+    });
+
+    it('round-trips region/exit topology from a grid-growth rules.json', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        const out = buildRulesJson(grid, { startCell });
+
+        const sourceRegions = rulesJson.regions['1'];
+        const outRegions = out.regions['1'];
+        // Same region names — Menu in both.
+        expect(new Set(Object.keys(outRegions))).toEqual(new Set(Object.keys(sourceRegions)));
+        // Each non-Menu region has the same exit connectivity.
+        for (const [name, src] of Object.entries(sourceRegions)) {
+            if (name === 'Menu') continue;
+            const dst = outRegions[name];
+            expect(dst).toBeDefined();
+            // Source forward exits all show up on the round-tripped
+            // region with the same connected_region.
+            for (const srcExit of src.exits ?? []) {
+                const matched = dst.exits.find((e) => e.name === srcExit.name);
+                expect(matched).toBeDefined();
+                expect(matched.connected_region).toBe(srcExit.connected_region);
+            }
+        }
+    });
+
+    it('preserves the per-region item placements (count and identity)', () => {
+        // Round-trip preserves which items live in which regions, but
+        // not exact compiled access rules — placeFromRules picks a
+        // random reachable tile for each gated location, and the
+        // resulting random gate position can cross paths to other
+        // locations (extractPathsAndObstacles BFS doesn't know about
+        // rule-typed cut vertices). That's a substrate-side limitation
+        // documented for v1; round-trip checks structure only.
+        const rulesJson = makeGridGrowthRulesJson();
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        const out = buildRulesJson(grid, { startCell });
+
+        const sourceRegions = rulesJson.regions['1'];
+        const outRegions = out.regions['1'];
+        const itemCount = (region) => {
+            const counts = {};
+            for (const loc of region.locations ?? []) {
+                const item = loc.item?.name;
+                if (!item) continue;
+                counts[item] = (counts[item] ?? 0) + 1;
+            }
+            return counts;
+        };
+        for (const [name, src] of Object.entries(sourceRegions)) {
+            if (name === 'Menu') continue;
+            const dst = outRegions[name];
+            expect(itemCount(dst)).toEqual(itemCount(src));
+        }
+    });
+
+    it('emits assume_bidirectional_exits=true on the output (default)', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1,
+        });
+        const out = buildRulesJson(grid, { startCell });
+        expect(out.assume_bidirectional_exits).toBe(true);
+    });
+
+    it('places teleporters when the layout cannot fit a region adjacently', () => {
+        // Synthetic: a region with 5 outgoing edges to distinct targets,
+        // forcing the layout to use teleporters once 4 sides are taken.
+        const rulesJson = {
+            schema_version: 3,
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'hub', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    hub: {
+                        name: 'hub',
+                        exits: [
+                            { name: 'to_a', connected_region: 'a', access_rule: { rule: 'True_' } },
+                            { name: 'to_b', connected_region: 'b', access_rule: { rule: 'True_' } },
+                            { name: 'to_c', connected_region: 'c', access_rule: { rule: 'True_' } },
+                            { name: 'to_d', connected_region: 'd', access_rule: { rule: 'True_' } },
+                            { name: 'to_e', connected_region: 'e', access_rule: { rule: 'True_' } },
+                        ],
+                        locations: [],
+                    },
+                    a: { name: 'a', exits: [], locations: [] },
+                    b: { name: 'b', exits: [], locations: [] },
+                    c: { name: 'c', exits: [], locations: [] },
+                    d: { name: 'd', exits: [], locations: [] },
+                    e: { name: 'e', exits: [], locations: [] },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+        };
+        const { grid, stats } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 7, height: 7 }, seed: 1,
+        });
+        // hub has 4 sides → at least one of {a..e} must teleport.
+        expect(stats.teleportersPlaced).toBeGreaterThan(0);
+        // All 6 regions placed.
+        expect(grid.allRegions().length).toBe(6);
     });
 });
 

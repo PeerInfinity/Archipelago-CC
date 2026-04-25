@@ -721,6 +721,33 @@ export function generateMaze(config) {
 
     const exclude = [world.entrance, ...world.exits.values()];
 
+    // 0-exit terminal regions (top-down may produce these for source
+    // regions that only have a back-edge). Skip the walker /
+    // feasibility passes — there's no exit to reach. Return a trivial
+    // walls-only region; the caller adds back-exits afterward.
+    if (world.exits.size === 0) {
+        return {
+            world,
+            stats: {
+                iterations: 0,
+                accepted: 0,
+                rejected: 0,
+                rejectedFeasibility: 0,
+                rejectedDifficulty: 0,
+                stalled: false,
+                reachedTarget: false,
+                shortestPath: null,
+                difficultyGateOn: false,
+                finalSuccessFraction: null,
+                lastProposalSuccessFraction: null,
+                gateKeyPlaced: false,
+                gateKeyReason: 'no_exit',
+                doorPos: null,
+                keyPos: null,
+            },
+        };
+    }
+
     const start = createState(world);
     const baseline = reach(world, bfsSolver, start, reachedExit);
     if (!baseline.ok) {
@@ -963,7 +990,10 @@ export function generateRegionCore(input) {
     if (!size || !size.width || !size.height) throw new Error('generateRegionCore: size.{width,height} required');
     if (!rng || typeof rng.next !== 'function') throw new Error('generateRegionCore: rng required');
     if (entrances.length > 1) throw new Error('generateRegionCore v1: at most one entrance supported');
-    if (exits.length === 0) throw new Error('generateRegionCore: at least one exit required');
+    // 0 exits is legal — a "terminal" region in the source rules.json
+    // has no outgoing edges; the caller may add a back-exit after the
+    // fact (top-down driver does this). The substrate produces a
+    // walls-only region with just the entrance tile in that case.
 
     // Resolve entrance tile (independent of size growth — the same
     // tile coords stay valid across the auto-grow attempts).
