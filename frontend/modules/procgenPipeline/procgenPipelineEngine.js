@@ -180,7 +180,12 @@ export function stitchGrid(grid) {
         }
         for (const exit of region.extracted_rules?.exits ?? []) {
             const side = exitsBySide.get(posKey(exit.position));
-            if (!side) { exit.target_region = null; continue; }
+            if (!side) {
+                // Not in exits_placed — the driver manages this exit
+                // directly (e.g. a bidirectional back-exit pointing
+                // at the parent region). Leave target_region alone.
+                continue;
+            }
 
             // Teleporter exits resolve to an explicit target cell
             // recorded by the growth driver; ordinary exits resolve
@@ -395,6 +400,13 @@ export function growMaze(config) {
         maxRegions = null,
         branchProbability = 0.5,
         teleporterMinGap = 2,
+        // When true, every non-start region gets a back-exit at its
+        // entrance tile pointing to its parent — so the player can
+        // walk back the way they came. The back-exit's access rule is
+        // copied from the forward exit at compile time, so the same
+        // gate guards both directions of traversal. See top-down-
+        // driver.md §2.
+        assumeBidirectional = true,
     } = growthParams;
 
     const rng = createRng(seed);
@@ -524,6 +536,41 @@ export function growMaze(config) {
         if (isTeleporter) {
             grid.setTeleporter(parentCell, parentSide, childCell);
             stats.teleportersPlaced += 1;
+        }
+        if (assumeBidirectional) {
+            // Add a back-exit on the child's entrance tile, pointing
+            // to the parent. Pair with parent's forward exit via
+            // targetExitId on both sides so the procgen player can
+            // resolve which entrance tile to spawn the player at on
+            // either direction of traversal.
+            const backExitId = parentRegion.region_id;
+            region.playable_payload.exits.set(backExitId, {
+                exit_id: backExitId,
+                x: entranceTile.x,
+                y: entranceTile.y,
+                side: entranceSide,
+                exitName: backExitId,
+                targetRegion: parentRegion.region_id,
+                targetExitId: parentExitPlaced.exit_id,
+                isBackExit: true,
+                isTeleporter,
+            });
+            // Mirror onto extracted_rules so the compiler emits the
+            // back-exit too. Path-and-obstacles for an entrance-to-
+            // entrance walk has zero obstacles → compiles to True_;
+            // buildRulesJson's post-pass overwrites this with the
+            // forward exit's rule for bidirectional pairs.
+            region.extracted_rules.exits.push({
+                id: backExitId,
+                position: { x: entranceTile.x, y: entranceTile.y },
+                target_region: parentRegion.region_id,
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            });
+            // Link parent's forward exit back to this child's
+            // back-exit, so a forward traversal carries the right
+            // arrivedFrom.exit_id.
+            const parentWorldExit = parentRegion.playable_payload?.exits?.get(parentExitPlaced.exit_id);
+            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
         pool.markPlaced({
             placed_items: region.placed_items,
@@ -745,6 +792,12 @@ function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBS
             side: e.side,
             exitName: ext?.id ?? e.exitName ?? null,
             targetRegion: ext?.target_region ?? e.targetRegion ?? null,
+            // Bidirectional metadata — lets the procgen player resolve
+            // which exit_id to spawn at on the other side, and lets the
+            // panel render back-exits / teleporters distinctly.
+            targetExitId: e.targetExitId ?? null,
+            isBackExit: e.isBackExit ?? false,
+            isTeleporter: e.isTeleporter ?? false,
         });
     }
 
@@ -834,6 +887,11 @@ export function buildRulesJson(grid, opts = {}) {
         playerId = '1',
         itemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
+        // Whether back-exits inherit their forward exit's rule. Mirrors
+        // the source rules.json's top-level flag. For grid-growth
+        // output (this driver) the default is true — every gate is
+        // bidirectional.
+        assumeBidirectional = true,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -877,6 +935,39 @@ export function buildRulesJson(grid, opts = {}) {
     // The inventoryUI warns when the list is empty; a single-entry
     // list suffices.
     scaffold.item_groups[playerId] = ['Everything'];
+
+    // Top-level flag: every back-exit inherits the forward exit's
+    // rule. The source-rules.json schema's `assume_bidirectional_exits`
+    // is what the player module / future top-down driver consult to
+    // decide whether to construct back-exits in the first place.
+    scaffold.assume_bidirectional_exits = assumeBidirectional;
+
+    // Bidirectional rule inheritance: for every back-exit in the
+    // compiled regions, copy the paired forward exit's compiled rule.
+    // Without this the back-exit's rule is True_ (its path through
+    // the entrance has no obstacles), which would let the player
+    // re-enter A from B without re-satisfying the gate.
+    if (assumeBidirectional) {
+        const regionsByName = {};
+        for (const region of grid.allRegions()) {
+            regionsByName[region.region_id] = region;
+        }
+        for (const region of grid.allRegions()) {
+            const compiledRegion = scaffold.regions[playerId][region.region_id];
+            if (!compiledRegion) continue;
+            for (const exit of compiledRegion.exits) {
+                const worldExit = region.playable_payload?.exits?.get(exit.name);
+                if (!worldExit?.isBackExit) continue;
+                const targetRegion = regionsByName[exit.connected_region];
+                const compiledTarget = scaffold.regions[playerId][exit.connected_region];
+                if (!targetRegion || !compiledTarget) continue;
+                const fwdExit = compiledTarget.exits.find(
+                    (e) => e.name === worldExit.targetExitId,
+                );
+                if (fwdExit) exit.access_rule = fwdExit.access_rule;
+            }
+        }
+    }
 
     // Menu is virtual — no playable payload, no sidecar entry.
     scaffold.preset_sidecars = buildPresetSidecars(grid, {

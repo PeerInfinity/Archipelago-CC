@@ -541,18 +541,43 @@ describe('growMaze', () => {
         expect(start.exits_placed.length).toBeGreaterThanOrEqual(2);
     });
 
-    it('collapses to single-exit regions when branchProbability = 0', () => {
+    it('collapses to single-exit regions when branchProbability = 0 (and bidirectional disabled)', () => {
         const { grid } = growMaze({
             gridDims: { width: 3, height: 3 },
             regionSize: { width: 6, height: 6 },
             itemPool: { key_red: 99 },
             obstaclePool: { door_red: 99 },
             seed: 1,
-            growthParams: { maxRegions: 4, branchProbability: 0 },
+            growthParams: { maxRegions: 4, branchProbability: 0, assumeBidirectional: false },
         });
         for (const region of grid.allRegions()) {
-            // Every region has exactly one exit (post-wallOff).
+            // Every region has at most one exit (post-wallOff).
             expect(region.extracted_rules.exits.length).toBeLessThanOrEqual(1);
+        }
+    });
+
+    it('adds a back-exit on each non-start region when bidirectional is on', () => {
+        const { grid, startCell } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 99 },
+            obstaclePool: { door_red: 99 },
+            seed: 1,
+            growthParams: { maxRegions: 4, branchProbability: 0, assumeBidirectional: true },
+        });
+        const startKey = `${startCell.gx},${startCell.gy}`;
+        for (const region of grid.allRegions()) {
+            const isStart = `${region.cell.gx},${region.cell.gy}` === startKey;
+            const backExits = [...region.playable_payload.exits.values()]
+                .filter((e) => e.isBackExit);
+            if (isStart) {
+                expect(backExits).toHaveLength(0);
+            } else {
+                expect(backExits).toHaveLength(1);
+                // Back-exit's targetExitId points at the parent's
+                // forward exit; reciprocal link is on the parent.
+                expect(backExits[0].targetExitId).toBeTruthy();
+            }
         }
     });
 
@@ -1029,6 +1054,49 @@ describe('buildRulesJson', () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell });
         expect(out.item_groups['1']).toEqual(['Everything']);
+    });
+
+    it('emits assume_bidirectional_exits=true at the top level', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(out.assume_bidirectional_exits).toBe(true);
+    });
+
+    it('back-exits inherit their forward exit access_rule', () => {
+        // Build a grid with key_red gates on every region — that
+        // forces non-trivial forward rules. Without inheritance, the
+        // back-exits would compile to True_ and let the player
+        // re-enter A from B without re-satisfying the gate.
+        const { grid, startCell } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 4 },
+            obstaclePool: { door_red: 4 },
+            seed: 3,
+            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            growthParams: { branchProbability: 0, assumeBidirectional: true },
+        });
+        const out = buildRulesJson(grid, { startCell });
+
+        let inheritedPairs = 0;
+        for (const region of grid.allRegions()) {
+            for (const [exitId, worldExit] of region.playable_payload.exits) {
+                if (!worldExit.isBackExit) continue;
+                const compiledRegion = out.regions['1'][region.region_id];
+                const compiledBack = compiledRegion.exits.find((e) => e.name === exitId);
+                expect(compiledBack).toBeDefined();
+                // Find the paired forward exit's compiled rule.
+                const targetCompiled = out.regions['1'][worldExit.targetRegion];
+                const compiledFwd = targetCompiled?.exits.find(
+                    (e) => e.name === worldExit.targetExitId,
+                );
+                if (!compiledFwd) continue;
+                expect(compiledBack.access_rule).toEqual(compiledFwd.access_rule);
+                inheritedPairs += 1;
+            }
+        }
+        // There should have been at least one bidirectional pair.
+        expect(inheritedPairs).toBeGreaterThan(0);
     });
 
     it('tags every emitted item with groups: ["Everything"]', () => {

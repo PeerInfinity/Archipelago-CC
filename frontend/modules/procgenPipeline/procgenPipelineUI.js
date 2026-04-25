@@ -401,13 +401,15 @@ export class ProcgenPipelineUI {
                 ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
             }
         }
-        // Entrance (only marked if not overwritten by an obstacle/item)
-        ctx.fillStyle = COLORS.entrance;
-        ctx.fillRect(offX + world.entrance.x * TILE_PX, offY + world.entrance.y * TILE_PX, TILE_PX, TILE_PX);
+        // Exits first, then entrance on top — so a back-exit tile
+        // that coincides with the entrance still reads as the entrance.
+        // §5 will replace this with a proper border / fill scheme.
         ctx.fillStyle = COLORS.exit;
         for (const e of world.exits.values()) {
             ctx.fillRect(offX + e.x * TILE_PX, offY + e.y * TILE_PX, TILE_PX, TILE_PX);
         }
+        ctx.fillStyle = COLORS.entrance;
+        ctx.fillRect(offX + world.entrance.x * TILE_PX, offY + world.entrance.y * TILE_PX, TILE_PX, TILE_PX);
         // Obstacles
         const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
         for (const [posKey, obstacleId] of world.obstacles) {

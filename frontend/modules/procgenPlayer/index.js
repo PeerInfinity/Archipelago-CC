@@ -104,11 +104,21 @@ function handleRulesLoaded() {
 function handleRegionMove(data) {
     const target = data?.targetRegion;
     if (target && warehouse?.has(target)) {
-        // arrivedFrom is opaque to the procgen player — just thread
-        // the user:regionMove's exitName through. v1 maze ignores it
-        // (single entrance per region); v2 substrates will use it to
-        // pick which entrance to spawn the player at.
-        const arrivedFrom = data?.exitName ? { exit_id: data.exitName } : null;
+        // arrivedFrom carries the exit_id IN THE TARGET region that
+        // the player arrived at. The dispatcher event's `exitName` is
+        // the SOURCE region's exit; resolve to the target's via the
+        // source exit's `targetExitId`. Falls back to the source
+        // exitName when the source exit doesn't carry the link (e.g.
+        // pre-bidirectional sidecars or initial-load synthesized
+        // events).
+        let arrivedExitId = data?.exitName ?? null;
+        const sourceEntry = data?.sourceRegion ? warehouse.get(data.sourceRegion) : null;
+        const sourceWorld = sourceEntry?.world;
+        if (sourceWorld?.exits && data?.exitName && sourceWorld.exits.has(data.exitName)) {
+            const srcExit = sourceWorld.exits.get(data.exitName);
+            if (srcExit?.targetExitId) arrivedExitId = srcExit.targetExitId;
+        }
+        const arrivedFrom = arrivedExitId ? { exit_id: arrivedExitId } : null;
         publishLoadRegion(target, arrivedFrom);
     }
     if (dispatcher?.publishToNextModule) {

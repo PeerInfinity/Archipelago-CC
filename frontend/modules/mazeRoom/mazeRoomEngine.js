@@ -61,6 +61,7 @@ export function createWorld(width, height, opts = {}) {
             exitName: entry.exitName ?? null,
             targetRegion: entry.targetRegion ?? null,
             targetExitId: entry.targetExitId ?? null,
+            isBackExit: entry.isBackExit ?? false,
             isTeleporter: entry.isTeleporter ?? false,
         });
     };
@@ -164,6 +165,9 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
             side: e.side ?? null,
             exitName: e.exitName ?? null,
             targetRegion: e.targetRegion ?? null,
+            targetExitId: e.targetExitId ?? null,
+            isBackExit: e.isBackExit ?? false,
+            isTeleporter: e.isTeleporter ?? false,
         }));
     } else if (sidecar.exit) {
         exitsInput = [{

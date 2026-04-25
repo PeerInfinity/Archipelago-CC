@@ -148,12 +148,18 @@ export class MazeRoomUI {
     _adoptLoadedRegion(payload, { skipRender = false } = {}) {
         // Payload shape (per procgen-player.md §"Event flow"):
         //   { region_id, world, arrivedFrom }
-        // v1 maze ignores arrivedFrom — every region has exactly one
-        // entrance, so the player always spawns at world.entrance.
-        // arrivedFrom becomes meaningful when v2 substrates support
-        // multiple entrances per region.
+        // arrivedFrom.exit_id (when present) names the exit IN THE
+        // LOADED REGION that the player arrived through — spawn at
+        // that exit's tile so the player faces inward. Falls back to
+        // world.entrance when the lookup misses (initial load, or a
+        // sidecar predating the bidirectional changes).
         this.world = payload.world;
         this.state = createState(this.world);
+        const arrivedExitId = payload.arrivedFrom?.exit_id;
+        if (arrivedExitId && this.world.exits?.has(arrivedExitId)) {
+            const exit = this.world.exits.get(arrivedExitId);
+            this.state.player_pos = { x: exit.x, y: exit.y };
+        }
         this.stats = null;
         this.message = payload.region_id
             ? `Loaded region: ${payload.region_id}`
@@ -462,13 +468,17 @@ export class MazeRoomUI {
             }
         }
 
-        ctx.fillStyle = COLORS.entrance;
-        ctx.fillRect(w.entrance.x * TILE_PX, w.entrance.y * TILE_PX, TILE_PX, TILE_PX);
-
+        // Paint exits first, then the entrance — so when an exit
+        // tile coincides with the entrance (back-exit on an entrance
+        // tile after bidirectional landed), the green entrance color
+        // wins over the red exit color. §5's tile-rendering rules
+        // replace this with a proper border / fill scheme.
         ctx.fillStyle = COLORS.exit;
         for (const e of w.exits.values()) {
             ctx.fillRect(e.x * TILE_PX, e.y * TILE_PX, TILE_PX, TILE_PX);
         }
+        ctx.fillStyle = COLORS.entrance;
+        ctx.fillRect(w.entrance.x * TILE_PX, w.entrance.y * TILE_PX, TILE_PX, TILE_PX);
 
         // Obstacles — filled tile in the library's color when still
         // blocking, faded to an outlined ghost when the current

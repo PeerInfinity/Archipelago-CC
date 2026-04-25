@@ -181,6 +181,66 @@ describe('procgenPlayer index', () => {
         expect(dispatcher.forwarded[0].eventName).toBe('user:regionMove');
     });
 
+    it('resolves arrivedFrom.exit_id via the source exit\'s targetExitId', () => {
+        // A custom registry entry whose worlds carry an exits Map
+        // with a targetExitId on each — simulating a bidirectional
+        // sidecar where the source exit names its peer in the target.
+        const FAKE_MAZE_BIDIR = {
+            id: 'maze',
+            loadRegionEvent: 'maze:loadRegion',
+            deserializeWorld: (sidecar) => ({
+                exits: new Map(Object.entries(sidecar.exits ?? {})),
+            }),
+        };
+        const RULES_BIDIR = {
+            start_regions: { 1: ['Menu'] },
+            regions: {
+                1: {
+                    Menu: { exits: [{ name: 'GameStart', connected_region: 'A' }] },
+                    A: { exits: [], locations: [] },
+                    B: { exits: [], locations: [] },
+                },
+            },
+            preset_sidecars: {
+                1: {
+                    A: {
+                        substrate: 'maze',
+                        playable_payload: {
+                            exits: { exit: { exit_id: 'exit', targetRegion: 'B', targetExitId: 'A' } },
+                        },
+                    },
+                    B: {
+                        substrate: 'maze',
+                        playable_payload: { exits: { A: { exit_id: 'A' } } },
+                    },
+                },
+            },
+        };
+
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_BIDIR);
+        const reg = makeMockRegistrationApi();
+        _testOnly_resetModuleState();
+        register(reg);
+        eventBus = makeMockEventBus();
+        dispatcher = makeMockDispatcher();
+        initialize('procgenPlayer', 0, makeMockInitApi(eventBus, dispatcher));
+        eventBus.publish('stateManager:rawJsonDataLoaded', {
+            rawJsonData: RULES_BIDIR, selectedPlayerInfo: { playerId: '1' },
+        });
+
+        const handler = reg._calls.dispatcherReceivers[0][2];
+        const baseline = eventBus.published.length;
+        // Player crosses A's `exit` (the dispatcher names it that way),
+        // arriving in B. arrivedFrom.exit_id should resolve to A
+        // (B's back-exit id, per source.targetExitId).
+        handler({ targetRegion: 'B', exitName: 'exit', sourceRegion: 'A' });
+        const newLoadEvents = eventBus.published.slice(baseline)
+            .filter((p) => p.event === 'maze:loadRegion');
+        expect(newLoadEvents).toHaveLength(1);
+        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'A' });
+    });
+
     it('does not publish loadRegion for region moves to non-warehoused regions, but still forwards', () => {
         const reg = makeMockRegistrationApi();
         _testOnly_resetModuleState();
