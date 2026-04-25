@@ -1,0 +1,202 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "region_2_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_1": {
+        "name": "region_2_1",
+        "exits": [],
+        "locations": [
+          {
+            "name": "region_2_1__key_red_pickup__1_3",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_2_1__key_red_pickup__2_3",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "key_red": {
+        "name": "key_red",
+        "id": 1,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "key_red": 2
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "constant",
+        "value": true
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_2_1__key_red_pickup__1_3": "key_red",
+      "region_2_1__key_red_pickup__2_3": "key_red"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_1_1": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 3
+          },
+          "exit": {
+            "x": 7,
+            "y": 0,
+            "exitName": "exit",
+            "targetRegion": "region_2_1"
+          },
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {}
+        }
+      },
+      "region_2_1": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1],
+          "entrance": {
+            "x": 0,
+            "y": 0
+          },
+          "exit": {
+            "x": 5,
+            "y": 5,
+            "exitName": null,
+            "targetRegion": null
+          },
+          "obstacles": [
+            {
+              "x": 5,
+              "y": 4,
+              "id": "door_red"
+            }
+          ],
+          "items": [
+            {
+              "x": 1,
+              "y": 3,
+              "id": "key_red",
+              "locationName": "region_2_1__key_red_pickup__1_3"
+            },
+            {
+              "x": 2,
+              "y": 3,
+              "id": "key_red",
+              "locationName": "region_2_1__key_red_pickup__2_3"
+            }
+          ],
+          "obstacleLib": {}
+        }
+      }
+    }
+  }
+}
