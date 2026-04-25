@@ -9,6 +9,7 @@ import {
     growMaze,
     buildRulesJson,
     stringifyRulesJson,
+    topDownFromRulesJson,
 } from './procgenPipelineEngine.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -63,6 +64,14 @@ export class ProcgenPipelineUI {
             items: { ...DEFAULT_SCENARIO.items },
             obstacles: { ...DEFAULT_SCENARIO.obstacles },
         };
+        // 'gridGrowth' (default) builds a fresh world from a scenario
+        // pool. 'topDown' realises an existing rules.json as maze
+        // regions on a grid.
+        this.mode = 'gridGrowth';
+        // Top-down's source rules.json (raw object) and a friendly
+        // label used in the panel UI. null until the user picks a file.
+        this.topDownSource = null;
+        this.topDownSourceLabel = '';
         this.result = null;
         this.isGenerating = false;
         this.message = '';
@@ -83,12 +92,113 @@ export class ProcgenPipelineUI {
 
     render() {
         this.rootElement.innerHTML = '';
-        this.rootElement.appendChild(this._renderScenarioPicker());
+        this.rootElement.appendChild(this._renderModeToggle());
+        if (this.mode === 'gridGrowth') {
+            this.rootElement.appendChild(this._renderScenarioPicker());
+        } else {
+            this.rootElement.appendChild(this._renderTopDownSourcePicker());
+        }
         this.rootElement.appendChild(this._renderParams());
         this.rootElement.appendChild(this._renderActions());
         this.rootElement.appendChild(this._renderStats());
         this.rootElement.appendChild(this._renderGrid());
         this.rootElement.appendChild(this._renderCompiled());
+    }
+
+    // --- Mode toggle ---
+
+    _renderModeToggle() {
+        const section = document.createElement('div');
+        section.className = 'procgen-pipeline-mode';
+        const title = document.createElement('div');
+        title.className = 'procgen-pipeline-section-title';
+        title.textContent = 'Mode';
+        section.appendChild(title);
+
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-mode-row';
+        for (const [value, label] of [
+            ['gridGrowth', 'Grid growth (build from a scenario pool)'],
+            ['topDown', 'Top-down (realise an existing rules.json)'],
+        ]) {
+            const btn = document.createElement('label');
+            btn.className = 'procgen-pipeline-mode-option';
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'procgen-pipeline-mode';
+            input.value = value;
+            input.checked = this.mode === value;
+            input.addEventListener('change', () => {
+                this.mode = value;
+                this.result = null;
+                this.message = '';
+                this.render();
+            });
+            const span = document.createElement('span');
+            span.textContent = label;
+            btn.appendChild(input);
+            btn.appendChild(span);
+            row.appendChild(btn);
+        }
+        section.appendChild(row);
+        return section;
+    }
+
+    // --- Top-down source picker ---
+
+    _renderTopDownSourcePicker() {
+        const section = document.createElement('div');
+        section.className = 'procgen-pipeline-source';
+        const title = document.createElement('div');
+        title.className = 'procgen-pipeline-section-title';
+        title.textContent = 'Source rules.json';
+        section.appendChild(title);
+
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-source-row';
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json,application/json';
+        fileInput.className = 'procgen-pipeline-source-input';
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files?.[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                const parsed = JSON.parse(text);
+                this.topDownSource = parsed;
+                this.topDownSourceLabel = file.name;
+                this.message = `Loaded source: ${file.name}`;
+            } catch (e) {
+                this.topDownSource = null;
+                this.topDownSourceLabel = '';
+                this.message = `ERROR parsing ${file.name}: ${e.message}`;
+            }
+            this.render();
+        });
+        row.appendChild(fileInput);
+
+        const status = document.createElement('span');
+        status.className = 'procgen-pipeline-source-status';
+        status.textContent = this.topDownSource
+            ? `Loaded: ${this.topDownSourceLabel}`
+            : '(no source loaded)';
+        row.appendChild(status);
+
+        if (this.topDownSource) {
+            const clearBtn = this._btn('Clear', () => {
+                this.topDownSource = null;
+                this.topDownSourceLabel = '';
+                this.result = null;
+                this.message = '';
+                this.render();
+            });
+            row.appendChild(clearBtn);
+        }
+
+        section.appendChild(row);
+        return section;
     }
 
     // --- Scenario pool picker ---
@@ -328,8 +438,15 @@ export class ProcgenPipelineUI {
             `regions ${stats.regionsBuilt}`,
             `skipped ${stats.regionsSkipped}`,
             `stop: ${stats.stopReason}`,
-            `pool rem: items=${this._sumCounts(poolRemaining.items)} obs=${this._sumCounts(poolRemaining.obstacles)}`,
         ];
+        if (poolRemaining) {
+            parts.push(
+                `pool rem: items=${this._sumCounts(poolRemaining.items)} obs=${this._sumCounts(poolRemaining.obstacles)}`,
+            );
+        }
+        if (stats.teleportersPlaced) {
+            parts.push(`teleporters ${stats.teleportersPlaced}`);
+        }
         section.textContent = parts.join(' · ');
         return section;
     }
@@ -559,45 +676,80 @@ export class ProcgenPipelineUI {
 
     _runGeneration() {
         if (this.isGenerating) return;
+        if (this.mode === 'topDown' && !this.topDownSource) {
+            this.message = 'Pick a source rules.json first.';
+            this.render();
+            return;
+        }
         this.isGenerating = true;
         this.message = '';
         this.result = null;
         this.render();
 
         try {
-            const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
-                minSuccessPct, maxSuccessPct, walkerTrials,
-                maxItemsPerRegion, maxRegions } = this.params;
-            const { grid, pool, stats, startCell } = growMaze({
-                gridDims: { width: gridWidth, height: gridHeight },
-                regionSize: { width: regionWidth, height: regionHeight },
-                itemPool: { ...this.scenario.items },
-                obstaclePool: { ...this.scenario.obstacles },
-                seed,
-                regionParams: {
-                    minSuccessPct: minSuccessPct / 100,
-                    maxSuccessPct: maxSuccessPct / 100,
-                    walkerTrials,
-                },
-                growthParams: {
-                    maxItemsPerRegion,
-                    maxRegions: maxRegions ?? null,
-                },
-            });
-            const rulesJson = buildRulesJson(grid, { startCell, seed });
-            this.result = {
-                grid,
-                regionSize: { width: regionWidth, height: regionHeight },
-                stats,
-                poolRemaining: pool.snapshot(),
-                rulesJson,
-            };
+            if (this.mode === 'topDown') {
+                this._runTopDown();
+            } else {
+                this._runGridGrowth();
+            }
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
         }
 
         this.isGenerating = false;
         this.render();
+    }
+
+    _runGridGrowth() {
+        const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
+            minSuccessPct, maxSuccessPct, walkerTrials,
+            maxItemsPerRegion, maxRegions } = this.params;
+        const { grid, pool, stats, startCell } = growMaze({
+            gridDims: { width: gridWidth, height: gridHeight },
+            regionSize: { width: regionWidth, height: regionHeight },
+            itemPool: { ...this.scenario.items },
+            obstaclePool: { ...this.scenario.obstacles },
+            seed,
+            regionParams: {
+                minSuccessPct: minSuccessPct / 100,
+                maxSuccessPct: maxSuccessPct / 100,
+                walkerTrials,
+            },
+            growthParams: {
+                maxItemsPerRegion,
+                maxRegions: maxRegions ?? null,
+            },
+        });
+        const rulesJson = buildRulesJson(grid, { startCell, seed });
+        this.result = {
+            grid,
+            regionSize: { width: regionWidth, height: regionHeight },
+            stats,
+            poolRemaining: pool.snapshot(),
+            rulesJson,
+        };
+    }
+
+    _runTopDown() {
+        const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
+        const { grid, stats, startCell } = topDownFromRulesJson(this.topDownSource, {
+            gridDims: { width: gridWidth, height: gridHeight },
+            regionSizeBase: { width: regionWidth, height: regionHeight },
+            seed,
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed,
+            assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
+        });
+        this.result = {
+            grid,
+            regionSize: { width: regionWidth, height: regionHeight },
+            stats,
+            // No pool in top-down mode — keep the field present so the
+            // stats renderer can branch cleanly.
+            poolRemaining: null,
+            rulesJson,
+        };
     }
 
     // --- helpers ---
@@ -615,6 +767,7 @@ export class ProcgenPipelineUI {
             localStorage.setItem(LS_KEY, JSON.stringify({
                 params: this.params,
                 scenario: this.scenario,
+                mode: this.mode,
             }));
             this.message = 'Saved.';
             this.render();
@@ -635,6 +788,9 @@ export class ProcgenPipelineUI {
                     items: { ...(parsed.scenario.items ?? {}) },
                     obstacles: { ...(parsed.scenario.obstacles ?? {}) },
                 };
+            }
+            if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown') {
+                this.mode = parsed.mode;
             }
         } catch (e) {
             // ignore

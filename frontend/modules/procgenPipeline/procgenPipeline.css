@@ -286,3 +286,45 @@
     max-height: 300px;
     overflow: auto;
 }
+
+.procgen-pipeline-mode {
+    padding: 6px 8px;
+}
+
+.procgen-pipeline-mode-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.procgen-pipeline-mode-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.procgen-pipeline-source {
+    padding: 6px 8px;
+}
+
+.procgen-pipeline-source-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.procgen-pipeline-source-input {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.procgen-pipeline-source-status {
+    font-size: 12px;
+    color: #888;
+}

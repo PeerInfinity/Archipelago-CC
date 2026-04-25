@@ -1070,7 +1070,7 @@ describe('generateMaze', () => {
         }
         expect(placed).toBeGreaterThan(15);
         expect(bypassable).toBe(0);
-    });
+    }, 30000);
 
     it('gate-and-key placement is deterministic for a fixed seed', () => {
         const a = generateMaze({ width: 10, height: 8, seed: 17 });

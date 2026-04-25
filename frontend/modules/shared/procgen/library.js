@@ -182,13 +182,13 @@ export function getItemRenderHints(itemId, itemLib = DEFAULT_ITEMS) {
  *     to stateManager's snapshot interface + the shared rule
  *     engine). See top-down-driver.md §8.
  */
-export function isObstacleCleared(obstacleId, inventory, obstacleLib = DEFAULT_OBSTACLES, opts = {}) {
+export function isObstacleCleared(obstacleId, inventory, obstacleLib = DEFAULT_OBSTACLES, opts) {
     const obstacle = obstacleLib[obstacleId];
     if (!obstacle) return true; // Unknown obstacle id ≡ no gate; permissive for robustness.
     const type = obstacle.clear_set_type ?? 'combo_list';
     if (type === 'rule') {
         if (!obstacle.clear_rule) return false; // No rule attached ≡ never clearable.
-        const evaluator = opts.evaluateRule ?? evaluateRuleAgainstInventory;
+        const evaluator = opts?.evaluateRule ?? evaluateRuleAgainstInventory;
         return evaluator(obstacle.clear_rule, inventory);
     }
     // combo_list

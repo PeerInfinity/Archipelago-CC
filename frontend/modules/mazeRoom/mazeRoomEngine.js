@@ -96,12 +96,24 @@ export function createWorld(width, height, opts = {}) {
 
 /**
  * Returns the exit at (x, y), or null if no exit sits there.
+ *
+ * Maintains a position-keyed cache (`world._exitsByPos`) so the BFS
+ * goal predicate / step pipeline don't pay an O(exits) iterator
+ * allocation per state visit. The cache is rebuilt lazily when
+ * `world.exits.size` no longer matches it (after wallOffUnusedExits,
+ * after the driver adds back-exits, etc.) — coarse but correct, and
+ * the rebuild cost is amortised across the many subsequent lookups
+ * inside a single BFS run.
  */
 export function getExitAt(world, x, y) {
-    for (const e of world.exits.values()) {
-        if (e.x === x && e.y === y) return e;
+    if (!world._exitsByPos || world._exitsByPos.size !== world.exits.size) {
+        const cache = new Map();
+        for (const e of world.exits.values()) {
+            cache.set(`${e.x},${e.y}`, e);
+        }
+        world._exitsByPos = cache;
     }
-    return null;
+    return world._exitsByPos.get(`${x},${y}`) ?? null;
 }
 
 /**
@@ -510,10 +522,10 @@ function manhattan(a, b) {
     return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
 
-function nearestExitDist(pos, world) {
+function nearestExitDist(pos, exitPositions) {
     let best = Infinity;
-    for (const e of world.exits.values()) {
-        const d = manhattan(pos, e);
+    for (let i = 0; i < exitPositions.length; i++) {
+        const d = manhattan(pos, exitPositions[i]);
         if (d < best) best = d;
     }
     return best;
@@ -525,11 +537,17 @@ export function makeMazePickMove(weights = DEFAULT_WALKER_WEIGHTS) {
         if (legalMoves.length === 0) return null;
         // For multi-exit worlds, score moves toward the nearest exit;
         // single-exit worlds collapse to "toward THE exit" naturally.
-        const curDist = nearestExitDist(state.player_pos, world);
+        // Snapshot the exits' positions once per pickMove call so the
+        // inner loop doesn't re-allocate Map iterators per legal move.
+        const exitPositions = [];
+        for (const e of world.exits.values()) {
+            exitPositions.push({ x: e.x, y: e.y });
+        }
+        const curDist = nearestExitDist(state.player_pos, exitPositions);
         const weighted = legalMoves.map((m) => {
             let w = 1;
             if (!visited.has(mazeVisitedKey(m.nextState))) w *= unvisitedBonus;
-            const newDist = nearestExitDist(m.nextState.player_pos, world);
+            const newDist = nearestExitDist(m.nextState.player_pos, exitPositions);
             if (newDist < curDist) w *= towardExitBonus;
             return { input: m.input, weight: w };
         });
