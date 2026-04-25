@@ -880,6 +880,33 @@ describe('placeFromRules', () => {
         expect(getObstacle(world, tile.x, tile.y)).toBeUndefined();
     });
 
+    it('skips logic gates with rule: True_ on exits (§6)', () => {
+        const { world } = freshCore();
+        const out = placeFromRules(world, {
+            exit_rules: { exit: { rule: 'True_' } },
+            rng: createRng(1),
+        });
+        expect(out.placed_logic_gates).toHaveLength(0);
+        // No obstacle on the exit tile either.
+        const exit = world.exits.values().next().value;
+        expect(getObstacle(world, exit.x, exit.y)).toBeUndefined();
+    });
+
+    it('skips the gate but still places the item for True_ location rules (§6)', () => {
+        const { world } = freshCore();
+        const out = placeFromRules(world, {
+            location_rules: { loc_freebie: { rule: 'True_' } },
+            item_placements: [{ item_id: 'map', location_id: 'loc_freebie' }],
+            rng: createRng(1),
+        });
+        expect(out.placed_logic_gates).toHaveLength(0);
+        expect(out.placed_items).toHaveLength(1);
+        expect(out.placed_locations).toHaveLength(1);
+        const tile = out.placed_items[0].position;
+        expect(getItem(world, tile.x, tile.y)).toBe('map');
+        expect(getObstacle(world, tile.x, tile.y)).toBeUndefined();
+    });
+
     it('per-instance gate ids are scoped to the region (no lib mutation leak)', () => {
         const sharedLib = { ...DEFAULT_OBSTACLES };
         const { world: worldA } = freshCore({ rng: createRng(1), region_id: 'A' });

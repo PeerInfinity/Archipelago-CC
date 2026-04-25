@@ -1258,6 +1258,10 @@ export function placeFromRules(world, input = {}) {
     const placed_items = [];
     const placed_locations = [];
 
+    // §6: a logic gate whose rule is just `True_` would never block
+    // anything — placing it is pure visual noise. Skip those.
+    const isTrueRule = (rule) => rule?.rule === 'True_';
+
     // Exit rules: gate each exit tile by exit_id. Each exit_rules
     // entry must reference an exit_id that's already in world.exits.
     for (const [exit_id, rule] of Object.entries(exit_rules)) {
@@ -1265,6 +1269,7 @@ export function placeFromRules(world, input = {}) {
         if (!exit) {
             throw new Error(`placeFromRules: exit_rules references unknown exit_id '${exit_id}'`);
         }
+        if (isTrueRule(rule)) continue; // §6 — no gate needed
         const gate_id = registerGate(rule);
         setObstacle(world, exit.x, exit.y, gate_id);
         placed_logic_gates.push({
@@ -1293,6 +1298,12 @@ export function placeFromRules(world, input = {}) {
         if (item_id) {
             setItem(world, tile.x, tile.y, item_id);
             placed_items.push({ item_id, location_id, position: tile });
+        }
+        if (isTrueRule(rule)) {
+            // §6 — record the location placement but skip the gate.
+            placed_locations.push({ location_id, position: tile });
+            placedLocationIds.add(location_id);
+            continue;
         }
         const gate_id = registerGate(rule);
         setObstacle(world, tile.x, tile.y, gate_id);

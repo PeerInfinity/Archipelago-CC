@@ -13,7 +13,7 @@ import {
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
-import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 
 const LS_KEY = 'procgenPipeline_params';
 const TILE_PX = 14;
@@ -21,8 +21,11 @@ const TILE_PX = 14;
 const COLORS = {
     floor: '#2a2a2a',
     wall: '#000000',
+    // Same §5 palette as mazeRoomUI — keep the two views consistent.
     entrance: '#3aa85a',
-    exit: '#d04040',
+    exit: '#3aa85a',
+    exitBlocked: '#d04040',
+    locationBlocked: '#d04040',
     grid: '#1a1a1a',
     cellBorder: '#3a3a50',
     emptyCell: '#141414',
@@ -393,7 +396,15 @@ export class ProcgenPipelineUI {
     }
 
     _drawRegion(ctx, world, offX, offY) {
-        // Tiles
+        const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
+        const itemLib = world.itemLib ?? DEFAULT_ITEMS;
+        // Composite view doesn't have a player inventory — gates
+        // always render closed here. (The maze panel's playable view
+        // is the right place to see them open as the player picks up
+        // keys.)
+        const inventory = new Set();
+
+        // Tile base layer
         for (let y = 0; y < world.height; y++) {
             for (let x = 0; x < world.width; x++) {
                 const tile = getTile(world, x, y);
@@ -401,35 +412,57 @@ export class ProcgenPipelineUI {
                 ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
             }
         }
-        // Exits first, then entrance on top — so a back-exit tile
-        // that coincides with the entrance still reads as the entrance.
-        // §5 will replace this with a proper border / fill scheme.
-        ctx.fillStyle = COLORS.exit;
+
+        // Quick lookup from tile coords to the exit at that position.
+        const exitAt = new Map();
         for (const e of world.exits.values()) {
-            ctx.fillRect(offX + e.x * TILE_PX, offY + e.y * TILE_PX, TILE_PX, TILE_PX);
+            exitAt.set(`${e.x},${e.y}`, e);
         }
-        ctx.fillStyle = COLORS.entrance;
-        ctx.fillRect(offX + world.entrance.x * TILE_PX, offY + world.entrance.y * TILE_PX, TILE_PX, TILE_PX);
-        // Obstacles
-        const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
-        for (const [posKey, obstacleId] of world.obstacles) {
-            const [x, y] = posKey.split(',').map(Number);
-            const color = obsLib[obstacleId]?.color ?? '#b84040';
-            ctx.fillStyle = color;
-            ctx.fillRect(offX + x * TILE_PX + 2, offY + y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-        }
-        // Items (as circles)
-        const itemLib = world.itemLib ?? DEFAULT_ITEMS;
-        for (const [posKey, itemId] of world.items) {
-            const [x, y] = posKey.split(',').map(Number);
-            const color = itemLib[itemId]?.color ?? '#e6a817';
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(offX + x * TILE_PX + TILE_PX / 2, offY + y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 1;
-            ctx.stroke();
+
+        // §5 rendering pass — same shape as mazeRoomUI._drawWorld.
+        for (let y = 0; y < world.height; y++) {
+            for (let x = 0; x < world.width; x++) {
+                const key = `${x},${y}`;
+                const obstacleId = world.obstacles.get(key);
+                const obstacle = obstacleId ? obsLib[obstacleId] : null;
+                const isLogicGate = obstacle?.clear_set_type === 'rule';
+                const gateClosed = isLogicGate
+                    && !isObstacleCleared(obstacleId, inventory, obsLib);
+                const exit = exitAt.get(key);
+                const isExit = !!exit;
+                const isEntrance = (x === world.entrance.x && y === world.entrance.y);
+                const itemId = world.items.get(key);
+
+                if (isExit) {
+                    ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
+                    ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
+                }
+                if (obstacle && !isLogicGate) {
+                    const color = obstacle.color ?? '#b84040';
+                    ctx.fillStyle = color;
+                    ctx.fillRect(offX + x * TILE_PX + 2, offY + y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+                }
+                if (itemId) {
+                    const color = itemLib[itemId]?.color ?? '#e6a817';
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(offX + x * TILE_PX + TILE_PX / 2, offY + y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    if (isLogicGate && gateClosed) {
+                        ctx.strokeStyle = COLORS.locationBlocked;
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(offX + x * TILE_PX + 1, offY + y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
+                    }
+                }
+                if (isEntrance && !isExit) {
+                    ctx.strokeStyle = COLORS.entrance;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(offX + x * TILE_PX + 1, offY + y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
+                }
+            }
         }
     }
 

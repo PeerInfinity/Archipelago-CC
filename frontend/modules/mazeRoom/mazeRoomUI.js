@@ -56,8 +56,16 @@ const TILE_PX = 20;
 const COLORS = {
     floor: '#2a2a2a',
     wall: '#000000',
+    // §5 tile-rendering rules:
+    // - Entrance: 2px solid green border
+    // - Exit (no gate / open gate): solid green fill
+    // - Exit (closed gate): solid red fill
+    // - Location (closed gate): item sprite + 2px solid red border
+    // - Both entrance and exit: follow the exit row
     entrance: '#3aa85a',
-    exit: '#d04040',
+    exit: '#3aa85a',
+    exitBlocked: '#d04040',
+    locationBlocked: '#d04040',
     player: '#4aa8ff',
     grid: '#1a1a1a',
 };
@@ -459,7 +467,9 @@ export class MazeRoomUI {
         const w = this.world;
         const itemLib = w.itemLib ?? DEFAULT_ITEMS;
         const obstacleLib = w.obstacleLib ?? DEFAULT_OBSTACLES;
+        const currentInv = this._currentInventory();
 
+        // Tile base layer: floor / wall.
         for (let y = 0; y < w.height; y++) {
             for (let x = 0; x < w.width; x++) {
                 const tile = getTile(w, x, y);
@@ -468,61 +478,98 @@ export class MazeRoomUI {
             }
         }
 
-        // Paint exits first, then the entrance — so when an exit
-        // tile coincides with the entrance (back-exit on an entrance
-        // tile after bidirectional landed), the green entrance color
-        // wins over the red exit color. §5's tile-rendering rules
-        // replace this with a proper border / fill scheme.
-        ctx.fillStyle = COLORS.exit;
+        // Build a quick lookup from tile coords to the exit at that
+        // position (if any), so the per-tile rendering decisions
+        // below don't have to walk world.exits each time.
+        const exitAt = new Map();
         for (const e of w.exits.values()) {
-            ctx.fillRect(e.x * TILE_PX, e.y * TILE_PX, TILE_PX, TILE_PX);
+            exitAt.set(`${e.x},${e.y}`, e);
         }
-        ctx.fillStyle = COLORS.entrance;
-        ctx.fillRect(w.entrance.x * TILE_PX, w.entrance.y * TILE_PX, TILE_PX, TILE_PX);
 
-        // Obstacles — filled tile in the library's color when still
-        // blocking, faded to an outlined ghost when the current
-        // inventory clears them (the player can walk through without
-        // further action).
-        const currentInv = this._currentInventory();
-        for (const [posKey, obstacleId] of w.obstacles) {
-            const [x, y] = posKey.split(',').map(Number);
-            const obstacle = obstacleLib[obstacleId];
-            const color = obstacle?.color ?? '#b84040';
-            const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib);
-            if (cleared) {
-                // Open — dashed outline, no solid fill, so the tile
-                // reads as "was a door, now walk-through."
-                ctx.save();
-                ctx.globalAlpha = 0.4;
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 1.5;
-                ctx.setLineDash([3, 3]);
-                ctx.strokeRect(x * TILE_PX + 3, y * TILE_PX + 3, TILE_PX - 6, TILE_PX - 6);
-                ctx.restore();
-            } else {
-                ctx.fillStyle = color;
-                ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+        // §5 rendering pass — exits, entrance border, combo-list
+        // obstacles, items, and gate borders, in an order that gets
+        // each tile's stack of overlays right.
+        for (let y = 0; y < w.height; y++) {
+            for (let x = 0; x < w.width; x++) {
+                const key = `${x},${y}`;
+                const obstacleId = w.obstacles.get(key);
+                const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
+                const isLogicGate = obstacle?.clear_set_type === 'rule';
+                const gateClosed = isLogicGate
+                    && !isObstacleCleared(obstacleId, currentInv, obstacleLib);
+                const exit = exitAt.get(key);
+                const isExit = !!exit;
+                const isEntrance = (x === w.entrance.x && y === w.entrance.y);
+                const itemId = w.items.get(key);
+                const itemHere = itemId && !currentInv.has(itemId);
+
+                // Exit fill: green by default, red when a logic gate
+                // sits on the tile and isn't cleared. (Both-row of
+                // §5 table is "follows the exit row" — this branch
+                // covers it because we don't paint the entrance
+                // border when isExit is true.)
+                if (isExit) {
+                    ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
+                    ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
+                }
+
+                // Combo-list obstacles (colored doors) keep their
+                // existing rendering. Logic gates are NOT painted as
+                // tile-fill obstacles — their visual is handled
+                // through the exit-fill / location-border paths.
+                if (obstacle && !isLogicGate) {
+                    const color = obstacle.color ?? '#b84040';
+                    const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib);
+                    if (cleared) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.4;
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([3, 3]);
+                        ctx.strokeRect(x * TILE_PX + 3, y * TILE_PX + 3, TILE_PX - 6, TILE_PX - 6);
+                        ctx.restore();
+                    } else {
+                        ctx.fillStyle = color;
+                        ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
+                    }
+                }
+
+                // Items: a circle in the library's color. Skipped
+                // when the player already collected the item.
+                if (itemHere) {
+                    const item = itemLib[itemId];
+                    const color = item?.color ?? '#e6a817';
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    // Closed logic gate ON a location: 2px red
+                    // border around the item. Open or no gate: no
+                    // border (per the §5 decision to keep the
+                    // rendering clean once the gate is open).
+                    if (isLogicGate && gateClosed) {
+                        ctx.strokeStyle = COLORS.locationBlocked;
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
+                    }
+                }
+
+                // Entrance border: 2px solid green, only when the
+                // tile isn't also an exit (per the §5 "both = exit
+                // row" rule).
+                if (isEntrance && !isExit) {
+                    ctx.strokeStyle = COLORS.entrance;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
+                }
             }
-        }
-
-        // Items — a smaller filled circle in the library's color, skipped
-        // if the player has already collected the item.
-        for (const [posKey, itemId] of w.items) {
-            if (currentInv.has(itemId)) continue;
-            const [x, y] = posKey.split(',').map(Number);
-            const item = itemLib[itemId];
-            const color = item?.color ?? '#e6a817';
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
         }
 
         ctx.strokeStyle = COLORS.grid;
