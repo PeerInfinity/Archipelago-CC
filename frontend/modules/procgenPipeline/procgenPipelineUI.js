@@ -5,6 +5,7 @@
  */
 
 import { setPanelInstance, getModuleApis } from './index.js';
+import eventBus from '../../app/core/eventBus.js';
 import {
     growMaze,
     buildRulesJson,
@@ -69,9 +70,15 @@ export class ProcgenPipelineUI {
         // regions on a grid.
         this.mode = 'gridGrowth';
         // Top-down's source rules.json (raw object) and a friendly
-        // label used in the panel UI. null until the user picks a file.
+        // label used in the panel UI. null until the user picks a file
+        // or copies in the currently-loaded rules.json.
         this.topDownSource = null;
         this.topDownSourceLabel = '';
+        // Cache of the latest rules.json the frontend has loaded —
+        // populated via stateManager:rawJsonDataLoaded. Lets the user
+        // re-feed whatever's currently active without a file picker.
+        this.loadedRulesJson = null;
+        this.loadedRulesJsonLabel = '';
         this.result = null;
         this.isGenerating = false;
         this.message = '';
@@ -80,13 +87,32 @@ export class ProcgenPipelineUI {
         this.rootElement.className = 'procgen-pipeline-panel';
         setPanelInstance(this);
         this._loadFromLocalStorage();
+        // Subscribe through the raw eventBus so the panel sees raw-
+        // json-loaded events even when constructed before the module's
+        // initialize() has wired up apis. Same workaround the maze
+        // panel uses (procgen-player.md "Substrate adapter contract:
+        // addendum from the smoke test").
+        const handler = (data) => {
+            if (!data?.rawJsonData) return;
+            this.loadedRulesJson = data.rawJsonData;
+            this.loadedRulesJsonLabel = data.source || data.selectedPlayerInfo?.playerName || 'currently loaded';
+            // Re-render so the "Use currently-loaded" button enables.
+            this.render();
+        };
+        eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'procgenPipeline');
+        this._unsubRawJsonLoaded = () => eventBus.unsubscribe(
+            'stateManager:rawJsonDataLoaded', handler, 'procgenPipeline',
+        );
         this.render();
     }
 
     get apis() { return ProcgenPipelineUI.moduleApis || getModuleApis(); }
 
     getRootElement() { return this.rootElement; }
-    destroy() { setPanelInstance(null); }
+    destroy() {
+        if (this._unsubRawJsonLoaded) { this._unsubRawJsonLoaded(); this._unsubRawJsonLoaded = null; }
+        setPanelInstance(null);
+    }
     onPanelShow() { this.render(); }
     onPanelResize() {}
 
@@ -178,6 +204,23 @@ export class ProcgenPipelineUI {
             this.render();
         });
         row.appendChild(fileInput);
+
+        // Quick path: use whatever rules.json the frontend currently
+        // has loaded (via Presets panel or ?game= URL). Disabled
+        // until a stateManager:rawJsonDataLoaded event has populated
+        // our cache.
+        const useLoadedBtn = this._btn('Use currently-loaded rules.json', () => {
+            if (!this.loadedRulesJson) return;
+            this.topDownSource = this.loadedRulesJson;
+            this.topDownSourceLabel = `loaded (${this.loadedRulesJsonLabel})`;
+            this.message = `Using currently-loaded rules.json`;
+            this.render();
+        });
+        if (!this.loadedRulesJson) {
+            useLoadedBtn.disabled = true;
+            useLoadedBtn.title = 'Load any preset (Presets panel) or open a ?game= URL first.';
+        }
+        row.appendChild(useLoadedBtn);
 
         const status = document.createElement('span');
         status.className = 'procgen-pipeline-source-status';
