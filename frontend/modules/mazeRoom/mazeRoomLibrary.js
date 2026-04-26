@@ -27,6 +27,7 @@ import {
     tileGridSerializer,
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -47,3 +48,14 @@ export const substrateRegistryEntry = Object.freeze({
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
 });
+
+// Side-effect on import: register the maze substrate so any caller
+// that imports this library can immediately dispatch via the registry.
+// Idempotent — production also calls register() via mazeRoom/index.js's
+// host hook, and tests that want a fresh registry call substrateRegistry
+// .clear() in beforeEach. Putting registration here (rather than in
+// procgenPipelineEngine.js) avoids a circular import between the
+// pipeline engine and the maze library.
+if (!substrateRegistry.has(substrateRegistryEntry.id)) {
+    substrateRegistry.register(substrateRegistryEntry);
+}

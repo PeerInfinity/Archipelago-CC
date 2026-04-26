@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 
 import { createRng } from '../shared/rng.js';
+// Side-effect: registers the maze substrate. Driver tests below
+// dispatch via substrateRegistry, which needs maze available.
+import '../mazeRoom/mazeRoomLibrary.js';
 import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,

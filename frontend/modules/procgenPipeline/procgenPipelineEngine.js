@@ -10,10 +10,6 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import {
-    generateRegionCore, placeFromItems, placeFromRules,
-    extractPathsAndObstacles,
-} from '../mazeRoom/mazeRoomEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
@@ -23,6 +19,18 @@ import {
     OPPOSITE_SIDE, SIDE_DELTAS,
     mirrorTileAcrossSide,
 } from '../shared/procgen/spatialPrimitives.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+
+function getAdapter(substrateId) {
+    const adapter = substrateRegistry.get(substrateId);
+    if (!adapter) {
+        throw new Error(
+            `procgenPipeline: no substrate registered for id '${substrateId}' — `
+            + `import the substrate's library module before calling the driver`,
+        );
+    }
+    return adapter;
+}
 
 // Re-export so existing callers (tests, UI) that imported ScenarioPool
 // from this module keep working. New callers should import from
@@ -42,7 +50,7 @@ export function cellKey(cell) {
 //
 // Cell-to-region storage for the grid-growth pipeline. Each cell
 // holds a Region = the driver-composed output of a substrate (see
-// buildMazeRegion below) augmented with its grid position.
+// buildSubstrateRegion below) augmented with its grid position.
 
 export class Grid {
     constructor({ width, height }) {
@@ -295,14 +303,19 @@ function pickSidesWithBranching(candidates, rng, branchProbability) {
 
 // --- Substrate composition ---
 //
-// Wraps the three maze-substrate adapter calls (generateRegionCore +
+// Wraps the three substrate adapter calls (generateRegionCore +
 // placeFromItems + extractPathsAndObstacles) into the region-object
 // shape the grid-growth driver and its downstream consumers expect.
-// Lives in the driver (not the substrate) because the
+// Lives in the driver (not in any substrate) because the
 // "start region → no obstacles" policy is a driver concern — the
 // caller passes `obstacles_to_place: []` for start regions.
+//
+// Substrate dispatch goes through substrateRegistry; the substrate
+// id defaults to 'maze' when the caller doesn't specify one. Step 4
+// will add per-region substrate selection to the callers above.
 
-function buildMazeRegion({
+function buildSubstrateRegion({
+    substrate = 'maze',
     region_id,
     size,
     entrances,
@@ -315,7 +328,8 @@ function buildMazeRegion({
     rng,
     params,
 }) {
-    const core = generateRegionCore({
+    const adapter = getAdapter(substrate);
+    const core = adapter.generateRegionCore({
         region_id,
         size,
         entrances,
@@ -325,22 +339,23 @@ function buildMazeRegion({
         rng,
         params,
     });
-    const placement = placeFromItems(core.world, {
+    const placement = adapter.placeFromItems(core.world, {
         items_to_place,
         obstacles_to_place,
         arrival_inventory,
         rng,
         params,
     });
-    const extracted_rules = extractPathsAndObstacles(core.world, { regionId: region_id });
+    const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: region_id });
     return {
+        substrate,
         region_id,
         playable_payload: core.world,
         extracted_rules,
         placed_items: placement.placed_items,
         placed_obstacles: placement.placed_obstacles,
         exits_placed: core.exits_placed,
-        render_hint: 'maze',
+        render_hint: substrate,
         sidecar_filename: `${region_id}.json`,
         wall_stats: core.wall_stats,
     };
@@ -415,7 +430,7 @@ export function growMaze(config) {
     if (startExitSides.length === 0) {
         throw new Error('growMaze: start cell has no in-bounds neighbors (grid too small?)');
     }
-    const startRegion = buildMazeRegion({
+    const startRegion = buildSubstrateRegion({
         region_id: regionIdForCell(startCell),
         size: regionSize,
         entrances: [],                     // start region — substrate picks middle
@@ -505,7 +520,7 @@ export function growMaze(config) {
             arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
         });
 
-        const region = buildMazeRegion({
+        const region = buildSubstrateRegion({
             region_id: regionIdForCell(childCell),
             size: regionSize,
             entrances: [{ side: entranceSide, tile: entranceTile }],
@@ -872,7 +887,12 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             }
         }
 
-        const core = generateRegionCore({
+        // Substrate dispatch: step 3 hardcodes 'maze'; step 4 will
+        // introduce per-region selection (substrateByRegion / source
+        // tag / substrateMix / picker).
+        const substrateId = 'maze';
+        const adapter = getAdapter(substrateId);
+        const core = adapter.generateRegionCore({
             region_id: name,
             size,
             entrances,
@@ -882,13 +902,13 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             rng,
             params: regionParams,
         });
-        const placement = placeFromRules(core.world, {
+        const placement = adapter.placeFromRules(core.world, {
             exit_rules,
             location_rules,
             item_placements,
             rng,
         });
-        const extracted_rules = extractPathsAndObstacles(core.world, { regionId: name });
+        const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: name });
 
         // Top-down knows the source's location IDs and access rules
         // directly. Override the BFS-derived names+rules from
@@ -933,13 +953,14 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // method and placeRegion would throw on the second call.
         const stub = grid.getRegion(cell);
         Object.assign(stub, {
+            substrate: substrateId,
             playable_payload: core.world,
             extracted_rules,
             placed_items: placement.placed_items,
             placed_obstacles: [],
             placed_logic_gates: placement.placed_logic_gates,
             exits_placed: core.exits_placed,
-            render_hint: 'maze',
+            render_hint: substrateId,
             sidecar_filename: `${name}.json`,
         });
 
@@ -1326,9 +1347,11 @@ export function buildPresetSidecars(grid, {
 } = {}) {
     const regionMap = {};
     for (const region of grid.allRegions()) {
+        const substrateId = region.substrate ?? 'maze';
+        const adapter = getAdapter(substrateId);
         regionMap[region.region_id] = {
-            substrate: 'maze',
-            render_hint: region.render_hint ?? 'maze',
+            substrate: substrateId,
+            render_hint: region.render_hint ?? substrateId,
             // Driver-level layout coordinate. Lets the Region Graph
             // panel reproduce the maze's spatial layout (one Cytoscape
             // node per region, positioned by grid cell) instead of
@@ -1337,7 +1360,7 @@ export function buildPresetSidecars(grid, {
             // (e.g. distinguishing teleporter from grid-adjacent
             // edges) read the same coordinate space the maze uses.
             grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
-            playable_payload: serializeMazeWorld(
+            playable_payload: adapter.serializeWorld(
                 region.playable_payload,
                 region.extracted_rules,
                 baseObstacleLib,
