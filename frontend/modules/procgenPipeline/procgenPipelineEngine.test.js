@@ -848,6 +848,19 @@ describe('buildPresetSidecars', () => {
         }
     });
 
+    it('each sidecar carries grid_cell with the region\'s grid coordinates', () => {
+        // grid_cell lets the Region Graph mirror the maze panel's
+        // spatial layout via Cytoscape's preset layout, instead of
+        // running its own force-directed pass. Per region.cell from
+        // the in-memory Grid.
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const region of grid.allRegions()) {
+            const side = sidecars['1'][region.region_id];
+            expect(side.grid_cell).toEqual({ gx: region.cell.gx, gy: region.cell.gy });
+        }
+    });
+
     it('playable_payload serializes tiles, obstacles, and items into JSON-safe shapes', () => {
         const { grid } = smallGrid();
         const sidecars = buildPresetSidecars(grid);

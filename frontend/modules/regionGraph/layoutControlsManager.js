@@ -125,7 +125,7 @@ export class LayoutControlsManager {
     const checkboxes = [
       { id: '#forceShowLocations', setting: 'moduleSettings.regionGraph.forceShowLocations', default: false },
       { id: '#forceHideLocations', setting: 'moduleSettings.regionGraph.forceHideLocations', default: false },
-      { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: false },
+      { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: true },
       { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
       { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
       { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
@@ -411,6 +411,23 @@ export class LayoutControlsManager {
     // Pre-size nodes for overlays so layout spaces them correctly
     this.ui.overlayManager.presizeNodes();
 
+    // Procgen grid layout — when rules.json carried preset_sidecars
+    // with grid_cell coordinates, mirror the maze panel's spatial
+    // layout instead of running a force-directed pass. Picked ahead
+    // of the DAG/cose auto-detection so a procgen-emitted graph
+    // doesn't get re-laid-out by Cytoscape's heuristics.
+    if (this.ui.gridLayout && this.ui.gridLayout.size > 0) {
+      const gridOptions = this.buildProcgenGridLayout();
+      if (gridOptions) {
+        const layoutPresetSelect = this.ui.controlPanel?.querySelector('#layoutPreset');
+        if (layoutPresetSelect) layoutPresetSelect.value = 'procgen-grid';
+        logger.debug(`Applying procgen grid layout (${this.ui.gridLayout.size} regions)`);
+        this.ui.currentLayout = this.ui.cy.layout(gridOptions);
+        this.ui.currentLayout.run();
+        return;
+      }
+    }
+
     // Auto-detect DAG structure for hierarchical layout
     const dagResult = this.detectDAGStructure();
     let layoutOptions;
@@ -453,6 +470,65 @@ export class LayoutControlsManager {
 
     this.ui.currentLayout = this.ui.cy.layout(layoutOptions);
     this.ui.currentLayout.run();
+  }
+
+  /**
+   * Build a Cytoscape 'preset' layout from the driver-emitted grid_cell
+   * coordinates in this.ui.gridLayout. Each region is placed at
+   * (gx, gy) scaled by per-cell spacing derived from the average
+   * node bounding-box (so dense graphs don't overlap and sparse
+   * graphs don't sprawl). Player and any nodes without a grid_cell
+   * are excluded from positioning — they default to {0, 0} and the
+   * cy.fit pass at the end pulls them into view; the player sprite
+   * follows its currently-highlighted region anyway.
+   *
+   * Returns null if the gridLayout couldn't produce a usable
+   * positions map (e.g. all entries non-finite); caller falls back
+   * to the cose / hierarchical pass.
+   */
+  buildProcgenGridLayout() {
+    const layout = this.ui.gridLayout;
+    if (!layout || layout.size === 0) return null;
+
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    const avgNodeWidth = nodes.reduce((sum, n) => {
+      const bb = n.boundingBox({ includeLabels: true });
+      return sum + bb.w;
+    }, 0) / Math.max(nodes.length, 1);
+    const avgNodeHeight = nodes.reduce((sum, n) => {
+      const bb = n.boundingBox({ includeLabels: true });
+      return sum + bb.h;
+    }, 0) / Math.max(nodes.length, 1);
+
+    const spacingFactor = 1.6;
+    const cellWidth = Math.max(avgNodeWidth * spacingFactor, 150);
+    const cellHeight = Math.max(avgNodeHeight * spacingFactor, 100);
+
+    // Translate to origin so the smallest gx/gy lands at (0, 0) —
+    // keeps the rendered graph tightly packed regardless of where
+    // the grid placed regions in absolute coordinates.
+    let minGx = Infinity, minGy = Infinity;
+    for (const cell of layout.values()) {
+      if (cell.gx < minGx) minGx = cell.gx;
+      if (cell.gy < minGy) minGy = cell.gy;
+    }
+    if (!Number.isFinite(minGx) || !Number.isFinite(minGy)) return null;
+
+    return {
+      name: 'preset',
+      positions: (node) => {
+        const cell = layout.get(node.id());
+        if (!cell) return { x: 0, y: 0 };
+        return {
+          x: (cell.gx - minGx) * cellWidth,
+          y: (cell.gy - minGy) * cellHeight,
+        };
+      },
+      animate: true,
+      animationDuration: 1000,
+      fit: true,
+      padding: 50,
+    };
   }
 
   /**

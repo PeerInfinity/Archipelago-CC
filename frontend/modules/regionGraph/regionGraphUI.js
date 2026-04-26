@@ -27,6 +27,12 @@ export class RegionGraphUI {
     this.currentLayout = null;
     this.selectedNode = null;
     this.nodePositions = new Map();
+    // Procgen grid layout from rules.json's preset_sidecars
+    // (driver-emitted grid_cell per region). When non-null, runLayout
+    // uses these coordinates via Cytoscape's preset layout instead of
+    // the cose / hierarchical fallback — so the Region Graph's
+    // spatial layout matches the maze panel's grid.
+    this.gridLayout = null;
     this.isLayoutRunning = false;
     this.layoutGeneration = 0;
     this.pathFinder = new PathFinder(stateManager);
@@ -53,7 +59,7 @@ export class RegionGraphUI {
     this.locationsVisible = false;
     this.locationsManuallyHidden = false;
     this.locationsManuallyShown = false;
-    this.edgeLabelsHidden = false;
+    this.edgeLabelsHidden = true;
 
     // Location display limit settings (defaults, loaded from settings later)
     this.maxLocationNodes = 100;
@@ -880,6 +886,17 @@ export class RegionGraphUI {
         }
       });
 
+    // Capture procgen grid layout from preset_sidecars (when present).
+    // rawJsonDataLoaded fires with the raw rules.json before
+    // rulesLoaded; we read grid_cell from each sidecar entry into
+    // this.gridLayout, which runLayout consumes via Cytoscape's
+    // preset layout. Non-procgen rules.json (no preset_sidecars,
+    // or sidecars without grid_cell) leave this.gridLayout null and
+    // the Region Graph falls back to its existing cose / hierarchical
+    // auto-layout.
+    this.unsubscribeRawJsonLoaded = this.eventBus.subscribe('stateManager:rawJsonDataLoaded',
+      (data) => this.captureGridLayoutFromRules(data));
+
     // Subscribe to state ready event
     this.unsubscribeStateReady = this.eventBus.subscribe('stateManager:ready',
       () => {
@@ -914,6 +931,37 @@ export class RegionGraphUI {
 
   async loadGraphData() {
     return this.dataManager.loadGraphData();
+  }
+
+  /**
+   * Read driver-emitted grid coordinates from rules.json's
+   * preset_sidecars and stash them in this.gridLayout for the next
+   * runLayout call. Idempotent — safe to call repeatedly. Sets
+   * this.gridLayout to null if the input has no procgen-shaped
+   * sidecars or no grid_cell entries.
+   */
+  captureGridLayoutFromRules(data) {
+    const rules = data?.rawJsonData;
+    const playerId = data?.selectedPlayerInfo?.playerId ?? '1';
+    const sidecars = rules?.preset_sidecars?.[playerId];
+    if (!sidecars || typeof sidecars !== 'object') {
+      this.gridLayout = null;
+      return;
+    }
+    const layout = new Map();
+    for (const [regionName, sidecar] of Object.entries(sidecars)) {
+      const cell = sidecar?.grid_cell;
+      if (cell
+        && Number.isFinite(cell.gx)
+        && Number.isFinite(cell.gy)
+      ) {
+        layout.set(regionName, { gx: cell.gx, gy: cell.gy });
+      }
+    }
+    this.gridLayout = layout.size > 0 ? layout : null;
+    if (this.gridLayout) {
+      logger.info(`Captured procgen grid layout for ${this.gridLayout.size} regions`);
+    }
   }
 
   determineNodeInteriorColor(locationCounts, isReachable) {
@@ -1174,6 +1222,9 @@ export class RegionGraphUI {
     }
     if (this.unsubscribeRulesLoaded) {
       this.unsubscribeRulesLoaded();
+    }
+    if (this.unsubscribeRawJsonLoaded) {
+      this.unsubscribeRawJsonLoaded();
     }
     if (this.unsubscribeStateReady) {
       this.unsubscribeStateReady();

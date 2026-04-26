@@ -1348,6 +1348,14 @@ export function buildPresetSidecars(grid, {
         regionMap[region.region_id] = {
             substrate: 'maze',
             render_hint: region.render_hint ?? 'maze',
+            // Driver-level layout coordinate. Lets the Region Graph
+            // panel reproduce the maze's spatial layout (one Cytoscape
+            // node per region, positioned by grid cell) instead of
+            // running its own force-directed pass — and lets any
+            // other consumer that wants to reason about adjacency
+            // (e.g. distinguishing teleporter from grid-adjacent
+            // edges) read the same coordinate space the maze uses.
+            grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
             playable_payload: serializeMazeWorld(
                 region.playable_payload,
                 region.extracted_rules,
