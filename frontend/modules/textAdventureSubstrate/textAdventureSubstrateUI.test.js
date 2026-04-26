@@ -52,3 +52,213 @@ describe('TextAdventureSubstrateUI — skeleton', () => {
         expect(panel.arrivedFromExitId).toBe('A_back');
     });
 });
+
+// World fixture helpers for the v1-feature tests below. Returns a
+// minimal tile-grid world the panel can read without needing a real
+// generation pass.
+function makeWorld({
+    exits = [],
+    items = [],
+    obstacles = [],
+    obstacleLib = {},
+} = {}) {
+    const world = {
+        exits: new Map(exits.map((e) => [e.exit_id, e])),
+        items: new Map(items.map((i) => [`${i.x},${i.y}`, i.id])),
+        obstacles: new Map(obstacles.map((o) => [`${o.x},${o.y}`, o.id])),
+        obstacleLib,
+        itemLocationNames: new Map(items.filter((i) => i.locationName)
+            .map((i) => [`${i.x},${i.y}`, i.locationName])),
+    };
+    return world;
+}
+
+describe('TextAdventureSubstrateUI — arrival messages', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); });
+
+    it('uses generic message when arrivedFrom is missing', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({});
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('You are now in Overworld.');
+    });
+
+    it('renders compass direction + source region when arrivedFrom resolves', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'back', x: 0, y: 3, side: 'W', targetRegion: 'Cave' }],
+        });
+        panel.applyLoadedRegion({
+            region_id: 'Overworld',
+            world,
+            arrivedFrom: { exit_id: 'back' },
+        });
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toContain('Overworld');
+        expect(last.html).toContain('Cave');
+        expect(last.html).toContain('west');
+    });
+
+    it('falls back to generic when arrivedFrom does not resolve to an exit', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({});
+        panel.applyLoadedRegion({
+            region_id: 'Overworld',
+            world,
+            arrivedFrom: { exit_id: 'nonexistent' },
+        });
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toContain('You are now in Overworld');
+    });
+});
+
+describe('TextAdventureSubstrateUI — accessibility lookups', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); });
+
+    it('marks an exit with no obstacle as open', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', targetRegion: 'Cave' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        expect(panel._isExitOpen(world.exits.get('east'))).toBe(true);
+    });
+
+    it('marks an exit with a satisfied combo-list door as open', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', targetRegion: 'Cave' }],
+            obstacles: [{ x: 5, y: 3, id: 'door_red' }],
+            obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel.inventory = new Set(['key_red']);
+        expect(panel._isExitOpen(world.exits.get('east'))).toBe(true);
+    });
+
+    it('marks an exit with an unsatisfied door as closed', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', targetRegion: 'Cave' }],
+            obstacles: [{ x: 5, y: 3, id: 'door_red' }],
+            obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel.inventory = new Set();
+        expect(panel._isExitOpen(world.exits.get('east'))).toBe(false);
+    });
+});
+
+describe('TextAdventureSubstrateUI — click dispatch', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); });
+
+    it('publishes user:regionMove on accessible exit click', () => {
+        const dispatcherCalls = [];
+        const dispatcher = {
+            publish: (event, data, opts) => dispatcherCalls.push({ event, data, opts }),
+        };
+        TextAdventureSubstrateUI.setModuleApis({ eventBus: null, dispatcher });
+
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{
+                exit_id: 'east', x: 5, y: 3, side: 'E',
+                exitName: 'east_to_cave', targetRegion: 'Cave',
+            }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel._onExitClick('east');
+
+        const move = dispatcherCalls.find((c) => c.event === 'user:regionMove');
+        expect(move).toBeDefined();
+        expect(move.data).toEqual({
+            sourceRegion: 'Overworld',
+            targetRegion: 'Cave',
+            exitName: 'east_to_cave',
+        });
+    });
+
+    it('does not publish for a closed exit; logs a blocked message instead', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', targetRegion: 'Cave' }],
+            obstacles: [{ x: 5, y: 3, id: 'door_red' }],
+            obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel.inventory = new Set();
+        panel._onExitClick('east');
+
+        expect(dispatcherCalls.find((c) => c.event === 'user:regionMove')).toBeUndefined();
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toContain('blocked');
+    });
+
+    it('publishes user:locationCheck on unchecked location click', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel._onLocationClick('Slay Yorgle');
+
+        const check = dispatcherCalls.find((c) => c.event === 'user:locationCheck');
+        expect(check).toBeDefined();
+        expect(check.data).toEqual({
+            locationName: 'Slay Yorgle',
+            regionName: 'Overworld',
+        });
+    });
+
+    it('does not publish for an already-checked location', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel.checkedLocations = new Set(['Slay Yorgle']);
+        panel._onLocationClick('Slay Yorgle');
+
+        expect(dispatcherCalls.find((c) => c.event === 'user:locationCheck')).toBeUndefined();
+    });
+});
+
+describe('TextAdventureSubstrateUI — message history', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); });
+
+    it('caps history at the message-history limit', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        for (let i = 0; i < 30; i++) panel._addMessage(`Message ${i}`);
+        expect(panel.messageHistory.length).toBe(10);
+        // Oldest dropped, newest retained.
+        expect(panel.messageHistory[0].html).toContain('Message 20');
+        expect(panel.messageHistory[9].html).toContain('Message 29');
+    });
+
+    it('escapes HTML in plain message strings', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel._addMessage('Hello <script>alert(1)</script>');
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).not.toContain('<script>');
+        expect(last.html).toContain('&lt;script&gt;');
+    });
+});
