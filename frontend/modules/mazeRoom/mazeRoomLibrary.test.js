@@ -1,7 +1,14 @@
 import { describe, it, expect } from 'vitest';
 
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
-import { deserializeMazeWorld } from './mazeRoomEngine.js';
+import {
+    generateRegionCore,
+    placeFromItems,
+    placeFromRules,
+    extractPathsAndObstacles,
+    deserializeMazeWorld,
+} from './mazeRoomEngine.js';
+import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
 
 describe('mazeRoomLibrary substrateRegistryEntry', () => {
     it('declares the maze identity, panel type, and load event', () => {
@@ -18,5 +25,13 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
 
     it('exposes deserializeWorld bound to the engine implementation', () => {
         expect(substrateRegistryEntry.deserializeWorld).toBe(deserializeMazeWorld);
+    });
+
+    it('exposes the build-time adapter slots, bound to maze implementations', () => {
+        expect(substrateRegistryEntry.generateRegionCore).toBe(generateRegionCore);
+        expect(substrateRegistryEntry.placeFromItems).toBe(placeFromItems);
+        expect(substrateRegistryEntry.placeFromRules).toBe(placeFromRules);
+        expect(substrateRegistryEntry.extractPathsAndObstacles).toBe(extractPathsAndObstacles);
+        expect(substrateRegistryEntry.serializeWorld).toBe(serializeMazeWorld);
     });
 });

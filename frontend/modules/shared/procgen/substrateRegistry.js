@@ -8,19 +8,34 @@
  * substrateRegistry.register(entry). The registry is a singleton;
  * entries are keyed by their `id` field.
  *
- * Step 2 of NewDocs/plans/procedural-generation/procgen-player.md.
- * No consumer wired up yet — this commit is the skeleton.
- *
  * Entry shape (informal — see procgen-player.md §"Substrate
- * registry"):
+ * registry" for the runtime fields, and
+ * text-adventure-substrate.md §"Substrate registry entry,
+ * expanded" for the build-time slots):
  *
  *   {
- *     id,                   // string, unique
- *     panelComponentType,   // Golden Layout component type the substrate exposes
- *     loadRegionEvent,      // eventBus event name the substrate subscribes to
- *     supportedFeatures,    // array of shared-library feature ids the substrate implements
- *     deserializeWorld,     // (sidecar) -> world  (added in step 4)
+ *     // Identity (required)
+ *     id,                       // string, unique substrate id
+ *
+ *     // Runtime — required for substrates that ship a panel
+ *     panelComponentType,       // Golden Layout component type
+ *     loadRegionEvent,          // eventBus event the panel subscribes to
+ *     supportedFeatures,        // array of shared-library feature ids
+ *     deserializeWorld,         // (sidecar) -> world; called by procgenPlayer
+ *
+ *     // Build-time — required for substrates that drive procgen
+ *     generateRegionCore,       // (input) -> { world, exits_placed, ... }
+ *     placeFromItems,           // (world, input) -> { placed_items, placed_obstacles }
+ *     placeFromRules,           // (world, input) -> { placed_logic_gates, placed_items, placed_locations }
+ *     extractPathsAndObstacles, // (world, opts) -> extracted_rules
+ *     serializeWorld,           // (world, extracted, baseObstacleLib, baseItemLib) -> sidecar
  *   }
+ *
+ * Build-time slots are optional. A substrate that only handles
+ * runtime playback (e.g. consuming hand-authored sidecars) can
+ * register without them; the driver checks for required slots at
+ * dispatch time. Likewise, runtime slots are optional for a
+ * substrate that only supplies build-time adapters.
  */
 
 class SubstrateRegistry {
