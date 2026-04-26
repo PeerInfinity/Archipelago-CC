@@ -548,6 +548,10 @@
         "shop": {
           "$ref": "#/$defs/shop",
           "description": "Shop data if this region contains a shop. Optional."
+        },
+        "substrate": {
+          "type": "string",
+          "description": "Optional substrate id telling the procgen top-down driver which substrate to realise this region with (e.g. 'maze', 'text_adventure'). Absent → driver falls back to caller-supplied substrateByRegion / substrateMix / substratePicker, then default 'maze'. Unknown ids pass schema validation but the driver may warn."
         }
       },
       "required": [

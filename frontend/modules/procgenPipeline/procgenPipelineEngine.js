@@ -32,6 +32,64 @@ function getAdapter(substrateId) {
     return adapter;
 }
 
+// --- Substrate selection ---
+//
+// Per-region substrate id resolution. Used by both top-down and
+// grid-growth drivers. Resolution order, highest priority first:
+//
+//   1. opts.substrateByRegion[regionName] — explicit caller override
+//   2. Source region's `substrate` field (top-down only; grid-growth
+//      synthesises regions and has no source tag to read)
+//   3. opts.substratePicker(regionName, sourceRegion, ctx) — custom
+//      callback. Replaces step 4 if provided.
+//   4. Weighted roll against opts.substrateMix
+//   5. Default 'maze'
+//
+// `sourceRegion` is the source rules.json region object for top-down
+// callers, or null for grid-growth (no source rules.json exists).
+
+export function pickSubstrate(regionName, sourceRegion, opts, rng) {
+    const byRegion = opts?.substrateByRegion;
+    if (byRegion && Object.prototype.hasOwnProperty.call(byRegion, regionName)) {
+        return byRegion[regionName];
+    }
+    if (sourceRegion?.substrate) {
+        return sourceRegion.substrate;
+    }
+    if (typeof opts?.substratePicker === 'function') {
+        const picked = opts.substratePicker(regionName, sourceRegion, { rng });
+        if (picked) return picked;
+    }
+    if (opts?.substrateMix) {
+        return rollSubstrateMix(opts.substrateMix, rng);
+    }
+    return 'maze';
+}
+
+/**
+ * Weighted random pick. `mix` is `{ id: weight, ... }` with positive
+ * numeric weights. The function normalises at pick time, so weights
+ * don't need to sum to 1 — `{ maze: 1, text_adventure: 1 }` is a fair
+ * 50/50, `{ maze: 3, text_adventure: 1 }` is 75/25. Deterministic
+ * given a fixed rng + unchanged map iteration order.
+ *
+ * Empty mix or all-zero weights fall back to 'maze' (since this is
+ * the substrate-selection path's hard default).
+ */
+export function rollSubstrateMix(mix, rng) {
+    const entries = Object.entries(mix).filter(([, w]) => w > 0);
+    if (entries.length === 0) return 'maze';
+    const total = entries.reduce((s, [, w]) => s + w, 0);
+    let r = rng.next() * total;
+    for (const [id, weight] of entries) {
+        r -= weight;
+        if (r <= 0) return id;
+    }
+    // Floating-point edge: r > 0 after walking all weights. Last entry
+    // wins, matching makeMazePickMove's analogous fallback.
+    return entries[entries.length - 1][0];
+}
+
 // Re-export so existing callers (tests, UI) that imported ScenarioPool
 // from this module keep working. New callers should import from
 // shared/procgen/scenarioPool.js directly.
@@ -406,6 +464,13 @@ export function growMaze(config) {
         // gate guards both directions of traversal. See top-down-
         // driver.md §2.
         assumeBidirectional = true,
+        // Substrate selection. Source-tag branch is a no-op here
+        // (grid-growth synthesises regions with no source); the other
+        // three resolution branches (byRegion / picker / mix / 'maze'
+        // default) all apply.
+        substrateByRegion,
+        substrateMix,
+        substratePicker,
     } = growthParams;
 
     const rng = createRng(seed);
@@ -430,8 +495,12 @@ export function growMaze(config) {
     if (startExitSides.length === 0) {
         throw new Error('growMaze: start cell has no in-bounds neighbors (grid too small?)');
     }
+    const startRegionId = regionIdForCell(startCell);
     const startRegion = buildSubstrateRegion({
-        region_id: regionIdForCell(startCell),
+        substrate: pickSubstrate(startRegionId, null, {
+            substrateByRegion, substrateMix, substratePicker,
+        }, rng),
+        region_id: startRegionId,
         size: regionSize,
         entrances: [],                     // start region — substrate picks middle
         exit_sides: startExitSides,
@@ -520,8 +589,12 @@ export function growMaze(config) {
             arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
         });
 
+        const childRegionId = regionIdForCell(childCell);
         const region = buildSubstrateRegion({
-            region_id: regionIdForCell(childCell),
+            substrate: pickSubstrate(childRegionId, null, {
+                substrateByRegion, substrateMix, substratePicker,
+            }, rng),
+            region_id: childRegionId,
             size: regionSize,
             entrances: [{ side: entranceSide, tile: entranceTile }],
             exit_sides: exitSides,
@@ -694,6 +767,11 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // BFS-tree-edge gets a back-exit on the child for round-
         // tripping back through the entrance.
         assumeBidirectional = rulesJson?.assume_bidirectional_exits !== false,
+        // Substrate selection. See pickSubstrate above for resolution
+        // order. v1 default: every region uses the maze substrate.
+        substrateByRegion,
+        substrateMix,
+        substratePicker,
     } = opts;
 
     const rng = createRng(seed);
@@ -887,10 +965,11 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             }
         }
 
-        // Substrate dispatch: step 3 hardcodes 'maze'; step 4 will
-        // introduce per-region selection (substrateByRegion / source
-        // tag / substrateMix / picker).
-        const substrateId = 'maze';
+        // Substrate dispatch: per-region resolution via pickSubstrate
+        // (caller override > source tag > picker > mix > 'maze').
+        const substrateId = pickSubstrate(name, sourceRegion, {
+            substrateByRegion, substrateMix, substratePicker,
+        }, rng);
         const adapter = getAdapter(substrateId);
         const core = adapter.generateRegionCore({
             region_id: name,

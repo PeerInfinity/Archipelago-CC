@@ -12,6 +12,7 @@ import {
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
     findDisconnectedCell,
     topDownFromRulesJson,
+    pickSubstrate, rollSubstrateMix,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
@@ -1734,5 +1735,93 @@ describe('stringifyRulesJson', () => {
         const rules = { schema_version: 3, regions: {} };
         const out = stringifyRulesJson(rules);
         expect(JSON.parse(out)).toEqual(rules);
+    });
+});
+
+describe('rollSubstrateMix', () => {
+    it('returns the only id when one weight is positive', () => {
+        const rng = createRng(42);
+        for (let i = 0; i < 50; i++) {
+            expect(rollSubstrateMix({ maze: 1, text_adventure: 0 }, rng)).toBe('maze');
+        }
+    });
+
+    it('falls back to maze on empty mix', () => {
+        const rng = createRng(1);
+        expect(rollSubstrateMix({}, rng)).toBe('maze');
+    });
+
+    it('falls back to maze when every weight is zero', () => {
+        const rng = createRng(1);
+        expect(rollSubstrateMix({ maze: 0, text_adventure: 0 }, rng)).toBe('maze');
+    });
+
+    it('approximates declared weights over many rolls', () => {
+        const rng = createRng(7);
+        const counts = { maze: 0, text_adventure: 0 };
+        const N = 1000;
+        for (let i = 0; i < N; i++) {
+            counts[rollSubstrateMix({ maze: 3, text_adventure: 1 }, rng)]++;
+        }
+        // 3:1 weights → expect ~75/25. Wide tolerance for a 1000-trial sample.
+        expect(counts.maze / N).toBeGreaterThan(0.65);
+        expect(counts.maze / N).toBeLessThan(0.85);
+        expect(counts.text_adventure / N).toBeGreaterThan(0.15);
+        expect(counts.text_adventure / N).toBeLessThan(0.35);
+    });
+
+    it('is deterministic for a fixed seed', () => {
+        const seq = (seed) => {
+            const rng = createRng(seed);
+            return Array.from({ length: 20 }, () =>
+                rollSubstrateMix({ maze: 1, text_adventure: 1 }, rng));
+        };
+        expect(seq(7)).toEqual(seq(7));
+    });
+});
+
+describe('pickSubstrate', () => {
+    const rng = createRng(1);
+
+    it('honors substrateByRegion before everything else', () => {
+        expect(pickSubstrate('Overworld',
+            { substrate: 'text_adventure' }, // source tag would lose
+            { substrateByRegion: { Overworld: 'maze' } },
+            rng,
+        )).toBe('maze');
+    });
+
+    it('reads source-region substrate tag when no caller override', () => {
+        expect(pickSubstrate('Overworld',
+            { substrate: 'text_adventure' },
+            {},
+            rng,
+        )).toBe('text_adventure');
+    });
+
+    it('falls through to substratePicker when source has no tag', () => {
+        const picker = (regionName) => regionName === 'Cave' ? 'text_adventure' : 'maze';
+        expect(pickSubstrate('Cave', null, { substratePicker: picker }, rng))
+            .toBe('text_adventure');
+        expect(pickSubstrate('Other', null, { substratePicker: picker }, rng))
+            .toBe('maze');
+    });
+
+    it('falls through to substrateMix when no picker', () => {
+        // Single-id mix → deterministic.
+        expect(pickSubstrate('Cave', null, { substrateMix: { text_adventure: 1 } }, rng))
+            .toBe('text_adventure');
+    });
+
+    it('defaults to maze when nothing else resolves', () => {
+        expect(pickSubstrate('Cave', null, {}, rng)).toBe('maze');
+    });
+
+    it('source tag wins over picker / mix when no caller override', () => {
+        expect(pickSubstrate('Overworld',
+            { substrate: 'text_adventure' },
+            { substrateMix: { maze: 1 }, substratePicker: () => 'maze' },
+            rng,
+        )).toBe('text_adventure');
     });
 });
