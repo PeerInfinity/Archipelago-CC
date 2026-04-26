@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 
 import { createRng } from '../shared/rng.js';
-// Side-effect: registers the maze substrate. Driver tests below
-// dispatch via substrateRegistry, which needs maze available.
+// Side-effect: registers the maze and text-adventure substrates.
+// Driver tests below dispatch via substrateRegistry, which needs both
+// available for the mixed-substrate end-to-end checks at the bottom.
 import '../mazeRoom/mazeRoomLibrary.js';
+import '../textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
@@ -1823,5 +1825,152 @@ describe('pickSubstrate', () => {
             { substrateMix: { maze: 1 }, substratePicker: () => 'maze' },
             rng,
         )).toBe('text_adventure');
+    });
+});
+
+describe('mixed substrates — end to end', () => {
+    function makeGridGrowthRulesJson() {
+        const { grid, startCell } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 7,
+            growthParams: { branchProbability: 0.5, assumeBidirectional: true },
+        });
+        return buildRulesJson(grid, { startCell });
+    }
+
+    function distributionFromSidecars(rules) {
+        const sidecars = rules.preset_sidecars['1'];
+        const counts = {};
+        for (const entry of Object.values(sidecars)) {
+            counts[entry.substrate] = (counts[entry.substrate] || 0) + 1;
+        }
+        return counts;
+    }
+
+    function regionSubstrates(rules) {
+        const sidecars = rules.preset_sidecars['1'];
+        const out = {};
+        for (const [regionId, entry] of Object.entries(sidecars)) {
+            out[regionId] = entry.substrate;
+        }
+        return out;
+    }
+
+    describe('top-down', () => {
+        it('emits a mix of substrates under substrateMix and a fixed seed', () => {
+            const source = makeGridGrowthRulesJson();
+            const { grid, startCell } = topDownFromRulesJson(source, {
+                gridDims: { width: 5, height: 5 },
+                seed: 1,
+                substrateMix: { maze: 1, text_adventure: 1 },
+            });
+            const out = buildRulesJson(grid, { startCell });
+            const counts = distributionFromSidecars(out);
+
+            // Both substrates present — at least one of each in the emitted
+            // sidecars. With a 50/50 mix and >2 regions, both showing up
+            // is overwhelmingly likely; if the mix mechanism failed
+            // (e.g. fell through to default 'maze' for every region)
+            // we'd see a single-key distribution.
+            expect(counts.maze).toBeGreaterThanOrEqual(1);
+            expect(counts.text_adventure).toBeGreaterThanOrEqual(1);
+        });
+
+        it('is deterministic for a fixed seed + mix', () => {
+            const source = makeGridGrowthRulesJson();
+            const opts = {
+                gridDims: { width: 5, height: 5 },
+                seed: 1,
+                substrateMix: { maze: 1, text_adventure: 1 },
+            };
+            const a = topDownFromRulesJson(source, opts);
+            const b = topDownFromRulesJson(source, opts);
+            const aOut = buildRulesJson(a.grid, { startCell: a.startCell });
+            const bOut = buildRulesJson(b.grid, { startCell: b.startCell });
+            expect(regionSubstrates(aOut)).toEqual(regionSubstrates(bOut));
+        });
+
+        it('honors substrateByRegion override for specific regions', () => {
+            const source = makeGridGrowthRulesJson();
+            const sourceRegionNames = Object.keys(source.regions['1']).filter(
+                (n) => n !== 'Menu',
+            );
+            // Force one region to text_adventure, one to maze; let the
+            // rest fall through to the default.
+            const overrides = {
+                [sourceRegionNames[0]]: 'text_adventure',
+                [sourceRegionNames[1]]: 'maze',
+            };
+            const { grid, startCell } = topDownFromRulesJson(source, {
+                gridDims: { width: 5, height: 5 },
+                seed: 1,
+                substrateByRegion: overrides,
+            });
+            const out = buildRulesJson(grid, { startCell });
+            const subs = regionSubstrates(out);
+            expect(subs[sourceRegionNames[0]]).toBe('text_adventure');
+            expect(subs[sourceRegionNames[1]]).toBe('maze');
+        });
+
+        it('cross-substrate exits resolve target_region correctly', () => {
+            const source = makeGridGrowthRulesJson();
+            const { grid, startCell } = topDownFromRulesJson(source, {
+                gridDims: { width: 5, height: 5 },
+                seed: 1,
+                substrateMix: { maze: 1, text_adventure: 1 },
+            });
+            const out = buildRulesJson(grid, { startCell });
+            // Walk every region's exits — none should have a null
+            // connected_region for in-grid neighbors. Stitching is
+            // substrate-agnostic, so cross-substrate boundaries should
+            // resolve as cleanly as same-substrate ones.
+            for (const region of Object.values(out.regions['1'])) {
+                for (const exit of region.exits) {
+                    expect(exit.connected_region).toBeTruthy();
+                }
+            }
+        });
+    });
+
+    describe('grid-growth', () => {
+        it('emits a mix of substrates under substrateMix and a fixed seed', () => {
+            const { grid, startCell } = growMaze({
+                gridDims: { width: 3, height: 3 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 2 },
+                obstaclePool: { door_red: 2 },
+                seed: 11,
+                growthParams: {
+                    substrateMix: { maze: 1, text_adventure: 1 },
+                    branchProbability: 0.5,
+                },
+            });
+            const out = buildRulesJson(grid, { startCell });
+            const counts = distributionFromSidecars(out);
+            expect(counts.maze).toBeGreaterThanOrEqual(1);
+            expect(counts.text_adventure).toBeGreaterThanOrEqual(1);
+        });
+
+        it('is deterministic for a fixed seed + mix', () => {
+            const config = {
+                gridDims: { width: 3, height: 3 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 2 },
+                obstaclePool: { door_red: 2 },
+                seed: 11,
+                growthParams: {
+                    substrateMix: { maze: 1, text_adventure: 1 },
+                    branchProbability: 0.5,
+                },
+            };
+            const a = growMaze(config);
+            const b = growMaze(config);
+            const aOut = buildRulesJson(a.grid, { startCell: a.startCell });
+            const bOut = buildRulesJson(b.grid, { startCell: b.startCell });
+            expect(regionSubstrates(aOut)).toEqual(regionSubstrates(bOut));
+        });
     });
 });
