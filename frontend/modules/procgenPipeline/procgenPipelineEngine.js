@@ -18,33 +18,21 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
 import { makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
+import {
+    SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
+    OPPOSITE_SIDE, SIDE_DELTAS,
+    mirrorTileAcrossSide,
+} from '../shared/procgen/spatialPrimitives.js';
 
 // Re-export so existing callers (tests, UI) that imported ScenarioPool
 // from this module keep working. New callers should import from
 // shared/procgen/scenarioPool.js directly.
 export { ScenarioPool };
 
-// --- Grid direction constants ---
-
-export const SIDE_N = 'N';
-export const SIDE_S = 'S';
-export const SIDE_E = 'E';
-export const SIDE_W = 'W';
-export const SIDES = [SIDE_N, SIDE_S, SIDE_E, SIDE_W];
-
-export const OPPOSITE_SIDE = Object.freeze({
-    [SIDE_N]: SIDE_S,
-    [SIDE_S]: SIDE_N,
-    [SIDE_E]: SIDE_W,
-    [SIDE_W]: SIDE_E,
-});
-
-const SIDE_DELTAS = Object.freeze({
-    [SIDE_N]: { dx: 0, dy: -1 },
-    [SIDE_S]: { dx: 0, dy: 1 },
-    [SIDE_E]: { dx: 1, dy: 0 },
-    [SIDE_W]: { dx: -1, dy: 0 },
-});
+// Re-export side constants so existing callers that imported them from
+// here keep working. New callers should import from
+// shared/procgen/spatialPrimitives.js directly.
+export { SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES, OPPOSITE_SIDE };
 
 export function cellKey(cell) {
     return `${cell.gx},${cell.gy}`;
@@ -257,15 +245,8 @@ function regionIdForCell(cell) {
     return `region_${cell.gx}_${cell.gy}`;
 }
 
-function mirrorTileAcrossSide(parentTile, parentSide, regionSize) {
-    switch (parentSide) {
-        case SIDE_E: return { x: 0, y: parentTile.y };
-        case SIDE_W: return { x: regionSize.width - 1, y: parentTile.y };
-        case SIDE_N: return { x: parentTile.x, y: regionSize.height - 1 };
-        case SIDE_S: return { x: parentTile.x, y: 0 };
-        default: throw new Error(`mirrorTileAcrossSide: unknown side '${parentSide}'`);
-    }
-}
+// mirrorTileAcrossSide now lives in shared/procgen/spatialPrimitives.js;
+// imported at the top of this file.
 
 /**
  * Pick exit sides for the start region. Always returns the primary
@@ -1254,7 +1235,7 @@ export function compileRegionGraph(grid, opts = {}) {
 // names from the extracted_rules are baked in so the substrate panel
 // can publish user:locationCheck and user:regionMove with the right
 // names without consulting any other lookup at runtime.
-function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBSTACLES, baseItemLib = DEFAULT_ITEMS) {
+export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBSTACLES, baseItemLib = DEFAULT_ITEMS) {
     const obstacles = [];
     for (const [key, id] of world.obstacles) {
         const [x, y] = key.split(',').map(Number);

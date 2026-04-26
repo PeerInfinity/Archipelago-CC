@@ -10,6 +10,17 @@
 import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver, makeRandomWalkerSolver } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
+import {
+    REGION_GROW_STEP, REGION_GROW_MAX_ATTEMPTS,
+    clockwisePerimeterTiles,
+    entranceTileForStartRegion,
+    tryAssignExitTiles,
+} from '../shared/procgen/spatialPrimitives.js';
+
+// Re-export clockwisePerimeterTiles for callers (tests, other
+// modules) that imported it from mazeRoomEngine. Step 3 re-points
+// them at spatialPrimitives.js directly and this re-export drops.
+export { clockwisePerimeterTiles };
 
 // --- Tile types ---
 
@@ -900,62 +911,10 @@ export function generateMaze(config) {
 //     placed on random reachable tiles; other obstacles left
 //     unplaced and reported back to the caller.
 
-const SIDE_N = 'N';
-const SIDE_S = 'S';
-const SIDE_E = 'E';
-const SIDE_W = 'W';
-
-// Auto-grow knobs for generateRegionCore. Cap retries so a
-// pathologically over-constrained input fails loudly instead of
-// looping; grow uniformly so per-side capacity goes up evenly.
-const REGION_GROW_STEP = 2;
-const REGION_GROW_MAX_ATTEMPTS = 4;
-
-/**
- * Returns the perimeter tiles in clockwise order starting from the
- * top edge of the east wall: E (top→bottom), S (right→left), W
- * (bottom→top), N (left→right). Corners are excluded — a tile in a
- * corner is on two walls at once and the rendering can't disambiguate
- * which side an exit/entrance there belongs to (which direction does
- * stepping off it lead?). Region size is required to be at least 3×3
- * so each side has at least one non-corner tile.
- *
- * Used by the multi-exit assignment in generateRegionCore: when the
- * caller doesn't specify `spec.side`, the next clockwise slot from
- * the cursor is assigned. See NewDocs/plans/procedural-generation/
- * top-down-driver.md §1.
- */
-export function clockwisePerimeterTiles(width, height) {
-    const tiles = [];
-    // E: top to bottom, skipping the two E corners (y=0 and y=height-1).
-    for (let y = 1; y < height - 1; y++) tiles.push({ x: width - 1, y, side: SIDE_E });
-    // S: right to left, skipping the two S corners.
-    for (let x = width - 2; x >= 1; x--) tiles.push({ x, y: height - 1, side: SIDE_S });
-    // W: bottom to top, skipping the two W corners.
-    for (let y = height - 2; y >= 1; y--) tiles.push({ x: 0, y, side: SIDE_W });
-    // N: left to right, skipping the two N corners.
-    for (let x = 1; x < width - 1; x++) tiles.push({ x, y: 0, side: SIDE_N });
-    return tiles;
-}
-
-// Pick a random non-corner tile on the requested side. Region size
-// must be at least 3 along the relevant axis so a non-corner choice
-// exists; tryAssignExitTiles (and topDownRegionSize) bake that in.
-function pickTileOnSide(side, size, rng) {
-    const xInner = () => 1 + Math.floor(rng.next() * (size.width - 2));
-    const yInner = () => 1 + Math.floor(rng.next() * (size.height - 2));
-    switch (side) {
-        case SIDE_N: return { x: xInner(), y: 0 };
-        case SIDE_S: return { x: xInner(), y: size.height - 1 };
-        case SIDE_E: return { x: size.width - 1, y: yInner() };
-        case SIDE_W: return { x: 0, y: yInner() };
-        default: throw new Error(`pickTileOnSide: unknown side '${side}'`);
-    }
-}
-
-function entranceTileForStartRegion(size) {
-    return { x: Math.floor(size.width / 2), y: Math.floor(size.height / 2) };
-}
+// Side constants, auto-grow knobs, perimeter helpers, exit-tile
+// assignment, and the start-region entrance helper now live in
+// shared/procgen/spatialPrimitives.js. They're imported at the top
+// of this file.
 
 function pickReachableFloorTile(world, rng, excluded) {
     const excludedKeys = new Set(excluded.map((p) => `${p.x},${p.y}`));
@@ -1097,92 +1056,8 @@ export function generateRegionCore(input) {
     };
 }
 
-/**
- * Resolve a tile per exit at the given size. Returns the resolved
- * list, or null if any exit can't be placed (caller's signal to
- * auto-grow and retry).
- *
- * Per-exit rules:
- *   - spec.tile specified → pin to that exact tile (caller-controlled
- *     placement). Used by top-down to line up an exit with the
- *     entrance tile so cross-region walls match. Allowed to coincide
- *     with the entrance — the driver opts into this — but collisions
- *     with another already-placed exit fail the layout.
- *   - spec.side specified → pick a random tile on that side, with
- *     collision avoidance (used by grid-growth, which targets
- *     specific sides for parent/child alignment).
- *   - spec.side omitted   → take the next clockwise slot from the
- *     cursor (used by top-down, which doesn't care which wall an
- *     exit lives on). Skips occupied slots and advances the cursor
- *     past each placement so subsequent unspecified-side exits move
- *     forward through the perimeter.
- */
-function tryAssignExitTiles(size, exits, entrance_tile, rng, defaultExitId) {
-    const entranceKey = `${entrance_tile.x},${entrance_tile.y}`;
-    const usedKeys = new Set([entranceKey]);
-    const perimeter = clockwisePerimeterTiles(size.width, size.height);
-    let cwCursor = 0;
-
-    const resolved = [];
-    for (let i = 0; i < exits.length; i++) {
-        const spec = exits[i];
-        let tile = null;
-        let resolvedSide = spec.side ?? null;
-
-        if (spec.tile) {
-            // Pinned tile (caller-controlled placement). Allowed to
-            // overlap with the entrance — top-down uses this to put
-            // the BFS-parent's reverse exit on the entrance tile so
-            // it lines up with the parent's exit across the shared
-            // wall. A collision with another already-placed exit's
-            // tile is still a hard failure.
-            const key = `${spec.tile.x},${spec.tile.y}`;
-            if (usedKeys.has(key) && key !== entranceKey) return null;
-            tile = spec.tile;
-            resolvedSide = spec.side ?? null;
-        } else if (spec.side) {
-            // Random on the requested side, retry on collision.
-            let attempts = 0;
-            while (attempts < 50) {
-                const candidate = pickTileOnSide(spec.side, size, rng);
-                if (!usedKeys.has(`${candidate.x},${candidate.y}`)) {
-                    tile = candidate;
-                    break;
-                }
-                attempts++;
-            }
-            if (!tile) return null; // every random pick collided — likely too-small side
-        } else {
-            // Clockwise: walk from cursor until we find an unused
-            // slot. Bound the walk by the full perimeter; if every
-            // slot is used, signal failure.
-            let placed = false;
-            for (let step = 0; step < perimeter.length; step++) {
-                const idx = (cwCursor + step) % perimeter.length;
-                const candidate = perimeter[idx];
-                if (!usedKeys.has(`${candidate.x},${candidate.y}`)) {
-                    tile = candidate;
-                    resolvedSide = candidate.side;
-                    cwCursor = idx + 1;
-                    placed = true;
-                    break;
-                }
-            }
-            if (!placed) return null;
-        }
-
-        usedKeys.add(`${tile.x},${tile.y}`);
-        resolved.push({
-            exit_id: spec.exit_id ?? defaultExitId(i),
-            side: resolvedSide,
-            x: tile.x,
-            y: tile.y,
-            exitName: spec.exitName ?? null,
-            targetRegion: spec.targetRegion ?? null,
-        });
-    }
-    return resolved;
-}
+// tryAssignExitTiles now lives in shared/procgen/spatialPrimitives.js.
+// generateRegionCore (above) imports it from there.
 
 /**
  * Substrate adapter — item-driven placement.
