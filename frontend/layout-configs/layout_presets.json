@@ -238,6 +238,11 @@
             },
             {
               "type": "component",
+              "componentType": "textAdventureSubstratePanel",
+              "title": "Text Adventure (Substrate)"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             }
