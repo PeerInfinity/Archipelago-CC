@@ -56,6 +56,10 @@ function checkedLocationsFromSnapshot(snapshot) {
 }
 
 const LS_KEY = 'mazeRoom_params';
+// Display / view settings stored separately from generation params,
+// so existing saved params don't need a shape migration. Currently
+// just the fog-of-war toggle.
+const LS_VIEW_KEY = 'mazeRoom_view';
 
 const DEFAULT_PARAMS = {
     seed: 1,
@@ -129,10 +133,10 @@ export class MazeRoomUI {
 
         // Discovery-mode UI filter. When active, undiscovered exits
         // skip their green/red fill and undiscovered locations skip
-        // their item sprite. The discovery state itself populates on
-        // region entry (this panel's v1 semantics, matching the text-
-        // adventure substrate); fog-of-war (step 2) will switch to
-        // per-tile population.
+        // their item sprite. Discovery state populates on region
+        // entry when fog of war is OFF (matches the text-adventure
+        // substrate); when fog is ON, discoveries fire per-tile as
+        // the player explores.
         this.discoveryModeActive = false;
         try {
             this.discoveryModeActive = !!getDiscoverySettings()?.enableDiscoveryMode;
@@ -141,6 +145,17 @@ export class MazeRoomUI {
         }
         this._unsubDiscoveryMode = null;
         this._unsubDiscoveryChanged = null;
+
+        // Fog of war. When enabled, only tiles in the seen-set for
+        // the current region render with their full overlays —
+        // everything else paints solid black. Seen = visited ∪
+        // 4-coord-adjacent-to-current-position; once a tile enters
+        // the set it stays. Per-region (so re-entering a previous
+        // region doesn't re-fog the parts the player explored
+        // earlier this session). Session-only — not persisted across
+        // page reloads in v1; the toggle itself IS persisted.
+        this.fogEnabled = false; // overridden by _loadFromLocalStorage
+        this.seenTilesByRegion = new Map(); // regionId -> Set<posKey>
 
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'maze-room-panel';
@@ -236,6 +251,102 @@ export class MazeRoomUI {
         return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
     }
 
+    // --- Fog of war ---
+
+    /**
+     * Tiles that have been visible at any point during this session
+     * for the current region. Lazily creates the entry for the
+     * current region if it doesn't exist yet.
+     */
+    _seenTilesForCurrentRegion() {
+        if (!this.currentRegionId) return null;
+        let s = this.seenTilesByRegion.get(this.currentRegionId);
+        if (!s) {
+            s = new Set();
+            this.seenTilesByRegion.set(this.currentRegionId, s);
+        }
+        return s;
+    }
+
+    /**
+     * Compute the set of tiles visible from `pos`: the tile itself
+     * plus 4-coord-adjacent tiles (regardless of walls). Out-of-
+     * bounds neighbors are skipped. The user requested coord-only
+     * adjacency — walls show as walls but anything beyond stays
+     * hidden until you walk to it.
+     */
+    _computeVisibleAt(pos) {
+        const w = this.world;
+        const visible = new Set();
+        if (!w || !pos) return visible;
+        const candidates = [
+            [pos.x, pos.y],
+            [pos.x, pos.y - 1],
+            [pos.x, pos.y + 1],
+            [pos.x - 1, pos.y],
+            [pos.x + 1, pos.y],
+        ];
+        for (const [x, y] of candidates) {
+            if (x >= 0 && x < w.width && y >= 0 && y < w.height) {
+                visible.add(`${x},${y}`);
+            }
+        }
+        return visible;
+    }
+
+    /**
+     * Add tiles to the seen-set for the current region, then fire
+     * discovery for any item / exit whose tile newly entered the set.
+     * Called from _adoptLoadedRegion (with the spawn-visibility set)
+     * and from _onStep (with post-step visibility).
+     */
+    _expandFogVisibility(visibleTiles) {
+        const seen = this._seenTilesForCurrentRegion();
+        if (!seen || !this.world) return;
+        const newlyAdded = [];
+        for (const k of visibleTiles) {
+            if (!seen.has(k)) {
+                seen.add(k);
+                newlyAdded.push(k);
+            }
+        }
+        if (newlyAdded.length === 0) return;
+        // Discover items / exits at newly-visible tiles.
+        if (!discoveryStateSingleton) return;
+        // Build a pos-key → exit lookup once (small map, world.exits
+        // typically <10 entries). Faster than O(exits) per newly-
+        // added tile if many tiles entered at once.
+        const exitAt = new Map();
+        for (const e of this.world.exits.values()) {
+            exitAt.set(`${e.x},${e.y}`, e);
+        }
+        for (const k of newlyAdded) {
+            const itemId = this.world.items?.get(k);
+            if (itemId) {
+                const locationName = this.world.itemLocationNames?.get(k);
+                if (locationName) discoveryStateSingleton.discoverLocation?.(locationName);
+            }
+            const exit = exitAt.get(k);
+            if (exit) {
+                const name = exit.exitName ?? exit.exit_id;
+                if (name) discoveryStateSingleton.discoverExit?.(this.currentRegionId, name);
+            }
+        }
+    }
+
+    /**
+     * Returns true when the tile at (x, y) should be drawn in full;
+     * false when fog of war should black it out. With fog disabled
+     * every tile is "visible." With fog enabled, only tiles in the
+     * current region's seen-set show.
+     */
+    _isTileVisibleForRender(x, y) {
+        if (!this.fogEnabled) return true;
+        const seen = this.seenTilesByRegion.get(this.currentRegionId);
+        if (!seen) return false;
+        return seen.has(`${x},${y}`);
+    }
+
     _currentInventory() {
         if (this.externalInventory !== null) return this.externalInventory;
         return this.state?.inventory ?? new Set();
@@ -307,10 +418,19 @@ export class MazeRoomUI {
         const snapshot = stateManagerProxySingleton.getSnapshot();
         this.externalInventory = inventoryFromSnapshot(snapshot);
         this.externalCheckedLocations = checkedLocationsFromSnapshot(snapshot);
-        // v1 maze semantics: walking into a region reveals every
-        // location and exit. Step 2 (fog of war) will switch this
-        // to per-tile population when fog is on; for now, mark all.
-        this._discoverEverythingInRegion();
+        // Discovery semantics depend on fog of war:
+        //   - Fog OFF: walking into a region reveals every location
+        //     and exit (matches the text-adventure substrate).
+        //   - Fog ON: only tiles within the spawn's visibility are
+        //     revealed. Further tiles uncover as the player explores
+        //     (see _onStep). Re-entering a region keeps the seen-set
+        //     it accumulated last visit.
+        if (this.fogEnabled) {
+            const initialVisible = this._computeVisibleAt(this.state.player_pos);
+            this._expandFogVisibility(initialVisible);
+        } else {
+            this._discoverEverythingInRegion();
+        }
         if (!skipRender) {
             this.render();
             this.rootElement?.focus();
@@ -580,6 +700,10 @@ export class MazeRoomUI {
         const section = document.createElement('div');
         section.className = 'maze-room-canvas-wrap';
 
+        // Display toggles row — small controls above the canvas that
+        // change rendering without re-running generation.
+        section.appendChild(this._renderViewToggles());
+
         if (!this.world) {
             const hint = document.createElement('div');
             hint.className = 'maze-room-hint';
@@ -595,6 +719,42 @@ export class MazeRoomUI {
         this._drawWorld(canvas);
         section.appendChild(canvas);
         return section;
+    }
+
+    _renderViewToggles() {
+        const row = document.createElement('div');
+        row.className = 'maze-room-view-toggles';
+
+        const fogLabel = document.createElement('label');
+        fogLabel.className = 'maze-room-view-toggle';
+        const fogInput = document.createElement('input');
+        fogInput.type = 'checkbox';
+        fogInput.checked = this.fogEnabled;
+        fogInput.addEventListener('change', () => {
+            this.fogEnabled = fogInput.checked;
+            this._saveViewSettings();
+            // Toggling fog ON keeps the existing seen-set — anything
+            // already explored stays visible, only unexplored tiles
+            // black out from here on.
+            //
+            // Toggling fog OFF reveals the current region in full to
+            // match the "fog off = all-on-entry" semantics. Items
+            // and exits that haven't been discovered yet under fog
+            // get marked discovered now, so the discovery-mode
+            // filter (if on) doesn't keep hiding them. Other regions
+            // the player visited under fog stay partially discovered
+            // — they get fully discovered next time the player walks
+            // into them with fog off.
+            if (!this.fogEnabled) {
+                this._discoverEverythingInRegion();
+            }
+            this.render();
+        });
+        fogLabel.appendChild(fogInput);
+        fogLabel.appendChild(document.createTextNode(' Fog of war'));
+        row.appendChild(fogLabel);
+
+        return row;
     }
 
     _drawWorld(canvas) {
@@ -641,6 +801,11 @@ export class MazeRoomUI {
         for (let y = 0; y < w.height; y++) {
             for (let x = 0; x < w.width; x++) {
                 const key = `${x},${y}`;
+                // Fog of war: tiles outside the seen-set get blacked
+                // out at the end of this method. Skip overlay work
+                // here so undiscovered items / exits / gate borders
+                // don't even render before the blackout.
+                if (this.fogEnabled && !this._isTileVisibleForRender(x, y)) continue;
                 const obstacleId = w.obstacles.get(key);
                 const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
                 const isLogicGate = obstacle?.clear_set_type === 'rule';
@@ -782,6 +947,23 @@ export class MazeRoomUI {
             ctx.stroke();
         }
 
+        // Fog overlay — paint solid black over every unseen tile. Runs
+        // after grid lines so the grid doesn't leak the unexplored
+        // shape, and before the player render so the player always
+        // shows on top. Player's own tile is always in the seen-set
+        // (any movement onto it expanded visibility), so this never
+        // covers the player.
+        if (this.fogEnabled) {
+            const seen = this.seenTilesByRegion.get(this.currentRegionId);
+            ctx.fillStyle = '#000';
+            for (let y = 0; y < w.height; y++) {
+                for (let x = 0; x < w.width; x++) {
+                    if (seen && seen.has(`${x},${y}`)) continue;
+                    ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
+                }
+            }
+        }
+
         if (this.state) {
             const { x, y } = this.state.player_pos;
             ctx.fillStyle = COLORS.player;
@@ -855,6 +1037,15 @@ export class MazeRoomUI {
         if (this.externalInventory !== null) {
             this._publishPlaybackEvents(oldPos, next.player_pos);
         }
+        // Fog of war: expand the seen-set with the new position's
+        // visibility (the new tile + 4-coord-adjacent). Newly-visible
+        // items / exits get their discoveries fired here. Cheap when
+        // fog is off — _expandFogVisibility no-ops if seen-set hasn't
+        // been initialised, and we don't compute visibility unless
+        // fog is enabled.
+        if (this.fogEnabled) {
+            this._expandFogVisibility(this._computeVisibleAt(next.player_pos));
+        }
         if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
             this.message = `Reached exit in ${this.state.turn} steps.`;
         }
@@ -920,6 +1111,25 @@ export class MazeRoomUI {
                 const parsed = JSON.parse(stored);
                 this.params = { ...DEFAULT_PARAMS, ...parsed };
             }
+        } catch (e) {
+            // ignore
+        }
+        try {
+            const view = localStorage.getItem(LS_VIEW_KEY);
+            if (view) {
+                const parsed = JSON.parse(view);
+                this.fogEnabled = !!parsed?.fogEnabled;
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    _saveViewSettings() {
+        try {
+            localStorage.setItem(LS_VIEW_KEY, JSON.stringify({
+                fogEnabled: this.fogEnabled,
+            }));
         } catch (e) {
             // ignore
         }
