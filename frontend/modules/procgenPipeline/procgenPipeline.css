@@ -76,6 +76,19 @@
     border-color: #553030;
 }
 
+.procgen-pipeline-library-row-substrate {
+    border-color: #305555;
+}
+
+.procgen-pipeline-library-row-disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.procgen-pipeline-library-row-disabled:hover {
+    background: #2a2a2a;
+}
+
 .procgen-pipeline-swatch {
     display: inline-block;
     width: 10px;

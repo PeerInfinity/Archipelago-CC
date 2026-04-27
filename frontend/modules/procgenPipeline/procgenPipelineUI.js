@@ -19,6 +19,7 @@ import {
     DEFAULT_ITEMS, DEFAULT_OBSTACLES,
     isObstacleCleared, getItemRenderHints,
 } from '../shared/procgen/library.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 const LS_KEY = 'procgenPipeline_params';
 const TILE_PX = 14;
@@ -65,6 +66,11 @@ export class ProcgenPipelineUI {
             items: { ...DEFAULT_SCENARIO.items },
             obstacles: { ...DEFAULT_SCENARIO.obstacles },
         };
+        // Substrate weights for mixed-substrate generation. Map of
+        // { [substrateId]: weight }. Empty → engine falls back to its
+        // default ('maze' for both growMaze and topDownFromRulesJson),
+        // matching pre-mixed-substrate behaviour.
+        this.substrateMix = {};
         // 'gridGrowth' (default) builds a fresh world from a scenario
         // pool. 'topDown' realises an existing rules.json as maze
         // regions on a grid.
@@ -119,9 +125,12 @@ export class ProcgenPipelineUI {
     render() {
         this.rootElement.innerHTML = '';
         this.rootElement.appendChild(this._renderModeToggle());
-        if (this.mode === 'gridGrowth') {
-            this.rootElement.appendChild(this._renderScenarioPicker());
-        } else {
+        // Scenario Pool: Substrates subsection always visible; Library
+        // and Counts subsections grid-growth-only (the scenario pool
+        // is a grid-growth concept — top-down's items come from its
+        // source rules.json).
+        this.rootElement.appendChild(this._renderScenarioPicker());
+        if (this.mode === 'topDown') {
             this.rootElement.appendChild(this._renderTopDownSourcePicker());
         }
         this.rootElement.appendChild(this._renderParams());
@@ -257,10 +266,141 @@ export class ProcgenPipelineUI {
         title.textContent = 'Scenario Pool';
         section.appendChild(title);
 
+        // Top: Substrates (always visible — both modes).
+        section.appendChild(this._renderSubstratesSubsection());
+
+        // Bottom: Library + Counts (grid-growth-only; top-down's
+        // items come from its source rules.json, not the pool).
+        if (this.mode === 'gridGrowth') {
+            section.appendChild(this._renderLibrarySubsection());
+        }
+
+        return section;
+    }
+
+    _renderSubstratesSubsection() {
         const grid = document.createElement('div');
         grid.className = 'procgen-pipeline-scenario-grid';
 
-        // Left: library (click to add)
+        // Left: registered substrates (click to add).
+        const left = document.createElement('div');
+        left.className = 'procgen-pipeline-scenario-library';
+        const leftHeader = document.createElement('div');
+        leftHeader.className = 'procgen-pipeline-scenario-subheader';
+        leftHeader.textContent = 'Substrates (click to add)';
+        left.appendChild(leftHeader);
+
+        const registered = substrateRegistry.getAll();
+        if (registered.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = '(no substrates registered)';
+            left.appendChild(empty);
+        } else {
+            for (const entry of registered) {
+                left.appendChild(this._renderSubstrateLibraryRow(entry));
+            }
+        }
+
+        // Right: selected substrates with weights.
+        const right = document.createElement('div');
+        right.className = 'procgen-pipeline-scenario-selected';
+        const rightHeader = document.createElement('div');
+        rightHeader.className = 'procgen-pipeline-scenario-subheader';
+        rightHeader.textContent = 'Substrate weights';
+        right.appendChild(rightHeader);
+
+        const selectedIds = Object.keys(this.substrateMix);
+        if (selectedIds.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = '(none selected — defaults to maze)';
+            right.appendChild(empty);
+        } else {
+            for (const id of selectedIds) {
+                right.appendChild(this._renderSubstrateSelectedRow(id, this.substrateMix[id]));
+            }
+        }
+
+        grid.appendChild(left);
+        grid.appendChild(right);
+        return grid;
+    }
+
+    _renderSubstrateLibraryRow(entry) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-library-row procgen-pipeline-library-row-substrate';
+        const name = document.createElement('span');
+        name.className = 'procgen-pipeline-library-name';
+        name.textContent = entry.id;
+        row.appendChild(name);
+
+        // Disabled-look when already in the mix; clicking again is a
+        // no-op rather than an increment, which would conflict with
+        // the weight semantics.
+        const alreadySelected = Object.prototype.hasOwnProperty.call(this.substrateMix, entry.id);
+        if (alreadySelected) {
+            row.classList.add('procgen-pipeline-library-row-disabled');
+        } else {
+            row.addEventListener('click', () => {
+                this.substrateMix[entry.id] = 1;
+                this._saveToLocalStorage();
+                this.render();
+            });
+        }
+        return row;
+    }
+
+    _renderSubstrateSelectedRow(id, weight) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-selected-row';
+        const name = document.createElement('span');
+        name.className = 'procgen-pipeline-selected-name';
+        name.textContent = id;
+        row.appendChild(name);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 0;
+        input.max = 999;
+        input.step = 1;
+        input.value = weight;
+        input.className = 'procgen-pipeline-count-input';
+        input.addEventListener('change', () => {
+            const v = parseInt(input.value, 10);
+            if (Number.isFinite(v) && v > 0) {
+                this.substrateMix[id] = v;
+            } else {
+                delete this.substrateMix[id];
+            }
+            this._saveToLocalStorage();
+            this.render();
+        });
+        row.appendChild(input);
+
+        const rm = document.createElement('button');
+        rm.className = 'procgen-pipeline-btn-small';
+        rm.textContent = '×';
+        rm.title = `Remove ${id}`;
+        rm.addEventListener('click', () => {
+            delete this.substrateMix[id];
+            this._saveToLocalStorage();
+            this.render();
+        });
+        row.appendChild(rm);
+        return row;
+    }
+
+    _renderLibrarySubsection() {
+        const grid = document.createElement('div');
+        grid.className = 'procgen-pipeline-scenario-grid';
+
+        // Left: library (click to add). v1 always shows shared library
+        // entries; substrate-specific library data isn't a thing yet,
+        // and both registered substrates support the same features so
+        // feature-based filtering would be a no-op. Filtering will
+        // matter when a future substrate has its own private items
+        // or supports a narrower feature set.
         const left = document.createElement('div');
         left.className = 'procgen-pipeline-scenario-library';
         const leftHeader = document.createElement('div');
@@ -274,7 +414,7 @@ export class ProcgenPipelineUI {
             left.appendChild(this._renderLibraryRow(id, def, 'obstacle'));
         }
 
-        // Right: selected (with counts)
+        // Right: selected (with counts).
         const right = document.createElement('div');
         right.className = 'procgen-pipeline-scenario-selected';
         const rightHeader = document.createElement('div');
@@ -297,8 +437,7 @@ export class ProcgenPipelineUI {
 
         grid.appendChild(left);
         grid.appendChild(right);
-        section.appendChild(grid);
-        return section;
+        return grid;
     }
 
     _renderLibraryRow(id, def, kind) {
@@ -763,6 +902,7 @@ export class ProcgenPipelineUI {
             growthParams: {
                 maxItemsPerRegion,
                 maxRegions: maxRegions ?? null,
+                ...(this._effectiveSubstrateMix() ? { substrateMix: this._effectiveSubstrateMix() } : {}),
             },
         });
         const rulesJson = buildRulesJson(grid, { startCell, seed });
@@ -777,10 +917,12 @@ export class ProcgenPipelineUI {
 
     _runTopDown() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
+        const mix = this._effectiveSubstrateMix();
         const { grid, stats, startCell } = topDownFromRulesJson(this.topDownSource, {
             gridDims: { width: gridWidth, height: gridHeight },
             regionSizeBase: { width: regionWidth, height: regionHeight },
             seed,
+            ...(mix ? { substrateMix: mix } : {}),
         });
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
@@ -825,11 +967,29 @@ export class ProcgenPipelineUI {
         return b;
     }
 
+    /**
+     * Returns the effective substrate mix to pass to the engine, or
+     * null when the user hasn't selected any substrates. Null means
+     * "use the engine's default" — both growMaze and
+     * topDownFromRulesJson fall back to 'maze' in that case, matching
+     * pre-mixed-substrate behaviour.
+     *
+     * Also filters out zero / negative weights, which the input
+     * field's change handler already removes from the map; the filter
+     * here is a belt-and-suspenders guard for stale localStorage.
+     */
+    _effectiveSubstrateMix() {
+        const positive = Object.entries(this.substrateMix).filter(([, w]) => w > 0);
+        if (positive.length === 0) return null;
+        return Object.fromEntries(positive);
+    }
+
     _saveToLocalStorage() {
         try {
             localStorage.setItem(LS_KEY, JSON.stringify({
                 params: this.params,
                 scenario: this.scenario,
+                substrateMix: this.substrateMix,
                 mode: this.mode,
             }));
             this.message = 'Saved.';
@@ -851,6 +1011,17 @@ export class ProcgenPipelineUI {
                     items: { ...(parsed.scenario.items ?? {}) },
                     obstacles: { ...(parsed.scenario.obstacles ?? {}) },
                 };
+            }
+            if (parsed.substrateMix && typeof parsed.substrateMix === 'object') {
+                // Drop entries for substrates that aren't currently
+                // registered (e.g. saved before a substrate module
+                // was removed).
+                this.substrateMix = {};
+                for (const [id, weight] of Object.entries(parsed.substrateMix)) {
+                    if (substrateRegistry.has(id) && weight > 0) {
+                        this.substrateMix[id] = weight;
+                    }
+                }
             }
             if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown') {
                 this.mode = parsed.mode;

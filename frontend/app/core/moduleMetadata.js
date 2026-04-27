@@ -176,6 +176,12 @@ export const moduleMetadata = {
     name: 'textAdventure',
     column: 3
   },
+  textAdventureSubstratePanel: {
+    title: 'Text Adventure (Substrate)',
+    icon: '📜',
+    name: 'textAdventureSubstrate',
+    column: 3
+  },
   iframePanel: {
     title: 'Iframe Panel',
     icon: '🖼️',

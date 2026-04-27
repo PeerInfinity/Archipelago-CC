@@ -240,6 +240,10 @@
       "path": "./modules/mazeRoom/index.js",
       "enabled": true
     },
+    "textAdventureSubstrate": {
+      "path": "./modules/textAdventureSubstrate/index.js",
+      "enabled": true
+    },
     "procgenPipeline": {
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
@@ -310,6 +314,7 @@
     "apcalc",
     "apworldEditor",
     "mazeRoom",
+    "textAdventureSubstrate",
     "procgenPipeline",
     "procgenPlayer"
   ]
