@@ -25,6 +25,8 @@ import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
+import { getDiscoverySettings } from '../discovery/index.js';
 // Imported directly so the panel can subscribe even when its
 // constructor runs before its module's initialize() (Golden Layout
 // may build panels during its own init, ahead of module init — at
@@ -125,6 +127,21 @@ export class MazeRoomUI {
         this.currentRegionId = null;
         this._unsubSnapshot = null;
 
+        // Discovery-mode UI filter. When active, undiscovered exits
+        // skip their green/red fill and undiscovered locations skip
+        // their item sprite. The discovery state itself populates on
+        // region entry (this panel's v1 semantics, matching the text-
+        // adventure substrate); fog-of-war (step 2) will switch to
+        // per-tile population.
+        this.discoveryModeActive = false;
+        try {
+            this.discoveryModeActive = !!getDiscoverySettings()?.enableDiscoveryMode;
+        } catch {
+            // Discovery module not loaded yet; default off.
+        }
+        this._unsubDiscoveryMode = null;
+        this._unsubDiscoveryChanged = null;
+
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'maze-room-panel';
         this.rootElement.tabIndex = 0;
@@ -133,6 +150,7 @@ export class MazeRoomUI {
         setPanelInstance(this);
         this._loadFromLocalStorage();
         this._subscribeToSnapshotUpdates();
+        this._subscribeToDiscoveryEvents();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -161,6 +179,61 @@ export class MazeRoomUI {
         };
         eventBus.subscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
         this._unsubSnapshot = () => eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
+    }
+
+    _subscribeToDiscoveryEvents() {
+        if (!eventBus?.subscribe) return;
+        const onModeChanged = (data) => {
+            this.discoveryModeActive = !!data?.active;
+            this.render();
+        };
+        const onDiscoveryChanged = () => {
+            // Re-render — could be an external module marking
+            // something discovered while the panel wasn't looking.
+            this.render();
+        };
+        eventBus.subscribe('discovery:modeChanged', onModeChanged, 'mazeRoom');
+        eventBus.subscribe('discovery:changed', onDiscoveryChanged, 'mazeRoom');
+        this._unsubDiscoveryMode =
+            () => eventBus.unsubscribe?.('discovery:modeChanged', onModeChanged, 'mazeRoom');
+        this._unsubDiscoveryChanged =
+            () => eventBus.unsubscribe?.('discovery:changed', onDiscoveryChanged, 'mazeRoom');
+    }
+
+    /**
+     * Mark every location and exit in the current region as discovered.
+     * v1 semantics — matches the text-adventure substrate. Step 2's
+     * fog-of-war work will gate this on the fog toggle: when fog is
+     * on, discoveries fire per-tile as the player explores instead
+     * of everything-on-entry.
+     */
+    _discoverEverythingInRegion() {
+        if (!this.world || !this.currentRegionId) return;
+        if (!discoveryStateSingleton) return;
+        if (this.world.itemLocationNames) {
+            for (const locationName of this.world.itemLocationNames.values()) {
+                if (locationName) discoveryStateSingleton.discoverLocation?.(locationName);
+            }
+        }
+        if (this.world.exits) {
+            for (const exit of this.world.exits.values()) {
+                const name = exit.exitName ?? exit.exit_id;
+                if (name) discoveryStateSingleton.discoverExit?.(this.currentRegionId, name);
+            }
+        }
+    }
+
+    _isExitVisibleToUI(exit) {
+        if (!this.discoveryModeActive) return true;
+        if (!discoveryStateSingleton || !this.currentRegionId) return true;
+        const name = exit.exitName ?? exit.exit_id;
+        return discoveryStateSingleton.isExitDiscovered?.(this.currentRegionId, name) ?? true;
+    }
+
+    _isLocationVisibleToUI(locationName) {
+        if (!this.discoveryModeActive) return true;
+        if (!discoveryStateSingleton || !locationName) return true;
+        return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
     }
 
     _currentInventory() {
@@ -234,6 +307,10 @@ export class MazeRoomUI {
         const snapshot = stateManagerProxySingleton.getSnapshot();
         this.externalInventory = inventoryFromSnapshot(snapshot);
         this.externalCheckedLocations = checkedLocationsFromSnapshot(snapshot);
+        // v1 maze semantics: walking into a region reveals every
+        // location and exit. Step 2 (fog of war) will switch this
+        // to per-tile population when fog is on; for now, mark all.
+        this._discoverEverythingInRegion();
         if (!skipRender) {
             this.render();
             this.rootElement?.focus();
@@ -245,6 +322,8 @@ export class MazeRoomUI {
     getRootElement() { return this.rootElement; }
     destroy() {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
+        if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
+        if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); this.rootElement.focus(); }
@@ -582,12 +661,22 @@ export class MazeRoomUI {
                     : currentInv.has(itemId);
                 const itemHere = itemId && !itemCollected;
 
+                // Discovery filter — only applies in playback mode.
+                // Exits hide their fill and items hide their sprite
+                // when discovery mode is active and the entry hasn't
+                // been discovered yet. Underlying tile (floor / wall /
+                // entrance) still renders; only the AP-overlays gate.
+                const exitVisible = !isPlayback || !exit
+                    || this._isExitVisibleToUI(exit);
+                const locationVisible = !isPlayback || !locationName
+                    || this._isLocationVisibleToUI(locationName);
+
                 // Exit fill: green by default, red when a logic gate
                 // sits on the tile and isn't cleared. (Both-row of
                 // §5 table is "follows the exit row" — this branch
                 // covers it because we don't paint the entrance
                 // border when isExit is true.)
-                if (isExit) {
+                if (isExit && exitVisible) {
                     ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
                     ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
                 }
@@ -620,11 +709,12 @@ export class MazeRoomUI {
                 }
 
                 // Items: a circle in the library's color. Skipped
-                // when the player already collected the item. Foreign
-                // items (no library entry) get a hash-derived color
-                // and a first-letter label so they're visually
-                // distinguishable from each other and from known items.
-                if (itemHere) {
+                // when the player already collected the item, or when
+                // discovery mode hides this location. Foreign items
+                // (no library entry) get a hash-derived color and a
+                // first-letter label so they're visually distinguishable
+                // from each other and from known items.
+                if (itemHere && locationVisible) {
                     const hints = getItemRenderHints(itemId, itemLib);
                     ctx.fillStyle = hints.color;
                     const cx = x * TILE_PX + TILE_PX / 2;
@@ -656,8 +746,11 @@ export class MazeRoomUI {
                 // closed" row anticipated only the item-present case;
                 // this fallback covers the no-item case too.) Skipped
                 // on exit tiles, which already render their closed
-                // state via the full red fill above.
-                if (isLogicGate && gateClosed && !isExit) {
+                // state via the full red fill above. Also hidden when
+                // discovery mode filters this location — otherwise
+                // the border would leak "something's here" before the
+                // location was supposed to be visible.
+                if (isLogicGate && gateClosed && !isExit && locationVisible) {
                     ctx.strokeStyle = COLORS.locationBlocked;
                     ctx.lineWidth = 2;
                     ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);

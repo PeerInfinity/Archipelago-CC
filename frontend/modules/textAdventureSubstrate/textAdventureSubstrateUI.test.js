@@ -262,3 +262,114 @@ describe('TextAdventureSubstrateUI — message history', () => {
         expect(last.html).toContain('&lt;script&gt;');
     });
 });
+
+// Discovery-mode tests. discoveryStateSingleton is shared across tests
+// (it's a module-level singleton); the helper resets it before each
+// test in this section so prior runs' marks don't leak.
+import discoveryStateSingleton from '../discovery/singleton.js';
+
+function resetDiscoverySingleton() {
+    discoveryStateSingleton.discoveredRegions.clear();
+    discoveryStateSingleton.discoveredLocations.clear();
+    discoveryStateSingleton.discoveredExits.clear();
+    // Inject a minimal eventBus so the discover* mutators run (they
+    // early-return when eventBus is null).
+    discoveryStateSingleton.eventBus = { publish: () => {} };
+}
+
+describe('TextAdventureSubstrateUI — discovery population', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    it('marks every location and exit on region entry', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'Overworld',
+            world: makeWorld({
+                exits: [
+                    { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave', targetRegion: 'Cave' },
+                    { exit_id: 'west', x: 0, y: 3, side: 'W', exitName: 'west_to_castle', targetRegion: 'Castle' },
+                ],
+                items: [
+                    { x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' },
+                    { x: 4, y: 4, id: 'key_red', locationName: 'Bridge Key' },
+                ],
+            }),
+            arrivedFrom: null,
+        });
+
+        expect(discoveryStateSingleton.isLocationDiscovered('Slay Yorgle')).toBe(true);
+        expect(discoveryStateSingleton.isLocationDiscovered('Bridge Key')).toBe(true);
+        expect(discoveryStateSingleton.isExitDiscovered('Overworld', 'east_to_cave')).toBe(true);
+        expect(discoveryStateSingleton.isExitDiscovered('Overworld', 'west_to_castle')).toBe(true);
+    });
+
+    it('handles a region with no items / exits without crashing', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        expect(() => {
+            panel.applyLoadedRegion({
+                region_id: 'Empty',
+                world: makeWorld({}),
+                arrivedFrom: null,
+            });
+        }).not.toThrow();
+    });
+
+    it('discovery state changes survive subsequent region transitions', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                items: [{ x: 1, y: 1, id: 'x', locationName: 'Loc A' }],
+            }),
+            arrivedFrom: null,
+        });
+        panel.applyLoadedRegion({
+            region_id: 'B',
+            world: makeWorld({
+                items: [{ x: 2, y: 2, id: 'y', locationName: 'Loc B' }],
+            }),
+            arrivedFrom: null,
+        });
+        expect(discoveryStateSingleton.isLocationDiscovered('Loc A')).toBe(true);
+        expect(discoveryStateSingleton.isLocationDiscovered('Loc B')).toBe(true);
+    });
+});
+
+describe('TextAdventureSubstrateUI — discovery filtering helpers', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    it('shows everything when discovery mode is off, even if not discovered', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.discoveryModeActive = false;
+        panel.currentRegionId = 'Overworld';
+        const exit = { exit_id: 'east', side: 'E', exitName: 'east', targetRegion: 'Cave' };
+        expect(panel._isExitVisibleToUI(exit)).toBe(true);
+        expect(panel._isLocationVisibleToUI('Slay Yorgle')).toBe(true);
+    });
+
+    it('hides undiscovered exits when discovery mode is on', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.discoveryModeActive = true;
+        panel.currentRegionId = 'Overworld';
+        const exit = { exit_id: 'east', side: 'E', exitName: 'east', targetRegion: 'Cave' };
+        expect(panel._isExitVisibleToUI(exit)).toBe(false);
+        // Once discovered, it shows.
+        discoveryStateSingleton.discoverExit('Overworld', 'east');
+        expect(panel._isExitVisibleToUI(exit)).toBe(true);
+    });
+
+    it('hides undiscovered locations when discovery mode is on', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.discoveryModeActive = true;
+        panel.currentRegionId = 'Overworld';
+        expect(panel._isLocationVisibleToUI('Slay Yorgle')).toBe(false);
+        discoveryStateSingleton.discoverLocation('Slay Yorgle');
+        expect(panel._isLocationVisibleToUI('Slay Yorgle')).toBe(true);
+    });
+});

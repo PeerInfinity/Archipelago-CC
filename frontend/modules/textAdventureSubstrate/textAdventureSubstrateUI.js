@@ -41,6 +41,8 @@ import { isObstacleCleared } from '../shared/procgen/library.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
+import { getDiscoverySettings } from '../discovery/index.js';
 // Subscribe through the raw eventBus with an explicit module name —
 // can't rely on this.apis.eventBus because Golden Layout may build
 // the panel before this module's initialize() has run.
@@ -91,6 +93,19 @@ export class TextAdventureSubstrateUI {
         // highlighting in the message history.
         this._previousCheckedLocations = new Set();
 
+        // Discovery-mode filter state. When active, locations and
+        // exits not in discoveryStateSingleton are hidden from the UI.
+        // Mode flips via discovery:modeChanged; discovery state changes
+        // (e.g. populated by another module) are observed via
+        // discovery:changed. Initial state read at construction so we
+        // don't miss the discovery module's own boot-time setup.
+        this.discoveryModeActive = false;
+        try {
+            this.discoveryModeActive = !!getDiscoverySettings()?.enableDiscoveryMode;
+        } catch {
+            // Discovery module not loaded yet (headless tests); default off.
+        }
+
         // Guard DOM creation so the panel constructs cleanly in
         // headless test environments (vitest runs under 'node').
         if (typeof document !== 'undefined') {
@@ -111,6 +126,7 @@ export class TextAdventureSubstrateUI {
         }
 
         this._subscribeToSnapshotUpdates();
+        this._subscribeToDiscoveryEvents();
         this.render();
 
         // The Golden Layout factory wrapper (frontend/app/layout/
@@ -135,6 +151,51 @@ export class TextAdventureSubstrateUI {
             eventBus.subscribe('stateManager:snapshotUpdated', handler, 'textAdventureSubstrate');
             this._unsubSnapshot = () =>
                 eventBus.unsubscribe?.('stateManager:snapshotUpdated', handler, 'textAdventureSubstrate');
+        }
+    }
+
+    _subscribeToDiscoveryEvents() {
+        if (!eventBus?.subscribe) return;
+        const onModeChanged = (data) => {
+            this.discoveryModeActive = !!data?.active;
+            this.render();
+        };
+        const onDiscoveryChanged = () => {
+            // Re-render when something gets discovered — e.g. another
+            // module marked a location while the player wasn't looking.
+            this.render();
+        };
+        eventBus.subscribe('discovery:modeChanged', onModeChanged, 'textAdventureSubstrate');
+        eventBus.subscribe('discovery:changed', onDiscoveryChanged, 'textAdventureSubstrate');
+        this._unsubDiscoveryMode = () =>
+            eventBus.unsubscribe?.('discovery:modeChanged', onModeChanged, 'textAdventureSubstrate');
+        this._unsubDiscoveryChanged = () =>
+            eventBus.unsubscribe?.('discovery:changed', onDiscoveryChanged, 'textAdventureSubstrate');
+    }
+
+    /**
+     * Mark every location and exit in the current region as discovered.
+     * Text-adventure substrate semantics: walking into a region reveals
+     * the whole region. Idempotent — discoveryStateSingleton's
+     * mutators no-op when already discovered.
+     */
+    _discoverEverythingInRegion() {
+        if (!this.world || !this.currentRegionId) return;
+        if (!discoveryStateSingleton) return;
+        // Locations: keyed by AP-canonical name baked into world.itemLocationNames
+        // by the pipeline at serialization time.
+        if (this.world.itemLocationNames) {
+            for (const locationName of this.world.itemLocationNames.values()) {
+                if (locationName) discoveryStateSingleton.discoverLocation?.(locationName);
+            }
+        }
+        // Exits: keyed by exitName on each entry. The region itself
+        // is also marked via discoverExit's internal cascade.
+        if (this.world.exits) {
+            for (const exit of this.world.exits.values()) {
+                const name = exit.exitName ?? exit.exit_id;
+                if (name) discoveryStateSingleton.discoverExit?.(this.currentRegionId, name);
+            }
         }
     }
 
@@ -163,6 +224,12 @@ export class TextAdventureSubstrateUI {
         this.inventory = inventoryFromSnapshot(snapshot);
         this.checkedLocations = checkedLocationsFromSnapshot(snapshot);
         this._previousCheckedLocations = new Set(this.checkedLocations);
+
+        // Text-adventure semantics: entering a region reveals its
+        // entire contents. Discovery mode (the UI filter) only
+        // affects rendering — the discovery state grows on entry
+        // either way.
+        this._discoverEverythingInRegion();
 
         this._addMessage(this._arrivalMessage());
     }
@@ -254,6 +321,17 @@ export class TextAdventureSubstrateUI {
     _renderExits() {
         if (!this.world?.exits || this.world.exits.size === 0) return null;
 
+        // Filter out undiscovered exits when discovery mode is on.
+        // _discoverEverythingInRegion populates on entry, so the
+        // filter is normally a no-op for the current region — it
+        // matters when this panel renders before population has
+        // run, or if discovery state is reset externally.
+        const visible = [];
+        for (const exit of this.world.exits.values()) {
+            if (this._isExitVisibleToUI(exit)) visible.push(exit);
+        }
+        if (visible.length === 0) return null;
+
         const section = document.createElement('div');
         section.className = 'text-adventure-section text-adventure-exits';
 
@@ -263,12 +341,25 @@ export class TextAdventureSubstrateUI {
         section.appendChild(label);
 
         const list = document.createElement('div');
-        for (const exit of this.world.exits.values()) {
+        for (const exit of visible) {
             list.appendChild(this._renderExitLink(exit));
             list.appendChild(document.createTextNode(' '));
         }
         section.appendChild(list);
         return section;
+    }
+
+    _isExitVisibleToUI(exit) {
+        if (!this.discoveryModeActive) return true;
+        if (!discoveryStateSingleton || !this.currentRegionId) return true;
+        const name = exit.exitName ?? exit.exit_id;
+        return discoveryStateSingleton.isExitDiscovered?.(this.currentRegionId, name) ?? true;
+    }
+
+    _isLocationVisibleToUI(locationName) {
+        if (!this.discoveryModeActive) return true;
+        if (!discoveryStateSingleton || !locationName) return true;
+        return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
     }
 
     _renderExitLink(exit) {
@@ -295,6 +386,7 @@ export class TextAdventureSubstrateUI {
         for (const [posKey, itemId] of this.world.items) {
             const locationName = this.world.itemLocationNames?.get(posKey);
             if (!locationName) continue;
+            if (!this._isLocationVisibleToUI(locationName)) continue;
             const entry = { posKey, itemId, locationName };
             if (this.checkedLocations.has(locationName)) {
                 checked.push(entry);
@@ -495,6 +587,8 @@ export class TextAdventureSubstrateUI {
 
     destroy() {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
+        if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
+        if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         this.rootElement = null;
         this.world = null;
     }
