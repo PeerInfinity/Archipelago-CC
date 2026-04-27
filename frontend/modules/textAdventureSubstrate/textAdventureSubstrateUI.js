@@ -113,12 +113,15 @@ export class TextAdventureSubstrateUI {
         this._subscribeToSnapshotUpdates();
         this.render();
 
-        if (this.rootElement && container?.getElement) {
-            container.getElement().appendChild(this.rootElement);
-        }
+        // The Golden Layout factory wrapper (frontend/app/layout/
+        // desktopLayout.js:createGoldenLayoutComponentFactory) calls
+        // getRootElement() and appends the returned node to its
+        // container. Don't append here too — that would double-mount.
     }
 
     get apis() { return TextAdventureSubstrateUI.moduleApis || getModuleApis(); }
+
+    getRootElement() { return this.rootElement; }
 
     _subscribeToSnapshotUpdates() {
         const handler = (data) => {
