@@ -733,19 +733,25 @@ export class MazeRoomUI {
         fogInput.addEventListener('change', () => {
             this.fogEnabled = fogInput.checked;
             this._saveViewSettings();
-            // Toggling fog ON keeps the existing seen-set — anything
-            // already explored stays visible, only unexplored tiles
-            // black out from here on.
-            //
-            // Toggling fog OFF reveals the current region in full to
-            // match the "fog off = all-on-entry" semantics. Items
-            // and exits that haven't been discovered yet under fog
-            // get marked discovered now, so the discovery-mode
-            // filter (if on) doesn't keep hiding them. Other regions
-            // the player visited under fog stay partially discovered
-            // — they get fully discovered next time the player walks
-            // into them with fog off.
-            if (!this.fogEnabled) {
+            if (this.fogEnabled) {
+                // Toggling fog ON keeps the existing seen-set, but
+                // also reveals the player's current tile + 4-coord-
+                // adjacent so the player isn't blacked into a
+                // single-tile pocket. Anything previously explored
+                // stays visible; everything else fogs out.
+                if (this.state) {
+                    this._expandFogVisibility(this._computeVisibleAt(this.state.player_pos));
+                }
+            } else {
+                // Toggling fog OFF reveals the current region in
+                // full, matching the "fog off = all-on-entry"
+                // semantics. Items and exits that haven't been
+                // discovered yet under fog get marked discovered
+                // now, so the discovery-mode filter (if on) doesn't
+                // keep hiding them. Other regions the player
+                // visited under fog stay partially discovered — they
+                // get fully discovered next time the player walks
+                // into them with fog off.
                 this._discoverEverythingInRegion();
             }
             this.render();

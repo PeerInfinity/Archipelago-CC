@@ -1,0 +1,15 @@
+{
+  "moduleSettings": {
+    "discovery": {
+      "enableDiscoveryMode": true,
+      "regionDiscoveryTrigger": "onEnter",
+      "autoDiscoverLocations": false,
+      "autoDiscoverExits": false,
+      "undiscoveredDisplay": "placeholder",
+      "clickDiscoversRegion": true,
+      "disableLocationCheckUI": true,
+      "clickDiscoversLocation": true,
+      "showUndiscoveredRegionNames": false
+    }
+  }
+}

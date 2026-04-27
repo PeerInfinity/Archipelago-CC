@@ -190,6 +190,15 @@
       "enabled": true
     }
   },
+  "discovery-fog": {
+    "userSettings": {
+      "paths": [
+        "./settings/settings.json",
+        "./settings/settings-discovery-fog.json"
+      ],
+      "enabled": true
+    }
+  },
   "check-all-from-graph": {
     "userSettings": {
       "paths": [
