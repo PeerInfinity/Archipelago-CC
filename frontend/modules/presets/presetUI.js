@@ -15,6 +15,12 @@ const TOOLBAR_LS_KEY = 'presetUI_toolbar';
 // Separate from the toolbar so a chart-toggle render doesn't churn
 // the toolbar persistence.
 const VIEW_LS_KEY = 'presetUI_view';
+
+// Loading-protection knobs. Both are deliberately generous — the
+// goal is to bail when the network is genuinely stuck, not to
+// interrupt large but legitimate loads.
+const LOAD_FETCH_TIMEOUT_MS = 30_000;
+const LOAD_WATCHDOG_MS = 3_000;
 const DEFAULT_VIEW_STATE = Object.freeze({
     showSphereLog: false,
     showFileList: true,
@@ -435,6 +441,15 @@ const PRESET_STYLES = `
     padding: 16px;
     border-radius: 4px;
     margin-top: 16px;
+}
+.preset-loading {
+    background-color: rgba(80, 130, 180, 0.1);
+    border-left: 3px solid rgba(80, 130, 180, 0.6);
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+    color: #ccc;
+    font-size: 0.9em;
 }
 .success-message {
     background-color: rgba(76, 175, 80, 0.1);
@@ -978,6 +993,14 @@ export class PresetUI {
     // chart off/on within the same detail view doesn't refetch.
     // Cleared whenever loadPreset runs.
     this._sphereLogCache = null;
+    // Tracks the currently-running rules.json fetch (if any) so we
+    // can abort it when the user clicks a different preset, and so
+    // a slow load doesn't fire its side-effects on a stale preset.
+    // Shape: { loadId, abortController, cancelled }.
+    this._inflightLoad = null;
+    // Monotonic counter — each load gets a unique id so isStale()
+    // can detect "I'm an older load that should bail."
+    this._loadIdCounter = 0;
     // Enrichment for the current chart, sourced from sphereState
     // after the preset finishes loading. Shape:
     //   { cacheKey: 'gameDirectory/seedName',
@@ -1833,14 +1856,48 @@ export class PresetUI {
   async loadRulesFile(gameDirectory, seedName, rulesFile, playerId = DEFAULT_PLAYER_ID) {
     const fullPath = `./presets/${gameDirectory}/${seedName}/${rulesFile}`;
     log('info', `Loading rules file: ${fullPath}`);
+
+    // --- Concurrency + timeout protection ---
+    // 1. Cancel any previous in-flight fetch so a slow A doesn't
+    //    clobber a faster B. The aborted load also bails before
+    //    publishing files:jsonLoaded so subscribers don't see two
+    //    consecutive presets.
+    // 2. AbortController-driven fetch timeout — bails after
+    //    LOAD_FETCH_TIMEOUT_MS so a hung network or huge response
+    //    can't lock up the panel.
+    // 3. A "still working" watchdog flips the loading status to
+    //    indicate that the post-fetch synchronous processing is
+    //    taking a while (some presets parse + import slowly on the
+    //    main thread; the watchdog signals the page isn't dead).
+    if (this._inflightLoad) {
+      this._inflightLoad.cancelled = true;
+      this._inflightLoad.abortController.abort();
+    }
+    const loadId = ++this._loadIdCounter;
+    const abortController = new AbortController();
+    const fetchTimeoutId = setTimeout(() => abortController.abort(), LOAD_FETCH_TIMEOUT_MS);
+    const inflight = { loadId, abortController, cancelled: false };
+    this._inflightLoad = inflight;
+
+    const setStatus = (html) => {
+      const el = document.getElementById('preset-status');
+      if (el) el.innerHTML = html;
+    };
+    const isStale = () => inflight.cancelled || this._loadIdCounter !== loadId;
+
+    setStatus(`<div class="preset-loading">Loading ${this.escapeHtml(rulesFile)}…</div>`);
+
     try {
-      const response = await fetch(fullPath);
+      const response = await fetch(fullPath, { signal: abortController.signal });
+      clearTimeout(fetchTimeoutId);
+      if (isStale()) return;
       if (!response.ok) {
         throw new Error(
           `Failed to load rules file ${fullPath}: ${response.status} ${response.statusText}`
         );
       }
       const rulesData = await response.json();
+      if (isStale()) return;
 
       // Ensure componentState exists before trying to set properties on it
       if (this.componentState) {
@@ -1848,26 +1905,47 @@ export class PresetUI {
         this.componentState.currentGameDirectory = gameDirectory;
         this.componentState.currentPlayerId = playerId; // Store the determined player ID
       } else {
-        // If componentState is not available, these assignments would fail.
-        // Log a warning, as this might indicate an issue with panel state management.
-        log('warn', 
+        log('warn',
           '[PresetUI] loadRulesFile: this.componentState is undefined. Cannot store currentRules, currentGameDirectory, or currentPlayerId. This might be normal if the panel was just created and no state has been saved yet, or it could indicate an issue with GoldenLayout state persistence for this component.'
         );
-        // As a fallback, we can store these on the instance if needed for immediate use,
-        // but they won't be persisted by GoldenLayout.
-        // this.currentRules_fallback = rulesData;
-        // this.currentGameDirectory_fallback = gameDirectory;
-        // this.currentPlayerId_fallback = playerId;
       }
+
+      // Yield once before publishing so the browser paints the
+      // loading indicator before the (often heavy, often
+      // synchronous) downstream subscribers run. Without this the
+      // user sees a hung page on large presets — the click handler
+      // returns to the runtime only after the publish + downstream
+      // chain completes.
+      await this._yieldToBrowser();
+      if (isStale()) return;
+
+      // Watchdog: if the publish chain takes more than a few
+      // seconds, surface a "still loading…" hint so the user knows
+      // the page isn't dead. We can't actually cancel synchronous
+      // downstream subscribers, but the message reduces panic.
+      const watchdogId = setTimeout(() => {
+        if (isStale()) return;
+        const sizeKB = (rulesFile && rulesData)
+          ? Math.round(JSON.stringify(rulesData).length / 1024)
+          : 0;
+        const sizeNote = sizeKB > 0 ? ` (${sizeKB.toLocaleString()} KB rules.json)` : '';
+        setStatus(`<div class="preset-loading">Still loading ${this.escapeHtml(rulesFile)}…${this.escapeHtml(sizeNote)}<br>Large presets can take several seconds to process.</div>`);
+      }, LOAD_WATCHDOG_MS);
 
       log('info',
         `Rules loaded for ${gameDirectory}, player ${playerId}. Publishing files:jsonLoaded.`
       );
-      this.eventBus.publish('files:jsonLoaded', {
-        jsonData: rulesData,
-        selectedPlayerId: playerId,
-        sourceName: fullPath
-      });
+      try {
+        this.eventBus.publish('files:jsonLoaded', {
+          jsonData: rulesData,
+          selectedPlayerId: playerId,
+          sourceName: fullPath
+        });
+      } finally {
+        clearTimeout(watchdogId);
+      }
+
+      if (isStale()) return;
 
       // Render procgen-specific stats if the rules.json carries them.
       // Hidden entirely otherwise (the helper returns null for non-
@@ -1978,16 +2056,58 @@ export class PresetUI {
       // Control button states should be managed by their respective modules.
       // this.gameUI._enableControlButtons();
     } catch (error) {
+      clearTimeout(fetchTimeoutId);
+      // Abort + already cancelled (user clicked another preset) →
+      // silent. Abort + still current → user-facing timeout error.
+      if (error?.name === 'AbortError') {
+        if (inflight.cancelled) {
+          log('info', `Load cancelled: ${fullPath}`);
+          return;
+        }
+        log('warn', `Load timed out after ${LOAD_FETCH_TIMEOUT_MS}ms: ${fullPath}`);
+        const statusElement = document.getElementById('preset-status');
+        if (statusElement) {
+          statusElement.innerHTML = `
+            <div class="error-message">
+              <p>Loading timed out after ${(LOAD_FETCH_TIMEOUT_MS / 1000).toFixed(0)}s.</p>
+              <p>The rules file may be too large to fetch over the current connection. Try reloading the page.</p>
+            </div>
+          `;
+        }
+        return;
+      }
       log('error', 'Error loading rules file:', error);
       const statusElement = document.getElementById('preset-status');
       if (statusElement) {
         statusElement.innerHTML = `
           <div class="error-message">
-            <p>Error loading rules file: ${error.message}</p>
+            <p>Error loading rules file: ${this.escapeHtml(error.message)}</p>
           </div>
         `;
       }
+    } finally {
+      // Only clear the in-flight pointer if it still points at this
+      // load — a newer click may have replaced it before the
+      // try/finally returned.
+      if (this._inflightLoad === inflight) this._inflightLoad = null;
     }
+  }
+
+  /**
+   * Yield to the browser once so paint can flush before more
+   * synchronous work runs. Used between fetch+parse and the
+   * downstream eventBus publish so a "Loading…" indicator shows
+   * before subscribers (which can be slow on big rules.json files)
+   * lock the main thread.
+   */
+  _yieldToBrowser() {
+    return new Promise((resolve) => {
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => resolve());
+      } else {
+        setTimeout(resolve, 0);
+      }
+    });
   }
 
   renderTestResultBadge(gameData) {
