@@ -9,6 +9,13 @@ const LIVE_INDEX_PATH = './presets/preset_files.live.json';
 // survive a panel close/reopen. See NewDocs/plans/presets-panel-
 // overhaul.md §"Search / sort / filter".
 const TOOLBAR_LS_KEY = 'presetUI_toolbar';
+// View preferences for the detail view (chart toggle, etc.).
+// Separate from the toolbar so a chart-toggle render doesn't churn
+// the toolbar persistence.
+const VIEW_LS_KEY = 'presetUI_view';
+const DEFAULT_VIEW_STATE = Object.freeze({
+    showSphereLog: false,
+});
 const DEFAULT_TOOLBAR_STATE = Object.freeze({
     query: '',
     sortKey: 'name',
@@ -114,6 +121,44 @@ function testPassCount(data) {
     const tr = data?.test_results;
     if (!tr) return 0;
     return Object.values(tr).filter((r) => r?.passed === true).length;
+}
+
+/**
+ * Parse a sphere log JSONL file's contents and return an ordered array
+ * of `{ integerSphere, fractionalCount }` entries, one per integer
+ * sphere that appeared. Pure for testability.
+ *
+ * Each input line is JSON; one line is metadata, the rest are
+ * state_update lines with a `sphere_index` string of shape `"<int>"`
+ * or `"<int>.<sub>"`. Lines with malformed or missing sphere_index
+ * are silently skipped.
+ *
+ * Output is sorted ascending by integerSphere. Integer spheres with
+ * zero count are NOT emitted (the chart skips empty rows rather than
+ * leaving gaps).
+ *
+ * See NewDocs/plans/presets-panel-overhaul.md §"Sphere log shape
+ * chart" for the rendering contract this feeds.
+ */
+export function parseSphereLogShape(jsonlText) {
+    if (!jsonlText) return [];
+    const counts = new Map();
+    for (const rawLine of jsonlText.split('\n')) {
+        const line = rawLine.trim();
+        if (!line) continue;
+        let parsed;
+        try { parsed = JSON.parse(line); } catch (e) { continue; }
+        if (parsed?.type !== 'state_update') continue;
+        const sphereIndex = parsed.sphere_index;
+        if (typeof sphereIndex !== 'string') continue;
+        const intPart = sphereIndex.split('.')[0];
+        const intSphere = Number.parseInt(intPart, 10);
+        if (!Number.isFinite(intSphere)) continue;
+        counts.set(intSphere, (counts.get(intSphere) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+        .sort((a, b) => a[0] - b[0])
+        .map(([integerSphere, fractionalCount]) => ({ integerSphere, fractionalCount }));
 }
 
 /**
@@ -267,6 +312,11 @@ export class PresetUI {
     this.presetsListContainer = null;
     this.rootElement = null;
     this.toolbarState = this._loadToolbarState();
+    this.viewState = this._loadViewState();
+    // Cache for the most-recently parsed sphere log so toggling the
+    // chart off/on within the same detail view doesn't refetch.
+    // Cleared whenever loadPreset runs.
+    this._sphereLogCache = null;
     // Most recent ordered list of (gameDirectory, seedName, playerId)
     // tuples produced by the games list. Populated each time
     // renderGamesList runs; consumed by the next/previous nav in the
@@ -768,6 +818,77 @@ export class PresetUI {
           opacity: 0.4;
           cursor: not-allowed;
         }
+        .preset-sphere-section {
+          margin-top: 16px;
+          padding: 12px;
+          background-color: rgba(0, 0, 0, 0.1);
+          border-radius: 6px;
+        }
+        .preset-sphere-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.95em;
+          color: #ccc;
+          cursor: pointer;
+          user-select: none;
+        }
+        .preset-sphere-chart {
+          margin-top: 8px;
+          max-height: 320px;
+          overflow-y: auto;
+          font-family: 'Consolas', monospace;
+        }
+        .preset-sphere-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 2px 0;
+          font-size: 0.85em;
+          color: #ddd;
+        }
+        .preset-sphere-row.preset-sphere-header {
+          color: #888;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 4px;
+          margin-bottom: 4px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.4px;
+        }
+        .preset-sphere-cell-num {
+          width: 60px;
+          text-align: right;
+          flex-shrink: 0;
+        }
+        .preset-sphere-cell-count {
+          width: 50px;
+          text-align: right;
+          flex-shrink: 0;
+          color: #aaa;
+        }
+        .preset-sphere-cell-bar {
+          flex: 1 1 auto;
+          min-width: 0;
+          overflow: hidden;
+          display: flex;
+          gap: 2px;
+          white-space: nowrap;
+        }
+        .preset-sphere-tile {
+          display: inline-block;
+          width: 10px;
+          height: 14px;
+          background-color: #4da6ff;
+          border-radius: 1px;
+          flex-shrink: 0;
+        }
+        .preset-sphere-empty {
+          color: #888;
+          font-style: italic;
+          padding: 6px 0;
+          font-size: 0.9em;
+        }
         .error-message {
           background-color: rgba(244, 67, 54, 0.1);
           border-left: 3px solid #f44336;
@@ -1138,6 +1259,9 @@ export class PresetUI {
     this.currentSeedName = seedName;
     this.currentPlayer = playerId;
 
+    // Drop any cached sphere log shape from the previous preset.
+    this._sphereLogCache = null;
+
     const container = this.presetsListContainer;
     if (!container) return;
 
@@ -1202,6 +1326,13 @@ export class PresetUI {
           </div>
           <div id="preset-status"></div>
         </div>
+        <div class="preset-sphere-section">
+          <label class="preset-sphere-toggle">
+            <input type="checkbox" id="sphere-log-toggle"${this.viewState.showSphereLog ? ' checked' : ''} />
+            Show sphere log shape
+          </label>
+          <div id="sphere-log-chart" class="preset-sphere-chart"></div>
+        </div>
       `;
 
       // Set the HTML content
@@ -1228,6 +1359,23 @@ export class PresetUI {
       wireNav('nav-prev-seed', nav.prevSeed);
       wireNav('nav-next-seed', nav.nextSeed);
       wireNav('nav-next-game', nav.nextGame);
+
+      // Sphere log toggle + lazy-render
+      const toggle = container.querySelector('#sphere-log-toggle');
+      const chartHost = container.querySelector('#sphere-log-chart');
+      const renderChartIfOn = () => {
+        if (!this.viewState.showSphereLog || !chartHost) return;
+        this._renderSphereLogChart(chartHost, gameDirectory, seedName);
+      };
+      if (toggle) {
+        toggle.addEventListener('change', () => {
+          this.viewState.showSphereLog = toggle.checked;
+          this._saveViewState();
+          if (chartHost) chartHost.innerHTML = '';
+          renderChartIfOn();
+        });
+      }
+      renderChartIfOn();
 
       // Add event listeners for the file links
       const fileLinks = container.querySelectorAll('.preset-file-link');
@@ -1541,6 +1689,88 @@ export class PresetUI {
         <span class="test-icon-mini">${icon}</span>
       </div>
     `;
+  }
+
+  _renderSphereLogChart(host, gameDirectory, seedName) {
+    if (!host) return;
+    const cacheKey = `${gameDirectory}/${seedName}`;
+    const renderShape = (shape) => {
+      if (!shape || shape.length === 0) {
+        host.innerHTML = '<div class="preset-sphere-empty">No spheres recorded.</div>';
+        return;
+      }
+      let inner = `
+        <div class="preset-sphere-row preset-sphere-header">
+          <span class="preset-sphere-cell-num">Sphere</span>
+          <span class="preset-sphere-cell-count">Frac.</span>
+          <span class="preset-sphere-cell-bar">Bar</span>
+        </div>
+      `;
+      for (const { integerSphere, fractionalCount } of shape) {
+        let cells = '';
+        for (let i = 0; i < fractionalCount; i += 1) {
+          cells += '<span class="preset-sphere-tile"></span>';
+        }
+        inner += `
+          <div class="preset-sphere-row">
+            <span class="preset-sphere-cell-num">${integerSphere}</span>
+            <span class="preset-sphere-cell-count">${fractionalCount}</span>
+            <span class="preset-sphere-cell-bar">${cells}</span>
+          </div>
+        `;
+      }
+      host.innerHTML = inner;
+    };
+
+    if (this._sphereLogCache?.cacheKey === cacheKey) {
+      renderShape(this._sphereLogCache.shape);
+      return;
+    }
+
+    const gameData = this.presets?.[gameDirectory];
+    const folderData = gameData?.folders?.[seedName];
+    const sphereFile = (folderData?.files ?? []).find((f) => f.endsWith('_sphere_log.jsonl'));
+    if (!sphereFile) {
+      host.innerHTML = '<div class="preset-sphere-empty">No sphere log available.</div>';
+      return;
+    }
+    host.innerHTML = '<div class="preset-sphere-empty">Loading sphere log…</div>';
+    const filePath = `./presets/${gameDirectory}/${seedName}/${sphereFile}`;
+    fetch(filePath, { cache: 'reload' })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
+      .then((text) => {
+        const shape = parseSphereLogShape(text);
+        this._sphereLogCache = { cacheKey, shape };
+        // Re-check the toggle state in case the user toggled off
+        // before the fetch resolved.
+        if (this.viewState.showSphereLog) renderShape(shape);
+      })
+      .catch((err) => {
+        log('warn', `Sphere log fetch failed for ${filePath}:`, err.message);
+        host.innerHTML = '<div class="preset-sphere-empty">Sphere log could not be loaded.</div>';
+      });
+  }
+
+  _loadViewState() {
+    try {
+      const raw = localStorage.getItem(VIEW_LS_KEY);
+      if (!raw) return { ...DEFAULT_VIEW_STATE };
+      const parsed = JSON.parse(raw);
+      return { ...DEFAULT_VIEW_STATE, ...parsed };
+    } catch (e) {
+      return { ...DEFAULT_VIEW_STATE };
+    }
+  }
+
+  _saveViewState() {
+    try {
+      localStorage.setItem(VIEW_LS_KEY, JSON.stringify(this.viewState));
+    } catch (e) {
+      // ignore
+    }
   }
 
   _computeDetailNav(gameDirectory, seedName, playerId) {

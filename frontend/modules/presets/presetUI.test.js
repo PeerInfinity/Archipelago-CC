@@ -4,6 +4,7 @@ import {
     selectIndexFile,
     filterAndSortPresets,
     computeDetailNav,
+    parseSphereLogShape,
 } from './presetUI.js';
 
 // Fixture index — subset of the real preset_files.json shape with a
@@ -332,5 +333,77 @@ describe('computeDetailNav', () => {
         const nav = computeDetailNav(tuples, FIXTURE,
             { gameDirectory: 'alttp', seedName: 'AP_1', playerId: null });
         expect(nav.nextGame?.label).toBe('Adventure');
+    });
+});
+
+describe('parseSphereLogShape', () => {
+    it('returns an empty array for empty input', () => {
+        expect(parseSphereLogShape('')).toEqual([]);
+        expect(parseSphereLogShape(null)).toEqual([]);
+        expect(parseSphereLogShape(undefined)).toEqual([]);
+    });
+
+    it('skips the metadata line and counts state_update lines per integer sphere', () => {
+        const text = [
+            JSON.stringify({ type: 'metadata', seed: 1 }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0.1' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0.2' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '1' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '1.1' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '2' }),
+        ].join('\n');
+        expect(parseSphereLogShape(text)).toEqual([
+            { integerSphere: 0, fractionalCount: 3 },
+            { integerSphere: 1, fractionalCount: 2 },
+            { integerSphere: 2, fractionalCount: 1 },
+        ]);
+    });
+
+    it('orders entries ascending even when input is unsorted', () => {
+        const text = [
+            JSON.stringify({ type: 'state_update', sphere_index: '5' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '2' }),
+        ].join('\n');
+        const out = parseSphereLogShape(text);
+        expect(out.map((e) => e.integerSphere)).toEqual([0, 2, 5]);
+    });
+
+    it('does NOT emit zero-count rows for missing integer spheres in between', () => {
+        // Spheres 0 and 5 with nothing in between — output skips 1-4.
+        const text = [
+            JSON.stringify({ type: 'state_update', sphere_index: '0' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '5' }),
+        ].join('\n');
+        const out = parseSphereLogShape(text);
+        expect(out.map((e) => e.integerSphere)).toEqual([0, 5]);
+    });
+
+    it('silently skips malformed lines and unknown record types', () => {
+        const text = [
+            'not-json',
+            '',
+            JSON.stringify({ type: 'state_update', sphere_index: '0' }),
+            JSON.stringify({ type: 'unknown_record', sphere_index: '7' }),
+            JSON.stringify({ type: 'state_update' /* missing sphere_index */ }),
+            JSON.stringify({ type: 'state_update', sphere_index: 5 /* not a string */ }),
+            JSON.stringify({ type: 'state_update', sphere_index: 'banana' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0.1' }),
+        ].join('\n');
+        expect(parseSphereLogShape(text)).toEqual([
+            { integerSphere: 0, fractionalCount: 2 },
+        ]);
+    });
+
+    it('handles sphere_index strings with no fractional part', () => {
+        const text = [
+            JSON.stringify({ type: 'state_update', sphere_index: '3' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '3' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '3' }),
+        ].join('\n');
+        expect(parseSphereLogShape(text)).toEqual([
+            { integerSphere: 3, fractionalCount: 3 },
+        ]);
     });
 });
