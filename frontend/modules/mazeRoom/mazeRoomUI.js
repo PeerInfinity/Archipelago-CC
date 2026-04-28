@@ -157,10 +157,17 @@ export class MazeRoomUI {
         this.fogEnabled = false; // overridden by _loadFromLocalStorage
         this.seenTilesByRegion = new Map(); // regionId -> Set<posKey>
 
-        this.rootElement = document.createElement('div');
-        this.rootElement.className = 'maze-room-panel';
-        this.rootElement.tabIndex = 0;
-        this.rootElement.addEventListener('keydown', (e) => this._handleKeydown(e));
+        // Guard DOM creation so the panel constructs cleanly in
+        // headless test environments (vitest runs under 'node').
+        // Mirrors the textAdventureSubstrateUI pattern.
+        if (typeof document !== 'undefined') {
+            this.rootElement = document.createElement('div');
+            this.rootElement.className = 'maze-room-panel';
+            this.rootElement.tabIndex = 0;
+            this.rootElement.addEventListener('keydown', (e) => this._handleKeydown(e));
+        } else {
+            this.rootElement = null;
+        }
 
         setPanelInstance(this);
         this._loadFromLocalStorage();
@@ -446,10 +453,11 @@ export class MazeRoomUI {
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         setPanelInstance(null);
     }
-    onPanelShow() { this.render(); this.rootElement.focus(); }
+    onPanelShow() { this.render(); this.rootElement?.focus(); }
     onPanelResize() {}
 
     render() {
+        if (!this.rootElement) return;
         this.rootElement.innerHTML = '';
         this.rootElement.appendChild(this._renderParams());
         this.rootElement.appendChild(this._renderActions());
