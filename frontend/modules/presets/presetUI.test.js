@@ -5,6 +5,7 @@ import {
     filterAndSortPresets,
     computeDetailNav,
     parseSphereLogShape,
+    buildSphereEnrichment,
     computeProcgenStats,
 } from './presetUI.js';
 
@@ -365,9 +366,9 @@ describe('parseSphereLogShape', () => {
             JSON.stringify({ type: 'state_update', sphere_index: '2' }),
         ].join('\n');
         expect(parseSphereLogShape(text)).toEqual([
-            { integerSphere: 0, fractionalCount: 3 },
-            { integerSphere: 1, fractionalCount: 2 },
-            { integerSphere: 2, fractionalCount: 1 },
+            { integerSphere: 0, fractionalCount: 3, sphereIndices: ['0', '0.1', '0.2'] },
+            { integerSphere: 1, fractionalCount: 2, sphereIndices: ['1', '1.1'] },
+            { integerSphere: 2, fractionalCount: 1, sphereIndices: ['2'] },
         ]);
     });
 
@@ -379,6 +380,19 @@ describe('parseSphereLogShape', () => {
         ].join('\n');
         const out = parseSphereLogShape(text);
         expect(out.map((e) => e.integerSphere)).toEqual([0, 2, 5]);
+    });
+
+    it('preserves JSONL order within each integer sphere (sphereIndices)', () => {
+        const text = [
+            // Out-of-order on purpose: the parser must preserve the
+            // file's emission order, not numerical fractional order.
+            JSON.stringify({ type: 'state_update', sphere_index: '0.3' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0' }),
+            JSON.stringify({ type: 'state_update', sphere_index: '0.1' }),
+        ].join('\n');
+        const [row] = parseSphereLogShape(text);
+        expect(row.sphereIndices).toEqual(['0.3', '0', '0.1']);
+        expect(row.fractionalCount).toBe(3);
     });
 
     it('does NOT emit zero-count rows for missing integer spheres in between', () => {
@@ -403,7 +417,7 @@ describe('parseSphereLogShape', () => {
             JSON.stringify({ type: 'state_update', sphere_index: '0.1' }),
         ].join('\n');
         expect(parseSphereLogShape(text)).toEqual([
-            { integerSphere: 0, fractionalCount: 2 },
+            { integerSphere: 0, fractionalCount: 2, sphereIndices: ['0', '0.1'] },
         ]);
     });
 
@@ -414,8 +428,78 @@ describe('parseSphereLogShape', () => {
             JSON.stringify({ type: 'state_update', sphere_index: '3' }),
         ].join('\n');
         expect(parseSphereLogShape(text)).toEqual([
-            { integerSphere: 3, fractionalCount: 3 },
+            { integerSphere: 3, fractionalCount: 3, sphereIndices: ['3', '3', '3'] },
         ]);
+    });
+});
+
+describe('buildSphereEnrichment', () => {
+    const sphereData = [
+        { sphereIndex: '0',   integerSphere: 0, fractionalSphere: 0, locations: ['L0a', 'L0b'] },
+        { sphereIndex: '0.1', integerSphere: 0, fractionalSphere: 1, locations: ['L0c'] },
+        { sphereIndex: '1',   integerSphere: 1, fractionalSphere: 0, locations: ['L1a'] },
+        { sphereIndex: '1.1', integerSphere: 1, fractionalSphere: 1, locations: ['L1b'] },
+        { sphereIndex: '2',   integerSphere: 2, fractionalSphere: 0, locations: [] },
+    ];
+
+    it('returns an empty Map for empty / missing input', () => {
+        expect(buildSphereEnrichment(null).size).toBe(0);
+        expect(buildSphereEnrichment([]).size).toBe(0);
+    });
+
+    it('builds a Map keyed by sphereIndex with locations attached', () => {
+        const map = buildSphereEnrichment(sphereData);
+        expect(map.size).toBe(5);
+        expect(map.get('0').locations).toEqual(['L0a', 'L0b']);
+        expect(map.get('1.1').locations).toEqual(['L1b']);
+    });
+
+    it('marks status without currentSphere as unknown', () => {
+        const map = buildSphereEnrichment(sphereData);
+        for (const v of map.values()) expect(v.status).toBe('unknown');
+    });
+
+    it('classifies status relative to currentSphere', () => {
+        const map = buildSphereEnrichment(sphereData,
+            { currentSphere: { integerSphere: 1, fractionalSphere: 0 } });
+        // Before current → completed
+        expect(map.get('0').status).toBe('completed');
+        expect(map.get('0.1').status).toBe('completed');
+        // Current
+        expect(map.get('1').status).toBe('current');
+        // After current → future
+        expect(map.get('1.1').status).toBe('future');
+        expect(map.get('2').status).toBe('future');
+    });
+
+    it('demotes "completed" to "current" when locations are not all checked', () => {
+        // Sphere 0 should be "completed" by index ordering, but L0a
+        // is unchecked, so it gets demoted to "current".
+        const map = buildSphereEnrichment(sphereData, {
+            currentSphere: { integerSphere: 1, fractionalSphere: 0 },
+            checkedLocations: new Set(['L0b', 'L0c']),
+        });
+        expect(map.get('0').status).toBe('current');
+        // 0.1 has only L0c, which IS checked → stays completed.
+        expect(map.get('0.1').status).toBe('completed');
+    });
+
+    it('promotes "current" to "completed" when all locations are checked', () => {
+        const map = buildSphereEnrichment(sphereData, {
+            currentSphere: { integerSphere: 1, fractionalSphere: 0 },
+            checkedLocations: new Set(['L1a']),
+        });
+        expect(map.get('1').status).toBe('completed');
+    });
+
+    it('skips sphere entries with non-string sphereIndex', () => {
+        const broken = [
+            { sphereIndex: '0', integerSphere: 0, fractionalSphere: 0, locations: [] },
+            { /* no sphereIndex */ integerSphere: 1, fractionalSphere: 0, locations: [] },
+            { sphereIndex: 42, integerSphere: 2, fractionalSphere: 0, locations: [] },
+        ];
+        const map = buildSphereEnrichment(broken);
+        expect([...map.keys()]).toEqual(['0']);
     });
 });
 

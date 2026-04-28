@@ -335,6 +335,14 @@ export class SpoilerChecklistUI {
     }, 50));
     this.eventBus.subscribe('sphereState:dataLoaded', () => this.updateDisplay());
     this.eventBus.subscribe('sphereState:currentSphereChanged', () => this.updateDisplay());
+    // External panels (e.g. Presets sphere-log chart) can ask the
+    // checklist to scroll to a particular sphere. The panel should
+    // already be activated (publisher fires ui:activatePanel before
+    // this event); we requestAnimationFrame so layout settles before
+    // scrollIntoView.
+    this.eventBus.subscribe('spoilerChecklist:scrollToSphere', (data) => {
+      this._scrollToSphere(data?.sphereIndex);
+    });
     this.eventBus.subscribe('stateManager:rulesLoaded', () => {
       this._updateCurrentPlayerId();
       this.updateDisplay();
@@ -356,6 +364,42 @@ export class SpoilerChecklistUI {
   /**
    * Sync received items if the checkbox is enabled and checked locations changed.
    */
+  /**
+   * Scroll to the sphere section matching `sphereIndex` (string
+   * "0" or "0.1"). Called from spoilerChecklist:scrollToSphere
+   * subscribers.
+   *
+   * Lookup falls back to the integer-only attribute when an exact
+   * match misses — e.g. when an integer sphere has only one
+   * fractional, renderIntegerSphere skips the fractional subsection
+   * so only the integer's data-sphere-index attribute exists.
+   */
+  _scrollToSphere(sphereIndex) {
+    if (typeof sphereIndex !== 'string' || !sphereIndex) return;
+    const host = this.checklistContainer;
+    if (!host) return;
+    // Wait one frame so panel-activation layout finishes before
+    // scrollIntoView measures.
+    const tryScroll = () => {
+      const exact = host.querySelector(`[data-sphere-index="${CSS.escape(sphereIndex)}"]`);
+      const intPart = sphereIndex.split('.')[0];
+      const fallback = exact
+        ? null
+        : host.querySelector(`[data-sphere-index="${CSS.escape(intPart)}"]`);
+      const target = exact ?? fallback;
+      if (!target) {
+        log('warn', `_scrollToSphere: no section found for sphere "${sphereIndex}"`);
+        return;
+      }
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(tryScroll);
+    } else {
+      tryScroll();
+    }
+  }
+
   _maybeSyncReceivedItems() {
     if (!this.simulateReceivedItems) return;
     if (this._isSyncing) return;
@@ -528,6 +572,12 @@ export class SpoilerChecklistUI {
   renderIntegerSphere(intSphere, spheres, currentSphere, checkedLocations, snapshot, staticData, snapshotInterface, frontierSphere, receivedItemsBySphere) {
     const section = document.createElement('div');
     section.className = 'sphere-section';
+    // Lets external panels (e.g. Presets sphere-log chart) target a
+    // specific sphere via spoilerChecklist:scrollToSphere events.
+    // The integer sphere uses the bare number; per-fractional
+    // subsections (rendered below in renderFractionalSphere) carry
+    // the full "N.M" sphere_index.
+    section.dataset.sphereIndex = String(intSphere);
 
     // Determine section status
     const isAllComplete = spheres.every(s => s.locations.every(loc => checkedLocations.has(loc)));
@@ -565,6 +615,8 @@ export class SpoilerChecklistUI {
 
   renderFractionalSphere(sphere, currentSphere, checkedLocations, snapshot, staticData, snapshotInterface, frontierSphere, receivedItemsBySphere) {
     const subsection = document.createElement('div');
+    // Per-fractional scroll target — see renderIntegerSphere comment.
+    subsection.dataset.sphereIndex = String(sphere.sphereIndex);
 
     // Subheading
     const subheading = document.createElement('div');

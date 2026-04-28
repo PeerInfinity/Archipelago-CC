@@ -69,6 +69,12 @@ export function register(registrationApi) {
 
   // Register event publisher for sync completion
   registrationApi.registerEventBusPublisher('spoilerChecklist:itemsSynced');
+  // External panels publish spoilerChecklist:scrollToSphere with
+  // { sphereIndex: '0.1' } to scroll the checklist to a specific
+  // sphere. The checklist UI subscribes in its initialize().
+  if (registrationApi.registerEventBusSubscriberIntent) {
+    registrationApi.registerEventBusSubscriberIntent(moduleInfo.name, 'spoilerChecklist:scrollToSphere');
+  }
 
   log('info', '[spoilerChecklist Module] Registration complete.');
 }

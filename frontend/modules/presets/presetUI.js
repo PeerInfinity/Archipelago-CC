@@ -1,6 +1,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
@@ -310,6 +311,22 @@ const PRESET_STYLES = `
     background-color: #4da6ff;
     border-radius: 1px;
     flex-shrink: 0;
+}
+.preset-sphere-tile-enriched {
+    cursor: pointer;
+}
+.preset-sphere-tile-enriched:hover {
+    outline: 1px solid #fff;
+    outline-offset: 1px;
+}
+.preset-sphere-tile-completed {
+    background-color: #6abf6a;
+}
+.preset-sphere-tile-current {
+    background-color: #ffb84d;
+}
+.preset-sphere-tile-future {
+    background-color: #4da6ff;
 }
 .preset-sphere-empty {
     color: #888;
@@ -639,8 +656,8 @@ export function computeProcgenStats(rulesData, playerId = '1') {
 
 /**
  * Parse a sphere log JSONL file's contents and return an ordered array
- * of `{ integerSphere, fractionalCount }` entries, one per integer
- * sphere that appeared. Pure for testability.
+ * of `{ integerSphere, fractionalCount, sphereIndices }` entries, one
+ * per integer sphere that appeared. Pure for testability.
  *
  * Each input line is JSON; one line is metadata, the rest are
  * state_update lines with a `sphere_index` string of shape `"<int>"`
@@ -651,12 +668,17 @@ export function computeProcgenStats(rulesData, playerId = '1') {
  * zero count are NOT emitted (the chart skips empty rows rather than
  * leaving gaps).
  *
+ * `sphereIndices` is the sequence of raw sphere_index strings that
+ * fell into this integer bucket, in JSONL order. Used to address
+ * individual fractional cells in the chart for tooltip / click
+ * targeting.
+ *
  * See NewDocs/plans/presets-panel-overhaul.md §"Sphere log shape
  * chart" for the rendering contract this feeds.
  */
 export function parseSphereLogShape(jsonlText) {
     if (!jsonlText) return [];
-    const counts = new Map();
+    const indicesByInt = new Map();
     for (const rawLine of jsonlText.split('\n')) {
         const line = rawLine.trim();
         if (!line) continue;
@@ -668,11 +690,69 @@ export function parseSphereLogShape(jsonlText) {
         const intPart = sphereIndex.split('.')[0];
         const intSphere = Number.parseInt(intPart, 10);
         if (!Number.isFinite(intSphere)) continue;
-        counts.set(intSphere, (counts.get(intSphere) ?? 0) + 1);
+        if (!indicesByInt.has(intSphere)) indicesByInt.set(intSphere, []);
+        indicesByInt.get(intSphere).push(sphereIndex);
     }
-    return [...counts.entries()]
+    return [...indicesByInt.entries()]
         .sort((a, b) => a[0] - b[0])
-        .map(([integerSphere, fractionalCount]) => ({ integerSphere, fractionalCount }));
+        .map(([integerSphere, sphereIndices]) => ({
+            integerSphere,
+            fractionalCount: sphereIndices.length,
+            sphereIndices,
+        }));
+}
+
+/**
+ * Build a per-fractional-sphere enrichment map from sphereState's
+ * sphere data. Pure for testability.
+ *
+ * Input: an array of sphere entries as returned by
+ * sphereState.getSphereData() — each `{ sphereIndex, integerSphere,
+ * fractionalSphere, locations, ... }`.
+ *
+ * Output: a Map keyed by sphereIndex string ('0.1' etc.) with values
+ * { sphereIndex, locations: string[], status: 'completed' | 'current'
+ * | 'future' | 'unknown' }.
+ *
+ * `currentSphere` is sphereState's current sphere (`{ integerSphere,
+ * fractionalSphere }`). When provided, every entry's status is
+ * computed by comparing index ordering to the current. `checkedLocations`
+ * is the player's checked-locations Set; sphere is "completed" when
+ * all its locations are checked. When neither is supplied, status is
+ * 'unknown'.
+ *
+ * Used by the presetUI sphere log chart to build tooltip + click
+ * data after sphereState publishes dataLoaded.
+ */
+export function buildSphereEnrichment(sphereData, opts = {}) {
+    const map = new Map();
+    if (!Array.isArray(sphereData)) return map;
+    const { currentSphere = null, checkedLocations = null } = opts;
+    const cur = currentSphere
+        ? [currentSphere.integerSphere ?? 0, currentSphere.fractionalSphere ?? 0]
+        : null;
+    for (const sphere of sphereData) {
+        const sphereIndex = sphere?.sphereIndex;
+        if (typeof sphereIndex !== 'string') continue;
+        const locations = Array.isArray(sphere.locations) ? sphere.locations : [];
+        let status = 'unknown';
+        if (cur) {
+            const here = [sphere.integerSphere ?? 0, sphere.fractionalSphere ?? 0];
+            const cmp = here[0] !== cur[0] ? here[0] - cur[0] : here[1] - cur[1];
+            if (cmp < 0) status = 'completed';
+            else if (cmp === 0) status = 'current';
+            else status = 'future';
+        }
+        // Refine "completed" when we have checked-location truth: all
+        // locations checked → completed; some unchecked → demote.
+        if (checkedLocations && locations.length > 0) {
+            const allChecked = locations.every((loc) => checkedLocations.has(loc));
+            if (status === 'completed' && !allChecked) status = 'current';
+            else if (status === 'current' && allChecked) status = 'completed';
+        }
+        map.set(sphereIndex, { sphereIndex, locations, status });
+    }
+    return map;
 }
 
 /**
@@ -836,6 +916,13 @@ export class PresetUI {
     // chart off/on within the same detail view doesn't refetch.
     // Cleared whenever loadPreset runs.
     this._sphereLogCache = null;
+    // Enrichment for the current chart, sourced from sphereState
+    // after the preset finishes loading. Shape:
+    //   { cacheKey: 'gameDirectory/seedName',
+    //     enrichment: Map<sphereIndex, { locations, status }> }
+    // Cleared on loadPreset; rebuilt on sphereState:dataLoaded when
+    // the loaded preset matches this.currentGameDirectory/SeedName.
+    this._sphereEnrichment = null;
     // Most recent ordered list of (gameDirectory, seedName, playerId)
     // tuples produced by the games list. Populated each time
     // renderGamesList runs; consumed by the next/previous nav in the
@@ -859,6 +946,14 @@ export class PresetUI {
       this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
     this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+
+    // Sphere log enrichment subscription. When the user loads a
+    // preset (sphereState auto-loads its sphere log from the file
+    // path), sphereState fires sphereState:dataLoaded; we hydrate
+    // the chart's per-cell tooltip + click data from sphereState.
+    this._sphereDataLoadedHandler = () => this._refreshSphereEnrichment();
+    this.eventBus.subscribe('sphereState:dataLoaded', this._sphereDataLoadedHandler);
+    this.eventBus.subscribe('sphereState:currentSphereChanged', this._sphereDataLoadedHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -962,6 +1057,11 @@ export class PresetUI {
     this.presets = null;
     if (this.presetsListContainer) {
       this.presetsListContainer.innerHTML = '';
+    }
+    if (this._sphereDataLoadedHandler) {
+      this.eventBus.unsubscribe('sphereState:dataLoaded', this._sphereDataLoadedHandler);
+      this.eventBus.unsubscribe('sphereState:currentSphereChanged', this._sphereDataLoadedHandler);
+      this._sphereDataLoadedHandler = null;
     }
   }
 
@@ -1421,8 +1521,11 @@ export class PresetUI {
     this.currentSeedName = seedName;
     this.currentPlayer = playerId;
 
-    // Drop any cached sphere log shape from the previous preset.
+    // Drop any cached sphere log shape and enrichment from the
+    // previous preset. Enrichment will rebuild when sphereState
+    // finishes loading the new preset's sphere log.
     this._sphereLogCache = null;
+    this._sphereEnrichment = null;
 
     const container = this.presetsListContainer;
     if (!container) return;
@@ -1968,6 +2071,61 @@ export class PresetUI {
     host.innerHTML = html;
   }
 
+  _formatSphereTooltip(enriched) {
+    // Multi-line title attribute. Most browsers render "\n" as a
+    // line break in title tooltips. Renderer expects sphereIndex,
+    // status (current|completed|future|unknown), and locations[].
+    const header = enriched.status && enriched.status !== 'unknown'
+      ? `Sphere ${enriched.sphereIndex} (${enriched.status})`
+      : `Sphere ${enriched.sphereIndex}`;
+    const lines = [header];
+    if (enriched.locations.length === 0) {
+      lines.push('No locations in this sphere');
+    } else {
+      lines.push(`${enriched.locations.length} location${enriched.locations.length === 1 ? '' : 's'}:`);
+      for (const loc of enriched.locations) lines.push(`  • ${loc}`);
+    }
+    return lines.join('\n');
+  }
+
+  _refreshSphereEnrichment() {
+    // Only meaningful when the detail view is open and showing a
+    // chart for some preset. Enrichment is keyed to that preset so
+    // a stale dataLoaded for a different preset is ignored.
+    const gameDirectory = this.currentGameDirectory;
+    const seedName = this.currentSeedName;
+    if (!gameDirectory || !seedName) return;
+    const cacheKey = `${gameDirectory}/${seedName}`;
+
+    let sphereData = null;
+    let currentSphere = null;
+    let checkedLocations = null;
+    try {
+      const getSphereData = centralRegistry.getPublicFunction('sphereState', 'getSphereData');
+      const getCurrentSphere = centralRegistry.getPublicFunction('sphereState', 'getCurrentSphere');
+      const getCheckedLocations = centralRegistry.getPublicFunction('sphereState', 'getCheckedLocations');
+      sphereData = getSphereData?.();
+      currentSphere = getCurrentSphere?.();
+      const checkedArr = getCheckedLocations?.();
+      if (Array.isArray(checkedArr)) checkedLocations = new Set(checkedArr);
+    } catch (e) {
+      log('warn', 'Failed to read sphereState:', e?.message);
+      return;
+    }
+    if (!Array.isArray(sphereData) || sphereData.length === 0) return;
+
+    this._sphereEnrichment = {
+      cacheKey,
+      enrichment: buildSphereEnrichment(sphereData, { currentSphere, checkedLocations }),
+    };
+
+    // Re-render the chart if it's currently visible.
+    if (this.viewState.showSphereLog) {
+      const host = this.presetsListContainer?.querySelector('#sphere-log-chart');
+      if (host) this._renderSphereLogChart(host, gameDirectory, seedName);
+    }
+  }
+
   _renderSphereLogChart(host, gameDirectory, seedName) {
     if (!host) return;
     const cacheKey = `${gameDirectory}/${seedName}`;
@@ -1976,6 +2134,25 @@ export class PresetUI {
         host.innerHTML = '<div class="preset-sphere-empty">No spheres recorded.</div>';
         return;
       }
+      // Enrichment is per-preset; ignore stale enrichment from a
+      // previously-displayed preset.
+      const enrichment = (this._sphereEnrichment?.cacheKey === cacheKey)
+        ? this._sphereEnrichment.enrichment
+        : null;
+
+      const cellHtml = (sphereIndex) => {
+        const enriched = enrichment?.get(sphereIndex);
+        const classes = ['preset-sphere-tile'];
+        let titleAttr = '';
+        if (enriched) {
+          classes.push('preset-sphere-tile-enriched');
+          if (enriched.status) classes.push(`preset-sphere-tile-${enriched.status}`);
+          titleAttr = ` title="${this.escapeHtml(this._formatSphereTooltip(enriched))}"`;
+        }
+        const idx = this.escapeHtml(sphereIndex);
+        return `<span class="${classes.join(' ')}" data-sphere-index="${idx}"${titleAttr}></span>`;
+      };
+
       let inner = `
         <div class="preset-sphere-row preset-sphere-header">
           <span class="preset-sphere-cell-num">Sphere</span>
@@ -1983,10 +2160,15 @@ export class PresetUI {
           <span class="preset-sphere-cell-bar">Bar</span>
         </div>
       `;
-      for (const { integerSphere, fractionalCount } of shape) {
+      for (const { integerSphere, fractionalCount, sphereIndices } of shape) {
         let cells = '';
         for (let i = 0; i < fractionalCount; i += 1) {
-          cells += '<span class="preset-sphere-tile"></span>';
+          // Fall back to the integer label if the parser produced
+          // no per-cell sphere indices (older callers, or malformed
+          // input). The fallback is a graceful degradation: the cell
+          // still has data-sphere-index, just at integer granularity.
+          const sphereIndex = sphereIndices?.[i] ?? String(integerSphere);
+          cells += cellHtml(sphereIndex);
         }
         inner += `
           <div class="preset-sphere-row">
@@ -1997,6 +2179,22 @@ export class PresetUI {
         `;
       }
       host.innerHTML = inner;
+
+      // Wire click handlers on enriched cells. Click activates the
+      // spoiler-checklist panel first (so its DOM is laid out and
+      // visible) and then publishes scrollToSphere — the checklist
+      // wraps the scroll in requestAnimationFrame so the activation
+      // pass has time to complete.
+      if (enrichment) {
+        for (const cell of host.querySelectorAll('.preset-sphere-tile-enriched')) {
+          cell.addEventListener('click', () => {
+            const sphereIndex = cell.dataset.sphereIndex;
+            if (!sphereIndex) return;
+            this.eventBus.publish('ui:activatePanel', { panelId: 'spoilerChecklistPanel' });
+            this.eventBus.publish('spoilerChecklist:scrollToSphere', { sphereIndex });
+          });
+        }
+      }
     };
 
     if (this._sphereLogCache?.cacheKey === cacheKey) {
