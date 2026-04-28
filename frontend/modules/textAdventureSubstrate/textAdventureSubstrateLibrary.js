@@ -26,10 +26,18 @@ export const substrateRegistryEntry = Object.freeze({
     id: 'text_adventure',
     panelComponentType: 'textAdventureSubstratePanel',
     loadRegionEvent: 'textAdventure:loadRegion',
+    // colored_doors_and_keys deliberately omitted: the panel renders
+    // location names and compass-direction exits but has no visual
+    // representation for doors. Items in the inventory are still
+    // visible globally; the substrate just can't realize colored
+    // doors as in-world obstacles.
     supportedFeatures: Object.freeze([
         'logic_gate',
-        'door_color',
-        'key_color',
+        'nesw_exits',
+        'region_topology_from_source',
+        'arbitrary_ap_locations',
+        'arbitrary_location_rules',
+        'arbitrary_exit_rules',
     ]),
     deserializeWorld: tileGridDeserializer,
 

@@ -36,8 +36,12 @@ export const substrateRegistryEntry = Object.freeze({
     loadRegionEvent: 'maze:loadRegion',
     supportedFeatures: Object.freeze([
         'logic_gate',
-        'door_color',
-        'key_color',
+        'colored_doors_and_keys',
+        'nesw_exits',
+        'region_topology_from_source',
+        'arbitrary_ap_locations',
+        'arbitrary_location_rules',
+        'arbitrary_exit_rules',
     ]),
     deserializeWorld: tileGridDeserializer,
 

@@ -18,12 +18,18 @@ describe('textAdventureSubstrateLibrary substrateRegistryEntry', () => {
     });
 
     it('declares the shared features the substrate implements', () => {
-        // v1 reuses the maze sidecar shape verbatim, so the
-        // shared-library features the substrate supports are the same
-        // set the maze supports.
+        // Library-mapped features. Text adventure declares logic_gate
+        // (it can render gates) but NOT colored_doors_and_keys (the
+        // panel has no visual representation for doors).
         expect(substrateRegistryEntry.supportedFeatures).toContain('logic_gate');
-        expect(substrateRegistryEntry.supportedFeatures).toContain('door_color');
-        expect(substrateRegistryEntry.supportedFeatures).toContain('key_color');
+        expect(substrateRegistryEntry.supportedFeatures).not.toContain('colored_doors_and_keys');
+        // Source-shape features — required to drive the top-down
+        // pipeline against an arbitrary AP rules.json.
+        expect(substrateRegistryEntry.supportedFeatures).toContain('nesw_exits');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('region_topology_from_source');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_ap_locations');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_location_rules');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_exit_rules');
     });
 
     it('exposes the build-time adapter slots, bound to shared primitives', () => {

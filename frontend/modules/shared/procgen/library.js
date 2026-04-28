@@ -34,6 +34,7 @@ export const DEFAULT_ITEMS = Object.freeze({
         classification: 'progression',
         color: '#d04040',
         symbol: 'key',
+        feature: 'colored_doors_and_keys',
     },
     key_green: {
         name: 'Green Key',
@@ -41,6 +42,7 @@ export const DEFAULT_ITEMS = Object.freeze({
         classification: 'progression',
         color: '#40c060',
         symbol: 'key',
+        feature: 'colored_doors_and_keys',
     },
     key_blue: {
         name: 'Blue Key',
@@ -48,6 +50,7 @@ export const DEFAULT_ITEMS = Object.freeze({
         classification: 'progression',
         color: '#4080d0',
         symbol: 'key',
+        feature: 'colored_doors_and_keys',
     },
 });
 
@@ -58,6 +61,7 @@ export const DEFAULT_OBSTACLES = Object.freeze({
         clear_set_type: 'combo_list',
         clear_set: [['key_red']],
         color: '#b84040',
+        feature: 'colored_doors_and_keys',
     },
     door_green: {
         name: 'Green Door',
@@ -65,6 +69,7 @@ export const DEFAULT_OBSTACLES = Object.freeze({
         clear_set_type: 'combo_list',
         clear_set: [['key_green']],
         color: '#408040',
+        feature: 'colored_doors_and_keys',
     },
     door_blue: {
         name: 'Blue Door',
@@ -72,6 +77,7 @@ export const DEFAULT_OBSTACLES = Object.freeze({
         clear_set_type: 'combo_list',
         clear_set: [['key_blue']],
         color: '#404080',
+        feature: 'colored_doors_and_keys',
     },
     // Template for logic-gate obstacles. Per-instance gates are
     // created by cloning this entry into the region's obstacleLib
@@ -86,6 +92,7 @@ export const DEFAULT_OBSTACLES = Object.freeze({
         clear_rule: null,
         color: '#b06eb8',
         display: { mode: 'tree' },
+        feature: 'logic_gate',
     },
 });
 

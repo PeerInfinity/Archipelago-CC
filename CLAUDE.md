@@ -13,7 +13,8 @@ source .venv/bin/activate
 | Test single game | `python scripts/test/test-all-templates.py --include-list "[GameName].yaml"` |
 | Spoiler test only | `npm test -- --mode=test-spoilers --game=[gamename] --seed=1` |
 | Regression test | `npm test --mode=test-regression` |
-| Start dev server | `python -m http.server 8000` |
+| Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "http.server"`) |
+| Start dev server | `python -m http.server 8000` (only if not already running) |
 | Stop dev server | `pkill -f "http.server"` |
 
 ## Important Gotchas
@@ -21,6 +22,7 @@ source .venv/bin/activate
 - **Name formats differ**: Template files use title case with spaces (`A Link to the Past.yaml`), but preset directories use lowercase identifiers (`alttp`)
 - **Don't modify**: Original Archipelago code files or original world files in `worlds/`
 - **Seed 1 always produces**: `AP_14089154938208861744`
+- **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "http.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
 
 ---
 

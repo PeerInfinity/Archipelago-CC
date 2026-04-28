@@ -18,9 +18,16 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
     });
 
     it('declares the shared features the maze implements', () => {
+        // Library-mapped features (filter the Library section).
         expect(substrateRegistryEntry.supportedFeatures).toContain('logic_gate');
-        expect(substrateRegistryEntry.supportedFeatures).toContain('door_color');
-        expect(substrateRegistryEntry.supportedFeatures).toContain('key_color');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('colored_doors_and_keys');
+        // Source-shape features (required to drive the top-down
+        // pipeline against an arbitrary AP rules.json).
+        expect(substrateRegistryEntry.supportedFeatures).toContain('nesw_exits');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('region_topology_from_source');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_ap_locations');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_location_rules');
+        expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_exit_rules');
     });
 
     it('exposes deserializeWorld bound to the engine implementation', () => {

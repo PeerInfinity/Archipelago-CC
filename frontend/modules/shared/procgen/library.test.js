@@ -8,6 +8,38 @@ import {
     getItemRenderHints,
 } from './library.js';
 
+describe('library entry feature tagging', () => {
+    it('every DEFAULT_ITEMS entry has a non-empty feature string', () => {
+        for (const [id, def] of Object.entries(DEFAULT_ITEMS)) {
+            expect(typeof def.feature, `item '${id}' is missing a feature tag`).toBe('string');
+            expect(def.feature.length, `item '${id}' has an empty feature tag`).toBeGreaterThan(0);
+        }
+    });
+
+    it('every DEFAULT_OBSTACLES entry has a non-empty feature string', () => {
+        for (const [id, def] of Object.entries(DEFAULT_OBSTACLES)) {
+            expect(typeof def.feature, `obstacle '${id}' is missing a feature tag`).toBe('string');
+            expect(def.feature.length, `obstacle '${id}' has an empty feature tag`).toBeGreaterThan(0);
+        }
+    });
+
+    it('keys and doors share the colored_doors_and_keys feature', () => {
+        // This pairing is what the Library subsection's filtering
+        // depends on — keys and doors of the same color must group
+        // together so a substrate that supports neither hides both.
+        for (const id of ['key_red', 'key_green', 'key_blue']) {
+            expect(DEFAULT_ITEMS[id].feature).toBe('colored_doors_and_keys');
+        }
+        for (const id of ['door_red', 'door_green', 'door_blue']) {
+            expect(DEFAULT_OBSTACLES[id].feature).toBe('colored_doors_and_keys');
+        }
+    });
+
+    it('logic_gate carries the logic_gate feature tag', () => {
+        expect(DEFAULT_OBSTACLES.logic_gate.feature).toBe('logic_gate');
+    });
+});
+
 describe('getItemRenderHints', () => {
     it('returns the library entry verbatim when the item is known', () => {
         const hints = getItemRenderHints('key_red', DEFAULT_ITEMS);

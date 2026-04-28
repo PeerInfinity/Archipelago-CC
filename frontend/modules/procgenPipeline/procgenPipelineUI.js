@@ -22,6 +22,9 @@ import {
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 const LS_KEY = 'procgenPipeline_params';
+// View preferences (toggle states etc.) live under a separate key so
+// they don't churn the saved scenario state on every render.
+const LS_VIEW_KEY = 'procgenPipeline_view';
 const TILE_PX = 14;
 
 const COLORS = {
@@ -55,6 +58,71 @@ const DEFAULT_SCENARIO = {
     obstacles: { door_red: 2 },
 };
 
+/**
+ * Group library entries by which of the selected substrates declare
+ * each entry's `feature`. Pure function — exported for testing.
+ *
+ * Inputs:
+ *   allEntries: [{ id, def, kind }] where def has a `feature` field.
+ *   selectedEntries: substrate registry entries (each has
+ *     `id` + `supportedFeatures: string[]`). Caller is expected to
+ *     have filtered out entries with weight 0.
+ *
+ * Returns:
+ *   {
+ *     common: [{ id, def, kind }],         // supported by every selected
+ *     substrateSpecific: [{ label, entries: [...] }],
+ *                                          // supported by some-but-not-all,
+ *                                          // grouped by supporter set
+ *     unsupported: [...],                  // supported by none of the
+ *                                          // selected (or all entries
+ *                                          // when nothing is selected)
+ *   }
+ *
+ * When `selectedEntries` is empty, every entry falls into `unsupported`
+ * (there's no selection to compare against). The UI hides the
+ * unsupported group behind a toggle, so the empty-selection default is
+ * "library appears empty until you pick a substrate."
+ */
+export function groupLibraryByFeature(allEntries, selectedEntries) {
+    const groups = {
+        common: [],
+        substrateSpecific: [],
+        unsupported: [],
+    };
+    if (selectedEntries.length === 0) {
+        groups.unsupported = [...allEntries];
+        return groups;
+    }
+    // Map of "supporters key" → bucket. The key is the sorted list of
+    // supporter ids joined with '|', so two entries supported by the
+    // same exact set merge into one labelled group.
+    const specificMap = new Map();
+    for (const entry of allEntries) {
+        const feature = entry.def.feature;
+        const supporters = selectedEntries
+            .filter((s) => Array.isArray(s.supportedFeatures)
+                && s.supportedFeatures.includes(feature))
+            .map((s) => s.id)
+            .sort();
+        if (supporters.length === selectedEntries.length) {
+            groups.common.push(entry);
+        } else if (supporters.length === 0) {
+            groups.unsupported.push(entry);
+        } else {
+            const key = supporters.join('|');
+            if (!specificMap.has(key)) {
+                const label = `${supporters.join(', ')} only`;
+                specificMap.set(key, { label, entries: [] });
+            }
+            specificMap.get(key).entries.push(entry);
+        }
+    }
+    groups.substrateSpecific = [...specificMap.values()]
+        .sort((a, b) => a.label.localeCompare(b.label));
+    return groups;
+}
+
 export class ProcgenPipelineUI {
     static moduleApis = null;
     static setModuleApis(apis) { ProcgenPipelineUI.moduleApis = apis; }
@@ -71,6 +139,12 @@ export class ProcgenPipelineUI {
         // default ('maze' for both growMaze and topDownFromRulesJson),
         // matching pre-mixed-substrate behaviour.
         this.substrateMix = {};
+        // View preference: when true, the Library subsection shows an
+        // "Unsupported by selected substrates" group with library
+        // entries no selected substrate declares. Default off so
+        // selecting a substrate visibly narrows the library to what
+        // it can use. Persisted under LS_VIEW_KEY.
+        this.showUnsupportedLibrary = false;
         // 'gridGrowth' (default) builds a fresh world from a scenario
         // pool. 'topDown' realises an existing rules.json as maze
         // regions on a grid.
@@ -93,6 +167,7 @@ export class ProcgenPipelineUI {
         this.rootElement.className = 'procgen-pipeline-panel';
         setPanelInstance(this);
         this._loadFromLocalStorage();
+        this._loadViewFromLocalStorage();
         // Subscribe through the raw eventBus so the panel sees raw-
         // json-loaded events even when constructed before the module's
         // initialize() has wired up apis. Same workaround the maze
@@ -395,23 +470,63 @@ export class ProcgenPipelineUI {
         const grid = document.createElement('div');
         grid.className = 'procgen-pipeline-scenario-grid';
 
-        // Left: library (click to add). v1 always shows shared library
-        // entries; substrate-specific library data isn't a thing yet,
-        // and both registered substrates support the same features so
-        // feature-based filtering would be a no-op. Filtering will
-        // matter when a future substrate has its own private items
-        // or supports a narrower feature set.
+        // Left: library (click to add). Entries are grouped by which
+        // selected substrates declare each entry's `feature`. See
+        // NewDocs/plans/procedural-generation/library-feature-filtering.md
+        // for the design.
         const left = document.createElement('div');
         left.className = 'procgen-pipeline-scenario-library';
         const leftHeader = document.createElement('div');
         leftHeader.className = 'procgen-pipeline-scenario-subheader';
         leftHeader.textContent = 'Library (click to add)';
         left.appendChild(leftHeader);
-        for (const [id, def] of Object.entries(DEFAULT_ITEMS)) {
-            left.appendChild(this._renderLibraryRow(id, def, 'item'));
+
+        // Toggle for the "Unsupported" group. Visible always so the
+        // user can find it; flipping it re-renders.
+        const toggleRow = document.createElement('label');
+        toggleRow.className = 'procgen-pipeline-library-toggle';
+        const toggleInput = document.createElement('input');
+        toggleInput.type = 'checkbox';
+        toggleInput.checked = this.showUnsupportedLibrary;
+        toggleInput.addEventListener('change', () => {
+            this.showUnsupportedLibrary = toggleInput.checked;
+            this._saveViewToLocalStorage();
+            this.render();
+        });
+        toggleRow.appendChild(toggleInput);
+        const toggleLabel = document.createElement('span');
+        toggleLabel.textContent = 'Show unsupported by selected substrates';
+        toggleRow.appendChild(toggleLabel);
+        left.appendChild(toggleRow);
+
+        const allEntries = [
+            ...Object.entries(DEFAULT_ITEMS).map(([id, def]) => ({ id, def, kind: 'item' })),
+            ...Object.entries(DEFAULT_OBSTACLES).map(([id, def]) => ({ id, def, kind: 'obstacle' })),
+        ];
+        const selectedEntries = Object.keys(this.substrateMix)
+            .filter((id) => this.substrateMix[id] > 0)
+            .sort()
+            .map((id) => substrateRegistry.get(id))
+            .filter(Boolean);
+        const groups = groupLibraryByFeature(allEntries, selectedEntries);
+
+        const renderGroup = (label, entries) => {
+            if (entries.length === 0) return;
+            const h = document.createElement('div');
+            h.className = 'procgen-pipeline-library-group-header';
+            h.textContent = label;
+            left.appendChild(h);
+            for (const { id, def, kind } of entries) {
+                left.appendChild(this._renderLibraryRow(id, def, kind));
+            }
+        };
+
+        renderGroup('Common', groups.common);
+        for (const sub of groups.substrateSpecific) {
+            renderGroup(sub.label, sub.entries);
         }
-        for (const [id, def] of Object.entries(DEFAULT_OBSTACLES)) {
-            left.appendChild(this._renderLibraryRow(id, def, 'obstacle'));
+        if (this.showUnsupportedLibrary) {
+            renderGroup('Unsupported by selected substrates', groups.unsupported);
         }
 
         // Right: selected (with counts).
@@ -1026,6 +1141,29 @@ export class ProcgenPipelineUI {
             if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown') {
                 this.mode = parsed.mode;
             }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    _loadViewFromLocalStorage() {
+        try {
+            const s = localStorage.getItem(LS_VIEW_KEY);
+            if (!s) return;
+            const parsed = JSON.parse(s);
+            if (typeof parsed.showUnsupportedLibrary === 'boolean') {
+                this.showUnsupportedLibrary = parsed.showUnsupportedLibrary;
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    _saveViewToLocalStorage() {
+        try {
+            localStorage.setItem(LS_VIEW_KEY, JSON.stringify({
+                showUnsupportedLibrary: this.showUnsupportedLibrary,
+            }));
         } catch (e) {
             // ignore
         }
