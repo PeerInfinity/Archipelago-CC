@@ -5,6 +5,135 @@ import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
 
+// Toolbar state — persisted to localStorage so the user's filters
+// survive a panel close/reopen. See NewDocs/plans/presets-panel-
+// overhaul.md §"Search / sort / filter".
+const TOOLBAR_LS_KEY = 'presetUI_toolbar';
+const DEFAULT_TOOLBAR_STATE = Object.freeze({
+    query: '',
+    sortKey: 'name',
+    filters: {
+        testStatus: 'any',     // any | passing | failing | unknown
+        worldType: 'any',      // any | original | worldgen | vanilla | multiworld
+        hasSphereLog: 'either',// either | yes | no
+        hasProcgenData: 'either',
+    },
+});
+
+/**
+ * Filter the presets index by the toolbar's query and filter
+ * settings, then sort the surviving entries by the toolbar's sort
+ * key. Pure for testability — no DOM, no localStorage.
+ *
+ * Input:
+ *   presets — the full preset_files.json object (gameDirectory → gameData).
+ *   toolbarState — { query, sortKey, filters }.
+ *
+ * Output:
+ *   Array of [gameDirectory, gameData] tuples in render order. The
+ *   'metadata' top-level key is dropped automatically.
+ *
+ * The downstream renderer groups these by gameData.name (so directories
+ * sharing a display name appear under one row); filtering and sorting
+ * happen pre-grouping.
+ */
+export function filterAndSortPresets(presets, toolbarState = DEFAULT_TOOLBAR_STATE) {
+    if (!presets) return [];
+    const state = { ...DEFAULT_TOOLBAR_STATE, ...toolbarState,
+        filters: { ...DEFAULT_TOOLBAR_STATE.filters, ...(toolbarState?.filters ?? {}) } };
+    const entries = Object.entries(presets).filter(([k]) => k !== 'metadata');
+    const filtered = entries.filter((e) =>
+        entryMatchesQuery(e, state.query) && entryMatchesFilters(e, state.filters));
+    return filtered.slice().sort((a, b) => comparePresetEntries(a, b, state.sortKey));
+}
+
+function entryMatchesQuery(entry, query) {
+    if (!query) return true;
+    const [gameDirectory, gameData] = entry;
+    const q = query.toLowerCase();
+    const name = (gameData?.name ?? '').toLowerCase();
+    const dir = (gameDirectory ?? '').toLowerCase();
+    return name.includes(q) || dir.includes(q);
+}
+
+function folderHasSphereLog(folder) {
+    return (folder?.files ?? []).some((f) => f.endsWith('_sphere_log.jsonl'));
+}
+
+function entryMatchesFilters(entry, filters) {
+    const [gameDirectory, gameData] = entry;
+    const folders = Object.values(gameData?.folders ?? {});
+
+    // Test status — based on the gameData.test_results map.
+    if (filters.testStatus !== 'any') {
+        const tr = gameData?.test_results;
+        const results = tr ? Object.values(tr).filter(Boolean) : [];
+        const anyPassed = results.some((r) => r.passed === true);
+        const anyFailed = results.some((r) => r.passed === false);
+        if (filters.testStatus === 'passing' && !anyPassed) return false;
+        if (filters.testStatus === 'failing' && !anyFailed) return false;
+        if (filters.testStatus === 'unknown' && (anyPassed || anyFailed)) return false;
+    }
+
+    // World type — directory suffix-based, except 'multiworld' which
+    // is the literal directory name. 'original' = no suffix.
+    if (filters.worldType !== 'any') {
+        const dir = gameDirectory ?? '';
+        const isWorldgen = dir.includes('_worldgen');
+        const isVanilla = dir.includes('_vanilla');
+        const isMultiworld = dir === 'multiworld';
+        if (filters.worldType === 'worldgen' && !isWorldgen) return false;
+        if (filters.worldType === 'vanilla' && !isVanilla) return false;
+        if (filters.worldType === 'multiworld' && !isMultiworld) return false;
+        if (filters.worldType === 'original'
+            && (isWorldgen || isVanilla || isMultiworld)) return false;
+    }
+
+    // Has sphere log — at least one folder has a *_sphere_log.jsonl file.
+    if (filters.hasSphereLog !== 'either') {
+        const has = folders.some(folderHasSphereLog);
+        if (filters.hasSphereLog === 'yes' && !has) return false;
+        if (filters.hasSphereLog === 'no' && has) return false;
+    }
+
+    // Has procgen data — at least one folder has has_procgen_data === true.
+    if (filters.hasProcgenData !== 'either') {
+        const has = folders.some((f) => f?.has_procgen_data === true);
+        if (filters.hasProcgenData === 'yes' && !has) return false;
+        if (filters.hasProcgenData === 'no' && has) return false;
+    }
+
+    return true;
+}
+
+function seedCount(data) {
+    return Object.keys(data?.folders ?? {}).length;
+}
+
+function testPassCount(data) {
+    const tr = data?.test_results;
+    if (!tr) return 0;
+    return Object.values(tr).filter((r) => r?.passed === true).length;
+}
+
+function comparePresetEntries(a, b, sortKey) {
+    const [, aData] = a;
+    const [, bData] = b;
+    switch (sortKey) {
+        case 'seedCount':
+            // Most seeds first; tiebreaker: name A→Z.
+            return seedCount(bData) - seedCount(aData)
+                || (aData?.name ?? '').localeCompare(bData?.name ?? '');
+        case 'testPassCount':
+            // Most passing tests first; tiebreaker: name A→Z.
+            return testPassCount(bData) - testPassCount(aData)
+                || (aData?.name ?? '').localeCompare(bData?.name ?? '');
+        case 'name':
+        default:
+            return (aData?.name ?? '').localeCompare(bData?.name ?? '');
+    }
+}
+
 /**
  * Decide which preset index file to load. Pure for testability.
  *
@@ -53,6 +182,12 @@ export class PresetUI {
     this.initialized = false;
     this.presetsListContainer = null;
     this.rootElement = null;
+    this.toolbarState = this._loadToolbarState();
+    // Most recent ordered list of (gameDirectory, seedName, playerId)
+    // tuples produced by the games list. Populated each time
+    // renderGamesList runs; consumed by the next/previous nav in the
+    // detail view to walk the list in the user's current sort order.
+    this._currentOrderedTuples = [];
 
     // Create and append root element immediately in constructor to have a target for GL
     this.getRootElement();
@@ -190,13 +325,14 @@ export class PresetUI {
       return;
     }
 
-    // Create a header
+    // Create a header + toolbar
     let html = `
       <div class="preset-header">
         <h3>Select a Game Preset</h3>
         <input type="file" id="json-file-input" accept=".json,.archipelago" style="display: none;" />
         <button id="load-json-button" class="button" style="margin-left: 10px;">Load File</button>
       </div>
+      ${this._renderToolbarHtml()}
       <div class="presets-container">
         <div class="game-row game-row-header">
           <div class="game-name-header">Game</div>
@@ -211,15 +347,21 @@ export class PresetUI {
         </div>
     `;
 
-    // Group preset directories by display name so that variants sharing the same
-    // game name (e.g. "alttp" and "alttp_vanilla", both named "A Link to the Past")
-    // appear as a single row. Seeds from vanilla directories get a V badge.
-    // Each group tracks: primaryGameData (for test results), seeds[], hasMultiworld.
+    // Apply toolbar filter + sort to (gameDirectory, gameData) entries
+    // before grouping by display name. Renders only what the user
+    // asked to see.
+    const orderedEntries = filterAndSortPresets(this.presets, this.toolbarState);
+
+    // Group filtered preset directories by display name so that variants
+    // sharing the same game name (e.g. "alttp" and "alttp_vanilla", both
+    // named "A Link to the Past") appear as a single row. Seeds from
+    // vanilla directories get a V badge. Each group tracks:
+    // primaryGameData (for test results), seeds[], hasMultiworld.
+    // The Map preserves insertion order, so the first group's entry in
+    // the sorted entry list determines its render position.
     const nameGroups = new Map();
 
-    Object.entries(this.presets).forEach(([gameDirectory, gameData]) => {
-      if (gameDirectory === 'metadata') return;
-
+    orderedEntries.forEach(([gameDirectory, gameData]) => {
       const name = gameData.name;
       if (!nameGroups.has(name)) {
         nameGroups.set(name, { primaryGameData: gameData, seeds: [], hasMultiworld: false });
@@ -238,6 +380,25 @@ export class PresetUI {
 
       Object.entries(gameData.folders || {}).forEach(([seedName, folderData]) => {
         group.seeds.push({ gameDirectory, seedName, folderData });
+      });
+    });
+
+    // Capture an ordered list of clickable tuples in the same order
+    // they're about to be rendered. Consumed by the detail view's
+    // next/previous nav. Multiworld seeds expand to one tuple per
+    // player; standard seeds expand to one tuple with playerId=null.
+    this._currentOrderedTuples = [];
+    nameGroups.forEach((group) => {
+      group.seeds.forEach(({ gameDirectory, seedName, folderData }) => {
+        if (gameDirectory === 'multiworld' && Array.isArray(folderData.games)) {
+          for (const playerGame of folderData.games) {
+            this._currentOrderedTuples.push({
+              gameDirectory, seedName, playerId: String(playerGame.player),
+            });
+          }
+        } else {
+          this._currentOrderedTuples.push({ gameDirectory, seedName, playerId: null });
+        }
       });
     });
 
@@ -316,6 +477,39 @@ export class PresetUI {
     // Add styles for the presets selector
     html += `
       <style>
+        .presets-toolbar {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 12px;
+          align-items: center;
+          margin: 8px 0 12px;
+          padding: 8px 12px;
+          background-color: rgba(0, 0, 0, 0.15);
+          border-radius: 6px;
+          font-size: 0.9em;
+          color: #ccc;
+        }
+        .presets-toolbar label {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .presets-toolbar-search {
+          flex: 1 1 200px;
+          min-width: 160px;
+          padding: 4px 8px;
+          background-color: rgba(0, 0, 0, 0.3);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+        .presets-toolbar select {
+          padding: 3px 6px;
+          background-color: rgba(0, 0, 0, 0.3);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
         .presets-container {
           display: flex;
           flex-direction: column;
@@ -587,6 +781,9 @@ export class PresetUI {
         }
       });
     }
+
+    // Toolbar event handlers
+    this._attachToolbarHandlers(container);
 
     // Add event listeners to the preset buttons (both standard and player)
     const buttons = container.querySelectorAll(
@@ -1200,6 +1397,115 @@ export class PresetUI {
         <span class="test-icon-mini">${icon}</span>
       </div>
     `;
+  }
+
+  _renderToolbarHtml() {
+    const t = this.toolbarState;
+    const opt = (value, label, current) => {
+      const sel = value === current ? ' selected' : '';
+      return `<option value="${this.escapeHtml(value)}"${sel}>${this.escapeHtml(label)}</option>`;
+    };
+    return `
+      <div class="presets-toolbar">
+        <input type="text" class="presets-toolbar-search"
+               placeholder="Search games…"
+               value="${this.escapeHtml(t.query || '')}" />
+        <label>Sort:
+          <select class="presets-toolbar-sort">
+            ${opt('name', 'Name (A→Z)', t.sortKey)}
+            ${opt('seedCount', '# of seeds', t.sortKey)}
+            ${opt('testPassCount', 'Test pass count', t.sortKey)}
+          </select>
+        </label>
+        <label>Tests:
+          <select class="presets-toolbar-tests">
+            ${opt('any', 'Any', t.filters.testStatus)}
+            ${opt('passing', 'Passing', t.filters.testStatus)}
+            ${opt('failing', 'Failing', t.filters.testStatus)}
+            ${opt('unknown', 'Unknown', t.filters.testStatus)}
+          </select>
+        </label>
+        <label>World:
+          <select class="presets-toolbar-world">
+            ${opt('any', 'Any', t.filters.worldType)}
+            ${opt('original', 'Original', t.filters.worldType)}
+            ${opt('worldgen', 'Worldgen', t.filters.worldType)}
+            ${opt('vanilla', 'Vanilla', t.filters.worldType)}
+            ${opt('multiworld', 'Multiworld', t.filters.worldType)}
+          </select>
+        </label>
+        <label>Sphere log:
+          <select class="presets-toolbar-sphere">
+            ${opt('either', 'Either', t.filters.hasSphereLog)}
+            ${opt('yes', 'Yes', t.filters.hasSphereLog)}
+            ${opt('no', 'No', t.filters.hasSphereLog)}
+          </select>
+        </label>
+        <label>Procgen:
+          <select class="presets-toolbar-procgen">
+            ${opt('either', 'Either', t.filters.hasProcgenData)}
+            ${opt('yes', 'Yes', t.filters.hasProcgenData)}
+            ${opt('no', 'No', t.filters.hasProcgenData)}
+          </select>
+        </label>
+      </div>
+    `;
+  }
+
+  _attachToolbarHandlers(container) {
+    const search = container.querySelector('.presets-toolbar-search');
+    const sortSel = container.querySelector('.presets-toolbar-sort');
+    const testsSel = container.querySelector('.presets-toolbar-tests');
+    const worldSel = container.querySelector('.presets-toolbar-world');
+    const sphereSel = container.querySelector('.presets-toolbar-sphere');
+    const procgenSel = container.querySelector('.presets-toolbar-procgen');
+    if (!search) return; // No toolbar rendered (defensive — shouldn't happen).
+
+    const apply = (mutator) => {
+      mutator(this.toolbarState);
+      this._saveToolbarState();
+      this.renderGamesList();
+      // Re-focus the search input after re-render so typing flows
+      // uninterrupted. Caret position is preserved by the value
+      // round-trip through render.
+      const next = this.presetsListContainer?.querySelector('.presets-toolbar-search');
+      if (next && document.activeElement !== next) {
+        next.focus();
+        next.setSelectionRange(next.value.length, next.value.length);
+      }
+    };
+
+    search.addEventListener('input', () => apply((s) => { s.query = search.value; }));
+    sortSel.addEventListener('change', () => apply((s) => { s.sortKey = sortSel.value; }));
+    testsSel.addEventListener('change', () => apply((s) => { s.filters.testStatus = testsSel.value; }));
+    worldSel.addEventListener('change', () => apply((s) => { s.filters.worldType = worldSel.value; }));
+    sphereSel.addEventListener('change', () => apply((s) => { s.filters.hasSphereLog = sphereSel.value; }));
+    procgenSel.addEventListener('change', () => apply((s) => { s.filters.hasProcgenData = procgenSel.value; }));
+  }
+
+  _loadToolbarState() {
+    try {
+      const raw = localStorage.getItem(TOOLBAR_LS_KEY);
+      if (!raw) return { ...DEFAULT_TOOLBAR_STATE,
+        filters: { ...DEFAULT_TOOLBAR_STATE.filters } };
+      const parsed = JSON.parse(raw);
+      return {
+        ...DEFAULT_TOOLBAR_STATE,
+        ...parsed,
+        filters: { ...DEFAULT_TOOLBAR_STATE.filters, ...(parsed?.filters ?? {}) },
+      };
+    } catch (e) {
+      return { ...DEFAULT_TOOLBAR_STATE,
+        filters: { ...DEFAULT_TOOLBAR_STATE.filters } };
+    }
+  }
+
+  _saveToolbarState() {
+    try {
+      localStorage.setItem(TOOLBAR_LS_KEY, JSON.stringify(this.toolbarState));
+    } catch (e) {
+      // ignore — quota exceeded or storage disabled
+    }
   }
 
   escapeHtml(unsafe) {
