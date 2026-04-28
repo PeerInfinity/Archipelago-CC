@@ -5,6 +5,7 @@ import {
     filterAndSortPresets,
     computeDetailNav,
     parseSphereLogShape,
+    computeProcgenStats,
 } from './presetUI.js';
 
 // Fixture index — subset of the real preset_files.json shape with a
@@ -405,5 +406,149 @@ describe('parseSphereLogShape', () => {
         expect(parseSphereLogShape(text)).toEqual([
             { integerSphere: 3, fractionalCount: 3 },
         ]);
+    });
+});
+
+describe('computeProcgenStats', () => {
+    function makeRegionSidecar({ substrate = 'maze', width = 8, height = 6,
+        exits = [], items = [], obstacleLib = {} } = {}) {
+        return {
+            substrate,
+            render_hint: substrate,
+            grid_cell: { gx: 0, gy: 0 },
+            playable_payload: { width, height, exits, items, obstacles: [], obstacleLib },
+        };
+    }
+
+    it('returns null for non-procgen rules.json (no preset_sidecars)', () => {
+        expect(computeProcgenStats({})).toBeNull();
+        expect(computeProcgenStats({ regions: { '1': {} } })).toBeNull();
+    });
+
+    it('returns null for empty preset_sidecars', () => {
+        expect(computeProcgenStats({ preset_sidecars: { '1': {} } })).toBeNull();
+    });
+
+    it('counts regions per substrate', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({ substrate: 'maze' }),
+                R2: makeRegionSidecar({ substrate: 'maze' }),
+                R3: makeRegionSidecar({ substrate: 'text_adventure' }),
+            }},
+        });
+        expect(stats.regionCount).toBe(3);
+        expect(stats.substrateCounts).toEqual({ maze: 2, text_adventure: 1 });
+    });
+
+    it('per-region exits exclude back-exits and teleporters', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({
+                    exits: [
+                        { exit_id: 'a', isBackExit: false, isTeleporter: false },
+                        { exit_id: 'b', isBackExit: true,  isTeleporter: false },
+                        { exit_id: 'c', isBackExit: false, isTeleporter: true  },
+                        { exit_id: 'd', isBackExit: false, isTeleporter: false },
+                    ],
+                }),
+            }},
+        });
+        expect(stats.regions[0].exits).toBe(2);
+    });
+
+    it('per-region locations count items with locationName', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({
+                    items: [
+                        { x: 1, y: 1, id: 'sword', locationName: 'Slay Yorgle' },
+                        { x: 2, y: 2, id: 'key',   locationName: 'Bridge Key' },
+                        { x: 3, y: 3, id: 'foo',   locationName: null },
+                    ],
+                }),
+            }},
+        });
+        expect(stats.regions[0].locations).toBe(2);
+    });
+
+    it('per-region density is (exits + locations) / area', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({
+                    width: 10, height: 10,
+                    exits: [{ exit_id: 'a' }, { exit_id: 'b' }],
+                    items: [
+                        { locationName: 'L1' },
+                        { locationName: 'L2' },
+                        { locationName: 'L3' },
+                    ],
+                }),
+            }},
+        });
+        expect(stats.regions[0].density).toBeCloseTo(0.05, 5);
+    });
+
+    it('counts logic_gate obstacleLib entries (clear_set_type=rule) across regions', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({ obstacleLib: {
+                    logic_gate_1: { clear_set_type: 'rule' },
+                    door_red: { clear_set_type: 'combo_list' },
+                }}),
+                R2: makeRegionSidecar({ obstacleLib: {
+                    logic_gate_2: { clear_set_type: 'rule' },
+                    logic_gate_3: { clear_set_type: 'rule' },
+                }}),
+            }},
+        });
+        expect(stats.totalLogicGates).toBe(3);
+    });
+
+    it('passes through procgen_metadata fields', () => {
+        const stats = computeProcgenStats({
+            procgen_metadata: {
+                driver: 'top-down',
+                source_game: 'Adventure',
+                source_counts: { regions: 6, locations: 25, exits: 17, logic_gates: 12 },
+                stop_reason: 'all_placed',
+                grid_dims: { width: 3, height: 3 },
+            },
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar(),
+            }},
+        });
+        expect(stats.driver).toBe('top-down');
+        expect(stats.sourceGame).toBe('Adventure');
+        expect(stats.sourceCounts).toEqual({ regions: 6, locations: 25, exits: 17, logic_gates: 12 });
+        expect(stats.stopReason).toBe('all_placed');
+        expect(stats.gridDims).toEqual({ width: 3, height: 3 });
+    });
+
+    it('reports null driver for older procgen output without procgen_metadata', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': { R1: makeRegionSidecar() } },
+        });
+        expect(stats.driver).toBeNull();
+        expect(stats.sourceCounts).toBeNull();
+        expect(stats.stopReason).toBeNull();
+    });
+
+    it('outputCounts aggregates across all regions', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({
+                    exits: [{ exit_id: 'a' }, { exit_id: 'b' }],
+                    items: [{ locationName: 'L1' }],
+                }),
+                R2: makeRegionSidecar({
+                    exits: [{ exit_id: 'c' }],
+                    items: [{ locationName: 'L2' }, { locationName: 'L3' }],
+                }),
+            }},
+        });
+        expect(stats.outputCounts).toEqual({
+            regions: 2, locations: 3, exits: 3, logic_gates: 0,
+        });
     });
 });

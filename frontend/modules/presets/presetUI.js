@@ -124,6 +124,84 @@ function testPassCount(data) {
 }
 
 /**
+ * Compute procgen-specific stats for a loaded rules.json. Pure for
+ * testability. Returns null when the rules.json carries no procgen
+ * data (i.e. no preset_sidecars), signalling the renderer to skip
+ * the entire procgen section.
+ *
+ * Output shape:
+ *   {
+ *     driver,           // 'top-down' | 'grid-growth' | null (older outputs)
+ *     sourceGame,       // top-down only
+ *     sourceCounts,     // top-down only — { regions, locations, exits, logic_gates }
+ *     stopReason,
+ *     gridDims,         // { width, height } or null
+ *     regionCount,
+ *     substrateCounts,  // { [substrateId]: count }
+ *     regions,          // [{ name, substrate, exits, locations, width, height, density }]
+ *     totalLogicGates,  // count of clear_set_type='rule' obstacles
+ *     outputCounts,     // { regions, locations, exits, logic_gates }
+ *   }
+ *
+ * Per-region "exits" excludes back-exits and teleporters (those don't
+ * represent additional connections from the source's perspective —
+ * they're inverse-direction pairs / cross-grid jumps). Locations are
+ * counted as items that carry an AP-canonical locationName.
+ *
+ * See NewDocs/plans/presets-panel-overhaul.md §"Procgen-specific
+ * stats".
+ */
+export function computeProcgenStats(rulesData, playerId = '1') {
+    if (!rulesData?.preset_sidecars) return null;
+    const sidecars = rulesData.preset_sidecars[playerId];
+    if (!sidecars || Object.keys(sidecars).length === 0) return null;
+
+    const meta = rulesData.procgen_metadata ?? {};
+    const substrateCounts = {};
+    const regions = [];
+    let totalLogicGates = 0;
+
+    for (const [name, entry] of Object.entries(sidecars)) {
+        const substrate = entry?.substrate ?? 'unknown';
+        substrateCounts[substrate] = (substrateCounts[substrate] ?? 0) + 1;
+
+        const pp = entry?.playable_payload ?? {};
+        const exitList = Array.isArray(pp.exits) ? pp.exits : [];
+        const exits = exitList.filter((e) => !e?.isBackExit && !e?.isTeleporter).length;
+        const itemList = Array.isArray(pp.items) ? pp.items : [];
+        const locations = itemList.filter((i) => i?.locationName).length;
+        const width = Number.isFinite(pp.width) ? pp.width : 0;
+        const height = Number.isFinite(pp.height) ? pp.height : 0;
+        const area = width * height;
+        const density = area > 0 ? (exits + locations) / area : 0;
+        regions.push({ name, substrate, exits, locations, width, height, density });
+
+        const obstacleLib = pp.obstacleLib ?? {};
+        for (const def of Object.values(obstacleLib)) {
+            if (def?.clear_set_type === 'rule') totalLogicGates += 1;
+        }
+    }
+
+    return {
+        driver: meta.driver ?? null,
+        sourceGame: meta.source_game ?? null,
+        sourceCounts: meta.source_counts ?? null,
+        stopReason: meta.stop_reason ?? null,
+        gridDims: meta.grid_dims ?? null,
+        regionCount: regions.length,
+        substrateCounts,
+        regions,
+        totalLogicGates,
+        outputCounts: {
+            regions: regions.length,
+            locations: regions.reduce((s, r) => s + r.locations, 0),
+            exits: regions.reduce((s, r) => s + r.exits, 0),
+            logic_gates: totalLogicGates,
+        },
+    };
+}
+
+/**
  * Parse a sphere log JSONL file's contents and return an ordered array
  * of `{ integerSphere, fractionalCount }` entries, one per integer
  * sphere that appeared. Pure for testability.
@@ -889,6 +967,69 @@ export class PresetUI {
           padding: 6px 0;
           font-size: 0.9em;
         }
+        .preset-procgen-section {
+          margin-top: 16px;
+        }
+        .preset-procgen-section:empty {
+          margin-top: 0;
+        }
+        .preset-procgen-title {
+          margin: 8px 0 4px;
+          color: #ddd;
+          padding: 8px 12px;
+          background-color: rgba(80, 130, 180, 0.2);
+          border-left: 3px solid rgba(80, 130, 180, 0.6);
+          border-radius: 4px;
+        }
+        .preset-procgen-subtitle {
+          margin: 12px 0 6px;
+          color: #ccc;
+          font-size: 0.95em;
+        }
+        .preset-procgen-summary {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 4px 16px;
+          padding: 8px 12px;
+          background-color: rgba(0, 0, 0, 0.1);
+          border-radius: 4px;
+          font-size: 0.9em;
+          color: #ccc;
+        }
+        .preset-procgen-summary strong {
+          color: #aaa;
+          margin-right: 4px;
+          font-weight: 500;
+        }
+        .preset-procgen-stop-ok {
+          color: #a5d6a7;
+        }
+        .preset-procgen-stop-warn {
+          color: #ffcc80;
+        }
+        .preset-procgen-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.85em;
+          margin-top: 4px;
+        }
+        .preset-procgen-table th,
+        .preset-procgen-table td {
+          text-align: left;
+          padding: 4px 8px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .preset-procgen-table th {
+          color: #888;
+          font-weight: 600;
+          text-transform: uppercase;
+          font-size: 0.85em;
+          letter-spacing: 0.4px;
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+        .preset-procgen-table tr:hover td {
+          background-color: rgba(255, 255, 255, 0.03);
+        }
         .error-message {
           background-color: rgba(244, 67, 54, 0.1);
           border-left: 3px solid #f44336;
@@ -1333,6 +1474,7 @@ export class PresetUI {
           </label>
           <div id="sphere-log-chart" class="preset-sphere-chart"></div>
         </div>
+        <div id="preset-procgen-stats" class="preset-procgen-section"></div>
       `;
 
       // Set the HTML content
@@ -1508,6 +1650,14 @@ export class PresetUI {
         selectedPlayerId: playerId,
         sourceName: fullPath
       });
+
+      // Render procgen-specific stats if the rules.json carries them.
+      // Hidden entirely otherwise (the helper returns null for non-
+      // procgen presets).
+      const procgenHost = this.presetsListContainer?.querySelector('#preset-procgen-stats');
+      if (procgenHost) {
+        this._renderProcgenStats(procgenHost, rulesData, playerId);
+      }
 
       // Publish success notification
       this.eventBus.publish('ui:notification', {
@@ -1689,6 +1839,111 @@ export class PresetUI {
         <span class="test-icon-mini">${icon}</span>
       </div>
     `;
+  }
+
+  _renderProcgenStats(host, rulesData, playerId) {
+    const stats = computeProcgenStats(rulesData, playerId);
+    if (!stats) {
+      host.innerHTML = '';
+      return;
+    }
+    const driverLabel = (() => {
+      if (stats.driver === 'top-down') {
+        return stats.sourceGame
+          ? `Top-down (${this.escapeHtml(stats.sourceGame)})`
+          : 'Top-down';
+      }
+      if (stats.driver === 'grid-growth') return 'Grid-growth';
+      // procgen_metadata absent (older procgen output) — preset_sidecars
+      // is present but we don't know the driver. Label honestly.
+      return 'Procgen (driver unknown)';
+    })();
+
+    const stopReasonClass = stats.stopReason === 'all_placed'
+      ? 'preset-procgen-stop-ok'
+      : stats.stopReason
+        ? 'preset-procgen-stop-warn'
+        : '';
+    const stopReasonText = stats.stopReason
+      ? `${this.escapeHtml(stats.stopReason)}${stats.stopReason === 'all_placed' ? ' ✓' : ' ⚠'}`
+      : '(unknown)';
+
+    const substrateBreakdown = Object.entries(stats.substrateCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([id, count]) => `${this.escapeHtml(id)} (${count})`)
+      .join(' · ');
+
+    const gridDimsLabel = stats.gridDims
+      ? `${stats.gridDims.width}×${stats.gridDims.height}, ${stats.regionCount} of ${stats.gridDims.width * stats.gridDims.height} cells occupied`
+      : `${stats.regionCount} regions`;
+
+    const gateDensity = stats.regionCount > 0
+      ? (stats.totalLogicGates / stats.regionCount).toFixed(2)
+      : '0.00';
+
+    let html = `
+      <h4 class="preset-procgen-title">Procgen</h4>
+      <div class="preset-procgen-summary">
+        <div><strong>Driver:</strong> ${driverLabel}</div>
+        <div><strong>Substrates:</strong> ${substrateBreakdown}</div>
+        <div><strong>Stop reason:</strong> <span class="${stopReasonClass}">${stopReasonText}</span></div>
+        <div><strong>Grid:</strong> ${this.escapeHtml(gridDimsLabel)}</div>
+        <div><strong>Logic gates:</strong> ${stats.totalLogicGates} (${gateDensity} per region)</div>
+      </div>
+    `;
+
+    // Source preservation — top-down only. Compares procgen_metadata's
+    // source_counts against the output we just computed.
+    if (stats.sourceCounts) {
+      const row = (label, sourceVal, outVal) => {
+        const ok = sourceVal === outVal;
+        const mark = ok ? '✓' : '✗';
+        const cls = ok ? 'preset-procgen-stop-ok' : 'preset-procgen-stop-warn';
+        return `<div><strong>${this.escapeHtml(label)}:</strong> ${outVal}/${sourceVal} <span class="${cls}">${mark}</span></div>`;
+      };
+      html += `
+        <h5 class="preset-procgen-subtitle">Source preservation</h5>
+        <div class="preset-procgen-summary">
+          ${row('Locations', stats.sourceCounts.locations, stats.outputCounts.locations)}
+          ${row('Exits', stats.sourceCounts.exits, stats.outputCounts.exits)}
+          ${row('Logic gates', stats.sourceCounts.logic_gates, stats.outputCounts.logic_gates)}
+          ${row('Regions', stats.sourceCounts.regions, stats.outputCounts.regions)}
+        </div>
+      `;
+    }
+
+    // Per-region table — sorted by density descending so outliers
+    // surface at the top. (The plan calls out region-size formula
+    // tuning as the next task; high-density rows are the rows where
+    // the formula picked too-small a size.)
+    const regionsSorted = stats.regions.slice().sort((a, b) => b.density - a.density);
+    let tableBody = '';
+    for (const r of regionsSorted) {
+      tableBody += `
+        <tr>
+          <td>${this.escapeHtml(r.name)}</td>
+          <td>${this.escapeHtml(r.substrate)}</td>
+          <td>${r.exits}</td>
+          <td>${r.locations}</td>
+          <td>${r.width}×${r.height}</td>
+          <td>${r.density.toFixed(3)}</td>
+        </tr>
+      `;
+    }
+    html += `
+      <h5 class="preset-procgen-subtitle">Per-region</h5>
+      <table class="preset-procgen-table">
+        <thead>
+          <tr>
+            <th>Region</th><th>Substrate</th><th>Exits</th>
+            <th>Locations</th><th>Grid w×h</th><th>Density</th>
+          </tr>
+        </thead>
+        <tbody>${tableBody}</tbody>
+      </table>
+    `;
+
+    host.innerHTML = html;
   }
 
   _renderSphereLogChart(host, gameDirectory, seedName) {
