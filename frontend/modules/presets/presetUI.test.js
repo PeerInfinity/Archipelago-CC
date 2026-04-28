@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 
-import { selectIndexFile, filterAndSortPresets } from './presetUI.js';
+import {
+    selectIndexFile,
+    filterAndSortPresets,
+    computeDetailNav,
+} from './presetUI.js';
 
 // Fixture index — subset of the real preset_files.json shape with a
 // mix of plain, _worldgen, _vanilla, and procgen entries.
@@ -227,5 +231,106 @@ describe('filterAndSortPresets', () => {
             filters: { hasProcgenData: 'yes' },
         });
         expect(out.map(([k]) => k)).toEqual(['alttp_worldgen']);
+    });
+});
+
+describe('computeDetailNav', () => {
+    // Tuples in render order, matching what _currentOrderedTuples
+    // would hold after a default-sort renderGamesList:
+    //   alttp/AP_1, alttp/AP_2, alttp_worldgen/AP_W1,
+    //   alttp_vanilla/AP_V1 — all "A Link to the Past"
+    //   adventure/AP_A1 — "Adventure"
+    //   blasphemous/AP_B1 — "Blasphemous"
+    //   multiworld/AP_MW1/P1 — "Multiworld"
+    const tuples = [
+        { gameDirectory: 'alttp', seedName: 'AP_1', playerId: null },
+        { gameDirectory: 'alttp', seedName: 'AP_2', playerId: null },
+        { gameDirectory: 'alttp_worldgen', seedName: 'AP_W1', playerId: null },
+        { gameDirectory: 'alttp_vanilla', seedName: 'AP_V1', playerId: null },
+        { gameDirectory: 'adventure', seedName: 'AP_A1', playerId: null },
+        { gameDirectory: 'blasphemous', seedName: 'AP_B1', playerId: null },
+        { gameDirectory: 'multiworld', seedName: 'AP_MW1', playerId: '1' },
+    ];
+
+    it('returns nulls when the selection is not in the tuple list', () => {
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'unknown', seedName: 'X', playerId: null });
+        expect(nav).toEqual({ prevGame: null, prevSeed: null, nextSeed: null, nextGame: null });
+    });
+
+    it('seed nav steps within the same gameDirectory only', () => {
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'alttp', seedName: 'AP_1', playerId: null });
+        expect(nav.prevSeed).toBeNull();
+        expect(nav.nextSeed?.seedName).toBe('AP_2');
+    });
+
+    it('seed nav stops at the gameDirectory boundary even when the next tuple shares a display name', () => {
+        // alttp/AP_2 is the last alttp tuple. The next tuple is
+        // alttp_worldgen/AP_W1 — same display name "A Link to the
+        // Past" — but a different gameDirectory. Seed nav should not
+        // cross.
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'alttp', seedName: 'AP_2', playerId: null });
+        expect(nav.nextSeed).toBeNull();
+    });
+
+    it('game nav jumps to the next display-name group (across gameDirectory boundaries within the group)', () => {
+        // From alttp/AP_1: prev game = none (first group); next game =
+        // first tuple of "Adventure" group = adventure/AP_A1.
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'alttp', seedName: 'AP_1', playerId: null });
+        expect(nav.prevGame).toBeNull();
+        expect(nav.nextGame?.gameDirectory).toBe('adventure');
+        expect(nav.nextGame?.seedName).toBe('AP_A1');
+    });
+
+    it('game nav from within a multi-directory group still goes to next group', () => {
+        // From alttp_worldgen/AP_W1 (middle of the "A Link to the Past"
+        // group), nextGame should still be adventure/AP_A1.
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'alttp_worldgen', seedName: 'AP_W1', playerId: null });
+        expect(nav.nextGame?.gameDirectory).toBe('adventure');
+        // prevGame from a non-first member of the group is the first
+        // tuple of the previous group — but there is no previous group,
+        // so null.
+        expect(nav.prevGame).toBeNull();
+    });
+
+    it('game nav backwards lands on the FIRST tuple of the previous group', () => {
+        // From adventure/AP_A1: prev game = first tuple of "A Link to
+        // the Past" group = alttp/AP_1.
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'adventure', seedName: 'AP_A1', playerId: null });
+        expect(nav.prevGame?.gameDirectory).toBe('alttp');
+        expect(nav.prevGame?.seedName).toBe('AP_1');
+    });
+
+    it('returns null nav targets at the ends of the list', () => {
+        const first = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'alttp', seedName: 'AP_1', playerId: null });
+        expect(first.prevGame).toBeNull();
+        expect(first.prevSeed).toBeNull();
+
+        const last = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'multiworld', seedName: 'AP_MW1', playerId: '1' });
+        expect(last.nextGame).toBeNull();
+        expect(last.nextSeed).toBeNull();
+    });
+
+    it('matches the playerId field exactly (multiworld tuples)', () => {
+        const navP1 = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'multiworld', seedName: 'AP_MW1', playerId: '1' });
+        expect(navP1.prevGame?.gameDirectory).toBe('blasphemous');
+        // Selecting with a non-matching playerId should not be found.
+        const navP2 = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'multiworld', seedName: 'AP_MW1', playerId: '2' });
+        expect(navP2).toEqual({ prevGame: null, prevSeed: null, nextSeed: null, nextGame: null });
+    });
+
+    it('attaches the display name as label', () => {
+        const nav = computeDetailNav(tuples, FIXTURE,
+            { gameDirectory: 'alttp', seedName: 'AP_1', playerId: null });
+        expect(nav.nextGame?.label).toBe('Adventure');
     });
 });

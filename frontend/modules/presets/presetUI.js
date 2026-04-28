@@ -116,6 +116,90 @@ function testPassCount(data) {
     return Object.values(tr).filter((r) => r?.passed === true).length;
 }
 
+/**
+ * Compute next/previous navigation targets for the detail view, based
+ * on the games-list's current ordering. Pure for testability.
+ *
+ * Inputs:
+ *   tuples — Array of { gameDirectory, seedName, playerId } in the
+ *     order produced by the most recent renderGamesList call.
+ *   presets — The full preset_files.json (used to look up display names).
+ *   selected — { gameDirectory, seedName, playerId } identifying the
+ *     currently-loaded preset.
+ *
+ * Returns { prevGame, prevSeed, nextSeed, nextGame } where each value
+ * is either null or a tuple-with-label `{ gameDirectory, seedName,
+ * playerId, label }`. label is the display name of the target game,
+ * used in button tooltips.
+ *
+ * Game-level nav (prevGame/nextGame) jumps to the FIRST tuple of the
+ * adjacent display-name group. Seed-level nav (prevSeed/nextSeed)
+ * stays within the same gameDirectory.
+ *
+ * See NewDocs/plans/presets-panel-overhaul.md §"Next / previous
+ * buttons".
+ */
+export function computeDetailNav(tuples, presets, selected) {
+    const result = { prevGame: null, prevSeed: null, nextSeed: null, nextGame: null };
+    if (!Array.isArray(tuples) || tuples.length === 0 || !selected) return result;
+
+    const gameNameOf = (gameDirectory) => presets?.[gameDirectory]?.name ?? gameDirectory;
+    const tagged = tuples.map((t) => ({ ...t, label: gameNameOf(t.gameDirectory) }));
+
+    const idx = tagged.findIndex((t) =>
+        t.gameDirectory === selected.gameDirectory
+        && t.seedName === selected.seedName
+        && (t.playerId ?? null) === (selected.playerId ?? null));
+    if (idx === -1) return result;
+    const current = tagged[idx];
+
+    // Seed-level nav: previous/next tuple within the same gameDirectory.
+    for (let i = idx - 1; i >= 0; i -= 1) {
+        if (tagged[i].gameDirectory === current.gameDirectory) {
+            result.prevSeed = tagged[i];
+            break;
+        }
+        // Different gameDirectory — but could be the same display name
+        // (e.g. alttp vs alttp_vanilla). Stop; "prev seed" is per
+        // gameDirectory, not per display name.
+        break;
+    }
+    for (let i = idx + 1; i < tagged.length; i += 1) {
+        if (tagged[i].gameDirectory === current.gameDirectory) {
+            result.nextSeed = tagged[i];
+            break;
+        }
+        break;
+    }
+
+    // Game-level nav: previous/next display-name group's first tuple.
+    // Display-name groups can span multiple gameDirectories; we walk
+    // back to the start of the current group, then one step before
+    // that is the LAST tuple of the previous group, and the first
+    // tuple in that group is what we want.
+    const groupStart = (i) => {
+        let j = i;
+        while (j > 0 && tagged[j - 1].label === tagged[j].label) j -= 1;
+        return j;
+    };
+    const groupEnd = (i) => {
+        let j = i;
+        while (j + 1 < tagged.length && tagged[j + 1].label === tagged[j].label) j += 1;
+        return j;
+    };
+    const myStart = groupStart(idx);
+    if (myStart > 0) {
+        const prevGroupEnd = myStart - 1;
+        result.prevGame = tagged[groupStart(prevGroupEnd)];
+    }
+    const myEnd = groupEnd(idx);
+    if (myEnd + 1 < tagged.length) {
+        result.nextGame = tagged[myEnd + 1];
+    }
+
+    return result;
+}
+
 function comparePresetEntries(a, b, sortKey) {
     const [, aData] = a;
     const [, bData] = b;
@@ -652,6 +736,38 @@ export class PresetUI {
         .back-button:hover {
           background-color: #555;
         }
+        .preset-detail-header {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+        .preset-detail-header .back-button {
+          margin-bottom: 0;
+        }
+        .preset-detail-nav {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .preset-nav-btn {
+          background-color: #333;
+          color: #ddd;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 6px 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9em;
+        }
+        .preset-nav-btn:hover:not([disabled]) {
+          background-color: #444;
+          color: white;
+        }
+        .preset-nav-btn[disabled] {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
         .error-message {
           background-color: rgba(244, 67, 54, 0.1);
           border-left: 3px solid #f44336;
@@ -1048,8 +1164,22 @@ export class PresetUI {
         )} - Seed ${this.escapeHtml(folderData.seed)}`;
       }
 
+      const nav = this._computeDetailNav(gameDirectory, seedName, playerId);
+      const navButton = (id, label, disabled, title) => {
+        const dis = disabled ? ' disabled' : '';
+        return `<button class="preset-nav-btn" id="${id}" title="${this.escapeHtml(title)}"${dis}>${this.escapeHtml(label)}</button>`;
+      };
+
       let html = `
-        <button class="back-button" id="back-to-presets">← Back to Games</button>
+        <div class="preset-detail-header">
+          <button class="back-button" id="back-to-presets">← Back to Games</button>
+          <div class="preset-detail-nav">
+            ${navButton('nav-prev-game', '‹ Prev game', !nav.prevGame, nav.prevGame ? `Prev game: ${nav.prevGame.label}` : 'No previous game')}
+            ${navButton('nav-prev-seed', '‹ Prev seed', !nav.prevSeed, nav.prevSeed ? `Prev seed in ${nav.prevSeed.label}` : 'No previous seed in this game')}
+            ${navButton('nav-next-seed', 'Next seed ›', !nav.nextSeed, nav.nextSeed ? `Next seed in ${nav.nextSeed.label}` : 'No next seed in this game')}
+            ${navButton('nav-next-game', 'Next game ›', !nav.nextGame, nav.nextGame ? `Next game: ${nav.nextGame.label}` : 'No next game')}
+          </div>
+        </div>
         <div class="preset-info">
           <h3>${headerTitle}</h3>
           <p>${this.escapeHtml(folderData.description || 'Multiworld Seed')}</p>
@@ -1084,6 +1214,20 @@ export class PresetUI {
           this.renderGamesList();
         });
       }
+
+      // Wire next/previous nav buttons
+      const wireNav = (id, target) => {
+        const btn = container.querySelector(`#${id}`);
+        if (btn && target) {
+          btn.addEventListener('click', () => {
+            this.loadPreset(target.gameDirectory, target.seedName, target.playerId);
+          });
+        }
+      };
+      wireNav('nav-prev-game', nav.prevGame);
+      wireNav('nav-prev-seed', nav.prevSeed);
+      wireNav('nav-next-seed', nav.nextSeed);
+      wireNav('nav-next-game', nav.nextGame);
 
       // Add event listeners for the file links
       const fileLinks = container.querySelectorAll('.preset-file-link');
@@ -1397,6 +1541,12 @@ export class PresetUI {
         <span class="test-icon-mini">${icon}</span>
       </div>
     `;
+  }
+
+  _computeDetailNav(gameDirectory, seedName, playerId) {
+    return computeDetailNav(this._currentOrderedTuples, this.presets, {
+      gameDirectory, seedName, playerId,
+    });
   }
 
   _renderToolbarHtml() {
