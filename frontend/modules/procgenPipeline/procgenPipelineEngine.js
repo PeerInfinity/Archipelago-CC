@@ -746,6 +746,58 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
     return { actualStart: declaredStart, menuName: null };
 }
 
+/**
+ * Count source-side regions, locations, exits, and non-trivial logic
+ * gates for a top-down rules.json input. Excludes the synthetic Menu
+ * region (the driver strips it; buildRulesJson re-emits it on the
+ * output side, so it's not a meaningful "source" entity for
+ * preservation accounting).
+ *
+ * "logic_gates" counts exits + locations whose access_rule is
+ * something other than absent or `{rule: 'True_'}` — i.e. any
+ * non-trivial AP access rule that has to be encoded as an in-world
+ * gate by the driver.
+ *
+ * Used to populate procgen_metadata.source_counts on the output
+ * rules.json. See NewDocs/plans/presets-panel-overhaul.md §"Source
+ * preservation".
+ */
+export function computeSourceCounts(rulesJson, playerId = '1') {
+    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
+    const startField = rulesJson?.start_regions?.[playerId];
+    let declaredStart = null;
+    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
+    else if (Array.isArray(startField)) declaredStart = startField[0];
+    const resolved = resolveTopDownStart(sourceRegions, declaredStart);
+    const menuName = resolved?.menuName ?? null;
+
+    let regionCount = 0;
+    let locationCount = 0;
+    let exitCount = 0;
+    let logicGateCount = 0;
+    const isNonTrivial = (rule) =>
+        rule != null && !(typeof rule === 'object' && rule.rule === 'True_');
+
+    for (const [name, region] of Object.entries(sourceRegions)) {
+        if (menuName && name === menuName) continue;
+        regionCount += 1;
+        for (const exit of region?.exits ?? []) {
+            exitCount += 1;
+            if (isNonTrivial(exit?.access_rule)) logicGateCount += 1;
+        }
+        for (const loc of region?.locations ?? []) {
+            locationCount += 1;
+            if (isNonTrivial(loc?.access_rule)) logicGateCount += 1;
+        }
+    }
+    return {
+        regions: regionCount,
+        locations: locationCount,
+        exits: exitCount,
+        logic_gates: logicGateCount,
+    };
+}
+
 export function topDownFromRulesJson(rulesJson, opts = {}) {
     const {
         playerId = '1',
@@ -1473,6 +1525,17 @@ export function buildRulesJson(grid, opts = {}) {
         // output (this driver) the default is true — every gate is
         // bidirectional.
         assumeBidirectional = true,
+        // Procgen metadata to embed at the top level of the output
+        // rules.json. When absent, no procgen_metadata field is
+        // emitted (backward compatible). Caller-supplied fields:
+        //   { driver: 'grid-growth' | 'top-down',
+        //     source_game?: string,                  // top-down only
+        //     source_counts?: { regions, locations, exits, logic_gates },
+        //     stop_reason?: string }
+        // region_count and grid_dims are auto-derived from the grid.
+        // See NewDocs/plans/presets-panel-overhaul.md §"Driver
+        // metadata, added in this plan".
+        procgenMetadata = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -1554,6 +1617,29 @@ export function buildRulesJson(grid, opts = {}) {
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
         playerId, baseObstacleLib: obstacleLib, baseItemLib: itemLib,
     });
+
+    // Procgen metadata: caller-supplied fields plus auto-derived
+    // region_count and grid_dims from the grid. Only emitted when the
+    // caller passes procgenMetadata, so older test fixtures that
+    // don't care continue to produce identical output.
+    if (procgenMetadata) {
+        const allRegions = [...grid.allRegions()];
+        let maxGx = -1, maxGy = -1;
+        for (const region of allRegions) {
+            const cell = region.cell;
+            if (!cell) continue;
+            if (cell.gx > maxGx) maxGx = cell.gx;
+            if (cell.gy > maxGy) maxGy = cell.gy;
+        }
+        scaffold.procgen_metadata = {
+            ...procgenMetadata,
+            region_count: allRegions.length,
+            grid_dims: {
+                width: maxGx >= 0 ? maxGx + 1 : 0,
+                height: maxGy >= 0 ? maxGy + 1 : 0,
+            },
+        };
+    }
 
     return scaffold;
 }

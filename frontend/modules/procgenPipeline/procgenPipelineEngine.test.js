@@ -15,6 +15,7 @@ import {
     findDisconnectedCell,
     topDownFromRulesJson,
     pickSubstrate, rollSubstrateMix,
+    computeSourceCounts,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
@@ -1118,6 +1119,58 @@ describe('buildRulesJson', () => {
         expect(out.assume_bidirectional_exits).toBe(true);
     });
 
+    it('omits procgen_metadata when the caller does not supply it', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(out).not.toHaveProperty('procgen_metadata');
+    });
+
+    it('emits procgen_metadata with caller fields plus auto-derived region_count and grid_dims', () => {
+        const { grid, startCell, stats } = smallGrid();
+        const out = buildRulesJson(grid, {
+            startCell,
+            procgenMetadata: {
+                driver: 'grid-growth',
+                stop_reason: stats.stopReason,
+            },
+        });
+        expect(out.procgen_metadata).toBeDefined();
+        expect(out.procgen_metadata.driver).toBe('grid-growth');
+        expect(out.procgen_metadata.stop_reason).toBe(stats.stopReason);
+        // Auto-derived from the grid: region_count matches allRegions
+        // length, grid_dims is max gx+1 by max gy+1 over occupied cells.
+        const allRegions = [...grid.allRegions()];
+        expect(out.procgen_metadata.region_count).toBe(allRegions.length);
+        let maxGx = -1, maxGy = -1;
+        for (const r of allRegions) {
+            if (r.cell.gx > maxGx) maxGx = r.cell.gx;
+            if (r.cell.gy > maxGy) maxGy = r.cell.gy;
+        }
+        expect(out.procgen_metadata.grid_dims).toEqual({
+            width: maxGx + 1,
+            height: maxGy + 1,
+        });
+    });
+
+    it('passes through caller-supplied source_game and source_counts (top-down shape)', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, {
+            startCell,
+            procgenMetadata: {
+                driver: 'top-down',
+                source_game: 'Adventure',
+                source_counts: { regions: 6, locations: 25, exits: 17, logic_gates: 12 },
+                stop_reason: 'all_placed',
+            },
+        });
+        expect(out.procgen_metadata.driver).toBe('top-down');
+        expect(out.procgen_metadata.source_game).toBe('Adventure');
+        expect(out.procgen_metadata.source_counts).toEqual({
+            regions: 6, locations: 25, exits: 17, logic_gates: 12,
+        });
+        expect(out.procgen_metadata.stop_reason).toBe('all_placed');
+    });
+
     it('back-exits inherit their forward exit access_rule', () => {
         // Build a grid with key_red gates on every region — that
         // forces non-trivial forward rules. Without inheritance, the
@@ -1199,6 +1252,76 @@ describe('buildRulesJson', () => {
         const b = smallGrid();
         expect(buildRulesJson(a.grid, { startCell: a.startCell }))
             .toEqual(buildRulesJson(b.grid, { startCell: b.startCell }));
+    });
+});
+
+describe('computeSourceCounts', () => {
+    it('counts regions, locations, exits, and non-trivial logic gates', () => {
+        const rulesJson = {
+            start_regions: { '1': { default: ['Menu'] } },
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'Overworld', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    Overworld: {
+                        name: 'Overworld',
+                        exits: [
+                            { name: 'east', connected_region: 'Cave', access_rule: { rule: 'Has', args: { item_name: 'key_red' } } },
+                            { name: 'west', connected_region: 'Castle', access_rule: { rule: 'True_' } },
+                        ],
+                        locations: [
+                            { name: 'Slay Yorgle', access_rule: { rule: 'True_' } },
+                            { name: 'Bridge Key' /* no access_rule */ },
+                            { name: 'Hidden', access_rule: { rule: 'Has', args: { item_name: 'key_red' } } },
+                        ],
+                    },
+                    Cave: {
+                        name: 'Cave',
+                        exits: [{ name: 'back', connected_region: 'Overworld', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    Castle: {
+                        name: 'Castle',
+                        exits: [],
+                        locations: [{ name: 'Throne', access_rule: { rule: 'HasAll', args: { items: ['a', 'b'] } } }],
+                    },
+                },
+            },
+        };
+        const counts = computeSourceCounts(rulesJson, '1');
+        // Menu is excluded — 3 source regions remain.
+        expect(counts.regions).toBe(3);
+        // Overworld has 2 exits + Cave has 1 = 3.
+        expect(counts.exits).toBe(3);
+        // Overworld has 3 locations + Castle has 1 = 4.
+        expect(counts.locations).toBe(4);
+        // Non-trivial: Overworld.east, Overworld.Hidden, Castle.Throne = 3.
+        // Locations without an access_rule and rules that are True_
+        // don't count.
+        expect(counts.logic_gates).toBe(3);
+    });
+
+    it('returns zeroed counts when the player has no regions', () => {
+        const counts = computeSourceCounts({ regions: { '1': {} } }, '1');
+        expect(counts).toEqual({ regions: 0, locations: 0, exits: 0, logic_gates: 0 });
+    });
+
+    it('skips Menu only when start_regions points at it', () => {
+        // No start_regions field → Menu region (if present) is just
+        // another region, counted normally.
+        const rulesJson = {
+            regions: {
+                '1': {
+                    Menu: { name: 'Menu', exits: [], locations: [{ name: 'L' }] },
+                },
+            },
+        };
+        const counts = computeSourceCounts(rulesJson, '1');
+        expect(counts.regions).toBe(1);
+        expect(counts.locations).toBe(1);
     });
 });
 

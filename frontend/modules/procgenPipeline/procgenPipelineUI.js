@@ -11,6 +11,7 @@ import {
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
+    computeSourceCounts,
 } from './procgenPipelineEngine.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -1020,7 +1021,13 @@ export class ProcgenPipelineUI {
                 ...(this._effectiveSubstrateMix() ? { substrateMix: this._effectiveSubstrateMix() } : {}),
             },
         });
-        const rulesJson = buildRulesJson(grid, { startCell, seed });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed,
+            procgenMetadata: {
+                driver: 'grid-growth',
+                stop_reason: stats.stopReason,
+            },
+        });
         this.result = {
             grid,
             regionSize: { width: regionWidth, height: regionHeight },
@@ -1042,6 +1049,12 @@ export class ProcgenPipelineUI {
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
+            procgenMetadata: {
+                driver: 'top-down',
+                source_game: this.topDownSource?.game_name ?? null,
+                source_counts: computeSourceCounts(this.topDownSource, '1'),
+                stop_reason: stats.stopReason,
+            },
         });
         this.result = {
             grid,
