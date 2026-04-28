@@ -2,6 +2,35 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
+const DEV_INDEX_PATH = './presets/preset_files.json';
+const LIVE_INDEX_PATH = './presets/preset_files.live.json';
+
+/**
+ * Decide which preset index file to load. Pure for testability.
+ *
+ * Selection order:
+ *   1. ?index=live / ?index=dev URL override wins.
+ *   2. github.io hostname → live index.
+ *   3. Anything else (localhost, file://, intranet) → dev index.
+ *
+ * Returns { path, isLive } where `path` is the URL to fetch and
+ * `isLive` reflects what the caller is *trying* to load (so a 404
+ * fallback can decide whether to retry with the dev index).
+ *
+ * See NewDocs/plans/presets-panel-overhaul.md §"Dev vs live preset
+ * indexes".
+ */
+export function selectIndexFile({ hostname = '', search = '' } = {}) {
+    const params = new URLSearchParams(search);
+    const override = params.get('index');
+    if (override === 'live') return { path: LIVE_INDEX_PATH, isLive: true };
+    if (override === 'dev') return { path: DEV_INDEX_PATH, isLive: false };
+    const isLive = (hostname || '').includes('github.io');
+    return {
+        path: isLive ? LIVE_INDEX_PATH : DEV_INDEX_PATH,
+        isLive,
+    };
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -80,12 +109,35 @@ export class PresetUI {
       // Use cache: 'reload' to validate with server (allows 304 Not Modified)
       // Use cache: 'no-store' when ?nocache=1 is in URL (completely bypasses cache for testing)
       const noCache = new URLSearchParams(window.location.search).has('nocache');
-      fetch('./presets/preset_files.json', { cache: noCache ? 'no-store' : 'reload' })
+      const cacheOpts = { cache: noCache ? 'no-store' : 'reload' };
+      const { path: indexPath, isLive } = selectIndexFile({
+        hostname: window.location.hostname,
+        search: window.location.search,
+      });
+      log('info', `[PresetUI] Loading preset index: ${indexPath}`);
+
+      const fetchAndApply = (path) => fetch(path, cacheOpts)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           return response.json();
+        });
+
+      fetchAndApply(indexPath)
+        .catch((error) => {
+          // Live index missing on a github.io host (or wherever the
+          // live index was selected) → fall back to dev with a
+          // warning. The dev index ships in the static build either
+          // way, so this is a benign fallback for first-time setups
+          // before a live index is hand-curated.
+          if (isLive && indexPath !== DEV_INDEX_PATH) {
+            log('warn',
+              `[PresetUI] Live preset index ${indexPath} unavailable (${error.message}); falling back to dev index.`
+            );
+            return fetchAndApply(DEV_INDEX_PATH);
+          }
+          throw error;
         })
         .then((data) => {
           this.presets = data;
