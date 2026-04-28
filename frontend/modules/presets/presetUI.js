@@ -17,6 +17,7 @@ const TOOLBAR_LS_KEY = 'presetUI_toolbar';
 const VIEW_LS_KEY = 'presetUI_view';
 const DEFAULT_VIEW_STATE = Object.freeze({
     showSphereLog: false,
+    showFileList: true,
 });
 const DEFAULT_TOOLBAR_STATE = Object.freeze({
     query: '',
@@ -184,21 +185,40 @@ const PRESET_STYLES = `
 .preset-files {
     margin-top: 16px;
 }
+.preset-files-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.preset-files-header h4 {
+    margin: 0;
+}
+.preset-files-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9em;
+    color: #ccc;
+    cursor: pointer;
+    user-select: none;
+    font-weight: normal;
+}
 .file-links-container {
     background-color: #111;
     border-radius: 6px;
-    padding: 12px;
-    margin-top: 10px;
+    padding: 8px 10px;
+    margin-top: 8px;
     border: 1px solid #333;
 }
 .preset-file-link {
     display: block;
-    margin: 8px 0;
+    margin: 0;
     color: #4da6ff;
     text-decoration: underline;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
 }
 .preset-file-link:hover {
     color: #80c3ff;
@@ -1611,15 +1631,21 @@ export class PresetUI {
           <h3>${headerTitle}</h3>
           <p>${this.escapeHtml(folderData.description || 'Multiworld Seed')}</p>
           <div class="preset-files">
-            <h4>Files:</h4>
-            <div class="file-links-container" style="background-color: #111 !important; border: 1px solid #333; border-radius: 6px; padding: 12px; margin-top: 10px;">
+            <div class="preset-files-header">
+              <h4>Files:</h4>
+              <label class="preset-files-toggle">
+                <input type="checkbox" id="file-list-toggle"${this.viewState.showFileList ? ' checked' : ''} />
+                Show file list
+              </label>
+            </div>
+            <div class="file-links-container"${this.viewState.showFileList ? '' : ' style="display: none;"'}>
       `;
 
       // Add links for each file
       folderData.files.forEach((file) => {
         const filePath = `./presets/${gameDirectory}/${seedName}/${file}`;
         html += `
-          <a class="preset-file-link" href="${filePath}" target="_blank" data-file="${file}">${file}</a><br/>
+          <a class="preset-file-link" href="${filePath}" target="_blank" data-file="${file}">${file}</a>
         `;
       });
 
@@ -1663,6 +1689,17 @@ export class PresetUI {
       wireNav('nav-prev-seed', nav.prevSeed);
       wireNav('nav-next-seed', nav.nextSeed);
       wireNav('nav-next-game', nav.nextGame);
+
+      // File list toggle — show/hide the .file-links-container.
+      const fileListToggle = container.querySelector('#file-list-toggle');
+      const fileLinksContainer = container.querySelector('.file-links-container');
+      if (fileListToggle && fileLinksContainer) {
+        fileListToggle.addEventListener('change', () => {
+          this.viewState.showFileList = fileListToggle.checked;
+          this._saveViewState();
+          fileLinksContainer.style.display = fileListToggle.checked ? '' : 'none';
+        });
+      }
 
       // Sphere log toggle + lazy-render
       const toggle = container.querySelector('#sphere-log-toggle');
