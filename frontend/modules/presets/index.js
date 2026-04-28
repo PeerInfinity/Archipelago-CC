@@ -53,6 +53,12 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('files:jsonLoaded');
   registrationApi.registerEventBusPublisher('ui:notification');
   registrationApi.registerEventBusPublisher('rules:loaded');
+  // Sphere log chart cells publish these to navigate the spoiler
+  // checklist when clicked. activatePanel brings the checklist
+  // forward; scrollToSphere is consumed by spoilerChecklistUI to
+  // scrollIntoView the matching section.
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
+  registrationApi.registerEventBusPublisher('spoilerChecklist:scrollToSphere');
 
   log('info', '[Presets Module] Registration complete.');
 }

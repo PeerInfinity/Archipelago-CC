@@ -501,6 +501,35 @@ describe('buildSphereEnrichment', () => {
         const map = buildSphereEnrichment(broken);
         expect([...map.keys()]).toEqual(['0']);
     });
+
+    it('attaches items per location when showLocationItems is true and locationItems is supplied', () => {
+        const locationItems = new Map([
+            ['L0a', { name: 'Sword', player: 1 }],
+            ['L0b', { name: 'Bow',   player: 1 }],
+            ['L1a', { name: 'Map',   player: 2 }],
+        ]);
+        const map = buildSphereEnrichment(sphereData,
+            { locationItems, showLocationItems: true });
+        expect(map.get('0').items).toBeInstanceOf(Map);
+        expect(map.get('0').items.get('L0a')).toBe('Sword');
+        expect(map.get('0').items.get('L0b')).toBe('Bow');
+        // Sphere 0.1's location L0c has no entry in locationItems →
+        // no items map for that sphere.
+        expect(map.get('0.1').items).toBeUndefined();
+        expect(map.get('1').items?.get('L1a')).toBe('Map');
+    });
+
+    it('omits items when showLocationItems is false', () => {
+        const locationItems = new Map([['L0a', { name: 'Sword' }]]);
+        const map = buildSphereEnrichment(sphereData,
+            { locationItems, showLocationItems: false });
+        for (const v of map.values()) expect(v.items).toBeUndefined();
+    });
+
+    it('omits items when locationItems lookup is absent', () => {
+        const map = buildSphereEnrichment(sphereData, { showLocationItems: true });
+        for (const v of map.values()) expect(v.items).toBeUndefined();
+    });
 });
 
 describe('computeProcgenStats', () => {

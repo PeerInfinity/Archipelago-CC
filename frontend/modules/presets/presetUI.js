@@ -2,6 +2,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
@@ -712,7 +713,7 @@ export function parseSphereLogShape(jsonlText) {
  *
  * Output: a Map keyed by sphereIndex string ('0.1' etc.) with values
  * { sphereIndex, locations: string[], status: 'completed' | 'current'
- * | 'future' | 'unknown' }.
+ * | 'future' | 'unknown', items?: Map<location, itemName> }.
  *
  * `currentSphere` is sphereState's current sphere (`{ integerSphere,
  * fractionalSphere }`). When provided, every entry's status is
@@ -721,16 +722,28 @@ export function parseSphereLogShape(jsonlText) {
  * all its locations are checked. When neither is supplied, status is
  * 'unknown'.
  *
+ * `locationItems` is a Map<locationName, { name, player }> as exposed
+ * by stateManager.getStaticData().locationItems. When supplied AND
+ * `showLocationItems` is true, each enrichment entry gains an
+ * `items` Map<locationName, itemName> for tooltip rendering.
+ *
  * Used by the presetUI sphere log chart to build tooltip + click
  * data after sphereState publishes dataLoaded.
  */
 export function buildSphereEnrichment(sphereData, opts = {}) {
     const map = new Map();
     if (!Array.isArray(sphereData)) return map;
-    const { currentSphere = null, checkedLocations = null } = opts;
+    const {
+        currentSphere = null,
+        checkedLocations = null,
+        locationItems = null,
+        showLocationItems = false,
+    } = opts;
     const cur = currentSphere
         ? [currentSphere.integerSphere ?? 0, currentSphere.fractionalSphere ?? 0]
         : null;
+    const includeItems = showLocationItems && locationItems
+        && typeof locationItems.get === 'function';
     for (const sphere of sphereData) {
         const sphereIndex = sphere?.sphereIndex;
         if (typeof sphereIndex !== 'string') continue;
@@ -750,7 +763,17 @@ export function buildSphereEnrichment(sphereData, opts = {}) {
             if (status === 'completed' && !allChecked) status = 'current';
             else if (status === 'current' && allChecked) status = 'completed';
         }
-        map.set(sphereIndex, { sphereIndex, locations, status });
+        const entry = { sphereIndex, locations, status };
+        if (includeItems) {
+            const items = new Map();
+            for (const loc of locations) {
+                const placement = locationItems.get(loc);
+                const name = placement?.name;
+                if (name) items.set(loc, name);
+            }
+            if (items.size > 0) entry.items = items;
+        }
+        map.set(sphereIndex, entry);
     }
     return map;
 }
@@ -954,6 +977,16 @@ export class PresetUI {
     this._sphereDataLoadedHandler = () => this._refreshSphereEnrichment();
     this.eventBus.subscribe('sphereState:dataLoaded', this._sphereDataLoadedHandler);
     this.eventBus.subscribe('sphereState:currentSphereChanged', this._sphereDataLoadedHandler);
+    // The Show-Location-Items setting governs whether tooltips also
+    // include placed item names. Toggle the setting → re-build the
+    // enrichment with the new value.
+    this._settingsChangedHandler = ({ key }) => {
+      if (key === '*' || (typeof key === 'string'
+          && key.startsWith('moduleSettings.commonUI.showLocationItems'))) {
+        this._refreshSphereEnrichment();
+      }
+    };
+    this.eventBus.subscribe('settings:changed', this._settingsChangedHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -1062,6 +1095,10 @@ export class PresetUI {
       this.eventBus.unsubscribe('sphereState:dataLoaded', this._sphereDataLoadedHandler);
       this.eventBus.unsubscribe('sphereState:currentSphereChanged', this._sphereDataLoadedHandler);
       this._sphereDataLoadedHandler = null;
+    }
+    if (this._settingsChangedHandler) {
+      this.eventBus.unsubscribe('settings:changed', this._settingsChangedHandler);
+      this._settingsChangedHandler = null;
     }
   }
 
@@ -2074,7 +2111,8 @@ export class PresetUI {
   _formatSphereTooltip(enriched) {
     // Multi-line title attribute. Most browsers render "\n" as a
     // line break in title tooltips. Renderer expects sphereIndex,
-    // status (current|completed|future|unknown), and locations[].
+    // status (current|completed|future|unknown), locations[], and
+    // optional items: Map<location, itemName>.
     const header = enriched.status && enriched.status !== 'unknown'
       ? `Sphere ${enriched.sphereIndex} (${enriched.status})`
       : `Sphere ${enriched.sphereIndex}`;
@@ -2083,12 +2121,17 @@ export class PresetUI {
       lines.push('No locations in this sphere');
     } else {
       lines.push(`${enriched.locations.length} location${enriched.locations.length === 1 ? '' : 's'}:`);
-      for (const loc of enriched.locations) lines.push(`  • ${loc}`);
+      for (const loc of enriched.locations) {
+        const itemName = enriched.items?.get(loc);
+        lines.push(itemName
+          ? `  • ${loc}: ${itemName}`
+          : `  • ${loc}`);
+      }
     }
     return lines.join('\n');
   }
 
-  _refreshSphereEnrichment() {
+  async _refreshSphereEnrichment() {
     // Only meaningful when the detail view is open and showing a
     // chart for some preset. Enrichment is keyed to that preset so
     // a stale dataLoaded for a different preset is ignored.
@@ -2100,6 +2143,7 @@ export class PresetUI {
     let sphereData = null;
     let currentSphere = null;
     let checkedLocations = null;
+    let locationItems = null;
     try {
       const getSphereData = centralRegistry.getPublicFunction('sphereState', 'getSphereData');
       const getCurrentSphere = centralRegistry.getPublicFunction('sphereState', 'getCurrentSphere');
@@ -2108,15 +2152,36 @@ export class PresetUI {
       currentSphere = getCurrentSphere?.();
       const checkedArr = getCheckedLocations?.();
       if (Array.isArray(checkedArr)) checkedLocations = new Set(checkedArr);
+      // staticData.locationItems is the canonical location → item
+      // map maintained by stateManager. Used for the optional item
+      // names in tooltips when commonUI.showLocationItems is on.
+      const staticData = stateManager?.getStaticData?.();
+      if (staticData?.locationItems) locationItems = staticData.locationItems;
     } catch (e) {
       log('warn', 'Failed to read sphereState:', e?.message);
       return;
     }
     if (!Array.isArray(sphereData) || sphereData.length === 0) return;
 
+    let showLocationItems = false;
+    try {
+      showLocationItems = await settingsManager.getSetting(
+        'moduleSettings.commonUI.showLocationItems', false,
+      );
+    } catch (e) {
+      // settingsManager unavailable — proceed without item names.
+    }
+
+    // Bail if the user navigated to a different preset while we
+    // awaited settings.
+    if (this.currentGameDirectory !== gameDirectory
+        || this.currentSeedName !== seedName) return;
+
     this._sphereEnrichment = {
       cacheKey,
-      enrichment: buildSphereEnrichment(sphereData, { currentSphere, checkedLocations }),
+      enrichment: buildSphereEnrichment(sphereData, {
+        currentSphere, checkedLocations, locationItems, showLocationItems,
+      }),
     };
 
     // Re-render the chart if it's currently visible.
