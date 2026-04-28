@@ -135,8 +135,18 @@ describe('filterAndSortPresets', () => {
         expect(out.find(([k]) => k === 'metadata')).toBeUndefined();
     });
 
-    it('default sort is by display name A→Z', () => {
+    it('default sort is index order — preserves Object.entries iteration order', () => {
         const out = filterAndSortPresets(FIXTURE, {});
+        // FIXTURE iteration order: alttp, alttp_worldgen, alttp_vanilla,
+        // adventure, blasphemous, multiworld (metadata is dropped).
+        expect(out.map(([k]) => k)).toEqual([
+            'alttp', 'alttp_worldgen', 'alttp_vanilla',
+            'adventure', 'blasphemous', 'multiworld',
+        ]);
+    });
+
+    it('explicit sortKey="name" sorts by display name A→Z', () => {
+        const out = filterAndSortPresets(FIXTURE, { sortKey: 'name' });
         const names = out.map(([, d]) => d.name);
         // Stable sort: three "A Link to the Past" entries in input order
         // (alttp, alttp_worldgen, alttp_vanilla), then Adventure, etc.

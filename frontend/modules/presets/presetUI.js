@@ -18,7 +18,10 @@ const DEFAULT_VIEW_STATE = Object.freeze({
 });
 const DEFAULT_TOOLBAR_STATE = Object.freeze({
     query: '',
-    sortKey: 'name',
+    // 'index' = preserve the order entries appear in preset_files.json
+    // (the file's hand-authored / generator-emitted order). Default
+    // because the user curates the index intentionally.
+    sortKey: 'index',
     filters: {
         testStatus: 'any',     // any | passing | failing | unknown
         worldType: 'any',      // any | original | worldgen | vanilla | multiworld
@@ -26,6 +29,439 @@ const DEFAULT_TOOLBAR_STATE = Object.freeze({
         hasProcgenData: 'either',
     },
 });
+
+// All custom CSS for the preset panel. Injected once into <head> by
+// _ensureStylesInjected (called from every render path). Originally
+// this lived inline in renderGamesList's HTML, but the detail view's
+// container.innerHTML = ... wiped the <style> child every time the
+// user clicked into a preset, which left the detail view rendered
+// with browser defaults. The bug surfaced when the sphere-log chart's
+// flex layout broke without its CSS.
+const PRESET_STYLES_ID = 'presetUI-styles';
+const PRESET_STYLES = `
+.presets-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    margin: 8px 0 12px;
+    padding: 8px 12px;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #ccc;
+}
+.presets-toolbar label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.presets-toolbar-search {
+    flex: 1 1 200px;
+    min-width: 160px;
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.presets-toolbar select {
+    padding: 3px 6px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.presets-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 16px;
+}
+.game-row {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+.game-name {
+    margin: 0;
+    color: #ddd;
+    min-width: 200px;
+    flex-shrink: 0;
+}
+.game-row-header {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    font-weight: 600;
+    color: #aaa;
+    font-size: 0.85em;
+    flex-wrap: nowrap;
+}
+.game-name-header {
+    min-width: 200px;
+    flex-shrink: 0;
+}
+.game-presets-header {
+    flex: 1;
+    text-align: center;
+}
+.test-headers {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.test-header {
+    width: 24px;
+    text-align: center;
+    cursor: help;
+}
+.test-badges-container {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+.test-badge-mini {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: help;
+}
+.test-badge-mini.test-badge-passed {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.5);
+    color: #a5d6a7;
+}
+.test-badge-mini.test-badge-failed {
+    background-color: rgba(244, 67, 54, 0.2);
+    border: 1px solid rgba(244, 67, 54, 0.5);
+    color: #ef9a9a;
+}
+.test-badge-mini.test-badge-unknown {
+    background-color: rgba(158, 158, 158, 0.2);
+    border: 1px solid rgba(158, 158, 158, 0.5);
+    color: #bdbdbd;
+}
+.test-icon-mini {
+    font-size: 0.9em;
+}
+.game-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1 1 auto;
+    align-items: center;
+}
+.preset-button {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    padding: 10px 15px;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+.preset-button:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.preset-info {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.preset-files {
+    margin-top: 16px;
+}
+.file-links-container {
+    background-color: #111;
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid #333;
+}
+.preset-file-link {
+    display: block;
+    margin: 8px 0;
+    color: #4da6ff;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+.preset-file-link:hover {
+    color: #80c3ff;
+    background-color: #222;
+}
+.back-button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+.back-button:hover {
+    background-color: #555;
+}
+.preset-detail-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.preset-detail-header .back-button {
+    margin-bottom: 0;
+}
+.preset-detail-nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.preset-nav-btn {
+    background-color: #333;
+    color: #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.preset-nav-btn:hover:not([disabled]) {
+    background-color: #444;
+    color: white;
+}
+.preset-nav-btn[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.preset-sphere-section {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+}
+.preset-sphere-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.95em;
+    color: #ccc;
+    cursor: pointer;
+    user-select: none;
+}
+.preset-sphere-chart {
+    margin-top: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    font-family: 'Consolas', monospace;
+}
+.preset-sphere-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+    font-size: 0.85em;
+    color: #ddd;
+}
+.preset-sphere-row.preset-sphere-header {
+    color: #888;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.preset-sphere-cell-num {
+    width: 60px;
+    text-align: right;
+    flex-shrink: 0;
+}
+.preset-sphere-cell-count {
+    width: 50px;
+    text-align: right;
+    flex-shrink: 0;
+    color: #aaa;
+}
+.preset-sphere-cell-bar {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    gap: 2px;
+    white-space: nowrap;
+}
+.preset-sphere-tile {
+    display: inline-block;
+    width: 10px;
+    height: 14px;
+    background-color: #4da6ff;
+    border-radius: 1px;
+    flex-shrink: 0;
+}
+.preset-sphere-empty {
+    color: #888;
+    font-style: italic;
+    padding: 6px 0;
+    font-size: 0.9em;
+}
+.preset-procgen-section {
+    margin-top: 16px;
+}
+.preset-procgen-section:empty {
+    margin-top: 0;
+}
+.preset-procgen-title {
+    margin: 8px 0 4px;
+    color: #ddd;
+    padding: 8px 12px;
+    background-color: rgba(80, 130, 180, 0.2);
+    border-left: 3px solid rgba(80, 130, 180, 0.6);
+    border-radius: 4px;
+}
+.preset-procgen-subtitle {
+    margin: 12px 0 6px;
+    color: #ccc;
+    font-size: 0.95em;
+}
+.preset-procgen-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 4px 16px;
+    padding: 8px 12px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #ccc;
+}
+.preset-procgen-summary strong {
+    color: #aaa;
+    margin-right: 4px;
+    font-weight: 500;
+}
+.preset-procgen-stop-ok {
+    color: #a5d6a7;
+}
+.preset-procgen-stop-warn {
+    color: #ffcc80;
+}
+.preset-procgen-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+    margin-top: 4px;
+}
+.preset-procgen-table th,
+.preset-procgen-table td {
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.preset-procgen-table th {
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.4px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.preset-procgen-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+.error-message {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-left: 3px solid #f44336;
+    padding: 16px;
+    border-radius: 4px;
+    margin-top: 16px;
+}
+.success-message {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 3px solid #4CAF50;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+.multiworld-seeds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.multiworld-seed-block {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.seed-number {
+    font-weight: bold;
+    color: #ccc;
+    margin-bottom: 8px;
+    display: block;
+}
+.seed-players {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.preset-player-button {
+    background-color: rgba(50, 100, 150, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    padding: 5px 10px;
+    text-align: center;
+    transition: background-color 0.2s;
+    min-width: 40px;
+}
+.preset-player-button:hover {
+    background-color: rgba(70, 120, 170, 0.9);
+}
+.player-details {
+    font-size: 0.9em;
+    color: #bbb;
+}
+.multiworld-container {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.placement-badge {
+    display: inline-block;
+    font-size: 0.65em;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+    line-height: 1;
+}
+.placement-vanilla {
+    background-color: rgba(156, 39, 176, 0.3);
+    border: 1px solid rgba(156, 39, 176, 0.6);
+    color: #ce93d8;
+}
+`;
 
 /**
  * Filter the presets index by the toolbar's query and filter
@@ -327,6 +763,8 @@ function comparePresetEntries(a, b, sortKey) {
     const [, aData] = a;
     const [, bData] = b;
     switch (sortKey) {
+        case 'name':
+            return (aData?.name ?? '').localeCompare(bData?.name ?? '');
         case 'seedCount':
             // Most seeds first; tiebreaker: name A→Z.
             return seedCount(bData) - seedCount(aData)
@@ -335,9 +773,12 @@ function comparePresetEntries(a, b, sortKey) {
             // Most passing tests first; tiebreaker: name A→Z.
             return testPassCount(bData) - testPassCount(aData)
                 || (aData?.name ?? '').localeCompare(bData?.name ?? '');
-        case 'name':
+        case 'index':
         default:
-            return (aData?.name ?? '').localeCompare(bData?.name ?? '');
+            // Preserve Object.entries insertion order. Array.prototype.sort
+            // is stable in modern JS, so returning 0 keeps the input
+            // ordering intact.
+            return 0;
     }
 }
 
@@ -686,433 +1127,12 @@ export class PresetUI {
     // Close the container
     html += '</div>';
 
-    // Add styles for the presets selector
-    html += `
-      <style>
-        .presets-toolbar {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px 12px;
-          align-items: center;
-          margin: 8px 0 12px;
-          padding: 8px 12px;
-          background-color: rgba(0, 0, 0, 0.15);
-          border-radius: 6px;
-          font-size: 0.9em;
-          color: #ccc;
-        }
-        .presets-toolbar label {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-        }
-        .presets-toolbar-search {
-          flex: 1 1 200px;
-          min-width: 160px;
-          padding: 4px 8px;
-          background-color: rgba(0, 0, 0, 0.3);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-        }
-        .presets-toolbar select {
-          padding: 3px 6px;
-          background-color: rgba(0, 0, 0, 0.3);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-        }
-        .presets-container {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          margin-top: 16px;
-        }
-        .game-row {
-          background-color: rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-          padding: 16px;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px;
-        }
-        .game-name {
-          margin: 0;
-          color: #ddd;
-          min-width: 200px;
-          flex-shrink: 0;
-        }
-        .game-row-header {
-          background-color: rgba(0, 0, 0, 0.3);
-          border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-          padding: 8px 16px;
-          font-weight: 600;
-          color: #aaa;
-          font-size: 0.85em;
-          flex-wrap: nowrap;
-        }
-        .game-name-header {
-          min-width: 200px;
-          flex-shrink: 0;
-        }
-        .game-presets-header {
-          flex: 1;
-          text-align: center;
-        }
-        .test-headers {
-          display: flex;
-          gap: 4px;
-          flex-shrink: 0;
-        }
-        .test-header {
-          width: 24px;
-          text-align: center;
-          cursor: help;
-        }
-        .test-badges-container {
-          display: flex;
-          gap: 4px;
-          flex-shrink: 0;
-          margin-left: auto;
-        }
-        .test-badge-mini {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 24px;
-          height: 24px;
-          border-radius: 4px;
-          cursor: help;
-        }
-        .test-badge-mini.test-badge-passed {
-          background-color: rgba(76, 175, 80, 0.2);
-          border: 1px solid rgba(76, 175, 80, 0.5);
-          color: #a5d6a7;
-        }
-        .test-badge-mini.test-badge-failed {
-          background-color: rgba(244, 67, 54, 0.2);
-          border: 1px solid rgba(244, 67, 54, 0.5);
-          color: #ef9a9a;
-        }
-        .test-badge-mini.test-badge-unknown {
-          background-color: rgba(158, 158, 158, 0.2);
-          border: 1px solid rgba(158, 158, 158, 0.5);
-          color: #bdbdbd;
-        }
-        .test-icon-mini {
-          font-size: 0.9em;
-        }
-        .game-presets {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          flex: 1 1 auto;
-          align-items: center;
-        }
-        .preset-button {
-          background-color: rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 6px;
-          color: white;
-          cursor: pointer;
-          padding: 10px 15px;
-          text-align: center;
-          transition: background-color 0.2s;
-        }
-        .preset-button:hover {
-          background-color: rgba(0, 0, 0, 0.5);
-        }
-        .preset-info {
-          background-color: rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-          padding: 16px;
-          margin-bottom: 16px;
-        }
-        .preset-files {
-          margin-top: 16px;
-        }
-        .file-links-container {
-          background-color: #111;
-          border-radius: 6px;
-          padding: 12px;
-          margin-top: 10px;
-          border: 1px solid #333;
-        }
-        .preset-file-link {
-          display: block;
-          margin: 8px 0;
-          color: #4da6ff;
-          text-decoration: underline;
-          cursor: pointer;
-          padding: 4px 8px;
-          border-radius: 4px;
-        }
-        .preset-file-link:hover {
-          color: #80c3ff;
-          background-color: #222;
-        }
-        .back-button {
-          background-color: #444;
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 4px;
-          cursor: pointer;
-          margin-bottom: 16px;
-        }
-        .back-button:hover {
-          background-color: #555;
-        }
-        .preset-detail-header {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          align-items: center;
-          margin-bottom: 16px;
-        }
-        .preset-detail-header .back-button {
-          margin-bottom: 0;
-        }
-        .preset-detail-nav {
-          display: flex;
-          gap: 6px;
-          flex-wrap: wrap;
-        }
-        .preset-nav-btn {
-          background-color: #333;
-          color: #ddd;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 6px 10px;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 0.9em;
-        }
-        .preset-nav-btn:hover:not([disabled]) {
-          background-color: #444;
-          color: white;
-        }
-        .preset-nav-btn[disabled] {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
-        .preset-sphere-section {
-          margin-top: 16px;
-          padding: 12px;
-          background-color: rgba(0, 0, 0, 0.1);
-          border-radius: 6px;
-        }
-        .preset-sphere-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 0.95em;
-          color: #ccc;
-          cursor: pointer;
-          user-select: none;
-        }
-        .preset-sphere-chart {
-          margin-top: 8px;
-          max-height: 320px;
-          overflow-y: auto;
-          font-family: 'Consolas', monospace;
-        }
-        .preset-sphere-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 2px 0;
-          font-size: 0.85em;
-          color: #ddd;
-        }
-        .preset-sphere-row.preset-sphere-header {
-          color: #888;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding-bottom: 4px;
-          margin-bottom: 4px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.4px;
-        }
-        .preset-sphere-cell-num {
-          width: 60px;
-          text-align: right;
-          flex-shrink: 0;
-        }
-        .preset-sphere-cell-count {
-          width: 50px;
-          text-align: right;
-          flex-shrink: 0;
-          color: #aaa;
-        }
-        .preset-sphere-cell-bar {
-          flex: 1 1 auto;
-          min-width: 0;
-          overflow: hidden;
-          display: flex;
-          gap: 2px;
-          white-space: nowrap;
-        }
-        .preset-sphere-tile {
-          display: inline-block;
-          width: 10px;
-          height: 14px;
-          background-color: #4da6ff;
-          border-radius: 1px;
-          flex-shrink: 0;
-        }
-        .preset-sphere-empty {
-          color: #888;
-          font-style: italic;
-          padding: 6px 0;
-          font-size: 0.9em;
-        }
-        .preset-procgen-section {
-          margin-top: 16px;
-        }
-        .preset-procgen-section:empty {
-          margin-top: 0;
-        }
-        .preset-procgen-title {
-          margin: 8px 0 4px;
-          color: #ddd;
-          padding: 8px 12px;
-          background-color: rgba(80, 130, 180, 0.2);
-          border-left: 3px solid rgba(80, 130, 180, 0.6);
-          border-radius: 4px;
-        }
-        .preset-procgen-subtitle {
-          margin: 12px 0 6px;
-          color: #ccc;
-          font-size: 0.95em;
-        }
-        .preset-procgen-summary {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: 4px 16px;
-          padding: 8px 12px;
-          background-color: rgba(0, 0, 0, 0.1);
-          border-radius: 4px;
-          font-size: 0.9em;
-          color: #ccc;
-        }
-        .preset-procgen-summary strong {
-          color: #aaa;
-          margin-right: 4px;
-          font-weight: 500;
-        }
-        .preset-procgen-stop-ok {
-          color: #a5d6a7;
-        }
-        .preset-procgen-stop-warn {
-          color: #ffcc80;
-        }
-        .preset-procgen-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 0.85em;
-          margin-top: 4px;
-        }
-        .preset-procgen-table th,
-        .preset-procgen-table td {
-          text-align: left;
-          padding: 4px 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .preset-procgen-table th {
-          color: #888;
-          font-weight: 600;
-          text-transform: uppercase;
-          font-size: 0.85em;
-          letter-spacing: 0.4px;
-          background-color: rgba(0, 0, 0, 0.2);
-        }
-        .preset-procgen-table tr:hover td {
-          background-color: rgba(255, 255, 255, 0.03);
-        }
-        .error-message {
-          background-color: rgba(244, 67, 54, 0.1);
-          border-left: 3px solid #f44336;
-          padding: 16px;
-          border-radius: 4px;
-          margin-top: 16px;
-        }
-        .success-message {
-          background-color: rgba(76, 175, 80, 0.1);
-          border-left: 3px solid #4CAF50;
-          padding: 8px 16px;
-          border-radius: 4px;
-          margin: 8px 0;
-        }
-        .multiworld-seeds {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          width: 100%;
-        }
-        .multiworld-seed-block {
-          background-color: rgba(0, 0, 0, 0.2);
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .seed-number {
-          font-weight: bold;
-          color: #ccc;
-          margin-bottom: 8px;
-          display: block;
-        }
-        .seed-players {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .player-info {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .preset-player-button {
-          background-color: rgba(50, 100, 150, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-          color: white;
-          cursor: pointer;
-          padding: 5px 10px;
-          text-align: center;
-          transition: background-color 0.2s;
-          min-width: 40px;
-        }
-        .preset-player-button:hover {
-          background-color: rgba(70, 120, 170, 0.9);
-        }
-        .player-details {
-          font-size: 0.9em;
-          color: #bbb;
-        }
-        .multiworld-container {
-          background-color: rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-          padding: 16px;
-          margin-bottom: 16px;
-        }
-        .placement-badge {
-          display: inline-block;
-          font-size: 0.65em;
-          font-weight: 700;
-          padding: 1px 4px;
-          border-radius: 3px;
-          margin-left: 6px;
-          vertical-align: middle;
-          line-height: 1;
-        }
-        .placement-vanilla {
-          background-color: rgba(156, 39, 176, 0.3);
-          border: 1px solid rgba(156, 39, 176, 0.6);
-          color: #ce93d8;
-        }
-      </style>
-    `;
+    // Styles are injected once into <head> via _ensureStylesInjected
+    // (called from every render path). Originally these lived inside
+    // this template literal, but the detail-view's container.innerHTML
+    // = ... wiped the <style> child every time the user clicked into
+    // a preset, leaving the detail view rendered with browser defaults.
+    this._ensureStylesInjected();
 
     // Set the HTML content
     container.innerHTML = html;
@@ -1203,12 +1223,13 @@ export class PresetUI {
   }
 
   displayLoadedJsonFileDetails(jsonData, fileName) {
-    log('info', 
+    log('info',
       `Displaying details for manually loaded JSON file: ${fileName}`,
       jsonData
     );
     const container = this.presetsListContainer;
     if (!container) return;
+    this._ensureStylesInjected();
 
     // For now, this is a placeholder. We will implement the details view in the next step.
     // It should be similar to loadPreset but adapt for a local file.
@@ -1405,6 +1426,7 @@ export class PresetUI {
 
     const container = this.presetsListContainer;
     if (!container) return;
+    this._ensureStylesInjected();
 
     try {
       const gameData = this.presets[gameDirectory];
@@ -2034,6 +2056,17 @@ export class PresetUI {
     });
   }
 
+  _ensureStylesInjected() {
+    // Idempotent: if a previous panel instance (or earlier render of
+    // this one) injected the stylesheet, leave it alone.
+    if (typeof document === 'undefined') return;
+    if (document.getElementById(PRESET_STYLES_ID)) return;
+    const style = document.createElement('style');
+    style.id = PRESET_STYLES_ID;
+    style.textContent = PRESET_STYLES;
+    document.head.appendChild(style);
+  }
+
   _renderToolbarHtml() {
     const t = this.toolbarState;
     const opt = (value, label, current) => {
@@ -2047,6 +2080,7 @@ export class PresetUI {
                value="${this.escapeHtml(t.query || '')}" />
         <label>Sort:
           <select class="presets-toolbar-sort">
+            ${opt('index', 'Index order', t.sortKey)}
             ${opt('name', 'Name (A→Z)', t.sortKey)}
             ${opt('seedCount', '# of seeds', t.sortKey)}
             ${opt('testPassCount', 'Test pass count', t.sortKey)}
