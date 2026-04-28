@@ -179,11 +179,22 @@ const PRESET_STYLES = `
 .preset-info {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+}
+.preset-info h3 {
+    margin: 0 0 4px;
+}
+.preset-info p {
+    margin: 0 0 6px;
+    color: #bbb;
+    font-size: 0.9em;
+}
+.preset-info p:last-child {
+    margin-bottom: 0;
 }
 .preset-files {
-    margin-top: 16px;
+    margin-top: 8px;
 }
 .preset-files-header {
     display: flex;
@@ -228,10 +239,10 @@ const PRESET_STYLES = `
     background-color: #444;
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 .back-button:hover {
     background-color: #555;
@@ -239,9 +250,9 @@ const PRESET_STYLES = `
 .preset-detail-header {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 .preset-detail-header .back-button {
     margin-bottom: 0;
@@ -269,8 +280,8 @@ const PRESET_STYLES = `
     cursor: not-allowed;
 }
 .preset-sphere-section {
-    margin-top: 16px;
-    padding: 12px;
+    margin-top: 8px;
+    padding: 8px 10px;
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 6px;
 }
@@ -356,21 +367,21 @@ const PRESET_STYLES = `
     font-size: 0.9em;
 }
 .preset-procgen-section {
-    margin-top: 16px;
+    margin-top: 8px;
 }
 .preset-procgen-section:empty {
     margin-top: 0;
 }
 .preset-procgen-title {
-    margin: 8px 0 4px;
+    margin: 0 0 4px;
     color: #ddd;
-    padding: 8px 12px;
+    padding: 6px 10px;
     background-color: rgba(80, 130, 180, 0.2);
     border-left: 3px solid rgba(80, 130, 180, 0.6);
     border-radius: 4px;
 }
 .preset-procgen-subtitle {
-    margin: 12px 0 6px;
+    margin: 8px 0 4px;
     color: #ccc;
     font-size: 0.95em;
 }
@@ -428,9 +439,17 @@ const PRESET_STYLES = `
 .success-message {
     background-color: rgba(76, 175, 80, 0.1);
     border-left: 3px solid #4CAF50;
-    padding: 8px 16px;
+    padding: 6px 10px;
     border-radius: 4px;
-    margin: 8px 0;
+    margin: 8px 0 0;
+}
+.success-message-headline {
+    font-weight: 500;
+}
+.success-message-counts {
+    margin-top: 2px;
+    font-size: 0.9em;
+    color: #a0a0a0;
 }
 .multiworld-seeds {
     display: flex;
@@ -1945,11 +1964,8 @@ export class PresetUI {
       if (statusElement) {
         statusElement.innerHTML = `
           <div class="success-message">
-            <p>✓ Preset rules loaded successfully!</p>
-            <p style="margin: 8px 0; font-size: 0.9em; color: #a0a0a0;">
-              Loaded: ${regionCount} regions, ${locationCount} locations, ${exitCount} exits, ${itemCount} items
-            </p>
-            <p>You can now go to the Locations or Regions view to explore the game.</p>
+            <div class="success-message-headline">✓ Preset rules loaded successfully!</div>
+            <div class="success-message-counts">Loaded: ${regionCount} regions, ${locationCount} locations, ${exitCount} exits, ${itemCount} items</div>
           </div>
         `;
       }
