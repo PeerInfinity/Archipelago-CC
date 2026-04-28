@@ -191,6 +191,7 @@ def update_preset_files(
     seed_int: Optional[int],
     player_name: str,
     game: str,
+    has_procgen_data: bool,
     dry_run: bool,
 ) -> None:
     if preset_files_path.exists():
@@ -208,6 +209,11 @@ def update_preset_files(
         ],
         "files": [f"{file_prefix}_rules.json"],
     }
+    # Procgen data flag — true when the rules.json carries
+    # preset_sidecars. Absent = false. See NewDocs/plans/
+    # presets-panel-overhaul.md §"Procgen detection at index time".
+    if has_procgen_data:
+        new_folder_entry["has_procgen_data"] = True
 
     game_entry = data.get(game_id)
     if game_entry is None:
@@ -278,6 +284,8 @@ def main() -> int:
         rules_path, dest_file,
         move=args.move, force=args.force, dry_run=args.dry_run,
     )
+    preset_sidecars = rules_data.get("preset_sidecars")
+    has_procgen_data = bool(preset_sidecars) and len(preset_sidecars) > 0
     update_preset_files(
         preset_files_path,
         game_id=args.game_id,
@@ -286,6 +294,7 @@ def main() -> int:
         seed_int=seed_int,
         player_name=player_name,
         game=game,
+        has_procgen_data=has_procgen_data,
         dry_run=args.dry_run,
     )
 

@@ -3087,6 +3087,15 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 folder_entry["is_canonical"] = True
             if cleaned_data.get('preset_label'):
                 folder_entry["label"] = cleaned_data['preset_label']
+            # Procgen data flag — true when the rules.json carries
+            # preset_sidecars (i.e. the world was generated via the
+            # procgen pipeline). Powers the Presets panel's "has
+            # procgen data" filter. Absent = false. See NewDocs/plans/
+            # presets-panel-overhaul.md §"Procgen detection at index
+            # time".
+            preset_sidecars = cleaned_data.get('preset_sidecars')
+            if preset_sidecars and len(preset_sidecars) > 0:
+                folder_entry["has_procgen_data"] = True
 
             preset_index[clean_game_name]["folders"][filename_base] = folder_entry
             
