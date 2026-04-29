@@ -416,6 +416,7 @@ function buildSubstrateRegion({
         render_hint: substrate,
         sidecar_filename: `${region_id}.json`,
         wall_stats: core.wall_stats,
+        grow_telemetry: core.grow_telemetry ?? null,
     };
 }
 
@@ -1093,6 +1094,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             exits_placed: core.exits_placed,
             render_hint: substrateId,
             sidecar_filename: `${name}.json`,
+            grow_telemetry: core.grow_telemetry ?? null,
         });
 
         stats.regionsBuilt += 1;
@@ -1497,6 +1499,11 @@ export function buildPresetSidecars(grid, {
                 baseObstacleLib,
                 baseItemLib,
             ),
+            // Substrate-side auto-grow telemetry from generateRegionCore.
+            // Read by computeProcgenStats to surface formula
+            // under-provisioning in the procgen stats panel. Omitted
+            // (rather than null) when the adapter didn't report it.
+            ...(region.grow_telemetry ? { grow_telemetry: region.grow_telemetry } : {}),
         };
     }
     return { [playerId]: regionMap };

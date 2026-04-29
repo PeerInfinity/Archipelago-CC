@@ -412,6 +412,10 @@ const PRESET_STYLES = `
 .preset-procgen-stop-warn {
     color: #ffcc80;
 }
+.preset-procgen-grow-detail {
+    color: #888;
+    font-size: 0.9em;
+}
 .preset-procgen-table {
     width: 100%;
     border-collapse: collapse;
@@ -668,6 +672,7 @@ export function computeProcgenStats(rulesData, playerId = '1') {
     const substrateCounts = {};
     const regions = [];
     let totalLogicGates = 0;
+    let regionsAutoGrew = 0;
 
     for (const [name, entry] of Object.entries(sidecars)) {
         const substrate = entry?.substrate ?? 'unknown';
@@ -682,7 +687,21 @@ export function computeProcgenStats(rulesData, playerId = '1') {
         const height = Number.isFinite(pp.height) ? pp.height : 0;
         const area = width * height;
         const density = area > 0 ? (exits + locations) / area : 0;
-        regions.push({ name, substrate, exits, locations, width, height, density });
+
+        // Auto-grow telemetry from generateRegionCore. growAttempts ≥ 1
+        // means topDownRegionSize under-provisioned this region and the
+        // substrate had to retry at a larger size — the signal we tune
+        // the formula against.
+        const growTelemetry = entry?.grow_telemetry ?? null;
+        const growAttempts = growTelemetry?.grow_attempts ?? 0;
+        if (growAttempts > 0) regionsAutoGrew += 1;
+        const requestedSize = growTelemetry?.requested_size ?? null;
+
+        regions.push({
+            name, substrate, exits, locations, width, height, density,
+            growAttempts,
+            requestedSize, // null when telemetry absent
+        });
 
         const obstacleLib = pp.obstacleLib ?? {};
         for (const def of Object.values(obstacleLib)) {
@@ -700,6 +719,7 @@ export function computeProcgenStats(rulesData, playerId = '1') {
         substrateCounts,
         regions,
         totalLogicGates,
+        regionsAutoGrew,
         outputCounts: {
             regions: regions.length,
             locations: regions.reduce((s, r) => s + r.locations, 0),
@@ -2216,6 +2236,15 @@ export class PresetUI {
       ? (stats.totalLogicGates / stats.regionCount).toFixed(2)
       : '0.00';
 
+    // Auto-grow summary — only meaningful when at least one region
+    // carried grow_telemetry. When every region grew at the initial
+    // size (regionsAutoGrew === 0) we still show the line so the
+    // user knows the formula is well-tuned for this seed.
+    const anyTelemetry = stats.regions.some((r) => r.requestedSize !== null);
+    const autoGrewLine = anyTelemetry
+      ? `<div><strong>Auto-grew:</strong> <span class="${stats.regionsAutoGrew === 0 ? 'preset-procgen-stop-ok' : 'preset-procgen-stop-warn'}">${stats.regionsAutoGrew}/${stats.regionCount} regions</span></div>`
+      : '';
+
     let html = `
       <h4 class="preset-procgen-title">Procgen</h4>
       <div class="preset-procgen-summary">
@@ -2224,6 +2253,7 @@ export class PresetUI {
         <div><strong>Stop reason:</strong> <span class="${stopReasonClass}">${stopReasonText}</span></div>
         <div><strong>Grid:</strong> ${this.escapeHtml(gridDimsLabel)}</div>
         <div><strong>Logic gates:</strong> ${stats.totalLogicGates} (${gateDensity} per region)</div>
+        ${autoGrewLine}
       </div>
     `;
 
@@ -2250,10 +2280,25 @@ export class PresetUI {
     // Per-region table — sorted by density descending so outliers
     // surface at the top. (The plan calls out region-size formula
     // tuning as the next task; high-density rows are the rows where
-    // the formula picked too-small a size.)
+    // the formula picked too-small a size.) The Grow column shows
+    // "—" when telemetry is absent, "0" when the initial size was
+    // sufficient, or "N (Wreq×Hreq)" with a warning style when the
+    // substrate had to grow N times from the formula's pick.
     const regionsSorted = stats.regions.slice().sort((a, b) => b.density - a.density);
+    const showGrowCol = anyTelemetry;
     let tableBody = '';
     for (const r of regionsSorted) {
+      let growCell = '';
+      if (showGrowCol) {
+        if (r.requestedSize === null) {
+          growCell = '<td>—</td>';
+        } else if (r.growAttempts === 0) {
+          growCell = '<td><span class="preset-procgen-stop-ok">0</span></td>';
+        } else {
+          const req = `${r.requestedSize.width}×${r.requestedSize.height}`;
+          growCell = `<td><span class="preset-procgen-stop-warn">${r.growAttempts}</span> <span class="preset-procgen-grow-detail">(from ${this.escapeHtml(req)})</span></td>`;
+        }
+      }
       tableBody += `
         <tr>
           <td>${this.escapeHtml(r.name)}</td>
@@ -2262,6 +2307,7 @@ export class PresetUI {
           <td>${r.locations}</td>
           <td>${r.width}×${r.height}</td>
           <td>${r.density.toFixed(3)}</td>
+          ${growCell}
         </tr>
       `;
     }
@@ -2272,6 +2318,7 @@ export class PresetUI {
           <tr>
             <th>Region</th><th>Substrate</th><th>Exits</th>
             <th>Locations</th><th>Grid w×h</th><th>Density</th>
+            ${showGrowCol ? '<th title="Substrate auto-grow attempts. >0 means the topDownRegionSize formula under-provisioned.">Grow</th>' : ''}
           </tr>
         </thead>
         <tbody>${tableBody}</tbody>

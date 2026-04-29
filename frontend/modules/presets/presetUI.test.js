@@ -534,13 +534,15 @@ describe('buildSphereEnrichment', () => {
 
 describe('computeProcgenStats', () => {
     function makeRegionSidecar({ substrate = 'maze', width = 8, height = 6,
-        exits = [], items = [], obstacleLib = {} } = {}) {
-        return {
+        exits = [], items = [], obstacleLib = {}, growTelemetry = null } = {}) {
+        const sidecar = {
             substrate,
             render_hint: substrate,
             grid_cell: { gx: 0, gy: 0 },
             playable_payload: { width, height, exits, items, obstacles: [], obstacleLib },
         };
+        if (growTelemetry) sidecar.grow_telemetry = growTelemetry;
+        return sidecar;
     }
 
     it('returns null for non-procgen rules.json (no preset_sidecars)', () => {
@@ -655,6 +657,56 @@ describe('computeProcgenStats', () => {
         expect(stats.driver).toBeNull();
         expect(stats.sourceCounts).toBeNull();
         expect(stats.stopReason).toBeNull();
+    });
+
+    it('reports regionsAutoGrew = 0 and surfaces requestedSize when telemetry is present but no growth happened', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({ growTelemetry: {
+                    requested_size: { width: 8, height: 6 },
+                    final_size: { width: 8, height: 6 },
+                    grow_attempts: 0,
+                }}),
+            }},
+        });
+        expect(stats.regionsAutoGrew).toBe(0);
+        expect(stats.regions[0].growAttempts).toBe(0);
+        expect(stats.regions[0].requestedSize).toEqual({ width: 8, height: 6 });
+    });
+
+    it('counts regions whose substrate had to auto-grow', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar({ growTelemetry: {
+                    requested_size: { width: 6, height: 6 },
+                    final_size: { width: 8, height: 8 },
+                    grow_attempts: 1,
+                }}),
+                R2: makeRegionSidecar({ growTelemetry: {
+                    requested_size: { width: 6, height: 6 },
+                    final_size: { width: 6, height: 6 },
+                    grow_attempts: 0,
+                }}),
+                R3: makeRegionSidecar({ growTelemetry: {
+                    requested_size: { width: 6, height: 6 },
+                    final_size: { width: 10, height: 10 },
+                    grow_attempts: 2,
+                }}),
+            }},
+        });
+        expect(stats.regionsAutoGrew).toBe(2);
+        expect(stats.regions.map((r) => r.growAttempts)).toEqual([1, 0, 2]);
+    });
+
+    it('treats absent grow_telemetry as no-growth and null requestedSize', () => {
+        const stats = computeProcgenStats({
+            preset_sidecars: { '1': {
+                R1: makeRegionSidecar(/* no growTelemetry */),
+            }},
+        });
+        expect(stats.regionsAutoGrew).toBe(0);
+        expect(stats.regions[0].growAttempts).toBe(0);
+        expect(stats.regions[0].requestedSize).toBeNull();
     });
 
     it('outputCounts aggregates across all regions', () => {

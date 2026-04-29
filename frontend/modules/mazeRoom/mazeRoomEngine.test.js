@@ -676,6 +676,37 @@ describe('generateRegionCore', () => {
         expect(out.size_used).toEqual({ width: out.world.width, height: out.world.height });
     });
 
+    it('reports grow_telemetry — initial size with no growth', () => {
+        const out = generateRegionCore({
+            region_id: 'fits',
+            size: { width: 8, height: 6 },
+            entrances: [{ side: 'W', tile: { x: 0, y: 3 } }],
+            exits: [{ side: 'E' }],
+            rng: createRng(2),
+            params: {},
+        });
+        expect(out.grow_telemetry).toEqual({
+            requested_size: { width: 8, height: 6 },
+            final_size: { width: 8, height: 6 },
+            grow_attempts: 0,
+        });
+    });
+
+    it('reports grow_telemetry — initial size with one or more growths', () => {
+        const out = generateRegionCore({
+            region_id: 'tight',
+            size: { width: 3, height: 3 },
+            entrances: [{ side: 'W', tile: { x: 0, y: 1 } }],
+            exits: [{}, {}, {}, {}, {}, {}, {}, {}],
+            rng: createRng(11),
+            params: {},
+        });
+        expect(out.grow_telemetry.requested_size).toEqual({ width: 3, height: 3 });
+        expect(out.grow_telemetry.grow_attempts).toBeGreaterThan(0);
+        expect(out.grow_telemetry.final_size.width).toBe(out.world.width);
+        expect(out.grow_telemetry.final_size.height).toBe(out.world.height);
+    });
+
     it('throws when even max-grow can not fit all exits', () => {
         // Far more exits than even the grown region's perimeter
         // could ever hold for the bounded number of grow attempts.

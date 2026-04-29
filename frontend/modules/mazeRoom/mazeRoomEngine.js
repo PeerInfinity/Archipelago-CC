@@ -1012,6 +1012,7 @@ export function generateRegionCore(input) {
     // grow the region uniformly and retry.
     let currentSize = { width: size.width, height: size.height };
     let resolvedExits = null;
+    let growAttempts = 0; // # of failed assignments, == # of times the size grew.
     for (let attempt = 0; attempt <= REGION_GROW_MAX_ATTEMPTS; attempt++) {
         resolvedExits = tryAssignExitTiles(currentSize, exits, entrance_tile, rng, defaultExitId);
         if (resolvedExits) break;
@@ -1026,6 +1027,7 @@ export function generateRegionCore(input) {
             width: currentSize.width + REGION_GROW_STEP,
             height: currentSize.height + REGION_GROW_STEP,
         };
+        growAttempts += 1;
     }
 
     const mazeSeed = Math.floor(rng.next() * 0x7fffffff);
@@ -1053,6 +1055,16 @@ export function generateRegionCore(input) {
         entrance_tile,
         size_used: { width: currentSize.width, height: currentSize.height },
         wall_stats,
+        // Per-region auto-grow telemetry. Surfaced through the
+        // top-down driver and into procgen_metadata so the procgen
+        // stats panel can show which regions had their initial size
+        // under-provisioned by topDownRegionSize. Used to tune the
+        // formula's slack constants.
+        grow_telemetry: {
+            requested_size: { width: size.width, height: size.height },
+            final_size: { width: currentSize.width, height: currentSize.height },
+            grow_attempts: growAttempts,
+        },
     };
 }
 
