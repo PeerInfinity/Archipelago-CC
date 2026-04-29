@@ -142,6 +142,15 @@ async function main() {
         PROJECT_ROOT, 'frontend', 'modules', 'procgenPipeline',
         'procgenPipelineEngine.js',
     );
+    // Side-effect import — the maze substrate library registers
+    // itself in substrateRegistry on import. The driver looks up
+    // 'maze' there for substrate-neutral dispatch and throws when
+    // no library has registered it. (The browser does the same
+    // via the maze module's register() hook.)
+    const mazeLibPath = path.join(
+        PROJECT_ROOT, 'frontend', 'modules', 'mazeRoom', 'mazeRoomLibrary.js',
+    );
+    await import(mazeLibPath);
     const { growMaze, buildRulesJson, stringifyRulesJson } = await import(enginePath);
 
     console.log('generate-procgen-rules:');
@@ -172,7 +181,17 @@ async function main() {
         },
     });
 
-    const rulesJson = buildRulesJson(grid, { startCell, seed: args.seed });
+    const rulesJson = buildRulesJson(grid, {
+        startCell, seed: args.seed,
+        // Match the procgen pipeline panel's _runGridGrowth shape so the
+        // staged rules.json carries procgen_metadata for the Presets
+        // panel's procgen stats block. Per-region grow_telemetry rides
+        // along automatically (buildPresetSidecars passes it through).
+        procgenMetadata: {
+            driver: 'grid-growth',
+            stop_reason: stats.stopReason,
+        },
+    });
     const text = stringifyRulesJson(rulesJson);
 
     fs.mkdirSync(path.dirname(args.out), { recursive: true });
