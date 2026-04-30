@@ -33,6 +33,7 @@ import { getDiscoverySettings } from '../discovery/index.js';
 // which point `this.apis.eventBus` is still null).
 import eventBus from '../../app/core/eventBus.js';
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
+import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -152,6 +153,16 @@ export class MazeRoomUI {
         // The bar instance lives across renders; render() re-appends
         // its element after clearing the panel's innerHTML.
         this._playbackBar = null;
+
+        // Tile editor — Phase 2. Edit mode persists to mazeRoom_view
+        // alongside fog. When enabled, the panel renders a palette
+        // and attaches a click handler to the canvas. The verifier
+        // section reports rules.json-shaped access rules computed from
+        // the current world; auto-runs after each edit.
+        this.editMode = false;
+        this._editor = null;
+        this._editorMessage = '';
+        this._verifierResult = null;
 
         // Fog of war. When enabled, only tiles in the seen-set for
         // the current region render with their full overlays —
@@ -472,6 +483,7 @@ export class MazeRoomUI {
         this.rootElement.appendChild(this._renderPlaybackBar());
         this.rootElement.appendChild(this._renderStats());
         this.rootElement.appendChild(this._renderMaze());
+        this.rootElement.appendChild(this._renderEditor());
         this.rootElement.appendChild(this._renderRules());
     }
 
@@ -755,8 +767,239 @@ export class MazeRoomUI {
         canvas.className = 'maze-room-canvas';
         canvas.width = this.world.width * TILE_PX;
         canvas.height = this.world.height * TILE_PX;
+        if (this.editMode) {
+            canvas.classList.add('maze-room-canvas-editing');
+            canvas.addEventListener('click', (e) => this._handleCanvasClick(e, canvas));
+        }
         this._drawWorld(canvas);
         section.appendChild(canvas);
+        return section;
+    }
+
+    _handleCanvasClick(event, canvas) {
+        if (!this.world || !this.editMode) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((event.clientX - rect.left) / TILE_PX);
+        const y = Math.floor((event.clientY - rect.top) / TILE_PX);
+        if (x < 0 || x >= this.world.width || y < 0 || y >= this.world.height) return;
+
+        const editor = this._ensureEditor();
+        const result = editor.applyAt(this.world, x, y);
+        this._editorMessage = result.description;
+        if (result.ok && result.type !== 'noop') {
+            this._runVerifier();
+        }
+        this.render();
+    }
+
+    _ensureEditor() {
+        if (!this._editor) {
+            this._editor = new MazeRoomEditor({
+                itemLib: this.world?.itemLib ?? DEFAULT_ITEMS,
+                obstacleLib: this.world?.obstacleLib ?? DEFAULT_OBSTACLES,
+            });
+        } else {
+            // World may have been regenerated; refresh library refs.
+            this._editor.setLibraries(
+                this.world?.itemLib ?? DEFAULT_ITEMS,
+                this.world?.obstacleLib ?? DEFAULT_OBSTACLES,
+            );
+        }
+        return this._editor;
+    }
+
+    _renderEditor() {
+        if (!this.editMode || !this.world) {
+            const empty = document.createElement('div');
+            empty.style.display = 'none';
+            return empty;
+        }
+        const section = document.createElement('div');
+        section.className = 'maze-room-editor';
+
+        section.appendChild(this._renderEditorPalette());
+        section.appendChild(this._renderVerifier());
+        return section;
+    }
+
+    _renderEditorPalette() {
+        const editor = this._ensureEditor();
+        const wrap = document.createElement('div');
+        wrap.className = 'maze-room-editor-palette';
+
+        const title = document.createElement('div');
+        title.className = 'maze-room-section-title';
+        title.textContent = 'Palette';
+        wrap.appendChild(title);
+
+        const swatches = document.createElement('div');
+        swatches.className = 'maze-room-editor-swatches';
+        for (const entry of PALETTE_ENTRIES) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'maze-room-editor-swatch';
+            if (entry.type === editor.selectedType) btn.classList.add('is-selected');
+            btn.textContent = `${entry.glyph} ${entry.label}`;
+            btn.addEventListener('click', () => {
+                editor.selectType(entry.type);
+                this.render();
+            });
+            swatches.appendChild(btn);
+        }
+        wrap.appendChild(swatches);
+
+        // Item / obstacle ID pickers — visible only when relevant.
+        if (editor.selectedType === PALETTE_TYPES.ITEM) {
+            wrap.appendChild(this._renderIdPicker(
+                'Item id',
+                Object.keys(this.world.itemLib ?? DEFAULT_ITEMS),
+                editor.selectedItemId,
+                (id) => { editor.selectItemId(id); this.render(); },
+            ));
+        } else if (editor.selectedType === PALETTE_TYPES.OBSTACLE) {
+            wrap.appendChild(this._renderIdPicker(
+                'Obstacle id',
+                Object.keys(this.world.obstacleLib ?? DEFAULT_OBSTACLES),
+                editor.selectedObstacleId,
+                (id) => { editor.selectObstacleId(id); this.render(); },
+            ));
+        }
+
+        if (this._editorMessage) {
+            const msg = document.createElement('div');
+            msg.className = 'maze-room-editor-message';
+            msg.textContent = this._editorMessage;
+            wrap.appendChild(msg);
+        }
+        return wrap;
+    }
+
+    _renderIdPicker(label, ids, selectedId, onChange) {
+        const row = document.createElement('div');
+        row.className = 'maze-room-editor-id-picker';
+        const lbl = document.createElement('label');
+        lbl.textContent = label;
+        const select = document.createElement('select');
+        for (const id of ids) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = id;
+            if (id === selectedId) opt.selected = true;
+            select.appendChild(opt);
+        }
+        select.addEventListener('change', () => onChange(select.value));
+        lbl.appendChild(select);
+        row.appendChild(lbl);
+        return row;
+    }
+
+    _runVerifier() {
+        if (!this.world) {
+            this._verifierResult = null;
+            return;
+        }
+        try {
+            const extracted = extractPathsAndObstacles(this.world);
+            const compiled = compileRegion(extracted, {
+                obstacleLib: this.world.obstacleLib ?? DEFAULT_OBSTACLES,
+            });
+            const falseRules = countFalseRules(compiled);
+            this._verifierResult = {
+                compiled,
+                falseRules,
+                exits: compiled.exits ?? [],
+                locations: compiled.locations ?? [],
+            };
+        } catch (err) {
+            this._verifierResult = { error: err?.message ?? String(err) };
+        }
+    }
+
+    _renderVerifier() {
+        const wrap = document.createElement('div');
+        wrap.className = 'maze-room-verifier';
+
+        const header = document.createElement('div');
+        header.className = 'maze-room-verifier-header';
+        const title = document.createElement('div');
+        title.className = 'maze-room-section-title';
+        title.textContent = 'Verifier';
+        header.appendChild(title);
+
+        const rerunBtn = document.createElement('button');
+        rerunBtn.type = 'button';
+        rerunBtn.className = 'maze-room-btn';
+        rerunBtn.textContent = 'Rerun';
+        rerunBtn.addEventListener('click', () => {
+            this._runVerifier();
+            this.render();
+        });
+        header.appendChild(rerunBtn);
+        wrap.appendChild(header);
+
+        const result = this._verifierResult;
+        if (!result) {
+            const hint = document.createElement('div');
+            hint.className = 'maze-room-hint';
+            hint.textContent = 'Click an edit or press Rerun to run the verifier.';
+            wrap.appendChild(hint);
+            return wrap;
+        }
+        if (result.error) {
+            const err = document.createElement('div');
+            err.className = 'maze-room-verifier-error';
+            err.textContent = `Error: ${result.error}`;
+            wrap.appendChild(err);
+            return wrap;
+        }
+
+        const summary = document.createElement('div');
+        summary.className = 'maze-room-verifier-summary';
+        const exitsCount = result.exits.length;
+        const locsCount = result.locations.length;
+        const falseCount = result.falseRules;
+        if (falseCount > 0) summary.classList.add('has-false-rules');
+        summary.textContent = `${exitsCount} exits, ${locsCount} locations · ${falseCount} False_ rule${falseCount === 1 ? '' : 's'}`;
+        wrap.appendChild(summary);
+
+        if (falseCount > 0) {
+            const banner = document.createElement('div');
+            banner.className = 'maze-room-verifier-banner';
+            banner.textContent = '⚠ Unreachable exit/location detected. Path extractor returned no walkable paths from the entrance.';
+            wrap.appendChild(banner);
+        }
+
+        wrap.appendChild(this._renderVerifierEntries('Exits', result.exits));
+        wrap.appendChild(this._renderVerifierEntries('Locations', result.locations));
+        return wrap;
+    }
+
+    _renderVerifierEntries(label, entries) {
+        const section = document.createElement('div');
+        section.className = 'maze-room-verifier-entries';
+        const heading = document.createElement('div');
+        heading.className = 'maze-room-verifier-entries-heading';
+        heading.textContent = `${label}:`;
+        section.appendChild(heading);
+
+        if (!entries || entries.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'maze-room-hint';
+            empty.textContent = '(none)';
+            section.appendChild(empty);
+            return section;
+        }
+
+        for (const entry of entries) {
+            const row = document.createElement('div');
+            row.className = 'maze-room-verifier-entry';
+            const name = entry.global_name ?? entry.id ?? '?';
+            const ruleStr = describeRule(entry.rule);
+            const isFalse = isFalseRule(entry.rule);
+            if (isFalse) row.classList.add('is-false');
+            row.textContent = `${name} — ${ruleStr}`;
+            section.appendChild(row);
+        }
         return section;
     }
 
@@ -798,6 +1041,25 @@ export class MazeRoomUI {
         fogLabel.appendChild(fogInput);
         fogLabel.appendChild(document.createTextNode(' Fog of war'));
         row.appendChild(fogLabel);
+
+        const editLabel = document.createElement('label');
+        editLabel.className = 'maze-room-view-toggle';
+        const editInput = document.createElement('input');
+        editInput.type = 'checkbox';
+        editInput.checked = this.editMode;
+        editInput.addEventListener('change', () => {
+            this.editMode = editInput.checked;
+            this._saveViewSettings();
+            if (this.editMode && this.world) {
+                // Auto-run the verifier on entering edit mode so the
+                // initial state is visible without requiring an edit.
+                this._runVerifier();
+            }
+            this.render();
+        });
+        editLabel.appendChild(editInput);
+        editLabel.appendChild(document.createTextNode(' Edit mode'));
+        row.appendChild(editLabel);
 
         return row;
     }
@@ -1164,6 +1426,7 @@ export class MazeRoomUI {
             if (view) {
                 const parsed = JSON.parse(view);
                 this.fogEnabled = !!parsed?.fogEnabled;
+                this.editMode = !!parsed?.editMode;
             }
         } catch (e) {
             // ignore
@@ -1174,9 +1437,36 @@ export class MazeRoomUI {
         try {
             localStorage.setItem(LS_VIEW_KEY, JSON.stringify({
                 fogEnabled: this.fogEnabled,
+                editMode: this.editMode,
             }));
         } catch (e) {
             // ignore
         }
     }
+}
+
+function countFalseRules(compiled) {
+    let count = 0;
+    for (const arr of [compiled.exits ?? [], compiled.locations ?? []]) {
+        for (const entry of arr) {
+            if (isFalseRule(entry.rule)) count += 1;
+        }
+    }
+    return count;
+}
+
+function isFalseRule(rule) {
+    return rule?.rule === 'False_';
+}
+
+function describeRule(rule) {
+    if (!rule) return '(none)';
+    if (rule.rule === 'True_') return 'True_';
+    if (rule.rule === 'False_') return 'False_  ⚠';
+    if (rule.rule === 'Has') return `Has(${rule.args?.item_name ?? '?'})`;
+    if (rule.rule === 'HasAll') return `HasAll(${(rule.args?.items ?? []).join(', ')})`;
+    if (rule.rule === 'HasAny') return `HasAny(${(rule.args?.items ?? []).join(', ')})`;
+    if (rule.rule === 'And') return `And(${(rule.children ?? []).map(describeRule).join(', ')})`;
+    if (rule.rule === 'Or') return `Or(${(rule.children ?? []).map(describeRule).join(', ')})`;
+    return rule.rule ?? JSON.stringify(rule);
 }

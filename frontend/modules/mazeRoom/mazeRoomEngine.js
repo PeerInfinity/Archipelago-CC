@@ -280,6 +280,10 @@ export function isEntrance(world, x, y) {
     return world.entrance.x === x && world.entrance.y === y;
 }
 
+export function setEntrance(world, x, y) {
+    world.entrance = { x, y };
+}
+
 export function isExit(world, x, y) {
     return getExitAt(world, x, y) !== null;
 }
