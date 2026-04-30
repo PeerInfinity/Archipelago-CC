@@ -92,6 +92,23 @@ export function buildSphereQueue(sphereData, locationIndex) {
     return queue;
 }
 
+/**
+ * Format a queue entry's sphere index for inclusion in the bot's
+ * status line: "Sphere 0 → ", "Sphere 0.1 → ", or "" when the entry
+ * has no sphere index. Trailing arrow + space is part of the prefix
+ * so callers can do `${sphereTag}walking to ...` cleanly even when
+ * the tag is absent.
+ *
+ * Pure helper — exported for testing.
+ */
+export function formatSphereTag(entry) {
+    if (!entry || entry.sphereIndex == null) return '';
+    const s = entry.sphereIndex;
+    const f = entry.fractionalIndex;
+    const idx = (f != null && f !== 0) ? `${s}.${f}` : `${s}`;
+    return `Sphere ${idx} → `;
+}
+
 // Module-scope registry of the currently-mounted bot, mirroring the
 // setPanelInstance pattern in mazeRoom/index.js. The presets module
 // registers dispatcher receivers for user:locationCheck /
@@ -314,16 +331,18 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        const progress = `(${this._cursor + 1}/${this._queue.length})`;
+        const sphereTag = formatSphereTag(head);
         if (!this._currentRegion) {
             // First user:regionMove hasn't arrived yet — wait for it.
             // Don't fail; just keep idle. The next event will retrigger
             // this method.
-            this._status = `waiting for region (cursor ${this._cursor + 1}/${this._queue.length})`;
+            this._status = `${sphereTag}waiting for region ${progress}`;
             this._render();
             return;
         }
         if (head.regionName === this._currentRegion) {
-            this._status = `walking to ${head.locationName} (cursor ${this._cursor + 1}/${this._queue.length})`;
+            this._status = `${sphereTag}walking to "${head.locationName}" ${progress}`;
             this._publishWalkTo({ kind: 'location', name: head.locationName });
             this._render();
             return;
@@ -348,7 +367,7 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
-        this._status = `routing through ${nextExit} → ${head.regionName} (cursor ${this._cursor + 1}/${this._queue.length})`;
+        this._status = `${sphereTag}routing via "${nextExit}" → ${head.regionName} ${progress}`;
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._render();
     }

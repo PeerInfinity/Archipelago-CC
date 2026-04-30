@@ -63,7 +63,7 @@ const fakeDocument = {
 beforeEach(() => { globalThis.document = fakeDocument; });
 afterEach(() => { delete globalThis.document; });
 
-import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, getActiveBot } from './playbackBotUI.js';
+import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, getActiveBot, formatSphereTag } from './playbackBotUI.js';
 
 const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
@@ -474,6 +474,124 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(getActiveBot()).toBe(bot2);
         bot2.destroy();
         expect(getActiveBot()).toBe(null);
+    });
+});
+
+describe('formatSphereTag', () => {
+    it('formats integer sphere as "Sphere N → "', () => {
+        expect(formatSphereTag({ sphereIndex: 0, fractionalIndex: 0 })).toBe('Sphere 0 → ');
+        expect(formatSphereTag({ sphereIndex: 2 })).toBe('Sphere 2 → ');
+    });
+
+    it('formats fractional sphere as "Sphere N.M → "', () => {
+        expect(formatSphereTag({ sphereIndex: 0, fractionalIndex: 1 })).toBe('Sphere 0.1 → ');
+        expect(formatSphereTag({ sphereIndex: 1, fractionalIndex: 8 })).toBe('Sphere 1.8 → ');
+    });
+
+    it('returns "" when sphereIndex is missing', () => {
+        expect(formatSphereTag({})).toBe('');
+        expect(formatSphereTag(null)).toBe('');
+        expect(formatSphereTag(undefined)).toBe('');
+    });
+});
+
+describe('PlaybackBotUI — rendered status line', () => {
+    // Same fixture as the play-loop tests, but here we assert what
+    // ends up in the status DOM element so the user can see it.
+    function makeBotWithSpheres() {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+                { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc B'] },
+                { sphereIndex: 1, fractionalIndex: 0, locations: ['Loc C'] },
+            ],
+            getStaticData: () => ({
+                regions: new Map([
+                    ['region_a', { locations: [{ name: 'Loc A' }] }],
+                    ['region_b', { locations: [{ name: 'Loc B' }] }],
+                    ['region_c', { locations: [{ name: 'Loc C' }] }],
+                ]),
+            }),
+            eventBus: bus,
+            pathFinder: { findPathWithExits: (from, to) => ({ steps: [
+                { region: from, exitUsed: null },
+                { region: to, exitUsed: `${from}_to_${to}` },
+            ], length: 1 }) },
+        });
+        return bot;
+    }
+
+    function statusText(bot) {
+        return bot.getElement().queryAll((el) => el.className === 'playback-bot-status')[0]?.textContent;
+    }
+
+    it('shows "Sphere log loaded: N entries" when idle', () => {
+        const bot = makeBotWithSpheres();
+        expect(statusText(bot)).toMatch(/^Sphere log loaded: 3 entries\.$/);
+    });
+
+    it('shows "No sphere log loaded" when there is no sphere data', () => {
+        const bot = new PlaybackBotUI({ getSphereData: () => [], eventBus: makeFakeBus() });
+        expect(statusText(bot)).toMatch(/^No sphere log loaded\.$/);
+    });
+
+    it('shows "Sphere X.Y → walking to ..." for a same-region head', () => {
+        const bot = makeBotWithSpheres();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(statusText(bot)).toBe('Sphere 0.1 → walking to "Loc A" (1/3)');
+    });
+
+    it('shows "Sphere X.Y → routing via ..." for a cross-region head', () => {
+        const bot = makeBotWithSpheres();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.onLocationCheck({ locationName: 'Loc A' });   // advance past first head
+        bot.play();
+        // Head is now Loc B in region_b; bot is in region_a.
+        expect(statusText(bot)).toBe('Sphere 0.2 → routing via "region_a_to_region_b" → region_b (2/3)');
+    });
+
+    it('shows "waiting for region" when no region move has fired yet', () => {
+        const bot = makeBotWithSpheres();
+        bot.play();   // no preceding onRegionMove
+        expect(statusText(bot)).toBe('Sphere 0.1 → waiting for region (1/3)');
+    });
+
+    it('shows "finished — N location(s) visited" after the queue drains', () => {
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }],
+            getStaticData: () => ({ regions: new Map([['region_a', { locations: [{ name: 'Loc A' }] }]]) }),
+            eventBus: makeFakeBus(),
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        expect(statusText(bot)).toBe('finished — 1 location visited');
+    });
+
+    it('shows error string when PathFinder returns no path', () => {
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc B'] }],
+            getStaticData: () => ({ regions: new Map([
+                ['region_a', { locations: [] }],
+                ['region_b', { locations: [{ name: 'Loc B' }] }],
+            ]) }),
+            eventBus: makeFakeBus(),
+            pathFinder: { findPathWithExits: () => null },
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(statusText(bot)).toBe('error: no path from region_a to region_b');
+    });
+
+    it('reverts to the static idle line after reset()', () => {
+        const bot = makeBotWithSpheres();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(statusText(bot)).not.toMatch(/^Sphere log loaded/);
+        bot.reset();
+        expect(statusText(bot)).toMatch(/^Sphere log loaded: 3 entries\.$/);
     });
 });
 
