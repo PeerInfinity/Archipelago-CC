@@ -399,8 +399,13 @@ export class PlaybackBotUI {
         // De-dupe identical consecutive walkTo: an event mid-leg can
         // re-enter _publishNextWalkTo without changing the head, and
         // re-issuing the same walkTo would just have the visualizer
-        // re-plan to the same tile.
-        const sig = `${target.kind}:${target.name}`;
+        // re-plan to the same tile. The signature includes the
+        // current region because the same exit name (e.g. "exit_1")
+        // appears in multiple regions — without the region prefix,
+        // a same-named exit in a different region would be silently
+        // skipped after a region transition, leaving the visualizer
+        // with no target.
+        const sig = `${this._currentRegion}:${target.kind}:${target.name}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
         this._publish('walkTo', { target });

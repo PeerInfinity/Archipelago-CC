@@ -444,6 +444,49 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(bot.isActive()).toBe(false);
     });
 
+    it('walkTo dedup keys on currentRegion so same-named exits in different regions both publish', () => {
+        // Cross-region routing regression: when the bot routes through
+        // a chain of regions, each region may have an exit with the
+        // SAME name (e.g. region_2_3.exit_1 and region_3_3.exit_1 both
+        // exist in AP_3). The bot's dedup must not collapse them, or
+        // the second region's walkTo gets silently skipped and the
+        // visualizer stalls. This test fakes that exact pattern:
+        // currentRegion changes but the head's first-hop exit name
+        // happens to be identical.
+        const seenWalkTos = [];
+        const pathFinder = {
+            findPathWithExits: (from, to) => ({ steps: [
+                { region: from, exitUsed: null },
+                { region: to, exitUsed: 'exit_1' },     // same name in both regions
+            ], length: 1 }),
+        };
+        const { bot, bus } = makeBot({
+            sphereData: [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc Z'] }],
+            staticData: {
+                regions: new Map([
+                    ['region_a', { locations: [] }],
+                    ['region_b', { locations: [] }],
+                    ['region_z', { locations: [{ name: 'Loc Z' }] }],
+                ]),
+            },
+            pathFinder,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        // First walkTo: exit_1 from region_a.
+        const firstWalk = bus.events.find((e) => e.payload.command === 'walkTo');
+        expect(firstWalk.payload.target).toEqual({ kind: 'exit', name: 'exit_1' });
+
+        // Cross into region_b. Bot computes new path; first hop is
+        // STILL named 'exit_1', but in a different region. Without
+        // region-keyed dedup, this second walkTo would be silently
+        // skipped.
+        bot.onRegionMove({ targetRegion: 'region_b' });
+        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        expect(walkTos).toHaveLength(2);
+        expect(walkTos[1].payload.target).toEqual({ kind: 'exit', name: 'exit_1' });
+    });
+
     it('redundant walkTo publishes are de-duped while head is unchanged', () => {
         const { bot, bus } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });
