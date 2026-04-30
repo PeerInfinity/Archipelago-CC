@@ -173,6 +173,7 @@ export class MazeRoomUI {
         this._visualizer = new MazeRoomVisualizer({
             eventBus,
             onStateChange: () => this._onVisualizerChange(),
+            onExitCross: (exit, sourceRegion) => this._onVisualizerExitCross(exit, sourceRegion),
         });
 
         // Fog of war. When enabled, only tiles in the seen-set for
@@ -242,6 +243,28 @@ export class MazeRoomUI {
         };
         eventBus.subscribe('playback:snapshotUpdated', playbackHandler, 'mazeRoom');
         this._unsubPlaybackSnapshot = () => eventBus.unsubscribe('playback:snapshotUpdated', playbackHandler, 'mazeRoom');
+
+        // Phase 5 single-trigger: the presets-panel bot publishes
+        // playback:command events to remote-control this panel's
+        // visualizer. Lets the user press Play once in the bot and
+        // have the maze panel auto-walk across regions via the
+        // existing exit-cross → user:regionMove → maze:loadRegion
+        // chain.
+        const commandHandler = (data) => {
+            if (!this._visualizer) return;
+            const cmd = data?.command;
+            switch (cmd) {
+                case 'play':    this._visualizer.play(data?.rateHz); break;
+                case 'stop':    this._visualizer.stop(); break;
+                case 'step':    this._visualizer.step(); break;
+                case 'instant': this._visualizer.instant(); break;
+                case 'reset':   this._visualizer.freshStart(); break;
+                case 'setRate': this._visualizer.setRate(data?.rateHz); break;
+                default: break;
+            }
+        };
+        eventBus.subscribe('playback:command', commandHandler, 'mazeRoom');
+        this._unsubPlaybackCommand = () => eventBus.unsubscribe('playback:command', commandHandler, 'mazeRoom');
     }
 
     _subscribeToDiscoveryEvents() {
@@ -494,6 +517,7 @@ export class MazeRoomUI {
     destroy() {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
         if (this._unsubPlaybackSnapshot) { this._unsubPlaybackSnapshot(); this._unsubPlaybackSnapshot = null; }
+        if (this._unsubPlaybackCommand) { this._unsubPlaybackCommand(); this._unsubPlaybackCommand = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
@@ -514,6 +538,24 @@ export class MazeRoomUI {
         this.rootElement.appendChild(this._renderPlaybackLogSection());
         this.rootElement.appendChild(this._renderEditor());
         this.rootElement.appendChild(this._renderRules());
+    }
+
+    /**
+     * Visualizer detected an exit-cross with a targetRegion. Mirror
+     * the keyboard-play exit-cross flow: publish user:regionMove on
+     * the dispatcher so the procgen player module loads the next
+     * region into this panel via maze:loadRegion. The visualizer
+     * itself paused on _awaitingRegionLoad until setWorld arrives.
+     */
+    _onVisualizerExitCross(exit, sourceRegion) {
+        const dispatcher = this.apis?.dispatcher;
+        if (!dispatcher?.publish) return;
+        if (!exit?.targetRegion) return;
+        dispatcher.publish('user:regionMove', {
+            sourceRegion: sourceRegion ?? this.currentRegionId,
+            targetRegion: exit.targetRegion,
+            exitName: exit.exitName ?? null,
+        }, { initialTarget: 'bottom' });
     }
 
     /**
@@ -1426,8 +1468,11 @@ export class MazeRoomUI {
             this.currentRegionId = null;
             // Re-point the visualizer at the freshly-generated world so
             // its step log starts clean and pathfinding sees the new
-            // tile layout.
-            this._visualizer?.setWorld(world, null);
+            // tile layout. Pass freshStart: true to clear any
+            // inventory carried over from a prior playback session
+            // (e.g., if the user was running through preset regions
+            // before clicking Generate).
+            this._visualizer?.setWorld(world, null, { freshStart: true });
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
         }

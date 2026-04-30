@@ -42,12 +42,26 @@ const STEP_DELTAS = {
 const DEFAULT_RATE_HZ = 4;
 
 export class MazeRoomVisualizer {
-    constructor({ eventBus = null, onStateChange = null } = {}) {
+    constructor({ eventBus = null, onStateChange = null, onExitCross = null } = {}) {
         this._eventBus = eventBus;
         this._onStateChange = onStateChange;
+        // Called when the visualizer steps onto an exit tile that has
+        // a targetRegion. Caller (the panel) translates this into a
+        // user:regionMove dispatcher publish so the procgen player
+        // loads the next region — same flow as keyboard exit-cross.
+        // The visualizer pauses its clock until setWorld arrives with
+        // the new region; see _awaitingRegionLoad below.
+        this._onExitCross = onExitCross;
         this._clock = new PlaybackClock({ onTick: () => this._tick() });
         this._world = null;
         this._regionId = null;
+        // Cross-region pause: set when an exit_cross event with a
+        // targetRegion fires and onExitCross was called. Cleared by
+        // setWorld when the new region's world arrives. While true,
+        // _tick early-returns so the visualizer doesn't keep ticking
+        // (and accidentally hit "no targets → completed") during the
+        // async region-load gap.
+        this._awaitingRegionLoad = false;
 
         this._state = null;            // { player_pos: {x,y}, turn }
         this._inventory = new Set();   // Set<itemId>
@@ -62,11 +76,48 @@ export class MazeRoomVisualizer {
         this._stuck = false;
     }
 
-    setWorld(world, regionId) {
+    /**
+     * Adopt a new region's world. By default preserves play state
+     * (inventory, checkedLocations, log, running clock) so a
+     * cross-region playthrough triggered by an exit-cross can
+     * continue seamlessly. Pass `freshStart: true` (or call
+     * `freshStart()`) when starting from scratch — e.g., the panel's
+     * Generate button.
+     */
+    setWorld(world, regionId, { freshStart = false } = {}) {
         const same = this._world === world && this._regionId === regionId;
         this._world = world ?? null;
         this._regionId = regionId ?? null;
-        if (!same) this.reset({ silent: false });
+        if (same) return;
+
+        if (freshStart) {
+            this.reset({ silent: false });
+            return;
+        }
+
+        // Continuation: keep inventory + checkedLocations + visited
+        // sets + log; reset position to new entrance and clear the
+        // pending region-load gate. If the clock was running, it
+        // keeps ticking — the next tick re-plans against the new
+        // world and (usually) finds a new target there.
+        this._state = this._world ? createState(this._world) : null;
+        this._target = null;
+        this._plan = [];
+        this._planIdx = 0;
+        this._completed = false;
+        this._stuck = false;
+        this._awaitingRegionLoad = false;
+        this._publishSnapshot();
+        this._notifyChange();
+    }
+
+    /**
+     * Full reset entry point — clears everything including inventory.
+     * Used by the Reset button on the playback control bar and by
+     * panel-Generate (where we want a clean session).
+     */
+    freshStart() {
+        this.reset({ silent: false });
     }
 
     reset({ silent = false } = {}) {
@@ -82,6 +133,7 @@ export class MazeRoomVisualizer {
         this._log = [];
         this._completed = false;
         this._stuck = false;
+        this._awaitingRegionLoad = false;
         this._publishSnapshot();
         if (!silent) this._notifyChange();
     }
@@ -138,6 +190,12 @@ export class MazeRoomVisualizer {
     // --- per-tick logic ---
 
     _tick() {
+        if (this._awaitingRegionLoad) {
+            // Region load is in flight — wait for setWorld to clear
+            // the gate. The clock keeps running so we resume
+            // automatically once the new region arrives.
+            return;
+        }
         if (!this._world || !this._state || this._completed || this._stuck) {
             this._clock.stop();
             return;
@@ -227,6 +285,15 @@ export class MazeRoomVisualizer {
                 targetRegion: exit?.targetRegion ?? null,
                 description: `Crossed exit ${exit?.exitName ?? ev.exit_id}${exit?.targetRegion ? ` → ${exit.targetRegion}` : ''}.`,
             });
+            // If this exit connects to another region, fire the
+            // cross-region callback (panel publishes user:regionMove).
+            // Pause the visualizer until setWorld arrives with the
+            // new region's world so we don't tick into a "no targets"
+            // completion during the async load.
+            if (exit?.targetRegion && this._onExitCross) {
+                this._awaitingRegionLoad = true;
+                this._onExitCross(exit, this._regionId);
+            }
             return `exit ${exit?.exitName ?? ev.exit_id}`;
         }
         return null;

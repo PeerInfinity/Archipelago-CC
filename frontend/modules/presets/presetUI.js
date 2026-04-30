@@ -403,6 +403,21 @@ const PRESET_STYLES = `
     background: #111;
     border-radius: 3px;
 }
+.playback-bot-status {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'Consolas', 'Courier New', monospace;
+    padding: 4px 6px;
+    background: #111;
+    border-radius: 3px;
+}
+.playback-bot-hint {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #777;
+    font-style: italic;
+}
 .playback-bot-log {
     margin-top: 6px;
     max-height: 200px;
@@ -2476,11 +2491,15 @@ export class PresetUI {
           const sphereState = getSphereStateSingleton();
           return sphereState?.getSphereData?.() ?? [];
         },
+        // Bot publishes playback:command events that the maze panel
+        // subscribes to. Single-trigger from this widget drives the
+        // visualizer over there; cross-region playback rides the
+        // existing exit-cross → user:regionMove flow.
+        eventBus: this.eventBus,
       });
     }
     const botEl = this._playbackBot.getElement();
     if (botEl) host.appendChild(botEl);
-    // Trigger a re-render so the cursor reflects current sphere data.
     if (typeof this._playbackBot._render === 'function') {
       this._playbackBot._render();
     }

@@ -54,9 +54,6 @@ class FakeElement {
         }
         return out;
     }
-    findButton(title) {
-        return this.queryAll((el) => el.tagName === 'BUTTON' && el.title === title)[0];
-    }
 }
 
 const fakeDocument = {
@@ -69,80 +66,101 @@ afterEach(() => { delete globalThis.document; });
 import { PlaybackBotUI } from './playbackBotUI.js';
 
 const SAMPLE_SPHERE_DATA = [
-    { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu', 'Overworld'], accessibleLocations: ['Free Loc'] },
+    { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
     { sphereIndex: 0, fractionalIndex: 1, locations: ['Free Loc'], accessibleRegions: [], accessibleLocations: ['Locked Loc'] },
-    { sphereIndex: 1, fractionalIndex: 1, locations: ['Locked Loc'], accessibleRegions: [], accessibleLocations: [] },
 ];
 
+function makeFakeBus() {
+    const events = [];
+    return {
+        events,
+        publish(topic, payload, publisher) {
+            events.push({ topic, payload, publisher });
+        },
+    };
+}
+
 describe('PlaybackBotUI — initialization', () => {
-    it('mounts with control bar + cursor + log', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
+    it('mounts with control bar and status display', () => {
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: makeFakeBus() });
         const root = bot.getElement();
         expect(root).toBeTruthy();
-        expect(root.findButton('Step')).toBeTruthy();
-        expect(root.findButton('Play')).toBeTruthy();
-        expect(root.findButton('Reset')).toBeTruthy();
-    });
-
-    it('starts with cursor at 0/N (idle)', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
-        const cursor = bot.getElement().queryAll((el) => el.className === 'playback-bot-cursor')[0];
-        expect(cursor.textContent).toMatch(/Cursor: idle/);
+        const status = root.queryAll((el) => el.className === 'playback-bot-status')[0];
+        expect(status?.textContent).toMatch(/2 entries/);
     });
 
     it('reports no sphere log when data is empty', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => [] });
-        const cursor = bot.getElement().queryAll((el) => el.className === 'playback-bot-cursor')[0];
-        expect(cursor.textContent).toMatch(/No sphere log loaded/);
+        const bot = new PlaybackBotUI({ getSphereData: () => [], eventBus: makeFakeBus() });
+        const status = bot.getElement().queryAll((el) => el.className === 'playback-bot-status')[0];
+        expect(status?.textContent).toMatch(/No sphere log loaded/);
     });
 });
 
-describe('PlaybackBotUI — stepping', () => {
-    it('step() advances the cursor by one entry', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
-        bot.step();
-        const cursor = bot.getElement().queryAll((el) => el.className === 'playback-bot-cursor')[0];
-        expect(cursor.textContent).toMatch(/Cursor: 1 \/ 3/);
+describe('PlaybackBotUI — publishes playback:command events', () => {
+    it('play() publishes play with a rate', () => {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+        bot.play(7);
+        const last = bus.events.at(-1);
+        expect(last.topic).toBe('playback:command');
+        expect(last.payload.command).toBe('play');
+        expect(last.payload.rateHz).toBe(7);
     });
 
-    it('instant() advances to the end and marks complete', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
-        bot.instant();
-        const cursor = bot.getElement().queryAll((el) => el.className === 'playback-bot-cursor')[0];
-        expect(cursor.textContent).toMatch(/complete/);
+    it('stop() publishes stop', () => {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+        bot.stop();
+        expect(bus.events.at(-1).payload.command).toBe('stop');
     });
 
-    it('reset() returns the cursor to idle and clears the log', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
+    it('step() publishes step', () => {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
         bot.step();
-        bot.step();
+        expect(bus.events.at(-1).payload.command).toBe('step');
+    });
+
+    it('reset() publishes reset', () => {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
         bot.reset();
-        const cursor = bot.getElement().queryAll((el) => el.className === 'playback-bot-cursor')[0];
-        expect(cursor.textContent).toMatch(/idle/);
+        expect(bus.events.at(-1).payload.command).toBe('reset');
     });
 
-    it('appends a step entry to the log on each step', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
-        bot.step();
-        bot.step();
-        const logRows = bot.getElement().queryAll((el) => el.className?.startsWith('playback-bot-log-entry'));
-        expect(logRows.length).toBe(2);
+    it('setRate() publishes setRate with rate', () => {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+        bot.setRate(12);
+        const last = bus.events.at(-1);
+        expect(last.payload.command).toBe('setRate');
+        expect(last.payload.rateHz).toBe(12);
     });
 
-    it('emits a done entry when stepping past the end', () => {
+    it('all events declare presets as the publisher module', () => {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+        bot.play(4);
+        bot.stop();
+        for (const ev of bus.events) {
+            expect(ev.publisher).toBe('presets');
+        }
+    });
+
+    it('survives a missing eventBus without throwing', () => {
         const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
-        for (let i = 0; i < SAMPLE_SPHERE_DATA.length + 2; i++) bot.step();
-        const logRows = bot.getElement().queryAll((el) => el.className === 'playback-bot-log-entry playback-bot-log-done');
-        expect(logRows.length).toBeGreaterThanOrEqual(1);
+        expect(() => bot.play()).not.toThrow();
     });
 });
 
-describe('PlaybackBotUI — completion handling', () => {
-    it('caps cursor at data.length and reports complete', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
-        bot.instant();
-        const cursor = bot.getElement().queryAll((el) => el.className === 'playback-bot-cursor')[0];
-        expect(cursor.textContent).toMatch(/3 \/ 3/);
-        expect(cursor.textContent).toMatch(/complete/);
+describe('PlaybackBotUI — destroy', () => {
+    it('detaches from parent and nulls element', () => {
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: makeFakeBus() });
+        const parent = new FakeElement('div');
+        parent.appendChild(bot.getElement());
+        expect(parent.children.length).toBe(1);
+        bot.destroy();
+        expect(parent.children.length).toBe(0);
+        expect(bot.getElement()).toBe(null);
     });
 });

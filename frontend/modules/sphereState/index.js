@@ -262,56 +262,64 @@ function handleRulesLoaded(data, propagationOptions) {
   log('info', `Extracted game: ${gameDir}, preset dir: ${presetDir}, seed: ${seedId}`);
 
   const sphereLogPath = `./presets/${gameDir}/${presetDir}/${seedId}_sphere_log.jsonl`;
-  log('info', `Attempting to auto-load sphere log from: ${sphereLogPath}`);
+  log('info', `Auto-loading sphere log: embedded-first, separate-file fallback (${sphereLogPath})`);
 
-  // Load sphere log (async, but we don't await)
-  sphereState.loadSphereLog(sphereLogPath).then(success => {
-    if (success) {
-      log('info', 'Sphere log auto-loaded successfully');
-    } else {
-      log('info', `Sphere log file missing; trying embedded fallback in rules.json (${sphereLogPath})`);
-      tryEmbeddedSphereLogFallback(sphereState, sourceName, sphereLogPath);
+  // Embedded-first priority: when the rules.json has its own
+  // sphere_log field (Phase 4 procgen output), use that directly to
+  // avoid a noisy 404 on the separate-file fetch. Only fall through
+  // to fetching `<seedId>_sphere_log.jsonl` when the embedded field
+  // is absent (e.g., older Python-generated presets that ship the
+  // sphere log as a sibling file).
+  loadEmbeddedFirstThenFile(sphereState, sourceName, sphereLogPath).then(success => {
+    if (!success) {
+      log('warn', `Sphere log unavailable: neither embedded nor separate file usable (${sphereLogPath})`);
     }
   });
 }
 
 /**
- * Phase 4 fallback: when no separate _sphere_log.jsonl is present,
- * re-fetch the rules.json (already loaded once into stateManager,
- * but re-fetched here so we can read the raw `sphere_log` field
- * without depending on stateManager's transformed staticData) and
- * load the embedded sphere log via preloadedContent. The fetch is
- * almost always a browser-cache hit since the rules.json was loaded
- * moments ago.
+ * Phase 4 loader: prefer the embedded sphere_log on the loaded
+ * rules.json, fall back to fetching the separate `.jsonl` file when
+ * absent. The embedded-first order avoids a noisy 404 in the
+ * common case where a procgen preset has only the embedded field.
+ *
+ * Returns a Promise resolving to true on success, false when neither
+ * source yields a usable sphere log.
  */
-function tryEmbeddedSphereLogFallback(sphereState, rulesPath, attemptedSphereLogPath) {
-  if (!rulesPath || typeof fetch !== 'function') {
-    log('warn', `Sphere log not found or failed to load: ${attemptedSphereLogPath}`);
-    return;
-  }
-  fetch(rulesPath)
-    .then((response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json();
-    })
-    .then((rulesDoc) => {
-      const entries = rulesDoc?.sphere_log;
-      if (!Array.isArray(entries) || entries.length === 0) {
-        log('warn', `No embedded sphere_log in rules.json (${rulesPath}); sphere log unavailable.`);
-        return;
-      }
-      const jsonlText = entries.map((e) => JSON.stringify(e)).join('\n');
-      sphereState.loadSphereLog(`embedded:${rulesPath}`, jsonlText).then((success) => {
-        if (success) {
-          log('info', `Embedded sphere log loaded from rules.json (${entries.length} entries).`);
-        } else {
-          log('warn', 'Embedded sphere log parse failed.');
+async function loadEmbeddedFirstThenFile(sphereState, rulesPath, separateFilePath) {
+  // Step 1: try the embedded field. The rules.json was loaded
+  // moments ago by stateManager, so the fetch is almost always a
+  // browser-cache hit. We re-parse rather than relying on stateManager's
+  // transformed staticData, which strips fields we don't index.
+  if (rulesPath && typeof fetch === 'function') {
+    try {
+      const response = await fetch(rulesPath);
+      if (response.ok) {
+        const rulesDoc = await response.json();
+        const entries = rulesDoc?.sphere_log;
+        if (Array.isArray(entries) && entries.length > 0) {
+          const jsonlText = entries.map((e) => JSON.stringify(e)).join('\n');
+          const ok = await sphereState.loadSphereLog(`embedded:${rulesPath}`, jsonlText);
+          if (ok) {
+            log('info', `Embedded sphere log loaded from rules.json (${entries.length} entries).`);
+            return true;
+          }
+          log('warn', 'Embedded sphere log parse failed; falling through to separate file.');
         }
-      });
-    })
-    .catch((err) => {
-      log('warn', `Could not load embedded sphere log fallback from ${rulesPath}: ${err.message}`);
-    });
+      }
+    } catch (err) {
+      log('warn', `Could not check embedded sphere log on ${rulesPath}: ${err.message}; falling through to separate file.`);
+    }
+  }
+
+  // Step 2: fall back to fetching the separate `.jsonl` file. This
+  // is the path Python-generated presets ship the sphere log on.
+  log('info', `Embedded sphere_log absent; trying separate file: ${separateFilePath}`);
+  const ok = await sphereState.loadSphereLog(separateFilePath);
+  if (ok) {
+    log('info', 'Sphere log loaded from separate file.');
+  }
+  return ok;
 }
 
 /**

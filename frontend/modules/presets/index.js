@@ -59,6 +59,10 @@ export function register(registrationApi) {
   // scrollIntoView the matching section.
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('spoilerChecklist:scrollToSphere');
+  // Phase 5 — playback bot in the procgen-data section publishes
+  // remote-control commands that the maze panel's visualizer
+  // subscribes to.
+  registrationApi.registerEventBusPublisher('playback:command');
 
   log('info', '[Presets Module] Registration complete.');
 }
