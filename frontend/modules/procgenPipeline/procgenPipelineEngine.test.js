@@ -599,7 +599,7 @@ describe('growMaze', () => {
             regionSize: { width: 6, height: 6 },
             itemPool: { key_red: 99 },
             obstaclePool: { door_red: 99 },
-            seed: 1,
+            seed: 24,
             growthParams: { maxRegions: 9, branchProbability: 1.0 },
         });
         // Some teleporter mappings should have been recorded (at

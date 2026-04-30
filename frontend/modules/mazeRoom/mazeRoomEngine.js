@@ -687,6 +687,59 @@ function reachableTiles(world, startState) {
     return out;
 }
 
+// Floor-only flood fill from the entrance: walls block, obstacles are
+// transparent. This matches what extractPathsAndObstacles consumes
+// (ghostStep semantics) — a target tile in this set is guaranteed to
+// have a non-empty path in the extracted rules. Used as the wall-
+// generator's feasibility predicate so no wall can isolate a target
+// from the entrance.
+function floorReachableSet(world) {
+    const visited = new Set([posKey(world.entrance.x, world.entrance.y)]);
+    const queue = [{ x: world.entrance.x, y: world.entrance.y }];
+    while (queue.length > 0) {
+        const p = queue.shift();
+        for (const input of INPUTS) {
+            const d = DELTAS[input];
+            const nx = p.x + d.dx;
+            const ny = p.y + d.dy;
+            if (!isFloor(world, nx, ny)) continue;
+            const k = posKey(nx, ny);
+            if (visited.has(k)) continue;
+            visited.add(k);
+            queue.push({ x: nx, y: ny });
+        }
+    }
+    return visited;
+}
+
+// Feasibility predicate for the wall generator: every exit AND every
+// item must be floor-connected to the entrance.
+//
+// "All exits" is load-bearing because the surrounding pipeline can
+// strip exits after generation (procgenPipelineEngine.wallOffUnusedExits
+// drops exits whose target neighbor cell never got built). If the
+// generator only required *any* exit reachable, walls would freely
+// isolate exits while another stayed reachable — and a later strip of
+// the still-reachable one would leave the surviving exit with no path,
+// compiling to a False_ access rule.
+//
+// "All items" is defense-in-depth: items are placed after the wall
+// generator runs (placeFromItems on a then-stable wall layout), so
+// world.items is empty during generateMaze and this branch is a no-op
+// at the current call sites. Keeping items in the contract makes the
+// helper safe to reuse if a future caller mutates walls after items
+// land.
+function allTargetsReachable(world) {
+    const reachable = floorReachableSet(world);
+    for (const e of world.exits.values()) {
+        if (!reachable.has(posKey(e.x, e.y))) return false;
+    }
+    for (const k of world.items.keys()) {
+        if (!reachable.has(k)) return false;
+    }
+    return true;
+}
+
 function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'key_red' } = {}) {
     // v1 gate-and-key targets a single exit. For multi-exit worlds we
     // pick the default (first-inserted) exit; the cut-vertex check
@@ -792,9 +845,7 @@ export function generateMaze(config) {
         };
     }
 
-    const start = createState(world);
-    const baseline = reach(world, bfsSolver, start, reachedExit);
-    if (!baseline.ok) {
+    if (!allTargetsReachable(world)) {
         throw new Error('generateMaze: entrance and exit not connected in empty room');
     }
 
@@ -823,8 +874,7 @@ export function generateMaze(config) {
         const edit = { type: 'add_wall', x: pick.x, y: pick.y };
         const token = apply(world, edit);
 
-        const feasible = reach(world, bfsSolver, createState(world), reachedExit);
-        if (!feasible.ok) {
+        if (!allTargetsReachable(world)) {
             undo(world, token);
             rejectedFeasibility += 1;
             stall += 1;
@@ -935,14 +985,28 @@ function pickReachableFloorTile(world, rng, excluded) {
     return candidates[Math.floor(rng.next() * candidates.length)];
 }
 
-// Colored key/door pairs the placer tries to realise via the
-// cut-vertex gate-and-key flow. Entries not present in a given
-// region's inputs are silently skipped.
-const COLORED_KEY_DOOR_PAIRS = Object.freeze([
-    { key_id: 'key_red',   door_id: 'door_red' },
-    { key_id: 'key_green', door_id: 'door_green' },
-    { key_id: 'key_blue',  door_id: 'door_blue' },
-]);
+// Single-key gate pairs the placer tries to realise via the cut-vertex
+// gate-and-key flow. Derived from the obstacle library at call time so
+// new colors (or non-color metaphors like gem/barrier, skeleton/padlock)
+// are picked up automatically — extend itemLib/obstacleLib and the
+// substrate auto-discovers the pair. Order follows obstacleLib insertion
+// order, which is deterministic for frozen library objects.
+//
+// "Single-key gate" means clear_set is exactly [[<one_item>]] — one
+// combo, one item. Multi-key gates (clear_set: [[a, b]]) are out of
+// scope here; those are handled by the logic-gate obstacle path
+// (placeFromRules) which is already fully rule-driven.
+export function deriveSingleKeyGatePairs(obstacleLib) {
+    const pairs = [];
+    for (const [door_id, entry] of Object.entries(obstacleLib)) {
+        if (!entry || entry.clear_set_type !== 'combo_list') continue;
+        const cs = entry.clear_set;
+        if (!Array.isArray(cs) || cs.length !== 1) continue;
+        if (!Array.isArray(cs[0]) || cs[0].length !== 1) continue;
+        pairs.push({ key_id: cs[0][0], door_id });
+    }
+    return pairs;
+}
 
 /**
  * Substrate adapter — core.
@@ -1122,9 +1186,11 @@ export function placeFromItems(world, input = {}) {
         gateKeyMinBeforeDoor: params.gateKeyMinBeforeDoor ?? 2,
     };
 
-    // Try to place one key-and-door pair per color that has both
-    // sides of the pair in the inputs.
-    for (const { key_id, door_id } of COLORED_KEY_DOOR_PAIRS) {
+    // Try to place one key-and-door pair per single-key gate that has
+    // both sides of the pair in the inputs. Pairs are derived from the
+    // obstacle library, so any colored or metaphorical key/door entries
+    // present in world.obstacleLib are picked up.
+    for (const { key_id, door_id } of deriveSingleKeyGatePairs(world.obstacleLib)) {
         if (!remaining_obstacles.includes(door_id) || !remaining_items.includes(key_id)) continue;
         const result = placeGateAndKey(world, rng, pgParams, { key_id, door_id });
         if (!result.placed) continue;

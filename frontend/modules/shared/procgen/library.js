@@ -52,6 +52,30 @@ export const DEFAULT_ITEMS = Object.freeze({
         symbol: 'key',
         feature: 'colored_doors_and_keys',
     },
+    key_yellow: {
+        name: 'Yellow Key',
+        id: 'key_yellow',
+        classification: 'progression',
+        color: '#d8b820',
+        symbol: 'key',
+        feature: 'colored_doors_and_keys',
+    },
+    key_purple: {
+        name: 'Purple Key',
+        id: 'key_purple',
+        classification: 'progression',
+        color: '#a040c0',
+        symbol: 'key',
+        feature: 'colored_doors_and_keys',
+    },
+    key_orange: {
+        name: 'Orange Key',
+        id: 'key_orange',
+        classification: 'progression',
+        color: '#d87830',
+        symbol: 'key',
+        feature: 'colored_doors_and_keys',
+    },
 });
 
 export const DEFAULT_OBSTACLES = Object.freeze({
@@ -77,6 +101,30 @@ export const DEFAULT_OBSTACLES = Object.freeze({
         clear_set_type: 'combo_list',
         clear_set: [['key_blue']],
         color: '#404080',
+        feature: 'colored_doors_and_keys',
+    },
+    door_yellow: {
+        name: 'Yellow Door',
+        id: 'door_yellow',
+        clear_set_type: 'combo_list',
+        clear_set: [['key_yellow']],
+        color: '#a08018',
+        feature: 'colored_doors_and_keys',
+    },
+    door_purple: {
+        name: 'Purple Door',
+        id: 'door_purple',
+        clear_set_type: 'combo_list',
+        clear_set: [['key_purple']],
+        color: '#803090',
+        feature: 'colored_doors_and_keys',
+    },
+    door_orange: {
+        name: 'Orange Door',
+        id: 'door_orange',
+        clear_set_type: 'combo_list',
+        clear_set: [['key_orange']],
+        color: '#b06018',
         feature: 'colored_doors_and_keys',
     },
     // Template for logic-gate obstacles. Per-instance gates are

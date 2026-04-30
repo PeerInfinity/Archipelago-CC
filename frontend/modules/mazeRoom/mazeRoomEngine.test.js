@@ -22,6 +22,7 @@ import {
     detectStepEvents,
     getDefaultExit,
     clockwisePerimeterTiles,
+    deriveSingleKeyGatePairs,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -721,6 +722,57 @@ describe('generateRegionCore', () => {
     });
 });
 
+describe('deriveSingleKeyGatePairs', () => {
+    it('extracts pairs from the default obstacle library', () => {
+        const pairs = deriveSingleKeyGatePairs(DEFAULT_OBSTACLES);
+        const ids = pairs.map((p) => `${p.key_id}->${p.door_id}`).sort();
+        expect(ids).toEqual([
+            'key_blue->door_blue',
+            'key_green->door_green',
+            'key_orange->door_orange',
+            'key_purple->door_purple',
+            'key_red->door_red',
+            'key_yellow->door_yellow',
+        ]);
+    });
+
+    it('discovers custom-named pairs (non-color metaphor)', () => {
+        const lib = {
+            barrier_lava: {
+                clear_set_type: 'combo_list',
+                clear_set: [['gem_volcanic']],
+            },
+            padlock: {
+                clear_set_type: 'combo_list',
+                clear_set: [['skeleton_key']],
+            },
+        };
+        const pairs = deriveSingleKeyGatePairs(lib);
+        expect(pairs).toEqual([
+            { key_id: 'gem_volcanic', door_id: 'barrier_lava' },
+            { key_id: 'skeleton_key', door_id: 'padlock' },
+        ]);
+    });
+
+    it('skips multi-key combo gates (left to logic-gate path)', () => {
+        const lib = {
+            door_red: { clear_set_type: 'combo_list', clear_set: [['key_red']] },
+            // Two combos (OR) — not a single-key gate.
+            door_either: { clear_set_type: 'combo_list', clear_set: [['key_a'], ['key_b']] },
+            // One combo with two items (AND) — not a single-key gate.
+            door_both: { clear_set_type: 'combo_list', clear_set: [['key_a', 'key_b']] },
+            // Logic-gate (rule-based) — different clear_set_type entirely.
+            logic_gate: { clear_set_type: 'rule', clear_rule: null },
+        };
+        const pairs = deriveSingleKeyGatePairs(lib);
+        expect(pairs).toEqual([{ key_id: 'key_red', door_id: 'door_red' }]);
+    });
+
+    it('handles an empty library without throwing', () => {
+        expect(deriveSingleKeyGatePairs({})).toEqual([]);
+    });
+});
+
 describe('placeFromItems', () => {
     const freshCore = (overrides = {}) => generateRegionCore({
         region_id: 'r',
@@ -772,6 +824,30 @@ describe('placeFromItems', () => {
         const obstacleIds = out.placed_obstacles.map((p) => p.obstacle_id).sort();
         expect(itemIds).toEqual(['key_blue', 'key_green']);
         expect(obstacleIds).toEqual(['door_blue', 'door_green']);
+    });
+
+    it('places a pair from a custom obstacle library entry (not red/green/blue)', () => {
+        // Add a "yellow" pair via a custom library; the substrate
+        // should auto-discover it from the obstacle's clear_set rather
+        // than relying on a hardcoded color list.
+        const itemLib = {
+            key_yellow: { id: 'key_yellow', classification: 'progression' },
+        };
+        const obstacleLib = {
+            door_yellow: {
+                id: 'door_yellow',
+                clear_set_type: 'combo_list',
+                clear_set: [['key_yellow']],
+            },
+        };
+        const { world } = freshCore({ item_lib: itemLib, obstacle_lib: obstacleLib });
+        const out = placeFromItems(world, {
+            items_to_place: ['key_yellow'],
+            obstacles_to_place: ['door_yellow'],
+            rng: createRng(1),
+        });
+        expect(out.placed_items.map((p) => p.item_id)).toEqual(['key_yellow']);
+        expect(out.placed_obstacles.map((p) => p.obstacle_id)).toEqual(['door_yellow']);
     });
 
     it('places extra unpaired items on reachable floor tiles', () => {
@@ -1131,6 +1207,35 @@ describe('generateMaze', () => {
         const b = generateMaze({ width: 10, height: 8, seed: 17 });
         expect(a.stats.doorPos).toEqual(b.stats.doorPos);
         expect(a.stats.keyPos).toEqual(b.stats.keyPos);
+    });
+
+    it('every exit reachable from entrance with multiple exits (regression)', () => {
+        // Pre-fix: feasibility check accepted walls if *any* exit was
+        // BFS-reachable. With multi-exit input the walker biased toward
+        // one exit and walls were freely placed isolating others. After
+        // wallOffUnusedExits stripped the still-reachable exit, the
+        // surviving exit could end up unreachable, compiling to False_.
+        // Repro: 8x6 with N + E exits across many seeds.
+        let unreachable = 0, total = 0;
+        for (let seed = 1; seed <= 30; seed++) {
+            const { world } = generateMaze({
+                width: 8, height: 6, seed,
+                exits: [
+                    { exit_id: 'exit_n', side: 'N', x: 2, y: 0 },
+                    { exit_id: 'exit_e', side: 'E', x: 7, y: 3 },
+                ],
+                entrance: { x: 4, y: 3 },
+                params: { placeGateAndKey: false },
+            });
+            for (const e of world.exits.values()) {
+                total += 1;
+                const r = reach(world, bfsSolver, createState(world),
+                    (s) => s.player_pos.x === e.x && s.player_pos.y === e.y);
+                if (!r.ok) unreachable += 1;
+            }
+        }
+        expect(total).toBe(60);
+        expect(unreachable).toBe(0);
     });
 
     it('terminates on stall_limit when the grid gets crowded', () => {
