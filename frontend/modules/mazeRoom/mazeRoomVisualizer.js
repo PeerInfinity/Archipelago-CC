@@ -42,7 +42,7 @@ const STEP_DELTAS = {
 const DEFAULT_RATE_HZ = 4;
 
 export class MazeRoomVisualizer {
-    constructor({ eventBus = null, onStateChange = null, onExitCross = null } = {}) {
+    constructor({ eventBus = null, onStateChange = null, onExitCross = null, onLocationCheck = null } = {}) {
         this._eventBus = eventBus;
         this._onStateChange = onStateChange;
         // Called when the visualizer steps onto an exit tile that has
@@ -52,6 +52,17 @@ export class MazeRoomVisualizer {
         // The visualizer pauses its clock until setWorld arrives with
         // the new region; see _awaitingRegionLoad below.
         this._onExitCross = onExitCross;
+        // Symmetric to _onExitCross but for pickups: called when the
+        // visualizer steps onto an item tile and the item has a
+        // locationName. The panel converts this into a
+        // user:locationCheck dispatcher publish — without it, bot-
+        // driven pickups never reach stateManager (which means the
+        // bot's onLocationCheck handler never fires either, and the
+        // bot's queue cursor stalls). Keyboard play handles this
+        // through _publishPlaybackEvents in the panel; the visualizer
+        // ticks bypass that path so this callback is the bot-mode
+        // equivalent.
+        this._onLocationCheck = onLocationCheck;
         this._clock = new PlaybackClock({ onTick: () => this._tick() });
         this._world = null;
         this._regionId = null;
@@ -353,6 +364,13 @@ export class MazeRoomVisualizer {
                 position: { ...ev.position },
                 description: `Picked up ${itemId}${locationName ? ` at "${locationName}"` : ''}.`,
             });
+            // Notify the panel so it can publish user:locationCheck on
+            // the dispatcher. The panel guards against duplicate
+            // publishes via stateManager's checkedLocations, so a
+            // missing locationName here is a benign no-op.
+            if (locationName && this._onLocationCheck) {
+                this._onLocationCheck(locationName, itemId, this._regionId);
+            }
             return `pickup ${itemId}`;
         }
         if (ev.type === 'exit_cross') {

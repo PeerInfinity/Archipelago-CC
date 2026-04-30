@@ -206,6 +206,45 @@ describe('MazeRoomVisualizer — playback events', () => {
         const smEvents = bus.events.filter((e) => e.topic === 'stateManager:snapshotUpdated');
         expect(smEvents.length).toBe(0);
     });
+
+    it('fires onLocationCheck when stepping onto a named-pickup tile', () => {
+        // Bot-driven playback regression: without this callback, the
+        // panel never publishes user:locationCheck for visualizer
+        // pickups (only keyboard play does, via _publishPlaybackEvents).
+        // The bot then waits forever for an event that never fires.
+        const events = [];
+        const v = new MazeRoomVisualizer({
+            onLocationCheck: (locationName, itemId, regionId) => {
+                events.push({ locationName, itemId, regionId });
+            },
+        });
+        const world = makeOpenWorld(3, 1);
+        setItem(world, 2, 0, 'key_red');
+        if (!world.itemLocationNames) world.itemLocationNames = new Map();
+        world.itemLocationNames.set('2,0', 'Pickup A');
+        v.setWorld(world, 'TestRegion');
+        v.instant();
+        expect(events).toEqual([
+            { locationName: 'Pickup A', itemId: 'key_red', regionId: 'TestRegion' },
+        ]);
+    });
+
+    it('skips onLocationCheck when the picked-up tile has no locationName', () => {
+        // Generate dev flow: items placed without itemLocationNames
+        // shouldn't fire dispatcher events (no AP-canonical name to
+        // attach the check to).
+        const events = [];
+        const v = new MazeRoomVisualizer({
+            onLocationCheck: (locationName, itemId, regionId) => {
+                events.push({ locationName, itemId, regionId });
+            },
+        });
+        const world = makeOpenWorld(3, 1);
+        setItem(world, 2, 0, 'key_red');     // no itemLocationNames entry
+        v.setWorld(world, 'R');
+        v.instant();
+        expect(events).toEqual([]);
+    });
 });
 
 describe('MazeRoomVisualizer — controls', () => {

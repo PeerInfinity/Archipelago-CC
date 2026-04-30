@@ -174,6 +174,8 @@ export class MazeRoomUI {
             eventBus,
             onStateChange: () => this._onVisualizerChange(),
             onExitCross: (exit, sourceRegion) => this._onVisualizerExitCross(exit, sourceRegion),
+            onLocationCheck: (locationName, itemId, regionId) =>
+                this._onVisualizerLocationCheck(locationName, itemId, regionId),
         });
 
         // Fog of war. When enabled, only tiles in the seen-set for
@@ -630,6 +632,30 @@ export class MazeRoomUI {
             sourceRegion: sourceRegion ?? this.currentRegionId,
             targetRegion: exit.targetRegion,
             exitName: exit.exitName ?? null,
+        }, { initialTarget: 'bottom' });
+    }
+
+    /**
+     * Visualizer picked up an item with a known locationName. Mirror
+     * the keyboard-play _publishPlaybackEvents path: publish
+     * user:locationCheck on the dispatcher so stateManager records
+     * the check and the playback bot's onLocationCheck advances its
+     * cursor. Without this, bot-driven playback stalls on the first
+     * pickup — the visualizer's internal state updates but no event
+     * reaches the rest of the app.
+     *
+     * stateManager already de-duplicates against its checkedLocations
+     * set, so re-publishing for an already-checked location is a
+     * benign no-op.
+     */
+    _onVisualizerLocationCheck(locationName, itemId, regionId) {
+        const dispatcher = this.apis?.dispatcher;
+        if (!dispatcher?.publish) return;
+        if (!locationName) return;
+        dispatcher.publish('user:locationCheck', {
+            locationName,
+            regionName: regionId ?? this.currentRegionId,
+            itemId: itemId ?? null,
         }, { initialTarget: 'bottom' });
     }
 

@@ -272,6 +272,62 @@ describe('MazeRoomUI — walkTo command resolution', () => {
     });
 });
 
+describe('MazeRoomUI — visualizer pickup → user:locationCheck dispatch', () => {
+    let calls;
+    function fakeApis() {
+        return {
+            dispatcher: {
+                publish: (topic, payload, options) => calls.push({ topic, payload, options }),
+            },
+            eventBus: { publish: () => {}, subscribe: () => {}, unsubscribe: () => {} },
+        };
+    }
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+        calls = [];
+        // The panel reads dispatcher via the static moduleApis hook;
+        // setModuleApis is the test-friendly way to wire a stub.
+        MazeRoomUI.setModuleApis(fakeApis());
+    });
+
+    it('publishes user:locationCheck with locationName + itemId + regionName', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({}),
+            arrivedFrom: null,
+        });
+        panel._onVisualizerLocationCheck('Slay Yorgle', 'sword', 'Overworld');
+        expect(calls).toHaveLength(1);
+        expect(calls[0].topic).toBe('user:locationCheck');
+        expect(calls[0].payload).toEqual({
+            locationName: 'Slay Yorgle',
+            regionName: 'Overworld',
+            itemId: 'sword',
+        });
+        expect(calls[0].options).toEqual({ initialTarget: 'bottom' });
+    });
+
+    it('falls back to currentRegionId when regionId is missing', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'CurrentRegion',
+            world: makeWorld({}),
+            arrivedFrom: null,
+        });
+        panel._onVisualizerLocationCheck('SomeLoc', 'key_red', null);
+        expect(calls[0].payload.regionName).toBe('CurrentRegion');
+    });
+
+    it('drops the publish when no locationName is provided', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel._onVisualizerLocationCheck(null, 'key_red', 'A');
+        panel._onVisualizerLocationCheck('', 'key_red', 'A');
+        expect(calls).toEqual([]);
+    });
+});
+
 describe('MazeRoomUI — discovery filtering helpers', () => {
     beforeEach(() => {
         _testOnly_resetModuleState();
