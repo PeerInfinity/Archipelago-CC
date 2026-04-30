@@ -3,6 +3,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { getActiveBot } from '../playbackBot/playbackBotUI.js';
 
 let _moduleEventBus = null;
+let _moduleDispatcher = null;
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -71,20 +72,40 @@ export function register(registrationApi) {
   // itself is a UI widget mounted inside this panel rather than its
   // own module, so it can't register dispatcher receivers directly;
   // we forward here to whichever bot is currently mounted via the
-  // module-scope getActiveBot() registry. Both receivers are passive
-  // forwards: they don't mutate the event or its propagation, just
-  // peek at it before/while it walks the chain. See
+  // module-scope getActiveBot() registry. See
   // NewDocs/plans/procedural-generation/sphere-log-playback.md.
+  //
+  // Two important quirks of the dispatcher chain:
+  //   1. The first matching handler must call publishToNextModule for
+  //      the chain to propagate. presets has the highest priority
+  //      index of any module that listens to these events, so without
+  //      this propagation stateManager (lowest priority) never sees
+  //      the event and its inventory snapshot stays stale.
+  //   2. PathFinder.findPathWithExits evaluates exit access rules
+  //      against stateManager's current snapshot. So we have to
+  //      propagate FIRST (so stateManager updates synchronously), and
+  //      only then call the bot. Otherwise the bot routes against
+  //      stale inventory and trips on the next gated exit.
   registrationApi.registerDispatcherReceiver(
     'presets',
     'user:locationCheck',
-    (data) => { try { getActiveBot()?.onLocationCheck?.(data); } catch (e) { log('warn', 'bot.onLocationCheck threw', e); } },
+    (data) => {
+      try {
+        _moduleDispatcher?.publishToNextModule?.('presets', 'user:locationCheck', data, { direction: 'up' });
+      } catch (e) { log('warn', 'presets: locationCheck propagation threw', e); }
+      try { getActiveBot()?.onLocationCheck?.(data); } catch (e) { log('warn', 'bot.onLocationCheck threw', e); }
+    },
     { direction: 'up', condition: 'unconditional', timing: 'immediate' },
   );
   registrationApi.registerDispatcherReceiver(
     'presets',
     'user:regionMove',
-    (data) => { try { getActiveBot()?.onRegionMove?.(data); } catch (e) { log('warn', 'bot.onRegionMove threw', e); } },
+    (data) => {
+      try {
+        _moduleDispatcher?.publishToNextModule?.('presets', 'user:regionMove', data, { direction: 'up' });
+      } catch (e) { log('warn', 'presets: regionMove propagation threw', e); }
+      try { getActiveBot()?.onRegionMove?.(data); } catch (e) { log('warn', 'bot.onRegionMove threw', e); }
+    },
     { direction: 'up', condition: 'unconditional', timing: 'immediate' },
   );
 
@@ -104,6 +125,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   );
 
   _moduleEventBus = initializationApi.getEventBus();
+  _moduleDispatcher = initializationApi.getDispatcher?.() ?? null;
 
   log('info', '[Presets Module] Initialization complete.');
 
