@@ -63,7 +63,7 @@ const fakeDocument = {
 beforeEach(() => { globalThis.document = fakeDocument; });
 afterEach(() => { delete globalThis.document; });
 
-import { PlaybackBotUI } from './playbackBotUI.js';
+import { PlaybackBotUI, buildLocationIndex, buildSphereQueue } from './playbackBotUI.js';
 
 const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
@@ -150,6 +150,120 @@ describe('PlaybackBotUI — publishes playback:command events', () => {
     it('survives a missing eventBus without throwing', () => {
         const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
         expect(() => bot.play()).not.toThrow();
+    });
+});
+
+describe('buildLocationIndex', () => {
+    it('maps every location to its region', () => {
+        const staticData = {
+            regions: new Map([
+                ['Menu', { exits: [], locations: [] }],
+                ['region_2_2', {
+                    locations: [
+                        { name: 'region_2_2__key_red_pickup__4_4', id: 1 },
+                        { name: 'region_2_2__key_green_pickup__7_3', id: 2 },
+                    ],
+                }],
+                ['region_3_2', {
+                    locations: [{ name: 'region_3_2__key_blue_pickup__5_9', id: 3 }],
+                }],
+            ]),
+        };
+        const idx = buildLocationIndex(staticData);
+        expect(idx.size).toBe(3);
+        expect(idx.get('region_2_2__key_red_pickup__4_4')).toBe('region_2_2');
+        expect(idx.get('region_2_2__key_green_pickup__7_3')).toBe('region_2_2');
+        expect(idx.get('region_3_2__key_blue_pickup__5_9')).toBe('region_3_2');
+    });
+
+    it('skips regions without a locations array', () => {
+        const staticData = {
+            regions: new Map([
+                ['Menu', { exits: [{ name: 'GameStart' }] }],   // no `locations`
+                ['region_a', { locations: [{ name: 'Loc A' }] }],
+            ]),
+        };
+        const idx = buildLocationIndex(staticData);
+        expect(idx.size).toBe(1);
+        expect(idx.get('Loc A')).toBe('region_a');
+    });
+
+    it('skips locations without a name', () => {
+        const staticData = {
+            regions: new Map([
+                ['region_a', { locations: [
+                    { name: 'Loc A', id: 1 },
+                    { id: 2 },                  // unnamed — defensive
+                    { name: 'Loc B', id: 3 },
+                ] }],
+            ]),
+        };
+        const idx = buildLocationIndex(staticData);
+        expect(idx.size).toBe(2);
+        expect(idx.get('Loc A')).toBe('region_a');
+        expect(idx.get('Loc B')).toBe('region_a');
+    });
+
+    it('returns an empty Map when staticData has no regions', () => {
+        expect(buildLocationIndex({}).size).toBe(0);
+        expect(buildLocationIndex(null).size).toBe(0);
+        expect(buildLocationIndex({ regions: null }).size).toBe(0);
+    });
+});
+
+describe('buildSphereQueue', () => {
+    function idx(...pairs) {
+        return new Map(pairs);
+    }
+
+    it('flattens multi-sphere entries in order', () => {
+        const data = [
+            { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A', 'Loc B'] },
+            { sphereIndex: 1, fractionalIndex: 0, locations: ['Loc C'] },
+            { sphereIndex: 1, fractionalIndex: 1, locations: ['Loc D'] },
+        ];
+        const queue = buildSphereQueue(data, idx(
+            ['Loc A', 'rA'], ['Loc B', 'rB'], ['Loc C', 'rC'], ['Loc D', 'rD'],
+        ));
+        expect(queue.map((e) => e.locationName)).toEqual(['Loc A', 'Loc B', 'Loc C', 'Loc D']);
+        expect(queue.map((e) => e.regionName)).toEqual(['rA', 'rB', 'rC', 'rD']);
+    });
+
+    it('preserves sphereIndex / fractionalIndex on every entry', () => {
+        const data = [
+            { sphereIndex: 0, fractionalIndex: 3, locations: ['Loc A'] },
+        ];
+        const queue = buildSphereQueue(data, idx(['Loc A', 'rA']));
+        expect(queue[0]).toEqual({
+            locationName: 'Loc A',
+            regionName: 'rA',
+            sphereIndex: 0,
+            fractionalIndex: 3,
+        });
+    });
+
+    it('drops locations whose region is not in the index', () => {
+        const data = [
+            { sphereIndex: 0, fractionalIndex: 0, locations: ['Loc A', 'Mystery', 'Loc B'] },
+        ];
+        const queue = buildSphereQueue(data, idx(['Loc A', 'rA'], ['Loc B', 'rB']));
+        expect(queue.map((e) => e.locationName)).toEqual(['Loc A', 'Loc B']);
+    });
+
+    it('skips entries without a locations array (e.g. metadata or empty sphere)', () => {
+        const data = [
+            { sphereIndex: 0, fractionalIndex: 0 },         // no locations key
+            { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+            { sphereIndex: 0, fractionalIndex: 2, locations: [] },
+        ];
+        const queue = buildSphereQueue(data, idx(['Loc A', 'rA']));
+        expect(queue.map((e) => e.locationName)).toEqual(['Loc A']);
+    });
+
+    it('returns an empty queue for empty / invalid inputs', () => {
+        expect(buildSphereQueue([], new Map())).toEqual([]);
+        expect(buildSphereQueue(null, new Map())).toEqual([]);
+        expect(buildSphereQueue([{ locations: ['x'] }], null)).toEqual([]);
     });
 });
 

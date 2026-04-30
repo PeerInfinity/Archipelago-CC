@@ -24,6 +24,74 @@ const DEFAULT_RATE_HZ = 4;
 const PLAYBACK_COMMAND_EVENT = 'playback:command';
 const PUBLISHER_MODULE = 'presets';
 
+/**
+ * Build a Map<locationName, regionName> from stateManager's static
+ * region data. Used by the bot to answer "which region does the next
+ * sphere-log location live in?" without parsing names.
+ *
+ * `staticData.regions` is a Map<regionName, regionData> populated from
+ * rules.json's per-player regions block; each regionData has a
+ * `locations: [{ name, ... }]` array. Locations without a name are
+ * skipped (defensive — shouldn't happen for a well-formed rules.json).
+ *
+ * Pure function — exported for testing.
+ */
+export function buildLocationIndex(staticData) {
+    const index = new Map();
+    const regions = staticData?.regions;
+    if (!regions || typeof regions.entries !== 'function') return index;
+    for (const [regionName, regionData] of regions.entries()) {
+        const locations = regionData?.locations;
+        if (!Array.isArray(locations)) continue;
+        for (const loc of locations) {
+            if (!loc?.name) continue;
+            index.set(loc.name, regionName);
+        }
+    }
+    return index;
+}
+
+/**
+ * Flatten a sphere log into an ordered queue of locations the bot
+ * should visit, in the order the AP fill assigned them.
+ *
+ * Consumes the parsed shape that `sphereState.getSphereData()`
+ * returns (already filtered to state_update entries, already
+ * scoped to the current player, already sorted by sphere index):
+ *   [{ sphereIndex, fractionalIndex, locations: [name, ...], ... }]
+ *
+ * Locations whose region can't be resolved via the index are dropped
+ * with no fanfare; the caller is expected to log if it cares (the
+ * bot does, in its play loop).
+ *
+ * Pure function — exported for testing.
+ *
+ * Returns: [{ locationName, regionName, sphereIndex, fractionalIndex }, ...]
+ *   sphereIndex / fractionalIndex are preserved verbatim so the bot's
+ *   status line can show "Sphere 0.3 → ..." instead of just a queue
+ *   index.
+ */
+export function buildSphereQueue(sphereData, locationIndex) {
+    const queue = [];
+    if (!Array.isArray(sphereData)) return queue;
+    if (!locationIndex || typeof locationIndex.get !== 'function') return queue;
+    for (const entry of sphereData) {
+        const locations = entry?.locations;
+        if (!Array.isArray(locations)) continue;
+        for (const locationName of locations) {
+            const regionName = locationIndex.get(locationName);
+            if (!regionName) continue;
+            queue.push({
+                locationName,
+                regionName,
+                sphereIndex: entry.sphereIndex ?? null,
+                fractionalIndex: entry.fractionalIndex ?? null,
+            });
+        }
+    }
+    return queue;
+}
+
 export class PlaybackBotUI {
     constructor({ getSphereData, eventBus = null } = {}) {
         this._getSphereData = getSphereData;
