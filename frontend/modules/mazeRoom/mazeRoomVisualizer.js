@@ -24,6 +24,7 @@ import {
     step,
     detectStepEvents,
     getObstacle,
+    getExitAt,
     isFloor,
     createState,
 } from './mazeRoomEngine.js';
@@ -227,6 +228,32 @@ export class MazeRoomVisualizer {
         this._externallyControlled = true;
         if (!this._world || !this._state) return;
         if (x === this._state.player_pos.x && y === this._state.player_pos.y) {
+            // Already on the target tile. Two cases:
+            //   - It's a regular floor / location tile: nothing to do.
+            //     The caller's "we're already there" check sees null
+            //     target and moves on.
+            //   - It's an exit tile with a targetRegion: the caller
+            //     (typically the bot) wants us to *cross*, but we
+            //     can't trigger an exit_cross by stepping in place —
+            //     detectStepEvents needs a movement to fire. The
+            //     procgen pipeline mirrors back-exit tiles to the
+            //     entrance, so this case happens every time the bot
+            //     wants to leave a region the same way it arrived.
+            //     Fire the cross callback directly so the panel
+            //     publishes user:regionMove and the chain advances.
+            const exit = getExitAt(this._world, x, y);
+            if (exit?.targetRegion && this._onExitCross) {
+                this._visitedExits.add(exit.exit_id);
+                this._log.push({
+                    type: 'exit_cross',
+                    exit_id: exit.exit_id,
+                    exitName: exit.exitName ?? null,
+                    targetRegion: exit.targetRegion ?? null,
+                    description: `Crossed exit ${exit.exitName ?? exit.exit_id} → ${exit.targetRegion} (in place — caller redirected to back-exit on entrance tile).`,
+                });
+                this._awaitingRegionLoad = true;
+                this._onExitCross(exit, this._regionId);
+            }
             this._target = null;
             this._plan = [];
             this._planIdx = 0;
@@ -352,11 +379,26 @@ export class MazeRoomVisualizer {
     _handleEvent(ev) {
         if (ev.type === 'pickup') {
             const itemId = ev.itemId;
-            this._inventory.add(itemId);
             const key = `${ev.position.x},${ev.position.y}`;
-            this._visitedItemPositions.add(key);
             const locationName = this._world.itemLocationNames?.get(key);
+            // Repeat visit: the player already collected this location
+            // (either earlier in this run or via the panel-side
+            // _adoptLoadedRegion seeding from stateManager). Suppress
+            // the log entry, the onLocationCheck callback, and the
+            // step description's pickup tag — we want the trace to
+            // read like a plain step, matching keyboard-play behavior
+            // (_publishPlaybackEvents has the same checkedLocations
+            // guard). Mirroring this here also keeps stateManager from
+            // logging a "rejected" entry every time the bot walks back
+            // through an already-checked tile.
+            const alreadyChecked = locationName && this._checkedLocations.has(locationName);
+            // Inventory + visited-position tracking is idempotent and
+            // useful even on repeats (e.g. for fog-of-war seen-set
+            // bookkeeping), so update those unconditionally.
+            this._inventory.add(itemId);
+            this._visitedItemPositions.add(key);
             if (locationName) this._checkedLocations.add(locationName);
+            if (alreadyChecked) return null;
             this._log.push({
                 type: 'pickup',
                 itemId,
@@ -365,9 +407,8 @@ export class MazeRoomVisualizer {
                 description: `Picked up ${itemId}${locationName ? ` at "${locationName}"` : ''}.`,
             });
             // Notify the panel so it can publish user:locationCheck on
-            // the dispatcher. The panel guards against duplicate
-            // publishes via stateManager's checkedLocations, so a
-            // missing locationName here is a benign no-op.
+            // the dispatcher. Skipped on repeats above so the bot's
+            // cursor doesn't process the same location twice.
             if (locationName && this._onLocationCheck) {
                 this._onLocationCheck(locationName, itemId, this._regionId);
             }

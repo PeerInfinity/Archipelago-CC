@@ -595,6 +595,92 @@ describe('PlaybackBotUI — rendered status line', () => {
     });
 });
 
+describe('PlaybackBotUI — append-only log', () => {
+    function makeBot() {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+                { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc B'] },
+            ],
+            getStaticData: () => ({ regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A' }] }],
+                ['region_b', { locations: [{ name: 'Loc B' }] }],
+            ]) }),
+            eventBus: bus,
+            pathFinder: { findPathWithExits: (from, to) => ({ steps: [
+                { region: from, exitUsed: null },
+                { region: to, exitUsed: `${from}_to_${to}` },
+            ], length: 1 }) },
+        });
+        return { bot, bus };
+    }
+
+    function logEntries(bot) {
+        const logEl = bot.getElement().queryAll((el) => el.className === 'playback-bot-log')[0];
+        return logEl?.children?.map((c) => c.textContent) ?? [];
+    }
+
+    it('appends a new entry when the bot transitions to a new state', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        // play() → walkTo location for queue head Loc A.
+        const log = bot.getLog();
+        expect(log).toEqual(['Sphere 0.1 → walking to "Loc A" (1/2)']);
+    });
+
+    it('records every distinct state transition in order', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();                                    // walking to Loc A
+        bot.onLocationCheck({ locationName: 'Loc A' }); // routing via region_a_to_region_b
+        bot.onRegionMove({ targetRegion: 'region_b' }); // walking to Loc B
+        bot.onLocationCheck({ locationName: 'Loc B' }); // finished
+        const log = bot.getLog();
+        expect(log).toEqual([
+            'Sphere 0.1 → walking to "Loc A" (1/2)',
+            'Sphere 0.2 → routing via "region_a_to_region_b" → region_b (2/2)',
+            'Sphere 0.2 → walking to "Loc B" (2/2)',
+            'finished — 2 locations visited',
+        ]);
+    });
+
+    it('dedupes consecutive identical status (mid-leg incidental events)', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        // Mid-leg: an unrelated location-check event arrives. The bot
+        // re-evaluates _publishNextWalkTo, which would compute the
+        // same status string (head unchanged). Log shouldn't grow.
+        bot.onLocationCheck({ locationName: 'Some unrelated location' });
+        bot.onLocationCheck({ locationName: 'Another unrelated location' });
+        const log = bot.getLog();
+        expect(log).toEqual(['Sphere 0.1 → walking to "Loc A" (1/2)']);
+    });
+
+    it('reset() clears the log', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getLog().length).toBeGreaterThan(0);
+        bot.reset();
+        expect(bot.getLog()).toEqual([]);
+    });
+
+    it('renders log entries as DOM children of .playback-bot-log', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        // After two state transitions, the log container should hold
+        // two entries; the header status line shows the most recent.
+        expect(logEntries(bot).length).toBe(2);
+        expect(logEntries(bot)[0]).toMatch(/walking to "Loc A"/);
+        expect(logEntries(bot)[1]).toMatch(/routing via/);
+    });
+});
+
 describe('PlaybackBotUI — destroy', () => {
     it('detaches from parent and nulls element', () => {
         const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: makeFakeBus() });

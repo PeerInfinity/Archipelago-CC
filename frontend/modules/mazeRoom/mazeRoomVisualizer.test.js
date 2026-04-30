@@ -245,6 +245,55 @@ describe('MazeRoomVisualizer — playback events', () => {
         v.instant();
         expect(events).toEqual([]);
     });
+
+    it('does not re-fire onLocationCheck when stepping over an already-collected tile', () => {
+        // Bot-driven playback regression: walking back over a
+        // previously-collected item tile (e.g. on a return trip
+        // through a region) was firing onLocationCheck again, which
+        // spammed user:locationCheck on the dispatcher and lit up
+        // stateManager's "already-checked" reject path. The visualizer
+        // now suppresses repeat pickups the same way keyboard play
+        // (_publishPlaybackEvents) always did.
+        const events = [];
+        const v = new MazeRoomVisualizer({
+            onLocationCheck: (locationName) => events.push(locationName),
+        });
+        // 5x1 row: entrance at (0,0), key at (2,0). Walk to (4,0) and
+        // back through (2,0) — second visit must not fire.
+        const world = makeOpenWorld(5, 1);
+        setItem(world, 2, 0, 'key_red');
+        if (!world.itemLocationNames) world.itemLocationNames = new Map();
+        world.itemLocationNames.set('2,0', 'Single Pickup');
+        v.setWorld(world, 'R');
+        // Drive manually: walkToTile gives a deterministic path so we
+        // don't rely on greedy-mode targeting decisions.
+        v.walkToTile({ x: 4, y: 0 });
+        v.step(); v.step();   // (0,0) → (1,0) → (2,0)  — first pickup
+        v.step(); v.step();   // → (3,0) → (4,0)
+        v.walkToTile({ x: 0, y: 0 });
+        v.step(); v.step();   // (4,0) → (3,0) → (2,0)  — repeat pickup, must skip
+        v.step(); v.step();   // → (1,0) → (0,0)
+        expect(events).toEqual(['Single Pickup']);
+    });
+
+    it('repeat pickups do not push a "Picked up" log entry', () => {
+        // Same setup as above, but verifies the visualizer's internal
+        // step log doesn't lie about a re-pickup. The trace should
+        // read like a plain step on the second visit.
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);
+        setItem(world, 2, 0, 'key_red');
+        if (!world.itemLocationNames) world.itemLocationNames = new Map();
+        world.itemLocationNames.set('2,0', 'Single Pickup');
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 4, y: 0 });
+        v.step(); v.step(); v.step(); v.step();
+        v.walkToTile({ x: 0, y: 0 });
+        v.step(); v.step(); v.step(); v.step();
+        const pickupLogs = v.getState().log.filter((e) => e.type === 'pickup');
+        expect(pickupLogs).toHaveLength(1);
+        expect(pickupLogs[0].locationName).toBe('Single Pickup');
+    });
 });
 
 describe('MazeRoomVisualizer — controls', () => {
@@ -300,6 +349,47 @@ describe('MazeRoomVisualizer — walkToTile (external control)', () => {
         // Still flips the controlled flag — the bot drove us here, even
         // if there's nothing to walk this turn.
         expect(v.isExternallyControlled()).toBe(true);
+    });
+
+    it('fires onExitCross when target equals current pos AND tile is an exit', () => {
+        // Bot regression: the procgen pipeline mirrors a region's
+        // back-exit to the entrance tile, so when the bot wants to
+        // leave a region via the back-exit, walkToTile finds itself
+        // already on the target. Without this guard the visualizer
+        // sits idle and the bot keeps re-issuing the same walkTo
+        // forever — never crossing.
+        const events = [];
+        const world = createWorld(5, 3, {
+            entrance: { x: 0, y: 1 },
+            exits: [{ exit_id: 'back', x: 0, y: 1, side: 'W',
+                exitName: 'back', targetRegion: 'parent' }],
+        });
+        for (let y = 0; y < 3; y++) {
+            for (let x = 0; x < 5; x++) setTile(world, x, y, TILE_FLOOR);
+        }
+        const v = new MazeRoomVisualizer({
+            onExitCross: (exit, regionId) => events.push({ exit_id: exit.exit_id, regionId }),
+        });
+        v.setWorld(world, 'child');
+        // Entrance is (0,1) and the back-exit is also (0,1) — same as
+        // procgen pipeline does. Walker is parked there on spawn.
+        v.walkToTile({ x: 0, y: 1, name: 'back' });
+        expect(events).toEqual([{ exit_id: 'back', regionId: 'child' }]);
+        // The visualizer should also log the exit-cross so the user
+        // can see it in the trace, and pause for region load.
+        const s = v.getState();
+        expect(s.log.some((e) => e.type === 'exit_cross' && e.exit_id === 'back')).toBe(true);
+    });
+
+    it('does not fire onExitCross for a regular floor tile at current pos', () => {
+        const events = [];
+        const v = new MazeRoomVisualizer({
+            onExitCross: (exit) => events.push(exit.exit_id),
+        });
+        const world = makeOpenWorld(5, 1);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 0, y: 0 });   // entrance, NOT an exit in this fixture
+        expect(events).toEqual([]);
     });
 
     it('sets _stuck and stops the clock when the target is unreachable', () => {

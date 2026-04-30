@@ -153,6 +153,14 @@ export class PlaybackBotUI {
         // pickup event), and the cursor would stall.
         this._checkedSoFar = new Set();
         this._status = 'idle';
+        // Append-only log of bot state transitions (one entry per
+        // status change). _render paints the most-recent entries into
+        // the widget so the user can scroll back through what the bot
+        // decided across the run, instead of losing context as a
+        // single-line status overwrites itself. Entries are also
+        // deduped against the previous one so a repeat-walkTo (head
+        // unchanged) doesn't spam the log.
+        this._log = [];
         // Last walkTo target we asked for, as a `${kind}:${name}` sig.
         // Used to suppress redundant walkTo publishes when an event
         // arrives mid-leg (incidental pickup, etc.) and the head
@@ -194,7 +202,7 @@ export class PlaybackBotUI {
             // mode (or whatever else the user has set up) handle the
             // walk. This preserves the bot's pre-Phase-3 role as a
             // pure remote control when the preset has no sphere log.
-            this._status = 'no sphere log';
+            this._setStatus('no sphere log');
             this._publish('play', { rateHz });
             this._render();
             return;
@@ -242,6 +250,7 @@ export class PlaybackBotUI {
         this._lastPublishedTarget = null;
         this._currentRegion = null;
         this._status = 'idle';
+        this._log = [];                 // start a fresh transition history
         this._publish('reset');
         this._render();
     }
@@ -258,6 +267,20 @@ export class PlaybackBotUI {
     getQueueLength() { return this._queue?.length ?? 0; }
     getCurrentRegion() { return this._currentRegion; }
     isActive() { return this._isActive; }
+    getLog() { return this._log.slice(); }
+
+    /**
+     * Set the bot's current status string AND append a corresponding
+     * entry to the log. Deduped against the previous entry's text so
+     * mid-leg events that don't change anything don't spam the log.
+     * Pure state mutation — caller still has to _render().
+     */
+    _setStatus(text) {
+        this._status = text;
+        if (this._log.length === 0 || this._log[this._log.length - 1] !== text) {
+            this._log.push(text);
+        }
+    }
 
     // --- dispatcher event handlers ---
     // The presets module's register() wires user:locationCheck /
@@ -324,7 +347,7 @@ export class PlaybackBotUI {
             // single 'stop' so the visualizer halts; no greedy
             // fallback runs because controlled mode is sticky on the
             // visualizer side.
-            this._status = `finished — ${this._cursor} location${this._cursor === 1 ? '' : 's'} visited`;
+            this._setStatus(`finished — ${this._cursor} location${this._cursor === 1 ? '' : 's'} visited`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._publish('stop');
@@ -337,12 +360,12 @@ export class PlaybackBotUI {
             // First user:regionMove hasn't arrived yet — wait for it.
             // Don't fail; just keep idle. The next event will retrigger
             // this method.
-            this._status = `${sphereTag}waiting for region ${progress}`;
+            this._setStatus(`${sphereTag}waiting for region ${progress}`);
             this._render();
             return;
         }
         if (head.regionName === this._currentRegion) {
-            this._status = `${sphereTag}walking to "${head.locationName}" ${progress}`;
+            this._setStatus(`${sphereTag}walking to "${head.locationName}" ${progress}`);
             this._publishWalkTo({ kind: 'location', name: head.locationName });
             this._render();
             return;
@@ -351,7 +374,7 @@ export class PlaybackBotUI {
         // snapshot, so accessibility reflects keys collected so far.
         const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, head.regionName);
         if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
-            this._status = `error: no path from ${this._currentRegion} to ${head.regionName}`;
+            this._setStatus(`error: no path from ${this._currentRegion} to ${head.regionName}`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._publish('stop');
@@ -360,14 +383,14 @@ export class PlaybackBotUI {
         }
         const nextExit = path.steps[1].exitUsed;
         if (!nextExit) {
-            this._status = `error: PathFinder returned a step without an exit (${this._currentRegion} → ${head.regionName})`;
+            this._setStatus(`error: PathFinder returned a step without an exit (${this._currentRegion} → ${head.regionName})`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._publish('stop');
             this._render();
             return;
         }
-        this._status = `${sphereTag}routing via "${nextExit}" → ${head.regionName} ${progress}`;
+        this._setStatus(`${sphereTag}routing via "${nextExit}" → ${head.regionName} ${progress}`);
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._render();
     }
@@ -421,10 +444,22 @@ export class PlaybackBotUI {
         const barEl = this._controlBar.getElement();
         if (barEl) root.appendChild(barEl);
 
+        // Append-only log of bot state transitions. Single-line status
+        // would lose context every time the bot decided something new
+        // (route via X, walking to Y, finished, etc.). The log keeps
+        // the full history so the user can scroll back. _statusEl is
+        // kept around as the "header" line that summarizes the most
+        // recent state at a glance; the log entries below are the
+        // history.
         const statusEl = document.createElement('div');
         statusEl.className = 'playback-bot-status';
         root.appendChild(statusEl);
         this._statusEl = statusEl;
+
+        const logEl = document.createElement('div');
+        logEl.className = 'playback-bot-log';
+        root.appendChild(logEl);
+        this._logEl = logEl;
 
         const hint = document.createElement('div');
         hint.className = 'playback-bot-hint';
@@ -437,20 +472,52 @@ export class PlaybackBotUI {
 
     _render() {
         if (!this._element) return;
-        if (!this._statusEl) return;
-        // While the bot is doing something (idle is the default at
-        // mount time), the play-loop status is the more useful
-        // line — it reads "walking to Bridge Key (cursor 4/16)" or
-        // "finished — 16 locations visited". Fall back to the static
-        // sphere-log summary before the user has hit play.
-        if (this._status && this._status !== 'idle') {
-            this._statusEl.textContent = this._status;
-            return;
+        // Header (most recent status) line. While the bot is doing
+        // something (idle is the default at mount time), show the
+        // current status. Otherwise fall back to the static sphere-log
+        // summary so a freshly-mounted bot still tells the user what
+        // sphere log is available.
+        if (this._statusEl) {
+            if (this._status && this._status !== 'idle') {
+                this._statusEl.textContent = this._status;
+            } else {
+                const data = this._getSphereData?.() ?? [];
+                const total = Array.isArray(data) ? data.length : 0;
+                this._statusEl.textContent = total > 0
+                    ? `Sphere log loaded: ${total} entries.`
+                    : 'No sphere log loaded.';
+            }
         }
-        const data = this._getSphereData?.() ?? [];
-        const total = Array.isArray(data) ? data.length : 0;
-        this._statusEl.textContent = total > 0
-            ? `Sphere log loaded: ${total} entries.`
-            : 'No sphere log loaded.';
+
+        // Append-only history. Render the full log; the panel's
+        // scroll container handles overflow. Each entry is a single
+        // <div> so CSS can style them as a tight monospaced list.
+        if (this._logEl) {
+            // Reuse existing children when possible to avoid replacing
+            // the whole DOM each render (which would scroll-jump). A
+            // common case is "log grew by one entry"; we just append.
+            const existing = this._logEl.children.length;
+            if (existing > this._log.length) {
+                // Log shrank (reset()) — clear and re-render.
+                this._logEl.innerHTML = '';
+                for (const text of this._log) {
+                    const entry = document.createElement('div');
+                    entry.className = 'playback-bot-log-entry';
+                    entry.textContent = text;
+                    this._logEl.appendChild(entry);
+                }
+            } else {
+                for (let i = existing; i < this._log.length; i += 1) {
+                    const entry = document.createElement('div');
+                    entry.className = 'playback-bot-log-entry';
+                    entry.textContent = this._log[i];
+                    this._logEl.appendChild(entry);
+                }
+            }
+            // Auto-scroll to bottom on append so the latest entry is
+            // visible. scrollHeight is up-to-date once children are
+            // attached synchronously.
+            this._logEl.scrollTop = this._logEl.scrollHeight;
+        }
     }
 }
