@@ -12,6 +12,7 @@ import {
     stringifyRulesJson,
     topDownFromRulesJson,
     computeSourceCounts,
+    Grid,
 } from './procgenPipelineEngine.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -124,6 +125,87 @@ export function groupLibraryByFeature(allEntries, selectedEntries) {
     return groups;
 }
 
+/**
+ * Reconstruct a Grid + composite-view payload from a rules.json that
+ * carries `preset_sidecars`. Returns the same shape `growMaze` /
+ * `topDownFromRulesJson` produce as their `result` (subset of
+ * fields — poolRemaining is unknown post-hoc), so the existing
+ * _renderGrid / _renderStats paths can paint it without further
+ * branching. Returns null if the input has no procgen data, or if no
+ * registered substrate can deserialize any of the regions.
+ *
+ * Pure function — exported for testing.
+ */
+export function reconstructResultFromSidecars(rulesJson) {
+    const sidecarsByPlayer = rulesJson?.preset_sidecars;
+    if (!sidecarsByPlayer || typeof sidecarsByPlayer !== 'object') return null;
+    // v1 single-player: pick the first player. (Per-player composite
+    // views would need a player picker in the panel; deferred.)
+    const playerKeys = Object.keys(sidecarsByPlayer);
+    if (playerKeys.length === 0) return null;
+    const playerSidecars = sidecarsByPlayer[playerKeys[0]];
+    const regionEntries = Object.entries(playerSidecars ?? {});
+    if (regionEntries.length === 0) return null;
+
+    let maxGx = 0;
+    let maxGy = 0;
+    let maxW = 0;
+    let maxH = 0;
+    for (const [, sc] of regionEntries) {
+        const cell = sc?.grid_cell;
+        if (cell) {
+            if (cell.gx > maxGx) maxGx = cell.gx;
+            if (cell.gy > maxGy) maxGy = cell.gy;
+        }
+        const payload = sc?.playable_payload || {};
+        if (payload.width > maxW) maxW = payload.width;
+        if (payload.height > maxH) maxH = payload.height;
+    }
+    if (maxW === 0 || maxH === 0) return null;
+
+    const grid = new Grid({ width: maxGx + 1, height: maxGy + 1 });
+    let placed = 0;
+    let teleporters = 0;
+    for (const [region_id, sc] of regionEntries) {
+        if (!sc?.grid_cell) continue;
+        const substrateId = sc.substrate ?? 'maze';
+        const adapter = substrateRegistry.get(substrateId);
+        if (!adapter || typeof adapter.deserializeWorld !== 'function') continue;
+        const world = adapter.deserializeWorld(sc.playable_payload);
+        if (world?.exits) {
+            for (const e of world.exits.values()) {
+                if (e.isTeleporter) teleporters += 1;
+            }
+        }
+        grid.placeRegion(sc.grid_cell, {
+            region_id,
+            substrate: substrateId,
+            render_hint: sc.render_hint ?? substrateId,
+            playable_payload: world,
+            grow_telemetry: sc.grow_telemetry ?? null,
+        });
+        placed += 1;
+    }
+    if (placed === 0) return null;
+
+    const meta = rulesJson.procgen_metadata ?? {};
+    return {
+        grid,
+        regionSize: { width: maxW, height: maxH },
+        stats: {
+            regionsBuilt: placed,
+            regionsSkipped: 0,
+            stopReason: meta.stop_reason ?? null,
+            teleportersPlaced: teleporters,
+        },
+        poolRemaining: null,
+        // Marker for the renderers that this view came from a loaded
+        // rules.json rather than a fresh pipeline run, so labels can
+        // signal that and we don't claim a fresh-generation pool stat.
+        fromLoadedPreset: true,
+    };
+}
+
 export class ProcgenPipelineUI {
     static moduleApis = null;
     static setModuleApis(apis) { ProcgenPipelineUI.moduleApis = apis; }
@@ -178,7 +260,14 @@ export class ProcgenPipelineUI {
             if (!data?.rawJsonData) return;
             this.loadedRulesJson = data.rawJsonData;
             this.loadedRulesJsonLabel = data.source || data.selectedPlayerInfo?.playerName || 'currently loaded';
-            // Re-render so the "Use currently-loaded" button enables.
+            // If the loaded rules.json carries preset_sidecars,
+            // reconstruct a Grid so the composite-view canvas paints
+            // all regions side-by-side. A subsequent local Generate
+            // overwrites this.result, so the user always sees the
+            // most recent state. We avoid clobbering an in-progress
+            // local generation result on top.
+            const reconstructed = reconstructResultFromSidecars(data.rawJsonData);
+            if (reconstructed) this.result = reconstructed;
             this.render();
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'procgenPipeline');
@@ -733,12 +822,15 @@ export class ProcgenPipelineUI {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-stats';
         if (!this.result) return section;
-        const { stats, poolRemaining } = this.result;
-        const parts = [
-            `regions ${stats.regionsBuilt}`,
-            `skipped ${stats.regionsSkipped}`,
-            `stop: ${stats.stopReason}`,
-        ];
+        const { stats, poolRemaining, fromLoadedPreset } = this.result;
+        const parts = [];
+        if (fromLoadedPreset) {
+            parts.push(`loaded preset · regions ${stats.regionsBuilt}`);
+        } else {
+            parts.push(`regions ${stats.regionsBuilt}`);
+            parts.push(`skipped ${stats.regionsSkipped}`);
+        }
+        if (stats.stopReason) parts.push(`stop: ${stats.stopReason}`);
         if (poolRemaining) {
             parts.push(
                 `pool rem: items=${this._sumCounts(poolRemaining.items)} obs=${this._sumCounts(poolRemaining.obstacles)}`,
