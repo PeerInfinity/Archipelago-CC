@@ -32,6 +32,7 @@ import { getDiscoverySettings } from '../discovery/index.js';
 // may build panels during its own init, ahead of module init — at
 // which point `this.apis.eventBus` is still null).
 import eventBus from '../../app/core/eventBus.js';
+import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -145,6 +146,12 @@ export class MazeRoomUI {
         }
         this._unsubDiscoveryMode = null;
         this._unsubDiscoveryChanged = null;
+
+        // Playback control bar — Phase 1.3 stub mount. Actions log to
+        // the console for now; Phase 3 wires them to the visualizer.
+        // The bar instance lives across renders; render() re-appends
+        // its element after clearing the panel's innerHTML.
+        this._playbackBar = null;
 
         // Fog of war. When enabled, only tiles in the seen-set for
         // the current region render with their full overlays —
@@ -451,6 +458,7 @@ export class MazeRoomUI {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
+        if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); this.rootElement?.focus(); }
@@ -461,9 +469,32 @@ export class MazeRoomUI {
         this.rootElement.innerHTML = '';
         this.rootElement.appendChild(this._renderParams());
         this.rootElement.appendChild(this._renderActions());
+        this.rootElement.appendChild(this._renderPlaybackBar());
         this.rootElement.appendChild(this._renderStats());
         this.rootElement.appendChild(this._renderMaze());
         this.rootElement.appendChild(this._renderRules());
+    }
+
+    _renderPlaybackBar() {
+        if (!this._playbackBar) {
+            // Stub actions: Phase 3 wires these to the visualizer.
+            this._playbackBar = new PlaybackControlBar({
+                label: 'Playback',
+                actions: {
+                    instant: () => console.log('[mazeRoom playback] instant (stub)'),
+                    step:    () => console.log('[mazeRoom playback] step (stub)'),
+                    play:    (rateHz) => console.log('[mazeRoom playback] play', rateHz, '(stub)'),
+                    stop:    () => console.log('[mazeRoom playback] stop (stub)'),
+                    setRate: (rateHz) => console.log('[mazeRoom playback] setRate', rateHz, '(stub)'),
+                },
+            });
+            this._playbackBar.setStatus('Phase 1.3 stub — controls not yet wired');
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'maze-room-playback';
+        const el = this._playbackBar.getElement();
+        if (el) wrapper.appendChild(el);
+        return wrapper;
     }
 
     // --- Parameter UI ---

@@ -215,3 +215,98 @@
     max-height: 300px;
     overflow: auto;
 }
+
+/* Playback control bar — Phase 1.3 stub mount.
+   Actions log to console; Phase 3 wires them to the visualizer. */
+.maze-room-playback {
+    margin-top: 8px;
+}
+
+.playback-control-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+}
+
+.playback-control-bar-label {
+    font-size: 12px;
+    color: #aaa;
+    font-weight: bold;
+    user-select: none;
+}
+
+.playback-control-bar-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.playback-control-bar-button {
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1;
+}
+
+.playback-control-bar-button:hover:not(:disabled) {
+    background: #3a3a3a;
+    border-color: #666;
+}
+
+.playback-control-bar-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.playback-control-bar.is-running .playback-control-bar-button-play {
+    background: #2a4a2a;
+}
+
+.playback-control-bar-rate {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.playback-control-bar-rate-label {
+    min-width: 40px;
+    user-select: none;
+}
+
+.playback-control-bar-rate-slider {
+    flex: 1 1 auto;
+    min-width: 60px;
+}
+
+.playback-control-bar-rate-input {
+    width: 50px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    color: #ddd;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+
+.playback-control-bar-rate-unit {
+    color: #777;
+    user-select: none;
+}
+
+.playback-control-bar-status {
+    font-size: 11px;
+    color: #777;
+    font-style: italic;
+    min-height: 14px;
+}
