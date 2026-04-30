@@ -107,8 +107,11 @@ export class PlaybackControlBar {
         this._buttons.stop = makeButton('Stop', '⏹', () => {
             this._call('stop');
         });
+        this._buttons.reset = makeButton('Reset', '↺', () => {
+            this._call('reset');
+        });
 
-        for (const key of ['instant', 'step', 'play', 'stop']) {
+        for (const key of ['instant', 'step', 'play', 'stop', 'reset']) {
             buttonsRow.appendChild(this._buttons[key]);
             this._listeners.push(() => {
                 this._buttons[key].onclick = null;

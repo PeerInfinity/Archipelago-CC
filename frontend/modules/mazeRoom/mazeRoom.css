@@ -454,3 +454,45 @@
     background: #2a1a1a;
     border-radius: 3px;
 }
+
+/* Playback step log — Phase 3. Renders below the control bar. */
+.maze-room-playback-log {
+    margin-top: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #aaa;
+}
+
+.maze-room-playback-log-entry {
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+.maze-room-playback-log-step {
+    color: #aaa;
+}
+
+.maze-room-playback-log-pickup {
+    color: #6fc46f;
+}
+
+.maze-room-playback-log-exit_cross {
+    color: #4a8acc;
+}
+
+.maze-room-playback-log-blocked {
+    background: #2a1a1a;
+    color: #ff8080;
+}
+
+.maze-room-playback-log-done {
+    color: #888;
+    font-style: italic;
+}

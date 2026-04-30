@@ -80,6 +80,11 @@ export function register(registrationApi) {
     // Self-activation on maze:loadRegion publishes ui:activatePanel.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
 
+    // Phase 3 visualizer publishes per-step playback snapshots so
+    // opt-in subscribers (this panel itself, future bot consumers)
+    // can mirror the simulated state without affecting stateManager.
+    registrationApi.registerEventBusPublisher('playback:snapshotUpdated');
+
     // The maze panel is the original source of these AP-level events
     // when the player triggers them by walking around in playback
     // mode. Both go on the dispatcher (chain-of-authority) so other

@@ -34,6 +34,7 @@ import { getDiscoverySettings } from '../discovery/index.js';
 import eventBus from '../../app/core/eventBus.js';
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
+import { MazeRoomVisualizer } from './mazeRoomVisualizer.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -164,6 +165,16 @@ export class MazeRoomUI {
         this._editorMessage = '';
         this._verifierResult = null;
 
+        // Playthrough visualizer — Phase 3. Owns its own clock, state
+        // and step log. Publishes playback:snapshotUpdated for opt-in
+        // subscribers (this panel itself, for inventory display) and
+        // does NOT touch stateManager. The instance lives across
+        // renders; setWorld is called from _adoptLoadedRegion.
+        this._visualizer = new MazeRoomVisualizer({
+            eventBus,
+            onStateChange: () => this._onVisualizerChange(),
+        });
+
         // Fog of war. When enabled, only tiles in the seen-set for
         // the current region render with their full overlays —
         // everything else paints solid black. Seen = visited ∪
@@ -219,6 +230,18 @@ export class MazeRoomUI {
         };
         eventBus.subscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
         this._unsubSnapshot = () => eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'mazeRoom');
+
+        // Phase 1.1 playback event — handler shape mirrors the live
+        // snapshot subscription so the renderer is idempotent across
+        // both sources.
+        const playbackHandler = (data) => {
+            if (this.externalInventory === null) return;
+            this.externalInventory = inventoryFromSnapshot(data?.snapshot);
+            this.externalCheckedLocations = checkedLocationsFromSnapshot(data?.snapshot);
+            this.render();
+        };
+        eventBus.subscribe('playback:snapshotUpdated', playbackHandler, 'mazeRoom');
+        this._unsubPlaybackSnapshot = () => eventBus.unsubscribe('playback:snapshotUpdated', playbackHandler, 'mazeRoom');
     }
 
     _subscribeToDiscoveryEvents() {
@@ -436,6 +459,9 @@ export class MazeRoomUI {
             ? `Loaded region: ${payload.region_id}`
             : 'Loaded region';
         this.currentRegionId = payload.region_id ?? null;
+        // Visualizer is per-region — feed it the loaded world so its
+        // step log and tile-pathfinder match what's on the canvas.
+        this._visualizer?.setWorld(this.world, this.currentRegionId);
         // Switch into playback mode: inventory truth comes from
         // stateManager snapshots from now on. Seed from the current
         // cached snapshot if one exists; further updates arrive via
@@ -467,9 +493,11 @@ export class MazeRoomUI {
     getRootElement() { return this.rootElement; }
     destroy() {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
+        if (this._unsubPlaybackSnapshot) { this._unsubPlaybackSnapshot(); this._unsubPlaybackSnapshot = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
+        if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); this.rootElement?.focus(); }
@@ -483,30 +511,115 @@ export class MazeRoomUI {
         this.rootElement.appendChild(this._renderPlaybackBar());
         this.rootElement.appendChild(this._renderStats());
         this.rootElement.appendChild(this._renderMaze());
+        this.rootElement.appendChild(this._renderPlaybackLogSection());
         this.rootElement.appendChild(this._renderEditor());
         this.rootElement.appendChild(this._renderRules());
     }
 
+    /**
+     * Visualizer ticked — mirror its player_pos into the panel's
+     * state so the canvas redraws show the bot moving. The
+     * visualizer's inventory + checkedLocations flow through the
+     * playback:snapshotUpdated event into externalInventory /
+     * externalCheckedLocations (see _subscribeToSnapshotUpdates),
+     * but player_pos isn't carried in the snapshot — the substrate
+     * tracks it on its own state object. We bridge that here.
+     */
+    _onVisualizerChange() {
+        const vState = this._visualizer?.getState();
+        if (vState?.player_pos && this.state) {
+            this.state.player_pos = { ...vState.player_pos };
+        }
+        // Fog of war: expand the seen-set on each visualizer step
+        // the same way keyboard play does, so fog-on playback uncovers
+        // tiles as the bot explores.
+        if (this.fogEnabled && this.state) {
+            this._expandFogVisibility(this._computeVisibleAt(this.state.player_pos));
+        }
+        this.render();
+    }
+
     _renderPlaybackBar() {
         if (!this._playbackBar) {
-            // Stub actions: Phase 3 wires these to the visualizer.
             this._playbackBar = new PlaybackControlBar({
                 label: 'Playback',
                 actions: {
-                    instant: () => console.log('[mazeRoom playback] instant (stub)'),
-                    step:    () => console.log('[mazeRoom playback] step (stub)'),
-                    play:    (rateHz) => console.log('[mazeRoom playback] play', rateHz, '(stub)'),
-                    stop:    () => console.log('[mazeRoom playback] stop (stub)'),
-                    setRate: (rateHz) => console.log('[mazeRoom playback] setRate', rateHz, '(stub)'),
+                    instant: () => this._visualizer?.instant(),
+                    step:    () => this._visualizer?.step(),
+                    play:    (rateHz) => this._visualizer?.play(rateHz),
+                    stop:    () => this._visualizer?.stop(),
+                    reset:   () => this._visualizer?.reset(),
+                    setRate: (rateHz) => this._visualizer?.setRate(rateHz),
                 },
             });
-            this._playbackBar.setStatus('Phase 1.3 stub — controls not yet wired');
+        }
+        // Reflect visualizer state on every render so the buttons +
+        // status line stay in sync after each tick.
+        const vState = this._visualizer?.getState();
+        if (this._playbackBar) {
+            this._playbackBar.setRunning(!!vState?.running);
+            const status = this._buildPlaybackStatus(vState);
+            this._playbackBar.setStatus(status);
         }
         const wrapper = document.createElement('div');
         wrapper.className = 'maze-room-playback';
         const el = this._playbackBar.getElement();
         if (el) wrapper.appendChild(el);
         return wrapper;
+    }
+
+    _renderPlaybackLogSection() {
+        const wrap = document.createElement('div');
+        wrap.className = 'maze-room-playback-log-section';
+        const vState = this._visualizer?.getState();
+        if (!vState || !this.world) {
+            wrap.style.display = 'none';
+            return wrap;
+        }
+        wrap.appendChild(this._renderPlaybackLog(vState));
+        return wrap;
+    }
+
+    _buildPlaybackStatus(vState) {
+        if (!vState) return '';
+        if (vState.stuck) return 'Stuck — reset to retry.';
+        if (vState.completed) return 'Done.';
+        if (vState.target) {
+            return `seeking ${vState.target.kind}: ${vState.target.name} at (${vState.target.x},${vState.target.y})`;
+        }
+        if (vState.running) return 'Running…';
+        return 'Idle. Press Step or Play to walk the region.';
+    }
+
+    _renderPlaybackLog(vState) {
+        const wrap = document.createElement('div');
+        wrap.className = 'maze-room-playback-log';
+
+        const log = vState?.log ?? [];
+        if (log.length === 0) {
+            const hint = document.createElement('div');
+            hint.className = 'maze-room-hint';
+            hint.textContent = 'Step log will appear here.';
+            wrap.appendChild(hint);
+            return wrap;
+        }
+
+        // Show only the most recent entries to keep the panel tight.
+        const TAIL = 40;
+        const tail = log.slice(-TAIL);
+        for (const entry of tail) {
+            const row = document.createElement('div');
+            row.className = `maze-room-playback-log-entry maze-room-playback-log-${entry.type}`;
+            row.textContent = formatLogEntry(entry);
+            wrap.appendChild(row);
+        }
+        if (log.length > TAIL) {
+            const more = document.createElement('div');
+            more.className = 'maze-room-hint';
+            more.textContent = `(${log.length - TAIL} earlier entries hidden)`;
+            wrap.insertBefore(more, wrap.firstChild);
+        }
+        return wrap;
     }
 
     // --- Parameter UI ---
@@ -1311,6 +1424,10 @@ export class MazeRoomUI {
             this.externalInventory = null;
             this.externalCheckedLocations = null;
             this.currentRegionId = null;
+            // Re-point the visualizer at the freshly-generated world so
+            // its step log starts clean and pathfinding sees the new
+            // tile layout.
+            this._visualizer?.setWorld(world, null);
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
         }
@@ -1457,6 +1574,16 @@ function countFalseRules(compiled) {
 
 function isFalseRule(rule) {
     return rule?.rule === 'False_';
+}
+
+function formatLogEntry(entry) {
+    if (!entry) return '';
+    if (entry.description) return entry.description;
+    if (entry.type === 'step') {
+        const eventStr = entry.events?.length ? `  [${entry.events.join('; ')}]` : '';
+        return `step ${entry.input}: (${entry.from.x},${entry.from.y}) → (${entry.to.x},${entry.to.y})${eventStr}`;
+    }
+    return entry.type;
 }
 
 function describeRule(rule) {
