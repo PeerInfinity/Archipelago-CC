@@ -9951,6 +9951,34 @@
           "AP_1_rules.json"
         ],
         "has_procgen_data": true
+      },
+      "AP_2": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_2_rules.json"
+        ],
+        "has_procgen_data": true
+      },
+      "AP_3": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_3_rules.json"
+        ],
+        "has_procgen_data": true
       }
     }
   },

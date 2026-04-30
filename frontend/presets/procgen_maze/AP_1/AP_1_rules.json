@@ -30,10 +30,20 @@
         "name": "region_1_0",
         "exits": [
           {
+            "name": "exit",
+            "connected_region": "region_2_0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          },
+          {
             "name": "region_1_1",
             "connected_region": "region_1_1",
             "access_rule": {
-              "rule": "False_"
+              "rule": "True_"
             }
           }
         ],
@@ -69,6 +79,36 @@
           }
         ]
       },
+      "region_2_0": {
+        "name": "region_2_0",
+        "exits": [
+          {
+            "name": "region_1_0",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_0__key_red_pickup__0_3",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "region_1_1": {
         "name": "region_1_1",
         "exits": [
@@ -76,7 +116,7 @@
             "name": "exit_1",
             "connected_region": "region_1_0",
             "access_rule": {
-              "rule": "False_"
+              "rule": "True_"
             }
           }
         ],
@@ -111,7 +151,7 @@
   },
   "itempool_counts": {
     "1": {
-      "key_red": 2
+      "key_red": 3
     }
   },
   "world": {
@@ -134,7 +174,8 @@
   "canonical_placements": {
     "1": {
       "region_1_0__key_red_pickup__3_5": "key_red",
-      "region_1_0__key_red_pickup__5_3": "key_red"
+      "region_1_0__key_red_pickup__5_3": "key_red",
+      "region_2_0__key_red_pickup__0_3": "key_red"
     }
   },
   "progression_mapping": {
@@ -156,7 +197,7 @@
         "playable_payload": {
           "width": 8,
           "height": 6,
-          "tiles": [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1],
           "entrance": {
             "x": 4,
             "y": 3
@@ -208,6 +249,17 @@
           },
           "exits": [
             {
+              "exit_id": "exit",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "exit",
+              "targetRegion": "region_2_0",
+              "targetExitId": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
               "exit_id": "region_1_1",
               "x": 2,
               "y": 5,
@@ -254,15 +306,73 @@
           },
           "grow_attempts": 0
         }
+      },
+      "region_2_0": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 0
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1],
+          "entrance": {
+            "x": 0,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "region_1_0",
+              "x": 0,
+              "y": 1,
+              "side": "W",
+              "exitName": "region_1_0",
+              "targetRegion": "region_1_0",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 4,
+              "id": "door_red"
+            }
+          ],
+          "items": [
+            {
+              "x": 0,
+              "y": 3,
+              "id": "key_red",
+              "locationName": "region_2_0__key_red_pickup__0_3"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {}
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
       }
     }
   },
   "procgen_metadata": {
     "driver": "grid-growth",
     "stop_reason": "pool_empty",
-    "region_count": 2,
+    "region_count": 3,
     "grid_dims": {
-      "width": 2,
+      "width": 3,
       "height": 2
     }
   },
@@ -283,12 +393,83 @@
             "base_items": {},
             "resolved_items": {}
           },
-          "new_accessible_locations": [],
+          "new_accessible_locations": [
+            "region_1_0__key_red_pickup__3_5"
+          ],
           "new_accessible_regions": [
             "Menu",
+            "region_1_0",
             "region_1_1"
           ],
           "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_0__key_red_pickup__5_3",
+            "region_2_0__key_red_pickup__0_3"
+          ],
+          "new_accessible_regions": [
+            "region_2_0"
+          ],
+          "sphere_locations": [
+            "region_1_0__key_red_pickup__3_5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_0__key_red_pickup__5_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_2_0__key_red_pickup__0_3"
+          ]
         }
       }
     }
