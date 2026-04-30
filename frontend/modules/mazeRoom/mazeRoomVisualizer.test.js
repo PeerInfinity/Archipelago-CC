@@ -66,6 +66,33 @@ describe('MazeRoomVisualizer — initialization', () => {
         expect(s.inventory.size).toBe(0);
         expect(s.log).toEqual([]);
     });
+
+    it('setWorld with spawnAt overrides the entrance spawn', () => {
+        // Cross-region back-traversal regression: the panel resolves
+        // arrivedFrom.exit_id to a non-entrance tile and needs the
+        // visualizer's state to land there too — otherwise the
+        // visualizer's _notifyChange callback mirrors the (wrong)
+        // entrance-spawn back into the panel and clobbers the panel's
+        // arrival position.
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 3);
+        v.setWorld(world, 'TestRegion', { spawnAt: { x: 4, y: 2 } });
+        const s = v.getState();
+        expect(s.player_pos).toEqual({ x: 4, y: 2 });
+    });
+
+    it('setWorld with spawnAt + onStateChange notifies with the override pos', () => {
+        // The _onVisualizerChange callback reads getState().player_pos
+        // and mirrors it into the panel; the override must be present
+        // by the time _notifyChange fires.
+        const seen = [];
+        const v = new MazeRoomVisualizer({
+            onStateChange: () => seen.push(v.getState().player_pos),
+        });
+        const world = makeOpenWorld(5, 3);
+        v.setWorld(world, 'TestRegion', { spawnAt: { x: 3, y: 1 } });
+        expect(seen.at(-1)).toEqual({ x: 3, y: 1 });
+    });
 });
 
 describe('MazeRoomVisualizer — basic walk', () => {

@@ -136,6 +136,66 @@ describe('MazeRoomUI — discovery population (fog off)', () => {
     });
 });
 
+describe('MazeRoomUI — arrival position on region load', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    it('spawns at the entrance when arrivedFrom is null', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [{ exit_id: 'east', x: 7, y: 3, side: 'E', targetRegion: 'B' }],
+            }),
+            arrivedFrom: null,
+        });
+        expect(panel.state.player_pos).toEqual({ x: 4, y: 3 });
+    });
+
+    it('spawns at the arrivedFrom exit tile, not the entrance', () => {
+        // Back-traversal regression: when the parent's exit and
+        // entrance differ (always, except by coincidence), arriving
+        // back via the parent's east-side exit must land on (7,3),
+        // not on the geometric center entrance (4,3).
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [{ exit_id: 'east', x: 7, y: 3, side: 'E', targetRegion: 'B' }],
+            }),
+            arrivedFrom: { exit_id: 'east' },
+        });
+        expect(panel.state.player_pos).toEqual({ x: 7, y: 3 });
+    });
+
+    it('the visualizer mirroring callback does not clobber the arrival pos', () => {
+        // The bug was: visualizer.setWorld would reset its internal
+        // _state to createState(world) (= entrance), then notify the
+        // panel's _onVisualizerChange callback which mirrored that
+        // back into panel.state.player_pos. The fix threads spawnAt
+        // through to the visualizer; this test asserts that after the
+        // load completes, panel.state.player_pos is still the arrival
+        // tile, not the entrance.
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [{ exit_id: 'east', x: 7, y: 3, side: 'E', targetRegion: 'B' }],
+            }),
+            arrivedFrom: { exit_id: 'east' },
+        });
+        // Invoke the visualizer-change handler directly to simulate
+        // the post-setWorld _notifyChange firing in the runtime.
+        panel._onVisualizerChange();
+        expect(panel.state.player_pos).toEqual({ x: 7, y: 3 });
+    });
+});
+
 describe('MazeRoomUI — discovery filtering helpers', () => {
     beforeEach(() => {
         _testOnly_resetModuleState();

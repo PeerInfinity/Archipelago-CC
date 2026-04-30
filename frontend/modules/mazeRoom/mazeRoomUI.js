@@ -473,9 +473,11 @@ export class MazeRoomUI {
         this.world = payload.world;
         this.state = createState(this.world);
         const arrivedExitId = payload.arrivedFrom?.exit_id;
+        let spawnAt = null;
         if (arrivedExitId && this.world.exits?.has(arrivedExitId)) {
             const exit = this.world.exits.get(arrivedExitId);
-            this.state.player_pos = { x: exit.x, y: exit.y };
+            spawnAt = { x: exit.x, y: exit.y };
+            this.state.player_pos = spawnAt;
         }
         this.stats = null;
         this.message = payload.region_id
@@ -484,7 +486,11 @@ export class MazeRoomUI {
         this.currentRegionId = payload.region_id ?? null;
         // Visualizer is per-region — feed it the loaded world so its
         // step log and tile-pathfinder match what's on the canvas.
-        this._visualizer?.setWorld(this.world, this.currentRegionId);
+        // Forward spawnAt so the visualizer's state matches the panel's
+        // — without this its createState(world) would reset to the
+        // geometric-center entrance, then _onVisualizerChange mirrors
+        // that back into the panel and clobbers the arrivedFrom spawn.
+        this._visualizer?.setWorld(this.world, this.currentRegionId, { spawnAt });
         // Switch into playback mode: inventory truth comes from
         // stateManager snapshots from now on. Seed from the current
         // cached snapshot if one exists; further updates arrive via

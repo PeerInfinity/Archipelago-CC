@@ -83,8 +83,15 @@ export class MazeRoomVisualizer {
      * continue seamlessly. Pass `freshStart: true` (or call
      * `freshStart()`) when starting from scratch — e.g., the panel's
      * Generate button.
+     *
+     * `spawnAt` overrides the default entrance-tile spawn. The panel
+     * uses this on cross-region transitions: arrivedFrom resolves to
+     * an exit tile that isn't the geometric-center entrance, and we
+     * need both the panel's state and the visualizer's state to land
+     * there. Without it, the visualizer notifies the panel back with
+     * world.entrance and the arrival position is silently clobbered.
      */
-    setWorld(world, regionId, { freshStart = false } = {}) {
+    setWorld(world, regionId, { freshStart = false, spawnAt = null } = {}) {
         const same = this._world === world && this._regionId === regionId;
         this._world = world ?? null;
         this._regionId = regionId ?? null;
@@ -101,6 +108,9 @@ export class MazeRoomVisualizer {
         // keeps ticking — the next tick re-plans against the new
         // world and (usually) finds a new target there.
         this._state = this._world ? createState(this._world) : null;
+        if (this._state && spawnAt) {
+            this._state.player_pos = { x: spawnAt.x, y: spawnAt.y };
+        }
         this._target = null;
         this._plan = [];
         this._planIdx = 0;
