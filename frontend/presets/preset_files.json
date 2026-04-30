@@ -9949,7 +9949,8 @@
         ],
         "files": [
           "AP_1_rules.json"
-        ]
+        ],
+        "has_procgen_data": true
       }
     }
   },

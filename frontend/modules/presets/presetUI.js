@@ -3,6 +3,8 @@ import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { PlaybackBotUI } from '../playbackBot/playbackBotUI.js';
+import { getSphereStateSingleton } from '../sphereState/singleton.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
@@ -377,6 +379,139 @@ const PRESET_STYLES = `
 }
 .preset-procgen-section:empty {
     margin-top: 0;
+}
+/* Playback bot — Phase 5 sphere-log replay UI mounted in this panel. */
+.playback-bot {
+    margin-top: 12px;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+}
+.playback-bot-heading {
+    font-weight: bold;
+    color: #ddd;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.playback-bot-cursor {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'Consolas', 'Courier New', monospace;
+    padding: 4px 6px;
+    background: #111;
+    border-radius: 3px;
+}
+.playback-bot-log {
+    margin-top: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #aaa;
+}
+.playback-bot-log-entry {
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+.playback-bot-log-step {
+    color: #aaa;
+}
+.playback-bot-log-done {
+    color: #888;
+    font-style: italic;
+}
+.playback-bot-log-error {
+    color: #ff8080;
+}
+.playback-bot-log-more {
+    color: #777;
+    font-style: italic;
+}
+/* Playback control bar styles needed when the bar is mounted outside
+   the maze panel (which would otherwise be the only place its CSS
+   lives). Mirrors mazeRoom.css's .playback-control-bar block. */
+.playback-control-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+}
+.playback-control-bar-label {
+    font-size: 12px;
+    color: #aaa;
+    font-weight: bold;
+    user-select: none;
+}
+.playback-control-bar-buttons {
+    display: flex;
+    gap: 4px;
+}
+.playback-control-bar-button {
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1;
+}
+.playback-control-bar-button:hover:not(:disabled) {
+    background: #3a3a3a;
+    border-color: #666;
+}
+.playback-control-bar-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.playback-control-bar.is-running .playback-control-bar-button-play {
+    background: #2a4a2a;
+}
+.playback-control-bar-rate {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #aaa;
+}
+.playback-control-bar-rate-label {
+    min-width: 40px;
+    user-select: none;
+}
+.playback-control-bar-rate-slider {
+    flex: 1 1 auto;
+    min-width: 60px;
+}
+.playback-control-bar-rate-input {
+    width: 50px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    color: #ddd;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+.playback-control-bar-rate-unit {
+    color: #777;
+    user-select: none;
+}
+.playback-control-bar-status {
+    font-size: 11px;
+    color: #777;
+    font-style: italic;
+    min-height: 14px;
 }
 .preset-procgen-title {
     margin: 0 0 4px;
@@ -2326,6 +2461,29 @@ export class PresetUI {
     `;
 
     host.innerHTML = html;
+
+    // Phase 5 — playback bot. Only useful when a sphere log is loaded;
+    // mounts as a separate widget below the procgen stats. Persists
+    // across re-renders within a session: subsequent renders reuse the
+    // existing instance so the log + cursor survive.
+    this._mountPlaybackBot(host);
+  }
+
+  _mountPlaybackBot(host) {
+    if (!this._playbackBot) {
+      this._playbackBot = new PlaybackBotUI({
+        getSphereData: () => {
+          const sphereState = getSphereStateSingleton();
+          return sphereState?.getSphereData?.() ?? [];
+        },
+      });
+    }
+    const botEl = this._playbackBot.getElement();
+    if (botEl) host.appendChild(botEl);
+    // Trigger a re-render so the cursor reflects current sphere data.
+    if (typeof this._playbackBot._render === 'function') {
+      this._playbackBot._render();
+    }
   }
 
   _formatSphereTooltip(enriched) {
