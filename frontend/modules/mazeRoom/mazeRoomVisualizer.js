@@ -230,8 +230,8 @@ export class MazeRoomVisualizer {
         if (x === this._state.player_pos.x && y === this._state.player_pos.y) {
             // Already on the target tile. Two cases:
             //   - It's a regular floor / location tile: nothing to do.
-            //     The caller's "we're already there" check sees null
-            //     target and moves on.
+            //     Clear the target so the caller's "we're already
+            //     there" check sees null and moves on.
             //   - It's an exit tile with a targetRegion: the caller
             //     (typically the bot) wants us to *cross*, but we
             //     can't trigger an exit_cross by stepping in place —
@@ -241,6 +241,12 @@ export class MazeRoomVisualizer {
             //     wants to leave a region the same way it arrived.
             //     Fire the cross callback directly so the panel
             //     publishes user:regionMove and the chain advances.
+            //     Do NOT reset _target/_plan/_planIdx in this branch:
+            //     onExitCross runs synchronously and the inner chain
+            //     (region transition → bot's follow-up walkTo →
+            //     inner walkToTile call) may have set fresh state.
+            //     Wiping it here clobbers the bot's next leg and the
+            //     visualizer sits idle until the bot times out.
             const exit = getExitAt(this._world, x, y);
             if (exit?.targetRegion && this._onExitCross) {
                 this._visitedExits.add(exit.exit_id);
@@ -253,6 +259,8 @@ export class MazeRoomVisualizer {
                 });
                 this._awaitingRegionLoad = true;
                 this._onExitCross(exit, this._regionId);
+                this._notifyChange();
+                return;
             }
             this._target = null;
             this._plan = [];

@@ -392,6 +392,49 @@ describe('MazeRoomVisualizer — walkToTile (external control)', () => {
         expect(events).toEqual([]);
     });
 
+    it('preserves a target set by onExitCross-triggered chain', () => {
+        // Cross-region routing regression: the bot's flow is
+        //   walkTo back-exit (same tile as spawn)
+        //     → onExitCross fires synchronously
+        //       → maze:loadRegion changes the world
+        //       → bot.onRegionMove → bot publishes the next walkTo
+        //         → inner walkToTile sets _target/_plan in the new world
+        //   ← chain returns to outer walkToTile
+        // The outer walkToTile must NOT then wipe _target/_plan/
+        // _planIdx, or the bot's next leg is silently dropped and the
+        // visualizer sits idle forever in the new region.
+        const world = createWorld(4, 3, {
+            entrance: { x: 0, y: 1 },
+            exits: [{ exit_id: 'back', x: 0, y: 1, side: 'W',
+                exitName: 'back', targetRegion: 'parent' }],
+        });
+        for (let y = 0; y < 3; y++) {
+            for (let x = 0; x < 4; x++) setTile(world, x, y, TILE_FLOOR);
+        }
+        const v = new MazeRoomVisualizer({
+            // Simulate what the panel + bot do during the chain: when
+            // we get an exit-cross callback, immediately call back into
+            // the visualizer with a follow-up walkToTile in a new
+            // region. We don't actually setWorld here — the test just
+            // needs to assert that any target set during the callback
+            // survives the outer walkToTile's bookkeeping.
+            onExitCross: () => {
+                // Pretend a region transition happened and the bot is
+                // now telling the visualizer to walk to (3, 1) (a
+                // tile that's NOT the current player position, so the
+                // not-same-tile branch sets _target).
+                v.walkToTile({ x: 3, y: 1, name: 'next_target' });
+            },
+        });
+        v.setWorld(world, 'child');
+        // Trigger the same-tile exit-cross at (0,1).
+        v.walkToTile({ x: 0, y: 1, name: 'back' });
+        const s = v.getState();
+        // The follow-up walkTo set the target to (3, 1). Outer
+        // walkToTile must not have nulled it.
+        expect(s.target).toMatchObject({ x: 3, y: 1, name: 'next_target' });
+    });
+
     it('sets _stuck and stops the clock when the target is unreachable', () => {
         const v = new MazeRoomVisualizer({});
         // 3x2 with all-walls on row 1 except entrance at (0,0); the
