@@ -14,6 +14,7 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
 import { makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
+import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import {
     SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
     OPPOSITE_SIDE, SIDE_DELTAS,
@@ -1543,6 +1544,12 @@ export function buildRulesJson(grid, opts = {}) {
         // See NewDocs/plans/presets-panel-overhaul.md §"Driver
         // metadata, added in this plan".
         procgenMetadata = null,
+        // Embed a procgen-side sphere log at the top level of the
+        // output rules.json. The forward simulator (Phase 1.4) walks
+        // the freshly-built scaffold and produces JSONL-compatible
+        // entries. Default true; callers (tests, debug harnesses) can
+        // disable. See debugging-tools.md Phase 4.
+        embedSphereLog = true,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -1646,6 +1653,31 @@ export function buildRulesJson(grid, opts = {}) {
                 height: maxGy >= 0 ? maxGy + 1 : 0,
             },
         };
+    }
+
+    // Procgen-side sphere log — Phase 4. Walks the freshly-built
+    // scaffold against the forward simulator's accessibility model
+    // and embeds the result as a top-level array. The loader
+    // (sphereState/index.js) falls back to this field when no
+    // separate _sphere_log.jsonl is present.
+    if (embedSphereLog) {
+        try {
+            scaffold.sphere_log = generateSphereLog(scaffold, {
+                playerId,
+                metadata: {
+                    seed,
+                    seed_name: seedName,
+                },
+            });
+        } catch (e) {
+            // Don't fail the entire build if sphere log generation
+            // throws — emit a marker entry the loader will see and
+            // log a warning, but keep the rules.json otherwise valid.
+            scaffold.sphere_log = [{
+                type: 'metadata',
+                error: `forwardSimulator failed: ${e?.message ?? String(e)}`,
+            }];
+        }
     }
 
     return scaffold;

@@ -269,9 +269,49 @@ function handleRulesLoaded(data, propagationOptions) {
     if (success) {
       log('info', 'Sphere log auto-loaded successfully');
     } else {
-      log('warn', `Sphere log not found or failed to load: ${sphereLogPath}`);
+      log('info', `Sphere log file missing; trying embedded fallback in rules.json (${sphereLogPath})`);
+      tryEmbeddedSphereLogFallback(sphereState, sourceName, sphereLogPath);
     }
   });
+}
+
+/**
+ * Phase 4 fallback: when no separate _sphere_log.jsonl is present,
+ * re-fetch the rules.json (already loaded once into stateManager,
+ * but re-fetched here so we can read the raw `sphere_log` field
+ * without depending on stateManager's transformed staticData) and
+ * load the embedded sphere log via preloadedContent. The fetch is
+ * almost always a browser-cache hit since the rules.json was loaded
+ * moments ago.
+ */
+function tryEmbeddedSphereLogFallback(sphereState, rulesPath, attemptedSphereLogPath) {
+  if (!rulesPath || typeof fetch !== 'function') {
+    log('warn', `Sphere log not found or failed to load: ${attemptedSphereLogPath}`);
+    return;
+  }
+  fetch(rulesPath)
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((rulesDoc) => {
+      const entries = rulesDoc?.sphere_log;
+      if (!Array.isArray(entries) || entries.length === 0) {
+        log('warn', `No embedded sphere_log in rules.json (${rulesPath}); sphere log unavailable.`);
+        return;
+      }
+      const jsonlText = entries.map((e) => JSON.stringify(e)).join('\n');
+      sphereState.loadSphereLog(`embedded:${rulesPath}`, jsonlText).then((success) => {
+        if (success) {
+          log('info', `Embedded sphere log loaded from rules.json (${entries.length} entries).`);
+        } else {
+          log('warn', 'Embedded sphere log parse failed.');
+        }
+      });
+    })
+    .catch((err) => {
+      log('warn', `Could not load embedded sphere log fallback from ${rulesPath}: ${err.message}`);
+    });
 }
 
 /**

@@ -24,6 +24,18 @@
       "type": "integer",
       "description": "The seed used for game generation."
     },
+    "sphere_log": {
+      "type": "array",
+      "description": "Optional embedded sphere log — same shape as a *_sphere_log.jsonl file's lines. Used as a fallback by the loader when no separate sphere log file is present. Procgen-emitted; not present in vanilla Archipelago output.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["metadata", "state_update"] },
+          "sphere_index": { "type": "string" },
+          "player_data": { "type": "object" }
+        }
+      }
+    },
     "player_names": {
       "type": "object",
       "description": "Mapping of player slot ID (string) to player name.",
