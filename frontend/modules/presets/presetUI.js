@@ -4,6 +4,7 @@ import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { PlaybackBotUI } from '../playbackBot/playbackBotUI.js';
+import { PathFinder } from '../shared/pathfinder.js';
 import { getSphereStateSingleton } from '../sphereState/singleton.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
@@ -2491,11 +2492,18 @@ export class PresetUI {
           const sphereState = getSphereStateSingleton();
           return sphereState?.getSphereData?.() ?? [];
         },
+        // staticData carries the regionName → locations index the bot
+        // uses to build its sphere queue without parsing names.
+        getStaticData: () => stateManager?.getStaticData?.() ?? null,
         // Bot publishes playback:command events that the maze panel
         // subscribes to. Single-trigger from this widget drives the
         // visualizer over there; cross-region playback rides the
         // existing exit-cross → user:regionMove flow.
         eventBus: this.eventBus,
+        // PathFinder evaluates exit access rules against the real
+        // snapshot, so as the bot collects keys mid-playthrough the
+        // routing reflects newly-accessible regions automatically.
+        pathFinder: new PathFinder(stateManager),
       });
     }
     const botEl = this._playbackBot.getElement();

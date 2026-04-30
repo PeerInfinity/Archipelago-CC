@@ -1,5 +1,6 @@
 import { PresetUI } from './presetUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { getActiveBot } from '../playbackBot/playbackBotUI.js';
 
 let _moduleEventBus = null;
 
@@ -63,6 +64,29 @@ export function register(registrationApi) {
   // remote-control commands that the maze panel's visualizer
   // subscribes to.
   registrationApi.registerEventBusPublisher('playback:command');
+
+  // Sphere-log playback (the bot's outer-layer play loop) advances
+  // its cursor and re-routes via PathFinder by listening to the same
+  // dispatcher events the rest of the app uses for state. The bot
+  // itself is a UI widget mounted inside this panel rather than its
+  // own module, so it can't register dispatcher receivers directly;
+  // we forward here to whichever bot is currently mounted via the
+  // module-scope getActiveBot() registry. Both receivers are passive
+  // forwards: they don't mutate the event or its propagation, just
+  // peek at it before/while it walks the chain. See
+  // NewDocs/plans/procedural-generation/sphere-log-playback.md.
+  registrationApi.registerDispatcherReceiver(
+    'presets',
+    'user:locationCheck',
+    (data) => { try { getActiveBot()?.onLocationCheck?.(data); } catch (e) { log('warn', 'bot.onLocationCheck threw', e); } },
+    { direction: 'up', condition: 'unconditional', timing: 'immediate' },
+  );
+  registrationApi.registerDispatcherReceiver(
+    'presets',
+    'user:regionMove',
+    (data) => { try { getActiveBot()?.onRegionMove?.(data); } catch (e) { log('warn', 'bot.onRegionMove threw', e); } },
+    { direction: 'up', condition: 'unconditional', timing: 'immediate' },
+  );
 
   log('info', '[Presets Module] Registration complete.');
 }

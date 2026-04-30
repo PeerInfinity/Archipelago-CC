@@ -63,7 +63,7 @@ const fakeDocument = {
 beforeEach(() => { globalThis.document = fakeDocument; });
 afterEach(() => { delete globalThis.document; });
 
-import { PlaybackBotUI, buildLocationIndex, buildSphereQueue } from './playbackBotUI.js';
+import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, getActiveBot } from './playbackBotUI.js';
 
 const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
@@ -264,6 +264,216 @@ describe('buildSphereQueue', () => {
         expect(buildSphereQueue([], new Map())).toEqual([]);
         expect(buildSphereQueue(null, new Map())).toEqual([]);
         expect(buildSphereQueue([{ locations: ['x'] }], null)).toEqual([]);
+    });
+});
+
+describe('PlaybackBotUI — sphere-log play loop', () => {
+    // Helpers shared across this describe block. Each test builds its
+    // own bot so module-scope state from prior tests is irrelevant.
+    function makeStaticData() {
+        return {
+            regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A', id: 1 }] }],
+                ['region_b', { locations: [{ name: 'Loc B', id: 2 }] }],
+                ['region_c', { locations: [{ name: 'Loc C', id: 3 }] }],
+            ]),
+        };
+    }
+
+    function makeSphereData() {
+        return [
+            { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+            { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc B'] },
+            { sphereIndex: 1, fractionalIndex: 0, locations: ['Loc C'] },
+        ];
+    }
+
+    function makeBot({
+        sphereData = makeSphereData(),
+        staticData = makeStaticData(),
+        pathFinder = { findPathWithExits: () => null },
+    } = {}) {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            eventBus: bus,
+            pathFinder,
+        });
+        return { bot, bus };
+    }
+
+    it('builds the queue lazily on first play', () => {
+        const { bot } = makeBot();
+        expect(bot.getQueueLength()).toBe(0);    // not yet built
+        bot.play();
+        expect(bot.getQueueLength()).toBe(3);
+    });
+
+    it('same-region head publishes walkTo location', () => {
+        const { bot, bus } = makeBot();
+        // Pretend the visualizer is already in region_a — simulate the
+        // initial user:regionMove that the procgen player synthesizes
+        // on rules-loaded.
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
+        expect(walkTo.payload.target).toEqual({ kind: 'location', name: 'Loc A' });
+    });
+
+    it('cross-region head publishes walkTo exit using the first hop from PathFinder', () => {
+        const pathFinder = {
+            findPathWithExits: (from, to) => {
+                expect(from).toBe('region_a');
+                expect(to).toBe('region_b');
+                return { steps: [
+                    { region: 'region_a', exitUsed: null },
+                    { region: 'region_b', exitUsed: 'a_to_b_exit' },
+                ], length: 1 };
+            },
+        };
+        const { bot, bus } = makeBot({ pathFinder });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        // Pre-mark Loc A as collected so the head is Loc B (region_b).
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        bot.play();
+        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
+        expect(walkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b_exit' });
+    });
+
+    it('advances cursor on user:locationCheck for the matching head', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getCursor()).toBe(0);
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        expect(bot.getCursor()).toBe(1);
+    });
+
+    it('skips queue entries collected incidentally (advance-past-checked)', () => {
+        // Bot is walking toward Loc A but the visualizer's path passes
+        // over Loc B (a future head); bot should pre-advance past Loc B
+        // when it sees that event so the cursor doesn't stall on a
+        // location stateManager already considers checked.
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getCursor()).toBe(0);
+        bot.onLocationCheck({ locationName: 'Loc B' });   // incidental
+        bot.onLocationCheck({ locationName: 'Loc A' });   // matches head
+        // After Loc A: cursor past Loc A AND past Loc B (already in
+        // _checkedSoFar). New head is Loc C.
+        expect(bot.getCursor()).toBe(2);
+    });
+
+    it('region change retriggers walkTo for the new region', () => {
+        const pathFinder = {
+            findPathWithExits: () => ({ steps: [
+                { region: 'region_a', exitUsed: null },
+                { region: 'region_b', exitUsed: 'a_to_b' },
+            ], length: 1 }),
+        };
+        const { bot, bus } = makeBot({ pathFinder });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        bot.play();
+        // First walkTo: exit out of region_a.
+        const firstWalkTo = bus.events.find((e) => e.payload.command === 'walkTo');
+        expect(firstWalkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b' });
+
+        // Visualizer crosses into region_b — bot now in same region as
+        // head and should publish a walkTo location.
+        bot.onRegionMove({ targetRegion: 'region_b' });
+        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        expect(walkTos.at(-1).payload.target).toEqual({ kind: 'location', name: 'Loc B' });
+    });
+
+    it('queue empty -> publishes stop and status reads finished', () => {
+        // Single-location queue so we exercise clean-finish without
+        // exiting the start region (which would need PathFinder).
+        const { bot, bus } = makeBot({
+            sphereData: [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+            ],
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.isActive()).toBe(true);
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        // Cursor advanced past the only entry → bot recognizes done.
+        expect(bot.getCursor()).toBe(1);
+        expect(bot.getStatus()).toMatch(/^finished — 1 location visited/);
+        expect(bot.isActive()).toBe(false);
+        const lastCmd = bus.events.at(-1).payload.command;
+        expect(lastCmd).toBe('stop');
+    });
+
+    it('PathFinder returning null -> error status, stop event, isActive=false', () => {
+        const pathFinder = { findPathWithExits: () => null };
+        const { bot, bus } = makeBot({ pathFinder });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        bot.play();   // Head is Loc B (region_b), no path returned
+        expect(bot.getStatus()).toMatch(/^error: no path from region_a to region_b/);
+        expect(bot.isActive()).toBe(false);
+        const lastCmd = bus.events.at(-1).payload.command;
+        expect(lastCmd).toBe('stop');
+    });
+
+    it('stop() pauses without resetting cursor', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        const cursorBefore = bot.getCursor();
+        bot.stop();
+        expect(bot.isActive()).toBe(false);
+        expect(bot.getCursor()).toBe(cursorBefore);
+    });
+
+    it('reset() clears cursor + queue + status', () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        expect(bot.getCursor()).toBe(1);
+        bot.reset();
+        expect(bot.getCursor()).toBe(0);
+        expect(bot.getQueueLength()).toBe(0);   // queue cleared, will rebuild on next play
+        expect(bot.getStatus()).toBe('idle');
+        expect(bot.isActive()).toBe(false);
+    });
+
+    it('redundant walkTo publishes are de-duped while head is unchanged', () => {
+        const { bot, bus } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        const walkTosAfterPlay = bus.events.filter((e) => e.payload.command === 'walkTo').length;
+        // Mid-leg event for an unrelated location — bot's
+        // _publishNextWalkTo runs again but the head/sig hasn't
+        // changed, so no second walkTo should fire.
+        bot.onLocationCheck({ locationName: 'Unrelated location' });
+        const walkTosAfterEvent = bus.events.filter((e) => e.payload.command === 'walkTo').length;
+        expect(walkTosAfterEvent).toBe(walkTosAfterPlay);
+    });
+
+    it('thin-remote fallback when no sphere data is loaded', () => {
+        const { bot, bus } = makeBot({ sphereData: [] });
+        bot.play(7);
+        // Empty queue → bot doesn't try to drive; just publishes play.
+        expect(bot.getStatus()).toBe('no sphere log');
+        const lastCmd = bus.events.at(-1);
+        expect(lastCmd.payload.command).toBe('play');
+        expect(lastCmd.payload.rateHz).toBe(7);
+    });
+
+    it('module-scope active-bot registry tracks the latest constructed bot', () => {
+        const { bot: bot1 } = makeBot();
+        expect(getActiveBot()).toBe(bot1);
+        const { bot: bot2 } = makeBot();
+        expect(getActiveBot()).toBe(bot2);
+        bot2.destroy();
+        expect(getActiveBot()).toBe(null);
     });
 });
 
