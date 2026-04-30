@@ -260,6 +260,7 @@ export class MazeRoomUI {
                 case 'instant': this._visualizer.instant(); break;
                 case 'reset':   this._visualizer.freshStart(); break;
                 case 'setRate': this._visualizer.setRate(data?.rateHz); break;
+                case 'walkTo':  this._handleWalkToCommand(data?.target); break;
                 default: break;
             }
         };
@@ -544,6 +545,74 @@ export class MazeRoomUI {
         this.rootElement.appendChild(this._renderPlaybackLogSection());
         this.rootElement.appendChild(this._renderEditor());
         this.rootElement.appendChild(this._renderRules());
+    }
+
+    /**
+     * Resolve a walkTo target ({kind, name}) against the loaded
+     * world's exits / item-location map and aim the visualizer at the
+     * resulting tile. Used by the playback bot's outer-layer
+     * commands; the panel is the natural place for the world-level
+     * lookup since the visualizer is one layer below substrate-aware
+     * state.
+     *
+     *   { kind: 'location', name }  → reverse-lookup via
+     *       world.itemLocationNames (Map<"x,y", locationName>) and
+     *       walkToTile that position.
+     *   { kind: 'exit', name }      → world.exits.get(name); fall
+     *       back to a scan over exits by exitName/exit_id when the
+     *       caller passed the AP-side exit name.
+     *
+     * Unknown / unresolvable targets are logged at console.warn and
+     * silently dropped so a stray command doesn't crash the panel.
+     */
+    _handleWalkToCommand(target) {
+        if (!this._visualizer) return;
+        if (!target || typeof target !== 'object') return;
+        const world = this.world;
+        if (!world) {
+            console.warn('[mazeRoom] walkTo received before world loaded; ignoring');
+            return;
+        }
+        const tile = this._resolveWalkToTile(target, world);
+        if (!tile) {
+            console.warn('[mazeRoom] walkTo: could not resolve target', target);
+            return;
+        }
+        this._visualizer.walkToTile({ x: tile.x, y: tile.y, name: target.name ?? null });
+    }
+
+    _resolveWalkToTile(target, world) {
+        if (target.kind === 'location') {
+            // world.itemLocationNames is keyed "x,y" → locationName.
+            // Scan once: location lookup is rare (per-leg) so a
+            // dedicated reverse index isn't worth the bookkeeping.
+            const map = world.itemLocationNames;
+            if (!map) return null;
+            for (const [key, name] of map.entries()) {
+                if (name !== target.name) continue;
+                const [xs, ys] = key.split(',');
+                return { x: Number.parseInt(xs, 10), y: Number.parseInt(ys, 10) };
+            }
+            return null;
+        }
+        if (target.kind === 'exit') {
+            const exits = world.exits;
+            if (!exits) return null;
+            // Try exit_id first (Map key), then fall back to a scan
+            // matching exitName — the caller may pass either depending
+            // on how PathFinder names the connection.
+            if (exits.has(target.name)) {
+                const e = exits.get(target.name);
+                return { x: e.x, y: e.y };
+            }
+            for (const e of exits.values()) {
+                if (e.exitName === target.name || e.exit_id === target.name) {
+                    return { x: e.x, y: e.y };
+                }
+            }
+            return null;
+        }
+        return null;
     }
 
     /**

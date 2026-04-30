@@ -74,6 +74,13 @@ export class MazeRoomVisualizer {
         this._log = [];                // step entries
         this._completed = false;
         this._stuck = false;
+        // When an outer controller (e.g. the playback bot) is driving
+        // via walkToTile, we suppress the greedy _pickAndPlan fallback
+        // so the visualizer sits idle between legs instead of wandering
+        // off to whatever's alphabetically next. Cleared on
+        // reset/freshStart; intentionally persists across setWorld
+        // continuations so a cross-region bot run stays in control.
+        this._externallyControlled = false;
     }
 
     /**
@@ -144,6 +151,7 @@ export class MazeRoomVisualizer {
         this._completed = false;
         this._stuck = false;
         this._awaitingRegionLoad = false;
+        this._externallyControlled = false;
         this._publishSnapshot();
         if (!silent) this._notifyChange();
     }
@@ -183,6 +191,63 @@ export class MazeRoomVisualizer {
     isRunning() { return this._clock.isRunning(); }
     isCompleted() { return this._completed; }
     isStuck() { return this._stuck; }
+    isExternallyControlled() { return this._externallyControlled; }
+
+    /**
+     * External-controller entry point: aim the visualizer at a specific
+     * tile, planning a tile-level path through the current world's
+     * walls and inventory-cleared obstacles. Bypasses _enumerateTargets
+     * so the controller (the playback bot) decides what's next without
+     * fighting the greedy fallback.
+     *
+     * Side effects:
+     *   - Sets _externallyControlled so subsequent ticks won't fall
+     *     back to greedy enumeration when this leg completes.
+     *   - Does NOT start the clock — the caller is expected to issue
+     *     play()/step() separately. Lets the bot pre-stage the next
+     *     leg without unintended ticks.
+     *
+     * No-op when the world or state isn't ready (silent return), or
+     * when (x, y) equals the current position (target cleared so the
+     * caller's "we're already there" check sees a null target). Sets
+     * _stuck when the tile is unreachable under the current inventory.
+     */
+    walkToTile({ x, y, name = null } = {}) {
+        this._externallyControlled = true;
+        if (!this._world || !this._state) return;
+        if (x === this._state.player_pos.x && y === this._state.player_pos.y) {
+            this._target = null;
+            this._plan = [];
+            this._planIdx = 0;
+            this._notifyChange();
+            return;
+        }
+        const target = { x, y, kind: 'walkTo', name };
+        const plan = this._planTilePath(target);
+        if (plan === null) {
+            this._target = target;
+            this._plan = [];
+            this._planIdx = 0;
+            this._stuck = true;
+            this._clock.stop();
+            this._log.push({
+                type: 'blocked',
+                from: { ...this._state.player_pos },
+                attempted: { x, y },
+                obstacleId: null,
+                obstacleRule: null,
+                inventory: [...this._inventory],
+                reason: 'unreachable',
+                description: `walkToTile: no path from (${this._state.player_pos.x},${this._state.player_pos.y}) to (${x},${y}) under current inventory.`,
+            });
+            this._notifyChange();
+            return;
+        }
+        this._target = target;
+        this._plan = plan;
+        this._planIdx = 0;
+        this._notifyChange();
+    }
 
     getState() {
         return {
@@ -212,6 +277,11 @@ export class MazeRoomVisualizer {
         }
 
         if (!this._target || this._planIdx >= this._plan.length) {
+            // Externally-controlled mode: an outer controller owns
+            // target selection. When the current leg is done we sit
+            // idle and let it issue the next walkToTile — no greedy
+            // fallback, no premature "completed" state.
+            if (this._externallyControlled) return;
             this._pickAndPlan();
             if (!this._target) {
                 this._completed = true;

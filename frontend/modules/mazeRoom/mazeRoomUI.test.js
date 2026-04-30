@@ -196,6 +196,82 @@ describe('MazeRoomUI — arrival position on region load', () => {
     });
 });
 
+describe('MazeRoomUI — walkTo command resolution', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    function panelWithLoadedWorld() {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [
+                    { exit_id: 'east_id', x: 7, y: 3, side: 'E', exitName: 'east_to_b', targetRegion: 'B' },
+                ],
+                items: [
+                    { x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' },
+                    { x: 5, y: 4, id: 'key_red', locationName: 'Bridge Key' },
+                ],
+            }),
+            arrivedFrom: null,
+        });
+        // Capture walkToTile invocations on the visualizer the panel
+        // built. The visualizer is real but we don't tick — only the
+        // resolution side is under test here.
+        const calls = [];
+        panel._visualizer.walkToTile = (arg) => calls.push(arg);
+        return { panel, calls };
+    }
+
+    it('resolves a kind: location target via world.itemLocationNames', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        panel._handleWalkToCommand({ kind: 'location', name: 'Bridge Key' });
+        expect(calls).toEqual([{ x: 5, y: 4, name: 'Bridge Key' }]);
+    });
+
+    it('resolves a kind: exit target by exit_id (Map key)', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        panel._handleWalkToCommand({ kind: 'exit', name: 'east_id' });
+        expect(calls).toEqual([{ x: 7, y: 3, name: 'east_id' }]);
+    });
+
+    it('resolves a kind: exit target by exitName fallback', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        // Caller passed the AP-side exit name rather than the exit_id.
+        panel._handleWalkToCommand({ kind: 'exit', name: 'east_to_b' });
+        expect(calls).toEqual([{ x: 7, y: 3, name: 'east_to_b' }]);
+    });
+
+    it('drops unknown location names without throwing', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        expect(() => {
+            panel._handleWalkToCommand({ kind: 'location', name: 'Nonexistent' });
+        }).not.toThrow();
+        expect(calls).toEqual([]);
+    });
+
+    it('drops unknown exit names without throwing', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        expect(() => {
+            panel._handleWalkToCommand({ kind: 'exit', name: 'no_such_exit' });
+        }).not.toThrow();
+        expect(calls).toEqual([]);
+    });
+
+    it('drops walkTo when no world is loaded (early call)', () => {
+        const panel = new MazeRoomUI(null, {});
+        const calls = [];
+        panel._visualizer.walkToTile = (arg) => calls.push(arg);
+        expect(() => {
+            panel._handleWalkToCommand({ kind: 'location', name: 'whatever' });
+        }).not.toThrow();
+        expect(calls).toEqual([]);
+    });
+});
+
 describe('MazeRoomUI — discovery filtering helpers', () => {
     beforeEach(() => {
         _testOnly_resetModuleState();

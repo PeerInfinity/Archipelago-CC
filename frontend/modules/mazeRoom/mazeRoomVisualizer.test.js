@@ -236,6 +236,95 @@ describe('MazeRoomVisualizer — controls', () => {
     });
 });
 
+describe('MazeRoomVisualizer — walkToTile (external control)', () => {
+    it('aims at the named tile and plans a path under current inventory', () => {
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);   // entrance (0,0), open row
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 4, y: 0, name: 'far_exit' });
+        expect(v.isExternallyControlled()).toBe(true);
+        const s = v.getState();
+        expect(s.target).toMatchObject({ x: 4, y: 0, kind: 'walkTo', name: 'far_exit' });
+        // 4 east-steps to traverse from (0,0) to (4,0).
+        v.step(); v.step(); v.step(); v.step();
+        expect(v.getState().player_pos).toEqual({ x: 4, y: 0 });
+    });
+
+    it('no-op when the target is the current player position', () => {
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 0, y: 0 });    // entrance
+        const s = v.getState();
+        expect(s.target).toBeNull();
+        expect(s.player_pos).toEqual({ x: 0, y: 0 });
+        // Still flips the controlled flag — the bot drove us here, even
+        // if there's nothing to walk this turn.
+        expect(v.isExternallyControlled()).toBe(true);
+    });
+
+    it('sets _stuck and stops the clock when the target is unreachable', () => {
+        const v = new MazeRoomVisualizer({});
+        // 3x2 with all-walls on row 1 except entrance at (0,0); the
+        // tile (2,1) sits in an enclosed cell (also a wall) so BFS can
+        // never plan a path there. We place the wall AT the target so
+        // _planTilePath returns null without us having to construct an
+        // isolated floor pocket.
+        const world = makeOpenWorld(3, 2);
+        setTile(world, 2, 1, TILE_WALL);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 2, y: 1 });
+        const s = v.getState();
+        expect(s.stuck).toBe(true);
+        expect(v.isRunning()).toBe(false);
+        expect(s.log.some((e) => e.type === 'blocked' && e.reason === 'unreachable')).toBe(true);
+    });
+
+    it('does not start the clock — caller drives play/step explicitly', () => {
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 4, y: 0 });
+        expect(v.isRunning()).toBe(false);
+    });
+
+    it('controlled mode sits idle — _tick is a no-op when the leg is done', () => {
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);
+        // No items / exits → greedy mode would mark complete immediately.
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 2, y: 0 });
+        v.step(); v.step();   // walks to (2,0); leg complete
+        expect(v.getState().player_pos).toEqual({ x: 2, y: 0 });
+        // Further ticks must NOT trip the greedy-completed branch — the
+        // bot owns target selection now.
+        v.step();
+        expect(v.isCompleted()).toBe(false);
+        expect(v.getState().target).toBeNull();
+    });
+
+    it('reset() clears externallyControlled — greedy mode is back', () => {
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 4, y: 0 });
+        expect(v.isExternallyControlled()).toBe(true);
+        v.reset();
+        expect(v.isExternallyControlled()).toBe(false);
+    });
+
+    it('externally-controlled flag survives a setWorld continuation (cross-region)', () => {
+        const v = new MazeRoomVisualizer({});
+        const world1 = makeOpenWorld(5, 1);
+        const world2 = makeOpenWorld(5, 1);
+        v.setWorld(world1, 'A');
+        v.walkToTile({ x: 4, y: 0 });
+        expect(v.isExternallyControlled()).toBe(true);
+        v.setWorld(world2, 'B');   // continuation — bot stays in charge
+        expect(v.isExternallyControlled()).toBe(true);
+    });
+});
+
 describe('MazeRoomVisualizer — completion / stuck handling', () => {
     it('marks complete when no targets remain reachable', () => {
         const v = new MazeRoomVisualizer({});
