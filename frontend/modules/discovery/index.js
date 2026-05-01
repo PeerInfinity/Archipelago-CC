@@ -36,7 +36,8 @@ let _settings = {
   clickDiscoversRegion: false,
   disableLocationCheckUI: false,
   showUndiscoveredDetails: false,
-  showUndiscoveredRegionNames: false
+  showUndiscoveredRegionNames: false,
+  colorUndiscoveredByReachability: false
 };
 
 // --- Module Info ---
@@ -594,6 +595,9 @@ async function loadSettings() {
     );
     _settings.showUndiscoveredRegionNames = await settingsManager.getSetting(
       'moduleSettings.discovery.showUndiscoveredRegionNames', false
+    );
+    _settings.colorUndiscoveredByReachability = await settingsManager.getSetting(
+      'moduleSettings.discovery.colorUndiscoveredByReachability', false
     );
     log('info', '[Discovery Module] Settings loaded:', _settings);
   } catch (error) {

@@ -862,8 +862,18 @@ export class GraphDataManager {
       const accessibilityFilter = getAccessibilityVisibilityFilter();
       const showAccessibility = !accessibilityFilter || accessibilityFilter();
 
+      // In discovery mode, undiscovered regions render without
+      // reachability color hints unless the user opts in via the
+      // colorUndiscoveredByReachability setting. Default off so
+      // discovery doesn't leak progression info from regions the
+      // player hasn't found yet. Outside discovery mode the gate is
+      // a no-op — every region color-codes as before.
+      const skipReachabilityColors = isDiscoveryModeActive
+        && !isRegionDiscovered
+        && !discoverySettings.colorUndiscoveredByReachability;
+
       // Apply base accessibility class
-      if (showAccessibility) {
+      if (showAccessibility && !skipReachabilityColors) {
         if (isReachable) {
           node.addClass('accessible');
         } else {

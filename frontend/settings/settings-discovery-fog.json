@@ -9,7 +9,8 @@
       "clickDiscoversRegion": true,
       "disableLocationCheckUI": true,
       "clickDiscoversLocation": true,
-      "showUndiscoveredRegionNames": false
+      "showUndiscoveredRegionNames": false,
+      "colorUndiscoveredByReachability": false
     }
   }
 }

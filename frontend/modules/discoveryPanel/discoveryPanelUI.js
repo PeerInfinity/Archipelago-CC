@@ -37,7 +37,8 @@ export class DiscoveryPanelUI {
       clickDiscoversRegion: false,
       disableLocationCheckUI: false,
       showUndiscoveredDetails: false,
-      showUndiscoveredRegionNames: false
+      showUndiscoveredRegionNames: false,
+      colorUndiscoveredByReachability: false
     };
 
     // Section collapse state
@@ -315,6 +316,9 @@ export class DiscoveryPanelUI {
       this.settings.showUndiscoveredRegionNames = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredRegionNames', false
       );
+      this.settings.colorUndiscoveredByReachability = await settingsManager.getSetting(
+        'moduleSettings.discovery.colorUndiscoveredByReachability', false
+      );
       log('info', '[DiscoveryPanelUI] Settings loaded:', this.settings);
     } catch (error) {
       log('error', '[DiscoveryPanelUI] Error loading settings:', error);
@@ -430,6 +434,13 @@ export class DiscoveryPanelUI {
       'showUndiscoveredRegionNames',
       'Show Undiscovered Region Names',
       'Show region names instead of "???" for undiscovered regions that have a discovered exit leading to them'
+    ));
+
+    // Color Undiscovered Regions by Reachability
+    content.appendChild(this.createBooleanSetting(
+      'colorUndiscoveredByReachability',
+      'Color Undiscovered Regions by Reachability',
+      'When discovery mode is active, color-code undiscovered regions in the Region Graph by location reachability. Off by default to avoid leaking progression info from regions the player hasn’t found yet.'
     ));
 
     // Click Discovers Region

@@ -86,7 +86,8 @@ export class RegionGraphUI {
       clickDiscoversRegion: false,
       disableLocationCheckUI: false,
       showUndiscoveredDetails: false,
-      showUndiscoveredRegionNames: false
+      showUndiscoveredRegionNames: false,
+      colorUndiscoveredByReachability: false
     };
     
     this.rootElement = document.createElement('div');
@@ -1198,6 +1199,7 @@ export class RegionGraphUI {
       this.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
       this.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
       this.discoverySettings.showUndiscoveredRegionNames = data.settings.showUndiscoveredRegionNames ?? false;
+      this.discoverySettings.colorUndiscoveredByReachability = data.settings.colorUndiscoveredByReachability ?? false;
       // Also update discovery mode active state if included
       if (typeof data.settings.enableDiscoveryMode === 'boolean') {
         this.isDiscoveryModeActive = data.settings.enableDiscoveryMode;
@@ -1247,6 +1249,8 @@ export class RegionGraphUI {
         'moduleSettings.discovery.showUndiscoveredDetails', false);
       this.discoverySettings.showUndiscoveredRegionNames = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredRegionNames', false);
+      this.discoverySettings.colorUndiscoveredByReachability = await settingsManager.getSetting(
+        'moduleSettings.discovery.colorUndiscoveredByReachability', false);
 
       // Check if discovery mode is currently enabled
       this.isDiscoveryModeActive = await settingsManager.getSetting(
