@@ -137,13 +137,13 @@ describe('PlaybackBotUI — publishes playback:command events', () => {
         expect(last.payload.rateHz).toBe(12);
     });
 
-    it('all events declare presets as the publisher module', () => {
+    it('all events declare playbackBot as the publisher module', () => {
         const bus = makeFakeBus();
         const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
         bot.play(4);
         bot.stop();
         for (const ev of bus.events) {
-            expect(ev.publisher).toBe('presets');
+            expect(ev.publisher).toBe('playbackBot');
         }
     });
 

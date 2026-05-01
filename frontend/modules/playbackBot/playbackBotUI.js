@@ -25,7 +25,14 @@ import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 
 const DEFAULT_RATE_HZ = 4;
 const PLAYBACK_COMMAND_EVENT = 'playback:command';
-const PUBLISHER_MODULE = 'presets';
+const PUBLISHER_MODULE = 'playbackBot';
+// LS key for the click-intercept toggle. Persisted separately from
+// any per-session bot state because it's a settings-level switch
+// (off by default; matches the behaviour the plan specifies).
+const LS_INTERCEPT_KEY = 'playbackBot_intercept';
+// Cap on how many dispatcher events to keep in the event log so the
+// panel stays bounded across long sessions.
+const DISPATCHER_LOG_CAP = 200;
 
 /**
  * Build a Map<locationName, regionName> from stateManager's static
@@ -165,6 +172,23 @@ export class PlaybackBotUI {
         // hasn't changed.
         this._lastPublishedTarget = null;
 
+        // Phase 2 — click-intercept toggle. When on, the module's
+        // dispatcher receivers swallow `user:locationCheck` /
+        // `user:exitClicked` and route them through walkToLocation /
+        // walkToExit instead. Persisted to LS so the choice survives
+        // page reloads.
+        this._interceptEnabled = loadInterceptFromLS();
+        // Append-only log of dispatcher events the module received,
+        // each tagged with the disposition (intercepted / propagated).
+        // Surfaced in the panel so the user can see the seam working.
+        this._dispatcherLog = [];
+
+        // Manual cross-region walkTo target — set by walkToLocation,
+        // cleared on arrival or on reset(). Re-dispatched on every
+        // onRegionMove so a multi-region route finishes one exit at
+        // a time.
+        this._pendingManualTarget = null;
+
         this._mount();
     }
 
@@ -247,6 +271,7 @@ export class PlaybackBotUI {
         this._currentRegion = null;
         this._status = 'idle';
         this._log = [];                 // start a fresh transition history
+        this._pendingManualTarget = null;
         this._publish('reset');
         this._render();
     }
@@ -270,6 +295,161 @@ export class PlaybackBotUI {
     getCurrentRegion() { return this._currentRegion; }
     isActive() { return this._isActive; }
     getLog() { return this._log.slice(); }
+    isInterceptEnabled() { return this._interceptEnabled; }
+    getDispatcherLog() { return this._dispatcherLog.slice(); }
+    getCurrentHead() {
+        if (!this._queue || this._cursor >= this._queue.length) return null;
+        return { ...this._queue[this._cursor] };
+    }
+
+    setInterceptEnabled(enabled) {
+        this._interceptEnabled = !!enabled;
+        saveInterceptToLS(this._interceptEnabled);
+        this._render();
+    }
+
+    /**
+     * Append a dispatcher-log entry. Called by the module's
+     * dispatcher receivers (in playbackBot/index.js) for every
+     * inbound event so the panel can surface the intercept seam.
+     * Disposition is 'intercepted' or 'propagated'.
+     */
+    logDispatcherEvent(eventName, payload, disposition) {
+        const entry = {
+            timestamp: Date.now(),
+            eventName,
+            target: this._dispatcherLogTarget(eventName, payload),
+            disposition,
+        };
+        this._dispatcherLog.push(entry);
+        if (this._dispatcherLog.length > DISPATCHER_LOG_CAP) {
+            this._dispatcherLog.splice(0, this._dispatcherLog.length - DISPATCHER_LOG_CAP);
+        }
+        this._render();
+    }
+
+    _dispatcherLogTarget(eventName, payload) {
+        if (eventName === 'user:locationCheck' || eventName === 'system:locationCheck') {
+            return payload?.locationName ?? '?';
+        }
+        if (eventName === 'user:exitClicked') {
+            return payload?.exitName ?? '?';
+        }
+        if (eventName === 'user:regionMove') {
+            return payload?.targetRegion ?? '?';
+        }
+        return '?';
+    }
+
+    // --- manual walkTo entry points ---
+
+    /**
+     * Route the bot to a specific named location. Used by the
+     * Phase 2 click-intercept (when intercept is on, a real user
+     * click on a location card is translated here) and by the
+     * manual walkTo input. Bypasses the queue cursor.
+     *
+     * Stores the target as `_pendingManualTarget` so that if the
+     * location lives in a different region, the bot can route
+     * through intermediate regions one exit at a time, retrying
+     * after each onRegionMove arrival until the target region is
+     * reached.
+     */
+    walkToLocation(name) {
+        if (!name) return;
+        this._pendingManualTarget = { kind: 'location', name };
+        this._dispatchPendingManualTarget();
+    }
+
+    /**
+     * Route the bot through a specific named exit. v1 assumes the
+     * exit lives in the current region (the click came from the
+     * Exits panel for the current region's exits). Cross-region
+     * exit routing isn't supported here — the regular sphere queue
+     * already does that, and the click-intercept use case is
+     * "I clicked an exit I can see right now."
+     */
+    walkToExit(name) {
+        if (!name) return;
+        this._pendingManualTarget = null;
+        this._publishWalkTo({ kind: 'exit', name });
+        this._setStatus(`routing via "${name}"`);
+        this._render();
+    }
+
+    /**
+     * Resolve the pending manual location target into a single-leg
+     * walkTo (direct location if same region, exit-step if cross-
+     * region). Called on initial walkToLocation and again on every
+     * onRegionMove so multi-region routes finish without the user
+     * having to re-click.
+     */
+    _dispatchPendingManualTarget() {
+        const target = this._pendingManualTarget;
+        if (!target || target.kind !== 'location') return;
+
+        // Find which region the location lives in via the same
+        // location-index used by the sphere queue.
+        const staticData = this._getStaticData?.();
+        const idx = staticData ? buildLocationIndex(staticData) : null;
+        const targetRegion = idx?.get(target.name) ?? null;
+
+        if (!targetRegion || targetRegion === this._currentRegion) {
+            // Same region (or unknown — fall through and let the
+            // visualizer fail loudly if the name doesn't resolve).
+            this._publishWalkTo({ kind: 'location', name: target.name });
+            this._setStatus(`walking to "${target.name}"`);
+            this._pendingManualTarget = null; // arrival ends the route
+            this._render();
+            return;
+        }
+
+        // Cross-region: route via PathFinder, walk to the next exit.
+        // _pendingManualTarget stays set; onRegionMove re-enters this
+        // method after the bot crosses, picking the next leg.
+        const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, targetRegion);
+        if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
+            this._setStatus(`error: no path from ${this._currentRegion ?? '?'} to ${targetRegion}`);
+            this._pendingManualTarget = null;
+            this._render();
+            return;
+        }
+        const nextExit = path.steps[1].exitUsed;
+        if (!nextExit) {
+            this._setStatus(`error: PathFinder returned no exit (${this._currentRegion} → ${targetRegion})`);
+            this._pendingManualTarget = null;
+            this._render();
+            return;
+        }
+        this._publishWalkTo({ kind: 'exit', name: nextExit });
+        this._setStatus(`routing via "${nextExit}" → "${target.name}"`);
+        this._render();
+    }
+
+    /**
+     * Manual walkTo by tile coordinate. Used by the panel's
+     * region-picker + (x, y) input. Returns { ok: false, reason }
+     * when the picked tile is unreachable from the current
+     * position; otherwise dispatches and returns { ok: true }.
+     *
+     * Delegates the actual unreachable check to the visualizer
+     * (which knows tile-level geometry) by publishing the walkTo
+     * and watching for a subsequent 'stuck' status. v1: just
+     * publishes optimistically — the visualizer will surface a
+     * blocked-step entry in its log if the tile can't be reached.
+     */
+    walkToTile(regionName, x, y) {
+        if (!regionName || !Number.isFinite(x) || !Number.isFinite(y)) {
+            return { ok: false, reason: 'invalid arguments' };
+        }
+        if (this._isActive) {
+            return { ok: false, reason: 'sphere queue is active — stop or reset first' };
+        }
+        this._publishWalkTo({ kind: 'tile', region: regionName, x, y });
+        this._setStatus(`walking to (${regionName} ${x},${y})`);
+        this._render();
+        return { ok: true };
+    }
 
     /**
      * Set the bot's current status string AND append a corresponding
@@ -294,6 +474,11 @@ export class PlaybackBotUI {
         const name = data?.locationName;
         if (!name) return;
         this._checkedSoFar.add(name);
+        // If this matches the pending manual target, the route is
+        // complete — clear it.
+        if (this._pendingManualTarget?.name === name) {
+            this._pendingManualTarget = null;
+        }
         if (this._isActive) this._publishNextWalkTo();
         this._render();
     }
@@ -302,6 +487,11 @@ export class PlaybackBotUI {
         const target = data?.targetRegion;
         if (target) this._currentRegion = target;
         if (this._isActive) this._publishNextWalkTo();
+        // Manual cross-region routes are progressed one exit at a
+        // time; re-dispatch the pending target now that the bot is
+        // in a new region (it'll either walk to the location or
+        // route through the next exit).
+        if (this._pendingManualTarget) this._dispatchPendingManualTarget();
         this._render();
     }
 
@@ -411,6 +601,13 @@ export class PlaybackBotUI {
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
         this._publish('walkTo', { target });
+        // Make sure the visualizer's clock is ticking. The sphere
+        // queue's play() pattern is "set target, then publish play";
+        // manual walkTos (intercept, manual input, cross-region
+        // routing) need the same kick so the visualizer actually
+        // walks the plan instead of sitting on a target it received
+        // while its clock is stopped.
+        this._publish('play', { rateHz: this._rate });
     }
 
     _publish(command, extra = {}) {
@@ -451,6 +648,27 @@ export class PlaybackBotUI {
         const barEl = this._controlBar.getElement();
         if (barEl) root.appendChild(barEl);
 
+        // Phase 2 — click-intercept toggle. When on, real user clicks
+        // on the Locations / Exits panels are routed to the bot's
+        // pathfinder instead of being applied immediately. Setting
+        // is consulted by the dispatcher receivers in
+        // playbackBot/index.js via isInterceptEnabled().
+        root.appendChild(this._mountInterceptToggle());
+
+        // Phase 2 — current target line. Mirrors the bot's queue head
+        // (or an active manual walkTo target) in plain text below the
+        // status line, so the user can see at a glance what the bot
+        // is heading toward.
+        const targetEl = document.createElement('div');
+        targetEl.className = 'playback-bot-target';
+        root.appendChild(targetEl);
+        this._targetEl = targetEl;
+
+        // Phase 2 — manual walkTo input. Region picker + (x, y)
+        // coords + Go button. Disabled while the sphere queue is
+        // active (controlled in _render's enabled-toggle pass).
+        root.appendChild(this._mountManualWalkTo());
+
         // Append-only log of bot state transitions. Single-line status
         // would lose context every time the bot decided something new
         // (route via X, walking to Y, finished, etc.). The log keeps
@@ -468,6 +686,19 @@ export class PlaybackBotUI {
         root.appendChild(logEl);
         this._logEl = logEl;
 
+        // Phase 2 — dispatcher event log. Append-only history of
+        // user:locationCheck / user:exitClicked / user:regionMove
+        // events the bot received, with disposition (intercepted /
+        // propagated). Useful for verifying the intercept seam.
+        const dispLogHeading = document.createElement('div');
+        dispLogHeading.className = 'playback-bot-section-heading';
+        dispLogHeading.textContent = 'Dispatcher events';
+        root.appendChild(dispLogHeading);
+        const dispLogEl = document.createElement('div');
+        dispLogEl.className = 'playback-bot-dispatcher-log';
+        root.appendChild(dispLogEl);
+        this._dispLogEl = dispLogEl;
+
         const hint = document.createElement('div');
         hint.className = 'playback-bot-hint';
         hint.textContent = 'Drives the maze panel — open it in another column to watch the bot walk.';
@@ -475,6 +706,118 @@ export class PlaybackBotUI {
 
         this._element = root;
         this._render();
+    }
+
+    _mountInterceptToggle() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-intercept';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = this._interceptEnabled;
+        cb.addEventListener('change', () => this.setInterceptEnabled(cb.checked));
+        wrap.appendChild(cb);
+        const text = document.createElement('span');
+        text.textContent = ' Route clicks to bot';
+        wrap.appendChild(text);
+        const sub = document.createElement('div');
+        sub.className = 'playback-bot-intercept-sub';
+        sub.textContent = 'When on, clicks on the Locations and Exits panels go to the bot instead of triggering immediately.';
+        wrap.appendChild(sub);
+        this._interceptCheckbox = cb;
+        return wrap;
+    }
+
+    _mountManualWalkTo() {
+        const wrap = document.createElement('div');
+        wrap.className = 'playback-bot-manual-walkto';
+
+        const heading = document.createElement('div');
+        heading.className = 'playback-bot-section-heading';
+        heading.textContent = 'Manual walk-to';
+        wrap.appendChild(heading);
+
+        const row = document.createElement('div');
+        row.className = 'playback-bot-manual-walkto-row';
+
+        const regionSelect = document.createElement('select');
+        regionSelect.className = 'playback-bot-manual-walkto-region';
+        wrap.appendChild(regionSelect); // attach to wrap so we can repopulate
+        // remove from wrap, then put in row — simpler:
+        wrap.removeChild(regionSelect);
+        row.appendChild(regionSelect);
+
+        const xInput = document.createElement('input');
+        xInput.type = 'number';
+        xInput.className = 'playback-bot-manual-walkto-x';
+        xInput.placeholder = 'x';
+        xInput.min = '0';
+        row.appendChild(xInput);
+
+        const yInput = document.createElement('input');
+        yInput.type = 'number';
+        yInput.className = 'playback-bot-manual-walkto-y';
+        yInput.placeholder = 'y';
+        yInput.min = '0';
+        row.appendChild(yInput);
+
+        const goBtn = document.createElement('button');
+        goBtn.type = 'button';
+        goBtn.className = 'playback-bot-manual-walkto-go';
+        goBtn.textContent = 'Go';
+        row.appendChild(goBtn);
+
+        wrap.appendChild(row);
+
+        const errEl = document.createElement('div');
+        errEl.className = 'playback-bot-manual-walkto-error';
+        wrap.appendChild(errEl);
+
+        goBtn.addEventListener('click', () => {
+            const region = regionSelect.value;
+            const x = Number.parseInt(xInput.value, 10);
+            const y = Number.parseInt(yInput.value, 10);
+            const r = this.walkToTile(region, x, y);
+            errEl.textContent = r.ok ? '' : r.reason;
+        });
+
+        this._manualWalkToEl = wrap;
+        this._manualWalkToRegionSelect = regionSelect;
+        this._manualWalkToXInput = xInput;
+        this._manualWalkToYInput = yInput;
+        this._manualWalkToGoBtn = goBtn;
+        this._manualWalkToErrEl = errEl;
+        return wrap;
+    }
+
+    _populateManualWalkToRegions() {
+        if (!this._manualWalkToRegionSelect) return;
+        const select = this._manualWalkToRegionSelect;
+        const previous = select.value;
+        const staticData = this._getStaticData?.();
+        const regions = staticData?.regions;
+        const names = [];
+        if (regions && typeof regions.keys === 'function') {
+            for (const name of regions.keys()) names.push(name);
+        }
+        names.sort((a, b) => a.localeCompare(b));
+        // Only rebuild when the list of names changed — avoids
+        // resetting the user's selection on every render. `select.options`
+        // exists in real browsers; fall back to children for
+        // headless test fakes that don't synthesise it.
+        const optionList = select.options
+            ? Array.from(select.options)
+            : Array.from(select.children ?? []);
+        const current = optionList.map((o) => o.value);
+        const same = current.length === names.length && current.every((v, i) => v === names[i]);
+        if (same) return;
+        select.innerHTML = '';
+        for (const name of names) {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            select.appendChild(opt);
+        }
+        if (previous && names.includes(previous)) select.value = previous;
     }
 
     _render() {
@@ -494,6 +837,45 @@ export class PlaybackBotUI {
                     ? `Sphere log loaded: ${total} entries.`
                     : 'No sphere log loaded.';
             }
+        }
+
+        // Phase 2 — current target line.
+        if (this._targetEl) {
+            const head = this.getCurrentHead();
+            if (head) {
+                this._targetEl.textContent = `Target: location "${head.locationName}" in ${head.regionName}`;
+            } else if (this._lastPublishedTarget) {
+                this._targetEl.textContent = `Target: ${this._lastPublishedTarget}`;
+            } else {
+                this._targetEl.textContent = 'Target: —';
+            }
+        }
+
+        // Phase 2 — intercept toggle stays in sync with model state
+        // (e.g., after setInterceptEnabled was called from outside).
+        if (this._interceptCheckbox) {
+            this._interceptCheckbox.checked = this._interceptEnabled;
+        }
+
+        // Phase 2 — manual walk-to: keep the region picker populated
+        // from current static data, and disable the inputs when the
+        // sphere queue is active.
+        this._populateManualWalkToRegions();
+        const manualDisabled = this._isActive;
+        for (const el of [
+            this._manualWalkToRegionSelect,
+            this._manualWalkToXInput,
+            this._manualWalkToYInput,
+            this._manualWalkToGoBtn,
+        ]) {
+            if (el) el.disabled = manualDisabled;
+        }
+        if (this._manualWalkToErrEl && manualDisabled) {
+            // Replace any prior error with the disabled-reason hint
+            // so the user knows why the controls are inert.
+            this._manualWalkToErrEl.textContent = '(disabled while sphere queue is active)';
+        } else if (this._manualWalkToErrEl && this._manualWalkToErrEl.textContent === '(disabled while sphere queue is active)') {
+            this._manualWalkToErrEl.textContent = '';
         }
 
         // Append-only history. Render the full log; the panel's
@@ -526,5 +908,49 @@ export class PlaybackBotUI {
             // attached synchronously.
             this._logEl.scrollTop = this._logEl.scrollHeight;
         }
+
+        // Phase 2 — dispatcher event log (separate from the bot's
+        // internal status log). Same append-only pattern.
+        if (this._dispLogEl) {
+            const existing = this._dispLogEl.children.length;
+            const total = this._dispatcherLog.length;
+            if (existing > total) {
+                this._dispLogEl.innerHTML = '';
+                for (const entry of this._dispatcherLog) {
+                    this._dispLogEl.appendChild(this._renderDispatcherLogEntry(entry));
+                }
+            } else {
+                for (let i = existing; i < total; i += 1) {
+                    this._dispLogEl.appendChild(this._renderDispatcherLogEntry(this._dispatcherLog[i]));
+                }
+            }
+            this._dispLogEl.scrollTop = this._dispLogEl.scrollHeight;
+        }
+    }
+
+    _renderDispatcherLogEntry(entry) {
+        const row = document.createElement('div');
+        row.className = `playback-bot-dispatcher-log-entry playback-bot-dispatcher-log-${entry.disposition}`;
+        const time = new Date(entry.timestamp).toLocaleTimeString();
+        row.textContent = `[${time}] ${entry.eventName} "${entry.target}" (${entry.disposition})`;
+        return row;
+    }
+}
+
+function loadInterceptFromLS() {
+    if (typeof localStorage === 'undefined') return false;
+    try {
+        return localStorage.getItem(LS_INTERCEPT_KEY) === 'true';
+    } catch (_e) {
+        return false;
+    }
+}
+
+function saveInterceptToLS(enabled) {
+    if (typeof localStorage === 'undefined') return;
+    try {
+        localStorage.setItem(LS_INTERCEPT_KEY, enabled ? 'true' : 'false');
+    } catch (_e) {
+        // ignore (private browsing, quota, etc.)
     }
 }

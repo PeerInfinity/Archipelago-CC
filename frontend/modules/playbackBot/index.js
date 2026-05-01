@@ -75,27 +75,83 @@ export function register(registrationApi) {
     // without looping on the bot's own pickup events. Both flavors
     // run through the same handler here; propagation forwards the
     // same event name received.
-    for (const evName of ['user:locationCheck', 'system:locationCheck']) {
-        const capturedEv = evName; // closure capture
-        registrationApi.registerDispatcherReceiver(
-            'playbackBot',
-            capturedEv,
-            (data) => {
-                try {
-                    _moduleDispatcher?.publishToNextModule?.(
-                        'playbackBot', capturedEv, data, { direction: 'up' });
-                } catch (e) {
-                    log('warn', `playbackBot: ${capturedEv} propagation threw`, e);
-                }
-                try {
-                    getActivePanel()?.getBot()?.onLocationCheck?.(data);
-                } catch (e) {
-                    log('warn', 'playbackBot: bot.onLocationCheck threw', e);
-                }
-            },
-            { direction: 'up', condition: 'unconditional', timing: 'immediate' },
-        );
-    }
+    //
+    // Phase 2 intercept logic: when the bot's intercept toggle is on,
+    // user:locationCheck and user:exitClicked are SWALLOWED (no
+    // propagation) and translated into a walkTo for the bot. system:
+    // events ALWAYS propagate — they're not user clicks, and the bot
+    // already drives its progress through them.
+    registrationApi.registerDispatcherReceiver(
+        'playbackBot',
+        'user:locationCheck',
+        (data) => {
+            const bot = getActivePanel()?.getBot();
+            if (bot?.isInterceptEnabled?.()) {
+                bot.logDispatcherEvent?.('user:locationCheck', data, 'intercepted');
+                bot.walkToLocation?.(data?.locationName);
+                return; // swallow — do NOT propagate
+            }
+            try {
+                _moduleDispatcher?.publishToNextModule?.(
+                    'playbackBot', 'user:locationCheck', data, { direction: 'up' });
+            } catch (e) {
+                log('warn', 'playbackBot: user:locationCheck propagation threw', e);
+            }
+            try {
+                bot?.logDispatcherEvent?.('user:locationCheck', data, 'propagated');
+                bot?.onLocationCheck?.(data);
+            } catch (e) {
+                log('warn', 'playbackBot: bot.onLocationCheck threw', e);
+            }
+        },
+        { direction: 'up', condition: 'unconditional', timing: 'immediate' },
+    );
+
+    registrationApi.registerDispatcherReceiver(
+        'playbackBot',
+        'system:locationCheck',
+        (data) => {
+            // system: never intercepts — it represents the bot's own
+            // pickups (visualizer reclassified them in Phase 0).
+            try {
+                _moduleDispatcher?.publishToNextModule?.(
+                    'playbackBot', 'system:locationCheck', data, { direction: 'up' });
+            } catch (e) {
+                log('warn', 'playbackBot: system:locationCheck propagation threw', e);
+            }
+            try {
+                const bot = getActivePanel()?.getBot();
+                bot?.logDispatcherEvent?.('system:locationCheck', data, 'propagated');
+                bot?.onLocationCheck?.(data);
+            } catch (e) {
+                log('warn', 'playbackBot: bot.onLocationCheck threw', e);
+            }
+        },
+        { direction: 'up', condition: 'unconditional', timing: 'immediate' },
+    );
+
+    registrationApi.registerDispatcherReceiver(
+        'playbackBot',
+        'user:exitClicked',
+        (data) => {
+            const bot = getActivePanel()?.getBot();
+            if (bot?.isInterceptEnabled?.()) {
+                bot.logDispatcherEvent?.('user:exitClicked', data, 'intercepted');
+                bot.walkToExit?.(data?.exitName);
+                return; // swallow — do NOT propagate
+            }
+            try {
+                _moduleDispatcher?.publishToNextModule?.(
+                    'playbackBot', 'user:exitClicked', data, { direction: 'up' });
+            } catch (e) {
+                log('warn', 'playbackBot: user:exitClicked propagation threw', e);
+            }
+            // No bot handler for exit clicks (the bot's queue is
+            // location-driven, not exit-driven); just log + propagate.
+            bot?.logDispatcherEvent?.('user:exitClicked', data, 'propagated');
+        },
+        { direction: 'up', condition: 'unconditional', timing: 'immediate' },
+    );
 
     registrationApi.registerDispatcherReceiver(
         'playbackBot',
@@ -108,7 +164,9 @@ export function register(registrationApi) {
                 log('warn', 'playbackBot: regionMove propagation threw', e);
             }
             try {
-                getActivePanel()?.getBot()?.onRegionMove?.(data);
+                const bot = getActivePanel()?.getBot();
+                bot?.logDispatcherEvent?.('user:regionMove', data, 'propagated');
+                bot?.onRegionMove?.(data);
             } catch (e) {
                 log('warn', 'playbackBot: bot.onRegionMove threw', e);
             }
