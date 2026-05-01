@@ -378,27 +378,44 @@ export class PlaybackBotUI {
     }
 
     /**
-     * Resolve the pending manual location target into a single-leg
-     * walkTo (direct location if same region, exit-step if cross-
-     * region). Called on initial walkToLocation and again on every
+     * Resolve the pending manual target into a single-leg walkTo
+     * (direct if same region, exit-step if cross-region). Called on
+     * initial walkToLocation / walkToTile and again on every
      * onRegionMove so multi-region routes finish without the user
-     * having to re-click.
+     * having to re-click. Handles both `kind: 'location'` and
+     * `kind: 'tile'` targets — the only difference is how the
+     * destination region is determined and what gets published as
+     * the final leg.
      */
     _dispatchPendingManualTarget() {
         const target = this._pendingManualTarget;
-        if (!target || target.kind !== 'location') return;
+        if (!target) return;
+        if (target.kind !== 'location' && target.kind !== 'tile') return;
 
-        // Find which region the location lives in via the same
-        // location-index used by the sphere queue.
-        const staticData = this._getStaticData?.();
-        const idx = staticData ? buildLocationIndex(staticData) : null;
-        const targetRegion = idx?.get(target.name) ?? null;
+        let targetRegion;
+        if (target.kind === 'location') {
+            // Find which region the location lives in via the same
+            // location-index used by the sphere queue.
+            const staticData = this._getStaticData?.();
+            const idx = staticData ? buildLocationIndex(staticData) : null;
+            targetRegion = idx?.get(target.name) ?? null;
+        } else {
+            targetRegion = target.region;
+        }
 
         if (!targetRegion || targetRegion === this._currentRegion) {
             // Same region (or unknown — fall through and let the
-            // visualizer fail loudly if the name doesn't resolve).
-            this._publishWalkTo({ kind: 'location', name: target.name });
-            this._setStatus(`walking to "${target.name}"`);
+            // visualizer fail loudly if the target doesn't resolve).
+            if (target.kind === 'location') {
+                this._publishWalkTo({ kind: 'location', name: target.name });
+                this._setStatus(`walking to "${target.name}"`);
+            } else {
+                this._publishWalkTo({
+                    kind: 'tile', region: targetRegion ?? this._currentRegion,
+                    x: target.x, y: target.y,
+                });
+                this._setStatus(`walking to (${targetRegion ?? this._currentRegion ?? '?'} ${target.x},${target.y})`);
+            }
             this._pendingManualTarget = null; // arrival ends the route
             this._render();
             return;
@@ -422,21 +439,29 @@ export class PlaybackBotUI {
             return;
         }
         this._publishWalkTo({ kind: 'exit', name: nextExit });
-        this._setStatus(`routing via "${nextExit}" → "${target.name}"`);
+        const dest = target.kind === 'location'
+            ? `"${target.name}"`
+            : `(${targetRegion} ${target.x},${target.y})`;
+        this._setStatus(`routing via "${nextExit}" → ${dest}`);
         this._render();
     }
 
     /**
      * Manual walkTo by tile coordinate. Used by the panel's
      * region-picker + (x, y) input. Returns { ok: false, reason }
-     * when the picked tile is unreachable from the current
-     * position; otherwise dispatches and returns { ok: true }.
+     * for invalid args or while the sphere queue is active;
+     * otherwise stores the target and returns { ok: true }.
      *
-     * Delegates the actual unreachable check to the visualizer
-     * (which knows tile-level geometry) by publishing the walkTo
-     * and watching for a subsequent 'stuck' status. v1: just
-     * publishes optimistically — the visualizer will surface a
-     * blocked-step entry in its log if the tile can't be reached.
+     * If the target region matches the current region, the tile
+     * walkTo is published immediately and the visualizer takes over.
+     * If different, the target is held as `_pendingManualTarget`
+     * and routed through one exit per region transition (mirroring
+     * walkToLocation's cross-region logic), retrying on each
+     * onRegionMove until the destination region is reached.
+     *
+     * Tile reachability inside a region is left to the visualizer
+     * (which knows tile-level geometry) — it surfaces a blocked-step
+     * entry in its log if the tile can't be reached.
      */
     walkToTile(regionName, x, y) {
         if (!regionName || !Number.isFinite(x) || !Number.isFinite(y)) {
@@ -445,9 +470,8 @@ export class PlaybackBotUI {
         if (this._isActive) {
             return { ok: false, reason: 'sphere queue is active — stop or reset first' };
         }
-        this._publishWalkTo({ kind: 'tile', region: regionName, x, y });
-        this._setStatus(`walking to (${regionName} ${x},${y})`);
-        this._render();
+        this._pendingManualTarget = { kind: 'tile', region: regionName, x, y };
+        this._dispatchPendingManualTarget();
         return { ok: true };
     }
 
@@ -596,8 +620,12 @@ export class PlaybackBotUI {
         // appears in multiple regions — without the region prefix,
         // a same-named exit in a different region would be silently
         // skipped after a region transition, leaving the visualizer
-        // with no target.
-        const sig = `${this._currentRegion}:${target.kind}:${target.name}`;
+        // with no target. For tile targets the sig must also include
+        // (x,y) since `name` is undefined.
+        const tail = target.kind === 'tile'
+            ? `${target.x},${target.y}`
+            : `${target.name}`;
+        const sig = `${this._currentRegion}:${target.kind}:${tail}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
         this._publish('walkTo', { target });

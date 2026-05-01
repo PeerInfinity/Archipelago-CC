@@ -270,6 +270,29 @@ describe('MazeRoomUI — walkTo command resolution', () => {
         }).not.toThrow();
         expect(calls).toEqual([]);
     });
+
+    it('resolves a kind: tile target when region matches the loaded one', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        panel._handleWalkToCommand({ kind: 'tile', region: 'A', x: 5, y: 7 });
+        expect(calls).toEqual([{ x: 5, y: 7, name: null }]);
+    });
+
+    it('drops a kind: tile target whose region does not match the loaded one', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        // Stale dispatch mid-region-transition: the bot computed (x, y)
+        // for region B but a load-region race left the panel still on A.
+        // Walking to those coords in A's world would land on the wrong
+        // tile, so the panel must drop instead.
+        panel._handleWalkToCommand({ kind: 'tile', region: 'B', x: 5, y: 7 });
+        expect(calls).toEqual([]);
+    });
+
+    it('drops a kind: tile target with non-finite coords', () => {
+        const { panel, calls } = panelWithLoadedWorld();
+        panel._handleWalkToCommand({ kind: 'tile', region: 'A', x: NaN, y: 7 });
+        panel._handleWalkToCommand({ kind: 'tile', region: 'A', x: 5, y: undefined });
+        expect(calls).toEqual([]);
+    });
 });
 
 describe('MazeRoomUI — visualizer pickup → system:locationCheck dispatch', () => {

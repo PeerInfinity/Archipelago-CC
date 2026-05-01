@@ -516,6 +516,133 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
     // playbackBot/index.js / playbackBotPanel.js if/when they grow.
 });
 
+describe('PlaybackBotUI — manual walkToTile', () => {
+    function makeStaticData() {
+        return {
+            regions: new Map([
+                ['region_a', { locations: [] }],
+                ['region_b', { locations: [] }],
+                ['region_c', { locations: [] }],
+            ]),
+        };
+    }
+
+    function makeBot({
+        pathFinder = { findPathWithExits: () => null },
+        staticData = makeStaticData(),
+    } = {}) {
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [],
+            getStaticData: () => staticData,
+            eventBus: bus,
+            pathFinder,
+        });
+        return { bot, bus };
+    }
+
+    it('rejects invalid arguments without dispatching', () => {
+        const { bot, bus } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        const before = bus.events.length;
+        expect(bot.walkToTile('', 0, 0)).toEqual({ ok: false, reason: 'invalid arguments' });
+        expect(bot.walkToTile('region_a', NaN, 0)).toEqual({ ok: false, reason: 'invalid arguments' });
+        expect(bot.walkToTile('region_a', 0, NaN)).toEqual({ ok: false, reason: 'invalid arguments' });
+        expect(bus.events.length).toBe(before);
+    });
+
+    it('refuses while the sphere queue is active', () => {
+        const { bot } = makeBot({
+            staticData: { regions: new Map([['region_a', { locations: [{ name: 'Loc A' }] }]]) },
+        });
+        // Inject a synthetic queue + active state so we don't have to
+        // wire up real sphere data just to assert the guard.
+        bot._isActive = true;
+        const r = bot.walkToTile('region_a', 1, 2);
+        expect(r.ok).toBe(false);
+        expect(r.reason).toMatch(/sphere queue is active/);
+    });
+
+    it('same-region target publishes kind:tile walkTo and clears pending', () => {
+        const { bot, bus } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        const r = bot.walkToTile('region_a', 5, 7);
+        expect(r).toEqual({ ok: true });
+        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
+        expect(walkTo.payload.target).toEqual({ kind: 'tile', region: 'region_a', x: 5, y: 7 });
+        // Pending cleared so a stray onRegionMove doesn't re-fire.
+        expect(bot._pendingManualTarget).toBeNull();
+    });
+
+    it('cross-region target routes through PathFinder via exit walkTo', () => {
+        const calls = [];
+        const pathFinder = {
+            findPathWithExits: (from, to) => {
+                calls.push([from, to]);
+                return { steps: [
+                    { region: from, exitUsed: null },
+                    { region: to, exitUsed: 'a_to_b' },
+                ], length: 1 };
+            },
+        };
+        const { bot, bus } = makeBot({ pathFinder });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        const r = bot.walkToTile('region_b', 3, 4);
+        expect(r.ok).toBe(true);
+        expect(calls).toEqual([['region_a', 'region_b']]);
+        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
+        expect(walkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b' });
+        // Pending stays set so the next regionMove finishes the route.
+        expect(bot._pendingManualTarget).toEqual({ kind: 'tile', region: 'region_b', x: 3, y: 4 });
+        expect(bot.getStatus()).toMatch(/routing via "a_to_b" → \(region_b 3,4\)/);
+    });
+
+    it('region transition finishes a cross-region tile route', () => {
+        const pathFinder = {
+            findPathWithExits: () => ({ steps: [
+                { region: 'region_a', exitUsed: null },
+                { region: 'region_b', exitUsed: 'a_to_b' },
+            ], length: 1 }),
+        };
+        const { bot, bus } = makeBot({ pathFinder });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.walkToTile('region_b', 3, 4);
+        // Simulate the visualizer crossing the exit.
+        bot.onRegionMove({ targetRegion: 'region_b' });
+        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        // Last walkTo: the final-leg tile walk in region_b.
+        expect(walkTos.at(-1).payload.target).toEqual({
+            kind: 'tile', region: 'region_b', x: 3, y: 4,
+        });
+        expect(bot._pendingManualTarget).toBeNull();
+    });
+
+    it('PathFinder failure surfaces error status and clears pending', () => {
+        const pathFinder = { findPathWithExits: () => null };
+        const { bot, bus } = makeBot({ pathFinder });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        const r = bot.walkToTile('region_b', 0, 0);
+        // walkToTile itself returns ok — the PathFinder failure is
+        // surfaced via status, matching walkToLocation's behavior.
+        expect(r.ok).toBe(true);
+        expect(bot.getStatus()).toMatch(/^error: no path from region_a to region_b/);
+        expect(bot._pendingManualTarget).toBeNull();
+        // No walkTo should have been published.
+        expect(bus.events.find((e) => e.payload.command === 'walkTo')).toBeUndefined();
+    });
+
+    it('back-to-back tile walkTos to different (x,y) both publish (dedup respects coords)', () => {
+        const { bot, bus } = makeBot();
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.walkToTile('region_a', 1, 1);
+        bot.walkToTile('region_a', 2, 2);
+        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        expect(walkTos).toHaveLength(2);
+        expect(walkTos[0].payload.target).toMatchObject({ kind: 'tile', x: 1, y: 1 });
+        expect(walkTos[1].payload.target).toMatchObject({ kind: 'tile', x: 2, y: 2 });
+    });
+});
+
 describe('formatSphereTag', () => {
     it('formats integer sphere as "Sphere N → "', () => {
         expect(formatSphereTag({ sphereIndex: 0, fractionalIndex: 0 })).toBe('Sphere 0 → ');

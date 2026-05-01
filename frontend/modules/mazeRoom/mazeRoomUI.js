@@ -557,12 +557,17 @@ export class MazeRoomUI {
      * lookup since the visualizer is one layer below substrate-aware
      * state.
      *
-     *   { kind: 'location', name }  → reverse-lookup via
+     *   { kind: 'location', name }     → reverse-lookup via
      *       world.itemLocationNames (Map<"x,y", locationName>) and
      *       walkToTile that position.
-     *   { kind: 'exit', name }      → world.exits.get(name); fall
+     *   { kind: 'exit', name }         → world.exits.get(name); fall
      *       back to a scan over exits by exitName/exit_id when the
      *       caller passed the AP-side exit name.
+     *   { kind: 'tile', region, x, y } → walk to (x, y). The region
+     *       must match the panel's currently-loaded region; cross-
+     *       region tile targets are routed by the bot through exits
+     *       one region at a time, and only land here once the
+     *       destination region is loaded.
      *
      * Unknown / unresolvable targets are logged at console.warn and
      * silently dropped so a stray command doesn't crash the panel.
@@ -613,6 +618,15 @@ export class MazeRoomUI {
                 }
             }
             return null;
+        }
+        if (target.kind === 'tile') {
+            // Defensive: the bot only publishes a tile walkTo when its
+            // _currentRegion matches target.region, but a stale dispatch
+            // mid-region-transition would walk to the wrong tile in the
+            // newly-loaded world. Drop instead.
+            if (target.region && target.region !== this.currentRegionId) return null;
+            if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) return null;
+            return { x: target.x, y: target.y };
         }
         return null;
     }
