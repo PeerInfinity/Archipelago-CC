@@ -1114,16 +1114,16 @@ Location was force-checked to maintain server sync.`;
 const messageHandlerSingleton = new MessageHandler();
 export default messageHandlerSingleton;
 
-// New handler for user:locationCheck event
+// Handler for user: + system:locationCheck. eventName is forwarded
+// when the handler propagates so the user:/system: distinction
+// stays consistent through the dispatcher chain.
 export async function handleUserLocationCheckForClient(
   eventData,
-  propagationOptions
+  eventName = 'user:locationCheck'
 ) {
-  log('info', 
-    '[MessageHandler] handleUserLocationCheckForClient received event:',
-    eventData ? JSON.parse(JSON.stringify(eventData)) : 'undefined',
-    'Propagation:',
-    propagationOptions ? JSON.parse(JSON.stringify(propagationOptions)) : 'undefined'
+  log('info',
+    `[MessageHandler] handleUserLocationCheckForClient received ${eventName}:`,
+    eventData ? JSON.parse(JSON.stringify(eventData)) : 'undefined'
   );
   
   // Access the dispatcher from the messageHandlerSingleton, which should have been set during client module initialization
@@ -1174,7 +1174,7 @@ export async function handleUserLocationCheckForClient(
         // Assuming 'client' is the correct module name string for itself
         dispatcher.publishToNextModule(
           MODULE_NAME,
-          'user:locationCheck',
+          eventName,
           eventData,
           { direction: 'up' }
         );
@@ -1193,7 +1193,7 @@ export async function handleUserLocationCheckForClient(
     if (dispatcher) {
       dispatcher.publishToNextModule(
         MODULE_NAME,
-        'user:locationCheck',
+        eventName,
         eventData,
         { direction: 'up' }
       );

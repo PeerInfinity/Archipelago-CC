@@ -86,17 +86,24 @@ export function register(registrationApi) {
   //      propagate FIRST (so stateManager updates synchronously), and
   //      only then call the bot. Otherwise the bot routes against
   //      stale inventory and trips on the next gated exit.
-  registrationApi.registerDispatcherReceiver(
-    'presets',
-    'user:locationCheck',
-    (data) => {
-      try {
-        _moduleDispatcher?.publishToNextModule?.('presets', 'user:locationCheck', data, { direction: 'up' });
-      } catch (e) { log('warn', 'presets: locationCheck propagation threw', e); }
-      try { getActiveBot()?.onLocationCheck?.(data); } catch (e) { log('warn', 'bot.onLocationCheck threw', e); }
-    },
-    { direction: 'up', condition: 'unconditional', timing: 'immediate' },
-  );
+  // user: + system:locationCheck — same handler. The bot's pickup-
+  // driven queue advance comes through system: now (visualizer
+  // pickups reclassified in Phase 0 of the playback-bot refactor).
+  // Propagate forward as the same event we received.
+  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+    const capturedEv = evName; // closure capture
+    registrationApi.registerDispatcherReceiver(
+      'presets',
+      capturedEv,
+      (data) => {
+        try {
+          _moduleDispatcher?.publishToNextModule?.('presets', capturedEv, data, { direction: 'up' });
+        } catch (e) { log('warn', `presets: ${capturedEv} propagation threw`, e); }
+        try { getActiveBot()?.onLocationCheck?.(data); } catch (e) { log('warn', 'bot.onLocationCheck threw', e); }
+      },
+      { direction: 'up', condition: 'unconditional', timing: 'immediate' },
+    );
+  }
   registrationApi.registerDispatcherReceiver(
     'presets',
     'user:regionMove',

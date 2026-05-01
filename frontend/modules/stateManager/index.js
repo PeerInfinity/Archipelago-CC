@@ -151,13 +151,19 @@ function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('init:postInitComplete');
   // TODO: Add intents for events the proxy might need to listen for (e.g., server messages for sync)
 
-  // Register dispatcher receiver for user:locationCheck
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name, // 'stateManager'
-    'user:locationCheck', // Explicitly the event name we want
-    handleUserLocationCheckForStateManager,
-    null // No further propagation
-  );
+  // Register dispatcher receivers for user: + system:locationCheck.
+  // Phase 0 of the playback-bot refactor split the visualizer's
+  // pickup events onto system: so the bot's intercept doesn't
+  // swallow its own progress; both events still terminate at
+  // stateManager identically.
+  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+    registrationApi.registerDispatcherReceiver(
+      moduleInfo.name, // 'stateManager'
+      evName,
+      handleUserLocationCheckForStateManager,
+      null // No further propagation
+    );
+  }
 
   // Register dispatcher receiver for user:itemCheck
   registrationApi.registerDispatcherReceiver(

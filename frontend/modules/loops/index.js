@@ -196,13 +196,15 @@ export function register(registrationApi) {
     },
   });
 
-  // Register the new dispatcher receiver for user:locationCheck
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name,
-    'user:locationCheck',
-    handleUserLocationCheckForLoops,
-    { direction: 'up', condition: 'conditional', timing: 'immediate' }
-  );
+  // user: + system:locationCheck — same handler, both forwarded.
+  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+    registrationApi.registerDispatcherReceiver(
+      moduleInfo.name,
+      evName,
+      (data) => handleUserLocationCheckForLoops(data, evName),
+      { direction: 'up', condition: 'conditional', timing: 'immediate' }
+    );
+  }
 
   // Register dispatcher receiver for user:itemCheck
   registrationApi.registerDispatcherReceiver(

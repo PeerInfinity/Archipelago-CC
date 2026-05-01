@@ -92,6 +92,11 @@ export function register(registrationApi) {
     // and act on them in the standard order.
     if (typeof registrationApi.registerDispatcherSender === 'function') {
         registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+        // system:locationCheck — visualizer pickups (keyboard play
+        // and bot play) publish here. Distinct from user: so the
+        // playback bot's Phase 2 click-intercept can swallow only
+        // real user clicks. Terminal handlers subscribe to both.
+        registrationApi.registerDispatcherSender('system:locationCheck', 'bottom', 'first');
         registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     }
 

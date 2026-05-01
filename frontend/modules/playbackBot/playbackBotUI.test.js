@@ -341,7 +341,7 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(walkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b_exit' });
     });
 
-    it('advances cursor on user:locationCheck for the matching head', () => {
+    it('advances cursor on system:locationCheck for the matching head', () => {
         const { bot } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.play();

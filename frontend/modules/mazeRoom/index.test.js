@@ -103,13 +103,14 @@ describe('mazeRoom index — dispatcher sender registration', () => {
         _testOnly_resetModuleState();
     });
 
-    it('registers user:locationCheck and user:regionMove as dispatcher senders', () => {
+    it('registers user/system:locationCheck and user:regionMove as dispatcher senders', () => {
         const reg = makeMockRegistrationApi();
         register(reg);
         const events = reg._calls.dispatcherSenders.map((s) => s.event);
         expect(events).toContain('user:locationCheck');
+        expect(events).toContain('system:locationCheck');
         expect(events).toContain('user:regionMove');
-        // Both registered with the same chain semantics regionGraph uses.
+        // All registered with the same chain semantics regionGraph uses.
         for (const sender of reg._calls.dispatcherSenders) {
             expect(sender.direction).toBe('bottom');
             expect(sender.target).toBe('first');

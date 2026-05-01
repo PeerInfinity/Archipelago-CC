@@ -39,13 +39,17 @@ export async function register(registrationApi) {
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
     );
     
-    registrationApi.registerDispatcherReceiver(
-        moduleId,
-        'user:locationCheck',
-        handleLocationCheck,
-        { direction: 'up', condition: 'unconditional', timing: 'immediate' }
-    );
-    
+    // user: + system:locationCheck — same handler, propagation
+    // forwards the same event name (see handleLocationCheck).
+    for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+        registrationApi.registerDispatcherReceiver(
+            moduleId,
+            evName,
+            (data) => handleLocationCheck(data, evName),
+            { direction: 'up', condition: 'unconditional', timing: 'immediate' }
+        );
+    }
+
     registrationApi.registerDispatcherReceiver(
         moduleId,
         'user:customAction',
@@ -289,8 +293,8 @@ function handleTrimPath(data, propagationOptions) {
     }
 }
 
-function handleLocationCheck(data, propagationOptions) {
-    log('info', `[${moduleId} Module] Received user:locationCheck event`, data);
+function handleLocationCheck(data, eventName = 'user:locationCheck') {
+    log('info', `[${moduleId} Module] Received ${eventName} event`, data);
 
     const gameState = getGameStateSingleton();
     if (data && data.locationName) {
@@ -303,16 +307,17 @@ function handleLocationCheck(data, propagationOptions) {
         }
     }
 
-    // Propagate event to the next module (up direction)
+    // Propagate event to the next module (up direction). Forward the
+    // same event name we received so user:/system: stays consistent.
     if (moduleDispatcher) {
         moduleDispatcher.publishToNextModule(
             moduleId,
-            'user:locationCheck',
+            eventName,
             data,
             { direction: 'up' }
         );
     } else {
-        log('error', `[${moduleId} Module] Dispatcher not available for propagation of user:locationCheck event`);
+        log('error', `[${moduleId} Module] Dispatcher not available for propagation of ${eventName} event`);
     }
 }
 

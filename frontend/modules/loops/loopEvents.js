@@ -78,13 +78,13 @@ export function initializeLoopEvents(eventBus) {
  * @param {object} eventData - The data associated with the event.
  * @param {object} propagationOptions - Options related to event propagation.
  */
-export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
+export function handleUserLocationCheckForLoops(eventData, eventName = 'user:locationCheck') {
   const dispatcher = getLoopsModuleDispatcher();
 
-  // When loop mode is NOT active, just propagate
+  // When loop mode is NOT active, just propagate the same event name we received.
   if (!isLoopModeActive) {
     if (dispatcher) {
-      dispatcher.publishToNextModule(moduleInfo.name, 'user:locationCheck', eventData, { direction: 'up' });
+      dispatcher.publishToNextModule(moduleInfo.name, eventName, eventData, { direction: 'up' });
     }
     return;
   }

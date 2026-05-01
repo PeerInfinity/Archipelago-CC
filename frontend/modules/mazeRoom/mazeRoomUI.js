@@ -637,12 +637,17 @@ export class MazeRoomUI {
 
     /**
      * Visualizer picked up an item with a known locationName. Mirror
-     * the keyboard-play _publishPlaybackEvents path: publish
-     * user:locationCheck on the dispatcher so stateManager records
-     * the check and the playback bot's onLocationCheck advances its
+     * the keyboard-play _publishPlaybackEvents path: publish a
+     * locationCheck on the dispatcher so stateManager records the
+     * check and the playback bot's onLocationCheck advances its
      * cursor. Without this, bot-driven playback stalls on the first
      * pickup — the visualizer's internal state updates but no event
      * reaches the rest of the app.
+     *
+     * Uses `system:locationCheck` (not `user:`) so the playback bot's
+     * Phase 2 click-intercept doesn't swallow the bot's own progress
+     * and infinite-loop. Terminal handlers subscribe to both events
+     * with the same handler so behavior is otherwise identical.
      *
      * stateManager already de-duplicates against its checkedLocations
      * set, so re-publishing for an already-checked location is a
@@ -652,7 +657,7 @@ export class MazeRoomUI {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
         if (!locationName) return;
-        dispatcher.publish('user:locationCheck', {
+        dispatcher.publish('system:locationCheck', {
             locationName,
             regionName: regionId ?? this.currentRegionId,
             itemId: itemId ?? null,
@@ -1645,7 +1650,11 @@ export class MazeRoomUI {
                 // (Adventure has 12 Freeincarnates) must still fire
                 // a check for THIS location.
                 if (checkedLocations.has(locationName)) continue;
-                dispatcher.publish('user:locationCheck', {
+                // system:locationCheck (not user:) — keyboard play
+                // and bot play both route through here; using system:
+                // avoids the Phase 2 intercept swallowing the bot's
+                // own pickups.
+                dispatcher.publish('system:locationCheck', {
                     locationName,
                     regionName: this.currentRegionId,
                 }, { initialTarget: 'bottom' });

@@ -157,13 +157,18 @@ export function register(registrationApi) {
     handleDisconnectRequest
   );
 
-  // Register dispatcher receiver for user:locationCheck
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name,
-    'user:locationCheck',
-    handleUserLocationCheckForClient, // Use the new imported handler
-    { direction: 'up', condition: 'conditional', timing: 'immediate' }
-  );
+  // Register dispatcher receivers for user: + system:locationCheck.
+  // The client forwards both flavors to the AP server identically;
+  // they only differ at the playback-bot intercept layer (Phase 2
+  // of the playback-bot refactor).
+  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+    registrationApi.registerDispatcherReceiver(
+      moduleInfo.name,
+      evName,
+      (data) => handleUserLocationCheckForClient(data, evName),
+      { direction: 'up', condition: 'conditional', timing: 'immediate' }
+    );
+  }
 
   // Register dispatcher receiver for user:itemCheck
   registrationApi.registerDispatcherReceiver(

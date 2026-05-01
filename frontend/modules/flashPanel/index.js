@@ -36,12 +36,15 @@ export function register(registrationApi) {
   // clicks in the Regions/Locations/etc. panels without gating on
   // the event-bus layer (which doesn't carry this event). The
   // handler always propagates — it's observation-only.
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name,
-    'user:locationCheck',
-    handleUserLocationCheckForFlashPanel,
-    { direction: 'up', condition: 'conditional', timing: 'immediate' }
-  );
+  // user: + system:locationCheck — observe both, propagate same name.
+  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+    registrationApi.registerDispatcherReceiver(
+      moduleInfo.name,
+      evName,
+      (data) => handleUserLocationCheckForFlashPanel(data, evName),
+      { direction: 'up', condition: 'conditional', timing: 'immediate' }
+    );
+  }
 
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
@@ -58,7 +61,7 @@ export function register(registrationApi) {
  * then propagates up the chain so the normal client/stateManager
  * flow continues.
  */
-function handleUserLocationCheckForFlashPanel(eventData) {
+function handleUserLocationCheckForFlashPanel(eventData, eventName = 'user:locationCheck') {
   try {
     if (activePanelInstance && typeof activePanelInstance.handleUserLocationCheck === 'function') {
       activePanelInstance.handleUserLocationCheck(eventData);
@@ -69,7 +72,7 @@ function handleUserLocationCheckForFlashPanel(eventData) {
   if (moduleDispatcher && typeof moduleDispatcher.publishToNextModule === 'function') {
     moduleDispatcher.publishToNextModule(
       moduleInfo.name,
-      'user:locationCheck',
+      eventName,
       eventData,
       { direction: 'up' }
     );

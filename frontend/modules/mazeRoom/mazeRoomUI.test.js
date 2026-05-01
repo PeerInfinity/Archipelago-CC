@@ -272,7 +272,7 @@ describe('MazeRoomUI — walkTo command resolution', () => {
     });
 });
 
-describe('MazeRoomUI — visualizer pickup → user:locationCheck dispatch', () => {
+describe('MazeRoomUI — visualizer pickup → system:locationCheck dispatch', () => {
     let calls;
     function fakeApis() {
         return {
@@ -291,7 +291,7 @@ describe('MazeRoomUI — visualizer pickup → user:locationCheck dispatch', () 
         MazeRoomUI.setModuleApis(fakeApis());
     });
 
-    it('publishes user:locationCheck with locationName + itemId + regionName', () => {
+    it('publishes system:locationCheck with locationName + itemId + regionName', () => {
         const panel = new MazeRoomUI(null, {});
         panel.applyLoadedRegion({
             region_id: 'A',
@@ -300,7 +300,7 @@ describe('MazeRoomUI — visualizer pickup → user:locationCheck dispatch', () 
         });
         panel._onVisualizerLocationCheck('Slay Yorgle', 'sword', 'Overworld');
         expect(calls).toHaveLength(1);
-        expect(calls[0].topic).toBe('user:locationCheck');
+        expect(calls[0].topic).toBe('system:locationCheck');
         expect(calls[0].payload).toEqual({
             locationName: 'Slay Yorgle',
             regionName: 'Overworld',

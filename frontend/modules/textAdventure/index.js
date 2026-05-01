@@ -49,12 +49,15 @@ export async function register(registrationApi) {
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
     );
 
-    registrationApi.registerDispatcherReceiver(
-        moduleId,
-        'user:locationCheck',
-        handleLocationCheck,
-        { direction: 'up', condition: 'unconditional', timing: 'immediate' }
-    );
+    // user: + system:locationCheck — same handler, propagate same name.
+    for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+        registrationApi.registerDispatcherReceiver(
+            moduleId,
+            evName,
+            (data) => handleLocationCheck(data, evName),
+            { direction: 'up', condition: 'unconditional', timing: 'immediate' }
+        );
+    }
 
     // Register dispatcher senders for events we publish
     registrationApi.registerDispatcherSender('user:regionMove', 'down', 'first');
@@ -114,14 +117,14 @@ function handleRegionMove(data, propagationOptions) {
     }
 }
 
-function handleLocationCheck(data, propagationOptions) {
-    log('info', `[${moduleId} Module] Received user:locationCheck event`, data);
-    
-    // Propagate event to the next module
+function handleLocationCheck(data, eventName = 'user:locationCheck') {
+    log('info', `[${moduleId} Module] Received ${eventName} event`, data);
+
+    // Propagate the same event we received so user:/system: stays consistent.
     if (moduleDispatcher) {
         moduleDispatcher.publishToNextModule(
             moduleId,
-            'user:locationCheck',
+            eventName,
             data,
             { direction: 'up' }
         );

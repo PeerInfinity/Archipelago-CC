@@ -138,14 +138,18 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 
-  // Register dispatcher receiver for user:locationCheck
-  // Chain: Loops (intercepts if loop mode) → Discovery (discovers + blocks if discovery mode) → GameState → StateManager
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name,
-    'user:locationCheck',
-    handleLocationCheckForDiscovery,
-    { direction: 'up', condition: 'conditional', timing: 'immediate' }
-  );
+  // Register dispatcher receivers for user: + system:locationCheck.
+  // Chain: Loops → Discovery → GameState → StateManager. Both events
+  // route through the same handler; propagation passes through the
+  // event name so user:/system: stays consistent down the chain.
+  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
+    registrationApi.registerDispatcherReceiver(
+      moduleInfo.name,
+      evName,
+      (data) => handleLocationCheckForDiscovery(data, evName),
+      { direction: 'up', condition: 'conditional', timing: 'immediate' }
+    );
+  }
 }
 
 /**
@@ -449,7 +453,7 @@ function handleRegionClicked(eventData) {
  * UI layer (locationUI, regionGraph) is responsible for blocking clicks that
  * shouldn't produce events during discovery mode.
  */
-function handleLocationCheckForDiscovery(eventData) {
+function handleLocationCheckForDiscovery(eventData, eventName = 'user:locationCheck') {
   // Discovery mode is active - discover the location if settings allow
   if (_settings.enableDiscoveryMode && _settings.clickDiscoversLocation && discoveryStateSingleton) {
     const { locationName, regionName } = eventData || {};
@@ -469,11 +473,13 @@ function handleLocationCheckForDiscovery(eventData) {
     }
   }
 
-  // Always propagate to gameState → stateManager
+  // Always propagate to gameState → stateManager. Forward the same
+  // event name we received so user:/system: distinction stays
+  // consistent through the chain.
   if (_moduleDispatcher) {
     _moduleDispatcher.publishToNextModule(
       moduleInfo.name,
-      'user:locationCheck',
+      eventName,
       eventData,
       { direction: 'up' }
     );
