@@ -245,6 +245,11 @@
               "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
+            },
+            {
+              "type": "component",
+              "componentType": "playbackBotPanel",
+              "title": "Playback Bot"
             }
           ]
         }

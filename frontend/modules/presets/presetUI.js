@@ -3,9 +3,6 @@ import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import { PlaybackBotUI } from '../playbackBot/playbackBotUI.js';
-import { PathFinder } from '../shared/pathfinder.js';
-import { getSphereStateSingleton } from '../sphereState/singleton.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
@@ -381,154 +378,11 @@ const PRESET_STYLES = `
 .preset-procgen-section:empty {
     margin-top: 0;
 }
-/* Playback bot — Phase 5 sphere-log replay UI mounted in this panel. */
-.playback-bot {
-    margin-top: 12px;
-    padding: 8px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 3px;
-}
-.playback-bot-heading {
-    font-weight: bold;
-    color: #ddd;
-    margin-bottom: 6px;
-    font-size: 13px;
-}
-.playback-bot-cursor {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #aaa;
-    font-family: 'Consolas', 'Courier New', monospace;
-    padding: 4px 6px;
-    background: #111;
-    border-radius: 3px;
-}
-.playback-bot-status {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #aaa;
-    font-family: 'Consolas', 'Courier New', monospace;
-    padding: 4px 6px;
-    background: #111;
-    border-radius: 3px;
-}
-.playback-bot-hint {
-    margin-top: 4px;
-    font-size: 11px;
-    color: #777;
-    font-style: italic;
-}
-.playback-bot-log {
-    margin-top: 6px;
-    max-height: 200px;
-    overflow-y: auto;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 3px;
-    padding: 4px 6px;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 11px;
-    line-height: 1.4;
-    color: #aaa;
-}
-.playback-bot-log-entry {
-    padding: 1px 2px;
-    border-radius: 2px;
-}
-.playback-bot-log-step {
-    color: #aaa;
-}
-.playback-bot-log-done {
-    color: #888;
-    font-style: italic;
-}
-.playback-bot-log-error {
-    color: #ff8080;
-}
-.playback-bot-log-more {
-    color: #777;
-    font-style: italic;
-}
-/* Playback control bar styles needed when the bar is mounted outside
-   the maze panel (which would otherwise be the only place its CSS
-   lives). Mirrors mazeRoom.css's .playback-control-bar block. */
-.playback-control-bar {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 8px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 3px;
-}
-.playback-control-bar-label {
-    font-size: 12px;
-    color: #aaa;
-    font-weight: bold;
-    user-select: none;
-}
-.playback-control-bar-buttons {
-    display: flex;
-    gap: 4px;
-}
-.playback-control-bar-button {
-    flex: 0 0 auto;
-    padding: 4px 10px;
-    background: #2a2a2a;
-    border: 1px solid #444;
-    border-radius: 3px;
-    color: #ddd;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: inherit;
-    line-height: 1;
-}
-.playback-control-bar-button:hover:not(:disabled) {
-    background: #3a3a3a;
-    border-color: #666;
-}
-.playback-control-bar-button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-.playback-control-bar.is-running .playback-control-bar-button-play {
-    background: #2a4a2a;
-}
-.playback-control-bar-rate {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #aaa;
-}
-.playback-control-bar-rate-label {
-    min-width: 40px;
-    user-select: none;
-}
-.playback-control-bar-rate-slider {
-    flex: 1 1 auto;
-    min-width: 60px;
-}
-.playback-control-bar-rate-input {
-    width: 50px;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 3px;
-    color: #ddd;
-    padding: 2px 4px;
-    font-size: 12px;
-}
-.playback-control-bar-rate-unit {
-    color: #777;
-    user-select: none;
-}
-.playback-control-bar-status {
-    font-size: 11px;
-    color: #777;
-    font-style: italic;
-    min-height: 14px;
-}
+/* Playback-bot styles moved to frontend/modules/playbackBot/playbackBot.css
+   when the widget moved into its own module + panel (Phase 1 of the
+   playback-bot refactor). The .playback-control-bar styles also live
+   there now since the bar is mounted in both the maze panel and the
+   playback-bot panel. */
 .preset-procgen-title {
     margin: 0 0 4px;
     color: #ddd;
@@ -2478,39 +2332,8 @@ export class PresetUI {
 
     host.innerHTML = html;
 
-    // Phase 5 — playback bot. Only useful when a sphere log is loaded;
-    // mounts as a separate widget below the procgen stats. Persists
-    // across re-renders within a session: subsequent renders reuse the
-    // existing instance so the log + cursor survive.
-    this._mountPlaybackBot(host);
-  }
-
-  _mountPlaybackBot(host) {
-    if (!this._playbackBot) {
-      this._playbackBot = new PlaybackBotUI({
-        getSphereData: () => {
-          const sphereState = getSphereStateSingleton();
-          return sphereState?.getSphereData?.() ?? [];
-        },
-        // staticData carries the regionName → locations index the bot
-        // uses to build its sphere queue without parsing names.
-        getStaticData: () => stateManager?.getStaticData?.() ?? null,
-        // Bot publishes playback:command events that the maze panel
-        // subscribes to. Single-trigger from this widget drives the
-        // visualizer over there; cross-region playback rides the
-        // existing exit-cross → user:regionMove flow.
-        eventBus: this.eventBus,
-        // PathFinder evaluates exit access rules against the real
-        // snapshot, so as the bot collects keys mid-playthrough the
-        // routing reflects newly-accessible regions automatically.
-        pathFinder: new PathFinder(stateManager),
-      });
-    }
-    const botEl = this._playbackBot.getElement();
-    if (botEl) host.appendChild(botEl);
-    if (typeof this._playbackBot._render === 'function') {
-      this._playbackBot._render();
-    }
+    // Playback-bot widget moved to its own panel/module (Phase 1 of
+    // the playback-bot refactor) — see frontend/modules/playbackBot/.
   }
 
   _formatSphereTooltip(enriched) {
@@ -2675,17 +2498,53 @@ export class PresetUI {
     const gameData = this.presets?.[gameDirectory];
     const folderData = gameData?.folders?.[seedName];
     const sphereFile = (folderData?.files ?? []).find((f) => f.endsWith('_sphere_log.jsonl'));
-    if (!sphereFile) {
+    const rulesFile = (folderData?.files ?? []).find((f) => f.endsWith('_rules.json'));
+
+    // Embedded-first: a procgen rules.json may carry the sphere log
+    // as a top-level `sphere_log` array (Phase 4 of the
+    // debugging-tools plan), with no separate `.jsonl` file on disk.
+    // Try the separate file first when present (Python-generated
+    // presets), then fall back to the embedded field. Mirrors the
+    // sphereState loader's loadEmbeddedFirstThenFile logic so both
+    // panels resolve the same source.
+    if (!sphereFile && !rulesFile) {
       host.innerHTML = '<div class="preset-sphere-empty">No sphere log available.</div>';
       return;
     }
     host.innerHTML = '<div class="preset-sphere-empty">Loading sphere log…</div>';
-    const filePath = `./presets/${gameDirectory}/${seedName}/${sphereFile}`;
-    fetch(filePath, { cache: 'reload' })
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.text();
-      })
+
+    const fetchSeparateFile = () => {
+      const filePath = `./presets/${gameDirectory}/${seedName}/${sphereFile}`;
+      return fetch(filePath, { cache: 'reload' })
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.text();
+        });
+    };
+
+    const fetchEmbedded = () => {
+      const rulesPath = `./presets/${gameDirectory}/${seedName}/${rulesFile}`;
+      return fetch(rulesPath, { cache: 'reload' })
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then((rulesDoc) => {
+          const entries = rulesDoc?.sphere_log;
+          if (!Array.isArray(entries) || entries.length === 0) {
+            throw new Error('no embedded sphere_log');
+          }
+          // Re-stringify to JSONL so parseSphereLogShape's existing
+          // line-by-line parser handles it without a special case.
+          return entries.map((e) => JSON.stringify(e)).join('\n');
+        });
+    };
+
+    const fetchPromise = sphereFile
+      ? fetchSeparateFile().catch(() => (rulesFile ? fetchEmbedded() : Promise.reject(new Error('no sphere log'))))
+      : fetchEmbedded();
+
+    fetchPromise
       .then((text) => {
         const shape = parseSphereLogShape(text);
         this._sphereLogCache = { cacheKey, shape };
@@ -2694,7 +2553,7 @@ export class PresetUI {
         if (this.viewState.showSphereLog) renderShape(shape);
       })
       .catch((err) => {
-        log('warn', `Sphere log fetch failed for ${filePath}:`, err.message);
+        log('warn', `Sphere log fetch failed for ${gameDirectory}/${seedName}:`, err.message);
         host.innerHTML = '<div class="preset-sphere-empty">Sphere log could not be loaded.</div>';
       });
   }

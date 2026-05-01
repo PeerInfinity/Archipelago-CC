@@ -1,9 +1,7 @@
 import { PresetUI } from './presetUI.js';
 import eventBus from '../../app/core/eventBus.js';
-import { getActiveBot } from '../playbackBot/playbackBotUI.js';
 
 let _moduleEventBus = null;
-let _moduleDispatcher = null;
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -61,60 +59,10 @@ export function register(registrationApi) {
   // scrollIntoView the matching section.
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('spoilerChecklist:scrollToSphere');
-  // Phase 5 — playback bot in the procgen-data section publishes
-  // remote-control commands that the maze panel's visualizer
-  // subscribes to.
-  registrationApi.registerEventBusPublisher('playback:command');
-
-  // Sphere-log playback (the bot's outer-layer play loop) advances
-  // its cursor and re-routes via PathFinder by listening to the same
-  // dispatcher events the rest of the app uses for state. The bot
-  // itself is a UI widget mounted inside this panel rather than its
-  // own module, so it can't register dispatcher receivers directly;
-  // we forward here to whichever bot is currently mounted via the
-  // module-scope getActiveBot() registry. See
-  // NewDocs/plans/procedural-generation/sphere-log-playback.md.
-  //
-  // Two important quirks of the dispatcher chain:
-  //   1. The first matching handler must call publishToNextModule for
-  //      the chain to propagate. presets has the highest priority
-  //      index of any module that listens to these events, so without
-  //      this propagation stateManager (lowest priority) never sees
-  //      the event and its inventory snapshot stays stale.
-  //   2. PathFinder.findPathWithExits evaluates exit access rules
-  //      against stateManager's current snapshot. So we have to
-  //      propagate FIRST (so stateManager updates synchronously), and
-  //      only then call the bot. Otherwise the bot routes against
-  //      stale inventory and trips on the next gated exit.
-  // user: + system:locationCheck — same handler. The bot's pickup-
-  // driven queue advance comes through system: now (visualizer
-  // pickups reclassified in Phase 0 of the playback-bot refactor).
-  // Propagate forward as the same event we received.
-  for (const evName of ['user:locationCheck', 'system:locationCheck']) {
-    const capturedEv = evName; // closure capture
-    registrationApi.registerDispatcherReceiver(
-      'presets',
-      capturedEv,
-      (data) => {
-        try {
-          _moduleDispatcher?.publishToNextModule?.('presets', capturedEv, data, { direction: 'up' });
-        } catch (e) { log('warn', `presets: ${capturedEv} propagation threw`, e); }
-        try { getActiveBot()?.onLocationCheck?.(data); } catch (e) { log('warn', 'bot.onLocationCheck threw', e); }
-      },
-      { direction: 'up', condition: 'unconditional', timing: 'immediate' },
-    );
-  }
-  registrationApi.registerDispatcherReceiver(
-    'presets',
-    'user:regionMove',
-    (data) => {
-      try {
-        _moduleDispatcher?.publishToNextModule?.('presets', 'user:regionMove', data, { direction: 'up' });
-      } catch (e) { log('warn', 'presets: regionMove propagation threw', e); }
-      try { getActiveBot()?.onRegionMove?.(data); } catch (e) { log('warn', 'bot.onRegionMove threw', e); }
-    },
-    { direction: 'up', condition: 'unconditional', timing: 'immediate' },
-  );
+  // playback:command publisher + the user:locationCheck /
+  // user:regionMove dispatcher receivers that drove the embedded bot
+  // moved to playbackBot/index.js when the bot got its own module
+  // (Phase 1 of the playback-bot refactor).
 
   log('info', '[Presets Module] Registration complete.');
 }
@@ -132,7 +80,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   );
 
   _moduleEventBus = initializationApi.getEventBus();
-  _moduleDispatcher = initializationApi.getDispatcher?.() ?? null;
 
   log('info', '[Presets Module] Initialization complete.');
 

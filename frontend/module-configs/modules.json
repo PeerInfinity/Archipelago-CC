@@ -251,6 +251,10 @@
     "procgenPlayer": {
       "path": "./modules/procgenPlayer/index.js",
       "enabled": true
+    },
+    "playbackBot": {
+      "path": "./modules/playbackBot/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -316,6 +320,7 @@
     "mazeRoom",
     "textAdventureSubstrate",
     "procgenPipeline",
-    "procgenPlayer"
+    "procgenPlayer",
+    "playbackBot"
   ]
 }

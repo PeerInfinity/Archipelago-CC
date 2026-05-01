@@ -1,0 +1,181 @@
+/* Playback Bot panel — Phase 1 of the playback-bot refactor moved
+   the widget out of the Presets panel into its own dedicated panel.
+   Styles below were originally inlined in presets/presetUI.js's
+   PRESET_STYLES string. */
+
+.playback-bot-panel {
+    padding: 8px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.playback-bot {
+    margin-top: 0;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+}
+.playback-bot-heading {
+    font-weight: bold;
+    color: #ddd;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.playback-bot-cursor {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'Consolas', 'Courier New', monospace;
+    padding: 4px 6px;
+    background: #111;
+    border-radius: 3px;
+}
+.playback-bot-status {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'Consolas', 'Courier New', monospace;
+    padding: 4px 6px;
+    background: #111;
+    border-radius: 3px;
+}
+.playback-bot-hint {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #777;
+    font-style: italic;
+}
+.playback-bot-log {
+    margin-top: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #aaa;
+}
+.playback-bot-log-entry {
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+.playback-bot-log-step {
+    color: #aaa;
+}
+.playback-bot-log-done {
+    color: #888;
+    font-style: italic;
+}
+.playback-bot-log-error {
+    color: #ff8080;
+}
+.playback-bot-log-more {
+    color: #777;
+    font-style: italic;
+}
+
+/* Empty-state placeholder shown when no preset / sphere log is
+   loaded. Replaces the bot widget visually; the bot DOM is hidden
+   underneath so its internal state survives between loads. */
+.playback-bot-empty-state {
+    padding: 12px;
+    background: #1a1a1a;
+    border: 1px dashed #333;
+    border-radius: 3px;
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1.4;
+}
+.playback-bot-empty-state-heading {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #ddd;
+}
+.playback-bot-empty-state-body {
+    color: #888;
+}
+
+/* Playback control bar — styles needed when the bar is mounted
+   outside the maze panel (which would otherwise be the only place
+   its CSS lives). Mirrors mazeRoom.css's .playback-control-bar
+   block. */
+.playback-control-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+}
+.playback-control-bar-label {
+    font-size: 12px;
+    color: #aaa;
+    font-weight: bold;
+    user-select: none;
+}
+.playback-control-bar-buttons {
+    display: flex;
+    gap: 4px;
+}
+.playback-control-bar-button {
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1;
+}
+.playback-control-bar-button:hover:not(:disabled) {
+    background: #3a3a3a;
+    border-color: #666;
+}
+.playback-control-bar-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.playback-control-bar.is-running .playback-control-bar-button-play {
+    background: #2a4a2a;
+}
+.playback-control-bar-rate {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #aaa;
+}
+.playback-control-bar-rate-label {
+    min-width: 40px;
+    user-select: none;
+}
+.playback-control-bar-rate-slider {
+    flex: 1 1 auto;
+    min-width: 60px;
+}
+.playback-control-bar-rate-input {
+    width: 50px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    color: #ddd;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+.playback-control-bar-rate-unit {
+    color: #777;
+    user-select: none;
+}
+.playback-control-bar-status {
+    font-size: 11px;
+    color: #777;
+    font-style: italic;
+    min-height: 14px;
+}

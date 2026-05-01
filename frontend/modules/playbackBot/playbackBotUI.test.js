@@ -63,7 +63,7 @@ const fakeDocument = {
 beforeEach(() => { globalThis.document = fakeDocument; });
 afterEach(() => { delete globalThis.document; });
 
-import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, getActiveBot, formatSphereTag } from './playbackBotUI.js';
+import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, formatSphereTag } from './playbackBotUI.js';
 
 const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
@@ -510,14 +510,10 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(lastCmd.payload.rateHz).toBe(7);
     });
 
-    it('module-scope active-bot registry tracks the latest constructed bot', () => {
-        const { bot: bot1 } = makeBot();
-        expect(getActiveBot()).toBe(bot1);
-        const { bot: bot2 } = makeBot();
-        expect(getActiveBot()).toBe(bot2);
-        bot2.destroy();
-        expect(getActiveBot()).toBe(null);
-    });
+    // The active-bot singleton moved to the panel layer in Phase 1
+    // of the playback-bot refactor — the bot is now a plain widget
+    // owned by PlaybackBotPanel. Tests for that singleton live in
+    // playbackBot/index.js / playbackBotPanel.js if/when they grow.
 });
 
 describe('formatSphereTag', () => {

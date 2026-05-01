@@ -1,21 +1,24 @@
 /**
  * Playback bot — remote control for the maze panel's playthrough
- * visualizer. Mounted in the presets panel's procgen-data section.
+ * visualizer. Phase 1 of the playback-bot refactor moved this widget
+ * out of the Presets panel into its own module (playbackBot/) and a
+ * dedicated panel (PlaybackBotPanel).
  *
  * The bot's controls publish `playback:command` events on the
  * eventBus; the maze panel subscribes and forwards them to its
  * visualizer. Cross-region playback is then driven by the
  * visualizer's exit-cross → user:regionMove → maze:loadRegion
- * chain, just as keyboard play would. The bot itself owns no
- * playback state — it's a remote, not a duplicate engine.
+ * chain, just as keyboard play would.
  *
- * Also displays a static "sphere log loaded: N entries" summary
- * so the user can confirm the loader picked up the log they
- * expected (separate file vs embedded fallback both reach this
- * widget identically).
+ * The bot is mostly substrate-agnostic — it builds a queue from
+ * sphereState's parsed sphere log and uses PathFinder for inter-
+ * region routing. The panel wrapper is responsible for injecting
+ * those dependencies; the bot itself is a plain widget that's
+ * exercised by tests directly.
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/debugging-tools.md (Phase 5)
+ * Plan references:
+ *   - NewDocs/plans/procedural-generation/debugging-tools.md (Phase 5)
+ *   - NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
  */
 
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
@@ -109,16 +112,11 @@ export function formatSphereTag(entry) {
     return `Sphere ${idx} → `;
 }
 
-// Module-scope registry of the currently-mounted bot, mirroring the
-// setPanelInstance pattern in mazeRoom/index.js. The presets module
-// registers dispatcher receivers for user:locationCheck /
-// user:regionMove and forwards them via getActiveBot(); the bot
-// itself can't register dispatcher receivers because dispatcher
-// receivership is module-scoped, and the bot is a UI widget mounted
-// inside the presets panel rather than its own module.
-let _activeBot = null;
-export function setActiveBot(bot) { _activeBot = bot; }
-export function getActiveBot() { return _activeBot; }
+// Phase 1 of the playback-bot refactor moved active-instance tracking
+// out of this widget and into the panel singleton (playbackBot/index.js's
+// setActivePanel/getActivePanel). The bot itself is now a plain widget
+// owned by PlaybackBotPanel; dispatcher receivers in playbackBot/index.js
+// reach it via `getActivePanel()?.getBot()`.
 
 export class PlaybackBotUI {
     constructor({
@@ -167,7 +165,6 @@ export class PlaybackBotUI {
         // hasn't changed.
         this._lastPublishedTarget = null;
 
-        setActiveBot(this);
         this._mount();
     }
 
@@ -181,7 +178,6 @@ export class PlaybackBotUI {
             this._element.parentNode.removeChild(this._element);
         }
         this._element = null;
-        if (_activeBot === this) setActiveBot(null);
     }
 
     // --- public controls ---
@@ -259,6 +255,12 @@ export class PlaybackBotUI {
         this._rate = rateHz;
         this._publish('setRate', { rateHz });
     }
+
+    // --- public render hook ---
+    // Called by the panel wrapper when sphere data changes so the
+    // status line picks up the new "Sphere log loaded: N entries"
+    // text without requiring the user to press a control first.
+    refresh() { this._render(); }
 
     // --- public state accessors ---
 
