@@ -57,8 +57,14 @@ export class RegionGraphUI {
     this.currentZoomLevel = 1.0;
     this.wheelSensitivity = 1.0;
     this.locationsVisible = false;
-    this.locationsManuallyHidden = false;
-    this.locationsManuallyShown = false;
+    // 'hover' | 'zoom' | 'force-show' | 'force-hide'. Set by
+    // layoutControlsManager when settings load — initialized here so
+    // updateZoomBasedVisibility's first call before that has a sensible
+    // default.
+    this.locationVisibilityMode = 'hover';
+    // Region whose location nodes are currently shown via hover, or null.
+    // Used by hover-mode handlers to swap the showing region in/out.
+    this._hoveredLocationRegion = null;
     this.edgeLabelsHidden = true;
 
     // Location display limit settings (defaults, loaded from settings later)
@@ -1144,6 +1150,14 @@ export class RegionGraphUI {
 
   hideAllLocationNodes() {
     return this.dataManager.hideAllLocationNodes();
+  }
+
+  showLocationNodesForRegion(regionId) {
+    return this.dataManager.showLocationNodesForRegion(regionId);
+  }
+
+  hideLocationNodesForRegion(regionId) {
+    return this.dataManager.hideLocationNodesForRegion(regionId);
   }
 
   getLocationStatus(regionId, location) {

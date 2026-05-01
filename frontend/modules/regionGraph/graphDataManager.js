@@ -1009,8 +1009,8 @@ export class GraphDataManager {
   }
 
   showAllLocationNodes() {
-    // Don't proceed if manually hidden
-    if (this.ui.locationsManuallyHidden) return;
+    // Don't proceed if mode says locations should stay hidden.
+    if (this.ui.locationVisibilityMode === 'force-hide') return;
 
     const staticData = stateManager.getStaticData();
     if (!staticData?.regions) return;
@@ -1271,6 +1271,27 @@ export class GraphDataManager {
   hideAllLocationNodes() {
     this.ui.cy.remove('.location-node');
     this.ui.cy.remove('.region-location-edge');
+  }
+
+  /**
+   * Show this single region's location nodes. Used by hover mode —
+   * createLocationNodesForRegion already returns the {nodes, edges}
+   * payload; we just lock the nodes after add so they stay positioned
+   * around their region the way showAllLocationNodes does.
+   */
+  showLocationNodesForRegion(regionId) {
+    if (!this.ui.cy) return;
+    const elements = this.createLocationNodesForRegion(regionId);
+    if (elements.length === 0) return;
+    this.ui.cy.add(elements);
+    this.ui.cy.nodes(`[parentRegion="${regionId}"]`).lock();
+  }
+
+  /** Remove just one region's location nodes + their edges. */
+  hideLocationNodesForRegion(regionId) {
+    if (!this.ui.cy) return;
+    this.ui.cy.remove(`node[parentRegion="${regionId}"]`);
+    this.ui.cy.remove(`edge[source="${regionId}"].region-location-edge`);
   }
 
   getLocationStatus(regionId, location) {

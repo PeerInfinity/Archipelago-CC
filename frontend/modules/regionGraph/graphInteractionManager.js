@@ -71,6 +71,33 @@ export class GraphInteractionManager {
       }, 1050); // Wait for layout animation (1000ms) plus buffer
     });
 
+    // Hover-mode location visibility. Show this region's locations on
+    // mouseover; the previous region's locations (if any) get hidden
+    // first so only one region's set is up at a time. Empty graph area
+    // and the location ring itself don't trigger hide — locations only
+    // disappear when entering a different region or leaving the panel.
+    this.ui.cy.on('mouseover', 'node.region', (evt) => {
+      if (this.ui.locationVisibilityMode !== 'hover') return;
+      const node = evt.target;
+      if (node.hasClass('player') || node.hasClass('location-node')) return;
+      const regionId = node.id();
+      if (this.ui._hoveredLocationRegion === regionId) return;
+      if (this.ui._hoveredLocationRegion) {
+        this.ui.hideLocationNodesForRegion(this.ui._hoveredLocationRegion);
+      }
+      this.ui.showLocationNodesForRegion(regionId);
+      this.ui._hoveredLocationRegion = regionId;
+    });
+    if (this.ui.graphContainer) {
+      this.ui.graphContainer.addEventListener('mouseleave', () => {
+        if (this.ui.locationVisibilityMode !== 'hover') return;
+        if (this.ui._hoveredLocationRegion) {
+          this.ui.hideLocationNodesForRegion(this.ui._hoveredLocationRegion);
+          this.ui._hoveredLocationRegion = null;
+        }
+      });
+    }
+
     // Update location nodes when region nodes are dragged
     this.ui.cy.on('drag', 'node.region', (evt) => {
       const regionNode = evt.target;
@@ -118,37 +145,28 @@ export class GraphInteractionManager {
       });
     }
 
-    // Handle location visibility override checkboxes
-    const forceShowLocationsCheckbox = this.ui.controlPanel.querySelector('#forceShowLocations');
-    const forceHideLocationsCheckbox = this.ui.controlPanel.querySelector('#forceHideLocations');
-
-    if (forceShowLocationsCheckbox && forceHideLocationsCheckbox) {
-      forceShowLocationsCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          forceHideLocationsCheckbox.checked = false;
-          this.ui.saveCheckboxSetting('#forceHideLocations', 'moduleSettings.regionGraph.forceHideLocations', false);
-          this.ui.locationsManuallyShown = true;
-          this.ui.locationsManuallyHidden = false;
-        } else {
-          this.ui.locationsManuallyShown = false;
+    // 4-way location visibility radio: hover | zoom | force-show | force-hide.
+    // Hover lets the per-region mouseover handlers below drive visibility;
+    // zoom keeps the original "auto-show past threshold" behavior; the two
+    // force modes pin locations on or off regardless of zoom or hover.
+    const radios = this.ui.controlPanel.querySelectorAll(
+      'input[name="locationVisibility"]');
+    radios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (!e.target.checked) return;
+        const mode = e.target.value;
+        this.ui.locationVisibilityMode = mode;
+        // Leaving hover mode while a region's locations are showing? Drop
+        // them so the new mode starts from a clean state.
+        if (mode !== 'hover' && this.ui._hoveredLocationRegion) {
+          this.ui.hideLocationNodesForRegion(this.ui._hoveredLocationRegion);
+          this.ui._hoveredLocationRegion = null;
         }
-        this.ui.saveCheckboxSetting('#forceShowLocations', 'moduleSettings.regionGraph.forceShowLocations', e.target.checked);
+        settingsManager.updateSetting?.(
+          'moduleSettings.regionGraph.locationVisibility', mode);
         this.updateZoomBasedVisibility();
       });
-
-      forceHideLocationsCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          forceShowLocationsCheckbox.checked = false;
-          this.ui.saveCheckboxSetting('#forceShowLocations', 'moduleSettings.regionGraph.forceShowLocations', false);
-          this.ui.locationsManuallyHidden = true;
-          this.ui.locationsManuallyShown = false;
-        } else {
-          this.ui.locationsManuallyHidden = false;
-        }
-        this.ui.saveCheckboxSetting('#forceHideLocations', 'moduleSettings.regionGraph.forceHideLocations', e.target.checked);
-        this.updateZoomBasedVisibility();
-      });
-    }
+    });
 
     // Make "Add to path" and "Overwrite path" mutually exclusive
     const addToPathCheckbox = this.ui.controlPanel.querySelector('#addToPath');
@@ -559,23 +577,30 @@ export class GraphInteractionManager {
     const prevZoom = this.ui.currentZoomLevel;
     this.ui.currentZoomLevel = zoom;
 
-    // Handle location node visibility (check manual overrides)
-    if (this.ui.locationsManuallyShown) {
+    const mode = this.ui.locationVisibilityMode || 'hover';
+    if (mode === 'force-show') {
       if (!this.ui.locationsVisible) {
         this.ui.showAllLocationNodes();
         this.ui.locationsVisible = true;
       }
-    } else if (this.ui.locationsManuallyHidden) {
+    } else if (mode === 'force-hide') {
       if (this.ui.locationsVisible) {
         this.ui.hideAllLocationNodes();
         this.ui.locationsVisible = false;
       }
-    } else {
-      // Normal zoom-based visibility
+    } else if (mode === 'zoom') {
       if (zoom >= this.ui.zoomLevels.showLocationNodes && !this.ui.locationsVisible) {
         this.ui.showAllLocationNodes();
         this.ui.locationsVisible = true;
       } else if (zoom < this.ui.zoomLevels.showLocationNodes && this.ui.locationsVisible) {
+        this.ui.hideAllLocationNodes();
+        this.ui.locationsVisible = false;
+      }
+    } else {
+      // 'hover' mode — bulk visibility stays off; the per-region
+      // mouseover handlers manage individual regions' location nodes.
+      // If a previous mode left bulk locations visible, clear them.
+      if (this.ui.locationsVisible) {
         this.ui.hideAllLocationNodes();
         this.ui.locationsVisible = false;
       }
@@ -586,8 +611,8 @@ export class GraphInteractionManager {
   }
 
   updateLabelVisibility(zoom) {
-    // Check if locations are manually shown - if so, show their labels at same zoom as region labels
-    const forceShowLocationLabels = this.ui.locationsManuallyShown;
+    // Force-show mode: show location labels at the same zoom as region labels.
+    const forceShowLocationLabels = this.ui.locationVisibilityMode === 'force-show';
     const edgeLabelStyle = this.ui.edgeLabelsHidden ? '' : 'data(label)';
 
     // Update visibility of labels based on zoom level

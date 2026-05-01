@@ -31,8 +31,8 @@ export class LayoutControlsManager {
             Show undiscovered regions/exits
           </label>
         </div>
-        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
-          <div style="font-weight: bold; margin-bottom: 5px;">Zoom:</div>
+        <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Zoom:</summary>
           <label style="display: block; margin: 3px 0;">
             <span style="margin-right: 5px;">Zoom level:</span>
             <input type="number" id="zoomLevel" min="0.01" max="10" step="0.01" value="1" style="width: 60px; padding: 2px;">
@@ -41,44 +41,9 @@ export class LayoutControlsManager {
             <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
             <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
           </label>
-        </div>
-        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
-          <div style="font-weight: bold; margin-bottom: 5px;">Location Visibility:</div>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="forceShowLocations" style="margin-right: 5px;">
-            Always show locations (override zoom)
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="forceHideLocations" style="margin-right: 5px;">
-            Always hide locations (override zoom)
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="forceHideEdgeLabels" style="margin-right: 5px;">
-            Hide edge labels
-          </label>
-        </div>
-        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
-          <div style="font-weight: bold; margin-bottom: 5px;">Location Display Limits:</div>
-          <label style="display: block; margin: 3px 0;">
-            <span style="margin-right: 5px;">Max location nodes:</span>
-            <input type="number" id="maxLocationNodes" min="0" value="100" style="width: 60px; padding: 2px;">
-            <span style="font-size: 10px; color: #888;"> (0 = unlimited)</span>
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="keepRegionSetsComplete" style="margin-right: 5px;" checked>
-            Keep region sets complete (may exceed limit)
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="onlyShowLocationsInView" style="margin-right: 5px;">
-            Only show locations in view
-          </label>
-          <label id="viewportDelayContainer" style="display: none; margin: 3px 0;">
-            <span style="margin-right: 5px;">Viewport stabilize delay (ms):</span>
-            <input type="number" id="viewportStabilizeDelay" min="100" max="5000" value="1000" style="width: 60px; padding: 2px;">
-          </label>
-        </div>
-        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
-          <div style="font-weight: bold; margin-bottom: 5px;">On Region Node Click:</div>
+        </details>
+        <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">On Region Node Click:</summary>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
             <input type="checkbox" id="movePlayerOneStep" style="margin-right: 5px;">
             Move player one step towards region
@@ -107,7 +72,50 @@ export class LayoutControlsManager {
             <input type="checkbox" id="checkAllLocationsInRegion" style="margin-right: 5px;">
             Check all locations in region
           </label>
-        </div>
+        </details>
+        <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Location Visibility:</summary>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="radio" name="locationVisibility" value="hover" style="margin-right: 5px;">
+            Show on hover
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="radio" name="locationVisibility" value="zoom" style="margin-right: 5px;">
+            Zoom-based
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="radio" name="locationVisibility" value="force-show" style="margin-right: 5px;">
+            Always show
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="radio" name="locationVisibility" value="force-hide" style="margin-right: 5px;">
+            Always hide
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="forceHideEdgeLabels" style="margin-right: 5px;">
+            Hide edge labels
+          </label>
+        </details>
+        <details style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Location Display Limits:</summary>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Max location nodes:</span>
+            <input type="number" id="maxLocationNodes" min="0" value="100" style="width: 60px; padding: 2px;">
+            <span style="font-size: 10px; color: #888;"> (0 = unlimited)</span>
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="keepRegionSetsComplete" style="margin-right: 5px;" checked>
+            Keep region sets complete (may exceed limit)
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="onlyShowLocationsInView" style="margin-right: 5px;">
+            Only show locations in view
+          </label>
+          <label id="viewportDelayContainer" style="display: none; margin: 3px 0;">
+            <span style="margin-right: 5px;">Viewport stabilize delay (ms):</span>
+            <input type="number" id="viewportStabilizeDelay" min="100" max="5000" value="1000" style="width: 60px; padding: 2px;">
+          </label>
+        </details>
       </div>
     `;
 
@@ -123,8 +131,6 @@ export class LayoutControlsManager {
   async loadCheckboxSettings() {
     // Load checkbox states from settings
     const checkboxes = [
-      { id: '#forceShowLocations', setting: 'moduleSettings.regionGraph.forceShowLocations', default: false },
-      { id: '#forceHideLocations', setting: 'moduleSettings.regionGraph.forceHideLocations', default: false },
       { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: true },
       { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
       { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
@@ -208,16 +214,24 @@ export class LayoutControlsManager {
       }
     }
 
-    // Sync location visibility flags from loaded checkbox states
-    const forceShowEl = this.ui.controlPanel.querySelector('#forceShowLocations');
-    const forceHideEl = this.ui.controlPanel.querySelector('#forceHideLocations');
-    if (forceShowEl?.checked) {
-      this.ui.locationsManuallyShown = true;
-      this.ui.locationsManuallyHidden = false;
-    } else if (forceHideEl?.checked) {
-      this.ui.locationsManuallyHidden = true;
-      this.ui.locationsManuallyShown = false;
+    // Load location visibility mode (4-way radio: hover | zoom | force-show
+    // | force-hide). Default is 'hover'. Migrates from the previous two
+    // checkbox keys (forceShowLocations / forceHideLocations) when the new
+    // key isn't set yet, so existing users who had a force-mode preference
+    // keep it on first load after the upgrade.
+    let mode = await settingsManager.getSetting(
+      'moduleSettings.regionGraph.locationVisibility', null);
+    if (!mode) {
+      const oldShow = await settingsManager.getSetting(
+        'moduleSettings.regionGraph.forceShowLocations', false);
+      const oldHide = await settingsManager.getSetting(
+        'moduleSettings.regionGraph.forceHideLocations', false);
+      mode = oldShow ? 'force-show' : (oldHide ? 'force-hide' : 'hover');
     }
+    this.ui.locationVisibilityMode = mode;
+    const radio = this.ui.controlPanel.querySelector(
+      `input[name="locationVisibility"][value="${mode}"]`);
+    if (radio) radio.checked = true;
 
     // Sync edge label visibility flag
     const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
