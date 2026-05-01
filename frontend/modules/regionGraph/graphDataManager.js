@@ -42,6 +42,13 @@ export class GraphDataManager {
       logger.info('Building graph from regions', { count: staticData.regions.size });
       this.buildGraphFromRegions(staticData.regions, staticData.exits);
       this.ui.graphInitialized = true; // Mark as successfully loaded
+      // Record which staticData reference the cy graph now reflects.
+      // stateManagerProxy replaces the entire staticDataCache on each
+      // rules load, so reference equality is an exact "graph is in
+      // sync with current static data" check — used by
+      // navigationManager to downgrade the "node not found" log to
+      // debug while a rebuild is pending.
+      this.ui.lastBuiltStaticData = staticData;
       this.ui.overlayManager.onGraphRebuilt();
 
       // Force a re-layout when loading new rules
@@ -196,6 +203,51 @@ export class GraphDataManager {
     const showUndiscoveredCheckbox = this.ui.controlPanel?.querySelector('#graph-show-undiscovered');
     const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
 
+    // Build the start-region set so each region's node can carry a
+    // start-region class — used by cytoscape's style to render start
+    // regions (typically just Menu) at a smaller size than the rest.
+    // snapshot.startRegions arrives in one of three shapes depending
+    // on the game / load path (mirrors what textAdventureLogic does):
+    //   1) array:               ["Overworld"]
+    //   2) default/available:   { default: ["Menu"], available: [] }
+    //   3) per-player wrapper:  { "1": { default: ["Menu"], ... } }
+    // Some games leave shape 3 unwrapped on the worker side; without
+    // handling it here, non-procgen presets would skip the smaller
+    // start-region styling entirely.
+    const startRegionsSnapshot = stateManager.getLatestStateSnapshot();
+    const startRegionsRaw = startRegionsSnapshot?.startRegions;
+    const startRegionSet = new Set();
+    const addFromDefaultAvailable = (obj) => {
+      if (!obj || typeof obj !== 'object') return;
+      if (Array.isArray(obj.default)) {
+        for (const r of obj.default) startRegionSet.add(r);
+      }
+      if (Array.isArray(obj.available)) {
+        for (const r of obj.available) startRegionSet.add(r);
+      }
+    };
+    if (Array.isArray(startRegionsRaw)) {
+      for (const r of startRegionsRaw) startRegionSet.add(r);
+    } else if (startRegionsRaw && typeof startRegionsRaw === 'object') {
+      // Shape 2: has its own default/available arrays directly.
+      const looksLikeShape2 = Array.isArray(startRegionsRaw.default)
+        || Array.isArray(startRegionsRaw.available);
+      if (looksLikeShape2) {
+        addFromDefaultAvailable(startRegionsRaw);
+      } else {
+        // Shape 3: per-player wrapper. Use snapshot.playerId if set,
+        // otherwise scan all entries (covers stateInterface tests where
+        // playerId may not surface; harmless extra scans for one-player
+        // presets).
+        const playerId = startRegionsSnapshot?.playerId ?? startRegionsSnapshot?.player?.id ?? '1';
+        if (startRegionsRaw[playerId]) {
+          addFromDefaultAvailable(startRegionsRaw[playerId]);
+        } else {
+          for (const v of Object.values(startRegionsRaw)) addFromDefaultAvailable(v);
+        }
+      }
+    }
+
     // Create nodes for each region with location counts
     // In discovery mode, we include ALL regions but mark hidden ones with discovery-hidden class
     // This preserves the layout when discovery state changes
@@ -209,6 +261,7 @@ export class GraphDataManager {
       // Determine display text and classes based on discovery state
       let displayText;
       let nodeClasses = 'region';
+      if (startRegionSet.has(regionName)) nodeClasses += ' start-region';
       let shouldHide = false;
 
       if (isDiscoveryModeActive && !isRegionDiscovered) {

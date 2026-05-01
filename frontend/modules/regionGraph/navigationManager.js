@@ -132,7 +132,23 @@ export class NavigationManager {
       // Region may not exist yet (e.g. placeholder before rules load) or in this graph
       const staticData = stateManager.getStaticData?.();
       const existsInStaticData = staticData?.regions?.has(regionName);
-      const logLevel = (!existsInStaticData || !this.ui.graphInitialized || this.isStartRegion(regionName)) ? 'debug' : 'warn';
+      // Detect a stale cy graph: stateManager swapped to a new
+      // preset's static data, but cy still holds the previous preset's
+      // nodes (or nothing) because loadGraphData hasn't rebuilt yet.
+      // Procgen presets in particular hit this on every load —
+      // procgenPlayer synthesizes a Menu→region_X_Y user:regionMove
+      // in its rulesLoaded handler, gameState propagates that as a
+      // regionChanged synchronously, and the new region isn't in cy
+      // yet. stateManagerProxy replaces staticDataCache wholesale on
+      // each rules load, so reference equality against the cy graph's
+      // last-built staticData is an exact, ordering-independent
+      // staleness check.
+      const isStaleGraph = existsInStaticData
+        && staticData !== this.ui.lastBuiltStaticData;
+      const logLevel = (!existsInStaticData
+                        || !this.ui.graphInitialized
+                        || this.isStartRegion(regionName)
+                        || isStaleGraph) ? 'debug' : 'warn';
       logger[logLevel](`Region node not found: ${regionName}`);
       return;
     }

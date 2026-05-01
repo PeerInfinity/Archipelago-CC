@@ -474,6 +474,18 @@ export class RegionGraphUI {
           }
         },
         {
+          // Placed AFTER .current and .hub so size wins when a start
+          // region is also the player's current region (which it is on
+          // initial load — Menu starts as the current region) or, in
+          // edge cases, when it would otherwise pick up the .hub class.
+          selector: 'node.start-region',
+          style: {
+            'width': 35,
+            'height': 25,
+            'font-size': '8px',
+          }
+        },
+        {
           selector: 'node:selected',
           style: {
             'border-color': '#ff0000',
@@ -799,7 +811,12 @@ export class RegionGraphUI {
     this.interactionManager.setupZoomBasedVisibility(); // Setup zoom-based visibility
     this.overlayManager.onCyCreated();
     this.graphInitialized = false; // Track if data has been loaded
-    
+    // staticData reference the cy graph currently reflects. Updated by
+    // graphDataManager after a successful build. navigationManager
+    // compares this against stateManager.getStaticData() to tell
+    // whether a "node not found" is a stale-graph race or a real bug.
+    this.lastBuiltStaticData = null;
+
     this.updateStatus('Graph initialized, waiting for data...');
     logger.info('Graph initialized, waiting for StateManager events');
     
@@ -956,6 +973,26 @@ export class RegionGraphUI {
         && Number.isFinite(cell.gy)
       ) {
         layout.set(regionName, { gx: cell.gx, gy: cell.gy });
+      }
+    }
+    // Synthesize positions for regions that aren't in any sidecar but
+    // have an exit into one that is — typically the Menu region, which
+    // exists as a stateManager bookkeeping construct (start region +
+    // a single GameStart exit) but isn't part of the procgen grid.
+    // Without this it would land at the (0, 0) fallback in
+    // buildProcgenGridLayout and overlap the top-left procgen region.
+    // Place it half a cell northwest of its first connected procgen
+    // region so the spatial relationship is visually clear.
+    const playerRegions = rules?.regions?.[playerId];
+    if (playerRegions && typeof playerRegions === 'object') {
+      for (const [regionName, regionData] of Object.entries(playerRegions)) {
+        if (layout.has(regionName)) continue;
+        const exits = regionData?.exits;
+        if (!Array.isArray(exits) || exits.length === 0) continue;
+        const firstConnected = exits.find(e => layout.has(e?.connected_region));
+        if (!firstConnected) continue;
+        const target = layout.get(firstConnected.connected_region);
+        layout.set(regionName, { gx: target.gx - 0.5, gy: target.gy - 0.5 });
       }
     }
     this.gridLayout = layout.size > 0 ? layout : null;

@@ -129,6 +129,12 @@ export class NodeOverlayManager {
     if (!this.ui.cy || !this.provider) return;
     this.ui.cy.nodes('.region').forEach(node => {
       if (node.hasClass('player')) return;
+      // Start regions (e.g. Menu) carry their own smaller class-based
+      // size and don't get overlay cards. Pre-sizing them here would
+      // override the class style with an inline bypass and leave them
+      // at LAYOUT_WIDTH/HEIGHT after layout, since _shrinkNodes only
+      // restores nodes tagged .has-overlay.
+      if (node.hasClass('start-region')) return;
       node.style({ width: LAYOUT_WIDTH, height: LAYOUT_HEIGHT, shape: 'rectangle' });
     });
   }
@@ -141,6 +147,11 @@ export class NodeOverlayManager {
   _shrinkNodes() {
     if (!this.ui.cy) return;
     this.ui.cy.nodes('.has-overlay').removeStyle('width height');
+    // Defensive: if a previous presizeNodes pass ran before
+    // start-region nodes were tagged (e.g. provider registered before
+    // graph rebuild added the class), strip their inline sizing too
+    // so the class-based smaller dimensions take effect.
+    this.ui.cy.nodes('.start-region').removeStyle('width height shape');
   }
 
 
