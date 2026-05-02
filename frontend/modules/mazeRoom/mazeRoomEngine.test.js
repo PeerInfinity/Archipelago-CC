@@ -304,6 +304,41 @@ describe('detectStepEvents', () => {
         expect(events).toEqual([]);
     });
 
+    it('emits exit_cross when stepping between two ADJACENT exit tiles', () => {
+        // Regression: apcalc's hub-spoke regions place a back-exit and
+        // a forward exit on adjacent tiles (Region 1 has its
+        // back-exit-to-Region-16 at (7,2) and its exit-to-C at (7,1)).
+        // The bot spawns on the back-exit tile, then the next-leg
+        // walkTo lands on the forward exit tile. Without firing a
+        // cross when both old and new positions are exits, the second
+        // cross silently drops and the visualizer idles forever.
+        const w = createWorld(4, 4, {
+            exits: [
+                { exit_id: 'back', x: 0, y: 0, targetRegion: 'Hub' },
+                { exit_id: 'forward', x: 1, y: 0, targetRegion: 'Next' },
+            ],
+        });
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events).toEqual([
+            { type: 'exit_cross', exit_id: 'forward', position: { x: 1, y: 0 } },
+        ]);
+    });
+
+    it('does not refire exit_cross for an in-place step on the same exit', () => {
+        // Pure defensive: detectStepEvents short-circuits zero-movement
+        // already, but the new condition's identity check should also
+        // not fire spuriously even in pathological "moved but stayed"
+        // scenarios.
+        const w = createWorld(4, 4, {
+            exits: [{ exit_id: 'wide', x: 1, y: 0, targetRegion: 'Other' }],
+        });
+        // Hypothetical: visualizer reports a step from one exit-tile
+        // position to the same exit-tile position. Our identity check
+        // matches by exit_id, so no cross fires.
+        const events = detectStepEvents(w, { x: 1, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events).toEqual([]);
+    });
+
     it('emits both pickup and exit_cross when an item sits on the exit tile', () => {
         // Edge case: maze generator avoids putting items on the exit
         // tile, but the helper should be robust if a substrate ever

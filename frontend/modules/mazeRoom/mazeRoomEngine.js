@@ -404,7 +404,17 @@ export function detectStepEvents(world, oldPos, newPos, _inventory) {
 
     const oldExit = getExitAt(world, oldPos.x, oldPos.y);
     const newExit = getExitAt(world, newPos.x, newPos.y);
-    if (!oldExit && newExit) {
+    // Fire exit_cross whenever we step ONTO an exit, except when we
+    // were already standing on the same exit (no-op repeat). The
+    // earlier `!oldExit && newExit` condition missed the case where
+    // a region has two adjacent exit tiles — e.g. apcalc's hub
+    // regions, where the back-exit from Region 16 and the exit to C
+    // sit at (7,2) and (7,1) inside Region 1. The bot spawns on the
+    // back-exit tile, the bot's next-leg walkTo lands on the C
+    // exit tile, and without this fix the second-exit cross never
+    // fires — the visualizer reaches the target and idles, leaving
+    // the bot waiting for a region transition that never comes.
+    if (newExit && (!oldExit || oldExit.exit_id !== newExit.exit_id)) {
         events.push({
             type: 'exit_cross',
             exit_id: newExit.exit_id,
