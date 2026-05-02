@@ -17695,15 +17695,529 @@
       "player_data": {
         "1": {
           "new_inventory_details": {
-            "base_items": {},
-            "resolved_items": {}
+            "base_items": {
+              "Button: 6": 1,
+              "Button: 8": 1,
+              "Button: 9": 1,
+              "Button: 7": 1
+            },
+            "resolved_items": {
+              "Button: 6": 1,
+              "Button: 8": 1,
+              "Button: 9": 1,
+              "Button: 7": 1
+            }
           },
-          "new_accessible_locations": [],
+          "new_accessible_locations": [
+            "Check 1",
+            "Check 2",
+            "Check 3",
+            "Check 4",
+            "Checked 1",
+            "Checked 2",
+            "Checked 3",
+            "Checked 4"
+          ],
           "new_accessible_regions": [
             "C",
-            "Menu"
+            "Menu",
+            "Region 1",
+            "Region 2",
+            "Region 3",
+            "Region 4"
           ],
           "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: 6": 1
+            },
+            "resolved_items": {
+              "Button: 6": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: +": 1
+            },
+            "resolved_items": {
+              "Button: +": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Check 6",
+            "Checked 6"
+          ],
+          "new_accessible_regions": [
+            "Region 6"
+          ],
+          "sphere_locations": [
+            "Check 3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: 1": 1
+            },
+            "resolved_items": {
+              "Button: 1": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Check 12",
+            "Check 7",
+            "Checked 12",
+            "Checked 7"
+          ],
+          "new_accessible_regions": [
+            "Region 12",
+            "Region 7"
+          ],
+          "sphere_locations": [
+            "Check 4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 1": 1
+            },
+            "resolved_items": {
+              "Checked 1": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 2": 1
+            },
+            "resolved_items": {
+              "Checked 2": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 3": 1
+            },
+            "resolved_items": {
+              "Checked 3": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 4": 1
+            },
+            "resolved_items": {
+              "Checked 4": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 12"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: *": 1
+            },
+            "resolved_items": {
+              "Button: *": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Check 13",
+            "Checked 13"
+          ],
+          "new_accessible_regions": [
+            "Region 13"
+          ],
+          "sphere_locations": [
+            "Check 7"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 12": 1
+            },
+            "resolved_items": {
+              "Checked 12": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 12"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 6": 1
+            },
+            "resolved_items": {
+              "Checked 6": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 7": 1
+            },
+            "resolved_items": {
+              "Checked 7": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 7"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: 3": 1
+            },
+            "resolved_items": {
+              "Button: 3": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Check 16",
+            "Check 5",
+            "Check 8",
+            "Checked 16",
+            "Checked 5",
+            "Checked 8"
+          ],
+          "new_accessible_regions": [
+            "Region 16",
+            "Region 5",
+            "Region 8"
+          ],
+          "sphere_locations": [
+            "Check 13"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 13": 1
+            },
+            "resolved_items": {
+              "Checked 13": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 13"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: 3": 1
+            },
+            "resolved_items": {
+              "Button: 3": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 16"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: 8": 1
+            },
+            "resolved_items": {
+              "Button: 8": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Button: 4": 1
+            },
+            "resolved_items": {
+              "Button: 4": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 8"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 16": 1
+            },
+            "resolved_items": {
+              "Checked 16": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 16"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 5": 1
+            },
+            "resolved_items": {
+              "Checked 5": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Checked 8": 1
+            },
+            "resolved_items": {
+              "Checked 8": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Checked 8"
+          ]
         }
       }
     }
