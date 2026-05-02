@@ -585,6 +585,29 @@ export class MazeRoomUI {
             console.warn('[mazeRoom] walkTo: could not resolve target', target);
             return;
         }
+        // Refresh externalInventory from the latest cached snapshot
+        // before the visualizer's tile-pathfinder runs. The snapshot
+        // we cached at setWorld time may not have reflected starting
+        // items yet (worker had not finished applying loadFromJSON's
+        // initial inventory), and a stale cache makes isObstacleCleared
+        // think gated exits are still locked — so the pathfinder
+        // refuses to plan a route through them. The bot already
+        // pings the worker before publishing walkTo, so by the time
+        // we're here the proxy's uiCache is fresh.
+        //
+        // The panel's externalInventory feeds the renderer, but the
+        // visualizer keeps its own _inventory Set for its tile
+        // pathfinder and step (it gets populated by in-region pickups
+        // during fresh-start play). In playback mode that internal
+        // set never sees starting_items — push the fresh snapshot
+        // into the visualizer too so isObstacleCleared inside
+        // _planTilePath sees the same world the renderer does.
+        const snap = stateManagerProxySingleton.getLatestStateSnapshot?.();
+        if (snap) {
+            this.externalInventory = inventoryFromSnapshot(snap);
+            this.externalCheckedLocations = checkedLocationsFromSnapshot(snap);
+            this._visualizer.setInventory?.(this.externalInventory);
+        }
         this._visualizer.walkToTile({ x: tile.x, y: tile.y, name: target.name ?? null });
     }
 

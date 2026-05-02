@@ -200,6 +200,24 @@ export class MazeRoomVisualizer {
         this._notifyChange();
     }
 
+    /**
+     * Replace the visualizer's internal inventory with an externally
+     * supplied set (typically stateManager's snapshot inventory in
+     * playback mode). Used by the panel before issuing a walkToTile
+     * so the tile pathfinder + step's obstacle checks evaluate against
+     * the same inventory the renderer is already showing — without
+     * this, starting items live in stateManager but not in the
+     * visualizer, and gated exits look passable on screen yet the
+     * pathfinder refuses to plan through them.
+     */
+    setInventory(inventory) {
+        if (inventory instanceof Set) {
+            this._inventory = new Set(inventory);
+        } else if (inventory && typeof inventory[Symbol.iterator] === 'function') {
+            this._inventory = new Set(inventory);
+        }
+    }
+
     isRunning() { return this._clock.isRunning(); }
     isCompleted() { return this._completed; }
     isStuck() { return this._stuck; }
