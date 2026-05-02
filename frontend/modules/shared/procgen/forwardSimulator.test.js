@@ -235,6 +235,65 @@ describe('generateSphereLog', () => {
         expect(log).toHaveLength(2); // metadata + integer-0 entry, nothing else
     });
 
+    it('seeds inventory from rulesDoc.starting_items so gated worlds walk', () => {
+        // Regression: apcalc-style worlds gate every exit on a starting
+        // item (e.g. "Button: 6"). Without seeding, the loop computed
+        // zero accessible locations on the first sphere and broke
+        // immediately, producing only the metadata + an empty sphere
+        // "0" entry — the embedded sphere log was effectively useless.
+        const doc = {
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [
+                            { name: 'GameStart', connected_region: 'Hall',
+                              access_rule: { rule: 'Has', args: { item_name: 'Button: 6' } } },
+                        ],
+                        locations: [],
+                    },
+                    Hall: {
+                        name: 'Hall',
+                        exits: [],
+                        locations: [
+                            { name: 'Reward',
+                              access_rule: { rule: 'True_' },
+                              item: { name: 'Victory', advancement: true } },
+                        ],
+                    },
+                },
+            },
+            start_regions: { '1': { default: ['Menu'] } },
+            starting_items: { '1': ['Button: 6'] },
+        };
+        const log = generateSphereLog(doc);
+        // Sphere 0 should reflect the starting inventory and the
+        // unlocked region; the picker should then collect Reward.
+        const sphereZero = log.find((e) => e.sphere_index === '0');
+        expect(sphereZero?.player_data['1'].new_inventory_details.base_items)
+            .toEqual({ 'Button: 6': 1 });
+        expect(sphereZero?.player_data['1'].new_accessible_regions).toContain('Hall');
+        const fractional = log.filter((e) => e.type === 'state_update' && e.sphere_index !== '0');
+        expect(fractional).toHaveLength(1);
+        expect(fractional[0].player_data['1'].sphere_locations).toEqual(['Reward']);
+    });
+
+    it('counts duplicate starting items in base_items', () => {
+        const doc = {
+            regions: {
+                '1': {
+                    Start: { name: 'Start', exits: [], locations: [] },
+                },
+            },
+            start_regions: { '1': { default: ['Start'] } },
+            starting_items: { '1': ['Coin', 'Coin', 'Key'] },
+        };
+        const log = generateSphereLog(doc);
+        const sphereZero = log.find((e) => e.sphere_index === '0');
+        expect(sphereZero?.player_data['1'].new_inventory_details.base_items)
+            .toEqual({ Coin: 2, Key: 1 });
+    });
+
     it('detects progression cycles via the safety budget', () => {
         // Construct a doc with thousands of trivial locations to verify
         // the budget is reasonable; should NOT trip on legitimate worlds.

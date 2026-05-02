@@ -233,7 +233,18 @@ export function generateSphereLog(rulesDoc, opts = {}) {
         event_items: opts.metadata?.event_items ?? {},
     });
 
-    const inventory = new Set();
+    // Seed inventory from rulesDoc.starting_items so accessibility on
+    // sphere 0 reflects what the player actually starts with. Without
+    // this, games that gate every exit on a starting item (e.g. apcalc,
+    // which starts with four Buttons) compute zero reachable locations
+    // and the loop terminates immediately, leaving the embedded sphere
+    // log with only the metadata + an empty sphere "0" entry.
+    const startingItems = rulesDoc.starting_items?.[String(playerId)] ?? [];
+    const inventory = new Set(startingItems);
+    const startingItemCounts = {};
+    for (const name of startingItems) {
+        startingItemCounts[name] = (startingItemCounts[name] ?? 0) + 1;
+    }
     const checkedLocations = new Set();
 
     const initialRegions = computeReachableRegions(model, inventory);
@@ -244,7 +255,10 @@ export function generateSphereLog(rulesDoc, opts = {}) {
         sphere_index: '0',
         player_data: {
             [playerId]: {
-                new_inventory_details: { base_items: {}, resolved_items: {} },
+                new_inventory_details: {
+                    base_items: { ...startingItemCounts },
+                    resolved_items: { ...startingItemCounts },
+                },
                 new_accessible_locations: sortedArray(initialLocs),
                 new_accessible_regions: sortedArray(initialRegions),
                 sphere_locations: [],
