@@ -103,10 +103,22 @@ export class PlaybackBotPanel {
         // run's first play(). Reset everything to a clean slate; the
         // user-preference toggles (intercept, rate) survive — those
         // live outside the playback-state set that reset() touches.
-        const onRulesLoaded = () => this._bot?.reset?.();
-        eventBus.subscribe('stateManager:rulesLoaded', onRulesLoaded, 'playbackBot');
+        //
+        // Subscribe to rawJsonDataLoaded (fires BEFORE rulesLoaded),
+        // not rulesLoaded itself: procgenPlayer's handleRulesLoaded
+        // publishes the synthesized initial user:regionMove inside
+        // its own rulesLoaded handler, and the bot's onRegionMove
+        // receiver consumes it to set _currentRegion. If we reset on
+        // rulesLoaded, our handler would fire AFTER procgenPlayer's
+        // (subscription order matches initialize() order) and wipe
+        // _currentRegion back to null — leaving the bot stuck on
+        // "waiting for region" forever. rawJsonDataLoaded fires first
+        // (data fetched, processing pending), so reset lands before
+        // procgenPlayer publishes its initial regionMove.
+        const onRawJsonLoaded = () => this._bot?.reset?.();
+        eventBus.subscribe('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
         this._sphereDataSubscriptions.push(() => {
-            eventBus.unsubscribe?.('stateManager:rulesLoaded', onRulesLoaded, 'playbackBot');
+            eventBus.unsubscribe?.('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
         });
     }
 
