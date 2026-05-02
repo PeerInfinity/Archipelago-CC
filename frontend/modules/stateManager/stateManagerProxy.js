@@ -1567,11 +1567,23 @@ export class StateManagerProxy {
       return { assumeBidirectional: false, source: 'default', detection: null };
     }
 
-    // Check for explicit setting in exporter settings (where assume_bidirectional_exits is stored)
+    // Check for explicit setting. AP-canonical rules.json puts
+    // assume_bidirectional_exits inside exporter[player]; procgen
+    // outputs put it at the top level (no exporter section). Honor
+    // either — if the rules.json explicitly states a value, use it.
+    // Without this top-level fallback, procgen outputs always fell
+    // through to auto-detection, which wrongly concluded that
+    // unidirectional procgen-generated exits were "intentional" and
+    // refused to bidirectionalize them — trapping the bot in regions
+    // whose only declared exit was gated behind unobtainable items
+    // (e.g. ALTTP's Sewers (Dark) needing 4 small keys to leave via
+    // Sewers Door, with the back-traversal of Throne Room invisible
+    // to PathFinder).
     const exporterSettings = this.staticDataCache.exporter
       ? Object.values(this.staticDataCache.exporter)[0]
       : null;
-    const explicitSetting = exporterSettings?.assume_bidirectional_exits;
+    const explicitSetting = exporterSettings?.assume_bidirectional_exits
+      ?? this.staticDataCache.assume_bidirectional_exits;
 
     if (explicitSetting !== undefined && explicitSetting !== null) {
       return {

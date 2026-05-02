@@ -996,6 +996,10 @@ export function getStaticGameData(sm) {
     // World data - player options and runtime attributes keyed by player ID
     world: sm.rules?.world,  // Full world object (game, options, runtime attributes) keyed by player ID
     exporter: sm.rules?.exporter,  // Exporter-specific settings (keyed by player ID for multiworld)
+    // Top-level explicit setting; honored by getEffectiveBidirectionalSetting
+    // when no exporter section is present (procgen outputs put this at
+    // the top of rules.json instead of nesting inside an exporter block).
+    assume_bidirectional_exits: sm.rules?.assume_bidirectional_exits,
     world_attributes: sm.rules?.world_attributes,  // Legacy: now merged into world
     helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)
