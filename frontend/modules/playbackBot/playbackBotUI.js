@@ -284,6 +284,7 @@ export class PlaybackBotUI {
         this._status = 'idle';
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
+        this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._publish('reset');
         this._render();
     }
@@ -439,6 +440,24 @@ export class PlaybackBotUI {
         // pending snapshot first (see _publishNextWalkTo for why).
         const flush = this._flushSnapshot();
         if (flush) await flush;
+        // Re-check after the await — the visualizer may have crossed
+        // an exit during the flush, putting us in the target region
+        // already. Same logic as _publishNextWalkTo.
+        if (targetRegion === this._currentRegion) {
+            if (target.kind === 'location') {
+                this._publishWalkTo({ kind: 'location', name: target.name });
+                this._setStatus(`walking to "${target.name}"`);
+            } else {
+                this._publishWalkTo({
+                    kind: 'tile', region: targetRegion,
+                    x: target.x, y: target.y,
+                });
+                this._setStatus(`walking to (${targetRegion} ${target.x},${target.y})`);
+            }
+            this._pendingManualTarget = null;
+            this._render();
+            return;
+        }
         const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, targetRegion);
         if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
             this._setStatus(`error: no path from ${this._currentRegion ?? '?'} to ${targetRegion}`);
@@ -609,6 +628,18 @@ export class PlaybackBotUI {
         // and PathFinder unable to find a route through it.
         const flush = this._flushSnapshot();
         if (flush) await flush;
+        // Re-check current region after the flush: an onRegionMove
+        // may have fired while we were awaiting the worker round-trip
+        // (visualizer crossed an exit on its own clock), and the
+        // sphere's target region may now match — in which case we
+        // should walk to the location, not call PathFinder with
+        // (X, X) and treat its zero-length return as an error.
+        if (head.regionName === this._currentRegion) {
+            this._setStatus(`${sphereTag}walking to "${head.locationName}" ${progress}`);
+            this._publishWalkTo({ kind: 'location', name: head.locationName });
+            this._render();
+            return;
+        }
         const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, head.regionName);
         if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
             this._setStatus(`error: no path from ${this._currentRegion} to ${head.regionName}`);

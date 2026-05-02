@@ -444,6 +444,15 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(bot.isActive()).toBe(false);
     });
 
+    it('reset() clears the dispatcher event log so a new run starts clean', () => {
+        const { bot } = makeBot();
+        bot.logDispatcherEvent('user:locationCheck', { locationName: 'Loc A' }, 'propagated');
+        bot.logDispatcherEvent('user:regionMove', { targetRegion: 'region_a' }, 'propagated');
+        expect(bot.getDispatcherLog().length).toBe(2);
+        bot.reset();
+        expect(bot.getDispatcherLog()).toEqual([]);
+    });
+
     it('walkTo dedup keys on currentRegion so same-named exits in different regions both publish', () => {
         // Cross-region routing regression: when the bot routes through
         // a chain of regions, each region may have an exit with the
@@ -881,6 +890,55 @@ describe('PlaybackBotUI — append-only log', () => {
         // Yield once more so the awaited continuation in _publishNextWalkTo runs.
         await Promise.resolve();
         expect(calls).toEqual(['ping:playbackBot:flush', 'findPath:region_a->region_b']);
+    });
+
+    it('takes the same-region branch when onRegionMove fires during the flush await', async () => {
+        // Race regression: the same-region check happens before the
+        // flush await, but onRegionMove can fire while we await
+        // pingWorker — the visualizer crosses an exit on its own
+        // clock — and currentRegion ends up matching the head region
+        // by the time PathFinder is called. Without re-checking after
+        // the await, PathFinder sees (X, X), returns a length-0 path,
+        // and the bot errors with "no path from X to X".
+        const findPathCalls = [];
+        let resolvePing;
+        const pingPromise = new Promise((r) => { resolvePing = r; });
+        const proxy = { pingWorker: () => pingPromise };
+        const bus = makeFakeBus();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+                { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc B'] },
+            ],
+            getStaticData: () => ({ regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A' }] }],
+                ['region_b', { locations: [{ name: 'Loc B' }] }],
+            ]) }),
+            eventBus: bus,
+            pathFinder: { findPathWithExits: (from, to) => {
+                findPathCalls.push(`${from}->${to}`);
+                return { steps: [
+                    { region: from, exitUsed: null },
+                    { region: to, exitUsed: `${from}_to_${to}` },
+                ], length: 1 };
+            } },
+            stateManagerProxy: proxy,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        await bot.play();                                    // walk to Loc A
+        bot.onLocationCheck({ locationName: 'Loc A' });      // sphere 0.2 wants region_b — cross-region path
+        // While awaiting flush, the visualizer crosses an exit and
+        // updates currentRegion to region_b — just as it would in
+        // production when the visualizer's clock runs concurrently.
+        bot.onRegionMove({ targetRegion: 'region_b' });
+        resolvePing();
+        await pingPromise;
+        await Promise.resolve();
+        // PathFinder should NOT have been called (post-flush re-check
+        // saw region match), and the bot should have walked to Loc B
+        // directly instead of erroring with "no path from X to X".
+        expect(findPathCalls).toEqual([]);
+        expect(bot.getStatus()).toMatch(/walking to "Loc B"/);
     });
 
     it('renders log entries as DOM children of .playback-bot-log', () => {

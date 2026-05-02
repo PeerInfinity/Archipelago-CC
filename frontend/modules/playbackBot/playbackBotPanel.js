@@ -96,6 +96,18 @@ export class PlaybackBotPanel {
                 eventBus.unsubscribe?.(ev, onChange, 'playbackBot');
             });
         }
+
+        // When a new rules.json is loaded (preset switch, drag-and-drop,
+        // etc.), the bot's queue/cursor/region/checked-set/log all
+        // pertain to the *previous* world and would corrupt the new
+        // run's first play(). Reset everything to a clean slate; the
+        // user-preference toggles (intercept, rate) survive — those
+        // live outside the playback-state set that reset() touches.
+        const onRulesLoaded = () => this._bot?.reset?.();
+        eventBus.subscribe('stateManager:rulesLoaded', onRulesLoaded, 'playbackBot');
+        this._sphereDataSubscriptions.push(() => {
+            eventBus.unsubscribe?.('stateManager:rulesLoaded', onRulesLoaded, 'playbackBot');
+        });
     }
 
     _hasSphereLog() {
