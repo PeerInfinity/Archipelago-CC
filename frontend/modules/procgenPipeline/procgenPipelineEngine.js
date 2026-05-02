@@ -265,6 +265,44 @@ export function stitchGrid(grid) {
     }
 }
 
+// Top-down counterpart to stitchGrid. The top-down driver's Phase 2
+// already wrote the source's connected_region onto each substrate
+// exit's targetRegion (per exit, not per side), so we just need to:
+// 1. drop exits whose target wasn't placed (skipped by Phase 1's
+//    BFS due to grid-full → null target so wallOffUnusedExits can
+//    drop them), and
+// 2. set isTeleporter from cell adjacency between this region's cell
+//    and the target region's cell.
+// Mirror updates onto extracted_rules.exits so buildRulesJson sees
+// the same view.
+function finalizeTopDownExits(grid, cellsByName) {
+    for (const region of grid.allRegions()) {
+        const myCell = region.cell;
+        const exits = region.playable_payload?.exits;
+        const extracted = region.extracted_rules?.exits ?? [];
+        const extractedById = new Map(extracted.map((e) => [e.id, e]));
+        if (!exits) continue;
+        for (const [exitId, worldExit] of exits) {
+            const target = worldExit.targetRegion;
+            const targetCell = target ? cellsByName.get(target) : null;
+            if (target && !targetCell) {
+                // Target was skipped by Phase 1; null it so it gets
+                // walled off.
+                worldExit.targetRegion = null;
+                worldExit.isTeleporter = false;
+                const ex = extractedById.get(exitId);
+                if (ex) ex.target_region = null;
+                continue;
+            }
+            if (targetCell && myCell) {
+                worldExit.isTeleporter = !cellsAreAdjacent(myCell, targetCell);
+            }
+            const ex = extractedById.get(exitId);
+            if (ex) ex.target_region = worldExit.targetRegion ?? null;
+        }
+    }
+}
+
 function posKey(p) { return `${p.x},${p.y}`; }
 
 // Union of placed items across all built regions. Valid as an
@@ -941,6 +979,27 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
     }
 
     // ----- Phase 2: realise each region -----
+    // Pick one uniform region size that fits every region's exit and
+    // location budget (per-axis max of each region's individual sizing).
+    // Equal-sized regions make entrance/exit tile coordinates line up
+    // across shared walls without coord wrapping, and keep the visual
+    // grid consistent — the alternative (per-region auto-grow) produced
+    // mismatched walls where a wide parent's exit had no in-bounds
+    // counterpart on a smaller child. A future pass could let one source
+    // region span multiple Grid cells; for now everyone is one cell.
+    let uniformSize = { width: regionSizeBase.width, height: regionSizeBase.height };
+    for (const { name } of placementOrder) {
+        const r = sourceRegions[name];
+        if (!r) continue;
+        const s = topDownRegionSize(
+            regionSizeBase,
+            (r.exits ?? []).length,
+            (r.locations ?? []).length,
+        );
+        if (s.width > uniformSize.width) uniformSize.width = s.width;
+        if (s.height > uniformSize.height) uniformSize.height = s.height;
+    }
+
     // exitSidesByExit lets a child resolve its entrance tile from its
     // parent's exit position — populated as we go through phase 2 in
     // BFS-placement order, so parents always realise before children.
@@ -949,9 +1008,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
     for (const { name, cell, parent } of placementOrder) {
         const sourceRegion = sourceRegions[name];
         if (!sourceRegion) continue;
-        const exitCount = (sourceRegion.exits ?? []).length;
-        const locationCount = (sourceRegion.locations ?? []).length;
-        const size = topDownRegionSize(regionSizeBase, exitCount, locationCount);
+        const size = uniformSize;
 
         let entrances = [];
         if (parent) {
@@ -1158,8 +1215,17 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         }
     }
 
-    // ----- Phase 4: stitch + clean up -----
-    stitchGrid(grid);
+    // ----- Phase 4: finalize + clean up -----
+    // grid-growth's stitchGrid resolves target_region from grid
+    // adjacency (one exit per cell per side). Top-down has many exits
+    // per side with distinct sources-of-truth targets, so adjacency-
+    // based resolution would collapse them onto whatever single region
+    // sits on that neighbor cell. Use a per-exit finalizer instead:
+    // the source's connected_region already rode through Phase 2 onto
+    // the substrate's exit objects; here we just confirm the target
+    // got placed, set isTeleporter from cell adjacency, and null out
+    // dangling exits so wallOffUnusedExits can drop them.
+    finalizeTopDownExits(grid, cellsByName);
     wallOffUnusedExits(grid);
 
     // ----- Phase 5: per-exit entrance resolution -----
@@ -1550,6 +1616,14 @@ export function buildRulesJson(grid, opts = {}) {
         // entries. Default true; callers (tests, debug harnesses) can
         // disable. See debugging-tools.md Phase 4.
         embedSphereLog = true,
+        // Items granted to the player at game start (from the source
+        // rules.json's `starting_items[playerId]`). Filtered to items
+        // present in the compiled items pool, with `sourceItems`
+        // backfilling definitions for starting-only items (items that
+        // exist in the source's items pool but were never placed in
+        // any region — APCalc has these). Default empty.
+        startingItems = [],
+        sourceItems = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -1593,6 +1667,28 @@ export function buildRulesJson(grid, opts = {}) {
     // The inventoryUI warns when the list is empty; a single-entry
     // list suffices.
     scaffold.item_groups[playerId] = ['Everything'];
+
+    // Starting items: keep names that exist in the compiled items
+    // pool. For names that don't, backfill the definition from
+    // `sourceItems` if available (source had the item declared but
+    // never placed it — e.g. APCalc's starting-only buttons). Drop
+    // anything that's neither — orphan references would fail
+    // rulesDoc validation as "starting item is not a defined item".
+    if (Array.isArray(startingItems) && startingItems.length > 0) {
+        const kept = [];
+        for (const name of startingItems) {
+            if (scaffold.items[playerId][name] != null) {
+                kept.push(name);
+                continue;
+            }
+            const def = sourceItems?.[name];
+            if (def != null) {
+                scaffold.items[playerId][name] = def;
+                kept.push(name);
+            }
+        }
+        scaffold.starting_items[playerId] = kept;
+    }
 
     // Top-level flag: every back-exit inherits the forward exit's
     // rule. The source-rules.json schema's `assume_bidirectional_exits`

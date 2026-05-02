@@ -100,6 +100,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     p.add_argument(
+        "--label",
+        default=None,
+        help=(
+            "Optional folder label shown in the presets panel (e.g. "
+            "'adventure s1'). Used by tiers like depgraph/metamath that "
+            "host multiple source variants under one game-id."
+        ),
+    )
+    p.add_argument(
         "--presets-dir",
         default=str(DEFAULT_PRESETS_DIR),
         help=f"Presets directory (default: {DEFAULT_PRESETS_DIR})",
@@ -192,6 +201,7 @@ def update_preset_files(
     player_name: str,
     game: str,
     has_procgen_data: bool,
+    label: Optional[str],
     dry_run: bool,
 ) -> None:
     if preset_files_path.exists():
@@ -214,6 +224,8 @@ def update_preset_files(
     # presets-panel-overhaul.md §"Procgen detection at index time".
     if has_procgen_data:
         new_folder_entry["has_procgen_data"] = True
+    if label:
+        new_folder_entry["label"] = label
 
     game_entry = data.get(game_id)
     if game_entry is None:
@@ -295,6 +307,7 @@ def main() -> int:
         player_name=player_name,
         game=game,
         has_procgen_data=has_procgen_data,
+        label=args.label,
         dry_run=args.dry_run,
     )
 

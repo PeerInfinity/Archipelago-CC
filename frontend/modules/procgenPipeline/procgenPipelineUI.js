@@ -1141,6 +1141,8 @@ export class ProcgenPipelineUI {
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
+            startingItems: this.topDownSource?.starting_items?.['1'] ?? [],
+            sourceItems: this.topDownSource?.items?.['1'] ?? null,
             procgenMetadata: {
                 driver: 'top-down',
                 source_game: this.topDownSource?.game_name ?? null,

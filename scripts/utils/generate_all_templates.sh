@@ -13,6 +13,7 @@
 #   GENERATE_WORLDGEN=true         Generate worldgen worlds for standard templates
 #   WORLDGEN_CANONICAL_SEED=1      Canonical seed number (empty to disable)
 #   GENERATE_WORLDGEN2=true        Generate worldgen2 worlds from worldgen worlds
+#   GENERATE_TOPDOWN_PRESETS=true  Generate procgen_topdown presets (top-down driver, maze substrate)
 #   CLEAN_EXISTING=false           Delete existing presets and worldgen worlds before generating
 
 # --- Command-line argument parsing ---
@@ -57,6 +58,7 @@ GENERATE_VANILLA_SEEDS="${GENERATE_VANILLA_SEEDS:-true}"
 GENERATE_WORLDGEN="${GENERATE_WORLDGEN:-true}"
 WORLDGEN_CANONICAL_SEED="${WORLDGEN_CANONICAL_SEED:-1}"
 GENERATE_WORLDGEN2="${GENERATE_WORLDGEN2:-true}"
+GENERATE_TOPDOWN_PRESETS="${GENERATE_TOPDOWN_PRESETS:-true}"
 CLEAN_EXISTING="${CLEAN_EXISTING:-false}"
 
 echo "Configuration:"
@@ -66,6 +68,7 @@ echo "  GENERATE_VANILLA_SEEDS=$GENERATE_VANILLA_SEEDS"
 echo "  GENERATE_WORLDGEN=$GENERATE_WORLDGEN"
 echo "  WORLDGEN_CANONICAL_SEED=$WORLDGEN_CANONICAL_SEED"
 echo "  GENERATE_WORLDGEN2=$GENERATE_WORLDGEN2"
+echo "  GENERATE_TOPDOWN_PRESETS=$GENERATE_TOPDOWN_PRESETS"
 echo "  CLEAN_EXISTING=$CLEAN_EXISTING"
 echo ""
 
@@ -83,6 +86,7 @@ if [ "$SCRIPT_MODE" = true ]; then
 #   GENERATE_WORLDGEN=$GENERATE_WORLDGEN
 #   WORLDGEN_CANONICAL_SEED=$WORLDGEN_CANONICAL_SEED
 #   GENERATE_WORLDGEN2=$GENERATE_WORLDGEN2
+#   GENERATE_TOPDOWN_PRESETS=$GENERATE_TOPDOWN_PRESETS
 #   CLEAN_EXISTING=$CLEAN_EXISTING
 HEADER
   chmod +x "$OUTPUT_SCRIPT"
@@ -316,6 +320,26 @@ gen_worldgen2_world() {
   run_world_generator \
     "frontend/presets/${preset_dir}_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
     "worlds/${preset_dir}_worldgen2" "${1} WorldGen2"
+}
+
+# Run the top-down driver against a source rules.json and register the
+# output as procgen_topdown/AP_<out_seed>/.
+# Usage: generate_topdown_preset SOURCE_GAME SOURCE_SEED_ID LABEL OUT_SEED
+generate_topdown_preset() {
+  local source_game="$1" source_seed_id="$2" label="$3" out_seed="$4"
+  local source_rules="frontend/presets/${source_game}/AP_${source_seed_id}/AP_${source_seed_id}_rules.json"
+  local staged="frontend/downloads/AP_${out_seed}_rules.json"
+  run_cmd node scripts/utils/generate-topdown-preset.js \
+    --source-rules "$source_rules" \
+    --seed "$out_seed" \
+    --out "$staged"
+  run_cmd python scripts/utils/register-preset.py "$staged" \
+    --game-id procgen_topdown \
+    --game-name "Procgen Top-Down" \
+    --seed-id "$out_seed" \
+    --label "$label" \
+    --move \
+    --force
 }
 
 # ============================================================
@@ -579,6 +603,32 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
     fi
   done
 
+fi
+
+# --- procgen_topdown presets ---
+
+# Sequential output seeds: each (source_game × source_seed_id) becomes one
+# top-down realisation. Same source-seed-id convention as Generate.py
+# (AP_14089154938208861744 = seed 1, AP_01043188731678011336 = seed 2,
+# AP_84719271504320872445 = seed 3). Output seed numbers are sequential
+# 1..9 across the 3 sources, matching the depgraph multi-variant pattern.
+if [ "$GENERATE_TOPDOWN_PRESETS" = "true" ]; then
+  section "Generating procgen_topdown presets"
+
+  # Adventure: seeds 1-3
+  generate_topdown_preset adventure 14089154938208861744 "adventure s1" 1
+  generate_topdown_preset adventure 01043188731678011336 "adventure s2" 2
+  generate_topdown_preset adventure 84719271504320872445 "adventure s3" 3
+
+  # APCalc: seeds 4-6
+  generate_topdown_preset apcalc 14089154938208861744 "apcalc s1" 4
+  generate_topdown_preset apcalc 01043188731678011336 "apcalc s2" 5
+  generate_topdown_preset apcalc 84719271504320872445 "apcalc s3" 6
+
+  # A Link to the Past: seeds 7-9
+  generate_topdown_preset alttp 14089154938208861744 "alttp s1" 7
+  generate_topdown_preset alttp 01043188731678011336 "alttp s2" 8
+  generate_topdown_preset alttp 84719271504320872445 "alttp s3" 9
 fi
 
 # --- Cleanup ---

@@ -25,6 +25,9 @@ export class GameStatePanelUI {
     createRootElement() {
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'game-state-panel';
+        // Match the JTA / Maze game-data panels: fill the host
+        // container and scroll when the path log overflows.
+        this.rootElement.style.cssText = 'height: 100%; overflow: auto;';
         this.rootElement.innerHTML = `
             <h3>Game State</h3>
             <div class="game-state-content">

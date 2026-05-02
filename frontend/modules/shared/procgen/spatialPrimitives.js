@@ -106,15 +106,25 @@ export function entranceTileForStartRegion(size) {
  * (0, py) — same y, x snapped to B's left edge. This helper does
  * the snap for any of the four sides.
  *
+ * When the parent has auto-grown wider/taller than the child along
+ * the shared wall, the parent's exit coord can exceed the child's
+ * bounds. Treat the parent wall as a sequence of child-sized
+ * segments and pick the local coord within the segment containing
+ * the exit (parentTile.x % regionSize.width on N/S walls,
+ * parentTile.y % regionSize.height on E/W walls). When the parent
+ * fits inside the child the modulo is a no-op.
+ *
  * Used by both pipeline drivers when wiring a child region's
  * entrance to its parent's exit.
  */
 export function mirrorTileAcrossSide(parentTile, parentSide, regionSize) {
+    const localX = ((parentTile.x % regionSize.width) + regionSize.width) % regionSize.width;
+    const localY = ((parentTile.y % regionSize.height) + regionSize.height) % regionSize.height;
     switch (parentSide) {
-        case SIDE_E: return { x: 0, y: parentTile.y };
-        case SIDE_W: return { x: regionSize.width - 1, y: parentTile.y };
-        case SIDE_N: return { x: parentTile.x, y: regionSize.height - 1 };
-        case SIDE_S: return { x: parentTile.x, y: 0 };
+        case SIDE_E: return { x: 0, y: localY };
+        case SIDE_W: return { x: regionSize.width - 1, y: localY };
+        case SIDE_N: return { x: localX, y: regionSize.height - 1 };
+        case SIDE_S: return { x: localX, y: 0 };
         default: throw new Error(`mirrorTileAcrossSide: unknown side '${parentSide}'`);
     }
 }
