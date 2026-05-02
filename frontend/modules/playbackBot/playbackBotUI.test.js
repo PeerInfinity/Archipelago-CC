@@ -834,6 +834,55 @@ describe('PlaybackBotUI — append-only log', () => {
         expect(bot.getLog()).toEqual([]);
     });
 
+    it('flushes the stateManager worker before cross-region path-finding', async () => {
+        // Regression: the bot used to call findPathWithExits synchronously
+        // after onLocationCheck, but the stateManager worker applies the
+        // pickup asynchronously — without a flush, the snapshot the
+        // PathFinder reads still showed the just-unlocked region as
+        // 'unreachable' and the route was rejected. Verify that a proxy
+        // with pingWorker is round-tripped before findPathWithExits runs,
+        // and that findPathWithExits is called only after the ping resolves.
+        const calls = [];
+        let resolvePing;
+        const pingPromise = new Promise((r) => { resolvePing = r; });
+        const proxy = {
+            pingWorker: (label) => {
+                calls.push(`ping:${label}`);
+                return pingPromise;
+            },
+        };
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+                { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc B'] },
+            ],
+            getStaticData: () => ({ regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A' }] }],
+                ['region_b', { locations: [{ name: 'Loc B' }] }],
+            ]) }),
+            eventBus: makeFakeBus(),
+            pathFinder: { findPathWithExits: (from, to) => {
+                calls.push(`findPath:${from}->${to}`);
+                return { steps: [
+                    { region: from, exitUsed: null },
+                    { region: to, exitUsed: `${from}_to_${to}` },
+                ], length: 1 };
+            } },
+            stateManagerProxy: proxy,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        await bot.play();                                    // walk to Loc A (same region — no ping)
+        expect(calls).toEqual([]);
+        bot.onLocationCheck({ locationName: 'Loc A' });      // cross-region — should ping then path-find
+        // Before the ping resolves, only the ping is recorded.
+        expect(calls).toEqual(['ping:playbackBot:flush']);
+        resolvePing();
+        await pingPromise;
+        // Yield once more so the awaited continuation in _publishNextWalkTo runs.
+        await Promise.resolve();
+        expect(calls).toEqual(['ping:playbackBot:flush', 'findPath:region_a->region_b']);
+    });
+
     it('renders log entries as DOM children of .playback-bot-log', () => {
         const { bot } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });

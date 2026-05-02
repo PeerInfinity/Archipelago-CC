@@ -131,11 +131,23 @@ export class PlaybackBotUI {
         getStaticData = null,
         eventBus = null,
         pathFinder = null,
+        stateManagerProxy = null,
     } = {}) {
         this._getSphereData = getSphereData;
         this._getStaticData = getStaticData;
         this._eventBus = eventBus;
         this._pathFinder = pathFinder;
+        // Proxy handle used to flush pending worker snapshots before
+        // cross-region path-finding. The bot's locationCheck handler
+        // fires immediately after the dispatcher propagates the event,
+        // but the stateManager worker applies the pickup asynchronously
+        // — without a flush, findPathWithExits reads a snapshot that
+        // doesn't yet reflect the just-collected key, and any region
+        // gated on that key is dropped from the accessibility map.
+        // Tests construct the bot without a proxy; the gate below
+        // (`if (this._stateManagerProxy?.pingWorker)`) keeps them
+        // synchronous in that case.
+        this._stateManagerProxy = stateManagerProxy;
         this._rate = DEFAULT_RATE_HZ;
         this._element = null;
         this._statusEl = null;
@@ -213,7 +225,7 @@ export class PlaybackBotUI {
     // before the underlying clock command, so the visualizer has a
     // target on the first tick.
 
-    play(rateHz = this._rate) {
+    async play(rateHz = this._rate) {
         this._rate = rateHz;
         this._ensureQueueBuilt();
         if (this._queue.length === 0) {
@@ -228,7 +240,7 @@ export class PlaybackBotUI {
             return;
         }
         this._isActive = true;
-        this._publishNextWalkTo();
+        await this._publishNextWalkTo();
         if (!this._isActive) return;    // queue drained or errored — don't start the clock
         this._publish('play', { rateHz });
     }
@@ -250,14 +262,14 @@ export class PlaybackBotUI {
         this._publish('step');
     }
 
-    instant() {
+    async instant() {
         this._ensureQueueBuilt();
         if (this._queue.length === 0) {
             this._publish('instant');
             return;
         }
         this._isActive = true;
-        this._publishNextWalkTo();
+        await this._publishNextWalkTo();
         if (!this._isActive) return;
         this._publish('instant');
     }
@@ -387,7 +399,7 @@ export class PlaybackBotUI {
      * destination region is determined and what gets published as
      * the final leg.
      */
-    _dispatchPendingManualTarget() {
+    async _dispatchPendingManualTarget() {
         const target = this._pendingManualTarget;
         if (!target) return;
         if (target.kind !== 'location' && target.kind !== 'tile') return;
@@ -423,7 +435,10 @@ export class PlaybackBotUI {
 
         // Cross-region: route via PathFinder, walk to the next exit.
         // _pendingManualTarget stays set; onRegionMove re-enters this
-        // method after the bot crosses, picking the next leg.
+        // method after the bot crosses, picking the next leg. Flush
+        // pending snapshot first (see _publishNextWalkTo for why).
+        const flush = this._flushSnapshot();
+        if (flush) await flush;
         const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, targetRegion);
         if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
             this._setStatus(`error: no path from ${this._currentRegion ?? '?'} to ${targetRegion}`);
@@ -554,7 +569,7 @@ export class PlaybackBotUI {
      * exit on a PathFinder route to the head's region). Errors short-
      * circuit into a stop + status message.
      */
-    _publishNextWalkTo() {
+    async _publishNextWalkTo() {
         if (!this._queue) return;
         this._advanceCursor();
         const head = this._queue[this._cursor];
@@ -588,6 +603,12 @@ export class PlaybackBotUI {
         }
         // Cross-region: route via the PathFinder against the real
         // snapshot, so accessibility reflects keys collected so far.
+        // Flush any pending worker snapshot first — without this, the
+        // bot can race ahead of the just-collected pickup, leaving the
+        // newly-unlocked region marked 'unreachable' in the snapshot
+        // and PathFinder unable to find a route through it.
+        const flush = this._flushSnapshot();
+        if (flush) await flush;
         const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, head.regionName);
         if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
             this._setStatus(`error: no path from ${this._currentRegion} to ${head.regionName}`);
@@ -609,6 +630,21 @@ export class PlaybackBotUI {
         this._setStatus(`${sphereTag}routing via "${nextExit}" → ${head.regionName} ${progress}`);
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._render();
+    }
+
+    /**
+     * Round-trip a ping through the stateManager worker so any pending
+     * snapshotUpdated messages are applied to the proxy's uiCache
+     * before the caller reads it. Returns null when no proxy is wired
+     * so the caller can skip the await entirely — `await null` would
+     * still defer to a microtask and break test bots that drive the
+     * dispatcher handlers synchronously.
+     */
+    _flushSnapshot() {
+        if (!this._stateManagerProxy?.pingWorker) return null;
+        return this._stateManagerProxy
+            .pingWorker('playbackBot:flush')
+            .catch(() => { /* timeout / worker error — fall through */ });
     }
 
     _publishWalkTo(target) {

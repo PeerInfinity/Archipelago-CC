@@ -142,6 +142,13 @@ export class PlaybackBotPanel {
             getStaticData: () => stateManager?.getStaticData?.() ?? null,
             eventBus,
             pathFinder: new PathFinder(stateManager),
+            // Pass the proxy so the bot can pingWorker before each
+            // cross-region findPathWithExits call. The proxy's uiCache
+            // updates asynchronously after stateManager processes a
+            // pickup; without a flush, the bot's PathFinder reads a
+            // stale snapshot and rejects routes through regions that
+            // were just unlocked by the previous sphere's item.
+            stateManagerProxy: stateManager,
         });
     }
 
