@@ -392,6 +392,67 @@ describe('MazeRoomVisualizer — walkToTile (external control)', () => {
         expect(events).toEqual([]);
     });
 
+    it('plans around exit tiles when the target is not an exit', () => {
+        // Regression: detectStepEvents fires exit_cross on entry to
+        // ANY exit tile, which pauses the visualizer mid-leg. If the
+        // tile pathfinder routes through an exit en route to a non-
+        // exit destination, the player silently teleports off-route.
+        // The pathfinder must treat exits as walls unless they ARE
+        // the target. Set up a 5x1 corridor with an exit at (2,0)
+        // dividing entrance (0,0) from a target at (4,0) — the only
+        // straight path passes through the exit. The planner should
+        // refuse and return null.
+        const events = [];
+        // 5x2 world: top row open, bottom row solid wall. (x,1) is
+        // unwalkable so the only path is straight along y=0.
+        const world = createWorld(5, 2, {
+            entrance: { x: 0, y: 0 },
+            exits: [{ exit_id: 'side_door', x: 2, y: 0, side: 'N',
+                exitName: 'side_door', targetRegion: 'somewhere' }],
+        });
+        for (let x = 0; x < 5; x++) {
+            setTile(world, x, 0, TILE_FLOOR);
+            setTile(world, x, 1, TILE_WALL);
+        }
+        const v = new MazeRoomVisualizer({
+            onExitCross: (exit) => events.push(exit.exit_id),
+        });
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 4, y: 0, name: 'far_floor' });
+        // Pathfinder couldn't plan around the exit — visualizer should
+        // mark stuck and not have fired any spurious exit_cross.
+        const s = v.getState();
+        expect(s.stuck).toBe(true);
+        expect(events).toEqual([]);
+    });
+
+    it('still plans onto an exit tile when that exit IS the target', () => {
+        // Counterpoint to the previous test: the bot needs to walk to
+        // a specific exit tile to cross intentionally. The pathfinder
+        // must allow the target itself to be an exit.
+        const events = [];
+        // 5x2 world: top row open, bottom row solid wall. (x,1) is
+        // unwalkable so the only path is straight along y=0.
+        const world = createWorld(5, 2, {
+            entrance: { x: 0, y: 0 },
+            exits: [{ exit_id: 'side_door', x: 2, y: 0, side: 'N',
+                exitName: 'side_door', targetRegion: 'somewhere' }],
+        });
+        for (let x = 0; x < 5; x++) {
+            setTile(world, x, 0, TILE_FLOOR);
+            setTile(world, x, 1, TILE_WALL);
+        }
+        const v = new MazeRoomVisualizer({
+            onExitCross: (exit) => events.push(exit.exit_id),
+        });
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 2, y: 0, name: 'side_door' });
+        // Plan: E, E. Step through them.
+        v.step(); v.step();
+        expect(v.getState().player_pos).toEqual({ x: 2, y: 0 });
+        expect(events).toEqual(['side_door']);
+    });
+
     it('preserves a target set by onExitCross-triggered chain', () => {
         // Cross-region routing regression: the bot's flow is
         //   walkTo back-exit (same tile as spawn)

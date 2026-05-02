@@ -574,9 +574,22 @@ export class MazeRoomVisualizer {
                 if (obstacleId && !isObstacleCleared(obstacleId, this._inventory, this._world.obstacleLib)) {
                     continue;
                 }
+                // Treat exit tiles as walls unless the candidate IS
+                // the target — stepping onto any exit tile fires
+                // exit_cross and pauses the visualizer for a region
+                // transition, so a path that incidentally routes
+                // through some other region's exit would silently
+                // teleport the player off-route. apcalc's hub-spoke
+                // layouts make this likely (regions with multiple
+                // adjacent exit tiles); for AP-canonical worlds it's
+                // rare. If a destination becomes unreachable as a
+                // result, the bot will (correctly) fail loudly rather
+                // than drift through an unwanted exit.
+                const isTarget = nx === target.x && ny === target.y;
+                if (!isTarget && getExitAt(this._world, nx, ny)) continue;
                 visited.add(key);
                 const newPlan = plan.concat(input);
-                if (nx === target.x && ny === target.y) return newPlan;
+                if (isTarget) return newPlan;
                 queue.push({ x: nx, y: ny, plan: newPlan });
             }
         }
