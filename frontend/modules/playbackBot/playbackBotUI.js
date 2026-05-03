@@ -1,20 +1,16 @@
 /**
- * Playback bot — remote control for the maze panel's playthrough
- * visualizer. Phase 1 of the playback-bot refactor moved this widget
- * out of the Presets panel into its own module (playbackBot/) and a
- * dedicated panel (PlaybackBotPanel).
+ * Playback bot — remote control for the active substrate's playback
+ * controller. The bot resolves the controller for the current region's
+ * substrate via substrateRegistry and calls it directly (play / stop /
+ * step / instant / reset / setRate / walkTo). Cross-region playback
+ * is driven by the substrate's exit-cross → user:regionMove chain,
+ * just as keyboard / click play would.
  *
- * The bot's controls publish `playback:command` events on the
- * eventBus; the maze panel subscribes and forwards them to its
- * visualizer. Cross-region playback is then driven by the
- * visualizer's exit-cross → user:regionMove → maze:loadRegion
- * chain, just as keyboard play would.
- *
- * The bot is mostly substrate-agnostic — it builds a queue from
- * sphereState's parsed sphere log and uses PathFinder for inter-
- * region routing. The panel wrapper is responsible for injecting
- * those dependencies; the bot itself is a plain widget that's
- * exercised by tests directly.
+ * The bot is substrate-agnostic above the controller boundary — it
+ * builds a queue from sphereState's parsed sphere log and uses
+ * PathFinder for inter-region routing. The panel wrapper is
+ * responsible for injecting dependencies; the bot itself is a plain
+ * widget exercised directly by tests.
  *
  * Plan references:
  *   - NewDocs/plans/procedural-generation/debugging-tools.md (Phase 5)
@@ -22,10 +18,9 @@
  */
 
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 const DEFAULT_RATE_HZ = 4;
-const PLAYBACK_COMMAND_EVENT = 'playback:command';
-const PUBLISHER_MODULE = 'playbackBot';
 // LS key for the click-intercept toggle. Persisted separately from
 // any per-session bot state because it's a settings-level switch
 // (off by default; matches the behaviour the plan specifies).
@@ -129,14 +124,25 @@ export class PlaybackBotUI {
     constructor({
         getSphereData,
         getStaticData = null,
-        eventBus = null,
+        getRulesJson = null,
         pathFinder = null,
         stateManagerProxy = null,
+        getActiveController = null,
     } = {}) {
         this._getSphereData = getSphereData;
         this._getStaticData = getStaticData;
-        this._eventBus = eventBus;
+        // Returns the loaded rules.json (the panel caches it from
+        // stateManager:rawJsonDataLoaded). Used by the default
+        // _resolveController to look up per-region substrate via
+        // preset_sidecars when picking the active controller.
+        this._getRulesJson = getRulesJson;
         this._pathFinder = pathFinder;
+        // Resolver for the active substrate's PlaybackController. If
+        // not injected, defaults to looking up the current region's
+        // substrate in the loaded rules.json's preset_sidecars and
+        // querying substrateRegistry. Tests can inject a stub
+        // controller without mocking the rules.json / registry stack.
+        this._getActiveController = getActiveController;
         // Proxy handle used to flush pending worker snapshots before
         // cross-region path-finding. The bot's locationCheck handler
         // fires immediately after the dispatcher propagates the event,
@@ -235,43 +241,43 @@ export class PlaybackBotUI {
             // walk. This preserves the bot's pre-Phase-3 role as a
             // pure remote control when the preset has no sphere log.
             this._setStatus('no sphere log');
-            this._publish('play', { rateHz });
+            this._dispatch('play', [rateHz]);
             this._render();
             return;
         }
         this._isActive = true;
         await this._publishNextWalkTo();
         if (!this._isActive) return;    // queue drained or errored — don't start the clock
-        this._publish('play', { rateHz });
+        this._dispatch('play', [rateHz]);
     }
 
     stop() {
         // Pause without clearing the cursor — calling play() again
         // resumes from the same head.
         this._isActive = false;
-        this._publish('stop');
+        this._dispatch('stop');
     }
 
     step() {
         this._ensureQueueBuilt();
         if (this._queue.length === 0) {
-            this._publish('step');
+            this._dispatch('step');
             return;
         }
         this._publishNextWalkTo();
-        this._publish('step');
+        this._dispatch('step');
     }
 
     async instant() {
         this._ensureQueueBuilt();
         if (this._queue.length === 0) {
-            this._publish('instant');
+            this._dispatch('instant');
             return;
         }
         this._isActive = true;
         await this._publishNextWalkTo();
         if (!this._isActive) return;
-        this._publish('instant');
+        this._dispatch('instant');
     }
 
     reset() {
@@ -285,13 +291,13 @@ export class PlaybackBotUI {
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
-        this._publish('reset');
+        this._dispatch('reset');
         this._render();
     }
 
     setRate(rateHz) {
         this._rate = rateHz;
-        this._publish('setRate', { rateHz });
+        this._dispatch('setRate', [rateHz]);
     }
 
     // --- public render hook ---
@@ -600,7 +606,7 @@ export class PlaybackBotUI {
             this._setStatus(`finished — ${this._cursor} location${this._cursor === 1 ? '' : 's'} visited`);
             this._isActive = false;
             this._lastPublishedTarget = null;
-            this._publish('stop');
+            this._dispatch('stop');
             this._render();
             return;
         }
@@ -645,7 +651,7 @@ export class PlaybackBotUI {
             this._setStatus(`error: no path from ${this._currentRegion} to ${head.regionName}`);
             this._isActive = false;
             this._lastPublishedTarget = null;
-            this._publish('stop');
+            this._dispatch('stop');
             this._render();
             return;
         }
@@ -654,7 +660,7 @@ export class PlaybackBotUI {
             this._setStatus(`error: PathFinder returned a step without an exit (${this._currentRegion} → ${head.regionName})`);
             this._isActive = false;
             this._lastPublishedTarget = null;
-            this._publish('stop');
+            this._dispatch('stop');
             this._render();
             return;
         }
@@ -681,12 +687,12 @@ export class PlaybackBotUI {
     _publishWalkTo(target) {
         // De-dupe identical consecutive walkTo: an event mid-leg can
         // re-enter _publishNextWalkTo without changing the head, and
-        // re-issuing the same walkTo would just have the visualizer
-        // re-plan to the same tile. The signature includes the
+        // re-issuing the same walkTo would just have the controller
+        // re-plan to the same target. The signature includes the
         // current region because the same exit name (e.g. "exit_1")
         // appears in multiple regions — without the region prefix,
         // a same-named exit in a different region would be silently
-        // skipped after a region transition, leaving the visualizer
+        // skipped after a region transition, leaving the controller
         // with no target. For tile targets the sig must also include
         // (x,y) since `name` is undefined.
         const tail = target.kind === 'tile'
@@ -695,27 +701,49 @@ export class PlaybackBotUI {
         const sig = `${this._currentRegion}:${target.kind}:${tail}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
-        this._publish('walkTo', { target });
-        // Make sure the visualizer's clock is ticking. The sphere
-        // queue's play() pattern is "set target, then publish play";
+        this._dispatch('walkTo', [target]);
+        // Make sure the controller's clock is ticking. The sphere
+        // queue's play() pattern is "set target, then start clock";
         // manual walkTos (intercept, manual input, cross-region
-        // routing) need the same kick so the visualizer actually
-        // walks the plan instead of sitting on a target it received
-        // while its clock is stopped.
-        this._publish('play', { rateHz: this._rate });
+        // routing) need the same kick so the controller actually
+        // executes the plan instead of sitting on a target with a
+        // stopped clock.
+        this._dispatch('play', [this._rate]);
     }
 
-    _publish(command, extra = {}) {
-        if (!this._eventBus?.publish) {
-            // No event bus — log a hint and stay quiet on the wire.
-            console.warn(`[playbackBot] eventBus unavailable; cannot publish ${command}`);
-            return;
+    /**
+     * Resolve the active substrate's PlaybackController and invoke
+     * `method(...args)` on it. Silent no-op when no controller is
+     * available (e.g. no panel mounted yet, no current region known).
+     */
+    _dispatch(method, args = []) {
+        const controller = this._resolveController();
+        if (!controller) return;
+        const fn = controller[method];
+        if (typeof fn !== 'function') return;
+        fn.apply(controller, args);
+    }
+
+    /**
+     * Find the PlaybackController for the active substrate. If a
+     * `getActiveController` resolver was injected, use it. Otherwise
+     * default to looking up `_currentRegion`'s substrate via the
+     * loaded rules.json's preset_sidecars and asking
+     * substrateRegistry. Non-procgen presets (no preset_sidecars)
+     * fall back to the maze substrate, preserving the bot's
+     * pre-mixed-substrate behaviour.
+     */
+    _resolveController() {
+        if (this._getActiveController) return this._getActiveController() ?? null;
+        let substrateId = 'maze';
+        const rulesJson = this._getRulesJson?.() ?? null;
+        if (rulesJson && this._currentRegion) {
+            const sidecars = rulesJson.preset_sidecars?.['1'];
+            const sidecar = sidecars?.[this._currentRegion];
+            if (sidecar?.substrate) substrateId = sidecar.substrate;
         }
-        this._eventBus.publish(PLAYBACK_COMMAND_EVENT, {
-            command,
-            ...extra,
-            source: 'playbackBot',
-        }, PUBLISHER_MODULE);
+        const entry = substrateRegistry.get(substrateId);
+        return entry?.getPlaybackController?.() ?? null;
     }
 
     _mount() {

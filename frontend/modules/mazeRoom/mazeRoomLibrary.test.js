@@ -41,4 +41,13 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
         expect(substrateRegistryEntry.extractPathsAndObstacles).toBe(extractPathsAndObstacles);
         expect(substrateRegistryEntry.serializeWorld).toBe(serializeMazeWorld);
     });
+
+    it('exposes getPlaybackController for the bot to dispatch into', () => {
+        // No panel mounted in the headless test environment, so the
+        // resolver returns null. The controller delegation itself is
+        // exercised in mazeRoomUI.test.js's "playback controller
+        // adapter" describe block.
+        expect(typeof substrateRegistryEntry.getPlaybackController).toBe('function');
+        expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
+    });
 });

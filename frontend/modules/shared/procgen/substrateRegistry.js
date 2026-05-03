@@ -23,12 +23,33 @@
  *     supportedFeatures,        // array of shared-library feature ids
  *     deserializeWorld,         // (sidecar) -> world; called by procgenPlayer
  *
+ *     // Runtime — playback (optional; substrates that don't support
+ *     // scripted playback may omit). The bot resolves the controller
+ *     // for the current region's substrate and calls methods directly,
+ *     // bypassing the eventBus. Returning null means "no panel mounted
+ *     // / no controller available" and the bot should no-op.
+ *     getPlaybackController,    // () -> PlaybackController | null
+ *
  *     // Build-time — required for substrates that drive procgen
  *     generateRegionCore,       // (input) -> { world, exits_placed, ... }
  *     placeFromItems,           // (world, input) -> { placed_items, placed_obstacles }
  *     placeFromRules,           // (world, input) -> { placed_logic_gates, placed_items, placed_locations }
  *     extractPathsAndObstacles, // (world, opts) -> extracted_rules
  *     serializeWorld,           // (world, extracted, baseObstacleLib, baseItemLib) -> sidecar
+ *   }
+ *
+ * PlaybackController contract (substrate-neutral, used by the playback
+ * bot):
+ *
+ *   {
+ *     play(rateHz?),            // start internal clock at given rate
+ *     stop(),                   // pause clock
+ *     step(),                   // advance one tick
+ *     instant(),                // flush remaining work without delay
+ *     reset(),                  // return to initial state
+ *     setRate(rateHz),          // change clock rate
+ *     walkTo(target),           // target = { kind:'location'|'exit'|'tile',
+ *                               //            name?, region?, x?, y? }
  *   }
  *
  * Build-time slots are optional. A substrate that only handles

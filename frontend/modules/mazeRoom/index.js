@@ -136,6 +136,10 @@ export function setPanelInstance(instance) {
     panelInstance = instance;
 }
 
+export function getPanelInstance() {
+    return panelInstance;
+}
+
 export function getModuleApis() {
     return { eventBus, dispatcher };
 }

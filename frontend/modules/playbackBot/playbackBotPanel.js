@@ -37,6 +37,10 @@ export class PlaybackBotPanel {
         this._emptyEl = null;
         this._sphereDataSubscriptions = [];
         this._initialized = false;
+        // Cache of the last loaded rules.json. Bot reads this via the
+        // getRulesJson injection to look up per-region substrate from
+        // preset_sidecars.
+        this._cachedRulesJson = null;
 
         if (typeof document === 'undefined') {
             this.rootElement = null;
@@ -115,7 +119,14 @@ export class PlaybackBotPanel {
         // "waiting for region" forever. rawJsonDataLoaded fires first
         // (data fetched, processing pending), so reset lands before
         // procgenPlayer publishes its initial regionMove.
-        const onRawJsonLoaded = () => this._bot?.reset?.();
+        const onRawJsonLoaded = (data) => {
+            // Stash the rules.json so the bot can look up per-region
+            // substrate via preset_sidecars. The proxy doesn't keep
+            // the parsed payload around — getRawJsonDataSource()
+            // returns just the source filename.
+            this._cachedRulesJson = data?.rawJsonData ?? null;
+            this._bot?.reset?.();
+        };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
         this._sphereDataSubscriptions.push(() => {
             eventBus.unsubscribe?.('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
@@ -157,14 +168,13 @@ export class PlaybackBotPanel {
     }
 
     _mountBot() {
-        const eventBus = PlaybackBotPanel.moduleApis?.eventBus;
         this._bot = new PlaybackBotUI({
             getSphereData: () => {
                 const sphereState = getSphereStateSingleton();
                 return sphereState?.getSphereData?.() ?? [];
             },
             getStaticData: () => stateManager?.getStaticData?.() ?? null,
-            eventBus,
+            getRulesJson: () => this._cachedRulesJson,
             pathFinder: new PathFinder(stateManager),
             // Pass the proxy so the bot can pingWorker before each
             // cross-region findPathWithExits call. The proxy's uiCache

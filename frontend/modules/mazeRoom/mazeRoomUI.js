@@ -245,29 +245,6 @@ export class MazeRoomUI {
         };
         eventBus.subscribe('playback:snapshotUpdated', playbackHandler, 'mazeRoom');
         this._unsubPlaybackSnapshot = () => eventBus.unsubscribe('playback:snapshotUpdated', playbackHandler, 'mazeRoom');
-
-        // Phase 5 single-trigger: the presets-panel bot publishes
-        // playback:command events to remote-control this panel's
-        // visualizer. Lets the user press Play once in the bot and
-        // have the maze panel auto-walk across regions via the
-        // existing exit-cross → user:regionMove → maze:loadRegion
-        // chain.
-        const commandHandler = (data) => {
-            if (!this._visualizer) return;
-            const cmd = data?.command;
-            switch (cmd) {
-                case 'play':    this._visualizer.play(data?.rateHz); break;
-                case 'stop':    this._visualizer.stop(); break;
-                case 'step':    this._visualizer.step(); break;
-                case 'instant': this._visualizer.instant(); break;
-                case 'reset':   this._visualizer.freshStart(); break;
-                case 'setRate': this._visualizer.setRate(data?.rateHz); break;
-                case 'walkTo':  this._handleWalkToCommand(data?.target); break;
-                default: break;
-            }
-        };
-        eventBus.subscribe('playback:command', commandHandler, 'mazeRoom');
-        this._unsubPlaybackCommand = () => eventBus.unsubscribe('playback:command', commandHandler, 'mazeRoom');
     }
 
     _subscribeToDiscoveryEvents() {
@@ -526,7 +503,6 @@ export class MazeRoomUI {
     destroy() {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
         if (this._unsubPlaybackSnapshot) { this._unsubPlaybackSnapshot(); this._unsubPlaybackSnapshot = null; }
-        if (this._unsubPlaybackCommand) { this._unsubPlaybackCommand(); this._unsubPlaybackCommand = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
@@ -609,6 +585,27 @@ export class MazeRoomUI {
             this._visualizer.setInventory?.(this.externalInventory);
         }
         this._visualizer.walkToTile({ x: tile.x, y: tile.y, name: target.name ?? null });
+    }
+
+    /**
+     * Substrate-neutral playback controller for the bot to call into
+     * via substrateRegistry. Cached so identity is stable across calls.
+     * Each method delegates to the existing visualizer / walkTo
+     * machinery — the controller is just a uniform interface view.
+     */
+    getPlaybackController() {
+        if (!this._playbackController) {
+            this._playbackController = {
+                play:    (rateHz) => this._visualizer?.play(rateHz),
+                stop:    () => this._visualizer?.stop(),
+                step:    () => this._visualizer?.step(),
+                instant: () => this._visualizer?.instant(),
+                reset:   () => this._visualizer?.freshStart(),
+                setRate: (rateHz) => this._visualizer?.setRate(rateHz),
+                walkTo:  (target) => this._handleWalkToCommand(target),
+            };
+        }
+        return this._playbackController;
     }
 
     _resolveWalkToTile(target, world) {

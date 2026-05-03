@@ -43,6 +43,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getDiscoverySettings } from '../discovery/index.js';
+import { TextAdventurePlaybackController } from './textAdventureSubstratePlayback.js';
 // Subscribe through the raw eventBus with an explicit module name —
 // can't rely on this.apis.eventBus because Golden Layout may build
 // the panel before this module's initialize() has run.
@@ -116,6 +117,11 @@ export class TextAdventureSubstrateUI {
             this.rootElement = null;
         }
 
+        // Substrate-neutral playback controller exposed to the bot via
+        // substrateRegistry.getPlaybackController. One per panel instance,
+        // so the controller's clock dies with the panel.
+        this._playbackController = new TextAdventurePlaybackController(this);
+
         setPanelInstance(this);
 
         // If textAdventure:loadRegion fired before this panel mounted,
@@ -138,6 +144,8 @@ export class TextAdventureSubstrateUI {
     get apis() { return TextAdventureSubstrateUI.moduleApis || getModuleApis(); }
 
     getRootElement() { return this.rootElement; }
+
+    getPlaybackController() { return this._playbackController; }
 
     _subscribeToSnapshotUpdates() {
         const handler = (data) => {
@@ -589,6 +597,7 @@ export class TextAdventureSubstrateUI {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
+        if (this._playbackController) { this._playbackController.reset(); this._playbackController = null; }
         this.rootElement = null;
         this.world = null;
     }

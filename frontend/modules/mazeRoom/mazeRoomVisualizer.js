@@ -114,7 +114,26 @@ export class MazeRoomVisualizer {
         const same = this._world === world && this._regionId === regionId;
         this._world = world ?? null;
         this._regionId = regionId ?? null;
-        if (same) return;
+        if (same) {
+            // Re-entry into the same region (typical when bouncing
+            // back through another substrate — e.g. maze -> text-
+            // adventure -> maze with the warehouse handing back the
+            // same world reference). The early-exit shortcut used to
+            // skip everything below, which left _awaitingRegionLoad
+            // stuck at true from the prior exit-cross — every
+            // subsequent _tick then returned immediately at the
+            // awaitingRegionLoad gate even though the load *was*
+            // already complete. Always clear the gate, and re-apply
+            // spawnAt so the player lands at the arrival exit instead
+            // of the previous walk's terminal tile. Inventory / log /
+            // _stuck / _completed persist.
+            this._awaitingRegionLoad = false;
+            if (spawnAt && this._state) {
+                this._state.player_pos = { x: spawnAt.x, y: spawnAt.y };
+            }
+            this._notifyChange();
+            return;
+        }
 
         if (freshStart) {
             this.reset({ silent: false });

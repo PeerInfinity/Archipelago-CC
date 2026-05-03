@@ -93,6 +93,25 @@ describe('MazeRoomVisualizer — initialization', () => {
         v.setWorld(world, 'TestRegion', { spawnAt: { x: 3, y: 1 } });
         expect(seen.at(-1)).toEqual({ x: 3, y: 1 });
     });
+
+    it('re-entry into the same region clears _awaitingRegionLoad and applies spawnAt', () => {
+        // Regression: when bouncing maze -> text-adventure -> maze, the
+        // procgen-player warehouse hands the same world reference back.
+        // The previous shortcut returned early and left
+        // _awaitingRegionLoad stuck at true (set by the prior exit-
+        // cross), so subsequent _ticks early-returned at the gate even
+        // though the load was complete and the bot's clock was running.
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 3);
+        v.setWorld(world, 'R');
+        // Simulate the exit-cross side-effect that the visualizer's
+        // own _tick performs when it walks onto an exit tile.
+        v._awaitingRegionLoad = true;
+        // Re-entry with the same world reference + a different spawn.
+        v.setWorld(world, 'R', { spawnAt: { x: 4, y: 2 } });
+        expect(v._awaitingRegionLoad).toBe(false);
+        expect(v.getState().player_pos).toEqual({ x: 4, y: 2 });
+    });
 });
 
 describe('MazeRoomVisualizer — basic walk', () => {

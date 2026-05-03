@@ -43,4 +43,13 @@ describe('textAdventureSubstrateLibrary substrateRegistryEntry', () => {
     it('exposes deserializeWorld bound to the shared tile-grid deserializer', () => {
         expect(substrateRegistryEntry.deserializeWorld).toBe(tileGridDeserializer);
     });
+
+    it('exposes getPlaybackController for the bot to dispatch into', () => {
+        // Without a panel mounted in the headless test environment,
+        // the resolver returns null. We just verify the slot exists
+        // and is callable — the controller wiring is exercised in
+        // textAdventureSubstratePlayback.test.js.
+        expect(typeof substrateRegistryEntry.getPlaybackController).toBe('function');
+        expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
+    });
 });

@@ -28,6 +28,7 @@ import {
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { getPanelInstance } from './index.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -44,6 +45,10 @@ export const substrateRegistryEntry = Object.freeze({
         'arbitrary_exit_rules',
     ]),
     deserializeWorld: tileGridDeserializer,
+
+    // Runtime — playback. Returns the live panel's controller so the
+    // bot can drive the visualizer directly. null when no panel mounted.
+    getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
     // Build-time adapters
     generateRegionCore: spatialCore,

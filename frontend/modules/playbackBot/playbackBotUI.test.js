@@ -70,19 +70,24 @@ const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 1, locations: ['Free Loc'], accessibleRegions: [], accessibleLocations: ['Locked Loc'] },
 ];
 
-function makeFakeBus() {
-    const events = [];
+function makeFakeController() {
+    const calls = [];
+    const record = (method) => (...args) => { calls.push({ method, args }); };
     return {
-        events,
-        publish(topic, payload, publisher) {
-            events.push({ topic, payload, publisher });
-        },
+        calls,
+        play:    record('play'),
+        stop:    record('stop'),
+        step:    record('step'),
+        instant: record('instant'),
+        reset:   record('reset'),
+        setRate: record('setRate'),
+        walkTo:  record('walkTo'),
     };
 }
 
 describe('PlaybackBotUI — initialization', () => {
     it('mounts with control bar and status display', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: makeFakeBus() });
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => makeFakeController() });
         const root = bot.getElement();
         expect(root).toBeTruthy();
         const status = root.queryAll((el) => el.className === 'playback-bot-status')[0];
@@ -90,66 +95,60 @@ describe('PlaybackBotUI — initialization', () => {
     });
 
     it('reports no sphere log when data is empty', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => [], eventBus: makeFakeBus() });
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController() });
         const status = bot.getElement().queryAll((el) => el.className === 'playback-bot-status')[0];
         expect(status?.textContent).toMatch(/No sphere log loaded/);
     });
 });
 
-describe('PlaybackBotUI — publishes playback:command events', () => {
-    it('play() publishes play with a rate', () => {
-        const bus = makeFakeBus();
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+describe('PlaybackBotUI — dispatches to the active substrate controller', () => {
+    it('play() invokes controller.play with a rate', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller });
         bot.play(7);
-        const last = bus.events.at(-1);
-        expect(last.topic).toBe('playback:command');
-        expect(last.payload.command).toBe('play');
-        expect(last.payload.rateHz).toBe(7);
+        const last = controller.calls.at(-1);
+        expect(last.method).toBe('play');
+        expect(last.args[0]).toBe(7);
     });
 
-    it('stop() publishes stop', () => {
-        const bus = makeFakeBus();
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+    it('stop() invokes controller.stop', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller });
         bot.stop();
-        expect(bus.events.at(-1).payload.command).toBe('stop');
+        expect(controller.calls.at(-1).method).toBe('stop');
     });
 
-    it('step() publishes step', () => {
-        const bus = makeFakeBus();
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+    it('step() invokes controller.step', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller });
         bot.step();
-        expect(bus.events.at(-1).payload.command).toBe('step');
+        expect(controller.calls.at(-1).method).toBe('step');
     });
 
-    it('reset() publishes reset', () => {
-        const bus = makeFakeBus();
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+    it('reset() invokes controller.reset', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller });
         bot.reset();
-        expect(bus.events.at(-1).payload.command).toBe('reset');
+        expect(controller.calls.at(-1).method).toBe('reset');
     });
 
-    it('setRate() publishes setRate with rate', () => {
-        const bus = makeFakeBus();
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
+    it('setRate() invokes controller.setRate with rate', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller });
         bot.setRate(12);
-        const last = bus.events.at(-1);
-        expect(last.payload.command).toBe('setRate');
-        expect(last.payload.rateHz).toBe(12);
+        const last = controller.calls.at(-1);
+        expect(last.method).toBe('setRate');
+        expect(last.args[0]).toBe(12);
     });
 
-    it('all events declare playbackBot as the publisher module', () => {
-        const bus = makeFakeBus();
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: bus });
-        bot.play(4);
-        bot.stop();
-        for (const ev of bus.events) {
-            expect(ev.publisher).toBe('playbackBot');
-        }
-    });
-
-    it('survives a missing eventBus without throwing', () => {
+    it('survives a missing controller without throwing', () => {
+        // No getActiveController injected and no proxy / region either,
+        // so the default _resolveController returns null. Bot must
+        // silently no-op rather than throw.
         const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA });
         expect(() => bot.play()).not.toThrow();
+        expect(() => bot.stop()).not.toThrow();
+        expect(() => bot.setRate(8)).not.toThrow();
     });
 });
 
@@ -293,14 +292,14 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         staticData = makeStaticData(),
         pathFinder = { findPathWithExits: () => null },
     } = {}) {
-        const bus = makeFakeBus();
+        const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => sphereData,
             getStaticData: () => staticData,
-            eventBus: bus,
+            getActiveController: () => controller,
             pathFinder,
         });
-        return { bot, bus };
+        return { bot, controller };
     }
 
     it('builds the queue lazily on first play', () => {
@@ -311,14 +310,14 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
     });
 
     it('same-region head publishes walkTo location', () => {
-        const { bot, bus } = makeBot();
+        const { bot, controller } = makeBot();
         // Pretend the visualizer is already in region_a — simulate the
         // initial user:regionMove that the procgen player synthesizes
         // on rules-loaded.
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.play();
-        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
-        expect(walkTo.payload.target).toEqual({ kind: 'location', name: 'Loc A' });
+        const walkTo = controller.calls.find((c) => c.method === 'walkTo');
+        expect(walkTo.args[0]).toEqual({ kind: 'location', name: 'Loc A' });
     });
 
     it('cross-region head publishes walkTo exit using the first hop from PathFinder', () => {
@@ -332,13 +331,13 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
                 ], length: 1 };
             },
         };
-        const { bot, bus } = makeBot({ pathFinder });
+        const { bot, controller } = makeBot({ pathFinder });
         bot.onRegionMove({ targetRegion: 'region_a' });
         // Pre-mark Loc A as collected so the head is Loc B (region_b).
         bot.onLocationCheck({ locationName: 'Loc A' });
         bot.play();
-        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
-        expect(walkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b_exit' });
+        const walkTo = controller.calls.find((c) => c.method === 'walkTo');
+        expect(walkTo.args[0]).toEqual({ kind: 'exit', name: 'a_to_b_exit' });
     });
 
     it('advances cursor on system:locationCheck for the matching head', () => {
@@ -373,25 +372,25 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
                 { region: 'region_b', exitUsed: 'a_to_b' },
             ], length: 1 }),
         };
-        const { bot, bus } = makeBot({ pathFinder });
+        const { bot, controller } = makeBot({ pathFinder });
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.onLocationCheck({ locationName: 'Loc A' });
         bot.play();
         // First walkTo: exit out of region_a.
-        const firstWalkTo = bus.events.find((e) => e.payload.command === 'walkTo');
-        expect(firstWalkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b' });
+        const firstWalkTo = controller.calls.find((c) => c.method === 'walkTo');
+        expect(firstWalkTo.args[0]).toEqual({ kind: 'exit', name: 'a_to_b' });
 
         // Visualizer crosses into region_b — bot now in same region as
         // head and should publish a walkTo location.
         bot.onRegionMove({ targetRegion: 'region_b' });
-        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
-        expect(walkTos.at(-1).payload.target).toEqual({ kind: 'location', name: 'Loc B' });
+        const walkTos = controller.calls.filter((c) => c.method === 'walkTo');
+        expect(walkTos.at(-1).args[0]).toEqual({ kind: 'location', name: 'Loc B' });
     });
 
     it('queue empty -> publishes stop and status reads finished', () => {
         // Single-location queue so we exercise clean-finish without
         // exiting the start region (which would need PathFinder).
-        const { bot, bus } = makeBot({
+        const { bot, controller } = makeBot({
             sphereData: [
                 { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
             ],
@@ -404,19 +403,19 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(bot.getCursor()).toBe(1);
         expect(bot.getStatus()).toMatch(/^finished — 1 location visited/);
         expect(bot.isActive()).toBe(false);
-        const lastCmd = bus.events.at(-1).payload.command;
+        const lastCmd = controller.calls.at(-1).method;
         expect(lastCmd).toBe('stop');
     });
 
     it('PathFinder returning null -> error status, stop event, isActive=false', () => {
         const pathFinder = { findPathWithExits: () => null };
-        const { bot, bus } = makeBot({ pathFinder });
+        const { bot, controller } = makeBot({ pathFinder });
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.onLocationCheck({ locationName: 'Loc A' });
         bot.play();   // Head is Loc B (region_b), no path returned
         expect(bot.getStatus()).toMatch(/^error: no path from region_a to region_b/);
         expect(bot.isActive()).toBe(false);
-        const lastCmd = bus.events.at(-1).payload.command;
+        const lastCmd = controller.calls.at(-1).method;
         expect(lastCmd).toBe('stop');
     });
 
@@ -469,7 +468,7 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
                 { region: to, exitUsed: 'exit_1' },     // same name in both regions
             ], length: 1 }),
         };
-        const { bot, bus } = makeBot({
+        const { bot, controller } = makeBot({
             sphereData: [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc Z'] }],
             staticData: {
                 regions: new Map([
@@ -483,40 +482,40 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.play();
         // First walkTo: exit_1 from region_a.
-        const firstWalk = bus.events.find((e) => e.payload.command === 'walkTo');
-        expect(firstWalk.payload.target).toEqual({ kind: 'exit', name: 'exit_1' });
+        const firstWalk = controller.calls.find((c) => c.method === 'walkTo');
+        expect(firstWalk.args[0]).toEqual({ kind: 'exit', name: 'exit_1' });
 
         // Cross into region_b. Bot computes new path; first hop is
         // STILL named 'exit_1', but in a different region. Without
         // region-keyed dedup, this second walkTo would be silently
         // skipped.
         bot.onRegionMove({ targetRegion: 'region_b' });
-        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        const walkTos = controller.calls.filter((c) => c.method === 'walkTo');
         expect(walkTos).toHaveLength(2);
-        expect(walkTos[1].payload.target).toEqual({ kind: 'exit', name: 'exit_1' });
+        expect(walkTos[1].args[0]).toEqual({ kind: 'exit', name: 'exit_1' });
     });
 
     it('redundant walkTo publishes are de-duped while head is unchanged', () => {
-        const { bot, bus } = makeBot();
+        const { bot, controller } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.play();
-        const walkTosAfterPlay = bus.events.filter((e) => e.payload.command === 'walkTo').length;
+        const walkTosAfterPlay = controller.calls.filter((c) => c.method === 'walkTo').length;
         // Mid-leg event for an unrelated location — bot's
         // _publishNextWalkTo runs again but the head/sig hasn't
         // changed, so no second walkTo should fire.
         bot.onLocationCheck({ locationName: 'Unrelated location' });
-        const walkTosAfterEvent = bus.events.filter((e) => e.payload.command === 'walkTo').length;
+        const walkTosAfterEvent = controller.calls.filter((c) => c.method === 'walkTo').length;
         expect(walkTosAfterEvent).toBe(walkTosAfterPlay);
     });
 
     it('thin-remote fallback when no sphere data is loaded', () => {
-        const { bot, bus } = makeBot({ sphereData: [] });
+        const { bot, controller } = makeBot({ sphereData: [] });
         bot.play(7);
         // Empty queue → bot doesn't try to drive; just publishes play.
         expect(bot.getStatus()).toBe('no sphere log');
-        const lastCmd = bus.events.at(-1);
-        expect(lastCmd.payload.command).toBe('play');
-        expect(lastCmd.payload.rateHz).toBe(7);
+        const lastCmd = controller.calls.at(-1);
+        expect(lastCmd.method).toBe('play');
+        expect(lastCmd.args[0]).toBe(7);
     });
 
     // The active-bot singleton moved to the panel layer in Phase 1
@@ -540,24 +539,24 @@ describe('PlaybackBotUI — manual walkToTile', () => {
         pathFinder = { findPathWithExits: () => null },
         staticData = makeStaticData(),
     } = {}) {
-        const bus = makeFakeBus();
+        const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => [],
             getStaticData: () => staticData,
-            eventBus: bus,
+            getActiveController: () => controller,
             pathFinder,
         });
-        return { bot, bus };
+        return { bot, controller };
     }
 
     it('rejects invalid arguments without dispatching', () => {
-        const { bot, bus } = makeBot();
+        const { bot, controller } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });
-        const before = bus.events.length;
+        const before = controller.calls.length;
         expect(bot.walkToTile('', 0, 0)).toEqual({ ok: false, reason: 'invalid arguments' });
         expect(bot.walkToTile('region_a', NaN, 0)).toEqual({ ok: false, reason: 'invalid arguments' });
         expect(bot.walkToTile('region_a', 0, NaN)).toEqual({ ok: false, reason: 'invalid arguments' });
-        expect(bus.events.length).toBe(before);
+        expect(controller.calls.length).toBe(before);
     });
 
     it('refuses while the sphere queue is active', () => {
@@ -573,12 +572,12 @@ describe('PlaybackBotUI — manual walkToTile', () => {
     });
 
     it('same-region target publishes kind:tile walkTo and clears pending', () => {
-        const { bot, bus } = makeBot();
+        const { bot, controller } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });
         const r = bot.walkToTile('region_a', 5, 7);
         expect(r).toEqual({ ok: true });
-        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
-        expect(walkTo.payload.target).toEqual({ kind: 'tile', region: 'region_a', x: 5, y: 7 });
+        const walkTo = controller.calls.find((c) => c.method === 'walkTo');
+        expect(walkTo.args[0]).toEqual({ kind: 'tile', region: 'region_a', x: 5, y: 7 });
         // Pending cleared so a stray onRegionMove doesn't re-fire.
         expect(bot._pendingManualTarget).toBeNull();
     });
@@ -594,13 +593,13 @@ describe('PlaybackBotUI — manual walkToTile', () => {
                 ], length: 1 };
             },
         };
-        const { bot, bus } = makeBot({ pathFinder });
+        const { bot, controller } = makeBot({ pathFinder });
         bot.onRegionMove({ targetRegion: 'region_a' });
         const r = bot.walkToTile('region_b', 3, 4);
         expect(r.ok).toBe(true);
         expect(calls).toEqual([['region_a', 'region_b']]);
-        const walkTo = bus.events.find((e) => e.payload.command === 'walkTo');
-        expect(walkTo.payload.target).toEqual({ kind: 'exit', name: 'a_to_b' });
+        const walkTo = controller.calls.find((c) => c.method === 'walkTo');
+        expect(walkTo.args[0]).toEqual({ kind: 'exit', name: 'a_to_b' });
         // Pending stays set so the next regionMove finishes the route.
         expect(bot._pendingManualTarget).toEqual({ kind: 'tile', region: 'region_b', x: 3, y: 4 });
         expect(bot.getStatus()).toMatch(/routing via "a_to_b" → \(region_b 3,4\)/);
@@ -613,14 +612,14 @@ describe('PlaybackBotUI — manual walkToTile', () => {
                 { region: 'region_b', exitUsed: 'a_to_b' },
             ], length: 1 }),
         };
-        const { bot, bus } = makeBot({ pathFinder });
+        const { bot, controller } = makeBot({ pathFinder });
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.walkToTile('region_b', 3, 4);
         // Simulate the visualizer crossing the exit.
         bot.onRegionMove({ targetRegion: 'region_b' });
-        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        const walkTos = controller.calls.filter((c) => c.method === 'walkTo');
         // Last walkTo: the final-leg tile walk in region_b.
-        expect(walkTos.at(-1).payload.target).toEqual({
+        expect(walkTos.at(-1).args[0]).toEqual({
             kind: 'tile', region: 'region_b', x: 3, y: 4,
         });
         expect(bot._pendingManualTarget).toBeNull();
@@ -628,7 +627,7 @@ describe('PlaybackBotUI — manual walkToTile', () => {
 
     it('PathFinder failure surfaces error status and clears pending', () => {
         const pathFinder = { findPathWithExits: () => null };
-        const { bot, bus } = makeBot({ pathFinder });
+        const { bot, controller } = makeBot({ pathFinder });
         bot.onRegionMove({ targetRegion: 'region_a' });
         const r = bot.walkToTile('region_b', 0, 0);
         // walkToTile itself returns ok — the PathFinder failure is
@@ -637,18 +636,18 @@ describe('PlaybackBotUI — manual walkToTile', () => {
         expect(bot.getStatus()).toMatch(/^error: no path from region_a to region_b/);
         expect(bot._pendingManualTarget).toBeNull();
         // No walkTo should have been published.
-        expect(bus.events.find((e) => e.payload.command === 'walkTo')).toBeUndefined();
+        expect(controller.calls.find((c) => c.method === 'walkTo')).toBeUndefined();
     });
 
     it('back-to-back tile walkTos to different (x,y) both publish (dedup respects coords)', () => {
-        const { bot, bus } = makeBot();
+        const { bot, controller } = makeBot();
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.walkToTile('region_a', 1, 1);
         bot.walkToTile('region_a', 2, 2);
-        const walkTos = bus.events.filter((e) => e.payload.command === 'walkTo');
+        const walkTos = controller.calls.filter((c) => c.method === 'walkTo');
         expect(walkTos).toHaveLength(2);
-        expect(walkTos[0].payload.target).toMatchObject({ kind: 'tile', x: 1, y: 1 });
-        expect(walkTos[1].payload.target).toMatchObject({ kind: 'tile', x: 2, y: 2 });
+        expect(walkTos[0].args[0]).toMatchObject({ kind: 'tile', x: 1, y: 1 });
+        expect(walkTos[1].args[0]).toMatchObject({ kind: 'tile', x: 2, y: 2 });
     });
 });
 
@@ -674,7 +673,7 @@ describe('PlaybackBotUI — rendered status line', () => {
     // Same fixture as the play-loop tests, but here we assert what
     // ends up in the status DOM element so the user can see it.
     function makeBotWithSpheres() {
-        const bus = makeFakeBus();
+        const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => [
                 { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
@@ -688,7 +687,7 @@ describe('PlaybackBotUI — rendered status line', () => {
                     ['region_c', { locations: [{ name: 'Loc C' }] }],
                 ]),
             }),
-            eventBus: bus,
+            getActiveController: () => controller,
             pathFinder: { findPathWithExits: (from, to) => ({ steps: [
                 { region: from, exitUsed: null },
                 { region: to, exitUsed: `${from}_to_${to}` },
@@ -707,7 +706,7 @@ describe('PlaybackBotUI — rendered status line', () => {
     });
 
     it('shows "No sphere log loaded" when there is no sphere data', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => [], eventBus: makeFakeBus() });
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController() });
         expect(statusText(bot)).toMatch(/^No sphere log loaded\.$/);
     });
 
@@ -737,7 +736,7 @@ describe('PlaybackBotUI — rendered status line', () => {
         const bot = new PlaybackBotUI({
             getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }],
             getStaticData: () => ({ regions: new Map([['region_a', { locations: [{ name: 'Loc A' }] }]]) }),
-            eventBus: makeFakeBus(),
+            getActiveController: () => makeFakeController(),
         });
         bot.onRegionMove({ targetRegion: 'region_a' });
         bot.play();
@@ -752,7 +751,7 @@ describe('PlaybackBotUI — rendered status line', () => {
                 ['region_a', { locations: [] }],
                 ['region_b', { locations: [{ name: 'Loc B' }] }],
             ]) }),
-            eventBus: makeFakeBus(),
+            getActiveController: () => makeFakeController(),
             pathFinder: { findPathWithExits: () => null },
         });
         bot.onRegionMove({ targetRegion: 'region_a' });
@@ -772,7 +771,7 @@ describe('PlaybackBotUI — rendered status line', () => {
 
 describe('PlaybackBotUI — append-only log', () => {
     function makeBot() {
-        const bus = makeFakeBus();
+        const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => [
                 { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
@@ -782,13 +781,13 @@ describe('PlaybackBotUI — append-only log', () => {
                 ['region_a', { locations: [{ name: 'Loc A' }] }],
                 ['region_b', { locations: [{ name: 'Loc B' }] }],
             ]) }),
-            eventBus: bus,
+            getActiveController: () => controller,
             pathFinder: { findPathWithExits: (from, to) => ({ steps: [
                 { region: from, exitUsed: null },
                 { region: to, exitUsed: `${from}_to_${to}` },
             ], length: 1 }) },
         });
-        return { bot, bus };
+        return { bot, controller };
     }
 
     function logEntries(bot) {
@@ -869,7 +868,7 @@ describe('PlaybackBotUI — append-only log', () => {
                 ['region_a', { locations: [{ name: 'Loc A' }] }],
                 ['region_b', { locations: [{ name: 'Loc B' }] }],
             ]) }),
-            eventBus: makeFakeBus(),
+            getActiveController: () => makeFakeController(),
             pathFinder: { findPathWithExits: (from, to) => {
                 calls.push(`findPath:${from}->${to}`);
                 return { steps: [
@@ -904,7 +903,7 @@ describe('PlaybackBotUI — append-only log', () => {
         let resolvePing;
         const pingPromise = new Promise((r) => { resolvePing = r; });
         const proxy = { pingWorker: () => pingPromise };
-        const bus = makeFakeBus();
+        const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => [
                 { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
@@ -914,7 +913,7 @@ describe('PlaybackBotUI — append-only log', () => {
                 ['region_a', { locations: [{ name: 'Loc A' }] }],
                 ['region_b', { locations: [{ name: 'Loc B' }] }],
             ]) }),
-            eventBus: bus,
+            getActiveController: () => controller,
             pathFinder: { findPathWithExits: (from, to) => {
                 findPathCalls.push(`${from}->${to}`);
                 return { steps: [
@@ -956,7 +955,7 @@ describe('PlaybackBotUI — append-only log', () => {
 
 describe('PlaybackBotUI — destroy', () => {
     it('detaches from parent and nulls element', () => {
-        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, eventBus: makeFakeBus() });
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => makeFakeController() });
         const parent = new FakeElement('div');
         parent.appendChild(bot.getElement());
         expect(parent.children.length).toBe(1);

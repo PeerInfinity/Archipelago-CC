@@ -20,6 +20,7 @@ import {
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { getPanelInstance } from './index.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -40,6 +41,12 @@ export const substrateRegistryEntry = Object.freeze({
         'arbitrary_exit_rules',
     ]),
     deserializeWorld: tileGridDeserializer,
+
+    // Runtime — playback. Returns the live panel's controller (own
+    // setInterval clock + walkTo queue) so the bot can drive
+    // text-adventure regions one click per tick. null when no panel
+    // is mounted.
+    getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
     // Build-time adapters — same as maze. The text panel reads from
     // the same world shape and ignores the tile-grid fields it

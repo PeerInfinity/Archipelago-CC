@@ -295,6 +295,57 @@ describe('MazeRoomUI — walkTo command resolution', () => {
     });
 });
 
+describe('MazeRoomUI — playback controller adapter', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    it('getPlaybackController returns a stable object exposing the substrate-neutral interface', () => {
+        const panel = new MazeRoomUI(null, {});
+        const c1 = panel.getPlaybackController();
+        const c2 = panel.getPlaybackController();
+        expect(c1).toBe(c2);  // cached
+        for (const m of ['play', 'stop', 'step', 'instant', 'reset', 'setRate', 'walkTo']) {
+            expect(typeof c1[m]).toBe('function');
+        }
+    });
+
+    it('controller methods delegate to the visualizer', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A', world: makeWorld({}), arrivedFrom: null,
+        });
+        const calls = [];
+        // Replace visualizer methods with recorders.
+        panel._visualizer.play       = (rateHz) => calls.push(['play', rateHz]);
+        panel._visualizer.stop       = () => calls.push(['stop']);
+        panel._visualizer.step       = () => calls.push(['step']);
+        panel._visualizer.instant    = () => calls.push(['instant']);
+        panel._visualizer.freshStart = () => calls.push(['freshStart']);
+        panel._visualizer.setRate    = (rateHz) => calls.push(['setRate', rateHz]);
+        panel._visualizer.walkToTile = (arg) => calls.push(['walkToTile', arg]);
+        const c = panel.getPlaybackController();
+        c.play(8);
+        c.stop();
+        c.step();
+        c.instant();
+        c.reset();
+        c.setRate(12);
+        // walkTo goes through _handleWalkToCommand → resolution → walkToTile.
+        c.walkTo({ kind: 'tile', region: 'A', x: 1, y: 1 });
+        expect(calls).toEqual([
+            ['play', 8],
+            ['stop'],
+            ['step'],
+            ['instant'],
+            ['freshStart'],
+            ['setRate', 12],
+            ['walkToTile', { x: 1, y: 1, name: null }],
+        ]);
+    });
+});
+
 describe('MazeRoomUI — visualizer pickup → system:locationCheck dispatch', () => {
     let calls;
     function fakeApis() {
