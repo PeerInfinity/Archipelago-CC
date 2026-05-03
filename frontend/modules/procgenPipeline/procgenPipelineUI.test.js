@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
 
-import { groupLibraryByFeature, reconstructResultFromSidecars } from './procgenPipelineUI.js';
+import {
+    groupLibraryByFeature,
+    reconstructResultFromSidecars,
+    resolveExitTilePositions,
+    fitTextToWidth,
+} from './procgenPipelineUI.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // Side-effect import: registers the maze substrate so deserializeWorld
 // resolves through substrateRegistry when reconstructResultFromSidecars
@@ -179,5 +184,117 @@ describe('reconstructResultFromSidecars', () => {
             preset_sidecars: { '1': { region_0_0: sc } },
         });
         expect(result).toBeNull();
+    });
+});
+
+describe('resolveExitTilePositions', () => {
+    const SIZE = { width: 8, height: 6 };
+
+    it('preserves explicit (x, y) verbatim and skips even-distribution', () => {
+        const placed = resolveExitTilePositions([
+            { exit_id: 'a', x: 3, y: 0, side: 'N' },
+            { exit_id: 'b', x: 7, y: 2, side: 'E' },
+        ], SIZE);
+        expect(placed).toEqual([
+            { exit: { exit_id: 'a', x: 3, y: 0, side: 'N' }, x: 3, y: 0 },
+            { exit: { exit_id: 'b', x: 7, y: 2, side: 'E' }, x: 7, y: 2 },
+        ]);
+    });
+
+    it('distributes side-only exits evenly along their wall, avoiding corners', () => {
+        // Three N-side exits → fractions 1/4, 2/4, 3/4 of (width-1=7).
+        const placed = resolveExitTilePositions([
+            { exit_id: 'n1', side: 'N' },
+            { exit_id: 'n2', side: 'N' },
+            { exit_id: 'n3', side: 'N' },
+        ], SIZE);
+        expect(placed.map(({ x, y }) => [x, y])).toEqual([[2, 0], [4, 0], [5, 0]]);
+        // None landed on the corners.
+        for (const { x } of placed) {
+            expect(x).toBeGreaterThan(0);
+            expect(x).toBeLessThan(SIZE.width - 1);
+        }
+    });
+
+    it('distributes per-side independently and pins to correct wall', () => {
+        const placed = resolveExitTilePositions([
+            { exit_id: 's1', side: 'S' },
+            { exit_id: 'w1', side: 'W' },
+            { exit_id: 'e1', side: 'E' },
+        ], SIZE);
+        const bySide = Object.fromEntries(placed.map(({ exit, x, y }) => [exit.exit_id, { x, y }]));
+        expect(bySide.s1.y).toBe(SIZE.height - 1);
+        expect(bySide.w1.x).toBe(0);
+        expect(bySide.e1.x).toBe(SIZE.width - 1);
+    });
+
+    it('mixes (x,y)-bearing and side-only exits in the same region', () => {
+        const placed = resolveExitTilePositions([
+            { exit_id: 'fixed', x: 0, y: 3, side: 'W' },
+            { exit_id: 'distributed', side: 'N' },
+        ], SIZE);
+        expect(placed).toHaveLength(2);
+        const fixed = placed.find((p) => p.exit.exit_id === 'fixed');
+        const distributed = placed.find((p) => p.exit.exit_id === 'distributed');
+        expect(fixed).toEqual({ exit: { exit_id: 'fixed', x: 0, y: 3, side: 'W' }, x: 0, y: 3 });
+        expect(distributed.y).toBe(0);  // N wall
+    });
+
+    it('drops exits with neither (x,y) nor a known side', () => {
+        const placed = resolveExitTilePositions([
+            { exit_id: 'orphan' },                       // no side, no coords
+            { exit_id: 'bad_side', side: 'NW' },         // unknown side
+            { exit_id: 'good', x: 1, y: 1 },
+        ], SIZE);
+        expect(placed.map((p) => p.exit.exit_id)).toEqual(['good']);
+    });
+
+    it('returns [] for empty / non-array inputs', () => {
+        expect(resolveExitTilePositions([], SIZE)).toEqual([]);
+        expect(resolveExitTilePositions(undefined, SIZE)).toEqual([]);
+        expect(resolveExitTilePositions(null, SIZE)).toEqual([]);
+    });
+
+    it('accepts the in-memory Map<exit_id, exit> shape from deserializeWorld', () => {
+        // The composite view's just-generated path passes the live
+        // in-memory world's exits Map (not the on-disk Array shape).
+        // Both must work because both feed _drawRegion.
+        const exitsMap = new Map([
+            ['a', { exit_id: 'a', x: 3, y: 0, side: 'N' }],
+            ['b', { exit_id: 'b', x: 7, y: 2, side: 'E' }],
+        ]);
+        const placed = resolveExitTilePositions(exitsMap, SIZE);
+        expect(placed.map(({ exit, x, y }) => [exit.exit_id, x, y]))
+            .toEqual([['a', 3, 0], ['b', 7, 2]]);
+    });
+});
+
+describe('fitTextToWidth', () => {
+    // Stand-in for CanvasRenderingContext2D — measureText returns the
+    // string's character count as the width, so 1px == 1 char and the
+    // tests stay deterministic.
+    const ctx = { measureText: (s) => ({ width: s.length }) };
+
+    it('returns the original string when it already fits', () => {
+        expect(fitTextToWidth(ctx, 'hello', 10)).toBe('hello');
+        expect(fitTextToWidth(ctx, 'hello', 5)).toBe('hello');
+    });
+
+    it('truncates with an ellipsis when over the budget', () => {
+        // "longish text" length 12; budget 8 leaves 7 chars + ellipsis
+        // since the ellipsis itself counts as 1 in the stub.
+        const out = fitTextToWidth(ctx, 'longish text', 8);
+        expect(out.endsWith('…')).toBe(true);
+        expect(out.length).toBe(8);
+    });
+
+    it('returns just the ellipsis when no characters fit', () => {
+        expect(fitTextToWidth(ctx, 'anything', 1)).toBe('…');
+    });
+
+    it('handles empty / nullish input', () => {
+        expect(fitTextToWidth(ctx, '', 100)).toBe('');
+        expect(fitTextToWidth(ctx, null, 100)).toBe('');
+        expect(fitTextToWidth(ctx, undefined, 100)).toBe('');
     });
 });

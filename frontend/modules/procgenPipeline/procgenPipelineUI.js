@@ -40,7 +40,88 @@ const COLORS = {
     grid: '#1a1a1a',
     cellBorder: '#3a3a50',
     emptyCell: '#141414',
+    // Text-adventure cells: warm parchment tint so they stand apart
+    // from the dark maze cells at a glance, without losing the cell
+    // border / exit / blocked palette.
+    textAdventureBg: '#3a3326',
+    textAdventureFg: '#f0e6c8',
+    textAdventureFgDim: '#a89d80',
+    genericBg: '#2a2a3a',
 };
+
+/**
+ * Resolve a list of exits to their tile (x, y) inside the cell.
+ *
+ * Substrates whose adapter populates per-exit tile coords (current maze
+ * + text-adventure path) round-trip their `(x, y)` verbatim. Future
+ * substrates that omit them get an even distribution along their wall,
+ * keyed by `side` (N/S/E/W). Mixing both modes per region is fine.
+ *
+ * Returns `[{ exit, x, y }, …]` in the input order.
+ */
+export function resolveExitTilePositions(exits, regionSize) {
+    // Accept either the on-disk Array shape (sidecar JSON) or the
+    // in-memory Map shape (after deserializeWorld), since both paths
+    // feed _drawRegion. Normalize to a plain array.
+    let list;
+    if (Array.isArray(exits)) list = exits;
+    else if (exits && typeof exits.values === 'function') list = [...exits.values()];
+    else return [];
+    if (list.length === 0) return [];
+    const result = [];
+    const bySide = { N: [], S: [], E: [], W: [] };
+    for (const exit of list) {
+        const hasXY = Number.isFinite(exit?.x) && Number.isFinite(exit?.y);
+        if (hasXY) {
+            result.push({ exit, x: exit.x, y: exit.y });
+        } else if (exit?.side && bySide[exit.side]) {
+            bySide[exit.side].push({ exit, slotIndex: result.length });
+            result.push(null);
+        } else {
+            result.push(null);
+        }
+    }
+    const lastX = regionSize.width - 1;
+    const lastY = regionSize.height - 1;
+    for (const side of ['N', 'S', 'E', 'W']) {
+        const queue = bySide[side];
+        if (queue.length === 0) continue;
+        const horizontal = (side === 'N' || side === 'S');
+        const span = horizontal ? regionSize.width : regionSize.height;
+        // Even distribution: slot k of N gets the (k+1)/(N+1) fraction
+        // of the span (avoids landing on the corners).
+        for (let i = 0; i < queue.length; i++) {
+            const frac = (i + 1) / (queue.length + 1);
+            const along = Math.max(0, Math.min(span - 1, Math.round(frac * (span - 1))));
+            let x; let y;
+            if (side === 'N') { x = along; y = 0; }
+            else if (side === 'S') { x = along; y = lastY; }
+            else if (side === 'W') { x = 0; y = along; }
+            else { x = lastX; y = along; }
+            const { exit, slotIndex } = queue[i];
+            result[slotIndex] = { exit, x, y };
+        }
+    }
+    return result.filter(Boolean);
+}
+
+/**
+ * Truncate `text` with an ellipsis so it fits within `maxPx` using the
+ * canvas's currently-set font. No-op if the text already fits.
+ */
+export function fitTextToWidth(ctx, text, maxPx) {
+    if (!text) return '';
+    if (ctx.measureText(text).width <= maxPx) return text;
+    const ellipsis = '…';
+    let lo = 0;
+    let hi = text.length;
+    while (lo < hi) {
+        const mid = (lo + hi + 1) >> 1;
+        if (ctx.measureText(text.slice(0, mid) + ellipsis).width <= maxPx) lo = mid;
+        else hi = mid - 1;
+    }
+    return lo > 0 ? text.slice(0, lo) + ellipsis : ellipsis;
+}
 
 const DEFAULT_PARAMS = {
     seed: 1,
@@ -886,7 +967,7 @@ export class ProcgenPipelineUI {
                         regionSize.width * TILE_PX - 1, regionSize.height * TILE_PX - 1);
                     continue;
                 }
-                this._drawRegion(ctx, region.playable_payload, offX, offY);
+                this._drawRegion(ctx, region, offX, offY, regionSize);
             }
         }
 
@@ -907,7 +988,19 @@ export class ProcgenPipelineUI {
         }
     }
 
-    _drawRegion(ctx, world, offX, offY) {
+    _drawRegion(ctx, region, offX, offY, regionSize) {
+        const hint = region?.render_hint ?? region?.substrate ?? 'maze';
+        const payload = region?.playable_payload;
+        if (hint === 'text_adventure') {
+            this._drawTextAdventureRegion(ctx, region, offX, offY, regionSize);
+        } else if (hint === 'maze') {
+            this._drawMazeRegion(ctx, payload, offX, offY);
+        } else {
+            this._drawGenericRegion(ctx, region, offX, offY, regionSize);
+        }
+    }
+
+    _drawMazeRegion(ctx, world, offX, offY) {
         const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
         const itemLib = world.itemLib ?? DEFAULT_ITEMS;
         // Composite view doesn't have a player inventory — gates
@@ -987,6 +1080,139 @@ export class ProcgenPipelineUI {
                 }
             }
         }
+    }
+
+    _drawTextAdventureRegion(ctx, region, offX, offY, regionSize) {
+        const payload = region?.playable_payload ?? {};
+        const cellW = regionSize.width * TILE_PX;
+        const cellH = regionSize.height * TILE_PX;
+        const obsLib = payload.obstacleLib ?? DEFAULT_OBSTACLES;
+        const inventory = new Set();
+
+        ctx.fillStyle = COLORS.textAdventureBg;
+        ctx.fillRect(offX, offY, cellW, cellH);
+
+        const placedExits = resolveExitTilePositions(payload.exits, regionSize);
+        for (const { x, y } of placedExits) {
+            const obstacleId = payload.obstacles?.get?.(`${x},${y}`);
+            const obstacle = obstacleId ? obsLib[obstacleId] : null;
+            const isLogicGate = obstacle?.clear_set_type === 'rule';
+            const gateClosed = isLogicGate
+                && !isObstacleCleared(obstacleId, inventory, obsLib);
+            ctx.fillStyle = gateClosed ? COLORS.exitBlocked : COLORS.exit;
+            ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
+        }
+
+        if (payload.entrance && Number.isFinite(payload.entrance.x) && Number.isFinite(payload.entrance.y)) {
+            const ex = payload.entrance.x;
+            const ey = payload.entrance.y;
+            const onExit = placedExits.some(({ x, y }) => x === ex && y === ey);
+            if (!onExit) {
+                ctx.strokeStyle = COLORS.entrance;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(offX + ex * TILE_PX + 1, offY + ey * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
+            }
+        }
+
+        // Items live in two parallel Maps keyed by "x,y": payload.items
+        // (Map → itemId) and payload.itemLocationNames (Map → AP name).
+        // Skip items whose location name didn't make it through serialization.
+        const locationNames = [];
+        const lockedLocations = new Set();
+        const items = payload.items;
+        const itemLocationNames = payload.itemLocationNames;
+        if (items && typeof items.entries === 'function') {
+            for (const [posKey] of items) {
+                const locationName = itemLocationNames?.get?.(posKey);
+                if (!locationName) continue;
+                locationNames.push(locationName);
+                const obstacleId = payload.obstacles?.get?.(posKey);
+                const obstacle = obstacleId ? obsLib[obstacleId] : null;
+                const isLogicGate = obstacle?.clear_set_type === 'rule';
+                const gateClosed = isLogicGate
+                    && !isObstacleCleared(obstacleId, inventory, obsLib);
+                if (gateClosed) lockedLocations.add(locationName);
+            }
+        }
+
+        const padX = 6;
+        const padY = 6;
+        const headerSize = 11;
+        const lineSize = 10;
+        const lineGap = 2;
+        let textY = offY + padY;
+
+        ctx.save();
+        ctx.fillStyle = COLORS.textAdventureFg;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+
+        ctx.font = `bold ${headerSize}px sans-serif`;
+        const heading = region?.region_id ?? region?.name ?? '(region)';
+        const headingLine = fitTextToWidth(ctx, heading, cellW - padX * 2);
+        if (headingLine && textY + headerSize <= offY + cellH - padY) {
+            ctx.fillText(headingLine, offX + padX, textY);
+            textY += headerSize + lineGap;
+        }
+
+        ctx.font = `${lineSize}px sans-serif`;
+        const summary = `${locationNames.length} location${locationNames.length === 1 ? '' : 's'}`;
+        if (textY + lineSize <= offY + cellH - padY) {
+            ctx.fillText(summary, offX + padX, textY);
+            textY += lineSize + lineGap;
+        }
+
+        const maxY = offY + cellH - padY;
+        let truncated = 0;
+        for (let i = 0; i < locationNames.length; i++) {
+            const name = locationNames[i];
+            const remaining = locationNames.length - i;
+            if (textY + lineSize > maxY) {
+                truncated = remaining;
+                break;
+            }
+            // Last visible slot may need to host a "+N more" instead.
+            const isLastSlot = textY + lineSize * 2 + lineGap > maxY;
+            if (isLastSlot && remaining > 1) {
+                ctx.fillStyle = COLORS.textAdventureFgDim;
+                ctx.fillText(`+${remaining} more`, offX + padX, textY);
+                truncated = 0;
+                textY += lineSize + lineGap;
+                break;
+            }
+            const prefix = lockedLocations.has(name) ? '\u{1F512} ' : '• ';
+            ctx.fillStyle = lockedLocations.has(name) ? COLORS.locationBlocked : COLORS.textAdventureFg;
+            ctx.fillText(fitTextToWidth(ctx, prefix + name, cellW - padX * 2), offX + padX, textY);
+            textY += lineSize + lineGap;
+        }
+        if (truncated > 0) {
+            ctx.fillStyle = COLORS.textAdventureFgDim;
+            ctx.fillText(`+${truncated} more`, offX + padX, textY);
+        }
+        ctx.restore();
+    }
+
+    _drawGenericRegion(ctx, region, offX, offY, regionSize) {
+        const cellW = regionSize.width * TILE_PX;
+        const cellH = regionSize.height * TILE_PX;
+        ctx.fillStyle = COLORS.genericBg;
+        ctx.fillRect(offX, offY, cellW, cellH);
+
+        const exits = region?.playable_payload?.exits ?? [];
+        const placedExits = resolveExitTilePositions(exits, regionSize);
+        ctx.fillStyle = COLORS.exit;
+        for (const { x, y } of placedExits) {
+            ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
+        }
+
+        ctx.save();
+        ctx.fillStyle = COLORS.textAdventureFg;
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const label = region?.substrate ?? region?.render_hint ?? '?';
+        ctx.fillText(`(${label})`, offX + cellW / 2, offY + cellH / 2);
+        ctx.restore();
     }
 
     // --- rules.json export ---
