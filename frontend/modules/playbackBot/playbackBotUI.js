@@ -549,7 +549,19 @@ export class PlaybackBotUI {
 
     onRegionMove(data) {
         const target = data?.targetRegion;
-        if (target) this._currentRegion = target;
+        if (target) {
+            // When the new region's substrate differs from the previous
+            // region's, the previous substrate's controller would
+            // otherwise keep its clock ticking idle indefinitely (no
+            // events tell it to stop). Explicitly stop it on the way
+            // out so the only running clock is the active substrate's.
+            const prevSubstrate = this._resolveSubstrateId(this._currentRegion);
+            this._currentRegion = target;
+            const newSubstrate = this._resolveSubstrateId(target);
+            if (prevSubstrate && prevSubstrate !== newSubstrate) {
+                substrateRegistry.get(prevSubstrate)?.getPlaybackController?.()?.stop?.();
+            }
+        }
         if (this._isActive) this._publishNextWalkTo();
         // Manual cross-region routes are progressed one exit at a
         // time; re-dispatch the pending target now that the bot is
@@ -735,15 +747,21 @@ export class PlaybackBotUI {
      */
     _resolveController() {
         if (this._getActiveController) return this._getActiveController() ?? null;
-        let substrateId = 'maze';
+        const substrateId = this._resolveSubstrateId(this._currentRegion);
+        return substrateRegistry.get(substrateId)?.getPlaybackController?.() ?? null;
+    }
+
+    /**
+     * Map a region name to its substrate id via the loaded rules.json's
+     * preset_sidecars. Falls back to 'maze' for non-procgen presets and
+     * for unknown region names — preserves the bot's pre-mixed-substrate
+     * default.
+     */
+    _resolveSubstrateId(regionName) {
         const rulesJson = this._getRulesJson?.() ?? null;
-        if (rulesJson && this._currentRegion) {
-            const sidecars = rulesJson.preset_sidecars?.['1'];
-            const sidecar = sidecars?.[this._currentRegion];
-            if (sidecar?.substrate) substrateId = sidecar.substrate;
-        }
-        const entry = substrateRegistry.get(substrateId);
-        return entry?.getPlaybackController?.() ?? null;
+        if (!rulesJson || !regionName) return 'maze';
+        const sidecar = rulesJson.preset_sidecars?.['1']?.[regionName];
+        return sidecar?.substrate ?? 'maze';
     }
 
     _mount() {

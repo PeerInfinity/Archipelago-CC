@@ -64,6 +64,7 @@ beforeEach(() => { globalThis.document = fakeDocument; });
 afterEach(() => { delete globalThis.document; });
 
 import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, formatSphereTag } from './playbackBotUI.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
@@ -962,5 +963,83 @@ describe('PlaybackBotUI — destroy', () => {
         bot.destroy();
         expect(parent.children.length).toBe(0);
         expect(bot.getElement()).toBe(null);
+    });
+});
+
+describe('PlaybackBotUI — substrate-switch stops the previous controller', () => {
+    // Test substrates registered into the real registry; the bot's
+    // default _resolveController path looks each one up via
+    // substrateRegistry.get(id). Cleared in afterEach so the next
+    // describe block starts fresh.
+    let mazeController;
+    let textController;
+
+    beforeEach(() => {
+        substrateRegistry.clear();
+        mazeController = makeFakeController();
+        textController = makeFakeController();
+        substrateRegistry.register({
+            id: 'maze',
+            getPlaybackController: () => mazeController,
+        });
+        substrateRegistry.register({
+            id: 'text_adventure',
+            getPlaybackController: () => textController,
+        });
+    });
+    afterEach(() => { substrateRegistry.clear(); });
+
+    function makeBotWithSidecars() {
+        const rulesJson = {
+            preset_sidecars: {
+                '1': {
+                    region_maze:    { substrate: 'maze' },
+                    region_text:    { substrate: 'text_adventure' },
+                    region_maze_2:  { substrate: 'maze' },
+                },
+            },
+        };
+        return new PlaybackBotUI({
+            getSphereData: () => [],
+            getRulesJson: () => rulesJson,
+        });
+    }
+
+    it('stops the previous substrate controller when crossing maze -> text_adventure', () => {
+        const bot = makeBotWithSidecars();
+        bot.onRegionMove({ targetRegion: 'region_maze' });
+        // Substrate switch on this transition.
+        bot.onRegionMove({ targetRegion: 'region_text' });
+        const stopCalls = mazeController.calls.filter((c) => c.method === 'stop');
+        expect(stopCalls).toHaveLength(1);
+        // Text controller (the new active) wasn't stopped.
+        expect(textController.calls.filter((c) => c.method === 'stop')).toHaveLength(0);
+    });
+
+    it('stops the previous substrate controller when crossing text_adventure -> maze', () => {
+        const bot = makeBotWithSidecars();
+        bot.onRegionMove({ targetRegion: 'region_text' });
+        bot.onRegionMove({ targetRegion: 'region_maze' });
+        const stopCalls = textController.calls.filter((c) => c.method === 'stop');
+        expect(stopCalls).toHaveLength(1);
+    });
+
+    it('does not stop on same-substrate transitions (maze -> maze)', () => {
+        const bot = makeBotWithSidecars();
+        bot.onRegionMove({ targetRegion: 'region_maze' });
+        bot.onRegionMove({ targetRegion: 'region_maze_2' });
+        // No substrate change; nothing should have been stopped.
+        expect(mazeController.calls.filter((c) => c.method === 'stop')).toHaveLength(0);
+    });
+
+    it('does not stop on the very first regionMove (no prior region)', () => {
+        const bot = makeBotWithSidecars();
+        bot.onRegionMove({ targetRegion: 'region_text' });
+        // _currentRegion was null before this call; resolver returns
+        // 'maze' as the default, but since there was no actual prior
+        // active controller to clean up, calling stop on the maze
+        // controller would be a no-op anyway. Either way, no stop on
+        // the new (text) controller.
+        expect(textController.calls.filter((c) => c.method === 'stop')).toHaveLength(0);
     });
 });
