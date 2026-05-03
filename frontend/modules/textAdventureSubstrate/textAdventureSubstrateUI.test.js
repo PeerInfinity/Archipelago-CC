@@ -5,6 +5,7 @@ import {
     groupExitsByCell,
     formatExitShorthand,
     formatLocationShorthand,
+    formatFlatExitShorthand,
 } from './textAdventureSubstrateUI.js';
 import {
     _testOnly_resetModuleState, _testOnly_setSettings, _testOnly_setCustomData,
@@ -417,6 +418,95 @@ describe('formatExitShorthand / formatLocationShorthand', () => {
 
     it('returns empty string for unknown cell letters', () => {
         expect(formatExitShorthand('X', 0, 1)).toBe('');
+    });
+
+    it('formatFlatExitShorthand uses x prefix and drops digit when single', () => {
+        expect(formatFlatExitShorthand(0, 1)).toBe('x');
+        expect(formatFlatExitShorthand(0, 3)).toBe('x1');
+        expect(formatFlatExitShorthand(2, 3)).toBe('x3');
+    });
+});
+
+describe('TextAdventureSubstrateUI — standalone mode integration', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); resetDiscoverySingleton(); });
+
+    function makeStandaloneRegion({ name = 'Foo', exits = [], locations = [] } = {}) {
+        return { name, exits, locations };
+    }
+
+    it('applyStandaloneRegion synthesizes a world with mode=standalone', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const region = makeStandaloneRegion({
+            name: 'Overworld',
+            exits: [
+                { name: 'east_door', connected_region: 'Cave' },
+                { name: 'north_path', connected_region: 'Forest' },
+            ],
+            locations: [
+                { name: 'Slay Yorgle', item: { name: 'Sword' } },
+            ],
+        });
+        panel.applyStandaloneRegion('Overworld', region, null);
+
+        expect(panel.currentRegionId).toBe('Overworld');
+        expect(panel.world.mode).toBe('standalone');
+        expect(panel.world.exits.size).toBe(2);
+        expect(panel.world.itemLocationNames.get('loc:0')).toBe('Slay Yorgle');
+    });
+
+    it('standalone exits all bucket into C so x<n> resolves them', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const region = makeStandaloneRegion({
+            name: 'X',
+            exits: [
+                { name: 'a', connected_region: 'A' },
+                { name: 'b', connected_region: 'B' },
+            ],
+        });
+        panel.applyStandaloneRegion('X', region, null);
+        const ctx = panel._buildCommandContext();
+        expect(ctx.exitsBySide.N).toEqual([]);
+        expect(ctx.exitsBySide.E).toEqual([]);
+        expect(ctx.exitsBySide.C.map((e) => e.exit_id)).toEqual(['a', 'b']);
+    });
+
+    it('standalone _isExitOpen evaluates exit access_rule via the rule engine', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const region = makeStandaloneRegion({
+            name: 'X',
+            exits: [
+                { name: 'open', connected_region: 'A' },
+                { name: 'closed', connected_region: 'B', access_rule: { Has: ['key'] } },
+            ],
+        });
+        panel.applyStandaloneRegion('X', region, null);
+        // No state manager available in headless test → rule evaluator
+        // returns null → _evaluateAccessRule defaults to true.
+        expect(panel._isExitOpen(panel.world.exits.get('open'))).toBe(true);
+        expect(panel._isExitOpen(panel.world.exits.get('closed'))).toBe(true);
+    });
+
+    it('standalone parser shorthand x routes through _handleSubmit', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const region = makeStandaloneRegion({
+            name: 'X',
+            exits: [
+                { name: 'first', connected_region: 'A' },
+                { name: 'second', connected_region: 'B' },
+            ],
+        });
+        panel.applyStandaloneRegion('X', region, null);
+        panel._handleSubmit('x2');
+
+        const move = dispatcherCalls.find((c) => c.event === 'user:regionMove');
+        expect(move).toBeDefined();
+        expect(move.data.targetRegion).toBe('B');
+        expect(move.data.exitName).toBe('second');
     });
 });
 

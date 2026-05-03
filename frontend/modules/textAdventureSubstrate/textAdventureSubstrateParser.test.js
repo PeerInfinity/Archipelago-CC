@@ -83,6 +83,55 @@ describe('TextAdventureSubstrateParser — shorthand resolution', () => {
     });
 });
 
+describe('TextAdventureSubstrateParser — flat exit shorthand (x<n>)', () => {
+    it('"x" resolves to the first exit across all cells', () => {
+        const parser = new TextAdventureSubstrateParser();
+        const ctx = makeContext({
+            N: [exit('north', 'go_north')],
+            E: [exit('east', 'go_east')],
+        });
+        expect(parser.parseCommand('x', ctx).target).toBe('go_north');
+    });
+
+    it('"x<n>" iterates N → E → S → W → C', () => {
+        const parser = new TextAdventureSubstrateParser();
+        const ctx = makeContext({
+            N: [exit('a', 'A')],
+            E: [exit('b', 'B'), exit('c', 'C')],
+            S: [exit('d', 'D')],
+            C: [exit('e', 'E')],
+        });
+        expect(parser.parseCommand('x1', ctx).target).toBe('A');
+        expect(parser.parseCommand('x2', ctx).target).toBe('B');
+        expect(parser.parseCommand('x3', ctx).target).toBe('C');
+        expect(parser.parseCommand('x4', ctx).target).toBe('D');
+        expect(parser.parseCommand('x5', ctx).target).toBe('E');
+    });
+
+    it('errors when index is out of range', () => {
+        const parser = new TextAdventureSubstrateParser();
+        const ctx = makeContext({ N: [exit('only')] });
+        const r = parser.parseCommand('x9', ctx);
+        expect(r.type).toBe('error');
+        expect(r.message).toMatch(/x9/);
+    });
+
+    it('errors when no exits exist', () => {
+        const parser = new TextAdventureSubstrateParser();
+        expect(parser.parseCommand('x', makeContext()).type).toBe('error');
+    });
+
+    it('works in standalone-shaped context (all exits in C bucket)', () => {
+        const parser = new TextAdventureSubstrateParser();
+        const ctx = makeContext({
+            C: [exit('e1', 'first'), exit('e2', 'second'), exit('e3', 'third')],
+        });
+        expect(parser.parseCommand('x', ctx).target).toBe('first');
+        expect(parser.parseCommand('x2', ctx).target).toBe('second');
+        expect(parser.parseCommand('x3', ctx).target).toBe('third');
+    });
+});
+
 describe('TextAdventureSubstrateParser — location shorthand', () => {
     it('resolves "l" to the first location', () => {
         const parser = new TextAdventureSubstrateParser();

@@ -177,7 +177,7 @@ export const moduleMetadata = {
     column: 3
   },
   textAdventureSubstratePanel: {
-    title: 'Text Adventure (Substrate)',
+    title: 'Text Adventure',
     icon: '📜',
     name: 'textAdventureSubstrate',
     column: 3

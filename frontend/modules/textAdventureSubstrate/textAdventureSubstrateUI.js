@@ -42,6 +42,7 @@
 import {
     setPanelInstance, consumePendingLoadRegion, getModuleApis,
     getTextAdventureSubstrateSettings, getCustomData,
+    readPendingStandaloneRegion,
 } from './index.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
@@ -59,6 +60,7 @@ import {
     customExitMoveMessage,
     customExitInaccessibleMessage,
 } from './textAdventureSubstrateTemplating.js';
+import { synthesizeStandaloneWorld } from './textAdventureSubstrateStandalone.js';
 // Subscribe through the raw eventBus with an explicit module name —
 // can't rely on this.apis.eventBus because Golden Layout may build
 // the panel before this module's initialize() has run.
@@ -130,6 +132,16 @@ export function formatExitShorthand(cellId, i, total) {
 export function formatLocationShorthand(i, total) {
     if (total <= 1) return 'l';
     return `l${i + 1}`;
+}
+
+/**
+ * Shorthand label for the i-th exit in standalone-mode's flat list.
+ * Always uses the `x` prefix (the parser's universal flat-exit
+ * shorthand). Drops the digit when there's only one.
+ */
+export function formatFlatExitShorthand(i, total) {
+    if (total <= 1) return 'x';
+    return `x${i + 1}`;
 }
 
 // Coerce stateManager's snapshot.inventory ({ itemName: count }) into
@@ -217,6 +229,21 @@ export class TextAdventureSubstrateUI {
         const pending = consumePendingLoadRegion();
         if (pending) {
             this._adoptLoadedRegion(pending);
+        }
+
+        // Standalone-mode mount-after-rulesLoaded backfill: pull the
+        // current region from gameState + staticData if the mode is
+        // already known.
+        const pendingStandalone = readPendingStandaloneRegion();
+        if (pendingStandalone) {
+            const world = synthesizeStandaloneWorld(pendingStandalone.regionData);
+            if (world) {
+                this._adoptLoadedRegion({
+                    region_id: pendingStandalone.regionName,
+                    world,
+                    arrivedFrom: null,
+                });
+            }
         }
 
         this._subscribeToSnapshotUpdates();
@@ -318,6 +345,29 @@ export class TextAdventureSubstrateUI {
         }
     }
 
+    /**
+     * Standalone-mode entry point. Mirrors applyLoadedRegion but
+     * synthesises the world from raw AP region data
+     * (`staticData.regions.get(regionName)`) instead of consuming a
+     * procgen sidecar payload.
+     */
+    applyStandaloneRegion(regionName, regionData, _oldRegionName) {
+        const world = synthesizeStandaloneWorld(regionData);
+        if (!world) return;
+        this._adoptLoadedRegion({
+            region_id: regionName,
+            world,
+            // gameState:regionChanged doesn't carry an exit name, so
+            // arrival messages fall through to the generic / custom
+            // form without per-direction context.
+            arrivedFrom: null,
+        });
+        this.render();
+        if (currentAutoFocusCommandInput()) {
+            this._commandInputElement?.focus?.();
+        }
+    }
+
     _adoptLoadedRegion(payload) {
         // Payload shape (per procgen-player.md §"Event flow"):
         //   { region_id, world, arrivedFrom }
@@ -397,11 +447,32 @@ export class TextAdventureSubstrateUI {
         });
     }
 
+    _evaluateAccessRule(rule) {
+        if (rule == null) return true;
+        const evaluator = this._ruleEvaluator();
+        if (!evaluator) return true;
+        try { return !!evaluator(rule); }
+        catch { return false; }
+    }
+
     _isExitOpen(exit) {
+        // Standalone exits carry an access_rule directly. Procgen exits
+        // store their gate as an obstacle at the exit's tile coord.
+        if (exit?.access_rule !== undefined) {
+            return this._evaluateAccessRule(exit.access_rule);
+        }
         return this._isObstacleAtCleared(exit.x, exit.y);
     }
 
     _isLocationOpen(itemPosKey) {
+        // Standalone locations are keyed by `loc:<i>`; their access
+        // rule lives on world.locationAccessRules, looked up by
+        // location name.
+        if (this.world?.mode === 'standalone') {
+            const locationName = this.world.itemLocationNames?.get(itemPosKey);
+            const rule = this.world.locationAccessRules?.get(locationName);
+            return this._evaluateAccessRule(rule);
+        }
         const [x, y] = itemPosKey.split(',').map(Number);
         return this._isObstacleAtCleared(x, y);
     }
@@ -490,9 +561,15 @@ export class TextAdventureSubstrateUI {
         if (!this.world) return ctx;
 
         if (this.world.exits) {
+            // Standalone has no compass; all exits sit in the C bucket
+            // so `c<n>` and `x<n>` (flat, N→E→S→W→C) both resolve them.
+            const isStandalone = this.world.mode === 'standalone';
             for (const exit of this.world.exits.values()) {
                 if (!this._isExitVisibleToUI(exit)) continue;
-                const cell = ctx.exitsBySide[exit?.side] ? exit.side : 'C';
+                let cell = 'C';
+                if (!isStandalone) {
+                    cell = ctx.exitsBySide[exit?.side] ? exit.side : 'C';
+                }
                 ctx.exitsBySide[cell].push(exit);
             }
         }
@@ -519,6 +596,10 @@ export class TextAdventureSubstrateUI {
 
     _renderExits() {
         if (!this.world?.exits || this.world.exits.size === 0) return null;
+
+        if (this.world.mode === 'standalone') {
+            return this._renderExitsFlat();
+        }
 
         const cells = this._commandContext.exitsBySide;
         const totalVisible = COMPASS_CELLS.reduce(
@@ -548,6 +629,40 @@ export class TextAdventureSubstrateUI {
             grid.appendChild(cellDiv);
         }
         section.appendChild(grid);
+        return section;
+    }
+
+    /**
+     * Standalone-mode exit renderer. No compass grid — exits go in
+     * a flat vertical list, prefixed with the universal `[x<n>]`
+     * shorthand. Drops the digit when there's only one exit.
+     */
+    _renderExitsFlat() {
+        // Standalone files all exits into the C bucket; iterate
+        // through every cell anyway in case future code paths put
+        // them elsewhere.
+        const cells = this._commandContext.exitsBySide;
+        const flat = [];
+        for (const cellId of COMPASS_CELLS) {
+            for (const exit of cells[cellId] ?? []) flat.push(exit);
+        }
+        if (flat.length === 0) return null;
+
+        const section = document.createElement('div');
+        section.className = 'text-adventure-section text-adventure-exits text-adventure-exits-flat';
+
+        const label = document.createElement('div');
+        label.className = 'text-adventure-section-label';
+        label.textContent = 'Exits';
+        section.appendChild(label);
+
+        const list = document.createElement('div');
+        list.className = 'text-adventure-exits-list';
+        flat.forEach((exit, i) => {
+            const shorthand = formatFlatExitShorthand(i, flat.length);
+            list.appendChild(this._renderExitLink(exit, shorthand));
+        });
+        section.appendChild(list);
         return section;
     }
 

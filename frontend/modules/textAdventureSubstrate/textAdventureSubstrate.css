@@ -118,6 +118,15 @@
     text-align: center;
 }
 
+/* Standalone-mode exit list: no compass grid. Just a vertical
+ * stack of links under the "Exits" heading. */
+.text-adventure-substrate-panel .text-adventure-exits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+}
+
 .text-adventure-substrate-panel .text-adventure-message-history {
     margin-top: 16px;
     padding-top: 10px;
