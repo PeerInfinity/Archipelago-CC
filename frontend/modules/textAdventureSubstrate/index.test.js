@@ -4,6 +4,8 @@ import {
     register, initialize,
     consumePendingLoadRegion,
     setPanelInstance,
+    getCustomData,
+    loadCustomData,
     _testOnly_resetModuleState,
 } from './index.js';
 
@@ -126,7 +128,7 @@ describe('textAdventureSubstrate index — registration', () => {
         }
     });
 
-    it('registers a settings schema with messageHistoryLimit + autoFocusCommandInput', () => {
+    it('registers a settings schema with messageHistoryLimit + autoFocusCommandInput + autoLoadCustomData', () => {
         const reg = makeMockRegistrationApi();
         register(reg);
         const entry = reg._calls.settingsSchemas.find(
@@ -137,5 +139,43 @@ describe('textAdventureSubstrate index — registration', () => {
         expect(entry.schema.messageHistoryLimit.default).toBe(10);
         expect(entry.schema).toHaveProperty('autoFocusCommandInput');
         expect(entry.schema.autoFocusCommandInput.default).toBe(true);
+        expect(entry.schema).toHaveProperty('autoLoadCustomData');
+        expect(entry.schema.autoLoadCustomData.default).toBe('');
+    });
+
+    it('registers textAdventureSubstrate:customDataLoaded as a publisher', () => {
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        expect(reg._calls.eventBusPublishers).toContain('textAdventureSubstrate:customDataLoaded');
+    });
+});
+
+describe('textAdventureSubstrate index — custom data API', () => {
+    let eventBus;
+
+    beforeEach(async () => {
+        _testOnly_resetModuleState();
+        eventBus = makeMockEventBus();
+        register(makeMockRegistrationApi());
+        await initialize('textAdventureSubstrate', 0, makeMockInitApi(eventBus));
+    });
+
+    it('starts with no custom data', () => {
+        expect(getCustomData()).toBeNull();
+    });
+
+    it('loadCustomData stores the data and broadcasts the load event', () => {
+        const data = { regions: { Foo: { enterMessage: 'Hi' } } };
+        loadCustomData(data);
+        expect(getCustomData()).toBe(data);
+        const ev = eventBus.published.find((p) => p.event === 'textAdventureSubstrate:customDataLoaded');
+        expect(ev).toBeDefined();
+        expect(ev.data.customData).toBe(data);
+    });
+
+    it('loadCustomData(null) clears the cache', () => {
+        loadCustomData({ regions: {} });
+        loadCustomData(null);
+        expect(getCustomData()).toBeNull();
     });
 });

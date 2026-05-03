@@ -26,6 +26,7 @@ export * from './textAdventureSubstrateLibrary.js';
 const SETTINGS_DEFAULTS = Object.freeze({
     messageHistoryLimit: 10,
     autoFocusCommandInput: true,
+    autoLoadCustomData: '',
 });
 
 const SETTINGS_SCHEMA = Object.freeze({
@@ -39,12 +40,35 @@ const SETTINGS_SCHEMA = Object.freeze({
         default: SETTINGS_DEFAULTS.autoFocusCommandInput,
         description: 'Auto-focus the command input on region entry',
     },
+    autoLoadCustomData: {
+        type: 'string',
+        default: SETTINGS_DEFAULTS.autoLoadCustomData,
+        description: 'URL of a custom-data JSON file to fetch on init (region/location/exit prose templates). Empty disables auto-load.',
+    },
 });
 
 let _settings = { ...SETTINGS_DEFAULTS };
+let _customData = null;
 
 export function getTextAdventureSubstrateSettings() {
     return _settings;
+}
+
+/** Returns the currently-loaded custom data document, or null. */
+export function getCustomData() {
+    return _customData;
+}
+
+/**
+ * Replace the in-memory custom data and broadcast a load event so
+ * any mounted panel re-renders. Public so callers (a future UI
+ * picker, a test harness) can swap data at runtime.
+ */
+export function loadCustomData(data) {
+    _customData = data ?? null;
+    if (eventBus?.publish) {
+        eventBus.publish('textAdventureSubstrate:customDataLoaded', { customData: _customData });
+    }
 }
 
 export const moduleInfo = {
@@ -97,6 +121,7 @@ export function _testOnly_resetModuleState() {
     dispatcher = null;
     pendingLoadRegion = null;
     _settings = { ...SETTINGS_DEFAULTS };
+    _customData = null;
     if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
     if (unsubSettingsChanged) { unsubSettingsChanged(); unsubSettingsChanged = null; }
 }
@@ -106,6 +131,13 @@ export function _testOnly_resetModuleState() {
 // auto-focus behaviour.
 export function _testOnly_setSettings(patch) {
     _settings = { ..._settings, ...patch };
+}
+
+// Test-only — set the in-memory custom data without going through
+// fetch. Skips the load event broadcast so tests can configure state
+// before constructing the panel.
+export function _testOnly_setCustomData(data) {
+    _customData = data ?? null;
 }
 
 let unsubSettingsChanged = null;
@@ -126,6 +158,24 @@ async function loadSettings() {
     }
 }
 
+/**
+ * Fetch the configured custom-data file (if any) and broadcast a
+ * load event. Failures are swallowed — the panel falls back to its
+ * generic prose.
+ */
+async function autoLoadCustomDataIfConfigured() {
+    const url = _settings.autoLoadCustomData;
+    if (!url) return;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) return;
+        const data = await response.json();
+        loadCustomData(data);
+    } catch {
+        // Network / parse failure — leave _customData null.
+    }
+}
+
 export function register(registrationApi) {
     // No-op under headless tests; the stylesheet only matters when the
     // panel is actually rendered.
@@ -142,6 +192,7 @@ export function register(registrationApi) {
     );
 
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    registrationApi.registerEventBusPublisher('textAdventureSubstrate:customDataLoaded');
 
     // The text panel publishes user:locationCheck and user:regionMove
     // when the player clicks a location / exit, same chain-of-authority
@@ -189,6 +240,11 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
             () => { loadSettings(); },
         );
     }
+
+    // Fire-and-forget: don't block init on a network fetch. Panels
+    // mounted before the fetch resolves get the data via the
+    // customDataLoaded event subscription.
+    void autoLoadCustomDataIfConfigured();
 
     return () => {
         if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }

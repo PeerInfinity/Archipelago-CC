@@ -6,7 +6,9 @@ import {
     formatExitShorthand,
     formatLocationShorthand,
 } from './textAdventureSubstrateUI.js';
-import { _testOnly_resetModuleState, _testOnly_setSettings } from './index.js';
+import {
+    _testOnly_resetModuleState, _testOnly_setSettings, _testOnly_setCustomData,
+} from './index.js';
 
 // Vitest runs under the 'node' environment (no DOM). The panel's
 // constructor guards document access for exactly this reason — these
@@ -540,6 +542,130 @@ describe('TextAdventureSubstrateUI — message history limit honors settings', (
         for (let i = 0; i < 30; i++) panel._addMessage(`m${i}`);
         // Default is 10 (from SETTINGS_DEFAULTS).
         expect(panel.messageHistory.length).toBe(10);
+    });
+});
+
+describe('TextAdventureSubstrateUI — custom data integration', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); });
+
+    it('arrival message uses custom enterMessage when one is configured', () => {
+        _testOnly_setCustomData({
+            regions: { Overworld: { enterMessage: 'A custom welcome to {regionName}!' } },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'Overworld', world: makeWorld({}), arrivedFrom: null,
+        });
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('A custom welcome to Overworld!');
+    });
+
+    it('arrival falls back to generic message when no enterMessage is configured', () => {
+        _testOnly_setCustomData({ regions: {} });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'Overworld', world: makeWorld({}), arrivedFrom: null,
+        });
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toContain('You are now in Overworld');
+    });
+
+    it('location check uses custom checkMessage with item highlighting', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+        _testOnly_setCustomData({
+            locations: {
+                'Slay Yorgle': {
+                    checkMessage: 'Search {locationName}: {item}',
+                },
+            },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel._onLocationClick('Slay Yorgle');
+
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('Search Slay Yorgle: <span class="item-name">sword</span>');
+    });
+
+    it('location check uses custom inaccessibleMessage when blocked', () => {
+        _testOnly_setCustomData({
+            locations: { Locked: { inaccessibleMessage: 'No way to {locationName}.' } },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Locked' }],
+            obstacles: [{ x: 2, y: 2, id: 'door' }],
+            obstacleLib: { door: { id: 'door', clear_set: [['key']] } },
+        });
+        panel.applyLoadedRegion({ region_id: 'X', world, arrivedFrom: null });
+        panel.inventory = new Set();
+        panel._onLocationClick('Locked');
+
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('No way to Locked.');
+    });
+
+    it('location click uses custom alreadyCheckedMessage', () => {
+        _testOnly_setCustomData({
+            locations: { 'Slay Yorgle': { alreadyCheckedMessage: 'Done with {locationName} already.' } },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'X', world, arrivedFrom: null });
+        panel.checkedLocations = new Set(['Slay Yorgle']);
+        panel._onLocationClick('Slay Yorgle');
+
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('Done with Slay Yorgle already.');
+    });
+
+    it('exit click prepends custom moveMessage before publishing', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+        _testOnly_setCustomData({
+            exits: { go_east: { moveMessage: 'Trekking {exitName} to {destinationRegion}.' } },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'go_east', targetRegion: 'Cave' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel._onExitClick('east');
+
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('Trekking go_east to Cave.');
+        const move = dispatcherCalls.find((c) => c.event === 'user:regionMove');
+        expect(move).toBeDefined();
+    });
+
+    it('exit click uses custom inaccessibleMessage when blocked', () => {
+        _testOnly_setCustomData({
+            exits: { east_door: { inaccessibleMessage: '{exitName} requires a key.' } },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_door', targetRegion: 'Cave' }],
+            obstacles: [{ x: 5, y: 3, id: 'door_red' }],
+            obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+        });
+        panel.applyLoadedRegion({ region_id: 'X', world, arrivedFrom: null });
+        panel.inventory = new Set();
+        panel._onExitClick('east');
+
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toBe('east_door requires a key.');
     });
 });
 

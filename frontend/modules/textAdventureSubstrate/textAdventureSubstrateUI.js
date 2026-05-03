@@ -41,7 +41,7 @@
 
 import {
     setPanelInstance, consumePendingLoadRegion, getModuleApis,
-    getTextAdventureSubstrateSettings,
+    getTextAdventureSubstrateSettings, getCustomData,
 } from './index.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
@@ -51,6 +51,14 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import { TextAdventurePlaybackController } from './textAdventureSubstratePlayback.js';
 import { TextAdventureSubstrateParser } from './textAdventureSubstrateParser.js';
+import {
+    customRegionEnterMessage,
+    customLocationCheckMessage,
+    customLocationInaccessibleMessage,
+    customLocationAlreadyCheckedMessage,
+    customExitMoveMessage,
+    customExitInaccessibleMessage,
+} from './textAdventureSubstrateTemplating.js';
 // Subscribe through the raw eventBus with an explicit module name —
 // can't rely on this.apis.eventBus because Golden Layout may build
 // the panel before this module's initialize() has run.
@@ -213,6 +221,7 @@ export class TextAdventureSubstrateUI {
 
         this._subscribeToSnapshotUpdates();
         this._subscribeToDiscoveryEvents();
+        this._subscribeToCustomDataEvents();
         this.render();
 
         // The Golden Layout factory wrapper (frontend/app/layout/
@@ -240,6 +249,14 @@ export class TextAdventureSubstrateUI {
             this._unsubSnapshot = () =>
                 eventBus.unsubscribe?.('stateManager:snapshotUpdated', handler, 'textAdventureSubstrate');
         }
+    }
+
+    _subscribeToCustomDataEvents() {
+        if (!eventBus?.subscribe) return;
+        const onLoaded = () => { this.render(); };
+        eventBus.subscribe('textAdventureSubstrate:customDataLoaded', onLoaded, 'textAdventureSubstrate');
+        this._unsubCustomData = () =>
+            eventBus.unsubscribe?.('textAdventureSubstrate:customDataLoaded', onLoaded, 'textAdventureSubstrate');
     }
 
     _subscribeToDiscoveryEvents() {
@@ -327,20 +344,34 @@ export class TextAdventureSubstrateUI {
 
     _arrivalMessage() {
         if (!this.currentRegionId) return '';
-        if (!this.arrivedFromExitId || !this.world?.exits?.has(this.arrivedFromExitId)) {
+
+        // Custom data takes precedence: when an enterMessage exists for
+        // this region, it replaces the generic arrival prose entirely
+        // (the source-region / direction context is exposed as template
+        // vars for the author to use or ignore).
+        const arrivalExit = this.arrivedFromExitId
+            ? this.world?.exits?.get(this.arrivedFromExitId) ?? null
+            : null;
+        const direction = arrivalExit ? SIDE_TO_DIRECTION[arrivalExit.side] : null;
+        const sourceRegion = arrivalExit?.targetRegion ?? null;
+
+        const custom = customRegionEnterMessage(getCustomData(), this.currentRegionId, {
+            direction: direction ?? '',
+            sourceRegion: sourceRegion ?? '',
+        });
+        if (custom) return custom;
+
+        if (!arrivalExit) {
             return `You are now in ${this.currentRegionId}.`;
         }
-        const arrivalExit = this.world.exits.get(this.arrivedFromExitId);
         // The arrival exit is the exit IN THIS REGION that points back
         // to where the player came from. Its `side` is the wall that
         // exit sits on, so the player arrived from THAT direction
         // — not the opposite. Standing facing inward at the east
         // wall means you arrived from the east.
-        const direction = SIDE_TO_DIRECTION[arrivalExit.side];
         if (!direction) {
             return `You arrive in ${this.currentRegionId} from ${arrivalExit.targetRegion ?? 'elsewhere'}.`;
         }
-        const sourceRegion = arrivalExit.targetRegion;
         if (sourceRegion) {
             return `You arrive in ${this.currentRegionId} from ${sourceRegion} (to the ${direction}).`;
         }
@@ -752,25 +783,52 @@ export class TextAdventureSubstrateUI {
     _onExitClick(exitId) {
         const exit = this.world?.exits?.get(exitId);
         if (!exit || !exit.targetRegion) return;
+        const exitName = exit.exitName ?? exit.exit_id;
+        const direction = SIDE_TO_DIRECTION[exit.side];
+
         if (!this._isExitOpen(exit)) {
-            const direction = SIDE_TO_DIRECTION[exit.side];
-            const dirText = direction ? ` ${direction}` : '';
-            this._addMessage(`The exit${dirText} to ${exit.targetRegion} is blocked.`);
+            const custom = customExitInaccessibleMessage(getCustomData(), exitName, {
+                direction: direction ?? '',
+                destinationRegion: exit.targetRegion,
+            });
+            if (custom) {
+                this._addMessageHtml(custom);
+            } else {
+                const dirText = direction ? ` ${direction}` : '';
+                this._addMessage(`The exit${dirText} to ${exit.targetRegion} is blocked.`);
+            }
             return;
         }
+
+        // Optional pre-transition move message. The substrate didn't
+        // emit any text on a successful exit before custom-data; the
+        // arrival message in the destination region is the only
+        // narration. With custom data we can opt in to a short "you
+        // travel through ..." line in the message history before the
+        // transition fires.
+        const move = customExitMoveMessage(getCustomData(), exitName, {
+            direction: direction ?? '',
+            destinationRegion: exit.targetRegion,
+        });
+        if (move) this._addMessageHtml(move);
+
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
         dispatcher.publish('user:regionMove', {
             sourceRegion: this.currentRegionId,
             targetRegion: exit.targetRegion,
-            exitName: exit.exitName ?? exit.exit_id,
+            exitName,
         }, { initialTarget: 'bottom' });
     }
 
     _onLocationClick(locationName) {
         if (!locationName) return;
+        const customData = getCustomData();
+
         if (this.checkedLocations.has(locationName)) {
-            this._addMessage(`You have already searched ${locationName}.`);
+            const custom = customLocationAlreadyCheckedMessage(customData, locationName);
+            if (custom) this._addMessageHtml(custom);
+            else this._addMessage(`You have already searched ${locationName}.`);
             return;
         }
         // Find the location's tile to verify accessibility.
@@ -786,7 +844,9 @@ export class TextAdventureSubstrateUI {
             }
         }
         if (posKey && !this._isLocationOpen(posKey)) {
-            this._addMessage(`You cannot reach ${locationName} from here.`);
+            const custom = customLocationInaccessibleMessage(customData, locationName);
+            if (custom) this._addMessageHtml(custom);
+            else this._addMessage(`You cannot reach ${locationName} from here.`);
             return;
         }
 
@@ -802,10 +862,18 @@ export class TextAdventureSubstrateUI {
         // with the location moved into "Already searched". The message
         // is added eagerly so the player sees feedback even if the
         // snapshot pipeline is asynchronous.
-        const itemHtml = itemId
-            ? `<span class="item-name">${escapeHtml(itemId)}</span>`
-            : 'something';
-        this._addMessageHtml(`You search ${escapeHtml(locationName)} and find ${itemHtml}.`);
+        const custom = customLocationCheckMessage(customData, locationName, {
+            item: itemId ?? '',
+            wasUnchecked: true,
+        });
+        if (custom) {
+            this._addMessageHtml(custom);
+        } else {
+            const itemHtml = itemId
+                ? `<span class="item-name">${escapeHtml(itemId)}</span>`
+                : 'something';
+            this._addMessageHtml(`You search ${escapeHtml(locationName)} and find ${itemHtml}.`);
+        }
     }
 
     // --- Messages ---
@@ -839,6 +907,7 @@ export class TextAdventureSubstrateUI {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
+        if (this._unsubCustomData) { this._unsubCustomData(); this._unsubCustomData = null; }
         if (this._playbackController) { this._playbackController.reset(); this._playbackController = null; }
         this.rootElement = null;
         this.world = null;
