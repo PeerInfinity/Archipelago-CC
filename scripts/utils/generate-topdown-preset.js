@@ -7,7 +7,8 @@
  * `_runTopDown` in frontend/modules/procgenPipeline/procgenPipelineUI.js)
  * so the no-flag invocation produces the same rules.json a user would
  * get by loading the source and clicking "Generate" with the panel's
- * defaults. Maze substrate only — no substrate mixing.
+ * defaults. Defaults to the maze substrate; pass --substrate-mix to
+ * realise regions across multiple substrates.
  *
  * Auto-sizes the grid to fit the source's region count (matches
  * `_applyGridDimsFromSource`).
@@ -16,7 +17,8 @@
  *   scripts/utils/generate-topdown-preset.js \
  *       --source-rules path/to/source_rules.json \
  *       --seed 1 \
- *       --out frontend/downloads/AP_1_rules.json
+ *       --out frontend/downloads/AP_1_rules.json \
+ *       [--substrate-mix maze=1,text_adventure=1]
  */
 
 import fs from 'fs';
@@ -36,7 +38,45 @@ const DEFAULTS = {
     growStep: 2,
     sourceRules: null,
     out: null,
+    substrateMix: null,    // null = maze only (engine default)
 };
+
+// Substrate id → loader path. Loading the module side-effect-registers
+// the substrate in substrateRegistry. Add new substrates here as their
+// libraries land.
+const SUBSTRATE_LOADERS = {
+    maze: 'frontend/modules/mazeRoom/mazeRoomLibrary.js',
+    text_adventure: 'frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js',
+};
+
+/**
+ * Parse `id=weight,id=weight` into `{ id: weight, … }`. Whitespace
+ * around tokens is trimmed; weights must be non-negative finite
+ * numbers; at least one positive weight is required.
+ */
+function parseSubstrateMix(spec) {
+    const mix = {};
+    const parts = spec.split(',').map((s) => s.trim()).filter(Boolean);
+    if (parts.length === 0) {
+        throw new Error(`--substrate-mix is empty`);
+    }
+    for (const part of parts) {
+        const eq = part.indexOf('=');
+        if (eq < 0) throw new Error(`--substrate-mix entry '${part}': expected id=weight`);
+        const id = part.slice(0, eq).trim();
+        const weightStr = part.slice(eq + 1).trim();
+        if (!id) throw new Error(`--substrate-mix entry '${part}': empty substrate id`);
+        const weight = Number(weightStr);
+        if (!Number.isFinite(weight) || weight < 0) {
+            throw new Error(`--substrate-mix entry '${part}': weight must be a non-negative number`);
+        }
+        if (id in mix) throw new Error(`--substrate-mix: duplicate id '${id}'`);
+        mix[id] = weight;
+    }
+    const totalWeight = Object.values(mix).reduce((a, b) => a + b, 0);
+    if (totalWeight <= 0) throw new Error(`--substrate-mix: at least one weight must be > 0`);
+    return mix;
+}
 
 function parseArgs(argv) {
     const args = { ...DEFAULTS };
@@ -53,6 +93,7 @@ function parseArgs(argv) {
         '--max-retries': 'maxRetries',
         '--grow-step': 'growStep',
         '--out': 'out',
+        '--substrate-mix': 'substrateMix',
     };
     for (let i = 0; i < argv.length; i++) {
         const flag = argv[i];
@@ -76,6 +117,9 @@ function parseArgs(argv) {
     if (!args.out) {
         args.out = path.join(PROJECT_ROOT, 'frontend', 'downloads', `AP_${args.seed}_rules.json`);
     }
+    if (args.substrateMix !== null) {
+        args.substrateMix = parseSubstrateMix(args.substrateMix);
+    }
     return args;
 }
 
@@ -94,6 +138,9 @@ Options:
   --grow-step <int>        Cells added to each axis per retry (default: ${DEFAULTS.growStep})
   --out <path>             Output rules.json path
                            (default: frontend/downloads/AP_<seed>_rules.json)
+  --substrate-mix <spec>   Comma-separated id=weight (e.g.
+                           "maze=1,text_adventure=1"). Default: maze only.
+                           Substrates: ${Object.keys(SUBSTRATE_LOADERS).join(', ')}
   -h, --help               Show this message and exit
 `);
 }
@@ -116,13 +163,20 @@ async function main() {
     }
     const source = JSON.parse(fs.readFileSync(sourceAbs, 'utf-8'));
 
-    // Side-effect import — the maze substrate library registers itself
-    // in substrateRegistry on import. Same as generate-procgen-rules.js
-    // and the browser's maze module register() hook.
-    const mazeLibPath = path.join(
-        PROJECT_ROOT, 'frontend', 'modules', 'mazeRoom', 'mazeRoomLibrary.js',
-    );
-    await import(mazeLibPath);
+    // Side-effect imports — each substrate library registers itself
+    // in substrateRegistry on import. Maze is always loaded so the
+    // default (no --substrate-mix) keeps working; mix-listed
+    // substrates are loaded on top so the engine's pickSubstrate
+    // resolves them through the registry.
+    const idsToLoad = new Set(['maze']);
+    if (args.substrateMix) {
+        for (const id of Object.keys(args.substrateMix)) idsToLoad.add(id);
+    }
+    for (const id of idsToLoad) {
+        const rel = SUBSTRATE_LOADERS[id];
+        if (!rel) throw new Error(`Unknown substrate '${id}' (no loader registered in SUBSTRATE_LOADERS)`);
+        await import(path.join(PROJECT_ROOT, rel));
+    }
     const enginePath = path.join(
         PROJECT_ROOT, 'frontend', 'modules', 'procgenPipeline',
         'procgenPipelineEngine.js',
@@ -137,12 +191,16 @@ async function main() {
     let gridDims = autoSizeGrid(source, args.minGridDim);
     const regionSizeBase = { width: args.regionWidth, height: args.regionHeight };
 
+    const mixDesc = args.substrateMix
+        ? Object.entries(args.substrateMix).map(([k, v]) => `${k}=${v}`).join(',')
+        : 'maze (default)';
     console.log('generate-topdown-preset:');
     console.log(`  source           = ${sourceAbs}`);
     console.log(`  source game_name = ${source.game_name ?? '(none)'}`);
     console.log(`  seed             = ${args.seed}`);
     console.log(`  gridDims         = ${gridDims.width}x${gridDims.height} (auto)`);
     console.log(`  regionSizeBase   = ${regionSizeBase.width}x${regionSizeBase.height}`);
+    console.log(`  substrate-mix    = ${mixDesc}`);
     console.log(`  max-retries      = ${args.maxRetries}, grow-step=${args.growStep}`);
     console.log(`  out              = ${args.out}`);
 
@@ -161,6 +219,7 @@ async function main() {
             gridDims,
             regionSizeBase,
             seed: args.seed,
+            ...(args.substrateMix ? { substrateMix: args.substrateMix } : {}),
         });
         grid = result.grid;
         stats = result.stats;

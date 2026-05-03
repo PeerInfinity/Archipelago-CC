@@ -327,12 +327,21 @@ gen_worldgen2_world() {
 # Usage: generate_topdown_preset SOURCE_GAME SOURCE_SEED_ID LABEL OUT_SEED
 generate_topdown_preset() {
   local source_game="$1" source_seed_id="$2" label="$3" out_seed="$4"
+  local substrate_mix="${5:-}"   # optional; e.g. "maze=1,text_adventure=1"
   local source_rules="frontend/presets/${source_game}/AP_${source_seed_id}/AP_${source_seed_id}_rules.json"
   local staged="frontend/downloads/AP_${out_seed}_rules.json"
-  run_cmd node scripts/utils/generate-topdown-preset.js \
-    --source-rules "$source_rules" \
-    --seed "$out_seed" \
-    --out "$staged"
+  if [ -n "$substrate_mix" ]; then
+    run_cmd node scripts/utils/generate-topdown-preset.js \
+      --source-rules "$source_rules" \
+      --seed "$out_seed" \
+      --out "$staged" \
+      --substrate-mix "$substrate_mix"
+  else
+    run_cmd node scripts/utils/generate-topdown-preset.js \
+      --source-rules "$source_rules" \
+      --seed "$out_seed" \
+      --out "$staged"
+  fi
   run_cmd python scripts/utils/register-preset.py "$staged" \
     --game-id procgen_topdown \
     --game-name "Procgen Top-Down" \
@@ -629,6 +638,11 @@ if [ "$GENERATE_TOPDOWN_PRESETS" = "true" ]; then
   generate_topdown_preset alttp 14089154938208861744 "alttp s1" 7
   generate_topdown_preset alttp 01043188731678011336 "alttp s2" 8
   generate_topdown_preset alttp 84719271504320872445 "alttp s3" 9
+
+  # Mixed-substrate (maze + text_adventure 1:1) — Adventure: seeds 10-12
+  generate_topdown_preset adventure 14089154938208861744 "adventure mixed s1" 10 "maze=1,text_adventure=1"
+  generate_topdown_preset adventure 01043188731678011336 "adventure mixed s2" 11 "maze=1,text_adventure=1"
+  generate_topdown_preset adventure 84719271504320872445 "adventure mixed s3" 12 "maze=1,text_adventure=1"
 fi
 
 # --- Cleanup ---

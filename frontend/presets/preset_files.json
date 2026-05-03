@@ -10141,6 +10141,51 @@
         ],
         "has_procgen_data": true,
         "label": "alttp s3"
+      },
+      "AP_10": {
+        "seed": 10,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Top-Down"
+          }
+        ],
+        "files": [
+          "AP_10_rules.json"
+        ],
+        "has_procgen_data": true,
+        "label": "adventure mixed s1"
+      },
+      "AP_11": {
+        "seed": 11,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Top-Down"
+          }
+        ],
+        "files": [
+          "AP_11_rules.json"
+        ],
+        "has_procgen_data": true,
+        "label": "adventure mixed s2"
+      },
+      "AP_12": {
+        "seed": 12,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Top-Down"
+          }
+        ],
+        "files": [
+          "AP_12_rules.json"
+        ],
+        "has_procgen_data": true,
+        "label": "adventure mixed s3"
       }
     }
   }
