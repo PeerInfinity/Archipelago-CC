@@ -19,8 +19,33 @@
 import { TextAdventureSubstrateUI } from './textAdventureSubstrateUI.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateLibrary.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 export * from './textAdventureSubstrateLibrary.js';
+
+const SETTINGS_DEFAULTS = Object.freeze({
+    messageHistoryLimit: 10,
+    autoFocusCommandInput: true,
+});
+
+const SETTINGS_SCHEMA = Object.freeze({
+    messageHistoryLimit: {
+        type: 'number',
+        default: SETTINGS_DEFAULTS.messageHistoryLimit,
+        description: 'Maximum number of messages to keep in the message history',
+    },
+    autoFocusCommandInput: {
+        type: 'boolean',
+        default: SETTINGS_DEFAULTS.autoFocusCommandInput,
+        description: 'Auto-focus the command input on region entry',
+    },
+});
+
+let _settings = { ...SETTINGS_DEFAULTS };
+
+export function getTextAdventureSubstrateSettings() {
+    return _settings;
+}
 
 export const moduleInfo = {
     name: 'textAdventureSubstrate',
@@ -71,7 +96,34 @@ export function _testOnly_resetModuleState() {
     eventBus = null;
     dispatcher = null;
     pendingLoadRegion = null;
+    _settings = { ...SETTINGS_DEFAULTS };
     if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
+    if (unsubSettingsChanged) { unsubSettingsChanged(); unsubSettingsChanged = null; }
+}
+
+// Test-only — patch the in-memory settings without going through
+// settingsManager. Used by Stage C tests for the command parser /
+// auto-focus behaviour.
+export function _testOnly_setSettings(patch) {
+    _settings = { ..._settings, ...patch };
+}
+
+let unsubSettingsChanged = null;
+
+async function loadSettings() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const next = { ..._settings };
+        for (const key of Object.keys(SETTINGS_SCHEMA)) {
+            next[key] = await settingsManager.getSetting(
+                `moduleSettings.textAdventureSubstrate.${key}`,
+                SETTINGS_DEFAULTS[key],
+            );
+        }
+        _settings = next;
+    } catch {
+        // Settings unavailable — keep current cache (may be defaults).
+    }
 }
 
 export function register(registrationApi) {
@@ -110,6 +162,13 @@ export function register(registrationApi) {
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
     }
+
+    if (typeof registrationApi.registerSettingsSchema === 'function') {
+        registrationApi.registerSettingsSchema(
+            'textAdventureSubstrate',
+            SETTINGS_SCHEMA,
+        );
+    }
 }
 
 export async function initialize(_moduleId, _priorityIndex, initializationApi) {
@@ -118,15 +177,22 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
 
     TextAdventureSubstrateUI.setModuleApis({ eventBus, dispatcher });
 
+    await loadSettings();
+
     if (eventBus?.subscribe) {
         unsubLoadRegion = eventBus.subscribe(
             substrateRegistryEntry.loadRegionEvent,
             handleLoadRegion,
         );
+        unsubSettingsChanged = eventBus.subscribe(
+            'settings:changed',
+            () => { loadSettings(); },
+        );
     }
 
     return () => {
         if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
+        if (unsubSettingsChanged) { unsubSettingsChanged(); unsubSettingsChanged = null; }
         panelInstance = null;
         eventBus = null;
         dispatcher = null;

@@ -2,31 +2,34 @@
  * Text Adventure substrate panel — renders a procgen-emitted region
  * as a textual description with clickable exits and locations.
  *
- * v1 features (this commit):
+ * Features:
  *   - Self-activation on textAdventure:loadRegion
  *   - Region heading
- *   - Exit list with compass directions ("Exit south to Overworld")
- *     and accessibility classes (open / closed) reflecting logic-gate
- *     clearance via stateManager + Rule Builder evaluation
+ *   - Exits rendered into a 3×3 compass grid (N/E/S/W cardinals,
+ *     center cell for null-side / teleporter exits). Each link shows
+ *     a shorthand label ([n], [n1], …) and accessibility classes via
+ *     stateManager + Rule Builder evaluation.
  *   - Location list with checked/unchecked separation; unchecked are
- *     clickable, checked are plain text
+ *     clickable with shorthand labels ([l], [l1], …); checked are
+ *     plain text.
  *   - Click handlers publish user:regionMove and user:locationCheck
  *     through the module dispatcher
+ *   - Always-visible command input at the bottom: text + Enter dispatches
+ *     a parsed command (shorthand n/e/s/w/c/l + indices, plus the
+ *     verb vocabulary ported from the textAdventure module). Auto-
+ *     focused on region entry when autoFocusCommandInput is on.
  *   - Reactivity to stateManager:snapshotUpdated (re-renders on
  *     inventory / checkedLocations changes so accessibility flips
  *     immediately)
  *   - Item-on-discovery highlighting (lifts the existing module's
  *     <span class="item-name"> pattern)
  *   - Inventory display ("Your inventory: ...")
- *   - Look button (re-renders the current region)
- *   - Message history with limit
+ *   - Message history (limit from settings)
  *   - Arrival message keyed off arrivedFrom.exit_id
+ *   - Discovery mode integration
  *
  * v2 / deferred:
- *   - Discovery mode
  *   - Custom-data prose templating
- *   - Settings schema
- *   - Text-input command parser
  *   - Standalone mode (load AP rules.json without procgen)
  *
  * The panel reads from the deserialized tile-grid world (same shape
@@ -36,7 +39,10 @@
  * (canonical AP location names baked in by the pipeline).
  */
 
-import { setPanelInstance, consumePendingLoadRegion, getModuleApis } from './index.js';
+import {
+    setPanelInstance, consumePendingLoadRegion, getModuleApis,
+    getTextAdventureSubstrateSettings,
+} from './index.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -44,6 +50,7 @@ import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import { TextAdventurePlaybackController } from './textAdventureSubstratePlayback.js';
+import { TextAdventureSubstrateParser } from './textAdventureSubstrateParser.js';
 // Subscribe through the raw eventBus with an explicit module name —
 // can't rely on this.apis.eventBus because Golden Layout may build
 // the panel before this module's initialize() has run.
@@ -54,7 +61,68 @@ const SIDE_TO_DIRECTION = Object.freeze({
     N: 'north', S: 'south', E: 'east', W: 'west',
 });
 
-const MESSAGE_HISTORY_LIMIT = 10;
+// Cells of the 3×3 exits grid. N/E/S/W are the cardinals; C is the
+// center cell, used for null-side exits (teleporters and unstitched
+// edges).
+const COMPASS_CELLS = Object.freeze(['N', 'E', 'S', 'W', 'C']);
+
+// Lowercase letter that prefixes shorthand for each cell. Mirrors
+// textAdventureSubstrateParser.SHORTHAND_RE.
+const CELL_SHORTHAND_LETTER = Object.freeze({
+    N: 'n', E: 'e', S: 's', W: 'w', C: 'c',
+});
+
+// Fallback used when the settings module hasn't loaded (headless tests).
+const MESSAGE_HISTORY_LIMIT_FALLBACK = 10;
+
+function currentMessageHistoryLimit() {
+    const v = getTextAdventureSubstrateSettings?.()?.messageHistoryLimit;
+    return Number.isFinite(v) && v > 0 ? v : MESSAGE_HISTORY_LIMIT_FALLBACK;
+}
+
+function currentAutoFocusCommandInput() {
+    const v = getTextAdventureSubstrateSettings?.()?.autoFocusCommandInput;
+    return v !== false; // default true
+}
+
+/**
+ * Bucket exits by compass cell. exit.side ∈ {N,S,E,W} → that cell;
+ * anything else (null, undefined, unknown) → 'C'. Order within each
+ * cell is preserved from the input.
+ *
+ * Exported so tests can verify bucketing without DOM setup.
+ */
+export function groupExitsByCell(exits) {
+    const cells = { N: [], E: [], S: [], W: [], C: [] };
+    if (!exits) return cells;
+    for (const exit of exits) {
+        const cell = (exit && cells[exit.side]) ? exit.side : 'C';
+        cells[cell].push(exit);
+    }
+    return cells;
+}
+
+/**
+ * Shorthand label for the i-th exit in a compass cell. Drops the
+ * digit when the cell holds exactly one exit; otherwise emits
+ * `<letter><1-based-index>`. Returns `''` if `cellId` isn't a
+ * known cell letter.
+ */
+export function formatExitShorthand(cellId, i, total) {
+    const letter = CELL_SHORTHAND_LETTER[cellId];
+    if (!letter) return '';
+    if (total <= 1) return letter;
+    return `${letter}${i + 1}`;
+}
+
+/**
+ * Shorthand label for the i-th unchecked location. Drops the digit
+ * when there's only one.
+ */
+export function formatLocationShorthand(i, total) {
+    if (total <= 1) return 'l';
+    return `l${i + 1}`;
+}
 
 // Coerce stateManager's snapshot.inventory ({ itemName: count }) into
 // the Set<itemId> shape isObstacleCleared expects.
@@ -121,6 +189,18 @@ export class TextAdventureSubstrateUI {
         // substrateRegistry.getPlaybackController. One per panel instance,
         // so the controller's clock dies with the panel.
         this._playbackController = new TextAdventurePlaybackController(this);
+
+        // Command parser. Stateless; one per panel for symmetry with
+        // playback controller.
+        this._parser = new TextAdventureSubstrateParser();
+
+        // Cached per-render context the parser shorthand resolves
+        // against. Recomputed in render(); read by _handleSubmit.
+        this._commandContext = { exitsBySide: { N: [], E: [], S: [], W: [], C: [] }, locations: [] };
+
+        // Reference to the input element so applyLoadedRegion can
+        // re-focus it after re-render. Set in _renderCommandInput.
+        this._commandInputElement = null;
 
         setPanelInstance(this);
 
@@ -216,6 +296,9 @@ export class TextAdventureSubstrateUI {
     applyLoadedRegion(payload) {
         this._adoptLoadedRegion(payload);
         this.render();
+        if (currentAutoFocusCommandInput()) {
+            this._commandInputElement?.focus?.();
+        }
     }
 
     _adoptLoadedRegion(payload) {
@@ -295,8 +378,27 @@ export class TextAdventureSubstrateUI {
     // --- Rendering ---
 
     render() {
+        // Always rebuild context so the parser shorthand stays current,
+        // even in headless tests where the DOM render path bails out.
+        this._commandContext = this._buildCommandContext();
+
         if (!this.rootElement) return;
+
+        // Preserve the command input's value + focus across renders.
+        // Snapshot updates re-render the whole panel; without this,
+        // pressing Enter mid-region would lose focus to the body and
+        // any in-progress typing would be wiped on the next snapshot.
+        const prevInput = this._commandInputElement;
+        const preservedValue = prevInput?.value ?? '';
+        const preservedSelectionStart = prevInput?.selectionStart ?? null;
+        const preservedSelectionEnd = prevInput?.selectionEnd ?? null;
+        const preservedFocus =
+            typeof document !== 'undefined'
+            && prevInput
+            && document.activeElement === prevInput;
+
         this.rootElement.innerHTML = '';
+        this._commandInputElement = null;
 
         if (!this.world || !this.currentRegionId) {
             const placeholder = document.createElement('div');
@@ -315,8 +417,66 @@ export class TextAdventureSubstrateUI {
         if (exitsSection) this.rootElement.appendChild(exitsSection);
 
         this.rootElement.appendChild(this._renderInventory());
-        this.rootElement.appendChild(this._renderLookButton());
         this.rootElement.appendChild(this._renderMessageHistory());
+        this.rootElement.appendChild(this._renderCommandInput());
+
+        // Restore the input's volatile state on the new element. Focus
+        // restored last so caret position survives the focus call.
+        if (this._commandInputElement) {
+            if (preservedValue) {
+                this._commandInputElement.value = preservedValue;
+            }
+            if (preservedFocus) {
+                this._commandInputElement.focus?.();
+                if (preservedSelectionStart !== null && preservedSelectionEnd !== null) {
+                    try {
+                        this._commandInputElement.setSelectionRange(
+                            preservedSelectionStart, preservedSelectionEnd,
+                        );
+                    } catch {
+                        // Some input types reject setSelectionRange; not fatal.
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Build the per-render context the parser shorthand resolves
+     * against — same enumeration the cell labels use, so a label like
+     * `[n2]` always matches what `n2` typed into the input would do.
+     *
+     * Filters by the same visibility rules as the renderers
+     * (discovery mode for exits and locations; checkedLocations
+     * removes already-searched entries from the locations list, since
+     * the renderer surfaces those separately).
+     */
+    _buildCommandContext() {
+        const ctx = {
+            exitsBySide: { N: [], E: [], S: [], W: [], C: [] },
+            locations: [],
+        };
+        if (!this.world) return ctx;
+
+        if (this.world.exits) {
+            for (const exit of this.world.exits.values()) {
+                if (!this._isExitVisibleToUI(exit)) continue;
+                const cell = ctx.exitsBySide[exit?.side] ? exit.side : 'C';
+                ctx.exitsBySide[cell].push(exit);
+            }
+        }
+
+        if (this.world.items && this.world.itemLocationNames) {
+            for (const [posKey, itemId] of this.world.items) {
+                const locationName = this.world.itemLocationNames.get(posKey);
+                if (!locationName) continue;
+                if (!this._isLocationVisibleToUI(locationName)) continue;
+                if (this.checkedLocations.has(locationName)) continue;
+                ctx.locations.push({ posKey, itemId, locationName });
+            }
+        }
+
+        return ctx;
     }
 
     _renderHeading() {
@@ -329,16 +489,11 @@ export class TextAdventureSubstrateUI {
     _renderExits() {
         if (!this.world?.exits || this.world.exits.size === 0) return null;
 
-        // Filter out undiscovered exits when discovery mode is on.
-        // _discoverEverythingInRegion populates on entry, so the
-        // filter is normally a no-op for the current region — it
-        // matters when this panel renders before population has
-        // run, or if discovery state is reset externally.
-        const visible = [];
-        for (const exit of this.world.exits.values()) {
-            if (this._isExitVisibleToUI(exit)) visible.push(exit);
-        }
-        if (visible.length === 0) return null;
+        const cells = this._commandContext.exitsBySide;
+        const totalVisible = COMPASS_CELLS.reduce(
+            (n, c) => n + (cells[c]?.length ?? 0), 0,
+        );
+        if (totalVisible === 0) return null;
 
         const section = document.createElement('div');
         section.className = 'text-adventure-section text-adventure-exits';
@@ -348,12 +503,20 @@ export class TextAdventureSubstrateUI {
         label.textContent = 'Exits';
         section.appendChild(label);
 
-        const list = document.createElement('div');
-        for (const exit of visible) {
-            list.appendChild(this._renderExitLink(exit));
-            list.appendChild(document.createTextNode(' '));
+        const grid = document.createElement('div');
+        grid.className = 'text-adventure-exits-grid';
+        for (const cellId of COMPASS_CELLS) {
+            const cellDiv = document.createElement('div');
+            cellDiv.className =
+                `text-adventure-exits-cell text-adventure-exits-cell-${cellId.toLowerCase()}`;
+            const list = cells[cellId];
+            list.forEach((exit, i) => {
+                const shorthand = formatExitShorthand(cellId, i, list.length);
+                cellDiv.appendChild(this._renderExitLink(exit, shorthand));
+            });
+            grid.appendChild(cellDiv);
         }
-        section.appendChild(list);
+        section.appendChild(grid);
         return section;
     }
 
@@ -370,13 +533,14 @@ export class TextAdventureSubstrateUI {
         return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
     }
 
-    _renderExitLink(exit) {
+    _renderExitLink(exit, shorthand) {
         const accessible = this._isExitOpen(exit);
         const direction = SIDE_TO_DIRECTION[exit.side];
         const target = exit.targetRegion ?? '???';
-        const label = direction
+        const body = direction
             ? `Exit ${direction} to ${target}`
             : `Exit to ${target}`;
+        const label = shorthand ? `[${shorthand}] ${body}` : body;
 
         const span = document.createElement('span');
         span.className = `text-adventure-link ${accessible ? 'accessible' : 'inaccessible'}`;
@@ -389,19 +553,23 @@ export class TextAdventureSubstrateUI {
     _renderLocations() {
         if (!this.world?.items || this.world.items.size === 0) return null;
 
-        const unchecked = [];
+        // Unchecked locations come from the command context (already
+        // visibility-filtered + checked-filtered, in stable order so
+        // the shorthand indices match what the parser sees).
+        const unchecked = this._commandContext.locations;
+
+        // Already-searched are derived inline since the context
+        // intentionally omits them.
         const checked = [];
         for (const [posKey, itemId] of this.world.items) {
             const locationName = this.world.itemLocationNames?.get(posKey);
             if (!locationName) continue;
             if (!this._isLocationVisibleToUI(locationName)) continue;
-            const entry = { posKey, itemId, locationName };
             if (this.checkedLocations.has(locationName)) {
-                checked.push(entry);
-            } else {
-                unchecked.push(entry);
+                checked.push({ posKey, itemId, locationName });
             }
         }
+
         if (unchecked.length === 0 && checked.length === 0) return null;
 
         const section = document.createElement('div');
@@ -414,10 +582,11 @@ export class TextAdventureSubstrateUI {
             section.appendChild(label);
 
             const list = document.createElement('div');
-            for (const entry of unchecked) {
-                list.appendChild(this._renderLocationLink(entry));
+            unchecked.forEach((entry, i) => {
+                const shorthand = formatLocationShorthand(i, unchecked.length);
+                list.appendChild(this._renderLocationLink(entry, shorthand));
                 list.appendChild(document.createTextNode(' '));
-            }
+            });
             section.appendChild(list);
         }
 
@@ -435,13 +604,13 @@ export class TextAdventureSubstrateUI {
         return section;
     }
 
-    _renderLocationLink(entry) {
+    _renderLocationLink(entry, shorthand) {
         const accessible = this._isLocationOpen(entry.posKey);
         const span = document.createElement('span');
         span.className = `text-adventure-link ${accessible ? 'accessible' : 'inaccessible'}`;
         span.dataset.kind = 'location';
         span.dataset.locationName = entry.locationName;
-        span.textContent = entry.locationName;
+        span.textContent = shorthand ? `[${shorthand}] ${entry.locationName}` : entry.locationName;
         return span;
     }
 
@@ -464,18 +633,6 @@ export class TextAdventureSubstrateUI {
         return section;
     }
 
-    _renderLookButton() {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'text-adventure-section';
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'text-adventure-look-button';
-        button.textContent = 'Look';
-        button.dataset.kind = 'look';
-        wrapper.appendChild(button);
-        return wrapper;
-    }
-
     _renderMessageHistory() {
         const section = document.createElement('div');
         section.className = 'text-adventure-message-history';
@@ -488,6 +645,97 @@ export class TextAdventureSubstrateUI {
         return section;
     }
 
+    _renderCommandInput() {
+        const form = document.createElement('form');
+        form.className = 'text-adventure-command-form';
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const value = this._commandInputElement?.value ?? '';
+            this._handleSubmit(value);
+        });
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'text-adventure-command-input';
+        input.placeholder = 'Type a command (n, s, l1, "help", …) and press Enter';
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        form.appendChild(input);
+
+        this._commandInputElement = input;
+        return form;
+    }
+
+    // --- Command input ---
+
+    /**
+     * Parse a typed command and dispatch the resulting action. Public
+     * (sans underscore) entry points are kept underscore-private —
+     * tests reach in via the panel instance directly, mirroring how
+     * existing tests call _onExitClick / _onLocationClick.
+     */
+    _handleSubmit(rawValue) {
+        const value = String(rawValue ?? '');
+        if (!value.trim()) return;
+
+        const result = this._parser.parseCommand(value, this._commandContext);
+
+        if (this._commandInputElement) {
+            this._commandInputElement.value = '';
+            this._commandInputElement.focus?.();
+        }
+
+        switch (result?.type) {
+            case 'move': {
+                const exit = this._findExitByName(result.target);
+                if (!exit) {
+                    this._addMessage(`No exit named "${result.target}" in this region.`);
+                    return;
+                }
+                this._onExitClick(exit.exit_id);
+                return;
+            }
+            case 'check': {
+                this._onLocationClick(result.target);
+                return;
+            }
+            case 'inventory': {
+                const inv = this.inventory.size === 0
+                    ? 'empty'
+                    : [...this.inventory].sort().join(', ');
+                this._addMessage(`Your inventory: ${inv}`);
+                return;
+            }
+            case 'help': {
+                this._addMessage(this._parser.getHelpText());
+                return;
+            }
+            case 'look': {
+                // Silent no-op, matching the panel's "look does nothing" decision.
+                return;
+            }
+            case 'error': {
+                this._addMessage(result.message ?? 'Unrecognized command.');
+                return;
+            }
+            default: {
+                this._addMessage('Unrecognized command.');
+            }
+        }
+    }
+
+    /**
+     * Look up an exit by exitName (preferred) or exit_id (fallback).
+     * The parser returns `target` set to whichever the exit carries.
+     */
+    _findExitByName(name) {
+        if (!name || !this.world?.exits) return null;
+        for (const exit of this.world.exits.values()) {
+            if (exit.exitName === name || exit.exit_id === name) return exit;
+        }
+        return null;
+    }
+
     // --- Click handling ---
 
     _handleClick(event) {
@@ -498,8 +746,6 @@ export class TextAdventureSubstrateUI {
             this._onExitClick(target.dataset.exitId);
         } else if (kind === 'location') {
             this._onLocationClick(target.dataset.locationName);
-        } else if (kind === 'look') {
-            this._onLookClick();
         }
     }
 
@@ -562,11 +808,6 @@ export class TextAdventureSubstrateUI {
         this._addMessageHtml(`You search ${escapeHtml(locationName)} and find ${itemHtml}.`);
     }
 
-    _onLookClick() {
-        if (!this.currentRegionId) return;
-        this._addMessage(`You look around ${this.currentRegionId}.`);
-    }
-
     // --- Messages ---
 
     /** Add a plain-text message; HTML is escaped before display. */
@@ -588,7 +829,8 @@ export class TextAdventureSubstrateUI {
 
     _pushMessage(html) {
         this.messageHistory.push({ html, timestamp: Date.now() });
-        while (this.messageHistory.length > MESSAGE_HISTORY_LIMIT) {
+        const limit = currentMessageHistoryLimit();
+        while (this.messageHistory.length > limit) {
             this.messageHistory.shift();
         }
     }

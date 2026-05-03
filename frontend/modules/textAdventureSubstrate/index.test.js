@@ -33,12 +33,16 @@ function makeMockRegistrationApi() {
         panelComponents: [],
         eventBusPublishers: [],
         dispatcherSenders: [],
+        settingsSchemas: [],
     };
     return {
         registerPanelComponent: (type, ctor) => { calls.panelComponents.push({ type, ctor }); },
         registerEventBusPublisher: (event) => { calls.eventBusPublishers.push(event); },
         registerDispatcherSender: (event, direction, target) => {
             calls.dispatcherSenders.push({ event, direction, target });
+        },
+        registerSettingsSchema: (moduleId, schema) => {
+            calls.settingsSchemas.push({ moduleId, schema });
         },
         _calls: calls,
     };
@@ -120,5 +124,18 @@ describe('textAdventureSubstrate index — registration', () => {
             expect(sender.direction).toBe('bottom');
             expect(sender.target).toBe('first');
         }
+    });
+
+    it('registers a settings schema with messageHistoryLimit + autoFocusCommandInput', () => {
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        const entry = reg._calls.settingsSchemas.find(
+            (s) => s.moduleId === 'textAdventureSubstrate',
+        );
+        expect(entry).toBeDefined();
+        expect(entry.schema).toHaveProperty('messageHistoryLimit');
+        expect(entry.schema.messageHistoryLimit.default).toBe(10);
+        expect(entry.schema).toHaveProperty('autoFocusCommandInput');
+        expect(entry.schema.autoFocusCommandInput.default).toBe(true);
     });
 });

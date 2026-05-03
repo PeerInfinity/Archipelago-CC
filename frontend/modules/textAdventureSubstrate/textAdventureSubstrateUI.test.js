@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { TextAdventureSubstrateUI } from './textAdventureSubstrateUI.js';
-import { _testOnly_resetModuleState } from './index.js';
+import {
+    TextAdventureSubstrateUI,
+    groupExitsByCell,
+    formatExitShorthand,
+    formatLocationShorthand,
+} from './textAdventureSubstrateUI.js';
+import { _testOnly_resetModuleState, _testOnly_setSettings } from './index.js';
 
 // Vitest runs under the 'node' environment (no DOM). The panel's
 // constructor guards document access for exactly this reason — these
@@ -335,6 +340,206 @@ describe('TextAdventureSubstrateUI — discovery population', () => {
         });
         expect(discoveryStateSingleton.isLocationDiscovered('Loc A')).toBe(true);
         expect(discoveryStateSingleton.isLocationDiscovered('Loc B')).toBe(true);
+    });
+});
+
+describe('groupExitsByCell', () => {
+    it('returns empty buckets for null / undefined / empty input', () => {
+        expect(groupExitsByCell(null)).toEqual({ N: [], E: [], S: [], W: [], C: [] });
+        expect(groupExitsByCell(undefined)).toEqual({ N: [], E: [], S: [], W: [], C: [] });
+        expect(groupExitsByCell([])).toEqual({ N: [], E: [], S: [], W: [], C: [] });
+    });
+
+    it('routes each exit to its compass bucket by side', () => {
+        const exits = [
+            { exit_id: 'n1', side: 'N' },
+            { exit_id: 'e1', side: 'E' },
+            { exit_id: 's1', side: 'S' },
+            { exit_id: 'w1', side: 'W' },
+        ];
+        const cells = groupExitsByCell(exits);
+        expect(cells.N).toEqual([exits[0]]);
+        expect(cells.E).toEqual([exits[1]]);
+        expect(cells.S).toEqual([exits[2]]);
+        expect(cells.W).toEqual([exits[3]]);
+        expect(cells.C).toEqual([]);
+    });
+
+    it('routes null / undefined / unknown sides to the center cell', () => {
+        const exits = [
+            { exit_id: 'tele', side: null },
+            { exit_id: 'noside' },
+            { exit_id: 'weird', side: 'NW' },
+        ];
+        const cells = groupExitsByCell(exits);
+        expect(cells.C).toEqual(exits);
+        expect(cells.N).toEqual([]);
+    });
+
+    it('preserves input order within a cell', () => {
+        const exits = [
+            { exit_id: 'n1', side: 'N' },
+            { exit_id: 'n2', side: 'N' },
+            { exit_id: 'n3', side: 'N' },
+        ];
+        const cells = groupExitsByCell(exits);
+        expect(cells.N.map((e) => e.exit_id)).toEqual(['n1', 'n2', 'n3']);
+    });
+
+    it('accepts a Map.values() iterable directly', () => {
+        const map = new Map([
+            ['a', { exit_id: 'a', side: 'N' }],
+            ['b', { exit_id: 'b', side: 'S' }],
+        ]);
+        const cells = groupExitsByCell(map.values());
+        expect(cells.N.map((e) => e.exit_id)).toEqual(['a']);
+        expect(cells.S.map((e) => e.exit_id)).toEqual(['b']);
+    });
+});
+
+describe('formatExitShorthand / formatLocationShorthand', () => {
+    it('drops the digit when there is exactly one entry', () => {
+        expect(formatExitShorthand('N', 0, 1)).toBe('n');
+        expect(formatExitShorthand('E', 0, 1)).toBe('e');
+        expect(formatExitShorthand('C', 0, 1)).toBe('c');
+        expect(formatLocationShorthand(0, 1)).toBe('l');
+    });
+
+    it('emits letter+1-based-index when there are multiple', () => {
+        expect(formatExitShorthand('N', 0, 3)).toBe('n1');
+        expect(formatExitShorthand('N', 1, 3)).toBe('n2');
+        expect(formatExitShorthand('N', 2, 3)).toBe('n3');
+        expect(formatLocationShorthand(0, 4)).toBe('l1');
+        expect(formatLocationShorthand(3, 4)).toBe('l4');
+    });
+
+    it('returns empty string for unknown cell letters', () => {
+        expect(formatExitShorthand('X', 0, 1)).toBe('');
+    });
+});
+
+describe('TextAdventureSubstrateUI — _buildCommandContext', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); resetDiscoverySingleton(); });
+
+    it('groups exits by side and excludes already-checked locations', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [
+                { exit_id: 'n1', side: 'N', exitName: 'go_n1', targetRegion: 'A' },
+                { exit_id: 's1', side: 'S', exitName: 'go_s1', targetRegion: 'B' },
+                { exit_id: 'tele', side: null, exitName: 'go_tele', targetRegion: 'C' },
+            ],
+            items: [
+                { x: 1, y: 1, id: 'sword', locationName: 'Slay Yorgle' },
+                { x: 2, y: 2, id: 'key', locationName: 'Bridge Key' },
+            ],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel.checkedLocations = new Set(['Slay Yorgle']);
+
+        const ctx = panel._buildCommandContext();
+        expect(ctx.exitsBySide.N.map((e) => e.exit_id)).toEqual(['n1']);
+        expect(ctx.exitsBySide.S.map((e) => e.exit_id)).toEqual(['s1']);
+        expect(ctx.exitsBySide.C.map((e) => e.exit_id)).toEqual(['tele']);
+        expect(ctx.locations.map((l) => l.locationName)).toEqual(['Bridge Key']);
+    });
+});
+
+describe('TextAdventureSubstrateUI — _handleSubmit', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); resetDiscoverySingleton(); });
+
+    it('dispatches user:regionMove for shorthand "n"', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{
+                exit_id: 'north', x: 5, y: 0, side: 'N',
+                exitName: 'north_to_field', targetRegion: 'Field',
+            }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel._handleSubmit('n');
+
+        const move = dispatcherCalls.find((c) => c.event === 'user:regionMove');
+        expect(move).toBeDefined();
+        expect(move.data.targetRegion).toBe('Field');
+    });
+
+    it('dispatches user:locationCheck for shorthand "l"', () => {
+        const dispatcherCalls = [];
+        TextAdventureSubstrateUI.setModuleApis({
+            eventBus: null,
+            dispatcher: { publish: (event, data) => dispatcherCalls.push({ event, data }) },
+        });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        panel._handleSubmit('l');
+
+        const check = dispatcherCalls.find((c) => c.event === 'user:locationCheck');
+        expect(check).toBeDefined();
+        expect(check.data.locationName).toBe('Slay Yorgle');
+    });
+
+    it('look verb is silent (no message added)', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({});
+        panel.applyLoadedRegion({ region_id: 'Empty', world, arrivedFrom: null });
+        const before = panel.messageHistory.length;
+        panel._handleSubmit('look');
+        expect(panel.messageHistory.length).toBe(before);
+    });
+
+    it('inventory verb adds an inventory line to message history', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({ region_id: 'X', world: makeWorld({}), arrivedFrom: null });
+        panel.inventory = new Set(['sword', 'key']);
+        panel._handleSubmit('inventory');
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toContain('inventory');
+    });
+
+    it('error from parser is surfaced to the message history', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({ region_id: 'X', world: makeWorld({}), arrivedFrom: null });
+        panel._handleSubmit('xyzzy');
+        const last = panel.messageHistory[panel.messageHistory.length - 1];
+        expect(last.html).toContain('Unrecognized');
+    });
+
+    it('empty submission is ignored', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.applyLoadedRegion({ region_id: 'X', world: makeWorld({}), arrivedFrom: null });
+        const before = panel.messageHistory.length;
+        panel._handleSubmit('');
+        panel._handleSubmit('   ');
+        expect(panel.messageHistory.length).toBe(before);
+    });
+});
+
+describe('TextAdventureSubstrateUI — message history limit honors settings', () => {
+    beforeEach(() => { _testOnly_resetModuleState(); });
+
+    it('caps history at the configured messageHistoryLimit', () => {
+        _testOnly_setSettings({ messageHistoryLimit: 3 });
+        const panel = new TextAdventureSubstrateUI(null, {});
+        for (let i = 0; i < 10; i++) panel._addMessage(`m${i}`);
+        expect(panel.messageHistory.length).toBe(3);
+        expect(panel.messageHistory[0].html).toContain('m7');
+        expect(panel.messageHistory[2].html).toContain('m9');
+    });
+
+    it('falls back to default when setting is unset', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        for (let i = 0; i < 30; i++) panel._addMessage(`m${i}`);
+        // Default is 10 (from SETTINGS_DEFAULTS).
+        expect(panel.messageHistory.length).toBe(10);
     });
 });
 
