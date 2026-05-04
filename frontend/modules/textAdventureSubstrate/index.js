@@ -142,7 +142,6 @@ export function _testOnly_resetModuleState() {
     if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
     if (unsubSettingsChanged) { unsubSettingsChanged(); unsubSettingsChanged = null; }
     if (unsubRawJsonLoaded) { unsubRawJsonLoaded(); unsubRawJsonLoaded = null; }
-    if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
     if (unsubRegionChanged) { unsubRegionChanged(); unsubRegionChanged = null; }
 }
 
@@ -166,7 +165,6 @@ export function _testOnly_setCustomData(data) {
 
 let unsubSettingsChanged = null;
 let unsubRawJsonLoaded = null;
-let unsubRulesLoaded = null;
 let unsubRegionChanged = null;
 
 async function loadSettings() {
@@ -221,18 +219,6 @@ function handleRawJsonLoaded(data) {
     // 404 is fine — the panel just keeps its generic prose.
     const url = pickAutoLoadCustomDataUrl(rulesJson, playerId, _settings.autoLoadCustomData);
     void fetchAndLoadCustomData(url);
-}
-
-function handleStandaloneRulesLoaded() {
-    if (_mode !== 'standalone') return;
-    if (!panelInstance?.applyStandaloneRegion) return;
-    // Pick up the initial region — gameState publishes regionChanged
-    // for the start region during reset(), but a panel that mounts
-    // after that fires would miss it.
-    const region = _readCurrentStandaloneRegion();
-    if (region) {
-        panelInstance.applyStandaloneRegion(region.regionName, region.regionData, null);
-    }
 }
 
 function handleStandaloneRegionChanged(data) {
@@ -339,10 +325,12 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
             'stateManager:rawJsonDataLoaded',
             handleRawJsonLoaded,
         );
-        unsubRulesLoaded = eventBus.subscribe(
-            'stateManager:rulesLoaded',
-            handleStandaloneRulesLoaded,
-        );
+        // Initial standalone region pickup: gameState.reset() (called
+        // by gameState's own stateManager:rulesLoaded handler)
+        // unconditionally publishes gameState:regionChanged for the
+        // start region, so this single subscription covers both initial
+        // load and subsequent transitions. A panel that mounts after
+        // those events fires backfills via readPendingStandaloneRegion.
         unsubRegionChanged = eventBus.subscribe(
             'gameState:regionChanged',
             handleStandaloneRegionChanged,
