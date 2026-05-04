@@ -3,6 +3,8 @@ import { describe, it, expect } from 'vitest';
 import {
     synthesizeStandaloneWorld,
     resolveCustomDataUrl,
+    customDataUrlForGame,
+    pickAutoLoadCustomDataUrl,
 } from './textAdventureSubstrateStandalone.js';
 
 describe('synthesizeStandaloneWorld', () => {
@@ -98,5 +100,52 @@ describe('resolveCustomDataUrl', () => {
     it('trims whitespace before classifying', () => {
         expect(resolveCustomDataUrl('  adventure  '))
             .toBe('./modules/shared/customData/adventure_textadventure.json');
+    });
+});
+
+describe('customDataUrlForGame', () => {
+    it('lowercases the game name and slots into the conventional path', () => {
+        expect(customDataUrlForGame('Adventure'))
+            .toBe('./modules/shared/customData/adventure_textadventure.json');
+        expect(customDataUrlForGame('TUNIC'))
+            .toBe('./modules/shared/customData/tunic_textadventure.json');
+    });
+
+    it('returns null for empty / non-string input', () => {
+        expect(customDataUrlForGame(null)).toBeNull();
+        expect(customDataUrlForGame(undefined)).toBeNull();
+        expect(customDataUrlForGame('')).toBeNull();
+        expect(customDataUrlForGame('   ')).toBeNull();
+        expect(customDataUrlForGame(42)).toBeNull();
+    });
+});
+
+describe('pickAutoLoadCustomDataUrl', () => {
+    const adventureRules = { world: { 1: { game: 'Adventure' } } };
+
+    it('explicit setting wins when set', () => {
+        expect(pickAutoLoadCustomDataUrl(adventureRules, '1', 'tunic'))
+            .toBe('./modules/shared/customData/tunic_textadventure.json');
+        expect(pickAutoLoadCustomDataUrl(adventureRules, '1', 'http://example/x.json'))
+            .toBe('http://example/x.json');
+    });
+
+    it('falls back to game-name auto-detect when setting is empty', () => {
+        expect(pickAutoLoadCustomDataUrl(adventureRules, '1', ''))
+            .toBe('./modules/shared/customData/adventure_textadventure.json');
+        expect(pickAutoLoadCustomDataUrl(adventureRules, '1', null))
+            .toBe('./modules/shared/customData/adventure_textadventure.json');
+    });
+
+    it('reads from the correct player slot', () => {
+        const rules = { world: { 1: { game: 'A' }, 2: { game: 'B' } } };
+        expect(pickAutoLoadCustomDataUrl(rules, '2', ''))
+            .toBe('./modules/shared/customData/b_textadventure.json');
+    });
+
+    it('returns null when neither setting nor game name is available', () => {
+        expect(pickAutoLoadCustomDataUrl(null, '1', '')).toBeNull();
+        expect(pickAutoLoadCustomDataUrl({}, '1', '')).toBeNull();
+        expect(pickAutoLoadCustomDataUrl({ world: {} }, '1', '')).toBeNull();
     });
 });

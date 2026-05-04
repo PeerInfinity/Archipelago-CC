@@ -22,7 +22,7 @@ import { substrateRegistryEntry } from './textAdventureSubstrateLibrary.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
-import { resolveCustomDataUrl } from './textAdventureSubstrateStandalone.js';
+import { pickAutoLoadCustomDataUrl } from './textAdventureSubstrateStandalone.js';
 
 export * from './textAdventureSubstrateLibrary.js';
 
@@ -46,7 +46,7 @@ const SETTINGS_SCHEMA = Object.freeze({
     autoLoadCustomData: {
         type: 'string',
         default: SETTINGS_DEFAULTS.autoLoadCustomData,
-        description: 'URL of a custom-data JSON file to fetch on init (region/location/exit prose templates). Empty disables auto-load.',
+        description: 'Override URL (or bare name) for the custom-data JSON to load. Empty = auto-detect by game name from ./modules/shared/customData/<game>_textadventure.json.',
     },
 });
 
@@ -186,15 +186,11 @@ async function loadSettings() {
 }
 
 /**
- * Fetch the configured custom-data file (if any) and broadcast a
- * load event. Failures are swallowed — the panel falls back to its
- * generic prose.
- *
- * Accepts either a URL/path or a bare name (legacy convention). Bare
- * names resolve to ./modules/shared/customData/<name>_textadventure.json.
+ * Fetch a custom-data file from the given URL and broadcast a load
+ * event. Failures (404, network, parse) are swallowed — the panel
+ * falls back to its generic prose.
  */
-async function autoLoadCustomDataIfConfigured() {
-    const url = resolveCustomDataUrl(_settings.autoLoadCustomData);
+async function fetchAndLoadCustomData(url) {
     if (!url) return;
     try {
         const response = await fetch(url);
@@ -202,7 +198,8 @@ async function autoLoadCustomDataIfConfigured() {
         const data = await response.json();
         loadCustomData(data);
     } catch {
-        // Network / parse failure — leave _customData null.
+        // Network / parse failure — leave the previous _customData
+        // (or null) in place.
     }
 }
 
@@ -217,6 +214,13 @@ function handleRawJsonLoaded(data) {
     const playerId = data?.selectedPlayerInfo?.playerId ?? '1';
     const hasSidecars = !!rulesJson?.preset_sidecars?.[playerId];
     _mode = hasSidecars ? 'procgen' : 'standalone';
+
+    // Pick a custom-data URL to try. Explicit setting wins; otherwise
+    // the rules.json's game name resolves to the conventional
+    // ./modules/shared/customData/<game>_textadventure.json path. A
+    // 404 is fine — the panel just keeps its generic prose.
+    const url = pickAutoLoadCustomDataUrl(rulesJson, playerId, _settings.autoLoadCustomData);
+    void fetchAndLoadCustomData(url);
 }
 
 function handleStandaloneRulesLoaded() {
@@ -345,10 +349,11 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
         );
     }
 
-    // Fire-and-forget: don't block init on a network fetch. Panels
-    // mounted before the fetch resolves get the data via the
-    // customDataLoaded event subscription.
-    void autoLoadCustomDataIfConfigured();
+    // Custom-data auto-load now runs from handleRawJsonLoaded — we
+    // need the rules.json's game name to pick the right file when
+    // the user hasn't set autoLoadCustomData explicitly. Without a
+    // rules.json there's nothing to render anyway, so no point
+    // pre-fetching here.
 
     return () => {
         if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }

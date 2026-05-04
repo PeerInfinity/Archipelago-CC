@@ -93,5 +93,33 @@ export function resolveCustomDataUrl(value) {
     if (trimmed.includes('/') || /^[a-z]+:/i.test(trimmed)) {
         return trimmed;
     }
-    return `./modules/shared/customData/${trimmed}_textadventure.json`;
+    return customDataUrlForGame(trimmed);
+}
+
+/**
+ * Build the conventional custom-data URL for a game. Lowercases the
+ * name and slots it into the legacy
+ * ./modules/shared/customData/<game>_textadventure.json path. Used by
+ * the auto-detect-on-rules-load path so a file dropped into that
+ * directory with the right name is picked up without configuration.
+ *
+ * Returns null for empty / non-string input.
+ */
+export function customDataUrlForGame(gameName) {
+    if (!gameName || typeof gameName !== 'string') return null;
+    const slug = gameName.trim().toLowerCase();
+    if (!slug) return null;
+    return `./modules/shared/customData/${slug}_textadventure.json`;
+}
+
+/**
+ * Pick the URL to auto-load for a freshly-loaded rules.json. Explicit
+ * setting wins; otherwise we try the game-name convention. Returns
+ * null when neither yields a URL.
+ */
+export function pickAutoLoadCustomDataUrl(rulesJson, playerId, settingValue) {
+    const explicit = resolveCustomDataUrl(settingValue);
+    if (explicit) return explicit;
+    const gameName = rulesJson?.world?.[playerId]?.game;
+    return customDataUrlForGame(gameName);
 }
