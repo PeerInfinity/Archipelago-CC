@@ -132,8 +132,8 @@
       "path": "./modules/spoilerChecklist/index.js",
       "enabled": true
     },
-    "textAdventure": {
-      "path": "./modules/textAdventure/index.js",
+    "textAdventureSubstrate": {
+      "path": "./modules/textAdventureSubstrate/index.js",
       "enabled": true
     },
     "tests": {
@@ -271,7 +271,7 @@
     "spoilerTest",
     "sphereState",
     "spoilerChecklist",
-    "textAdventure",
+    "textAdventureSubstrate",
     "tests",
     "progressBar",
     "progressBarPanel",

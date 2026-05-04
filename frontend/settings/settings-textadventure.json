@@ -14,10 +14,6 @@
       "disableLocationCheckUI": true,
       "clickDiscoversLocation": true,
       "showUndiscoveredRegionNames": true
-    },
-    "textAdventure": {
-      "enableDiscoveryMode": true,
-      "autoLoadCustomData": "adventure"
     }
   }
 }

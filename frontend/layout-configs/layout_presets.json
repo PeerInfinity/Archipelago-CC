@@ -239,7 +239,7 @@
             {
               "type": "component",
               "componentType": "textAdventureSubstratePanel",
-              "title": "Text Adventure (Substrate)"
+              "title": "Text Adventure"
             },
             {
               "type": "component",
@@ -612,7 +612,7 @@
           "content": [
             {
               "type": "component",
-              "componentType": "textAdventurePanel",
+              "componentType": "textAdventureSubstratePanel",
               "title": "Text Adventure"
             },
             {
