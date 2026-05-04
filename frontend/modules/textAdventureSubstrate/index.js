@@ -332,7 +332,7 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
             () => { loadSettings(); },
         );
         unsubRawJsonLoaded = eventBus.subscribe(
-            'rawJsonDataLoaded',
+            'stateManager:rawJsonDataLoaded',
             handleRawJsonLoaded,
         );
         unsubRulesLoaded = eventBus.subscribe(
