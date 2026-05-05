@@ -34,6 +34,13 @@ export class GameStatePanelUI {
                 <div class="current-region">
                     <strong>Current Region:</strong> <span class="region-name">Loading...</span>
                 </div>
+                <div class="mana-section" style="display: none;">
+                    <strong>Mana:</strong> <span class="mana-value">—</span>
+                </div>
+                <div class="region-xp-section" style="display: none;">
+                    <strong>Region XP:</strong>
+                    <div class="region-xp-entries"></div>
+                </div>
                 <div class="path-section">
                     <strong>Path:</strong>
                     <div class="path-entries"></div>
@@ -43,6 +50,10 @@ export class GameStatePanelUI {
 
         this.currentRegionElement = this.rootElement.querySelector('.region-name');
         this.pathEntriesElement = this.rootElement.querySelector('.path-entries');
+        this.manaSection = this.rootElement.querySelector('.mana-section');
+        this.manaValueElement = this.rootElement.querySelector('.mana-value');
+        this.regionXPSection = this.rootElement.querySelector('.region-xp-section');
+        this.regionXPEntriesElement = this.rootElement.querySelector('.region-xp-entries');
         return this.rootElement;
     }
 
@@ -68,6 +79,29 @@ export class GameStatePanelUI {
             this.updateDisplay();
         });
         this.unsubscribeHandles.push(rulesHandle);
+
+        // Loop-mode resource events. Mana display becomes visible when
+        // cost data is loaded; region XP display becomes visible when
+        // any region has accumulated XP.
+        const manaHandle = this.eventBus.subscribe('gameState:manaChanged', () => {
+            this.updateManaDisplay();
+        });
+        this.unsubscribeHandles.push(manaHandle);
+        const xpHandle = this.eventBus.subscribe('gameState:xpChanged', () => {
+            this.updateRegionXPDisplay();
+        });
+        this.unsubscribeHandles.push(xpHandle);
+        // Cost data flipping on/off (e.g. after rulesLoaded or "Generate
+        // Costs") changes whether mana is meaningful, so we re-evaluate
+        // the mana section's visibility too.
+        const costLoadedHandle = this.eventBus.subscribe('costDataManager:loaded', () => {
+            this.updateManaDisplay();
+        });
+        this.unsubscribeHandles.push(costLoadedHandle);
+        const costClearedHandle = this.eventBus.subscribe('costDataManager:cleared', () => {
+            this.updateManaDisplay();
+        });
+        this.unsubscribeHandles.push(costClearedHandle);
     }
 
     updateDisplay() {
@@ -107,6 +141,68 @@ export class GameStatePanelUI {
                 }
             }
         }
+
+        // Loop-mode resource sections — refreshed alongside the rest.
+        this.updateManaDisplay();
+        this.updateRegionXPDisplay();
+    }
+
+    /**
+     * Mana readout. Visible whenever the loops module's cost data is
+     * loaded — the player always sees their resource regardless of
+     * which substrate they're in. 1-decimal formatting per spec.
+     */
+    updateManaDisplay() {
+        if (!this.manaSection || !this.manaValueElement) return;
+        const cdm = this._getCostDataManager();
+        const visible = !!cdm?.isLoaded?.();
+        this.manaSection.style.display = visible ? '' : 'none';
+        if (!visible) return;
+        const getCur = centralRegistry.getPublicFunction('gameState', 'getCurrentMana');
+        const getMax = centralRegistry.getPublicFunction('gameState', 'getMaxMana');
+        const cur = getCur ? getCur() : 0;
+        const max = getMax ? getMax() : 0;
+        this.manaValueElement.textContent = `${cur.toFixed(1)} / ${max.toFixed(1)}`;
+    }
+
+    /**
+     * Region XP readout. Visible whenever any region has XP. Reads the
+     * underlying GameState.regionXP map via getState (registered by
+     * gameState/index.js as a public function).
+     */
+    updateRegionXPDisplay() {
+        if (!this.regionXPSection || !this.regionXPEntriesElement) return;
+        const getState = centralRegistry.getPublicFunction('gameState', 'getState');
+        const gs = getState ? getState() : null;
+        const map = gs?.regionXP;
+        if (!map || map.size === 0) {
+            this.regionXPSection.style.display = 'none';
+            return;
+        }
+        this.regionXPSection.style.display = '';
+        this.regionXPEntriesElement.innerHTML = '';
+        // Sort by name for stable display.
+        const entries = [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+        for (const [regionName, data] of entries) {
+            const el = document.createElement('div');
+            el.className = 'region-xp-entry';
+            const lvl = data?.level ?? 0;
+            const xp = data?.xp ?? 0;
+            const need = data?.xpForNextLevel ?? 0;
+            el.textContent = `${regionName}: L${lvl} (${xp.toFixed(0)}/${need} xp)`;
+            this.regionXPEntriesElement.appendChild(el);
+        }
+    }
+
+    _getCostDataManager() {
+        if (this._costDataManager) return this._costDataManager;
+        try {
+            const fn = centralRegistry.getPublicFunction?.('loops', 'getCostDataManager');
+            this._costDataManager = fn?.() ?? null;
+        } catch {
+            this._costDataManager = null;
+        }
+        return this._costDataManager;
     }
 
     destroy() {
