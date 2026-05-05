@@ -35,6 +35,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
 import { MazeRoomVisualizer } from './mazeRoomVisualizer.js';
+import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -70,6 +71,7 @@ const DEFAULT_PARAMS = {
     height: 12,
     maxIterations: 2000,
     stallLimit: 200,
+    biomeId: DEFAULT_BIOME_ID,
 };
 
 const TILE_PX = 20;
@@ -810,6 +812,31 @@ export class MazeRoomUI {
         const grid = document.createElement('div');
         grid.className = 'maze-room-grid';
 
+        // Biome dropdown — feeds config.biome.id on the next generate.
+        const biomeRow = document.createElement('div');
+        biomeRow.className = 'maze-room-field';
+        const biomeLabel = document.createElement('label');
+        biomeLabel.textContent = 'Biome';
+        biomeLabel.htmlFor = 'maze-room-biome';
+        const biomeSelect = document.createElement('select');
+        biomeSelect.id = 'maze-room-biome';
+        for (const [id, entry] of Object.entries(BIOMES)) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = entry.name;
+            opt.title = entry.description;
+            if (id === (this.params.biomeId ?? DEFAULT_BIOME_ID)) {
+                opt.selected = true;
+            }
+            biomeSelect.appendChild(opt);
+        }
+        biomeSelect.addEventListener('change', () => {
+            this.params.biomeId = biomeSelect.value;
+        });
+        biomeRow.appendChild(biomeLabel);
+        biomeRow.appendChild(biomeSelect);
+        grid.appendChild(biomeRow);
+
         const fields = [
             { key: 'seed',             label: 'Seed',              min: 0 },
             { key: 'width',            label: 'Width',             min: 2,   max: 80 },
@@ -925,12 +952,15 @@ export class MazeRoomUI {
         section.className = 'maze-room-stats';
         if (!this.stats) return section;
 
-        const parts = [
+        const parts = [];
+        if (this.stats.biome) parts.push(`biome ${this.stats.biome}`);
+        if (this.stats.usedFallback) parts.push('fallback');
+        parts.push(
             `iter ${this.stats.iterations}`,
             `accepted ${this.stats.accepted}`,
             `rej ${this.stats.rejected}`,
             `path ${this.stats.shortestPath ?? '—'}`,
-        ];
+        );
         if (this.stats.gateKeyPlaced) {
             parts.push('gate+key');
         } else if (this.stats.gateKeyReason && this.stats.gateKeyReason !== 'disabled') {
@@ -1574,6 +1604,7 @@ export class MazeRoomUI {
                 width: this.params.width,
                 height: this.params.height,
                 seed: this.params.seed,
+                biome: { id: this.params.biomeId ?? DEFAULT_BIOME_ID },
                 params: {
                     maxIterations: this.params.maxIterations,
                     stallLimit: this.params.stallLimit,

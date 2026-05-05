@@ -16,6 +16,11 @@ import {
     entranceTileForStartRegion,
     tryAssignExitTiles,
 } from '../shared/procgen/spatialPrimitives.js';
+import { getBackend } from '../shared/procgen/mazeAlgorithms/registry.js';
+import { resolveBiome } from './mazeRoomBiomeLibrary.js';
+// Side-effect: ensure all maze backends are registered before
+// generateMaze runs.
+import './mazeAlgorithms/index.js';
 
 // Re-export clockwisePerimeterTiles for callers (tests, other
 // modules) that imported it from mazeRoomEngine. Step 3 re-points
@@ -579,7 +584,7 @@ const DEFAULT_PARAMS = Object.freeze({
     gateKeyMinBeforeDoor: 2,
 });
 
-function floorTilesExcluding(world, exclude) {
+export function floorTilesExcluding(world, exclude) {
     const out = [];
     for (let y = 0; y < world.height; y++) {
         for (let x = 0; x < world.width; x++) {
@@ -670,7 +675,7 @@ function floorReachableSet(world) {
 // at the current call sites. Keeping items in the contract makes the
 // helper safe to reuse if a future caller mutates walls after items
 // land.
-function allTargetsReachable(world) {
+export function allTargetsReachable(world) {
     const reachable = floorReachableSet(world);
     for (const e of world.exits.values()) {
         if (!reachable.has(posKey(e.x, e.y))) return false;
@@ -744,11 +749,27 @@ function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'k
     return { placed: false, reason: 'no_suitable_placement' };
 }
 
+// Reset every non-entrance, non-exit tile to floor. Used by the
+// fallback path when a backend produces an unreachable layout.
+function resetTilesToFloor(world) {
+    for (let i = 0; i < world.tiles.length; i++) {
+        world.tiles[i] = TILE_FLOOR;
+    }
+}
+
 export function generateMaze(config) {
     const width = config.width;
     const height = config.height;
     const params = { ...DEFAULT_PARAMS, ...(config.params ?? {}) };
     const rng = createRng(config.seed ?? 1);
+
+    // Resolve biome up-front so an unknown id throws before world setup.
+    const { id: biomeId, biome, params: biomeParams } = resolveBiome(config.biome);
+    const backend = getBackend(biome.backend);
+    if (!backend) {
+        throw new Error(`generateMaze: biome '${biomeId}' references unknown backend '${biome.backend}'`);
+    }
+    const mergedBackendParams = { ...params, ...biomeParams };
 
     const world = createWorld(width, height, {
         entrance: config.entrance,
@@ -756,8 +777,6 @@ export function generateMaze(config) {
         // Legacy single-exit shorthand still accepted by createWorld.
         exit: config.exit,
     });
-
-    const exclude = [world.entrance, ...world.exits.values()];
 
     // 0-exit terminal regions (top-down may produce these for source
     // regions that only have a back-edge). There's no exit to reach,
@@ -767,6 +786,9 @@ export function generateMaze(config) {
         return {
             world,
             stats: {
+                biome: biomeId,
+                backend: biome.backend,
+                usedFallback: false,
                 iterations: 0,
                 accepted: 0,
                 rejected: 0,
@@ -785,30 +807,21 @@ export function generateMaze(config) {
         throw new Error('generateMaze: entrance and exit not connected in empty room');
     }
 
-    let accepted = 0;
-    let rejectedFeasibility = 0;
-    let stall = 0;
-    let iterations = 0;
+    let backendStats = backend.run(world, mergedBackendParams, rng);
+    let usedFallback = false;
 
-    for (iterations = 0; iterations < params.maxIterations; iterations++) {
-        if (stall >= params.stallLimit) break;
-
-        const candidates = floorTilesExcluding(world, exclude);
-        if (candidates.length === 0) break;
-
-        const pick = candidates[Math.floor(rng.next() * candidates.length)];
-        const edit = { type: 'add_wall', x: pick.x, y: pick.y };
-        const token = apply(world, edit);
-
-        if (!allTargetsReachable(world)) {
-            undo(world, token);
-            rejectedFeasibility += 1;
-            stall += 1;
-            continue;
-        }
-
-        accepted += 1;
-        stall = 0;
+    // Validation safety net. Tree-based backends are connected by
+    // construction and `random_walls` rejects any wall that breaks
+    // feasibility, so this should never trip in practice — but a
+    // backend with a bug shouldn't be able to ship an unsolvable
+    // region. Reset and re-run with the classic backend.
+    if (!allTargetsReachable(world)) {
+        // eslint-disable-next-line no-console
+        console.warn(`mazeRoom: biome '${biomeId}' produced unreachable layout, falling back to random_walls`);
+        resetTilesToFloor(world);
+        const classic = getBackend('random_walls');
+        backendStats = classic.run(world, mergedBackendParams, rng);
+        usedFallback = true;
     }
 
     const gateKeyResult = params.placeGateAndKey
@@ -817,11 +830,14 @@ export function generateMaze(config) {
 
     const finalReach = reach(world, bfsSolver, createState(world), reachedExit);
     const stats = {
-        iterations,
-        accepted,
-        rejected: rejectedFeasibility,
-        rejectedFeasibility,
-        stalled: stall >= params.stallLimit,
+        biome: biomeId,
+        backend: biome.backend,
+        usedFallback,
+        iterations: backendStats.iterations,
+        accepted: backendStats.accepted,
+        rejected: backendStats.rejectedFeasibility ?? 0,
+        rejectedFeasibility: backendStats.rejectedFeasibility ?? 0,
+        stalled: backendStats.stalled ?? false,
         shortestPath: finalReach.ok ? finalReach.steps : null,
         gateKeyPlaced: gateKeyResult.placed,
         gateKeyReason: gateKeyResult.reason ?? null,
