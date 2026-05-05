@@ -20,11 +20,26 @@
     font-style: italic;
 }
 
-.text-adventure-substrate-panel .text-adventure-region-name {
+.text-adventure-substrate-panel .text-adventure-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
     margin: 0 0 12px 0;
+}
+
+.text-adventure-substrate-panel .text-adventure-region-name {
+    margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: #f0f0f0;
+}
+
+.text-adventure-substrate-panel .text-adventure-mana {
+    font-size: 14px;
+    font-weight: 500;
+    color: #88c8ff;
+    font-variant-numeric: tabular-nums;
 }
 
 /* Link styling (used by step 6's exit / location renderers). Kept

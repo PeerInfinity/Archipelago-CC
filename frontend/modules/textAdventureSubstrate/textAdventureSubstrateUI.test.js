@@ -794,3 +794,110 @@ describe('TextAdventureSubstrateUI — discovery filtering helpers', () => {
         expect(panel._isLocationVisibleToUI('Slay Yorgle')).toBe(true);
     });
 });
+
+describe('TextAdventureSubstrateUI — loop-mode mana hooks (Phase 4)', () => {
+    // Local imports for the gameState singleton helpers — kept inside
+    // the describe block so they don't disturb the test file's
+    // top-level imports.
+    let createGameStateSingleton, _testOnly_resetGameStateSingleton;
+    beforeEach(async () => {
+        ({ createGameStateSingleton, _testOnly_resetGameStateSingleton } =
+            await import('../gameState/singleton.js'));
+        _testOnly_resetGameStateSingleton();
+        _testOnly_resetModuleState();
+    });
+
+    function makeStubCostDataManager({
+        loaded = true,
+        regionCosts = {},
+        locationCosts = {},
+    } = {}) {
+        return {
+            isLoaded: () => loaded,
+            getRegionCost: (name) => regionCosts[name] ?? 50,
+            getLocationCost: (name) => locationCosts[name] ?? 10,
+        };
+    }
+
+    function makeManaPanel({ manaEnabled = true, costData = makeStubCostDataManager() } = {}) {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({});
+        world.manaEnabled = manaEnabled;
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        // Inject the stub directly; bypasses centralRegistry lookup.
+        panel._costDataManager = costData;
+        return panel;
+    }
+
+    it('_shouldDeductMana is true when manaEnabled and loop mode is inactive', () => {
+        const panel = makeManaPanel({ manaEnabled: true });
+        panel._isLoopModeActive = false;
+        expect(panel._shouldDeductMana()).toBe(true);
+    });
+
+    it('_shouldDeductMana is false when loop mode is active', () => {
+        const panel = makeManaPanel({ manaEnabled: true });
+        panel._isLoopModeActive = true;
+        expect(panel._shouldDeductMana()).toBe(false);
+    });
+
+    it('_shouldDeductMana is false when manaEnabled is off', () => {
+        const panel = makeManaPanel({ manaEnabled: false });
+        panel._isLoopModeActive = false;
+        expect(panel._shouldDeductMana()).toBe(false);
+    });
+
+    it('_getLocationCost reads from costDataManager when loaded', () => {
+        const panel = makeManaPanel({
+            costData: makeStubCostDataManager({ locationCosts: { 'Slay Yorgle': 25 } }),
+        });
+        expect(panel._getLocationCost('Slay Yorgle')).toBe(25);
+        expect(panel._getLocationCost('Unknown')).toBe(10); // default
+    });
+
+    it('_getLocationCost falls back to 10 when costDataManager is not loaded', () => {
+        const panel = makeManaPanel({ costData: makeStubCostDataManager({ loaded: false }) });
+        expect(panel._getLocationCost('Slay Yorgle')).toBe(10);
+    });
+
+    it('_getRegionMoveCost reads from costDataManager when loaded', () => {
+        const panel = makeManaPanel({
+            costData: makeStubCostDataManager({ regionCosts: { 'Overworld': 30 } }),
+        });
+        expect(panel._getRegionMoveCost('Overworld')).toBe(30);
+        expect(panel._getRegionMoveCost('Other')).toBe(50); // default
+    });
+
+    it('_deductLocationCheckMana subtracts from gameState mana', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = makeManaPanel({
+            costData: makeStubCostDataManager({ locationCosts: { 'A': 10, 'B': 20 } }),
+        });
+        panel._deductLocationCheckMana(['A', 'B']);
+        expect(gs.getCurrentMana()).toBe(70); // 100 - 10 - 20
+    });
+
+    it('_deductRegionMoveMana subtracts source region cost', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = makeManaPanel({
+            costData: makeStubCostDataManager({ regionCosts: { 'Overworld': 25 } }),
+        });
+        panel._deductRegionMoveMana('Overworld');
+        expect(gs.getCurrentMana()).toBe(75);
+    });
+
+    it('does not deduct mana when manaEnabled is off (via _shouldDeductMana gate)', () => {
+        // Sanity check: if a caller respects _shouldDeductMana, no
+        // deduction happens. (The actual gating in production lives in
+        // the snapshot/region-change handlers; this verifies the gate.)
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = makeManaPanel({ manaEnabled: false });
+        if (panel._shouldDeductMana()) {
+            panel._deductLocationCheckMana(['A']);
+        }
+        expect(gs.getCurrentMana()).toBe(100);
+    });
+});

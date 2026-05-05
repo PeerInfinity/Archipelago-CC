@@ -15,3 +15,9 @@ export function getGameStateSingleton() {
     }
     return instance;
 }
+
+// Test-only — wipe the singleton between cases so each test starts
+// with a fresh GameState. App code should never call this.
+export function _testOnly_resetGameStateSingleton() {
+    instance = null;
+}

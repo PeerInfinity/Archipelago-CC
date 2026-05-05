@@ -46,6 +46,8 @@ import {
 } from './index.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -195,6 +197,16 @@ export class TextAdventureSubstrateUI {
             // Discovery module not loaded yet (headless tests); default off.
         }
 
+        // Loop-mode tracking — flipped by loopUI:modeChanged. When loop
+        // mode is active, the loops queue handles mana deduction, so the
+        // substrate stays passive. When inactive, the substrate deducts
+        // mana directly on observed location/region changes (Phase 4).
+        this._isLoopModeActive = false;
+
+        // Lazy cache of the loops module's costDataManager. Looked up via
+        // centralRegistry on first read so module load order doesn't matter.
+        this._costDataManager = null;
+
         // Guard DOM creation so the panel constructs cleanly in
         // headless test environments (vitest runs under 'node').
         if (typeof document !== 'undefined') {
@@ -249,6 +261,9 @@ export class TextAdventureSubstrateUI {
         this._subscribeToSnapshotUpdates();
         this._subscribeToDiscoveryEvents();
         this._subscribeToCustomDataEvents();
+        this._subscribeToLoopMode();
+        this._subscribeToManaChanges();
+        this._subscribeToRegionChanges();
         this.render();
 
         // The Golden Layout factory wrapper (frontend/app/layout/
@@ -267,7 +282,21 @@ export class TextAdventureSubstrateUI {
         const handler = (data) => {
             const newChecked = checkedLocationsFromSnapshot(data?.snapshot);
             this.inventory = inventoryFromSnapshot(data?.snapshot);
-            this._previousCheckedLocations = this.checkedLocations;
+            const oldChecked = this.checkedLocations;
+            // Phase 4: deduct mana for newly-checked locations when the
+            // current region has manaEnabled and loop mode is NOT active
+            // (when active, the loops queue's _processFrame already
+            // deducts and we'd otherwise double-bill).
+            if (this._shouldDeductMana()) {
+                const newlyChecked = [];
+                for (const name of newChecked) {
+                    if (!oldChecked.has(name)) newlyChecked.push(name);
+                }
+                if (newlyChecked.length > 0) {
+                    this._deductLocationCheckMana(newlyChecked);
+                }
+            }
+            this._previousCheckedLocations = oldChecked;
             this.checkedLocations = newChecked;
             this.render();
         };
@@ -276,6 +305,105 @@ export class TextAdventureSubstrateUI {
             this._unsubSnapshot = () =>
                 eventBus.unsubscribe?.('stateManager:snapshotUpdated', handler, 'textAdventureSubstrate');
         }
+    }
+
+    /**
+     * Phase 4: subscribe to loop-mode toggle so the substrate knows
+     * whether to deduct mana itself (loop mode off) or defer to the
+     * loops queue's per-frame deduction (loop mode on).
+     */
+    _subscribeToLoopMode() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            this._isLoopModeActive = !!data?.active;
+        };
+        eventBus.subscribe('loopUI:modeChanged', handler, 'textAdventureSubstrate');
+        this._unsubLoopMode = () =>
+            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'textAdventureSubstrate');
+    }
+
+    /**
+     * Re-render when mana changes so the panel header reflects the
+     * latest values. Mana display is only shown when costDataManager
+     * has cost data loaded.
+     */
+    _subscribeToManaChanges() {
+        if (!eventBus?.subscribe) return;
+        const handler = () => { this.render(); };
+        eventBus.subscribe('gameState:manaChanged', handler, 'textAdventureSubstrate');
+        this._unsubMana = () =>
+            eventBus.unsubscribe?.('gameState:manaChanged', handler, 'textAdventureSubstrate');
+    }
+
+    /**
+     * Phase 4: deduct the source region's moveCost when the player
+     * leaves a manaEnabled region in non-loop-mode. Loop-mode active
+     * region moves are handled by the loops queue.
+     */
+    _subscribeToRegionChanges() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            const oldRegion = data?.oldRegion;
+            // Only deduct when the OLD region is the one this panel
+            // currently shows (i.e. the player is leaving us). Other
+            // panels / substrates handle their own departures.
+            if (!oldRegion || oldRegion !== this.currentRegionId) return;
+            if (!this._shouldDeductMana()) return;
+            this._deductRegionMoveMana(oldRegion);
+        };
+        eventBus.subscribe('gameState:regionChanged', handler, 'textAdventureSubstrate');
+        this._unsubRegionChange = () =>
+            eventBus.unsubscribe?.('gameState:regionChanged', handler, 'textAdventureSubstrate');
+    }
+
+    /** True when this region has loop-mode mana hooks enabled and the
+     *  loops queue isn't doing its own deduction. */
+    _shouldDeductMana() {
+        return !!this.world?.manaEnabled && !this._isLoopModeActive;
+    }
+
+    /** Lazily resolve the loops module's costDataManager via centralRegistry. */
+    _getCostDataManager() {
+        if (this._costDataManager) return this._costDataManager;
+        try {
+            const fn = centralRegistry.getPublicFunction?.('loops', 'getCostDataManager');
+            this._costDataManager = fn?.() ?? null;
+        } catch {
+            this._costDataManager = null;
+        }
+        return this._costDataManager;
+    }
+
+    _getLocationCost(locationName) {
+        const cdm = this._getCostDataManager();
+        if (cdm?.isLoaded?.() && typeof cdm.getLocationCost === 'function') {
+            const cost = cdm.getLocationCost(locationName);
+            if (typeof cost === 'number') return cost;
+        }
+        return 10; // default
+    }
+
+    _getRegionMoveCost(regionName) {
+        const cdm = this._getCostDataManager();
+        if (cdm?.isLoaded?.() && typeof cdm.getRegionCost === 'function') {
+            const cost = cdm.getRegionCost(regionName);
+            if (typeof cost === 'number') return cost;
+        }
+        return 50; // default
+    }
+
+    _deductLocationCheckMana(locationNames) {
+        const gs = getGameStateSingleton?.();
+        if (!gs) return;
+        for (const name of locationNames) {
+            gs.deductMana(this._getLocationCost(name));
+        }
+    }
+
+    _deductRegionMoveMana(regionName) {
+        const gs = getGameStateSingleton?.();
+        if (!gs) return;
+        gs.deductMana(this._getRegionMoveCost(regionName));
     }
 
     _subscribeToCustomDataEvents() {
@@ -588,10 +716,33 @@ export class TextAdventureSubstrateUI {
     }
 
     _renderHeading() {
+        // Wrap the region name + (optional) mana readout in a header
+        // container so they sit side-by-side with consistent styling.
+        const wrap = document.createElement('div');
+        wrap.className = 'text-adventure-heading';
+
         const heading = document.createElement('h2');
         heading.className = 'text-adventure-region-name';
         heading.textContent = this.currentRegionId;
-        return heading;
+        wrap.appendChild(heading);
+
+        // Mana readout (Phase 4): visible whenever the loops module's
+        // cost data is loaded — the player always sees their resource,
+        // whether or not this particular region has manaEnabled.
+        const cdm = this._getCostDataManager();
+        if (cdm?.isLoaded?.()) {
+            const gs = getGameStateSingleton?.();
+            if (gs) {
+                const manaEl = document.createElement('span');
+                manaEl.className = 'text-adventure-mana';
+                const cur = gs.getCurrentMana?.() ?? 0;
+                const max = gs.getMaxMana?.() ?? 0;
+                manaEl.textContent = `mana: ${cur.toFixed(1)} / ${max.toFixed(1)}`;
+                wrap.appendChild(manaEl);
+            }
+        }
+
+        return wrap;
     }
 
     _renderExits() {
