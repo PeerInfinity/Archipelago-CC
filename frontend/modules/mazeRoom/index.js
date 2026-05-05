@@ -85,6 +85,13 @@ export function register(registrationApi) {
     // can mirror the simulated state without affecting stateManager.
     registrationApi.registerEventBusPublisher('playback:snapshotUpdated');
 
+    // Phase 6: substrate-handled completion. The loops module
+    // registers loops:substrateActionCompleted as the canonical owner,
+    // but the maze panel is the actual publisher (it walks the
+    // autopath and signals back to the loops queue when done). Co-
+    // register so the eventBus recognizes mazeRoom as a publisher too.
+    registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
+
     // The maze panel is the original source of these AP-level events
     // when the player triggers them by walking around in playback
     // mode. Both go on the dispatcher (chain-of-authority) so other
