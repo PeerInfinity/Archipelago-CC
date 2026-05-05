@@ -949,6 +949,10 @@ export function generateRegionCore(input) {
         obstacle_lib = DEFAULT_OBSTACLES,
         rng,
         params = {},
+        // Per-region biome selection. Shape: { id, paramsOverride? }.
+        // null/undefined → DEFAULT_BIOME_ID via resolveBiome inside
+        // generateMaze. Round-tripped through preset_sidecars.
+        biome = null,
     } = input;
 
     if (!region_id) throw new Error('generateRegionCore: region_id required');
@@ -1008,6 +1012,7 @@ export function generateRegionCore(input) {
         seed: mazeSeed,
         entrance: entrance_tile,
         exits: resolvedExits,
+        biome,
         params: { ...params, placeGateAndKey: false },
     });
 
@@ -1015,6 +1020,15 @@ export function generateRegionCore(input) {
     // extractPathsAndObstacles consult the right clear_sets.
     world.itemLib = item_lib;
     world.obstacleLib = obstacle_lib;
+
+    // Stamp the resolved biome on the world so serializeMazeWorld can
+    // emit it into the sidecar without the caller having to thread it
+    // through separately. wall_stats.biome is the resolved id (i.e.
+    // DEFAULT_BIOME_ID when input was null).
+    world.biome = {
+        id: wall_stats.biome,
+        ...(biome?.paramsOverride ? { paramsOverride: biome.paramsOverride } : {}),
+    };
 
     return {
         world,
@@ -1026,6 +1040,7 @@ export function generateRegionCore(input) {
         entrance_tile,
         size_used: { width: currentSize.width, height: currentSize.height },
         wall_stats,
+        biome: world.biome,
         // Per-region auto-grow telemetry. Surfaced through the
         // top-down driver and into procgen_metadata so the procgen
         // stats panel can show which regions had their initial size

@@ -2096,4 +2096,47 @@ describe('mixed substrates — end to end', () => {
             expect(regionSubstrates(aOut)).toEqual(regionSubstrates(bOut));
         });
     });
+
+    describe('biome round-trip via preset_sidecars', () => {
+        it("emits 'biome' on every maze region (default = classic)", () => {
+            const { grid, startCell } = growMaze({
+                gridDims: { width: 2, height: 2 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 1 },
+                obstaclePool: { door_red: 1 },
+                seed: 1,
+            });
+            const out = buildRulesJson(grid, { startCell });
+            const sidecars = out.preset_sidecars['1'];
+            const mazeRegions = Object.values(sidecars).filter((r) => r.substrate === 'maze');
+            expect(mazeRegions.length).toBeGreaterThan(0);
+            for (const r of mazeRegions) {
+                expect(r.biome).toBeTruthy();
+                expect(r.biome.id).toBe('classic');
+            }
+        });
+
+        it("emits 'biome' on text-adventure regions too — both substrates share generateRegionCore today, so the underlying spatial structure carries a biome regardless", () => {
+            // If/when ta gets its own spatial core or opts out of
+            // biomes, this test should flip to expecting the field
+            // to be omitted; revisit at that time.
+            const { grid, startCell } = growMaze({
+                gridDims: { width: 2, height: 2 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 1 },
+                obstaclePool: { door_red: 1 },
+                seed: 11,
+                growthParams: {
+                    substrateMix: { maze: 0, text_adventure: 1 },
+                },
+            });
+            const out = buildRulesJson(grid, { startCell });
+            const sidecars = out.preset_sidecars['1'];
+            const taRegions = Object.values(sidecars).filter((r) => r.substrate === 'text_adventure');
+            expect(taRegions.length).toBeGreaterThan(0);
+            for (const r of taRegions) {
+                expect(r.biome?.id).toBe('classic');
+            }
+        });
+    });
 });

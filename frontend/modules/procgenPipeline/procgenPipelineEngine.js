@@ -424,6 +424,7 @@ function buildSubstrateRegion({
     obstacleLib,
     rng,
     params,
+    biome = null,
 }) {
     const adapter = getAdapter(substrate);
     const core = adapter.generateRegionCore({
@@ -435,6 +436,7 @@ function buildSubstrateRegion({
         obstacle_lib: obstacleLib,
         rng,
         params,
+        biome,
     });
     const placement = adapter.placeFromItems(core.world, {
         items_to_place,
@@ -455,6 +457,7 @@ function buildSubstrateRegion({
         render_hint: substrate,
         sidecar_filename: `${region_id}.json`,
         wall_stats: core.wall_stats,
+        biome: core.biome ?? null,
         grow_telemetry: core.grow_telemetry ?? null,
     };
 }
@@ -864,6 +867,11 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         substrateByRegion,
         substrateMix,
         substratePicker,
+        // Per-region biome override. Shape: { [region_name]: { id,
+        // paramsOverride? } }. Falls through to source-region's biome
+        // (if rules.json carries one), otherwise to the substrate
+        // default. v1 callers don't pass this; future commits will.
+        biomeByRegion,
     } = opts;
 
     const rng = createRng(seed);
@@ -1082,6 +1090,12 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             substrateByRegion, substrateMix, substratePicker,
         }, rng);
         const adapter = getAdapter(substrateId);
+        // Biome resolution mirrors substrate dispatch: per-region from
+        // input wins, otherwise inherit from rules.json source region
+        // (which the top-down driver may stamp), otherwise null →
+        // substrate default. v1 callers don't supply biome; that's a
+        // future commit.
+        const regionBiome = biomeByRegion?.[name] ?? sourceRegion?.biome ?? null;
         const core = adapter.generateRegionCore({
             region_id: name,
             size,
@@ -1091,6 +1105,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             obstacle_lib: obstacleLib,
             rng,
             params: regionParams,
+            biome: regionBiome,
         });
         const placement = adapter.placeFromRules(core.world, {
             exit_rules,
@@ -1152,6 +1167,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             exits_placed: core.exits_placed,
             render_hint: substrateId,
             sidecar_filename: `${name}.json`,
+            biome: core.biome ?? null,
             grow_telemetry: core.grow_telemetry ?? null,
         });
 
@@ -1566,6 +1582,12 @@ export function buildPresetSidecars(grid, {
                 baseObstacleLib,
                 baseItemLib,
             ),
+            // Resolved biome (substrate-supplied — null when the
+            // substrate doesn't have a biome concept). Round-trips so
+            // a regenerate-this-region action can reuse the same
+            // biome configuration. Omitted when null to keep the
+            // sidecar output minimal for substrates that ignore it.
+            ...(region.biome ? { biome: region.biome } : {}),
             // Substrate-side auto-grow telemetry from generateRegionCore.
             // Read by computeProcgenStats to surface formula
             // under-provisioning in the procgen stats panel. Omitted
