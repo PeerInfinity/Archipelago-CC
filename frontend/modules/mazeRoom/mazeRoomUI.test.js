@@ -877,6 +877,43 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(calls[0]).toMatchObject({ x: 5, y: 5 });
     });
 
+    it('_shouldDeductMazeMana allows deduction during queue-driven walks (Phase 6d)', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel._isLoopModeActive = true;
+        // Without queue direction: loops queue handles it; substrate stays passive.
+        panel._loopsDrivenAction = null;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+        // With queue direction: substrate is the canonical deducter.
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('_deductMazeStepMana with freshLocationCheck override charges location cost', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            manaEnabled: true,
+            longestShortestPath: 10,
+            // The location is in checkedLocations already (visualizer
+            // updated it before _onVisualizerChange fires) — without
+            // the override the panel would charge move cost.
+            itemLocationNames: new Map([['3,3', 'Slay Yorgle']]),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.externalCheckedLocations = new Set(['Slay Yorgle']);
+        panel._isLoopModeActive = true;
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        panel._costDataManager = makeStubCostDataManager({
+            regionCosts: { Forest: 50 },
+            locationCosts: { 'Slay Yorgle': 30 },
+        });
+        panel._deductMazeStepMana({ x: 3, y: 3 }, { freshLocationCheck: 'Slay Yorgle' });
+        // 100 - 30 (location cost charged due to override)
+        expect(gs.getCurrentMana()).toBe(70);
+    });
+
     it('_onLoopsSubstrateActionBegan — fails back with completed:false when target unresolvable', () => {
         const events = [];
         // We can't easily mock the eventBus singleton import; the bus's

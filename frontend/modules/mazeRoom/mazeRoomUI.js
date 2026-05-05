@@ -422,9 +422,22 @@ export class MazeRoomUI {
         bus.publish('loops:substrateActionCompleted', { completed }, 'mazeRoom');
     }
 
-    /** True when this region's mana hooks should fire on per-tile steps. */
+    /** True when this region's mana hooks should fire on per-tile steps.
+     *
+     * Three play modes:
+     *   - Direct keyboard play: deduct (loop mode inactive, no queue).
+     *   - Loops queue → substrate-driven walk (Phase 6): deduct via
+     *     visualizer-step hook. Queue's _processFrame is parked so it
+     *     can't double-bill.
+     *   - Loops queue without delegation (manaEnabled off, or substrate
+     *     not maze): loops queue handles deduction; substrate stays
+     *     passive.
+     */
     _shouldDeductMazeMana() {
-        return !!this.world?.manaEnabled && !this._isLoopModeActive;
+        if (!this.world?.manaEnabled) return false;
+        if (this._loopsDrivenAction) return true;
+        if (this._isLoopModeActive) return false;
+        return true;
     }
 
     _getCostDataManager() {
@@ -485,21 +498,35 @@ export class MazeRoomUI {
 
     /**
      * Deduct mana for a single tile-step. Called from _handleKeydown
-     * after a successful step in the substrate-integrated playback flow.
-     * Also awards XP equal to mana spent (matches loops _processFrame's
-     * 1 XP : 1 mana ratio), and triggers a loop reset when mana hits 0.
+     * after a successful step in direct keyboard play, and from
+     * _onVisualizerChange during queue-driven walks (Phase 6d).
+     * Awards XP equal to mana spent (1 XP : 1 mana, matching loops
+     * _processFrame), and triggers a loop reset when mana hits 0.
+     *
+     * @param {{x: number, y: number}} newPos
+     * @param {Object} [opts]
+     * @param {string|null} [opts.freshLocationCheck] - when set, names
+     *   the location that was just freshly checked at this step. Used
+     *   by queue-driven walks where the visualizer updates its own
+     *   _checkedLocations BEFORE this fires, so the panel-side
+     *   "is this location unchecked" lookup would give the wrong
+     *   answer. The visualizer's onLocationCheck callback fires only
+     *   for fresh checks, so we know the truth at that point.
      */
-    _deductMazeStepMana(newPos) {
+    _deductMazeStepMana(newPos, opts = {}) {
         if (!this._shouldDeductMazeMana()) return;
         const gs = getGameStateSingleton?.();
         if (!gs) return;
 
-        // If the destination tile holds an unchecked location, charge
-        // the location cost; otherwise charge the per-tile move cost.
         const key = `${newPos.x},${newPos.y}`;
         const locationName = this.world?.itemLocationNames?.get(key);
-        const checked = this._currentCheckedLocations();
-        const isUncheckedLocation = locationName && !checked.has(locationName);
+        let isUncheckedLocation;
+        if (opts.freshLocationCheck) {
+            isUncheckedLocation = !!locationName;
+        } else {
+            const checked = this._currentCheckedLocations();
+            isUncheckedLocation = locationName && !checked.has(locationName);
+        }
         const cost = isUncheckedLocation
             ? this._locationTileCost(locationName)
             : this._perTileMoveCost();
@@ -1038,6 +1065,15 @@ export class MazeRoomUI {
         const fromLoopThisLocation = fromLoop
             && this._loopsDrivenAction?.type === 'locationCheck'
             && this._loopsDrivenAction?.locationName === locationName;
+
+        // Phase 6d: signal _onVisualizerChange that this step was a
+        // fresh location check. Set BEFORE _onVisualizerChange runs
+        // (the visualizer fires _publishSnapshot then _notifyChange
+        // immediately after this callback). The visualizer suppresses
+        // this callback for already-checked locations, so reaching
+        // here means the location was genuinely fresh.
+        this._pendingFreshLocationCheck = locationName;
+
         dispatcher.publish('system:locationCheck', {
             locationName,
             regionName: regionId ?? this.currentRegionId,
@@ -1066,9 +1102,26 @@ export class MazeRoomUI {
      */
     _onVisualizerChange() {
         const vState = this._visualizer?.getState();
+        let stepHappened = false;
+        let newPos = null;
         if (vState?.player_pos && this.state) {
-            this.state.player_pos = { ...vState.player_pos };
+            const oldPos = this.state.player_pos;
+            newPos = { ...vState.player_pos };
+            stepHappened = !!oldPos && (oldPos.x !== newPos.x || oldPos.y !== newPos.y);
+            this.state.player_pos = newPos;
         }
+        // Phase 6d: per-step mana deduction during queue-driven walks.
+        // The visualizer's tick fires (a) _handleEvent → onLocationCheck
+        // (which sets _pendingFreshLocationCheck for fresh pickups)
+        // (b) _publishSnapshot, then (c) _notifyChange → us. By here
+        // the externalCheckedLocations already reflects any pickup,
+        // so we use the pending flag to charge location vs move cost
+        // correctly.
+        if (stepHappened && newPos && this._loopsDrivenAction) {
+            const fresh = this._pendingFreshLocationCheck;
+            this._deductMazeStepMana(newPos, { freshLocationCheck: fresh });
+        }
+        this._pendingFreshLocationCheck = null;
         // Fog of war: expand the seen-set on each visualizer step
         // the same way keyboard play does, so fog-on playback uncovers
         // tiles as the bot explores.
