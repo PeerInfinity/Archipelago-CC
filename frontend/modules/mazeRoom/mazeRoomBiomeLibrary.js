@@ -32,6 +32,40 @@ export const BIOMES = Object.freeze({
         description: 'Shortest path from entrance to each exit; everything else is wall.',
         backend: 'corridor_only',
     }),
+    branchy: Object.freeze({
+        name: 'Branchy',
+        description: 'Recursive backtracker with newest-cell picker — long winding corridors with deep dead ends.',
+        backend: 'recursive_backtracker',
+        params: Object.freeze({ picker: 'newest' }),
+    }),
+    bushy: Object.freeze({
+        name: 'Bushy',
+        description: 'Recursive backtracker with random picker — bushier, Prim\'s-like with shorter branches.',
+        backend: 'recursive_backtracker',
+        params: Object.freeze({ picker: 'random' }),
+    }),
+    loopy: Object.freeze({
+        name: 'Loopy',
+        description: 'Kruskal\'s spanning tree with 50% braid — perfect maze with some loops mixed in.',
+        backend: 'kruskals',
+        postProcessors: Object.freeze([
+            Object.freeze({ id: 'braid', params: Object.freeze({ p: 0.5 }) }),
+        ]),
+    }),
+    open: Object.freeze({
+        name: 'Open',
+        description: 'Kruskal\'s spanning tree with full braid — every dead end removed, loops everywhere.',
+        backend: 'kruskals',
+        postProcessors: Object.freeze([
+            Object.freeze({ id: 'braid', params: Object.freeze({ p: 1.0 }) }),
+        ]),
+    }),
+    rooms: Object.freeze({
+        name: 'Rooms',
+        description: 'Recursive division — partitions the region into chambers connected by single-tile gaps.',
+        backend: 'recursive_division',
+        params: Object.freeze({ minRoom: 3 }),
+    }),
 });
 
 export const DEFAULT_BIOME_ID = 'classic';

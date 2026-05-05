@@ -17,6 +17,7 @@ import {
     tryAssignExitTiles,
 } from '../shared/procgen/spatialPrimitives.js';
 import { getBackend } from '../shared/procgen/mazeAlgorithms/registry.js';
+import { getPostProcessor } from '../shared/procgen/mazeAlgorithms/postProcessors.js';
 import { resolveBiome } from './mazeRoomBiomeLibrary.js';
 // Side-effect: ensure all maze backends are registered before
 // generateMaze runs.
@@ -809,6 +810,17 @@ export function generateMaze(config) {
 
     let backendStats = backend.run(world, mergedBackendParams, rng);
     let usedFallback = false;
+
+    // Apply listed post-processors in order (braid, pruneDeadEnds,
+    // etc.). Each post-processor's params come from the biome entry;
+    // none of them are configurable from generateMaze's caller.
+    for (const pp of biome.postProcessors ?? []) {
+        const fn = getPostProcessor(pp.id);
+        if (!fn) {
+            throw new Error(`generateMaze: biome '${biomeId}' references unknown post-processor '${pp.id}'`);
+        }
+        fn(world, pp.params ?? {}, rng);
+    }
 
     // Validation safety net. Tree-based backends are connected by
     // construction and `random_walls` rejects any wall that breaks
