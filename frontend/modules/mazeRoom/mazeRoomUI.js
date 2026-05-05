@@ -36,6 +36,9 @@ import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
 import { MazeRoomVisualizer } from './mazeRoomVisualizer.js';
 import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { proposedLinearFinalCost } from '../loops/xpFormulas.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -147,6 +150,16 @@ export class MazeRoomUI {
         this._unsubDiscoveryMode = null;
         this._unsubDiscoveryChanged = null;
 
+        // Loop-mode tracking (Phase 3). Mirrors the textAdventure
+        // substrate pattern: when loop mode is active, the loops queue
+        // handles mana deduction; this panel stays passive. When loop
+        // mode is inactive AND world.manaEnabled is set, the panel
+        // deducts per-tile mana on each step via gameState.deductMana.
+        this._isLoopModeActive = false;
+        this._costDataManager = null; // lazy via centralRegistry
+        this._unsubLoopMode = null;
+        this._unsubManaChanged = null;
+
         // Playback control bar — Phase 1.3 stub mount. Actions log to
         // the console for now; Phase 3 wires them to the visualizer.
         // The bar instance lives across renders; render() re-appends
@@ -203,6 +216,8 @@ export class MazeRoomUI {
         this._loadFromLocalStorage();
         this._subscribeToSnapshotUpdates();
         this._subscribeToDiscoveryEvents();
+        this._subscribeToLoopMode();
+        this._subscribeToManaChanges();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -262,6 +277,112 @@ export class MazeRoomUI {
             () => eventBus.unsubscribe?.('discovery:modeChanged', onModeChanged, 'mazeRoom');
         this._unsubDiscoveryChanged =
             () => eventBus.unsubscribe?.('discovery:changed', onDiscoveryChanged, 'mazeRoom');
+    }
+
+    /**
+     * Phase 3: track loop-mode active state so the panel knows whether
+     * to deduct mana on per-tile movement. Loops queue's _processFrame
+     * deducts when active; substrate stays passive to avoid double-billing.
+     */
+    _subscribeToLoopMode() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            this._isLoopModeActive = !!data?.active;
+        };
+        eventBus.subscribe('loopUI:modeChanged', handler, 'mazeRoom');
+        this._unsubLoopMode =
+            () => eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'mazeRoom');
+    }
+
+    /** Re-render the mana display whenever currentMana / maxMana change. */
+    _subscribeToManaChanges() {
+        if (!eventBus?.subscribe) return;
+        const handler = () => { this.render(); };
+        eventBus.subscribe('gameState:manaChanged', handler, 'mazeRoom');
+        this._unsubManaChanged =
+            () => eventBus.unsubscribe?.('gameState:manaChanged', handler, 'mazeRoom');
+    }
+
+    /** True when this region's mana hooks should fire on per-tile steps. */
+    _shouldDeductMazeMana() {
+        return !!this.world?.manaEnabled && !this._isLoopModeActive;
+    }
+
+    _getCostDataManager() {
+        if (this._costDataManager) return this._costDataManager;
+        try {
+            const fn = centralRegistry.getPublicFunction?.('loops', 'getCostDataManager');
+            this._costDataManager = fn?.() ?? null;
+        } catch {
+            this._costDataManager = null;
+        }
+        return this._costDataManager;
+    }
+
+    /**
+     * Per-tile move cost for the current region:
+     *   baseRegionCost / longestShortestPath
+     * with XP-level reduction applied at deduction time. Falls back to
+     * the loops default region cost (50) divided by the path length
+     * when no cost data is loaded.
+     */
+    _perTileMoveCost() {
+        const path = Math.max(1, this.world?.longestShortestPath ?? 1);
+        const cdm = this._getCostDataManager();
+        let baseRegion = 50;
+        if (cdm?.isLoaded?.() && this.currentRegionId) {
+            const c = cdm.getRegionCost?.(this.currentRegionId);
+            if (typeof c === 'number') baseRegion = c;
+        }
+        const baseTile = baseRegion / path;
+        return this._applyXpReduction(baseTile);
+    }
+
+    /**
+     * Cost of stepping onto an unchecked location tile. Replaces the
+     * per-tile move cost for that step.
+     */
+    _locationTileCost(locationName) {
+        const cdm = this._getCostDataManager();
+        let base = 10;
+        if (cdm?.isLoaded?.() && typeof cdm.getLocationCost === 'function') {
+            const c = cdm.getLocationCost(locationName);
+            if (typeof c === 'number') base = c;
+        }
+        return this._applyXpReduction(base);
+    }
+
+    _applyXpReduction(cost) {
+        if (!this.currentRegionId) return cost;
+        try {
+            const gs = getGameStateSingleton?.();
+            if (!gs) return cost;
+            const xpData = gs.getRegionXP(this.currentRegionId);
+            return proposedLinearFinalCost(cost, xpData?.level ?? 0);
+        } catch {
+            return cost;
+        }
+    }
+
+    /**
+     * Deduct mana for a single tile-step. Called from _handleKeydown
+     * after a successful step in the substrate-integrated playback flow.
+     */
+    _deductMazeStepMana(newPos) {
+        if (!this._shouldDeductMazeMana()) return;
+        const gs = getGameStateSingleton?.();
+        if (!gs) return;
+
+        // If the destination tile holds an unchecked location, charge
+        // the location cost; otherwise charge the per-tile move cost.
+        const key = `${newPos.x},${newPos.y}`;
+        const locationName = this.world?.itemLocationNames?.get(key);
+        const checked = this._currentCheckedLocations();
+        const isUncheckedLocation = locationName && !checked.has(locationName);
+        const cost = isUncheckedLocation
+            ? this._locationTileCost(locationName)
+            : this._perTileMoveCost();
+        gs.deductMana(cost);
     }
 
     /**
@@ -503,6 +624,8 @@ export class MazeRoomUI {
         if (this._unsubPlaybackSnapshot) { this._unsubPlaybackSnapshot(); this._unsubPlaybackSnapshot = null; }
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
+        if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
+        if (this._unsubManaChanged) { this._unsubManaChanged(); this._unsubManaChanged = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         setPanelInstance(null);
@@ -517,10 +640,31 @@ export class MazeRoomUI {
         this.rootElement.appendChild(this._renderActions());
         this.rootElement.appendChild(this._renderPlaybackBar());
         this.rootElement.appendChild(this._renderStats());
+        const manaEl = this._renderManaDisplay();
+        if (manaEl) this.rootElement.appendChild(manaEl);
         this.rootElement.appendChild(this._renderMaze());
         this.rootElement.appendChild(this._renderPlaybackLogSection());
         this.rootElement.appendChild(this._renderEditor());
         this.rootElement.appendChild(this._renderRules());
+    }
+
+    /**
+     * Phase 3 mana readout. Visible whenever cost data is loaded —
+     * the player always sees their resource regardless of whether the
+     * current region has manaEnabled. 1-decimal formatting per spec.
+     */
+    _renderManaDisplay() {
+        const cdm = this._getCostDataManager();
+        if (!cdm?.isLoaded?.()) return null;
+        let gs;
+        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
+        if (!gs) return null;
+        const wrap = document.createElement('div');
+        wrap.className = 'maze-mana-display';
+        const cur = gs.getCurrentMana?.() ?? 0;
+        const max = gs.getMaxMana?.() ?? 0;
+        wrap.textContent = `mana: ${cur.toFixed(1)} / ${max.toFixed(1)}`;
+        return wrap;
     }
 
     /**
@@ -1657,6 +1801,15 @@ export class MazeRoomUI {
         if (next === null) return;
         this.state = next;
         if (this.externalInventory !== null) {
+            // Phase 3: deduct mana for the tile-step before publishing
+            // events. Charges location cost if the new tile holds an
+            // unchecked location, otherwise the per-tile move cost.
+            // The deduction is gated on world.manaEnabled and on loop
+            // mode being inactive (loops queue handles deduction itself
+            // when active). The check uses pre-event checkedLocations,
+            // matching the user's spec ("moving onto a tile with an
+            // unchecked location uses the location cost").
+            this._deductMazeStepMana(next.player_pos);
             this._publishPlaybackEvents(oldPos, next.player_pos);
         }
         // Fog of war: expand the seen-set with the new position's

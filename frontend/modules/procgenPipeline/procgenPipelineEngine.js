@@ -16,6 +16,7 @@ import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
 import { makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
+import { computeLongestShortestPath } from '../mazeRoom/mazeGeometry.js';
 import {
     SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
     OPPOSITE_SIDE, SIDE_DELTAS,
@@ -1544,6 +1545,14 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
             itemLibExtras[id] = def;
         }
     }
+    // Geometric property used by loop-mode mana hooks: the longest of
+    // the pairwise shortest paths among (entrance, ...exits). Combined
+    // with baseRegionCost from loop_costs at runtime to derive a
+    // per-tile move cost: moveCost = baseRegionCost / longestShortestPath.
+    // Always computed (cheap BFS over the tile grid); the runtime
+    // ignores it when manaEnabled is off.
+    const longestShortestPath = computeLongestShortestPath(world);
+
     return {
         width: world.width,
         height: world.height,
@@ -1554,6 +1563,7 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         items,
         obstacleLib: obstacleLibExtras,
         itemLib: itemLibExtras,
+        longestShortestPath,
     };
 }
 
@@ -1561,11 +1571,25 @@ export function buildPresetSidecars(grid, {
     playerId = '1',
     baseObstacleLib = DEFAULT_OBSTACLES,
     baseItemLib = DEFAULT_ITEMS,
+    // Loop-mode opt-in. When true, every region's playable_payload gets
+    // `manaEnabled: true`, activating the substrate's mana hooks at
+    // runtime. Default false — existing presets stay cost-free unless
+    // the caller explicitly enables loop mode. Future: per-region map.
+    manaEnabled = false,
 } = {}) {
     const regionMap = {};
     for (const region of grid.allRegions()) {
         const substrateId = region.substrate ?? 'maze';
         const adapter = getAdapter(substrateId);
+        const playablePayload = adapter.serializeWorld(
+            region.playable_payload,
+            region.extracted_rules,
+            baseObstacleLib,
+            baseItemLib,
+        );
+        if (manaEnabled) {
+            playablePayload.manaEnabled = true;
+        }
         regionMap[region.region_id] = {
             substrate: substrateId,
             render_hint: region.render_hint ?? substrateId,
@@ -1577,12 +1601,7 @@ export function buildPresetSidecars(grid, {
             // (e.g. distinguishing teleporter from grid-adjacent
             // edges) read the same coordinate space the maze uses.
             grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
-            playable_payload: adapter.serializeWorld(
-                region.playable_payload,
-                region.extracted_rules,
-                baseObstacleLib,
-                baseItemLib,
-            ),
+            playable_payload: playablePayload,
             // Resolved biome (substrate-supplied — null when the
             // substrate doesn't have a biome concept). Round-trips so
             // a regenerate-this-region action can reuse the same
@@ -1754,8 +1773,14 @@ export function buildRulesJson(grid, opts = {}) {
     }
 
     // Menu is virtual — no playable payload, no sidecar entry.
+    // When the caller turned on loop mode, all regions' sidecars get
+    // `manaEnabled: true` so the substrate's mana hooks fire at
+    // runtime. Per-region overrides are a later v2 concern.
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
-        playerId, baseObstacleLib: obstacleLib, baseItemLib: itemLib,
+        playerId,
+        baseObstacleLib: obstacleLib,
+        baseItemLib: itemLib,
+        manaEnabled: enableLoopMode,
     });
 
     // Procgen metadata: caller-supplied fields plus auto-derived

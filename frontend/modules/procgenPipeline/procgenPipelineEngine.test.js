@@ -902,6 +902,31 @@ describe('buildPresetSidecars', () => {
         expect(reparsed).toEqual(sidecars);
     });
 
+    it('serializeMazeWorld always includes longestShortestPath on the payload', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const side of Object.values(sidecars['1'])) {
+            expect(typeof side.playable_payload.longestShortestPath).toBe('number');
+            expect(side.playable_payload.longestShortestPath).toBeGreaterThanOrEqual(1);
+        }
+    });
+
+    it('omits manaEnabled by default (loop mode opt-in)', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const side of Object.values(sidecars['1'])) {
+            expect(side.playable_payload.manaEnabled).toBeUndefined();
+        }
+    });
+
+    it('sets manaEnabled=true on every region payload when option is on', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid, { manaEnabled: true });
+        for (const side of Object.values(sidecars['1'])) {
+            expect(side.playable_payload.manaEnabled).toBe(true);
+        }
+    });
+
     it('uses a custom playerId when supplied', () => {
         const { grid } = smallGrid();
         const sidecars = buildPresetSidecars(grid, { playerId: '2' });

@@ -496,3 +496,14 @@
     color: #888;
     font-style: italic;
 }
+
+/* Phase 3: mana readout shown above the maze canvas when cost data is
+ * loaded. Sits on its own line; matches the substrate's other status
+ * lines (playback log, stats). */
+.maze-mana-display {
+    font-size: 14px;
+    font-weight: 500;
+    color: #88c8ff;
+    font-variant-numeric: tabular-nums;
+    margin: 4px 0;
+}

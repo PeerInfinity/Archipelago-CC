@@ -614,3 +614,178 @@ describe('MazeRoomUI — fog/discovery interaction on region entry', () => {
         expect(discoveryStateSingleton.isExitDiscovered('Overworld', 'far_exit')).toBe(false);
     });
 });
+
+describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
+    let createGameStateSingleton, _testOnly_resetGameStateSingleton;
+    beforeEach(async () => {
+        ({ createGameStateSingleton, _testOnly_resetGameStateSingleton } =
+            await import('../gameState/singleton.js'));
+        _testOnly_resetGameStateSingleton();
+    });
+
+    function makeStubCostDataManager({
+        loaded = true,
+        regionCosts = {},
+        locationCosts = {},
+    } = {}) {
+        return {
+            isLoaded: () => loaded,
+            getRegionCost: (name) => regionCosts[name] ?? 50,
+            getLocationCost: (name) => locationCosts[name] ?? 10,
+        };
+    }
+
+    it('_shouldDeductMazeMana is true with manaEnabled and loop mode inactive', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel._isLoopModeActive = false;
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('_shouldDeductMazeMana is false when loop mode is active', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel._isLoopModeActive = true;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('_shouldDeductMazeMana is false when manaEnabled is off', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: false };
+        panel._isLoopModeActive = false;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('_perTileMoveCost = baseRegionCost / longestShortestPath', () => {
+        createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true, longestShortestPath: 10 };
+        panel.currentRegionId = 'Forest';
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        // 50 / 10 = 5, no XP reduction at level 0 → 5
+        expect(panel._perTileMoveCost()).toBe(5);
+    });
+
+    it('_perTileMoveCost falls back to default region cost when costData not loaded', () => {
+        createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true, longestShortestPath: 5 };
+        panel.currentRegionId = 'Forest';
+        panel._costDataManager = makeStubCostDataManager({ loaded: false });
+        // 50 / 5 = 10
+        expect(panel._perTileMoveCost()).toBe(10);
+    });
+
+    it('_perTileMoveCost handles longestShortestPath = 1', () => {
+        createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true, longestShortestPath: 1 };
+        panel.currentRegionId = 'Forest';
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        expect(panel._perTileMoveCost()).toBe(50);
+    });
+
+    it('_locationTileCost reads from costDataManager when loaded', () => {
+        createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.currentRegionId = 'Forest';
+        panel._costDataManager = makeStubCostDataManager({
+            locationCosts: { 'Slay Yorgle': 25 },
+        });
+        expect(panel._locationTileCost('Slay Yorgle')).toBe(25);
+        expect(panel._locationTileCost('Unknown')).toBe(10);
+    });
+
+    it('XP reduction is applied to per-tile move cost', () => {
+        const gs = createGameStateSingleton(null);
+        gs.addRegionXP('Forest', 100); // → level 1, reduction = 1.05
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true, longestShortestPath: 10 };
+        panel.currentRegionId = 'Forest';
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        // base = 50/10 = 5; with reduction 1.05: 5/1.05 ≈ 4.7619
+        const cost = panel._perTileMoveCost();
+        expect(cost).toBeCloseTo(5 / 1.05, 5);
+    });
+
+    it('_deductMazeStepMana deducts move cost on a floor tile', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            manaEnabled: true,
+            longestShortestPath: 10,
+            itemLocationNames: new Map(),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.externalCheckedLocations = new Set();
+        panel._isLoopModeActive = false;
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        panel._deductMazeStepMana({ x: 3, y: 3 });
+        expect(gs.getCurrentMana()).toBe(95); // 100 - 5
+    });
+
+    it('_deductMazeStepMana deducts location cost on an unchecked location tile', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            manaEnabled: true,
+            longestShortestPath: 10,
+            itemLocationNames: new Map([['3,3', 'Slay Yorgle']]),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.externalCheckedLocations = new Set();
+        panel._isLoopModeActive = false;
+        panel._costDataManager = makeStubCostDataManager({
+            regionCosts: { Forest: 50 },
+            locationCosts: { 'Slay Yorgle': 30 },
+        });
+        panel._deductMazeStepMana({ x: 3, y: 3 });
+        expect(gs.getCurrentMana()).toBe(70); // 100 - 30 (location, not move)
+    });
+
+    it('_deductMazeStepMana uses move cost on an already-checked location tile', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            manaEnabled: true,
+            longestShortestPath: 10,
+            itemLocationNames: new Map([['3,3', 'Slay Yorgle']]),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.externalCheckedLocations = new Set(['Slay Yorgle']);
+        panel._isLoopModeActive = false;
+        panel._costDataManager = makeStubCostDataManager({
+            regionCosts: { Forest: 50 },
+            locationCosts: { 'Slay Yorgle': 30 },
+        });
+        panel._deductMazeStepMana({ x: 3, y: 3 });
+        expect(gs.getCurrentMana()).toBe(95); // 100 - 5 (move, location already checked)
+    });
+
+    it('_deductMazeStepMana skips deduction when loop mode is active', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true, longestShortestPath: 10, itemLocationNames: new Map() };
+        panel.currentRegionId = 'Forest';
+        panel._isLoopModeActive = true;
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        panel._deductMazeStepMana({ x: 3, y: 3 });
+        expect(gs.getCurrentMana()).toBe(100); // no deduction
+    });
+
+    it('_deductMazeStepMana skips deduction when manaEnabled is off', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: false, longestShortestPath: 10, itemLocationNames: new Map() };
+        panel.currentRegionId = 'Forest';
+        panel._isLoopModeActive = false;
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        panel._deductMazeStepMana({ x: 3, y: 3 });
+        expect(gs.getCurrentMana()).toBe(100);
+    });
+});

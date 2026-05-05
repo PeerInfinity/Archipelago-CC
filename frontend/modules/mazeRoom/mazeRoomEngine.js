@@ -232,6 +232,16 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     }
     world.itemLocationNames = itemLocationNames;
 
+    // Loop-mode plumbing (Phase 3): both fields ride through verbatim
+    // when present on the sidecar. The runtime substrate uses them to
+    // compute per-tile cost = baseRegionCost / longestShortestPath.
+    if (typeof sidecar.longestShortestPath === 'number') {
+        world.longestShortestPath = sidecar.longestShortestPath;
+    }
+    if (sidecar.manaEnabled === true) {
+        world.manaEnabled = true;
+    }
+
     return world;
 }
 
