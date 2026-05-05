@@ -437,10 +437,17 @@ export class EventCoordinator {
    */
   _handleSetLoopMode(data) {
     const action = data?.action || 'toggle';
-    logger.info(`Received loops:setLoopMode with action: ${action}, current mode: ${this.loopUI.isLoopModeActive}`);
+    // activatePanel defaults to true so existing callers (UI button
+    // clicks etc.) keep the prior behavior. Auto-enter on rules-load
+    // (when a preset's loop_costs is freshly applied) passes false so
+    // the substrate panel that just came up isn't pushed out of view.
+    const activatePanel = data?.activatePanel !== false;
+    logger.info(`Received loops:setLoopMode with action: ${action}, current mode: ${this.loopUI.isLoopModeActive}, activatePanel: ${activatePanel}`);
 
     // Get panelManager for panel activation (if available)
-    const panelManagerInstance = this.loopUI.getPanelManager ? this.loopUI.getPanelManager() : null;
+    const panelManagerInstance = (activatePanel && this.loopUI.getPanelManager)
+      ? this.loopUI.getPanelManager()
+      : null;
 
     switch (action) {
       case 'enable':

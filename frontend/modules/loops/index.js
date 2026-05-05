@@ -150,6 +150,21 @@ async function handleRulesLoaded(eventData) {
       '[Loops Module] LoopState singleton or resetForNewRules method not available when handling stateManager:rulesLoaded.'
     );
   }
+
+  // Auto-enter loop mode when the freshly-loaded preset carries its
+  // own cost data (procgen pipeline's "Enable loop mode" toggle, or
+  // any other source that set loop_costs). The presence of cost data
+  // is a strong signal "this preset was generated with loop mode in
+  // mind". activatePanel:false keeps the substrate panel visible
+  // instead of pushing the loops panel to front.
+  if (_costDataManager?.isLoaded() && _moduleEventBus?.publish) {
+    log('info', '[Loops Module] Cost data is loaded; auto-entering loop mode');
+    _moduleEventBus.publish('loops:setLoopMode', {
+      action: 'enable',
+      activatePanel: false,
+    });
+  }
+
   // Potentially trigger UI update if loopInstance exists
   loopInstance?.renderLoopPanel();
 }
