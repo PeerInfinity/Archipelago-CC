@@ -185,6 +185,16 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'triggerLoopReset', () => {
         return getGameStateSingleton().triggerLoopReset();
     });
+    // Best-path persistence (Phase 5).
+    registrationApi.registerPublicFunction(moduleId, 'recordBestPath', (key, steps, cost) => {
+        return getGameStateSingleton().recordBestPath(key, steps, cost);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'getBestPath', (key) => {
+        return getGameStateSingleton().getBestPath(key);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'clearBestPaths', () => {
+        return getGameStateSingleton().clearBestPaths();
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {

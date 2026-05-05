@@ -196,6 +196,77 @@ describe('GameState — loop-mode resource API', () => {
     });
   });
 
+  describe('best-path persistence (Phase 5)', () => {
+    it('starts with no best paths', () => {
+      expect(gs.bestPaths.size).toBe(0);
+      expect(gs.getBestPath('any')).toBeNull();
+    });
+
+    it('records a new path on first call', () => {
+      const ok = gs.recordBestPath('Forest|in|out', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 5);
+      expect(ok).toBe(true);
+      const stored = gs.getBestPath('Forest|in|out');
+      expect(stored).toEqual({ steps: [{ x: 0, y: 0 }, { x: 1, y: 0 }], cost: 5 });
+    });
+
+    it('replaces only when the new cost is strictly lower', () => {
+      gs.recordBestPath('k', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 10);
+      // equal cost — not replaced
+      expect(gs.recordBestPath('k', [{ x: 5, y: 5 }], 10)).toBe(false);
+      expect(gs.getBestPath('k').cost).toBe(10);
+      // higher cost — not replaced
+      expect(gs.recordBestPath('k', [{ x: 6, y: 6 }], 11)).toBe(false);
+      expect(gs.getBestPath('k').cost).toBe(10);
+      // lower cost — replaced
+      expect(gs.recordBestPath('k', [{ x: 7, y: 7 }], 9)).toBe(true);
+      expect(gs.getBestPath('k')).toEqual({ steps: [{ x: 7, y: 7 }], cost: 9 });
+    });
+
+    it('stores a defensive copy of steps (caller mutation does not affect storage)', () => {
+      const steps = [{ x: 0, y: 0 }, { x: 1, y: 0 }];
+      gs.recordBestPath('k', steps, 5);
+      steps.push({ x: 99, y: 99 }); // mutate caller's array
+      expect(gs.getBestPath('k').steps).toEqual([{ x: 0, y: 0 }, { x: 1, y: 0 }]);
+    });
+
+    it('rejects malformed input', () => {
+      expect(gs.recordBestPath(123, [], 5)).toBe(false);
+      expect(gs.recordBestPath('k', 'nope', 5)).toBe(false);
+      expect(gs.recordBestPath('k', [], '5')).toBe(false);
+      expect(gs.bestPaths.size).toBe(0);
+    });
+
+    it('clearBestPaths empties the map', () => {
+      gs.recordBestPath('a', [{ x: 0, y: 0 }], 1);
+      gs.recordBestPath('b', [{ x: 0, y: 0 }], 2);
+      gs.clearBestPaths();
+      expect(gs.bestPaths.size).toBe(0);
+    });
+
+    it('reset() clears best paths', () => {
+      gs.setStartRegions(['Menu']);
+      gs.recordBestPath('a', [{ x: 0, y: 0 }], 1);
+      gs.reset();
+      expect(gs.bestPaths.size).toBe(0);
+    });
+
+    it('round-trips through serialize / deserialize', () => {
+      gs.setStartRegions(['Menu']);
+      gs.recordBestPath('Forest|in|out', [{ x: 0, y: 0 }, { x: 1, y: 1 }], 7);
+      gs.recordBestPath('Forest|in|loc:LOC', [{ x: 0, y: 0 }, { x: 2, y: 0 }], 12);
+
+      const data = gs.serialize();
+      const gs2 = new GameState(makeBus());
+      gs2.deserialize(data);
+      expect(gs2.getBestPath('Forest|in|out')).toEqual({
+        steps: [{ x: 0, y: 0 }, { x: 1, y: 1 }], cost: 7,
+      });
+      expect(gs2.getBestPath('Forest|in|loc:LOC')).toEqual({
+        steps: [{ x: 0, y: 0 }, { x: 2, y: 0 }], cost: 12,
+      });
+    });
+  });
+
   describe('reset / serialize / deserialize', () => {
     it('reset clears mana and XP back to defaults', () => {
       gs.setStartRegions(['Menu']);

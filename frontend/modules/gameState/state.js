@@ -40,6 +40,14 @@ export class GameState {
         this.manaDebt = 0;
         this.noManaDepletionReset = false;
         this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
+
+        // Best-path persistence (Phase 5). Maps a caller-composed string
+        // key to the best-cost route discovered so far through some
+        // (region, entry, target) triple. Keys are opaque to gameState —
+        // see mazeRoomUI.bestPathKey() for the conventional shape.
+        // Persisted across loop resets within a session; cleared on
+        // reset() (i.e. when a new ruleset loads).
+        this.bestPaths = new Map(); // key -> { steps, cost }
     }
 
     // -------------------- Mana API --------------------
@@ -162,6 +170,37 @@ export class GameState {
 
     clearRegionXP() {
         this.regionXP.clear();
+    }
+
+    // -------------------- Best-path persistence (Phase 5) --------------------
+
+    /**
+     * Record a discovered route under `key` if it's better (lower cost)
+     * than what we already have.
+     * @param {string} key
+     * @param {Array<{x: number, y: number}>} steps
+     * @param {number} cost
+     * @returns {boolean} true when stored (new or improved); false otherwise
+     */
+    recordBestPath(key, steps, cost) {
+        if (typeof key !== 'string' || !Array.isArray(steps)
+            || typeof cost !== 'number') return false;
+        const existing = this.bestPaths.get(key);
+        if (!existing || cost < existing.cost) {
+            this.bestPaths.set(key, { steps: steps.map((s) => ({ x: s.x, y: s.y })), cost });
+            return true;
+        }
+        return false;
+    }
+
+    /** Return the best-known route for `key`, or null. */
+    getBestPath(key) {
+        return this.bestPaths.get(key) ?? null;
+    }
+
+    /** Drop all stored best paths. Called by reset() on rules-load. */
+    clearBestPaths() {
+        this.bestPaths.clear();
     }
 
     /**
@@ -805,6 +844,7 @@ export class GameState {
         this.currentMana = this.maxMana;
         this.manaDebt = 0;
         this.regionXP.clear();
+        this.bestPaths.clear();
 
         // Emit events for the reset
         if (this.eventBus) {
@@ -856,6 +896,9 @@ export class GameState {
             currentMana: this.currentMana,
             maxMana: this.maxMana,
             regionXP: Array.from(this.regionXP.entries()),
+            bestPaths: Array.from(this.bestPaths.entries()).map(([k, v]) => [
+                k, { steps: v.steps.map((s) => ({ x: s.x, y: s.y })), cost: v.cost },
+            ]),
         };
     }
 
@@ -885,6 +928,9 @@ export class GameState {
             }
             if (data.regionXP) {
                 this.regionXP = new Map(data.regionXP);
+            }
+            if (Array.isArray(data.bestPaths)) {
+                this.bestPaths = new Map(data.bestPaths);
             }
 
             // Emit events for the loaded state
