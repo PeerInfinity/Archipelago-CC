@@ -86,8 +86,8 @@ export function rollSubstrateMix(mix, rng) {
         r -= weight;
         if (r <= 0) return id;
     }
-    // Floating-point edge: r > 0 after walking all weights. Last entry
-    // wins, matching makeMazePickMove's analogous fallback.
+    // Floating-point edge: r > 0 after walking all weights (rounding
+    // accumulated across the subtractions). Last entry wins.
     return entries[entries.length - 1][0];
 }
 

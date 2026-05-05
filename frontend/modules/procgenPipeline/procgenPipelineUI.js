@@ -129,9 +129,6 @@ const DEFAULT_PARAMS = {
     gridHeight: 3,
     regionWidth: 8,
     regionHeight: 6,
-    minSuccessPct: 30,
-    maxSuccessPct: 60,
-    walkerTrials: 15,
     maxItemsPerRegion: 2,
     maxRegions: null,
 };
@@ -802,9 +799,6 @@ export class ProcgenPipelineUI {
             { key: 'gridHeight',        label: 'Grid height',      min: 1, max: 10 },
             { key: 'regionWidth',       label: 'Region width',     min: 2, max: 40 },
             { key: 'regionHeight',      label: 'Region height',    min: 2, max: 40 },
-            { key: 'minSuccessPct',     label: 'Walker min %',     min: 0, max: 100 },
-            { key: 'maxSuccessPct',     label: 'Walker max %',     min: 0, max: 100 },
-            { key: 'walkerTrials',      label: 'Walker trials',    min: 1, max: 100 },
             { key: 'maxItemsPerRegion', label: 'Max items/region', min: 0, max: 10 },
             { key: 'maxRegions',        label: 'Max regions',      min: 1, max: 99, nullable: true, placeholder: 'auto' },
         ];
@@ -1320,7 +1314,6 @@ export class ProcgenPipelineUI {
 
     _runGridGrowth() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
-            minSuccessPct, maxSuccessPct, walkerTrials,
             maxItemsPerRegion, maxRegions } = this.params;
         const { grid, pool, stats, startCell } = growMaze({
             gridDims: { width: gridWidth, height: gridHeight },
@@ -1328,11 +1321,7 @@ export class ProcgenPipelineUI {
             itemPool: { ...this.scenario.items },
             obstaclePool: { ...this.scenario.obstacles },
             seed,
-            regionParams: {
-                minSuccessPct: minSuccessPct / 100,
-                maxSuccessPct: maxSuccessPct / 100,
-                walkerTrials,
-            },
+            regionParams: {},
             growthParams: {
                 maxItemsPerRegion,
                 maxRegions: maxRegions ?? null,

@@ -514,7 +514,7 @@ describe('growMaze', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 7,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
         expect(['pool_empty', 'frontier_empty']).toContain(stats.stopReason);
         // Pool may be fully drained or partially — but not over-drained.
@@ -622,7 +622,7 @@ describe('growMaze', () => {
             itemPool: { key_red: 3 },
             obstaclePool: { door_red: 3 },
             seed: 11,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
         for (const region of grid.allRegions()) {
             for (const exit of region.extracted_rules.exits) {
@@ -646,7 +646,7 @@ describe('growMaze', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 42,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         };
         const a = growMaze(cfg);
         const b = growMaze(cfg);
@@ -667,7 +667,7 @@ describe('growMaze', () => {
             itemPool: { key_red: 3 },
             obstaclePool: { door_red: 3 },
             seed: 3,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
         expect(startCell).toEqual({ gx: 1, gy: 1 });
         expect(grid.hasRegion(startCell)).toBe(true);
@@ -684,7 +684,7 @@ describe('growMaze', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 9,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
         for (const region of grid.allRegions()) {
             expect(region).toHaveProperty('region_id');
@@ -707,7 +707,7 @@ describe('compileRegionGraph', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 17,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
     }
 
@@ -834,7 +834,7 @@ describe('buildPresetSidecars', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 5,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
     }
 
@@ -1060,7 +1060,7 @@ describe('buildRulesJson', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 5,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
     }
 
@@ -1182,7 +1182,7 @@ describe('buildRulesJson', () => {
             itemPool: { key_red: 4 },
             obstaclePool: { door_red: 4 },
             seed: 3,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
             growthParams: { branchProbability: 0, assumeBidirectional: true },
         });
         const out = buildRulesJson(grid, { startCell });
@@ -1821,7 +1821,7 @@ describe('stringifyRulesJson', () => {
             itemPool: { key_red: 2 },
             obstaclePool: { door_red: 2 },
             seed: 5,
-            regionParams: { minSuccessPct: 0.3, maxSuccessPct: 0.6 },
+            regionParams: {},
         });
     }
 

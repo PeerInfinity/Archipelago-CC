@@ -70,10 +70,6 @@ const DEFAULT_PARAMS = {
     height: 12,
     maxIterations: 2000,
     stallLimit: 200,
-    walkerTrials: 20,
-    walkerStepBudget: null, // null = auto (4 * width * height)
-    minSuccessPct: 30,      // percent; null disables the difficulty gate
-    maxSuccessPct: 90,      // percent; null disables the difficulty gate
 };
 
 const TILE_PX = 20;
@@ -820,10 +816,6 @@ export class MazeRoomUI {
             { key: 'height',           label: 'Height',            min: 2,   max: 80 },
             { key: 'maxIterations',    label: 'Max iterations',    min: 1,   max: 100000 },
             { key: 'stallLimit',       label: 'Stall limit',       min: 1,   max: 10000 },
-            { key: 'walkerTrials',     label: 'Walker trials',     min: 1,   max: 500 },
-            { key: 'walkerStepBudget', label: 'Step budget',       min: 1,   max: 100000, nullable: true, placeholder: 'auto' },
-            { key: 'minSuccessPct',    label: 'Min success %',     min: 0,   max: 100,    nullable: true, placeholder: 'off' },
-            { key: 'maxSuccessPct',    label: 'Max success %',     min: 0,   max: 100,    nullable: true, placeholder: 'off' },
         ];
 
         for (const f of fields) {
@@ -936,21 +928,15 @@ export class MazeRoomUI {
         const parts = [
             `iter ${this.stats.iterations}`,
             `accepted ${this.stats.accepted}`,
-            `rej ${this.stats.rejected} (feas ${this.stats.rejectedFeasibility}, diff ${this.stats.rejectedDifficulty})`,
+            `rej ${this.stats.rejected}`,
             `path ${this.stats.shortestPath ?? '—'}`,
         ];
-        if (this.stats.difficultyGateOn && this.stats.finalSuccessFraction != null) {
-            parts.push(`walker ${(this.stats.finalSuccessFraction * 100).toFixed(0)}%`);
-        }
         if (this.stats.gateKeyPlaced) {
             parts.push('gate+key');
         } else if (this.stats.gateKeyReason && this.stats.gateKeyReason !== 'disabled') {
             parts.push(`no-gate (${this.stats.gateKeyReason})`);
         }
-        let status = 'complete';
-        if (this.stats.stalled) status = 'stalled';
-        else if (this.stats.reachedTarget) status = 'target';
-        parts.push(status);
+        parts.push(this.stats.stalled ? 'stalled' : 'complete');
 
         const line = document.createElement('div');
         line.textContent = parts.join(' · ');
@@ -1591,10 +1577,6 @@ export class MazeRoomUI {
                 params: {
                     maxIterations: this.params.maxIterations,
                     stallLimit: this.params.stallLimit,
-                    walkerTrials: this.params.walkerTrials,
-                    walkerStepBudget: this.params.walkerStepBudget,
-                    minSuccessPct: this.params.minSuccessPct == null ? null : this.params.minSuccessPct / 100,
-                    maxSuccessPct: this.params.maxSuccessPct == null ? null : this.params.maxSuccessPct / 100,
                 },
             });
             this.world = world;

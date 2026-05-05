@@ -11,7 +11,6 @@ import {
     getItem, setItem,
     step,
     bfsSolver, reachedExit,
-    walkerSolver, makeMazePickMove,
     apply, undo,
     generateMaze,
     extractPathsAndObstacles,
@@ -466,71 +465,6 @@ describe('apply / undo', () => {
     it('throws on unknown edit type', () => {
         const w = createWorld(3, 3);
         expect(() => apply(w, { type: 'nuke', x: 0, y: 0 })).toThrow();
-    });
-});
-
-describe('walkerSolver', () => {
-    it('finds the exit on an empty room with high success rate', () => {
-        const w = createWorld(6, 6);
-        const rng = createRng(1);
-        const r = reach(w, walkerSolver, createState(w), reachedExit, {
-            trials: 40, stepBudget: 200, rng,
-        });
-        expect(r.ok).toBe(true);
-        // Empty room with distance-bias walker should almost always solve.
-        expect(r.successFraction).toBeGreaterThan(0.5);
-    });
-
-    it('hits the goal in zero steps when already there', () => {
-        const w = createWorld(4, 4, { entrance: { x: 2, y: 2 }, exit: { x: 2, y: 2 } });
-        const rng = createRng(1);
-        const r = reach(w, walkerSolver, createState(w), reachedExit, {
-            trials: 5, stepBudget: 50, rng,
-        });
-        expect(r.successes).toBe(5);
-        expect(r.meanSuccessLength).toBe(0);
-    });
-
-    it('is deterministic for a fixed seed', () => {
-        const w = createWorld(6, 6);
-        const a = reach(w, walkerSolver, createState(w), reachedExit,
-            { trials: 20, stepBudget: 100, rng: createRng(9) });
-        const b = reach(w, walkerSolver, createState(w), reachedExit,
-            { trials: 20, stepBudget: 100, rng: createRng(9) });
-        expect(a).toEqual(b);
-    });
-
-    it('reports low success rate on a tight stepBudget', () => {
-        const w = createWorld(10, 10);
-        const rng = createRng(1);
-        const r = reach(w, walkerSolver, createState(w), reachedExit, {
-            trials: 20, stepBudget: 3, rng,
-        });
-        // 3 steps can't reach (9,9) from (0,0) — shortest path is 18.
-        expect(r.successes).toBe(0);
-    });
-});
-
-describe('makeMazePickMove', () => {
-    it('returns null when no legal moves', () => {
-        const pick = makeMazePickMove();
-        const w = createWorld(2, 2);
-        expect(pick({ world: w, state: createState(w), legalMoves: [], visited: new Set(), rng: createRng(1) })).toBeNull();
-    });
-
-    it('picks an unvisited move over a visited one when weights dominate', () => {
-        // With unvisitedBonus very high and towardExitBonus = 1, the
-        // unvisited option should win essentially every time.
-        const pick = makeMazePickMove({ unvisitedBonus: 1000, towardExitBonus: 1 });
-        const world = createWorld(3, 3);
-        const state = createState(world);
-        const visited = new Set(['1,0|']); // east already visited
-        const legalMoves = [
-            { input: INPUT_E, nextState: { player_pos: { x: 1, y: 0 }, inventory: new Set() } },
-            { input: INPUT_S, nextState: { player_pos: { x: 0, y: 1 }, inventory: new Set() } },
-        ];
-        const chosen = pick({ world, state, legalMoves, visited, rng: createRng(1) });
-        expect(chosen).toBe(INPUT_S);
     });
 });
 
@@ -1137,46 +1071,18 @@ describe('generateMaze', () => {
         expect(stats.accepted).toBeGreaterThan(0);
     });
 
-    it('difficulty gate off by default — stats.difficultyGateOn is false', () => {
-        const { stats } = generateMaze({ width: 6, height: 6, seed: 1 });
-        expect(stats.difficultyGateOn).toBe(false);
-        expect(stats.finalSuccessFraction).toBeNull();
-    });
-
-    it('difficulty gate on when both min/max success pcts are set', () => {
-        const { stats } = generateMaze({
-            width: 8, height: 8, seed: 3,
-            params: {
-                maxIterations: 500, stallLimit: 100,
-                walkerTrials: 10, minSuccessPct: 0.3, maxSuccessPct: 0.9,
-            },
-        });
-        expect(stats.difficultyGateOn).toBe(true);
-        expect(stats.finalSuccessFraction).not.toBeNull();
-        expect(stats.finalSuccessFraction).toBeGreaterThanOrEqual(0);
-        expect(stats.finalSuccessFraction).toBeLessThanOrEqual(1);
-    });
-
-    it('rejectedDifficulty counts proposals that pass feasibility but fail the band', () => {
-        // With a very narrow band, expect some difficulty-rejections.
+    it('rejected count equals rejectedFeasibility (no other rejection sources)', () => {
         const { stats } = generateMaze({
             width: 10, height: 10, seed: 5,
-            params: {
-                maxIterations: 300, stallLimit: 60,
-                walkerTrials: 10, minSuccessPct: 0.4, maxSuccessPct: 0.6,
-            },
+            params: { maxIterations: 300, stallLimit: 60 },
         });
-        expect(stats.difficultyGateOn).toBe(true);
-        expect(stats.rejected).toBe(stats.rejectedFeasibility + stats.rejectedDifficulty);
+        expect(stats.rejected).toBe(stats.rejectedFeasibility);
     });
 
-    it('difficulty-gated generation is still deterministic for a fixed seed', () => {
+    it('feasibility-only generation is deterministic for a fixed seed', () => {
         const cfg = {
             width: 8, height: 8, seed: 11,
-            params: {
-                maxIterations: 400, stallLimit: 80,
-                walkerTrials: 15, minSuccessPct: 0.3, maxSuccessPct: 0.9,
-            },
+            params: { maxIterations: 400, stallLimit: 80 },
         };
         const a = generateMaze(cfg);
         const b = generateMaze(cfg);
@@ -1224,7 +1130,6 @@ describe('generateMaze', () => {
         for (let seed = 1; seed <= 20; seed++) {
             const { world, stats } = generateMaze({
                 width: 12, height: 10, seed,
-                params: { walkerTrials: 15, minSuccessPct: 0.3, maxSuccessPct: 0.5 },
             });
             if (!stats.gateKeyPlaced) continue;
             placed += 1;

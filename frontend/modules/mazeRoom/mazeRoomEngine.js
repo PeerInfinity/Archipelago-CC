@@ -8,7 +8,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { reach, makeBfsSolver, makeRandomWalkerSolver } from '../shared/simulatorCore.js';
+import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 import {
     REGION_GROW_STEP, REGION_GROW_MAX_ATTEMPTS,
@@ -542,68 +542,6 @@ export function extractPathsAndObstacles(world, opts = {}) {
     };
 }
 
-// --- Heuristic walker (difficulty gate) ---
-
-// Move scoring: weighted toward unvisited tiles, with a softened bias
-// toward moves that reduce Manhattan distance to the exit. Both bonuses
-// are multiplicative over a base weight of 1, so a visited move that
-// also increases distance still has non-zero weight — the walker can
-// backtrack out of a dead end.
-const DEFAULT_WALKER_WEIGHTS = Object.freeze({
-    unvisitedBonus: 4,
-    towardExitBonus: 2,
-});
-
-function manhattan(a, b) {
-    return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-}
-
-function nearestExitDist(pos, exitPositions) {
-    let best = Infinity;
-    for (let i = 0; i < exitPositions.length; i++) {
-        const d = manhattan(pos, exitPositions[i]);
-        if (d < best) best = d;
-    }
-    return best;
-}
-
-export function makeMazePickMove(weights = DEFAULT_WALKER_WEIGHTS) {
-    const { unvisitedBonus, towardExitBonus } = { ...DEFAULT_WALKER_WEIGHTS, ...weights };
-    return function mazePickMove({ world, state, legalMoves, visited, rng }) {
-        if (legalMoves.length === 0) return null;
-        // For multi-exit worlds, score moves toward the nearest exit;
-        // single-exit worlds collapse to "toward THE exit" naturally.
-        // Snapshot the exits' positions once per pickMove call so the
-        // inner loop doesn't re-allocate Map iterators per legal move.
-        const exitPositions = [];
-        for (const e of world.exits.values()) {
-            exitPositions.push({ x: e.x, y: e.y });
-        }
-        const curDist = nearestExitDist(state.player_pos, exitPositions);
-        const weighted = legalMoves.map((m) => {
-            let w = 1;
-            if (!visited.has(mazeVisitedKey(m.nextState))) w *= unvisitedBonus;
-            const newDist = nearestExitDist(m.nextState.player_pos, exitPositions);
-            if (newDist < curDist) w *= towardExitBonus;
-            return { input: m.input, weight: w };
-        });
-        const total = weighted.reduce((s, m) => s + m.weight, 0);
-        let r = rng.next() * total;
-        for (const m of weighted) {
-            r -= m.weight;
-            if (r <= 0) return m.input;
-        }
-        return weighted[weighted.length - 1].input;
-    };
-}
-
-export const walkerSolver = makeRandomWalkerSolver({
-    step,
-    inputs: INPUTS,
-    visitedKey: mazeVisitedKey,
-    pickMove: makeMazePickMove(),
-});
-
 // --- apply / undo ---
 
 export function apply(world, edit) {
@@ -632,13 +570,6 @@ export function undo(world, token) {
 const DEFAULT_PARAMS = Object.freeze({
     maxIterations: 2000,
     stallLimit: 200,
-    // Walker / difficulty-gate knobs. The gate is active only when
-    // minSuccessPct or maxSuccessPct is non-null; leaving them unset
-    // gives feasibility-only behavior (v1 walls-only baseline).
-    walkerTrials: 20,
-    walkerStepBudget: null, // null → auto: 4 * width * height
-    minSuccessPct: null,
-    maxSuccessPct: null,
     // Gate-and-key placement. Set false to get a walls-only maze.
     placeGateAndKey: true,
     gateKeyMaxAttempts: 20,
@@ -829,9 +760,9 @@ export function generateMaze(config) {
     const exclude = [world.entrance, ...world.exits.values()];
 
     // 0-exit terminal regions (top-down may produce these for source
-    // regions that only have a back-edge). Skip the walker /
-    // feasibility passes — there's no exit to reach. Return a trivial
-    // walls-only region; the caller adds back-exits afterward.
+    // regions that only have a back-edge). There's no exit to reach,
+    // so skip the wall-generation loop and return a trivial walls-only
+    // region; the caller adds back-exits afterward.
     if (world.exits.size === 0) {
         return {
             world,
@@ -840,13 +771,8 @@ export function generateMaze(config) {
                 accepted: 0,
                 rejected: 0,
                 rejectedFeasibility: 0,
-                rejectedDifficulty: 0,
                 stalled: false,
-                reachedTarget: false,
                 shortestPath: null,
-                difficultyGateOn: false,
-                finalSuccessFraction: null,
-                lastProposalSuccessFraction: null,
                 gateKeyPlaced: false,
                 gateKeyReason: 'no_exit',
                 doorPos: null,
@@ -859,20 +785,10 @@ export function generateMaze(config) {
         throw new Error('generateMaze: entrance and exit not connected in empty room');
     }
 
-    const difficultyGateOn = params.minSuccessPct != null || params.maxSuccessPct != null;
-    // Treat unset bounds as "no rejection on that side" / "no early stop":
-    // min=0 accepts arbitrarily hard mazes; max=1 never early-stops.
-    const minSuccess = params.minSuccessPct ?? 0;
-    const maxSuccess = params.maxSuccessPct ?? 1;
-    const walkerStepBudget = params.walkerStepBudget ?? (4 * width * height);
-
     let accepted = 0;
     let rejectedFeasibility = 0;
-    let rejectedDifficulty = 0;
     let stall = 0;
     let iterations = 0;
-    let lastWalker = null;
-    let reachedTarget = false;
 
     for (iterations = 0; iterations < params.maxIterations; iterations++) {
         if (stall >= params.stallLimit) break;
@@ -891,35 +807,8 @@ export function generateMaze(config) {
             continue;
         }
 
-        if (!difficultyGateOn) {
-            accepted += 1;
-            stall = 0;
-            continue;
-        }
-
-        // Walls only push difficulty in one direction (harder), so the
-        // band's upper bound is a *stopping* criterion, not a rejection
-        // criterion — otherwise a starting success rate above max would
-        // reject every proposal and stall immediately. Only reject when
-        // the wall overshoots below min.
-        const walker = reach(world, walkerSolver, createState(world), reachedExit, {
-            trials: params.walkerTrials,
-            stepBudget: walkerStepBudget,
-            rng,
-        });
-        lastWalker = walker;
-        if (walker.successFraction < minSuccess) {
-            undo(world, token);
-            rejectedDifficulty += 1;
-            stall += 1;
-            continue;
-        }
         accepted += 1;
         stall = 0;
-        if (walker.successFraction <= maxSuccess) {
-            reachedTarget = true;
-            break;
-        }
     }
 
     const gateKeyResult = params.placeGateAndKey
@@ -927,25 +816,13 @@ export function generateMaze(config) {
         : { placed: false, reason: 'disabled' };
 
     const finalReach = reach(world, bfsSolver, createState(world), reachedExit);
-    const finalWalker = difficultyGateOn
-        ? reach(world, walkerSolver, createState(world), reachedExit, {
-            trials: params.walkerTrials,
-            stepBudget: walkerStepBudget,
-            rng,
-        })
-        : null;
     const stats = {
         iterations,
         accepted,
-        rejected: rejectedFeasibility + rejectedDifficulty,
+        rejected: rejectedFeasibility,
         rejectedFeasibility,
-        rejectedDifficulty,
         stalled: stall >= params.stallLimit,
-        reachedTarget,
         shortestPath: finalReach.ok ? finalReach.steps : null,
-        difficultyGateOn,
-        finalSuccessFraction: finalWalker ? finalWalker.successFraction : null,
-        lastProposalSuccessFraction: lastWalker ? lastWalker.successFraction : null,
         gateKeyPlaced: gateKeyResult.placed,
         gateKeyReason: gateKeyResult.reason ?? null,
         doorPos: gateKeyResult.doorPos ?? null,
