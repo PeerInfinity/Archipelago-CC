@@ -51,11 +51,11 @@ export class EventCoordinator {
       this.eventSubscriptions.push(unsubscribe);
     };
 
-    // Mana changes
-    subscribe('loopState:manaChanged', this._handleManaChanged);
+    // Mana changes (gameState owns mana; published as gameState:manaChanged)
+    subscribe('gameState:manaChanged', this._handleManaChanged);
 
-    // XP changes
-    subscribe('loopState:xpChanged', this._handleXPChanged);
+    // XP changes (gameState owns XP; published as gameState:xpChanged)
+    subscribe('gameState:xpChanged', this._handleXPChanged);
 
     // Pause state changes (single authoritative event)
     subscribe('loopState:pauseStateChanged', this._handlePauseStateChanged);

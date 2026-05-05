@@ -238,8 +238,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopState:queueUpdated');
   registrationApi.registerEventBusPublisher('loopState:speedChanged');
   registrationApi.registerEventBusPublisher('loopState:stateLoaded');
-  registrationApi.registerEventBusPublisher('loopState:xpChanged');
-  registrationApi.registerEventBusPublisher('loopState:manaChanged');
+  // Note: gameState:manaChanged and gameState:xpChanged are registered
+  // by the gameState module (canonical owner of the resource economy).
   registrationApi.registerEventBusPublisher('loopState:loopReset');
   registrationApi.registerEventBusPublisher('loopState:newActionStarted');
   registrationApi.registerEventBusPublisher('loopState:exploreActionRepeated');
@@ -284,7 +284,16 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     getRegionCounts: initializationApi.getModuleFunction('gameState', 'getRegionCounts'),
     setStartRegions: initializationApi.getModuleFunction('gameState', 'setStartRegions'),
     isStartRegion: initializationApi.getModuleFunction('gameState', 'isStartRegion'),
-    reset: initializationApi.getModuleFunction('gameState', 'reset')
+    reset: initializationApi.getModuleFunction('gameState', 'reset'),
+    getState: initializationApi.getModuleFunction('gameState', 'getState'),
+    // Loop-mode resource API
+    getCurrentMana: initializationApi.getModuleFunction('gameState', 'getCurrentMana'),
+    getMaxMana: initializationApi.getModuleFunction('gameState', 'getMaxMana'),
+    deductMana: initializationApi.getModuleFunction('gameState', 'deductMana'),
+    refillMana: initializationApi.getModuleFunction('gameState', 'refillMana'),
+    recalculateMaxMana: initializationApi.getModuleFunction('gameState', 'recalculateMaxMana'),
+    getRegionXP: initializationApi.getModuleFunction('gameState', 'getRegionXP'),
+    addRegionXP: initializationApi.getModuleFunction('gameState', 'addRegionXP'),
   };
   
   // Store the API for access by loopUI
@@ -368,16 +377,17 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         get pathFinder() { return _pathFinder; },
         get gameState() { return _gameStateAPI; },
 
-        // Convenience accessors
+        // Convenience accessors (mana state lives in gameState; setters route
+        // through gameState's emitManaChanged for the canonical event).
         get mana() { return loopStateSingleton.currentMana; },
         set mana(v) {
           loopStateSingleton.currentMana = v;
-          _moduleEventBus?.publish('loopState:manaChanged', { current: v, max: loopStateSingleton.maxMana });
+          gameStateAPI.getState?.()?.emitManaChanged?.();
         },
         get maxMana() { return loopStateSingleton.maxMana; },
         set maxMana(v) {
           loopStateSingleton.maxMana = v;
-          _moduleEventBus?.publish('loopState:manaChanged', { current: loopStateSingleton.currentMana, max: v });
+          gameStateAPI.getState?.()?.emitManaChanged?.();
         },
         get speed() { return loopStateSingleton.gameSpeed; },
         set speed(v) { loopStateSingleton.setGameSpeed(v); },

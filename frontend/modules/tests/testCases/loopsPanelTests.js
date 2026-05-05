@@ -415,7 +415,7 @@ export async function testManaConsumption(testController) {
         testController.log(`[${testRunId}] Mana decreased to: ${data.mana}`);
       }
     };
-    eventBus.subscribe('loopState:manaChanged', manaHandler);
+    eventBus.subscribe('gameState:manaChanged', manaHandler);
 
     // Start processing (unpause)
     const pauseBtn = loopsPanelElement.querySelector('#loop-ui-toggle-pause');
@@ -437,7 +437,7 @@ export async function testManaConsumption(testController) {
     testController.reportCondition('Mana tracking system functional', true);
 
     // Cleanup
-    eventBus.unsubscribe('loopState:manaChanged', manaHandler);
+    eventBus.unsubscribe('gameState:manaChanged', manaHandler);
 
     testController.log(`[${testRunId}] Mana consumption test completed`);
     return overallResult;
@@ -548,7 +548,7 @@ export async function testLevelUpMechanics(testController) {
         testController.log(`[${testRunId}] Level up detected! New level: ${newLevel}`);
       }
     };
-    eventBus.subscribe('loopState:xpChanged', xpHandler);
+    eventBus.subscribe('gameState:xpChanged', xpHandler);
 
     // Add enough XP to trigger a level-up (XP per level = 100 + level * 20)
     // For level 0 -> 1, need 120 XP
@@ -573,7 +573,7 @@ export async function testLevelUpMechanics(testController) {
     }
 
     // Cleanup
-    eventBus.unsubscribe('loopState:xpChanged', xpHandler);
+    eventBus.unsubscribe('gameState:xpChanged', xpHandler);
 
     testController.log(`[${testRunId}] Level-up mechanics test completed`);
     return overallResult;

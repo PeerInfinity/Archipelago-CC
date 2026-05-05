@@ -185,14 +185,14 @@ export class LoopStatsUI {
     // Re-analyze when queue updates
     subscribe('loopState:queueUpdated', this._handleQueueUpdated);
 
-    // Re-analyze when mana changes
-    subscribe('loopState:manaChanged', this._handleManaChanged);
+    // Re-analyze when mana changes (gameState owns mana)
+    subscribe('gameState:manaChanged', this._handleManaChanged);
 
     // Archive analysis on loop reset
     subscribe('loopState:loopReset', this._handleLoopReset);
 
-    // Re-analyze when XP changes (affects costs)
-    subscribe('loopState:xpChanged', this._handleXPChanged);
+    // Re-analyze when XP changes (affects costs; gameState owns XP)
+    subscribe('gameState:xpChanged', this._handleXPChanged);
 
     // Handle action progress for real-time updates
     subscribe('loopState:progressUpdated', this._handleProgressUpdated);

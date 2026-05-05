@@ -1,6 +1,7 @@
 /**
  * GameState - Tracks player-specific state information
- * Tracks the player's current region and path through regions
+ * Tracks the player's current region, path through regions, and resource economy
+ * (mana / region XP) for loop mode.
  */
 export class GameState {
     constructor(eventBus) {
@@ -29,6 +30,138 @@ export class GameState {
         // true: create loops when revisiting regions (default)
         // false: trim path on backward navigation
         this.allowLoops = true;
+
+        // Loop-mode resource state — owned here so substrates can deduct mana
+        // and gain XP without coupling to the loops module. Loops, maze, and
+        // textAdventure all consume this through gameState's API.
+        this.currentMana = 100;
+        this.maxMana = 100;
+        this.manaPerItem = 10;
+        this.manaDebt = 0;
+        this.noManaDepletionReset = false;
+        this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
+    }
+
+    // -------------------- Mana API --------------------
+
+    getCurrentMana() {
+        return this.currentMana;
+    }
+
+    getMaxMana() {
+        return this.maxMana;
+    }
+
+    getManaPerItem() {
+        return this.manaPerItem;
+    }
+
+    getManaDebt() {
+        return this.manaDebt;
+    }
+
+    resetManaDebt() {
+        this.manaDebt = 0;
+    }
+
+    getNoManaDepletionReset() {
+        return this.noManaDepletionReset;
+    }
+
+    setNoManaDepletionReset(enabled) {
+        this.noManaDepletionReset = enabled;
+    }
+
+    /**
+     * Deduct mana. Honors `noManaDepletionReset` (test mode allows negative mana
+     * with debt tracking). Always emits `gameState:manaChanged`.
+     * @param {number} amount - Amount of mana to deduct (may be fractional)
+     * @returns {number} new currentMana value
+     */
+    deductMana(amount) {
+        const newMana = this.currentMana - amount;
+        if (newMana < 0 && this.noManaDepletionReset) {
+            this.manaDebt = Math.max(this.manaDebt, Math.abs(newMana));
+            this.currentMana = newMana;
+        } else {
+            this.currentMana = Math.max(0, newMana);
+        }
+        this.emitManaChanged();
+        return this.currentMana;
+    }
+
+    /**
+     * Refill mana to max. Used by loop reset.
+     */
+    refillMana() {
+        this.currentMana = this.maxMana;
+        this.emitManaChanged();
+    }
+
+    emitManaChanged() {
+        if (this.eventBus) {
+            this.eventBus.publish('gameState:manaChanged', {
+                current: this.currentMana,
+                max: this.maxMana,
+            });
+        }
+    }
+
+    /**
+     * Recalculate maxMana from a state snapshot (base + manaPerItem * itemCount).
+     * Caps currentMana to the new max. Emits `gameState:manaChanged`.
+     */
+    recalculateMaxMana(snapshot) {
+        const baseMana = 100;
+        let itemCount = 0;
+        if (snapshot && snapshot.inventory) {
+            for (const [, count] of Object.entries(snapshot.inventory)) {
+                if (count > 0) itemCount += count;
+            }
+        }
+        this.maxMana = baseMana + itemCount * this.manaPerItem;
+        if (this.currentMana > this.maxMana) {
+            this.currentMana = this.maxMana;
+        }
+        this.emitManaChanged();
+    }
+
+    // -------------------- Region XP API --------------------
+
+    /**
+     * Get XP data for a region, initializing if absent.
+     * @returns {{level: number, xp: number, xpForNextLevel: number}}
+     */
+    getRegionXP(regionName) {
+        if (!this.regionXP.has(regionName)) {
+            this.regionXP.set(regionName, {
+                level: 0,
+                xp: 0,
+                xpForNextLevel: 100,
+            });
+        }
+        return this.regionXP.get(regionName);
+    }
+
+    /**
+     * Add XP to a region. Levels up while xp ≥ xpForNextLevel.
+     * Emits `gameState:xpChanged` on each level-up (matches prior behavior).
+     */
+    addRegionXP(regionName, amount) {
+        const xpData = this.getRegionXP(regionName);
+        xpData.xp += amount;
+        while (xpData.xp >= xpData.xpForNextLevel) {
+            xpData.xp -= xpData.xpForNextLevel;
+            xpData.level += 1;
+            xpData.xpForNextLevel = 100 + xpData.level * 20;
+            if (this.eventBus) {
+                this.eventBus.publish('gameState:xpChanged', { regionName, xpData });
+            }
+        }
+    }
+
+    clearRegionXP() {
+        this.regionXP.clear();
     }
 
     /**
@@ -627,13 +760,20 @@ export class GameState {
     }
     
     /**
-     * Reset state to defaults
+     * Reset state to defaults. Also clears loop-mode resource state
+     * (mana, XP, debt). Used when a new ruleset is loaded.
      */
     reset() {
         const firstStartRegion = this.startRegions[0];
         this.currentRegion = firstStartRegion;
         this.path = [];
         this.regionInstanceCounts.clear();
+
+        // Reset loop-mode resource state
+        this.maxMana = 100;
+        this.currentMana = this.maxMana;
+        this.manaDebt = 0;
+        this.regionXP.clear();
 
         // Emit events for the reset
         if (this.eventBus) {
@@ -643,6 +783,7 @@ export class GameState {
             });
         }
         this.emitPathUpdated();
+        this.emitManaChanged();
     }
 
     /**
@@ -680,7 +821,10 @@ export class GameState {
             currentRegion: this.currentRegion,
             path: [...this.path],
             regionInstanceCounts: Array.from(this.regionInstanceCounts.entries()),
-            startRegions: [...this.startRegions]
+            startRegions: [...this.startRegions],
+            currentMana: this.currentMana,
+            maxMana: this.maxMana,
+            regionXP: Array.from(this.regionXP.entries()),
         };
     }
 
@@ -702,9 +846,19 @@ export class GameState {
             if (data.regionInstanceCounts) {
                 this.regionInstanceCounts = new Map(data.regionInstanceCounts);
             }
+            if (typeof data.currentMana === 'number') {
+                this.currentMana = data.currentMana;
+            }
+            if (typeof data.maxMana === 'number') {
+                this.maxMana = data.maxMana;
+            }
+            if (data.regionXP) {
+                this.regionXP = new Map(data.regionXP);
+            }
 
             // Emit events for the loaded state
             this.emitPathUpdated();
+            this.emitManaChanged();
         }
     }
 }

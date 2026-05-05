@@ -60,6 +60,8 @@ export async function register(registrationApi) {
     // Register event publishers
     registrationApi.registerEventBusPublisher('gameState:regionChanged');
     registrationApi.registerEventBusPublisher('gameState:pathUpdated');
+    registrationApi.registerEventBusPublisher('gameState:manaChanged');
+    registrationApi.registerEventBusPublisher('gameState:xpChanged');
 
     // Export public functions
     registrationApi.registerPublicFunction(moduleId, 'getCurrentRegion', () => {
@@ -156,6 +158,29 @@ export async function register(registrationApi) {
         const gameState = getGameStateSingleton();
         return gameState.reset();
     });
+
+    // Loop-mode resource API (mana / region XP)
+    registrationApi.registerPublicFunction(moduleId, 'getCurrentMana', () => {
+        return getGameStateSingleton().getCurrentMana();
+    });
+    registrationApi.registerPublicFunction(moduleId, 'getMaxMana', () => {
+        return getGameStateSingleton().getMaxMana();
+    });
+    registrationApi.registerPublicFunction(moduleId, 'deductMana', (amount) => {
+        return getGameStateSingleton().deductMana(amount);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'refillMana', () => {
+        return getGameStateSingleton().refillMana();
+    });
+    registrationApi.registerPublicFunction(moduleId, 'recalculateMaxMana', (snapshot) => {
+        return getGameStateSingleton().recalculateMaxMana(snapshot);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'getRegionXP', (regionName) => {
+        return getGameStateSingleton().getRegionXP(regionName);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'addRegionXP', (regionName, amount) => {
+        return getGameStateSingleton().addRegionXP(regionName, amount);
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -178,6 +203,9 @@ export async function initialize(mId, priorityIndex, initializationApi) {
         eventBus.subscribe('iframe:appReady', handleRemoteAppReady);
         eventBus.subscribe('window:appReady', handleRemoteAppReady);
         log('info', `[${moduleId} Module] Subscribed to remote app ready events`);
+
+        // Subscribe to snapshotUpdated to recalculate maxMana from inventory
+        eventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated);
     }
 
     log('info', `[${moduleId} Module] Initialization complete.`);
@@ -202,6 +230,12 @@ function handleRemoteAppReady(data, propagationOptions) {
             log('info', `[${moduleId} Module] Published initial region: ${currentRegion}`);
         }
     }
+}
+
+function handleSnapshotUpdated(eventData) {
+    if (!eventData || !eventData.snapshot) return;
+    const gameState = getGameStateSingleton();
+    gameState.recalculateMaxMana(eventData.snapshot);
 }
 
 function handleRulesLoaded(data, propagationOptions) {

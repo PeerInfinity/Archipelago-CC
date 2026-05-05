@@ -41,13 +41,9 @@ export class LoopState {
     // Action queue manager (will be initialized after gameState is set)
     this.actionQueueManager = null;
 
-    // Resources
-    this.maxMana = 100;
-    this.currentMana = 100;
-    this.manaPerItem = 10; // How much each inventory item increases max mana
-
-    // Experience tracking
-    this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
+    // Resources (mana, manaPerItem) and region XP live in gameState now —
+    // accessed below via delegating getters/setters for backward compat.
+    // See gameState/state.js for the canonical state.
 
     // Action processing - now based on gameState path
     this.currentActionIndex = 0; // Index in the gameState path
@@ -62,8 +58,7 @@ export class LoopState {
 
     // Test mode flags
     this.instantMode = false; // When true, actions complete in one frame
-    this.noManaDepletionReset = false; // When true, don't reset loop when mana reaches 0
-    this.manaDebt = 0; // Track how negative mana went (for testing)
+    // noManaDepletionReset and manaDebt now live in gameState (test-mode flags).
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -79,6 +74,81 @@ export class LoopState {
 
     // Auto-save interval
     this._saveIntervalId = null;
+  }
+
+  // ----- Delegating accessors for mana/XP fields (now owned by gameState) -----
+  // Existing internal code reads/writes loopState.currentMana, loopState.maxMana,
+  // loopState.regionXP, etc. These property accessors keep that working while
+  // gameState is the source of truth. Setters are silent (caller controls
+  // event firing — matching prior behavior where field writes didn't auto-fire).
+  //
+  // `_gs()` returns the GameState instance (or null). `gameState` on this
+  // class is the flat API object injected via setDependencies; the instance
+  // is fetched via its `getState` function and cached in `_gameStateInstance`.
+
+  _gs() {
+    if (this._gameStateInstance) return this._gameStateInstance;
+    if (this.gameState && typeof this.gameState.getState === 'function') {
+      this._gameStateInstance = this.gameState.getState();
+      return this._gameStateInstance;
+    }
+    return null;
+  }
+
+  get currentMana() {
+    const gs = this._gs();
+    return gs ? gs.currentMana : 100;
+  }
+  set currentMana(value) {
+    const gs = this._gs();
+    if (gs) gs.currentMana = value;
+  }
+
+  get maxMana() {
+    const gs = this._gs();
+    return gs ? gs.maxMana : 100;
+  }
+  set maxMana(value) {
+    const gs = this._gs();
+    if (gs) gs.maxMana = value;
+  }
+
+  get manaPerItem() {
+    const gs = this._gs();
+    return gs ? gs.manaPerItem : 10;
+  }
+  set manaPerItem(value) {
+    const gs = this._gs();
+    if (gs) gs.manaPerItem = value;
+  }
+
+  get regionXP() {
+    const gs = this._gs();
+    return gs ? gs.regionXP : new Map();
+  }
+  set regionXP(value) {
+    const gs = this._gs();
+    if (gs) {
+      gs.regionXP = value instanceof Map ? value : new Map(value || []);
+    }
+  }
+
+  get manaDebt() {
+    const gs = this._gs();
+    return gs ? gs.manaDebt : 0;
+  }
+  set manaDebt(value) {
+    const gs = this._gs();
+    if (gs) gs.manaDebt = value;
+  }
+
+  get noManaDepletionReset() {
+    const gs = this._gs();
+    return gs ? gs.noManaDepletionReset : false;
+  }
+  set noManaDepletionReset(value) {
+    const gs = this._gs();
+    if (gs) gs.noManaDepletionReset = value;
   }
 
   /**
@@ -123,10 +193,11 @@ export class LoopState {
   }
 
   /**
-   * Sets up event listeners for game events
+   * Sets up event listeners for game events.
+   * (snapshotUpdated → recalculateMaxMana now lives in gameState/index.js,
+   * since gameState owns the mana state.)
    */
   _setupEventListeners() {
-    // Ensure eventBus dependency is set
     if (!this.eventBus) {
       log(
         'warn',
@@ -134,17 +205,6 @@ export class LoopState {
       );
       return;
     }
-    // Subscribe to snapshot updates for mana recalculation
-    this.eventBus.subscribe('stateManager:snapshotUpdated', (eventData) => {
-      if (eventData && eventData.snapshot) {
-        this.recalculateMaxMana(eventData.snapshot); // Pass snapshot data
-      } else {
-        log(
-          'warn',
-          '[LoopState] Received snapshotUpdated event without snapshot data.'
-        );
-      }
-    });
   }
 
   /**
@@ -171,106 +231,22 @@ export class LoopState {
   }
 
   /**
-   * Calculate max mana based on inventory items from a snapshot
-   * @param {object} snapshot - The state snapshot containing inventory data.
-   */
-  recalculateMaxMana(snapshot) {
-    // Accepts snapshot as argument
-    // Dependencies should already be set if this is called via event listener
-    if (!this.stateManager || !this.eventBus) {
-      log(
-        'warn',
-        '[LoopState] Cannot recalculate max mana: Dependencies not set (should not happen via event).'
-      );
-      return;
-    }
-    // Base mana + extra for each inventory item
-    const baseMana = 100;
-    let itemCount = 0;
-
-    // REMOVED: Get current snapshot from the proxy
-    // const snapshot = this.stateManager.getSnapshot();
-
-    // Count all items in inventory from the provided snapshot argument
-    if (snapshot && snapshot.inventory) {
-      // Check snapshot.inventory directly
-
-      // Assuming snapshot.inventory is a plain object { item: count }
-      // Iterate the inventory object directly
-      const itemsIterable = Object.entries(snapshot.inventory);
-
-      for (const [item, count] of itemsIterable) {
-        if (count > 0) {
-          itemCount += count;
-        }
-      }
-    } else {
-      log(
-        'warn',
-        '[LoopState] Could not get inventory data from state snapshot.'
-      );
-    }
-
-    this.maxMana = baseMana + itemCount * this.manaPerItem;
-
-    // Cap current mana if it exceeds the new maximum
-    if (this.currentMana > this.maxMana) {
-      this.currentMana = this.maxMana;
-    }
-
-    // Notify about mana changes
-    this.eventBus.publish('loopState:manaChanged', {
-      current: this.currentMana,
-      max: this.maxMana,
-    });
-  }
-
-  /**
-   * Get XP data for a region
-   * @param {string} regionName - Name of the region
-   * @returns {Object} - XP data for the region
+   * Get XP data for a region. Delegates to gameState.
    */
   getRegionXP(regionName) {
-    if (!this.regionXP.has(regionName)) {
-      // Initialize region XP data if not exists
-      this.regionXP.set(regionName, {
-        level: 0,
-        xp: 0,
-        xpForNextLevel: 100,
-      });
-    }
-
-    return this.regionXP.get(regionName);
+    const gs = this._gs();
+    if (gs) return gs.getRegionXP(regionName);
+    // Fallback when gameState isn't yet wired (shouldn't happen at runtime)
+    return { level: 0, xp: 0, xpForNextLevel: 100 };
   }
 
   /**
-   * Add XP to a region
-   * @param {string} regionName - Name of the region
-   * @param {number} amount - Amount of XP to add
+   * Add XP to a region. Delegates to gameState (which fires
+   * `gameState:xpChanged` on each level-up).
    */
   addRegionXP(regionName, amount) {
-    const xpData = this.getRegionXP(regionName);
-    xpData.xp += amount;
-
-    // Check for level up
-    while (xpData.xp >= xpData.xpForNextLevel) {
-      xpData.xp -= xpData.xpForNextLevel;
-      xpData.level += 1;
-      xpData.xpForNextLevel = this._calculateXPForNextLevel(xpData.level);
-
-      // Always notify UI of level up
-      this.eventBus.publish('loopState:xpChanged', { regionName, xpData });
-    }
-  }
-
-  /**
-   * Calculate XP required for the next level
-   * @param {number} currentLevel - Current level
-   * @returns {number} - XP required for next level
-   */
-  _calculateXPForNextLevel(currentLevel) {
-    // Linear formula: 100 + (level * 20)
-    return 100 + currentLevel * 20;
+    const gs = this._gs();
+    if (gs) gs.addRegionXP(regionName, amount);
   }
 
   /**
@@ -841,37 +817,26 @@ export class LoopState {
       this.actionQueueManager.setProgress(this.currentAction.pathIndex, newProgress);
       this.currentAction.progress = newProgress;
 
-      // Reduce mana based on progress
+      // Reduce mana based on progress. gameState.deductMana handles
+      // noManaDepletionReset / manaDebt tracking and fires
+      // gameState:manaChanged.
       const manaCost = (progressIncrement / 100) * actionCost;
-      const newMana = this.currentMana - manaCost;
-
-      // Track mana debt if mana goes negative
-      if (newMana < 0 && this.noManaDepletionReset) {
-        this.manaDebt = Math.max(this.manaDebt, Math.abs(newMana));
-        this.currentMana = newMana; // Allow negative mana for tracking
-      } else {
-        this.currentMana = Math.max(0, newMana);
+      const gs = this._gs();
+      if (gs) {
+        gs.deductMana(manaCost);
       }
-
-      // Publish mana changed event immediately after update
-      this.eventBus.publish('loopState:manaChanged', {
-        current: this.currentMana,
-        max: this.maxMana,
-      });
 
       // Continuous XP gain during action
       if (this.currentAction.sourceRegion) {
-        // Award 1 XP per mana spent
-        const xpGain = (progressIncrement / 100) * actionCost;
-
+        // Award 1 XP per mana spent.
         // SIMPLIFIED XP Gain: Always award 1x XP during explore/other actions.
         // The 4x "farming" logic relied on discovery state which is now removed.
-        // This logic can be reinstated later by querying DiscoveryState if needed.
+        // gameState.addRegionXP fires gameState:xpChanged on level-up; we also
+        // emit a per-frame xpChanged so UI fine-grained progress updates work.
+        const xpGain = (progressIncrement / 100) * actionCost;
         this.addRegionXP(this.currentAction.sourceRegion, xpGain);
-
-        // Notify UI about XP change even for small increments
         const xpData = this.getRegionXP(this.currentAction.sourceRegion);
-        this.eventBus.publish('loopState:xpChanged', {
+        this.eventBus.publish('gameState:xpChanged', {
           regionName: this.currentAction.sourceRegion,
           xpData,
         });
@@ -1192,13 +1157,8 @@ export class LoopState {
     // Stop any active processing
     this.stopProcessing();
 
-    // Reset mana to base values
-    this.maxMana = 100;
-    this.currentMana = this.maxMana;
-    this.manaDebt = 0;
-
-    // Clear accumulated state
-    this.regionXP.clear();
+    // Mana/XP are now reset by gameState.reset() (called via the same
+    // stateManager:rulesLoaded handler chain). Just clear loop-specific state.
     this.repeatExploreStates.clear();
 
     // Reset action progress
@@ -1208,7 +1168,7 @@ export class LoopState {
     this.isPaused = false;
     this._queueCompleted = false;
 
-    // Notify about the reset
+    // Notify about the reset (mana fields read through delegated accessors)
     if (this.eventBus) {
       this.eventBus.publish('loopState:loopReset', {
         mana: {
@@ -1225,8 +1185,9 @@ export class LoopState {
    * Does NOT modify pause state — the caller decides whether to pause or continue.
    */
   _resetLoop() {
-    // Restore mana to full
-    this.currentMana = this.maxMana;
+    // Restore mana to full via gameState (fires gameState:manaChanged).
+    const gs = this._gs();
+    if (gs) gs.refillMana();
 
     // Reset action progress tracking
     this._resetActionsProgress();
@@ -1415,14 +1376,9 @@ export class LoopState {
     // Reset progress on all actions
     this._resetActionsProgress();
 
-    // Restore mana to full
-    this.currentMana = this.maxMana;
-
-    // Notify about mana change
-    this.eventBus.publish('loopState:manaChanged', {
-      current: this.currentMana,
-      max: this.maxMana,
-    });
+    // Restore mana to full via gameState (fires gameState:manaChanged).
+    const gs = this._gs();
+    if (gs) gs.refillMana();
 
     // Get queue from gameState
     const queue = this.getActionQueue();
@@ -1512,9 +1468,13 @@ export class LoopState {
     // Load repeatExploreStates
     this.repeatExploreStates = new Map(state.repeatExploreStates || []);
 
+    // Notify mana/xp change so consumers reflect the loaded values
+    // (the delegated setters above are silent by design).
+    const gs = this._gs();
+    if (gs) gs.emitManaChanged();
+
     // Notify state loaded
     if (this.eventBus) {
-      // Ensure eventBus is available
       this.eventBus.publish('loopState:stateLoaded', {});
     } else {
       log(
