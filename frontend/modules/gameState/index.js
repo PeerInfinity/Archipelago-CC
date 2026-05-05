@@ -287,10 +287,14 @@ function handleRegionMove(data, propagationOptions) {
     log('info', `[${moduleId} Module] Current region before processing: ${currentRegionBefore}`);
     
     if (data && data.targetRegion) {
-        // Check if path should be updated (default: true)
-        const shouldUpdatePath = data.updatePath !== false;
+        // Check if path should be updated. Default: true. Skipped when:
+        //  - the caller explicitly sets updatePath:false
+        //  - fromLoop:true (the loops queue or substrate-driven Phase 6
+        //    walking is dispatching this; the path entry is already in
+        //    the queue from when the action was originally enqueued)
+        const shouldUpdatePath = data.updatePath !== false && !data.fromLoop;
         log('info', `[${moduleId} Module] Path update enabled: ${shouldUpdatePath}`);
-        
+
         if (shouldUpdatePath) {
             // Update path with exit information BEFORE updating current region
             // This allows updatePath to properly detect the current vs target region

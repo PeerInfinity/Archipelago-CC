@@ -160,6 +160,14 @@ export class MazeRoomUI {
         this._unsubLoopMode = null;
         this._unsubManaChanged = null;
 
+        // Phase 6: substrate-handled completion. Non-null while the
+        // panel is walking through a loops queue action's autopath via
+        // the visualizer. Signals to dispatched events that they
+        // should carry fromLoop:true so gameState skips a duplicate
+        // path entry (the queue already has the original).
+        this._loopsDrivenAction = null;
+        this._unsubLoopsBegan = null;
+
         // Playback control bar — Phase 1.3 stub mount. Actions log to
         // the console for now; Phase 3 wires them to the visualizer.
         // The bar instance lives across renders; render() re-appends
@@ -219,6 +227,7 @@ export class MazeRoomUI {
         this._subscribeToLoopMode();
         this._subscribeToManaChanges();
         this._subscribeToCostDataChanges();
+        this._subscribeToLoopsQueue();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -324,6 +333,95 @@ export class MazeRoomUI {
         };
     }
 
+    // -------------------- Phase 6: substrate-handled completion --------------------
+
+    /**
+     * Receive the loops queue's substrateActionBegan event: when this
+     * panel's region matches the action's sourceRegion, plan an
+     * autopath and drive the visualizer. The walk completes via the
+     * existing onExitCross / onLocationCheck callbacks (which will
+     * publish loops:substrateActionCompleted when _loopsDrivenAction is
+     * set). Unsupported / unresolvable actions immediately fail back
+     * to loops with completed:false so the queue can stop.
+     */
+    _subscribeToLoopsQueue() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => this._onLoopsSubstrateActionBegan(data);
+        eventBus.subscribe('loops:substrateActionBegan', handler, 'mazeRoom');
+        this._unsubLoopsBegan = () =>
+            eventBus.unsubscribe?.('loops:substrateActionBegan', handler, 'mazeRoom');
+    }
+
+    _onLoopsSubstrateActionBegan(data) {
+        const action = data?.action;
+        if (!action || !this.world || !this.currentRegionId) return;
+        // Only the panel currently showing the action's region handles
+        // it. Other instances ignore.
+        if (action.sourceRegion !== this.currentRegionId) return;
+
+        const target = this._resolveLoopsActionTarget(action);
+        if (!target) {
+            // Unknown action type or unresolvable target — bail out so
+            // the queue isn't parked indefinitely.
+            this._publishLoopsCompleted(false);
+            return;
+        }
+
+        // Mark walk as queue-driven so dispatched events carry
+        // fromLoop:true.
+        this._loopsDrivenAction = action;
+
+        // Already at the target tile? Fire the completion synchronously
+        // by simulating what walkToTile would do at the destination.
+        // For exits this means firing onExitCross (the visualizer
+        // handles the in-place exit case); for locations the panel
+        // should have already triggered the check on prior arrival,
+        // so just declare complete.
+        const visualizer = this._visualizer;
+        if (!visualizer) {
+            this._publishLoopsCompleted(false);
+            this._loopsDrivenAction = null;
+            return;
+        }
+        visualizer.walkToTile({ x: target.x, y: target.y, name: target.name ?? null });
+    }
+
+    /**
+     * Resolve a queue action to a tile target on this region's world.
+     * regionMove → exit tile whose targetRegion matches.
+     * locationCheck → location tile via reverse lookup.
+     * customAction('explore') → not yet supported (Phase 6c future).
+     */
+    _resolveLoopsActionTarget(action) {
+        if (!this.world) return null;
+        if (action.type === 'regionMove') {
+            for (const exit of this.world.exits.values()) {
+                if (exit.targetRegion === action.destinationRegion) {
+                    return { x: exit.x, y: exit.y, name: exit.exitName ?? null };
+                }
+            }
+            return null;
+        }
+        if (action.type === 'locationCheck') {
+            if (!this.world.itemLocationNames) return null;
+            for (const [key, name] of this.world.itemLocationNames) {
+                if (name === action.locationName) {
+                    const [x, y] = key.split(',').map(Number);
+                    return { x, y, name };
+                }
+            }
+            return null;
+        }
+        // explore / other custom actions not yet supported in Phase 6c.
+        return null;
+    }
+
+    _publishLoopsCompleted(completed) {
+        const bus = eventBus;
+        if (!bus?.publish) return;
+        bus.publish('loops:substrateActionCompleted', { completed }, 'mazeRoom');
+    }
+
     /** True when this region's mana hooks should fire on per-tile steps. */
     _shouldDeductMazeMana() {
         return !!this.world?.manaEnabled && !this._isLoopModeActive;
@@ -422,6 +520,10 @@ export class MazeRoomUI {
      * region after the synthetic Menu wrapper) when available — Menu
      * has no playable payload, so dispatching to it would leave the
      * panel stuck on the old region.
+     *
+     * Phase 6c: when this fires mid-walk under loops queue direction,
+     * also notify loops with completed:false so it stops processing
+     * the queue (the path was just cleared by triggerLoopReset).
      */
     _fireLoopReset() {
         const gs = getGameStateSingleton?.();
@@ -429,6 +531,19 @@ export class MazeRoomUI {
         if (!gs) return;
         const startRegion = this._resolveStartRegion(gs);
         const sourceRegion = this.currentRegionId;
+
+        // Notify loops first — clear the queue-driven flag and emit
+        // completed:false so stopProcessing fires on the loops side
+        // before the regionMove dispatch lands.
+        if (this._loopsDrivenAction) {
+            this._loopsDrivenAction = null;
+            this._publishLoopsCompleted(false);
+        }
+
+        // Stop the visualizer so any in-flight tile-by-tile walk doesn't
+        // continue into the new region after teleport.
+        this._visualizer?.stop?.();
+
         gs.triggerLoopReset();
         if (startRegion && dispatcher?.publish) {
             dispatcher.publish('user:regionMove', {
@@ -695,6 +810,7 @@ export class MazeRoomUI {
         if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
         if (this._unsubManaChanged) { this._unsubManaChanged(); this._unsubManaChanged = null; }
         if (this._unsubCostData) { this._unsubCostData(); this._unsubCostData = null; }
+        if (this._unsubLoopsBegan) { this._unsubLoopsBegan(); this._unsubLoopsBegan = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         setPanelInstance(null);
@@ -873,11 +989,24 @@ export class MazeRoomUI {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
         if (!exit?.targetRegion) return;
+        // Phase 6c: when this walk was driven by the loops queue, mark
+        // the dispatched event so gameState skips a duplicate path
+        // entry (the queue already enqueued the original regionMove).
+        const fromLoop = this._loopsDrivenAction != null;
         dispatcher.publish('user:regionMove', {
             sourceRegion: sourceRegion ?? this.currentRegionId,
             targetRegion: exit.targetRegion,
             exitName: exit.exitName ?? null,
+            ...(fromLoop ? { fromLoop: true } : {}),
         }, { initialTarget: 'bottom' });
+
+        // Hand control back to the loops queue. The action's been
+        // executed; clear the marker BEFORE publishing so any
+        // re-entrant flows see we're idle again.
+        if (fromLoop) {
+            this._loopsDrivenAction = null;
+            this._publishLoopsCompleted(true);
+        }
     }
 
     /**
@@ -902,11 +1031,28 @@ export class MazeRoomUI {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
         if (!locationName) return;
+        // Phase 6c: substrate-driven walk under loops queue → fromLoop
+        // so gameState skips path-add (the queue already enqueued the
+        // original locationCheck).
+        const fromLoop = this._loopsDrivenAction != null;
+        const fromLoopThisLocation = fromLoop
+            && this._loopsDrivenAction?.type === 'locationCheck'
+            && this._loopsDrivenAction?.locationName === locationName;
         dispatcher.publish('system:locationCheck', {
             locationName,
             regionName: regionId ?? this.currentRegionId,
             itemId: itemId ?? null,
+            ...(fromLoop ? { fromLoop: true } : {}),
         }, { initialTarget: 'bottom' });
+
+        // Only the location the queue specifically asked for completes
+        // the action. Incidental pickups along the way (a regionMove
+        // walk passing over a location tile) shouldn't trigger
+        // completion — the queue is targeting a different tile.
+        if (fromLoopThisLocation) {
+            this._loopsDrivenAction = null;
+            this._publishLoopsCompleted(true);
+        }
     }
 
     /**
@@ -928,6 +1074,13 @@ export class MazeRoomUI {
         // tiles as the bot explores.
         if (this.fogEnabled && this.state) {
             this._expandFogVisibility(this._computeVisibleAt(this.state.player_pos));
+        }
+        // Phase 6c: under loops-queue direction, a "stuck" visualizer
+        // means the autopath couldn't be planned (e.g. unreachable
+        // target). Fail back to loops so the queue stops cleanly.
+        if (this._loopsDrivenAction && vState?.stuck) {
+            this._loopsDrivenAction = null;
+            this._publishLoopsCompleted(false);
         }
         this.render();
     }

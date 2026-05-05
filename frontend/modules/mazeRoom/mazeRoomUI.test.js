@@ -802,6 +802,98 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(gs.getRegionXP('Forest').xp).toBe(5); // 50 / 10 longestShortestPath
     });
 
+    it('_resolveLoopsActionTarget — regionMove resolves to matching exit tile', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map([
+                ['exit_a', { exit_id: 'exit_a', x: 5, y: 0, targetRegion: 'A' }],
+                ['exit_b', { exit_id: 'exit_b', x: 0, y: 5, targetRegion: 'B', exitName: 'eastward' }],
+            ]),
+            itemLocationNames: new Map(),
+        };
+        const target = panel._resolveLoopsActionTarget({
+            type: 'regionMove', destinationRegion: 'B',
+        });
+        expect(target).toEqual({ x: 0, y: 5, name: 'eastward' });
+    });
+
+    it('_resolveLoopsActionTarget — locationCheck resolves via itemLocationNames', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map(),
+            itemLocationNames: new Map([['3,4', 'Slay Yorgle']]),
+        };
+        const target = panel._resolveLoopsActionTarget({
+            type: 'locationCheck', locationName: 'Slay Yorgle',
+        });
+        expect(target).toEqual({ x: 3, y: 4, name: 'Slay Yorgle' });
+    });
+
+    it('_resolveLoopsActionTarget — explore not yet supported returns null', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { exits: new Map(), itemLocationNames: new Map() };
+        expect(panel._resolveLoopsActionTarget({
+            type: 'customAction', actionName: 'explore',
+        })).toBeNull();
+    });
+
+    it('_resolveLoopsActionTarget — unknown destinationRegion returns null', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map([['e', { exit_id: 'e', x: 1, y: 1, targetRegion: 'A' }]]),
+            itemLocationNames: new Map(),
+        };
+        expect(panel._resolveLoopsActionTarget({
+            type: 'regionMove', destinationRegion: 'NotInWorld',
+        })).toBeNull();
+    });
+
+    it('_onLoopsSubstrateActionBegan — ignores actions for other regions', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { exits: new Map(), itemLocationNames: new Map() };
+        panel.currentRegionId = 'Forest';
+        panel._visualizer = { walkToTile: () => { throw new Error('should not walk'); } };
+        // No exception means the handler bailed early on region mismatch.
+        expect(() => panel._onLoopsSubstrateActionBegan({
+            action: { type: 'regionMove', sourceRegion: 'Cave', destinationRegion: 'X' },
+        })).not.toThrow();
+        expect(panel._loopsDrivenAction).toBeNull();
+    });
+
+    it('_onLoopsSubstrateActionBegan — sets _loopsDrivenAction and calls walkToTile on resolvable target', () => {
+        const calls = [];
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map([['e', { exit_id: 'e', x: 5, y: 5, targetRegion: 'B' }]]),
+            itemLocationNames: new Map(),
+        };
+        panel.currentRegionId = 'A';
+        panel._visualizer = { walkToTile: (t) => calls.push(t) };
+        panel._onLoopsSubstrateActionBegan({
+            action: { type: 'regionMove', sourceRegion: 'A', destinationRegion: 'B' },
+        });
+        expect(panel._loopsDrivenAction).not.toBeNull();
+        expect(calls).toHaveLength(1);
+        expect(calls[0]).toMatchObject({ x: 5, y: 5 });
+    });
+
+    it('_onLoopsSubstrateActionBegan — fails back with completed:false when target unresolvable', () => {
+        const events = [];
+        // We can't easily mock the eventBus singleton import; the bus's
+        // publish is a no-op in this headless context but the panel
+        // also clears _loopsDrivenAction in the failure path.
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { exits: new Map(), itemLocationNames: new Map() };
+        panel.currentRegionId = 'A';
+        panel._publishLoopsCompleted = (c) => events.push(c);
+        panel._visualizer = { walkToTile: () => { throw new Error('should not walk'); } };
+        panel._onLoopsSubstrateActionBegan({
+            action: { type: 'regionMove', sourceRegion: 'A', destinationRegion: 'NotHere' },
+        });
+        expect(events).toEqual([false]);
+        expect(panel._loopsDrivenAction).toBeNull();
+    });
+
     it('_deductMazeStepMana triggers loop reset when mana hits zero', () => {
         const dispatcherCalls = [];
         const dispatcher = {
