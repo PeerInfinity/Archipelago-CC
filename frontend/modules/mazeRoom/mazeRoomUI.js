@@ -39,7 +39,7 @@ import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { proposedLinearFinalCost } from '../loops/xpFormulas.js';
-import { bestPathKey } from './mazeAutopather.js';
+import { bestPathKey, findPath } from './mazeAutopather.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -419,19 +419,26 @@ export class MazeRoomUI {
 
     /**
      * Resolve a queue action to a tile target on this region's world.
-     * regionMove → exit tile whose targetRegion matches.
+     * regionMove → exit tile whose targetRegion matches. When multiple
+     *   exits match, prefer the one with the lowest saved best-path
+     *   cost; if no saved data, prefer the closest BFS distance.
      * locationCheck → location tile via reverse lookup.
      * customAction('explore') → not yet supported (Phase 6c future).
      */
     _resolveLoopsActionTarget(action) {
         if (!this.world) return null;
         if (action.type === 'regionMove') {
+            const candidates = [];
             for (const exit of this.world.exits.values()) {
                 if (exit.targetRegion === action.destinationRegion) {
-                    return { x: exit.x, y: exit.y, name: exit.exitName ?? null };
+                    candidates.push(exit);
                 }
             }
-            return null;
+            if (candidates.length === 0) return null;
+            const exit = candidates.length === 1
+                ? candidates[0]
+                : this._pickBestExit(candidates);
+            return { x: exit.x, y: exit.y, name: exit.exitName ?? null };
         }
         if (action.type === 'locationCheck') {
             if (!this.world.itemLocationNames) return null;
@@ -445,6 +452,66 @@ export class MazeRoomUI {
         }
         // explore / other custom actions not yet supported in Phase 6c.
         return null;
+    }
+
+    /**
+     * Phase 6f: pick the cheapest exit among candidates that all lead
+     * to the same destination region. Prefer the lowest-cost saved
+     * best path (recorded by previous successful walks); fall back to
+     * the shortest BFS distance from current position. Final fallback
+     * is the first candidate so the caller never gets null.
+     */
+    _pickBestExit(candidates) {
+        // getGameStateSingleton throws when uninitialized (some test
+        // contexts; not expected in production). Treat it as "no
+        // saved-path data available" rather than crashing the panel.
+        let gs = null;
+        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
+        const arrivedFrom = this.arrivedFromExitId;
+
+        // 1. Saved best-path winner (lowest cost).
+        if (gs) {
+            let bestByCost = null;
+            let bestCost = Infinity;
+            for (const exit of candidates) {
+                const key = bestPathKey(this.currentRegionId, arrivedFrom, {
+                    kind: 'exit', exitId: exit.exit_id,
+                });
+                if (!key) continue;
+                const stored = gs.getBestPath(key);
+                if (stored && stored.cost < bestCost) {
+                    bestCost = stored.cost;
+                    bestByCost = exit;
+                }
+            }
+            if (bestByCost) return bestByCost;
+        }
+
+        // 2. Closest by BFS distance from current player position.
+        const fromPos = this.state?.player_pos;
+        if (fromPos) {
+            let bestByDistance = null;
+            let bestDistance = Infinity;
+            for (const exit of candidates) {
+                const result = findPath(
+                    this.world, fromPos,
+                    { kind: 'tile', x: exit.x, y: exit.y },
+                    {
+                        inventory: this.externalInventory,
+                        obstacleLib: this.world?.obstacleLib,
+                        excludeOtherExits: true,
+                    },
+                );
+                if (result && result.length < bestDistance) {
+                    bestDistance = result.length;
+                    bestByDistance = exit;
+                }
+            }
+            if (bestByDistance) return bestByDistance;
+        }
+
+        // 3. Defensive fallback.
+        return candidates[0];
     }
 
     _publishLoopsCompleted(completed) {

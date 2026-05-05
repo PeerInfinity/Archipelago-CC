@@ -829,6 +829,61 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(target).toEqual({ x: 3, y: 4, name: 'Slay Yorgle' });
     });
 
+    it('_pickBestExit — prefers lowest saved best-path cost (Phase 6f)', () => {
+        const gs = createGameStateSingleton(null);
+        // Pre-record best paths: exit_a is cheap (10), exit_b is expensive (50).
+        gs.recordBestPath('Forest|south|exit:exit_a', [{ x: 0, y: 0 }, { x: 1, y: 1 }], 10);
+        gs.recordBestPath('Forest|south|exit:exit_b', [{ x: 0, y: 0 }, { x: 5, y: 5 }], 50);
+
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { width: 10, height: 10, tiles: new Int8Array(100) };
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel.state = { player_pos: { x: 0, y: 0 } };
+
+        const candidates = [
+            { exit_id: 'exit_a', x: 1, y: 1, targetRegion: 'A' },
+            { exit_id: 'exit_b', x: 5, y: 5, targetRegion: 'A' },
+        ];
+        const picked = panel._pickBestExit(candidates);
+        expect(picked.exit_id).toBe('exit_a');
+    });
+
+    it('_pickBestExit — falls back to closest BFS distance when no saved data', () => {
+        // Fresh gameState; no saved paths.
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { width: 10, height: 1, tiles: new Int8Array(10), exits: new Map() };
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel.state = { player_pos: { x: 0, y: 0 } };
+
+        const candidates = [
+            { exit_id: 'far', x: 9, y: 0, targetRegion: 'A' },
+            { exit_id: 'near', x: 3, y: 0, targetRegion: 'A' },
+        ];
+        const picked = panel._pickBestExit(candidates);
+        expect(picked.exit_id).toBe('near');
+        // gameState was unused for selection (no recordings)
+        expect(gs.bestPaths.size).toBe(0);
+    });
+
+    it('_pickBestExit — defensive fallback to first candidate when no info', () => {
+        // gs uninitialized in this branch — _pickBestExit catches the
+        // throw and treats it as "no saved-path data".
+        _testOnly_resetGameStateSingleton();
+        const panel = new MazeRoomUI(null, {});
+        panel.world = null;
+        panel.currentRegionId = null;
+        panel.state = null;
+        const candidates = [
+            { exit_id: 'a', x: 0, y: 0, targetRegion: 'X' },
+            { exit_id: 'b', x: 1, y: 1, targetRegion: 'X' },
+        ];
+        const picked = panel._pickBestExit(candidates);
+        expect(picked.exit_id).toBe('a');
+    });
+
     it('_resolveLoopsActionTarget — explore not yet supported returns null', () => {
         const panel = new MazeRoomUI(null, {});
         panel.world = { exits: new Map(), itemLocationNames: new Map() };
