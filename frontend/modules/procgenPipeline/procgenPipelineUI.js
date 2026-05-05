@@ -131,6 +131,11 @@ const DEFAULT_PARAMS = {
     regionHeight: 6,
     maxItemsPerRegion: 2,
     maxRegions: null,
+    // Loop-mode toggle (Phase 2/3 of loop-mode-substrate-integration).
+    // When on, buildRulesJson computes a loop_costs sidecar AND every
+    // region's playable_payload gets manaEnabled=true so substrates
+    // deduct mana on movement / location checks at runtime.
+    enableLoopMode: false,
 };
 
 const DEFAULT_SCENARIO = {
@@ -828,6 +833,25 @@ export class ProcgenPipelineUI {
         }
         section.appendChild(grid);
 
+        // Loop-mode toggle. Renders below the numeric grid. When on,
+        // every generated rules.json carries loop_costs + manaEnabled
+        // sidecar fields, so the maze/textAdventure substrates deduct
+        // mana on movement at runtime.
+        const loopModeRow = document.createElement('div');
+        loopModeRow.className = 'procgen-pipeline-field';
+        const loopModeLabel = document.createElement('label');
+        loopModeLabel.textContent = 'Enable loop mode';
+        loopModeLabel.title = 'Embed loop_costs in rules.json and turn on per-region mana deduction';
+        const loopModeInput = document.createElement('input');
+        loopModeInput.type = 'checkbox';
+        loopModeInput.checked = !!this.params.enableLoopMode;
+        loopModeInput.addEventListener('change', () => {
+            this.params.enableLoopMode = !!loopModeInput.checked;
+        });
+        loopModeRow.appendChild(loopModeLabel);
+        loopModeRow.appendChild(loopModeInput);
+        section.appendChild(loopModeRow);
+
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';
         const saveBtn = this._btn('Save Params', () => this._saveToLocalStorage());
@@ -1330,6 +1354,7 @@ export class ProcgenPipelineUI {
         });
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
+            enableLoopMode: !!this.params.enableLoopMode,
             procgenMetadata: {
                 driver: 'grid-growth',
                 stop_reason: stats.stopReason,
@@ -1355,6 +1380,7 @@ export class ProcgenPipelineUI {
         });
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
+            enableLoopMode: !!this.params.enableLoopMode,
             assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
             startingItems: this.topDownSource?.starting_items?.['1'] ?? [],
             sourceItems: this.topDownSource?.items?.['1'] ?? null,
