@@ -253,8 +253,12 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopState:queueUpdated');
   registrationApi.registerEventBusPublisher('loopState:speedChanged');
   registrationApi.registerEventBusPublisher('loopState:stateLoaded');
-  // Note: gameState:manaChanged and gameState:xpChanged are registered
-  // by the gameState module (canonical owner of the resource economy).
+  // gameState owns the resource economy and registers gameState:manaChanged
+  // / gameState:xpChanged itself, but loopState._processFrame also emits
+  // gameState:xpChanged each frame for fine-grained UI progress (gameState's
+  // addRegionXP only fires on level-up). Re-register here so the eventBus
+  // recognizes loops as a co-publisher.
+  registrationApi.registerEventBusPublisher('gameState:xpChanged');
   registrationApi.registerEventBusPublisher('loopState:loopReset');
   registrationApi.registerEventBusPublisher('loopState:newActionStarted');
   registrationApi.registerEventBusPublisher('loopState:exploreActionRepeated');
