@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { LoopState } from './loopState.js';
 import { GameState } from '../gameState/state.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 function makeBus() {
   const events = [];
@@ -105,5 +106,103 @@ describe('LoopState — mana/XP delegation to GameState', () => {
     ls2.loadFromSerializedState(serialized);
     expect(gs2.getCurrentMana()).toBe(50);
     expect(gs2.getRegionXP('Region1').xp).toBe(30);
+  });
+});
+
+describe('LoopState — substrate-handled completion (Phase 6)', () => {
+  let loopState, gs, bus;
+  let unregisterRegionInfo = null;
+
+  beforeEach(() => {
+    ({ loopState, gs, bus } = makeWiredLoopState());
+    // Pre-set a regionInfo provider on centralRegistry so the
+    // delegation check has something to query.
+    centralRegistry.registerPublicFunction(
+      'procgenPlayer',
+      'getRegionInfo',
+      (regionName) => regionInfoTable.get(regionName) ?? null,
+    );
+    unregisterRegionInfo = () => {
+      // Vitest doesn't reset the registry between tests; null out the
+      // function so other suites don't pick up stale data.
+      centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', () => null);
+    };
+  });
+  afterEach(() => {
+    if (unregisterRegionInfo) unregisterRegionInfo();
+    regionInfoTable.clear();
+  });
+
+  // Mutated per-test to control what getRegionInfo returns.
+  const regionInfoTable = new Map();
+
+  describe('_shouldDelegateCurrentAction', () => {
+    it('returns false when there is no current action', () => {
+      loopState.currentAction = null;
+      expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+    });
+
+    it('returns false when the current action has no sourceRegion', () => {
+      loopState.currentAction = { type: 'customAction', sourceRegion: null };
+      expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+    });
+
+    it('returns false for a non-maze substrate', () => {
+      regionInfoTable.set('TARegion', { substrate: 'text_adventure', manaEnabled: true });
+      loopState.currentAction = { type: 'regionMove', sourceRegion: 'TARegion' };
+      expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+    });
+
+    it('returns false when manaEnabled is off', () => {
+      regionInfoTable.set('Maze1', { substrate: 'maze', manaEnabled: false });
+      loopState.currentAction = { type: 'regionMove', sourceRegion: 'Maze1' };
+      expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+    });
+
+    it('returns true for maze substrate with manaEnabled', () => {
+      regionInfoTable.set('Maze1', { substrate: 'maze', manaEnabled: true });
+      loopState.currentAction = { type: 'regionMove', sourceRegion: 'Maze1' };
+      expect(loopState._shouldDelegateCurrentAction()).toBe(true);
+    });
+  });
+
+  describe('_handleSubstrateActionCompleted', () => {
+    it('is a no-op when no action is currently delegated', () => {
+      loopState._delegatedAction = null;
+      // Just shouldn't throw; nothing to assert beyond that.
+      expect(() => loopState._handleSubstrateActionCompleted({ completed: true })).not.toThrow();
+    });
+
+    it('clears _delegatedAction on either success or interruption', () => {
+      loopState._delegatedAction = { type: 'regionMove', pathIndex: 0 };
+      // Need an actionQueueManager / dispatcher / currentAction to make
+      // _completeCurrentAction safe; this test only checks the flag
+      // gets cleared. _completeCurrentAction may early-return.
+      loopState.currentAction = null;
+      loopState._handleSubstrateActionCompleted({ completed: false });
+      expect(loopState._delegatedAction).toBeNull();
+    });
+
+    it('stops processing on completed:false', () => {
+      loopState._delegatedAction = { type: 'regionMove' };
+      loopState.isProcessing = true;
+      loopState._handleSubstrateActionCompleted({ completed: false });
+      expect(loopState.isProcessing).toBe(false);
+    });
+  });
+
+  describe('stopProcessing / resetForNewRules', () => {
+    it('stopProcessing clears _delegatedAction', () => {
+      loopState._delegatedAction = { type: 'regionMove' };
+      loopState.isProcessing = true;
+      loopState.stopProcessing();
+      expect(loopState._delegatedAction).toBeNull();
+    });
+
+    it('resetForNewRules clears _delegatedAction', () => {
+      loopState._delegatedAction = { type: 'regionMove' };
+      loopState.resetForNewRules();
+      expect(loopState._delegatedAction).toBeNull();
+    });
   });
 });

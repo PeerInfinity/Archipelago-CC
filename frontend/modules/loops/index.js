@@ -275,6 +275,15 @@ export function register(registrationApi) {
   // recognizes loops as a co-publisher.
   registrationApi.registerEventBusPublisher('gameState:xpChanged');
   registrationApi.registerEventBusPublisher('loopState:loopReset');
+
+  // Phase 6: substrate-handled completion protocol. Loops publishes
+  // substrateActionBegan when parking a maze-region action; the
+  // substrate panel responds with substrateActionCompleted (which it
+  // also publishes — the substrate is the canonical owner of that
+  // event but loops dispatches into the same eventBus, so co-register
+  // here for the substrate's UI-side response wiring too).
+  registrationApi.registerEventBusPublisher('loops:substrateActionBegan');
+  registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
   registrationApi.registerEventBusPublisher('loopState:newActionStarted');
   registrationApi.registerEventBusPublisher('loopState:exploreActionRepeated');
   registrationApi.registerEventBusPublisher('loopUI:modeChanged');

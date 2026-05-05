@@ -17,6 +17,7 @@ import {
 } from './xpFormulas.js';
 import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -59,6 +60,12 @@ export class LoopState {
     // Test mode flags
     this.instantMode = false; // When true, actions complete in one frame
     // noManaDepletionReset and manaDebt now live in gameState (test-mode flags).
+
+    // Phase 6: substrate-handled completion. When non-null, we're
+    // currently parked waiting for a substrate panel to walk through
+    // its tile-by-tile execution and publish
+    // loops:substrateActionCompleted.
+    this._delegatedAction = null;
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -205,6 +212,11 @@ export class LoopState {
       );
       return;
     }
+    // Phase 6: substrate-handled completion. Resume the queue when
+    // the substrate panel finishes its tile-by-tile walk.
+    this.eventBus.subscribe('loops:substrateActionCompleted', (data) => {
+      this._handleSubstrateActionCompleted(data);
+    });
   }
 
   /**
@@ -590,6 +602,11 @@ export class LoopState {
 
     this.isProcessing = false;
 
+    // Drop any in-flight substrate delegation. The substrate's own
+    // walk-completion / reset path is responsible for cleanup on its
+    // side; we just stop waiting.
+    this._delegatedAction = null;
+
     // Don't reset the action progress during a pause,
     // so we can continue from where we left off
 
@@ -755,6 +772,27 @@ export class LoopState {
    */
   _processFrame(timestamp) {
     if (!this.isProcessing || this.isPaused) {
+      this._animationFrameId = null;
+      return;
+    }
+
+    // Phase 6: substrate-handled completion. When the current action's
+    // sourceRegion is a maze substrate region with manaEnabled, hand
+    // control off — the substrate panel walks tile-by-tile, deducts
+    // mana per tile, and publishes loops:substrateActionCompleted when
+    // done. We park the queue (no progress tick, no animation frame)
+    // until that event arrives. _handleSubstrateActionCompleted resumes.
+    if (!this._delegatedAction && this._shouldDelegateCurrentAction()) {
+      this._delegatedAction = this.currentAction;
+      this._lastFrameTime = null;
+      this.eventBus?.publish('loops:substrateActionBegan', {
+        action: this.currentAction,
+      });
+      this._animationFrameId = null;
+      return;
+    }
+    if (this._delegatedAction) {
+      // Still parked, waiting for the substrate to finish.
       this._animationFrameId = null;
       return;
     }
@@ -1039,6 +1077,72 @@ export class LoopState {
   }
 
   /**
+   * True when the current action's sourceRegion is a maze substrate
+   * region with manaEnabled — i.e. one that wants to handle the
+   * action via tile-by-tile walking instead of the queue's flat
+   * tick-progress-to-100 model.
+   *
+   * Reads procgenPlayer.getRegionInfo via centralRegistry to avoid
+   * a hard dep. Returns false in standalone / non-procgen contexts.
+   */
+  _shouldDelegateCurrentAction() {
+    if (!this.currentAction?.sourceRegion) return false;
+    let info = null;
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      info = fn?.(this.currentAction.sourceRegion) ?? null;
+    } catch {
+      info = null;
+    }
+    return info?.substrate === 'maze' && info?.manaEnabled === true;
+  }
+
+  /**
+   * Substrate-completion handler — called from the loops:substrate-
+   * ActionCompleted subscription. Advances the queue when the
+   * substrate finished cleanly; stops processing when the substrate
+   * was interrupted (typically by an out-of-mana reset that already
+   * cleared the path).
+   */
+  _handleSubstrateActionCompleted(data) {
+    if (!this._delegatedAction) return;
+    const completed = data?.completed === true;
+    this._delegatedAction = null;
+
+    if (!completed) {
+      // Reset interrupted the walk. The substrate's _fireLoopReset
+      // already cleared the path via gameState.triggerLoopReset; the
+      // queue is empty. Stop processing.
+      this.stopProcessing();
+      return;
+    }
+
+    // Mark progress 100 and run the normal completion flow. This
+    // dispatches loop:moveCompleted / loop:exploreCompleted /
+    // user:locationCheck-with-fromLoop:true, advances currentActionIndex
+    // (skipping already-checked locations), and either continues the
+    // queue or transitions to the queue-completed state.
+    if (this.currentAction && this.actionQueueManager) {
+      const idx = this.currentAction.pathIndex;
+      this.actionQueueManager.setProgress(idx, 100);
+      this.currentAction.progress = 100;
+    }
+    this._completeCurrentAction();
+
+    // Resume animation frame to either tick the next action or hit
+    // the queue-completed transition cleanly.
+    if (this.isProcessing && !this.isPaused) {
+      this._lastFrameTime = null;
+      if (this._animationFrameId) {
+        cancelAnimationFrame(this._animationFrameId);
+      }
+      this._animationFrameId = requestAnimationFrame(
+        this._processFrame.bind(this),
+      );
+    }
+  }
+
+  /**
    * Apply the effects of completing an action
    * @param {Object} action - The completed action
    */
@@ -1160,6 +1264,7 @@ export class LoopState {
     // Mana/XP are now reset by gameState.reset() (called via the same
     // stateManager:rulesLoaded handler chain). Just clear loop-specific state.
     this.repeatExploreStates.clear();
+    this._delegatedAction = null;
 
     // Reset action progress
     this._resetActionsProgress();
