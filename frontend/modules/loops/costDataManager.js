@@ -16,6 +16,23 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 const logger = createUniversalLogger('costDataManager');
 
 /**
+ * Returns true when the source string looks like a URL or filesystem
+ * path that fetch() can resolve. Filters out synthetic source names
+ * the rest of the app uses for in-memory loads (procgenPipeline,
+ * editorApply, moduleSpecificConfigProvidedRules, hardcodedFallback:*).
+ * @param {string} src
+ */
+function _looksLikeRulesPath(src) {
+    if (typeof src !== 'string' || src.length === 0) return false;
+    if (src.startsWith('hardcodedFallback:')) return false;
+    if (src === 'procgenPipeline' || src === 'editorApply'
+        || src === 'moduleSpecificConfigProvidedRules') return false;
+    // Real paths contain a slash or end in .json; the synthetic names
+    // pass through both filters above so this is the inclusive case.
+    return src.includes('/') || src.endsWith('.json');
+}
+
+/**
  * CostDataManager class
  * Loads and manages cost data for loop mode
  */
@@ -146,33 +163,48 @@ export class CostDataManager {
   }
 
   /**
-   * Try to load loop_costs embedded in a rules.json document.
+   * Apply a loop_costs object directly (e.g., from in-memory jsonData).
+   * Wraps setCostData with the embedded-source naming convention and
+   * the pipeline-error skip rule.
+   *
+   * @param {Object} embedded - loop_costs object from rules.json
+   * @param {string} sourceLabel - human label for logging (e.g., 'procgenPipeline')
+   * @returns {boolean} true on success
+   */
+  applyEmbeddedLoopCosts(embedded, sourceLabel = 'embedded') {
+    if (!embedded || typeof embedded !== 'object') return false;
+    if (embedded.error) {
+      logger.warn(`Embedded loop_costs has error field, skipping: ${embedded.error}`);
+      return false;
+    }
+    const ok = this.setCostData(embedded, `embedded:${sourceLabel}`);
+    if (ok) {
+      logger.info(`Loaded embedded loop_costs from ${sourceLabel} (${Object.keys(embedded.regions || {}).length} regions, ${Object.keys(embedded.locations || {}).length} locations).`);
+    }
+    return ok;
+  }
+
+  /**
+   * Try to load loop_costs embedded in a rules.json document by URL.
    * Mirrors the pattern sphereState uses for embedded sphere_log:
-   * refetches the rules.json (browser-cache friendly), checks for the
-   * `loop_costs` top-level field, and applies it via setCostData.
+   * refetches the rules.json (browser-cache friendly) and applies any
+   * loop_costs field via setCostData.
+   *
+   * Skips synthetic source names (procgenPipeline, editorApply, etc.)
+   * — those don't resolve as URLs. Use applyEmbeddedLoopCosts directly
+   * with the in-memory jsonData for those flows.
    *
    * @param {string} rulesPath - URL/path to the rules.json
    * @returns {Promise<boolean>} true if embedded loop_costs were found and loaded
    */
   async tryLoadEmbedded(rulesPath) {
     if (!rulesPath || typeof fetch !== 'function') return false;
+    if (!_looksLikeRulesPath(rulesPath)) return false;
     try {
       const response = await fetch(rulesPath);
       if (!response.ok) return false;
       const rulesDoc = await response.json();
-      const embedded = rulesDoc?.loop_costs;
-      if (!embedded || typeof embedded !== 'object') return false;
-      // The pipeline writes an `error` field when generation fails. Skip
-      // those — caller falls back to clear() and the user can regenerate.
-      if (embedded.error) {
-        logger.warn(`Embedded loop_costs has error field, skipping: ${embedded.error}`);
-        return false;
-      }
-      const ok = this.setCostData(embedded, `embedded:${rulesPath}`);
-      if (ok) {
-        logger.info(`Loaded embedded loop_costs from rules.json (${Object.keys(embedded.regions || {}).length} regions, ${Object.keys(embedded.locations || {}).length} locations).`);
-      }
-      return ok;
+      return this.applyEmbeddedLoopCosts(rulesDoc?.loop_costs, rulesPath);
     } catch (err) {
       logger.warn(`Could not load embedded loop_costs from ${rulesPath}: ${err.message}`);
       return false;

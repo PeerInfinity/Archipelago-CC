@@ -92,6 +92,19 @@ function log(level, message, ...data) {
 
 // --- Event Handlers --- //
 
+// Pick up loop_costs from an in-memory rules.json before stateManager
+// finishes loading them. Fires for editor / procgenPipeline paths where
+// there's no URL to refetch from.
+function handleFilesJsonLoaded(eventData) {
+  if (!_costDataManager) return;
+  const jsonData = eventData?.jsonData;
+  const sourceName = eventData?.sourceName ?? 'unknown';
+  const embedded = jsonData?.loop_costs;
+  if (embedded) {
+    _costDataManager.applyEmbeddedLoopCosts(embedded, sourceName);
+  }
+}
+
 // Handler for rules loaded
 async function handleRulesLoaded(eventData) {
   log('info', '[Loops Module] Received stateManager:rulesLoaded');
@@ -103,24 +116,26 @@ async function handleRulesLoaded(eventData) {
     log('info', '[Loops Module] Set start regions:', staticData.startRegions);
   }
 
-  // Try to pick up loop_costs embedded in the rules.json (procgen
-  // pipeline emits these when enableLoopMode is on). If absent, clear
-  // and let the user regenerate via the UI.
+  // Try to pick up loop_costs embedded in the rules.json. The procgen
+  // pipeline / editor flows already populated cost data via
+  // files:jsonLoaded above; this branch only matters when rules were
+  // loaded from a real file path. tryLoadEmbedded is a no-op on
+  // synthetic source names so it won't fight with the in-memory load.
   if (_costDataManager) {
     const rulesPath = eventData?.source;
-    let loaded = false;
+    let loadedNow = false;
     if (typeof rulesPath === 'string' && rulesPath.length > 0) {
       try {
-        loaded = await _costDataManager.tryLoadEmbedded(rulesPath);
+        loadedNow = await _costDataManager.tryLoadEmbedded(rulesPath);
       } catch (err) {
         log('warn', '[Loops Module] tryLoadEmbedded threw:', err);
       }
     }
-    if (!loaded) {
+    // Clear only when no source resolved AND no in-memory load
+    // populated cost data. isLoaded() reflects either path.
+    if (!loadedNow && !_costDataManager.isLoaded()) {
       _costDataManager.clear();
       log('info', '[Loops Module] No embedded loop_costs; cost data cleared for new rules');
-    } else {
-      log('info', '[Loops Module] Loaded embedded loop_costs from rules.json');
     }
   }
 
@@ -474,6 +489,15 @@ loops.queue          - Current action queue
     // Subscribe to stateManager:rulesLoaded to reset loop state when rules change
     loopUnsubscribeHandles.push(
       _moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded)
+    );
+
+    // Pick up loop_costs from in-memory rules.json data on the
+    // procgen-pipeline / editor-apply paths (no URL to refetch from).
+    // The rulesLoaded handler still runs afterwards but its
+    // tryLoadEmbedded skips synthetic sources, so it leaves the
+    // freshly-set cost data alone.
+    loopUnsubscribeHandles.push(
+      _moduleEventBus.subscribe('files:jsonLoaded', handleFilesJsonLoaded)
     );
   } else {
     log('error',
