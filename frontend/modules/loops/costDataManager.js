@@ -146,6 +146,40 @@ export class CostDataManager {
   }
 
   /**
+   * Try to load loop_costs embedded in a rules.json document.
+   * Mirrors the pattern sphereState uses for embedded sphere_log:
+   * refetches the rules.json (browser-cache friendly), checks for the
+   * `loop_costs` top-level field, and applies it via setCostData.
+   *
+   * @param {string} rulesPath - URL/path to the rules.json
+   * @returns {Promise<boolean>} true if embedded loop_costs were found and loaded
+   */
+  async tryLoadEmbedded(rulesPath) {
+    if (!rulesPath || typeof fetch !== 'function') return false;
+    try {
+      const response = await fetch(rulesPath);
+      if (!response.ok) return false;
+      const rulesDoc = await response.json();
+      const embedded = rulesDoc?.loop_costs;
+      if (!embedded || typeof embedded !== 'object') return false;
+      // The pipeline writes an `error` field when generation fails. Skip
+      // those — caller falls back to clear() and the user can regenerate.
+      if (embedded.error) {
+        logger.warn(`Embedded loop_costs has error field, skipping: ${embedded.error}`);
+        return false;
+      }
+      const ok = this.setCostData(embedded, `embedded:${rulesPath}`);
+      if (ok) {
+        logger.info(`Loaded embedded loop_costs from rules.json (${Object.keys(embedded.regions || {}).length} regions, ${Object.keys(embedded.locations || {}).length} locations).`);
+      }
+      return ok;
+    } catch (err) {
+      logger.warn(`Could not load embedded loop_costs from ${rulesPath}: ${err.message}`);
+      return false;
+    }
+  }
+
+  /**
    * Set cost data directly (e.g., from cost generator)
    * @param {Object} data - Cost data object
    * @param {string} source - Source description

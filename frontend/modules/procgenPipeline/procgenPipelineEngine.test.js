@@ -1125,6 +1125,34 @@ describe('buildRulesJson', () => {
         expect(out).not.toHaveProperty('procgen_metadata');
     });
 
+    it('omits loop_costs by default (loop mode is opt-in)', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell });
+        expect(out).not.toHaveProperty('loop_costs');
+    });
+
+    it('embeds loop_costs when enableLoopMode is true', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, { startCell, enableLoopMode: true });
+        expect(out).toHaveProperty('loop_costs');
+        expect(out.loop_costs.regions).toBeDefined();
+        expect(out.loop_costs.locations).toBeDefined();
+        // Start region (Menu) is always free
+        expect(out.loop_costs.regions.Menu).toEqual({ moveCost: 0 });
+        // Pipeline records the seed_name as the source
+        expect(out.loop_costs.generatedFrom).toBeTruthy();
+    });
+
+    it('skips loop_costs when sphere log embedding is disabled', () => {
+        const { grid, startCell } = smallGrid();
+        const out = buildRulesJson(grid, {
+            startCell,
+            enableLoopMode: true,
+            embedSphereLog: false,
+        });
+        expect(out).not.toHaveProperty('loop_costs');
+    });
+
     it('emits procgen_metadata with caller fields plus auto-derived region_count and grid_dims', () => {
         const { grid, startCell, stats } = smallGrid();
         const out = buildRulesJson(grid, {

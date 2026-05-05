@@ -93,7 +93,7 @@ function log(level, message, ...data) {
 // --- Event Handlers --- //
 
 // Handler for rules loaded
-function handleRulesLoaded(eventData) {
+async function handleRulesLoaded(eventData) {
   log('info', '[Loops Module] Received stateManager:rulesLoaded');
 
   // Set start regions on gameState from static data
@@ -103,10 +103,25 @@ function handleRulesLoaded(eventData) {
     log('info', '[Loops Module] Set start regions:', staticData.startRegions);
   }
 
-  // Clear cost data so the user is prompted to regenerate for the new rules
+  // Try to pick up loop_costs embedded in the rules.json (procgen
+  // pipeline emits these when enableLoopMode is on). If absent, clear
+  // and let the user regenerate via the UI.
   if (_costDataManager) {
-    _costDataManager.clear();
-    log('info', '[Loops Module] Cost data cleared for new rules');
+    const rulesPath = eventData?.source;
+    let loaded = false;
+    if (typeof rulesPath === 'string' && rulesPath.length > 0) {
+      try {
+        loaded = await _costDataManager.tryLoadEmbedded(rulesPath);
+      } catch (err) {
+        log('warn', '[Loops Module] tryLoadEmbedded threw:', err);
+      }
+    }
+    if (!loaded) {
+      _costDataManager.clear();
+      log('info', '[Loops Module] No embedded loop_costs; cost data cleared for new rules');
+    } else {
+      log('info', '[Loops Module] Loaded embedded loop_costs from rules.json');
+    }
   }
 
   // Full reset of loop state for new rules (clears XP, mana, explore states, etc.)

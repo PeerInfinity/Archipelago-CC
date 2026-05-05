@@ -15,6 +15,7 @@ import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
 import { makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
+import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
 import {
     SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
     OPPOSITE_SIDE, SIDE_DELTAS,
@@ -1638,6 +1639,13 @@ export function buildRulesJson(grid, opts = {}) {
         // entries. Default true; callers (tests, debug harnesses) can
         // disable. See debugging-tools.md Phase 4.
         embedSphereLog = true,
+        // Embed loop-mode cost data (per-region moveCost, per-location
+        // cost) at the top level of the output rules.json. Requires
+        // embedSphereLog. The runtime loops module auto-loads this when
+        // present. Default false (loop mode is opt-in).
+        // See NewDocs/plans/procedural-generation/
+        // loop-mode-substrate-integration.md (Phase 2).
+        enableLoopMode = false,
         // Items granted to the player at game start (from the source
         // rules.json's `starting_items[playerId]`). Filtered to items
         // present in the compiled items pool, with `sourceItems`
@@ -1795,6 +1803,32 @@ export function buildRulesJson(grid, opts = {}) {
                 type: 'metadata',
                 error: `forwardSimulator failed: ${e?.message ?? String(e)}`,
             }];
+        }
+    }
+
+    // Loop-mode cost generation — Phase 2 of loop-mode-substrate-integration.
+    // Pure simulation against the freshly-generated sphere log; runtime
+    // costDataManager picks up `loop_costs` directly from rules.json on load.
+    if (enableLoopMode && embedSphereLog && Array.isArray(scaffold.sphere_log)) {
+        try {
+            scaffold.loop_costs = generateLoopCosts({
+                rulesJson: scaffold,
+                sphereLog: scaffold.sphere_log,
+                playerId,
+                sourceFileName: seedName || `seed_${seed}`,
+            });
+        } catch (e) {
+            // Match the sphere-log error pattern: don't fail the build,
+            // emit a marker the loader will warn about.
+            scaffold.loop_costs = {
+                version: '1.0',
+                generatedAt: new Date().toISOString(),
+                error: `loopCostGenerator failed: ${e?.message ?? String(e)}`,
+                regions: {},
+                locations: {},
+                defaultRegionCost: 50,
+                defaultLocationCost: 10,
+            };
         }
     }
 
