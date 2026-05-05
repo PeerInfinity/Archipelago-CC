@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findPath, bestPathKey } from './mazeAutopather.js';
+import { findPath, bestPathKey, stepsToInputs } from './mazeAutopather.js';
 
 // Minimal world fixture: tiles array of 0 (floor) / 1 (wall). Caller
 // supplies entrance and exits.
@@ -205,6 +205,121 @@ describe('mazeAutopather — findPath', () => {
             expect(bestPathKey('R', 'in', { kind: 'exit' })).toBeNull(); // no exitId
             expect(bestPathKey('R', 'in', { kind: 'location' })).toBeNull(); // no locationName
             expect(bestPathKey('R', 'in', { kind: 'tile', x: 1, y: 1 })).toBeNull(); // unsupported kind
+        });
+    });
+
+    describe('inventory / obstacle awareness', () => {
+        function withObstacle({ width = 5, height = 1, obstacleAt, obstacleId = 'door_red', obstacleLib = {} } = {}) {
+            const w = makeWorld({ width, height });
+            w.obstacles = new Map([[`${obstacleAt.x},${obstacleAt.y}`, obstacleId]]);
+            w.obstacleLib = obstacleLib;
+            return w;
+        }
+
+        it('routes through obstacle tiles when inventory is omitted (geometry-only mode)', () => {
+            // Obstacle blocks the only path; without inventory awareness
+            // we should still find a route (geometric fallback).
+            const w = withObstacle({
+                obstacleAt: { x: 2, y: 0 },
+                obstacleId: 'door_red',
+                obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+            });
+            const r = findPath(w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 });
+            expect(r).not.toBeNull();
+            expect(r.length).toBe(4); // routes through (2,0)
+        });
+
+        it('blocks routing through unclearable obstacles when inventory is provided', () => {
+            const w = withObstacle({
+                obstacleAt: { x: 2, y: 0 },
+                obstacleId: 'door_red',
+                obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+            });
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { inventory: new Set() }, // empty inventory
+            );
+            // 5x1 corridor with a locked door at (2,0) and no key —
+            // unreachable.
+            expect(r).toBeNull();
+        });
+
+        it('passes through clearable obstacles when the player has the key', () => {
+            const w = withObstacle({
+                obstacleAt: { x: 2, y: 0 },
+                obstacleId: 'door_red',
+                obstacleLib: { door_red: { id: 'door_red', clear_set: [['key_red']] } },
+            });
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { inventory: new Set(['key_red']) },
+            );
+            expect(r).not.toBeNull();
+            expect(r.length).toBe(4);
+        });
+    });
+
+    describe('excludeOtherExits', () => {
+        it('routes through arbitrary exits by default (geometry-only)', () => {
+            // 5x1 with an exit at (2,0). Default behaviour (no exit
+            // exclusion) lets the path pass through.
+            const w = makeWorld({
+                width: 5, height: 1,
+                exits: [
+                    { exit_id: 'mid', x: 2, y: 0 },
+                    { exit_id: 'far', x: 4, y: 0 },
+                ],
+            });
+            const r = findPath(w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 });
+            expect(r).not.toBeNull();
+            expect(r.length).toBe(4);
+        });
+
+        it('treats off-route exits as walls when excludeOtherExits is set', () => {
+            const w = makeWorld({
+                width: 5, height: 1,
+                exits: [
+                    { exit_id: 'mid', x: 2, y: 0 }, // off-route exit blocks the corridor
+                    { exit_id: 'far', x: 4, y: 0 },
+                ],
+            });
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { excludeOtherExits: true },
+            );
+            // 5x1 corridor with the off-route exit blocking → no path
+            expect(r).toBeNull();
+        });
+
+        it('still allows the goal tile itself to be an exit when excludeOtherExits is on', () => {
+            const w = makeWorld({
+                width: 5, height: 1,
+                exits: [{ exit_id: 'far', x: 4, y: 0 }],
+            });
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'exit', exitId: 'far' },
+                { excludeOtherExits: true },
+            );
+            expect(r).not.toBeNull();
+            expect(r.steps.at(-1)).toEqual({ x: 4, y: 0 });
+        });
+    });
+
+    describe('stepsToInputs', () => {
+        it('returns empty for a zero-or-one-step path', () => {
+            expect(stepsToInputs([])).toEqual([]);
+            expect(stepsToInputs([{ x: 0, y: 0 }])).toEqual([]);
+        });
+
+        it('encodes cardinal moves as N/S/E/W', () => {
+            const steps = [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 }, // E
+                { x: 1, y: 1 }, // S
+                { x: 0, y: 1 }, // W
+                { x: 0, y: 0 }, // N
+            ];
+            expect(stepsToInputs(steps)).toEqual(['E', 'S', 'W', 'N']);
         });
     });
 

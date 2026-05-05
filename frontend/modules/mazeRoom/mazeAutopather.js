@@ -1,5 +1,5 @@
 /**
- * Maze autopather — pure BFS pathfinding over maze worlds.
+ * Maze autopather — BFS pathfinding over maze worlds.
  *
  * Computes a tile-by-tile route from a starting position to one of a
  * few target kinds:
@@ -16,17 +16,32 @@
  * no path exists or when the target kind is unrecognized / under-
  * specified.
  *
- * Cost calculation is **not** done here — the autopather is purely
- * geometric. Callers translate `length` and per-tile location lookups
- * into mana cost using their own cost model (e.g. mazeRoomUI's
- * proposedLinearFinalCost-aware deduction).
+ * Walkability:
+ *   - Walls always block.
+ *   - When `opts.inventory` is provided (and either `opts.obstacleLib`
+ *     or `world.obstacleLib`), tiles holding obstacles the inventory
+ *     can't clear are also blocked. Without inventory, obstacles pass
+ *     through (geometry-only mode, suitable for procgen-time use).
+ *   - When `opts.excludeOtherExits` is true, exit tiles other than the
+ *     goal are treated as walls — preventing accidental teleports
+ *     through unintended exits in hub-spoke layouts.
+ *
+ * Cost calculation is **not** done here. Callers translate `length`
+ * and per-tile location lookups into mana cost using their own cost
+ * model (e.g. mazeRoomUI's proposedLinearFinalCost-aware deduction).
  *
  * Used by:
- *   - mazeRoomUI's planned "walk to ..." commands (Phase 5+)
+ *   - mazeRoomVisualizer._planTilePath (delegates here, with inventory +
+ *     excludeOtherExits set)
+ *   - mazeRoomUI's "walk to ..." commands
  *   - the loops queue → autopather wiring (Phase 6)
  */
 
-import { isFloor } from './mazeRoomEngine.js';
+import {
+    isFloor, getObstacle, getExitAt,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
+} from './mazeRoomEngine.js';
+import { isObstacleCleared } from '../shared/procgen/library.js';
 
 /**
  * @param {Object} world - maze world (width, height, tiles, exits, etc.)
@@ -35,13 +50,46 @@ import { isFloor } from './mazeRoomEngine.js';
  * @param {Object} [opts]
  * @param {Set<string>} [opts.seenTiles] - "x,y" keys of seen tiles (for
  *   the closestUnexplored target).
+ * @param {Set<string>|Iterable} [opts.inventory] - item ids the player
+ *   currently holds. When provided, obstacle tiles the inventory can't
+ *   clear are blocked.
+ * @param {Object} [opts.obstacleLib] - obstacle library for inventory-
+ *   aware clearance checks. Defaults to `world.obstacleLib`.
+ * @param {boolean} [opts.excludeOtherExits] - when true, exit tiles
+ *   other than the goal are blocked (prevents accidental teleports
+ *   through off-route exits).
  * @returns {{steps: Array<{x,y}>, length: number} | null}
  */
 export function findPath(world, from, target, opts = {}) {
     if (!world || !from || !target) return null;
     const isGoal = makeGoalPredicate(world, target, opts);
     if (!isGoal) return null;
-    return _bfsToGoal(world, from, isGoal);
+    return _bfsToGoal(world, from, isGoal, opts);
+}
+
+/**
+ * Convert a path of tile coordinates (from `findPath`) into the input
+ * direction sequence the engine's `step()` consumes. Used by the
+ * visualizer to drive its existing per-tick step loop after planning
+ * via `findPath`.
+ *
+ * @param {Array<{x,y}>} steps
+ * @returns {Array<string>} input direction codes (INPUT_N/S/E/W)
+ */
+export function stepsToInputs(steps) {
+    if (!Array.isArray(steps) || steps.length < 2) return [];
+    const out = [];
+    for (let i = 1; i < steps.length; i++) {
+        const dx = steps[i].x - steps[i - 1].x;
+        const dy = steps[i].y - steps[i - 1].y;
+        if (dx === 1 && dy === 0) out.push(INPUT_E);
+        else if (dx === -1 && dy === 0) out.push(INPUT_W);
+        else if (dx === 0 && dy === 1) out.push(INPUT_S);
+        else if (dx === 0 && dy === -1) out.push(INPUT_N);
+        // Non-cardinal moves are rejected silently — BFS only emits
+        // 4-connected paths, so this should never trigger.
+    }
+    return out;
 }
 
 function makeGoalPredicate(world, target, opts) {
@@ -100,12 +148,36 @@ function _isFrontierTile(world, x, y, seenTiles) {
     return false;
 }
 
-function _bfsToGoal(world, from, isGoal) {
+function _bfsToGoal(world, from, isGoal, opts = {}) {
     const w = world.width;
     const h = world.height;
     if (!isFloor(world, from.x, from.y)) return null;
     if (isGoal(from.x, from.y)) {
         return { steps: [{ x: from.x, y: from.y }], length: 0 };
+    }
+
+    const inventory = opts.inventory ?? null;
+    const obstacleLib = inventory
+        ? (opts.obstacleLib ?? world.obstacleLib ?? null)
+        : null;
+    const excludeOtherExits = opts.excludeOtherExits === true;
+
+    // Walkable predicate applied to each candidate neighbor. The
+    // `from` tile is implicitly walkable (the player is there); we
+    // skip the runtime checks for it. `isAlsoGoal` tells the predicate
+    // whether this candidate is the destination — the exclude-other-
+    // exits rule allows the goal tile to be an exit (we're trying to
+    // walk TO it, not THROUGH it).
+    function isWalkable(x, y, isAlsoGoal) {
+        if (!isFloor(world, x, y)) return false;
+        if (excludeOtherExits && !isAlsoGoal && getExitAt(world, x, y)) return false;
+        if (inventory && obstacleLib) {
+            const obstacleId = getObstacle(world, x, y);
+            if (obstacleId && !isObstacleCleared(obstacleId, inventory, obstacleLib)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     const seen = new Uint8Array(w * h);
@@ -128,10 +200,11 @@ function _bfsToGoal(world, from, isGoal) {
                 const ny = node.y + d.dy;
                 if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
                 if (seen[idx(nx, ny)]) continue;
-                if (!isFloor(world, nx, ny)) continue;
+                const isAlsoGoal = isGoal(nx, ny);
+                if (!isWalkable(nx, ny, isAlsoGoal)) continue;
                 seen[idx(nx, ny)] = 1;
                 parent.set(`${nx},${ny}`, `${node.x},${node.y}`);
-                if (isGoal(nx, ny)) {
+                if (isAlsoGoal) {
                     return _reconstructPath(parent, from, { x: nx, y: ny });
                 }
                 next.push({ x: nx, y: ny });

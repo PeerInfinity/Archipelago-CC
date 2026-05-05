@@ -28,10 +28,8 @@ import {
     isFloor,
     createState,
 } from './mazeRoomEngine.js';
-import { isObstacleCleared } from '../shared/procgen/library.js';
 import { PlaybackClock } from '../shared/playbackClock.js';
-
-const INPUT_LIST = [INPUT_N, INPUT_S, INPUT_E, INPUT_W];
+import { findPath, stepsToInputs } from './mazeAutopather.js';
 
 const STEP_DELTAS = {
     [INPUT_N]: { dx: 0,  dy: -1 },
@@ -574,45 +572,24 @@ export class MazeRoomVisualizer {
     }
 
     _planTilePath(target) {
-        const start = this._state.player_pos;
-        if (start.x === target.x && start.y === target.y) return [];
-        const visited = new Set([`${start.x},${start.y}`]);
-        const queue = [{ x: start.x, y: start.y, plan: [] }];
-        const SAFETY = 10000;
-        let expanded = 0;
-        while (queue.length > 0 && expanded++ < SAFETY) {
-            const { x, y, plan } = queue.shift();
-            for (const input of INPUT_LIST) {
-                const { dx, dy } = STEP_DELTAS[input];
-                const nx = x + dx;
-                const ny = y + dy;
-                if (!isFloor(this._world, nx, ny)) continue;
-                const key = `${nx},${ny}`;
-                if (visited.has(key)) continue;
-                const obstacleId = getObstacle(this._world, nx, ny);
-                if (obstacleId && !isObstacleCleared(obstacleId, this._inventory, this._world.obstacleLib)) {
-                    continue;
-                }
-                // Treat exit tiles as walls unless the candidate IS
-                // the target — stepping onto any exit tile fires
-                // exit_cross and pauses the visualizer for a region
-                // transition, so a path that incidentally routes
-                // through some other region's exit would silently
-                // teleport the player off-route. apcalc's hub-spoke
-                // layouts make this likely (regions with multiple
-                // adjacent exit tiles); for AP-canonical worlds it's
-                // rare. If a destination becomes unreachable as a
-                // result, the bot will (correctly) fail loudly rather
-                // than drift through an unwanted exit.
-                const isTarget = nx === target.x && ny === target.y;
-                if (!isTarget && getExitAt(this._world, nx, ny)) continue;
-                visited.add(key);
-                const newPlan = plan.concat(input);
-                if (isTarget) return newPlan;
-                queue.push({ x: nx, y: ny, plan: newPlan });
-            }
-        }
-        return null;
+        // Delegates to the shared autopather. Inventory + obstacleLib
+        // give it the same locked-door-aware behavior as the previous
+        // inline BFS. excludeOtherExits matches the prior heuristic of
+        // treating off-route exit tiles as walls so the visualizer
+        // doesn't silently teleport through them mid-walk (apcalc's
+        // hub-spoke layouts make this happen otherwise).
+        const result = findPath(
+            this._world,
+            this._state.player_pos,
+            { kind: 'tile', x: target.x, y: target.y },
+            {
+                inventory: this._inventory,
+                obstacleLib: this._world?.obstacleLib,
+                excludeOtherExits: true,
+            },
+        );
+        if (!result) return null;
+        return stepsToInputs(result.steps);
     }
 
     // --- snapshot publishing ---
