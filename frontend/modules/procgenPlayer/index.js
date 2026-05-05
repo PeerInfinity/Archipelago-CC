@@ -158,6 +158,25 @@ export function register(registrationApi) {
             'getResolvedStartRegion',
             () => resolvedStartRegion,
         );
+
+        // Lightweight per-region metadata lookup. Used by the loops
+        // module to decide whether to delegate a queue action to the
+        // substrate panel (Phase 6: substrate-handled completion).
+        // Returns null for regions absent from the warehouse — i.e.
+        // synthetic Menu wrappers or non-procgen rules.
+        registrationApi.registerPublicFunction(
+            'procgenPlayer',
+            'getRegionInfo',
+            (regionName) => {
+                if (!warehouse || !regionName) return null;
+                const entry = warehouse.get(regionName);
+                if (!entry) return null;
+                return {
+                    substrate: entry.substrate,
+                    manaEnabled: entry.world?.manaEnabled === true,
+                };
+            },
+        );
     }
 }
 
