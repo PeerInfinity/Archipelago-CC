@@ -788,4 +788,47 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         panel._deductMazeStepMana({ x: 3, y: 3 });
         expect(gs.getCurrentMana()).toBe(100);
     });
+
+    it('_deductMazeStepMana awards XP equal to mana spent', () => {
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true, longestShortestPath: 10, itemLocationNames: new Map() };
+        panel.currentRegionId = 'Forest';
+        panel.externalCheckedLocations = new Set();
+        panel._isLoopModeActive = false;
+        panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+        panel._deductMazeStepMana({ x: 3, y: 3 });
+        expect(gs.getRegionXP('Forest').xp).toBe(5); // 50 / 10 longestShortestPath
+    });
+
+    it('_deductMazeStepMana triggers loop reset when mana hits zero', () => {
+        const dispatcherCalls = [];
+        const dispatcher = {
+            publish: (event, data, opts) => dispatcherCalls.push({ event, data, opts }),
+        };
+        MazeRoomUI.setModuleApis({ eventBus: null, dispatcher });
+        try {
+            const gs = createGameStateSingleton(null);
+            gs.setStartRegions(['Menu']);
+            gs.currentMana = 4; // about to go below zero on a 5-mana step
+            const panel = new MazeRoomUI(null, {});
+            panel.world = { manaEnabled: true, longestShortestPath: 10, itemLocationNames: new Map() };
+            panel.currentRegionId = 'Forest';
+            panel.externalCheckedLocations = new Set();
+            panel._isLoopModeActive = false;
+            panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+            panel._deductMazeStepMana({ x: 3, y: 3 });
+            // Mana refilled to max
+            expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
+            // Dispatcher saw the reset move
+            const move = dispatcherCalls.find((c) => c.event === 'user:regionMove');
+            expect(move).toBeDefined();
+            expect(move.data.targetRegion).toBe('Menu');
+            expect(move.data.fromReset).toBe(true);
+            expect(move.data.updatePath).toBe(false);
+        } finally {
+            MazeRoomUI.setModuleApis(null);
+        }
+    });
 });

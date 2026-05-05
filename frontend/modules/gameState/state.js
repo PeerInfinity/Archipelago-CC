@@ -165,6 +165,32 @@ export class GameState {
     }
 
     /**
+     * Loop reset — refills mana, clears the path, and resets manaDebt.
+     * Does NOT change currentRegion: the caller dispatches a
+     * user:regionMove with fromReset:true so procgenPlayer loads the
+     * destination region's payload (and substrate panels skip their
+     * deduction handler on the reset transition). Mirrors the
+     * Cavernous-style "out of mana → start over" cycle.
+     *
+     * Used by the substrate-driven path (TA / maze direct play in
+     * non-loop-mode). The loops queue's existing _resetLoop has its
+     * own queue-replay-based teleport semantics and stays unchanged.
+     */
+    triggerLoopReset() {
+        this.currentMana = this.maxMana;
+        this.manaDebt = 0;
+        this.path = [];
+        this.regionInstanceCounts.clear();
+        if (this.eventBus) {
+            this.eventBus.publish('gameState:loopReset', {
+                mana: { current: this.currentMana, max: this.maxMana },
+            });
+        }
+        this.emitManaChanged();
+        this.emitPathUpdated();
+    }
+
+    /**
      * Set the start regions for this game
      * @param {string[]} regions - Array of starting region names
      */
@@ -192,19 +218,24 @@ export class GameState {
     }
 
     /**
-     * Set the current region
+     * Set the current region.
      * @param {string} regionName - Name of the region
+     * @param {Object} [extra] - Extra fields merged into the published
+     *   gameState:regionChanged event (e.g. { fromReset: true } so
+     *   substrate panels can skip mana deduction on the reset
+     *   transition).
      */
-    setCurrentRegion(regionName) {
+    setCurrentRegion(regionName, extra = {}) {
         if (this.currentRegion !== regionName) {
             const oldRegion = this.currentRegion;
             this.currentRegion = regionName;
-            
+
             // Publish event about region change
             if (this.eventBus) {
                 this.eventBus.publish('gameState:regionChanged', {
                     oldRegion,
-                    newRegion: regionName
+                    newRegion: regionName,
+                    ...extra,
                 });
             }
         }

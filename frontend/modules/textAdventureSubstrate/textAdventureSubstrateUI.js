@@ -264,6 +264,7 @@ export class TextAdventureSubstrateUI {
         this._subscribeToLoopMode();
         this._subscribeToManaChanges();
         this._subscribeToRegionChanges();
+        this._subscribeToCostDataChanges();
         this.render();
 
         // The Golden Layout factory wrapper (frontend/app/layout/
@@ -343,10 +344,11 @@ export class TextAdventureSubstrateUI {
     _subscribeToRegionChanges() {
         if (!eventBus?.subscribe) return;
         const handler = (data) => {
+            // The reset trigger dispatches a user:regionMove with
+            // fromReset:true that ends up here too — skip the deduction
+            // on the teleport-to-start transition.
+            if (data?.fromReset) return;
             const oldRegion = data?.oldRegion;
-            // Only deduct when the OLD region is the one this panel
-            // currently shows (i.e. the player is leaving us). Other
-            // panels / substrates handle their own departures.
             if (!oldRegion || oldRegion !== this.currentRegionId) return;
             if (!this._shouldDeductMana()) return;
             this._deductRegionMoveMana(oldRegion);
@@ -354,6 +356,27 @@ export class TextAdventureSubstrateUI {
         eventBus.subscribe('gameState:regionChanged', handler, 'textAdventureSubstrate');
         this._unsubRegionChange = () =>
             eventBus.unsubscribe?.('gameState:regionChanged', handler, 'textAdventureSubstrate');
+    }
+
+    /**
+     * Re-render when cost data flips on/off so the mana readout in
+     * the panel header appears as soon as costDataManager loads
+     * (otherwise the first render captures isLoaded=false and the
+     * mana readout never shows up until something else triggers a
+     * render).
+     */
+    _subscribeToCostDataChanges() {
+        if (!eventBus?.subscribe) return;
+        const handler = () => {
+            this._costDataManager = null; // invalidate lazy cache
+            this.render();
+        };
+        eventBus.subscribe('costDataManager:loaded', handler, 'textAdventureSubstrate');
+        eventBus.subscribe('costDataManager:cleared', handler, 'textAdventureSubstrate');
+        this._unsubCostData = () => {
+            eventBus.unsubscribe?.('costDataManager:loaded', handler, 'textAdventureSubstrate');
+            eventBus.unsubscribe?.('costDataManager:cleared', handler, 'textAdventureSubstrate');
+        };
     }
 
     /** True when this region has loop-mode mana hooks enabled and the
@@ -396,14 +419,50 @@ export class TextAdventureSubstrateUI {
         const gs = getGameStateSingleton?.();
         if (!gs) return;
         for (const name of locationNames) {
-            gs.deductMana(this._getLocationCost(name));
+            const cost = this._getLocationCost(name);
+            gs.deductMana(cost);
+            // Award XP equal to mana spent (matches loops _processFrame's
+            // 1 XP : 1 mana ratio).
+            if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+            if (gs.getCurrentMana() <= 0) {
+                this._fireLoopReset();
+                return;
+            }
         }
     }
 
     _deductRegionMoveMana(regionName) {
         const gs = getGameStateSingleton?.();
         if (!gs) return;
-        gs.deductMana(this._getRegionMoveCost(regionName));
+        const cost = this._getRegionMoveCost(regionName);
+        gs.deductMana(cost);
+        gs.addRegionXP(regionName, cost);
+        if (gs.getCurrentMana() <= 0) {
+            this._fireLoopReset();
+        }
+    }
+
+    /**
+     * Substrate-driven loop reset: refill mana, clear path, and
+     * dispatch a user:regionMove (with fromReset:true / updatePath:false)
+     * to the first start region so procgenPlayer loads its payload
+     * and the substrate's regionChanged handler skips its own deduction.
+     */
+    _fireLoopReset() {
+        const gs = getGameStateSingleton?.();
+        const dispatcher = this.apis?.dispatcher;
+        if (!gs) return;
+        const startRegion = gs.startRegions?.[0];
+        const sourceRegion = this.currentRegionId;
+        gs.triggerLoopReset();
+        if (startRegion && dispatcher?.publish) {
+            dispatcher.publish('user:regionMove', {
+                sourceRegion,
+                targetRegion: startRegion,
+                fromReset: true,
+                updatePath: false,
+            }, { initialTarget: 'bottom' });
+        }
     }
 
     _subscribeToCustomDataEvents() {

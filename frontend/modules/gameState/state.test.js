@@ -136,6 +136,66 @@ describe('GameState — loop-mode resource API', () => {
     });
   });
 
+  describe('triggerLoopReset', () => {
+    it('refills mana, clears path, resets manaDebt', () => {
+      gs.setStartRegions(['Menu']);
+      gs.deductMana(80);
+      gs.manaDebt = 5;
+      gs.path = [
+        { type: 'regionMove', destinationRegion: 'A', sourceRegion: 'Menu', instanceNumber: 1 },
+      ];
+      gs.regionInstanceCounts.set('A', 1);
+
+      bus.events.length = 0;
+      gs.triggerLoopReset();
+
+      expect(gs.getCurrentMana()).toBe(100);
+      expect(gs.getManaDebt()).toBe(0);
+      expect(gs.getPath()).toEqual([]);
+      expect(gs.regionInstanceCounts.size).toBe(0);
+    });
+
+    it('emits gameState:loopReset, gameState:manaChanged, gameState:pathUpdated', () => {
+      gs.setStartRegions(['Menu']);
+      bus.events.length = 0;
+      gs.triggerLoopReset();
+      const names = bus.events.map((e) => e.name);
+      expect(names).toContain('gameState:loopReset');
+      expect(names).toContain('gameState:manaChanged');
+      expect(names).toContain('gameState:pathUpdated');
+    });
+
+    it('does NOT change currentRegion (caller dispatches user:regionMove)', () => {
+      gs.setStartRegions(['Menu']);
+      gs.setCurrentRegion('Far');
+      gs.triggerLoopReset();
+      expect(gs.getCurrentRegion()).toBe('Far');
+    });
+  });
+
+  describe('setCurrentRegion extra fields', () => {
+    it('passes extra fields through to the published event', () => {
+      gs.setStartRegions(['Menu']);
+      bus.events.length = 0;
+      gs.setCurrentRegion('A', { fromReset: true });
+      const ev = bus.events.find((e) => e.name === 'gameState:regionChanged');
+      expect(ev.data).toMatchObject({
+        oldRegion: 'Menu',
+        newRegion: 'A',
+        fromReset: true,
+      });
+    });
+
+    it('omits extras when none are passed (backwards compat)', () => {
+      gs.setStartRegions(['Menu']);
+      bus.events.length = 0;
+      gs.setCurrentRegion('A');
+      const ev = bus.events.find((e) => e.name === 'gameState:regionChanged');
+      expect(ev.data).toEqual({ oldRegion: 'Menu', newRegion: 'A' });
+      expect(ev.data.fromReset).toBeUndefined();
+    });
+  });
+
   describe('reset / serialize / deserialize', () => {
     it('reset clears mana and XP back to defaults', () => {
       gs.setStartRegions(['Menu']);

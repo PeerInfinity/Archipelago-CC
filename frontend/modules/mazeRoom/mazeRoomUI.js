@@ -218,6 +218,7 @@ export class MazeRoomUI {
         this._subscribeToDiscoveryEvents();
         this._subscribeToLoopMode();
         this._subscribeToManaChanges();
+        this._subscribeToCostDataChanges();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -303,6 +304,26 @@ export class MazeRoomUI {
             () => eventBus.unsubscribe?.('gameState:manaChanged', handler, 'mazeRoom');
     }
 
+    /**
+     * Re-render when cost data flips on/off so the mana readout
+     * appears as soon as the loops module finishes loading
+     * loop_costs (otherwise the first render captures isLoaded=false
+     * and the readout never shows).
+     */
+    _subscribeToCostDataChanges() {
+        if (!eventBus?.subscribe) return;
+        const handler = () => {
+            this._costDataManager = null; // invalidate lazy cache
+            this.render();
+        };
+        eventBus.subscribe('costDataManager:loaded', handler, 'mazeRoom');
+        eventBus.subscribe('costDataManager:cleared', handler, 'mazeRoom');
+        this._unsubCostData = () => {
+            eventBus.unsubscribe?.('costDataManager:loaded', handler, 'mazeRoom');
+            eventBus.unsubscribe?.('costDataManager:cleared', handler, 'mazeRoom');
+        };
+    }
+
     /** True when this region's mana hooks should fire on per-tile steps. */
     _shouldDeductMazeMana() {
         return !!this.world?.manaEnabled && !this._isLoopModeActive;
@@ -367,6 +388,8 @@ export class MazeRoomUI {
     /**
      * Deduct mana for a single tile-step. Called from _handleKeydown
      * after a successful step in the substrate-integrated playback flow.
+     * Also awards XP equal to mana spent (matches loops _processFrame's
+     * 1 XP : 1 mana ratio), and triggers a loop reset when mana hits 0.
      */
     _deductMazeStepMana(newPos) {
         if (!this._shouldDeductMazeMana()) return;
@@ -383,6 +406,33 @@ export class MazeRoomUI {
             ? this._locationTileCost(locationName)
             : this._perTileMoveCost();
         gs.deductMana(cost);
+        if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+        if (gs.getCurrentMana() <= 0) {
+            this._fireLoopReset();
+        }
+    }
+
+    /**
+     * Substrate-driven loop reset: refill mana, clear path, and
+     * dispatch user:regionMove with fromReset:true so procgenPlayer
+     * loads the start region's payload and the substrate's
+     * regionChanged handler skips its own deduction.
+     */
+    _fireLoopReset() {
+        const gs = getGameStateSingleton?.();
+        const dispatcher = this.apis?.dispatcher;
+        if (!gs) return;
+        const startRegion = gs.startRegions?.[0];
+        const sourceRegion = this.currentRegionId;
+        gs.triggerLoopReset();
+        if (startRegion && dispatcher?.publish) {
+            dispatcher.publish('user:regionMove', {
+                sourceRegion,
+                targetRegion: startRegion,
+                fromReset: true,
+                updatePath: false,
+            }, { initialTarget: 'bottom' });
+        }
     }
 
     /**
@@ -626,6 +676,7 @@ export class MazeRoomUI {
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
         if (this._unsubManaChanged) { this._unsubManaChanged(); this._unsubManaChanged = null; }
+        if (this._unsubCostData) { this._unsubCostData(); this._unsubCostData = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         setPanelInstance(null);

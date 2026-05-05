@@ -62,6 +62,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('gameState:pathUpdated');
     registrationApi.registerEventBusPublisher('gameState:manaChanged');
     registrationApi.registerEventBusPublisher('gameState:xpChanged');
+    registrationApi.registerEventBusPublisher('gameState:loopReset');
 
     // Export public functions
     registrationApi.registerPublicFunction(moduleId, 'getCurrentRegion', () => {
@@ -181,6 +182,9 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'addRegionXP', (regionName, amount) => {
         return getGameStateSingleton().addRegionXP(regionName, amount);
     });
+    registrationApi.registerPublicFunction(moduleId, 'triggerLoopReset', () => {
+        return getGameStateSingleton().triggerLoopReset();
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -286,9 +290,15 @@ function handleRegionMove(data, propagationOptions) {
                 data.sourceRegion || null
             );
         }
-        
-        // Always update current region
-        gameState.setCurrentRegion(data.targetRegion);
+
+        // Always update current region. Pass fromReset through so
+        // substrate panels can skip mana deduction on the reset
+        // transition (gameState.triggerLoopReset → user:regionMove
+        // dispatch with fromReset: true).
+        gameState.setCurrentRegion(
+            data.targetRegion,
+            data.fromReset ? { fromReset: true } : {},
+        );
     }
     
     // Propagate event to the next module (up direction)
