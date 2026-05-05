@@ -47,6 +47,10 @@ let warehouse = null;
 // stateManager:rulesLoaded fires — see handleFilesJsonLoaded /
 // handleRulesLoaded for why.
 let pendingStartTransition = null;
+// Resolved start region — the warehoused region findStartRegion picked
+// (e.g. the first real region after a synthetic 'Menu'). Cached here
+// so substrate-driven loop resets can teleport directly to it.
+let resolvedStartRegion = null;
 
 function publishLoadRegion(regionId, arrivedFrom) {
     if (!warehouse || !eventBus?.publish) return false;
@@ -70,6 +74,7 @@ function handleRawJsonLoaded(data) {
         // stale one can't accidentally answer a later regionMove.
         warehouse = null;
         pendingStartTransition = null;
+        resolvedStartRegion = null;
         return;
     }
     warehouse = built;
@@ -82,6 +87,10 @@ function handleRawJsonLoaded(data) {
     // start). A regionMove published before that reset lands would
     // be wiped out. Defer until handleRulesLoaded runs.
     pendingStartTransition = findStartRegion(rulesJson, playerId, warehouse);
+    // Cache the resolved start so substrate-driven loop resets can
+    // teleport the player to the first real region (skipping the
+    // synthetic Menu wrapper, which has no playable payload).
+    resolvedStartRegion = pendingStartTransition?.region ?? null;
 }
 
 function handleRulesLoaded() {
@@ -139,6 +148,17 @@ export function register(registrationApi) {
     if (typeof registrationApi.registerDispatcherSender === 'function') {
         registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     }
+
+    // Resolved start region — substrates use this for loop-mode
+    // teleport-to-start so they target the first warehoused region
+    // instead of the synthetic Menu wrapper (which has no payload).
+    if (typeof registrationApi.registerPublicFunction === 'function') {
+        registrationApi.registerPublicFunction(
+            'procgenPlayer',
+            'getResolvedStartRegion',
+            () => resolvedStartRegion,
+        );
+    }
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {
@@ -167,6 +187,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
         warehouse = null;
         pendingStartTransition = null;
+        resolvedStartRegion = null;
         eventBus = null;
         dispatcher = null;
         logger = null;

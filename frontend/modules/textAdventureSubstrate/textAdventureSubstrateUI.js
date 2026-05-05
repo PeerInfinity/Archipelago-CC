@@ -445,14 +445,20 @@ export class TextAdventureSubstrateUI {
     /**
      * Substrate-driven loop reset: refill mana, clear path, and
      * dispatch a user:regionMove (with fromReset:true / updatePath:false)
-     * to the first start region so procgenPlayer loads its payload
-     * and the substrate's regionChanged handler skips its own deduction.
+     * to the start region so procgenPlayer loads its payload and the
+     * substrate's regionChanged handler skips its own deduction.
+     *
+     * Targets procgenPlayer's resolvedStartRegion (the first warehoused
+     * region after the synthetic Menu wrapper) when available — Menu
+     * itself has no playable payload, so dispatching to it would leave
+     * the panel stuck on the old region. Falls back to the declared
+     * start region for non-procgen flows.
      */
     _fireLoopReset() {
         const gs = getGameStateSingleton?.();
         const dispatcher = this.apis?.dispatcher;
         if (!gs) return;
-        const startRegion = gs.startRegions?.[0];
+        const startRegion = this._resolveStartRegion(gs);
         const sourceRegion = this.currentRegionId;
         gs.triggerLoopReset();
         if (startRegion && dispatcher?.publish) {
@@ -463,6 +469,19 @@ export class TextAdventureSubstrateUI {
                 updatePath: false,
             }, { initialTarget: 'bottom' });
         }
+    }
+
+    _resolveStartRegion(gs) {
+        try {
+            const fn = centralRegistry.getPublicFunction?.(
+                'procgenPlayer', 'getResolvedStartRegion',
+            );
+            const resolved = fn?.();
+            if (resolved) return resolved;
+        } catch {
+            // procgenPlayer not loaded (e.g. standalone TA); fall through.
+        }
+        return gs.startRegions?.[0] ?? null;
     }
 
     _subscribeToCustomDataEvents() {
