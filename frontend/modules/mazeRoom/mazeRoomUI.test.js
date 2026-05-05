@@ -889,6 +889,33 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(panel._shouldDeductMazeMana()).toBe(true);
     });
 
+    it('_recordBestPathIfBetter writes the walked path into gameState.bestPaths (Phase 6e)', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.currentRegionId = 'Forest';
+        panel._loopsDrivenSteps = [
+            { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 },
+        ];
+        panel._loopsDrivenCost = 7.5;
+        panel._loopsDrivenArrivedFrom = 'south_door';
+        panel._recordBestPathIfBetter({ kind: 'exit', exitId: 'north_door' });
+        const stored = gs.getBestPath('Forest|south_door|exit:north_door');
+        expect(stored).toEqual({
+            steps: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
+            cost: 7.5,
+        });
+    });
+
+    it('_recordBestPathIfBetter is a no-op without tracking state', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.currentRegionId = 'Forest';
+        panel._loopsDrivenSteps = null; // not tracking
+        expect(() => panel._recordBestPathIfBetter({ kind: 'exit', exitId: 'e' }))
+            .not.toThrow();
+        expect(gs.bestPaths.size).toBe(0);
+    });
+
     it('_deductMazeStepMana with freshLocationCheck override charges location cost', () => {
         const gs = createGameStateSingleton(null);
         gs.currentMana = 100;

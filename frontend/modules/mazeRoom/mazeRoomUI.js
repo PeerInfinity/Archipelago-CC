@@ -39,6 +39,7 @@ import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { proposedLinearFinalCost } from '../loops/xpFormulas.js';
+import { bestPathKey } from './mazeAutopather.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -370,6 +371,13 @@ export class MazeRoomUI {
         // Mark walk as queue-driven so dispatched events carry
         // fromLoop:true.
         this._loopsDrivenAction = action;
+        // Phase 6e: best-path tracking. Capture the starting tile and
+        // arrival exit; accumulate steps + cost as the visualizer walks.
+        // Recorded into gameState.bestPaths on successful completion.
+        const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
+        this._loopsDrivenSteps = [{ x: startPos.x, y: startPos.y }];
+        this._loopsDrivenCost = 0;
+        this._loopsDrivenArrivedFrom = this.arrivedFromExitId;
 
         // Already at the target tile? Fire the completion synchronously
         // by simulating what walkToTile would do at the destination.
@@ -384,6 +392,29 @@ export class MazeRoomUI {
             return;
         }
         visualizer.walkToTile({ x: target.x, y: target.y, name: target.name ?? null });
+    }
+
+    /**
+     * Phase 6e: record the path actually walked into gameState's
+     * bestPaths if it beats the existing entry. Called on successful
+     * queue-driven walk completion (not on reset). `toRef` is the
+     * destination shape that bestPathKey understands —
+     * { kind: 'exit', exitId } or { kind: 'location', locationName }.
+     */
+    _recordBestPathIfBetter(toRef) {
+        const gs = getGameStateSingleton?.();
+        if (!gs || !this.currentRegionId) return;
+        if (!Array.isArray(this._loopsDrivenSteps) || this._loopsDrivenSteps.length === 0) return;
+        const key = bestPathKey(this.currentRegionId, this._loopsDrivenArrivedFrom, toRef);
+        if (!key) return;
+        gs.recordBestPath(key, this._loopsDrivenSteps, this._loopsDrivenCost);
+    }
+
+    _clearLoopsDrivenTracking() {
+        this._loopsDrivenAction = null;
+        this._loopsDrivenSteps = null;
+        this._loopsDrivenCost = 0;
+        this._loopsDrivenArrivedFrom = null;
     }
 
     /**
@@ -514,9 +545,9 @@ export class MazeRoomUI {
      *   for fresh checks, so we know the truth at that point.
      */
     _deductMazeStepMana(newPos, opts = {}) {
-        if (!this._shouldDeductMazeMana()) return;
+        if (!this._shouldDeductMazeMana()) return 0;
         const gs = getGameStateSingleton?.();
-        if (!gs) return;
+        if (!gs) return 0;
 
         const key = `${newPos.x},${newPos.y}`;
         const locationName = this.world?.itemLocationNames?.get(key);
@@ -535,6 +566,7 @@ export class MazeRoomUI {
         if (gs.getCurrentMana() <= 0) {
             this._fireLoopReset();
         }
+        return cost;
     }
 
     /**
@@ -559,11 +591,13 @@ export class MazeRoomUI {
         const startRegion = this._resolveStartRegion(gs);
         const sourceRegion = this.currentRegionId;
 
-        // Notify loops first — clear the queue-driven flag and emit
-        // completed:false so stopProcessing fires on the loops side
-        // before the regionMove dispatch lands.
+        // Notify loops first — clear the queue-driven tracking and
+        // emit completed:false so stopProcessing fires on the loops
+        // side before the regionMove dispatch lands. The walk was
+        // interrupted, so don't record a best-path (incomplete walks
+        // aren't "discovered routes" per the design).
         if (this._loopsDrivenAction) {
-            this._loopsDrivenAction = null;
+            this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(false);
         }
 
@@ -1027,11 +1061,12 @@ export class MazeRoomUI {
             ...(fromLoop ? { fromLoop: true } : {}),
         }, { initialTarget: 'bottom' });
 
-        // Hand control back to the loops queue. The action's been
-        // executed; clear the marker BEFORE publishing so any
-        // re-entrant flows see we're idle again.
+        // Hand control back to the loops queue. Record the walked path
+        // first (Phase 6e), then clear the queue-driven marker BEFORE
+        // publishing completion so any re-entrant flows see we're idle.
         if (fromLoop) {
-            this._loopsDrivenAction = null;
+            this._recordBestPathIfBetter({ kind: 'exit', exitId: exit.exit_id });
+            this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
         }
     }
@@ -1086,7 +1121,8 @@ export class MazeRoomUI {
         // walk passing over a location tile) shouldn't trigger
         // completion — the queue is targeting a different tile.
         if (fromLoopThisLocation) {
-            this._loopsDrivenAction = null;
+            this._recordBestPathIfBetter({ kind: 'location', locationName });
+            this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
         }
     }
@@ -1119,7 +1155,13 @@ export class MazeRoomUI {
         // correctly.
         if (stepHappened && newPos && this._loopsDrivenAction) {
             const fresh = this._pendingFreshLocationCheck;
-            this._deductMazeStepMana(newPos, { freshLocationCheck: fresh });
+            const cost = this._deductMazeStepMana(newPos, { freshLocationCheck: fresh });
+            // Phase 6e: append to the in-progress best-path tracking
+            // (cleared by reset, recorded into gameState on completion).
+            if (Array.isArray(this._loopsDrivenSteps)) {
+                this._loopsDrivenSteps.push({ x: newPos.x, y: newPos.y });
+                this._loopsDrivenCost += cost;
+            }
         }
         this._pendingFreshLocationCheck = null;
         // Fog of war: expand the seen-set on each visualizer step
@@ -1132,7 +1174,7 @@ export class MazeRoomUI {
         // means the autopath couldn't be planned (e.g. unreachable
         // target). Fail back to loops so the queue stops cleanly.
         if (this._loopsDrivenAction && vState?.stuck) {
-            this._loopsDrivenAction = null;
+            this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(false);
         }
         this.render();
