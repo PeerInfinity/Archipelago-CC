@@ -116,9 +116,10 @@ describe('mazeAutopather — findPath', () => {
     });
 
     describe('closestUnexplored target', () => {
-        it('finds the nearest frontier tile', () => {
-            // 5x1 grid; player at (0,0), seen tiles up to (2,0); frontier
-            // is (2,0) since (3,0) is unseen.
+        it('walks one step into the closest unseen walkable tile', () => {
+            // 5x1 grid; player at (0,0), seen tiles up to (2,0); the
+            // closest unseen walkable tile is (3,0). Path = three steps
+            // ending on the unseen tile (which becomes seen on arrival).
             const w = makeWorld({ width: 5, height: 1 });
             const seenTiles = new Set(['0,0', '1,0', '2,0']);
             const r = findPath(
@@ -127,12 +128,12 @@ describe('mazeAutopather — findPath', () => {
                 { seenTiles },
             );
             expect(r).not.toBeNull();
-            expect(r.length).toBe(2);
-            expect(r.steps.at(-1)).toEqual({ x: 2, y: 0 });
+            expect(r.length).toBe(3);
+            expect(r.steps.at(-1)).toEqual({ x: 3, y: 0 });
         });
 
-        it('returns null when there are no frontier tiles', () => {
-            // Whole grid is seen → no unseen neighbors anywhere.
+        it('returns null when every walkable tile is already seen', () => {
+            // Whole grid is seen → no unseen tile to walk to.
             const w = makeWorld({ width: 3, height: 1 });
             const seenTiles = new Set(['0,0', '1,0', '2,0']);
             const r = findPath(
@@ -149,9 +150,12 @@ describe('mazeAutopather — findPath', () => {
             expect(r).toBeNull();
         });
 
-        it('returns trivial path when starting on a frontier tile', () => {
-            // Player at (1,0); seen = (0,0), (1,0); (2,0) unseen. So
-            // (1,0) itself is a frontier tile.
+        it('walks one step into an unseen neighbor when the player\'s tile is on the boundary', () => {
+            // Player at (1,0); seen = (0,0), (1,0); (2,0) is unseen.
+            // The goal is (2,0) — one step into the unseen.
+            // (Earlier, the closestUnexplored target was the player's
+            // own frontier tile and the path returned length 0 — that
+            // meant walkToTile no-oped and the explore action parked.)
             const w = makeWorld({ width: 3, height: 1 });
             const seenTiles = new Set(['0,0', '1,0']);
             const r = findPath(
@@ -159,12 +163,14 @@ describe('mazeAutopather — findPath', () => {
                 { kind: 'closestUnexplored' },
                 { seenTiles },
             );
-            expect(r).toEqual({ steps: [{ x: 1, y: 0 }], length: 0 });
+            expect(r).not.toBeNull();
+            expect(r.length).toBe(1);
+            expect(r.steps.at(-1)).toEqual({ x: 2, y: 0 });
         });
 
-        it('does not pick a wall tile as a frontier', () => {
+        it('returns null when all unseen tiles are unreachable behind walls', () => {
             // 3x1 with a wall at (1,0): the only walkable tiles are
-            // (0,0) and (2,0), and they're disconnected.
+            // (0,0) and (2,0). (0,0) seen, (2,0) unseen but unreachable.
             const tiles = new Int8Array(3);
             tiles[1] = 1;
             const w = makeWorld({ width: 3, height: 1, tiles });
@@ -174,9 +180,6 @@ describe('mazeAutopather — findPath', () => {
                 { kind: 'closestUnexplored' },
                 { seenTiles },
             );
-            // (0,0) is seen; its only neighbor is wall (1,0). Wall isn't
-            // walkable so it doesn't count toward frontier — no frontier
-            // tile reachable.
             expect(r).toBeNull();
         });
     });

@@ -208,6 +208,10 @@ export class MazeRoomUI {
         // page reloads in v1; the toggle itself IS persisted.
         this.fogEnabled = false; // overridden by _loadFromLocalStorage
         this.seenTilesByRegion = new Map(); // regionId -> Set<posKey>
+        // Direct-explore button state: set true while a user-initiated
+        // explore is walking, false otherwise. Mutually exclusive with
+        // _loopsDrivenAction so the two chains don't fight.
+        this._directExploreActive = false;
 
         // Guard DOM creation so the panel constructs cleanly in
         // headless test environments (vitest runs under 'node').
@@ -430,12 +434,12 @@ export class MazeRoomUI {
      *   exits match, prefer the one with the lowest saved best-path
      *   cost; if no saved data, prefer the closest BFS distance.
      * locationCheck → location tile via reverse lookup.
-     * customAction('explore') → closestUnexplored frontier tile via
-     *   the autopather (Phase 6h). Returns { alreadyComplete: true }
-     *   when fog is off, the seen-set is empty, or no reachable
-     *   frontier remains under the current inventory — caller treats
-     *   that as "explore the reachable region is finished" and
-     *   completes the action successfully.
+     * customAction('explore') → closest unseen walkable tile via the
+     *   autopather (Phase 6h). Returns { alreadyComplete: true } when
+     *   fog is off, the seen-set is empty, or no reachable un-seen
+     *   tile remains under the current inventory — caller treats that
+     *   as "the reachable region is fully explored" and completes the
+     *   action successfully.
      */
     _resolveLoopsActionTarget(action) {
         if (!this.world) return null;
@@ -470,14 +474,17 @@ export class MazeRoomUI {
 
     /**
      * Phase 6h: explore action target resolver. Returns the next
-     * walkToTile for the closestUnexplored frontier, or
-     * { alreadyComplete: true } when the reachable fog has been
-     * fully cleared (or fog is off entirely — in that case the
-     * region was auto-discovered on entry, so "explore" is a no-op).
+     * walkToTile target — the closest walkable un-seen tile reachable
+     * under the current inventory — or { alreadyComplete: true } when
+     * no un-seen tile remains (or fog is off entirely; in that case
+     * the region was auto-discovered on entry, so "explore" is a
+     * no-op). The path's last step lands on the un-seen tile, which
+     * becomes seen on arrival via _onVisualizerChange's per-step fog
+     * expansion — that primes the next chain leg.
      */
     _resolveExploreTarget() {
         if (!this.fogEnabled) return { alreadyComplete: true };
-        const seenTiles = this.seenTilesByRegion.get(this.currentRegionId);
+        const seenTiles = this.seenTilesByRegion.get(this._seenSetKey());
         if (!seenTiles || seenTiles.size === 0) {
             // No fog state yet — the panel hasn't initialized the
             // seen-set for this region (shouldn't happen in normal
@@ -788,16 +795,30 @@ export class MazeRoomUI {
     // --- Fog of war ---
 
     /**
+     * Key used to store the seen-tile set for the currently-loaded
+     * world. Falls back to a sentinel string in dev/Generate mode
+     * (where there's no procgen region context — currentRegionId is
+     * null) so fog of war and the Explore button work uniformly
+     * across both flows. The Generate handler clears the sentinel
+     * entry before running so seen-sets from a prior Generate don't
+     * leak into a new one.
+     */
+    _seenSetKey() {
+        return this.currentRegionId ?? '__local__';
+    }
+
+    /**
      * Tiles that have been visible at any point during this session
-     * for the current region. Lazily creates the entry for the
-     * current region if it doesn't exist yet.
+     * for the current world. Lazily creates the entry if it doesn't
+     * exist yet. Always returns a Set — uses _seenSetKey()'s sentinel
+     * when no procgen region is loaded.
      */
     _seenTilesForCurrentRegion() {
-        if (!this.currentRegionId) return null;
-        let s = this.seenTilesByRegion.get(this.currentRegionId);
+        const key = this._seenSetKey();
+        let s = this.seenTilesByRegion.get(key);
         if (!s) {
             s = new Set();
-            this.seenTilesByRegion.set(this.currentRegionId, s);
+            this.seenTilesByRegion.set(key, s);
         }
         return s;
     }
@@ -876,7 +897,7 @@ export class MazeRoomUI {
      */
     _isTileVisibleForRender(x, y) {
         if (!this.fogEnabled) return true;
-        const seen = this.seenTilesByRegion.get(this.currentRegionId);
+        const seen = this.seenTilesByRegion.get(this._seenSetKey());
         if (!seen) return false;
         return seen.has(`${x},${y}`);
     }
@@ -1325,6 +1346,24 @@ export class MazeRoomUI {
             && !vState.target
         ) {
             this._chainExploreOrComplete();
+        }
+        // Direct-explore (Explore button) chaining. Same shape as the
+        // queue-driven version above, but uses the local _directExploreActive
+        // flag instead of publishing to the loops queue. Stuck → end
+        // direct explore with a message; leg complete → next leg or
+        // alreadyComplete.
+        if (this._directExploreActive && vState?.stuck) {
+            this._directExploreActive = false;
+            this.message = 'Explore halted: visualizer stuck (unreachable target).';
+        }
+        if (
+            stepHappened
+            && this._directExploreActive
+            && vState
+            && !vState.stuck
+            && !vState.target
+        ) {
+            this._chainDirectExplore();
         }
         this.render();
     }
@@ -1998,7 +2037,75 @@ export class MazeRoomUI {
         editLabel.appendChild(document.createTextNode(' Edit mode'));
         row.appendChild(editLabel);
 
+        // Direct Explore button — sidesteps the loops queue and the
+        // substrate-handled-completion protocol so the explore mechanic
+        // itself can be tested in isolation. Clicking kicks off the
+        // same _resolveExploreTarget + walkToTile chain the queue would
+        // drive, but completion just clears the local flag instead of
+        // publishing loops:substrateActionCompleted. Disabled when no
+        // world is loaded or when an explore is already running.
+        const exploreBtn = document.createElement('button');
+        exploreBtn.className = 'maze-room-explore-btn';
+        exploreBtn.type = 'button';
+        exploreBtn.textContent = 'Explore';
+        exploreBtn.disabled = !this.world || !!this._directExploreActive || !!this._loopsDrivenAction;
+        exploreBtn.addEventListener('click', () => this._onExploreButtonClick());
+        row.appendChild(exploreBtn);
+
         return row;
+    }
+
+    /**
+     * Direct-explore entry point bound to the Explore button. Drives
+     * the same closestUnexplored autopath the queue's customAction
+     * delegation uses, but with a separate `_directExploreActive` flag
+     * so _onVisualizerChange's chain logic and the queue's completion
+     * protocol stay independent.
+     */
+    _onExploreButtonClick() {
+        if (!this.world) return;
+        // Don't double-fire on top of an in-progress explore (direct or
+        // queue-driven).
+        if (this._directExploreActive || this._loopsDrivenAction) return;
+        // Need a state with a player position. createState() seeds
+        // state.player_pos on Generate; _adoptLoadedRegion seeds it
+        // for procgen playback. Bail with a message in the unlikely
+        // case neither has run.
+        if (!this.state?.player_pos) return;
+        this._directExploreActive = true;
+        this.message = 'Exploring…';
+        this.render();
+        this._chainDirectExplore();
+    }
+
+    /**
+     * Resolve the next explore leg and either walk it or finish.
+     * Mirrors _chainExploreOrComplete's shape but uses the direct
+     * flag instead of publishing to the loops queue.
+     */
+    _chainDirectExplore() {
+        if (!this._directExploreActive) return;
+        const next = this._resolveExploreTarget();
+        if (next?.alreadyComplete) {
+            this._directExploreActive = false;
+            this.message = 'Explore complete: no reachable un-seen tiles.';
+            this.render();
+            return;
+        }
+        if (!next || !this._visualizer) {
+            this._directExploreActive = false;
+            this.render();
+            return;
+        }
+        this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
+        // Auto-start the visualizer's clock so the planned plan
+        // actually executes (the clock is what feeds _tick which steps
+        // through the plan). play() is idempotent when already running.
+        if (typeof this._visualizer.isRunning === 'function' && !this._visualizer.isRunning()) {
+            this._visualizer.play?.();
+        } else if (typeof this._visualizer.play === 'function' && !this._visualizer.isRunning?.()) {
+            this._visualizer.play();
+        }
     }
 
     _drawWorld(canvas) {
@@ -2198,7 +2305,7 @@ export class MazeRoomUI {
         // (any movement onto it expanded visibility), so this never
         // covers the player.
         if (this.fogEnabled) {
-            const seen = this.seenTilesByRegion.get(this.currentRegionId);
+            const seen = this.seenTilesByRegion.get(this._seenSetKey());
             ctx.fillStyle = '#000';
             for (let y = 0; y < w.height; y++) {
                 for (let x = 0; x < w.width; x++) {
@@ -2245,6 +2352,16 @@ export class MazeRoomUI {
             this.externalInventory = null;
             this.externalCheckedLocations = null;
             this.currentRegionId = null;
+            // Reset the local-flow seen-set so a fresh Generate doesn't
+            // inherit fog state from the prior maze. Then seed the
+            // spawn's 4-coord-adjacent visibility so the player isn't
+            // blacked into a single tile when fog is on. (Procgen
+            // playback's _adoptLoadedRegion does the same thing keyed
+            // by the loaded region id.)
+            this.seenTilesByRegion.delete('__local__');
+            if (this.fogEnabled) {
+                this._expandFogVisibility(this._computeVisibleAt(this.state.player_pos));
+            }
             // Re-point the visualizer at the freshly-generated world so
             // its step log starts clean and pathfinding sees the new
             // tile layout. Pass freshStart: true to clear any

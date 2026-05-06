@@ -444,27 +444,58 @@ export class GameState {
     /**
      * Add a custom action entry to the path
      * @param {string} actionName - Name of the action
-     * @param {Object} params - Additional parameters for the action
+     * @param {Object} params - Additional parameters for the action.
+     *   `params.regionName`, when supplied, overrides the implicit
+     *   sourceRegion lookup — caller is asserting "this action runs
+     *   in regionName regardless of the player's current position."
+     *   Used by queue-building flows where the player stays at the
+     *   loop start while the queue references downstream regions
+     *   (Phase 6g). When omitted, the entry's sourceRegion follows
+     *   the same lookup as addLocationCheck: the path's last
+     *   regionMove's destinationRegion (i.e. "where the queue is
+     *   currently at"), falling back to currentRegion for an empty
+     *   path.
      */
     addCustomAction(actionName, params = {}) {
-        if (!this.currentRegion) {
-            console.warn(`[GameState] Cannot add custom action when not in a valid region`);
+        // Find the last regionMove for the implicit-source / instance-
+        // number lookup. Mirrors addLocationCheck's pattern.
+        let lastRegionMove = null;
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            if (this.path[i].type === 'regionMove') {
+                lastRegionMove = this.path[i];
+                break;
+            }
+        }
+
+        // Resolve the source region: explicit param > last regionMove's
+        // destination > currentRegion.
+        const sourceRegion =
+            params.regionName
+            ?? lastRegionMove?.destinationRegion
+            ?? this.currentRegion;
+
+        if (!sourceRegion) {
+            console.warn(`[GameState] Cannot add custom action: no source region`);
             return;
         }
-        // Note: Removed the start region check to allow building paths from start regions
-        // Start regions may still need explore/move actions in loop mode
-        
-        // Get the current region's instance number
-        const currentInstanceNumber = this.regionInstanceCounts.get(this.currentRegion) || 1;
-        
+
+        // Instance number: prefer the lastRegionMove's instance when it
+        // matches sourceRegion (preserves the in-path semantics —
+        // multiple instances of the same region get distinct counts).
+        // Otherwise fall back to the live regionInstanceCounts.
+        const instanceNumber =
+            (lastRegionMove && lastRegionMove.destinationRegion === sourceRegion)
+                ? lastRegionMove.instanceNumber
+                : (this.regionInstanceCounts.get(sourceRegion) || 1);
+
         this.path.push({
             type: 'customAction',
             actionName: actionName,
             params: params,
-            sourceRegion: this.currentRegion,
-            instanceNumber: currentInstanceNumber
+            sourceRegion,
+            instanceNumber,
         });
-        
+
         // Emit path updated event
         this.emitPathUpdated();
     }

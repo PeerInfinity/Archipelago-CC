@@ -1257,22 +1257,28 @@ export class LoopState {
           exitName: action.exitUsed,
         });
         // Phase 6g: when this regionMove was NOT delegated to a
-        // substrate (e.g. Menu's synthetic-wrapper hop, or any region
-        // without manaEnabled), the queue is responsible for actually
-        // advancing the player. Dispatch user:regionMove with
-        // fromLoop:true so gameState skips a duplicate path entry
-        // (the queue already enqueued the original) and procgenPlayer
-        // loads the destination's substrate payload. For delegated
-        // completions, the substrate panel's onExitCross already
-        // dispatched user:regionMove with fromLoop:true — skip here
-        // to avoid double-dispatch.
+        // substrate (e.g. Menu's synthetic-wrapper hop, the
+        // text-adventure substrate, or any region without manaEnabled),
+        // the queue is responsible for actually advancing the player.
+        // Use dispatcher.publish (initialTarget: 'bottom') so the chain
+        // visits procgenPlayer first (it sits at a higher load
+        // priority than loops, so publishToNextModule with
+        // direction:'up' would miss it) — procgenPlayer.handleRegionMove
+        // is what publishes the destination's substrate <kind>:loadRegion
+        // event. Without that, the substrate panel never adopts the new
+        // region. fromLoop:true tells gameState to skip a duplicate path
+        // entry (the queue already enqueued the original).
+        //
+        // For delegated completions, the substrate panel's onExitCross
+        // already dispatched user:regionMove with fromLoop:true — skip
+        // here to avoid double-dispatch.
         if (!this._completedViaDelegation) {
-          this.dispatcher.publishToNextModule('loops', 'user:regionMove', {
+          this.dispatcher.publish('user:regionMove', {
             sourceRegion: action.sourceRegion,
             targetRegion: action.destinationRegion,
             exitName: action.exitUsed,
             fromLoop: true,
-          }, { direction: 'up' });
+          }, { initialTarget: 'bottom' });
         }
         break;
     }

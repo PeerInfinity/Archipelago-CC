@@ -332,7 +332,7 @@ describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () 
     ({ loopState, gs, dispatcher } = makeWiredLoopState({ withDispatcher: true }));
   });
 
-  it('dispatches user:regionMove with fromLoop:true for non-delegated completion', () => {
+  it('publishes user:regionMove with fromLoop:true (initialTarget bottom) for non-delegated completion', () => {
     loopState._completedViaDelegation = false;
     loopState._applyActionEffects({
       type: 'regionMove',
@@ -341,8 +341,12 @@ describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () 
       exitUsed: 'GameStart',
     });
 
+    // Use dispatcher.publish (initialTarget: 'bottom') so procgenPlayer
+    // — which sits at a higher load priority than loops — receives
+    // the event and publishes the destination substrate's loadRegion.
+    // publishToNextModule(direction: 'up') would miss it.
     const moveDispatch = dispatcher.calls.find(
-      (c) => c.method === 'publishToNextModule'
+      (c) => c.method === 'publish'
         && c.eventName === 'user:regionMove',
     );
     expect(moveDispatch).toBeDefined();
@@ -352,6 +356,7 @@ describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () 
       exitName: 'GameStart',
       fromLoop: true,
     });
+    expect(moveDispatch.opts).toEqual({ initialTarget: 'bottom' });
     // loop:moveCompleted still fires alongside.
     expect(dispatcher.calls.some(
       (c) => c.eventName === 'loop:moveCompleted',
@@ -368,8 +373,7 @@ describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () 
     });
 
     const moveDispatch = dispatcher.calls.find(
-      (c) => c.method === 'publishToNextModule'
-        && c.eventName === 'user:regionMove',
+      (c) => c.eventName === 'user:regionMove',
     );
     expect(moveDispatch).toBeUndefined();
     // loop:moveCompleted still fires for discovery tracking.

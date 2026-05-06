@@ -7,8 +7,9 @@
  *   - { kind: 'exit', exitId }                  — walk to a specific exit
  *   - { kind: 'location', locationName }        — walk to a location tile
  *   - { kind: 'closestUnexplored' }             — walk to the closest
- *       frontier tile (walkable + seen + has at least one un-seen
- *       4-neighbor). Requires `opts.seenTiles` (Set<"x,y">).
+ *       walkable un-seen tile. Walking onto it expands the player's
+ *       seen-set (the fog clears around the new position), priming
+ *       the next chain leg. Requires `opts.seenTiles` (Set<"x,y">).
  *
  * Returns `{ steps: [{x, y}, ...], length: number }` where `steps`
  * includes both endpoints and `length` is `steps.length - 1` (the
@@ -123,29 +124,26 @@ function makeGoalPredicate(world, target, opts) {
         case 'closestUnexplored': {
             const seenTiles = opts.seenTiles;
             if (!seenTiles || typeof seenTiles.has !== 'function') return null;
-            return (x, y) => _isFrontierTile(world, x, y, seenTiles);
+            // Goal = any walkable un-seen tile. The BFS in _bfsToGoal
+            // walks through walkable tiles; the first un-seen one it
+            // reaches is the closest reveal. Walking onto the goal
+            // expands the player's seen-set by 5 tiles (the new
+            // position + 4-coord-adjacent), priming the next chain
+            // leg.
+            //
+            // Earlier this predicate looked for "frontier tiles" (seen
+            // tiles with at least one un-seen walkable neighbor). That
+            // led to a length-0 path when the player's own tile was a
+            // frontier — walkToTile's same-tile branch then no-oped
+            // and the queue parked forever. Targeting the un-seen tile
+            // directly avoids that and gives a one-step reveal in the
+            // common case.
+            return (x, y) => isFloor(world, x, y) && !seenTiles.has(`${x},${y}`);
         }
 
         default:
             return null;
     }
-}
-
-/** A tile is "frontier" when it's walkable, seen, and has at least one
- *  walkable un-seen 4-neighbor — i.e. stepping onto it would reveal
- *  new ground. */
-function _isFrontierTile(world, x, y, seenTiles) {
-    if (!isFloor(world, x, y)) return false;
-    if (!seenTiles.has(`${x},${y}`)) return false;
-    const DELTAS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    for (const [dx, dy] of DELTAS) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx < 0 || ny < 0 || nx >= world.width || ny >= world.height) continue;
-        if (!isFloor(world, nx, ny)) continue;
-        if (!seenTiles.has(`${nx},${ny}`)) return true;
-    }
-    return false;
 }
 
 function _bfsToGoal(world, from, isGoal, opts = {}) {
@@ -261,4 +259,4 @@ export function bestPathKey(regionName, fromExitId, toRef) {
 }
 
 // Exported for tests
-export const _internal = { _bfsToGoal, _isFrontierTile, _reconstructPath };
+export const _internal = { _bfsToGoal, _reconstructPath };

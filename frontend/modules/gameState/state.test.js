@@ -282,6 +282,51 @@ describe('GameState — loop-mode resource API', () => {
       expect(bus.events.find((e) => e.name === 'gameState:manaChanged')).toBeDefined();
     });
 
+    it('addCustomAction honors params.regionName for sourceRegion (queue-building from a downstream block)', () => {
+      // Phase 6g/6h: queue-build from a Loops panel block representing
+      // region_2_1 while the player stays at region_1_1 (loop start).
+      // Pre-fix, addCustomAction stamped sourceRegion=this.currentRegion
+      // (region_1_1), causing the action to render under the wrong
+      // region's block.
+      gs.setStartRegions(['Menu']);
+      gs.setCurrentRegion('region_1_1');
+      gs.updatePath('region_1_1', 'GameStart', 'Menu');
+      gs.updatePath('region_2_1', 'exit_0', 'region_1_1');
+
+      gs.addCustomAction('explore', { regionName: 'region_2_1' });
+
+      const last = gs.getPath().at(-1);
+      expect(last).toMatchObject({
+        type: 'customAction',
+        actionName: 'explore',
+        sourceRegion: 'region_2_1',
+      });
+      // Instance number tracks the regionMove that landed in region_2_1.
+      expect(last.instanceNumber).toBe(1);
+    });
+
+    it('addCustomAction defaults to the last regionMove\'s destination when no regionName is supplied', () => {
+      gs.setStartRegions(['Menu']);
+      gs.setCurrentRegion('region_1_1');
+      gs.updatePath('region_1_1', 'GameStart', 'Menu');
+      gs.updatePath('region_2_1', 'exit_0', 'region_1_1');
+
+      gs.addCustomAction('explore', { repeat: true });
+
+      const last = gs.getPath().at(-1);
+      expect(last.sourceRegion).toBe('region_2_1');
+    });
+
+    it('addCustomAction falls back to currentRegion when path has no regionMoves', () => {
+      gs.setStartRegions(['Menu']);
+      gs.setCurrentRegion('Menu');
+
+      gs.addCustomAction('explore', {});
+
+      const last = gs.getPath().at(-1);
+      expect(last.sourceRegion).toBe('Menu');
+    });
+
     it('updatePath into empty path uses explicit sourceRegion (not currentRegion) for the redundancy check', () => {
       // Phase 6g queue-building scenario: player is at the loop start
       // region (region_1_1) and the queue's first entry records a

@@ -467,10 +467,19 @@ describe('MazeRoomUI — fog of war helpers', () => {
         expect(setB).not.toBe(setA);
     });
 
-    it('_seenTilesForCurrentRegion returns null when no region is loaded', () => {
+    it('_seenTilesForCurrentRegion uses a sentinel key when no region is loaded (dev / Generate flow)', () => {
+        // Dev/Generate doesn't have a procgen region context, but the
+        // panel still needs a place to record fog state so the fog
+        // checkbox + Explore button work. The sentinel keeps that
+        // independent from any per-region state.
         const panel = new MazeRoomUI(null, {});
         panel.currentRegionId = null;
-        expect(panel._seenTilesForCurrentRegion()).toBeNull();
+        const localSet = panel._seenTilesForCurrentRegion();
+        expect(localSet).toBeInstanceOf(Set);
+        // Switching to a procgen region returns a different set.
+        panel.currentRegionId = 'A';
+        const regionSet = panel._seenTilesForCurrentRegion();
+        expect(regionSet).not.toBe(localSet);
     });
 
     it('_computeVisibleAt returns position plus 4-coord-adjacent in-bounds tiles', () => {
