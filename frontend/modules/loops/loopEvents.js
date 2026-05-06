@@ -128,21 +128,31 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
 
   log('info', `[LoopsModule] Found path to region: ${path.join(' -> ')}`);
 
-  // Clear the current queue before building new one
+  // Clear the current queue before building new one. resetQueue
+  // teleports the player to the resolved loop start region (Menu's
+  // synthetic-wrapper-bypassed equivalent for procgen) so the substrate
+  // panel is in the right region by the time the queue's first
+  // delegated action runs.
   loopStateSingleton.resetQueue();
 
   // Build move sequence along the path
   const moves = buildMoveSequence(path);
   if (!moves) return; // buildMoveSequence logs on failure
 
-  // Publish move events (path to target region)
-  if (dispatcher && moves.length > 0) {
+  // Phase 6g: append moves to the path WITHOUT dispatching user:regionMove
+  // for each step. The prior dispatch-per-step caused gameState's
+  // handleRegionMove to call setCurrentRegion for each hop, which
+  // walked the player through every region as the queue was built —
+  // by Start time the substrate panel was already at the target
+  // region instead of the queue's first sourceRegion. updatePath
+  // mutates only gameState.path; currentRegion stays put.
+  if (moves.length > 0) {
     moves.forEach((move) => {
-      dispatcher.publish('user:regionMove', {
-        sourceRegion: move.sourceRegion,
-        targetRegion: move.targetRegion,
-        exitUsed: move.exitUsed
-      });
+      gameStateAPI.updatePath(
+        move.targetRegion,
+        move.exitUsed,
+        move.sourceRegion,
+      );
     });
   }
 
@@ -260,7 +270,11 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   log('info', `[LoopEvents] Found path to exit: ${path.join(' -> ')}`);
 
-  // Clear the current queue before building new one
+  // Clear the current queue before building new one. resetQueue
+  // teleports the player to the resolved loop start region (Menu's
+  // synthetic-wrapper-bypassed equivalent for procgen) so the substrate
+  // panel is in the right region by the time the queue's first
+  // delegated action runs.
   loopStateSingleton.resetQueue();
 
   // Build the path moves to the source region
@@ -277,15 +291,15 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
     });
   }
 
-  // Publish all the region move events
-  const loopDispatcher = getLoopsModuleDispatcher();
-  if (loopDispatcher && moves.length > 0) {
+  // Phase 6g: append moves to the path WITHOUT dispatching user:regionMove
+  // for each step. See handleUserLocationCheckForLoops for the rationale.
+  if (moves.length > 0) {
     moves.forEach((move) => {
-      loopDispatcher.publish('user:regionMove', {
-        sourceRegion: move.sourceRegion,
-        targetRegion: move.targetRegion,
-        exitUsed: move.exitUsed
-      });
+      gameStateAPI.updatePath(
+        move.targetRegion,
+        move.exitUsed,
+        move.sourceRegion,
+      );
     });
   }
 

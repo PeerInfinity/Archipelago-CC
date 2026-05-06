@@ -343,6 +343,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     setStartRegions: initializationApi.getModuleFunction('gameState', 'setStartRegions'),
     isStartRegion: initializationApi.getModuleFunction('gameState', 'isStartRegion'),
     reset: initializationApi.getModuleFunction('gameState', 'reset'),
+    clearPath: initializationApi.getModuleFunction('gameState', 'clearPath'),
+    updatePath: initializationApi.getModuleFunction('gameState', 'updatePath'),
     getState: initializationApi.getModuleFunction('gameState', 'getState'),
     // Loop-mode resource API
     getCurrentMana: initializationApi.getModuleFunction('gameState', 'getCurrentMana'),

@@ -160,6 +160,16 @@ export async function register(registrationApi) {
         return gameState.reset();
     });
 
+    registrationApi.registerPublicFunction(moduleId, 'clearPath', () => {
+        const gameState = getGameStateSingleton();
+        return gameState.clearPath();
+    });
+
+    registrationApi.registerPublicFunction(moduleId, 'updatePath', (targetRegion, exitUsed, sourceRegion) => {
+        const gameState = getGameStateSingleton();
+        return gameState.updatePath(targetRegion, exitUsed, sourceRegion);
+    });
+
     // Loop-mode resource API (mana / region XP)
     registrationApi.registerPublicFunction(moduleId, 'getCurrentMana', () => {
         return getGameStateSingleton().getCurrentMana();

@@ -66,6 +66,11 @@ export class LoopState {
     // its tile-by-tile execution and publish
     // loops:substrateActionCompleted.
     this._delegatedAction = null;
+    // Phase 6g: signal flag set across _handleSubstrateActionCompleted →
+    // _completeCurrentAction → _applyActionEffects. Read by the
+    // regionMove case to suppress its user:regionMove dispatch when
+    // the substrate already dispatched one from onExitCross.
+    this._completedViaDelegation = false;
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -414,6 +419,24 @@ export class LoopState {
    * Atomically reset the entire queue: stop processing, clear all path entries
    * (including regionMoves), clear tracking, and emit a single queue update.
    * Use this before building a new queue from scratch.
+   *
+   * Phase 6g: path clearing now happens via gameState.clearPath() —
+   * unlike the prior gameState.reset() call, this preserves
+   * mana/XP/bestPaths and does NOT teleport the player back to
+   * startRegions[0] (Menu). The player is teleported separately to
+   * the *resolved* loop start (procgenPlayer.getResolvedStartRegion(),
+   * which skips the synthetic Menu wrapper for procgen rules) via a
+   * fromReset:true regionMove dispatch — substrate panels' regionChanged
+   * handlers bail out on fromReset so they don't deduct mana on the
+   * teleport, and procgenPlayer reloads the substrate's payload so the
+   * panel matches the queue's first delegated action's sourceRegion.
+   *
+   * The path itself still starts from Menu (findDiscoveredPath uses
+   * staticData.startRegions[0] as its source). The synthetic
+   * "Menu → resolvedStart" first hop is non-delegated (Menu has no
+   * substrate), ticks progress to 100, and dispatches a fromLoop:true
+   * user:regionMove on completion — by which point the player is
+   * already at resolvedStart, so setCurrentRegion is a no-op.
    */
   resetQueue() {
     // Stop processing
@@ -429,15 +452,35 @@ export class LoopState {
     }
     this.currentActionIndex = 0;
 
-    // Clear the entire gameState path
-    if (this.gameState) {
-      this.gameState.removeAllActionsOfType('locationCheck');
-      this.gameState.removeAllActionsOfType('customAction');
-      if (this.gameState.reset) {
-        this.gameState.reset();
-      } else {
-        this.gameState.trimPath();
-      }
+    // Clear the gameState path without disturbing player position or
+    // loop-mode resources. The teleport below moves the player to the
+    // resolved loop start.
+    if (this.gameState?.clearPath) {
+      this.gameState.clearPath();
+    } else if (this.gameState) {
+      // Older gameState shape (no clearPath): fall back to the prior
+      // sequence so tests using a stub still work.
+      this.gameState.removeAllActionsOfType?.('locationCheck');
+      this.gameState.removeAllActionsOfType?.('customAction');
+      this.gameState.trimPath?.();
+    }
+
+    // Teleport the player to the resolved loop start. For procgen,
+    // resolvedStart is the first warehoused region after Menu (Menu
+    // itself is a synthetic wrapper with no playable payload); for
+    // non-procgen flows, fall back to gameState.startRegions[0].
+    const loopStartRegion = this._resolveLoopStartRegion();
+    if (
+      loopStartRegion
+      && this.dispatcher?.publish
+      && this.gameState?.getCurrentRegion?.() !== loopStartRegion
+    ) {
+      this.dispatcher.publish('user:regionMove', {
+        sourceRegion: this.gameState.getCurrentRegion?.() ?? null,
+        targetRegion: loopStartRegion,
+        fromReset: true,
+        updatePath: false,
+      }, { initialTarget: 'bottom' });
     }
 
     // Emit single queue update with the now-empty queue
@@ -445,6 +488,28 @@ export class LoopState {
     this.eventBus.publish('loopState:queueUpdated', {
       queue: queue,
     });
+  }
+
+  /**
+   * Resolve the loop start region — where the player teleports on
+   * resetQueue / loop reset. Prefers procgenPlayer.getResolvedStartRegion
+   * (skips synthetic Menu) when available; falls back to
+   * gameState.startRegions[0] otherwise. The fallback reads through
+   * _gs() (the raw GameState instance) because the public gameStateAPI
+   * doesn't expose startRegions as a property.
+   */
+  _resolveLoopStartRegion() {
+    try {
+      const fn = centralRegistry?.getPublicFunction?.(
+        'procgenPlayer', 'getResolvedStartRegion',
+      );
+      const resolved = fn?.();
+      if (resolved) return resolved;
+    } catch {
+      // procgenPlayer not loaded; fall through.
+    }
+    const gs = this._gs?.();
+    return gs?.startRegions?.[0] ?? null;
   }
 
   /**
@@ -1127,7 +1192,17 @@ export class LoopState {
       this.actionQueueManager.setProgress(idx, 100);
       this.currentAction.progress = 100;
     }
-    this._completeCurrentAction();
+    // Phase 6g: signal _applyActionEffects that this regionMove
+    // completion came from the substrate (which already dispatched
+    // user:regionMove from its onExitCross handler). The non-delegated
+    // path needs to dispatch user:regionMove itself to advance the
+    // player; the delegated path must not, or we'd double-dispatch.
+    this._completedViaDelegation = true;
+    try {
+      this._completeCurrentAction();
+    } finally {
+      this._completedViaDelegation = false;
+    }
 
     // Resume animation frame to either tick the next action or hit
     // the queue-completed transition cleanly.
@@ -1181,6 +1256,24 @@ export class LoopState {
           destinationRegion: action.destinationRegion,
           exitName: action.exitUsed,
         });
+        // Phase 6g: when this regionMove was NOT delegated to a
+        // substrate (e.g. Menu's synthetic-wrapper hop, or any region
+        // without manaEnabled), the queue is responsible for actually
+        // advancing the player. Dispatch user:regionMove with
+        // fromLoop:true so gameState skips a duplicate path entry
+        // (the queue already enqueued the original) and procgenPlayer
+        // loads the destination's substrate payload. For delegated
+        // completions, the substrate panel's onExitCross already
+        // dispatched user:regionMove with fromLoop:true — skip here
+        // to avoid double-dispatch.
+        if (!this._completedViaDelegation) {
+          this.dispatcher.publishToNextModule('loops', 'user:regionMove', {
+            sourceRegion: action.sourceRegion,
+            targetRegion: action.destinationRegion,
+            exitName: action.exitUsed,
+            fromLoop: true,
+          }, { direction: 'up' });
+        }
         break;
     }
   }

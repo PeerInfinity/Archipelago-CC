@@ -282,6 +282,52 @@ describe('GameState — loop-mode resource API', () => {
       expect(bus.events.find((e) => e.name === 'gameState:manaChanged')).toBeDefined();
     });
 
+    it('updatePath into empty path uses explicit sourceRegion (not currentRegion) for the redundancy check', () => {
+      // Phase 6g queue-building scenario: player is at the loop start
+      // region (region_1_1) and the queue's first entry records a
+      // synthetic hop from Menu to region_1_1. The first updatePath
+      // call would falsely look redundant if it fell back to
+      // currentRegion === targetRegion === region_1_1.
+      gs.setStartRegions(['Menu']);
+      gs.setCurrentRegion('region_1_1');
+
+      gs.updatePath('region_1_1', 'GameStart', 'Menu');
+
+      const path = gs.getPath();
+      expect(path.length).toBe(1);
+      expect(path[0]).toMatchObject({
+        type: 'regionMove',
+        sourceRegion: 'Menu',
+        destinationRegion: 'region_1_1',
+        exitUsed: 'GameStart',
+      });
+    });
+
+    it('clearPath wipes path entries without disturbing player position or resources', () => {
+      gs.setStartRegions(['Menu', 'region_0_0']);
+      gs.setCurrentRegion('region_2_3');
+      gs.updatePath('region_0_0', null, 'Menu');
+      gs.updatePath('region_1_0', 'east', 'region_0_0');
+      gs.deductMana(30);
+      gs.addRegionXP('region_0_0', 50);
+      gs.recordBestPath('a:b:c', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
+      bus.events.length = 0;
+
+      gs.clearPath();
+
+      expect(gs.getPath()).toEqual([]);
+      expect(gs.getRegionCounts().size).toBe(0);
+      // Player position and loop-mode resources untouched.
+      expect(gs.getCurrentRegion()).toBe('region_2_3');
+      expect(gs.getCurrentMana()).toBe(70);
+      expect(gs.getRegionXP('region_0_0').xp).toBeGreaterThan(0);
+      expect(gs.getBestPath('a:b:c')).not.toBeNull();
+      // pathUpdated emitted, regionChanged NOT emitted.
+      const eventNames = bus.events.map((e) => e.name);
+      expect(eventNames).toContain('gameState:pathUpdated');
+      expect(eventNames).not.toContain('gameState:regionChanged');
+    });
+
     it('round-trips mana and XP via serialize/deserialize', () => {
       gs.setStartRegions(['Menu']);
       gs.currentMana = 73;

@@ -374,13 +374,19 @@ export class LoopBlockBuilder {
           if (e.target.classList.contains('region-link')) return;
           const dispatcher = getLoopsModuleDispatcher();
           if (dispatcher) {
-            const currentRegion = this.loopUI.gameStateAPI?.getCurrentRegion?.() || regionName;
-            dispatcher.publish('user:regionMove', {
-              sourceRegion: currentRegion,
-              targetRegion: connectedRegionName,
+            // Phase 6g: route through user:exitClicked so the loops
+            // module's intercept handler (handleUserExitClickedForLoops)
+            // queues the move via gameState.updatePath without firing
+            // user:regionMove. Pre-Phase 6g this published user:regionMove
+            // directly, which moved the player as a side effect of
+            // queue building.
+            dispatcher.publish('user:exitClicked', {
               exitName: exitDef.name,
-              updatePath: true,
-              source: 'loopBlockBuilder'
+              sourceRegion: regionName,
+              destinationRegion: connectedRegionName,
+              accessRule: exitDef.access_rule,
+              isDiscovered: isExitDiscovered,
+              source: 'loopBlockBuilder',
             }, 'bottom');
           }
           this.loopUI.navigateToRegion(connectedRegionName);

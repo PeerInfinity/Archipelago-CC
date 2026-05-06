@@ -314,17 +314,30 @@ export class GameState {
         // Get the last region in the path (where the queue currently ends)
         const lastPathRegion = this.getLastRegionInPath();
 
+        // For the redundancy check below, when the path is empty AND an
+        // explicit sourceRegion is provided, treat it as the implicit
+        // "where we are" — this is the queue-building case (Phase 6g),
+        // where the path's first entry records a planned hop from a
+        // known start (e.g. Menu) regardless of where the player
+        // currently stands. Without this, getLastRegionInPath()'s
+        // fallback to currentRegion would falsely flag the first hop
+        // as redundant when currentRegion happens to equal targetRegion.
+        const referenceSource = (this.path.length === 0 && sourceRegion)
+            ? sourceRegion
+            : lastPathRegion;
+
         // Check if we're already at the target region - ignore redundant moves
-        // Use the last region in the path, not currentRegion, so queue building works correctly
-        if (targetRegion === lastPathRegion) {
+        if (targetRegion === referenceSource) {
             // Using console.log instead of console.warn since this is expected behavior
             // (prevents duplicate moves when events are processed multiple times)
-            console.log(`[GameState] Ignoring redundant move to same region: ${targetRegion}. Path ends at: ${lastPathRegion}`);
+            console.log(`[GameState] Ignoring redundant move to same region: ${targetRegion}. Reference source: ${referenceSource}`);
             return;
         }
 
-        // If sourceRegion is provided, validate it matches the last region in path
-        if (sourceRegion && sourceRegion !== lastPathRegion) {
+        // If sourceRegion is provided, validate it matches the last region in path.
+        // Only warn when the path is non-empty — when it's empty, the
+        // explicit sourceRegion IS the start, not a mismatch.
+        if (sourceRegion && this.path.length > 0 && sourceRegion !== lastPathRegion) {
             console.warn(`[GameState] Source region mismatch: path ends at ${lastPathRegion}, got sourceRegion ${sourceRegion}. Target: ${targetRegion}, Exit: ${exitUsed}. This may indicate multiple region move events or outdated event data.`);
         }
         
@@ -829,6 +842,24 @@ export class GameState {
         return this.allowLoops;
     }
     
+    /**
+     * Clear the path without disturbing player position or loop-mode
+     * resources. Used by loops's resetQueue when rebuilding the queue
+     * from a fresh state — the player teleports to the loop start
+     * separately via a fromReset:true regionMove dispatch, so this
+     * method MUST NOT mutate currentRegion or fire regionChanged
+     * (otherwise procgenPlayer would reload the substrate panel
+     * mid-queue-build and the user would see a flicker).
+     *
+     * Mana / XP / bestPaths are preserved — those represent player
+     * progress across loop iterations, not per-queue state.
+     */
+    clearPath() {
+        this.path = [];
+        this.regionInstanceCounts.clear();
+        this.emitPathUpdated();
+    }
+
     /**
      * Reset state to defaults. Also clears loop-mode resource state
      * (mana, XP, debt). Used when a new ruleset is loaded.

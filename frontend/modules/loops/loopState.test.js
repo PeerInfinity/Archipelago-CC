@@ -19,24 +19,47 @@ function makeStubStateManager() {
   };
 }
 
+function makeStubDispatcher() {
+  const calls = [];
+  return {
+    calls,
+    publish: (eventName, eventData, opts) => {
+      calls.push({ method: 'publish', eventName, eventData, opts });
+    },
+    publishToNextModule: (moduleName, eventName, eventData, opts) => {
+      calls.push({ method: 'publishToNextModule', moduleName, eventName, eventData, opts });
+    },
+  };
+}
+
 /**
  * Wire a LoopState with a real GameState behind a flat API object,
- * matching how loops/index.js wires them at runtime.
+ * matching how loops/index.js wires them at runtime. The API forwards
+ * to the GameState instance so consumers see the same observable
+ * behavior the runtime gives them.
  */
-function makeWiredLoopState() {
+function makeWiredLoopState({ withDispatcher = false } = {}) {
   const bus = makeBus();
   const gs = new GameState(bus);
   const loopState = new LoopState();
+  const dispatcher = withDispatcher ? makeStubDispatcher() : null;
   loopState.setDependencies({
     eventBus: bus,
     stateManager: makeStubStateManager(),
-    dispatcher: null,
+    dispatcher,
     gameState: {
       getState: () => gs,
-      // The other API methods aren't exercised by these tests
+      getCurrentRegion: () => gs.getCurrentRegion(),
+      clearPath: () => gs.clearPath(),
+      removeAllActionsOfType: (t, n) => gs.removeAllActionsOfType(t, n),
+      trimPath: (r, i) => gs.trimPath(r, i),
+      addLocationCheck: (l, r, sd) => gs.addLocationCheck(l, r, sd),
+      addCustomAction: (a, p) => gs.addCustomAction(a, p),
+      insertLocationCheckAt: (l, r, i, lr) => gs.insertLocationCheckAt(l, r, i, lr),
+      insertCustomActionAt: (a, r, i, p) => gs.insertCustomActionAt(a, r, i, p),
     },
   });
-  return { loopState, gs, bus };
+  return { loopState, gs, bus, dispatcher };
 }
 
 describe('LoopState — mana/XP delegation to GameState', () => {
@@ -204,5 +227,154 @@ describe('LoopState — substrate-handled completion (Phase 6)', () => {
       loopState.resetForNewRules();
       expect(loopState._delegatedAction).toBeNull();
     });
+  });
+});
+
+describe('LoopState — resetQueue (Phase 6g)', () => {
+  let loopState, gs, bus, dispatcher;
+  let unregisterStartFn = null;
+
+  beforeEach(() => {
+    ({ loopState, gs, bus, dispatcher } = makeWiredLoopState({ withDispatcher: true }));
+  });
+  afterEach(() => {
+    if (unregisterStartFn) {
+      unregisterStartFn();
+      unregisterStartFn = null;
+    }
+  });
+
+  function setResolvedStart(value) {
+    centralRegistry.registerPublicFunction(
+      'procgenPlayer', 'getResolvedStartRegion', () => value,
+    );
+    unregisterStartFn = () => centralRegistry.registerPublicFunction(
+      'procgenPlayer', 'getResolvedStartRegion', () => null,
+    );
+  }
+
+  it('clears the path via gameState.clearPath', () => {
+    gs.setStartRegions(['Menu']);
+    // Seed the path with two regionMove entries; currentRegion stays
+    // at Menu so updatePath's redundancy check doesn't drop the first
+    // hop.
+    gs.updatePath('region_0_0', null, 'Menu');
+    gs.updatePath('region_1_0', 'east', 'region_0_0');
+    expect(gs.getPath().length).toBe(2);
+
+    loopState.resetQueue();
+
+    expect(gs.getPath()).toEqual([]);
+  });
+
+  it('preserves mana / XP / bestPaths (does NOT call gameState.reset)', () => {
+    gs.setStartRegions(['Menu']);
+    gs.deductMana(40);
+    gs.addRegionXP('region_0_0', 60);
+    gs.recordBestPath('a:b:c', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
+
+    loopState.resetQueue();
+
+    expect(gs.getCurrentMana()).toBe(60);
+    expect(gs.getRegionXP('region_0_0').xp).toBeGreaterThan(0);
+    expect(gs.getBestPath('a:b:c')).not.toBeNull();
+  });
+
+  it('teleports to procgenPlayer.getResolvedStartRegion when registered', () => {
+    setResolvedStart('region_0_0');
+    gs.setStartRegions(['Menu']);
+    gs.setCurrentRegion('region_2_3');
+
+    loopState.resetQueue();
+
+    const teleport = dispatcher.calls.find(
+      (c) => c.method === 'publish'
+        && c.eventName === 'user:regionMove'
+        && c.eventData?.targetRegion === 'region_0_0',
+    );
+    expect(teleport).toBeDefined();
+    expect(teleport.eventData.fromReset).toBe(true);
+    expect(teleport.eventData.updatePath).toBe(false);
+  });
+
+  it('falls back to gameState.startRegions[0] when no resolved start is registered', () => {
+    setResolvedStart(null);
+    gs.setStartRegions(['MyStart']);
+    gs.setCurrentRegion('region_2_3');
+
+    loopState.resetQueue();
+
+    const teleport = dispatcher.calls.find(
+      (c) => c.eventName === 'user:regionMove'
+        && c.eventData?.targetRegion === 'MyStart',
+    );
+    expect(teleport).toBeDefined();
+  });
+
+  it('does NOT teleport when already at the loop start region', () => {
+    setResolvedStart('region_0_0');
+    gs.setStartRegions(['Menu']);
+    gs.setCurrentRegion('region_0_0');
+
+    loopState.resetQueue();
+
+    const teleport = dispatcher.calls.find(
+      (c) => c.eventName === 'user:regionMove',
+    );
+    expect(teleport).toBeUndefined();
+  });
+});
+
+describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () => {
+  let loopState, gs, dispatcher;
+
+  beforeEach(() => {
+    ({ loopState, gs, dispatcher } = makeWiredLoopState({ withDispatcher: true }));
+  });
+
+  it('dispatches user:regionMove with fromLoop:true for non-delegated completion', () => {
+    loopState._completedViaDelegation = false;
+    loopState._applyActionEffects({
+      type: 'regionMove',
+      sourceRegion: 'Menu',
+      destinationRegion: 'region_0_0',
+      exitUsed: 'GameStart',
+    });
+
+    const moveDispatch = dispatcher.calls.find(
+      (c) => c.method === 'publishToNextModule'
+        && c.eventName === 'user:regionMove',
+    );
+    expect(moveDispatch).toBeDefined();
+    expect(moveDispatch.eventData).toMatchObject({
+      sourceRegion: 'Menu',
+      targetRegion: 'region_0_0',
+      exitName: 'GameStart',
+      fromLoop: true,
+    });
+    // loop:moveCompleted still fires alongside.
+    expect(dispatcher.calls.some(
+      (c) => c.eventName === 'loop:moveCompleted',
+    )).toBe(true);
+  });
+
+  it('skips the user:regionMove dispatch when the action was delegated to a substrate', () => {
+    loopState._completedViaDelegation = true;
+    loopState._applyActionEffects({
+      type: 'regionMove',
+      sourceRegion: 'region_0_0',
+      destinationRegion: 'region_1_0',
+      exitUsed: 'east',
+    });
+
+    const moveDispatch = dispatcher.calls.find(
+      (c) => c.method === 'publishToNextModule'
+        && c.eventName === 'user:regionMove',
+    );
+    expect(moveDispatch).toBeUndefined();
+    // loop:moveCompleted still fires for discovery tracking.
+    expect(dispatcher.calls.some(
+      (c) => c.eventName === 'loop:moveCompleted',
+    )).toBe(true);
   });
 });
