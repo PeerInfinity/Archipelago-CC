@@ -83,17 +83,17 @@ describe('TextAdventureSubstrateParser — shorthand resolution', () => {
     });
 });
 
-describe('TextAdventureSubstrateParser — flat exit shorthand (x<n>)', () => {
-    it('"x" resolves to the first exit across all cells', () => {
+describe('TextAdventureSubstrateParser — flat exit shorthand (m<n>)', () => {
+    it('"m" resolves to the first exit across all cells', () => {
         const parser = new TextAdventureSubstrateParser();
         const ctx = makeContext({
             N: [exit('north', 'go_north')],
             E: [exit('east', 'go_east')],
         });
-        expect(parser.parseCommand('x', ctx).target).toBe('go_north');
+        expect(parser.parseCommand('m', ctx).target).toBe('go_north');
     });
 
-    it('"x<n>" iterates N → E → S → W → C', () => {
+    it('"m<n>" iterates N → E → S → W → C', () => {
         const parser = new TextAdventureSubstrateParser();
         const ctx = makeContext({
             N: [exit('a', 'A')],
@@ -101,24 +101,24 @@ describe('TextAdventureSubstrateParser — flat exit shorthand (x<n>)', () => {
             S: [exit('d', 'D')],
             C: [exit('e', 'E')],
         });
-        expect(parser.parseCommand('x1', ctx).target).toBe('A');
-        expect(parser.parseCommand('x2', ctx).target).toBe('B');
-        expect(parser.parseCommand('x3', ctx).target).toBe('C');
-        expect(parser.parseCommand('x4', ctx).target).toBe('D');
-        expect(parser.parseCommand('x5', ctx).target).toBe('E');
+        expect(parser.parseCommand('m1', ctx).target).toBe('A');
+        expect(parser.parseCommand('m2', ctx).target).toBe('B');
+        expect(parser.parseCommand('m3', ctx).target).toBe('C');
+        expect(parser.parseCommand('m4', ctx).target).toBe('D');
+        expect(parser.parseCommand('m5', ctx).target).toBe('E');
     });
 
     it('errors when index is out of range', () => {
         const parser = new TextAdventureSubstrateParser();
         const ctx = makeContext({ N: [exit('only')] });
-        const r = parser.parseCommand('x9', ctx);
+        const r = parser.parseCommand('m9', ctx);
         expect(r.type).toBe('error');
-        expect(r.message).toMatch(/x9/);
+        expect(r.message).toMatch(/m9/);
     });
 
-    it('errors when no exits exist', () => {
+    it('"m" errors when no exits exist', () => {
         const parser = new TextAdventureSubstrateParser();
-        expect(parser.parseCommand('x', makeContext()).type).toBe('error');
+        expect(parser.parseCommand('m', makeContext()).type).toBe('error');
     });
 
     it('works in standalone-shaped context (all exits in C bucket)', () => {
@@ -126,9 +126,27 @@ describe('TextAdventureSubstrateParser — flat exit shorthand (x<n>)', () => {
         const ctx = makeContext({
             C: [exit('e1', 'first'), exit('e2', 'second'), exit('e3', 'third')],
         });
-        expect(parser.parseCommand('x', ctx).target).toBe('first');
-        expect(parser.parseCommand('x2', ctx).target).toBe('second');
-        expect(parser.parseCommand('x3', ctx).target).toBe('third');
+        expect(parser.parseCommand('m', ctx).target).toBe('first');
+        expect(parser.parseCommand('m2', ctx).target).toBe('second');
+        expect(parser.parseCommand('m3', ctx).target).toBe('third');
+    });
+});
+
+describe('TextAdventureSubstrateParser — explore shorthand (x)', () => {
+    it('"x" returns an explore command regardless of context', () => {
+        const parser = new TextAdventureSubstrateParser();
+        // Even with no exits/locations, x is the explore command — the
+        // panel decides whether to queue it or fire it immediately.
+        expect(parser.parseCommand('x', makeContext())).toEqual({ type: 'explore' });
+    });
+
+    it('"x1" / "x9" / "xN" with digits no longer parse as exits', () => {
+        const parser = new TextAdventureSubstrateParser();
+        const ctx = makeContext({ N: [exit('a', 'A')] });
+        // x with digits should NOT match the explore command and should
+        // NOT match the move shorthand (m took over that role). Falls
+        // through to the verb parser, which fails (no verb match).
+        expect(parser.parseCommand('x1', ctx).type).toBe('error');
     });
 });
 

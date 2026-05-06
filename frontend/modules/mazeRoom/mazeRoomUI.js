@@ -367,6 +367,13 @@ export class MazeRoomUI {
             this._publishLoopsCompleted(false);
             return;
         }
+        // Phase 6h: explore-with-no-frontier (or fog off). Counts as a
+        // successful completion per the design: clearing all reachable
+        // fog is "explore done," even when no movement happened.
+        if (target.alreadyComplete) {
+            this._publishLoopsCompleted(true);
+            return;
+        }
 
         // Mark walk as queue-driven so dispatched events carry
         // fromLoop:true.
@@ -423,7 +430,12 @@ export class MazeRoomUI {
      *   exits match, prefer the one with the lowest saved best-path
      *   cost; if no saved data, prefer the closest BFS distance.
      * locationCheck → location tile via reverse lookup.
-     * customAction('explore') → not yet supported (Phase 6c future).
+     * customAction('explore') → closestUnexplored frontier tile via
+     *   the autopather (Phase 6h). Returns { alreadyComplete: true }
+     *   when fog is off, the seen-set is empty, or no reachable
+     *   frontier remains under the current inventory — caller treats
+     *   that as "explore the reachable region is finished" and
+     *   completes the action successfully.
      */
     _resolveLoopsActionTarget(action) {
         if (!this.world) return null;
@@ -450,8 +462,49 @@ export class MazeRoomUI {
             }
             return null;
         }
-        // explore / other custom actions not yet supported in Phase 6c.
+        if (action.type === 'customAction' && action.actionName === 'explore') {
+            return this._resolveExploreTarget();
+        }
         return null;
+    }
+
+    /**
+     * Phase 6h: explore action target resolver. Returns the next
+     * walkToTile for the closestUnexplored frontier, or
+     * { alreadyComplete: true } when the reachable fog has been
+     * fully cleared (or fog is off entirely — in that case the
+     * region was auto-discovered on entry, so "explore" is a no-op).
+     */
+    _resolveExploreTarget() {
+        if (!this.fogEnabled) return { alreadyComplete: true };
+        const seenTiles = this.seenTilesByRegion.get(this.currentRegionId);
+        if (!seenTiles || seenTiles.size === 0) {
+            // No fog state yet — the panel hasn't initialized the
+            // seen-set for this region (shouldn't happen in normal
+            // flow, _adoptLoadedRegion seeds it). Treat as complete
+            // rather than parking the queue.
+            return { alreadyComplete: true };
+        }
+        const fromPos = this.state?.player_pos;
+        if (!fromPos) return { alreadyComplete: true };
+        const result = findPath(
+            this.world,
+            fromPos,
+            { kind: 'closestUnexplored' },
+            {
+                seenTiles,
+                inventory: this.externalInventory,
+                obstacleLib: this.world?.obstacleLib,
+                excludeOtherExits: true,
+            },
+        );
+        if (!result || !Array.isArray(result.steps) || result.steps.length === 0) {
+            // No reachable frontier under current inventory — explore
+            // has nothing more to do. Per design, count as complete.
+            return { alreadyComplete: true };
+        }
+        const last = result.steps[result.steps.length - 1];
+        return { x: last.x, y: last.y, name: null };
     }
 
     /**
@@ -894,6 +947,17 @@ export class MazeRoomUI {
             ? `Loaded region: ${payload.region_id}`
             : 'Loaded region';
         this.currentRegionId = payload.region_id ?? null;
+        // Phase 6h: per-region fog control. When the sidecar carries an
+        // explicit fogEnabled flag (procgen with loop mode on), it
+        // overrides the LS-persisted checkbox state — fog becomes a
+        // property of the world, not a UI preference. The checkbox is
+        // kept as a session-only debug override; toggling it after a
+        // region load works for that region until the next load.
+        // Worlds without the field (legacy presets, debug regenerates)
+        // fall back to the LS value loaded at panel init.
+        if (typeof this.world.fogEnabled === 'boolean') {
+            this.fogEnabled = this.world.fogEnabled;
+        }
         // Visualizer is per-region — feed it the loaded world so its
         // step log and tile-pathfinder match what's on the canvas.
         // Forward spawnAt so the visualizer's state matches the panel's
@@ -1244,7 +1308,41 @@ export class MazeRoomUI {
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(false);
         }
+        // Phase 6h: explore-action chaining. When the queue-driven
+        // action is a customAction('explore') and the visualizer's
+        // current leg has completed (target cleared after the last
+        // tile of the planned path), recompute the closestUnexplored
+        // frontier against the now-expanded seenTiles. Frontier
+        // remains → walkToTile the next leg. None → publish
+        // completed:true. Out-of-mana is already handled upstream by
+        // _fireLoopReset (which clears tracking + publishes false).
+        if (
+            stepHappened
+            && this._loopsDrivenAction?.type === 'customAction'
+            && this._loopsDrivenAction?.actionName === 'explore'
+            && vState
+            && !vState.stuck
+            && !vState.target
+        ) {
+            this._chainExploreOrComplete();
+        }
         this.render();
+    }
+
+    _chainExploreOrComplete() {
+        const next = this._resolveExploreTarget();
+        if (next?.alreadyComplete) {
+            this._clearLoopsDrivenTracking();
+            this._publishLoopsCompleted(true);
+            return;
+        }
+        if (!next || !this._visualizer) {
+            // Defensive: treat as success rather than parking the queue.
+            this._clearLoopsDrivenTracking();
+            this._publishLoopsCompleted(true);
+            return;
+        }
+        this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
     }
 
     _renderPlaybackBar() {

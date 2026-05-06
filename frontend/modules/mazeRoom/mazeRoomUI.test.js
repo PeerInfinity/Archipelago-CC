@@ -884,12 +884,24 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(picked.exit_id).toBe('a');
     });
 
-    it('_resolveLoopsActionTarget — explore not yet supported returns null', () => {
+    it('_resolveLoopsActionTarget — explore returns alreadyComplete when fog is off', () => {
         const panel = new MazeRoomUI(null, {});
         panel.world = { exits: new Map(), itemLocationNames: new Map() };
+        panel.fogEnabled = false;
         expect(panel._resolveLoopsActionTarget({
             type: 'customAction', actionName: 'explore',
-        })).toBeNull();
+        })).toEqual({ alreadyComplete: true });
+    });
+
+    it('_resolveLoopsActionTarget — explore returns alreadyComplete when seenTiles is empty', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { exits: new Map(), itemLocationNames: new Map() };
+        panel.fogEnabled = true;
+        panel.currentRegionId = 'r1';
+        // No seen-set entry seeded for r1 → empty.
+        expect(panel._resolveLoopsActionTarget({
+            type: 'customAction', actionName: 'explore',
+        })).toEqual({ alreadyComplete: true });
     });
 
     it('_resolveLoopsActionTarget — unknown destinationRegion returns null', () => {

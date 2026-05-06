@@ -1576,6 +1576,15 @@ export function buildPresetSidecars(grid, {
     // runtime. Default false — existing presets stay cost-free unless
     // the caller explicitly enables loop mode. Future: per-region map.
     manaEnabled = false,
+    // Fog-of-war opt-in (Phase 6h). When true, every region's
+    // playable_payload gets `fogEnabled: true`. Maze substrate hides
+    // un-stepped tiles + fires per-tile discovery; text-adventure
+    // substrate skips its on-entry "discover everything in region"
+    // shortcut and renders undiscovered locations / exits as ???
+    // placeholders that the player reveals one-at-a-time via the
+    // explore action. Defaults to manaEnabled — loop mode flips both
+    // by default; pass an explicit boolean to decouple.
+    fogEnabled = manaEnabled,
 } = {}) {
     const regionMap = {};
     for (const region of grid.allRegions()) {
@@ -1589,6 +1598,9 @@ export function buildPresetSidecars(grid, {
         );
         if (manaEnabled) {
             playablePayload.manaEnabled = true;
+        }
+        if (fogEnabled) {
+            playablePayload.fogEnabled = true;
         }
         regionMap[region.region_id] = {
             substrate: substrateId,
@@ -1774,13 +1786,15 @@ export function buildRulesJson(grid, opts = {}) {
 
     // Menu is virtual — no playable payload, no sidecar entry.
     // When the caller turned on loop mode, all regions' sidecars get
-    // `manaEnabled: true` so the substrate's mana hooks fire at
-    // runtime. Per-region overrides are a later v2 concern.
+    // `manaEnabled: true` (substrate mana hooks) and `fogEnabled: true`
+    // (substrate fog-of-war + per-tile/per-???-slot discovery). Per-
+    // region overrides are a later v2 concern.
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
         playerId,
         baseObstacleLib: obstacleLib,
         baseItemLib: itemLib,
         manaEnabled: enableLoopMode,
+        fogEnabled: enableLoopMode,
     });
 
     // Procgen metadata: caller-supplied fields plus auto-derived

@@ -927,6 +927,36 @@ describe('buildPresetSidecars', () => {
         }
     });
 
+    it('omits fogEnabled by default and defaults it to manaEnabled when manaEnabled is on', () => {
+        const { grid } = smallGrid();
+        // Default: both off.
+        for (const side of Object.values(buildPresetSidecars(grid)['1'])) {
+            expect(side.playable_payload.fogEnabled).toBeUndefined();
+        }
+        // manaEnabled flips fogEnabled too (loop-mode default).
+        for (const side of Object.values(buildPresetSidecars(grid, { manaEnabled: true })['1'])) {
+            expect(side.playable_payload.fogEnabled).toBe(true);
+        }
+    });
+
+    it('decouples fogEnabled from manaEnabled when explicitly set', () => {
+        const { grid } = smallGrid();
+        // Mana on, fog off (debugging combo).
+        for (const side of Object.values(
+            buildPresetSidecars(grid, { manaEnabled: true, fogEnabled: false })['1'],
+        )) {
+            expect(side.playable_payload.manaEnabled).toBe(true);
+            expect(side.playable_payload.fogEnabled).toBeUndefined();
+        }
+        // Fog on, mana off.
+        for (const side of Object.values(
+            buildPresetSidecars(grid, { manaEnabled: false, fogEnabled: true })['1'],
+        )) {
+            expect(side.playable_payload.manaEnabled).toBeUndefined();
+            expect(side.playable_payload.fogEnabled).toBe(true);
+        }
+    });
+
     it('uses a custom playerId when supplied', () => {
         const { grid } = smallGrid();
         const sidecars = buildPresetSidecars(grid, { playerId: '2' });

@@ -589,11 +589,18 @@ export class TextAdventureSubstrateUI {
         this.checkedLocations = checkedLocationsFromSnapshot(snapshot);
         this._previousCheckedLocations = new Set(this.checkedLocations);
 
-        // Text-adventure semantics: entering a region reveals its
-        // entire contents. Discovery mode (the UI filter) only
-        // affects rendering — the discovery state grows on entry
-        // either way.
-        this._discoverEverythingInRegion();
+        // Phase 6h: when the sidecar carries fogEnabled:true, the
+        // region's contents start undiscovered. The panel renders
+        // unrevealed locations and exits as ??? placeholders, and the
+        // explore action (queued in loop mode, dispatched immediately
+        // out of loop mode) reveals one random item per execution —
+        // matching the loops module's existing exploreCompleted
+        // semantics. Without fog, the original "entering a region
+        // reveals its entire contents" shortcut applies (mirrors the
+        // pre-Phase-6h behavior).
+        if (this.world?.fogEnabled !== true) {
+            this._discoverEverythingInRegion();
+        }
 
         this._addMessage(this._arrivalMessage());
     }
@@ -723,6 +730,16 @@ export class TextAdventureSubstrateUI {
 
         const exitsSection = this._renderExits();
         if (exitsSection) this.rootElement.appendChild(exitsSection);
+
+        // Phase 6h: undiscovered locations / exits get ??? placeholder
+        // slots in a dedicated "Unknown" section. Clicking any slot
+        // is a shortcut for the explore action — which may reveal a
+        // different ??? slot than the one clicked, since explore picks
+        // randomly. We deliberately don't show side info for unknown
+        // exits (no compass cell), so the player can't infer geometry
+        // before exploring.
+        const unknownSection = this._renderUnknownPlaceholders();
+        if (unknownSection) this.rootElement.appendChild(unknownSection);
 
         this.rootElement.appendChild(this._renderInventory());
         this.rootElement.appendChild(this._renderMessageHistory());
@@ -896,14 +913,21 @@ export class TextAdventureSubstrateUI {
     }
 
     _isExitVisibleToUI(exit) {
-        if (!this.discoveryModeActive) return true;
+        // Phase 6h: when the world ships with fogEnabled (procgen +
+        // loop mode), the regular exit list only shows discovered
+        // exits; undiscovered ones surface as ??? placeholders elsewhere
+        // (see _renderUnknownPlaceholders). The legacy discoveryModeActive
+        // UI flag still applies for non-fog worlds.
+        const filterByDiscovery = this.world?.fogEnabled === true || this.discoveryModeActive;
+        if (!filterByDiscovery) return true;
         if (!discoveryStateSingleton || !this.currentRegionId) return true;
         const name = exit.exitName ?? exit.exit_id;
         return discoveryStateSingleton.isExitDiscovered?.(this.currentRegionId, name) ?? true;
     }
 
     _isLocationVisibleToUI(locationName) {
-        if (!this.discoveryModeActive) return true;
+        const filterByDiscovery = this.world?.fogEnabled === true || this.discoveryModeActive;
+        if (!filterByDiscovery) return true;
         if (!discoveryStateSingleton || !locationName) return true;
         return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
     }
@@ -987,6 +1011,86 @@ export class TextAdventureSubstrateUI {
         span.dataset.locationName = entry.locationName;
         span.textContent = shorthand ? `[${shorthand}] ${entry.locationName}` : entry.locationName;
         return span;
+    }
+
+    /**
+     * Phase 6h: ??? placeholders for undiscovered locations and exits
+     * in the current region. Each slot is a clickable shortcut for the
+     * explore action — clicking any one fires the same action regardless
+     * of which slot was chosen, because explore picks one undiscovered
+     * item randomly (could be a different ??? slot). Side info for
+     * unknown exits is intentionally not surfaced here (slots aren't
+     * placed in the compass cells), so the player learns geometry only
+     * after the exit is revealed.
+     *
+     * Standalone-mode worlds aren't procgen and have no fogEnabled
+     * field, so the count is 0 and this renders nothing.
+     */
+    _renderUnknownPlaceholders() {
+        if (!this.world || !this.currentRegionId) return null;
+
+        let unknownLocations = 0;
+        if (this.world.items && this.world.itemLocationNames) {
+            for (const [posKey] of this.world.items) {
+                const locationName = this.world.itemLocationNames.get(posKey);
+                if (!locationName) continue;
+                if (this.checkedLocations.has(locationName)) continue;
+                if (!this._isLocationDiscovered(locationName)) unknownLocations += 1;
+            }
+        }
+
+        let unknownExits = 0;
+        if (this.world.exits) {
+            for (const exit of this.world.exits.values()) {
+                const name = exit.exitName ?? exit.exit_id;
+                if (!this._isExitDiscovered(name)) unknownExits += 1;
+            }
+        }
+
+        if (unknownLocations === 0 && unknownExits === 0) return null;
+
+        const section = document.createElement('div');
+        section.className = 'text-adventure-section text-adventure-unknown';
+
+        const label = document.createElement('div');
+        label.className = 'text-adventure-section-label';
+        label.textContent = 'Unknown';
+        section.appendChild(label);
+
+        const list = document.createElement('div');
+        list.className = 'text-adventure-unknown-list';
+        for (let i = 0; i < unknownLocations; i += 1) {
+            list.appendChild(this._renderUnknownPlaceholderLink('location'));
+            list.appendChild(document.createTextNode(' '));
+        }
+        for (let i = 0; i < unknownExits; i += 1) {
+            list.appendChild(this._renderUnknownPlaceholderLink('exit'));
+            list.appendChild(document.createTextNode(' '));
+        }
+        section.appendChild(list);
+
+        return section;
+    }
+
+    _renderUnknownPlaceholderLink(kindHint) {
+        const span = document.createElement('span');
+        span.className = 'text-adventure-link text-adventure-unknown-link';
+        span.dataset.kind = 'explore';
+        // kindHint is informational only — clicking any ??? slot fires
+        // the same explore action.
+        span.dataset.unknownKind = kindHint;
+        span.textContent = '???';
+        return span;
+    }
+
+    _isExitDiscovered(name) {
+        if (!discoveryStateSingleton || !this.currentRegionId) return true;
+        return discoveryStateSingleton.isExitDiscovered?.(this.currentRegionId, name) ?? true;
+    }
+
+    _isLocationDiscovered(locationName) {
+        if (!discoveryStateSingleton) return true;
+        return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
     }
 
     _renderInventory() {
@@ -1074,6 +1178,10 @@ export class TextAdventureSubstrateUI {
                 this._onLocationClick(result.target);
                 return;
             }
+            case 'explore': {
+                this._onExploreClick();
+                return;
+            }
             case 'inventory': {
                 const inv = this.inventory.size === 0
                     ? 'empty'
@@ -1121,6 +1229,8 @@ export class TextAdventureSubstrateUI {
             this._onExitClick(target.dataset.exitId);
         } else if (kind === 'location') {
             this._onLocationClick(target.dataset.locationName);
+        } else if (kind === 'explore') {
+            this._onExploreClick();
         }
     }
 
@@ -1162,6 +1272,34 @@ export class TextAdventureSubstrateUI {
             sourceRegion: this.currentRegionId,
             targetRegion: exit.targetRegion,
             exitName,
+        }, { initialTarget: 'bottom' });
+    }
+
+    /**
+     * Phase 6h: explore-action shortcut. Triggered by clicking any
+     * ??? placeholder in the Unknown section, or by typing the `x`
+     * shorthand in the command input.
+     *
+     * In loop mode: queues a customAction('explore') on gameState's
+     * path, mirroring the Loops panel's "Explore Region" button. The
+     * user runs the queue from the Loops panel.
+     *
+     * Out of loop mode: dispatches loop:exploreCompleted immediately
+     * so discovery's handleExploreCompleted reveals one random item
+     * right now (no queue involvement).
+     */
+    _onExploreClick() {
+        if (!this.currentRegionId) return;
+        if (this._isLoopModeActive) {
+            const gs = getGameStateSingleton?.();
+            gs?.addCustomAction?.('explore', { regionName: this.currentRegionId });
+            this.render();
+            return;
+        }
+        const dispatcher = this.apis?.dispatcher;
+        if (!dispatcher?.publish) return;
+        dispatcher.publish('loop:exploreCompleted', {
+            regionName: this.currentRegionId,
         }, { initialTarget: 'bottom' });
     }
 

@@ -9,13 +9,19 @@
  *      in procgen mode. The parser recognises:
  *        - n, e, s, w, c                  → first exit in that cell
  *        - n1, n2, e3, w2, c1, ...        → 1-based index within cell
- *        - x, x1, x2, ...                 → flat exit index across all
+ *        - m, m1, m2, ...                 → flat exit index across all
  *                                            cells (N→E→S→W→C order).
  *                                            The only exit shorthand
  *                                            usable in standalone mode,
  *                                            where there are no cells.
  *        - l                              → first location
  *        - l1, l2, l3, ...                → 1-based location index
+ *        - x                              → explore action (Phase 6h).
+ *                                            Queues in loop mode,
+ *                                            fires immediately
+ *                                            otherwise. No digit
+ *                                            suffix — explore picks
+ *                                            randomly.
  *      "look" (the full word) stays as the look verb; the single
  *      letter "l" is reassigned to mean "first location".
  *
@@ -29,7 +35,8 @@
  * ambiguous-bare-name handling are unchanged from the original parser.
  */
 
-const SHORTHAND_RE = /^([neswcxl])(\d*)$/;
+const SHORTHAND_RE = /^([neswcml])(\d*)$/;
+const EXPLORE_RE = /^x$/;
 
 export class TextAdventureSubstrateParser {
     constructor() {
@@ -110,6 +117,13 @@ export class TextAdventureSubstrateParser {
      * IS a shorthand pattern but the index is out of range.
      */
     _parseShorthand(trimmed, context) {
+        // Phase 6h: `x` (no digit) is the explore command. Match this
+        // before the SHORTHAND_RE pass so it doesn't get reinterpreted
+        // as a missing-letter shorthand.
+        if (EXPLORE_RE.test(trimmed)) {
+            return { type: 'explore' };
+        }
+
         const m = SHORTHAND_RE.exec(trimmed);
         if (!m) return null;
 
@@ -130,11 +144,12 @@ export class TextAdventureSubstrateParser {
             };
         }
 
-        if (letter === 'x') {
-            // Flat index across all cells. In standalone mode the
-            // panel files every exit into one bucket (any cell works
-            // since the renderer doesn't care); in procgen mode the
-            // user can still use x1/x2/... if they don't want to
+        if (letter === 'm') {
+            // Phase 6h: flat-exit-index shorthand (renamed from `x`,
+            // which is now the explore command). In standalone mode
+            // the panel files every exit into one bucket (any cell
+            // works since the renderer doesn't care); in procgen mode
+            // the user can still use m1/m2/... if they don't want to
             // think about compass cells.
             const flat = this._allExits(context.exitsBySide);
             const exit = flat[index - 1];
@@ -273,8 +288,9 @@ export class TextAdventureSubstrateParser {
             '• n, e, s, w — first exit in that compass direction (procgen)',
             '• n1, n2, e3, ... — Nth exit in that direction',
             '• c, c1, c2, ... — exit in the center cell (teleporters / unsided)',
-            '• x, x1, x2, ... — Nth exit (flat index; works in both modes)',
+            '• m, m1, m2, ... — Nth exit (flat index; works in both modes)',
             '• l, l1, l2, ... — Nth unchecked location',
+            '• x — explore (queue in loop mode, reveal one ??? otherwise)',
             '',
             'You can also type the bare name of a location or exit.',
         ].join('\n');
