@@ -403,6 +403,25 @@ export class MazeRoomUI {
             return;
         }
         visualizer.walkToTile({ x: target.x, y: target.y, name: target.name ?? null });
+        // walkToTile only plans the path; the caller is responsible
+        // for starting the clock so _tick actually fires. Without
+        // this, queue-driven walks just sit there with a plan and the
+        // queue parks indefinitely. play() is idempotent when already
+        // running.
+        this._ensureVisualizerPlaying();
+    }
+
+    /**
+     * Make sure the visualizer's tick clock is running so a freshly
+     * planned walkToTile actually executes. Idempotent — checks
+     * isRunning() first to avoid restarting an already-ticking clock
+     * (which can cause double-tick races).
+     */
+    _ensureVisualizerPlaying() {
+        const v = this._visualizer;
+        if (!v) return;
+        if (typeof v.isRunning === 'function' && v.isRunning()) return;
+        v.play?.();
     }
 
     /**
@@ -1382,6 +1401,7 @@ export class MazeRoomUI {
             return;
         }
         this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
+        this._ensureVisualizerPlaying();
     }
 
     _renderPlaybackBar() {
@@ -2098,14 +2118,9 @@ export class MazeRoomUI {
             return;
         }
         this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
-        // Auto-start the visualizer's clock so the planned plan
-        // actually executes (the clock is what feeds _tick which steps
-        // through the plan). play() is idempotent when already running.
-        if (typeof this._visualizer.isRunning === 'function' && !this._visualizer.isRunning()) {
-            this._visualizer.play?.();
-        } else if (typeof this._visualizer.play === 'function' && !this._visualizer.isRunning?.()) {
-            this._visualizer.play();
-        }
+        // walkToTile plans the path; we have to start the clock so
+        // _tick actually fires through the plan.
+        this._ensureVisualizerPlaying();
     }
 
     _drawWorld(canvas) {
