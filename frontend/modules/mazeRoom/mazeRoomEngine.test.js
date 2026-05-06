@@ -1280,6 +1280,24 @@ describe('deserializeMazeWorld', () => {
             .toThrow(/tiles length/);
     });
 
+    it('preserves manaEnabled and fogEnabled flags through deserialization (Phase 6h)', () => {
+        // Without preservation, the runtime sees `undefined` for both
+        // and falls back to legacy behavior — auto-discover everything
+        // in TA, ignore the per-region fog override in maze.
+        const noFlags = deserializeMazeWorld(makeSidecar());
+        expect(noFlags.manaEnabled).toBeUndefined();
+        expect(noFlags.fogEnabled).toBeUndefined();
+
+        const both = deserializeMazeWorld(makeSidecar({ manaEnabled: true, fogEnabled: true }));
+        expect(both.manaEnabled).toBe(true);
+        expect(both.fogEnabled).toBe(true);
+
+        // Each flag rides through independently (decouple-able per Phase 6h-1).
+        const onlyFog = deserializeMazeWorld(makeSidecar({ fogEnabled: true }));
+        expect(onlyFog.manaEnabled).toBeUndefined();
+        expect(onlyFog.fogEnabled).toBe(true);
+    });
+
     it('rejects non-object input', () => {
         expect(() => deserializeMazeWorld(null)).toThrow(/must be an object/);
         expect(() => deserializeMazeWorld(undefined)).toThrow(/must be an object/);

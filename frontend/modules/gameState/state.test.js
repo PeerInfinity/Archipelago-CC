@@ -137,32 +137,45 @@ describe('GameState — loop-mode resource API', () => {
   });
 
   describe('triggerLoopReset', () => {
-    it('refills mana, clears path, resets manaDebt', () => {
+    it('refills mana and resets manaDebt', () => {
       gs.setStartRegions(['Menu']);
       gs.deductMana(80);
       gs.manaDebt = 5;
-      gs.path = [
-        { type: 'regionMove', destinationRegion: 'A', sourceRegion: 'Menu', instanceNumber: 1 },
-      ];
-      gs.regionInstanceCounts.set('A', 1);
-
       bus.events.length = 0;
+
       gs.triggerLoopReset();
 
       expect(gs.getCurrentMana()).toBe(100);
       expect(gs.getManaDebt()).toBe(0);
-      expect(gs.getPath()).toEqual([]);
-      expect(gs.regionInstanceCounts.size).toBe(0);
     });
 
-    it('emits gameState:loopReset, gameState:manaChanged, gameState:pathUpdated', () => {
+    it('preserves the path and regionInstanceCounts (queue persists across loop resets)', () => {
+      // Phase 6h followup: clearing the path on loop reset wiped the
+      // loops queue every time the player ran out of mana mid-walk,
+      // breaking the Cavernous-style "re-run the same queue" model.
+      // Loops module subscribes to gameState:loopReset to reset its
+      // per-action progress separately.
+      gs.setStartRegions(['Menu']);
+      gs.path = [
+        { type: 'regionMove', destinationRegion: 'A', sourceRegion: 'Menu', instanceNumber: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'A', instanceNumber: 1 },
+      ];
+      gs.regionInstanceCounts.set('A', 1);
+
+      gs.triggerLoopReset();
+
+      expect(gs.getPath().length).toBe(2);
+      expect(gs.getRegionCounts().get('A')).toBe(1);
+    });
+
+    it('emits gameState:loopReset and gameState:manaChanged (path is untouched, no pathUpdated)', () => {
       gs.setStartRegions(['Menu']);
       bus.events.length = 0;
       gs.triggerLoopReset();
       const names = bus.events.map((e) => e.name);
       expect(names).toContain('gameState:loopReset');
       expect(names).toContain('gameState:manaChanged');
-      expect(names).toContain('gameState:pathUpdated');
+      expect(names).not.toContain('gameState:pathUpdated');
     });
 
     it('does NOT change currentRegion (caller dispatches user:regionMove)', () => {

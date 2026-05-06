@@ -222,6 +222,17 @@ export class LoopState {
     this.eventBus.subscribe('loops:substrateActionCompleted', (data) => {
       this._handleSubstrateActionCompleted(data);
     });
+    // Phase 6h followup: when the substrate-driven path triggers a
+    // loop reset (out-of-mana, fired via gameState.triggerLoopReset),
+    // the queue's per-action progress tracking is now stale — the
+    // explore action that drained the player's mana might be at 73%
+    // progress. Reset it so a subsequent Start runs the queue from
+    // action 0 with clean progress, mirroring the loops-queue's own
+    // _resetLoop. Path is preserved (the queue stays); only progress
+    // and the action cursor reset.
+    this.eventBus.subscribe('gameState:loopReset', () => {
+      this._resetActionsProgress();
+    });
   }
 
   /**
@@ -682,6 +693,15 @@ export class LoopState {
     }
 
     this.eventBus.publish('loopState:processingStopped', {});
+    // Mirror startProcessing's pauseStateChanged publish so the
+    // loopUI's button label refreshes on stop. Without this, after a
+    // substrate-driven reset (out-of-mana mid-walk → stopProcessing
+    // → button stays at "Pause") the user has to interact with the
+    // queue once before the label catches up.
+    this.eventBus.publish('loopState:pauseStateChanged', {
+      isPaused: this.isPaused,
+      processingState: this.getProcessingState(),
+    });
   }
 
   /**

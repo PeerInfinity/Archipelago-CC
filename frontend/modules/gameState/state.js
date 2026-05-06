@@ -204,29 +204,31 @@ export class GameState {
     }
 
     /**
-     * Loop reset — refills mana, clears the path, and resets manaDebt.
-     * Does NOT change currentRegion: the caller dispatches a
-     * user:regionMove with fromReset:true so procgenPlayer loads the
-     * destination region's payload (and substrate panels skip their
-     * deduction handler on the reset transition). Mirrors the
-     * Cavernous-style "out of mana → start over" cycle.
+     * Loop reset — refills mana and resets manaDebt. Does NOT change
+     * currentRegion (the caller dispatches a user:regionMove with
+     * fromReset:true) and does NOT clear the path. The path IS the
+     * loops queue; clearing it would wipe queued actions on every
+     * out-of-mana reset, which breaks the Cavernous-style "run the
+     * same queue again until it completes" model. The loops module
+     * subscribes to gameState:loopReset and resets its per-action
+     * progress tracking so the next Start runs from action 0 with
+     * clean progress.
      *
      * Used by the substrate-driven path (TA / maze direct play in
-     * non-loop-mode). The loops queue's existing _resetLoop has its
-     * own queue-replay-based teleport semantics and stays unchanged.
+     * non-loop-mode, plus loops-queue substrate delegation when mana
+     * runs out mid-walk). The loops queue's existing _resetLoop has
+     * its own queue-replay-based teleport semantics and stays
+     * unchanged.
      */
     triggerLoopReset() {
         this.currentMana = this.maxMana;
         this.manaDebt = 0;
-        this.path = [];
-        this.regionInstanceCounts.clear();
         if (this.eventBus) {
             this.eventBus.publish('gameState:loopReset', {
                 mana: { current: this.currentMana, max: this.maxMana },
             });
         }
         this.emitManaChanged();
-        this.emitPathUpdated();
     }
 
     /**

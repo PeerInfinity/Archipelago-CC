@@ -241,6 +241,15 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.manaEnabled === true) {
         world.manaEnabled = true;
     }
+    // Phase 6h: fogEnabled rides through verbatim. The maze panel's
+    // _adoptLoadedRegion overrides this.fogEnabled from this field;
+    // the TA substrate's _adoptLoadedRegion gates _discoverEverythingInRegion
+    // on it. Without this preservation, the runtime sees `undefined`
+    // and falls back to legacy behavior (auto-discover everything),
+    // bypassing the per-region fog model entirely.
+    if (sidecar.fogEnabled === true) {
+        world.fogEnabled = true;
+    }
 
     return world;
 }
