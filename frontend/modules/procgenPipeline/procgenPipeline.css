@@ -195,7 +195,8 @@
     min-width: 120px;
 }
 
-.procgen-pipeline-field input {
+.procgen-pipeline-field input,
+.procgen-pipeline-field select {
     width: 70px;
     padding: 3px 6px;
     background: #2a2a2a;

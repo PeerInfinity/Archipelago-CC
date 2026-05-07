@@ -845,25 +845,6 @@ export class ProcgenPipelineUI {
         }
         section.appendChild(grid);
 
-        // Loop-mode toggle. Renders below the numeric grid. When on,
-        // every generated rules.json carries loop_costs + manaEnabled
-        // sidecar fields, so the maze/textAdventure substrates deduct
-        // mana on movement at runtime.
-        const loopModeRow = document.createElement('div');
-        loopModeRow.className = 'procgen-pipeline-field';
-        const loopModeLabel = document.createElement('label');
-        loopModeLabel.textContent = 'Enable loop mode';
-        loopModeLabel.title = 'Embed loop_costs in rules.json and turn on per-region mana deduction';
-        const loopModeInput = document.createElement('input');
-        loopModeInput.type = 'checkbox';
-        loopModeInput.checked = !!this.params.enableLoopMode;
-        loopModeInput.addEventListener('change', () => {
-            this.params.enableLoopMode = !!loopModeInput.checked;
-        });
-        loopModeRow.appendChild(loopModeLabel);
-        loopModeRow.appendChild(loopModeInput);
-        section.appendChild(loopModeRow);
-
         // Region XP effect dropdown. The selected mode is stamped on
         // every loop_costs.regions[name].xpEffect when loop mode is on;
         // costDataManager exposes it at runtime via getRegionXpEffect.
@@ -889,6 +870,25 @@ export class ProcgenPipelineUI {
         xpEffectRow.appendChild(xpEffectLabel);
         xpEffectRow.appendChild(xpEffectSelect);
         section.appendChild(xpEffectRow);
+
+        // Loop-mode toggle. Renders below the numeric grid. When on,
+        // every generated rules.json carries loop_costs + manaEnabled
+        // sidecar fields, so the maze/textAdventure substrates deduct
+        // mana on movement at runtime.
+        const loopModeRow = document.createElement('div');
+        loopModeRow.className = 'procgen-pipeline-field';
+        const loopModeLabel = document.createElement('label');
+        loopModeLabel.textContent = 'Enable loop mode';
+        loopModeLabel.title = 'Embed loop_costs in rules.json and turn on per-region mana deduction';
+        const loopModeInput = document.createElement('input');
+        loopModeInput.type = 'checkbox';
+        loopModeInput.checked = !!this.params.enableLoopMode;
+        loopModeInput.addEventListener('change', () => {
+            this.params.enableLoopMode = !!loopModeInput.checked;
+        });
+        loopModeRow.appendChild(loopModeLabel);
+        loopModeRow.appendChild(loopModeInput);
+        section.appendChild(loopModeRow);
 
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';

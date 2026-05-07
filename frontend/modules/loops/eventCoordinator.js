@@ -163,6 +163,9 @@ export class EventCoordinator {
     this.loopUI._updateRegionsInQueue(data.queue);
     this.loopUI._updateLoopStats();
     this.loopUI.renderLoopPanel();
+    // Refresh control button states (Step in particular toggles on
+    // queue length, which the pauseStateChanged path doesn't cover).
+    this.loopUI._updatePauseButtonState(false);
   }
 
   /**
@@ -429,6 +432,12 @@ export class EventCoordinator {
 
     logger.info('Received gameState:pathUpdated, re-rendering loop panel');
     this.loopUI.renderLoopPanel();
+    // Path updates that come from gameState directly (e.g. exit/location
+    // clicks routed through gameStateAPI.updatePath) don't fire
+    // loopState:queueUpdated, so _handleQueueUpdated doesn't see them.
+    // Refresh control button states here too — Step in particular
+    // toggles enabled when the queue grows from empty.
+    this.loopUI._updatePauseButtonState(false);
   }
 
   /**

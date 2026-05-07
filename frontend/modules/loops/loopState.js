@@ -66,6 +66,11 @@ export class LoopState {
     // its tile-by-tile execution and publish
     // loops:substrateActionCompleted.
     this._delegatedAction = null;
+    // Step button: when true, the queue stops (transitions to paused)
+    // after the next action completes — including substrate-delegated
+    // walks (whole logical action) and out-of-mana resets (reset is
+    // the step). Set by step(); cleared on completion or reset.
+    this._stepMode = false;
     // Phase 6g: signal flag set across _handleSubstrateActionCompleted →
     // _completeCurrentAction → _applyActionEffects. Read by the
     // regionMove case to suppress its user:regionMove dispatch when
@@ -616,6 +621,14 @@ export class LoopState {
     this.eventBus.publish('loopState:processingStarted', {
       action: this.currentAction,
     });
+    // Mirror stopProcessing's pauseStateChanged publish so any path
+    // that lands here (auto-start on gameState:pathUpdated, click-Start,
+    // setPaused(false), step()) refreshes the Pause/Step button labels
+    // without depending on a follow-up publisher to do it.
+    this.eventBus.publish('loopState:pauseStateChanged', {
+      isPaused: this.isPaused,
+      processingState: this.getProcessingState(),
+    });
   }
 
   /**
@@ -702,6 +715,66 @@ export class LoopState {
       isPaused: this.isPaused,
       processingState: this.getProcessingState(),
     });
+  }
+
+  /**
+   * Step: run exactly one queued action, then transition to paused.
+   * - Whole logical action: substrate-delegated walks finish in full.
+   * - An out-of-mana reset along the way counts as the step.
+   * - End state is `paused` so the user can keep clicking Step (or
+   *   Resume) to advance one action at a time.
+   * - Works from idle, paused, or completed-with-new-actions. From
+   *   the completed-with-new-actions case, picks up at currentActionIndex
+   *   (the new action) rather than restarting from 0.
+   * - No-op when already running or when the queue has no work past
+   *   currentActionIndex (the UI also disables the button then).
+   */
+  step() {
+    if (this.isProcessing) return;
+    const queue = this.getActionQueue();
+    if (queue.length === 0) return;
+
+    // Completed state with new actions appended past currentActionIndex:
+    // resume from currentActionIndex so the new action runs next, not
+    // index 0 (which would re-walk the already-completed prefix).
+    if (this._queueCompleted) {
+      if (queue.length <= this.currentActionIndex) return;
+      this._stepMode = true;
+      this.resumeProcessing();
+      if (!this.isProcessing) this._stepMode = false;
+      return;
+    }
+
+    this._stepMode = true;
+    if (this.isPaused) {
+      this.setPaused(false);
+    } else {
+      this.startProcessing();
+    }
+    // Defensive: if startup didn't actually start processing (e.g.,
+    // queue was filtered out by upstream guards), drop the flag so it
+    // can't fire on a later action.
+    if (!this.isProcessing) this._stepMode = false;
+  }
+
+  /**
+   * Drop step mode and transition to paused. Used by the post-action
+   * and post-reset hooks so a single Step click lands the queue in
+   * the same shape as a manual Pause.
+   */
+  _pauseAfterStep() {
+    this._stepMode = false;
+    this.isPaused = true;
+    if (this.isProcessing) {
+      this.stopProcessing();
+    } else {
+      // stopProcessing publishes pauseStateChanged; if processing
+      // already stopped (substrate-driven reset path), publish here.
+      this.eventBus.publish('loopState:pauseStateChanged', {
+        isPaused: this.isPaused,
+        processingState: this.getProcessingState(),
+      });
+    }
   }
 
   /**
@@ -990,8 +1063,11 @@ export class LoopState {
         //log('info', 'Loop reset: out of mana');
         this._resetLoop();
 
-        if (!this.autoRestartQueue) {
+        // Step mode forces the pause path — the reset itself is the
+        // step's terminal event regardless of autoRestartQueue.
+        if (!this.autoRestartQueue || this._stepMode) {
           // Pause at end of loop — user must click Resume to go again
+          this._stepMode = false;
           this.isPaused = true;
           this.stopProcessing();
           this.eventBus.publish('loopState:pauseStateChanged', {
@@ -1138,6 +1214,9 @@ export class LoopState {
         this.isProcessing = false;
         this.isPaused = false;
         this._queueCompleted = true;
+        // Step mode is irrelevant once the queue ends; the completed
+        // state already meets "stop after one action".
+        this._stepMode = false;
         this.eventBus.publish('loopState:queueCompleted', {});
         this.eventBus.publish('loopState:pauseStateChanged', {
           isPaused: this.isPaused,
@@ -1158,6 +1237,13 @@ export class LoopState {
       this.eventBus.publish('loopState:newActionStarted', {
         action: this.currentAction,
       });
+    }
+
+    // Step mode: stop after this single action. Done at the very end
+    // so currentActionIndex has already advanced — a follow-up Step
+    // (or Resume) picks up from the next action.
+    if (this._stepMode) {
+      this._pauseAfterStep();
     }
   }
 
@@ -1199,6 +1285,9 @@ export class LoopState {
       // already cleared the path via gameState.triggerLoopReset; the
       // queue is empty. Stop processing.
       this.stopProcessing();
+      // Step mode: reset counts as the step. Land in paused so the
+      // user can resume from the (now-cleared) queue position.
+      if (this._stepMode) this._pauseAfterStep();
       return;
     }
 

@@ -193,6 +193,7 @@ export class LoopUI {
                 <span style="font-weight: bold;">Controls</span>
               </div>
               <button id="loop-ui-toggle-pause" class="button" disabled>Pause</button>
+              <button id="loop-ui-step" class="button" disabled title="Run the next queued action, then pause">Step</button>
               <button id="loop-ui-clear-queue" class="button" disabled>Clear Queue</button>
               <button id="loop-ui-expand-collapse-all" class="button">Expand All</button>
               <button id="loop-ui-compact-view" class="button">Compact View</button>
@@ -292,6 +293,12 @@ export class LoopUI {
         loopState.setPaused(false);  // Start or Resume → running
       }
       // Button update is handled by the loopState:pauseStateChanged event
+    });
+
+    attachButtonHandler('loop-ui-step', function () {
+      loopState.step();
+      // _updatePauseButtonState reflects the resulting paused state
+      // when loopState fires pauseStateChanged after the action lands.
     });
 
     attachButtonHandler('loop-ui-toggle-restart', this._handleRestartClick);
@@ -1213,6 +1220,27 @@ export class LoopUI {
       const labels = { idle: 'Start', running: 'Pause', paused: 'Resume', completed: 'Restart', waiting: 'Waiting' };
       pauseBtn.textContent = labels[processingState] || 'Start';
       pauseBtn.disabled = !this.isLoopModeActive || processingState === 'waiting';
+    }
+
+    // Step is meaningful when the queue has work to advance from
+    // currentActionIndex and isn't already running. 'idle' and 'paused'
+    // accept any non-empty queue; 'completed' accepts only queues that
+    // have grown past currentActionIndex (a new action was appended
+    // after the queue ran to the end). Disabled while running or
+    // waiting, and when loop mode is inactive.
+    const stepBtn = this.rootElement?.querySelector('#loop-ui-step');
+    if (stepBtn) {
+      const queueLen = loopState.getActionQueue?.()?.length ?? 0;
+      const idx = loopState.currentActionIndex ?? 0;
+      let stepActive = false;
+      if (this.isLoopModeActive && queueLen > 0) {
+        if (processingState === 'idle' || processingState === 'paused') {
+          stepActive = true;
+        } else if (processingState === 'completed') {
+          stepActive = queueLen > idx;
+        }
+      }
+      stepBtn.disabled = !stepActive;
     }
 
     // Update the status line in the action container

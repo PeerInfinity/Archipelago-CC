@@ -228,6 +228,34 @@ describe('LoopState — substrate-handled completion (Phase 6)', () => {
       expect(loopState._delegatedAction).toBeNull();
     });
   });
+
+  describe('step / step-mode hooks', () => {
+    it('step() is a no-op while already processing', () => {
+      loopState.isProcessing = true;
+      loopState.step();
+      expect(loopState._stepMode).toBe(false);
+    });
+
+    it('step() is a no-op when the queue is empty', () => {
+      loopState.isProcessing = false;
+      // No actions in gameState path → empty queue.
+      loopState.step();
+      expect(loopState._stepMode).toBe(false);
+      expect(loopState.isProcessing).toBe(false);
+    });
+
+    it('substrate completion in step mode lands in paused', () => {
+      loopState._stepMode = true;
+      loopState._delegatedAction = { type: 'regionMove' };
+      loopState.isProcessing = true;
+      // completed:false short-circuits _completeCurrentAction and
+      // exercises the post-stopProcessing pause hook.
+      loopState._handleSubstrateActionCompleted({ completed: false });
+      expect(loopState.isProcessing).toBe(false);
+      expect(loopState.isPaused).toBe(true);
+      expect(loopState._stepMode).toBe(false);
+    });
+  });
 });
 
 describe('LoopState — resetQueue (Phase 6g)', () => {
