@@ -134,7 +134,8 @@ export class GameStatePanelUI {
                         el.textContent = `  ✓ ${entry.locationName}`;
                         el.style.color = '#6ea8d9';
                     } else if (entry.type === 'customAction') {
-                        el.textContent = `  ⚡ ${entry.actionName}`;
+                        const regionSuffix = entry.sourceRegion ? ` (${entry.sourceRegion})` : '';
+                        el.textContent = `  ⚡ ${entry.actionName}${regionSuffix}`;
                         el.style.color = '#e0a030';
                     }
                     this.pathEntriesElement.appendChild(el);

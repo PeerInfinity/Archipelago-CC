@@ -4,7 +4,7 @@
 
 import loopState from './loopStateSingleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { getLoopsModuleDispatcher, getCostDataManager } from './index.js';
+import { getCostDataManager } from './index.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import {
@@ -380,23 +380,19 @@ export class LoopBlockBuilder {
         li.style.cursor = 'pointer';
         li.addEventListener('click', (e) => {
           if (e.target.classList.contains('region-link')) return;
-          const dispatcher = getLoopsModuleDispatcher();
-          if (dispatcher) {
-            // Phase 6g: route through user:exitClicked so the loops
-            // module's intercept handler (handleUserExitClickedForLoops)
-            // queues the move via gameState.updatePath without firing
-            // user:regionMove. Pre-Phase 6g this published user:regionMove
-            // directly, which moved the player as a side effect of
-            // queue building.
-            dispatcher.publish('user:exitClicked', {
-              exitName: exitDef.name,
-              sourceRegion: regionName,
-              destinationRegion: connectedRegionName,
-              accessRule: exitDef.access_rule,
-              isDiscovered: isExitDiscovered,
-              source: 'loopBlockBuilder',
-            }, 'bottom');
-          }
+          // Append a regionMove directly to the queue. We don't
+          // publish user:exitClicked here because the loops module's
+          // intercept handler resets and rebuilds the entire queue
+          // via findDiscoveredPath(Menu→source) — that would wipe
+          // any in-flight Explore actions and other queue contents.
+          // user:exitClicked stays as the Exits panel's signal for
+          // genuine "click to navigate" intent; this in-panel click
+          // is purely a queue-build action.
+          this.loopUI.gameStateAPI?.updatePath?.(
+            connectedRegionName,
+            exitDef.name,
+            regionName,
+          );
           this.loopUI.navigateToRegion(connectedRegionName);
         });
       }
