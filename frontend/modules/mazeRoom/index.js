@@ -11,6 +11,7 @@
 import { MazeRoomUI } from './mazeRoomUI.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 export * from './mazeRoomEngine.js';
 export { substrateRegistryEntry } from './mazeRoomLibrary.js';
@@ -39,7 +40,13 @@ function handleLoadRegion(payload) {
     // Self-activate. No-op when the panel is already the active item
     // in its stack; in any other case ui:activatePanel is what brings
     // it (or causes it to be created) into focus.
-    if (eventBus?.publish) {
+    //
+    // Skip activation when the loops panel has "Keep this panel focused"
+    // on AND the queue is currently driving (loops.isFocusLocked()).
+    // The substrate still picks up the loadRegion payload for rendering;
+    // only the tab-switch is suppressed.
+    const focusLocked = centralRegistry.getPublicFunction?.('loops', 'isFocusLocked')?.();
+    if (!focusLocked && eventBus?.publish) {
         eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
     }
     if (panelInstance && typeof panelInstance.applyLoadedRegion === 'function') {

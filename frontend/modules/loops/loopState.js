@@ -71,6 +71,20 @@ export class LoopState {
     // walks (whole logical action) and out-of-mana resets (reset is
     // the step). Set by step(); cleared on completion or reset.
     this._stepMode = false;
+    // "Keep this panel focused" toggle. When true, the loops module's
+    // public isFocusLocked() returns true while the queue is processing
+    // (or step-mode is armed), and substrate index modules (maze,
+    // textAdventure) skip their ui:activatePanel publish on loadRegion
+    // so the loops panel stays in front. Pushed in by displaySettings
+    // on load and on UI changes. Default off.
+    this.keepFocused = false;
+    // True while a substrate-driven loop reset is propagating through
+    // the dispatcher chain — set by the gameState:loopReset subscriber
+    // and cleared in the next microtask. Out-of-mana resets call
+    // _publishLoopsCompleted(false) (which clears isProcessing) BEFORE
+    // dispatching the user:regionMove that teleports back to start, so
+    // isFocusLocked needs another way to know the reset isn't done yet.
+    this._loopResetInProgress = false;
     // Phase 6g: signal flag set across _handleSubstrateActionCompleted →
     // _completeCurrentAction → _applyActionEffects. Read by the
     // regionMove case to suppress its user:regionMove dispatch when
@@ -237,6 +251,14 @@ export class LoopState {
     // and the action cursor reset.
     this.eventBus.subscribe('gameState:loopReset', () => {
       this._resetActionsProgress();
+      // Mark the reset as in-progress so isFocusLocked stays true
+      // through the synchronous regionMove dispatch that follows
+      // (substrate index modules check this before publishing
+      // ui:activatePanel on loadRegion). Cleared on the next
+      // microtask — by then handleLoadRegion has run and any
+      // dependent UI activation decision has been made.
+      this._loopResetInProgress = true;
+      queueMicrotask(() => { this._loopResetInProgress = false; });
     });
   }
 
@@ -280,6 +302,21 @@ export class LoopState {
   addRegionXP(regionName, amount) {
     const gs = this._gs();
     if (gs) gs.addRegionXP(regionName, amount);
+  }
+
+  /**
+   * True when the loops panel should keep focus during queue activity
+   * — i.e. the user enabled "Keep this panel focused" AND the queue is
+   * actively processing or step-mode is armed. Substrate index modules
+   * read this before publishing ui:activatePanel on loadRegion.
+   *
+   * Outside queue activity (idle, paused, completed), substrates may
+   * still self-activate so they mount and render properly when the
+   * user navigates manually — including the very first region load.
+   */
+  isFocusLocked() {
+    return this.keepFocused === true
+      && (this.isProcessing || this._stepMode || this._loopResetInProgress);
   }
 
   /**

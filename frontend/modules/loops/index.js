@@ -217,6 +217,14 @@ export function register(registrationApi) {
     return _pathFinder;
   });
 
+  // Substrate index modules (maze, textAdventure) consult this before
+  // publishing ui:activatePanel on loadRegion — when the loops queue is
+  // running and the user has "Keep this panel focused" on, substrates
+  // skip their self-activation so the loops panel stays in front.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'isFocusLocked', () => {
+    return loopStateSingleton.isFocusLocked();
+  });
+
   // Register Loops settings schema snippet
   registrationApi.registerSettingsSchema({
     type: 'object',

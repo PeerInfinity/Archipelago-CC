@@ -33,6 +33,12 @@ export class DisplaySettingsManager {
       autoRestart: false,
       instantMode: false,
       loopModeEnabled: false,
+
+      // When true, suppress substrate self-activation during queue
+      // processing so the loops panel stays focused. Substrate panels
+      // (maze, textAdventure) check loops.isFocusLocked() before
+      // publishing ui:activatePanel on loadRegion.
+      keepFocused: false,
     };
 
     logger.debug('DisplaySettingsManager constructed');
@@ -63,6 +69,7 @@ export class DisplaySettingsManager {
       this.settings.defaultSpeed = await this.settingsManager.getSetting('moduleSettings.loops.defaultSpeed', 100);
       this.settings.autoRestart = await this.settingsManager.getSetting('moduleSettings.loops.autoRestart', false);
       this.settings.loopModeEnabled = await this.settingsManager.getSetting('moduleSettings.loops.loopModeEnabled', false);
+      this.settings.keepFocused = await this.settingsManager.getSetting('moduleSettings.loops.keepFocused', false);
 
       // Override with localStorage values (since settingsManager doesn't actually persist)
       this._loadFromLocalStorage();
@@ -129,6 +136,11 @@ export class DisplaySettingsManager {
       if (speedInput) {
         speedInput.disabled = this.settings.instantMode;
       }
+    }
+
+    const keepFocusedCheckbox = this.rootElement.querySelector('#loop-ui-toggle-keep-focused');
+    if (keepFocusedCheckbox) {
+      keepFocusedCheckbox.checked = !!this.settings.keepFocused;
     }
 
     logger.debug('Settings synced to UI');
@@ -232,6 +244,8 @@ export class DisplaySettingsManager {
         this.settings.autoRestart = value;
       } else if (key === 'moduleSettings.loops.loopModeEnabled') {
         this.settings.loopModeEnabled = value;
+      } else if (key === 'moduleSettings.loops.keepFocused') {
+        this.settings.keepFocused = value;
       }
 
       // Sync to UI to reflect the change
@@ -249,6 +263,7 @@ export class DisplaySettingsManager {
         defaultSpeed: this.settings.defaultSpeed,
         autoRestart: this.settings.autoRestart,
         instantMode: this.settings.instantMode,
+        keepFocused: this.settings.keepFocused,
       };
       localStorage.setItem(LOOP_SETTINGS_STORAGE_KEY, JSON.stringify(data));
     } catch (e) {
@@ -269,6 +284,9 @@ export class DisplaySettingsManager {
       }
       if (typeof data.instantMode === 'boolean') {
         this.settings.instantMode = data.instantMode;
+      }
+      if (typeof data.keepFocused === 'boolean') {
+        this.settings.keepFocused = data.keepFocused;
       }
       logger.debug('Loaded loop settings from localStorage', data);
     } catch (e) {

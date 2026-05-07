@@ -72,8 +72,25 @@ export function initializeLoopEvents(eventBus) {
 }
 
 /**
+ * When true, loop-mode location clicks rebuild the queue with a path-
+ * to-location (resetQueue → buildMoveSequence → addLocationCheck or
+ * customAction(explore)). When false, the handler just propagates
+ * user:locationCheck up the chain unchanged.
+ *
+ * Currently disabled because the maze substrate publishes
+ * user:locationCheck when the player steps on a location tile mid-
+ * Explore — that fired the auto-queue intercept and wiped the running
+ * Explore. A possible fix is to have substrates publish
+ * system:locationCheck for tile-internal events instead, then flip
+ * this flag back on (the dispatcher receiver in loops/index.js already
+ * forwards both event names through this handler).
+ */
+const AUTO_QUEUE_ON_LOCATION_CHECK = false;
+
+/**
  * Handles the 'user:locationCheck' event for the Loops module.
- * If loop mode is active, it queues the action.
+ * If loop mode is active AND AUTO_QUEUE_ON_LOCATION_CHECK is on,
+ * it rebuilds the queue with a path to the location.
  * Otherwise, it propagates the event up the chain.
  * @param {object} eventData - The data associated with the event.
  * @param {object} propagationOptions - Options related to event propagation.
@@ -81,8 +98,9 @@ export function initializeLoopEvents(eventBus) {
 export function handleUserLocationCheckForLoops(eventData, eventName = 'user:locationCheck') {
   const dispatcher = getLoopsModuleDispatcher();
 
-  // When loop mode is NOT active, just propagate the same event name we received.
-  if (!isLoopModeActive) {
+  // When loop mode is NOT active, or the auto-queue intercept is off,
+  // just propagate the same event name we received.
+  if (!isLoopModeActive || !AUTO_QUEUE_ON_LOCATION_CHECK) {
     if (dispatcher) {
       dispatcher.publishToNextModule(moduleInfo.name, eventName, eventData, { direction: 'up' });
     }

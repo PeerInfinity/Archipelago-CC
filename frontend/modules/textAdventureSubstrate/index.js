@@ -23,6 +23,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { pickAutoLoadCustomDataUrl } from './textAdventureSubstrateStandalone.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 export * from './textAdventureSubstrateLibrary.js';
 
@@ -113,7 +114,13 @@ function handleLoadRegion(payload) {
     // Self-activate. No-op when this panel is already the active item;
     // ui:activatePanel brings it (or causes it to be created) into
     // focus in any other case.
-    if (eventBus?.publish) {
+    //
+    // Skip activation when the loops panel has "Keep this panel focused"
+    // on AND the queue is currently driving (loops.isFocusLocked()).
+    // The substrate still picks up the loadRegion payload for rendering;
+    // only the tab-switch is suppressed.
+    const focusLocked = centralRegistry.getPublicFunction?.('loops', 'isFocusLocked')?.();
+    if (!focusLocked && eventBus?.publish) {
         eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstratePanel' });
     }
     if (panelInstance && typeof panelInstance.applyLoadedRegion === 'function') {

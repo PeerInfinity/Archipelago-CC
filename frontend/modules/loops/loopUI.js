@@ -138,6 +138,13 @@ export class LoopUI {
         const settingsUpdated = this.displaySettings.handleSettingsChanged({ key, value });
         if (settingsUpdated) {
           log('info', 'LoopUI reacting to settings change:', key);
+          // Mirror keepFocused into loopState so isFocusLocked reflects
+          // changes made via the global settings panel (the inline
+          // checkbox already pushes through its handler).
+          if (key === 'moduleSettings.loops.keepFocused' || key === '*') {
+            const v = this.displaySettings.getSetting('keepFocused');
+            if (v !== undefined) loopState.keepFocused = !!v;
+          }
           this.renderLoopPanel(); // Re-render panel when setting changes
         }
       }
@@ -209,6 +216,7 @@ export class LoopUI {
                 <label class="auto-restart-label"><input type="checkbox" id="loop-ui-toggle-auto-restart" /> Auto-restart when queue complete</label>
                 <label class="auto-resume-label"><input type="checkbox" id="loop-ui-toggle-auto-resume" /> Auto-resume on new action</label>
                 <label class="auto-remove-label"><input type="checkbox" id="loop-ui-toggle-auto-remove" /> Auto-remove completed actions</label>
+                <label class="keep-focused-label" title="Suppress substrate panel activation while the queue is running"><input type="checkbox" id="loop-ui-toggle-keep-focused" /> Keep this panel focused</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button">Save Game</button>
@@ -343,6 +351,16 @@ export class LoopUI {
         const newState = autoRemoveCheckbox.checked;
         loopState.setAutoRemoveCompleted(newState);
         await this.displaySettings.setSetting('autoRemoveCompleted', newState, true);
+      });
+    }
+
+    const keepFocusedCheckbox = querySelector('#loop-ui-toggle-keep-focused');
+    if (keepFocusedCheckbox) {
+      keepFocusedCheckbox.checked = !!loopState.keepFocused;
+      keepFocusedCheckbox.addEventListener('change', async () => {
+        const newState = keepFocusedCheckbox.checked;
+        loopState.keepFocused = newState;
+        await this.displaySettings.setSetting('keepFocused', newState, true);
       });
     }
 
@@ -776,6 +794,10 @@ export class LoopUI {
     const autoRemoveCompleted = this.displaySettings.getSetting('autoRemoveCompleted');
     if (autoRemoveCompleted !== undefined) {
       loopState.autoRemoveCompleted = autoRemoveCompleted; // Don't call setter here to avoid premature removal
+    }
+    const keepFocused = this.displaySettings.getSetting('keepFocused');
+    if (keepFocused !== undefined) {
+      loopState.keepFocused = !!keepFocused;
     }
 
     // Get and set the gameState API
