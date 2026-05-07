@@ -13,6 +13,36 @@ export function proposedLinearFinalCost(baseCost, level) {
   return baseCost / proposedLinearReduction(level);
 }
 
+// Region XP effect modes. Per the loop-mode v1 plan (Phase 7):
+//   'cost'  — reduce mana cost via proposedLinearFinalCost (current behavior)
+//   'speed' — reduce action time only; cost unaffected (deferred to v2)
+//   'both'  — reduce both cost and time (deferred to v2)
+//   'none'  — no XP effect
+// 'speed' and 'both' are accepted by validators but not yet wired to a
+// speed multiplier; their *cost* component matches 'speed' = 'none' and
+// 'both' = 'cost' until tick-speed regulation lands.
+export const REGION_XP_EFFECTS = ['cost', 'speed', 'both', 'none'];
+export const DEFAULT_REGION_XP_EFFECT = 'cost';
+
+export function isValidRegionXpEffect(effect) {
+  return REGION_XP_EFFECTS.includes(effect);
+}
+
+export function normalizeRegionXpEffect(effect) {
+  return isValidRegionXpEffect(effect) ? effect : DEFAULT_REGION_XP_EFFECT;
+}
+
+// Apply the cost component of a regionXpEffect. Use this everywhere a
+// deduction or display cost was previously calling proposedLinearFinalCost
+// directly so a single setting can flip the behavior.
+export function applyRegionXpCostEffect(baseCost, level, effect = DEFAULT_REGION_XP_EFFECT) {
+  const e = normalizeRegionXpEffect(effect);
+  if (e === 'cost' || e === 'both') {
+    return proposedLinearFinalCost(baseCost, level);
+  }
+  return baseCost;
+}
+
 // Calculate level from total XP (linear formula)
 export function levelFromXP(xp) {
   // With 100 XP for level 1, and +20 XP per level

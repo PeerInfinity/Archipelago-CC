@@ -1193,7 +1193,10 @@ describe('buildRulesJson', () => {
         expect(out.loop_costs.regions).toBeDefined();
         expect(out.loop_costs.locations).toBeDefined();
         // Start region (Menu) is always free
-        expect(out.loop_costs.regions.Menu).toEqual({ moveCost: 0 });
+        expect(out.loop_costs.regions.Menu).toEqual({ moveCost: 0, xpEffect: 'cost' });
+        // Default regionXpEffect is 'cost' and is also recorded at the
+        // sidecar root for fallback.
+        expect(out.loop_costs.defaultRegionXpEffect).toBe('cost');
         // Pipeline records the seed_name as the source
         expect(out.loop_costs.generatedFrom).toBeTruthy();
     });

@@ -13,7 +13,7 @@
 // REMOVED: import eventBus from '../../app/core/eventBus.js';
 import {
   proposedLinearReduction,
-  proposedLinearFinalCost,
+  applyRegionXpCostEffect,
 } from './xpFormulas.js';
 import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -1349,10 +1349,12 @@ export class LoopState {
       }
     }
 
-    // Apply region XP reduction if applicable
+    // Apply region XP reduction if applicable, gated by the per-region
+    // xpEffect from the loop_costs sidecar (defaults to 'cost').
     if (action.sourceRegion) {
       const xpData = this.getRegionXP(action.sourceRegion);
-      return proposedLinearFinalCost(baseCost, xpData.level);
+      const effect = this.costDataManager?.getRegionXpEffect?.(action.sourceRegion);
+      return applyRegionXpCostEffect(baseCost, xpData.level, effect);
     }
 
     return baseCost;

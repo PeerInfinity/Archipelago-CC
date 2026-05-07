@@ -1677,6 +1677,13 @@ export function buildRulesJson(grid, opts = {}) {
         // See NewDocs/plans/procedural-generation/
         // loop-mode-substrate-integration.md (Phase 2).
         enableLoopMode = false,
+        // Per-region XP effect mode stamped on every loop_costs region
+        // entry: 'cost' (default — XP discounts mana cost), 'speed'
+        // (reserved for v2 — XP discounts action time only), 'both'
+        // (reserved for v2), or 'none' (XP has no effect on cost).
+        // Threaded through to generateLoopCosts when enableLoopMode is
+        // true. See loop-mode-substrate-integration.md (Phase 7).
+        regionXpEffect = 'cost',
         // Items granted to the player at game start (from the source
         // rules.json's `starting_items[playerId]`). Filtered to items
         // present in the compiled items pool, with `sourceItems`
@@ -1854,6 +1861,7 @@ export function buildRulesJson(grid, opts = {}) {
                 rulesJson: scaffold,
                 sphereLog: scaffold.sphere_log,
                 playerId,
+                regionXpEffect,
                 sourceFileName: seedName || `seed_${seed}`,
             });
         } catch (e) {

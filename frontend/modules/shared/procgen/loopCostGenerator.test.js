@@ -49,7 +49,7 @@ describe('loopCostGenerator — pure cost simulation', () => {
                 Start: { exits: [], locations: [] },
             }, 'Start');
             const costs = generateLoopCosts({ rulesJson: rules, sphereLog: [] });
-            expect(costs.regions.Start).toEqual({ moveCost: 0 });
+            expect(costs.regions.Start).toEqual({ moveCost: 0, xpEffect: 'cost' });
         });
     });
 
@@ -188,6 +188,59 @@ describe('loopCostGenerator — pure cost simulation', () => {
             const costs = generateLoopCosts({ rulesJson: rules, sphereLog });
             // Visited cost = 50 (maxMana/2). Unvisited gets the max of existing (50)
             expect(costs.locations.Unvisited).toBe(50);
+        });
+    });
+
+    describe('regionXpEffect option', () => {
+        it("defaults to 'cost' on every region entry and at the sidecar root", () => {
+            const rules = makeRules({
+                Menu: { exits: [{ name: 'to_a', connected_region: 'A' }], locations: [] },
+                A: { exits: [], locations: [{ name: 'Loc' }] },
+            }, 'Menu');
+            const costs = generateLoopCosts({ rulesJson: rules, sphereLog: [] });
+            expect(costs.defaultRegionXpEffect).toBe('cost');
+            for (const entry of Object.values(costs.regions)) {
+                expect(entry.xpEffect).toBe('cost');
+            }
+        });
+
+        it('stamps the supplied effect on every region', () => {
+            const rules = makeRules({
+                Menu: {
+                    exits: [
+                        { name: 'to_a', connected_region: 'A' },
+                        { name: 'to_b', connected_region: 'B' },
+                    ],
+                    locations: [],
+                },
+                A: { exits: [], locations: [{ name: 'Loc1' }] },
+                B: { exits: [], locations: [] },
+            }, 'Menu');
+            const sphereLog = [stateUpdate(0, ['Loc1'])];
+            const costs = generateLoopCosts({
+                rulesJson: rules,
+                sphereLog,
+                regionXpEffect: 'none',
+            });
+            expect(costs.defaultRegionXpEffect).toBe('none');
+            // Path-assigned region (A) and default-filled region (B)
+            // both pick up the effect.
+            expect(costs.regions.A.xpEffect).toBe('none');
+            expect(costs.regions.B.xpEffect).toBe('none');
+            expect(costs.regions.Menu.xpEffect).toBe('none');
+        });
+
+        it('falls back to default when given an unknown effect', () => {
+            const rules = makeRules({
+                Menu: { exits: [], locations: [] },
+            }, 'Menu');
+            const costs = generateLoopCosts({
+                rulesJson: rules,
+                sphereLog: [],
+                regionXpEffect: 'wibble',
+            });
+            expect(costs.defaultRegionXpEffect).toBe('cost');
+            expect(costs.regions.Menu.xpEffect).toBe('cost');
         });
     });
 

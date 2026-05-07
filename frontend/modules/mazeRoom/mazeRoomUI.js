@@ -38,7 +38,7 @@ import { MazeRoomVisualizer } from './mazeRoomVisualizer.js';
 import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { proposedLinearFinalCost } from '../loops/xpFormulas.js';
+import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
 import { bestPathKey, findPath } from './mazeAutopather.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
@@ -667,7 +667,8 @@ export class MazeRoomUI {
             const gs = getGameStateSingleton?.();
             if (!gs) return cost;
             const xpData = gs.getRegionXP(this.currentRegionId);
-            return proposedLinearFinalCost(cost, xpData?.level ?? 0);
+            const effect = this._getCostDataManager()?.getRegionXpEffect?.(this.currentRegionId);
+            return applyRegionXpCostEffect(cost, xpData?.level ?? 0, effect);
         } catch {
             return cost;
         }

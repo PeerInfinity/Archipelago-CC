@@ -11,7 +11,7 @@ import {
   manaColorClass,
   formatTime,
 } from '../shared/queueAnalysis.js';
-import { proposedLinearFinalCost } from './xpFormulas.js';
+import { applyRegionXpCostEffect } from './xpFormulas.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -266,7 +266,11 @@ export class LoopBlockBuilder {
       : 50;
     const exploreBaseCost = exploreRegionCost * 2;
     const exploreXpData = loopState.getRegionXP(regionName);
-    const exploreFinalCost = proposedLinearFinalCost(exploreBaseCost, exploreXpData.level);
+    const exploreFinalCost = applyRegionXpCostEffect(
+      exploreBaseCost,
+      exploreXpData.level,
+      exploreCostDataManager?.getRegionXpEffect?.(regionName),
+    );
     exploreCostSpan.textContent = exploreFinalCost.toFixed(1);
     exploreContainer.appendChild(exploreCostSpan);
 
@@ -357,7 +361,11 @@ export class LoopBlockBuilder {
         ? costDataManager.getRegionCost(regionName)
         : 50;
       const xpData = loopState.getRegionXP(regionName);
-      const moveFinalCost = proposedLinearFinalCost(moveBaseCost, xpData.level);
+      const moveFinalCost = applyRegionXpCostEffect(
+        moveBaseCost,
+        xpData.level,
+        costDataManager?.getRegionXpEffect?.(regionName),
+      );
       costSpan.textContent = moveFinalCost.toFixed(1);
       li.appendChild(costSpan);
 
@@ -485,7 +493,11 @@ export class LoopBlockBuilder {
         ? locCostDataManager.getLocationCost(locationDef.name)
         : 100;
       const locXpData = loopState.getRegionXP(regionName);
-      const locFinalCost = proposedLinearFinalCost(locBaseCost, locXpData.level);
+      const locFinalCost = applyRegionXpCostEffect(
+        locBaseCost,
+        locXpData.level,
+        locCostDataManager?.getRegionXpEffect?.(regionName),
+      );
       costSpan.textContent = locFinalCost.toFixed(1);
       li.appendChild(costSpan);
 

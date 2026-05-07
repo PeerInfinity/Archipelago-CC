@@ -7,7 +7,7 @@
 
 import {
   proposedLinearReduction,
-  proposedLinearFinalCost,
+  applyRegionXpCostEffect,
 } from '../loops/xpFormulas.js';
 import { getCostDataManager } from '../loops/index.js';
 
@@ -58,13 +58,16 @@ export function calculateActionCost(action, loopState) {
   let finalCost = baseCost;
   let level = 0;
 
-  // Apply region XP reduction if applicable
+  // Apply region XP reduction if applicable, gated by the per-region
+  // xpEffect from the loop_costs sidecar (defaults to 'cost').
   const actionRegion = action.sourceRegion;
   if (actionRegion && loopState) {
     const xpData = loopState.getRegionXP(actionRegion);
     level = xpData?.level || 0;
 
-    finalCost = proposedLinearFinalCost(baseCost, level);
+    const cdm = getCostDataManager();
+    const effect = cdm?.getRegionXpEffect?.(actionRegion);
+    finalCost = applyRegionXpCostEffect(baseCost, level, effect);
     levelDiscount = baseCost - finalCost;
   }
 

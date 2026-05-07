@@ -12,6 +12,10 @@
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import {
+  DEFAULT_REGION_XP_EFFECT,
+  normalizeRegionXpEffect,
+} from './xpFormulas.js';
 
 const logger = createUniversalLogger('costDataManager');
 
@@ -278,6 +282,27 @@ export class CostDataManager {
     }
 
     return this.costData.defaultRegionCost || 50;
+  }
+
+  /**
+   * Region XP effect mode for the named region. Read from the per-region
+   * `xpEffect` field in the loop_costs sidecar; falls back to
+   * `defaultRegionXpEffect` (sidecar-level) and finally to `DEFAULT_REGION_XP_EFFECT`
+   * ('cost') when neither is set.
+   *
+   * @param {string} regionName
+   * @returns {'cost'|'speed'|'both'|'none'}
+   */
+  getRegionXpEffect(regionName) {
+    if (!this.costData) return DEFAULT_REGION_XP_EFFECT;
+    const regionData = this.costData.regions?.[regionName];
+    if (regionData && typeof regionData.xpEffect === 'string') {
+      return normalizeRegionXpEffect(regionData.xpEffect);
+    }
+    if (typeof this.costData.defaultRegionXpEffect === 'string') {
+      return normalizeRegionXpEffect(this.costData.defaultRegionXpEffect);
+    }
+    return DEFAULT_REGION_XP_EFFECT;
   }
 
   /**

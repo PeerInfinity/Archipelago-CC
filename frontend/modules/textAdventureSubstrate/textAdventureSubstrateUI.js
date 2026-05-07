@@ -44,6 +44,7 @@ import {
     getTextAdventureSubstrateSettings, getCustomData,
     readPendingStandaloneRegion,
 } from './index.js';
+import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
@@ -418,8 +419,18 @@ export class TextAdventureSubstrateUI {
     _deductLocationCheckMana(locationNames) {
         const gs = getGameStateSingleton?.();
         if (!gs) return;
+        const cdm = this._getCostDataManager();
         for (const name of locationNames) {
-            const cost = this._getLocationCost(name);
+            const baseCost = this._getLocationCost(name);
+            const xpData = this.currentRegionId
+                ? gs.getRegionXP(this.currentRegionId)
+                : null;
+            const effect = this.currentRegionId
+                ? cdm?.getRegionXpEffect?.(this.currentRegionId)
+                : undefined;
+            const cost = applyRegionXpCostEffect(
+                baseCost, xpData?.level ?? 0, effect,
+            );
             gs.deductMana(cost);
             // Award XP equal to mana spent (matches loops _processFrame's
             // 1 XP : 1 mana ratio).
@@ -434,7 +445,13 @@ export class TextAdventureSubstrateUI {
     _deductRegionMoveMana(regionName) {
         const gs = getGameStateSingleton?.();
         if (!gs) return;
-        const cost = this._getRegionMoveCost(regionName);
+        const cdm = this._getCostDataManager();
+        const baseCost = this._getRegionMoveCost(regionName);
+        const xpData = gs.getRegionXP(regionName);
+        const effect = cdm?.getRegionXpEffect?.(regionName);
+        const cost = applyRegionXpCostEffect(
+            baseCost, xpData?.level ?? 0, effect,
+        );
         gs.deductMana(cost);
         gs.addRegionXP(regionName, cost);
         if (gs.getCurrentMana() <= 0) {

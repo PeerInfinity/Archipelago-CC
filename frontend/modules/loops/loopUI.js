@@ -7,8 +7,8 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import {
   levelFromXP,
   xpForNextLevel,
-  proposedLinearFinalCost,
   proposedLinearReduction,
+  applyRegionXpCostEffect,
 } from './xpFormulas.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
@@ -1925,10 +1925,13 @@ export class LoopUI {
       }
     }
 
-    // Apply region XP reduction if applicable
+    // Apply region XP reduction if applicable, gated by the per-region
+    // xpEffect from the loop_costs sidecar (defaults to 'cost').
     if (action.sourceRegion) {
       const xpData = loopState.getRegionXP(action.sourceRegion);
-      return proposedLinearFinalCost(baseCost, xpData.level);
+      const cdm = getCostDataManager();
+      const effect = cdm?.getRegionXpEffect?.(action.sourceRegion);
+      return applyRegionXpCostEffect(baseCost, xpData.level, effect);
     }
 
     return baseCost;

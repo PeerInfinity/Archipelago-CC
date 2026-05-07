@@ -32,6 +32,13 @@
 
 const DEFAULT_PLAYER_ID = '1';
 
+const VALID_REGION_XP_EFFECTS = ['cost', 'speed', 'both', 'none'];
+const DEFAULT_REGION_XP_EFFECT = 'cost';
+
+function _normalizeRegionXpEffect(effect) {
+    return VALID_REGION_XP_EFFECTS.includes(effect) ? effect : DEFAULT_REGION_XP_EFFECT;
+}
+
 /**
  * @param {Object} args
  * @param {Object} args.rulesJson — the source rules.json
@@ -41,9 +48,14 @@ const DEFAULT_PLAYER_ID = '1';
  * @param {number} [args.manaPerItem=10]
  * @param {number} [args.defaultRegionCost=50]
  * @param {number} [args.defaultLocationCost=10]
+ * @param {'cost'|'speed'|'both'|'none'} [args.regionXpEffect='cost']
+ *        Per-region XP effect mode. Stamped on every region entry as
+ *        `xpEffect`, plus written to `defaultRegionXpEffect` at the
+ *        sidecar root for fallback.
  * @param {string} [args.sourceFileName=null] — recorded in metadata
  * @returns {Object} cost data (version, generatedAt, regions, locations,
- *                   defaultRegionCost, defaultLocationCost)
+ *                   defaultRegionCost, defaultLocationCost,
+ *                   defaultRegionXpEffect)
  */
 export function generateLoopCosts({
     rulesJson,
@@ -53,6 +65,7 @@ export function generateLoopCosts({
     manaPerItem = 10,
     defaultRegionCost = 50,
     defaultLocationCost = 10,
+    regionXpEffect = DEFAULT_REGION_XP_EFFECT,
     sourceFileName = null,
 } = {}) {
     if (!rulesJson || typeof rulesJson !== 'object') {
@@ -74,15 +87,17 @@ export function generateLoopCosts({
 
     const adjacency = buildAdjacency(regions);
     const locationToRegion = buildLocationIndex(regions);
+    const xpEffect = _normalizeRegionXpEffect(regionXpEffect);
 
     const costs = {
         version: '1.0',
         generatedAt: new Date().toISOString(),
         generatedFrom: sourceFileName,
-        regions: { [startRegion]: { moveCost: 0 } },
+        regions: { [startRegion]: { moveCost: 0, xpEffect } },
         locations: {},
         defaultRegionCost,
         defaultLocationCost,
+        defaultRegionXpEffect: xpEffect,
     };
 
     const assignedRegions = new Set([startRegion]);
@@ -121,7 +136,7 @@ export function generateLoopCosts({
             let remaining = uncosted.length;
             for (const region of uncosted) {
                 const cost = Math.max(1, Math.floor(manaForRegions / remaining));
-                costs.regions[region] = { moveCost: cost };
+                costs.regions[region] = { moveCost: cost, xpEffect };
                 assignedRegions.add(region);
                 remaining -= 1;
             }
@@ -235,6 +250,7 @@ function extractLocationEntries(sphereLog, playerId) {
 }
 
 function fillDefaults(costs, regions, assignedRegions, assignedLocations) {
+    const xpEffect = _normalizeRegionXpEffect(costs.defaultRegionXpEffect);
     // Uncosted regions: highest neighbor cost, or defaultRegionCost.
     for (const [name, data] of Object.entries(regions)) {
         if (assignedRegions.has(name)) continue;
@@ -245,6 +261,7 @@ function fillDefaults(costs, regions, assignedRegions, assignedLocations) {
         }
         costs.regions[name] = {
             moveCost: highest > 0 ? highest : costs.defaultRegionCost,
+            xpEffect,
         };
     }
 

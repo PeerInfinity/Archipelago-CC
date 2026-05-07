@@ -136,7 +136,19 @@ const DEFAULT_PARAMS = {
     // region's playable_payload gets manaEnabled=true so substrates
     // deduct mana on movement / location checks at runtime.
     enableLoopMode: false,
+    // Region XP effect mode stamped on every loop_costs region entry
+    // when enableLoopMode is on. 'cost' (default) discounts mana cost
+    // proportionally to XP level; 'speed' / 'both' are reserved for v2;
+    // 'none' disables the XP discount. See Phase 7.
+    regionXpEffect: 'cost',
 };
+
+const REGION_XP_EFFECT_OPTIONS = [
+    { value: 'cost', label: 'Cost', disabled: false },
+    { value: 'speed', label: 'Speed (v2)', disabled: true },
+    { value: 'both', label: 'Both (v2)', disabled: true },
+    { value: 'none', label: 'None', disabled: false },
+];
 
 const DEFAULT_SCENARIO = {
     items: { key_red: 2 },
@@ -852,6 +864,32 @@ export class ProcgenPipelineUI {
         loopModeRow.appendChild(loopModeInput);
         section.appendChild(loopModeRow);
 
+        // Region XP effect dropdown. The selected mode is stamped on
+        // every loop_costs.regions[name].xpEffect when loop mode is on;
+        // costDataManager exposes it at runtime via getRegionXpEffect.
+        // No effect if loop mode is off — the field is still written
+        // but no mana deduction happens.
+        const xpEffectRow = document.createElement('div');
+        xpEffectRow.className = 'procgen-pipeline-field';
+        const xpEffectLabel = document.createElement('label');
+        xpEffectLabel.textContent = 'Region XP effect';
+        xpEffectLabel.title = "Per-region XP discount mode applied to mana costs. 'Speed' / 'Both' are reserved for v2.";
+        const xpEffectSelect = document.createElement('select');
+        for (const opt of REGION_XP_EFFECT_OPTIONS) {
+            const optEl = document.createElement('option');
+            optEl.value = opt.value;
+            optEl.textContent = opt.label;
+            if (opt.disabled) optEl.disabled = true;
+            xpEffectSelect.appendChild(optEl);
+        }
+        xpEffectSelect.value = this.params.regionXpEffect ?? 'cost';
+        xpEffectSelect.addEventListener('change', () => {
+            this.params.regionXpEffect = xpEffectSelect.value;
+        });
+        xpEffectRow.appendChild(xpEffectLabel);
+        xpEffectRow.appendChild(xpEffectSelect);
+        section.appendChild(xpEffectRow);
+
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';
         const saveBtn = this._btn('Save Params', () => this._saveToLocalStorage());
@@ -1355,6 +1393,7 @@ export class ProcgenPipelineUI {
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,
+            regionXpEffect: this.params.regionXpEffect ?? 'cost',
             procgenMetadata: {
                 driver: 'grid-growth',
                 stop_reason: stats.stopReason,
@@ -1381,6 +1420,7 @@ export class ProcgenPipelineUI {
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,
+            regionXpEffect: this.params.regionXpEffect ?? 'cost',
             assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
             startingItems: this.topDownSource?.starting_items?.['1'] ?? [],
             sourceItems: this.topDownSource?.items?.['1'] ?? null,
