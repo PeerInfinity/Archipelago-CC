@@ -161,12 +161,7 @@ describe('loopEvents — Phase 6g queue building', () => {
   });
 
   describe('handleUserLocationCheckForLoops', () => {
-    it('passes the event up the chain without queue-building', () => {
-      // Auto-queue intercept disabled: substrate panels publish
-      // user:locationCheck when the player steps on a location tile,
-      // which used to wipe the running Explore and replace it with a
-      // single locationCheck path. Handler now just propagates so the
-      // location check completes via the up-chain handler.
+    it('user:locationCheck during loop mode appends path entries via updatePath, then enqueues the location check', () => {
       pathFinderResults.value = ['Menu', 'region_0_0'];
       setRegionWithExits('Menu', [{ name: 'GameStart', connected_region: 'region_0_0' }]);
 
@@ -175,15 +170,39 @@ describe('loopEvents — Phase 6g queue building', () => {
         regionName: 'region_0_0',
       });
 
-      // No queue mutation: no updatePath, no addLocationCheck, no
-      // resetQueue.
+      const updates = gameStateCalls.filter((c) => c.method === 'updatePath');
+      expect(updates).toEqual([
+        { method: 'updatePath', target: 'region_0_0', exit: 'GameStart', source: 'Menu' },
+      ]);
+      expect(gameStateCalls.find(
+        (c) => c.method === 'addLocationCheck' && c.loc === 'My Location',
+      )).toBeDefined();
+      expect(dispatcherCalls.filter(
+        (c) => c.eventName === 'user:regionMove',
+      )).toEqual([]);
+    });
+
+    it('system:locationCheck during loop mode propagates without queue-building', () => {
+      // Substrates publish system:locationCheck for tile-internal events
+      // (e.g. maze panel on tile-step). The handler must NOT rebuild the
+      // queue — that would wipe in-flight Explore actions and replace
+      // them with a path-to-location.
+      pathFinderResults.value = ['Menu', 'region_0_0'];
+      setRegionWithExits('Menu', [{ name: 'GameStart', connected_region: 'region_0_0' }]);
+
+      handleUserLocationCheckForLoops({
+        locationName: 'My Location',
+        regionName: 'region_0_0',
+      }, 'system:locationCheck');
+
+      // No queue mutation.
       expect(gameStateCalls).toEqual([]);
       expect(loopStateCalls).toEqual([]);
 
-      // Event propagates up the dispatcher chain.
+      // Event propagates up under its original name.
       const propagations = dispatcherCalls.filter(
         (c) => c.method === 'publishToNextModule'
-          && c.eventName === 'user:locationCheck',
+          && c.eventName === 'system:locationCheck',
       );
       expect(propagations).toHaveLength(1);
       expect(propagations[0].opts).toEqual({ direction: 'up' });
