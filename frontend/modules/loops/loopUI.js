@@ -202,11 +202,11 @@ export class LoopUI {
                 <span class="collapse-indicator" style="margin-right: 5px; transition: transform 0.3s; transform: rotate(-90deg);">▼</span>
                 <span style="font-weight: bold;">Controls</span>
               </div>
-              <button id="loop-ui-toggle-pause" class="button" disabled>Pause</button>
+              <button id="loop-ui-toggle-pause" class="button" disabled title="Start running the queue">Pause</button>
               <button id="loop-ui-step" class="button" disabled title="Run the next queued action, then pause">Step</button>
-              <button id="loop-ui-clear-queue" class="button" disabled>Clear Queue</button>
-              <button id="loop-ui-expand-collapse-all" class="button">Expand All</button>
-              <button id="loop-ui-compact-view" class="button">Compact View</button>
+              <button id="loop-ui-clear-queue" class="button" disabled title="Remove all queued actions, including movement entries, and return to the start region">Clear Queue</button>
+              <button id="loop-ui-expand-collapse-all" class="button" title="Expand or collapse all region blocks">Expand All</button>
+              <button id="loop-ui-compact-view" class="button" title="Toggle a denser view of the action queue">Compact View</button>
             </div>
             <div class="controls-content" style="display: none; margin-top: 8px;">
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
@@ -222,17 +222,17 @@ export class LoopUI {
                 <label class="keep-focused-label" title="Suppress substrate panel activation while the queue is running"><input type="checkbox" id="loop-ui-toggle-keep-focused" /> Keep this panel focused</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
-                <button id="loop-ui-save-state" class="button">Save Game</button>
-                <button id="loop-ui-load-state" class="button">Load Game</button>
-                <button id="loop-ui-export-state" class="button">Export</button>
-                <label for="loop-ui-state-import" class="button">Import</label>
+                <button id="loop-ui-save-state" class="button" title="Save the current game state to local storage">Save Game</button>
+                <button id="loop-ui-load-state" class="button" title="Load the previously saved game state from local storage">Load Game</button>
+                <button id="loop-ui-export-state" class="button" title="Download the current game state as a JSON file">Export</button>
+                <label for="loop-ui-state-import" class="button" title="Load a game state from a JSON file">Import</label>
                 <input type="file" id="loop-ui-state-import" class="hidden" accept=".json" />
-                <button id="loop-ui-hard-reset" class="button">Hard Reset</button>
-                <button id="loop-ui-toggle-loop-mode" class="button">Enter Loop Mode</button>
+                <button id="loop-ui-hard-reset" class="button" title="Clear all progress: queue, mana, XP, and discovery (asks to confirm)">Hard Reset</button>
+                <button id="loop-ui-toggle-loop-mode" class="button" title="Enter or exit Loop mode">Enter Loop Mode</button>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
-                <button id="loop-ui-toggle-restart" class="button" disabled>Restart</button>
-                <button id="loop-ui-clear-explore" class="button">Clear Explore Actions</button>
+                <button id="loop-ui-toggle-restart" class="button" disabled title="Restart the queue from the beginning, refill mana, and run">Restart</button>
+                <button id="loop-ui-clear-explore" class="button" title="Remove all explore actions from the queue">Clear Explore Actions</button>
               </div>
             </div>
         </div>
@@ -306,10 +306,22 @@ export class LoopUI {
       // Button update is handled by the loopState:pauseStateChanged event
     });
 
-    attachButtonHandler('loop-ui-step', function () {
-      loopState.step();
-      // _updatePauseButtonState reflects the resulting paused state
-      // when loopState fires pauseStateChanged after the action lands.
+    attachButtonHandler('loop-ui-step', () => {
+      // Dispatch by current state: in completed/waiting with no further
+      // actions, the button is the "Reset" variant — return to the
+      // start of the queue and land paused. Otherwise, run one action.
+      const queueLen = loopState.getActionQueue?.()?.length ?? 0;
+      const idx = loopState.currentActionIndex ?? 0;
+      const state = loopState.getProcessingState();
+      const isResetVariant =
+        (state === 'completed' || state === 'waiting') && queueLen <= idx;
+      if (isResetVariant) {
+        loopState.restartFromStart({ autoStart: false });
+      } else {
+        loopState.step();
+      }
+      // _updatePauseButtonState reflects the resulting state when
+      // loopState fires pauseStateChanged.
     });
 
     attachButtonHandler('loop-ui-toggle-restart', this._handleRestartClick);
@@ -492,49 +504,25 @@ export class LoopUI {
   // --- Helper handlers for button clicks ---
   _handleRestartClick() {
     try {
-      loopState._resetLoop();
-      const restartRoot = this.rootElement || document;
-      restartRoot.querySelectorAll('.action-progress-bar').forEach((bar) => {
-        bar.style.width = '0%';
-      });
-      restartRoot.querySelectorAll('.action-status').forEach((status) => {
-        status.textContent = 'Pending';
-        status.className = 'action-status pending';
-      });
-      loopState.restartQueueFromBeginning();
-      restartRoot.querySelectorAll('.action-progress-value').forEach((value) => {
-        const actionItem = value.closest('.action-item');
-        if (actionItem) {
-          const actionId = actionItem.id.replace('action-', '');
-          const actionQueue = this.getActionQueue();
-          const action = actionQueue.find((a) => a.id === actionId);
-          if (action) {
-            const actionCost = this._estimateActionCost(action);
-            const currentQueue = this.getActionQueue();
-            const actionIndex = currentQueue.findIndex(
-              (a) => a.id === actionId
-            );
-            const displayIndex = actionIndex !== -1 ? actionIndex + 1 : '?';
-            value.textContent = `0/${actionCost}, Action ${displayIndex} of ${currentQueue.length}`;
-          }
-        }
-      });
-      if (loopState.isPaused) {
-        loopState.setPaused(false);
-        const pauseBtn = this.rootElement.querySelector(
-          '#loop-ui-toggle-pause'
-        );
-        if (pauseBtn) pauseBtn.textContent = 'Pause';
-      }
+      // restartFromStart fires loopState:loopReset (refreshes mana and
+      // action-progress-bar / action-status DOM via _handleLoopReset)
+      // and loopState:queueUpdated (re-renders the action-item list,
+      // including progress-value labels). pauseStateChanged refreshes
+      // the pause button label. The previous incarnation patched all
+      // those DOM elements manually to bridge a duplicate _resetLoop +
+      // restartQueueFromBeginning call sequence; the consolidated
+      // method removes that redundancy.
+      loopState.restartFromStart({ autoStart: true });
     } catch (error) {
       log('error', 'Error during restart:', error);
     }
   }
 
   _handleClearQueueClick() {
-    // Use resetQueue which handles stopping processing, clearing path,
-    // clearing tracking, and publishing queueUpdated
-    loopState.resetQueue();
+    // clearQueue stops processing, clears the path (including
+    // regionMoves), clears tracking, teleports to the resolved loop
+    // start, and publishes queueUpdated.
+    loopState.clearQueue();
 
     // Reset to idle state
     loopState.isPaused = false;
@@ -1269,29 +1257,47 @@ export class LoopUI {
     const pauseBtn = this.rootElement?.querySelector('#loop-ui-toggle-pause');
     if (pauseBtn) {
       const labels = { idle: 'Start', running: 'Pause', paused: 'Resume', completed: 'Restart', waiting: 'Waiting' };
+      const titles = {
+        idle: 'Start running the queue',
+        running: 'Pause the queue',
+        paused: 'Resume running the queue',
+        completed: 'Restart the queue from the beginning, refill mana, and run',
+        waiting: 'Auto-resume is on; the queue will resume when an action is added',
+      };
       pauseBtn.textContent = labels[processingState] || 'Start';
+      pauseBtn.title = titles[processingState] || titles.idle;
       pauseBtn.disabled = !this.isLoopModeActive || processingState === 'waiting';
     }
 
-    // Step is meaningful when the queue has work to advance from
-    // currentActionIndex and isn't already running. 'idle' and 'paused'
-    // accept any non-empty queue; 'completed' accepts only queues that
-    // have grown past currentActionIndex (a new action was appended
-    // after the queue ran to the end). Disabled while running or
-    // waiting, and when loop mode is inactive.
+    // Step button has two variants:
+    //   'Step'  — run one queued action, then pause. Active in idle
+    //             and paused (any non-empty queue) and in completed/
+    //             waiting when new actions sit past currentActionIndex.
+    //   'Reset' — return queue to index 0, refill mana, land paused.
+    //             Active in completed/waiting when there are no
+    //             actions past currentActionIndex (queue ran to end).
+    // Disabled while running, with an empty queue, or when loop mode
+    // is inactive.
     const stepBtn = this.rootElement?.querySelector('#loop-ui-step');
     if (stepBtn) {
       const queueLen = loopState.getActionQueue?.()?.length ?? 0;
       const idx = loopState.currentActionIndex ?? 0;
-      let stepActive = false;
+      let mode = 'disabled'; // 'step' | 'reset' | 'disabled'
       if (this.isLoopModeActive && queueLen > 0) {
         if (processingState === 'idle' || processingState === 'paused') {
-          stepActive = true;
-        } else if (processingState === 'completed') {
-          stepActive = queueLen > idx;
+          mode = 'step';
+        } else if (processingState === 'completed' || processingState === 'waiting') {
+          mode = queueLen > idx ? 'step' : 'reset';
         }
       }
-      stepBtn.disabled = !stepActive;
+      stepBtn.disabled = mode === 'disabled';
+      if (mode === 'reset') {
+        stepBtn.textContent = 'Reset';
+        stepBtn.title = 'Return to the start of the queue, refill mana, and stay paused';
+      } else {
+        stepBtn.textContent = 'Step';
+        stepBtn.title = 'Run the next queued action, then pause';
+      }
     }
 
     // Update the status line in the action container. Skip in inactive

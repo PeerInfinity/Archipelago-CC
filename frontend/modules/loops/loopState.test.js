@@ -258,7 +258,7 @@ describe('LoopState — substrate-handled completion (Phase 6)', () => {
   });
 });
 
-describe('LoopState — resetQueue (Phase 6g)', () => {
+describe('LoopState — clearQueue (Phase 6g)', () => {
   let loopState, gs, bus, dispatcher;
   let unregisterStartFn = null;
 
@@ -290,7 +290,7 @@ describe('LoopState — resetQueue (Phase 6g)', () => {
     gs.updatePath('region_1_0', 'east', 'region_0_0');
     expect(gs.getPath().length).toBe(2);
 
-    loopState.resetQueue();
+    loopState.clearQueue();
 
     expect(gs.getPath()).toEqual([]);
   });
@@ -301,7 +301,7 @@ describe('LoopState — resetQueue (Phase 6g)', () => {
     gs.addRegionXP('region_0_0', 60);
     gs.recordBestPath('a:b:c', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
 
-    loopState.resetQueue();
+    loopState.clearQueue();
 
     expect(gs.getCurrentMana()).toBe(60);
     expect(gs.getRegionXP('region_0_0').xp).toBeGreaterThan(0);
@@ -313,7 +313,7 @@ describe('LoopState — resetQueue (Phase 6g)', () => {
     gs.setStartRegions(['Menu']);
     gs.setCurrentRegion('region_2_3');
 
-    loopState.resetQueue();
+    loopState.clearQueue();
 
     const teleport = dispatcher.calls.find(
       (c) => c.method === 'publish'
@@ -330,7 +330,7 @@ describe('LoopState — resetQueue (Phase 6g)', () => {
     gs.setStartRegions(['MyStart']);
     gs.setCurrentRegion('region_2_3');
 
-    loopState.resetQueue();
+    loopState.clearQueue();
 
     const teleport = dispatcher.calls.find(
       (c) => c.eventName === 'user:regionMove'
@@ -344,7 +344,7 @@ describe('LoopState — resetQueue (Phase 6g)', () => {
     gs.setStartRegions(['Menu']);
     gs.setCurrentRegion('region_0_0');
 
-    loopState.resetQueue();
+    loopState.clearQueue();
 
     const teleport = dispatcher.calls.find(
       (c) => c.eventName === 'user:regionMove',

@@ -42,13 +42,13 @@ vi.mock('./index.js', () => ({
   moduleInfo: { name: 'loops' },
 }));
 
-// loopStateSingleton.resetQueue is called by both handlers but isn't
-// the unit under test here. Stub it so we can observe whether it ran
-// without booting the real loop state machinery.
+// loopStateSingleton.clearQueue is called by both handlers but
+// isn't the unit under test here. Stub it so we can observe whether
+// it ran without booting the real loop state machinery.
 const loopStateCalls = [];
 vi.mock('./loopStateSingleton.js', () => ({
   default: {
-    resetQueue: () => loopStateCalls.push('resetQueue'),
+    clearQueue: () => loopStateCalls.push('clearQueue'),
   },
 }));
 

@@ -73,7 +73,7 @@ export function initializeLoopEvents(eventBus) {
 
 /**
  * When true, loop-mode user:locationCheck events rebuild the queue with
- * a path-to-location (resetQueue → buildMoveSequence → addLocationCheck
+ * a path-to-location (clearQueue → buildMoveSequence → addLocationCheck
  * or customAction(explore)). When false, propagates up the chain
  * unchanged. system:locationCheck is always propagated regardless —
  * it's used by substrates for tile-internal events (e.g. the maze
@@ -148,12 +148,12 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
 
   log('info', `[LoopsModule] Found path to region: ${path.join(' -> ')}`);
 
-  // Clear the current queue before building new one. resetQueue
+  // Clear the current queue before building new one. clearQueue
   // teleports the player to the resolved loop start region (Menu's
   // synthetic-wrapper-bypassed equivalent for procgen) so the substrate
   // panel is in the right region by the time the queue's first
   // delegated action runs.
-  loopStateSingleton.resetQueue();
+  loopStateSingleton.clearQueue();
 
   // Build move sequence along the path
   const moves = buildMoveSequence(path);
@@ -290,12 +290,12 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   log('info', `[LoopEvents] Found path to exit: ${path.join(' -> ')}`);
 
-  // Clear the current queue before building new one. resetQueue
+  // Clear the current queue before building new one. clearQueue
   // teleports the player to the resolved loop start region (Menu's
   // synthetic-wrapper-bypassed equivalent for procgen) so the substrate
   // panel is in the right region by the time the queue's first
   // delegated action runs.
-  loopStateSingleton.resetQueue();
+  loopStateSingleton.clearQueue();
 
   // Build the path moves to the source region
   const moves = buildMoveSequence(path);

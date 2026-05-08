@@ -411,40 +411,16 @@ export class LoopState {
 
     return true;
   }
-  
   /**
-   * Clear all actions from the queue
-   */
-  clearQueue() {
-    if (!this.gameState) {
-      log('error', '[LoopState] Cannot clear queue: gameState not available');
-      return;
-    }
-
-    // Stop processing
-    if (this.isProcessing) {
-      this.stopProcessing();
-    }
-
-    // Clear queue via ActionQueueManager
-    if (this.actionQueueManager) {
-      this.actionQueueManager.clearQueue();
-    }
-    this.currentActionIndex = 0;
-
-    // Get updated queue
-    const queue = this.getActionQueue();
-
-    // Notify queue updated
-    this.eventBus.publish('loopState:queueUpdated', {
-      queue: queue,
-    });
-  }
-
-  /**
-   * Atomically reset the entire queue: stop processing, clear all path entries
-   * (including regionMoves), clear tracking, and emit a single queue update.
-   * Use this before building a new queue from scratch.
+   * Clear the queue. Stops processing, clears ALL path entries
+   * (including regionMoves), clears progress/completion tracking,
+   * teleports the player to the resolved loop start, and emits a
+   * single queue update. Used before building a new queue from
+   * scratch.
+   *
+   * Distinct from `restartFromStart()`, which preserves the queue,
+   * refills mana, resets progress, and snaps to index 0 (no teleport,
+   * no path clearing).
    *
    * Phase 6g: path clearing now happens via gameState.clearPath() —
    * unlike the prior gameState.reset() call, this preserves
@@ -464,7 +440,7 @@ export class LoopState {
    * user:regionMove on completion — by which point the player is
    * already at resolvedStart, so setCurrentRegion is a no-op.
    */
-  resetQueue() {
+  clearQueue() {
     // Stop processing
     if (this.isProcessing) {
       this.stopProcessing();
@@ -518,7 +494,7 @@ export class LoopState {
 
   /**
    * Resolve the loop start region — where the player teleports on
-   * resetQueue / loop reset. Prefers procgenPlayer.getResolvedStartRegion
+   * clearQueue / loop reset. Prefers procgenPlayer.getResolvedStartRegion
    * (skips synthetic Menu) when available; falls back to
    * gameState.startRegions[0] otherwise. The fallback reads through
    * _gs() (the raw GameState instance) because the public gameStateAPI
@@ -1684,36 +1660,56 @@ export class LoopState {
   }
 
   /**
-   * Restart the queue from the beginning
-   * (with no reordering needed since we now maintain original order)
+   * Restart the queue from index 0. Refills mana, resets action
+   * progress, snaps to the first action, clears _queueCompleted, then
+   * either auto-starts processing or lands paused based on autoStart.
+   *
+   * Distinct from:
+   *   - clearQueue() — clears the path (including regionMoves) and
+   *     teleports the player to the resolved loop start (heavier
+   *     "back to scratch"); does not preserve queue state.
+   *   - _resetLoop() — internal mutation primitive (mana refill,
+   *     progress reset, index 0); used here and by the OOM reset path.
+   *
+   * @param {Object} [options]
+   * @param {boolean} [options.autoStart=true] - When true, unpauses
+   *   and starts processing if the queue is non-empty (Restart button
+   *   semantics). When false, lands paused — used by the Step button's
+   *   Reset variant in completed/waiting state.
    */
-  restartQueueFromBeginning() {
-    // Stop current processing
+  restartFromStart({ autoStart = true } = {}) {
     if (this.isProcessing) {
       this.stopProcessing();
     }
 
-    // Reset to beginning
-    this.currentActionIndex = 0;
+    this._resetLoop();
 
-    // Reset progress on all actions
-    this._resetActionsProgress();
-
-    // Restore mana to full via gameState (fires gameState:manaChanged).
-    const gs = this._gs();
-    if (gs) gs.refillMana();
-
-    // Get queue from gameState
-    const queue = this.getActionQueue();
-
-    // Notify about queue update (so UI can refresh)
+    // _resetLoop publishes loopState:loopReset (which refreshes mana
+    // and progress-bar DOM), but the action-item rendering (cost/index
+    // labels) refreshes on queueUpdated. Publish that too so the UI
+    // doesn't need manual DOM patch-up at every caller.
     this.eventBus.publish('loopState:queueUpdated', {
-      queue: queue,
+      queue: this.getActionQueue(),
     });
 
-    // Start processing if there are actions
-    if (queue.length > 0 && !this.isPaused) {
-      this.startProcessing();
+    if (autoStart) {
+      // "Restart" semantics: the user said go. Unpause and run.
+      this.isPaused = false;
+      if (this.getActionQueue().length > 0) {
+        this.startProcessing(); // publishes pauseStateChanged
+      } else {
+        this.eventBus.publish('loopState:pauseStateChanged', {
+          isPaused: this.isPaused,
+          processingState: this.getProcessingState(),
+        });
+      }
+    } else {
+      // "Reset" semantics: return to start, don't run. Land paused.
+      this.isPaused = true;
+      this.eventBus.publish('loopState:pauseStateChanged', {
+        isPaused: this.isPaused,
+        processingState: this.getProcessingState(),
+      });
     }
   }
 

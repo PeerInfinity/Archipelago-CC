@@ -247,41 +247,6 @@ describe('removeAction — event publication', () => {
   });
 });
 
-describe('clearQueue', () => {
-  let loopState, gs, bus;
-  beforeEach(() => {
-    ({ loopState, gs, bus } = makeWired());
-    gs.addCustomAction('explore');
-    gs.addCustomAction('explore');
-  });
-
-  it('stops processing if running', () => {
-    loopState.startProcessing();
-    expect(loopState.isProcessing).toBe(true);
-    loopState.clearQueue();
-    expect(loopState.isProcessing).toBe(false);
-  });
-
-  it('resets currentActionIndex to 0', () => {
-    loopState.currentActionIndex = 5;
-    loopState.clearQueue();
-    expect(loopState.currentActionIndex).toBe(0);
-  });
-
-  it('publishes loopState:queueUpdated', () => {
-    bus.events.length = 0;
-    loopState.clearQueue();
-    expect(bus.events.find(e => e.name === 'loopState:queueUpdated')).toBeDefined();
-  });
-
-  it('preserves regionMove entries in the path (only customAction/locationCheck cleared)', () => {
-    gs.updatePath('region_0_0', null, 'Menu'); // adds regionMove
-    expect(gs.getPath().some(e => e.type === 'regionMove')).toBe(true);
-    loopState.clearQueue();
-    expect(gs.getPath().some(e => e.type === 'regionMove')).toBe(true);
-    expect(gs.getPath().some(e => e.type === 'customAction')).toBe(false);
-  });
-});
 
 describe('clearExploreActions', () => {
   let loopState, gs, bus;

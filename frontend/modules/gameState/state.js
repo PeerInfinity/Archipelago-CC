@@ -878,7 +878,7 @@ export class GameState {
     
     /**
      * Clear the path without disturbing player position or loop-mode
-     * resources. Used by loops's resetQueue when rebuilding the queue
+     * resources. Used by loops's clearQueue when rebuilding the queue
      * from a fresh state — the player teleports to the loop start
      * separately via a fromReset:true regionMove dispatch, so this
      * method MUST NOT mutate currentRegion or fire regionChanged
