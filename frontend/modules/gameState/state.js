@@ -625,63 +625,64 @@ export class GameState {
     }
     
     /**
-     * Remove a specific location check entry from the path
-     * @param {string} locationName - Name of the location to remove
-     * @param {string} targetRegionName - Name of the region where the action should be removed from
-     * @param {number} targetInstanceNumber - Which instance of the region to remove from
+     * Remove the path entry at an exact index. Refuses to remove
+     * regionMove entries (those are managed by navigation).
+     * Preferred over removeLocationCheckAt / removeCustomActionAt
+     * because (actionName, sourceRegion, instanceNumber) is not unique
+     * — multiple identical actions can exist in the same region instance.
+     */
+    removePathEntry(pathIndex) {
+        if (pathIndex < 0 || pathIndex >= this.path.length) {
+            return false;
+        }
+        const entry = this.path[pathIndex];
+        if (entry.type === 'regionMove') {
+            console.warn(`[GameState] Cannot remove regionMove via removePathEntry`);
+            return false;
+        }
+        this.path.splice(pathIndex, 1);
+        this.emitPathUpdated();
+        return true;
+    }
+
+    /**
+     * Remove the FIRST location check entry matching (locationName, region,
+     * instanceNumber). Multiple identical entries can exist; this removes
+     * one. Prefer removePathEntry(pathIndex) when the index is known.
      */
     removeLocationCheckAt(locationName, targetRegionName, targetInstanceNumber) {
-        let removedCount = 0;
-        
-        // Find and remove all matching location check entries
-        for (let i = this.path.length - 1; i >= 0; i--) {
+        for (let i = 0; i < this.path.length; i++) {
             const entry = this.path[i];
             if (entry.type === 'locationCheck' &&
                 entry.locationName === locationName &&
                 entry.sourceRegion === targetRegionName &&
                 entry.instanceNumber === targetInstanceNumber) {
                 this.path.splice(i, 1);
-                removedCount++;
+                this.emitPathUpdated();
+                return true;
             }
         }
-        
-        if (removedCount > 0) {
-            // Emit path updated event
-            this.emitPathUpdated();
-            return true;
-        }
-        
         console.warn(`[GameState] Location check ${locationName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
         return false;
     }
-    
+
     /**
-     * Remove a specific custom action entry from the path
-     * @param {string} actionName - Name of the action to remove
-     * @param {string} targetRegionName - Name of the region where the action should be removed from
-     * @param {number} targetInstanceNumber - Which instance of the region to remove from
+     * Remove the FIRST custom action entry matching (actionName, region,
+     * instanceNumber). Multiple identical entries can exist; this removes
+     * one. Prefer removePathEntry(pathIndex) when the index is known.
      */
     removeCustomActionAt(actionName, targetRegionName, targetInstanceNumber) {
-        let removedCount = 0;
-        
-        // Find and remove all matching custom action entries
-        for (let i = this.path.length - 1; i >= 0; i--) {
+        for (let i = 0; i < this.path.length; i++) {
             const entry = this.path[i];
             if (entry.type === 'customAction' &&
                 entry.actionName === actionName &&
                 entry.sourceRegion === targetRegionName &&
                 entry.instanceNumber === targetInstanceNumber) {
                 this.path.splice(i, 1);
-                removedCount++;
+                this.emitPathUpdated();
+                return true;
             }
         }
-        
-        if (removedCount > 0) {
-            // Emit path updated event
-            this.emitPathUpdated();
-            return true;
-        }
-        
         console.warn(`[GameState] Custom action ${actionName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
         return false;
     }

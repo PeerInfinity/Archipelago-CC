@@ -42,71 +42,55 @@ export class EventCoordinator {
 
     logger.info('Subscribing to EventBus events');
 
-    // Helper to subscribe and track
+    // subscribe: forwards every event to the handler.
+    // subscribeIfActive: gates the dispatch on loopUI.isLoopModeActive.
+    // The active gate was previously inlined as `if (!isLoopModeActive)`
+    // at the top of ~13 handlers; this wrapper centralizes it.
     const subscribe = (eventName, handler) => {
-      const unsubscribe = this.eventBus.subscribe(
-        eventName,
-        handler.bind(this)
-      );
+      const unsubscribe = this.eventBus.subscribe(eventName, handler.bind(this));
+      this.eventSubscriptions.push(unsubscribe);
+    };
+    const subscribeIfActive = (eventName, handler) => {
+      const bound = handler.bind(this);
+      const unsubscribe = this.eventBus.subscribe(eventName, (data) => {
+        if (this.loopUI.isLoopModeActive) bound(data);
+      });
       this.eventSubscriptions.push(unsubscribe);
     };
 
-    // Mana changes (gameState owns mana; published as gameState:manaChanged)
-    subscribe('gameState:manaChanged', this._handleManaChanged);
+    // Active-gated handlers (only do work when loop mode is on).
+    subscribeIfActive('gameState:manaChanged', this._handleManaChanged);
+    subscribeIfActive('gameState:xpChanged', this._handleXPChanged);
+    subscribeIfActive('loopState:pauseStateChanged', this._handlePauseStateChanged);
+    subscribeIfActive('loopState:queueUpdated', this._handleQueueUpdated);
+    subscribeIfActive('loopState:autoRestartChanged', this._handleAutoRestartChanged);
+    subscribeIfActive('loopState:progressUpdated', this._handleProgressUpdated);
+    subscribeIfActive('loopState:actionCompleted', this._handleActionCompleted);
+    subscribeIfActive('loopState:newActionStarted', this._handleNewActionStarted);
+    subscribeIfActive('stateManager:snapshotUpdated', this._handleSnapshotUpdated);
+    subscribeIfActive('discovery:locationDiscovered', this._handleDiscoveryChanged);
+    subscribeIfActive('discovery:exitDiscovered', this._handleDiscoveryChanged);
+    subscribeIfActive('discovery:regionDiscovered', this._handleDiscoveryChanged);
+    subscribeIfActive('discovery:changed', this._handleDiscoveryChanged);
+    subscribeIfActive('loopState:loopReset', this._handleLoopReset);
+    subscribeIfActive('loopState:exploreActionRepeated', this._handleExploreRepeated);
+    subscribeIfActive('gameState:pathUpdated', this._handlePathUpdated);
 
-    // XP changes (gameState owns XP; published as gameState:xpChanged)
-    subscribe('gameState:xpChanged', this._handleXPChanged);
-
-    // Pause state changes (single authoritative event)
-    subscribe('loopState:pauseStateChanged', this._handlePauseStateChanged);
-
-    // Queue updates
-    subscribe('loopState:queueUpdated', this._handleQueueUpdated);
-
-    // Auto-restart changes
-    subscribe('loopState:autoRestartChanged', this._handleAutoRestartChanged);
-
-    // Progress updates
-    subscribe('loopState:progressUpdated', this._handleProgressUpdated);
-
-    // Action completion
-    subscribe('loopState:actionCompleted', this._handleActionCompleted);
-
-    // New action started
-    subscribe('loopState:newActionStarted', this._handleNewActionStarted);
-
-    // Queue completed
+    // Ungated handlers: do work regardless of loop-mode state.
+    //   queueCompleted: runs auto-remove housekeeping
+    //   stateManagerReady: sets the _stateManagerReady flag we own
+    //   rulesLoaded: always re-renders (idempotent)
+    //   discoveryModeChanged: updates loopUI.isDiscoveryModeActive
+    //   discoverySettingsChanged: copies settings into loopUI
+    //   stateLoaded: always re-renders + syncs control values
+    //   setLoopMode: this IS the action that flips isLoopModeActive
     subscribe('loopState:queueCompleted', this._handleQueueCompleted);
-
-    // State manager events
     subscribe('stateManager:ready', this._handleStateManagerReady);
-    subscribe('stateManager:snapshotUpdated', this._handleSnapshotUpdated);
     subscribe('stateManager:rulesLoaded', this._handleRulesLoaded);
-
-    // Discovery events
-    subscribe('discovery:locationDiscovered', this._handleDiscoveryChanged);
-    subscribe('discovery:exitDiscovered', this._handleDiscoveryChanged);
-    subscribe('discovery:regionDiscovered', this._handleDiscoveryChanged);
-    subscribe('discovery:changed', this._handleDiscoveryChanged);
-
-    // Discovery mode and settings changes
     subscribe('discovery:modeChanged', this._handleDiscoveryModeChanged);
     subscribe('discovery:settingsChanged', this._handleDiscoverySettingsChanged);
-
-    // Loop reset
-    subscribe('loopState:loopReset', this._handleLoopReset);
-
-    // State loaded
     subscribe('loopState:stateLoaded', this._handleStateLoaded);
-
-    // Explore action repeated
-    subscribe('loopState:exploreActionRepeated', this._handleExploreRepeated);
-
-    // Loop mode toggle
     subscribe('loops:setLoopMode', this._handleSetLoopMode);
-
-    // GameState path updates (keeps loops panel in sync with regions panel)
-    subscribe('gameState:pathUpdated', this._handlePathUpdated);
 
     logger.info(`Subscribed to ${this.eventSubscriptions.length} events`);
   }
@@ -128,9 +112,7 @@ export class EventCoordinator {
    * @private
    */
   _handleManaChanged(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updateManaDisplay(data.current, data.max);
-    }
+    this.loopUI._updateManaDisplay(data.current, data.max);
   }
 
   /**
@@ -138,10 +120,8 @@ export class EventCoordinator {
    * @private
    */
   _handleXPChanged(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updateRegionXPDisplay(data.regionName);
-      this.loopUI._updateLoopStats();
-    }
+    this.loopUI._updateRegionXPDisplay(data.regionName);
+    this.loopUI._updateLoopStats();
   }
 
   /**
@@ -149,9 +129,7 @@ export class EventCoordinator {
    * @private
    */
   _handlePauseStateChanged(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updatePauseButtonState(data.isPaused, data.processingState);
-    }
+    this.loopUI._updatePauseButtonState(data.isPaused, data.processingState);
   }
 
   /**
@@ -159,7 +137,6 @@ export class EventCoordinator {
    * @private
    */
   _handleQueueUpdated(data) {
-    if (!this.loopUI.isLoopModeActive) return;
     this.loopUI._updateRegionsInQueue(data.queue);
     this.loopUI._updateLoopStats();
     this.loopUI.renderLoopPanel();
@@ -173,7 +150,6 @@ export class EventCoordinator {
    * @private
    */
   _handleAutoRestartChanged(data) {
-    if (!this.loopUI.isLoopModeActive) return;
     const autoRestartCheckbox = this.loopUI.rootElement?.querySelector(
       '#loop-ui-toggle-auto-restart'
     );
@@ -188,7 +164,7 @@ export class EventCoordinator {
    */
   _handleProgressUpdated(data) {
     const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
-    if (!this.loopUI.isLoopModeActive || !loopState?.isProcessing) return;
+    if (!loopState?.isProcessing) return;
 
     if (data.action) {
       this.loopUI._updateActionProgress(data.action);
@@ -216,10 +192,8 @@ export class EventCoordinator {
    * @private
    */
   _handleActionCompleted(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updateLoopStats();
-      this.loopUI.renderLoopPanel();
-    }
+    this.loopUI._updateLoopStats();
+    this.loopUI.renderLoopPanel();
   }
 
   /**
@@ -227,7 +201,7 @@ export class EventCoordinator {
    * @private
    */
   _handleNewActionStarted(data) {
-    if (this.loopUI.isLoopModeActive && data.action) {
+    if (data.action) {
       this.loopUI._updateCurrentActionDisplay(data.action);
     }
   }
@@ -275,14 +249,12 @@ export class EventCoordinator {
    * @private
    */
   _handleSnapshotUpdated(data) {
-    if (this.loopUI.isLoopModeActive) {
-      // Auto-remove completed actions if enabled
-      const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
-      if (loopState?.autoRemoveCompleted) {
-        loopState.removeCompletedActions();
-      }
-      this.loopUI.renderLoopPanel();
+    // Auto-remove completed actions if enabled
+    const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+    if (loopState?.autoRemoveCompleted) {
+      loopState.removeCompletedActions();
     }
+    this.loopUI.renderLoopPanel();
   }
 
   /**
@@ -299,16 +271,14 @@ export class EventCoordinator {
    * @private
    */
   _handleDiscoveryChanged(data) {
-    if (this.loopUI.isLoopModeActive) {
-      const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
-      if (loopState?.autoRemoveCompleted) {
-        // Disable repeat-explore for any regions that are now fully explored
-        loopState.disableRepeatForExploredRegions();
-        // Remove completed actions from the queue
-        loopState.removeCompletedActions();
-      }
-      this.loopUI.renderLoopPanel();
+    const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+    if (loopState?.autoRemoveCompleted) {
+      // Disable repeat-explore for any regions that are now fully explored
+      loopState.disableRepeatForExploredRegions();
+      // Remove completed actions from the queue
+      loopState.removeCompletedActions();
     }
+    this.loopUI.renderLoopPanel();
   }
 
   /**
@@ -352,17 +322,15 @@ export class EventCoordinator {
    * @private
    */
   _handleLoopReset(data) {
-    if (this.loopUI.isLoopModeActive) {
-      // Auto-remove completed actions when the loop resets
-      const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
-      if (loopState?.autoRemoveCompleted) {
-        loopState.removeCompletedActions();
-      }
+    // Auto-remove completed actions when the loop resets
+    const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+    if (loopState?.autoRemoveCompleted) {
+      loopState.removeCompletedActions();
+    }
 
-      this.loopUI._handleLoopReset(data);
-      if (data.mana) {
-        this.loopUI._updateManaDisplay(data.mana.current, data.mana.max);
-      }
+    this.loopUI._handleLoopReset(data);
+    if (data.mana) {
+      this.loopUI._updateManaDisplay(data.mana.current, data.mana.max);
     }
   }
 
@@ -405,10 +373,8 @@ export class EventCoordinator {
    * @private
    */
   _handleExploreRepeated(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI.regionsInQueue.add(data.regionName);
-      this.loopUI.renderLoopPanel();
-    }
+    this.loopUI.regionsInQueue.add(data.regionName);
+    this.loopUI.renderLoopPanel();
   }
 
   /**
@@ -418,8 +384,6 @@ export class EventCoordinator {
    * @private
    */
   _handlePathUpdated(data) {
-    if (!this.loopUI.isLoopModeActive) return;
-
     // Check for auto-resume before re-rendering
     const loopState = this.loopUI.getLoopState?.();
     if (loopState && loopState.getProcessingState() === 'waiting') {

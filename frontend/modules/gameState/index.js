@@ -120,6 +120,11 @@ export async function register(registrationApi) {
         return gameState.insertCustomActionAt(actionName, targetRegionName, targetInstanceNumber, params);
     });
     
+    registrationApi.registerPublicFunction(moduleId, 'removePathEntry', (pathIndex) => {
+        const gameState = getGameStateSingleton();
+        return gameState.removePathEntry(pathIndex);
+    });
+
     registrationApi.registerPublicFunction(moduleId, 'removeLocationCheckAt', (locationName, targetRegionName, targetInstanceNumber) => {
         const gameState = getGameStateSingleton();
         return gameState.removeLocationCheckAt(locationName, targetRegionName, targetInstanceNumber);

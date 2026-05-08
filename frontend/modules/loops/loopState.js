@@ -570,123 +570,75 @@ export class LoopState {
   /**
    * Start processing the action queue
    */
+  /**
+   * Start processing from the beginning of the queue. Resets
+   * currentActionIndex to 0; use resumeProcessing() to continue from
+   * where the queue left off.
+   */
   startProcessing() {
+    this._beginProcessing({ resetIndex: true, publishProcessingStarted: true });
+  }
+
+  /**
+   * Resume processing from the current action index. Unlike
+   * startProcessing(), preserves currentActionIndex — used by
+   * auto-resume on new action and by step() from a paused state.
+   */
+  resumeProcessing() {
+    this._beginProcessing({ resetIndex: false, publishProcessingStarted: false });
+  }
+
+  /**
+   * Internal: shared body of startProcessing / resumeProcessing.
+   * The two callers differ only in (a) whether they reset
+   * currentActionIndex to 0, and (b) whether they publish the
+   * processingStarted event (only the start path does).
+   */
+  _beginProcessing({ resetIndex, publishProcessingStarted }) {
+    if (this.isPaused || this.isProcessing) return;
+
     const queue = this.getActionQueue();
+    if (queue.length === 0) return;
 
-    if (this.isPaused || this.isProcessing) {
-      return;
-    }
-
-    // If there are no actions, don't start processing
-    if (queue.length === 0) {
+    if (resetIndex) {
+      this.currentActionIndex = 0;
+    } else if (this.currentActionIndex >= queue.length) {
+      // Resume path: nothing left to advance to.
       return;
     }
 
     this.isProcessing = true;
     this._queueCompleted = false;
-
-    // Always reset currentActionIndex when starting fresh
-    this.currentActionIndex = 0;
-
-    // Make sure the index is valid
-    if (this.currentActionIndex >= queue.length) {
-      // No more actions to process
-      log('info', 'No more actions to process, stopping');
-      this.stopProcessing();
-      return;
-    }
-
     this.currentAction = queue[this.currentActionIndex];
-    log('info', `Starting to process action at index ${this.currentActionIndex}:`, this.currentAction);
 
-    // Ensure we have a valid action
     if (!this.currentAction) {
       log('error', 'No valid action at index', this.currentActionIndex);
       this.isProcessing = false;
       return;
     }
 
-    // Initialize progress if not tracked yet
     if (!this.actionQueueManager.getProgress(this.currentAction.pathIndex)) {
       this.actionQueueManager.setProgress(this.currentAction.pathIndex, 0);
     }
-    
-    // Set current action progress from tracking
     this.currentAction.progress = this.actionQueueManager.getProgress(this.currentAction.pathIndex);
 
-    // Cancel any existing animation frame
     if (this._animationFrameId) {
       cancelAnimationFrame(this._animationFrameId);
       this._animationFrameId = null;
     }
+    this._lastFrameTime = null;
+    this._animationFrameId = requestAnimationFrame(this._processFrame.bind(this));
 
-    // Start animation frame for smooth updates
-    this._lastFrameTime = null; // Reset to ensure proper first frame
-    this._animationFrameId = requestAnimationFrame(
-      this._processFrame.bind(this)
-    );
-
-    //log('info', 'Started processing action:', this.currentAction);
-
-    this.eventBus.publish('loopState:processingStarted', {
-      action: this.currentAction,
-    });
-    // Mirror stopProcessing's pauseStateChanged publish so any path
-    // that lands here (auto-start on gameState:pathUpdated, click-Start,
-    // setPaused(false), step()) refreshes the Pause/Step button labels
-    // without depending on a follow-up publisher to do it.
+    if (publishProcessingStarted) {
+      this.eventBus.publish('loopState:processingStarted', {
+        action: this.currentAction,
+      });
+    }
+    // Refresh Pause/Step button labels — any path that lands here
+    // (click-Start, auto-start on gameState:pathUpdated, step(),
+    // setPaused(false)) needs the UI in sync.
     this.eventBus.publish('loopState:pauseStateChanged', {
       isPaused: this.isPaused,
-      processingState: this.getProcessingState(),
-    });
-  }
-
-  /**
-   * Resume processing from the current action index.
-   * Unlike startProcessing() which resets to the beginning, this continues
-   * from where processing left off. Used by auto-resume on new action.
-   */
-  resumeProcessing() {
-    const queue = this.getActionQueue();
-
-    if (this.isPaused || this.isProcessing) {
-      return;
-    }
-
-    if (queue.length === 0 || this.currentActionIndex >= queue.length) {
-      return;
-    }
-
-    this.isProcessing = true;
-    this._queueCompleted = false;
-
-    this.currentAction = queue[this.currentActionIndex];
-
-    if (!this.currentAction) {
-      log('error', '[LoopState] No valid action at index', this.currentActionIndex);
-      this.isProcessing = false;
-      return;
-    }
-
-    // Initialize progress if not tracked yet
-    if (!this.actionQueueManager.getProgress(this.currentAction.pathIndex)) {
-      this.actionQueueManager.setProgress(this.currentAction.pathIndex, 0);
-    }
-    this.currentAction.progress = this.actionQueueManager.getProgress(this.currentAction.pathIndex);
-
-    // Cancel any existing animation frame
-    if (this._animationFrameId) {
-      cancelAnimationFrame(this._animationFrameId);
-      this._animationFrameId = null;
-    }
-
-    this._lastFrameTime = null;
-    this._animationFrameId = requestAnimationFrame(
-      this._processFrame.bind(this)
-    );
-
-    this.eventBus.publish('loopState:pauseStateChanged', {
-      isPaused: false,
       processingState: this.getProcessingState(),
     });
   }
@@ -757,7 +709,11 @@ export class LoopState {
 
     this._stepMode = true;
     if (this.isPaused) {
-      this.setPaused(false);
+      // Use resumeProcessing (not setPaused(false), which calls
+      // startProcessing and resets currentActionIndex to 0). Stepping
+      // from paused must advance from where the queue left off.
+      this.isPaused = false;
+      this.resumeProcessing();
     } else {
       this.startProcessing();
     }

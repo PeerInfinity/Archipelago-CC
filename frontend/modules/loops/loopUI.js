@@ -1096,22 +1096,12 @@ export class LoopUI {
     const path = this.getActionQueue();
     if (pathIndex >= 0 && pathIndex < path.length) {
       const entry = path[pathIndex];
-      
-      // Use gameState API to remove the action
-      if (entry.type === 'locationCheck' && this.gameStateAPI?.removeLocationCheckAt) {
-        this.gameStateAPI.removeLocationCheckAt(
-          entry.locationName,
-          entry.sourceRegion,
-          entry.instanceNumber
-        );
-      } else if (entry.type === 'customAction' && this.gameStateAPI?.removeCustomActionAt) {
-        this.gameStateAPI.removeCustomActionAt(
-          entry.actionName,
-          entry.sourceRegion,
-          entry.instanceNumber
-        );
-      }
-      // Note: We don't remove regionMove entries directly
+      // regionMove entries are managed by navigation, not removable here.
+      if (entry.type === 'regionMove') return;
+      // Remove by exact pathIndex; the *At lookups would silently remove
+      // a different duplicate when multiple identical actions share the
+      // same (actionName, sourceRegion, instanceNumber) triplet.
+      this.gameStateAPI?.removePathEntry?.(entry.pathIndex);
     }
   }
 
@@ -1816,11 +1806,12 @@ export class LoopUI {
         this.gameStateAPI.trimPath(prevMoveRegion, prevMoveInstance);
         this.renderLoopPanel();
       }
-    } else if (entry.type === 'locationCheck' && this.gameStateAPI?.removeLocationCheckAt) {
-      this.gameStateAPI.removeLocationCheckAt(entry.locationName, entry.sourceRegion, entry.instanceNumber);
-      this.renderLoopPanel();
-    } else if (entry.type === 'customAction' && this.gameStateAPI?.removeCustomActionAt) {
-      this.gameStateAPI.removeCustomActionAt(entry.actionName, entry.sourceRegion, entry.instanceNumber);
+    } else if ((entry.type === 'locationCheck' || entry.type === 'customAction')
+               && this.gameStateAPI?.removePathEntry) {
+      // Remove by exact pathIndex — the *At lookups remove the FIRST
+      // matching entry, not necessarily this one (multiple identical
+      // actions can share the same key in a single region instance).
+      this.gameStateAPI.removePathEntry(entry.pathIndex);
       this.renderLoopPanel();
     }
   }

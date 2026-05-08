@@ -115,23 +115,30 @@ export class ActionQueueManager {
 
     const actionToRemove = queue[actionIndex];
 
-    // Remove from gameState based on action type
-    if (actionToRemove.type === 'locationCheck') {
+    if (actionToRemove.type !== 'locationCheck' && actionToRemove.type !== 'customAction') {
+      logger.warn(`Cannot remove action of type ${actionToRemove.type}`);
+      return false;
+    }
+
+    // Remove by exact pathIndex — (actionName, sourceRegion, instanceNumber)
+    // is not unique, so the *At lookup methods would silently remove the
+    // wrong duplicate. removePathEntry refuses to touch regionMove entries.
+    if (this.gameStateAPI.removePathEntry) {
+      const ok = this.gameStateAPI.removePathEntry(actionToRemove.pathIndex);
+      if (!ok) return false;
+    } else if (actionToRemove.type === 'locationCheck') {
+      // Fallback for older gameState API surfaces.
       this.gameStateAPI.removeLocationCheckAt(
         actionToRemove.locationName,
         actionToRemove.sourceRegion,
         actionToRemove.instanceNumber
       );
-    } else if (actionToRemove.type === 'customAction') {
+    } else {
       this.gameStateAPI.removeCustomActionAt(
         actionToRemove.actionName,
         actionToRemove.sourceRegion,
-        actionToRemove.instanceNumber,
-        actionToRemove.metadata
+        actionToRemove.instanceNumber
       );
-    } else {
-      logger.warn(`Cannot remove action of type ${actionToRemove.type}`);
-      return false;
     }
 
     // Clean up our tracking data
