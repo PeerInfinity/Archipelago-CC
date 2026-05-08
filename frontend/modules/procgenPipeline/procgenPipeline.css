@@ -22,6 +22,45 @@
     padding: 6px 8px 4px;
 }
 
+/* Collapsible accordion sections (Scenario Pool, Top-down source,
+ * Parameters, Stats, Compiled output). Mirrors the maze panel's
+ * collapsible pattern so both panels feel consistent. */
+.procgen-pipeline-collapsible {
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.procgen-pipeline-collapsible-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+    user-select: none;
+    background: #232323;
+}
+
+.procgen-pipeline-collapsible-header:hover {
+    background: #2a2a2a;
+}
+
+.procgen-pipeline-collapsible-indicator {
+    color: #888;
+    font-size: 10px;
+}
+
+.procgen-pipeline-collapsible-title {
+    font-weight: bold;
+    font-size: 12px;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.procgen-pipeline-collapsible-body {
+    padding: 0;
+}
+
 .procgen-pipeline-placeholder {
     padding: 12px;
     color: #888;

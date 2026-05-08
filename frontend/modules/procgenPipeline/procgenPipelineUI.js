@@ -323,6 +323,10 @@ export class ProcgenPipelineUI {
         // selecting a substrate visibly narrows the library to what
         // it can use. Persisted under LS_VIEW_KEY.
         this.showUnsupportedLibrary = false;
+        // Per-section collapsed state. Stable section IDs let the
+        // user's preferences survive panel rebuilds and reloads.
+        // Persisted via LS_VIEW_KEY alongside showUnsupportedLibrary.
+        this.collapsedSections = new Set();
         // 'gridGrowth' (default) builds a fresh world from a scenario
         // pool. 'topDown' realises an existing rules.json as maze
         // regions on a grid.
@@ -384,20 +388,83 @@ export class ProcgenPipelineUI {
 
     render() {
         this.rootElement.innerHTML = '';
+        // Mode toggle and the Generate-button row stay unwrapped — they
+        // anchor the panel and shouldn't be foldable. Everything else
+        // is wrapped in an accordion section so users can hide
+        // sections they aren't actively using. Per-section state lives
+        // in this.collapsedSections.
         this.rootElement.appendChild(this._renderModeToggle());
         // Scenario Pool: Substrates subsection always visible; Library
         // and Counts subsections grid-growth-only (the scenario pool
         // is a grid-growth concept — top-down's items come from its
         // source rules.json).
-        this.rootElement.appendChild(this._renderScenarioPicker());
+        this.rootElement.appendChild(this._renderCollapsibleSection(
+            'scenario', 'Scenario Pool', this._renderScenarioPicker(),
+        ));
         if (this.mode === 'topDown') {
-            this.rootElement.appendChild(this._renderTopDownSourcePicker());
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'topdown-source', 'Top-down source', this._renderTopDownSourcePicker(),
+            ));
         }
-        this.rootElement.appendChild(this._renderParams());
+        this.rootElement.appendChild(this._renderCollapsibleSection(
+            'parameters', 'Parameters', this._renderParams(),
+        ));
         this.rootElement.appendChild(this._renderActions());
-        this.rootElement.appendChild(this._renderStats());
+        this.rootElement.appendChild(this._renderCollapsibleSection(
+            'stats', 'Stats', this._renderStats(),
+        ));
         this.rootElement.appendChild(this._renderGrid());
-        this.rootElement.appendChild(this._renderCompiled());
+        this.rootElement.appendChild(this._renderCollapsibleSection(
+            'compiled', 'Compiled output', this._renderCompiled(),
+        ));
+    }
+
+    /**
+     * Wrap content in an accordion-style section with a clickable
+     * header that toggles between expanded and collapsed. Per-section
+     * collapse state lives in this.collapsedSections (a Set of IDs)
+     * and persists via _saveViewToLocalStorage. Mirrors the maze
+     * panel's collapsible pattern.
+     *
+     * @param {string} sectionId - Stable ID for persistence (e.g. 'scenario').
+     * @param {string} titleText - Header label.
+     * @param {HTMLElement} contentEl - The section's content node.
+     * @returns {HTMLElement} The wrapper.
+     */
+    _renderCollapsibleSection(sectionId, titleText, contentEl) {
+        const isCollapsed = this.collapsedSections.has(sectionId);
+        const wrap = document.createElement('div');
+        wrap.className = `procgen-pipeline-collapsible ${isCollapsed ? 'is-collapsed' : 'is-expanded'}`;
+        wrap.dataset.sectionId = sectionId;
+
+        const header = document.createElement('div');
+        header.className = 'procgen-pipeline-collapsible-header';
+        const indicator = document.createElement('span');
+        indicator.className = 'procgen-pipeline-collapsible-indicator';
+        indicator.textContent = isCollapsed ? '▶' : '▼';
+        const title = document.createElement('span');
+        title.className = 'procgen-pipeline-collapsible-title';
+        title.textContent = titleText;
+        header.appendChild(indicator);
+        header.appendChild(title);
+        header.addEventListener('click', () => {
+            if (this.collapsedSections.has(sectionId)) {
+                this.collapsedSections.delete(sectionId);
+            } else {
+                this.collapsedSections.add(sectionId);
+            }
+            this._saveViewToLocalStorage();
+            this.render();
+        });
+        wrap.appendChild(header);
+
+        if (!isCollapsed && contentEl) {
+            const body = document.createElement('div');
+            body.className = 'procgen-pipeline-collapsible-body';
+            body.appendChild(contentEl);
+            wrap.appendChild(body);
+        }
+        return wrap;
     }
 
     // --- Mode toggle ---
@@ -444,10 +511,7 @@ export class ProcgenPipelineUI {
     _renderTopDownSourcePicker() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-source';
-        const title = document.createElement('div');
-        title.className = 'procgen-pipeline-section-title';
-        title.textContent = 'Source rules.json';
-        section.appendChild(title);
+        // Title supplied by the collapsible wrapper in render().
 
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-source-row';
@@ -520,11 +584,7 @@ export class ProcgenPipelineUI {
     _renderScenarioPicker() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-scenario';
-
-        const title = document.createElement('div');
-        title.className = 'procgen-pipeline-section-title';
-        title.textContent = 'Scenario Pool';
-        section.appendChild(title);
+        // Title supplied by the collapsible wrapper in render().
 
         // Top: Substrates (always visible — both modes).
         section.appendChild(this._renderSubstratesSubsection());
@@ -801,11 +861,7 @@ export class ProcgenPipelineUI {
     _renderParams() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-params';
-
-        const title = document.createElement('div');
-        title.className = 'procgen-pipeline-section-title';
-        title.textContent = 'Parameters';
-        section.appendChild(title);
+        // Title supplied by the collapsible wrapper in render().
 
         const grid = document.createElement('div');
         grid.className = 'procgen-pipeline-grid';
@@ -1542,6 +1598,9 @@ export class ProcgenPipelineUI {
             if (typeof parsed.showUnsupportedLibrary === 'boolean') {
                 this.showUnsupportedLibrary = parsed.showUnsupportedLibrary;
             }
+            if (Array.isArray(parsed.collapsedSections)) {
+                this.collapsedSections = new Set(parsed.collapsedSections);
+            }
         } catch (e) {
             // ignore
         }
@@ -1551,6 +1610,7 @@ export class ProcgenPipelineUI {
         try {
             localStorage.setItem(LS_VIEW_KEY, JSON.stringify({
                 showUnsupportedLibrary: this.showUnsupportedLibrary,
+                collapsedSections: Array.from(this.collapsedSections),
             }));
         } catch (e) {
             // ignore
