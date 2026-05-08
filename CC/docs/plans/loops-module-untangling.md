@@ -1,5 +1,23 @@
 # Loops Module — Untangling Plan
 
+## Status (as of 2026-05-08)
+
+| Item | Status | Commit |
+|---|---|---|
+| #5 Phase A — settingsManager persistence | **DONE** | `19a8e762c` |
+| #5 Phase B — drop loops localStorage workaround | **DONE** | `8cb20b25c` |
+| #5 Phase C — DisplaySettingsBase | **DONE** | `f4fdeb27b` |
+| #5 Phase D — optionsPanel verification | **DONE** | (no code change; verified manually 2026-05-08) |
+| #3 — Split `_processFrame` | **TODO** | — |
+| #6 — Collapse loopState↔gameState shim | **TODO** | — |
+
+Bonus work that landed alongside Phase A-C:
+- **Permissive `updateSetting`** (auto-create + warn instead of refuse): `8cb20b25c`
+- **`resetToDefaults` uses disk defaults** (lazy `_ensureDefaultsLoaded`): `8cb20b25c`
+- **Two-layer settings** (persisted base + session overrides via `{persist: false}`): `f4fdeb27b`
+- **Loops/regions persistence fallout fixes** (8 missing `setSetting` calls in regions, `instantMode`/`autoRemoveCompleted`/`autoResumeOnNewAction`/`keepFocused` wired through, Show Undiscovered persistence + initial visibility): `8cb20b25c`, `f4fdeb27b`
+- **Loops discovery override migrated to session-only** (no longer leaks to localStorage): `f4fdeb27b`
+
 ## Background
 
 The loops module (`frontend/modules/loops/`) accumulated several
