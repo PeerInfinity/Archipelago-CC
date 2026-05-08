@@ -253,3 +253,117 @@ describe('SettingsManager — updateSetting / updateSettings / resetToDefaults t
     expect(localStorage.getItem(sm.getStorageKey())).toBeNull();
   });
 });
+
+describe('SettingsManager — permissive updateSetting (auto-creates missing paths)', () => {
+  let sm;
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    sm = new SettingsManager();
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+  });
+  afterEach(() => {
+    delete globalThis.localStorage;
+  });
+
+  it('creates a missing intermediate object instead of refusing the update', async () => {
+    // 'moduleSettings.brandNew' does not exist in SAMPLE_SETTINGS.
+    const ok = await sm.updateSetting('moduleSettings.brandNew.enabled', true);
+    expect(ok).toBe(true);
+    expect(await sm.getSetting('moduleSettings.brandNew.enabled')).toBe(true);
+  });
+
+  it('persists the auto-created path to localStorage', async () => {
+    await sm.updateSetting('moduleSettings.loops.brandNewToggle', true);
+    sm.flushPendingSave();
+    const written = JSON.parse(localStorage.getItem(sm.getStorageKey()));
+    expect(written.userSettings.moduleSettings.loops.brandNewToggle).toBe(true);
+  });
+
+  it('handles deeply nested missing paths (creates each level)', async () => {
+    await sm.updateSetting('a.b.c.d.e', 42);
+    expect(await sm.getSetting('a.b.c.d.e')).toBe(42);
+  });
+
+  it('still rejects when the FINAL parent slot is a non-object scalar', async () => {
+    // generalSettings.theme exists as a string. updateSetting('generalSettings.theme.deeper', ...)
+    // tries to traverse INTO 'dark' — that's not auto-creatable.
+    const ok = await sm.updateSetting('generalSettings.theme.deeper', 'oops');
+    expect(ok).toBe(false);
+  });
+});
+
+describe('SettingsManager — disk-defaults loading for resetToDefaults', () => {
+  const DISK_DEFAULTS = {
+    generalSettings: { theme: 'dark', autoSaveMode: false },
+    moduleSettings: { loops: { autoRestart: false, defaultSpeed: 100 } },
+    colorblindMode: { loops: false },
+  };
+
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    globalThis.fetch = vi.fn(async (url) => {
+      if (url === './settings/settings.json') {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => JSON.parse(JSON.stringify(DISK_DEFAULTS)),
+        };
+      }
+      return { ok: false, status: 404 };
+    });
+  });
+  afterEach(() => {
+    delete globalThis.localStorage;
+    delete globalThis.fetch;
+  });
+
+  it('resetToDefaults uses disk defaults, NOT the session-start state', async () => {
+    // Simulate init: setInitialSettings receives a localStorage-overlay
+    // value (the user previously toggled autoRestart=true and saved it).
+    const sessionStartSettings = JSON.parse(JSON.stringify(DISK_DEFAULTS));
+    sessionStartSettings.moduleSettings.loops.autoRestart = true; // overlay
+    const sm = new SettingsManager();
+    sm.setInitialSettings(sessionStartSettings);
+
+    // Wait for the lazy disk-defaults fetch.
+    await sm._ensureDefaultsLoaded();
+
+    // Sanity: settings reflect the overlay.
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(true);
+
+    await sm.resetToDefaults();
+
+    // After reset, the value is the DISK default (false), not the
+    // session-start overlay (true). This is the bug we're fixing.
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(false);
+  });
+
+  it('resetToDefaults falls back to session-start snapshot when disk fetch fails', async () => {
+    // Simulate fetch failure (matches the test/offline path).
+    globalThis.fetch = vi.fn(async () => ({ ok: false, status: 404 }));
+
+    const sessionStartSettings = JSON.parse(JSON.stringify(DISK_DEFAULTS));
+    sessionStartSettings.moduleSettings.loops.autoRestart = true; // overlay
+    const sm = new SettingsManager();
+    sm.setInitialSettings(sessionStartSettings);
+
+    await sm._ensureDefaultsLoaded();
+    await sm.resetToDefaults();
+
+    // Fallback: defaults = session-start snapshot. The overlay value
+    // sticks. Matches the pre-fix behavior so tests / offline don't
+    // regress.
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(true);
+  });
+
+  it('_ensureDefaultsLoaded only fetches once even when called repeatedly', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings(DISK_DEFAULTS);
+    await Promise.all([
+      sm._ensureDefaultsLoaded(),
+      sm._ensureDefaultsLoaded(),
+      sm._ensureDefaultsLoaded(),
+    ]);
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+  });
+});

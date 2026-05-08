@@ -175,7 +175,11 @@
     "loops": {
       "defaultSpeed": 100,
       "autoRestart": false,
-      "loopModeEnabled": false
+      "autoResumeOnNewAction": false,
+      "loopModeEnabled": false,
+      "instantMode": false,
+      "autoRemoveCompleted": false,
+      "keepFocused": false
     },
     "spoilerTest": {
       "verboseSpoilerTests": false

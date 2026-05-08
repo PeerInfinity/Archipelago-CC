@@ -16,7 +16,12 @@ const logger = createUniversalLogger('loopUI:DisplaySettings');
  * 4. Set setting: Update cache and optionally persist
  * 5. Sync to UI: Update checkbox/select states to match cache
  */
-const LOOP_SETTINGS_STORAGE_KEY = 'archipelago_loop_settings';
+
+// Legacy storage key — pre-Phase-A workaround for the missing
+// settingsManager.saveSettings() implementation. Kept here only to
+// remove orphaned data from existing users' localStorage; no code
+// reads from or writes to this key anymore.
+const LEGACY_LOOP_SETTINGS_STORAGE_KEY = 'archipelago_loop_settings';
 
 export class DisplaySettingsManager {
   constructor(settingsManager, rootElement) {
@@ -31,8 +36,10 @@ export class DisplaySettingsManager {
       // Loop-specific settings (persisted)
       defaultSpeed: 100,
       autoRestart: false,
+      autoResumeOnNewAction: false,
       instantMode: false,
       loopModeEnabled: false,
+      autoRemoveCompleted: false,
 
       // When true, suppress substrate self-activation during queue
       // processing so the loops panel stays focused. Substrate panels
@@ -68,11 +75,19 @@ export class DisplaySettingsManager {
       // Load loop-specific settings from settingsManager (defaults from settings.json)
       this.settings.defaultSpeed = await this.settingsManager.getSetting('moduleSettings.loops.defaultSpeed', 100);
       this.settings.autoRestart = await this.settingsManager.getSetting('moduleSettings.loops.autoRestart', false);
+      this.settings.autoResumeOnNewAction = await this.settingsManager.getSetting('moduleSettings.loops.autoResumeOnNewAction', false);
       this.settings.loopModeEnabled = await this.settingsManager.getSetting('moduleSettings.loops.loopModeEnabled', false);
+      this.settings.instantMode = await this.settingsManager.getSetting('moduleSettings.loops.instantMode', false);
+      this.settings.autoRemoveCompleted = await this.settingsManager.getSetting('moduleSettings.loops.autoRemoveCompleted', false);
       this.settings.keepFocused = await this.settingsManager.getSetting('moduleSettings.loops.keepFocused', false);
 
-      // Override with localStorage values (since settingsManager doesn't actually persist)
-      this._loadFromLocalStorage();
+      // One-time cleanup of the legacy side-channel localStorage key.
+      // Pre-Phase-A this module wrote settings here directly because
+      // settingsManager.saveSettings() was a stub. Now persistence
+      // flows through settingsManager → mode-keyed localStorage; the
+      // legacy key is orphaned and harmless, but worth removing so
+      // it doesn't linger as confusing debug noise.
+      this._removeLegacyStorageKey();
 
       logger.debug('Persisted settings loaded successfully');
     } catch (error) {
@@ -177,7 +192,6 @@ export class DisplaySettingsManager {
         // Revert on failure
         this.settings[key] = oldValue;
       }
-      this._saveToLocalStorage();
     }
   }
 
@@ -244,6 +258,12 @@ export class DisplaySettingsManager {
         this.settings.autoRestart = value;
       } else if (key === 'moduleSettings.loops.loopModeEnabled') {
         this.settings.loopModeEnabled = value;
+      } else if (key === 'moduleSettings.loops.autoResumeOnNewAction') {
+        this.settings.autoResumeOnNewAction = value;
+      } else if (key === 'moduleSettings.loops.instantMode') {
+        this.settings.instantMode = value;
+      } else if (key === 'moduleSettings.loops.autoRemoveCompleted') {
+        this.settings.autoRemoveCompleted = value;
       } else if (key === 'moduleSettings.loops.keepFocused') {
         this.settings.keepFocused = value;
       }
@@ -257,40 +277,20 @@ export class DisplaySettingsManager {
     return false; // Not a loop-related setting
   }
 
-  _saveToLocalStorage() {
+  /**
+   * Remove the legacy archipelago_loop_settings key from localStorage
+   * if it exists. Pre-Phase-A workaround data; safe to drop now.
+   * @private
+   */
+  _removeLegacyStorageKey() {
     try {
-      const data = {
-        defaultSpeed: this.settings.defaultSpeed,
-        autoRestart: this.settings.autoRestart,
-        instantMode: this.settings.instantMode,
-        keepFocused: this.settings.keepFocused,
-      };
-      localStorage.setItem(LOOP_SETTINGS_STORAGE_KEY, JSON.stringify(data));
+      if (typeof localStorage !== 'undefined' &&
+          localStorage.getItem(LEGACY_LOOP_SETTINGS_STORAGE_KEY) !== null) {
+        localStorage.removeItem(LEGACY_LOOP_SETTINGS_STORAGE_KEY);
+        logger.debug('Removed legacy localStorage key', LEGACY_LOOP_SETTINGS_STORAGE_KEY);
+      }
     } catch (e) {
-      logger.error('Failed to save loop settings to localStorage:', e);
-    }
-  }
-
-  _loadFromLocalStorage() {
-    try {
-      const raw = localStorage.getItem(LOOP_SETTINGS_STORAGE_KEY);
-      if (!raw) return;
-      const data = JSON.parse(raw);
-      if (typeof data.defaultSpeed === 'number') {
-        this.settings.defaultSpeed = data.defaultSpeed;
-      }
-      if (typeof data.autoRestart === 'boolean') {
-        this.settings.autoRestart = data.autoRestart;
-      }
-      if (typeof data.instantMode === 'boolean') {
-        this.settings.instantMode = data.instantMode;
-      }
-      if (typeof data.keepFocused === 'boolean') {
-        this.settings.keepFocused = data.keepFocused;
-      }
-      logger.debug('Loaded loop settings from localStorage', data);
-    } catch (e) {
-      logger.error('Failed to load loop settings from localStorage:', e);
+      // localStorage may be unavailable / blocked; ignore.
     }
   }
 }

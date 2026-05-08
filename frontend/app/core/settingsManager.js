@@ -84,18 +84,59 @@ export class SettingsManager {
         initialSettings
       );
       this.settings = JSON.parse(JSON.stringify(initialSettings)); // Deep copy
-      this._defaultSettings = JSON.parse(JSON.stringify(initialSettings)); // Store defaults for merging
       this.isLoading = false;
       // If there was a loadPromise, it's now irrelevant or should be handled.
       // For simplicity, ensureLoaded will check isLoading and this.settings.
       eventBus.publish('settings:loaded', this.settings, 'core');
+
+      // Lazy-load disk defaults in the background so resetToDefaults
+      // resets to the SHIPPED defaults, not to "whatever was loaded
+      // at session start" (which would include user/mode overlays).
+      // Fire-and-forget; resetToDefaults awaits the same promise if
+      // it hasn't resolved yet.
+      this._ensureDefaultsLoaded();
     } else {
-      log('warn', 
+      log('warn',
         '[SettingsManager] setInitialSettings called with invalid settings object.',
         initialSettings
       );
       // Do not set isLoading to false, allow normal loading to proceed if ensureLoaded is called.
     }
+  }
+
+  /**
+   * Fetch settings.json once and cache as `this._defaultSettings`.
+   * Used as the reset-to-defaults baseline. Decoupled from
+   * setInitialSettings so that user/mode overlays loaded at init
+   * don't masquerade as defaults.
+   *
+   * If the fetch fails (e.g. test env, offline), falls back to a
+   * snapshot of the current settings — matches the prior behavior
+   * where _defaultSettings was just whatever setInitialSettings
+   * received. Existing tests that don't stub fetch keep passing.
+   * @private
+   */
+  async _ensureDefaultsLoaded() {
+    if (this._defaultSettings) return;
+    if (this._defaultsPromise) return this._defaultsPromise;
+    this._defaultsPromise = (async () => {
+      try {
+        if (typeof fetch !== 'function') throw new Error('fetch unavailable');
+        const response = await fetch('./settings/settings.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+        this._defaultSettings = JSON.parse(JSON.stringify(json));
+        log('info', 'Disk defaults loaded for resetToDefaults');
+      } catch (e) {
+        log('warn', 'Could not load disk defaults; resetToDefaults will fall back to session-start state:', e?.message);
+        // Fallback: snapshot whatever we have right now. Preserves
+        // the pre-fix behavior so tests + offline use don't regress.
+        if (this.settings) {
+          this._defaultSettings = JSON.parse(JSON.stringify(this.settings));
+        }
+      }
+    })();
+    return this._defaultsPromise;
   }
 
   async _loadSettingsFromServer() {
@@ -285,16 +326,27 @@ export class SettingsManager {
     let current = this.settings;
     for (let i = 0; i < keys.length - 1; i++) {
       const k = keys[i];
-      if (!current[k] || typeof current[k] !== 'object') {
-        // Avoid creating nested objects if the path doesn't exist in the loaded structure.
-        // This might be debatable, but safer than auto-creating paths.
-        log('warn', 
+      if (current[k] === undefined || current[k] === null) {
+        // Permissive: auto-create the missing intermediate object so
+        // a brand-new setting (declared in code but not yet in
+        // settings.json) can still be saved. Log a warning so a
+        // genuine typo (e.g. 'lops' instead of 'loops') is still
+        // discoverable in the console.
+        log('warn',
+          `Auto-creating missing settings path '${keys
+            .slice(0, i + 1)
+            .join('.')}' (typo, or first use of a new setting?).`
+        );
+        current[k] = {};
+      } else if (typeof current[k] !== 'object') {
+        // Slot exists as a non-object scalar — overwriting it with
+        // an object would silently destroy a real setting. Refuse.
+        log('warn',
           `Cannot update setting. Path '${keys
             .slice(0, i + 1)
-            .join('.')}' does not exist or is not an object.`
+            .join('.')}' is a scalar (${typeof current[k]}); refusing to overwrite with an object.`
         );
         return false;
-        // current[k] = {}; // Original behavior - auto-create
       }
       current = current[k];
     }
@@ -422,6 +474,11 @@ export class SettingsManager {
    * @returns {Promise<void>}
    */
   async resetToDefaults() {
+    // Wait for the disk-defaults fetch (kicked off in setInitialSettings)
+    // so reset uses shipped defaults rather than "whatever was loaded
+    // at session start." Falls back to the session-start snapshot if
+    // the fetch failed (offline / test env).
+    await this._ensureDefaultsLoaded();
     if (!this._defaultSettings) {
       log('warn', 'No default settings available for reset.');
       return;

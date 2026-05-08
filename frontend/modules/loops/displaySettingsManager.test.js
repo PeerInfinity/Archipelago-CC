@@ -78,17 +78,18 @@ describe('DisplaySettingsManager — setSetting persistence', () => {
     delete globalThis.localStorage;
   });
 
-  it('persist=true updates settingsManager AND localStorage', async () => {
+  it('persist=true delegates persistence to settingsManager (no side-channel localStorage)', async () => {
     await mgr.setSetting('autoRestart', true);
     expect(sm.updateSetting).toHaveBeenCalledWith('moduleSettings.loops.autoRestart', true);
-    const stored = JSON.parse(localStorage.getItem('archipelago_loop_settings'));
-    expect(stored.autoRestart).toBe(true);
+    // Phase B: the legacy archipelago_loop_settings side-channel is
+    // gone. Persistence flows through settingsManager → mode-keyed
+    // localStorage; this module no longer owns its own LS key.
+    expect(localStorage.getItem('archipelago_loop_settings')).toBeNull();
   });
 
-  it('persist=false skips settingsManager AND localStorage', async () => {
+  it('persist=false skips settingsManager', async () => {
     await mgr.setSetting('instantMode', true, false);
     expect(sm.updateSetting).not.toHaveBeenCalled();
-    expect(localStorage.getItem('archipelago_loop_settings')).toBeNull();
     // Cache still updated.
     expect(mgr.getSetting('instantMode')).toBe(true);
   });
@@ -107,7 +108,7 @@ describe('DisplaySettingsManager — setSetting persistence', () => {
   });
 });
 
-describe('DisplaySettingsManager — localStorage round-trip', () => {
+describe('DisplaySettingsManager — legacy localStorage cleanup (Phase B)', () => {
   beforeEach(() => {
     globalThis.localStorage = makeLocalStorageStub();
   });
@@ -115,63 +116,47 @@ describe('DisplaySettingsManager — localStorage round-trip', () => {
     delete globalThis.localStorage;
   });
 
-  it('loadPersistedSettings overlays localStorage on top of settingsManager values', async () => {
-    // settingsManager says autoRestart=false (default), but localStorage
-    // has true → localStorage wins (loadPersistedSettings calls _loadFromLocalStorage last).
+  it('loadPersistedSettings reads only from settingsManager (legacy LS data is ignored)', async () => {
+    // Pre-Phase-B, this module overlay-loaded from
+    // archipelago_loop_settings on top of settingsManager values.
+    // Now it loads only from settingsManager — the legacy data is
+    // not consulted, and the key gets cleaned up as a side effect.
     localStorage.setItem('archipelago_loop_settings', JSON.stringify({
       defaultSpeed: 250,
       autoRestart: true,
-      instantMode: true,
-      keepFocused: true,
     }));
 
-    const mgr = new DisplaySettingsManager(makeSettingsManager(), null);
-    await mgr.loadPersistedSettings();
-    expect(mgr.getSetting('defaultSpeed')).toBe(250);
-    expect(mgr.getSetting('autoRestart')).toBe(true);
-    expect(mgr.getSetting('instantMode')).toBe(true);
-    expect(mgr.getSetting('keepFocused')).toBe(true);
-  });
-
-  it('only persists the four LS-tracked fields (colorblindMode is NOT in LS)', async () => {
-    const sm = makeSettingsManager();
-    const mgr = new DisplaySettingsManager(sm, null);
-    await mgr.setSetting('colorblindMode', true);
-    const stored = JSON.parse(localStorage.getItem('archipelago_loop_settings'));
-    expect('colorblindMode' in stored).toBe(false);
-    expect(stored).toEqual({
-      defaultSpeed: 100,
-      autoRestart: false,
-      instantMode: false,
-      keepFocused: false,
+    const sm = makeSettingsManager({
+      'moduleSettings.loops.defaultSpeed': 100,  // settingsManager says 100
+      'moduleSettings.loops.autoRestart': false, // settingsManager says false
     });
-  });
-
-  it('_loadFromLocalStorage tolerates malformed JSON', async () => {
-    localStorage.setItem('archipelago_loop_settings', 'not-json');
-    const mgr = new DisplaySettingsManager(makeSettingsManager(), null);
-    await expect(mgr.loadPersistedSettings()).resolves.toBeUndefined();
-    // Defaults preserved.
+    const mgr = new DisplaySettingsManager(sm, null);
+    await mgr.loadPersistedSettings();
+    // settingsManager values win — legacy LS is ignored entirely.
+    expect(mgr.getSetting('defaultSpeed')).toBe(100);
     expect(mgr.getSetting('autoRestart')).toBe(false);
   });
 
-  it('_loadFromLocalStorage tolerates missing key', async () => {
+  it('loadPersistedSettings removes the legacy archipelago_loop_settings key', async () => {
+    localStorage.setItem('archipelago_loop_settings', JSON.stringify({ defaultSpeed: 999 }));
+    expect(localStorage.getItem('archipelago_loop_settings')).not.toBeNull();
+
     const mgr = new DisplaySettingsManager(makeSettingsManager(), null);
     await mgr.loadPersistedSettings();
-    expect(mgr.getSetting('defaultSpeed')).toBe(100);
+
+    expect(localStorage.getItem('archipelago_loop_settings')).toBeNull();
   });
 
-  it('_loadFromLocalStorage ignores wrong-typed fields', async () => {
-    localStorage.setItem('archipelago_loop_settings', JSON.stringify({
-      defaultSpeed: '500',     // wrong type — string not number
-      autoRestart: 'yes',      // wrong type — string not boolean
-      instantMode: true,       // accepted
-    }));
+  it('loadPersistedSettings is a no-op cleanup when the legacy key was never written', async () => {
     const mgr = new DisplaySettingsManager(makeSettingsManager(), null);
-    await mgr.loadPersistedSettings();
-    expect(mgr.getSetting('defaultSpeed')).toBe(100); // default preserved
-    expect(mgr.getSetting('autoRestart')).toBe(false); // default preserved
-    expect(mgr.getSetting('instantMode')).toBe(true);
+    await expect(mgr.loadPersistedSettings()).resolves.toBeUndefined();
+    expect(localStorage.getItem('archipelago_loop_settings')).toBeNull();
+  });
+
+  it('setSetting no longer writes to the legacy localStorage key', async () => {
+    const mgr = new DisplaySettingsManager(makeSettingsManager(), null);
+    await mgr.setSetting('autoRestart', true);
+    expect(localStorage.getItem('archipelago_loop_settings')).toBeNull();
   });
 });
 
