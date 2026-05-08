@@ -4,6 +4,18 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 const logger = createUniversalLogger('loopUI:ExpansionState');
 
 /**
+ * Build the composite key used to store expansion state for a region
+ * visit. The Loops panel renders a separate block for each (region,
+ * instanceNumber) pair so revisits get their own block and their own
+ * independent expansion state — mirrors the Regions panel's
+ * navigation-mode behavior. instanceNumber defaults to 1 because most
+ * call sites only care about the first visit.
+ */
+function regionKey(regionName, instanceNumber = 1) {
+  return `${regionName}#${instanceNumber || 1}`;
+}
+
+/**
  * ExpansionStateManager
  *
  * Manages expansion state for region blocks and action blocks in the loops panel.
@@ -15,7 +27,7 @@ const logger = createUniversalLogger('loopUI:ExpansionState');
  * 4. Rendering → isRegionExpanded() / isActionExpanded() query the Sets
  *
  * State Storage:
- * - expandedRegions: Set<regionName> - Tracks which regions are expanded
+ * - expandedRegions: Set<"regionName#instanceNumber"> - Tracks expanded visits
  * - expandedActions: Set<actionId> - Tracks which action blocks are expanded
  */
 export class ExpansionStateManager {
@@ -28,12 +40,13 @@ export class ExpansionStateManager {
   }
 
   /**
-   * Check if a region is expanded
+   * Check if a region visit is expanded.
    * @param {string} regionName - The region name
+   * @param {number} [instanceNumber=1] - Visit number (1 for first visit)
    * @returns {boolean} True if expanded, false if collapsed
    */
-  isRegionExpanded(regionName) {
-    return this.expandedRegions.has(regionName);
+  isRegionExpanded(regionName, instanceNumber = 1) {
+    return this.expandedRegions.has(regionKey(regionName, instanceNumber));
   }
 
   /**
@@ -46,17 +59,19 @@ export class ExpansionStateManager {
   }
 
   /**
-   * Set expansion state for a region
+   * Set expansion state for a region visit.
    * @param {string} regionName - The region name
    * @param {boolean} expanded - True to expand, false to collapse
+   * @param {number} [instanceNumber=1] - Visit number (1 for first visit)
    */
-  setRegionExpanded(regionName, expanded) {
+  setRegionExpanded(regionName, expanded, instanceNumber = 1) {
+    const key = regionKey(regionName, instanceNumber);
     if (expanded) {
-      this.expandedRegions.add(regionName);
+      this.expandedRegions.add(key);
     } else {
-      this.expandedRegions.delete(regionName);
+      this.expandedRegions.delete(key);
     }
-    logger.debug(`Set region expansion for ${regionName}: ${expanded}`);
+    logger.debug(`Set region expansion for ${key}: ${expanded}`);
   }
 
   /**
@@ -74,18 +89,20 @@ export class ExpansionStateManager {
   }
 
   /**
-   * Toggle expansion state for a region
+   * Toggle expansion state for a region visit.
    * @param {string} regionName - The region name
+   * @param {number} [instanceNumber=1] - Visit number
    * @returns {boolean} New expansion state
    */
-  toggleRegion(regionName) {
-    const wasExpanded = this.expandedRegions.has(regionName);
+  toggleRegion(regionName, instanceNumber = 1) {
+    const key = regionKey(regionName, instanceNumber);
+    const wasExpanded = this.expandedRegions.has(key);
     if (wasExpanded) {
-      this.expandedRegions.delete(regionName);
+      this.expandedRegions.delete(key);
     } else {
-      this.expandedRegions.add(regionName);
+      this.expandedRegions.add(key);
     }
-    logger.debug(`Toggled region expansion for ${regionName}: ${!wasExpanded}`);
+    logger.debug(`Toggled region expansion for ${key}: ${!wasExpanded}`);
     return !wasExpanded;
   }
 
@@ -106,14 +123,14 @@ export class ExpansionStateManager {
   }
 
   /**
-   * Expand all regions
-   * @param {Array<string>} regionNames - Array of region names to expand
+   * Expand all visits.
+   * @param {Array<{name: string, instance: number}>} regionVisits
    */
-  expandAll(regionNames) {
-    regionNames.forEach(name => {
-      this.expandedRegions.add(name);
+  expandAll(regionVisits) {
+    regionVisits.forEach((v) => {
+      this.expandedRegions.add(regionKey(v.name, v.instance));
     });
-    logger.debug(`Expanded all ${regionNames.length} regions`);
+    logger.debug(`Expanded all ${regionVisits.length} region visits`);
   }
 
   /**

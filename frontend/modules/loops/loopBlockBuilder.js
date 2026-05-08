@@ -53,16 +53,21 @@ export class LoopBlockBuilder {
     useColorblind,
     isExpanded,
     currentActionIndex,
-    analysisEntries = null
+    analysisEntries = null,
+    instanceNumber = 1
   ) {
-    // Create outer container
+    // Create outer container. data-region-instance distinguishes blocks
+    // for the same region across multiple visits — keeps querySelector
+    // lookups (e.g. navigateToRegion's scroll-into-view) able to target
+    // the right visit.
     const regionBlock = document.createElement('div');
     regionBlock.className = 'loop-region-block';
     regionBlock.dataset.region = regionName;
+    regionBlock.dataset.regionInstance = String(instanceNumber);
     regionBlock.classList.add(isExpanded ? 'expanded' : 'collapsed');
 
     // Build header
-    const headerEl = this.buildHeader(regionName, isExpanded);
+    const headerEl = this.buildHeader(regionName, isExpanded, instanceNumber);
     regionBlock.appendChild(headerEl);
 
     // Build content (contains actions and region details)
@@ -80,7 +85,7 @@ export class LoopBlockBuilder {
     regionBlock.appendChild(contentEl);
 
     // Attach event listeners
-    this.attachEventListeners(headerEl, regionName);
+    this.attachEventListeners(headerEl, regionName, instanceNumber);
 
     return regionBlock;
   }
@@ -91,7 +96,7 @@ export class LoopBlockBuilder {
    * @param {boolean} isExpanded - Whether the region is expanded
    * @returns {HTMLElement} The header element
    */
-  buildHeader(regionName, isExpanded) {
+  buildHeader(regionName, isExpanded, instanceNumber = 1) {
     const headerEl = document.createElement('div');
     headerEl.className = 'loop-region-header';
 
@@ -103,7 +108,10 @@ export class LoopBlockBuilder {
     const showRegionNames = discoverySettings.showUndiscoveredRegionNames ?? false;
 
     const showAsPlaceholder = isDiscoveryModeActive && !isRegionDiscovered;
-    const displayName = (showAsPlaceholder && !showFullDetails && !showRegionNames) ? '???' : regionName;
+    const baseName = (showAsPlaceholder && !showFullDetails && !showRegionNames) ? '???' : regionName;
+    // Suffix on revisits so the user can tell two blocks for the same
+    // region apart at a glance. First-visit blocks render unchanged.
+    const displayName = instanceNumber > 1 ? `${baseName} (${instanceNumber})` : baseName;
 
     // Calculate XP data for the region
     const xpData = loopState.getRegionXP(regionName);
@@ -641,10 +649,10 @@ export class LoopBlockBuilder {
    * @param {HTMLElement} headerEl - Header element
    * @param {string} regionName - Name of the region
    */
-  attachEventListeners(headerEl, regionName) {
+  attachEventListeners(headerEl, regionName, instanceNumber = 1) {
     // Header click listener for expand/collapse
     headerEl.addEventListener('click', (e) => {
-      this.loopUI.toggleRegionExpanded(regionName);
+      this.loopUI.toggleRegionExpanded(regionName, instanceNumber);
     });
   }
 

@@ -590,7 +590,7 @@ export class LoopUI {
       // Clear UI specific states
       this.expansionState.clear();
       const startRegion = this.getPrimaryStartRegion();
-      if (startRegion) this.expansionState.setRegionExpanded(startRegion, true);
+      if (startRegion) this.expansionState.setRegionExpanded(startRegion, true, 1);
       this.regionsInQueue.clear();
       // REMOVED: this.repeatExploreStates.clear(); - Now handled by LoopState
       // Render the panel
@@ -1028,6 +1028,42 @@ export class LoopUI {
       return staticData.regions.keys().next().value;
     }
     return null;
+  }
+
+  /**
+   * Pick the region visit to expand by default on first render of the
+   * loops panel. Mirrors the "expand the destination, collapse the
+   * source" convention used by _addMoveAction when the user queues a
+   * move during interaction.
+   *
+   * Strategy: walk the queue backward for the last regionMove and
+   * return its destinationRegion + that move's instanceNumber ("where
+   * the queue ends up if you run it"). Falls back to the first
+   * action's sourceRegion (instance 1) when there's no regionMove in
+   * the queue (e.g. an explore-only queue), and to the primary start
+   * region (instance 1) when the queue is empty.
+   *
+   * @returns {{name: string, instance: number} | null}
+   */
+  pickInitialExpandedRegion() {
+    const queue = this.getActionQueue();
+    for (let i = queue.length - 1; i >= 0; i--) {
+      const action = queue[i];
+      if (action?.type === 'regionMove' && action.destinationRegion) {
+        return {
+          name: action.destinationRegion,
+          instance: action.instanceNumber || 1,
+        };
+      }
+    }
+    if (queue.length > 0 && queue[0]?.sourceRegion) {
+      return {
+        name: queue[0].sourceRegion,
+        instance: queue[0].instanceNumber || 1,
+      };
+    }
+    const startRegion = this.getPrimaryStartRegion();
+    return startRegion ? { name: startRegion, instance: 1 } : null;
   }
 
   /**
@@ -1604,8 +1640,12 @@ export class LoopUI {
       return;
     }
 
-    // Immediately collapse the source region when adding a move action
-    this.expansionState.setRegionExpanded(regionName, false);
+    // Immediately collapse the source region when adding a move action.
+    // Defaults to instance 1; this code path doesn't currently track
+    // instance numbers because loopState.queueAction below doesn't
+    // mutate gameState.path for regionMove (see queueAction's regionMove
+    // branch — it warns and returns). Kept consistent with the new API.
+    this.expansionState.setRegionExpanded(regionName, false, 1);
 
     //log('info', 
     //  `Queueing move action from ${regionName} to ${destinationRegion} via ${exitName}`
@@ -1627,8 +1667,9 @@ export class LoopUI {
     this.regionsInQueue.add(regionName);
     this.regionsInQueue.add(destinationRegion);
 
-    // Immediately expand the destination region
-    this.expansionState.setRegionExpanded(destinationRegion, true);
+    // Immediately expand the destination region (instance 1 — see note
+    // above on why this code path doesn't track instance numbers).
+    this.expansionState.setRegionExpanded(destinationRegion, true, 1);
 
     // Re-render to update UI
     this.renderLoopPanel();
@@ -1640,13 +1681,14 @@ export class LoopUI {
   expandAllRegions() {
     log('info', 'LoopUI: Expanding all region blocks');
     if (!this.isLoopModeActive) return;
-    
-    // Get all discovered regions
-    const discoveredRegions = discoveryStateSingleton.discoveredRegions;
 
-    // Add all regions to the expanded set
-    const regionNamesArray = Array.from(discoveredRegions);
-    this.expansionState.expandAll(regionNamesArray);
+    // Expand every (region, instance) pair currently rendered. The
+    // renderer groups the queue into visits, so a region revisited
+    // gets multiple distinct visits and each needs its own expansion
+    // entry. Falling back to discoveredRegions would miss the
+    // instance dimension.
+    const visits = this.loopRenderer.groupActionsByVisit(this.getActionQueue());
+    this.expansionState.expandAll(visits.map((v) => ({ name: v.name, instance: v.instance })));
 
     const expandCollapseBtn = this.rootElement.querySelector(
       '#loop-ui-expand-collapse-all'
@@ -1691,30 +1733,41 @@ export class LoopUI {
   }
 
   /**
-   * Toggle a region's expanded state
+   * Toggle a region visit's expanded state
    * @param {string} regionName - Name of the region
+   * @param {number} [instanceNumber=1] - Visit number
    */
-  toggleRegionExpanded(regionName) {
-    this.expansionState.toggleRegion(regionName);
+  toggleRegionExpanded(regionName, instanceNumber = 1) {
+    this.expansionState.toggleRegion(regionName, instanceNumber);
     this.renderLoopPanel();
   }
 
   /**
    * Navigate to a region: expand it, re-render, and scroll to it with a highlight
-   * Called when the user clicks an exit or entrance to move to a new region
+   * Called when the user clicks an exit or entrance to move to a new region.
+   * Expands the most recent visit of the region (the one most likely to
+   * be the user's current focus).
    * @param {string} regionName - The target region to navigate to
    */
   navigateToRegion(regionName) {
     // Collapse all other regions when navigating to a new one
     this.expansionState.collapseAll();
-    this.expansionState.setRegionExpanded(regionName, true);
+    // Pick the latest visit of this region from the current queue.
+    const visits = this.loopRenderer.groupActionsByVisit(this.getActionQueue());
+    let target = null;
+    for (const v of visits) {
+      if (v.name === regionName) target = v;
+    }
+    const instance = target ? target.instance : 1;
+    this.expansionState.setRegionExpanded(regionName, true, instance);
     this.renderLoopPanel();
 
-    // Scroll to the new region block after the DOM updates
+    // Scroll to the new region block after the DOM updates. Use the
+    // composite (region, instance) so the right visit's block is the
+    // one we scroll to.
     requestAnimationFrame(() => {
-      const regionBlock = this.rootElement?.querySelector(
-        `.loop-region-block[data-region="${CSS.escape(regionName)}"]`
-      );
+      const selector = `.loop-region-block[data-region="${CSS.escape(regionName)}"][data-region-instance="${instance}"]`;
+      const regionBlock = this.rootElement?.querySelector(selector);
       if (regionBlock) {
         regionBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
         regionBlock.classList.add('highlight-region');
@@ -2063,17 +2116,13 @@ export class LoopUI {
       }
     }
     
-    // If entering loop mode, expand the first region block by default
+    // If entering loop mode, expand the queue's "ending" region — the
+    // destination of the last regionMove. Mirrors the expand-destination
+    // behavior in _addMoveAction so first-load and incremental queue
+    // building agree on which visit is in front.
     if (this.isLoopModeActive) {
-      const actionQueue = this.getActionQueue();
-      const firstRegion = actionQueue.length > 0 ? actionQueue[0].sourceRegion : null;
-      if (firstRegion) {
-        this.expansionState.setRegionExpanded(firstRegion, true);
-      } else {
-        // Fallback to start region if queue is empty
-        const startRegion = this.getPrimaryStartRegion();
-        if (startRegion) this.expansionState.setRegionExpanded(startRegion, true);
-      }
+      const visit = this.pickInitialExpandedRegion();
+      if (visit) this.expansionState.setRegionExpanded(visit.name, true, visit.instance);
     }
 
     // --- Update THIS panel's UI elements ---
@@ -2118,7 +2167,7 @@ export class LoopUI {
 
     // Add start region back to expanded regions
     const startRegion = this.getPrimaryStartRegion();
-    if (startRegion) this.expansionState.setRegionExpanded(startRegion, true);
+    if (startRegion) this.expansionState.setRegionExpanded(startRegion, true, 1);
 
     // Re-render the panel in its cleared state
     this.renderLoopPanel();

@@ -256,13 +256,13 @@ export class EventCoordinator {
     this._stateManagerReady = true;
     if (this.loopUI.isLoopModeActive) {
       this._enableDiscoveryForLoopMode();
-      // If no regions are expanded yet (e.g. auto-entered loop mode before data loaded),
-      // expand the first region now that the path has real region names
+      // If no regions are expanded yet (e.g. auto-entered loop mode
+      // before data loaded), expand the queue's ending region now that
+      // the path has real region names. See pickInitialExpandedRegion.
       if (this.loopUI.expansionState.expandedRegions.size === 0) {
-        const actionQueue = this.loopUI.getActionQueue();
-        const firstRegion = actionQueue.length > 0 ? actionQueue[0].sourceRegion : null;
-        if (firstRegion) {
-          this.loopUI.expansionState.setRegionExpanded(firstRegion, true);
+        const visit = this.loopUI.pickInitialExpandedRegion?.();
+        if (visit) {
+          this.loopUI.expansionState.setRegionExpanded(visit.name, true, visit.instance);
         }
       }
       logger.info('Re-rendering loop panel with full static data');

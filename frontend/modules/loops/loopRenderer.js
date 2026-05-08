@@ -93,43 +93,58 @@ export class LoopRenderer {
     const analysis = analyzeQueue(actionQueue, loopState);
     this._lastAnalysis = analysis;
 
-    // Group actions by region, ensuring the start region always has an entry
-    const regionGroups = this.groupActionsByRegion(actionQueue);
+    // Group actions per visit (one block per region+instance pair).
+    // Mirrors the Regions panel's per-visit rendering — Menu→A→B→A
+    // produces four blocks: Menu#1, A#1, B#1, A#2.
+    const visits = this.groupActionsByVisit(actionQueue);
+    // Ensure the start region has at least an empty block when the
+    // queue doesn't yet reference it — otherwise the panel comes up
+    // empty on first load with no queued actions.
     const startRegion = this.loopUI?.getPrimaryStartRegion?.();
-    if (startRegion && !regionGroups.has(startRegion)) {
-      regionGroups.set(startRegion, []);
-      // Note: Do NOT auto-expand the start region here. The renderer should not
-      // mutate expansion state during rendering, as it overrides user actions like
-      // Collapse All and header click toggles. Initial expansion is handled by
-      // toggleLoopMode() when loop mode is first entered.
+    if (
+      startRegion
+      && !visits.some((v) => v.name === startRegion && v.instance === 1)
+    ) {
+      visits.unshift({
+        key: `${startRegion}#1`,
+        name: startRegion,
+        instance: 1,
+        actions: [],
+      });
+      // Note: Do NOT auto-expand the start region here. The renderer
+      // should not mutate expansion state during rendering, as it
+      // would override user actions like Collapse All and header
+      // click toggles. Initial expansion is handled by toggleLoopMode
+      // when loop mode is first entered.
     }
 
     // Check if compact view is active
     if (this._compactView) {
       this._renderCompactView(regionsArea, actionQueue, analysis);
     } else {
-      // Render each region block (normal view)
-      regionGroups.forEach((actions, regionName) => {
-        const regionStaticData = staticData?.regions?.get(regionName);
-        const isStartRegion = this.loopUI?.gameStateAPI?.isStartRegion?.(regionName);
+      // Render each visit's block (normal view)
+      visits.forEach((visit) => {
+        const regionStaticData = staticData?.regions?.get(visit.name);
+        const isStartRegion = this.loopUI?.gameStateAPI?.isStartRegion?.(visit.name);
         if (!regionStaticData && !isStartRegion) {
-          logger.warn(`No static data found for region: ${regionName}`);
+          logger.warn(`No static data found for region: ${visit.name}`);
           return;
         }
 
-        const isExpanded = this.expansionState.isRegionExpanded(regionName);
+        const isExpanded = this.expansionState.isRegionExpanded(visit.name, visit.instance);
 
         // Delegate to callback for actual block construction
         const regionBlock = this.buildRegionBlockFn(
-          regionName,
+          visit.name,
           regionStaticData,
-          actions,
+          visit.actions,
           snapshot,
           snapshotInterface,
           useLoopColorblind,
           isExpanded,
           currentActionIndex,
-          analysis.entries
+          analysis.entries,
+          visit.instance,
         );
 
         if (regionBlock) {
@@ -143,47 +158,71 @@ export class LoopRenderer {
     this.updateCurrentActionDisplay(loopState.currentAction, loopState);
 
     // Update expand/collapse button
-    this._updateExpandCollapseButton(regionGroups);
+    this._updateExpandCollapseButton(visits);
 
     logger.info('Panel rendered');
   }
 
   /**
-   * Group actions by region
+   * Walk the action queue and build one block per region visit (a
+   * region+instanceNumber pair). Multiple visits to the same region
+   * produce separate blocks so the user can expand/collapse each
+   * visit independently — matches the Regions panel's navigation-mode
+   * rendering.
+   *
+   * Source instance for a regionMove is the destination instance of
+   * the previous regionMove if its destination matches this entry's
+   * source. Otherwise it's 1 (the implicit initial visit, e.g. the
+   * Menu block at the start of the queue).
+   *
    * @param {Array} actionQueue - Action queue
-   * @returns {Map} Map of regionName -> actions array
+   * @returns {Array<{key: string, name: string, instance: number, actions: Array}>}
+   *   Visit blocks in path order. Each entry's actions array contains
+   *   { pathEntry, index, instanceNumber } objects in path order.
    */
-  groupActionsByRegion(actionQueue) {
-    const regionGroups = new Map();
+  groupActionsByVisit(actionQueue) {
+    const visits = [];
+    const visitIndex = new Map(); // 'name#instance' → index in visits
+
+    function ensureVisit(name, instance) {
+      const key = `${name}#${instance}`;
+      const existing = visitIndex.get(key);
+      if (existing !== undefined) return visits[existing];
+      const visit = { key, name, instance, actions: [] };
+      visitIndex.set(key, visits.length);
+      visits.push(visit);
+      return visit;
+    }
+
+    // current.name + current.instance describe where the path "is"
+    // after processing entries so far. null until we encounter an
+    // action that anchors it.
+    let current = null;
 
     actionQueue.forEach((pathEntry, index) => {
-      // For move actions, group under the source region (where we're moving FROM)
-      // For other actions, group under the source region (where the action occurs)
-      let groupRegion;
+      const entryInstance = pathEntry.instanceNumber || 1;
       if (pathEntry.type === 'regionMove') {
-        groupRegion = pathEntry.sourceRegion || pathEntry.destinationRegion;
+        // Source visit: the block we're currently in.
+        const sourceInstance =
+          (current && current.name === pathEntry.sourceRegion)
+            ? current.instance
+            : 1;
+        const sourceVisit = ensureVisit(pathEntry.sourceRegion, sourceInstance);
+        sourceVisit.actions.push({ pathEntry, index, instanceNumber: entryInstance });
+        // After this move, we're at the destination. Ensure its block
+        // exists so it renders even if no actions are queued there.
+        ensureVisit(pathEntry.destinationRegion, entryInstance);
+        current = { name: pathEntry.destinationRegion, instance: entryInstance };
       } else {
-        groupRegion = pathEntry.sourceRegion;
-      }
-
-      if (!regionGroups.has(groupRegion)) {
-        regionGroups.set(groupRegion, []);
-      }
-      regionGroups.get(groupRegion).push({
-        pathEntry,
-        index,
-        instanceNumber: pathEntry.instanceNumber || 0
-      });
-
-      // Ensure destination regions of moves also have a group entry,
-      // so a region block is rendered for them (even if no actions exist there yet)
-      if (pathEntry.type === 'regionMove' && pathEntry.destinationRegion &&
-          !regionGroups.has(pathEntry.destinationRegion)) {
-        regionGroups.set(pathEntry.destinationRegion, []);
+        // customAction / locationCheck — entry carries its own
+        // sourceRegion+instanceNumber. Trust them.
+        const visit = ensureVisit(pathEntry.sourceRegion, entryInstance);
+        visit.actions.push({ pathEntry, index, instanceNumber: entryInstance });
+        current = { name: pathEntry.sourceRegion, instance: entryInstance };
       }
     });
 
-    return regionGroups;
+    return visits;
   }
 
   /**
@@ -393,15 +432,15 @@ export class LoopRenderer {
 
   /**
    * Update expand/collapse button text
-   * @param {Map} regionGroups - Region groups map
+   * @param {Array<{name: string, instance: number}>} visits - Visit blocks
    * @private
    */
-  _updateExpandCollapseButton(regionGroups) {
+  _updateExpandCollapseButton(visits) {
     const expandCollapseBtn = this.rootElement.querySelector('#loop-ui-expand-collapse-all');
     if (!expandCollapseBtn) return;
 
-    const allExpanded = Array.from(regionGroups.keys()).every(
-      regionName => this.expansionState.isRegionExpanded(regionName)
+    const allExpanded = visits.every(
+      (v) => this.expansionState.isRegionExpanded(v.name, v.instance)
     );
 
     expandCollapseBtn.textContent = allExpanded ? 'Collapse All' : 'Expand All';
