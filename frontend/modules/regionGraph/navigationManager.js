@@ -2,6 +2,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
+import { executeRegionMovePath, buildStepsFromRegionList } from '../shared/pathExecutor.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
@@ -405,24 +406,25 @@ export class NavigationManager {
     }
   }
 
-  addToPath(targetRegion, moveOnlyOneStep = false) {
+  async addToPath(targetRegion, moveOnlyOneStep = false) {
     // Get the current path from gameState
     const gameState = getGameStateSingleton();
     const currentPath = gameState.getPath();
+    const { moduleDispatcher } = await import('./index.js');
+    if (!moduleDispatcher) {
+      logger.warn('moduleDispatcher not available for publishing user:regionMove');
+      return;
+    }
 
-    // If no existing path, publish region move and let gameState handle the path
+    // If no existing path, publish a single regionMove and let gameState handle the path
     if (!currentPath || currentPath.length === 0) {
       const currentRegion = gameState.getCurrentRegion();
       if (currentRegion === targetRegion) return;
-      import('./index.js').then(({ moduleDispatcher }) => {
-        if (moduleDispatcher) {
-          moduleDispatcher.publish('user:regionMove', {
-            targetRegion: targetRegion,
-            sourceRegion: currentRegion,
-            source: 'regionGraph-addToPath'
-          }, 'bottom');
-        }
-      });
+      moduleDispatcher.publish('user:regionMove', {
+        targetRegion,
+        sourceRegion: currentRegion,
+        source: 'regionGraph-addToPath',
+      }, { initialTarget: 'bottom' });
       return;
     }
 
@@ -447,60 +449,39 @@ export class NavigationManager {
     // Disable "Show All Regions" before executing moves
     this.setShowAllRegions(false);
 
-    // Execute the path by sending user:regionMove events
-    // Skip the first region in the path (it's our starting point)
-    const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    // path.steps[0] is the starting position; the rest are the regions
+    // we move through. Optionally execute just the next step.
+    const regionsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    logger.info(`Adding to path: ${regionsToExecute.join(' → ')}`);
 
-    logger.info(`Adding to path: ${stepsToExecute.join(' → ')}`);
-
-    // Build adjacency map for finding exits
-    const staticData = stateManager.getStaticData();
-    const snapshot = stateManager.getLatestStateSnapshot();
-    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
-    const adjacencyMap = this.ui.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
-
-    stepsToExecute.forEach((stepRegion, index) => {
-      // Find the exit to use for this step
-      const sourceRegion = index === 0 ? startRegion : stepsToExecute[index - 1];
-      const exitName = this.ui.pathFinder.findExitBetweenRegions(
-        sourceRegion,
-        stepRegion,
-        adjacencyMap
-      );
-
-      // Manually update the path since we disabled automatic path updates
-      gameState.updatePath(stepRegion, exitName, sourceRegion);
-
-      // Import and use moduleDispatcher to send the event
-      import('./index.js').then(({ moduleDispatcher }) => {
-        if (moduleDispatcher) {
-          moduleDispatcher.publish('user:regionMove', {
-            sourceRegion: sourceRegion,
-            targetRegion: stepRegion,
-            exitName: exitName,
-            updatePath: false,
-            source: 'regionGraph-addToPath'
-          }, 'bottom');
-          logger.debug(`Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
-        }
-      });
+    const adjacencyMap = this._buildAdjacencyMap();
+    const steps = buildStepsFromRegionList({
+      startRegion,
+      regions: regionsToExecute,
+      findExit: (s, t) => this.ui.pathFinder.findExitBetweenRegions(s, t, adjacencyMap),
+    });
+    const dispatched = executeRegionMovePath({
+      steps,
+      dispatcher: moduleDispatcher,
+      gameState,                           // sync updatePath per step
+      source: 'regionGraph-addToPath',
     });
 
-    this.ui.updateStatus(`Added ${stepsToExecute.length} region(s) to path`);
+    this.ui.updateStatus(`Added ${dispatched} region(s) to path`);
   }
 
-  overwritePath(targetRegion, moveOnlyOneStep = false) {
-    // Get the start region from stateManager
+  async overwritePath(targetRegion, moveOnlyOneStep = false) {
     const startRegion = this.getPrimaryStartRegion();
-
-    // First, set player to start region and reset the path
-    logger.debug(`Resetting player to ${startRegion} and clearing path`);
     const gameState = getGameStateSingleton();
+    const { moduleDispatcher } = await import('./index.js');
+    if (!moduleDispatcher) {
+      logger.warn('moduleDispatcher not available for publishing user:regionMove');
+      return;
+    }
 
-    // Set current region to start region first
+    // Reset player to start region and trim path back to it
+    logger.debug(`Resetting player to ${startRegion} and clearing path`);
     gameState.setCurrentRegion(startRegion);
-
-    // Then trim the path (this will reset path to just start region)
     gameState.trimPath(startRegion, 1);
 
     // Disable "Show All Regions" before executing moves
@@ -520,46 +501,36 @@ export class NavigationManager {
       return;
     }
 
-    // Execute the path by sending user:regionMove events
-    // Skip the first region in the path (start region)
-    const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    const regionsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    logger.info(`Creating new path: ${startRegion} → ${regionsToExecute.join(' → ')}`);
 
-    logger.info(`Creating new path: ${startRegion} → ${stepsToExecute.join(' → ')}`);
+    const adjacencyMap = this._buildAdjacencyMap();
+    const steps = buildStepsFromRegionList({
+      startRegion,
+      regions: regionsToExecute,
+      findExit: (s, t) => this.ui.pathFinder.findExitBetweenRegions(s, t, adjacencyMap),
+    });
+    const dispatched = executeRegionMovePath({
+      steps,
+      dispatcher: moduleDispatcher,
+      gameState,
+      source: 'regionGraph-overwritePath',
+    });
 
-    // Build adjacency map for finding exits
+    this.ui.updateStatus(`Created path: ${startRegion} → ${targetRegion} (${dispatched} steps)`);
+  }
+
+  /**
+   * Build the accessibility/adjacency map used by pathFinder for exit
+   * lookups. Both addToPath and overwritePath need it; extracted to
+   * keep their bodies focused on the high-level flow.
+   * @private
+   */
+  _buildAdjacencyMap() {
     const staticData = stateManager.getStaticData();
     const snapshot = stateManager.getLatestStateSnapshot();
     const snapshotInterface = createSnapshotInterface(snapshot, staticData);
-    const adjacencyMap = this.ui.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
-
-    stepsToExecute.forEach((stepRegion, index) => {
-      // Find the exit to use for this step
-      const sourceRegion = index === 0 ? startRegion : stepsToExecute[index - 1];
-      const exitName = this.ui.pathFinder.findExitBetweenRegions(
-        sourceRegion,
-        stepRegion,
-        adjacencyMap
-      );
-
-      // Manually update the path since we disabled automatic path updates
-      gameState.updatePath(stepRegion, exitName, sourceRegion);
-
-      // Import and use moduleDispatcher to send the event
-      import('./index.js').then(({ moduleDispatcher }) => {
-        if (moduleDispatcher) {
-          moduleDispatcher.publish('user:regionMove', {
-            sourceRegion: sourceRegion,
-            targetRegion: stepRegion,
-            exitName: exitName,
-            updatePath: false,
-            source: 'regionGraph-overwritePath'
-          }, 'bottom');
-          logger.debug(`Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
-        }
-      });
-    });
-
-    this.ui.updateStatus(`Created path: ${startRegion} → ${targetRegion} (${stepsToExecute.length} steps)`);
+    return this.ui.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
   }
 
   setShowAllRegions(enabled) {

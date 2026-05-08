@@ -24,6 +24,7 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+import { executeRegionMovePath } from '../shared/pathExecutor.js';
 
 const logger = createUniversalLogger('costGenerator');
 
@@ -313,18 +314,24 @@ export class CostGenerator {
       this.costDataManager.setCostData(costs, 'generation-in-progress');
     }
 
-    // Queue the path actions using proper user:regionMove events
-    let previousRegion = startRegion;
-    for (let i = 1; i < path.steps.length; i++) {
-      const step = path.steps[i];
-      this.dispatcher.publish('loops', 'user:regionMove', {
-        sourceRegion: previousRegion,
-        targetRegion: step.region,
-        exitName: step.exitUsed,
-        updatePath: true,
-      }, { initialTarget: 'bottom' });
-      previousRegion = step.region;
-    }
+    // Queue the path actions using proper user:regionMove events.
+    // path.steps[0] is the starting position; subsequent entries each
+    // describe the region we're MOVING TO and the exit we used to get
+    // there. Reshape into the canonical step list and dispatch via the
+    // shared helper. NOTE: this.dispatcher here is the raw
+    // EventDispatcher (4-arg publish), not the per-module wrapper —
+    // wrap it so the helper sees the standard (eventName, data, opts)
+    // signature with 'loops' bound as the originModuleId.
+    const steps = path.steps.slice(1).map((step, index) => ({
+      sourceRegion: index === 0 ? startRegion : path.steps[index].region,
+      targetRegion: step.region,
+      exitName: step.exitUsed,
+    }));
+    const dispatcher = {
+      publish: (eventName, data, options) =>
+        this.dispatcher.publish('loops', eventName, data, options),
+    };
+    executeRegionMovePath({ steps, dispatcher, source: 'loops-costGenerator' });
 
     // Add the location check at the end
     this.gameStateAPI.addLocationCheck?.(locationName, targetRegion);
