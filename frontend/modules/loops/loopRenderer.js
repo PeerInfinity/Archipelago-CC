@@ -276,9 +276,11 @@ export class LoopRenderer {
   updateCurrentActionDisplay(action, loopState, getActionQueueFn, estimateActionCostFn, getActionDisplayNameFn, isLoopModeActive) {
     const actionContainer = this.rootElement?.querySelector('#current-action-container');
 
-    if (!actionContainer || !isLoopModeActive) {
-      // Only update if active - clear if not active
-      if (actionContainer) actionContainer.innerHTML = '';
+    if (!actionContainer) return;
+
+    if (!isLoopModeActive) {
+      // Status line stays visible in inactive mode — see _showInactiveMessage.
+      actionContainer.innerHTML = `<div class="no-action-message">Loop mode inactive</div>`;
       return;
     }
 
@@ -394,8 +396,20 @@ export class LoopRenderer {
     const regionsArea = this.rootElement.querySelector('#loop-regions-area');
     let inactiveMessage = this.rootElement.querySelector('.loop-inactive-message');
 
-    if (fixedArea) fixedArea.style.display = 'none';
+    // Keep the fixed area visible so the status line shows "Loop mode
+    // inactive" instead of vanishing. Hide just the mana bar — there's
+    // no mana to show in inactive mode.
+    const manaContainer = fixedArea?.querySelector('.mana-container');
+    if (manaContainer) manaContainer.style.display = 'none';
     if (regionsArea) regionsArea.style.display = 'none';
+    // renderLoopPanel early-returns after this in inactive mode, so the
+    // action container won't be updated by updateCurrentActionDisplay.
+    // Set the status line here so an active→inactive transition sees
+    // the new message immediately instead of stale running-action HTML.
+    const actionContainer = fixedArea?.querySelector('#current-action-container');
+    if (actionContainer) {
+      actionContainer.innerHTML = `<div class="no-action-message">Loop mode inactive</div>`;
+    }
 
     if (!inactiveMessage) {
       inactiveMessage = document.createElement('div');
@@ -426,6 +440,9 @@ export class LoopRenderer {
     const inactiveMessage = this.rootElement.querySelector('.loop-inactive-message');
 
     if (fixedArea) fixedArea.style.display = 'block';
+    // Restore the mana bar (we hide it in inactive mode).
+    const manaContainer = fixedArea?.querySelector('.mana-container');
+    if (manaContainer) manaContainer.style.display = '';
     if (regionsArea) regionsArea.style.display = 'block';
     if (inactiveMessage) inactiveMessage.style.display = 'none';
   }

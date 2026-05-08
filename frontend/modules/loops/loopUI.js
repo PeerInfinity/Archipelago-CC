@@ -1294,8 +1294,12 @@ export class LoopUI {
       stepBtn.disabled = !stepActive;
     }
 
-    // Update the status line in the action container
-    if (processingState !== 'running') {
+    // Update the status line in the action container. Skip in inactive
+    // mode — the renderer's updateCurrentActionDisplay handles that case
+    // ("Loop mode inactive") and we'd otherwise overwrite it with
+    // statusMessages[processingState] (which is 'Queue ready' for the
+    // default 'idle' state).
+    if (this.isLoopModeActive && processingState !== 'running') {
       const actionContainer = this.rootElement?.querySelector('#current-action-container');
       if (actionContainer) {
         const statusMessages = {
