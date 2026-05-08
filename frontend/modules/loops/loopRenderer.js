@@ -75,7 +75,7 @@ export class LoopRenderer {
     if (!discoveredRegions || discoveredRegions.size === 0) {
       regionsArea.innerHTML = '<div class="no-regions-message">No regions discovered yet.</div>';
       this.updateManaDisplay(loopState.currentMana, loopState.maxMana);
-      this.updateCurrentActionDisplay(loopState.currentAction, loopState);
+      this._refreshCurrentActionDisplay(loopState, isLoopModeActive);
       return;
     }
 
@@ -155,7 +155,7 @@ export class LoopRenderer {
 
     // Update displays
     this.updateManaDisplay(loopState.currentMana, loopState.maxMana);
-    this.updateCurrentActionDisplay(loopState.currentAction, loopState);
+    this._refreshCurrentActionDisplay(loopState, isLoopModeActive);
 
     // Update expand/collapse button
     this._updateExpandCollapseButton(visits);
@@ -261,6 +261,32 @@ export class LoopRenderer {
     manaText.textContent = `${Math.floor(current)}/${Math.floor(max)}`;
 
     logger.debug(`Mana updated: ${current}/${max} (${percentage.toFixed(1)}%)`);
+  }
+
+  /**
+   * Internal: refresh the current-action display from inside renderLoopPanel.
+   *
+   * Both call sites (no-discoveries early return and end-of-render)
+   * need to update the action container, but the public
+   * updateCurrentActionDisplay takes cost/name callbacks that the
+   * loopUI normally supplies. Pull them off `this.loopUI` here so the
+   * renderer doesn't fall through to the no-action branch (or crash
+   * mid-render when an action exists) just because the callbacks
+   * weren't threaded through.
+   *
+   * @param {Object} loopState
+   * @param {boolean} isLoopModeActive
+   */
+  _refreshCurrentActionDisplay(loopState, isLoopModeActive) {
+    const lui = this.loopUI;
+    this.updateCurrentActionDisplay(
+      loopState.currentAction,
+      loopState,
+      lui ? lui.getActionQueue.bind(lui) : undefined,
+      lui ? lui._estimateActionCost.bind(lui) : undefined,
+      lui ? lui._getActionDisplayName.bind(lui) : undefined,
+      isLoopModeActive,
+    );
   }
 
   /**
