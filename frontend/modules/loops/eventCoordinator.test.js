@@ -225,6 +225,44 @@ describe('EventCoordinator — _handleQueueUpdated and _handlePathUpdated', () =
     bus.publish('gameState:pathUpdated', {});
     expect(loopUI.calls).toEqual([]);
   });
+
+  it('pathUpdated in waiting with queueLen <= currentActionIndex → no auto-resume (gate)', () => {
+    // Documents the queueLen > currentActionIndex gate in
+    // _handlePathUpdated: a pathUpdated event in 'waiting' state
+    // with no actions appended past the current index does not
+    // resume — only the re-render path runs.
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    loopUI.loopState._processingState = 'waiting';
+    loopUI.loopState.currentActionIndex = 2;
+    loopUI.loopState.getActionQueue = () => [{ id: 'a' }, { id: 'b' }]; // length 2, idx 2 → no work past
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+    bus.publish('gameState:pathUpdated', {});
+
+    expect(loopUI.calls.find(c => c.method === 'loopState.resumeProcessing')).toBeUndefined();
+    // Still re-renders (falls through to the non-waiting code path).
+    expect(loopUI.calls.find(c => c.method === 'renderLoopPanel')).toBeDefined();
+  });
+
+  it('pathUpdated auto-resume preserves currentActionIndex (uses resumeProcessing, not startProcessing)', () => {
+    // The doc claims auto-resume picks up at the newly appended
+    // action, not at index 0. The mechanism is that
+    // _handlePathUpdated calls resumeProcessing() (preserves the
+    // index), not startProcessing() (which would reset to 0).
+    // This test pins that wiring choice.
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    let startCalled = 0;
+    loopUI.loopState._processingState = 'waiting';
+    loopUI.loopState.currentActionIndex = 1;
+    loopUI.loopState.getActionQueue = () => [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+    loopUI.loopState.startProcessing = () => { startCalled++; };
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+    bus.publish('gameState:pathUpdated', {});
+
+    expect(loopUI.calls.find(c => c.method === 'loopState.resumeProcessing')).toBeDefined();
+    expect(startCalled).toBe(0);
+  });
 });
 
 describe('EventCoordinator — progress / action / queue events', () => {
