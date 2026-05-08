@@ -2,6 +2,7 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { SubscriptionTracker } from '../shared/subscriptionTracker.js';
 import { getCostDataManager } from './index.js';
 
 const logger = createUniversalLogger('loopUI:EventCoordinator');
@@ -22,7 +23,7 @@ export class EventCoordinator {
   constructor(eventBus, loopUI) {
     this.eventBus = eventBus;
     this.loopUI = loopUI; // Reference to LoopUI instance for callbacks
-    this.eventSubscriptions = [];
+    this._subs = new SubscriptionTracker();
     this._stateManagerReady = false;
     this._savedDiscoverySettings = null; // Settings saved before loop mode override
 
@@ -35,7 +36,7 @@ export class EventCoordinator {
    */
   subscribeToEvents() {
     // Prevent duplicate subscriptions
-    if (this.eventSubscriptions.length > 0) {
+    if (this._subs.size() > 0) {
       logger.warn('subscribeToEvents called multiple times. Skipping.');
       return;
     }
@@ -47,15 +48,13 @@ export class EventCoordinator {
     // The active gate was previously inlined as `if (!isLoopModeActive)`
     // at the top of ~13 handlers; this wrapper centralizes it.
     const subscribe = (eventName, handler) => {
-      const unsubscribe = this.eventBus.subscribe(eventName, handler.bind(this));
-      this.eventSubscriptions.push(unsubscribe);
+      this._subs.subscribe(this.eventBus, eventName, handler.bind(this));
     };
     const subscribeIfActive = (eventName, handler) => {
       const bound = handler.bind(this);
-      const unsubscribe = this.eventBus.subscribe(eventName, (data) => {
+      this._subs.add(this.eventBus.subscribe(eventName, (data) => {
         if (this.loopUI.isLoopModeActive) bound(data);
-      });
-      this.eventSubscriptions.push(unsubscribe);
+      }));
     };
 
     // Active-gated handlers (only do work when loop mode is on).
@@ -92,7 +91,7 @@ export class EventCoordinator {
     subscribe('loopState:stateLoaded', this._handleStateLoaded);
     subscribe('loops:setLoopMode', this._handleSetLoopMode);
 
-    logger.info(`Subscribed to ${this.eventSubscriptions.length} events`);
+    logger.info(`Subscribed to ${this._subs.size()} events`);
   }
 
   /**
@@ -100,9 +99,8 @@ export class EventCoordinator {
    * Cleanup method called on destroy
    */
   unsubscribeAll() {
-    logger.info(`Unsubscribing from ${this.eventSubscriptions.length} events`);
-    this.eventSubscriptions.forEach(unsubscribe => unsubscribe());
-    this.eventSubscriptions = [];
+    logger.info(`Unsubscribing from ${this._subs.size()} events`);
+    this._subs.unsubscribeAll();
   }
 
   // ==================== Event Handlers ====================

@@ -123,23 +123,23 @@ describe('EventCoordinator — subscription lifecycle', () => {
     for (const name of expected) {
       expect(bus.subs.has(name)).toBe(true);
     }
-    expect(coord.eventSubscriptions.length).toBe(expected.length);
+    expect(coord._subs.size()).toBe(expected.length);
   });
 
   it('subscribeToEvents called twice is a no-op (no duplicate subscriptions)', () => {
     coord.subscribeToEvents();
-    const firstCount = coord.eventSubscriptions.length;
+    const firstCount = coord._subs.size();
     coord.subscribeToEvents();
-    expect(coord.eventSubscriptions.length).toBe(firstCount);
+    expect(coord._subs.size()).toBe(firstCount);
   });
 
   it('unsubscribeAll calls every recorded unsubscribe and clears the list', () => {
     coord.subscribeToEvents();
-    const subscribedCount = coord.eventSubscriptions.length;
+    const subscribedCount = coord._subs.size();
     coord.unsubscribeAll();
     const unsubCalls = bus.calls.filter(c => c.method === 'unsubscribe');
     expect(unsubCalls.length).toBe(subscribedCount);
-    expect(coord.eventSubscriptions.length).toBe(0);
+    expect(coord._subs.size()).toBe(0);
   });
 });
 

@@ -1,6 +1,7 @@
 // eventCoordinator.js
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { debounce } from '../commonUI/index.js';
+import { SubscriptionTracker } from '../shared/subscriptionTracker.js';
 
 const logger = createUniversalLogger('regionUI:Events');
 
@@ -20,7 +21,7 @@ export class EventCoordinator {
   constructor(eventBus, regionUI) {
     this.eventBus = eventBus;
     this.regionUI = regionUI;
-    this.unsubscribeHandles = [];
+    this._subs = new SubscriptionTracker();
 
     logger.debug('EventCoordinator constructed');
   }
@@ -41,8 +42,7 @@ export class EventCoordinator {
 
     const subscribe = (eventName, handler) => {
       logger.info(`Subscribing to ${eventName}`);
-      const unsubscribe = this.eventBus.subscribe(eventName, handler);
-      this.unsubscribeHandles.push(unsubscribe);
+      this._subs.subscribe(this.eventBus, eventName, handler);
     };
 
     // Debounced update function for frequent changes
@@ -291,9 +291,8 @@ export class EventCoordinator {
    * Unsubscribe from all events
    */
   unsubscribeAll() {
-    logger.info(`Unsubscribing from ${this.unsubscribeHandles.length} events`);
-    this.unsubscribeHandles.forEach((unsubscribe) => unsubscribe());
-    this.unsubscribeHandles = [];
+    logger.info(`Unsubscribing from ${this._subs.size()} events`);
+    this._subs.unsubscribeAll();
   }
 }
 
