@@ -8,7 +8,7 @@
 | #5 Phase B — drop loops localStorage workaround | **DONE** | `8cb20b25c` |
 | #5 Phase C — DisplaySettingsBase | **DONE** | `f4fdeb27b` |
 | #5 Phase D — optionsPanel verification | **DONE** | (no code change; verified manually 2026-05-08) |
-| #3 — Split `_processFrame` | **TODO** | — |
+| #3 — Split `_processFrame` | **DONE** | (2026-05-08) |
 | #6 — Collapse loopState↔gameState shim | **TODO** | — |
 
 Bonus work that landed alongside Phase A-C:
@@ -123,14 +123,25 @@ Each helper:
 - `_tickManaCheck()` — runs `_resetLoop` if OOM. Returns `false` if
   the reset stopped processing (autoRestart=false or step-mode).
 
-### Open question
+### Open question — RESOLVED (2026-05-08)
 
-Should the OOM check still run when `_completeCurrentAction` stops
-processing? The current behavior says no — that's the early-return
-quirk. There may be a real bug hiding here: if a step-mode action
-finishes by hitting OOM exactly on its last frame, the user sees
-"queue paused" but mana is at 0, so the next Step click goes nowhere
-useful. Worth a separate test to characterize before we decide.
+> Should the OOM check still run when `_completeCurrentAction` stops
+> processing?
+
+**Yes.** Per user direction: the Step button must never gate on
+remaining mana, and stepping with insufficient mana should go through
+the normal OOM reset path. The early-return quirk is a bug.
+
+The fix: only skip the OOM check when `_queueCompleted` is true
+(queue ran to the end, no current action to reset). Step-mode
+completion-pause no longer suppresses OOM — the reset still fires
+and snaps the queue back to index 0 with mana refilled, so the next
+Step click runs the next action with a full mana pool instead of
+re-encountering OOM on a stranded mana=0 state.
+
+`_maybeResetForOOM` includes `!this.isProcessing` in its pause
+condition so a step-mode pause that ran first this frame still ends
+in pause after the OOM reset (instead of RAF-looping).
 
 ### Risks
 

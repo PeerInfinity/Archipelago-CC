@@ -260,13 +260,10 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
   });
 
   it('non-step instantMode: action completes, advances index, then OOM check fires and resets', () => {
-    // Important ordering in _processFrame: completion runs first
-    // (~line 1061), THEN the OOM check (~line 1072). The OOM early-
-    // return at line 1068 only fires when _completeCurrentAction stops
-    // processing (queue ended OR step mode hit _pauseAfterStep). When
-    // the queue continues to a next action, isProcessing stays true
-    // and the OOM check runs — _resetLoop resets currentActionIndex
-    // back to 0 and refills mana.
+    // _processFrame ordering: completion runs first, then the OOM check.
+    // When the queue still has more actions, isProcessing stays true and
+    // the OOM check runs — _resetLoop resets currentActionIndex back to 0
+    // and refills mana.
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
     loopState.maxMana = 100;
@@ -283,11 +280,13 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
     expect(loopState.isPaused).toBe(true);
   });
 
-  it('step mode + instantMode: completion stops processing, OOM early-returns and does NOT reset', () => {
-    // The complementary case: with step mode on, _completeCurrentAction
-    // calls _pauseAfterStep which sets isProcessing=false. The
-    // !isProcessing early-return at line 1068 then fires, skipping
-    // the OOM check. Mana stays at 0.
+  it('step mode + instantMode: completion pauses, OOM still fires and resets', () => {
+    // Step + completion + OOM all in one frame: _completeCurrentAction
+    // calls _pauseAfterStep (isProcessing → false), then the OOM check
+    // still runs (it only skips when _queueCompleted is true). Reset
+    // refills mana and snaps the queue back to index 0; the user lands
+    // in "paused at index 0 with mana refilled" — ready for the next
+    // Step click rather than stranded at mana=0.
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
     loopState.maxMana = 100;
@@ -297,11 +296,12 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
     loopState.step();
     tick(loopState);
 
-    // Action completed, index advanced to 1 (step mode preserved it).
-    expect(loopState.currentActionIndex).toBe(1);
-    // Mana stayed at 0 — OOM check never fired.
-    expect(loopState.currentMana).toBe(0);
+    // Reset fired: index back to 0, mana refilled, paused.
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState.currentMana).toBe(100);
     expect(loopState.isPaused).toBe(true);
+    expect(loopState.isProcessing).toBe(false);
+    expect(loopState._stepMode).toBe(false);
   });
 });
 

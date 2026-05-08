@@ -274,12 +274,12 @@ describe('Step button — interaction with mana reset', () => {
   });
 
   it('Step that triggers an out-of-mana reset: reset counts as the step, lands in paused', () => {
-    // Drive WITHOUT instantMode here. With instantMode, _processFrame
-    // computes progressIncrement = 100 in one shot and the OOM check
-    // (line 1072) sits AFTER the early-return that fires once
-    // _completeCurrentAction → _pauseAfterStep flips isProcessing
-    // off — so OOM never gets a chance to fire. Real runtime hits
-    // OOM mid-action, which is what we want to exercise here.
+    // Mid-action OOM (not instantMode): mana hits 0 before progress
+    // reaches 100, so _resetLoop fires from the OOM check. Step mode
+    // forces the pause path. (The instantMode-completion-with-OOM
+    // edge case is covered separately in manaReset.test.js — both
+    // paths now end in the same "paused at index 0, mana refilled"
+    // shape.)
     loopState.instantMode = false;
     gs.addCustomAction('explore'); // index 0  (cost 50 fallback)
     gs.addCustomAction('explore'); // index 1

@@ -891,7 +891,20 @@ export class LoopState {
   }
 
   /**
-   * Process a single animation frame
+   * Process a single animation frame.
+   *
+   * Per-frame contract: advance the current action by one tick. Each frame
+   * either ticks progress, completes an action, triggers an OOM reset, or
+   * some combination — but the order is fixed and the helpers make it
+   * explicit.
+   *
+   * Notable: the OOM reset runs even if completion paused us this frame
+   * (step-mode landing). The only way to skip OOM is when the queue ran
+   * to the end (_queueCompleted = true), at which point there's no
+   * current action to reset. Stepping with low mana therefore lands the
+   * user in "paused at index 0 with mana refilled" — the reset is the
+   * step's terminal event, never a stranded mana=0 state.
+   *
    * @param {number} timestamp - Current timestamp
    */
   _processFrame(timestamp) {
@@ -899,13 +912,43 @@ export class LoopState {
       this._animationFrameId = null;
       return;
     }
+    if (this._tickSubstrateDelegation()) return;
+    if (!this._primeFrameClock(timestamp)) return;
 
-    // Phase 6: substrate-handled completion. When the current action's
-    // sourceRegion is a maze substrate region with manaEnabled, hand
-    // control off — the substrate panel walks tile-by-tile, deducts
-    // mana per tile, and publishes loops:substrateActionCompleted when
-    // done. We park the queue (no progress tick, no animation frame)
-    // until that event arrives. _handleSubstrateActionCompleted resumes.
+    const deltaTime = (timestamp - this._lastFrameTime) * this.gameSpeed;
+    this._lastFrameTime = timestamp;
+
+    try {
+      if (!this._ensureCurrentAction()) return;
+      this._advanceActionProgress(deltaTime);
+      this._maybeCompleteCurrentAction();
+      // Queue ran to the end — no current action to reset, terminal events
+      // already published by _completeCurrentAction. Skip OOM and bail.
+      if (this._queueCompleted) return;
+      if (this._maybeResetForOOM()) return;
+      this._publishProgressUpdate();
+    } catch (error) {
+      log('error', 'Error in _processFrame:', error);
+      this.stopProcessing();
+      return;
+    }
+
+    this._animationFrameId = requestAnimationFrame(
+      this._processFrame.bind(this)
+    );
+  }
+
+  /**
+   * Phase 6 substrate delegation. When the current action's sourceRegion
+   * is a maze substrate region with manaEnabled, hand control off — the
+   * substrate panel walks tile-by-tile, deducts mana per tile, and
+   * publishes loops:substrateActionCompleted when done. The queue parks
+   * (no progress tick, no animation frame) until that event arrives;
+   * _handleSubstrateActionCompleted resumes.
+   *
+   * @returns {boolean} true if we parked this frame (caller should bail).
+   */
+  _tickSubstrateDelegation() {
     if (!this._delegatedAction && this._shouldDelegateCurrentAction()) {
       this._delegatedAction = this.currentAction;
       this._lastFrameTime = null;
@@ -913,168 +956,167 @@ export class LoopState {
         action: this.currentAction,
       });
       this._animationFrameId = null;
-      return;
+      return true;
     }
     if (this._delegatedAction) {
-      // Still parked, waiting for the substrate to finish.
       this._animationFrameId = null;
-      return;
+      return true;
     }
+    return false;
+  }
 
+  /**
+   * On the first frame, _lastFrameTime is null. Prime it and re-schedule
+   * without doing work — we need a delta to compute progress.
+   *
+   * @returns {boolean} true if the clock was already primed (caller proceeds);
+   *   false if we just primed it and re-scheduled (caller bails).
+   */
+  _primeFrameClock(timestamp) {
     if (!this._lastFrameTime) {
       this._lastFrameTime = timestamp;
       this._animationFrameId = requestAnimationFrame(
         this._processFrame.bind(this)
       );
-      return;
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Validate currentAction/index against the queue. Recovers by snapping
+   * to index 0 when possible; stops processing on an empty queue.
+   *
+   * @returns {boolean} true if we have a valid action to process; false if
+   *   processing was stopped (caller should bail).
+   */
+  _ensureCurrentAction() {
+    const queue = this.getActionQueue();
+    if (this.currentAction && this.currentActionIndex < queue.length) {
+      return true;
+    }
+    log('error', 'Invalid action state in _processFrame:', {
+      currentActionIndex: this.currentActionIndex,
+      queueLength: queue.length,
+      hasCurrentAction: !!this.currentAction,
+    });
+    if (queue.length > 0) {
+      this.currentActionIndex = 0;
+      this.currentAction = queue[this.currentActionIndex];
+      return true;
+    }
+    this.stopProcessing();
+    return false;
+  }
+
+  /**
+   * Advance the current action's progress by one frame's worth, deduct
+   * mana proportionally, and award XP. Side effects:
+   *   - actionQueueManager progress map
+   *   - gs.deductMana (handles noManaDepletionReset / manaDebt internally)
+   *   - gs.addRegionXP + gameState:xpChanged event for fine-grained UI updates
+   *
+   * Zero-cost actions and instantMode complete in a single frame.
+   */
+  _advanceActionProgress(deltaTime) {
+    const actionCost = this._calculateActionCost(this.currentAction);
+    const currentProgress =
+      this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
+
+    let progressIncrement;
+    if (actionCost === 0 || this.instantMode) {
+      progressIncrement = 100 - currentProgress;
+    } else {
+      // Slow down the action for better visibility — 20 instead of 100.
+      progressIncrement = (deltaTime / 1000) * (20 / actionCost);
     }
 
-    // Calculate time delta and apply game speed
-    const deltaTime = (timestamp - this._lastFrameTime) * this.gameSpeed;
-    this._lastFrameTime = timestamp;
-
-    try {
-      // Get current queue from gameState
-      const queue = this.getActionQueue();
-      
-      // Verify we have a valid current action and index
-      if (
-        !this.currentAction ||
-        this.currentActionIndex >= queue.length
-      ) {
-        log('error', 'Invalid action state in _processFrame:', {
-          currentActionIndex: this.currentActionIndex,
-          queueLength: queue.length,
-          hasCurrentAction: !!this.currentAction,
-        });
-
-        // Try to recover by finding a valid action
-        if (queue.length > 0) {
-          this.currentActionIndex = 0;
-          this.currentAction = queue[this.currentActionIndex];
-        } else {
-          // No actions left, stop processing
-          this.stopProcessing();
-          return;
-        }
-      }
-
-      // Process current action
-      const actionCost = this._calculateActionCost(this.currentAction);
-
-      // Calculate progress increment
-      let progressIncrement;
-      const currentProgress = this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
-
-      if (actionCost === 0 || this.instantMode) {
-        // Zero-cost or instant mode: complete action in one frame
-        progressIncrement = 100 - currentProgress;
-      } else {
-        // Slow down the action for better visibility - use 20 instead of 100
-        progressIncrement = (deltaTime / 1000) * (20 / actionCost);
-      }
-
-      // Update progress in our tracking Map
-      const newProgress = currentProgress + progressIncrement;
-      this.actionQueueManager.setProgress(this.currentAction.pathIndex, newProgress);
-      this.currentAction.progress = newProgress;
-
-      // Reduce mana based on progress. gameState.deductMana handles
-      // noManaDepletionReset / manaDebt tracking and fires
-      // gameState:manaChanged.
-      const manaCost = (progressIncrement / 100) * actionCost;
-      const gs = this._gs();
-      if (gs) {
-        gs.deductMana(manaCost);
-      }
-
-      // Continuous XP gain during action
-      if (this.currentAction.sourceRegion) {
-        // Award 1 XP per mana spent.
-        // SIMPLIFIED XP Gain: Always award 1x XP during explore/other actions.
-        // The 4x "farming" logic relied on discovery state which is now removed.
-        // gameState.addRegionXP fires gameState:xpChanged on level-up; we also
-        // emit a per-frame xpChanged so UI fine-grained progress updates work.
-        const xpGain = (progressIncrement / 100) * actionCost;
-        this.addRegionXP(this.currentAction.sourceRegion, xpGain);
-        const xpData = this.getRegionXP(this.currentAction.sourceRegion);
-        this.eventBus.publish('gameState:xpChanged', {
-          regionName: this.currentAction.sourceRegion,
-          xpData,
-        });
-      }
-
-      // Log every few frames for debugging
-      //if (Math.random() < 0.05) {
-      //  log('info',
-      //    `Action progress: ${this.currentAction.progress.toFixed(
-      //      2
-      //    )}%, Mana: ${this.currentMana.toFixed(2)}/${this.maxMana}`
-      //  );
-      //}
-
-      // Check for action completion
-      if (this.currentAction.progress >= 100) {
-        //log('info', 'Action completed:', this.currentAction);
-        this._completeCurrentAction();
-
-        // _completeCurrentAction may have stopped processing (queue finished
-        // or paused). Don't fall through to the mana check — it would
-        // overwrite the idle/paused state with a spurious _resetLoop.
-        if (!this.isProcessing) return;
-      }
-
-      // Check for loop reset (out of mana)
-      if (this.currentMana <= 0 && !this.noManaDepletionReset) {
-        //log('info', 'Loop reset: out of mana');
-        this._resetLoop();
-
-        // Step mode forces the pause path — the reset itself is the
-        // step's terminal event regardless of autoRestartQueue.
-        if (!this.autoRestartQueue || this._stepMode) {
-          // Pause at end of loop — user must click Resume to go again
-          this._stepMode = false;
-          this.isPaused = true;
-          this.stopProcessing();
-          this.eventBus.publish('loopState:pauseStateChanged', {
-            isPaused: true,
-            processingState: this.getProcessingState(),
-          });
-          return;
-        }
-
-        // Auto-restart: continue processing
-        this._animationFrameId = requestAnimationFrame(
-          this._processFrame.bind(this)
-        );
-        return;
-      }
-      // Update UI - important to keep this happening
-      // Always include mana data, but only include action if it exists
-      const eventData = {
-        mana: {
-          current: this.currentMana,
-          max: this.maxMana,
-        },
-      };
-
-      // Only include action data if there's a current action
-      if (this.currentAction) {
-        eventData.action = this.currentAction;
-      }
-
-      this.eventBus.publish('loopState:progressUpdated', eventData);
-    } catch (error) {
-      log('error', 'Error in _processFrame:', error);
-      // Try to recover by stopping processing
-      this.stopProcessing();
-      return;
-    }
-
-    // Request next frame - this must always happen during processing
-    this._animationFrameId = requestAnimationFrame(
-      this._processFrame.bind(this)
+    const newProgress = currentProgress + progressIncrement;
+    this.actionQueueManager.setProgress(
+      this.currentAction.pathIndex,
+      newProgress
     );
+    this.currentAction.progress = newProgress;
+
+    const manaCost = (progressIncrement / 100) * actionCost;
+    const gs = this._gs();
+    if (gs) gs.deductMana(manaCost);
+
+    if (this.currentAction.sourceRegion) {
+      const xpGain = (progressIncrement / 100) * actionCost;
+      this.addRegionXP(this.currentAction.sourceRegion, xpGain);
+      const xpData = this.getRegionXP(this.currentAction.sourceRegion);
+      this.eventBus.publish('gameState:xpChanged', {
+        regionName: this.currentAction.sourceRegion,
+        xpData,
+      });
+    }
+  }
+
+  /**
+   * If the current action's progress hit 100, complete it.
+   * _completeCurrentAction may transition to _queueCompleted (queue ran
+   * to the end) or, in step mode, call _pauseAfterStep to stop processing
+   * after this single action.
+   */
+  _maybeCompleteCurrentAction() {
+    if (this.currentAction.progress >= 100) {
+      this._completeCurrentAction();
+    }
+  }
+
+  /**
+   * Out-of-mana reset. Runs when mana ≤ 0 unless noManaDepletionReset
+   * is set. The reset refills mana, resets progress, and snaps the queue
+   * back to index 0.
+   *
+   * Pause vs continue:
+   *   - autoRestart off → pause
+   *   - step mode → pause (the reset is the step's terminal event)
+   *   - already paused this frame (step-mode completion ran first) →
+   *     pause; otherwise we'd RAF into a paused state forever
+   *   - otherwise → continue (RAF the next frame)
+   *
+   * @returns {boolean} true if a reset fired (caller should bail —
+   *   the frame is done either way).
+   */
+  _maybeResetForOOM() {
+    if (this.currentMana > 0 || this.noManaDepletionReset) return false;
+
+    this._resetLoop();
+
+    const shouldPause =
+      !this.autoRestartQueue || this._stepMode || !this.isProcessing;
+    if (shouldPause) {
+      this._stepMode = false;
+      this.isPaused = true;
+      this.stopProcessing();
+      this.eventBus.publish('loopState:pauseStateChanged', {
+        isPaused: true,
+        processingState: this.getProcessingState(),
+      });
+    } else {
+      this._animationFrameId = requestAnimationFrame(
+        this._processFrame.bind(this)
+      );
+    }
+    return true;
+  }
+
+  /**
+   * Publish the per-frame UI update event.
+   */
+  _publishProgressUpdate() {
+    const eventData = {
+      mana: {
+        current: this.currentMana,
+        max: this.maxMana,
+      },
+    };
+    if (this.currentAction) {
+      eventData.action = this.currentAction;
+    }
+    this.eventBus.publish('loopState:progressUpdated', eventData);
   }
 
   /**
