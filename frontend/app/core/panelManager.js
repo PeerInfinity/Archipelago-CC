@@ -883,6 +883,46 @@ class PanelManager {
   }
   // --- END NEW METHOD --- //
 
+  /**
+   * Returns true when a panel with the given componentType is the
+   * active tab in its Golden Layout stack. Used by callers that want
+   * to gate a side effect on "is the user currently looking at this
+   * panel" (e.g. loops uses this to suppress substrate self-activation
+   * while the loops panel is in front).
+   *
+   * Returns false when GoldenLayout isn't ready, no component with
+   * the given type is mounted, or the component's parent isn't a
+   * stack — i.e. when there's no meaningful "active tab" to compare
+   * against. Callers should treat false as "no active claim" and
+   * proceed with their default behavior.
+   *
+   * @param {string} componentType
+   * @returns {boolean}
+   */
+  isPanelActive(componentType) {
+    if (
+      !this.goldenLayout ||
+      !this.goldenLayout.isInitialised ||
+      !this.goldenLayout.root
+    ) {
+      return false;
+    }
+    const allItems = this.goldenLayout.getAllContentItems
+      ? this.goldenLayout.getAllContentItems()
+      : [];
+    for (const item of allItems) {
+      if (!item.isComponent) continue;
+      const container = item.container;
+      if (!container || container.componentType !== componentType) continue;
+      const stack = item.parent;
+      if (!stack || !stack.isStack || typeof stack.getActiveComponentItem !== 'function') {
+        return false;
+      }
+      return stack.getActiveComponentItem() === item;
+    }
+    return false;
+  }
+
   removeMappingByPanelId(panelId) {
     if (!panelId) {
       log(

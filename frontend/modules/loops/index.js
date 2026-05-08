@@ -2,6 +2,7 @@
 import loopStateSingleton from './loopStateSingleton.js';
 import { LoopUI } from './loopUI.js';
 import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, handleUserExitClickedForLoops, initializeLoopEvents } from './loopEvents.js'; // Import handlers
+import panelManagerInstance from '../../app/core/panelManager.js';
 
 // Cost generation and management
 import { CostGenerator } from './costGenerator.js';
@@ -218,11 +219,20 @@ export function register(registrationApi) {
   });
 
   // Substrate index modules (maze, textAdventure) consult this before
-  // publishing ui:activatePanel on loadRegion — when the loops queue is
-  // running and the user has "Keep this panel focused" on, substrates
-  // skip their self-activation so the loops panel stays in front.
+  // publishing ui:activatePanel on loadRegion — when the user has
+  // "Keep this panel focused" on AND the loops panel is the active
+  // tab in its Golden Layout stack, substrates skip their self-
+  // activation so the active loops tab stays in front.
+  //
+  // Using "is loops the active tab" as the gate makes this independent
+  // of timing (no flags tracking isProcessing / step mode / reset
+  // microtasks) and naturally handles both same-stack focus stealing
+  // (loops + substrate share a tab group → suppress) and different-
+  // stack layouts (panels are independent → activation doesn't push
+  // loops off → suppression unnecessary).
   registrationApi.registerPublicFunction(moduleInfo.name, 'isFocusLocked', () => {
-    return loopStateSingleton.isFocusLocked();
+    return loopStateSingleton.keepFocused === true
+      && panelManagerInstance.isPanelActive(moduleInfo.componentType);
   });
 
   // Register Loops settings schema snippet
