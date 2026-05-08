@@ -39,6 +39,14 @@ export class SettingsManager {
     this._currentMode = 'default';
     this._saveTimeoutId = null;
 
+    // Session-only overrides. Keyed by full dotted path (same shape
+    // as updateSetting's key). Reads via getSetting fall back to
+    // this.settings; only persisted writes touch localStorage. Used
+    // by callers that want to override a setting for the duration of
+    // the session WITHOUT clobbering the user's saved value (e.g.
+    // loops mode auto-enabling discovery while loops is active).
+    this._overrides = new Map();
+
     // Subscribe to the mode-determination event so we save under the
     // right slot. Guard for the test environment where eventBus may
     // be a stub.
@@ -294,12 +302,15 @@ export class SettingsManager {
 
   /**
    * Gets a specific setting value using a dot-notation key. Ensures settings are loaded first.
+   * Session overrides (set via updateSetting with persist:false) take
+   * precedence over the persisted base.
    * @param {string} key - The setting key (e.g., 'generalSettings.theme' or 'moduleSettings.client.defaultServer')
    * @param {*} defaultValue - Value to return if key not found.
    * @returns {Promise<*>} A promise resolving to the setting value or defaultValue.
    */
   async getSetting(key, defaultValue = undefined) {
     await this.ensureLoaded();
+    if (this._overrides.has(key)) return this._overrides.get(key);
     const keys = key.split('.');
     let current = this.settings;
     for (const k of keys) {
@@ -314,14 +325,48 @@ export class SettingsManager {
 
   /**
    * Updates a specific setting value using a dot-notation key.
-   * Publishes a 'settings:changed' event and triggers saveSettings.
-   * Ensures settings are loaded first.
+   * Publishes a 'settings:changed' event and (when persisting)
+   * triggers saveSettings. Ensures settings are loaded first.
+   *
    * @param {string} key - The setting key (e.g., 'generalSettings.theme')
    * @param {*} value - The new value.
+   * @param {Object} [options]
+   * @param {boolean} [options.persist=true] - When false, the value
+   *   is stored as a session-only override (does NOT touch
+   *   localStorage). The override takes precedence over the
+   *   persisted base for subsequent getSetting calls. Use this for
+   *   transient overrides (e.g. "while loop mode is on, force
+   *   discovery on") that shouldn't survive a reload. A subsequent
+   *   persistent write to the same key clears the override —
+   *   user-explicit writes always win.
    * @returns {Promise<boolean>} A promise resolving to true if the setting was updated, false otherwise.
    */
-  async updateSetting(key, value) {
+  async updateSetting(key, value, options = {}) {
+    const { persist = true } = options;
     await this.ensureLoaded();
+
+    if (!persist) {
+      // Session-only override path. Doesn't touch this.settings or
+      // localStorage. Reads via getSetting see this value first.
+      if (this._overrides.get(key) === value) return false;
+      this._overrides.set(key, value);
+      log('info', `Setting overridden (session): ${key} =`, value);
+      eventBus.publish('settings:changed', {
+        key,
+        value,
+        settings: await this.getEffectiveSettings(),
+      }, 'core');
+      return true;
+    }
+
+    // Persistent path: a user-driven write. Clear any session override
+    // for this key — the user's explicit value should win and become
+    // the new "real" value going forward.
+    const hadOverride = this._overrides.delete(key);
+    if (hadOverride) {
+      log('info', `Cleared session override for ${key} (replaced by persistent write)`);
+    }
+
     const keys = key.split('.');
     let current = this.settings;
     for (let i = 0; i < keys.length - 1; i++) {
@@ -359,7 +404,7 @@ export class SettingsManager {
         eventBus.publish('settings:changed', {
           key,
           value,
-          settings: await this.getSettings(), // Get fresh copy
+          settings: await this.getEffectiveSettings(),
         }, 'core');
         await this.saveSettings(); // Trigger save
         return true;
@@ -371,6 +416,71 @@ export class SettingsManager {
       return false;
     }
     return false; // Value was the same, no update
+  }
+
+  /**
+   * Drop a single session override. Reads via getSetting subsequently
+   * fall back to the persisted base. Fires settings:changed so
+   * subscribers re-read (the effective value may have changed).
+   * No-op when no override exists for the key.
+   *
+   * @param {string} key
+   * @returns {Promise<boolean>} true if an override was cleared
+   */
+  async clearOverride(key) {
+    if (!this._overrides.has(key)) return false;
+    this._overrides.delete(key);
+    log('info', `Cleared session override: ${key}`);
+    // Look up the underlying persisted value to include in the event,
+    // matching the shape of a per-key updateSetting publish.
+    const value = await this.getSetting(key);
+    eventBus.publish('settings:changed', {
+      key,
+      value,
+      settings: await this.getEffectiveSettings(),
+    }, 'core');
+    return true;
+  }
+
+  /**
+   * Drop every session override. Used by exit-loop-mode and similar
+   * teardown paths. Fires one settings:changed per cleared key so
+   * subscribers re-read.
+   */
+  async clearAllOverrides() {
+    if (this._overrides.size === 0) return;
+    const keys = Array.from(this._overrides.keys());
+    for (const key of keys) {
+      await this.clearOverride(key);
+    }
+  }
+
+  /**
+   * Snapshot of `this.settings` with all session overrides layered on
+   * top. Use this when you need "what value would getSetting return
+   * for any key" — e.g. populating settings:changed event payloads.
+   *
+   * Distinct from getSettings(), which returns the persisted base
+   * (used by the JSON panel's save flow so transient overrides don't
+   * accidentally get saved into the mode blob).
+   */
+  async getEffectiveSettings() {
+    await this.ensureLoaded();
+    if (this._overrides.size === 0) return JSON.parse(JSON.stringify(this.settings));
+    const snapshot = JSON.parse(JSON.stringify(this.settings));
+    for (const [key, value] of this._overrides) {
+      const keys = key.split('.');
+      let current = snapshot;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const k = keys[i];
+        if (current[k] === undefined || current[k] === null || typeof current[k] !== 'object') {
+          current[k] = {};
+        }
+        current = current[k];
+      }
+      current[keys[keys.length - 1]] = value;
+    }
+    return snapshot;
   }
 
   // Merges user-provided settings on top of defaults, ensuring new default keys

@@ -133,9 +133,12 @@ export class LoopUI {
     }
     this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
-      ({ key, value }) => {
-        // Delegate to DisplaySettingsManager
-        const settingsUpdated = this.displaySettings.handleSettingsChanged({ key, value });
+      async ({ key, value }) => {
+        // Delegate to DisplaySettingsManager. Async so we can await
+        // the reload that fires for wildcard ('*') events — needed
+        // because the keepFocused mirror below reads the fresh value
+        // after the cache is updated.
+        const settingsUpdated = await this.displaySettings.handleSettingsChanged({ key, value });
         if (settingsUpdated) {
           log('info', 'LoopUI reacting to settings change:', key);
           // Mirror keepFocused into loopState so isFocusLocked reflects

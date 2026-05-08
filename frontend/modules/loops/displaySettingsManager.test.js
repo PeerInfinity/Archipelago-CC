@@ -171,22 +171,21 @@ describe('DisplaySettingsManager — handleSettingsChanged', () => {
     delete globalThis.localStorage;
   });
 
-  it('returns false for unrelated keys', () => {
-    expect(mgr.handleSettingsChanged({ key: 'someUnrelatedKey', value: 1 })).toBe(false);
-    // Unrelated change shouldn't touch the cache.
+  it('returns false for unrelated keys', async () => {
+    await expect(mgr.handleSettingsChanged({ key: 'someUnrelatedKey', value: 1 })).resolves.toBe(false);
     expect(mgr.getSetting('autoRestart')).toBe(false);
   });
 
-  it('updates cache for colorblindMode.loops', () => {
-    expect(mgr.handleSettingsChanged({ key: 'colorblindMode.loops', value: true })).toBe(true);
+  it('updates cache for colorblindMode.loops via the colorblindMode helper', async () => {
+    await expect(mgr.handleSettingsChanged({ key: 'colorblindMode.loops', value: true })).resolves.toBe(true);
     expect(mgr.getColorblindMode()).toBe(true);
   });
 
-  it('updates cache for each loop-related moduleSettings key', () => {
-    mgr.handleSettingsChanged({ key: 'moduleSettings.loops.defaultSpeed', value: 250 });
-    mgr.handleSettingsChanged({ key: 'moduleSettings.loops.autoRestart', value: true });
-    mgr.handleSettingsChanged({ key: 'moduleSettings.loops.loopModeEnabled', value: true });
-    mgr.handleSettingsChanged({ key: 'moduleSettings.loops.keepFocused', value: true });
+  it('updates cache for each loop-related moduleSettings key', async () => {
+    await mgr.handleSettingsChanged({ key: 'moduleSettings.loops.defaultSpeed', value: 250 });
+    await mgr.handleSettingsChanged({ key: 'moduleSettings.loops.autoRestart', value: true });
+    await mgr.handleSettingsChanged({ key: 'moduleSettings.loops.loopModeEnabled', value: true });
+    await mgr.handleSettingsChanged({ key: 'moduleSettings.loops.keepFocused', value: true });
     expect(mgr.getSetting('defaultSpeed')).toBe(250);
     expect(mgr.getSetting('autoRestart')).toBe(true);
     expect(mgr.getSetting('loopModeEnabled')).toBe(true);
@@ -195,9 +194,7 @@ describe('DisplaySettingsManager — handleSettingsChanged', () => {
 
   it('returns true and reloads everything for wildcard ("*") changes', async () => {
     sm.values['moduleSettings.loops.defaultSpeed'] = 333;
-    expect(mgr.handleSettingsChanged({ key: '*', value: undefined })).toBe(true);
-    // Wildcard reload happens asynchronously — wait a tick.
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await expect(mgr.handleSettingsChanged({ key: '*', value: undefined })).resolves.toBe(true);
     expect(mgr.getSetting('defaultSpeed')).toBe(333);
   });
 });

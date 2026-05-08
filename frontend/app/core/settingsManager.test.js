@@ -292,6 +292,142 @@ describe('SettingsManager — permissive updateSetting (auto-creates missing pat
   });
 });
 
+describe('SettingsManager — session overrides ({persist: false})', () => {
+  let sm;
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    sm = new SettingsManager();
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+  });
+  afterEach(() => {
+    delete globalThis.localStorage;
+  });
+
+  it('updateSetting with persist:false stores an override (does NOT touch this.settings or localStorage)', async () => {
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    sm.flushPendingSave();
+    // localStorage stays empty.
+    expect(localStorage.getItem(sm.getStorageKey())).toBeNull();
+    // Persisted base unchanged.
+    expect(sm.settings.moduleSettings.loops.autoRestart).toBe(false);
+    // But the override is visible via getSetting.
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(true);
+  });
+
+  it('persistent updateSetting clears any existing override (user write wins)', async () => {
+    // Override autoRestart=true (session-only), then user writes
+    // autoRestart=true with persist:true. The persistent write sees
+    // `current[finalKey] === value` would be the OVERRIDE, not the
+    // base — but updateSetting compares against the base
+    // (this.settings), which is false, so the write goes through.
+    // Override gets cleared and the new persisted value is true.
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: true });
+    expect(sm._overrides.has('moduleSettings.loops.autoRestart')).toBe(false);
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(true);
+    sm.flushPendingSave();
+    const written = JSON.parse(localStorage.getItem(sm.getStorageKey()));
+    expect(written.userSettings.moduleSettings.loops.autoRestart).toBe(true);
+  });
+
+  it('clearOverride drops an override and getSetting falls back to persisted base', async () => {
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(true);
+    await sm.clearOverride('moduleSettings.loops.autoRestart');
+    expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(false);
+  });
+
+  it('clearOverride is a no-op (returns false) when no override exists', async () => {
+    await expect(sm.clearOverride('nonexistent')).resolves.toBe(false);
+  });
+
+  it('clearAllOverrides drops every override at once', async () => {
+    await sm.updateSetting('a', 1, { persist: false });
+    await sm.updateSetting('b', 2, { persist: false });
+    await sm.updateSetting('c', 3, { persist: false });
+    await sm.clearAllOverrides();
+    expect(sm._overrides.size).toBe(0);
+  });
+
+  it('overrides do NOT bleed into the localStorage write', async () => {
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    // Trigger an unrelated persistent write that flushes the saver.
+    await sm.updateSetting('moduleSettings.loops.defaultSpeed', 250, { persist: true });
+    sm.flushPendingSave();
+    const written = JSON.parse(localStorage.getItem(sm.getStorageKey()));
+    expect(written.userSettings.moduleSettings.loops.defaultSpeed).toBe(250);
+    expect(written.userSettings.moduleSettings.loops.autoRestart).toBe(false); // still the base value
+  });
+
+  it('settings:changed event fires when an override is set or cleared', async () => {
+    const eventBus = (await import('./eventBus.js')).default;
+    const spy = vi.spyOn(eventBus, 'publish');
+    spy.mockClear();
+
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    await sm.clearOverride('moduleSettings.loops.autoRestart');
+
+    const matching = spy.mock.calls.filter(
+      ([event, data]) => event === 'settings:changed' && data.key === 'moduleSettings.loops.autoRestart',
+    );
+    expect(matching.length).toBe(2);
+    expect(matching[0][1].value).toBe(true);  // override set
+    expect(matching[1][1].value).toBe(false); // override cleared → base value
+    spy.mockRestore();
+  });
+
+  it('does NOT fire settings:changed when re-setting an override to the same value', async () => {
+    const eventBus = (await import('./eventBus.js')).default;
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    const spy = vi.spyOn(eventBus, 'publish');
+    spy.mockClear();
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    const matching = spy.mock.calls.filter(([event]) => event === 'settings:changed');
+    expect(matching.length).toBe(0);
+    spy.mockRestore();
+  });
+});
+
+describe('SettingsManager — getSettings vs getEffectiveSettings', () => {
+  let sm;
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    sm = new SettingsManager();
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+  });
+  afterEach(() => {
+    delete globalThis.localStorage;
+  });
+
+  it('getSettings returns the persisted base (overrides excluded)', async () => {
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    const snapshot = await sm.getSettings();
+    expect(snapshot.moduleSettings.loops.autoRestart).toBe(false);
+  });
+
+  it('getEffectiveSettings layers overrides on top of the persisted base', async () => {
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    const snapshot = await sm.getEffectiveSettings();
+    expect(snapshot.moduleSettings.loops.autoRestart).toBe(true);
+    // Other settings unaffected.
+    expect(snapshot.generalSettings.theme).toBe('dark');
+  });
+
+  it('getEffectiveSettings creates missing intermediate objects for new override paths', async () => {
+    await sm.updateSetting('moduleSettings.brandNew.toggle', true, { persist: false });
+    const snapshot = await sm.getEffectiveSettings();
+    expect(snapshot.moduleSettings.brandNew.toggle).toBe(true);
+  });
+
+  it('getEffectiveSettings deep-copies (mutations do not leak back to overrides)', async () => {
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    const snapshot = await sm.getEffectiveSettings();
+    snapshot.moduleSettings.loops.autoRestart = 'mutated';
+    const fresh = await sm.getEffectiveSettings();
+    expect(fresh.moduleSettings.loops.autoRestart).toBe(true);
+  });
+});
+
 describe('SettingsManager — disk-defaults loading for resetToDefaults', () => {
   const DISK_DEFAULTS = {
     generalSettings: { theme: 'dark', autoSaveMode: false },

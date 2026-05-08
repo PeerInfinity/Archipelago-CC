@@ -127,10 +127,16 @@ export class RegionUI {
         log('error', '[RegionUI] Failed to initialize display settings:', error);
       });
 
-      // Load initial discovery settings
-      this.loadDiscoverySettings().catch(error => {
-        log('error', '[RegionUI] Failed to load discovery settings:', error);
-      });
+      // Load initial discovery settings, then apply discovery-mode
+      // visibility. Without this follow-up call, the
+      // #region-show-undiscovered checkbox stays hidden until the
+      // user toggles discovery mode (which fires discovery:modeChanged
+      // and runs updateDiscoveryControlsVisibility through that path).
+      this.loadDiscoverySettings()
+        .then(() => this.eventCoordinator?.updateDiscoveryControlsVisibility?.())
+        .catch(error => {
+          log('error', '[RegionUI] Failed to load discovery settings:', error);
+        });
 
       this.isInitialized = true; // Mark that basic panel setup is done.
       log(
@@ -318,7 +324,10 @@ export class RegionUI {
     // Sort Select
     const sortSelect = this.rootElement.querySelector('#region-sort-select');
     if (sortSelect) {
-      sortSelect.addEventListener('change', () => this.renderAllRegions());
+      sortSelect.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('sortMethod', e.target.value, true);
+        this.renderAllRegions();
+      });
     }
 
     // Filter Checkboxes
@@ -326,17 +335,19 @@ export class RegionUI {
       '#region-show-reachable'
     );
     if (reachableCheckbox) {
-      reachableCheckbox.addEventListener('change', () =>
-        this.renderAllRegions()
-      );
+      reachableCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showReachable', e.target.checked, true);
+        this.renderAllRegions();
+      });
     }
     const unreachableCheckbox = this.rootElement.querySelector(
       '#region-show-unreachable'
     );
     if (unreachableCheckbox) {
-      unreachableCheckbox.addEventListener('change', () =>
-        this.renderAllRegions()
-      );
+      unreachableCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showUnreachable', e.target.checked, true);
+        this.renderAllRegions();
+      });
     }
 
     // Existing Show All/Visited Path Checkbox
@@ -377,37 +388,57 @@ export class RegionUI {
       });
     }
 
-    // Show Undiscovered checkbox (discovery mode)
+    // Show Undiscovered checkbox (discovery mode). Persisted as a
+    // regions-panel display setting — controls how the panel renders
+    // undiscovered content, not the discovery data itself.
     const showUndiscoveredCheckbox = this.rootElement.querySelector('#region-show-undiscovered');
     if (showUndiscoveredCheckbox) {
-      showUndiscoveredCheckbox.addEventListener('change', () => this.renderAllRegions());
+      showUndiscoveredCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showUndiscovered', e.target.checked, true);
+        this.renderAllRegions();
+      });
     }
 
     // Visibility checkboxes for region block elements
     const showEntrancesCheckbox = this.rootElement.querySelector('#show-entrances');
     if (showEntrancesCheckbox) {
-      showEntrancesCheckbox.addEventListener('change', () => this.updateElementVisibility());
+      showEntrancesCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showEntrances', e.target.checked, true);
+        this.updateElementVisibility();
+      });
     }
 
     const showExitsCheckbox = this.rootElement.querySelector('#show-exits');
     if (showExitsCheckbox) {
-      showExitsCheckbox.addEventListener('change', () => this.updateElementVisibility());
+      showExitsCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showExits', e.target.checked, true);
+        this.updateElementVisibility();
+      });
     }
 
     const showLocationsCheckbox = this.rootElement.querySelector('#show-locations');
     if (showLocationsCheckbox) {
-      showLocationsCheckbox.addEventListener('change', () => this.updateElementVisibility());
+      showLocationsCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showLocations', e.target.checked, true);
+        this.updateElementVisibility();
+      });
     }
 
     const showLogicTreesCheckbox = this.rootElement.querySelector('#show-logic-trees');
     if (showLogicTreesCheckbox) {
-      showLogicTreesCheckbox.addEventListener('change', () => this.updateElementVisibility());
+      showLogicTreesCheckbox.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('showLogicTrees', e.target.checked, true);
+        this.updateElementVisibility();
+      });
     }
 
     // Section order dropdown
     const sectionOrderSelect = this.rootElement.querySelector('#section-order-select');
     if (sectionOrderSelect) {
-      sectionOrderSelect.addEventListener('change', () => this.renderAllRegions());
+      sectionOrderSelect.addEventListener('change', (e) => {
+        this.displaySettings.setSetting('sectionOrder', e.target.value, true);
+        this.renderAllRegions();
+      });
     }
 
     const expandCollapseAllButton = this.rootElement.querySelector(

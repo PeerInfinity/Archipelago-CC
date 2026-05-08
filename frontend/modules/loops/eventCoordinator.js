@@ -25,7 +25,6 @@ export class EventCoordinator {
     this.loopUI = loopUI; // Reference to LoopUI instance for callbacks
     this._subs = new SubscriptionTracker();
     this._stateManagerReady = false;
-    this._savedDiscoverySettings = null; // Settings saved before loop mode override
 
     logger.debug('EventCoordinator constructed');
   }
@@ -487,66 +486,63 @@ export class EventCoordinator {
         break;
     }
 
-    // Apply or restore discovery settings based on loop mode state
+    // Apply or restore discovery settings based on loop mode state.
+    // Restore unconditionally when leaving loop mode — clearOverride
+    // is a no-op for keys that have no override, so it's safe to
+    // call even when loop mode was never active in this session.
     if (this.loopUI.isLoopModeActive && this._stateManagerReady) {
       this._enableDiscoveryForLoopMode();
-    } else if (!this.loopUI.isLoopModeActive && this._savedDiscoverySettings) {
+    } else if (!this.loopUI.isLoopModeActive) {
       this._restoreDiscoverySettings();
     }
   }
 
   /**
-   * Enable discovery mode with loop-appropriate settings
-   * Saves the current settings first so they can be restored on exit
+   * Enable discovery mode with loop-appropriate settings.
+   *
+   * Uses settingsManager session overrides ({persist: false}) so the
+   * forced values don't get baked into localStorage. When loop mode
+   * exits (or the page reloads), the user's actual saved settings
+   * resurface unchanged. Replaced the previous "save current values
+   * → overwrite → restore on exit" plumbing — that race-conditioned
+   * on reload because the saved-values map was session-only and
+   * captured the already-overridden values on the second session.
    * @private
    */
   async _enableDiscoveryForLoopMode() {
     const prefix = 'moduleSettings.discovery.';
-
-    // Save current settings before overwriting
-    this._savedDiscoverySettings = {
-      enableDiscoveryMode: await settingsManager.getSetting(`${prefix}enableDiscoveryMode`, false),
-      regionDiscoveryTrigger: await settingsManager.getSetting(`${prefix}regionDiscoveryTrigger`, 'onEnter'),
-      autoDiscoverLocations: await settingsManager.getSetting(`${prefix}autoDiscoverLocations`, false),
-      autoDiscoverExits: await settingsManager.getSetting(`${prefix}autoDiscoverExits`, false),
-      undiscoveredDisplay: await settingsManager.getSetting(`${prefix}undiscoveredDisplay`, 'hidden'),
-      showUndiscoveredRegionNames: await settingsManager.getSetting(`${prefix}showUndiscoveredRegionNames`, false),
-      clickDiscoversRegion: await settingsManager.getSetting(`${prefix}clickDiscoversRegion`, false),
-      disableLocationCheckUI: await settingsManager.getSetting(`${prefix}disableLocationCheckUI`, false),
-    };
-    logger.info('Saved pre-loop discovery settings');
-
-    // Apply loop mode settings
-    await settingsManager.updateSetting(`${prefix}enableDiscoveryMode`, true);
-    await settingsManager.updateSetting(`${prefix}regionDiscoveryTrigger`, 'onExitDiscovered');
-    await settingsManager.updateSetting(`${prefix}autoDiscoverLocations`, false);
-    await settingsManager.updateSetting(`${prefix}autoDiscoverExits`, false);
-    await settingsManager.updateSetting(`${prefix}undiscoveredDisplay`, 'placeholder');
-    await settingsManager.updateSetting(`${prefix}showUndiscoveredRegionNames`, false);
-    await settingsManager.updateSetting(`${prefix}clickDiscoversRegion`, false);
-    await settingsManager.updateSetting(`${prefix}disableLocationCheckUI`, true);
-    logger.info('Discovery mode enabled with loop settings');
+    const opts = { persist: false };
+    await settingsManager.updateSetting(`${prefix}enableDiscoveryMode`, true, opts);
+    await settingsManager.updateSetting(`${prefix}regionDiscoveryTrigger`, 'onExitDiscovered', opts);
+    await settingsManager.updateSetting(`${prefix}autoDiscoverLocations`, false, opts);
+    await settingsManager.updateSetting(`${prefix}autoDiscoverExits`, false, opts);
+    await settingsManager.updateSetting(`${prefix}undiscoveredDisplay`, 'placeholder', opts);
+    await settingsManager.updateSetting(`${prefix}showUndiscoveredRegionNames`, false, opts);
+    await settingsManager.updateSetting(`${prefix}clickDiscoversRegion`, false, opts);
+    await settingsManager.updateSetting(`${prefix}disableLocationCheckUI`, true, opts);
+    logger.info('Discovery mode overridden for loop mode (session-only)');
   }
 
   /**
-   * Restore discovery settings to what they were before loop mode was entered
+   * Drop the session overrides so the user's actual saved discovery
+   * settings resurface.
    * @private
    */
   async _restoreDiscoverySettings() {
     const prefix = 'moduleSettings.discovery.';
-    const saved = this._savedDiscoverySettings;
-
-    await settingsManager.updateSetting(`${prefix}enableDiscoveryMode`, saved.enableDiscoveryMode);
-    await settingsManager.updateSetting(`${prefix}regionDiscoveryTrigger`, saved.regionDiscoveryTrigger);
-    await settingsManager.updateSetting(`${prefix}autoDiscoverLocations`, saved.autoDiscoverLocations);
-    await settingsManager.updateSetting(`${prefix}autoDiscoverExits`, saved.autoDiscoverExits);
-    await settingsManager.updateSetting(`${prefix}undiscoveredDisplay`, saved.undiscoveredDisplay);
-    await settingsManager.updateSetting(`${prefix}showUndiscoveredRegionNames`, saved.showUndiscoveredRegionNames);
-    await settingsManager.updateSetting(`${prefix}clickDiscoversRegion`, saved.clickDiscoversRegion);
-    await settingsManager.updateSetting(`${prefix}disableLocationCheckUI`, saved.disableLocationCheckUI);
-
-    this._savedDiscoverySettings = null;
-    logger.info('Discovery settings restored to pre-loop values');
+    for (const key of [
+      'enableDiscoveryMode',
+      'regionDiscoveryTrigger',
+      'autoDiscoverLocations',
+      'autoDiscoverExits',
+      'undiscoveredDisplay',
+      'showUndiscoveredRegionNames',
+      'clickDiscoversRegion',
+      'disableLocationCheckUI',
+    ]) {
+      await settingsManager.clearOverride(`${prefix}${key}`);
+    }
+    logger.info('Discovery overrides cleared');
   }
 }
 
