@@ -213,6 +213,15 @@ export class MazeRoomUI {
         // _loopsDrivenAction so the two chains don't fight.
         this._directExploreActive = false;
 
+        // Phase 8 panel cleanup. genControlsVisible hides the
+        // generation-only sections (Parameters, Generate / Reset
+        // Player, Stats, Editor, Playback log, Rules) so the panel
+        // can act as a playback-only view during loop-mode play.
+        // collapsedSections holds the IDs of sections the user has
+        // collapsed. Both persisted via LS_VIEW_KEY.
+        this.genControlsVisible = true; // overridden by _loadFromLocalStorage
+        this.collapsedSections = new Set();
+
         // Guard DOM creation so the panel constructs cleanly in
         // headless test environments (vitest runs under 'node').
         // Mirrors the textAdventureSubstrateUI pattern.
@@ -1054,16 +1063,109 @@ export class MazeRoomUI {
     render() {
         if (!this.rootElement) return;
         this.rootElement.innerHTML = '';
-        this.rootElement.appendChild(this._renderParams());
-        this.rootElement.appendChild(this._renderActions());
-        this.rootElement.appendChild(this._renderPlaybackBar());
-        this.rootElement.appendChild(this._renderStats());
+        // Top toolbar: "Show generator controls" toggle. Always visible
+        // so the user can re-enable the generator sections after
+        // hiding them. Renders before any conditionally-hidden section.
+        this.rootElement.appendChild(this._renderTopToolbar());
+        if (this.genControlsVisible) {
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'parameters', 'Generator', this._renderParams(),
+            ));
+            this.rootElement.appendChild(this._renderActions());
+        }
+        this.rootElement.appendChild(this._renderCollapsibleSection(
+            'playback', 'Playback controls', this._renderPlaybackBar(),
+        ));
+        if (this.genControlsVisible) {
+            this.rootElement.appendChild(this._renderStats());
+        }
         const manaEl = this._renderManaDisplay();
-        if (manaEl) this.rootElement.appendChild(manaEl);
+        if (manaEl) {
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'mana', 'Mana', manaEl,
+            ));
+        }
         this.rootElement.appendChild(this._renderMaze());
-        this.rootElement.appendChild(this._renderPlaybackLogSection());
-        this.rootElement.appendChild(this._renderEditor());
-        this.rootElement.appendChild(this._renderRules());
+        if (this.genControlsVisible) {
+            this.rootElement.appendChild(this._renderPlaybackLogSection());
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'editor', 'Edit mode', this._renderEditor(),
+            ));
+            this.rootElement.appendChild(this._renderRules());
+        }
+    }
+
+    /**
+     * Top toolbar with the "Show generator controls" checkbox.
+     * Always rendered (regardless of genControlsVisible) so the user
+     * can flip the toggle back on. Persists to LS_VIEW_KEY via
+     * _saveViewSettings.
+     */
+    _renderTopToolbar() {
+        const bar = document.createElement('div');
+        bar.className = 'maze-room-top-toolbar';
+
+        const label = document.createElement('label');
+        label.className = 'maze-room-top-toolbar-toggle';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = !!this.genControlsVisible;
+        input.addEventListener('change', () => {
+            this.genControlsVisible = input.checked;
+            this._saveViewSettings();
+            this.render();
+        });
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(' Show generator controls'));
+        bar.appendChild(label);
+        return bar;
+    }
+
+    /**
+     * Wrap content in an accordion-style section with a clickable
+     * header that toggles between expanded and collapsed. Per-section
+     * collapse state lives in this.collapsedSections (a Set of IDs)
+     * and persists via _saveViewSettings.
+     *
+     * @param {string} sectionId - Stable ID for persistence (e.g. 'parameters').
+     * @param {string} titleText - Header label.
+     * @param {HTMLElement} contentEl - The section's content node.
+     * @returns {HTMLElement} The wrapper.
+     */
+    _renderCollapsibleSection(sectionId, titleText, contentEl) {
+        const isCollapsed = this.collapsedSections.has(sectionId);
+        const wrap = document.createElement('div');
+        wrap.className = `maze-room-collapsible ${isCollapsed ? 'is-collapsed' : 'is-expanded'}`;
+        wrap.dataset.sectionId = sectionId;
+
+        const header = document.createElement('div');
+        header.className = 'maze-room-collapsible-header';
+        const indicator = document.createElement('span');
+        indicator.className = 'maze-room-collapsible-indicator';
+        indicator.textContent = isCollapsed ? '▶' : '▼';
+        const title = document.createElement('span');
+        title.className = 'maze-room-collapsible-title';
+        title.textContent = titleText;
+        header.appendChild(indicator);
+        header.appendChild(title);
+        header.addEventListener('click', () => {
+            if (this.collapsedSections.has(sectionId)) {
+                this.collapsedSections.delete(sectionId);
+            } else {
+                this.collapsedSections.add(sectionId);
+            }
+            this._saveViewSettings();
+            this.render();
+        });
+        wrap.appendChild(header);
+
+        if (!isCollapsed && contentEl) {
+            const body = document.createElement('div');
+            body.className = 'maze-room-collapsible-body';
+            body.appendChild(contentEl);
+            wrap.appendChild(body);
+        }
+        return wrap;
     }
 
     /**
@@ -1493,7 +1595,8 @@ export class MazeRoomUI {
     _renderParams() {
         const section = document.createElement('div');
         section.className = 'maze-room-params';
-        section.innerHTML = '<div class="maze-room-section-title">Parameters</div>';
+        // Title is supplied by the collapsible wrapper ("Generator")
+        // in render(); no inline section-title here.
 
         const grid = document.createElement('div');
         grid.className = 'maze-room-grid';
@@ -2514,6 +2617,12 @@ export class MazeRoomUI {
                 const parsed = JSON.parse(view);
                 this.fogEnabled = !!parsed?.fogEnabled;
                 this.editMode = !!parsed?.editMode;
+                if (typeof parsed?.genControlsVisible === 'boolean') {
+                    this.genControlsVisible = parsed.genControlsVisible;
+                }
+                if (Array.isArray(parsed?.collapsedSections)) {
+                    this.collapsedSections = new Set(parsed.collapsedSections);
+                }
             }
         } catch (e) {
             // ignore
@@ -2525,6 +2634,8 @@ export class MazeRoomUI {
             localStorage.setItem(LS_VIEW_KEY, JSON.stringify({
                 fogEnabled: this.fogEnabled,
                 editMode: this.editMode,
+                genControlsVisible: this.genControlsVisible,
+                collapsedSections: Array.from(this.collapsedSections),
             }));
         } catch (e) {
             // ignore
