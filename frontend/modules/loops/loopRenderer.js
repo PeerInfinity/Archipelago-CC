@@ -285,7 +285,7 @@ export class LoopRenderer {
     }
 
     if (!action) {
-      actionContainer.innerHTML = `<div class="no-action-message">Queue ready</div>`;
+      actionContainer.innerHTML = `<div class="no-action-message">Queue idle</div>`;
       return;
     }
 

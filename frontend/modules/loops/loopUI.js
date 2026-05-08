@@ -911,7 +911,7 @@ export class LoopUI {
           </div>
         </div>
         <div class="current-action-container" id="current-action-container">
-          <div class="no-action-message">Queue ready</div>
+          <div class="no-action-message">Queue idle</div>
         </div>
       </div>
     `;
@@ -1297,16 +1297,16 @@ export class LoopUI {
     // Update the status line in the action container. Skip in inactive
     // mode — the renderer's updateCurrentActionDisplay handles that case
     // ("Loop mode inactive") and we'd otherwise overwrite it with
-    // statusMessages[processingState] (which is 'Queue ready' for the
+    // statusMessages[processingState] (which is 'Queue idle' for the
     // default 'idle' state).
     if (this.isLoopModeActive && processingState !== 'running') {
       const actionContainer = this.rootElement?.querySelector('#current-action-container');
       if (actionContainer) {
         const statusMessages = {
-          idle: 'Queue ready',
-          paused: 'Paused',
+          idle: 'Queue idle',
+          paused: 'Queue paused',
           completed: 'Queue complete',
-          waiting: 'Waiting for new actions...',
+          waiting: 'Queue waiting for new actions',
         };
         const msg = statusMessages[processingState];
         if (msg) {
