@@ -12,15 +12,69 @@ function log(level, message, ...data) {
   }
 }
 
-// const SETTINGS_STORAGE_KEY = 'appSettings'; // Not currently used; mode system has its own keys
+// Mode-keyed localStorage shape (matches modeDataLoader's load path).
+// One blob per mode, keyed `<prefix><modeName>`. The blob carries
+// userSettings alongside other mode-scoped fields (rulesConfig,
+// moduleConfig, layoutConfig, ...) written by the JSON panel's
+// "Save to LocalStorage" flow. Our auto-save preserves those other
+// fields by reading the existing blob and only replacing userSettings.
+const LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
 
-class SettingsManager {
+// Debounce window for auto-save: a flurry of updateSetting calls
+// (e.g. dragging a slider, bulk JSON apply firing many writes)
+// coalesces into one localStorage write. Trailing-edge: write fires
+// once SAVE_DEBOUNCE_MS after the last call.
+const SAVE_DEBOUNCE_MS = 100;
+
+export class SettingsManager {
   constructor() {
     this.settings = null;
     this._defaultSettings = null; // Stores the initial/default settings for merge base
     this.isLoading = true; // Will be set to false once settings are loaded or provided
     this.loadPromise = null; // Initialize to null, created by ensureLoaded if needed
-    // log('info', 'SettingsManager initializing...');
+
+    // Mode-keyed persistence: writes go to localStorage[<prefix><currentMode>].
+    // Defaults to 'default' until app:activeModeDetermined fires (which
+    // happens during app initialization, before any UI can drive a save).
+    this._currentMode = 'default';
+    this._saveTimeoutId = null;
+
+    // Subscribe to the mode-determination event so we save under the
+    // right slot. Guard for the test environment where eventBus may
+    // be a stub.
+    if (eventBus && typeof eventBus.subscribe === 'function') {
+      try {
+        eventBus.subscribe('app:activeModeDetermined', (data) => {
+          if (data && typeof data.activeMode === 'string' && data.activeMode.length > 0) {
+            this._currentMode = data.activeMode;
+          }
+        }, 'core');
+      } catch (e) {
+        // EventBus.subscribe enforces a moduleName parameter; if the
+        // signature ever changes or we're in a test stub, fall back
+        // to direct setCurrentMode calls.
+        log('warn', 'Could not subscribe to app:activeModeDetermined:', e?.message);
+      }
+    }
+  }
+
+  /**
+   * Override the active mode used for saving. Called automatically
+   * from the app:activeModeDetermined subscription; exposed for tests
+   * and for any future runtime mode-switch flow.
+   */
+  setCurrentMode(modeName) {
+    if (typeof modeName === 'string' && modeName.length > 0) {
+      this._currentMode = modeName;
+    }
+  }
+
+  /**
+   * The localStorage key currently used for persistence. Useful for
+   * test assertions and for any future migration / debug tooling.
+   */
+  getStorageKey() {
+    return `${LOCAL_STORAGE_MODE_PREFIX}${this._currentMode}`;
   }
 
   setInitialSettings(initialSettings) {
@@ -104,28 +158,81 @@ class SettingsManager {
     return this.settings;
   }
 
-  // Old loadSettings removed
-
-  // saveSettings now needs to potentially POST to a server endpoint
-  // For now, it's a placeholder. Actual saving logic TBD.
+  /**
+   * Schedule a debounced write of `this.settings` to the current mode's
+   * localStorage blob. Multiple calls within SAVE_DEBOUNCE_MS coalesce
+   * into one write. Called from updateSetting / updateSettings /
+   * resetToDefaults; callers don't need to await — the in-memory
+   * cache and `settings:changed` events are already synchronous, the
+   * persistence is fire-and-forget.
+   *
+   * Returns the (resolved) Promise that callers awaited under the old
+   * stub API, for backwards compatibility.
+   */
   async saveSettings() {
     if (this.isLoading) {
       log('warn', 'Settings not loaded yet, cannot save.');
       return;
     }
-    log('info', 'Attempting to save settings (placeholder)...', this.settings);
-    // TODO: Implement actual saving mechanism (e.g., POST to backend)
-    // try {
-    //   const response = await fetch('/api/settings', { // Example endpoint
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(this.settings),
-    //   });
-    //   if (!response.ok) throw new Error('Failed to save settings');
-    //   log('info', 'Settings saved successfully.');
-    // } catch (error) {
-    //   log('error', 'Error saving settings:', error);
-    // }
+    if (this._saveTimeoutId !== null) {
+      clearTimeout(this._saveTimeoutId);
+    }
+    this._saveTimeoutId = setTimeout(() => {
+      this._saveTimeoutId = null;
+      this._doSaveSettings();
+    }, SAVE_DEBOUNCE_MS);
+  }
+
+  /**
+   * Cancel any pending debounced save and run it immediately. For
+   * tests and any future "save before page unload" path.
+   */
+  flushPendingSave() {
+    if (this._saveTimeoutId !== null) {
+      clearTimeout(this._saveTimeoutId);
+      this._saveTimeoutId = null;
+      this._doSaveSettings();
+    }
+  }
+
+  /**
+   * Synchronous core of the save. Reads the current mode's existing
+   * blob (so we preserve sibling fields like rulesConfig / layoutConfig
+   * written by the JSON panel), replaces the userSettings field, and
+   * writes back. Updates lastActiveMode to match what JsonUI's manual
+   * save does.
+   * @private
+   */
+  _doSaveSettings() {
+    if (typeof localStorage === 'undefined') return;
+    if (!this.settings) return;
+
+    const key = this.getStorageKey();
+    let existing = {};
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) existing = JSON.parse(raw);
+    } catch (e) {
+      log('warn', `Could not parse existing mode blob at ${key}, starting fresh:`, e);
+      existing = {};
+    }
+
+    const blob = {
+      ...existing,
+      modeName: this._currentMode,
+      savedTimestamp: new Date().toISOString(),
+      // Deep copy so subsequent in-memory mutations don't bleed into
+      // the just-written blob (existing settings:changed semantics
+      // don't promise a fresh-snapshot otherwise).
+      userSettings: JSON.parse(JSON.stringify(this.settings)),
+    };
+
+    try {
+      localStorage.setItem(key, JSON.stringify(blob));
+      log('info', `Settings persisted to mode '${this._currentMode}'`);
+    } catch (e) {
+      log('error', 'Error saving settings to localStorage:', e);
+    }
   }
 
   /**
@@ -326,6 +433,7 @@ class SettingsManager {
       value: this.settings,
       settings: await this.getSettings(),
     }, 'core');
+    await this.saveSettings();
   }
 }
 
