@@ -1576,15 +1576,16 @@ export function buildPresetSidecars(grid, {
     // runtime. Default false — existing presets stay cost-free unless
     // the caller explicitly enables loop mode. Future: per-region map.
     manaEnabled = false,
-    // Fog-of-war opt-in (Phase 6h). When true, every region's
-    // playable_payload gets `fogEnabled: true`. Maze substrate hides
+    // Fog-of-war flag. Substrate consumers default to fog ON when the
+    // field is absent; explicit `fogEnabled: false` is the legacy
+    // "reveal everything on entry" opt-out. Maze substrate hides
     // un-stepped tiles + fires per-tile discovery; text-adventure
     // substrate skips its on-entry "discover everything in region"
     // shortcut and renders undiscovered locations / exits as ???
     // placeholders that the player reveals one-at-a-time via the
-    // explore action. Defaults to manaEnabled — loop mode flips both
-    // by default; pass an explicit boolean to decouple.
-    fogEnabled = manaEnabled,
+    // explore action. Defaults to true (decoupled from manaEnabled
+    // since the flip — pass `false` explicitly to opt out).
+    fogEnabled = true,
 } = {}) {
     const regionMap = {};
     for (const region of grid.allRegions()) {
@@ -1599,9 +1600,9 @@ export function buildPresetSidecars(grid, {
         if (manaEnabled) {
             playablePayload.manaEnabled = true;
         }
-        if (fogEnabled) {
-            playablePayload.fogEnabled = true;
-        }
+        // Emit fogEnabled explicitly so consumers can disambiguate
+        // "absent → default true" from "explicit false → opt-out".
+        playablePayload.fogEnabled = fogEnabled !== false;
         regionMap[region.region_id] = {
             substrate: substrateId,
             render_hint: region.render_hint ?? substrateId,
@@ -1792,16 +1793,16 @@ export function buildRulesJson(grid, opts = {}) {
     }
 
     // Menu is virtual — no playable payload, no sidecar entry.
-    // When the caller turned on loop mode, all regions' sidecars get
-    // `manaEnabled: true` (substrate mana hooks) and `fogEnabled: true`
-    // (substrate fog-of-war + per-tile/per-???-slot discovery). Per-
-    // region overrides are a later v2 concern.
+    // Loop mode flips `manaEnabled: true` (substrate mana hooks).
+    // Fog is on by default (the substrate's per-tile / per-explore
+    // discovery applies); callers wanting the legacy reveal-on-entry
+    // behavior pass `fogEnabled: false` explicitly. Per-region
+    // overrides are a later v2 concern.
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
         playerId,
         baseObstacleLib: obstacleLib,
         baseItemLib: itemLib,
         manaEnabled: enableLoopMode,
-        fogEnabled: enableLoopMode,
     });
 
     // Procgen metadata: caller-supplied fields plus auto-derived

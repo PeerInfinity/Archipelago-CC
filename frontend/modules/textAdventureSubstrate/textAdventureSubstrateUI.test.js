@@ -285,28 +285,26 @@ function resetDiscoverySingleton() {
     discoveryStateSingleton.eventBus = { publish: () => {} };
 }
 
-describe('TextAdventureSubstrateUI — discovery population', () => {
+describe('TextAdventureSubstrateUI — discovery population (fog opt-out)', () => {
     beforeEach(() => {
         _testOnly_resetModuleState();
         resetDiscoverySingleton();
     });
 
-    it('marks every location and exit on region entry', () => {
+    it('marks every location and exit on region entry when fogEnabled is explicitly false', () => {
         const panel = new TextAdventureSubstrateUI(null, {});
-        panel.applyLoadedRegion({
-            region_id: 'Overworld',
-            world: makeWorld({
-                exits: [
-                    { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave', targetRegion: 'Cave' },
-                    { exit_id: 'west', x: 0, y: 3, side: 'W', exitName: 'west_to_castle', targetRegion: 'Castle' },
-                ],
-                items: [
-                    { x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' },
-                    { x: 4, y: 4, id: 'key_red', locationName: 'Bridge Key' },
-                ],
-            }),
-            arrivedFrom: null,
+        const world = makeWorld({
+            exits: [
+                { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave', targetRegion: 'Cave' },
+                { exit_id: 'west', x: 0, y: 3, side: 'W', exitName: 'west_to_castle', targetRegion: 'Castle' },
+            ],
+            items: [
+                { x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' },
+                { x: 4, y: 4, id: 'key_red', locationName: 'Bridge Key' },
+            ],
         });
+        world.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
 
         expect(discoveryStateSingleton.isLocationDiscovered('Slay Yorgle')).toBe(true);
         expect(discoveryStateSingleton.isLocationDiscovered('Bridge Key')).toBe(true);
@@ -325,22 +323,18 @@ describe('TextAdventureSubstrateUI — discovery population', () => {
         }).not.toThrow();
     });
 
-    it('discovery state changes survive subsequent region transitions', () => {
+    it('opt-out discovery state survives subsequent region transitions', () => {
         const panel = new TextAdventureSubstrateUI(null, {});
-        panel.applyLoadedRegion({
-            region_id: 'A',
-            world: makeWorld({
-                items: [{ x: 1, y: 1, id: 'x', locationName: 'Loc A' }],
-            }),
-            arrivedFrom: null,
+        const worldA = makeWorld({
+            items: [{ x: 1, y: 1, id: 'x', locationName: 'Loc A' }],
         });
-        panel.applyLoadedRegion({
-            region_id: 'B',
-            world: makeWorld({
-                items: [{ x: 2, y: 2, id: 'y', locationName: 'Loc B' }],
-            }),
-            arrivedFrom: null,
+        worldA.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'A', world: worldA, arrivedFrom: null });
+        const worldB = makeWorld({
+            items: [{ x: 2, y: 2, id: 'y', locationName: 'Loc B' }],
         });
+        worldB.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'B', world: worldB, arrivedFrom: null });
         expect(discoveryStateSingleton.isLocationDiscovered('Loc A')).toBe(true);
         expect(discoveryStateSingleton.isLocationDiscovered('Loc B')).toBe(true);
     });
@@ -367,13 +361,26 @@ describe('TextAdventureSubstrateUI — fog-gated discovery (Phase 6h)', () => {
         expect(discoveryStateSingleton.isExitDiscovered('X', 'first')).toBe(false);
     });
 
-    it('still discovers everything when world.fogEnabled is false / undefined', () => {
+    it('skips _discoverEverythingInRegion when world.fogEnabled is undefined (default)', () => {
         const panel = new TextAdventureSubstrateUI(null, {});
         const world = makeWorld({
             exits: [{ exit_id: 'e1', x: 1, y: 1, side: 'E', exitName: 'first', targetRegion: 'Other' }],
             items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
         });
-        // fogEnabled omitted entirely.
+        // fogEnabled omitted → default fog on.
+        panel.applyLoadedRegion({ region_id: 'X', world, arrivedFrom: null });
+
+        expect(discoveryStateSingleton.isLocationDiscovered('Slay Yorgle')).toBe(false);
+        expect(discoveryStateSingleton.isExitDiscovered('X', 'first')).toBe(false);
+    });
+
+    it('discovers everything on entry only when world.fogEnabled is explicitly false', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        const world = makeWorld({
+            exits: [{ exit_id: 'e1', x: 1, y: 1, side: 'E', exitName: 'first', targetRegion: 'Other' }],
+            items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
+        });
+        world.fogEnabled = false;
         panel.applyLoadedRegion({ region_id: 'X', world, arrivedFrom: null });
 
         expect(discoveryStateSingleton.isLocationDiscovered('Slay Yorgle')).toBe(true);
@@ -397,13 +404,14 @@ describe('TextAdventureSubstrateUI — fog-gated discovery (Phase 6h)', () => {
         expect(panel._isExitVisibleToUI(world.exits.get('e1'))).toBe(true);
     });
 
-    it('_renderUnknownPlaceholders returns null when nothing is undiscovered', () => {
+    it('_renderUnknownPlaceholders returns null when fog opt-out auto-discovers everything', () => {
         const panel = new TextAdventureSubstrateUI(null, {});
         const world = makeWorld({
             exits: [{ exit_id: 'e1', x: 1, y: 1, side: 'E', exitName: 'first', targetRegion: 'Other' }],
             items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
         });
-        // Default flow auto-discovers everything (no fogEnabled).
+        // Explicit fog off → on-entry discovery shortcut runs.
+        world.fogEnabled = false;
         panel.applyLoadedRegion({ region_id: 'X', world, arrivedFrom: null });
         expect(panel._renderUnknownPlaceholders()).toBeNull();
     });
@@ -548,10 +556,10 @@ describe('formatExitShorthand / formatLocationShorthand', () => {
         expect(formatExitShorthand('X', 0, 1)).toBe('');
     });
 
-    it('formatFlatExitShorthand uses x prefix and drops digit when single', () => {
-        expect(formatFlatExitShorthand(0, 1)).toBe('x');
-        expect(formatFlatExitShorthand(0, 3)).toBe('x1');
-        expect(formatFlatExitShorthand(2, 3)).toBe('x3');
+    it('formatFlatExitShorthand uses m prefix and drops digit when single', () => {
+        expect(formatFlatExitShorthand(0, 1)).toBe('m');
+        expect(formatFlatExitShorthand(0, 3)).toBe('m1');
+        expect(formatFlatExitShorthand(2, 3)).toBe('m3');
     });
 });
 
@@ -592,6 +600,9 @@ describe('TextAdventureSubstrateUI — standalone mode integration', () => {
             ],
         });
         panel.applyStandaloneRegion('X', region, null);
+        // Opt out of fog so the visibility filter doesn't hide the
+        // exits before _buildCommandContext sees them.
+        panel.world.fogEnabled = false;
         const ctx = panel._buildCommandContext();
         expect(ctx.exitsBySide.N).toEqual([]);
         expect(ctx.exitsBySide.E).toEqual([]);
@@ -629,6 +640,11 @@ describe('TextAdventureSubstrateUI — standalone mode integration', () => {
             ],
         });
         panel.applyStandaloneRegion('X', region, null);
+        // Opt out of fog so exits are visible to the parser. The
+        // command context was cached during applyStandaloneRegion;
+        // rebuild it so the new fog flag takes effect before submit.
+        panel.world.fogEnabled = false;
+        panel._commandContext = panel._buildCommandContext();
         // Phase 6h: flat-exit-index moved from `x<n>` to `m<n>`.
         panel._handleSubmit('m2');
 
@@ -655,6 +671,9 @@ describe('TextAdventureSubstrateUI — _buildCommandContext', () => {
                 { x: 2, y: 2, id: 'key', locationName: 'Bridge Key' },
             ],
         });
+        // Opt out of fog so all items/exits are visible to the
+        // command context (default fog on would filter them).
+        world.fogEnabled = false;
         panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
         panel.checkedLocations = new Set(['Slay Yorgle']);
 
@@ -682,6 +701,7 @@ describe('TextAdventureSubstrateUI — _handleSubmit', () => {
                 exitName: 'north_to_field', targetRegion: 'Field',
             }],
         });
+        world.fogEnabled = false; // opt out of fog so the exit is visible
         panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
         panel._handleSubmit('n');
 
@@ -700,6 +720,7 @@ describe('TextAdventureSubstrateUI — _handleSubmit', () => {
         const world = makeWorld({
             items: [{ x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' }],
         });
+        world.fogEnabled = false; // opt out of fog so the location is visible
         panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
         panel._handleSubmit('l');
 
@@ -894,13 +915,24 @@ describe('TextAdventureSubstrateUI — discovery filtering helpers', () => {
         resetDiscoverySingleton();
     });
 
-    it('shows everything when discovery mode is off, even if not discovered', () => {
+    it('shows everything when world opts out of fog (fogEnabled: false) and discovery is off', () => {
         const panel = new TextAdventureSubstrateUI(null, {});
         panel.discoveryModeActive = false;
         panel.currentRegionId = 'Overworld';
+        panel.world = { fogEnabled: false };
         const exit = { exit_id: 'east', side: 'E', exitName: 'east', targetRegion: 'Cave' };
         expect(panel._isExitVisibleToUI(exit)).toBe(true);
         expect(panel._isLocationVisibleToUI('Slay Yorgle')).toBe(true);
+    });
+
+    it('hides undiscovered items by default (fog on) even when discovery mode is off', () => {
+        const panel = new TextAdventureSubstrateUI(null, {});
+        panel.discoveryModeActive = false;
+        panel.currentRegionId = 'Overworld';
+        panel.world = {}; // fogEnabled absent → default fog on
+        const exit = { exit_id: 'east', side: 'E', exitName: 'east', targetRegion: 'Cave' };
+        expect(panel._isExitVisibleToUI(exit)).toBe(false);
+        expect(panel._isLocationVisibleToUI('Slay Yorgle')).toBe(false);
     });
 
     it('hides undiscovered exits when discovery mode is on', () => {

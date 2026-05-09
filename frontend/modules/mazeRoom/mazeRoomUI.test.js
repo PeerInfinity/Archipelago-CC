@@ -72,29 +72,27 @@ describe('MazeRoomUI — skeleton', () => {
     });
 });
 
-describe('MazeRoomUI — discovery population (fog off)', () => {
+describe('MazeRoomUI — discovery population (fog opt-out)', () => {
     beforeEach(() => {
         _testOnly_resetModuleState();
         resetDiscoverySingleton();
     });
 
-    it('marks every location and exit on region entry when fog is off', () => {
+    it('marks every location and exit on region entry when world.fogEnabled is false', () => {
         const panel = new MazeRoomUI(null, {});
         panel.fogEnabled = false;
-        panel.applyLoadedRegion({
-            region_id: 'Overworld',
-            world: makeWorld({
-                exits: [
-                    { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave', targetRegion: 'Cave' },
-                    { exit_id: 'west', x: 0, y: 3, side: 'W', exitName: 'west_to_castle', targetRegion: 'Castle' },
-                ],
-                items: [
-                    { x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' },
-                    { x: 4, y: 4, id: 'key_red', locationName: 'Bridge Key' },
-                ],
-            }),
-            arrivedFrom: null,
+        const world = makeWorld({
+            exits: [
+                { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave', targetRegion: 'Cave' },
+                { exit_id: 'west', x: 0, y: 3, side: 'W', exitName: 'west_to_castle', targetRegion: 'Castle' },
+            ],
+            items: [
+                { x: 2, y: 2, id: 'sword', locationName: 'Slay Yorgle' },
+                { x: 4, y: 4, id: 'key_red', locationName: 'Bridge Key' },
+            ],
         });
+        world.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
 
         expect(discoveryStateSingleton.isLocationDiscovered('Slay Yorgle')).toBe(true);
         expect(discoveryStateSingleton.isLocationDiscovered('Bridge Key')).toBe(true);
@@ -114,23 +112,19 @@ describe('MazeRoomUI — discovery population (fog off)', () => {
         }).not.toThrow();
     });
 
-    it('subsequent regions accumulate discoveries (does not clear prior marks)', () => {
+    it('subsequent fog-opt-out regions accumulate discoveries (does not clear prior marks)', () => {
         const panel = new MazeRoomUI(null, {});
         panel.fogEnabled = false;
-        panel.applyLoadedRegion({
-            region_id: 'A',
-            world: makeWorld({
-                items: [{ x: 1, y: 1, id: 'x', locationName: 'Loc A' }],
-            }),
-            arrivedFrom: null,
+        const worldA = makeWorld({
+            items: [{ x: 1, y: 1, id: 'x', locationName: 'Loc A' }],
         });
-        panel.applyLoadedRegion({
-            region_id: 'B',
-            world: makeWorld({
-                items: [{ x: 2, y: 2, id: 'y', locationName: 'Loc B' }],
-            }),
-            arrivedFrom: null,
+        worldA.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'A', world: worldA, arrivedFrom: null });
+        const worldB = makeWorld({
+            items: [{ x: 2, y: 2, id: 'y', locationName: 'Loc B' }],
         });
+        worldB.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'B', world: worldB, arrivedFrom: null });
         expect(discoveryStateSingleton.isLocationDiscovered('Loc A')).toBe(true);
         expect(discoveryStateSingleton.isLocationDiscovered('Loc B')).toBe(true);
     });
@@ -570,26 +564,44 @@ describe('MazeRoomUI — fog/discovery interaction on region entry', () => {
         resetDiscoverySingleton();
     });
 
-    it('fog OFF reveals every location/exit in the region on entry', () => {
+    it('panel fog OFF + world.fogEnabled false reveals every location/exit on entry', () => {
         const panel = new MazeRoomUI(null, {});
         panel.fogEnabled = false;
+        const world = makeWorld({
+            width: 6,
+            height: 6,
+            entrance: { x: 0, y: 0 },
+            items: [
+                { x: 5, y: 5, id: 'sword', locationName: 'Distant Sword' },
+            ],
+            exits: [
+                { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave' },
+            ],
+        });
+        world.fogEnabled = false;
+        panel.applyLoadedRegion({ region_id: 'Overworld', world, arrivedFrom: null });
+        expect(discoveryStateSingleton.isLocationDiscovered('Distant Sword')).toBe(true);
+        expect(discoveryStateSingleton.isExitDiscovered('Overworld', 'east_to_cave')).toBe(true);
+    });
+
+    it('panel fog OFF + world without fog flag does NOT auto-reveal (default fog on)', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.fogEnabled = false;
+        // World omits fogEnabled → default fog on; panel-level fog
+        // toggle controls only render, not discovery side effects.
         panel.applyLoadedRegion({
             region_id: 'Overworld',
             world: makeWorld({
                 width: 6,
                 height: 6,
                 entrance: { x: 0, y: 0 },
-                items: [
-                    { x: 5, y: 5, id: 'sword', locationName: 'Distant Sword' },
-                ],
-                exits: [
-                    { exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave' },
-                ],
+                items: [{ x: 5, y: 5, id: 'sword', locationName: 'Distant Sword' }],
+                exits: [{ exit_id: 'east', x: 5, y: 3, side: 'E', exitName: 'east_to_cave' }],
             }),
             arrivedFrom: null,
         });
-        expect(discoveryStateSingleton.isLocationDiscovered('Distant Sword')).toBe(true);
-        expect(discoveryStateSingleton.isExitDiscovered('Overworld', 'east_to_cave')).toBe(true);
+        expect(discoveryStateSingleton.isLocationDiscovered('Distant Sword')).toBe(false);
+        expect(discoveryStateSingleton.isExitDiscovered('Overworld', 'east_to_cave')).toBe(false);
     });
 
     it('fog ON only reveals tiles within the spawn visibility', () => {

@@ -1023,16 +1023,21 @@ export class MazeRoomUI {
         this.externalInventory = inventoryFromSnapshot(snapshot);
         this.externalCheckedLocations = checkedLocationsFromSnapshot(snapshot);
         // Discovery semantics depend on fog of war:
-        //   - Fog OFF: walking into a region reveals every location
-        //     and exit (matches the text-adventure substrate).
-        //   - Fog ON: only tiles within the spawn's visibility are
-        //     revealed. Further tiles uncover as the player explores
-        //     (see _onStep). Re-entering a region keeps the seen-set
-        //     it accumulated last visit.
+        //   - Panel fog rendering ON: only tiles within the spawn's
+        //     visibility are revealed. Further tiles uncover as the
+        //     player explores (see _onStep). Re-entering a region
+        //     keeps the seen-set it accumulated last visit.
+        //   - World explicitly opts out (`fogEnabled: false` in the
+        //     sidecar): walking into a region reveals every location
+        //     and exit (legacy behavior; matches the text-adventure
+        //     substrate's opt-out).
+        //   - Otherwise: don't auto-reveal. Discovery state is
+        //     governed by the discovery module's per-action paths
+        //     (clicks, explore actions). Matches the new fog-on default.
         if (this.fogEnabled) {
             const initialVisible = this._computeVisibleAt(this.state.player_pos);
             this._expandFogVisibility(initialVisible);
-        } else {
+        } else if (this.world?.fogEnabled === false) {
             this._discoverEverythingInRegion();
         }
         if (!skipRender) {

@@ -927,28 +927,29 @@ describe('buildPresetSidecars', () => {
         }
     });
 
-    it('omits fogEnabled by default and defaults it to manaEnabled when manaEnabled is on', () => {
+    it('emits fogEnabled: true by default and explicit false on opt-out', () => {
         const { grid } = smallGrid();
-        // Default: both off.
+        // Default: fog on (substrates respect discovery settings).
         for (const side of Object.values(buildPresetSidecars(grid)['1'])) {
-            expect(side.playable_payload.fogEnabled).toBeUndefined();
-        }
-        // manaEnabled flips fogEnabled too (loop-mode default).
-        for (const side of Object.values(buildPresetSidecars(grid, { manaEnabled: true })['1'])) {
             expect(side.playable_payload.fogEnabled).toBe(true);
+        }
+        // Explicit opt-out emits the field as `false` so consumers can
+        // disambiguate from "absent → default true".
+        for (const side of Object.values(buildPresetSidecars(grid, { fogEnabled: false })['1'])) {
+            expect(side.playable_payload.fogEnabled).toBe(false);
         }
     });
 
-    it('decouples fogEnabled from manaEnabled when explicitly set', () => {
+    it('decouples fogEnabled from manaEnabled', () => {
         const { grid } = smallGrid();
-        // Mana on, fog off (debugging combo).
+        // Mana on, fog explicitly off (debugging combo).
         for (const side of Object.values(
             buildPresetSidecars(grid, { manaEnabled: true, fogEnabled: false })['1'],
         )) {
             expect(side.playable_payload.manaEnabled).toBe(true);
-            expect(side.playable_payload.fogEnabled).toBeUndefined();
+            expect(side.playable_payload.fogEnabled).toBe(false);
         }
-        // Fog on, mana off.
+        // Mana off, fog on (the new default — but still fine to pass explicitly).
         for (const side of Object.values(
             buildPresetSidecars(grid, { manaEnabled: false, fogEnabled: true })['1'],
         )) {

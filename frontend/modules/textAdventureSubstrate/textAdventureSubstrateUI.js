@@ -139,12 +139,13 @@ export function formatLocationShorthand(i, total) {
 
 /**
  * Shorthand label for the i-th exit in standalone-mode's flat list.
- * Always uses the `x` prefix (the parser's universal flat-exit
- * shorthand). Drops the digit when there's only one.
+ * Uses the `m` prefix (the parser's flat-exit shorthand; renamed from
+ * `x` in Phase 6h, where `x` became the explore command). Drops the
+ * digit when there's only one.
  */
 export function formatFlatExitShorthand(i, total) {
-    if (total <= 1) return 'x';
-    return `x${i + 1}`;
+    if (total <= 1) return 'm';
+    return `m${i + 1}`;
 }
 
 // Coerce stateManager's snapshot.inventory ({ itemName: count }) into
@@ -606,16 +607,15 @@ export class TextAdventureSubstrateUI {
         this.checkedLocations = checkedLocationsFromSnapshot(snapshot);
         this._previousCheckedLocations = new Set(this.checkedLocations);
 
-        // Phase 6h: when the sidecar carries fogEnabled:true, the
-        // region's contents start undiscovered. The panel renders
-        // unrevealed locations and exits as ??? placeholders, and the
-        // explore action (queued in loop mode, dispatched immediately
-        // out of loop mode) reveals one random item per execution —
-        // matching the loops module's existing exploreCompleted
-        // semantics. Without fog, the original "entering a region
-        // reveals its entire contents" shortcut applies (mirrors the
-        // pre-Phase-6h behavior).
-        if (this.world?.fogEnabled !== true) {
+        // Fog is on by default. The region's contents start undiscovered;
+        // the panel renders unrevealed locations and exits as ???
+        // placeholders, and the explore action (queued in loop mode,
+        // dispatched immediately out of loop mode) reveals one random
+        // item per execution — matching the loops module's existing
+        // exploreCompleted semantics. Worlds that explicitly opt out
+        // (sidecar ships `fogEnabled: false`) get the legacy "entering
+        // a region reveals its entire contents" shortcut.
+        if (this.world?.fogEnabled === false) {
             this._discoverEverythingInRegion();
         }
 
@@ -802,7 +802,7 @@ export class TextAdventureSubstrateUI {
 
         if (this.world.exits) {
             // Standalone has no compass; all exits sit in the C bucket
-            // so `c<n>` and `x<n>` (flat, N→E→S→W→C) both resolve them.
+            // so `c<n>` and `m<n>` (flat, N→E→S→W→C) both resolve them.
             const isStandalone = this.world.mode === 'standalone';
             for (const exit of this.world.exits.values()) {
                 if (!this._isExitVisibleToUI(exit)) continue;
@@ -897,7 +897,7 @@ export class TextAdventureSubstrateUI {
 
     /**
      * Standalone-mode exit renderer. No compass grid — exits go in
-     * a flat vertical list, prefixed with the universal `[x<n>]`
+     * a flat vertical list, prefixed with the universal `[m<n>]`
      * shorthand. Drops the digit when there's only one exit.
      */
     _renderExitsFlat() {
@@ -930,12 +930,12 @@ export class TextAdventureSubstrateUI {
     }
 
     _isExitVisibleToUI(exit) {
-        // Phase 6h: when the world ships with fogEnabled (procgen +
-        // loop mode), the regular exit list only shows discovered
-        // exits; undiscovered ones surface as ??? placeholders elsewhere
-        // (see _renderUnknownPlaceholders). The legacy discoveryModeActive
-        // UI flag still applies for non-fog worlds.
-        const filterByDiscovery = this.world?.fogEnabled === true || this.discoveryModeActive;
+        // Fog is on by default. The regular exit list only shows
+        // discovered exits; undiscovered ones surface as ???
+        // placeholders elsewhere (see _renderUnknownPlaceholders).
+        // Worlds that explicitly opt out of fog (`fogEnabled: false`)
+        // skip the filter unless discovery mode is active.
+        const filterByDiscovery = this.world?.fogEnabled !== false || this.discoveryModeActive;
         if (!filterByDiscovery) return true;
         if (!discoveryStateSingleton || !this.currentRegionId) return true;
         const name = exit.exitName ?? exit.exit_id;
@@ -943,7 +943,7 @@ export class TextAdventureSubstrateUI {
     }
 
     _isLocationVisibleToUI(locationName) {
-        const filterByDiscovery = this.world?.fogEnabled === true || this.discoveryModeActive;
+        const filterByDiscovery = this.world?.fogEnabled !== false || this.discoveryModeActive;
         if (!filterByDiscovery) return true;
         if (!discoveryStateSingleton || !locationName) return true;
         return discoveryStateSingleton.isLocationDiscovered?.(locationName) ?? true;
@@ -1073,6 +1073,19 @@ export class TextAdventureSubstrateUI {
         label.className = 'text-adventure-section-label';
         label.textContent = 'Unknown';
         section.appendChild(label);
+
+        // Explicit explore link surfaces the `[x]` shortcut and gives
+        // the user a single, unambiguous click target. The ??? slots
+        // below remain clickable too — they fire the same explore
+        // action.
+        const exploreLink = document.createElement('div');
+        exploreLink.className = 'text-adventure-unknown-explore';
+        const exploreSpan = document.createElement('span');
+        exploreSpan.className = 'text-adventure-link';
+        exploreSpan.dataset.kind = 'explore';
+        exploreSpan.textContent = '[x] explore';
+        exploreLink.appendChild(exploreSpan);
+        section.appendChild(exploreLink);
 
         const list = document.createElement('div');
         list.className = 'text-adventure-unknown-list';
@@ -1204,10 +1217,19 @@ export class TextAdventureSubstrateUI {
                     ? 'empty'
                     : [...this.inventory].sort().join(', ');
                 this._addMessage(`Your inventory: ${inv}`);
+                this.render();
                 return;
             }
             case 'help': {
-                this._addMessage(this._parser.getHelpText());
+                // getHelpText returns a multi-line string; push each
+                // line as its own message so the message-history div
+                // breaks them up. innerHTML eats raw \n as whitespace,
+                // and an escapeHtml(text).replace(/\n/g, '<br>') round
+                // trip would smuggle markup past the escape gate.
+                for (const line of this._parser.getHelpText().split('\n')) {
+                    this._addMessage(line);
+                }
+                this.render();
                 return;
             }
             case 'look': {
@@ -1216,10 +1238,12 @@ export class TextAdventureSubstrateUI {
             }
             case 'error': {
                 this._addMessage(result.message ?? 'Unrecognized command.');
+                this.render();
                 return;
             }
             default: {
                 this._addMessage('Unrecognized command.');
+                this.render();
             }
         }
     }
