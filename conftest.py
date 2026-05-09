@@ -45,14 +45,28 @@ UPSTREAM_WORLDS: frozenset[str] = frozenset({
 collect_ignore_glob = [f"worlds/{name}/test" for name in UPSTREAM_WORLDS]
 
 
+def _is_upstream_world_module(module: str) -> bool:
+    parts = module.split(".", 2)
+    return len(parts) >= 2 and parts[0] == "worlds" and parts[1] in UPSTREAM_WORLDS
+
+
 def pytest_configure(config) -> None:  # noqa: ARG001 — pytest hook signature
     del config
-    from worlds.AutoWorld import AutoWorldRegister
 
-    upstream_games = [
-        game
-        for game, world_type in AutoWorldRegister.world_types.items()
-        if (world_type.__module__.split(".", 2) + [""])[1] in UPSTREAM_WORLDS
-    ]
-    for game in upstream_games:
-        AutoWorldRegister.world_types.pop(game, None)
+    from worlds.AutoWorld import AutoWorldRegister
+    from worlds.Files import AutoPatchExtensionRegister, AutoPatchRegister
+
+    for game, world_type in list(AutoWorldRegister.world_types.items()):
+        if _is_upstream_world_module(world_type.__module__):
+            AutoWorldRegister.world_types.pop(game, None)
+
+    for game, patch_type in list(AutoPatchRegister.patch_types.items()):
+        if _is_upstream_world_module(patch_type.__module__):
+            AutoPatchRegister.patch_types.pop(game, None)
+            ending = getattr(patch_type, "patch_file_ending", None)
+            if ending is not None:
+                AutoPatchRegister.file_endings.pop(ending, None)
+
+    for game, ext_type in list(AutoPatchExtensionRegister.extension_types.items()):
+        if _is_upstream_world_module(ext_type.__module__):
+            AutoPatchExtensionRegister.extension_types.pop(game, None)
