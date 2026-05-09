@@ -25,12 +25,17 @@ syncing with upstream if new worlds are added there.
 
 from __future__ import annotations
 
+# NOTE: 'generic' and 'apquest' are upstream worlds, but core tests in
+# test/general/ look them up by game name as required fixtures
+# (world_types["Archipelago"] in test_items.py::test_items_in_datapackage,
+# world_types["APQuest"] in test_options.py::test_item_links_name_groups).
+# Keep them registered so those tests can find them.
 UPSTREAM_WORLDS: frozenset[str] = frozenset({
-    "adventure", "ahit", "alttp", "apquest", "aquaria", "blasphemous",
+    "adventure", "ahit", "alttp", "aquaria", "blasphemous",
     "bomb_rush_cyberfunk", "bumpstik", "cccharles", "celeste64",
     "celeste_open_world", "checksfinder", "civ_6", "cv64", "cvcotm",
     "dark_souls_3", "dlcquest", "doom_1993", "doom_ii", "earthbound",
-    "factorio", "faxanadu", "ff1", "ffmq", "generic", "heretic", "hk",
+    "factorio", "faxanadu", "ff1", "ffmq", "heretic", "hk",
     "hylics2", "inscryption", "jakanddaxter", "kdl3", "kh1", "kh2", "ladx",
     "landstalker", "lingo", "lufia2ac", "marioland2", "meritous", "messenger",
     "mlss", "mm2", "mm3", "mmbn3", "musedash", "noita", "oot", "osrs",
