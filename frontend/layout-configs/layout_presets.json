@@ -173,7 +173,7 @@
             },
             {
               "type": "component",
-              "componentType": "costDebuggerPanel",
+              "componentType": "loopsCostDebuggerPanel",
               "title": "Cost Debugger"
             },
             {

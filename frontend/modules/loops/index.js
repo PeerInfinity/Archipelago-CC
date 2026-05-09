@@ -458,15 +458,21 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
         // Convenience accessors (mana state lives in gameState; setters route
         // through gameState's emitManaChanged for the canonical event).
-        get mana() { return loopStateSingleton.currentMana; },
+        get mana() { return gameStateAPI.getState?.()?.currentMana; },
         set mana(v) {
-          loopStateSingleton.currentMana = v;
-          gameStateAPI.getState?.()?.emitManaChanged?.();
+          const gs = gameStateAPI.getState?.();
+          if (gs) {
+            gs.currentMana = v;
+            gs.emitManaChanged?.();
+          }
         },
-        get maxMana() { return loopStateSingleton.maxMana; },
+        get maxMana() { return gameStateAPI.getState?.()?.maxMana; },
         set maxMana(v) {
-          loopStateSingleton.maxMana = v;
-          gameStateAPI.getState?.()?.emitManaChanged?.();
+          const gs = gameStateAPI.getState?.();
+          if (gs) {
+            gs.maxMana = v;
+            gs.emitManaChanged?.();
+          }
         },
         get speed() { return loopStateSingleton.gameSpeed; },
         set speed(v) { loopStateSingleton.setGameSpeed(v); },
