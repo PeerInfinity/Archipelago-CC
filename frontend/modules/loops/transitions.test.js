@@ -354,3 +354,138 @@ describe('Transitions — resetForNewRules', () => {
     expect(loopState.repeatExploreStates.size).toBe(0);
   });
 });
+
+describe('Transitions — restartFromStart({ autoStart: true })', () => {
+  // Restart button semantics: refill mana, snap to index 0, unpause,
+  // and run. Replaces the prior restartQueueFromBeginning.
+  let loopState, gs, bus;
+  beforeEach(() => {
+    ({ loopState, gs, bus } = makeWired());
+    gs.addCustomAction('explore');
+    gs.addCustomAction('explore');
+  });
+
+  it('refills mana, resets index to 0, clears _queueCompleted', () => {
+    loopState.maxMana = 100;
+    loopState.currentMana = 25;
+    loopState.currentActionIndex = 1;
+    loopState._queueCompleted = true;
+
+    loopState.restartFromStart({ autoStart: true });
+
+    expect(loopState.currentMana).toBe(100);
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState._queueCompleted).toBe(false);
+  });
+
+  it('starts processing when queue is non-empty', () => {
+    loopState.restartFromStart({ autoStart: true });
+    expect(loopState.isProcessing).toBe(true);
+    expect(loopState.isPaused).toBe(false);
+  });
+
+  it('unpauses if previously paused', () => {
+    loopState.isPaused = true;
+    loopState.restartFromStart({ autoStart: true });
+    expect(loopState.isPaused).toBe(false);
+    expect(loopState.isProcessing).toBe(true);
+  });
+
+  it('stops a running queue first, then restarts from index 0', () => {
+    loopState.startProcessing();
+    loopState.currentActionIndex = 1;
+    loopState.restartFromStart({ autoStart: true });
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState.isProcessing).toBe(true);
+  });
+
+  it('publishes loopState:queueUpdated and pauseStateChanged', () => {
+    bus.events.length = 0;
+    loopState.restartFromStart({ autoStart: true });
+    const names = bus.events.map((e) => e.name);
+    expect(names).toContain('loopState:queueUpdated');
+    expect(names).toContain('loopState:pauseStateChanged');
+  });
+
+  it('handles empty queue gracefully (no startProcessing, still publishes events)', () => {
+    const { loopState: lsEmpty, bus: busEmpty } = makeWired();
+    busEmpty.events.length = 0;
+    lsEmpty.restartFromStart({ autoStart: true });
+    expect(lsEmpty.isProcessing).toBe(false);
+    expect(lsEmpty.isPaused).toBe(false);
+    const names = busEmpty.events.map((e) => e.name);
+    expect(names).toContain('loopState:queueUpdated');
+    expect(names).toContain('loopState:pauseStateChanged');
+  });
+
+  it('autoStart defaults to true when called with no arguments', () => {
+    loopState.restartFromStart();
+    expect(loopState.isProcessing).toBe(true);
+  });
+});
+
+describe('Transitions — restartFromStart({ autoStart: false })', () => {
+  // Step button "Reset" variant: refill mana, snap to index 0, land
+  // paused. The user clicks Reset and then chooses when to resume.
+  let loopState, gs, bus;
+  beforeEach(() => {
+    ({ loopState, gs, bus } = makeWired());
+    gs.addCustomAction('explore');
+    gs.addCustomAction('explore');
+  });
+
+  it('refills mana, resets index to 0, clears _queueCompleted', () => {
+    loopState.maxMana = 100;
+    loopState.currentMana = 0;
+    loopState.currentActionIndex = 2;
+    loopState._queueCompleted = true;
+
+    loopState.restartFromStart({ autoStart: false });
+
+    expect(loopState.currentMana).toBe(100);
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState._queueCompleted).toBe(false);
+  });
+
+  it('lands paused (does NOT start processing)', () => {
+    loopState.restartFromStart({ autoStart: false });
+    expect(loopState.isProcessing).toBe(false);
+    expect(loopState.isPaused).toBe(true);
+    expect(loopState.getProcessingState()).toBe('paused');
+  });
+
+  it('publishes loopState:queueUpdated and pauseStateChanged with paused state', () => {
+    bus.events.length = 0;
+    loopState.restartFromStart({ autoStart: false });
+    const names = bus.events.map((e) => e.name);
+    expect(names).toContain('loopState:queueUpdated');
+    const pause = bus.events.find((e) => e.name === 'loopState:pauseStateChanged');
+    expect(pause).toBeDefined();
+    expect(pause.data.processingState).toBe('paused');
+  });
+
+  it('stops a running queue first, then lands paused', () => {
+    loopState.startProcessing();
+    loopState.currentActionIndex = 1;
+    loopState.restartFromStart({ autoStart: false });
+    expect(loopState.isProcessing).toBe(false);
+    expect(loopState.isPaused).toBe(true);
+    expect(loopState.currentActionIndex).toBe(0);
+  });
+
+  it('from completed state: lands paused at index 0 with mana refilled (Reset button case)', () => {
+    // Simulate the Step button "Reset" entry condition: queue ran to
+    // end, autoRestart off, mana drained.
+    loopState.maxMana = 100;
+    loopState.currentMana = 5;
+    loopState._queueCompleted = true;
+    loopState.currentActionIndex = 2; // past end
+    expect(loopState.getProcessingState()).toBe('completed');
+
+    loopState.restartFromStart({ autoStart: false });
+
+    expect(loopState.currentMana).toBe(100);
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState.getProcessingState()).toBe('paused');
+  });
+});

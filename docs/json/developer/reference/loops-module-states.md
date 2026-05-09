@@ -79,6 +79,9 @@ Anything that changes the state flags goes through one of these methods
 | `step()` (from completed-with-new) | true (via `resumeProcessing`) | (unchanged) | false | no |
 | `_pauseAfterStep` | false (via `stopProcessing`) | true | (unchanged) | no |
 | `_resetLoop` | (unchanged) | (unchanged) | false | yes (→ 0) |
+| `restartFromStart({autoStart:true})` | true (via `startProcessing` if queue non-empty) | false | false (via `_resetLoop`) | yes (→ 0) |
+| `restartFromStart({autoStart:false})` | false (via `stopProcessing` if running) | true | false (via `_resetLoop`) | yes (→ 0) |
+| `clearQueue` | false (via `stopProcessing` if running) | (unchanged) | false | yes (→ 0) |
 | `_completeCurrentAction` (queue-end, no autoRestart) | false | false | true | (sets to past-end) |
 | `_completeCurrentAction` (queue-end, autoRestart) | (unchanged) | (unchanged) | (unchanged) | yes (→ 0) |
 | `resetForNewRules` | false (via `stopProcessing`) | false | false | yes (→ 0 via `_resetActionsProgress`) |
@@ -182,8 +185,8 @@ asymmetries" below.
 |---|---|---|
 | idle | `startProcessing()` (resets `currentActionIndex` to 0) | Step from idle starts at the queue's first action. |
 | paused | `isPaused = false`, then `resumeProcessing()` | Preserves `currentActionIndex` — picks up where the pause left off. |
-| completed (`queueLen > currentActionIndex`) | `resumeProcessing()` | Picks up at the new action appended past the end (not index 0). |
-| completed (`queueLen <= currentActionIndex`) | no-op | UI also disables the button in this case. |
+| completed/waiting (`queueLen > currentActionIndex`) | `resumeProcessing()` | Picks up at the new action appended past the end (not index 0). |
+| completed/waiting (`queueLen <= currentActionIndex`) | no-op | UI flips the button label to "Reset" — see below. |
 | running | no-op (returns early) | |
 | empty queue | no-op | |
 
@@ -194,6 +197,32 @@ starts. The flag forces:
 - OOM reset → pause path (instead of autoRestart-continue)
 
 Step mode is cleared when either of those terminal events fires.
+
+### Step button "Reset" variant
+
+In `completed` or `waiting` state with no actions past
+`currentActionIndex` (the queue ran to the end and nothing has been
+appended since), the Step button label flips to **"Reset"** and the
+click handler calls `restartFromStart({ autoStart: false })` instead
+of `step()`. The reset refills mana, snaps the queue to index 0,
+clears `_queueCompleted`, and lands paused. This mirrors the
+"OOM reset, no autoRestart" shape but is user-triggered.
+
+### `restartFromStart({ autoStart })`
+
+Public method used by both the Restart button (`autoStart: true`,
+default) and the Step button's Reset variant (`autoStart: false`).
+Body:
+
+1. `stopProcessing()` if running.
+2. `_resetLoop()` — refills mana, resets action progress, sets
+   `currentActionIndex = 0`, clears `_queueCompleted`.
+3. Publishes `loopState:queueUpdated` for full UI refresh.
+4. Branch on `autoStart`:
+   - `true`: `isPaused = false`; if queue non-empty, `startProcessing()`
+     (publishes `pauseStateChanged`); else publish `pauseStateChanged`
+     for the empty-queue case.
+   - `false`: `isPaused = true`; publish `pauseStateChanged`.
 
 ### `setPaused(false)` from paused
 
@@ -315,20 +344,14 @@ current functionality but flagged so future changes can converge them.
    action is removed from a completed queue. The two paths probably
    should agree.
 
-2. **Step button in completed state with no further actions.**
-   Currently disabled. Under consideration: replace the disabled state
-   with a "Reset" label that calls `_resetLoop()` and lands in paused
-   (so the queue is ready to step from index 0 with mana refilled
-   without a stray auto-start).
-
-3. **`_completeCurrentAction` queue-end vs OOM ordering in
+2. **`_completeCurrentAction` queue-end vs OOM ordering in
    `_processFrame`.** The OOM check follows completion. After fixing
    the step-mode-completion-then-OOM quirk (so OOM still fires when
    step pause stopped processing), the only remaining skip-OOM case is
    `_queueCompleted`. See `_processFrame` JSDoc for the full
    per-frame contract.
 
-4. **`stopProcessing` doesn't clear `isPaused`.** Calling
+3. **`stopProcessing` doesn't clear `isPaused`.** Calling
    `stopProcessing` from the paused state is a no-op (gated on
    `isProcessing`), but if a future caller stops processing while
    `isPaused` is true, the queue stays in paused state. This is the
