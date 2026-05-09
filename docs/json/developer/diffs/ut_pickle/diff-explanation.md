@@ -25,7 +25,7 @@ These files are verbatim copies with no modifications:
 | Added `PickleModeBool` setting (`pickle_mode: bool = True`) | Toggle between pickle-based tracking and original YAML-based tracking |
 | `game` → `"UT Pickle Mode"` | Prevents conflict with the original "Universal Tracker" world registration |
 | `settings_key` → `"ut_pickle"` | Separate host.yaml section so settings don't conflict with original UT |
-| `_is_enabled()` handles both dict and Group settings | AP's settings system may return a raw dict or a Group object depending on timing; the check handles both |
+| `_is_enabled()` reads the raw stored dict via `get_settings().__dict__.get('ut_pickle')` | Avoids triggering `Settings.__getattribute__` at world-import time. Going through normal attribute access fires `settings._update_cache()`, which freezes the world-settings name cache against the (still-loading) `AutoWorldRegister` and prevents later worlds' settings from being upcast to their `Group` subclass. See the [`tracker/__init__.py` section](../universal-tracker-modifications.md#__init__py) for the full root-cause writeup; both worlds carry the same fix. (defensive `dict`/`Group`/`getattr` handling on the result is kept in case Settings is later loaded by something else before this runs) |
 | Wrapped launcher component in `_is_enabled()` guard | When disabled, no launcher component is registered and no monkey patches are installed |
 | Added monkey patch auto-install | Installs the `Main.main` wrapper that exports pickle files during generation |
 | Icon key → `"ut_pickle_ico"` | Prevents collision with original UT's `"ut_ico"` icon key |
@@ -51,7 +51,7 @@ Total: **7 lines added**, 1 line changed (`if` → `elif`)
 
 ### `TrackerCore.py` (~100 lines)
 
-Thin wrapper that extends the original `TrackerCore` (via `TrackerCoreOriginal`) with `PickleMixin`. Overrides `initalize_tracker_core()` to try pickle mode first, then fall back to original YAML-based tracking. Also sets host settings defaults that are normally set by `run_generator()` (which pickle mode skips). Settings checks handle both dict and Group objects.
+Thin wrapper that extends the original `TrackerCore` (via `TrackerCoreOriginal`) with `PickleMixin`. Overrides `initalize_tracker_core()` to try pickle mode first, then fall back to original YAML-based tracking. Also sets host settings defaults that are normally set by `run_generator()` (which pickle mode skips). Settings checks accept either a `dict` or `Group` object — historically required because the cache-poison bug (see [universal-tracker-modifications.md](../universal-tracker-modifications.md#__init__py)) sometimes caused `TrackerWorld.settings` to come back as a raw dict; with that bug now fixed at the source the dict branch is defensive, but is kept in case anything reintroduces the trigger.
 
 ### `pickle_exporter.py` (~170 lines)
 
@@ -70,7 +70,7 @@ Mixin that adds pickle loading and auto-discovery to TrackerCore:
 
 ### `monkey_patches/hooks.py` (~80 lines)
 
-Wraps `Main.main()` to export a pickle after seed generation completes. Only the `Main.main` wrapper is used (no `Spoiler.to_file` wrapper needed since pickle export doesn't require spoiler data). The `pickle_mode` settings check handles both dict and Group objects.
+Wraps `Main.main()` to export a pickle after seed generation completes. Only the `Main.main` wrapper is used (no `Spoiler.to_file` wrapper needed since pickle export doesn't require spoiler data). The `pickle_mode` settings check accepts either a `dict` or `Group` object — see the [`TrackerCore.py`](#trackercorepy-100-lines) note for context on why the dict branch is defensive after the 2026-05-09 cache-poison fix.
 
 ### `monkey_patches/__init__.py` (~10 lines)
 

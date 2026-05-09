@@ -317,6 +317,40 @@ class CurrentTrackerState(NamedTuple):
     state: Optional[CollectionState]  # Last field, no glitches_state
 ```
 
+#### `_is_enabled()` — settings cache poison fix (2026-05-09)
+
+The launcher Component is registered conditionally on a host.yaml flag:
+
+```python
+if _is_enabled():
+    components.append(Component("Universal Tracker", ...))
+```
+
+Previously, `_is_enabled()` called `get_settings().universal_tracker` to read the
+flag. That triggers `Settings.__getattribute__`, which calls `settings._update_cache()`
+to populate the world-settings name cache. Because `_is_enabled()` runs at
+*module-load time* during `worlds/__init__.py`'s alphabetical world load,
+`_update_cache()` iterates an `AutoWorldRegister` that contains only the worlds
+loaded so far (alphabetically through `tracker`). The function then sets
+`_world_settings_name_cache_updated = True` in its `finally` block — permanently
+freezing the cache against an incomplete registry.
+
+The downstream effect: every world loaded after `tracker` (`tunic`, `ut_pickle`,
+`wargroove`, `yoshisisland`, `yugioh06`, `zillion`) was missing from the cache.
+When `World.settings` was later accessed for any of them, `Settings.__getattribute__`
+fell through and returned the raw `dict` from host.yaml instead of upcasting to the
+world's `Group` subclass. `test/general/test_settings.py::TestSettings::test_settings_can_update`
+SUBFAILed on `'UT Pickle Mode'` because `TrackerWorld.settings` was a `dict`,
+not a `TrackerSettings(Group)`.
+
+The fix reads the raw stored value via `get_settings().__dict__.get('universal_tracker')`,
+which bypasses `Settings.__getattribute__` entirely (the `__dict__` slot lookup
+short-circuits the upcast machinery) and leaves the cache un-built until something
+that genuinely needs it runs. The same pattern was applied to
+[`worlds/ut_pickle/__init__.py`](../../../../worlds/ut_pickle/__init__.py); see
+[ut_pickle/diff-explanation.md](ut_pickle/diff-explanation.md) for the parallel
+change.
+
 ---
 
 ## Integration with JSON Export System
