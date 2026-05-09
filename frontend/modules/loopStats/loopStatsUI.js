@@ -265,7 +265,8 @@ export class LoopStatsUI {
     }
 
     const actionQueue = this.loopState.getActionQueue();
-    const analysis = queueAnalyzer.analyze(actionQueue, this.loopState);
+    const gs = window.centralRegistry?.getPublicFunction?.('gameState', 'getState')?.();
+    const analysis = queueAnalyzer.analyze(actionQueue, this.loopState, gs);
     const previousAnalysis = queueAnalyzer.getPreviousAnalysis();
 
     // Capture start-of-loop analysis on first render with actions
@@ -406,7 +407,8 @@ export class LoopStatsUI {
   _updateSummary(analysis) {
     if (!analysis && this.loopState) {
       const actionQueue = this.loopState.getActionQueue();
-      analysis = queueAnalyzer.analyze(actionQueue, this.loopState);
+      const gs = window.centralRegistry?.getPublicFunction?.('gameState', 'getState')?.();
+      analysis = queueAnalyzer.analyze(actionQueue, this.loopState, gs);
     }
 
     if (!analysis) return;

@@ -1631,10 +1631,12 @@ async function timerOfflineTestWithLoopsQueue(testController) {
     const gameStateAPI = {
       trimPath: window.centralRegistry.getPublicFunction('gameState', 'trimPath'),
       addLocationCheck: window.centralRegistry.getPublicFunction('gameState', 'addLocationCheck'),
+      getState: window.centralRegistry.getPublicFunction('gameState', 'getState'),
     };
     if (!gameStateAPI.trimPath || !gameStateAPI.addLocationCheck) {
       throw new Error('gameState public functions not found in central registry');
     }
+    const gs = gameStateAPI.getState?.();
     testController.reportCondition('GameState API available', true);
 
     // Use global event dispatcher for publishing events
@@ -1673,7 +1675,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
       loopNumber: 1,
       locationsChecked: 0,
       totalPredictedCost: 0,
-      startingMana: loopState.currentMana,
+      startingMana: gs ? gs.currentMana : 100,
       iterationsInLoop: 0,
     };
 
@@ -1686,7 +1688,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
         loopNumber: loopCount + 1,
         locationsChecked: 0,
         totalPredictedCost: 0,
-        startingMana: loopState.currentMana,
+        startingMana: gs ? gs.currentMana : 100,
         iterationsInLoop: 0,
         analysisSnapshots: [],
       };
@@ -1758,7 +1760,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
         // Get analysis from loopStats module if available
         if (queueAnalyzer) {
           const actionQueue = loopState.getActionQueue?.() || [];
-          const analysis = queueAnalyzer.analyze(actionQueue, loopState);
+          const analysis = queueAnalyzer.analyze(actionQueue, loopState, gs);
 
           if (analysis && analysis.entries.length > 0) {
             // Log analysis summary for first few checks
@@ -1820,7 +1822,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
 
       // End of this loop
       currentLoopStats.iterationsInLoop = iterationsThisLoop;
-      currentLoopStats.endingMana = loopState.currentMana;
+      currentLoopStats.endingMana = gs ? gs.currentMana : 100;
       currentLoopStats.manaDebt = loopState.getManaDebt?.() || 0;
       loopStatsData.push(currentLoopStats);
 

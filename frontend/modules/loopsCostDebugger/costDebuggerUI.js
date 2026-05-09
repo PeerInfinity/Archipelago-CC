@@ -238,7 +238,7 @@ export class CostDebuggerUI {
 
     // Save current settings to restore after verification
     const savedInstantMode = loopState.instantMode;
-    const savedNoManaReset = loopState.noManaDepletionReset;
+    const savedNoManaReset = gameState.noManaDepletionReset;
     const savedAutoRestart = loopState.autoRestartQueue;
 
     try {
@@ -283,16 +283,16 @@ export class CostDebuggerUI {
 
         // Record XP state before
         const xpBefore = new Map();
-        for (const [region, data] of loopState.regionXP) {
+        for (const [region, data] of gameState.regionXP) {
           xpBefore.set(region, { ...data });
         }
 
         // Reset mana for this loop (simulate loop reset between steps)
-        loopState.currentMana = loopState.maxMana;
-        loopState.manaDebt = 0;
+        gameState.currentMana = gameState.maxMana;
+        gameState.manaDebt = 0;
         loopState.resetManaDebt();
-        const manaAtStart = loopState.currentMana;
-        const maxManaAtStart = loopState.maxMana;
+        const manaAtStart = gameState.currentMana;
+        const maxManaAtStart = gameState.maxMana;
 
         // Execute queue actions directly, awaiting each checkLocation to avoid
         // flooding the worker. loopState.startProcessing() fires all actions in
@@ -300,13 +300,13 @@ export class CostDebuggerUI {
         await this._executeStepDirect(loopState, step.queue);
 
         // Record state after
-        const manaAfter = loopState.currentMana;
-        const maxManaAfter = loopState.maxMana;
-        const actualManaConsumed = manaAtStart - manaAfter + loopState.manaDebt;
+        const manaAfter = gameState.currentMana;
+        const maxManaAfter = gameState.maxMana;
+        const actualManaConsumed = manaAtStart - manaAfter + gameState.manaDebt;
 
         // Calculate XP gained (use totalXP to account for level-up resets)
         const xpGained = {};
-        for (const [region, afterData] of loopState.regionXP) {
+        for (const [region, afterData] of gameState.regionXP) {
           const beforeData = xpBefore.get(region);
           const xpDelta = totalXP(afterData) - totalXP(beforeData);
           if (xpDelta > 0) xpGained[region] = xpDelta;
@@ -323,7 +323,7 @@ export class CostDebuggerUI {
             manaConsumed: actualManaConsumed,
             manaRemaining: manaAfter,
             maxManaAfter,
-            manaDebt: loopState.manaDebt,
+            manaDebt: gameState.manaDebt,
             xpGained,
           },
           predicted: {
@@ -358,7 +358,7 @@ export class CostDebuggerUI {
       loopState.setInstantMode(savedInstantMode);
       loopState.setNoManaDepletionReset(savedNoManaReset);
       loopState.setAutoRestartQueue(savedAutoRestart);
-      loopState.manaDebt = 0;
+      gameState.manaDebt = 0;
 
       this.isVerifying = false;
       this._updateButtons();
@@ -464,6 +464,7 @@ export class CostDebuggerUI {
    * is never flooded. Updates loopState mana/XP to match what _processFrame does.
    */
   async _executeStepDirect(loopState, stepQueue) {
+    const gameState = window.centralRegistry?.getPublicFunction?.('gameState', 'getState')?.();
     for (const action of stepQueue) {
       // Calculate mana cost (same as loopState._processFrame in instant mode)
       const actionCost = loopState._calculateActionCost({
@@ -477,12 +478,12 @@ export class CostDebuggerUI {
       });
 
       // Deduct mana
-      const newMana = loopState.currentMana - actionCost;
-      if (newMana < 0 && loopState.noManaDepletionReset) {
-        loopState.manaDebt = Math.max(loopState.manaDebt, Math.abs(newMana));
-        loopState.currentMana = newMana;
+      const newMana = gameState.currentMana - actionCost;
+      if (newMana < 0 && gameState.noManaDepletionReset) {
+        gameState.manaDebt = Math.max(gameState.manaDebt, Math.abs(newMana));
+        gameState.currentMana = newMana;
       } else {
-        loopState.currentMana = Math.max(0, newMana);
+        gameState.currentMana = Math.max(0, newMana);
       }
 
       // XP gain (1 XP per mana spent, same as loopState)

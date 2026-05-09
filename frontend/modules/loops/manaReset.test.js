@@ -91,8 +91,8 @@ describe('OOM — basic reset path', () => {
 
   it('mid-action mana exhaustion triggers _resetLoop and refills mana', () => {
     gs.addCustomAction('explore'); // cost 50 (default)
-    loopState.maxMana = 100;
-    loopState.currentMana = 5; // ~10% of action 0's cost
+    gs.maxMana = 100;
+    gs.currentMana = 5; // ~10% of action 0's cost
     loopState.startProcessing();
 
     // Pump frames until processing stops or we hit a safety cap.
@@ -102,15 +102,15 @@ describe('OOM — basic reset path', () => {
     expect(loopState.isPaused).toBe(true);
     expect(loopState.isProcessing).toBe(false);
     // _resetLoop refilled mana to max.
-    expect(loopState.currentMana).toBe(loopState.maxMana);
+    expect(gs.currentMana).toBe(gs.maxMana);
     // Action progress was reset to 0; index reset to 0.
     expect(loopState.currentActionIndex).toBe(0);
   });
 
   it('publishes loopState:loopReset on the OOM reset', () => {
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
     loopState.startProcessing();
     bus.events.length = 0;
 
@@ -121,8 +121,8 @@ describe('OOM — basic reset path', () => {
 
   it('publishes loopState:pauseStateChanged with paused state after OOM (autoRestart=false)', () => {
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
     loopState.startProcessing();
     bus.events.length = 0;
 
@@ -145,8 +145,8 @@ describe('OOM — autoRestartQueue=true continues processing', () => {
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
     loopState.setAutoRestartQueue(true);
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
     loopState.instantMode = false;
     loopState.startProcessing();
 
@@ -169,9 +169,9 @@ describe('OOM — noManaDepletionReset suppresses the reset', () => {
 
   it('mana goes negative and manaDebt tracks how negative', () => {
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
-    loopState.noManaDepletionReset = true;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
+    gs.noManaDepletionReset = true;
     loopState.instantMode = true;
     loopState.startProcessing();
 
@@ -179,22 +179,22 @@ describe('OOM — noManaDepletionReset suppresses the reset', () => {
     tick(loopState);
 
     // Mana went negative, no reset fired, manaDebt records the negative excess.
-    expect(loopState.currentMana).toBeLessThan(0);
-    expect(loopState.manaDebt).toBeGreaterThanOrEqual(45);
+    expect(gs.currentMana).toBeLessThan(0);
+    expect(gs.manaDebt).toBeGreaterThanOrEqual(45);
     // Without the reset, the action completed normally and we advance.
     expect(loopState.currentActionIndex).toBeGreaterThan(0);
   });
 
   it('manaDebt accumulates the MAX (deepest) negative across multiple deductions', () => {
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
-    loopState.noManaDepletionReset = true;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
+    gs.noManaDepletionReset = true;
 
     // Drive deductions directly via gameState.
     loopState._gs().deductMana(20); // -15
     loopState._gs().deductMana(10); // -25
     loopState._gs().deductMana(5);  // -30
-    expect(loopState.manaDebt).toBe(30);
+    expect(gs.manaDebt).toBe(30);
   });
 });
 
@@ -209,8 +209,8 @@ describe('OOM — _stepMode forces pause path regardless of autoRestart', () => 
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
     loopState.setAutoRestartQueue(true);
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
     loopState.instantMode = false;
 
     loopState.step();
@@ -234,8 +234,8 @@ describe('OOM — multiple consecutive resets', () => {
   it('autoRestart with low mana triggers multiple resets in a chain', () => {
     gs.addCustomAction('explore');
     loopState.setAutoRestartQueue(true);
-    loopState.maxMana = 30; // less than action cost (50)
-    loopState.currentMana = 30;
+    gs.maxMana = 30; // less than action cost (50)
+    gs.currentMana = 30;
     loopState.instantMode = false;
     loopState.startProcessing();
     bus.events.length = 0;
@@ -266,8 +266,8 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
     // and refills mana.
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 50; // exactly the action cost
+    gs.maxMana = 100;
+    gs.currentMana = 50; // exactly the action cost
     loopState.instantMode = true;
     loopState.startProcessing();
 
@@ -275,7 +275,7 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
 
     // Reset happened — index back to 0, mana refilled.
     expect(loopState.currentActionIndex).toBe(0);
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     // No autoRestart → paused after the reset.
     expect(loopState.isPaused).toBe(true);
   });
@@ -289,8 +289,8 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
     // Step click rather than stranded at mana=0.
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 50;
+    gs.maxMana = 100;
+    gs.currentMana = 50;
     loopState.instantMode = true;
 
     loopState.step();
@@ -298,7 +298,7 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
 
     // Reset fired: index back to 0, mana refilled, paused.
     expect(loopState.currentActionIndex).toBe(0);
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     expect(loopState.isPaused).toBe(true);
     expect(loopState.isProcessing).toBe(false);
     expect(loopState._stepMode).toBe(false);
@@ -306,23 +306,23 @@ describe('OOM — instantMode + completion + OOM in one frame', () => {
 });
 
 describe('OOM — gameState.deductMana semantics', () => {
-  let loopState;
+  let loopState, gs;
   beforeEach(() => {
-    ({ loopState } = makeWired());
+    ({ loopState, gs } = makeWired());
   });
 
   it('clamps to 0 when noManaDepletionReset is OFF (default)', () => {
-    loopState.maxMana = 100;
-    loopState.currentMana = 10;
+    gs.maxMana = 100;
+    gs.currentMana = 10;
     loopState._gs().deductMana(50);
-    expect(loopState.currentMana).toBe(0);
-    expect(loopState.manaDebt).toBe(0);
+    expect(gs.currentMana).toBe(0);
+    expect(gs.manaDebt).toBe(0);
   });
 
   it('emits gameState:manaChanged on every deduction', () => {
     const bus = loopState.eventBus;
-    loopState.maxMana = 100;
-    loopState.currentMana = 50;
+    gs.maxMana = 100;
+    gs.currentMana = 50;
     bus.events.length = 0;
 
     loopState._gs().deductMana(10);
@@ -335,39 +335,39 @@ describe('OOM — gameState.deductMana semantics', () => {
 
   it('refillMana brings currentMana back to maxMana and emits manaChanged', () => {
     const bus = loopState.eventBus;
-    loopState.maxMana = 100;
-    loopState.currentMana = 0;
+    gs.maxMana = 100;
+    gs.currentMana = 0;
     bus.events.length = 0;
 
     loopState._gs().refillMana();
 
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     expect(bus.events.find(e => e.name === 'gameState:manaChanged')).toBeDefined();
   });
 });
 
 describe('OOM — recalculateMaxMana caps currentMana', () => {
-  let loopState;
+  let loopState, gs;
   beforeEach(() => {
-    ({ loopState } = makeWired());
+    ({ loopState, gs } = makeWired());
   });
 
   it('shrinks currentMana if new max is lower', () => {
-    loopState.maxMana = 200;
-    loopState.currentMana = 150;
-    loopState.manaPerItem = 10;
+    gs.maxMana = 200;
+    gs.currentMana = 150;
+    gs.manaPerItem = 10;
     // Snapshot with no items → base 100. New maxMana = 100.
     loopState._gs().recalculateMaxMana({ inventory: {} });
-    expect(loopState.maxMana).toBe(100);
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.maxMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
   });
 
   it('leaves currentMana alone when below the new max', () => {
-    loopState.maxMana = 100;
-    loopState.currentMana = 30;
-    loopState.manaPerItem = 10;
+    gs.maxMana = 100;
+    gs.currentMana = 30;
+    gs.manaPerItem = 10;
     loopState._gs().recalculateMaxMana({ inventory: { item1: 5 } });
-    expect(loopState.maxMana).toBe(150);
-    expect(loopState.currentMana).toBe(30);
+    expect(gs.maxMana).toBe(150);
+    expect(gs.currentMana).toBe(30);
   });
 });

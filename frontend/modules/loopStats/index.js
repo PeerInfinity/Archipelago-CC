@@ -71,8 +71,10 @@ export function register(registrationApi) {
     return queueAnalyzer.getPreviousAnalysis();
   });
 
-  registrationApi.registerPublicFunction(moduleInfo.name, 'analyzeQueue', (actionQueue, loopState) => {
-    return queueAnalyzer.analyze(actionQueue, loopState || loopStateSingleton);
+  registrationApi.registerPublicFunction(moduleInfo.name, 'analyzeQueue', (actionQueue, loopState, gameState) => {
+    const gs = gameState
+      ?? window.centralRegistry?.getPublicFunction?.('gameState', 'getState')?.();
+    return queueAnalyzer.analyze(actionQueue, loopState || loopStateSingleton, gs);
   });
 
   registrationApi.registerPublicFunction(moduleInfo.name, 'getSerializableState', () => {

@@ -527,10 +527,11 @@ export class LoopUI {
     // Reset to idle state
     loopState.isPaused = false;
     loopState._queueCompleted = false;
-    loopState.currentMana = loopState.maxMana;
+    const gs = this.gameStateAPI?.getState?.();
+    if (gs) gs.currentMana = gs.maxMana;
 
     this.regionsInQueue.clear();
-    this._updateManaDisplay(loopState.currentMana, loopState.maxMana);
+    this._updateManaDisplay(gs ? gs.currentMana : 100, gs ? gs.maxMana : 100);
 
     // Publish state change so button updates to "Start"
     this.eventBus.publish('loopState:pauseStateChanged', {
@@ -562,14 +563,15 @@ export class LoopUI {
       )
     ) {
       // Reset loopState properties
-      loopState.regionXP = new Map();
+      const gs = this.gameStateAPI?.getState?.();
+      if (gs) gs.regionXP = new Map();
       // Clear the action queue using gameState API
       if (this.gameStateAPI?.trimPath) {
         this.gameStateAPI.trimPath(1); // Keep only Menu
       }
       loopState.currentAction = null;
       loopState.currentActionIndex = 0;
-      loopState.currentMana = loopState.maxMana;
+      if (gs) gs.currentMana = gs.maxMana;
       loopState.isProcessing = false;
 
       // ADDED: Clear discovery state via its singleton
@@ -914,7 +916,8 @@ export class LoopUI {
 
 
       // Update display with current state
-      this._updateManaDisplay(loopState.currentMana, loopState.maxMana);
+      const gs = this.gameStateAPI?.getState?.();
+      this._updateManaDisplay(gs ? gs.currentMana : 100, gs ? gs.maxMana : 100);
       this._updateCurrentActionDisplay(loopState.currentAction);
       this._updateLoopStats();
     }
@@ -933,8 +936,9 @@ export class LoopUI {
     
     // Calculate total XP across all regions
     let totalXP = 0;
-    if (loopState.regionXP) {
-      for (const [region, xpData] of loopState.regionXP) {
+    const gs = this.gameStateAPI?.getState?.();
+    if (gs?.regionXP) {
+      for (const [, xpData] of gs.regionXP) {
         totalXP += xpData.xp || 0;
       }
     }
@@ -2164,7 +2168,11 @@ export class LoopUI {
     }
 
     // Reset mana display to max
-    this._updateManaDisplay(loopState.maxMana, loopState.maxMana);
+    {
+      const gs = this.gameStateAPI?.getState?.();
+      const max = gs ? gs.maxMana : 100;
+      this._updateManaDisplay(max, max);
+    }
 
     // Reset current action display
     this._updateCurrentActionDisplay(null); // Pass null to show 'No action'

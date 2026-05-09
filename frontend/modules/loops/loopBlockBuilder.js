@@ -570,7 +570,7 @@ export class LoopBlockBuilder {
 
     // Get data from analysis or calculate fallback
     let actionName, manaCost, manaRemaining, timeStr;
-    const maxMana = loopState.maxMana || 100;
+    const maxMana = this.loopUI?.gameStateAPI?.getState?.()?.maxMana || 100;
 
     if (analysisEntry) {
       actionName = analysisEntry.description;

@@ -184,9 +184,11 @@ export function manaColorClass(remaining, max) {
  * Analyze the action queue and calculate costs for each action
  * @param {Array} actionQueue - Array of actions from loopState
  * @param {Object} loopState - The loop state instance
+ * @param {Object} [gameState] - GameState instance (source of mana fields).
+ *   Falls back to loopState.maxMana for legacy callers / test mocks.
  * @returns {QueueAnalysis} Analysis result
  */
-export function analyzeQueue(actionQueue, loopState) {
+export function analyzeQueue(actionQueue, loopState, gameState) {
   if (!actionQueue || !loopState) {
     return {
       entries: [],
@@ -198,7 +200,7 @@ export function analyzeQueue(actionQueue, loopState) {
     };
   }
 
-  const maxMana = loopState.maxMana;
+  const maxMana = gameState ? gameState.maxMana : loopState.maxMana;
   const gameSpeed = loopState.gameSpeed || 10;
   const startingMana = maxMana;
   let currentMana = startingMana;

@@ -100,8 +100,8 @@ describe('Step button — single-step semantics (no substrate)', () => {
     loopState.instantMode = true;
     // Plenty of mana so the mana-reset path stays out of the way for
     // the basic single-step tests.
-    loopState.maxMana = 100000;
-    loopState.currentMana = 100000;
+    gs.maxMana = 100000;
+    gs.currentMana = 100000;
     gs.setStartRegions(['Menu']);
     gs.setCurrentRegion('Menu');
     frameClock = 1000;
@@ -283,8 +283,8 @@ describe('Step button — interaction with mana reset', () => {
     loopState.instantMode = false;
     gs.addCustomAction('explore'); // index 0  (cost 50 fallback)
     gs.addCustomAction('explore'); // index 1
-    loopState.maxMana = 100;
-    loopState.currentMana = 5; // ~10% of action 0's cost
+    gs.maxMana = 100;
+    gs.currentMana = 5; // ~10% of action 0's cost
 
     loopState.step();
     // Pump frames until we either complete action 0 or hit OOM. Cap
@@ -302,7 +302,7 @@ describe('Step button — interaction with mana reset', () => {
     expect(loopState._stepMode).toBe(false);
     // After reset, we should be back at action 0 with mana refilled.
     expect(loopState.currentActionIndex).toBe(0);
-    expect(loopState.currentMana).toBe(loopState.maxMana);
+    expect(gs.currentMana).toBe(gs.maxMana);
   });
 });
 
@@ -315,8 +315,8 @@ describe('Step button — autoRestartQueue interaction', () => {
 
     ({ loopState, gs, bus } = makeWiredLoopState());
     loopState.instantMode = true;
-    loopState.maxMana = 100000;
-    loopState.currentMana = 100000;
+    gs.maxMana = 100000;
+    gs.currentMana = 100000;
     gs.setStartRegions(['Menu']);
     gs.setCurrentRegion('Menu');
     frameClock = 1000;

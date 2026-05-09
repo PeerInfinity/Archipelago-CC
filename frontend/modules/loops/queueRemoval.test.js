@@ -65,8 +65,8 @@ function makeWired() {
       insertCustomActionAt: (a, r, i, p) => gs.insertCustomActionAt(a, r, i, p),
     },
   });
-  loopState.maxMana = 100000;
-  loopState.currentMana = 100000;
+  gs.maxMana = 100000;
+  gs.currentMana = 100000;
   gs.setStartRegions(['Menu']);
   gs.setCurrentRegion('Menu');
   return { loopState, gs, bus, dispatcher };

@@ -232,13 +232,14 @@ export class CostGenerator {
    */
   async _processLocationEntry(entry, costs, startRegion) {
     const { locationName } = entry;
+    const gs = this.gameStateAPI?.getState?.();
 
     // Phantom entry: no location to check, just apply mana boost from received items
     if (!locationName) {
-      if (entry.itemsReceived > 0) {
-        this.loopState.maxMana += entry.itemsReceived * 10;
-        this.loopState.currentMana = this.loopState.maxMana;
-        logger.debug(`Mana boost from received items: +${entry.itemsReceived * 10} (now ${this.loopState.maxMana})`);
+      if (entry.itemsReceived > 0 && gs) {
+        gs.maxMana += entry.itemsReceived * 10;
+        gs.currentMana = gs.maxMana;
+        logger.debug(`Mana boost from received items: +${entry.itemsReceived * 10} (now ${gs.maxMana})`);
       }
       return;
     }
@@ -250,9 +251,9 @@ export class CostGenerator {
     if (!locationData) {
       // Location not in this game's static data (belongs to another player) — skip
       // but still apply any mana boost from items received
-      if (entry.itemsReceived > 0) {
-        this.loopState.maxMana += entry.itemsReceived * 10;
-        this.loopState.currentMana = this.loopState.maxMana;
+      if (entry.itemsReceived > 0 && gs) {
+        gs.maxMana += entry.itemsReceived * 10;
+        gs.currentMana = gs.maxMana;
       }
       logger.debug(`Skipping location not in this game: ${locationName}`);
       return;
@@ -283,8 +284,9 @@ export class CostGenerator {
       .filter(region => !this.assignedRegions.has(region));
 
     // Calculate and assign costs to uncosted regions BEFORE queuing
+    const currentMana = gs ? gs.currentMana : 100;
     if (uncostedRegions.length > 0) {
-      const manaForRegions = this.loopState.currentMana / 2;
+      const manaForRegions = currentMana / 2;
       let remainingUncosted = uncostedRegions.length;
 
       for (const region of uncostedRegions) {
@@ -295,7 +297,7 @@ export class CostGenerator {
         this.assignedRegions.add(region);
         remainingUncosted--;
 
-        logger.debug(`Assigned region cost: ${region} = ${costPerRegion} (mana: ${this.loopState.currentMana})`);
+        logger.debug(`Assigned region cost: ${region} = ${costPerRegion} (mana: ${currentMana})`);
       }
 
       // Update costDataManager so the costs are used when actions run
@@ -304,11 +306,11 @@ export class CostGenerator {
 
     // Calculate and assign location cost BEFORE queuing (use half of remaining mana)
     if (!this.assignedLocations.has(locationName)) {
-      const locationCost = Math.floor(this.loopState.currentMana / 2);
+      const locationCost = Math.floor(currentMana / 2);
       costs.locations[locationName] = Math.max(1, locationCost);
       this.assignedLocations.add(locationName);
 
-      logger.debug(`Assigned location cost: ${locationName} = ${locationCost} (mana: ${this.loopState.currentMana})`);
+      logger.debug(`Assigned location cost: ${locationName} = ${locationCost} (mana: ${currentMana})`);
 
       // Update costDataManager
       this.costDataManager.setCostData(costs, 'generation-in-progress');
@@ -345,9 +347,9 @@ export class CostGenerator {
     await this._waitForLocationCheck(locationName);
 
     // Apply mana boost from items received in this sphere
-    if (entry.itemsReceived > 0) {
-      this.loopState.maxMana += entry.itemsReceived * 10;
-      logger.debug(`Mana boost from received items: +${entry.itemsReceived * 10} (now ${this.loopState.maxMana})`);
+    if (entry.itemsReceived > 0 && gs) {
+      gs.maxMana += entry.itemsReceived * 10;
+      logger.debug(`Mana boost from received items: +${entry.itemsReceived * 10} (now ${gs.maxMana})`);
     }
 
     // Reset loop for next entry (refill mana to maxMana, reset action progress)
@@ -453,11 +455,13 @@ export class CostGenerator {
    * Configure loop state for generation mode
    */
   _configureLoopStateForGeneration() {
-    // Reset mana to max
-    this.loopState.currentMana = this.loopState.maxMana;
-
-    // Clear XP (fresh simulation)
-    this.loopState.regionXP = new Map();
+    const gs = this.gameStateAPI?.getState?.();
+    if (gs) {
+      // Reset mana to max
+      gs.currentMana = gs.maxMana;
+      // Clear XP (fresh simulation)
+      gs.regionXP = new Map();
+    }
 
     // Enable instant mode and no-mana-depletion-reset
     this.loopState.setInstantMode(true);
@@ -474,14 +478,15 @@ export class CostGenerator {
    * @returns {Object} Saved state
    */
   _saveLoopState() {
+    const gs = this.gameStateAPI?.getState?.();
     return {
-      currentMana: this.loopState.currentMana,
-      maxMana: this.loopState.maxMana,
-      regionXP: new Map(this.loopState.regionXP),
+      currentMana: gs ? gs.currentMana : 100,
+      maxMana: gs ? gs.maxMana : 100,
+      regionXP: gs ? new Map(gs.regionXP) : new Map(),
       isPaused: this.loopState.isPaused,
       isProcessing: this.loopState.isProcessing,
       instantMode: this.loopState.instantMode,
-      noManaDepletionReset: this.loopState.noManaDepletionReset,
+      noManaDepletionReset: gs ? gs.noManaDepletionReset : false,
       gameSpeed: this.loopState.gameSpeed,
     };
   }
@@ -491,9 +496,12 @@ export class CostGenerator {
    * @param {Object} savedState - State to restore
    */
   _restoreLoopState(savedState) {
-    this.loopState.currentMana = savedState.currentMana;
-    this.loopState.maxMana = savedState.maxMana;
-    this.loopState.regionXP = savedState.regionXP;
+    const gs = this.gameStateAPI?.getState?.();
+    if (gs) {
+      gs.currentMana = savedState.currentMana;
+      gs.maxMana = savedState.maxMana;
+      gs.regionXP = savedState.regionXP;
+    }
     this.loopState.isPaused = savedState.isPaused;
     this.loopState.isProcessing = savedState.isProcessing;
     this.loopState.setInstantMode(savedState.instantMode);

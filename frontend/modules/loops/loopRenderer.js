@@ -71,10 +71,11 @@ export class LoopRenderer {
     }
 
     // Get discovered regions
+    const gs = this.loopUI?.gameStateAPI?.getState?.();
     const discoveredRegions = discoveryStateSingleton.discoveredRegions;
     if (!discoveredRegions || discoveredRegions.size === 0) {
       regionsArea.innerHTML = '<div class="no-regions-message">No regions discovered yet.</div>';
-      this.updateManaDisplay(loopState.currentMana, loopState.maxMana);
+      this.updateManaDisplay(gs ? gs.currentMana : 100, gs ? gs.maxMana : 100);
       this._refreshCurrentActionDisplay(loopState, isLoopModeActive);
       return;
     }
@@ -90,7 +91,7 @@ export class LoopRenderer {
     const useLoopColorblind = this.displaySettings.getColorblindMode();
 
     // Run queue analysis for predicted costs/remaining mana
-    const analysis = analyzeQueue(actionQueue, loopState);
+    const analysis = analyzeQueue(actionQueue, loopState, gs);
     this._lastAnalysis = analysis;
 
     // Group actions per visit (one block per region+instance pair).
@@ -154,7 +155,7 @@ export class LoopRenderer {
     }
 
     // Update displays
-    this.updateManaDisplay(loopState.currentMana, loopState.maxMana);
+    this.updateManaDisplay(gs ? gs.currentMana : 100, gs ? gs.maxMana : 100);
     this._refreshCurrentActionDisplay(loopState, isLoopModeActive);
 
     // Update expand/collapse button

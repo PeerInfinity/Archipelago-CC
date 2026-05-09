@@ -12,26 +12,34 @@ import { CostGenerator } from './costGenerator.js';
 
 function makeStubDeps({ staticData = {}, manaState = {} } = {}) {
   const events = [];
+  // Mana/XP/manaDebt/noManaDepletionReset live on the GameState
+  // instance (production reads them via gameStateAPI.getState()).
+  const fakeGs = {
+    currentMana: manaState.currentMana ?? 100,
+    maxMana: manaState.maxMana ?? 100,
+    regionXP: new Map(),
+    manaDebt: 0,
+    noManaDepletionReset: false,
+    refillMana() { this.currentMana = this.maxMana; },
+  };
+  const loopState = {
+    isPaused: false,
+    isProcessing: false,
+    instantMode: false,
+    gameSpeed: 1,
+    setInstantMode(v) { this.instantMode = v; },
+    setNoManaDepletionReset(v) { fakeGs.noManaDepletionReset = v; },
+    setPaused(v) { this.isPaused = v; },
+    setGameSpeed(v) { this.gameSpeed = v; },
+    startProcessing() { this.isProcessing = true; },
+    stopProcessing() { this.isProcessing = false; },
+    _resetLoop() { fakeGs.refillMana(); },
+  };
   return {
     events,
+    fakeGs,
     deps: {
-      loopState: {
-        currentMana: manaState.currentMana ?? 100,
-        maxMana: manaState.maxMana ?? 100,
-        regionXP: new Map(),
-        isPaused: false,
-        isProcessing: false,
-        instantMode: false,
-        noManaDepletionReset: false,
-        gameSpeed: 1,
-        setInstantMode(v) { this.instantMode = v; },
-        setNoManaDepletionReset(v) { this.noManaDepletionReset = v; },
-        setPaused(v) { this.isPaused = v; },
-        setGameSpeed(v) { this.gameSpeed = v; },
-        startProcessing() { this.isProcessing = true; },
-        stopProcessing() { this.isProcessing = false; },
-        _resetLoop() { this.currentMana = this.maxMana; },
-      },
+      loopState,
       stateManager: {
         getStartRegions: () => ['Menu'],
         getStaticData: () => staticData,
@@ -45,7 +53,11 @@ function makeStubDeps({ staticData = {}, manaState = {} } = {}) {
         getCostData() { return this._data; },
       },
       dispatcher: { publish: () => {} },
-      gameStateAPI: { addLocationCheck: () => {}, trimPath: () => {} },
+      gameStateAPI: {
+        addLocationCheck: () => {},
+        trimPath: () => {},
+        getState: () => fakeGs,
+      },
     },
   };
 }
@@ -285,11 +297,11 @@ describe('CostGenerator — _getHighestNeighborCost', () => {
 
 describe('CostGenerator — save / restore loopState', () => {
   it('round-trips all tracked fields', () => {
-    const { deps } = makeStubDeps({ manaState: { currentMana: 70, maxMana: 200 } });
-    deps.loopState.regionXP = new Map([['A', { level: 2, xp: 10, xpForNextLevel: 100 }]]);
+    const { deps, fakeGs } = makeStubDeps({ manaState: { currentMana: 70, maxMana: 200 } });
+    fakeGs.regionXP = new Map([['A', { level: 2, xp: 10, xpForNextLevel: 100 }]]);
     deps.loopState.gameSpeed = 7;
     deps.loopState.instantMode = true;
-    deps.loopState.noManaDepletionReset = true;
+    fakeGs.noManaDepletionReset = true;
 
     const gen = new CostGenerator(deps);
     const saved = gen._saveLoopState();
@@ -298,40 +310,40 @@ describe('CostGenerator — save / restore loopState', () => {
       instantMode: true, noManaDepletionReset: true,
     });
     // Saved regionXP is a copy, not the same reference.
-    expect(saved.regionXP).not.toBe(deps.loopState.regionXP);
+    expect(saved.regionXP).not.toBe(fakeGs.regionXP);
     expect(saved.regionXP.get('A').level).toBe(2);
 
     // Mutate live state, then restore.
-    deps.loopState.currentMana = 1;
-    deps.loopState.maxMana = 1;
+    fakeGs.currentMana = 1;
+    fakeGs.maxMana = 1;
     deps.loopState.gameSpeed = 1;
     deps.loopState.instantMode = false;
-    deps.loopState.noManaDepletionReset = false;
-    deps.loopState.regionXP = new Map();
+    fakeGs.noManaDepletionReset = false;
+    fakeGs.regionXP = new Map();
 
     gen._restoreLoopState(saved);
-    expect(deps.loopState.currentMana).toBe(70);
-    expect(deps.loopState.maxMana).toBe(200);
+    expect(fakeGs.currentMana).toBe(70);
+    expect(fakeGs.maxMana).toBe(200);
     expect(deps.loopState.gameSpeed).toBe(7);
     expect(deps.loopState.instantMode).toBe(true);
-    expect(deps.loopState.noManaDepletionReset).toBe(true);
-    expect(deps.loopState.regionXP.get('A').level).toBe(2);
+    expect(fakeGs.noManaDepletionReset).toBe(true);
+    expect(fakeGs.regionXP.get('A').level).toBe(2);
   });
 });
 
 describe('CostGenerator — _configureLoopStateForGeneration', () => {
   it('resets mana to max, clears XP, enables instant + no-mana-reset, unpauses', () => {
-    const { deps } = makeStubDeps({ manaState: { currentMana: 30, maxMana: 100 } });
-    deps.loopState.regionXP = new Map([['A', { level: 2, xp: 10, xpForNextLevel: 100 }]]);
+    const { deps, fakeGs } = makeStubDeps({ manaState: { currentMana: 30, maxMana: 100 } });
+    fakeGs.regionXP = new Map([['A', { level: 2, xp: 10, xpForNextLevel: 100 }]]);
     deps.loopState.isPaused = true;
     const gen = new CostGenerator(deps);
 
     gen._configureLoopStateForGeneration();
 
-    expect(deps.loopState.currentMana).toBe(100);
-    expect(deps.loopState.regionXP.size).toBe(0);
+    expect(fakeGs.currentMana).toBe(100);
+    expect(fakeGs.regionXP.size).toBe(0);
     expect(deps.loopState.instantMode).toBe(true);
-    expect(deps.loopState.noManaDepletionReset).toBe(true);
+    expect(fakeGs.noManaDepletionReset).toBe(true);
     expect(deps.loopState.isPaused).toBe(false);
   });
 });

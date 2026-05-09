@@ -1,6 +1,6 @@
 # Loops Module — Untangling Plan
 
-## Status (as of 2026-05-08)
+## Status (as of 2026-05-09)
 
 | Item | Status | Commit |
 |---|---|---|
@@ -9,7 +9,9 @@
 | #5 Phase C — DisplaySettingsBase | **DONE** | `f4fdeb27b` |
 | #5 Phase D — optionsPanel verification | **DONE** | (no code change; verified manually 2026-05-08) |
 | #3 — Split `_processFrame` | **DONE** | (2026-05-08) |
-| #6 — Collapse loopState↔gameState shim | **TODO** | — |
+| #6 Phase A — audit shim call sites | **DONE** | (2026-05-09; no code change) |
+| #6 Phase B — migrate readers/writers | **DONE** | (2026-05-09) |
+| #6 Phase C — delete shim accessors | **DONE** | (2026-05-09) |
 
 Bonus work that landed alongside Phase A-C:
 - **Permissive `updateSetting`** (auto-create + warn instead of refuse): `8cb20b25c`
@@ -579,6 +581,126 @@ assignment. The wired harness already exposes both `loopState` and
 
 Phase A: 30 minutes. Phase B: 2-4 hours (mechanical). Phase C: 30
 minutes + 1 hour test/UI verification. Total: ~5 hours.
+
+---
+
+### Phase A results (2026-05-09)
+
+Grep produced **163 call sites across 16 files** (90 writes, 73 reads).
+
+**By role:**
+
+| Role | Files | Total | Writes | Reads |
+|---|---|---|---|---|
+| Tests (real LoopState via `makeWired`) | manaReset / transitions / loopState / stepButton / settingsFlags / queueRemoval | 93 | 67 | 26 |
+| Tests (stub LoopState) | costGenerator.test.js | 15 | 7 | 8 |
+| In-package production | loopUI / loopRenderer / loopBlockBuilder / costGenerator | 31 | 13 | 18 |
+| Out-of-package production | costDebuggerUI / shared/queueAnalysis (×2) / testCases/timerTests | 22 | 6 | 16 |
+| `loopState.js` internals (`this.X`, separate from grep) | loopState.js | 14 | 5 | 9 |
+
+Test files all destructure `gs` from `makeWired()` already, so test
+migration is mechanical: `loopState.X` → `gs.X` and
+`loopState.X = Y` → `gs.X = Y`.
+
+**By property:**
+
+| Property | Count |
+|---|---|
+| currentMana | 62 |
+| maxMana | 60 |
+| regionXP | 19 |
+| manaDebt | 10 |
+| noManaDepletionReset | 10 |
+| manaPerItem | 2 |
+
+### Phase B authoring decisions (locked 2026-05-09)
+
+1. **Write strategy: `gameStateAPI.getState()` escape hatch.**
+   In-package code reaches the GameState instance via the existing
+   `getState()` function and reads/writes directly
+   (`gs.currentMana = X`, `gs.regionXP.clear()`, `gs.manaDebt = 0`).
+   No new flat-API surface added. Smallest diff; mirrors what
+   `loopState._gs()` already does. Setters stay silent — matches
+   pre-migration shim behavior exactly.
+
+2. **Event-firing: silent by default; flag per call site.**
+   Direct `gs.currentMana = X` assignment doesn't emit
+   `gameState:manaChanged`. That matches the shim's silent setter.
+   Only convert to `refillMana()`/`deductMana()` (or similar) when
+   review of the call site says the silent behavior is a bug
+   (e.g., the UI display required an explicit
+   `_updateManaDisplay()` call right after — converting to a helper
+   would let the display refresh via subscription). Default-safe
+   path is silent.
+
+3. **`costGenerator.test.js` stub shape: move mana fields onto a
+   `gameStateAPI` stub with `getState()`.**
+   The test's `deps.gameStateAPI` becomes a tiny fake that returns a
+   tiny fake GameState instance via `getState()`, holding
+   `currentMana`/`maxMana`/`regionXP`/`manaDebt`/`noManaDepletionReset`.
+   Production `costGenerator` will read/write through
+   `this.gameStateAPI.getState().X`, and the test stub matches that
+   shape.
+
+### Phase B surprises and risks
+
+1. **Flat API gaps.** No `setCurrentMana`, `setMaxMana` (or
+   compound `+=`), `clearRegionXP`, `getManaDebt`, `resetManaDebt`,
+   `getNoManaDepletionReset`, `setNoManaDepletionReset`, or regionXP
+   iteration on the flat API. Decision (above) is to skip the flat
+   API and use `getState()` instead.
+
+2. **`maxMana += entry.itemsReceived * 10`** (costGenerator lines
+   239, 254, 349) — compound assignment becomes
+   `gs.maxMana += entry.itemsReceived * 10` after migration. Silent
+   — matches old behavior.
+
+3. **`costGenerator.js` save/restore** (`saveLoopState` /
+   `restoreLoopState`, lines 475-498) — snapshots multiple mana/XP
+   fields and rolls back. Migration: snapshot pulls from
+   `gs = this.gameStateAPI.getState()`, restore writes back to
+   the same `gs`. Watch for `regionXP = new Map(savedMap)` — must
+   not break the iteration in line 286 (costDebuggerUI) or 937
+   (loopUI), which iterate the live Map.
+
+4. **`costDebuggerUI.js` already has `gameState` (the instance) in
+   scope** at the call sites (line 226). Migration is literally
+   `loopState.currentMana` → `gameState.currentMana`. No new lookup
+   needed.
+
+5. **`loopState.js` internal `this.X` (14 sites).** Once the shim
+   getters/setters are deleted, `this.currentMana` no longer
+   forwards. Rewrite to `this._gs().currentMana` (or capture
+   `const gs = this._gs()` once per method that uses multiple
+   fields). Sites are at lines 850, 859, 866, 1060, 1088-89,
+   1474-75, 1503-04, 1747-48, 1767, 1770.
+
+6. **`shared/queueAnalysis.js` and
+   `textAdventure-remote/shared/queueAnalysis.js`** are mirrored
+   files. The textAdventure-remote copy is overwritten by the
+   `generate-presets` workflow (per memory:
+   `architecture` notes about textAdventure-remote sync). Migrate
+   the source `shared/queueAnalysis.js` and the workflow will
+   replace the remote copy on next run; verify by re-running the
+   sync command if necessary.
+
+### Phase B execution plan
+
+Recommended order (each test sweep should pass before moving on):
+
+1. **`loopState.js` internals** (14 spots) — `this.X` →
+   `this._gs().X`. Run `npx vitest run frontend/modules/loops/`.
+2. **In-package readers and writers** (loopUI, loopRenderer,
+   loopBlockBuilder, costGenerator). For each, capture
+   `const gs = this.gameStateAPI.getState()` once per method.
+3. **Out-of-package** (costDebuggerUI, queueAnalysis ×2, timerTests).
+4. **Test files** (manaReset, transitions, loopState, stepButton,
+   settingsFlags, queueRemoval). Replace `loopState.X` with `gs.X`;
+   `gs` is already destructured from `makeWired()`.
+5. **`costGenerator.test.js` stub** — restructure as decided above.
+6. **Phase C: delete the shim** at `loopState.js:124-178`. Run full
+   `npx vitest run` (1876 tests). Anything still using the shim
+   fails loudly here.
 
 ---
 

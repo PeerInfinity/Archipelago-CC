@@ -149,8 +149,8 @@ describe('autoRestartQueue — _completeCurrentAction queue-end branch', () => {
   beforeEach(() => {
     ({ loopState, gs } = makeWired());
     tick = makeTicker();
-    loopState.maxMana = 100000;
-    loopState.currentMana = 100000; // enough mana not to OOM
+    gs.maxMana = 100000;
+    gs.currentMana = 100000; // enough mana not to OOM
     loopState.instantMode = true;
   });
 
@@ -234,8 +234,8 @@ describe('autoRestart vs autoResume — co-existence (LoopState level)', () => {
   beforeEach(() => {
     ({ loopState, gs } = makeWired());
     tick = makeTicker();
-    loopState.maxMana = 100000;
-    loopState.currentMana = 100000;
+    gs.maxMana = 100000;
+    gs.currentMana = 100000;
     loopState.instantMode = true;
   });
 

@@ -220,20 +220,20 @@ describe('Transitions — setPaused(false)', () => {
 
   it('calls _resetLoop when _shouldResetOnResume returns true (currentActionIndex past end)', () => {
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 25; // not max
+    gs.maxMana = 100;
+    gs.currentMana = 25; // not max
     loopState.isPaused = true;
     loopState.currentActionIndex = 1; // past end of 1-item queue
     loopState.setPaused(false);
     // _resetLoop refills mana to maxMana; verifies it ran.
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
   });
 
   it('does NOT reset mana when _shouldResetOnResume returns false (paused mid-action with progress)', () => {
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 25; // depleted but action still has progress
+    gs.maxMana = 100;
+    gs.currentMana = 25; // depleted but action still has progress
     loopState.isPaused = true;
     loopState.currentActionIndex = 0;
     // Make the queue look "in progress" (action 0 partially done)
@@ -245,7 +245,7 @@ describe('Transitions — setPaused(false)', () => {
 
     // _shouldResetOnResume returned false → no _resetLoop → mana stays
     // at 25 (modulo whatever startProcessing's first frame did).
-    expect(loopState.currentMana).toBe(25);
+    expect(gs.currentMana).toBe(25);
   });
 
   it('is essentially a no-op when queue is empty (does not start processing)', () => {
@@ -292,8 +292,8 @@ describe('Transitions — _resetLoop', () => {
   it('refills mana, resets progress, and clears _queueCompleted', () => {
     gs.addCustomAction('explore');
     gs.addCustomAction('explore');
-    loopState.maxMana = 100;
-    loopState.currentMana = 0;
+    gs.maxMana = 100;
+    gs.currentMana = 0;
     loopState._queueCompleted = true;
     loopState.currentActionIndex = 1;
     const queue = loopState.getActionQueue();
@@ -301,7 +301,7 @@ describe('Transitions — _resetLoop', () => {
 
     loopState._resetLoop();
 
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     expect(loopState._queueCompleted).toBe(false);
     expect(loopState.currentActionIndex).toBe(0);
   });
@@ -318,7 +318,7 @@ describe('Transitions — _resetLoop', () => {
   it('publishes loopState:loopReset with mana data', () => {
     const wired = makeWired();
     wired.gs.addCustomAction('explore');
-    wired.loopState.maxMana = 100;
+    wired.gs.maxMana = 100;
     wired.bus.events.length = 0;
     wired.loopState._resetLoop();
     const reset = wired.bus.events.find((e) => e.name === 'loopState:loopReset');
@@ -366,14 +366,14 @@ describe('Transitions — restartFromStart({ autoStart: true })', () => {
   });
 
   it('refills mana, resets index to 0, clears _queueCompleted', () => {
-    loopState.maxMana = 100;
-    loopState.currentMana = 25;
+    gs.maxMana = 100;
+    gs.currentMana = 25;
     loopState.currentActionIndex = 1;
     loopState._queueCompleted = true;
 
     loopState.restartFromStart({ autoStart: true });
 
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     expect(loopState.currentActionIndex).toBe(0);
     expect(loopState._queueCompleted).toBe(false);
   });
@@ -435,14 +435,14 @@ describe('Transitions — restartFromStart({ autoStart: false })', () => {
   });
 
   it('refills mana, resets index to 0, clears _queueCompleted', () => {
-    loopState.maxMana = 100;
-    loopState.currentMana = 0;
+    gs.maxMana = 100;
+    gs.currentMana = 0;
     loopState.currentActionIndex = 2;
     loopState._queueCompleted = true;
 
     loopState.restartFromStart({ autoStart: false });
 
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     expect(loopState.currentActionIndex).toBe(0);
     expect(loopState._queueCompleted).toBe(false);
   });
@@ -476,15 +476,15 @@ describe('Transitions — restartFromStart({ autoStart: false })', () => {
   it('from completed state: lands paused at index 0 with mana refilled (Reset button case)', () => {
     // Simulate the Step button "Reset" entry condition: queue ran to
     // end, autoRestart off, mana drained.
-    loopState.maxMana = 100;
-    loopState.currentMana = 5;
+    gs.maxMana = 100;
+    gs.currentMana = 5;
     loopState._queueCompleted = true;
     loopState.currentActionIndex = 2; // past end
     expect(loopState.getProcessingState()).toBe('completed');
 
     loopState.restartFromStart({ autoStart: false });
 
-    expect(loopState.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(100);
     expect(loopState.currentActionIndex).toBe(0);
     expect(loopState.getProcessingState()).toBe('paused');
   });

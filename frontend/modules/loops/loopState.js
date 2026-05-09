@@ -102,15 +102,9 @@ export class LoopState {
     this._saveIntervalId = null;
   }
 
-  // ----- Delegating accessors for mana/XP fields (now owned by gameState) -----
-  // Existing internal code reads/writes loopState.currentMana, loopState.maxMana,
-  // loopState.regionXP, etc. These property accessors keep that working while
-  // gameState is the source of truth. Setters are silent (caller controls
-  // event firing — matching prior behavior where field writes didn't auto-fire).
-  //
-  // `_gs()` returns the GameState instance (or null). `gameState` on this
-  // class is the flat API object injected via setDependencies; the instance
-  // is fetched via its `getState` function and cached in `_gameStateInstance`.
+  // Mana / XP / manaDebt / noManaDepletionReset live on the GameState
+  // instance. Use `this._gs()` internally to reach them; outside callers
+  // go through `gameStateAPI.getState()`.
 
   _gs() {
     if (this._gameStateInstance) return this._gameStateInstance;
@@ -119,62 +113,6 @@ export class LoopState {
       return this._gameStateInstance;
     }
     return null;
-  }
-
-  get currentMana() {
-    const gs = this._gs();
-    return gs ? gs.currentMana : 100;
-  }
-  set currentMana(value) {
-    const gs = this._gs();
-    if (gs) gs.currentMana = value;
-  }
-
-  get maxMana() {
-    const gs = this._gs();
-    return gs ? gs.maxMana : 100;
-  }
-  set maxMana(value) {
-    const gs = this._gs();
-    if (gs) gs.maxMana = value;
-  }
-
-  get manaPerItem() {
-    const gs = this._gs();
-    return gs ? gs.manaPerItem : 10;
-  }
-  set manaPerItem(value) {
-    const gs = this._gs();
-    if (gs) gs.manaPerItem = value;
-  }
-
-  get regionXP() {
-    const gs = this._gs();
-    return gs ? gs.regionXP : new Map();
-  }
-  set regionXP(value) {
-    const gs = this._gs();
-    if (gs) {
-      gs.regionXP = value instanceof Map ? value : new Map(value || []);
-    }
-  }
-
-  get manaDebt() {
-    const gs = this._gs();
-    return gs ? gs.manaDebt : 0;
-  }
-  set manaDebt(value) {
-    const gs = this._gs();
-    if (gs) gs.manaDebt = value;
-  }
-
-  get noManaDepletionReset() {
-    const gs = this._gs();
-    return gs ? gs.noManaDepletionReset : false;
-  }
-  set noManaDepletionReset(value) {
-    const gs = this._gs();
-    if (gs) gs.noManaDepletionReset = value;
   }
 
   /**
@@ -847,7 +785,8 @@ export class LoopState {
    * @param {boolean} enabled - Whether to enable no-reset mode
    */
   setNoManaDepletionReset(enabled) {
-    this.noManaDepletionReset = enabled;
+    const gs = this._gs();
+    if (gs) gs.noManaDepletionReset = enabled;
     log('info', `[LoopState] No-mana-depletion-reset mode ${enabled ? 'enabled' : 'disabled'}`);
   }
 
@@ -856,14 +795,16 @@ export class LoopState {
    * @returns {number} The mana debt
    */
   getManaDebt() {
-    return this.manaDebt;
+    const gs = this._gs();
+    return gs ? gs.manaDebt : 0;
   }
 
   /**
    * Reset mana debt tracking
    */
   resetManaDebt() {
-    this.manaDebt = 0;
+    const gs = this._gs();
+    if (gs) gs.manaDebt = 0;
   }
 
   /**
@@ -1057,7 +998,9 @@ export class LoopState {
    *   the frame is done either way).
    */
   _maybeResetForOOM() {
-    if (this.currentMana > 0 || this.noManaDepletionReset) return false;
+    const gs = this._gs();
+    if (!gs) return false;
+    if (gs.currentMana > 0 || gs.noManaDepletionReset) return false;
 
     this._resetLoop();
 
@@ -1083,10 +1026,11 @@ export class LoopState {
    * Publish the per-frame UI update event.
    */
   _publishProgressUpdate() {
+    const gs = this._gs();
     const eventData = {
       mana: {
-        current: this.currentMana,
-        max: this.maxMana,
+        current: gs ? gs.currentMana : 100,
+        max: gs ? gs.maxMana : 100,
       },
     };
     if (this.currentAction) {
@@ -1467,12 +1411,13 @@ export class LoopState {
     this.isPaused = false;
     this._queueCompleted = false;
 
-    // Notify about the reset (mana fields read through delegated accessors)
+    // Notify about the reset.
     if (this.eventBus) {
+      const gs = this._gs();
       this.eventBus.publish('loopState:loopReset', {
         mana: {
-          current: this.currentMana,
-          max: this.maxMana,
+          current: gs ? gs.currentMana : 100,
+          max: gs ? gs.maxMana : 100,
         },
         paused: true,
       });
@@ -1500,8 +1445,8 @@ export class LoopState {
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {
       mana: {
-        current: this.currentMana,
-        max: this.maxMana,
+        current: gs ? gs.currentMana : 100,
+        max: gs ? gs.maxMana : 100,
       },
     });
   }
@@ -1742,10 +1687,11 @@ export class LoopState {
       actionCompleted: []
     };
 
+    const gs = this._gs();
     return {
       // Don't save maxMana as it should be calculated dynamically based on inventory
-      currentMana: this.currentMana,
-      regionXP: Array.from(this.regionXP.entries()),
+      currentMana: gs ? gs.currentMana : 100,
+      regionXP: gs ? Array.from(gs.regionXP.entries()) : [],
       gameSpeed: this.gameSpeed,
       autoRestartQueue: this.autoRestartQueue,
       // Save progress tracking from ActionQueueManager
@@ -1763,11 +1709,12 @@ export class LoopState {
   loadFromSerializedState(state) {
     if (!state) return;
 
+    const gs = this._gs();
     // Load current mana, cap at a reasonable default if needed (e.g., 100) until snapshot arrives
-    this.currentMana = state.currentMana ?? 100;
+    if (gs) gs.currentMana = state.currentMana ?? 100;
 
     // Load region XP
-    this.regionXP = new Map(state.regionXP || []);
+    if (gs) gs.regionXP = new Map(state.regionXP || []);
 
     // Load game speed
     this.gameSpeed = state.gameSpeed ?? 100;
@@ -1789,7 +1736,6 @@ export class LoopState {
 
     // Notify mana/xp change so consumers reflect the loaded values
     // (the delegated setters above are silent by design).
-    const gs = this._gs();
     if (gs) gs.emitManaChanged();
 
     // Notify state loaded

@@ -79,10 +79,11 @@ export class QueueAnalyzer {
    * Analyze the action queue and calculate costs (delegates to shared module)
    * @param {Array} actionQueue - Array of actions from loopState
    * @param {Object} loopState - The loop state instance
+   * @param {Object} [gameState] - GameState instance (source of mana fields)
    * @returns {Object} Analysis result
    */
-  analyze(actionQueue, loopState) {
-    const analysis = analyzeQueue(actionQueue, loopState);
+  analyze(actionQueue, loopState, gameState) {
+    const analysis = analyzeQueue(actionQueue, loopState, gameState);
 
     // Cache current analysis
     this.currentAnalysis = analysis;
