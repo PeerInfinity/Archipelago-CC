@@ -1,5 +1,5 @@
 --- scripts/test/fixtures/tracker_original/__init__.py	2026-04-05 12:28:34.438301003 -0700
-+++ worlds/ut_pickle/__init__.py	2026-04-05 18:20:51.214015970 -0700
++++ worlds/ut_pickle/__init__.py	2026-05-09 16:36:59.488963724 -0700
 @@ -1,7 +1,7 @@
  from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
  from settings import Group, Bool, UserFolderPath, _world_settings_name_cache
@@ -84,7 +84,7 @@
      item_name_to_id = {}
      location_name_to_id = {}
  
-@@ -187,5 +204,25 @@
+@@ -187,5 +204,30 @@
              self.location_icon_coords = lambda _,__: None
  
  
@@ -92,9 +92,14 @@
 -components.append(Component("Universal Tracker", None, func=launch_client, component_type=Type.CLIENT, icon="ut_ico"))
 +def _is_enabled() -> bool:
 +    """Check if ut_pickle is enabled in host.yaml settings."""
++    # NOTE: read the raw dict from Settings.__dict__ to avoid triggering
++    # _update_cache() at world-import time. See worlds/tracker/__init__.py
++    # for the full explanation; the same pattern lives there.
 +    try:
 +        from settings import get_settings
-+        ut = get_settings().ut_pickle
++        ut = get_settings().__dict__.get('ut_pickle')
++        if ut is None:
++            return False
 +        if isinstance(ut, dict):
 +            return bool(ut.get('enabled', False))
 +        return bool(getattr(ut, 'enabled', False))
