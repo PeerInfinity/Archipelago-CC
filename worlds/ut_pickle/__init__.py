@@ -206,9 +206,14 @@ class UTMapTabData:
 
 def _is_enabled() -> bool:
     """Check if ut_pickle is enabled in host.yaml settings."""
+    # NOTE: read the raw dict from Settings.__dict__ to avoid triggering
+    # _update_cache() at world-import time. See worlds/tracker/__init__.py
+    # for the full explanation; the same pattern lives there.
     try:
         from settings import get_settings
-        ut = get_settings().ut_pickle
+        ut = get_settings().__dict__.get('ut_pickle')
+        if ut is None:
+            return False
         if isinstance(ut, dict):
             return bool(ut.get('enabled', False))
         return bool(getattr(ut, 'enabled', False))

@@ -198,9 +198,17 @@ class UTMapTabData:
 
 def _is_enabled() -> bool:
     """Check if Universal Tracker is enabled in host.yaml settings."""
+    # NOTE: read the raw dict from Settings.__dict__ rather than going through
+    # get_settings().universal_tracker. This is called at world-import time, and
+    # attribute access on Settings triggers _update_cache(), which freezes the
+    # settings-name cache against the (incomplete) AutoWorldRegister. Worlds
+    # loaded alphabetically after this one (tunic, ut_pickle, etc.) would then
+    # fail to upcast their settings dicts to their Group subclass.
     try:
         from settings import get_settings
-        ut = get_settings().universal_tracker
+        ut = get_settings().__dict__.get('universal_tracker')
+        if ut is None:
+            return True
         if isinstance(ut, dict):
             return bool(ut.get('enabled', True))
         return bool(getattr(ut, 'enabled', True))
