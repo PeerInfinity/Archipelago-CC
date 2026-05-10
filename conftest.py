@@ -25,6 +25,17 @@ syncing with upstream if new worlds are added there.
 
 from __future__ import annotations
 
+# Suppress Settings.autosave during pytest. settings.py registers an atexit
+# hook that would write host.yaml back to disk on process exit; under pytest
+# that fires an assertion ("Auto-saving ... during unittests") that surfaces
+# as noisy "Exception ignored in atexit callback" output, and without -O
+# could actually clobber host.yaml with in-memory test state. Setting this
+# flag before any Settings instance is constructed both skips the atexit
+# registration and turns autosave() into a no-op.
+import settings as _settings  # noqa: E402 — imported for side-effect-free flag set
+_settings.skip_autosave = True
+del _settings
+
 # NOTE: 'generic' and 'apquest' are upstream worlds, but core tests in
 # test/general/ look them up by game name as required fixtures
 # (world_types["Archipelago"] in test_items.py::test_items_in_datapackage,
