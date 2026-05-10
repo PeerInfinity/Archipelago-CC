@@ -63,6 +63,15 @@ jobs:
         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
         python Launcher.py --update_settings  # make sure host.yaml exists for tests
     - name: Unittests
+      env:
+        # Force UTF-8 stdio. Without this, Python 3.11 on Windows defaults
+        # sys.stdout to a cp1252 TextIOWrapper, and pytest-xdist's parent-
+        # worker stdout teardown trips a "ValueError: underlying buffer has
+        # been detached" inside _pytest.config.console_main's final
+        # sys.stdout.flush() — failing the job after every test passed.
+        # Python 3.13 uses UTF-8 by default and is unaffected.
+        PYTHONUTF8: "1"
+        PYTHONIOENCODING: "utf-8"
       run: |
         pytest -n auto
 
