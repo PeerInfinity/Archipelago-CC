@@ -2828,7 +2828,8 @@ export class MazeRoomUI {
      * @param {string} key - bestPathKey() result for the entry.
      */
     _replayBestPath(key) {
-        const gs = getGameStateSingleton?.();
+        let gs = null;
+        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
         if (!gs) return;
         const stored = gs.getBestPath(key);
         if (!stored || !Array.isArray(stored.actions) || stored.actions.length === 0) return;
@@ -2868,7 +2869,12 @@ export class MazeRoomUI {
      * first.
      */
     _getReplayableTargets() {
-        const gs = getGameStateSingleton?.();
+        // Called from _renderActionQueue, which may run before any
+        // module has initialized the gameState singleton (GL builds
+        // panels during its own init). getGameStateSingleton throws
+        // in that window — treat as "no saved entries yet."
+        let gs = null;
+        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
         if (!gs || !this.currentRegionId) return [];
         const fromPart = this.arrivedFromExitId ?? 'entrance';
         const prefix = `${this.currentRegionId}|${fromPart}|`;
@@ -2909,7 +2915,8 @@ export class MazeRoomUI {
      * "best" comparisons meaningless).
      */
     _recordDirectWalkIfBetter(toRef) {
-        const gs = getGameStateSingleton?.();
+        let gs = null;
+        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
         if (!gs || !this.currentRegionId) return;
         if (!this.world?.manaEnabled) return;
         if (this.externalInventory === null) return;
