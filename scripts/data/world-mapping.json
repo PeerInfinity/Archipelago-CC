@@ -978,17 +978,6 @@
     "template_file": "Mega Man 3.yaml",
     "world_directory": "mm3"
   },
-  "Mega Man 3 WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Mega Man 3 WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Mega Man 3 WorldGen.yaml",
-    "world_directory": "mm3_worldgen"
-  },
   "MegaMan Battle Network 3": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -1176,6 +1165,17 @@
     "template_file": "Pokemon Red and Blue.yaml",
     "world_directory": "pokemon_rb"
   },
+  "Procgen Maze WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Procgen Maze WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Procgen Maze WorldGen.yaml",
+    "world_directory": "procgen_maze_worldgen"
+  },
   "Raft": {
     "exporter_path": "exporter/games/official/raft.py",
     "exporter_size": 6659,
@@ -1263,6 +1263,17 @@
     "has_custom_game_logic": true,
     "template_file": "Secret of Evermore.yaml",
     "world_directory": "soe"
+  },
+  "Seedling": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Seedling",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Seedling.yaml",
+    "world_directory": "seedling"
   },
   "Shivers": {
     "exporter_path": null,
@@ -1604,6 +1615,17 @@
     "has_custom_game_logic": false,
     "template_file": "Timespinner WorldGen.yaml",
     "world_directory": "timespinner_worldgen"
+  },
+  "UT Pickle Mode": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "UT Pickle Mode",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "UT Pickle Mode.yaml",
+    "world_directory": "ut_pickle"
   },
   "Undertale": {
     "exporter_path": null,

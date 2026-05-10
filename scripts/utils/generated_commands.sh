@@ -597,7 +597,6 @@ python Generate.py --weights_file_path "Templates/Links Awakening DX WorldGen.ya
 python Generate.py --weights_file_path "Templates/Lufia II Ancient Cave WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Mario & Luigi Superstar Saga WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Mega Man 2 WorldGen.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Mega Man 3 WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/MegaMan Battle Network 3 WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Meritous WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1

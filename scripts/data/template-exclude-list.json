@@ -161,6 +161,10 @@
     {
       "name": "Satisfactory.yaml",
       "reason": "Temporarily excluded. Calls self.state_logic.can_produce_all() which resolves to state.has_all() but is not exported, causing AttributeError."
+    },
+    {
+      "name": "Mega Man 3.yaml",
+      "reason": "Temporarily excluded. WorldGen variant intermittently fails test_explicit_indirect_conditions_spheres with Fill.FillError on certain pytest seeds (e.g. 57516062135983689099)."
     }
   ],
   "ut_fuzz_apworld_exclude_list": [

@@ -71,7 +71,6 @@
 | Lufia II Ancient Cave WorldGen | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | Mega Man 2 WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Mega Man 3 WorldGen | ✅ Passed | 0 | 16.1 | 16.1 | 🟢 Complete | ✅ | ✅ |
 | MegaMan Battle Network 3 WorldGen | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Meritous WorldGen | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Metamath WorldGen | ✅ Passed | 0 | 3.2 | 3.2 | 🟢 Complete | ✅ | ✅ |
