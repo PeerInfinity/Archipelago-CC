@@ -1165,17 +1165,6 @@
     "template_file": "Pokemon Red and Blue.yaml",
     "world_directory": "pokemon_rb"
   },
-  "Procgen Maze WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Procgen Maze WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Procgen Maze WorldGen.yaml",
-    "world_directory": "procgen_maze_worldgen"
-  },
   "Raft": {
     "exporter_path": "exporter/games/official/raft.py",
     "exporter_size": 6659,
