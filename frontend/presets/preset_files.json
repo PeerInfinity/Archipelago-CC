@@ -9928,6 +9928,28 @@
       }
     }
   },
+  "procgen_maze_worldgen": {
+    "name": "Procgen Maze WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
   "procgen_topdown": {
     "name": "Procgen Top-Down",
     "folders": {
