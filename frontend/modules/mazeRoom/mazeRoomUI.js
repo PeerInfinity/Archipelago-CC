@@ -40,6 +40,12 @@ import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
 import { bestPathKey, findPath } from './mazeAutopather.js';
+import {
+    MazeRoomQueue,
+    ACTION_MOVE,
+    ACTION_WAIT,
+    ACTION_LOCATION_CHECK,
+} from './mazeRoomQueue.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -96,11 +102,30 @@ const COLORS = {
     grid: '#1a1a1a',
 };
 
+// Maps DOM key strings to queue action specs. Queue verbs are the
+// substrate-neutral representation; the move executor translates
+// dir→engine input via MOVE_DIR_TO_INPUT.
 const KEY_MAP = {
-    ArrowUp: INPUT_N, w: INPUT_N, W: INPUT_N,
-    ArrowDown: INPUT_S, s: INPUT_S, S: INPUT_S,
-    ArrowLeft: INPUT_W, a: INPUT_W, A: INPUT_W,
-    ArrowRight: INPUT_E, d: INPUT_E, D: INPUT_E,
+    ArrowUp:    { type: ACTION_MOVE, dir: 'N' },
+    w:          { type: ACTION_MOVE, dir: 'N' },
+    W:          { type: ACTION_MOVE, dir: 'N' },
+    ArrowDown:  { type: ACTION_MOVE, dir: 'S' },
+    s:          { type: ACTION_MOVE, dir: 'S' },
+    S:          { type: ACTION_MOVE, dir: 'S' },
+    ArrowLeft:  { type: ACTION_MOVE, dir: 'W' },
+    a:          { type: ACTION_MOVE, dir: 'W' },
+    A:          { type: ACTION_MOVE, dir: 'W' },
+    ArrowRight: { type: ACTION_MOVE, dir: 'E' },
+    d:          { type: ACTION_MOVE, dir: 'E' },
+    D:          { type: ACTION_MOVE, dir: 'E' },
+    ' ':        { type: ACTION_WAIT },
+};
+
+const MOVE_DIR_TO_INPUT = {
+    N: INPUT_N,
+    S: INPUT_S,
+    E: INPUT_E,
+    W: INPUT_W,
 };
 
 export class MazeRoomUI {
@@ -196,6 +221,16 @@ export class MazeRoomUI {
             onExitCross: (exit, sourceRegion) => this._onVisualizerExitCross(exit, sourceRegion),
             onLocationCheck: (locationName, itemId, regionId) =>
                 this._onVisualizerLocationCheck(locationName, itemId, regionId),
+        });
+
+        // Tile-level action queue (Cavernous-2-style). Player keydowns
+        // route through this rather than calling step() directly. The
+        // executor is bound here so the queue can run actions
+        // synchronously; the UI re-renders after each handleInput in
+        // _handleKeydown. Cleared on region transitions. See
+        // NewDocs/plans/procedural-generation/maze-content-modules.md.
+        this._mazeQueue = new MazeRoomQueue({
+            executor: (action) => this._executeQueueAction(action),
         });
 
         // Fog of war. When enabled, only tiles in the seen-set for
@@ -983,6 +1018,13 @@ export class MazeRoomUI {
         // that exit's tile so the player faces inward. Falls back to
         // world.entrance when the lookup misses (initial load, or a
         // sidecar predating the bidirectional changes).
+        //
+        // Maze queue is per-region: clear on entry so the new region
+        // starts with an empty queue. Loops-driven entry will refill
+        // it via Phase 6 delegation in a later phase; for now the
+        // queue is keyboard-input-only and the manual-entry "empty
+        // queue" rule applies.
+        this._mazeQueue?.clearAll();
         this.world = payload.world;
         this.state = createState(this.world);
         const arrivedExitId = payload.arrivedFrom?.exit_id;
@@ -1080,6 +1122,12 @@ export class MazeRoomUI {
         }
         this.rootElement.appendChild(this._renderCollapsibleSection(
             'playback', 'Playback controls', this._renderPlaybackBar(),
+        ));
+        // Maze action queue lives directly under Playback controls.
+        // Always rendered (not gated on genControlsVisible) since
+        // it's part of normal play, not a generator dev tool.
+        this.rootElement.appendChild(this._renderCollapsibleSection(
+            'actionQueue', 'Action queue', this._renderActionQueue(),
         ));
         if (this.genControlsVisible) {
             this.rootElement.appendChild(this._renderStats());
@@ -1539,6 +1587,137 @@ export class MazeRoomUI {
         const el = this._playbackBar.getElement();
         if (el) wrapper.appendChild(el);
         return wrapper;
+    }
+
+    /**
+     * Renders the maze action queue: a Cavernous-2-style horizontal
+     * icon row showing queued actions, a status line, and a
+     * Clear button. Lives under Playback controls (see render()).
+     *
+     * Icon click sets the edit cursor BEFORE that icon (subsequent
+     * keypresses insert there rather than appending). The trailing
+     * empty slot clears the cursor back to tail / null. Done actions
+     * are visually faded; the next-to-run action is highlighted.
+     *
+     * Backspace deletes the action just before the cursor — handled
+     * directly in _handleKeydown rather than via a button, mirroring
+     * Cavernous's `B` convention.
+     */
+    _renderActionQueue() {
+        const wrap = document.createElement('div');
+        wrap.className = 'maze-room-queue';
+
+        const snap = this._mazeQueue.snapshot();
+        const pending = snap.actions.length - snap.executionIndex;
+
+        const status = document.createElement('div');
+        status.className = 'maze-room-queue-status';
+        if (snap.actions.length === 0) {
+            status.textContent = 'Empty — press a movement key or Space to wait.';
+        } else {
+            const cursorText = snap.editCursor !== null
+                ? ` · cursor @ ${snap.editCursor}`
+                : '';
+            status.textContent
+                = `${snap.actions.length} action${snap.actions.length === 1 ? '' : 's'}`
+                + ` · ${pending} pending${cursorText}`;
+        }
+        wrap.appendChild(status);
+
+        const row = document.createElement('div');
+        row.className = 'maze-room-queue-row';
+        for (let i = 0; i < snap.actions.length; i++) {
+            if (snap.editCursor === i) {
+                row.appendChild(this._renderQueueCursor());
+            }
+            row.appendChild(this._renderQueueIcon(snap.actions[i], i));
+        }
+        // Cursor placed exactly at the tail (== length, not null).
+        // editCursor === null means "default tail" (no visible bar);
+        // editCursor === length means the user explicitly placed it
+        // there. They're equivalent for input behavior but rendered
+        // differently for clarity.
+        if (snap.editCursor !== null && snap.editCursor === snap.actions.length) {
+            row.appendChild(this._renderQueueCursor());
+        }
+        // Trailing click region: clicking here clears the cursor.
+        // Always present so the user has somewhere to click to exit
+        // edit-cursor mode without keyboard input.
+        const tailSlot = document.createElement('div');
+        tailSlot.className = 'maze-room-queue-tail-slot';
+        tailSlot.title = 'Click to insert at tail (clear cursor)';
+        tailSlot.addEventListener('click', () => {
+            this._mazeQueue.setEditCursor(null);
+            this.render();
+            this.rootElement?.focus();
+        });
+        row.appendChild(tailSlot);
+        wrap.appendChild(row);
+
+        const controls = document.createElement('div');
+        controls.className = 'maze-room-queue-controls';
+        const clearBtn = document.createElement('button');
+        clearBtn.type = 'button';
+        clearBtn.className = 'maze-room-queue-clear';
+        clearBtn.textContent = 'Clear pending';
+        clearBtn.disabled = pending === 0;
+        clearBtn.addEventListener('click', () => {
+            this._mazeQueue.clearPending();
+            this.render();
+            this.rootElement?.focus();
+        });
+        controls.appendChild(clearBtn);
+        wrap.appendChild(controls);
+
+        return wrap;
+    }
+
+    _renderQueueCursor() {
+        const el = document.createElement('div');
+        el.className = 'maze-room-queue-cursor';
+        el.setAttribute('aria-hidden', 'true');
+        return el;
+    }
+
+    _renderQueueIcon(action, index) {
+        const el = document.createElement('div');
+        const isDone = action.status === 'done';
+        const isNext = !isDone && index === this._mazeQueue.executionIndex;
+        el.className = 'maze-room-queue-icon'
+            + (isDone ? ' is-done' : ' is-pending')
+            + (isNext ? ' is-next' : '');
+        el.dataset.index = String(index);
+
+        let glyph;
+        let tooltip;
+        if (action.type === ACTION_MOVE) {
+            glyph = { N: '↑', S: '↓', E: '→', W: '←' }[action.dir] ?? '?';
+            tooltip = `move ${action.dir}`;
+        } else if (action.type === ACTION_WAIT) {
+            glyph = '◌';
+            tooltip = 'wait';
+        } else if (action.type === ACTION_LOCATION_CHECK) {
+            glyph = '✓';
+            tooltip = `check ${action.locationName ?? ''}`;
+        } else {
+            glyph = '?';
+            tooltip = action.type;
+        }
+        el.textContent = glyph;
+        el.title = `${tooltip} (#${index}${isDone ? ', done' : ''})`;
+
+        if (!isDone) {
+            // Click sets edit cursor BEFORE this icon. Done actions
+            // are non-interactive (the cursor can't enter the done
+            // region anyway — setEditCursor clamps to executionIndex).
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this._mazeQueue.setEditCursor(index);
+                this.render();
+                this.rootElement?.focus();
+            });
+        }
+        return el;
     }
 
     _renderPlaybackLogSection() {
@@ -2506,9 +2685,58 @@ export class MazeRoomUI {
 
     _handleKeydown(e) {
         if (!this.world || !this.state) return;
-        const input = KEY_MAP[e.key];
-        if (!input) return;
+        // Backspace: editing op (not a queue verb). Removes the action
+        // just before the cursor (or the last pending action if cursor
+        // is at tail / null). No-ops in the done region.
+        if (e.key === 'Backspace') {
+            e.preventDefault();
+            const q = this._mazeQueue;
+            const cursor = q.editCursor ?? q.length;
+            if (cursor > q.executionIndex) {
+                q.deleteAt(cursor - 1);
+                this.render();
+            }
+            return;
+        }
+        const spec = KEY_MAP[e.key];
+        if (!spec) return;
         e.preventDefault();
+        // Route through the queue. Append-and-execute fires the
+        // executor synchronously when cursor is at tail; pure insert
+        // when cursor is set mid-queue. Either way the queue's state
+        // is current before render().
+        this._mazeQueue.handleInput(spec);
+        this.render();
+    }
+
+    /**
+     * Executor injected into the queue. Dispatches on action type.
+     * Called synchronously by MazeRoomQueue.handleInput (append-and-
+     * execute path) and by stepOne (replay paths, future phases).
+     */
+    _executeQueueAction(action) {
+        if (action.type === ACTION_MOVE) {
+            this._executeMoveAction(action.dir);
+        } else if (action.type === ACTION_WAIT) {
+            this._executeWaitAction();
+        } else if (action.type === ACTION_LOCATION_CHECK) {
+            this._executeLocationCheckAction(action.locationName);
+        }
+    }
+
+    /**
+     * Execute a queued move. Mirrors the pre-queue _handleKeydown
+     * move logic exactly: step() with the panel's rule evaluator,
+     * playback-mode mana deduction + event publishing, fog
+     * expansion, end-of-region message. A blocked move (step returns
+     * null) is a no-op for state/mana/events — the queue still
+     * advances per the plan's "queued move becomes a no-op for that
+     * step" semantics.
+     */
+    _executeMoveAction(dir) {
+        if (!this.world || !this.state) return;
+        const input = MOVE_DIR_TO_INPUT[dir];
+        if (!input) return;
         // In playback mode (externalInventory non-null) the snapshot is
         // truth and step() must not mutate state.inventory; in Generate
         // dev mode the override is undefined and step keeps its
@@ -2547,7 +2775,48 @@ export class MazeRoomUI {
         if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
             this.message = `Reached exit in ${this.state.turn} steps.`;
         }
-        this.render();
+    }
+
+    /**
+     * Execute a queued wait. No movement, no event publish, no fog
+     * change. In playback mode, deducts mana at the per-tile-move
+     * rate (same cost as a move-onto-floor, per the plan's "wait
+     * has same mana cost as move"). When hazards land in a later
+     * phase, this is where the per-tick hazard advance fires.
+     */
+    _executeWaitAction() {
+        if (!this.world || !this.state) return;
+        if (this.externalInventory === null) return;
+        if (!this._shouldDeductMazeMana()) return;
+        const gs = getGameStateSingleton?.();
+        if (!gs) return;
+        const cost = this._perTileMoveCost();
+        gs.deductMana(cost);
+        if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+        if (gs.getCurrentMana() <= 0) {
+            this._fireLoopReset();
+        }
+    }
+
+    /**
+     * Execute a queued locationCheck. Direct keyboard input doesn't
+     * emit this verb in v1 — location checks fire as a side effect of
+     * stepping onto a location tile via _publishPlaybackEvents. This
+     * path exists for loops-delegation expansion and saved-queue
+     * replay (later phases): when the queue is asked to check a
+     * specific named location, fire the dispatcher event.
+     *
+     * No-ops outside playback mode (no AP snapshot to claim against).
+     */
+    _executeLocationCheckAction(locationName) {
+        if (!locationName) return;
+        if (this.externalInventory === null) return;
+        const dispatcher = this.apis?.dispatcher;
+        if (!dispatcher?.publish) return;
+        dispatcher.publish('user:locationCheck', {
+            locationName,
+            regionName: this.currentRegionId,
+        }, { initialTarget: 'bottom' });
     }
 
     /**

@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { MazeRoomUI } from './mazeRoomUI.js';
 import { _testOnly_resetModuleState } from './index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { ACTION_MOVE, ACTION_WAIT, ACTION_LOCATION_CHECK } from './mazeRoomQueue.js';
 
 // Vitest runs under the 'node' environment (no DOM). The panel's
 // constructor guards document access for exactly this reason — these
@@ -1071,6 +1072,153 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
             expect(move.data.targetRegion).toBe('Menu');
             expect(move.data.fromReset).toBe(true);
             expect(move.data.updatePath).toBe(false);
+        } finally {
+            MazeRoomUI.setModuleApis(null);
+        }
+    });
+});
+
+describe('MazeRoomUI — action queue integration (Phase 1)', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    it('constructs a MazeRoomQueue exposed as panel._mazeQueue', () => {
+        const panel = new MazeRoomUI(null, {});
+        expect(panel._mazeQueue).toBeTruthy();
+        expect(panel._mazeQueue.length).toBe(0);
+        expect(panel._mazeQueue.isIdle()).toBe(true);
+    });
+
+    it('routes move actions through _executeMoveAction', () => {
+        const panel = new MazeRoomUI(null, {});
+        const spy = vi.spyOn(panel, '_executeMoveAction').mockImplementation(() => {});
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
+        expect(spy).toHaveBeenCalledWith('N');
+    });
+
+    it('routes wait actions through _executeWaitAction', () => {
+        const panel = new MazeRoomUI(null, {});
+        const spy = vi.spyOn(panel, '_executeWaitAction').mockImplementation(() => {});
+        panel._mazeQueue.handleInput({ type: ACTION_WAIT });
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('routes locationCheck actions through _executeLocationCheckAction', () => {
+        const panel = new MazeRoomUI(null, {});
+        const spy = vi.spyOn(panel, '_executeLocationCheckAction').mockImplementation(() => {});
+        panel._mazeQueue.handleInput({
+            type: ACTION_LOCATION_CHECK,
+            locationName: 'Slay Yorgle',
+        });
+        expect(spy).toHaveBeenCalledWith('Slay Yorgle');
+    });
+
+    it('clears the queue on region adoption', () => {
+        const panel = new MazeRoomUI(null, {});
+        // Programmatic appends bypass the executor (no execution).
+        panel._mazeQueue.append({ type: ACTION_MOVE, dir: 'N' });
+        panel._mazeQueue.append({ type: ACTION_WAIT });
+        expect(panel._mazeQueue.length).toBe(2);
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({}),
+            arrivedFrom: null,
+        });
+        expect(panel._mazeQueue.length).toBe(0);
+        expect(panel._mazeQueue.executionIndex).toBe(0);
+        expect(panel._mazeQueue.editCursor).toBeNull();
+    });
+
+    it('_executeWaitAction is a no-op outside playback mode', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel.state = { player_pos: { x: 0, y: 0 }, turn: 0 };
+        // externalInventory null → not in playback mode.
+        panel.externalInventory = null;
+        // Should not throw and should not deduct mana (no gameState
+        // singleton interaction).
+        expect(() => panel._executeWaitAction()).not.toThrow();
+    });
+
+    it('_executeWaitAction deducts mana in playback mode', async () => {
+        const { createGameStateSingleton, _testOnly_resetGameStateSingleton } =
+            await import('../gameState/singleton.js');
+        _testOnly_resetGameStateSingleton();
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 100;
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            manaEnabled: true,
+            longestShortestPath: 10,
+            itemLocationNames: new Map(),
+        };
+        panel.state = { player_pos: { x: 1, y: 1 }, turn: 0 };
+        panel.currentRegionId = 'Forest';
+        panel.externalInventory = new Set();
+        panel.externalCheckedLocations = new Set();
+        panel._isLoopModeActive = false;
+        panel._costDataManager = {
+            isLoaded: () => true,
+            getRegionCost: () => 50,
+            getLocationCost: () => 10,
+        };
+        panel._executeWaitAction();
+        // Same cost as a move-onto-floor (50 / 10 = 5).
+        expect(gs.getCurrentMana()).toBe(95);
+    });
+
+    it('_executeLocationCheckAction publishes user:locationCheck in playback mode', () => {
+        const calls = [];
+        const dispatcher = {
+            publish: (event, data, opts) => calls.push({ event, data, opts }),
+        };
+        MazeRoomUI.setModuleApis({ eventBus: null, dispatcher });
+        try {
+            const panel = new MazeRoomUI(null, {});
+            panel.externalInventory = new Set();
+            panel.currentRegionId = 'Forest';
+            panel._executeLocationCheckAction('Slay Yorgle');
+            expect(calls).toHaveLength(1);
+            expect(calls[0].event).toBe('user:locationCheck');
+            expect(calls[0].data).toEqual({
+                locationName: 'Slay Yorgle',
+                regionName: 'Forest',
+            });
+        } finally {
+            MazeRoomUI.setModuleApis(null);
+        }
+    });
+
+    it('_executeLocationCheckAction no-ops outside playback mode', () => {
+        const calls = [];
+        const dispatcher = {
+            publish: (event, data, opts) => calls.push({ event, data, opts }),
+        };
+        MazeRoomUI.setModuleApis({ eventBus: null, dispatcher });
+        try {
+            const panel = new MazeRoomUI(null, {});
+            panel.externalInventory = null;
+            panel._executeLocationCheckAction('Slay Yorgle');
+            expect(calls).toEqual([]);
+        } finally {
+            MazeRoomUI.setModuleApis(null);
+        }
+    });
+
+    it('_executeLocationCheckAction no-ops with empty locationName', () => {
+        const calls = [];
+        const dispatcher = {
+            publish: (event, data, opts) => calls.push({ event, data, opts }),
+        };
+        MazeRoomUI.setModuleApis({ eventBus: null, dispatcher });
+        try {
+            const panel = new MazeRoomUI(null, {});
+            panel.externalInventory = new Set();
+            panel._executeLocationCheckAction('');
+            panel._executeLocationCheckAction(null);
+            expect(calls).toEqual([]);
         } finally {
             MazeRoomUI.setModuleApis(null);
         }
