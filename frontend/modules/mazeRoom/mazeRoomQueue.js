@@ -309,4 +309,40 @@ export class MazeRoomQueue {
             this._emit();
         }
     }
+
+    /**
+     * Advance the cursor by one without invoking the executor. Used
+     * when the action's side effects are being driven externally
+     * (e.g. the visualizer walking a loops-delegated path tile-by-
+     * tile) — the queue is then a mirror of an external execution
+     * rather than the driver. Returns true if an action was marked
+     * done, false if the queue was idle.
+     */
+    markCurrentDone() {
+        if (this.isIdle()) return false;
+        const action = this.actions[this.executionIndex];
+        action.status = STATUS_DONE;
+        this.executionIndex++;
+        this._emit();
+        return true;
+    }
+
+    /**
+     * Mark every remaining pending action as done without invoking the
+     * executor. Same external-drive context as markCurrentDone — used
+     * when a loops-delegated walk completes and the trailing
+     * locationCheck verb (or any straggler verbs) need to drain so
+     * the queue shows the full sequence as done.
+     */
+    drainPending() {
+        if (this.isIdle()) return 0;
+        let drained = 0;
+        for (let i = this.executionIndex; i < this.actions.length; i++) {
+            this.actions[i].status = STATUS_DONE;
+            drained++;
+        }
+        this.executionIndex = this.actions.length;
+        if (drained > 0) this._emit();
+        return drained;
+    }
 }

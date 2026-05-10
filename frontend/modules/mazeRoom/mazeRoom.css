@@ -597,6 +597,11 @@
     border-radius: 2px;
 }
 
+.maze-room-queue-row.is-read-only {
+    border-color: #88c8ff;
+    background: #1c2230;
+}
+
 .maze-room-queue-icon {
     width: 22px;
     height: 22px;

@@ -420,6 +420,48 @@ describe('MazeRoomQueue — stepOne', () => {
     });
 });
 
+describe('MazeRoomQueue — markCurrentDone / drainPending', () => {
+    it('markCurrentDone advances without invoking the executor', () => {
+        const executor = vi.fn();
+        const q = new MazeRoomQueue({ executor });
+        q.append({ type: ACTION_MOVE, dir: 'N' });
+        q.append({ type: ACTION_MOVE, dir: 'E' });
+        expect(q.markCurrentDone()).toBe(true);
+        expect(executor).not.toHaveBeenCalled();
+        expect(q.executionIndex).toBe(1);
+        expect(q.actions[0].status).toBe(STATUS_DONE);
+        expect(q.actions[1].status).toBe(STATUS_PENDING);
+    });
+
+    it('markCurrentDone returns false when idle', () => {
+        const q = new MazeRoomQueue();
+        expect(q.markCurrentDone()).toBe(false);
+    });
+
+    it('drainPending marks every remaining pending done without executor', () => {
+        const executor = vi.fn();
+        const q = new MazeRoomQueue({ executor });
+        q.appendAll([
+            { type: ACTION_MOVE, dir: 'N' },
+            { type: ACTION_MOVE, dir: 'E' },
+            { type: ACTION_LOCATION_CHECK, locationName: 'Slay Yorgle' },
+        ]);
+        q.markCurrentDone();
+        expect(q.drainPending()).toBe(2);
+        expect(executor).not.toHaveBeenCalled();
+        expect(q.isIdle()).toBe(true);
+        expect(q.actions.every((a) => a.status === STATUS_DONE)).toBe(true);
+    });
+
+    it('drainPending returns 0 and skips emit when idle', () => {
+        const q = new MazeRoomQueue();
+        const listener = vi.fn();
+        q.subscribe(listener);
+        expect(q.drainPending()).toBe(0);
+        expect(listener).not.toHaveBeenCalled();
+    });
+});
+
 // ---------------------------------------------------------------
 // subscribe / unsubscribe
 // ---------------------------------------------------------------

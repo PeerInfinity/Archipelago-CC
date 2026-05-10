@@ -463,6 +463,13 @@ export class MazeRoomUI {
             this._loopsDrivenAction = null;
             return;
         }
+        // Populate the maze queue with the planned action sequence
+        // so the user sees the substrate's expansion of this loops
+        // action. The queue mirrors the walk: as the visualizer
+        // ticks, _onVisualizerChange marks each move done; the
+        // trailing locationCheck verb (for location targets) drains
+        // on completion. Queue stays read-only while loops drives.
+        this._populateLoopsDrivenQueue(action, startPos, target);
         visualizer.walkToTile({ x: target.x, y: target.y, name: target.name ?? null });
         // walkToTile only plans the path; the caller is responsible
         // for starting the clock so _tick actually fires. Without
@@ -470,6 +477,69 @@ export class MazeRoomUI {
         // queue parks indefinitely. play() is idempotent when already
         // running.
         this._ensureVisualizerPlaying();
+    }
+
+    /**
+     * Compute the autopather's path from the player's current tile to
+     * `target` and load the corresponding verbs into the maze queue
+     * (move N/S/E/W per step, plus a trailing locationCheck verb for
+     * location targets). The visualizer's own pathfinder runs
+     * independently; both BFS the same world so they agree on the
+     * route in normal cases. If our path computation fails we leave
+     * the queue empty rather than guess — the walk still runs, just
+     * without queue visualization.
+     */
+    _populateLoopsDrivenQueue(action, startPos, target) {
+        if (!this._mazeQueue) return;
+        // Clear any in-flight pending — loops-driven walks own the
+        // queue while they run. (clearPending preserves done history
+        // from prior loops actions in the same region.)
+        this._mazeQueue.clearPending();
+        // findPath requires world.tiles + width/height to BFS through.
+        // Test fixtures often stub world without these, in which case
+        // we skip queue population and let the visualizer drive
+        // without a queue mirror.
+        if (!this.world?.tiles
+            || typeof this.world.width !== 'number'
+            || typeof this.world.height !== 'number') {
+            if (action.type === 'locationCheck' && action.locationName) {
+                this._mazeQueue.append({
+                    type: 'locationCheck',
+                    locationName: action.locationName,
+                });
+            }
+            return;
+        }
+        let path = null;
+        try {
+            path = findPath(
+                this.world,
+                { x: startPos.x, y: startPos.y },
+                { kind: 'tile', x: target.x, y: target.y },
+            );
+        } catch {
+            path = null;
+        }
+        if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
+            // Zero-step walk (already at target). Just add the
+            // terminal verb for location targets so the queue
+            // reflects what's about to happen.
+            if (action.type === 'locationCheck' && action.locationName) {
+                this._mazeQueue.append({
+                    type: 'locationCheck',
+                    locationName: action.locationName,
+                });
+            }
+            return;
+        }
+        const moves = stepsToActions(path.steps);
+        if (moves.length > 0) this._mazeQueue.appendAll(moves);
+        if (action.type === 'locationCheck' && action.locationName) {
+            this._mazeQueue.append({
+                type: 'locationCheck',
+                locationName: action.locationName,
+            });
+        }
     }
 
     /**
@@ -1441,6 +1511,7 @@ export class MazeRoomUI {
         // publishing completion so any re-entrant flows see we're idle.
         if (fromLoop) {
             this._recordBestPathIfBetter({ kind: 'exit', exitId: exit.exit_id });
+            this._mazeQueue?.drainPending();
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
         }
@@ -1511,6 +1582,7 @@ export class MazeRoomUI {
         // completion — the queue is targeting a different tile.
         if (fromLoopThisLocation) {
             this._recordBestPathIfBetter({ kind: 'location', locationName });
+            this._mazeQueue?.drainPending();
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
         }
@@ -1551,6 +1623,12 @@ export class MazeRoomUI {
                 this._loopsDrivenSteps.push({ x: newPos.x, y: newPos.y });
                 this._loopsDrivenCost += cost;
             }
+            // Mirror the walk into the action queue: the visualizer
+            // performed this tile-step; mark the corresponding queue
+            // verb done so the icon row drains in lockstep. No
+            // executor invocation — the side effects already happened
+            // via the visualizer.
+            this._mazeQueue?.markCurrentDone();
         }
         this._pendingFreshLocationCheck = null;
         // Fog of war: expand the seen-set on each visualizer step
@@ -1608,15 +1686,31 @@ export class MazeRoomUI {
     _chainExploreOrComplete() {
         const next = this._resolveExploreTarget();
         if (next?.alreadyComplete) {
+            this._mazeQueue?.drainPending();
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
             return;
         }
         if (!next || !this._visualizer) {
             // Defensive: treat as success rather than parking the queue.
+            this._mazeQueue?.drainPending();
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
             return;
+        }
+        // Explore chains multiple legs through the visualizer; populate
+        // the queue with the next leg's moves so the icon row shows
+        // the upcoming path. (No locationCheck terminator — explore
+        // doesn't end at a specific location.)
+        const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
+        const path = findPath(
+            this.world,
+            { x: startPos.x, y: startPos.y },
+            { kind: 'tile', x: next.x, y: next.y },
+        );
+        if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
+            const moves = stepsToActions(path.steps);
+            if (moves.length > 0) this._mazeQueue?.appendAll(moves);
         }
         this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
         this._ensureVisualizerPlaying();
@@ -1671,10 +1765,18 @@ export class MazeRoomUI {
 
         const snap = this._mazeQueue.snapshot();
         const pending = snap.actions.length - snap.executionIndex;
+        // Read-only mode: loops queue is driving the walk. User edits
+        // would race the visualizer's execution. Replay buttons hide
+        // for the same reason — can't start a replay mid-loop-walk.
+        const readOnly = !!this._loopsDrivenAction;
 
         const status = document.createElement('div');
         status.className = 'maze-room-queue-status';
-        if (snap.actions.length === 0) {
+        if (readOnly) {
+            const verb = this._loopsDrivenAction?.type ?? 'loops';
+            status.textContent
+                = `Loops driving — ${verb} (${pending} pending of ${snap.actions.length})`;
+        } else if (snap.actions.length === 0) {
             status.textContent = 'Empty — press a movement key or Space to wait.';
         } else {
             const cursorText = snap.editCursor !== null
@@ -1687,32 +1789,30 @@ export class MazeRoomUI {
         wrap.appendChild(status);
 
         const row = document.createElement('div');
-        row.className = 'maze-room-queue-row';
+        row.className = 'maze-room-queue-row'
+            + (readOnly ? ' is-read-only' : '');
         for (let i = 0; i < snap.actions.length; i++) {
-            if (snap.editCursor === i) {
+            if (!readOnly && snap.editCursor === i) {
                 row.appendChild(this._renderQueueCursor());
             }
-            row.appendChild(this._renderQueueIcon(snap.actions[i], i));
+            row.appendChild(this._renderQueueIcon(snap.actions[i], i, readOnly));
         }
-        // Cursor placed exactly at the tail (== length, not null).
-        // editCursor === null means "default tail" (no visible bar);
-        // editCursor === length means the user explicitly placed it
-        // there. They're equivalent for input behavior but rendered
-        // differently for clarity.
-        if (snap.editCursor !== null && snap.editCursor === snap.actions.length) {
+        if (!readOnly
+            && snap.editCursor !== null && snap.editCursor === snap.actions.length) {
             row.appendChild(this._renderQueueCursor());
         }
         // Trailing click region: clicking here clears the cursor.
-        // Always present so the user has somewhere to click to exit
-        // edit-cursor mode without keyboard input.
+        // Disabled (non-interactive) while loops is driving.
         const tailSlot = document.createElement('div');
         tailSlot.className = 'maze-room-queue-tail-slot';
-        tailSlot.title = 'Click to insert at tail (clear cursor)';
-        tailSlot.addEventListener('click', () => {
-            this._mazeQueue.setEditCursor(null);
-            this.render();
-            this.rootElement?.focus();
-        });
+        if (!readOnly) {
+            tailSlot.title = 'Click to insert at tail (clear cursor)';
+            tailSlot.addEventListener('click', () => {
+                this._mazeQueue.setEditCursor(null);
+                this.render();
+                this.rootElement?.focus();
+            });
+        }
         row.appendChild(tailSlot);
         wrap.appendChild(row);
 
@@ -1722,7 +1822,7 @@ export class MazeRoomUI {
         clearBtn.type = 'button';
         clearBtn.className = 'maze-room-queue-clear';
         clearBtn.textContent = 'Clear pending';
-        clearBtn.disabled = pending === 0;
+        clearBtn.disabled = readOnly || pending === 0;
         clearBtn.addEventListener('click', () => {
             this._mazeQueue.clearPending();
             this.render();
@@ -1745,8 +1845,9 @@ export class MazeRoomUI {
         wrap.appendChild(controls);
 
         // Replay buttons for each saved best-queue matching the current
-        // (region, arrivedFromExitId). Hidden when nothing's saved.
-        const replayables = this._getReplayableTargets();
+        // (region, arrivedFromExitId). Hidden when nothing's saved or
+        // when loops is driving (can't start a replay mid-walk).
+        const replayables = readOnly ? [] : this._getReplayableTargets();
         if (replayables.length > 0) {
             const replayWrap = document.createElement('div');
             replayWrap.className = 'maze-room-queue-replay';
@@ -1782,7 +1883,7 @@ export class MazeRoomUI {
         return el;
     }
 
-    _renderQueueIcon(action, index) {
+    _renderQueueIcon(action, index, readOnly = false) {
         const el = document.createElement('div');
         const isDone = action.status === 'done';
         const isNext = !isDone && index === this._mazeQueue.executionIndex;
@@ -1809,10 +1910,12 @@ export class MazeRoomUI {
         el.textContent = glyph;
         el.title = `${tooltip} (#${index}${isDone ? ', done' : ''})`;
 
-        if (!isDone) {
+        if (!isDone && !readOnly) {
             // Click sets edit cursor BEFORE this icon. Done actions
             // are non-interactive (the cursor can't enter the done
             // region anyway — setEditCursor clamps to executionIndex).
+            // Loops-driving (read-only) blocks edits to prevent
+            // racing the visualizer.
             el.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this._mazeQueue.setEditCursor(index);
@@ -2788,6 +2891,14 @@ export class MazeRoomUI {
 
     _handleKeydown(e) {
         if (!this.world || !this.state) return;
+        // While loops is driving, the queue mirrors the visualizer.
+        // Direct input would race the visualizer's execution. Swallow
+        // the keystroke so default browser behavior (e.g. spacebar
+        // scrolling) doesn't fire either.
+        if (this._loopsDrivenAction) {
+            if (e.key === 'Backspace' || KEY_MAP[e.key]) e.preventDefault();
+            return;
+        }
         // Backspace: editing op (not a queue verb). Removes the action
         // just before the cursor (or the last pending action if cursor
         // is at tail / null). No-ops in the done region.

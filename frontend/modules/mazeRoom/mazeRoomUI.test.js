@@ -1493,6 +1493,90 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
         expect(panel._directWalkLocations).toEqual([]);
     });
 
+    it('_populateLoopsDrivenQueue appends moves derived from the path', () => {
+        const panel = new MazeRoomUI(null, {});
+        // 5x1 corridor: floors (0), no walls.
+        panel.world = {
+            width: 5, height: 1, tiles: new Int8Array(5),
+            exits: new Map(), items: new Map(), itemLocationNames: new Map(),
+        };
+        panel._mazeQueue._executor = () => {};
+        panel._populateLoopsDrivenQueue(
+            { type: 'regionMove', destinationRegion: 'X' },
+            { x: 0, y: 0 },
+            { x: 4, y: 0 },
+        );
+        // 4 east moves
+        expect(panel._mazeQueue.actions.map((a) => `${a.type}:${a.dir ?? ''}`)).toEqual([
+            'move:E', 'move:E', 'move:E', 'move:E',
+        ]);
+    });
+
+    it('_populateLoopsDrivenQueue appends locationCheck terminator for location targets', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            width: 3, height: 1, tiles: new Int8Array(3),
+            exits: new Map(), items: new Map(), itemLocationNames: new Map(),
+        };
+        panel._populateLoopsDrivenQueue(
+            { type: 'locationCheck', locationName: 'Slay Yorgle' },
+            { x: 0, y: 0 },
+            { x: 2, y: 0 },
+        );
+        expect(panel._mazeQueue.actions.map((a) => `${a.type}:${a.dir ?? a.locationName ?? ''}`)).toEqual([
+            'move:E', 'move:E', 'locationCheck:Slay Yorgle',
+        ]);
+    });
+
+    it('_populateLoopsDrivenQueue skips path BFS when world lacks tiles', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map(), items: new Map(), itemLocationNames: new Map(),
+        };
+        expect(() => panel._populateLoopsDrivenQueue(
+            { type: 'regionMove' },
+            { x: 0, y: 0 },
+            { x: 1, y: 1 },
+        )).not.toThrow();
+        // No tile data → empty queue (visualizer still drives the walk).
+        expect(panel._mazeQueue.length).toBe(0);
+    });
+
+    it('_populateLoopsDrivenQueue still adds locationCheck terminator without tiles', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map(), items: new Map(), itemLocationNames: new Map(),
+        };
+        panel._populateLoopsDrivenQueue(
+            { type: 'locationCheck', locationName: 'L' },
+            { x: 0, y: 0 },
+            { x: 1, y: 1 },
+        );
+        expect(panel._mazeQueue.actions).toEqual([
+            expect.objectContaining({ type: 'locationCheck', locationName: 'L' }),
+        ]);
+    });
+
+    it('keyboard input is blocked while loops is driving', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            width: 5, height: 1, tiles: new Int8Array(5),
+            exits: new Map(), items: new Map(), itemLocationNames: new Map(),
+        };
+        panel.state = { player_pos: { x: 0, y: 0 }, turn: 0 };
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        const executor = vi.fn();
+        panel._mazeQueue._executor = executor;
+        const fakeEvent = {
+            key: 'ArrowRight',
+            preventDefault: vi.fn(),
+        };
+        panel._handleKeydown(fakeEvent);
+        expect(fakeEvent.preventDefault).toHaveBeenCalled();
+        expect(executor).not.toHaveBeenCalled();
+        expect(panel._mazeQueue.length).toBe(0);
+    });
+
     it('region adoption stops an active replay', () => {
         const gs = createGameStateSingleton(null);
         gs.recordBestPath('r|entrance|exit:e', {
