@@ -151,7 +151,9 @@ const REGION_XP_EFFECT_OPTIONS = [
 ];
 
 const DEFAULT_SCENARIO = {
-    items: { key_red: 2 },
+    // `victory` is the auto-completion-condition item — opt out by
+    // removing it from the items pool. See library.js for details.
+    items: { victory: 1, key_red: 2 },
     obstacles: { door_red: 2 },
 };
 
@@ -1446,10 +1448,17 @@ export class ProcgenPipelineUI {
                 ...(this._effectiveSubstrateMix() ? { substrateMix: this._effectiveSubstrateMix() } : {}),
             },
         });
+        // First scenario item whose lib def is `is_victory: true` with
+        // a positive count becomes the auto-completion-condition item.
+        // Opt-out: drop all such items from the scenario's item pool.
+        const victoryItemId = Object.entries(this.scenario.items)
+            .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0]
+            ?? null;
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,
             regionXpEffect: this.params.regionXpEffect ?? 'cost',
+            completionConditionItem: victoryItemId,
             procgenMetadata: {
                 driver: 'grid-growth',
                 stop_reason: stats.stopReason,

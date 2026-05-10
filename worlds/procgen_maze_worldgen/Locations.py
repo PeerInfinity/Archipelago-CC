@@ -30,6 +30,7 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
-    "region_2_1__key_red_pickup__1_3": LocationData("region_2_1", "region_2_1__key_red_pickup__1_3", 1000, False),
-    "region_2_1__key_red_pickup__2_3": LocationData("region_2_1", "region_2_1__key_red_pickup__2_3", 1001, False),
+    "region_1_0__key_red_pickup__5_5": LocationData("region_1_0", "region_1_0__key_red_pickup__5_5", 1000, False),
+    "region_1_0__key_red_pickup__2_4": LocationData("region_1_0", "region_1_0__key_red_pickup__2_4", 1001, False),
+    "region_2_0__victory_pickup__2_3": LocationData("region_2_0", "region_2_0__victory_pickup__2_3", 1002, False),
 }

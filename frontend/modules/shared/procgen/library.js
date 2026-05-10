@@ -28,6 +28,23 @@
  */
 
 export const DEFAULT_ITEMS = Object.freeze({
+    // Victory item — when present in a scenario's item pool, the
+    // grid-growth driver wires up an item-check completion condition
+    // (state.has(victory)) instead of the constant-true placeholder
+    // and ScenarioPool defers victory items until everything else has
+    // been placed, so the victory always lands in a leaf region whose
+    // access chain requires the rest of the inventory. Opt-out by
+    // removing the entry from the scenario's items pool. See
+    // `is_victory` references in scenarioPool.js / procgenPipelineUI.js.
+    victory: {
+        name: 'Victory',
+        id: 'victory',
+        classification: 'progression',
+        color: '#f5d020',
+        symbol: 'star',
+        feature: 'victory',
+        is_victory: true,
+    },
     key_red: {
         name: 'Red Key',
         id: 'key_red',

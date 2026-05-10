@@ -23,4 +23,5 @@ class ItemData:
 
 item_table: Dict[str, ItemData] = {
     "key_red": ItemData(1, ItemClassification.progression),
+    "victory": ItemData(2, ItemClassification.progression),
 }

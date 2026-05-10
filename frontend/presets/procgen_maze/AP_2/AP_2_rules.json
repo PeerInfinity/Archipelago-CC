@@ -26,61 +26,11 @@
         ],
         "locations": []
       },
-      "region_3_1": {
-        "name": "region_3_1",
-        "exits": [
-          {
-            "name": "region_3_2",
-            "connected_region": "region_3_2",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "key_blue"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "region_3_1__key_blue_pickup__1_5",
-            "id": 1000,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "key_blue",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          }
-        ]
-      },
-      "region_2_2": {
-        "name": "region_2_2",
+      "region_2_1": {
+        "name": "region_2_1",
         "exits": [
           {
             "name": "exit_0",
-            "connected_region": "region_3_2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "exit_2",
-            "connected_region": "region_2_3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "region_3_2": {
-        "name": "region_3_2",
-        "exits": [
-          {
-            "name": "exit",
             "connected_region": "region_3_1",
             "access_rule": {
               "rule": "Has",
@@ -99,10 +49,26 @@
         ],
         "locations": [
           {
-            "name": "region_3_2__key_green_pickup__2_1",
-            "id": 1001,
+            "name": "region_2_1__key_blue_pickup__4_4",
+            "id": 1000,
             "access_rule": {
               "rule": "True_"
+            },
+            "item": {
+              "name": "key_blue",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_2_1__key_green_pickup__6_0",
+            "id": 1001,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
             },
             "item": {
               "name": "key_green",
@@ -110,9 +76,26 @@
               "advancement": true,
               "type": "progression"
             }
-          },
+          }
+        ]
+      },
+      "region_3_1": {
+        "name": "region_3_1",
+        "exits": [
           {
-            "name": "region_3_2__key_blue_pickup__0_4",
+            "name": "region_2_1",
+            "connected_region": "region_2_1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_1__key_blue_pickup__2_2",
             "id": 1002,
             "access_rule": {
               "rule": "True_"
@@ -123,8 +106,41 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "region_3_1__victory_pickup__1_4",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
           }
         ]
+      },
+      "region_2_2": {
+        "name": "region_2_2",
+        "exits": [
+          {
+            "name": "exit_1",
+            "connected_region": "region_2_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_2",
+            "connected_region": "region_2_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "region_2_3": {
         "name": "region_2_3",
@@ -160,8 +176,8 @@
         ],
         "locations": [
           {
-            "name": "region_2_3__key_red_pickup__4_2",
-            "id": 1003,
+            "name": "region_2_3__key_red_pickup__4_1",
+            "id": 1004,
             "access_rule": {
               "rule": "True_"
             },
@@ -173,8 +189,8 @@
             }
           },
           {
-            "name": "region_2_3__key_green_pickup__4_1",
-            "id": 1004,
+            "name": "region_2_3__key_green_pickup__3_1",
+            "id": 1005,
             "access_rule": {
               "rule": "True_"
             },
@@ -190,16 +206,6 @@
       "region_3_3": {
         "name": "region_3_3",
         "exits": [
-          {
-            "name": "exit",
-            "connected_region": "region_3_2",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "key_red"
-              }
-            }
-          },
           {
             "name": "region_2_3",
             "connected_region": "region_2_3",
@@ -224,8 +230,8 @@
         ],
         "locations": [
           {
-            "name": "region_3_3__key_red_pickup__0_3",
-            "id": 1005,
+            "name": "region_3_3__key_red_pickup__1_3",
+            "id": 1006,
             "access_rule": {
               "rule": "True_"
             },
@@ -237,13 +243,10 @@
             }
           },
           {
-            "name": "region_3_3__key_red_pickup__0_0",
-            "id": 1006,
+            "name": "region_3_3__key_red_pickup__0_3",
+            "id": 1007,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "key_red"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "key_red",
@@ -282,9 +285,17 @@
           "Everything"
         ]
       },
+      "victory": {
+        "name": "victory",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
       "key_red": {
         "name": "key_red",
-        "id": 3,
+        "id": 4,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -301,6 +312,7 @@
     "1": {
       "key_blue": 2,
       "key_green": 2,
+      "victory": 1,
       "key_red": 3
     }
   },
@@ -314,8 +326,8 @@
   "game_info": {
     "1": {
       "completion_condition": {
-        "type": "constant",
-        "value": true
+        "type": "item_check",
+        "item": "victory"
       }
     }
   },
@@ -323,13 +335,14 @@
   "exporter": {},
   "canonical_placements": {
     "1": {
-      "region_3_1__key_blue_pickup__1_5": "key_blue",
-      "region_3_2__key_green_pickup__2_1": "key_green",
-      "region_3_2__key_blue_pickup__0_4": "key_blue",
-      "region_2_3__key_red_pickup__4_2": "key_red",
-      "region_2_3__key_green_pickup__4_1": "key_green",
-      "region_3_3__key_red_pickup__0_3": "key_red",
-      "region_3_3__key_red_pickup__0_0": "key_red"
+      "region_2_1__key_blue_pickup__4_4": "key_blue",
+      "region_2_1__key_green_pickup__6_0": "key_green",
+      "region_3_1__key_blue_pickup__2_2": "key_blue",
+      "region_3_1__victory_pickup__1_4": "victory",
+      "region_2_3__key_red_pickup__4_1": "key_red",
+      "region_2_3__key_green_pickup__3_1": "key_green",
+      "region_3_3__key_red_pickup__1_3": "key_red",
+      "region_3_3__key_red_pickup__0_3": "key_red"
     }
   },
   "progression_mapping": {
@@ -349,29 +362,29 @@
           "gy": 2
         },
         "playable_payload": {
-          "width": 9,
-          "height": 7,
-          "tiles": [1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1],
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,1,1],
           "entrance": {
             "x": 4,
             "y": 3
           },
           "exits": [
             {
-              "exit_id": "exit_0",
-              "x": 8,
-              "y": 5,
-              "side": "E",
-              "exitName": "exit_0",
-              "targetRegion": "region_3_2",
+              "exit_id": "exit_1",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_1",
+              "targetRegion": "region_2_1",
               "targetExitId": "region_2_2",
               "isBackExit": false,
               "isTeleporter": false
             },
             {
               "exit_id": "exit_2",
-              "x": 4,
-              "y": 6,
+              "x": 3,
+              "y": 5,
               "side": "S",
               "exitName": "exit_2",
               "targetRegion": "region_2_3",
@@ -383,16 +396,21 @@
           "obstacles": [],
           "items": [],
           "obstacleLib": {},
-          "itemLib": {}
+          "itemLib": {},
+          "longestShortestPath": 8,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
         },
         "grow_telemetry": {
           "requested_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "final_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "grow_attempts": 0
         }
@@ -405,18 +423,18 @@
           "gy": 3
         },
         "playable_payload": {
-          "width": 9,
-          "height": 7,
-          "tiles": [1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1],
           "entrance": {
-            "x": 4,
+            "x": 3,
             "y": 0
           },
           "exits": [
             {
               "exit_id": "exit",
-              "x": 8,
-              "y": 5,
+              "x": 7,
+              "y": 4,
               "side": "E",
               "exitName": "exit",
               "targetRegion": "region_3_3",
@@ -426,7 +444,7 @@
             },
             {
               "exit_id": "region_2_2",
-              "x": 4,
+              "x": 3,
               "y": 0,
               "side": "N",
               "exitName": "region_2_2",
@@ -438,41 +456,46 @@
           ],
           "obstacles": [
             {
-              "x": 7,
-              "y": 3,
+              "x": 6,
+              "y": 2,
               "id": "door_red"
             },
             {
-              "x": 8,
-              "y": 4,
+              "x": 7,
+              "y": 3,
               "id": "door_green"
             }
           ],
           "items": [
             {
               "x": 4,
-              "y": 2,
+              "y": 1,
               "id": "key_red",
-              "locationName": "region_2_3__key_red_pickup__4_2"
+              "locationName": "region_2_3__key_red_pickup__4_1"
             },
             {
-              "x": 4,
+              "x": 3,
               "y": 1,
               "id": "key_green",
-              "locationName": "region_2_3__key_green_pickup__4_1"
+              "locationName": "region_2_3__key_green_pickup__3_1"
             }
           ],
           "obstacleLib": {},
-          "itemLib": {}
+          "itemLib": {},
+          "longestShortestPath": 8,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
         },
         "grow_telemetry": {
           "requested_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "final_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "grow_attempts": 0
         }
@@ -485,29 +508,18 @@
           "gy": 3
         },
         "playable_payload": {
-          "width": 9,
-          "height": 7,
-          "tiles": [0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "width": 8,
+          "height": 6,
+          "tiles": [1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
             "x": 0,
-            "y": 5
+            "y": 4
           },
           "exits": [
             {
-              "exit_id": "exit",
-              "x": 1,
-              "y": 0,
-              "side": "N",
-              "exitName": "exit",
-              "targetRegion": "region_3_2",
-              "targetExitId": null,
-              "isBackExit": false,
-              "isTeleporter": false
-            },
-            {
               "exit_id": "region_2_3",
               "x": 0,
-              "y": 5,
+              "y": 4,
               "side": "W",
               "exitName": "region_2_3",
               "targetRegion": "region_2_3",
@@ -518,111 +530,121 @@
           ],
           "obstacles": [
             {
-              "x": 0,
+              "x": 1,
               "y": 2,
               "id": "door_red"
             }
           ],
           "items": [
             {
+              "x": 1,
+              "y": 3,
+              "id": "key_red",
+              "locationName": "region_3_3__key_red_pickup__1_3"
+            },
+            {
               "x": 0,
               "y": 3,
               "id": "key_red",
               "locationName": "region_3_3__key_red_pickup__0_3"
-            },
-            {
-              "x": 0,
-              "y": 0,
-              "id": "key_red",
-              "locationName": "region_3_3__key_red_pickup__0_0"
             }
           ],
           "obstacleLib": {},
-          "itemLib": {}
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
         },
         "grow_telemetry": {
           "requested_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "final_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "grow_attempts": 0
         }
       },
-      "region_3_2": {
+      "region_2_1": {
         "substrate": "maze",
         "render_hint": "maze",
         "grid_cell": {
-          "gx": 3,
-          "gy": 2
+          "gx": 2,
+          "gy": 1
         },
         "playable_payload": {
-          "width": 9,
-          "height": 7,
-          "tiles": [1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,1,1,1],
           "entrance": {
-            "x": 0,
+            "x": 4,
             "y": 5
           },
           "exits": [
             {
-              "exit_id": "exit",
-              "x": 4,
-              "y": 0,
-              "side": "N",
-              "exitName": "exit",
+              "exit_id": "exit_0",
+              "x": 7,
+              "y": 4,
+              "side": "E",
+              "exitName": "exit_0",
               "targetRegion": "region_3_1",
-              "targetExitId": "region_3_2",
+              "targetExitId": "region_2_1",
               "isBackExit": false,
               "isTeleporter": false
             },
             {
               "exit_id": "region_2_2",
-              "x": 0,
+              "x": 4,
               "y": 5,
-              "side": "W",
+              "side": "S",
               "exitName": "region_2_2",
               "targetRegion": "region_2_2",
-              "targetExitId": "exit_0",
+              "targetExitId": "exit_1",
               "isBackExit": true,
               "isTeleporter": false
             }
           ],
           "obstacles": [
             {
-              "x": 4,
-              "y": 1,
+              "x": 6,
+              "y": 4,
               "id": "door_blue"
             }
           ],
           "items": [
             {
-              "x": 2,
-              "y": 1,
-              "id": "key_green",
-              "locationName": "region_3_2__key_green_pickup__2_1"
-            },
-            {
-              "x": 0,
+              "x": 4,
               "y": 4,
               "id": "key_blue",
-              "locationName": "region_3_2__key_blue_pickup__0_4"
+              "locationName": "region_2_1__key_blue_pickup__4_4"
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "id": "key_green",
+              "locationName": "region_2_1__key_green_pickup__6_0"
             }
           ],
           "obstacleLib": {},
-          "itemLib": {}
+          "itemLib": {},
+          "longestShortestPath": 4,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
         },
         "grow_telemetry": {
           "requested_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "final_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "grow_attempts": 0
         }
@@ -635,52 +657,63 @@
           "gy": 1
         },
         "playable_payload": {
-          "width": 9,
-          "height": 7,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,0,1,1,0,1,0,1,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
-            "x": 4,
-            "y": 6
+            "x": 0,
+            "y": 4
           },
           "exits": [
             {
-              "exit_id": "region_3_2",
-              "x": 4,
-              "y": 6,
-              "side": "S",
-              "exitName": "region_3_2",
-              "targetRegion": "region_3_2",
-              "targetExitId": "exit",
+              "exit_id": "region_2_1",
+              "x": 0,
+              "y": 4,
+              "side": "W",
+              "exitName": "region_2_1",
+              "targetRegion": "region_2_1",
+              "targetExitId": "exit_0",
               "isBackExit": true,
               "isTeleporter": false
             }
           ],
           "obstacles": [
             {
-              "x": 6,
-              "y": 6,
+              "x": 3,
+              "y": 2,
               "id": "door_blue"
             }
           ],
           "items": [
             {
-              "x": 1,
-              "y": 5,
+              "x": 2,
+              "y": 2,
               "id": "key_blue",
-              "locationName": "region_3_1__key_blue_pickup__1_5"
+              "locationName": "region_3_1__key_blue_pickup__2_2"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "id": "victory",
+              "locationName": "region_3_1__victory_pickup__1_4"
             }
           ],
           "obstacleLib": {},
-          "itemLib": {}
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
         },
         "grow_telemetry": {
           "requested_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "final_size": {
-            "width": 9,
-            "height": 7
+            "width": 8,
+            "height": 6
           },
           "grow_attempts": 0
         }
@@ -714,16 +747,15 @@
             "resolved_items": {}
           },
           "new_accessible_locations": [
-            "region_2_3__key_green_pickup__4_1",
-            "region_2_3__key_red_pickup__4_2",
-            "region_3_2__key_blue_pickup__0_4",
-            "region_3_2__key_green_pickup__2_1"
+            "region_2_1__key_blue_pickup__4_4",
+            "region_2_3__key_green_pickup__3_1",
+            "region_2_3__key_red_pickup__4_1"
           ],
           "new_accessible_regions": [
             "Menu",
+            "region_2_1",
             "region_2_2",
-            "region_2_3",
-            "region_3_2"
+            "region_2_3"
           ],
           "sphere_locations": []
         }
@@ -736,16 +768,22 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_green": 1
+              "key_blue": 1
             },
             "resolved_items": {
-              "key_green": 1
+              "key_blue": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_locations": [
+            "region_2_1__key_green_pickup__6_0",
+            "region_3_1__key_blue_pickup__2_2",
+            "region_3_1__victory_pickup__1_4"
+          ],
+          "new_accessible_regions": [
+            "region_3_1"
+          ],
           "sphere_locations": [
-            "region_2_3__key_green_pickup__4_1"
+            "region_2_1__key_blue_pickup__4_4"
           ]
         }
       }
@@ -757,21 +795,16 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_red": 1
+              "key_green": 1
             },
             "resolved_items": {
-              "key_red": 1
+              "key_green": 1
             }
           },
-          "new_accessible_locations": [
-            "region_3_3__key_red_pickup__0_0",
-            "region_3_3__key_red_pickup__0_3"
-          ],
-          "new_accessible_regions": [
-            "region_3_3"
-          ],
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
           "sphere_locations": [
-            "region_2_3__key_red_pickup__4_2"
+            "region_2_3__key_green_pickup__3_1"
           ]
         }
       }
@@ -783,41 +816,21 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_blue": 1
+              "key_red": 1
             },
             "resolved_items": {
-              "key_blue": 1
+              "key_red": 1
             }
           },
           "new_accessible_locations": [
-            "region_3_1__key_blue_pickup__1_5"
+            "region_3_3__key_red_pickup__0_3",
+            "region_3_3__key_red_pickup__1_3"
           ],
           "new_accessible_regions": [
-            "region_3_1"
+            "region_3_3"
           ],
           "sphere_locations": [
-            "region_3_2__key_blue_pickup__0_4"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.4",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "key_green": 1
-            },
-            "resolved_items": {
-              "key_green": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_3_2__key_green_pickup__2_1"
+            "region_2_3__key_red_pickup__4_1"
           ]
         }
       }
@@ -829,16 +842,16 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_blue": 1
+              "key_green": 1
             },
             "resolved_items": {
-              "key_blue": 1
+              "key_green": 1
             }
           },
           "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
-            "region_3_1__key_blue_pickup__1_5"
+            "region_2_1__key_green_pickup__6_0"
           ]
         }
       }
@@ -850,16 +863,16 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_red": 1
+              "key_blue": 1
             },
             "resolved_items": {
-              "key_red": 1
+              "key_blue": 1
             }
           },
           "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
-            "region_3_3__key_red_pickup__0_0"
+            "region_3_1__key_blue_pickup__2_2"
           ]
         }
       }
@@ -867,6 +880,27 @@
     {
       "type": "state_update",
       "sphere_index": "1.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "victory": 1
+            },
+            "resolved_items": {
+              "victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_3_1__victory_pickup__1_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -881,6 +915,27 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "region_3_3__key_red_pickup__0_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_3_3__key_red_pickup__1_3"
           ]
         }
       }

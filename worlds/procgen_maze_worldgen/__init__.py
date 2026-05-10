@@ -24,6 +24,7 @@ from .Rules import set_rules
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
     "key_red": 2,
+    "victory": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
@@ -41,7 +42,16 @@ class ProcgenMazeWorldGenWeb(WebWorld):
     """Web interface for Procgen Maze WorldGen."""
     theme = "ocean"
     game_info_languages: List[str] = ['en']
-    tutorials = []
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Procgen Maze WorldGen world for Archipelago.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Auto-generated"]
+        )
+    ]
 
 
 class ProcgenMazeWorld(RuleWorldMixin, World):
@@ -74,7 +84,7 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["key_red"]),
+        "Everything": frozenset(["key_red", "victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -83,22 +93,25 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "region_2_1__key_red_pickup__1_3": "key_red",
-        "region_2_1__key_red_pickup__2_3": "key_red",
+        "region_1_0__key_red_pickup__2_4": "key_red",
+        "region_1_0__key_red_pickup__5_5": "key_red",
+        "region_2_0__victory_pickup__2_3": "victory",
     }
 
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
-        "region_2_1__key_red_pickup__1_3": "key_red",
-        "region_2_1__key_red_pickup__2_3": "key_red",
+        "region_1_0__key_red_pickup__5_5": "key_red",
+        "region_1_0__key_red_pickup__2_4": "key_red",
+        "region_2_0__victory_pickup__2_3": "victory",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "region_2_1__key_red_pickup__1_3": True,
-        "region_2_1__key_red_pickup__2_3": True,
+        "region_1_0__key_red_pickup__5_5": True,
+        "region_1_0__key_red_pickup__2_4": True,
+        "region_2_0__victory_pickup__2_3": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -256,6 +269,11 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("victory", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

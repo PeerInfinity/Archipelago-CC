@@ -9946,7 +9946,8 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
-        "is_canonical": true
+        "is_canonical": true,
+        "has_procgen_data": true
       }
     }
   },

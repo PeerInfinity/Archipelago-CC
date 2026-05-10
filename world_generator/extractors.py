@@ -492,6 +492,19 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
         'dynamically_added', 'shop', 'dungeon'
     }
 
+    # Pre-pass: count how many regions emit each raw exit name. Exit
+    # names are region-scoped per the rules.json schema, but AP's
+    # multiworld.get_entrance(name, player) is a global lookup — two
+    # regions emitting the same name (e.g. procgen's `exit_1`) would
+    # silently overwrite each other downstream. Names that collide
+    # globally get prefixed with `<source_region>__`; unique names
+    # pass through unchanged so existing world output is undisturbed.
+    raw_exit_name_counts: Dict[str, int] = {}
+    for region_info in regions_data.values():
+        for exit_info in region_info.get('exits', []):
+            raw = exit_info.get('name', '')
+            raw_exit_name_counts[raw] = raw_exit_name_counts.get(raw, 0) + 1
+
     for region_name, region_info in regions_data.items():
         location_names = [loc.get('name', '') for loc in region_info.get('locations', [])]
         exit_names = [exit_info.get('name', '') for exit_info in region_info.get('exits', [])]
@@ -524,9 +537,14 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
 
         # Extract exits
         for exit_info in region_info.get('exits', []):
-            exit_name = exit_info.get('name', '')
-            exits[exit_name] = ExitData(
-                name=exit_name,
+            raw_name = exit_info.get('name', '')
+            unique_name = (
+                f"{region_name}__{raw_name}"
+                if raw_exit_name_counts.get(raw_name, 0) > 1
+                else raw_name
+            )
+            exits[unique_name] = ExitData(
+                name=unique_name,
                 source_region=region_name,
                 target_region=exit_info.get('connected_region', ''),
                 access_rule=exit_info.get('access_rule'),

@@ -1693,6 +1693,13 @@ export function buildRulesJson(grid, opts = {}) {
         // any region — APCalc has these). Default empty.
         startingItems = [],
         sourceItems = null,
+        // When set to an item name, overwrite the scaffold's default
+        // constant-true completion_condition with an item_check on
+        // this item (state.has(itemName) at runtime). Grid-growth
+        // passes the scenario's victory item here so the generated
+        // worldgen package satisfies AP's test_completion_condition.
+        // Top-down leaves this null and inherits the scaffold default.
+        completionConditionItem = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -1711,6 +1718,13 @@ export function buildRulesJson(grid, opts = {}) {
         // Menu connects to with an unconditional exit.
         startRegions: ['Menu'],
     });
+
+    if (completionConditionItem) {
+        scaffold.game_info[playerId].completion_condition = {
+            type: 'item_check',
+            item: completionConditionItem,
+        };
+    }
 
     // Synthetic Menu region prefixed in front of compiled regions.
     // Object-literal insertion order is preserved in JSON output, so

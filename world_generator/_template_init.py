@@ -960,10 +960,13 @@ class _ShopWrapper:
     # Build web theme
     web_theme = data.metadata.web_theme or "ocean"
 
-    # Build tutorials content
-    tutorials_content = "[]"
+    # Build tutorials content. WebHost's test_has_tutorial requires
+    # every non-hidden world to declare at least one Tutorial whose
+    # file_name exists on disk; when the rules.json supplies no
+    # web_tutorials, fall back to a single default entry pointing at
+    # setup_en.md, which generator.py always writes.
+    tutorial_entries = []
     if data.metadata.web_tutorials:
-        tutorial_entries = []
         for t in data.metadata.web_tutorials:
             name_escaped = t.name.replace('\\', '\\\\').replace('"', '\\"')
             desc_escaped = t.description.replace('\\', '\\\\').replace('"', '\\"')
@@ -981,8 +984,19 @@ class _ShopWrapper:
                 f'            [{authors_list}]\n'
                 f'        )'
             )
-        if tutorial_entries:
-            tutorials_content = "[\n" + ",\n".join(tutorial_entries) + "\n    ]"
+    if not tutorial_entries:
+        game_name_escaped = game_name.replace('\\', '\\\\').replace('"', '\\"')
+        tutorial_entries.append(
+            f'        Tutorial(\n'
+            f'            "Multiworld Setup Guide",\n'
+            f'            "A guide to setting up the {game_name_escaped} world for Archipelago.",\n'
+            f'            "English",\n'
+            f'            "setup_en.md",\n'
+            f'            "setup/en",\n'
+            f'            ["Auto-generated"]\n'
+            f'        )'
+        )
+    tutorials_content = "[\n" + ",\n".join(tutorial_entries) + "\n    ]"
 
     # Build world docstring
     if data.metadata.world_description:

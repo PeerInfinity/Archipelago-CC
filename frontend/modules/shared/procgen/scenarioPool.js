@@ -74,15 +74,28 @@ export class ScenarioPool {
         }
 
         // Flatten unplaced items into a multiset we can sample from.
+        // Victory items (lib def has `is_victory: true`) are kept in a
+        // separate pool and only sampled once the regular pool is empty
+        // — the grid-growth driver places one item per region in BFS
+        // order, so deferring victory until everything else is placed
+        // lands the victory in a leaf region whose access chain
+        // requires the rest of the inventory. See library.js comment
+        // on the `victory` entry.
         const pool = [];
+        const victoryPool = [];
         for (const [id, count] of Object.entries(this.items)) {
-            for (let i = 0; i < count; i++) pool.push(id);
+            const isVictory = !!this.itemLib?.[id]?.is_victory;
+            for (let i = 0; i < count; i++) {
+                (isVictory ? victoryPool : pool).push(id);
+            }
         }
 
         const picked_items = [];
-        for (let i = 0; i < maxItems && pool.length > 0; i++) {
-            const idx = Math.floor(rng.next() * pool.length);
-            picked_items.push(pool.splice(idx, 1)[0]);
+        for (let i = 0; i < maxItems; i++) {
+            const source = pool.length > 0 ? pool : victoryPool;
+            if (source.length === 0) break;
+            const idx = Math.floor(rng.next() * source.length);
+            picked_items.push(source.splice(idx, 1)[0]);
         }
 
         // Pair items with one matching obstacle each, where available.

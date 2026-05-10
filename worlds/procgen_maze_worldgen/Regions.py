@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "region_1_1", "region_2_1"]
+    region_names = ["Menu", "region_1_0", "region_2_0", "region_1_1"]
 
     regions = {}
     for region_name in region_names:
@@ -52,7 +52,10 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["region_1_1"], "GameStart")
-    _create_entrance(regions["region_1_1"], regions["region_2_1"], "exit")
+    _create_entrance(regions["region_1_0"], regions["region_2_0"], "region_1_0__exit_1")
+    _create_entrance(regions["region_1_0"], regions["region_1_1"], "region_1_1")
+    _create_entrance(regions["region_2_0"], regions["region_1_0"], "region_1_0")
+    _create_entrance(regions["region_1_1"], regions["region_1_0"], "region_1_1__exit_1")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

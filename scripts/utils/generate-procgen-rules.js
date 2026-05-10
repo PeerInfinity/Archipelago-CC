@@ -39,7 +39,7 @@ const DEFAULTS = {
     walkerTrials: 15,
     maxItemsPerRegion: 2,
     maxRegions: null,
-    items: { key_red: 2 },
+    items: { victory: 1, key_red: 2 },
     obstacles: { door_red: 2 },
     out: null,  // Resolved below to frontend/downloads/AP_<seed>_rules.json
 };
@@ -152,6 +152,10 @@ async function main() {
     );
     await import(mazeLibPath);
     const { growMaze, buildRulesJson, stringifyRulesJson } = await import(enginePath);
+    const libPath = path.join(
+        PROJECT_ROOT, 'frontend', 'modules', 'shared', 'procgen', 'library.js',
+    );
+    const { DEFAULT_ITEMS } = await import(libPath);
 
     console.log('generate-procgen-rules:');
     console.log(`  seed                  = ${args.seed}`);
@@ -181,12 +185,21 @@ async function main() {
         },
     });
 
+    // Mirror _runGridGrowth: first scenario item whose lib def is
+    // `is_victory: true` with a positive count becomes the auto-
+    // completion-condition item. Opt-out: drop all such items from
+    // --items (or set their count to 0).
+    const victoryItemId = Object.entries(args.items)
+        .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0]
+        ?? null;
+
     const rulesJson = buildRulesJson(grid, {
         startCell, seed: args.seed,
         // Match the procgen pipeline panel's _runGridGrowth shape so the
         // staged rules.json carries procgen_metadata for the Presets
         // panel's procgen stats block. Per-region grow_telemetry rides
         // along automatically (buildPresetSidecars passes it through).
+        completionConditionItem: victoryItemId,
         procgenMetadata: {
             driver: 'grid-growth',
             stop_reason: stats.stopReason,

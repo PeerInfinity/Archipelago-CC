@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Procgen Maze WorldGen
-Location Count:                  2
+Location Count:                  3
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     
@@ -22,8 +22,9 @@ Use Canonical Options:           Yes
 
 Locations:
 
-region_2_1__key_red_pickup__1_3: key_red
-region_2_1__key_red_pickup__2_3: key_red
+region_1_0__key_red_pickup__5_5: key_red
+region_1_0__key_red_pickup__2_4: key_red
+region_2_0__victory_pickup__2_3: victory
 
 Playthrough:
 
@@ -31,6 +32,9 @@ Playthrough:
 
 }
 1: {
-  region_2_1__key_red_pickup__1_3: key_red
-  region_2_1__key_red_pickup__2_3: key_red
+  region_1_0__key_red_pickup__5_5: key_red
+  region_2_0__victory_pickup__2_3: victory
+}
+2: {
+  region_1_0__key_red_pickup__2_4: key_red
 }
