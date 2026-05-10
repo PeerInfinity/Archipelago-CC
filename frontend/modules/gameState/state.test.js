@@ -209,73 +209,129 @@ describe('GameState — loop-mode resource API', () => {
     });
   });
 
-  describe('best-path persistence (Phase 5)', () => {
+  describe('best-path persistence', () => {
+    function makeValue({
+      actions = [{ type: 'move', dir: 'E' }],
+      totalCost = 5,
+      itemsPickedUp = [],
+      locationsChecked = [],
+    } = {}) {
+      return { actions, totalCost, itemsPickedUp, locationsChecked };
+    }
+
     it('starts with no best paths', () => {
       expect(gs.bestPaths.size).toBe(0);
       expect(gs.getBestPath('any')).toBeNull();
     });
 
     it('records a new path on first call', () => {
-      const ok = gs.recordBestPath('Forest|in|out', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 5);
+      const ok = gs.recordBestPath('Forest|in|out', makeValue({
+        actions: [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'N' }],
+        totalCost: 5,
+        itemsPickedUp: ['sword'],
+        locationsChecked: ['Slay Yorgle'],
+      }));
       expect(ok).toBe(true);
       const stored = gs.getBestPath('Forest|in|out');
-      expect(stored).toEqual({ steps: [{ x: 0, y: 0 }, { x: 1, y: 0 }], cost: 5 });
+      expect(stored).toEqual({
+        actions: [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'N' }],
+        totalCost: 5,
+        itemsPickedUp: ['sword'],
+        locationsChecked: ['Slay Yorgle'],
+      });
     });
 
-    it('replaces only when the new cost is strictly lower', () => {
-      gs.recordBestPath('k', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 10);
-      // equal cost — not replaced
-      expect(gs.recordBestPath('k', [{ x: 5, y: 5 }], 10)).toBe(false);
-      expect(gs.getBestPath('k').cost).toBe(10);
-      // higher cost — not replaced
-      expect(gs.recordBestPath('k', [{ x: 6, y: 6 }], 11)).toBe(false);
-      expect(gs.getBestPath('k').cost).toBe(10);
-      // lower cost — replaced
-      expect(gs.recordBestPath('k', [{ x: 7, y: 7 }], 9)).toBe(true);
-      expect(gs.getBestPath('k')).toEqual({ steps: [{ x: 7, y: 7 }], cost: 9 });
+    it('replaces only when the new totalCost is strictly lower', () => {
+      gs.recordBestPath('k', makeValue({ totalCost: 10 }));
+      expect(gs.recordBestPath('k', makeValue({ totalCost: 10 }))).toBe(false);
+      expect(gs.getBestPath('k').totalCost).toBe(10);
+      expect(gs.recordBestPath('k', makeValue({ totalCost: 11 }))).toBe(false);
+      expect(gs.getBestPath('k').totalCost).toBe(10);
+      const replaced = gs.recordBestPath('k', makeValue({
+        actions: [{ type: 'wait' }], totalCost: 9,
+      }));
+      expect(replaced).toBe(true);
+      expect(gs.getBestPath('k').totalCost).toBe(9);
+      expect(gs.getBestPath('k').actions).toEqual([{ type: 'wait' }]);
     });
 
-    it('stores a defensive copy of steps (caller mutation does not affect storage)', () => {
-      const steps = [{ x: 0, y: 0 }, { x: 1, y: 0 }];
-      gs.recordBestPath('k', steps, 5);
-      steps.push({ x: 99, y: 99 }); // mutate caller's array
-      expect(gs.getBestPath('k').steps).toEqual([{ x: 0, y: 0 }, { x: 1, y: 0 }]);
+    it('strips id / status from stored actions (Cavernous strip-progress convention)', () => {
+      gs.recordBestPath('k', makeValue({
+        actions: [
+          { id: 7, type: 'move', dir: 'E', status: 'done' },
+          { id: 8, type: 'wait', status: 'pending' },
+        ],
+        totalCost: 1,
+      }));
+      const stored = gs.getBestPath('k');
+      expect(stored.actions).toEqual([
+        { type: 'move', dir: 'E' },
+        { type: 'wait' },
+      ]);
+    });
+
+    it('stores a defensive copy of itemsPickedUp / locationsChecked', () => {
+      const items = ['key'];
+      const locs = ['Loc A'];
+      gs.recordBestPath('k', makeValue({
+        totalCost: 5, itemsPickedUp: items, locationsChecked: locs,
+      }));
+      items.push('extra');
+      locs.push('extra-loc');
+      expect(gs.getBestPath('k').itemsPickedUp).toEqual(['key']);
+      expect(gs.getBestPath('k').locationsChecked).toEqual(['Loc A']);
     });
 
     it('rejects malformed input', () => {
-      expect(gs.recordBestPath(123, [], 5)).toBe(false);
-      expect(gs.recordBestPath('k', 'nope', 5)).toBe(false);
-      expect(gs.recordBestPath('k', [], '5')).toBe(false);
+      expect(gs.recordBestPath(123, makeValue())).toBe(false);
+      expect(gs.recordBestPath('k', null)).toBe(false);
+      expect(gs.recordBestPath('k', { totalCost: 5 })).toBe(false); // no actions
+      expect(gs.recordBestPath('k', { actions: [] })).toBe(false); // no totalCost
+      expect(gs.recordBestPath('k', { actions: 'nope', totalCost: 5 })).toBe(false);
       expect(gs.bestPaths.size).toBe(0);
     });
 
     it('clearBestPaths empties the map', () => {
-      gs.recordBestPath('a', [{ x: 0, y: 0 }], 1);
-      gs.recordBestPath('b', [{ x: 0, y: 0 }], 2);
+      gs.recordBestPath('a', makeValue({ totalCost: 1 }));
+      gs.recordBestPath('b', makeValue({ totalCost: 2 }));
       gs.clearBestPaths();
       expect(gs.bestPaths.size).toBe(0);
     });
 
     it('reset() clears best paths', () => {
       gs.setStartRegions(['Menu']);
-      gs.recordBestPath('a', [{ x: 0, y: 0 }], 1);
+      gs.recordBestPath('a', makeValue({ totalCost: 1 }));
       gs.reset();
       expect(gs.bestPaths.size).toBe(0);
     });
 
     it('round-trips through serialize / deserialize', () => {
       gs.setStartRegions(['Menu']);
-      gs.recordBestPath('Forest|in|out', [{ x: 0, y: 0 }, { x: 1, y: 1 }], 7);
-      gs.recordBestPath('Forest|in|loc:LOC', [{ x: 0, y: 0 }, { x: 2, y: 0 }], 12);
+      gs.recordBestPath('Forest|in|out', makeValue({
+        actions: [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'N' }],
+        totalCost: 7,
+        itemsPickedUp: ['sword'],
+        locationsChecked: ['Slay Yorgle'],
+      }));
+      gs.recordBestPath('Forest|in|loc:LOC', makeValue({
+        actions: [{ type: 'move', dir: 'S' }, { type: 'wait' }],
+        totalCost: 12,
+      }));
 
       const data = gs.serialize();
       const gs2 = new GameState(makeBus());
       gs2.deserialize(data);
       expect(gs2.getBestPath('Forest|in|out')).toEqual({
-        steps: [{ x: 0, y: 0 }, { x: 1, y: 1 }], cost: 7,
+        actions: [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'N' }],
+        totalCost: 7,
+        itemsPickedUp: ['sword'],
+        locationsChecked: ['Slay Yorgle'],
       });
       expect(gs2.getBestPath('Forest|in|loc:LOC')).toEqual({
-        steps: [{ x: 0, y: 0 }, { x: 2, y: 0 }], cost: 12,
+        actions: [{ type: 'move', dir: 'S' }, { type: 'wait' }],
+        totalCost: 12,
+        itemsPickedUp: [],
+        locationsChecked: [],
       });
     });
   });
@@ -368,7 +424,12 @@ describe('GameState — loop-mode resource API', () => {
       gs.updatePath('region_1_0', 'east', 'region_0_0');
       gs.deductMana(30);
       gs.addRegionXP('region_0_0', 50);
-      gs.recordBestPath('a:b:c', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
+      gs.recordBestPath('a:b:c', {
+        actions: [{ type: 'move', dir: 'E' }],
+        totalCost: 1,
+        itemsPickedUp: [],
+        locationsChecked: [],
+      });
       bus.events.length = 0;
 
       gs.clearPath();

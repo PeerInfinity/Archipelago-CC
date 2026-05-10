@@ -258,7 +258,12 @@ describe('LoopState — clearQueue (Phase 6g)', () => {
     gs.setStartRegions(['Menu']);
     gs.deductMana(40);
     gs.addRegionXP('region_0_0', 60);
-    gs.recordBestPath('a:b:c', [{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
+    gs.recordBestPath('a:b:c', {
+      actions: [{ type: 'move', dir: 'E' }],
+      totalCost: 1,
+      itemsPickedUp: [],
+      locationsChecked: [],
+    });
 
     loopState.clearQueue();
 

@@ -39,7 +39,7 @@ import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
-import { bestPathKey, findPath } from './mazeAutopather.js';
+import { bestPathKey, findPath, stepsToActions } from './mazeAutopather.js';
 import {
     MazeRoomQueue,
     ACTION_MOVE,
@@ -232,6 +232,21 @@ export class MazeRoomUI {
         this._mazeQueue = new MazeRoomQueue({
             executor: (action) => this._executeQueueAction(action),
         });
+
+        // Replay driver state. Non-null while a saved best-queue is
+        // being replayed; holds the setInterval handle so direct input
+        // can cancel it cleanly.
+        this._replayDriver = null;
+        this._replayTickMs = 200;
+
+        // Direct-walk recording state. Populated on region entry (when
+        // manaEnabled), accumulated by the per-tile mana deduction and
+        // pickup events, consumed when the player reaches an exit or
+        // checks a location via direct keyboard play. Distinct from
+        // _loopsDrivenSteps which tracks the visualizer-driven walks.
+        this._directWalkCost = 0;
+        this._directWalkItems = [];
+        this._directWalkLocations = [];
 
         // Fog of war. When enabled, only tiles in the seen-set for
         // the current region render with their full overlays —
@@ -433,6 +448,8 @@ export class MazeRoomUI {
         this._loopsDrivenSteps = [{ x: startPos.x, y: startPos.y }];
         this._loopsDrivenCost = 0;
         this._loopsDrivenArrivedFrom = this.arrivedFromExitId;
+        this._loopsDrivenItems = [];
+        this._loopsDrivenLocations = [];
 
         // Already at the target tile? Fire the completion synchronously
         // by simulating what walkToTile would do at the destination.
@@ -469,11 +486,18 @@ export class MazeRoomUI {
     }
 
     /**
-     * Phase 6e: record the path actually walked into gameState's
-     * bestPaths if it beats the existing entry. Called on successful
-     * queue-driven walk completion (not on reset). `toRef` is the
-     * destination shape that bestPathKey understands —
+     * Record the path actually walked into gameState's bestPaths if it
+     * beats the existing entry. Called on successful queue-driven walk
+     * completion (not on reset). `toRef` is the destination shape that
+     * bestPathKey understands —
      * { kind: 'exit', exitId } or { kind: 'location', locationName }.
+     *
+     * Translates the loops-delegation walk's tile-coord sequence into
+     * the canonical action-verb shape (move N/S/E/W) so saved entries
+     * have a single format regardless of which walk path produced them.
+     * Side-effect aggregates (items picked up, locations checked) are
+     * captured from tracking state — populated during the walk via
+     * substrate's pickup callbacks.
      */
     _recordBestPathIfBetter(toRef) {
         const gs = getGameStateSingleton?.();
@@ -481,7 +505,21 @@ export class MazeRoomUI {
         if (!Array.isArray(this._loopsDrivenSteps) || this._loopsDrivenSteps.length === 0) return;
         const key = bestPathKey(this.currentRegionId, this._loopsDrivenArrivedFrom, toRef);
         if (!key) return;
-        gs.recordBestPath(key, this._loopsDrivenSteps, this._loopsDrivenCost);
+        const actions = stepsToActions(this._loopsDrivenSteps);
+        // Append the explicit terminal verb for location targets so the
+        // saved queue replays the check at arrival (exits cross
+        // naturally via _publishPlaybackEvents on tile entry).
+        if (toRef.kind === 'location' && toRef.locationName) {
+            actions.push({ type: 'locationCheck', locationName: toRef.locationName });
+        }
+        gs.recordBestPath(key, {
+            actions,
+            totalCost: this._loopsDrivenCost,
+            itemsPickedUp: Array.isArray(this._loopsDrivenItems)
+                ? [...this._loopsDrivenItems] : [],
+            locationsChecked: Array.isArray(this._loopsDrivenLocations)
+                ? [...this._loopsDrivenLocations] : [],
+        });
     }
 
     _clearLoopsDrivenTracking() {
@@ -489,6 +527,8 @@ export class MazeRoomUI {
         this._loopsDrivenSteps = null;
         this._loopsDrivenCost = 0;
         this._loopsDrivenArrivedFrom = null;
+        this._loopsDrivenItems = null;
+        this._loopsDrivenLocations = null;
     }
 
     /**
@@ -602,8 +642,8 @@ export class MazeRoomUI {
                 });
                 if (!key) continue;
                 const stored = gs.getBestPath(key);
-                if (stored && stored.cost < bestCost) {
-                    bestCost = stored.cost;
+                if (stored && stored.totalCost < bestCost) {
+                    bestCost = stored.totalCost;
                     bestByCost = exit;
                 }
             }
@@ -1023,8 +1063,15 @@ export class MazeRoomUI {
         // starts with an empty queue. Loops-driven entry will refill
         // it via Phase 6 delegation in a later phase; for now the
         // queue is keyboard-input-only and the manual-entry "empty
-        // queue" rule applies.
+        // queue" rule applies. Also stop any in-flight replay driver
+        // — its actions are for the previous region.
+        this._stopReplay?.();
         this._mazeQueue?.clearAll();
+        // Reset direct-walk tracking. Items / locations are session-
+        // scoped to the region; cost accumulates from the entrance.
+        this._directWalkCost = 0;
+        this._directWalkItems = [];
+        this._directWalkLocations = [];
         this.world = payload.world;
         this.state = createState(this.world);
         const arrivedExitId = payload.arrivedFrom?.exit_id;
@@ -1102,6 +1149,7 @@ export class MazeRoomUI {
         if (this._unsubLoopsBegan) { this._unsubLoopsBegan(); this._unsubLoopsBegan = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
+        this._stopReplay();
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); this.rootElement?.focus(); }
@@ -1436,6 +1484,20 @@ export class MazeRoomUI {
         // here means the location was genuinely fresh.
         this._pendingFreshLocationCheck = locationName;
 
+        // Track side effects of the current loops-driven walk so
+        // _recordBestPathIfBetter can stamp itemsPickedUp /
+        // locationsChecked into the bestPaths entry on completion.
+        if (this._loopsDrivenAction) {
+            if (Array.isArray(this._loopsDrivenLocations)
+                && !this._loopsDrivenLocations.includes(locationName)) {
+                this._loopsDrivenLocations.push(locationName);
+            }
+            if (itemId && Array.isArray(this._loopsDrivenItems)
+                && !this._loopsDrivenItems.includes(itemId)) {
+                this._loopsDrivenItems.push(itemId);
+            }
+        }
+
         dispatcher.publish('system:locationCheck', {
             locationName,
             regionName: regionId ?? this.currentRegionId,
@@ -1667,7 +1729,48 @@ export class MazeRoomUI {
             this.rootElement?.focus();
         });
         controls.appendChild(clearBtn);
+
+        if (this._replayDriver) {
+            const stopBtn = document.createElement('button');
+            stopBtn.type = 'button';
+            stopBtn.className = 'maze-room-queue-clear';
+            stopBtn.textContent = 'Stop replay';
+            stopBtn.addEventListener('click', () => {
+                this._stopReplay();
+                this.render();
+                this.rootElement?.focus();
+            });
+            controls.appendChild(stopBtn);
+        }
         wrap.appendChild(controls);
+
+        // Replay buttons for each saved best-queue matching the current
+        // (region, arrivedFromExitId). Hidden when nothing's saved.
+        const replayables = this._getReplayableTargets();
+        if (replayables.length > 0) {
+            const replayWrap = document.createElement('div');
+            replayWrap.className = 'maze-room-queue-replay';
+            const label = document.createElement('div');
+            label.className = 'maze-room-queue-replay-label';
+            label.textContent = 'Saved best paths from here:';
+            replayWrap.appendChild(label);
+            const replayRow = document.createElement('div');
+            replayRow.className = 'maze-room-queue-replay-buttons';
+            for (const entry of replayables) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'maze-room-queue-replay-button';
+                btn.textContent
+                    = `${entry.label}  (cost ${entry.totalCost.toFixed(1)}, ${entry.actionCount} actions)`;
+                btn.title = 'Load and play this saved queue';
+                btn.addEventListener('click', () => {
+                    this._replayBestPath(entry.key);
+                });
+                replayRow.appendChild(btn);
+            }
+            replayWrap.appendChild(replayRow);
+            wrap.appendChild(replayWrap);
+        }
 
         return wrap;
     }
@@ -2701,12 +2804,138 @@ export class MazeRoomUI {
         const spec = KEY_MAP[e.key];
         if (!spec) return;
         e.preventDefault();
+        // Cancel an active replay so direct input takes over. Pressed
+        // key still routes through the queue as normal — replay's
+        // pending tail is preserved, but the user is now in control.
+        if (this._replayDriver) {
+            this._stopReplay();
+        }
         // Route through the queue. Append-and-execute fires the
         // executor synchronously when cursor is at tail; pure insert
         // when cursor is set mid-queue. Either way the queue's state
         // is current before render().
         this._mazeQueue.handleInput(spec);
         this.render();
+    }
+
+    /**
+     * Load a saved best-queue into the maze queue and start a replay
+     * driver that calls stepOne() on a fixed clock. Saved actions are
+     * appended after any existing pending actions (which are kept) so
+     * the user's in-progress queue isn't silently destroyed. Cancels
+     * any prior replay first.
+     *
+     * @param {string} key - bestPathKey() result for the entry.
+     */
+    _replayBestPath(key) {
+        const gs = getGameStateSingleton?.();
+        if (!gs) return;
+        const stored = gs.getBestPath(key);
+        if (!stored || !Array.isArray(stored.actions) || stored.actions.length === 0) return;
+        this._stopReplay();
+        this._mazeQueue.appendAll(stored.actions);
+        this._startReplayDriver();
+        this.render();
+        this.rootElement?.focus();
+    }
+
+    _startReplayDriver() {
+        if (this._replayDriver) return;
+        const tick = () => {
+            if (this._mazeQueue.isIdle()) {
+                this._stopReplay();
+                this.render();
+                return;
+            }
+            this._mazeQueue.stepOne();
+            this.render();
+        };
+        this._replayDriver = setInterval(tick, this._replayTickMs);
+    }
+
+    _stopReplay() {
+        if (this._replayDriver) {
+            clearInterval(this._replayDriver);
+            this._replayDriver = null;
+        }
+    }
+
+    /**
+     * Collect saved best-queue entries for the current (region,
+     * arrivedFromExitId) so the UI can render replay buttons. Each
+     * entry is decoded from its key into a human-readable label —
+     * "exit: <exitName>" / "check: <locationName>". Sorted cheapest
+     * first.
+     */
+    _getReplayableTargets() {
+        const gs = getGameStateSingleton?.();
+        if (!gs || !this.currentRegionId) return [];
+        const fromPart = this.arrivedFromExitId ?? 'entrance';
+        const prefix = `${this.currentRegionId}|${fromPart}|`;
+        const out = [];
+        for (const [key, value] of gs.bestPaths.entries()) {
+            if (!key.startsWith(prefix)) continue;
+            const tail = key.substring(prefix.length);
+            let label = null;
+            if (tail.startsWith('exit:')) {
+                const exitId = tail.substring('exit:'.length);
+                const exit = this.world?.exits?.get?.(exitId);
+                const exitLabel = exit?.exitName ?? exit?.targetRegion ?? exitId;
+                label = `exit: ${exitLabel}`;
+            } else if (tail.startsWith('loc:')) {
+                label = `check: ${tail.substring('loc:'.length)}`;
+            }
+            if (label) {
+                out.push({
+                    key,
+                    label,
+                    totalCost: value.totalCost,
+                    actionCount: value.actions.length,
+                });
+            }
+        }
+        out.sort((a, b) => a.totalCost - b.totalCost);
+        return out;
+    }
+
+    /**
+     * Record the direct-keyboard walk's path-so-far into gameState's
+     * bestPaths if it beats the existing entry. Called on fresh
+     * pickup / exit cross during direct play (not loops-delegated).
+     *
+     * Uses the queue's done actions as the action sequence — every
+     * keypress that ran via append-and-execute produced exactly one
+     * done action. Skips when manaEnabled is off (cost = 0 makes
+     * "best" comparisons meaningless).
+     */
+    _recordDirectWalkIfBetter(toRef) {
+        const gs = getGameStateSingleton?.();
+        if (!gs || !this.currentRegionId) return;
+        if (!this.world?.manaEnabled) return;
+        if (this.externalInventory === null) return;
+        if (this._loopsDrivenAction) return;
+        const key = bestPathKey(this.currentRegionId, this.arrivedFromExitId, toRef);
+        if (!key) return;
+        const doneSlice = this._mazeQueue.actions.slice(0, this._mazeQueue.executionIndex);
+        if (doneSlice.length === 0) return;
+        const actions = doneSlice.map((a) => {
+            const out = { type: a.type };
+            if (a.dir !== undefined) out.dir = a.dir;
+            if (a.locationName !== undefined) out.locationName = a.locationName;
+            return out;
+        });
+        // For location targets the pickup happened as a side effect of
+        // the last move (no locationCheck verb in the done slice). Add
+        // the explicit verb so saved-queue replay reproduces the check.
+        if (toRef.kind === 'location' && toRef.locationName) {
+            actions.push({ type: 'locationCheck', locationName: toRef.locationName });
+        }
+        gs.recordBestPath(key, {
+            actions,
+            totalCost: this._directWalkCost,
+            itemsPickedUp: [...this._directWalkItems],
+            locationsChecked: [...this._directWalkLocations],
+        });
     }
 
     /**
@@ -2760,7 +2989,10 @@ export class MazeRoomUI {
             // when active). The check uses pre-event checkedLocations,
             // matching the user's spec ("moving onto a tile with an
             // unchecked location uses the location cost").
-            this._deductMazeStepMana(next.player_pos);
+            const cost = this._deductMazeStepMana(next.player_pos);
+            if (this.world?.manaEnabled && !this._loopsDrivenAction) {
+                this._directWalkCost += cost;
+            }
             this._publishPlaybackEvents(oldPos, next.player_pos);
         }
         // Fog of war: expand the seen-set with the new position's
@@ -2793,6 +3025,9 @@ export class MazeRoomUI {
         const cost = this._perTileMoveCost();
         gs.deductMana(cost);
         if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+        if (!this._loopsDrivenAction) {
+            this._directWalkCost += cost;
+        }
         if (gs.getCurrentMana() <= 0) {
             this._fireLoopReset();
         }
@@ -2842,6 +3077,18 @@ export class MazeRoomUI {
                 // (Adventure has 12 Freeincarnates) must still fire
                 // a check for THIS location.
                 if (checkedLocations.has(locationName)) continue;
+                // Track + record direct walk before publishing — the
+                // publish may trigger a region transition synchronously
+                // (rare for locationCheck, but defensive).
+                if (this.world?.manaEnabled && !this._loopsDrivenAction) {
+                    if (ev.itemId && !this._directWalkItems.includes(ev.itemId)) {
+                        this._directWalkItems.push(ev.itemId);
+                    }
+                    if (!this._directWalkLocations.includes(locationName)) {
+                        this._directWalkLocations.push(locationName);
+                    }
+                    this._recordDirectWalkIfBetter({ kind: 'location', locationName });
+                }
                 // system:locationCheck (not user:) — keyboard play
                 // and bot play both route through here; using system:
                 // avoids the Phase 2 intercept swallowing the bot's
@@ -2853,6 +3100,12 @@ export class MazeRoomUI {
             } else if (ev.type === 'exit_cross') {
                 const exit = this.world.exits.get(ev.exit_id);
                 if (!exit?.targetRegion) continue;
+                // Record direct walk to this exit BEFORE publishing —
+                // the publish triggers the region transition, which
+                // clears the queue + tracking state.
+                if (this.world?.manaEnabled && !this._loopsDrivenAction) {
+                    this._recordDirectWalkIfBetter({ kind: 'exit', exitId: ev.exit_id });
+                }
                 dispatcher.publish('user:regionMove', {
                     sourceRegion: this.currentRegionId,
                     targetRegion: exit.targetRegion,

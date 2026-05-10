@@ -41,13 +41,23 @@ export class GameState {
         this.noManaDepletionReset = false;
         this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
 
-        // Best-path persistence (Phase 5). Maps a caller-composed string
-        // key to the best-cost route discovered so far through some
-        // (region, entry, target) triple. Keys are opaque to gameState —
-        // see mazeRoomUI.bestPathKey() for the conventional shape.
+        // Best-path persistence. Maps a caller-composed string key to
+        // the best-cost route discovered so far through some (region,
+        // entry, target) triple. Keys are opaque to gameState — see
+        // mazeRoomUI.bestPathKey() for the conventional shape.
         // Persisted across loop resets within a session; cleared on
         // reset() (i.e. when a new ruleset loads).
-        this.bestPaths = new Map(); // key -> { steps, cost }
+        //
+        // Value shape (maze content modules Phase 1):
+        //   {
+        //     actions: [{type:'move',dir}, {type:'wait'}, {type:'locationCheck',locationName}, ...],
+        //     totalCost: number,
+        //     itemsPickedUp: string[],
+        //     locationsChecked: string[],
+        //   }
+        // Stored actions carry the verb data only (no id/status), per
+        // Cavernous's "strip-progress-on-save" convention.
+        this.bestPaths = new Map();
     }
 
     // -------------------- Mana API --------------------
@@ -182,15 +192,29 @@ export class GameState {
      * @param {number} cost
      * @returns {boolean} true when stored (new or improved); false otherwise
      */
-    recordBestPath(key, steps, cost) {
-        if (typeof key !== 'string' || !Array.isArray(steps)
-            || typeof cost !== 'number') return false;
+    recordBestPath(key, value) {
+        if (typeof key !== 'string' || !value || typeof value !== 'object') return false;
+        if (!Array.isArray(value.actions)) return false;
+        if (typeof value.totalCost !== 'number') return false;
         const existing = this.bestPaths.get(key);
-        if (!existing || cost < existing.cost) {
-            this.bestPaths.set(key, { steps: steps.map((s) => ({ x: s.x, y: s.y })), cost });
-            return true;
-        }
-        return false;
+        if (existing && existing.totalCost <= value.totalCost) return false;
+        // Strip ids/statuses on save (Cavernous strip-progress-on-save):
+        // stored actions are pure verb data, never live queue state.
+        const cleanActions = value.actions.map((a) => {
+            const out = { type: a.type };
+            if (a.dir !== undefined) out.dir = a.dir;
+            if (a.locationName !== undefined) out.locationName = a.locationName;
+            return out;
+        });
+        this.bestPaths.set(key, {
+            actions: cleanActions,
+            totalCost: value.totalCost,
+            itemsPickedUp: Array.isArray(value.itemsPickedUp)
+                ? [...value.itemsPickedUp] : [],
+            locationsChecked: Array.isArray(value.locationsChecked)
+                ? [...value.locationsChecked] : [],
+        });
+        return true;
     }
 
     /** Return the best-known route for `key`, or null. */
@@ -962,7 +986,13 @@ export class GameState {
             maxMana: this.maxMana,
             regionXP: Array.from(this.regionXP.entries()),
             bestPaths: Array.from(this.bestPaths.entries()).map(([k, v]) => [
-                k, { steps: v.steps.map((s) => ({ x: s.x, y: s.y })), cost: v.cost },
+                k,
+                {
+                    actions: v.actions.map((a) => ({ ...a })),
+                    totalCost: v.totalCost,
+                    itemsPickedUp: [...(v.itemsPickedUp ?? [])],
+                    locationsChecked: [...(v.locationsChecked ?? [])],
+                },
             ]),
         };
     }

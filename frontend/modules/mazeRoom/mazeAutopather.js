@@ -93,6 +93,37 @@ export function stepsToInputs(steps) {
     return out;
 }
 
+/**
+ * Convert a sequence of tile coordinates into queue action specs
+ * (move N/S/E/W). Used to translate visualizer-driven walks (loops
+ * delegation) into the same verb format the maze action queue uses,
+ * so saved best-queues have a single canonical shape regardless of
+ * which path produced them.
+ *
+ * Returns an empty array on bad input or a single-tile path. Output
+ * actions carry no id / status — those are queue-level concerns; the
+ * stored shape is just the verb list (Cavernous's strip-progress-on-
+ * save convention).
+ *
+ * @param {Array<{x:number,y:number}>} steps - 4-connected tile path
+ * @returns {Array<{type:'move',dir:'N'|'S'|'E'|'W'}>}
+ */
+export function stepsToActions(steps) {
+    if (!Array.isArray(steps) || steps.length < 2) return [];
+    const out = [];
+    for (let i = 1; i < steps.length; i++) {
+        const dx = steps[i].x - steps[i - 1].x;
+        const dy = steps[i].y - steps[i - 1].y;
+        let dir = null;
+        if (dx === 1 && dy === 0) dir = 'E';
+        else if (dx === -1 && dy === 0) dir = 'W';
+        else if (dx === 0 && dy === 1) dir = 'S';
+        else if (dx === 0 && dy === -1) dir = 'N';
+        if (dir) out.push({ type: 'move', dir });
+    }
+    return out;
+}
+
 function makeGoalPredicate(world, target, opts) {
     switch (target.kind) {
         case 'tile':

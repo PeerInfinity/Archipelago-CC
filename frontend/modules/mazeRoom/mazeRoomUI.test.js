@@ -854,8 +854,18 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
     it('_pickBestExit — prefers lowest saved best-path cost (Phase 6f)', () => {
         const gs = createGameStateSingleton(null);
         // Pre-record best paths: exit_a is cheap (10), exit_b is expensive (50).
-        gs.recordBestPath('Forest|south|exit:exit_a', [{ x: 0, y: 0 }, { x: 1, y: 1 }], 10);
-        gs.recordBestPath('Forest|south|exit:exit_b', [{ x: 0, y: 0 }, { x: 5, y: 5 }], 50);
+        gs.recordBestPath('Forest|south|exit:exit_a', {
+            actions: [{ type: 'move', dir: 'E' }],
+            totalCost: 10,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        gs.recordBestPath('Forest|south|exit:exit_b', {
+            actions: [{ type: 'move', dir: 'S' }],
+            totalCost: 50,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
 
         const panel = new MazeRoomUI(null, {});
         panel.world = { width: 10, height: 10, tiles: new Int8Array(100) };
@@ -978,7 +988,7 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(panel._shouldDeductMazeMana()).toBe(true);
     });
 
-    it('_recordBestPathIfBetter writes the walked path into gameState.bestPaths (Phase 6e)', () => {
+    it('_recordBestPathIfBetter writes the walked path as actions + aggregates', () => {
         const gs = createGameStateSingleton(null);
         const panel = new MazeRoomUI(null, {});
         panel.currentRegionId = 'Forest';
@@ -987,12 +997,37 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         ];
         panel._loopsDrivenCost = 7.5;
         panel._loopsDrivenArrivedFrom = 'south_door';
+        panel._loopsDrivenItems = ['sword'];
+        panel._loopsDrivenLocations = ['Slay Yorgle'];
         panel._recordBestPathIfBetter({ kind: 'exit', exitId: 'north_door' });
         const stored = gs.getBestPath('Forest|south_door|exit:north_door');
+        // Steps (0,0)→(0,1)→(1,1) translate to move S, move E.
         expect(stored).toEqual({
-            steps: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
-            cost: 7.5,
+            actions: [
+                { type: 'move', dir: 'S' },
+                { type: 'move', dir: 'E' },
+            ],
+            totalCost: 7.5,
+            itemsPickedUp: ['sword'],
+            locationsChecked: ['Slay Yorgle'],
         });
+    });
+
+    it('_recordBestPathIfBetter appends a locationCheck verb for location targets', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.currentRegionId = 'Forest';
+        panel._loopsDrivenSteps = [{ x: 0, y: 0 }, { x: 1, y: 0 }];
+        panel._loopsDrivenCost = 3;
+        panel._loopsDrivenArrivedFrom = 'south';
+        panel._loopsDrivenItems = [];
+        panel._loopsDrivenLocations = ['Slay Yorgle'];
+        panel._recordBestPathIfBetter({ kind: 'location', locationName: 'Slay Yorgle' });
+        const stored = gs.getBestPath('Forest|south|loc:Slay Yorgle');
+        expect(stored.actions).toEqual([
+            { type: 'move', dir: 'E' },
+            { type: 'locationCheck', locationName: 'Slay Yorgle' },
+        ]);
     });
 
     it('_recordBestPathIfBetter is a no-op without tracking state', () => {
@@ -1222,5 +1257,264 @@ describe('MazeRoomUI — action queue integration (Phase 1)', () => {
         } finally {
             MazeRoomUI.setModuleApis(null);
         }
+    });
+});
+
+describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
+    let createGameStateSingleton, _testOnly_resetGameStateSingleton;
+    beforeEach(async () => {
+        ({ createGameStateSingleton, _testOnly_resetGameStateSingleton } =
+            await import('../gameState/singleton.js'));
+        _testOnly_resetGameStateSingleton();
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    it('_getReplayableTargets returns entries matching current region + arrivedFrom', () => {
+        const gs = createGameStateSingleton(null);
+        gs.recordBestPath('Forest|south|exit:exit_a', {
+            actions: [{ type: 'move', dir: 'N' }],
+            totalCost: 5,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        gs.recordBestPath('Forest|south|loc:Slay Yorgle', {
+            actions: [{ type: 'move', dir: 'E' }, { type: 'locationCheck', locationName: 'Slay Yorgle' }],
+            totalCost: 3,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        // Wrong region — filtered out
+        gs.recordBestPath('Cave|south|exit:e', {
+            actions: [{ type: 'wait' }],
+            totalCost: 1,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        // Wrong arrivedFrom — filtered out
+        gs.recordBestPath('Forest|north|exit:exit_a', {
+            actions: [{ type: 'wait' }],
+            totalCost: 2,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map([
+                ['exit_a', { exit_id: 'exit_a', x: 0, y: 0, targetRegion: 'A', exitName: 'north_door' }],
+            ]),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+
+        const targets = panel._getReplayableTargets();
+        expect(targets).toHaveLength(2);
+        // Sorted cheapest-first
+        expect(targets[0].label).toBe('check: Slay Yorgle');
+        expect(targets[0].totalCost).toBe(3);
+        expect(targets[1].label).toBe('exit: north_door');
+        expect(targets[1].totalCost).toBe(5);
+    });
+
+    it('_getReplayableTargets uses "entrance" sentinel when arrivedFromExitId is null', () => {
+        const gs = createGameStateSingleton(null);
+        gs.recordBestPath('Forest|entrance|exit:a', {
+            actions: [{ type: 'move', dir: 'N' }],
+            totalCost: 7,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        const panel = new MazeRoomUI(null, {});
+        panel.world = {
+            exits: new Map([['a', { exit_id: 'a', x: 0, y: 0, targetRegion: 'B' }]]),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = null;
+        expect(panel._getReplayableTargets()).toHaveLength(1);
+    });
+
+    it('_replayBestPath appends the saved actions to the queue', () => {
+        const gs = createGameStateSingleton(null);
+        gs.recordBestPath('Forest|south|exit:e', {
+            actions: [
+                { type: 'move', dir: 'N' },
+                { type: 'move', dir: 'E' },
+                { type: 'wait' },
+            ],
+            totalCost: 10,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        const panel = new MazeRoomUI(null, {});
+        // Stub render so it doesn't try to write to a null rootElement.
+        panel.render = () => {};
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        // Replace executor with a tracker so we don't run the real
+        // engine.step; we only care that the queue got loaded.
+        const ran = [];
+        panel._mazeQueue._executor = (a) => ran.push(a.type);
+        panel._replayBestPath('Forest|south|exit:e');
+        // Driver is set; replay is running on an interval.
+        expect(panel._replayDriver).not.toBeNull();
+        expect(panel._mazeQueue.length).toBe(3);
+        expect(panel._mazeQueue.actions.map((a) => a.type)).toEqual([
+            'move', 'move', 'wait',
+        ]);
+        panel._stopReplay();
+    });
+
+    it('_replayBestPath no-ops on missing key', () => {
+        createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        panel._replayBestPath('nonexistent');
+        expect(panel._replayDriver).toBeNull();
+        expect(panel._mazeQueue.length).toBe(0);
+    });
+
+    it('_stopReplay clears the driver and is idempotent', () => {
+        const gs = createGameStateSingleton(null);
+        gs.recordBestPath('k', {
+            actions: [{ type: 'wait' }],
+            totalCost: 1,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        panel.currentRegionId = 'r';
+        panel.arrivedFromExitId = null;
+        // Hand-start the driver to test stop in isolation.
+        panel._mazeQueue.append({ type: ACTION_WAIT });
+        panel._startReplayDriver();
+        expect(panel._replayDriver).not.toBeNull();
+        panel._stopReplay();
+        expect(panel._replayDriver).toBeNull();
+        panel._stopReplay(); // idempotent
+        expect(panel._replayDriver).toBeNull();
+    });
+
+    it('_recordDirectWalkIfBetter saves queue done actions on direct play', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel.externalInventory = new Set();
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel._loopsDrivenAction = null;
+        panel._directWalkCost = 12.5;
+        panel._directWalkItems = ['sword'];
+        panel._directWalkLocations = [];
+        // Seed the queue's done section with three actions.
+        panel._mazeQueue._executor = () => {};
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
+        panel._mazeQueue.handleInput({ type: ACTION_WAIT });
+        panel._recordDirectWalkIfBetter({ kind: 'exit', exitId: 'north_door' });
+        const stored = gs.getBestPath('Forest|south|exit:north_door');
+        expect(stored).toEqual({
+            actions: [
+                { type: 'move', dir: 'N' },
+                { type: 'move', dir: 'E' },
+                { type: 'wait' },
+            ],
+            totalCost: 12.5,
+            itemsPickedUp: ['sword'],
+            locationsChecked: [],
+        });
+    });
+
+    it('_recordDirectWalkIfBetter skips when loops is driving (loops has its own path)', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel.externalInventory = new Set();
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        panel._directWalkCost = 5;
+        panel._mazeQueue._executor = () => {};
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
+        panel._recordDirectWalkIfBetter({ kind: 'exit', exitId: 'e' });
+        expect(gs.bestPaths.size).toBe(0);
+    });
+
+    it('_recordDirectWalkIfBetter skips when manaEnabled is off', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: false };
+        panel.externalInventory = new Set();
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel._directWalkCost = 5;
+        panel._mazeQueue._executor = () => {};
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
+        panel._recordDirectWalkIfBetter({ kind: 'exit', exitId: 'e' });
+        expect(gs.bestPaths.size).toBe(0);
+    });
+
+    it('_recordDirectWalkIfBetter appends locationCheck verb for location targets', () => {
+        const gs = createGameStateSingleton(null);
+        const panel = new MazeRoomUI(null, {});
+        panel.world = { manaEnabled: true };
+        panel.externalInventory = new Set();
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel._directWalkCost = 3;
+        panel._directWalkItems = ['sword'];
+        panel._directWalkLocations = ['Slay Yorgle'];
+        panel._mazeQueue._executor = () => {};
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
+        panel._recordDirectWalkIfBetter({ kind: 'location', locationName: 'Slay Yorgle' });
+        const stored = gs.getBestPath('Forest|south|loc:Slay Yorgle');
+        expect(stored.actions).toEqual([
+            { type: 'move', dir: 'E' },
+            { type: 'locationCheck', locationName: 'Slay Yorgle' },
+        ]);
+        expect(stored.totalCost).toBe(3);
+        expect(stored.itemsPickedUp).toEqual(['sword']);
+        expect(stored.locationsChecked).toEqual(['Slay Yorgle']);
+    });
+
+    it('region adoption resets direct-walk tracking', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel._directWalkCost = 42;
+        panel._directWalkItems = ['stale-item'];
+        panel._directWalkLocations = ['stale-loc'];
+        panel.applyLoadedRegion({
+            region_id: 'r',
+            world: makeWorld({}),
+            arrivedFrom: null,
+        });
+        expect(panel._directWalkCost).toBe(0);
+        expect(panel._directWalkItems).toEqual([]);
+        expect(panel._directWalkLocations).toEqual([]);
+    });
+
+    it('region adoption stops an active replay', () => {
+        const gs = createGameStateSingleton(null);
+        gs.recordBestPath('r|entrance|exit:e', {
+            actions: [{ type: 'wait' }, { type: 'wait' }],
+            totalCost: 2,
+            itemsPickedUp: [],
+            locationsChecked: [],
+        });
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        panel.currentRegionId = 'r';
+        panel.arrivedFromExitId = null;
+        panel._mazeQueue._executor = () => {}; // suppress side effects
+        panel._replayBestPath('r|entrance|exit:e');
+        expect(panel._replayDriver).not.toBeNull();
+        // Adopting a region clears the queue + stops the replay.
+        panel.applyLoadedRegion({
+            region_id: 'r2',
+            world: makeWorld({}),
+            arrivedFrom: null,
+        });
+        expect(panel._replayDriver).toBeNull();
+        expect(panel._mazeQueue.length).toBe(0);
     });
 });
