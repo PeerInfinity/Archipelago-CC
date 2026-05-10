@@ -47,7 +47,13 @@ UPSTREAM_WORLDS: frozenset[str] = frozenset({
     "yugioh06", "zillion",
 })
 
-collect_ignore_glob = [f"worlds/{name}/test" for name in UPSTREAM_WORLDS]
+collect_ignore_glob = [
+    pattern
+    for name in UPSTREAM_WORLDS
+    # Most upstream worlds put their tests under worlds/<name>/test/; a few
+    # (e.g. factorio) keep test_*.py at the world-package root.
+    for pattern in (f"worlds/{name}/test", f"worlds/{name}/test_*.py")
+]
 
 
 def _is_upstream_world_module(module: str) -> bool:
