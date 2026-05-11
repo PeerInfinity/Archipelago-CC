@@ -137,12 +137,26 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         );
     }
 
+    // Browser-console debug accessor, mirroring window.loops. Lets
+    // dev / smoke tests poke the panel without going through the
+    // module's exports: `mazeRoom.panel`, `mazeRoom.world`, etc.
+    if (typeof window !== 'undefined') {
+        window.mazeRoom = {
+            get panel() { return panelInstance; },
+            get world() { return panelInstance?.world; },
+            get state() { return panelInstance?.state; },
+            get queue() { return panelInstance?._mazeQueue; },
+            rerender() { panelInstance?.render(); },
+        };
+    }
+
     return () => {
         if (unsubLoadRegion) { unsubLoadRegion(); unsubLoadRegion = null; }
         panelInstance = null;
         eventBus = null;
         dispatcher = null;
         pendingLoadRegion = null;
+        if (typeof window !== 'undefined') delete window.mazeRoom;
     };
 }
 
