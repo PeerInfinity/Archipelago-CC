@@ -141,6 +141,14 @@ const DEFAULT_PARAMS = {
     // proportionally to XP level; 'speed' / 'both' are reserved for v2;
     // 'none' disables the XP discount. See Phase 7.
     regionXpEffect: 'cost',
+    // Hazard module (maze content modules Phase 2). When enabled,
+    // every region gets `count` hazards placed by hazardPathGen +
+    // applyHazardModule in the procgen pipeline. Disabled by default
+    // — existing presets stay hazard-free unless the caller opts in.
+    enableHazards: false,
+    hazardCount: 3,
+    hazardMaxConsecutiveFails: 10,
+    hazardWallOverlapAllowed: false,
 };
 
 const REGION_XP_EFFECT_OPTIONS = [
@@ -948,6 +956,31 @@ export class ProcgenPipelineUI {
         loopModeRow.appendChild(loopModeInput);
         section.appendChild(loopModeRow);
 
+        // Hazard authoring (maze content modules Phase 2e). Same row
+        // pattern as the loop-mode toggle. When enabled, a follow-up
+        // group shows count + max-fails + wall-overlap inputs. Toggle
+        // triggers re-render so the sub-fields appear / disappear in
+        // place.
+        const hazardRow = document.createElement('div');
+        hazardRow.className = 'procgen-pipeline-field';
+        const hazardLabel = document.createElement('label');
+        hazardLabel.textContent = 'Enable hazards';
+        hazardLabel.title = 'Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region';
+        const hazardInput = document.createElement('input');
+        hazardInput.type = 'checkbox';
+        hazardInput.checked = !!this.params.enableHazards;
+        hazardInput.addEventListener('change', () => {
+            this.params.enableHazards = !!hazardInput.checked;
+            this.render();
+        });
+        hazardRow.appendChild(hazardLabel);
+        hazardRow.appendChild(hazardInput);
+        section.appendChild(hazardRow);
+
+        if (this.params.enableHazards) {
+            section.appendChild(this._renderHazardSubFields());
+        }
+
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';
         const saveBtn = this._btn('Save Params', () => this._saveToLocalStorage());
@@ -1447,6 +1480,7 @@ export class ProcgenPipelineUI {
                 maxRegions: maxRegions ?? null,
                 ...(this._effectiveSubstrateMix() ? { substrateMix: this._effectiveSubstrateMix() } : {}),
             },
+            hazardOpts: this._effectiveHazardOpts(),
         });
         // First scenario item whose lib def is `is_victory: true` with
         // a positive count becomes the auto-completion-condition item.
@@ -1481,6 +1515,7 @@ export class ProcgenPipelineUI {
             regionSizeBase: { width: regionWidth, height: regionHeight },
             seed,
             ...(mix ? { substrateMix: mix } : {}),
+            hazardOpts: this._effectiveHazardOpts(),
         });
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
@@ -1550,6 +1585,87 @@ export class ProcgenPipelineUI {
         const positive = Object.entries(this.substrateMix).filter(([, w]) => w > 0);
         if (positive.length === 0) return null;
         return Object.fromEntries(positive);
+    }
+
+    /**
+     * Build the hazardOpts payload for growMaze / topDownFromRulesJson
+     * from the panel's UI state. Returns null when hazards are
+     * disabled — both engine entries treat null as "no hazards."
+     */
+    _effectiveHazardOpts() {
+        if (!this.params.enableHazards) return null;
+        const count = Math.max(0, Math.floor(this.params.hazardCount ?? 0));
+        if (count === 0) return null;
+        return {
+            enabled: true,
+            count,
+            maxConsecutiveFails: Math.max(1, Math.floor(this.params.hazardMaxConsecutiveFails ?? 10)),
+            wallOverlapAllowed: !!this.params.hazardWallOverlapAllowed,
+        };
+    }
+
+    /**
+     * Sub-fields rendered when enableHazards is on. Three controls:
+     * count per region, max consecutive placement failures before
+     * stopping, and wall-overlap toggle. Collected inside a single
+     * container so the parent renderer can show/hide them as a unit.
+     */
+    _renderHazardSubFields() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-hazard-fields';
+
+        const countRow = document.createElement('div');
+        countRow.className = 'procgen-pipeline-field';
+        const countLabel = document.createElement('label');
+        countLabel.textContent = 'Hazards per region';
+        countLabel.title = 'Target hazard count for each region (0 disables)';
+        const countInput = document.createElement('input');
+        countInput.type = 'number';
+        countInput.min = '0';
+        countInput.step = '1';
+        countInput.value = String(this.params.hazardCount ?? 0);
+        countInput.addEventListener('change', () => {
+            const v = Math.max(0, Math.floor(Number(countInput.value) || 0));
+            this.params.hazardCount = v;
+        });
+        countRow.appendChild(countLabel);
+        countRow.appendChild(countInput);
+        wrap.appendChild(countRow);
+
+        const failRow = document.createElement('div');
+        failRow.className = 'procgen-pipeline-field';
+        const failLabel = document.createElement('label');
+        failLabel.textContent = 'Max consecutive fails';
+        failLabel.title = 'Stop early after this many failed placement attempts in a row';
+        const failInput = document.createElement('input');
+        failInput.type = 'number';
+        failInput.min = '1';
+        failInput.step = '1';
+        failInput.value = String(this.params.hazardMaxConsecutiveFails ?? 10);
+        failInput.addEventListener('change', () => {
+            const v = Math.max(1, Math.floor(Number(failInput.value) || 1));
+            this.params.hazardMaxConsecutiveFails = v;
+        });
+        failRow.appendChild(failLabel);
+        failRow.appendChild(failInput);
+        wrap.appendChild(failRow);
+
+        const overlapRow = document.createElement('div');
+        overlapRow.className = 'procgen-pipeline-field';
+        const overlapLabel = document.createElement('label');
+        overlapLabel.textContent = 'Allow wall overlap';
+        overlapLabel.title = 'Hazard paths may include wall tiles (still must contain ≥1 floor tile)';
+        const overlapInput = document.createElement('input');
+        overlapInput.type = 'checkbox';
+        overlapInput.checked = !!this.params.hazardWallOverlapAllowed;
+        overlapInput.addEventListener('change', () => {
+            this.params.hazardWallOverlapAllowed = !!overlapInput.checked;
+        });
+        overlapRow.appendChild(overlapLabel);
+        overlapRow.appendChild(overlapInput);
+        wrap.appendChild(overlapRow);
+
+        return wrap;
     }
 
     _saveToLocalStorage() {
