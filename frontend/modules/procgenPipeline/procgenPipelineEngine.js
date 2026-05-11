@@ -23,6 +23,7 @@ import {
     mirrorTileAcrossSide,
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -427,6 +428,7 @@ function buildSubstrateRegion({
     rng,
     params,
     biome = null,
+    hazardOpts = null,
 }) {
     const adapter = getAdapter(substrate);
     const core = adapter.generateRegionCore({
@@ -448,6 +450,10 @@ function buildSubstrateRegion({
         params,
     });
     const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: region_id });
+    // Content module pass: stamp hazards onto the world after the
+    // base maze + obstacle layout is done. No-op when no hazards are
+    // requested or when the substrate isn't 'maze'.
+    if (substrate === 'maze') applyHazardModule(core.world, hazardOpts, rng);
     return {
         substrate,
         region_id,
@@ -462,6 +468,34 @@ function buildSubstrateRegion({
         biome: core.biome ?? null,
         grow_telemetry: core.grow_telemetry ?? null,
     };
+}
+
+/**
+ * Run the hazard content module's `generate` pass on a freshly-built
+ * world. Mutates world.hazards in place when hazards land; no-op
+ * otherwise. Gated on hazardOpts.enabled to keep existing presets
+ * cost-free unless the caller opts in.
+ *
+ * @param {object} world - target world (must have width/height/tiles)
+ * @param {object|null} hazardOpts
+ * @param {boolean} hazardOpts.enabled
+ * @param {number} [hazardOpts.count] - target hazard count per region (0)
+ * @param {number} [hazardOpts.maxConsecutiveFails]
+ * @param {boolean} [hazardOpts.wallOverlapAllowed]
+ * @param {{next:()=>number}} rng
+ */
+function applyHazardModule(world, hazardOpts, rng) {
+    if (!hazardOpts || !hazardOpts.enabled) return;
+    const count = Math.max(0, Math.floor(hazardOpts.count ?? 0));
+    if (count === 0) return;
+    const result = generateHazards(world, {
+        count,
+        maxConsecutiveFails: hazardOpts.maxConsecutiveFails ?? 10,
+        wallOverlapAllowed: !!hazardOpts.wallOverlapAllowed,
+    }, rng);
+    if (result.hazards.length > 0) {
+        world.hazards = result.hazards.map((h) => ({ ...h, phase: 0 }));
+    }
 }
 
 // --- Growth loop ---
@@ -488,6 +522,9 @@ export function growMaze(config) {
         seed = 1,
         regionParams = {},
         growthParams = {},
+        // Content-module options. Passed through to buildSubstrateRegion
+        // — null disables. See applyHazardModule for the option shape.
+        hazardOpts = null,
     } = config;
 
     if (!gridDims || !gridDims.width || !gridDims.height) {
@@ -553,6 +590,7 @@ export function growMaze(config) {
         items_to_place: [],
         obstacles_to_place: [],            // start region — no obstacles
         itemLib, obstacleLib, rng, params: regionParams,
+        hazardOpts,
     });
     grid.placeRegion(startCell, startRegion);
     pool.markPlaced({
@@ -647,6 +685,7 @@ export function growMaze(config) {
             items_to_place: plan.items_to_place,
             obstacles_to_place: plan.obstacles_to_place,
             itemLib, obstacleLib, rng, params: regionParams,
+            hazardOpts,
         });
 
         grid.placeRegion(childCell, region);
@@ -874,6 +913,10 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // (if rules.json carries one), otherwise to the substrate
         // default. v1 callers don't pass this; future commits will.
         biomeByRegion,
+        // Content-module options (maze content modules Phase 2e).
+        // Same shape as growMaze's hazardOpts; see applyHazardModule.
+        // null disables.
+        hazardOpts = null,
     } = opts;
 
     const rng = createRng(seed);
@@ -1155,6 +1198,11 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
                 tile_position: placed.tile_position,
             });
         }
+
+        // Content-module pass: place hazards on the freshly-built
+        // world. No-op when hazardOpts is null/disabled or substrate
+        // isn't 'maze'.
+        if (substrateId === 'maze') applyHazardModule(core.world, hazardOpts, rng);
 
         // Mutate the stub in place — Grid doesn't have a replaceRegion
         // method and placeRegion would throw on the second call.
@@ -1553,6 +1601,19 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
     // ignores it when manaEnabled is off.
     const longestShortestPath = computeLongestShortestPath(world);
 
+    // Hazards (Phase 2). Each entry is the IMMUTABLE shape — the
+    // runtime initializes phase to 0 in deserializeMazeWorld. Stored
+    // entries strip phase + any other mutable runtime state per the
+    // strip-progress-on-save convention.
+    const hazardsOut = Array.isArray(world.hazards) && world.hazards.length > 0
+        ? world.hazards.map((h) => ({
+            shape: h.shape,
+            length: h.length,
+            tiles: h.tiles.map((t) => ({ x: t.x, y: t.y })),
+            cycleLength: h.cycleLength,
+        }))
+        : null;
+
     return {
         width: world.width,
         height: world.height,
@@ -1564,6 +1625,7 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         obstacleLib: obstacleLibExtras,
         itemLib: itemLibExtras,
         longestShortestPath,
+        ...(hazardsOut ? { hazards: hazardsOut } : {}),
     };
 }
 

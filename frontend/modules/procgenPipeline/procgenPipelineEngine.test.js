@@ -1047,6 +1047,127 @@ describe('buildPresetSidecars', () => {
         }
     });
 
+    it('omits hazards field when world.hazards is absent (no-hazard regions)', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        for (const side of Object.values(sidecars['1'])) {
+            expect(side.playable_payload.hazards).toBeUndefined();
+        }
+    });
+
+    it('serializes hazards on world.hazards into the sidecar (strip-progress)', () => {
+        const { grid } = smallGrid();
+        // Stamp a fake hazard onto one region's playable_payload to
+        // simulate what applyHazardModule does during generation.
+        const region = grid.allRegions()[0];
+        region.playable_payload.hazards = [{
+            shape: 'linear',
+            length: 3,
+            tiles: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+            cycleLength: 4,
+            phase: 2, // intentionally non-zero; serializer strips it
+        }];
+        const sidecars = buildPresetSidecars(grid);
+        const payload = sidecars['1'][region.region_id].playable_payload;
+        expect(payload.hazards).toEqual([{
+            shape: 'linear',
+            length: 3,
+            tiles: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+            cycleLength: 4,
+        }]);
+        // Phase must NOT be in the sidecar (runtime-only field).
+        expect(payload.hazards[0].phase).toBeUndefined();
+    });
+
+    it('deserializeMazeWorld initializes hazard phases to 0 on load', () => {
+        const { grid } = smallGrid();
+        const region = grid.allRegions()[0];
+        region.playable_payload.hazards = [{
+            shape: 'loop',
+            length: 4,
+            tiles: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 2, y: 2 }, { x: 1, y: 2 }],
+            cycleLength: 4,
+        }];
+        const sidecars = buildPresetSidecars(grid);
+        const sidecar = sidecars['1'][region.region_id].playable_payload;
+        const restored = deserializeMazeWorld(sidecar);
+        expect(restored.hazards).toHaveLength(1);
+        expect(restored.hazards[0]).toEqual({
+            shape: 'loop',
+            length: 4,
+            tiles: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 2, y: 2 }, { x: 1, y: 2 }],
+            cycleLength: 4,
+            phase: 0,
+        });
+    });
+
+    it('deserializeMazeWorld leaves world.hazards undefined when sidecar has none', () => {
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const sidecar = Object.values(sidecars['1'])[0].playable_payload;
+        const restored = deserializeMazeWorld(sidecar);
+        expect(restored.hazards).toBeUndefined();
+    });
+
+    it('growMaze places hazards on regions when hazardOpts.enabled is true', () => {
+        // A modest grid + plentiful pool to give the maze room for
+        // hazards. count=3 per region, plenty of fail-budget.
+        const result = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 8, height: 6 },
+            itemPool: { key_red: 4 },
+            obstaclePool: { door_red: 4 },
+            seed: 7,
+            hazardOpts: {
+                enabled: true,
+                count: 3,
+                maxConsecutiveFails: 20,
+                wallOverlapAllowed: false,
+            },
+        });
+        let regionsWithHazards = 0;
+        for (const region of result.grid.allRegions()) {
+            const h = region.playable_payload.hazards;
+            if (Array.isArray(h) && h.length > 0) {
+                regionsWithHazards++;
+                for (const hz of h) {
+                    expect(hz.phase).toBe(0);
+                    expect(Array.isArray(hz.tiles)).toBe(true);
+                    expect(hz.tiles.length).toBeGreaterThanOrEqual(2);
+                }
+            }
+        }
+        // At least one region should have hazards on a non-trivial grid.
+        expect(regionsWithHazards).toBeGreaterThan(0);
+    });
+
+    it('growMaze without hazardOpts produces no hazards (default)', () => {
+        const result = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
+            seed: 11,
+        });
+        for (const region of result.grid.allRegions()) {
+            expect(region.playable_payload.hazards).toBeUndefined();
+        }
+    });
+
+    it('growMaze with hazardOpts.enabled=false produces no hazards', () => {
+        const result = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
+            seed: 11,
+            hazardOpts: { enabled: false, count: 5 },
+        });
+        for (const region of result.grid.allRegions()) {
+            expect(region.playable_payload.hazards).toBeUndefined();
+        }
+    });
+
     it('serializes only itemLib entries that are not in the base library', () => {
         // Construct a world where we manually add a foreign-item
         // entry to itemLib (mirrors what the top-down driver will

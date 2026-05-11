@@ -251,6 +251,21 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
         world.fogEnabled = true;
     }
 
+    // Hazards (maze content modules Phase 2). Each sidecar entry is the
+    // immutable shape (tiles + cycleLength + length + shape); phase
+    // initializes to 0 here, matching the v1 region-reset model where
+    // every region entry starts hazards fresh. resetHazards from the
+    // substrate also resets to 0 after teleport.
+    if (Array.isArray(sidecar.hazards) && sidecar.hazards.length > 0) {
+        world.hazards = sidecar.hazards.map((h) => ({
+            shape: h.shape,
+            length: h.length,
+            tiles: (h.tiles ?? []).map((t) => ({ x: t.x, y: t.y })),
+            cycleLength: h.cycleLength,
+            phase: 0,
+        }));
+    }
+
     return world;
 }
 
