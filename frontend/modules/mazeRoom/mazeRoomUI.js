@@ -46,6 +46,7 @@ import {
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
 } from './mazeRoomQueue.js';
+import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -2806,6 +2807,14 @@ export class MazeRoomUI {
             ctx.lineTo(w.width * TILE_PX, y * TILE_PX + 0.5);
             ctx.stroke();
         }
+
+        // Hazard overlays — red paths + facing triangles. Drawn after
+        // grid lines (so the path is visually on top of the grid
+        // texture) and before the fog overlay (so unseen hazards
+        // properly hide behind fog). Hazards live on world.hazards
+        // when a content-module-aware procgen pipeline produced this
+        // region; legacy worlds without the field render normally.
+        drawHazards(ctx, w.hazards, TILE_PX);
 
         // Fog overlay — paint solid black over every unseen tile. Runs
         // after grid lines so the grid doesn't leak the unexplored
