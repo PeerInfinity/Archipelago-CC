@@ -26,6 +26,14 @@
  *   - When `opts.excludeOtherExits` is true, exit tiles other than the
  *     goal are treated as walls — preventing accidental teleports
  *     through unintended exits in hub-spoke layouts.
+ *   - When `opts.hazards` is a non-empty array of hazard objects (per
+ *     hazardRuntime), the BFS switches to time-expanded mode: state
+ *     becomes (x, y, turn mod lcm-of-cycle-lengths), and each candidate
+ *     move must pass validateMove against the hazards' state at the
+ *     pre-move turn. With cycle lengths in {2,4,8} the LCM is 8, so
+ *     the search space is at most X×Y×8. v1 doesn't consider wait as
+ *     an action — the planner routes around hazards but won't wait
+ *     them out (a hazard guarding a chokepoint may yield no path).
  *
  * Cost calculation is **not** done here. Callers translate `length`
  * and per-tile location lookups into mana cost using their own cost
@@ -43,6 +51,7 @@ import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
+import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/contentModules/hazardRuntime.js';
 
 /**
  * @param {Object} world - maze world (width, height, tiles, exits, etc.)
@@ -59,6 +68,9 @@ import { isObstacleCleared } from '../shared/procgen/library.js';
  * @param {boolean} [opts.excludeOtherExits] - when true, exit tiles
  *   other than the goal are blocked (prevents accidental teleports
  *   through off-route exits).
+ * @param {Array<object>} [opts.hazards] - hazard runtime objects (see
+ *   hazardRuntime). When non-empty, the BFS plans around hazards
+ *   using a time-expanded state (x, y, turn).
  * @returns {{steps: Array<{x,y}>, length: number} | null}
  */
 export function findPath(world, from, target, opts = {}) {
@@ -191,6 +203,19 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
         : null;
     const excludeOtherExits = opts.excludeOtherExits === true;
 
+    // Time-expanded mode: when hazards are provided, the BFS tracks
+    // turn count alongside position. State = (x, y, t mod LCM); each
+    // candidate move advances turn by 1 and is validated against the
+    // hazards' state at the pre-move turn (Rule 1 + 2 from
+    // hazardRuntime). When `hazards` is null/empty, the BFS reverts
+    // to the plain (x, y) state for performance.
+    const hazards = Array.isArray(opts.hazards) && opts.hazards.length > 0
+        ? opts.hazards
+        : null;
+    const cycleLcm = hazards
+        ? hazards.reduce((m, hz) => _lcm(m, Math.max(1, hz.cycleLength || 1)), 1)
+        : 1;
+
     // Walkable predicate applied to each candidate neighbor. The
     // `from` tile is implicitly walkable (the player is there); we
     // skip the runtime checks for it. `isAlsoGoal` tells the predicate
@@ -209,34 +234,53 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
         return true;
     }
 
-    const seen = new Uint8Array(w * h);
-    const idx = (x, y) => y * w + x;
-    seen[idx(from.x, from.y)] = 1;
-
-    // parent: "x,y" → "px,py" predecessor for path reconstruction
+    // State key: "x,y" without hazards (existing fast path), "x,y,t"
+    // with hazards (time-expanded). The reconstruction walks both
+    // shapes correctly via _parseStateKeyXY.
+    const stateKey = hazards
+        ? (x, y, t) => `${x},${y},${t}`
+        : (x, y) => `${x},${y}`;
+    const visited = new Set();
     const parent = new Map();
+    const startKey = stateKey(from.x, from.y, 0);
+    visited.add(startKey);
+
     const DELTAS = [
         { dx: 1, dy: 0 }, { dx: -1, dy: 0 },
         { dx: 0, dy: 1 }, { dx: 0, dy: -1 },
     ];
 
-    let frontier = [{ x: from.x, y: from.y }];
+    let frontier = [{ x: from.x, y: from.y, t: 0 }];
     while (frontier.length > 0) {
         const next = [];
         for (const node of frontier) {
+            // Hazards' state at this node's turn — computed once per
+            // node, reused across the 4 neighbor checks.
+            const hazardsAtT = hazards ? _hazardsAtTurn(hazards, node.t) : null;
             for (const d of DELTAS) {
                 const nx = node.x + d.dx;
                 const ny = node.y + d.dy;
                 if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
-                if (seen[idx(nx, ny)]) continue;
+                const nt = hazards ? (node.t + 1) % cycleLcm : 0;
+                const nKey = stateKey(nx, ny, nt);
+                if (visited.has(nKey)) continue;
                 const isAlsoGoal = isGoal(nx, ny);
                 if (!isWalkable(nx, ny, isAlsoGoal)) continue;
-                seen[idx(nx, ny)] = 1;
-                parent.set(`${nx},${ny}`, `${node.x},${node.y}`);
+                // Hazard validation at turn t: Rule 1 (can't move
+                // into hazard.next), Rule 2 (head-on collision into
+                // hazard.cur from hazard.next). Always passes when
+                // hazards is null.
+                if (hazardsAtT && !validateMoveAgainstHazards(
+                    hazardsAtT,
+                    { x: node.x, y: node.y },
+                    { x: nx, y: ny },
+                )) continue;
+                visited.add(nKey);
+                parent.set(nKey, stateKey(node.x, node.y, node.t));
                 if (isAlsoGoal) {
-                    return _reconstructPath(parent, from, { x: nx, y: ny });
+                    return _reconstructPath(parent, startKey, nKey);
                 }
-                next.push({ x: nx, y: ny });
+                next.push({ x: nx, y: ny, t: nt });
             }
         }
         frontier = next;
@@ -244,15 +288,44 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
     return null;
 }
 
-function _reconstructPath(parent, from, to) {
-    const steps = [{ x: to.x, y: to.y }];
-    let cur = `${to.x},${to.y}`;
-    const stop = `${from.x},${from.y}`;
-    while (cur !== stop) {
+/**
+ * Snapshot hazards at turn `t`: each hazard's phase becomes
+ * (h.phase + t) mod h.cycleLength. New objects so the original
+ * hazards aren't mutated (the substrate owns the runtime phase
+ * separately).
+ */
+function _hazardsAtTurn(hazards, t) {
+    if (t === 0) return hazards;
+    return hazards.map((h) => ({
+        ...h,
+        phase: ((h.phase ?? 0) + t) % h.cycleLength,
+    }));
+}
+
+function _gcd(a, b) {
+    let x = Math.abs(a | 0);
+    let y = Math.abs(b | 0);
+    while (y) { const t = y; y = x % y; x = t; }
+    return x || 1;
+}
+
+function _lcm(a, b) {
+    if (!a || !b) return Math.max(a, b);
+    return (a / _gcd(a, b)) * b;
+}
+
+function _parseStateKeyXY(key) {
+    const parts = key.split(',');
+    return { x: Number(parts[0]), y: Number(parts[1]) };
+}
+
+function _reconstructPath(parent, fromKey, toKey) {
+    const steps = [_parseStateKeyXY(toKey)];
+    let cur = toKey;
+    while (cur !== fromKey) {
         const p = parent.get(cur);
         if (!p) break; // shouldn't happen; guard against malformed parent map
-        const [px, py] = p.split(',').map(Number);
-        steps.unshift({ x: px, y: py });
+        steps.unshift(_parseStateKeyXY(p));
         cur = p;
     }
     return { steps, length: steps.length - 1 };

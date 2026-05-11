@@ -326,6 +326,140 @@ describe('mazeAutopather — findPath', () => {
         });
     });
 
+    describe('hazard-aware planning (time-expanded BFS)', () => {
+        function linearHazard(tiles, phase = 0) {
+            return {
+                shape: 'linear',
+                length: tiles.length,
+                tiles,
+                cycleLength: 2 * (tiles.length - 1),
+                phase,
+            };
+        }
+
+        it('returns the plain straight-line path when no hazards provided', () => {
+            const w = makeWorld({ width: 5, height: 1 });
+            const r = findPath(w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 });
+            expect(r.steps).toEqual([
+                { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 },
+                { x: 3, y: 0 }, { x: 4, y: 0 },
+            ]);
+        });
+
+        it('returns the plain path when hazards array is empty', () => {
+            const w = makeWorld({ width: 5, height: 1 });
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { hazards: [] },
+            );
+            expect(r.length).toBe(4);
+        });
+
+        it('routes around a hazard when an alternate route exists', () => {
+            // 5x3 open grid. A length-3 hazard cycles at (1,1)→(2,1)→(3,1)
+            // (cycle 4) covering the middle row. Player at (0,1)
+            // wants (4,1). Direct path through y=1 has hazard tiles
+            // at every step — but the player can route via y=0 or y=2.
+            const w = makeWorld({ width: 5, height: 3 });
+            const haz = linearHazard(
+                [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+                0,
+            );
+            const r = findPath(
+                w, { x: 0, y: 1 }, { kind: 'tile', x: 4, y: 1 },
+                { hazards: [haz] },
+            );
+            expect(r).not.toBeNull();
+            // The route should NOT lie entirely on y=1. Verify by
+            // checking at least one step deviates.
+            const hasDeviation = r.steps.some((s) => s.y !== 1);
+            expect(hasDeviation).toBe(true);
+        });
+
+        it('rejects moves that would step into hazard.next at the right turn', () => {
+            // Single-row corridor: 4 tiles. Hazard length-2 cycle
+            // between (1,0) and (2,0) starting at phase 0
+            // (cur=(1,0), next=(2,0)). Player at (0,0) wants (3,0).
+            // Direct east-walk: turn 0 to (1,0) — Rule 2 fires (head-
+            // on into facing). All other moves off-grid. → no path.
+            const w = makeWorld({ width: 4, height: 1 });
+            const haz = linearHazard([{ x: 1, y: 0 }, { x: 2, y: 0 }], 0);
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 3, y: 0 },
+                { hazards: [haz] },
+            );
+            // Player at (0,0). At turn 0, hazard at (1,0) facing (2,0).
+            //   Move E to (1,0): Rule 1 → blocked (1,0 != hazard.next=2,0;
+            //     actually Rule 1 doesn't fire). Rule 2: to=(1,0)=hazard.cur,
+            //     from=(0,0)≠hazard.next=(2,0). Rule 2 doesn't fire.
+            //     So Move E IS allowed at turn 0. But then turn 1
+            //     hazard at (2,0). Move E from (1,0) to (2,0) at turn 1:
+            //     hazard.cur=(2,0), hazard.next=(1,0). Rule 1: to=(2,0)=
+            //     hazard.next? No, hazard.next=(1,0). Rule 2: to=(2,0)=
+            //     hazard.cur, from=(1,0)=hazard.next. BLOCKED.
+            //     So player can step to (1,0) at turn 0, but is then
+            //     trapped — can't go E without head-on, can't go back
+            //     to (0,0) at turn 1 (hazard moves to (1,0), Rule 1
+            //     would block returning). Wait isn't an option in v1.
+            //     → no path.
+            expect(r).toBeNull();
+        });
+
+        it('finds a path when hazard cycling lets the player phase past', () => {
+            // 5x2 grid. Hazard cycles (1,0)↔(2,0) (cycle 2). At turn
+            // 0 the hazard is at (1,0) facing (2,0). A direct
+            // east-walk fails at turn 1 (head-on into the cycling
+            // hazard), but the planner can detour through y=1 to
+            // reach (4,0) — confirming the time-expanded BFS doesn't
+            // give up just because the straight path is blocked.
+            //
+            // Note: the planner CAN step onto a hazard's current tile
+            // when it's about to step off elsewhere — co-location at
+            // the current tile is allowed (only Rule 2's head-on is
+            // blocked). So the path's tile set may include (1,0) or
+            // (2,0); what matters is that every step is hazard-safe
+            // per validateMove at its turn.
+            const w = makeWorld({ width: 5, height: 2 });
+            const haz = linearHazard([{ x: 1, y: 0 }, { x: 2, y: 0 }], 0);
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { hazards: [haz] },
+            );
+            expect(r).not.toBeNull();
+            expect(r.steps[0]).toEqual({ x: 0, y: 0 });
+            expect(r.steps[r.steps.length - 1]).toEqual({ x: 4, y: 0 });
+            // Path is 4-connected at every step.
+            for (let i = 1; i < r.steps.length; i++) {
+                const dx = Math.abs(r.steps[i].x - r.steps[i - 1].x);
+                const dy = Math.abs(r.steps[i].y - r.steps[i - 1].y);
+                expect(dx + dy).toBe(1);
+            }
+            // Plain BFS (no hazards) would find a length-4 direct
+            // path. Hazard-aware planning has to detour, so the path
+            // is strictly longer than 4.
+            expect(r.length).toBeGreaterThan(4);
+        });
+
+        it('mutating the original hazards array does not affect the search', () => {
+            // Regression: the search snapshots hazards-at-turn-t into
+            // fresh objects each turn; the input array should remain
+            // untouched by the search.
+            const w = makeWorld({ width: 5, height: 3 });
+            const haz = linearHazard(
+                [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+                0,
+            );
+            const snap = { ...haz };
+            findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { hazards: [haz] },
+            );
+            // Phase + tiles preserved.
+            expect(haz.phase).toBe(snap.phase);
+            expect(haz.tiles).toBe(snap.tiles);
+        });
+    });
+
     describe('error / edge cases', () => {
         it('returns null on missing world', () => {
             expect(findPath(null, { x: 0, y: 0 }, { kind: 'tile', x: 1, y: 1 })).toBeNull();

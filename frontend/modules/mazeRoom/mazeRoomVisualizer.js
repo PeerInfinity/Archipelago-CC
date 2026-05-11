@@ -586,6 +586,11 @@ export class MazeRoomVisualizer {
                 inventory: this._inventory,
                 obstacleLib: this._world?.obstacleLib,
                 excludeOtherExits: true,
+                // Hazard-aware planning: when world.hazards is set,
+                // findPath uses time-expanded BFS to route around the
+                // hazards. Null/empty hazards falls back to the plain
+                // (faster) BFS path.
+                hazards: this._world?.hazards,
             },
         );
         if (!result) return null;

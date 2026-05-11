@@ -531,6 +531,12 @@ export class MazeRoomUI {
                 this.world,
                 { x: startPos.x, y: startPos.y },
                 { kind: 'tile', x: target.x, y: target.y },
+                {
+                    // Hazard-aware planning when the region has them;
+                    // routes around hazards via time-expanded BFS.
+                    // Null/empty falls back to the plain (faster) BFS.
+                    hazards: this.world?.hazards,
+                },
             );
         } catch {
             path = null;
@@ -691,6 +697,7 @@ export class MazeRoomUI {
                 inventory: this.externalInventory,
                 obstacleLib: this.world?.obstacleLib,
                 excludeOtherExits: true,
+                hazards: this.world?.hazards,
             },
         );
         if (!result || !Array.isArray(result.steps) || result.steps.length === 0) {
@@ -748,6 +755,7 @@ export class MazeRoomUI {
                         inventory: this.externalInventory,
                         obstacleLib: this.world?.obstacleLib,
                         excludeOtherExits: true,
+                        hazards: this.world?.hazards,
                     },
                 );
                 if (result && result.length < bestDistance) {
@@ -1740,6 +1748,7 @@ export class MazeRoomUI {
             this.world,
             { x: startPos.x, y: startPos.y },
             { kind: 'tile', x: next.x, y: next.y },
+            { hazards: this.world?.hazards },
         );
         if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
             const moves = stepsToActions(path.steps);
