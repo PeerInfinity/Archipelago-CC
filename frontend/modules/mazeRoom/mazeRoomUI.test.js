@@ -1687,24 +1687,21 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         expect(haz.phase).toBe(1);
     });
 
-    it('_executeWaitAction is rejected when a hazard is about to stomp the player\'s tile', () => {
+    it('_executeWaitAction rejection + stomp triggers a pre-tick teleport', () => {
         // Player at (1,0). Hazard at (0,0) facing east toward (1,0).
-        // Wait → Rule 1 fires (1,0) = hazard's next tile.
+        // Wait would land the player on (1,0) = hazard.next — Rule 1
+        // applied to wait. The pre-tick stomp check in
+        // _tickAndCheckHazards fires the teleport BEFORE the hazard
+        // ticks, so the player ends up at world.entrance and the
+        // hazard is reset to phase 0.
         const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
         const world = makeWorldWithHazards([haz], { width: 3, height: 1 });
         const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
-        // arrivedFromExitId null → teleport falls back to world.entrance.
         world.entrance = { x: 2, y: 0 };
         panel._executeWaitAction();
-        // Wait blocked, then tick fired. After the tick the hazard's
-        // current tile = (1,0) and next = (0,0). hasAnyValidMove from
-        // (1,0): wait blocked (Rule 2? no — wait's from===to===(1,0),
-        // hazard.cur = (1,0), hazard.next = (0,0). Rule 2 fires when
-        // from === next, but from = (1,0) ≠ next (0,0). Rule 1 fires
-        // when to = next; to = (1,0) ≠ next (0,0). So wait is fine
-        // post-tick! No teleport.
-        expect(haz.phase).toBe(1);
-        expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
+        expect(panel.state.player_pos).toEqual({ x: 2, y: 0 });
+        expect(haz.phase).toBe(0);
+        expect(panel.message).toMatch(/Hazard-trapped/);
     });
 
     it('_fireHazardTeleport moves player to world.entrance and resets hazards', () => {
@@ -1790,6 +1787,51 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         panel._tickAndCheckHazards();
         expect(panel.state.player_pos).toEqual({ x: 0, y: 0 }); // unchanged
         expect(world.hazards[0].phase).toBe(1); // tick advanced
+    });
+
+    it('waiting on a tile a hazard will step into triggers the pre-tick teleport', () => {
+        // Player at (1,0). Hazard at (0,0) facing east toward (1,0).
+        // Phase 0: hazard.cur=(0,0), hazard.next=(1,0). Pre-tick stomp
+        // check fires (Rule 1 applied to wait) → teleport BEFORE the
+        // tick advances. Without this check, the wait was silently a
+        // no-op and the player walked under the hazard.
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 4, height: 1 });
+        world.entrance = { x: 3, y: 0 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
+        panel._executeWaitAction();
+        expect(panel.state.player_pos).toEqual({ x: 3, y: 0 });
+        expect(haz.phase).toBe(0); // reset after teleport
+        expect(panel.message).toMatch(/Hazard-trapped/);
+    });
+
+    it('Rule-2 bumped move leaves player on hazard.next → pre-tick teleport', () => {
+        // Player at (1,0). Hazard at (0,0) facing east toward (1,0).
+        // Player tries to move WEST to (0,0). Rule 2 fires (to=cur,
+        // from=next). Move rejected, player stays at (1,0) which IS
+        // hazard.next. Pre-tick stomp catches it → teleport.
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 4, height: 1 });
+        world.entrance = { x: 3, y: 0 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
+        panel._executeMoveAction('W');
+        expect(panel.state.player_pos).toEqual({ x: 3, y: 0 });
+        expect(haz.phase).toBe(0);
+    });
+
+    it('moving OUT from under a stomp threat is still allowed (escape works)', () => {
+        // Player at (1,0) with hazard about to stomp. Player moves
+        // SOUTH to (1,1) — that's not a hazard tile, so validateMove
+        // passes. Move executes; tick advances hazard onto (1,0) (now
+        // empty); player at (1,1) is safe. No teleport.
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 4, height: 3 });
+        world.entrance = { x: 3, y: 2 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
+        panel._executeMoveAction('S');
+        expect(panel.state.player_pos).toEqual({ x: 1, y: 1 });
+        expect(haz.phase).toBe(1); // hazard ticked
+        expect(panel.message).not.toMatch(/Hazard-trapped/);
     });
 
     it('_executeMoveAction does not tick when loops is driving (visualizer does)', () => {

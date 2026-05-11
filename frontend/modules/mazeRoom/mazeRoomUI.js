@@ -52,6 +52,7 @@ import {
     resetHazards,
     validateMove as validateMoveAgainstHazards,
     hasAnyValidMove as hasAnyValidMoveAgainstHazards,
+    isPlayerStomped,
 } from '../shared/procgen/contentModules/hazardRuntime.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
@@ -3244,16 +3245,34 @@ export class MazeRoomUI {
     }
 
     /**
-     * Advance every hazard by one turn, then check whether the
-     * player has any valid action from their current tile against
-     * the new hazard state. If none, fire the hazard teleport.
-     * Called after each direct-keyboard player action.
+     * Advance every hazard by one turn and surface the teleport
+     * trigger for two distinct failure modes:
+     *
+     *   1. Pre-tick stomp: the player's current tile equals some
+     *      hazard's next-turn tile (Rule 1 against wait). The
+     *      hazard is about to step onto them this turn — teleport
+     *      now, skip the tick. Covers the "wait into a hazard"
+     *      and "Rule-2-bumped onto a hazard's next" cases that the
+     *      post-tick check alone would miss (after the tick the
+     *      player is co-located with the hazard, but a wait or move
+     *      out usually still passes validateMove, so
+     *      hasAnyValidMove returns true and the stomp is silently
+     *      forgiven).
+     *
+     *   2. Post-tick no-valid-move: hazards advanced into a
+     *      configuration where no candidate action (wait + 4 moves
+     *      into walkable tiles) passes validateMove. Player is
+     *      trapped — teleport.
      *
      * No-op when world has no hazards.
      */
     _tickAndCheckHazards() {
         const hazards = this.world?.hazards;
         if (!Array.isArray(hazards) || hazards.length === 0) return;
+        if (isPlayerStomped(hazards, this.state.player_pos)) {
+            this._fireHazardTeleport();
+            return;
+        }
         tickHazards(hazards);
         if (!hasAnyValidMoveAgainstHazards(this.world, hazards, this.state.player_pos)) {
             this._fireHazardTeleport();

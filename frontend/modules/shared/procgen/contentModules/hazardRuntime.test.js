@@ -9,6 +9,7 @@ import {
     validateMove,
     hasAnyValidMove,
     getCurrentOccupancy,
+    isPlayerStomped,
 } from './hazardRuntime.js';
 import {
     HAZARD_SHAPE_LINEAR,
@@ -341,6 +342,33 @@ describe('hasAnyValidMove', () => {
 // ---------------------------------------------------------------
 // getCurrentOccupancy
 // ---------------------------------------------------------------
+
+describe('isPlayerStomped', () => {
+    it('returns true when any hazard.next tile equals playerXY', () => {
+        // Hazard at A=(0,0), facing B=(1,0). Player on B → stomped.
+        const h = linear(PATH_3, 0);
+        expect(isPlayerStomped([h], { x: 1, y: 0 })).toBe(true);
+    });
+
+    it('returns false when no hazard is about to enter playerXY', () => {
+        const h = linear(PATH_3, 0); // next=(1,0)
+        expect(isPlayerStomped([h], { x: 5, y: 5 })).toBe(false);
+        expect(isPlayerStomped([h], { x: 0, y: 0 })).toBe(false); // hazard's cur, not next
+    });
+
+    it('handles multiple hazards conjunctively (any-match)', () => {
+        const a = linear(PATH_3, 0); // next=(1,0)
+        const b = linear([{ x: 9, y: 9 }, { x: 9, y: 8 }], 0); // next=(9,8)
+        expect(isPlayerStomped([a, b], { x: 9, y: 8 })).toBe(true);
+        expect(isPlayerStomped([a, b], { x: 1, y: 0 })).toBe(true);
+        expect(isPlayerStomped([a, b], { x: 5, y: 5 })).toBe(false);
+    });
+
+    it('returns false for empty / null hazards', () => {
+        expect(isPlayerStomped([], { x: 0, y: 0 })).toBe(false);
+        expect(isPlayerStomped(null, { x: 0, y: 0 })).toBe(false);
+    });
+});
 
 describe('getCurrentOccupancy', () => {
     it('returns the set of tiles all hazards currently occupy', () => {

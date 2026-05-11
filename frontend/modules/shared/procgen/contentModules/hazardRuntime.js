@@ -147,6 +147,29 @@ export function validateMove(hazards, from, to) {
     return true;
 }
 
+/**
+ * Returns true if any hazard's next-turn tile equals `playerXY` —
+ * i.e. the hazard is about to step onto the player and stomp them.
+ * Equivalent to `!validateMove(hazards, playerXY, playerXY)` (Rule 1
+ * applied to the wait direction), exposed as a named helper to make
+ * the substrate's pre-tick stomp check read intent-first.
+ *
+ * Used by the substrate to detect the doomed-by-the-tick case:
+ *   - wait into a hazard.next tile (action no-op, but tick stomps),
+ *   - move rejected by Rule 1 (player stays on a tile that ISN'T
+ *     this hazard's next, but might be another's),
+ *   - move rejected by Rule 2 (head-on bump leaves player on the
+ *     same tile that IS this hazard's next, so tick stomps).
+ *
+ * Returning false here doesn't mean the player is safe — they may
+ * still get trapped after the tick advances (caught by
+ * hasAnyValidMove). It only means the tick won't stomp them this
+ * turn.
+ */
+export function isPlayerStomped(hazards, playerXY) {
+    return !validateMove(hazards, playerXY, playerXY);
+}
+
 const NEIGHBOR_DELTAS = [
     { dx: 0, dy: -1 },
     { dx: 0, dy: 1 },
