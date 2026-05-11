@@ -1834,6 +1834,36 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         expect(panel.message).not.toMatch(/Hazard-trapped/);
     });
 
+    it('_onVisualizerChange treats a turn-only advance (wait) as a tick', () => {
+        // Simulate the visualizer firing _onVisualizerChange after a
+        // wait: player_pos unchanged, turn advanced by 1. Substrate
+        // should advance the queue, push a duplicate tile into
+        // _loopsDrivenSteps, and tick hazards.
+        const haz = makeHazardLinear([{ x: 5, y: 5 }, { x: 5, y: 6 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 8, height: 8 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        panel._loopsDrivenSteps = [{ x: 0, y: 0 }];
+        panel._loopsDrivenCost = 0;
+        // Fake the visualizer: turn starts at 0, wait advances to 1.
+        // First call sets _lastVisualizerTurn (no wait detected on
+        // first observation, by design — initial pickup).
+        panel._visualizer = { getState: () => ({ player_pos: { x: 0, y: 0 }, turn: 0 }) };
+        panel._mazeQueue.append({ type: 'wait' });
+        panel._onVisualizerChange();
+        // Now advance the turn (simulating a wait tick).
+        panel._visualizer = { getState: () => ({ player_pos: { x: 0, y: 0 }, turn: 1 }) };
+        panel._onVisualizerChange();
+        // Hazard ticked.
+        expect(haz.phase).toBe(1);
+        // Queue advanced.
+        expect(panel._mazeQueue.executionIndex).toBe(1);
+        // bestPath tracking saw a duplicate-tile step.
+        expect(panel._loopsDrivenSteps).toEqual([
+            { x: 0, y: 0 }, { x: 0, y: 0 },
+        ]);
+    });
+
     it('_executeMoveAction does not tick when loops is driving (visualizer does)', () => {
         const haz = makeHazardLinear([{ x: 5, y: 5 }, { x: 5, y: 6 }], 0);
         const world = makeWorldWithHazards([haz], { width: 8, height: 8 });

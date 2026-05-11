@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findPath, bestPathKey, stepsToInputs } from './mazeAutopather.js';
+import { findPath, bestPathKey, stepsToInputs, stepsToActions } from './mazeAutopather.js';
 
 // Minimal world fixture: tiles array of 0 (floor) / 1 (wall). Caller
 // supplies entrance and exits.
@@ -324,6 +324,51 @@ describe('mazeAutopather — findPath', () => {
             ];
             expect(stepsToInputs(steps)).toEqual(['E', 'S', 'W', 'N']);
         });
+
+        it('emits WAIT for duplicate-tile entries', () => {
+            const steps = [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 }, // E
+                { x: 1, y: 0 }, // wait
+                { x: 2, y: 0 }, // E
+            ];
+            expect(stepsToInputs(steps)).toEqual(['E', 'WAIT', 'E']);
+        });
+    });
+
+    describe('stepsToActions', () => {
+        it('returns empty for a zero-or-one-step path', () => {
+            expect(stepsToActions([])).toEqual([]);
+            expect(stepsToActions([{ x: 0, y: 0 }])).toEqual([]);
+        });
+
+        it('encodes cardinal moves as {type:move, dir}', () => {
+            const steps = [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 },
+                { x: 1, y: 1 },
+            ];
+            expect(stepsToActions(steps)).toEqual([
+                { type: 'move', dir: 'E' },
+                { type: 'move', dir: 'S' },
+            ]);
+        });
+
+        it('emits {type:wait} for duplicate-tile entries', () => {
+            const steps = [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 },
+                { x: 1, y: 0 }, // wait
+                { x: 1, y: 0 }, // wait
+                { x: 2, y: 0 },
+            ];
+            expect(stepsToActions(steps)).toEqual([
+                { type: 'move', dir: 'E' },
+                { type: 'wait' },
+                { type: 'wait' },
+                { type: 'move', dir: 'E' },
+            ]);
+        });
     });
 
     describe('hazard-aware planning (time-expanded BFS)', () => {
@@ -438,6 +483,91 @@ describe('mazeAutopather — findPath', () => {
             // path. Hazard-aware planning has to detour, so the path
             // is strictly longer than 4.
             expect(r.length).toBeGreaterThan(4);
+        });
+
+        it('allowWait ignored when no hazards (would just lengthen paths)', () => {
+            // Trivial 5x1 corridor, no hazards. Even with allowWait,
+            // the planner produces the plain shortest path — no wait
+            // insertions, no extra cost.
+            const w = makeWorld({ width: 5, height: 1 });
+            const r = findPath(
+                w, { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 },
+                { allowWait: true },
+            );
+            expect(r.length).toBe(4);
+            for (let i = 1; i < r.steps.length; i++) {
+                expect(r.steps[i]).not.toEqual(r.steps[i - 1]);
+            }
+        });
+
+        it('with allowWait, can shorten a route by waiting for the hazard cycle', () => {
+            // 5x3 grid. A length-3 hazard sweeps the middle row left-
+            // to-right at phases 0..3 (cycle 4). The plain detour
+            // via row 0 OR row 2 is 6 moves (2 verticals + 4
+            // easts). With allowWait, the player can take the
+            // shorter 4-move route across the middle row by waiting
+            // for the hazard to be elsewhere on a step's turn.
+            //
+            // What we verify here is the looser version: with
+            // allowWait the path is AT MOST as long as the plain-
+            // BFS path, and the geometry is still valid (4-connected
+            // or duplicate-tile waits). Edge cases (when wait yields
+            // strictly shorter) depend on BFS tie-breaking, which we
+            // don't pin down at the unit-test level.
+            const w = makeWorld({ width: 5, height: 3 });
+            const haz = linearHazard(
+                [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }], 0,
+            );
+            const noWait = findPath(
+                w, { x: 0, y: 1 }, { kind: 'tile', x: 4, y: 1 },
+                { hazards: [haz] },
+            );
+            const withWait = findPath(
+                w, { x: 0, y: 1 }, { kind: 'tile', x: 4, y: 1 },
+                { hazards: [haz], allowWait: true },
+            );
+            expect(noWait).not.toBeNull();
+            expect(withWait).not.toBeNull();
+            // allowWait should never find a strictly worse path —
+            // the search space is a strict superset of the no-wait
+            // search.
+            expect(withWait.length).toBeLessThanOrEqual(noWait.length);
+            // 4-connected check (each step is a cardinal move OR a
+            // wait — Manhattan distance 0 or 1).
+            for (let i = 1; i < withWait.steps.length; i++) {
+                const dx = Math.abs(withWait.steps[i].x - withWait.steps[i - 1].x);
+                const dy = Math.abs(withWait.steps[i].y - withWait.steps[i - 1].y);
+                expect(dx + dy).toBeLessThanOrEqual(1);
+            }
+        });
+
+        it('wait neighbor is gated by Rule 1 (no hazard.next at current tile)', () => {
+            // Player at (1,0), hazard at (0,0) facing (1,0). Waiting
+            // at the player's tile would be a stomp — Rule 1 blocks
+            // wait. So allowWait shouldn't help find a "wait then
+            // move" route from this start.
+            const w = makeWorld({ width: 3, height: 1 });
+            const haz = linearHazard(
+                [{ x: 0, y: 0 }, { x: 1, y: 0 }], 0,
+            );
+            const r = findPath(
+                w, { x: 1, y: 0 }, { kind: 'tile', x: 2, y: 0 },
+                { hazards: [haz], allowWait: true },
+            );
+            // The pre-tick stomp check is the substrate's
+            // responsibility — at the planner level we just verify
+            // the first emitted step isn't a wait at the (stomp-
+            // prone) start position.
+            if (r) {
+                // first step is either a move out of the stomp tile
+                // or the trivial-path early-return. Should NOT be a
+                // wait at (1,0) since that would have been blocked.
+                const firstStep = r.steps[1];
+                if (firstStep) {
+                    const wasWait = firstStep.x === 1 && firstStep.y === 0;
+                    expect(wasWait).toBe(false);
+                }
+            }
         });
 
         it('mutating the original hazards array does not affect the search', () => {

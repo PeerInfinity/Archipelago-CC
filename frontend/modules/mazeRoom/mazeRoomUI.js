@@ -254,6 +254,12 @@ export class MazeRoomUI {
         this._replayDriver = null;
         this._replayTickMs = 200;
 
+        // Last seen visualizer turn counter — used by
+        // _onVisualizerChange to detect waits (ticks that advance
+        // the turn without changing player_pos). Initialized to null
+        // so the first observed turn isn't mistaken for a wait.
+        this._lastVisualizerTurn = null;
+
         // Direct-walk recording state. Populated on region entry (when
         // manaEnabled), accumulated by the per-tile mana deduction and
         // pickup events, consumed when the player reaches an exit or
@@ -536,6 +542,12 @@ export class MazeRoomUI {
                     // routes around hazards via time-expanded BFS.
                     // Null/empty falls back to the plain (faster) BFS.
                     hazards: this.world?.hazards,
+                    // Loops-delegated walks tolerate waits in the
+                    // plan — the visualizer's tick loop knows to
+                    // INPUT_WAIT (no engine.step, advance turn) and
+                    // _onVisualizerChange mirrors waits into the
+                    // queue + ticks hazards.
+                    allowWait: true,
                 },
             );
         } catch {
@@ -1634,6 +1646,21 @@ export class MazeRoomUI {
             stepHappened = !!oldPos && (oldPos.x !== newPos.x || oldPos.y !== newPos.y);
             this.state.player_pos = newPos;
         }
+        // Tick detection: the visualizer's turn counter strictly
+        // increases on every tick (move OR wait). Comparing against
+        // our cached value catches waits — which don't change
+        // player_pos but still represent a turn passing. Used by the
+        // wait branch below to advance the queue + tick hazards even
+        // when the player didn't move.
+        let waitHappened = false;
+        if (typeof vState?.turn === 'number') {
+            if (this._lastVisualizerTurn != null
+                && vState.turn !== this._lastVisualizerTurn
+                && !stepHappened) {
+                waitHappened = true;
+            }
+            this._lastVisualizerTurn = vState.turn;
+        }
         // Phase 6d: per-step mana deduction during queue-driven walks.
         // The visualizer's tick fires (a) _handleEvent → onLocationCheck
         // (which sets _pendingFreshLocationCheck for fresh pickups)
@@ -1665,6 +1692,44 @@ export class MazeRoomUI {
             // If teleport fired, _loopsDrivenAction is cleared by
             // _fireHazardTeleport and the rest of this handler can
             // exit early — no more chaining to do.
+            if (!this._loopsDrivenAction) {
+                this._pendingFreshLocationCheck = null;
+                this.render();
+                return;
+            }
+        } else if (waitHappened && this._loopsDrivenAction) {
+            // Visualizer-driven wait during a loops-delegated walk
+            // (Phase 2-wait): player didn't move but a turn passed.
+            // Mirror the same downstream effects as a move tick —
+            // mana deduction, bestPath tracking, queue mirror,
+            // hazard tick — using the per-tile-move-cost (waits cost
+            // the same as a move-onto-floor per the user's spec).
+            let cost = 0;
+            if (this.externalInventory !== null && this._shouldDeductMazeMana()) {
+                const gs = getGameStateSingleton?.();
+                if (gs) {
+                    cost = this._perTileMoveCost();
+                    gs.deductMana(cost);
+                    if (this.currentRegionId) {
+                        gs.addRegionXP(this.currentRegionId, cost);
+                    }
+                    if (gs.getCurrentMana() <= 0) {
+                        this._fireLoopReset();
+                        this._pendingFreshLocationCheck = null;
+                        this.render();
+                        return;
+                    }
+                }
+            }
+            if (Array.isArray(this._loopsDrivenSteps) && this.state?.player_pos) {
+                this._loopsDrivenSteps.push({
+                    x: this.state.player_pos.x,
+                    y: this.state.player_pos.y,
+                });
+                this._loopsDrivenCost += cost;
+            }
+            this._mazeQueue?.markCurrentDone();
+            this._tickAndCheckHazards();
             if (!this._loopsDrivenAction) {
                 this._pendingFreshLocationCheck = null;
                 this.render();
@@ -1748,7 +1813,7 @@ export class MazeRoomUI {
             this.world,
             { x: startPos.x, y: startPos.y },
             { kind: 'tile', x: next.x, y: next.y },
-            { hazards: this.world?.hazards },
+            { hazards: this.world?.hazards, allowWait: true },
         );
         if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
             const moves = stepsToActions(path.steps);

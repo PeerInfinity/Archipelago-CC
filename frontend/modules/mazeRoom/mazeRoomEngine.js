@@ -39,6 +39,12 @@ export const INPUT_N = 'N';
 export const INPUT_S = 'S';
 export const INPUT_E = 'E';
 export const INPUT_W = 'W';
+// Wait input — recognised by the visualizer's tick loop (skips
+// engine.step, advances state.turn) and emitted by stepsToInputs
+// for duplicate-tile entries in a planned path. NOT included in
+// INPUTS because step() doesn't consume it; only the playback
+// surfaces need to know about it.
+export const INPUT_WAIT = 'WAIT';
 export const INPUTS = [INPUT_N, INPUT_S, INPUT_E, INPUT_W];
 
 const DELTAS = {

@@ -48,7 +48,7 @@
 
 import {
     isFloor, getObstacle, getExitAt,
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/contentModules/hazardRuntime.js';
@@ -71,6 +71,12 @@ import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/co
  * @param {Array<object>} [opts.hazards] - hazard runtime objects (see
  *   hazardRuntime). When non-empty, the BFS plans around hazards
  *   using a time-expanded state (x, y, turn).
+ * @param {boolean} [opts.allowWait] - when true (and hazards is
+ *   non-empty), the BFS considers waiting as a 5th action, letting
+ *   the planner wait a hazard out at a chokepoint. Wait entries
+ *   show up in the output as duplicate-tile steps (same x,y twice
+ *   in a row); stepsToInputs / stepsToActions translate them to
+ *   INPUT_WAIT / {type:'wait'} respectively.
  * @returns {{steps: Array<{x,y}>, length: number} | null}
  */
 export function findPath(world, from, target, opts = {}) {
@@ -95,12 +101,13 @@ export function stepsToInputs(steps) {
     for (let i = 1; i < steps.length; i++) {
         const dx = steps[i].x - steps[i - 1].x;
         const dy = steps[i].y - steps[i - 1].y;
-        if (dx === 1 && dy === 0) out.push(INPUT_E);
+        if (dx === 0 && dy === 0) out.push(INPUT_WAIT);
+        else if (dx === 1 && dy === 0) out.push(INPUT_E);
         else if (dx === -1 && dy === 0) out.push(INPUT_W);
         else if (dx === 0 && dy === 1) out.push(INPUT_S);
         else if (dx === 0 && dy === -1) out.push(INPUT_N);
         // Non-cardinal moves are rejected silently — BFS only emits
-        // 4-connected paths, so this should never trigger.
+        // 4-connected paths and waits, so this should never trigger.
     }
     return out;
 }
@@ -126,6 +133,10 @@ export function stepsToActions(steps) {
     for (let i = 1; i < steps.length; i++) {
         const dx = steps[i].x - steps[i - 1].x;
         const dy = steps[i].y - steps[i - 1].y;
+        if (dx === 0 && dy === 0) {
+            out.push({ type: 'wait' });
+            continue;
+        }
         let dir = null;
         if (dx === 1 && dy === 0) dir = 'E';
         else if (dx === -1 && dy === 0) dir = 'W';
@@ -215,6 +226,12 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
     const cycleLcm = hazards
         ? hazards.reduce((m, hz) => _lcm(m, Math.max(1, hz.cycleLength || 1)), 1)
         : 1;
+    // Wait support: when allowWait is on AND we're in time-expanded
+    // mode, the BFS considers staying in place as a 5th action.
+    // Useful for letting a hazard's cycle clear a chokepoint instead
+    // of failing the search. Only meaningful with hazards (without
+    // them, waiting is always a strict regression on path length).
+    const allowWait = !!opts.allowWait && !!hazards;
 
     // Walkable predicate applied to each candidate neighbor. The
     // `from` tile is implicitly walkable (the player is there); we
@@ -255,7 +272,7 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
         const next = [];
         for (const node of frontier) {
             // Hazards' state at this node's turn — computed once per
-            // node, reused across the 4 neighbor checks.
+            // node, reused across the 4 neighbor checks + the wait.
             const hazardsAtT = hazards ? _hazardsAtTurn(hazards, node.t) : null;
             for (const d of DELTAS) {
                 const nx = node.x + d.dx;
@@ -281,6 +298,30 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
                     return _reconstructPath(parent, startKey, nKey);
                 }
                 next.push({ x: nx, y: ny, t: nt });
+            }
+            // Wait neighbor: same (x,y), advance turn. Valid only when
+            // no hazard.next equals the current position at turn t
+            // (Rule 1 applied to wait). Without this branch the
+            // planner would give up at hazard chokepoints — with it,
+            // the player can wait out a sweeping hazard before
+            // continuing.
+            if (allowWait) {
+                const nt = (node.t + 1) % cycleLcm;
+                const nKey = stateKey(node.x, node.y, nt);
+                if (!visited.has(nKey)
+                    && validateMoveAgainstHazards(
+                        hazardsAtT,
+                        { x: node.x, y: node.y },
+                        { x: node.x, y: node.y },
+                    )) {
+                    visited.add(nKey);
+                    parent.set(nKey, stateKey(node.x, node.y, node.t));
+                    // Wait can be the final step on the path only if
+                    // the start tile happens to be a goal — handled
+                    // by the trivial-path early-return above. So we
+                    // don't check isGoal here; just enqueue.
+                    next.push({ x: node.x, y: node.y, t: nt });
+                }
             }
         }
         frontier = next;

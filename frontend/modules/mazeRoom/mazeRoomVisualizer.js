@@ -20,7 +20,7 @@
  */
 
 import {
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
     step,
     detectStepEvents,
     getObstacle,
@@ -378,6 +378,29 @@ export class MazeRoomVisualizer {
 
         const input = this._plan[this._planIdx];
         const oldPos = { ...this._state.player_pos };
+        // Wait input: skip engine.step entirely. The player stays in
+        // place; only the turn counter advances. Log the wait so the
+        // playback log shows it, and notify so the substrate's
+        // _onVisualizerChange ticks hazards + advances the action
+        // queue for this turn (matches a normal step's downstream
+        // effects, minus the actual move).
+        if (input === INPUT_WAIT) {
+            this._state.turn += 1;
+            this._planIdx += 1;
+            this._log.push({
+                type: 'step',
+                input: INPUT_WAIT,
+                from: oldPos,
+                to: { ...oldPos },
+                turn: this._state.turn,
+                events: [],
+                target: this._target ? { ...this._target } : null,
+            });
+            if (this._planIdx >= this._plan.length) this._target = null;
+            this._publishSnapshot();
+            this._notifyChange();
+            return;
+        }
         const next = step(this._world, this._state, input, this._inventory);
 
         if (next === null) {
@@ -591,6 +614,11 @@ export class MazeRoomVisualizer {
                 // hazards. Null/empty hazards falls back to the plain
                 // (faster) BFS path.
                 hazards: this._world?.hazards,
+                // Allow waiting in the plan — _tick handles INPUT_WAIT
+                // by advancing turn without moving, and the substrate's
+                // _onVisualizerChange ticks hazards + advances the
+                // queue on each wait via the waitHappened branch.
+                allowWait: true,
             },
         );
         if (!result) return null;
