@@ -1154,6 +1154,49 @@ describe('buildPresetSidecars', () => {
         }
     });
 
+    it('growMaze never places hazards on entrance / exit / location tiles', () => {
+        // Modest grid + plentiful pool + larger region size to give
+        // hazards room to land far from the anchor tiles. Cycle
+        // through several seeds to catch any chance overlap that a
+        // single run would miss.
+        for (const seed of [3, 11, 19, 23, 31, 41]) {
+            const result = growMaze({
+                gridDims: { width: 3, height: 3 },
+                regionSize: { width: 8, height: 6 },
+                itemPool: { key_red: 6 },
+                obstaclePool: { door_red: 6 },
+                seed,
+                hazardOpts: {
+                    enabled: true,
+                    count: 4,
+                    maxConsecutiveFails: 30,
+                },
+            });
+            for (const region of result.grid.allRegions()) {
+                const w = region.playable_payload;
+                if (!Array.isArray(w.hazards) || w.hazards.length === 0) continue;
+                const reserved = new Set();
+                reserved.add(`${w.entrance.x},${w.entrance.y}`);
+                for (const exit of w.exits.values()) {
+                    reserved.add(`${exit.x},${exit.y}`);
+                }
+                for (const key of w.items.keys()) {
+                    reserved.add(key);
+                }
+                for (const h of w.hazards) {
+                    for (const t of h.tiles) {
+                        const k = `${t.x},${t.y}`;
+                        if (reserved.has(k)) {
+                            throw new Error(
+                                `Hazard tile ${k} overlaps anchor (entrance / exit / location) in region ${region.region_id} (seed ${seed})`,
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    });
+
     it('growMaze with hazardOpts.enabled=false produces no hazards', () => {
         const result = growMaze({
             gridDims: { width: 3, height: 3 },

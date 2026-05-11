@@ -287,6 +287,11 @@ export function generateLoopPath(world, opts, rng) {
  * @param {Array<{shape:string,length:number}>} [opts.shapeMix] -
  *   weighted shape pool. Default: every linear length + every loop
  *   length with equal weight.
+ * @param {Iterable<string>} [opts.initialReservedTiles] - posKey
+ *   strings ("x,y") that NO hazard tile may occupy. Used by the
+ *   procgen pipeline to keep hazards off entrance / exit tiles
+ *   (visually awkward + would obscure the spawn point). Seeds the
+ *   reserved set before any placement attempt.
  * @param {{next:()=>number}} rng
  * @returns {{ hazards: Array, stopReason: string }}
  */
@@ -298,7 +303,7 @@ export function generateHazards(world, opts, rng) {
         return { hazards: [], stopReason: 'no_request' };
     }
     const hazards = [];
-    const reserved = new Set();
+    const reserved = new Set(opts?.initialReservedTiles ?? []);
     let consecutiveFails = 0;
     while (hazards.length < count) {
         if (consecutiveFails >= maxConsecutiveFails) {

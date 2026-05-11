@@ -381,6 +381,39 @@ describe('generateHazards', () => {
         const b = generateHazards(world, { count: 4 }, createRng(99));
         expect(a).toEqual(b);
     });
+
+    it('honors initialReservedTiles (entrance / exit protection)', () => {
+        const world = makeWorld(10, 10);
+        const reserved = new Set(['5,5', '0,0', '9,9']);
+        const result = generateHazards(world, {
+            count: 4,
+            initialReservedTiles: reserved,
+        }, createRng(1));
+        // No placed hazard tile should overlap any reserved tile.
+        for (const h of result.hazards) {
+            for (const t of h.tiles) {
+                expect(reserved.has(`${t.x},${t.y}`)).toBe(false);
+            }
+        }
+    });
+
+    it('initialReservedTiles is additive to the per-hazard non-overlap rule', () => {
+        // Initial reservation excludes some tiles; placed hazards
+        // continue to add to the set so subsequent hazards don't
+        // overlap with either prior hazards OR the initial reserve.
+        const world = makeWorld(15, 15);
+        const reserved = new Set(['7,7']);
+        const result = generateHazards(world, {
+            count: 5,
+            initialReservedTiles: reserved,
+        }, createRng(2));
+        const allHazardTiles = result.hazards.flatMap((h) => h.tiles);
+        const keys = new Set(allHazardTiles.map((t) => `${t.x},${t.y}`));
+        // No duplicates among placed hazards.
+        expect(keys.size).toBe(allHazardTiles.length);
+        // None of them is the seeded reserve.
+        expect(keys.has('7,7')).toBe(false);
+    });
 });
 
 // ---------------------------------------------------------------

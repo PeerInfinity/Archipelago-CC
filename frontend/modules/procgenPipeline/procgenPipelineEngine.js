@@ -488,10 +488,37 @@ function applyHazardModule(world, hazardOpts, rng) {
     if (!hazardOpts || !hazardOpts.enabled) return;
     const count = Math.max(0, Math.floor(hazardOpts.count ?? 0));
     if (count === 0) return;
+    // Keep hazards off entrance / exit / location tiles. Hazards
+    // don't statically block tiles (the player walks through them
+    // when the cycle phase allows), but a hazard whose path
+    // includes one of these "anchor" tiles would obscure them
+    // visually and create UX confusion — entrance is where the
+    // player spawns, exits route between regions, and locations
+    // hold the item sprite.
+    const reservedTiles = new Set();
+    if (world.entrance) {
+        reservedTiles.add(`${world.entrance.x},${world.entrance.y}`);
+    }
+    if (world.exits) {
+        for (const exit of world.exits.values()) {
+            if (typeof exit?.x === 'number' && typeof exit?.y === 'number') {
+                reservedTiles.add(`${exit.x},${exit.y}`);
+            }
+        }
+    }
+    // world.items is a Map<posKey, itemId>; each entry is a
+    // location tile. Reserve them all so hazards stay clear of
+    // pickups.
+    if (world.items) {
+        for (const key of world.items.keys()) {
+            reservedTiles.add(key);
+        }
+    }
     const result = generateHazards(world, {
         count,
         maxConsecutiveFails: hazardOpts.maxConsecutiveFails ?? 10,
         wallOverlapAllowed: !!hazardOpts.wallOverlapAllowed,
+        initialReservedTiles: reservedTiles,
     }, rng);
     if (result.hazards.length > 0) {
         world.hazards = result.hazards.map((h) => ({ ...h, phase: 0 }));
