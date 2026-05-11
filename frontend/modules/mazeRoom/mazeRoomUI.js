@@ -47,6 +47,12 @@ import {
     ACTION_LOCATION_CHECK,
 } from './mazeRoomQueue.js';
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
+import {
+    tickHazards,
+    resetHazards,
+    validateMove as validateMoveAgainstHazards,
+    hasAnyValidMove as hasAnyValidMoveAgainstHazards,
+} from '../shared/procgen/contentModules/hazardRuntime.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
 // Convert to a Set of item ids that the player currently holds (count > 0)
@@ -127,6 +133,13 @@ const MOVE_DIR_TO_INPUT = {
     S: INPUT_S,
     E: INPUT_E,
     W: INPUT_W,
+};
+
+const MOVE_DIR_TO_DELTA = {
+    N: { dx: 0, dy: -1 },
+    S: { dx: 0, dy: 1 },
+    E: { dx: 1, dy: 0 },
+    W: { dx: -1, dy: 0 },
 };
 
 export class MazeRoomUI {
@@ -1143,6 +1156,10 @@ export class MazeRoomUI {
         this._directWalkCost = 0;
         this._directWalkItems = [];
         this._directWalkLocations = [];
+        // Per the v1 region-reset model, any hazards loaded onto the
+        // new world start at phase 0. resetHazards no-ops when the
+        // world has no hazards.
+        resetHazards(payload?.world?.hazards);
         this.world = payload.world;
         this.state = createState(this.world);
         const arrivedExitId = payload.arrivedFrom?.exit_id;
@@ -1630,6 +1647,20 @@ export class MazeRoomUI {
             // executor invocation — the side effects already happened
             // via the visualizer.
             this._mazeQueue?.markCurrentDone();
+            // Phase 2e: every tile-step is a turn — tick hazards. The
+            // autopather doesn't currently plan around hazards (v1
+            // limitation), so if a delegated walk ends in a doomed
+            // position, _fireHazardTeleport will fire below via
+            // _tickAndCheckHazards and clear the loops walk cleanly.
+            this._tickAndCheckHazards();
+            // If teleport fired, _loopsDrivenAction is cleared by
+            // _fireHazardTeleport and the rest of this handler can
+            // exit early — no more chaining to do.
+            if (!this._loopsDrivenAction) {
+                this._pendingFreshLocationCheck = null;
+                this.render();
+                return;
+            }
         }
         this._pendingFreshLocationCheck = null;
         // Fog of war: expand the seen-set on each visualizer step
@@ -3098,66 +3129,180 @@ export class MazeRoomUI {
         // dev mode the override is undefined and step keeps its
         // historical pickup-into-state.inventory behavior.
         const oldPos = { x: this.state.player_pos.x, y: this.state.player_pos.y };
-        // Use the same clearance evaluator path as the renderer so a
-        // visibly-open logic gate is also walkable (and a closed one
-        // blocks). Falls through to the local subset evaluator when
-        // no snapshot is loaded.
-        const ruleEvaluator = this._currentRuleEvaluator();
-        const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
-        const next = step(this.world, this.state, input, this.externalInventory ?? undefined, clearOpts);
-        if (next === null) return;
-        this.state = next;
-        if (this.externalInventory !== null) {
-            // Phase 3: deduct mana for the tile-step before publishing
-            // events. Charges location cost if the new tile holds an
-            // unchecked location, otherwise the per-tile move cost.
-            // The deduction is gated on world.manaEnabled and on loop
-            // mode being inactive (loops queue handles deduction itself
-            // when active). The check uses pre-event checkedLocations,
-            // matching the user's spec ("moving onto a tile with an
-            // unchecked location uses the location cost").
-            const cost = this._deductMazeStepMana(next.player_pos);
-            if (this.world?.manaEnabled && !this._loopsDrivenAction) {
-                this._directWalkCost += cost;
+
+        // Hazard validation: if any hazard would be stepped into
+        // ("Rule 1" — next-turn tile) or approached head-on ("Rule 2"),
+        // the move is a no-op. Engine.step + side effects are skipped;
+        // the turn still passes (hazards tick below). Mirrors the
+        // "queued move becomes a no-op for that step" semantics from
+        // wall-bumped moves.
+        const intendedPos = this._intendedTileFor(oldPos, dir);
+        const hazardAllowed = validateMoveAgainstHazards(
+            this.world.hazards, oldPos, intendedPos,
+        );
+        let stepped = false;
+        if (hazardAllowed) {
+            // Use the same clearance evaluator path as the renderer so a
+            // visibly-open logic gate is also walkable (and a closed
+            // one blocks). Falls through to the local subset evaluator
+            // when no snapshot is loaded.
+            const ruleEvaluator = this._currentRuleEvaluator();
+            const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
+            const next = step(this.world, this.state, input, this.externalInventory ?? undefined, clearOpts);
+            if (next !== null) {
+                this.state = next;
+                stepped = true;
+                if (this.externalInventory !== null) {
+                    // Phase 3: deduct mana for the tile-step before
+                    // publishing events. Charges location cost if the
+                    // new tile holds an unchecked location, otherwise
+                    // the per-tile move cost. The deduction is gated
+                    // on world.manaEnabled and on loop mode being
+                    // inactive (loops queue handles deduction itself
+                    // when active). The check uses pre-event
+                    // checkedLocations, matching the user's spec
+                    // ("moving onto a tile with an unchecked location
+                    // uses the location cost").
+                    const cost = this._deductMazeStepMana(next.player_pos);
+                    if (this.world?.manaEnabled && !this._loopsDrivenAction) {
+                        this._directWalkCost += cost;
+                    }
+                    this._publishPlaybackEvents(oldPos, next.player_pos);
+                }
+                // Fog of war: expand the seen-set with the new
+                // position's visibility (the new tile + 4-coord-
+                // adjacent). Newly-visible items / exits get their
+                // discoveries fired here. Cheap when fog is off —
+                // _expandFogVisibility no-ops if seen-set hasn't been
+                // initialised, and we don't compute visibility unless
+                // fog is enabled.
+                if (this.fogEnabled) {
+                    this._expandFogVisibility(this._computeVisibleAt(next.player_pos));
+                }
+                if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
+                    this.message = `Reached exit in ${this.state.turn} steps.`;
+                }
             }
-            this._publishPlaybackEvents(oldPos, next.player_pos);
         }
-        // Fog of war: expand the seen-set with the new position's
-        // visibility (the new tile + 4-coord-adjacent). Newly-visible
-        // items / exits get their discoveries fired here. Cheap when
-        // fog is off — _expandFogVisibility no-ops if seen-set hasn't
-        // been initialised, and we don't compute visibility unless
-        // fog is enabled.
-        if (this.fogEnabled) {
-            this._expandFogVisibility(this._computeVisibleAt(next.player_pos));
+        // Whether the move executed or not, the turn passed — tick
+        // hazards and check for the no-valid-moves teleport. For
+        // loops-delegated walks the tick happens in
+        // _onVisualizerChange instead (per tile-step there).
+        if (!this._loopsDrivenAction) {
+            this._tickAndCheckHazards();
         }
-        if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
-            this.message = `Reached exit in ${this.state.turn} steps.`;
-        }
+        // Suppress unused-var lint if we ever change the branching;
+        // `stepped` documents intent and is reserved for future use.
+        void stepped;
     }
 
     /**
      * Execute a queued wait. No movement, no event publish, no fog
      * change. In playback mode, deducts mana at the per-tile-move
      * rate (same cost as a move-onto-floor, per the plan's "wait
-     * has same mana cost as move"). When hazards land in a later
-     * phase, this is where the per-tick hazard advance fires.
+     * has same mana cost as move"). Ticks hazards after the wait so
+     * the player can wait out hazard cycles.
      */
     _executeWaitAction() {
         if (!this.world || !this.state) return;
-        if (this.externalInventory === null) return;
-        if (!this._shouldDeductMazeMana()) return;
-        const gs = getGameStateSingleton?.();
-        if (!gs) return;
-        const cost = this._perTileMoveCost();
-        gs.deductMana(cost);
-        if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+        const pos = this.state.player_pos;
+        const hazardAllowed = validateMoveAgainstHazards(
+            this.world.hazards, pos, pos,
+        );
+        if (hazardAllowed
+                && this.externalInventory !== null
+                && this._shouldDeductMazeMana()) {
+            const gs = getGameStateSingleton?.();
+            if (gs) {
+                const cost = this._perTileMoveCost();
+                gs.deductMana(cost);
+                if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+                if (!this._loopsDrivenAction) {
+                    this._directWalkCost += cost;
+                }
+                if (gs.getCurrentMana() <= 0) {
+                    this._fireLoopReset();
+                    return;
+                }
+            }
+        }
         if (!this._loopsDrivenAction) {
-            this._directWalkCost += cost;
+            this._tickAndCheckHazards();
         }
-        if (gs.getCurrentMana() <= 0) {
-            this._fireLoopReset();
+    }
+
+    /**
+     * Compute the tile a player at `from` would intend to step into
+     * given direction `dir` (regardless of whether engine.step would
+     * actually permit the move). Used for hazard pre-validation
+     * before engine.step runs.
+     */
+    _intendedTileFor(from, dir) {
+        const d = MOVE_DIR_TO_DELTA[dir];
+        if (!d) return from;
+        return { x: from.x + d.dx, y: from.y + d.dy };
+    }
+
+    /**
+     * Advance every hazard by one turn, then check whether the
+     * player has any valid action from their current tile against
+     * the new hazard state. If none, fire the hazard teleport.
+     * Called after each direct-keyboard player action.
+     *
+     * No-op when world has no hazards.
+     */
+    _tickAndCheckHazards() {
+        const hazards = this.world?.hazards;
+        if (!Array.isArray(hazards) || hazards.length === 0) return;
+        tickHazards(hazards);
+        if (!hasAnyValidMoveAgainstHazards(this.world, hazards, this.state.player_pos)) {
+            this._fireHazardTeleport();
         }
+    }
+
+    /**
+     * Teleport the player back to the entrance of this region after a
+     * "no valid moves" situation. Distinct from _fireLoopReset (which
+     * triggers a region-change and refills mana) — hazard-teleport is
+     * a local-region reset:
+     *
+     *   - player_pos → arrival exit tile (falls back to world.entrance)
+     *   - hazards reset to phase 0
+     *   - mana / XP / region untouched
+     *   - in-flight visualizer + replay are cancelled so they can't
+     *     continue from a stale position
+     *   - if loops was driving, loops gets a completed:false so its
+     *     queue stops cleanly
+     *
+     * Per the user's spec: "If there are no valid moves, then the
+     * player should be teleported back to the entrance they arrived
+     * in the region from."
+     */
+    _fireHazardTeleport() {
+        const tile = this._resolveHazardEntranceTile();
+        if (!tile) return;
+        if (this._loopsDrivenAction) {
+            this._clearLoopsDrivenTracking();
+            this._publishLoopsCompleted(false);
+        }
+        this._visualizer?.stop?.();
+        this._stopReplay?.();
+        this._mazeQueue?.clearPending();
+        this.state.player_pos = { x: tile.x, y: tile.y };
+        resetHazards(this.world.hazards);
+        this.message = 'Hazard-trapped — teleported to entrance.';
+    }
+
+    _resolveHazardEntranceTile() {
+        // Prefer the exit tile the player arrived through (the door
+        // they came in by) — mirrors _adoptLoadedRegion's spawn-
+        // positioning logic. Falls back to world.entrance for the
+        // initial spawn / standalone Generate flow.
+        if (this.arrivedFromExitId && this.world?.exits?.has(this.arrivedFromExitId)) {
+            const exit = this.world.exits.get(this.arrivedFromExitId);
+            return { x: exit.x, y: exit.y };
+        }
+        return this.world?.entrance ?? null;
     }
 
     /**

@@ -1602,3 +1602,204 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
         expect(panel._mazeQueue.length).toBe(0);
     });
 });
+
+describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    function makeHazardLinear(tiles, phase = 0) {
+        return {
+            shape: 'linear',
+            length: tiles.length,
+            tiles,
+            cycleLength: 2 * (tiles.length - 1),
+            phase,
+        };
+    }
+
+    function makeWorldWithHazards(hazards, opts = {}) {
+        const w = makeWorld(opts);
+        // Open floor for engine.step to operate on.
+        const totalTiles = w.width * w.height;
+        w.tiles = new Int8Array(totalTiles);
+        w.hazards = hazards;
+        return w;
+    }
+
+    function makePanelOnWorld(world, opts = {}) {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = world;
+        panel.state = {
+            player_pos: opts.playerPos ?? { x: 0, y: 0 },
+            turn: 0,
+            inventory: new Set(),
+        };
+        panel.currentRegionId = opts.regionId ?? 'R';
+        panel.arrivedFromExitId = opts.arrivedFrom ?? null;
+        // Stub render so headless tests don't try to draw.
+        panel.render = () => {};
+        return panel;
+    }
+
+    it('_adoptLoadedRegion resets hazard phases to 0', () => {
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
+        const world = makeWorldWithHazards([haz], {});
+        world.fogEnabled = false;
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'R',
+            world,
+            arrivedFrom: null,
+        });
+        expect(haz.phase).toBe(0);
+    });
+
+    it('_executeMoveAction skips engine.step when hazard blocks the destination', () => {
+        // Hazard at (0,0), facing (1,0). Player at (2,0) tries to move
+        // west to (1,0) — Rule 1 fires (1,0) = hazard's next tile.
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 4, height: 1 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 2, y: 0 } });
+        panel._executeMoveAction('W');
+        // Player didn't move (blocked); turn advanced (hazard ticked).
+        expect(panel.state.player_pos).toEqual({ x: 2, y: 0 });
+        expect(haz.phase).toBe(1);
+    });
+
+    it('_executeMoveAction allows + ticks when destination is clear', () => {
+        // Hazard far from player. Player moves east into open floor.
+        const haz = makeHazardLinear([{ x: 5, y: 0 }, { x: 5, y: 1 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 6, height: 2 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        panel._executeMoveAction('E');
+        expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
+        expect(haz.phase).toBe(1);
+    });
+
+    it('_executeWaitAction ticks hazards even when no mana deducted', () => {
+        const haz = makeHazardLinear([{ x: 5, y: 0 }, { x: 5, y: 1 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 6, height: 2 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        // externalInventory null → no mana deduction path. Wait still ticks.
+        panel._executeWaitAction();
+        expect(haz.phase).toBe(1);
+    });
+
+    it('_executeWaitAction is rejected when a hazard is about to stomp the player\'s tile', () => {
+        // Player at (1,0). Hazard at (0,0) facing east toward (1,0).
+        // Wait → Rule 1 fires (1,0) = hazard's next tile.
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 3, height: 1 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
+        // arrivedFromExitId null → teleport falls back to world.entrance.
+        world.entrance = { x: 2, y: 0 };
+        panel._executeWaitAction();
+        // Wait blocked, then tick fired. After the tick the hazard's
+        // current tile = (1,0) and next = (0,0). hasAnyValidMove from
+        // (1,0): wait blocked (Rule 2? no — wait's from===to===(1,0),
+        // hazard.cur = (1,0), hazard.next = (0,0). Rule 2 fires when
+        // from === next, but from = (1,0) ≠ next (0,0). Rule 1 fires
+        // when to = next; to = (1,0) ≠ next (0,0). So wait is fine
+        // post-tick! No teleport.
+        expect(haz.phase).toBe(1);
+        expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
+    });
+
+    it('_fireHazardTeleport moves player to world.entrance and resets hazards', () => {
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 1);
+        const world = makeWorldWithHazards([haz], { width: 5, height: 5 });
+        world.entrance = { x: 2, y: 2 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 4, y: 4 } });
+        panel._fireHazardTeleport();
+        expect(panel.state.player_pos).toEqual({ x: 2, y: 2 });
+        expect(haz.phase).toBe(0);
+        expect(panel.message).toMatch(/Hazard-trapped/);
+    });
+
+    it('_fireHazardTeleport prefers the arrived-from exit over world.entrance', () => {
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 5, height: 5 });
+        world.entrance = { x: 2, y: 2 };
+        world.exits = new Map([
+            ['south_door', { exit_id: 'south_door', x: 4, y: 4 }],
+        ]);
+        const panel = makePanelOnWorld(world, {
+            playerPos: { x: 1, y: 1 },
+            arrivedFrom: 'south_door',
+        });
+        panel._fireHazardTeleport();
+        expect(panel.state.player_pos).toEqual({ x: 4, y: 4 });
+    });
+
+    it('_fireHazardTeleport clears pending queue actions + stops replay', () => {
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 5, height: 5 });
+        world.entrance = { x: 0, y: 0 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 2, y: 2 } });
+        // Populate the queue with some pending and start a fake replay.
+        panel._mazeQueue.append({ type: 'move', dir: 'N' });
+        panel._mazeQueue.append({ type: 'move', dir: 'E' });
+        panel._startReplayDriver();
+        expect(panel._replayDriver).not.toBeNull();
+        expect(panel._mazeQueue.length).toBeGreaterThan(0);
+        panel._fireHazardTeleport();
+        expect(panel._replayDriver).toBeNull();
+        expect(panel._mazeQueue.length).toBe(0);
+    });
+
+    it('_tickAndCheckHazards is a no-op when world has no hazards', () => {
+        const world = makeWorldWithHazards(undefined, { width: 3, height: 3 });
+        const panel = makePanelOnWorld(world);
+        expect(() => panel._tickAndCheckHazards()).not.toThrow();
+        expect(panel.state.player_pos).toEqual({ x: 0, y: 0 });
+    });
+
+    it('_tickAndCheckHazards teleports when no valid move remains after the tick', () => {
+        // 2x1 world: tiles (0,0) and (1,0). One hazard cycling between
+        // them. Player at (0,0); the tick advances the hazard from
+        // phase 0 (at (0,0)) to phase 1 (at (1,0), facing back to (0,0)).
+        // After tick, hasAnyValidMove from (0,0):
+        //   wait at (0,0): Rule 1 — to=(0,0)=hazard.next. BLOCKED.
+        //   move E to (1,0): Rule 2 — from=(0,0)=hazard.next, to=(1,0)=hazard.cur. BLOCKED.
+        //   N/S/W: off-grid. Skipped.
+        // → no valid move → teleport fires. Player → world.entrance
+        // and hazard phase resets to 0.
+        const world = makeWorldWithHazards([
+            makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0),
+        ], { width: 2, height: 1 });
+        world.entrance = { x: 1, y: 0 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        panel._tickAndCheckHazards();
+        // Teleport executed.
+        expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
+        expect(world.hazards[0].phase).toBe(0);
+        expect(panel.message).toMatch(/Hazard-trapped/);
+    });
+
+    it('_tickAndCheckHazards leaves phase + position alone when a valid move exists', () => {
+        // Same shape as the above world, but bigger so the player has
+        // an escape direction. Player at (0,0); after tick, the hazard
+        // is at (1,0) facing (0,0). Player can move south to (0,1).
+        const world = makeWorldWithHazards([
+            makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0),
+        ], { width: 2, height: 3 });
+        world.entrance = { x: 1, y: 2 };
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        panel._tickAndCheckHazards();
+        expect(panel.state.player_pos).toEqual({ x: 0, y: 0 }); // unchanged
+        expect(world.hazards[0].phase).toBe(1); // tick advanced
+    });
+
+    it('_executeMoveAction does not tick when loops is driving (visualizer does)', () => {
+        const haz = makeHazardLinear([{ x: 5, y: 5 }, { x: 5, y: 6 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 8, height: 8 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        panel._executeMoveAction('E');
+        // Loops walks the visualizer; the queue-executor path
+        // doesn't tick — _onVisualizerChange does.
+        expect(haz.phase).toBe(0);
+    });
+});
