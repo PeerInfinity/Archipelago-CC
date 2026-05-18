@@ -1,0 +1,72 @@
+{
+  "startRoomId": "foyer",
+  "rooms": {
+    "foyer": {
+      "id": "foyer",
+      "title": "Engine Foyer",
+      "description": "You are standing in the foyer of the Text Adventure Engine demonstration. Doorways lead off in several directions, each demonstrating a different engine feature. A welcome plaque is mounted on the wall.\n\nType commands like `go north` or `examine plaque`, or click the labelled exits and items below.",
+      "exits": [
+        { "id": "to-exits", "label": "north (Exits Room)", "targetRoomId": "exits-room" },
+        { "id": "to-items", "label": "east (Items Room)", "targetRoomId": "items-room" },
+        { "id": "to-inventory", "label": "south (Inventory Room)", "targetRoomId": "inventory-room" },
+        { "id": "to-discovery", "label": "west (Discovery Room)", "targetRoomId": "discovery-room" }
+      ],
+      "items": [
+        {
+          "id": "plaque",
+          "label": "welcome plaque",
+          "description": "A polished brass plaque reads: 'Welcome to the Text Adventure Engine. This world is self-referential — each room demonstrates a feature. Once you have explored all four wings, the door to the conclusion room will open.'"
+        }
+      ]
+    },
+    "exits-room": {
+      "id": "exits-room",
+      "title": "Exits Room",
+      "description": "This room demonstrates exits. There are three doorways here. The first is open. The second is locked (you can see it, but you can't go through it — the wrapper or standalone mode marks it inaccessible). The third leads back to the foyer.",
+      "exits": [
+        { "id": "open-door", "label": "open door (leads nowhere interesting)", "targetRoomId": "exits-room" },
+        { "id": "locked-door", "label": "locked door (inaccessible)", "targetRoomId": "foyer" },
+        { "id": "back", "label": "south (back to Foyer)", "targetRoomId": "foyer" }
+      ],
+      "items": []
+    },
+    "items-room": {
+      "id": "items-room",
+      "title": "Items Room",
+      "description": "Three items sit on a table. The brass coin can be examined freely. The crystal shard is locked — visible but you can't interact with it. The third item demonstrates collection: pick up the wooden token and it becomes greyed out.",
+      "exits": [
+        { "id": "back", "label": "west (back to Foyer)", "targetRoomId": "foyer" }
+      ],
+      "items": [
+        { "id": "coin", "label": "brass coin", "description": "A small brass coin, dull from age." },
+        { "id": "shard", "label": "crystal shard (locked)", "description": "A shimmering crystal shard. (You can't actually examine this — it's marked inaccessible.)" },
+        { "id": "token", "label": "wooden token", "description": "A small wooden token. Examining it 'collects' it (in standalone mode)." }
+      ]
+    },
+    "inventory-room": {
+      "id": "inventory-room",
+      "title": "Inventory Room",
+      "description": "This room demonstrates the inventory sidebar. The bowl on the pedestal grants you a single coin when examined; in managed mode the wrapper would populate the inventory from Archipelago state instead.\n\nNote: standalone mode does not auto-populate inventory — the inventory sidebar will appear empty unless something explicitly adds to it.",
+      "exits": [
+        { "id": "back", "label": "north (back to Foyer)", "targetRoomId": "foyer" }
+      ],
+      "items": [
+        { "id": "bowl", "label": "bowl on a pedestal", "description": "A wooden bowl sits on a stone pedestal. (Inventory grants happen in managed mode; this is a demo placeholder.)" }
+      ]
+    },
+    "discovery-room": {
+      "id": "discovery-room",
+      "title": "Discovery Room",
+      "description": "This room demonstrates discovery mode. With `discoveryMode: 'discovered'`, undiscovered items are hidden and exits to undiscovered rooms are obscured. By default the engine runs in `'full'` mode and shows everything.\n\nThree items are present, but if discovery were enabled you'd only see the ones you'd already examined.",
+      "exits": [
+        { "id": "back", "label": "east (back to Foyer)", "targetRoomId": "foyer" },
+        { "id": "secret", "label": "a faint outline of a door (unknown destination)", "targetRoomId": "foyer" }
+      ],
+      "items": [
+        { "id": "lantern", "label": "old lantern", "description": "A dusty oil lantern." },
+        { "id": "scroll", "label": "rolled scroll", "description": "A blank scroll." },
+        { "id": "stone", "label": "smooth stone", "description": "A smooth river stone." }
+      ]
+    }
+  }
+}

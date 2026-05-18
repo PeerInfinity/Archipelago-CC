@@ -1,0 +1,10 @@
+{
+  "worlds": [
+    {
+      "name": "meta-demo",
+      "file": "meta-demo.json",
+      "title": "Engine Demo",
+      "description": "Self-referential tour of the engine's features. Each room demonstrates one capability."
+    }
+  ]
+}

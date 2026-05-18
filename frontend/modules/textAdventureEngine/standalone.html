@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Adventure Engine — Standalone</title>
+    <link rel="stylesheet" href="./engine.css">
+    <style>
+        html, body { height: 100%; margin: 0; }
+        body { background: #1a1a1a; }
+        #app {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module">
+        import { TextAdventureEngine } from './engine.js';
+        const engine = new TextAdventureEngine(document.getElementById('app'));
+        // Expose for debugging from devtools
+        window.engine = engine;
+    </script>
+</body>
+</html>
