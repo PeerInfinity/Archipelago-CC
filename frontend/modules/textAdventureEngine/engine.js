@@ -65,7 +65,7 @@ export class TextAdventureEngine {
                 this.state.items[roomId][item.id] = { discovered: false, collected: false, accessible: true };
             }
             for (const exit of (room.exits || [])) {
-                this.state.exits[roomId][exit.id] = { accessible: true };
+                this.state.exits[roomId][exit.id] = { accessible: true, discovered: false };
             }
         }
         this.messages = [];
@@ -150,6 +150,11 @@ export class TextAdventureEngine {
         if (slot) { slot.accessible = !!value; this._queueRender(); }
     }
 
+    setExitDiscovered(roomId, exitId, value) {
+        const slot = this.state.exits[roomId]?.[exitId];
+        if (slot) { slot.discovered = !!value; this._queueRender(); }
+    }
+
     setInventory(items) {
         this.state.inventory = {};
         for (const [id, entry] of Object.entries(items || {})) {
@@ -178,6 +183,15 @@ export class TextAdventureEngine {
 
     displayMessage(text, kind = 'normal') {
         this._queueMessage(text, kind);
+        this._queueRender();
+    }
+
+    setDiscoveryMode(mode) {
+        if (mode !== 'full' && mode !== 'discovered') {
+            throw new Error(`setDiscoveryMode: mode must be 'full' or 'discovered', got '${mode}'`);
+        }
+        if (this.options.discoveryMode === mode) return;
+        this.options.discoveryMode = mode;
         this._queueRender();
     }
 
@@ -210,6 +224,51 @@ export class TextAdventureEngine {
         this._emit('command:move', { fromRoomId: roomId, exitId, targetRoomId: exit.targetRoomId });
         if (!this.options.managed) {
             this.setCurrentRoom(exit.targetRoomId);
+        }
+    }
+
+    /**
+     * Trigger an explore action for the given room. Emits
+     * `command:explore`. In standalone mode, picks one undiscovered
+     * exit or item from the room and marks it discovered (mirrors
+     * the host's discovery module behavior for out-of-loop explore).
+     * In managed mode, the wrapper takes care of the discovery
+     * delta — engine just emits the event.
+     */
+    triggerExplore(roomId, _opts = {}) {
+        const room = this.world?.rooms[roomId];
+        if (!room) {
+            this.displayMessage(`No room '${roomId}'.`, 'error');
+            return;
+        }
+        this._emit('command:explore', { roomId });
+        if (this.options.managed) return;
+
+        // Standalone: pick one undiscovered candidate.
+        const candidates = [];
+        for (const exit of room.exits) {
+            const targetRoomDiscovered = this.state.rooms[exit.targetRoomId]?.discovered;
+            if (exit.targetRoomId && !targetRoomDiscovered) {
+                candidates.push({ kind: 'exit', exit });
+            }
+        }
+        for (const item of room.items) {
+            const slot = this.state.items[roomId]?.[item.id];
+            if (slot && !slot.discovered) {
+                candidates.push({ kind: 'item', item });
+            }
+        }
+        if (candidates.length === 0) {
+            this.displayMessage('Nothing left to discover here.', 'system');
+            return;
+        }
+        const pick = candidates[Math.floor(Math.random() * candidates.length)];
+        if (pick.kind === 'exit') {
+            this.setRoomDiscovered(pick.exit.targetRoomId, true);
+            this.displayMessage(`You discover a passage: ${pick.exit.label}.`, 'success');
+        } else {
+            this.setItemDiscovered(roomId, pick.item.id, true);
+            this.displayMessage(`You discover: ${pick.item.label}.`, 'success');
         }
     }
 
@@ -293,6 +352,7 @@ export class TextAdventureEngine {
                 'Commands:\n' +
                 '  go <exit> / move <exit>   — travel through an exit\n' +
                 '  examine <item> / look <item>  — examine an item\n' +
+                '  explore / x                — reveal one undiscovered thing\n' +
                 '  look                       — describe current room\n' +
                 '  inventory / inv            — list inventory (shown in sidebar)\n' +
                 '  help                       — this text',
@@ -304,6 +364,12 @@ export class TextAdventureEngine {
         // look (re-describe room)
         if (lower === 'look' || lower === 'l') {
             this._describeRoom(room, { force: true });
+            return;
+        }
+
+        // explore
+        if (lower === 'explore' || lower === 'x') {
+            this.triggerExplore(room.id, opts);
             return;
         }
 
@@ -414,6 +480,9 @@ export class TextAdventureEngine {
                 this.focus();
             } else if (t.dataset.itemId) {
                 this.triggerExamineItem(roomId, t.dataset.itemId);
+                this.focus();
+            } else if (t.dataset.action === 'explore') {
+                this.triggerExplore(roomId);
                 this.focus();
             }
         });
@@ -557,6 +626,15 @@ export class TextAdventureEngine {
             html.push('<div class="tae-actions-list">' + itemEls.join(' · ') + '</div>');
         }
 
+        // Explore link (only meaningful when there's something to discover)
+        if (this.options.discoveryMode === 'discovered') {
+            html.push(
+                '<div class="tae-actions-list tae-actions-explore">'
+                + `<span class="tae-link tae-link-explore" data-room-id="${escapeHtml(room.id)}" data-action="explore">[x] explore</span>`
+                + '</div>'
+            );
+        }
+
         html.push('</div>');
 
         this._displayEl.innerHTML = html.join('');
@@ -570,14 +648,26 @@ export class TextAdventureEngine {
     }
 
     _renderExit(roomId, exit) {
-        const accessible = this.state.exits[roomId]?.[exit.id]?.accessible ?? true;
-        const targetRoom = this.world.rooms[exit.targetRoomId];
+        const exitSlot = this.state.exits[roomId]?.[exit.id];
+        const accessible = exitSlot?.accessible ?? true;
+        const exitDiscovered = exitSlot?.discovered ?? false;
         const targetDiscovered = this.state.rooms[exit.targetRoomId]?.discovered ?? false;
         const discoveryMode = this.options.discoveryMode;
 
+        // Three-state rendering when discovery mode is on:
+        //   - exit not discovered             → fully obscured placeholder, click → explore
+        //   - exit discovered, target unknown → show exit but obscure target name
+        //   - exit discovered, target known   → full label
+        if (discoveryMode === 'discovered' && !exitDiscovered) {
+            return `<span class="tae-link tae-link-unknown" data-room-id="${escapeHtml(roomId)}" data-action="explore">an unfamiliar passage</span>`;
+        }
+
         let label = exit.label;
         if (discoveryMode === 'discovered' && !targetDiscovered) {
-            label = 'an unfamiliar passage';
+            // The exit itself is known; the destination isn't. Show the
+            // exit name but strip the parenthesised "(to X)" suffix
+            // since we shouldn't reveal where it leads.
+            label = exit.id + ' (unknown destination)';
         }
 
         const cls = ['tae-link', 'tae-link-exit'];
@@ -589,7 +679,10 @@ export class TextAdventureEngine {
         const slot = this.state.items[roomId]?.[item.id];
         if (!slot) return null;
         if (this.options.discoveryMode === 'discovered' && !slot.discovered && !slot.collected) {
-            return null; // hidden until discovered
+            // Obscured placeholder. Clicking it triggers explore for
+            // the room, matching the existing substrate's behavior of
+            // any "???" slot being a shortcut to explore.
+            return `<span class="tae-link tae-link-unknown" data-room-id="${escapeHtml(roomId)}" data-action="explore">an unfamiliar item</span>`;
         }
         const cls = ['tae-link', 'tae-link-item'];
         if (slot.collected) cls.push('tae-link-collected');

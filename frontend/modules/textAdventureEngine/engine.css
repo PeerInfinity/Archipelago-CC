@@ -149,6 +149,12 @@
 .tae-link-accessible   { color: #88cc88; }
 .tae-link-inaccessible { color: #cc8888; cursor: not-allowed; }
 .tae-link-collected    { color: #888; text-decoration: line-through; cursor: default; }
+.tae-link-explore      { color: #d4af37; font-weight: bold; }
+.tae-link-unknown      { color: #999; font-style: italic; }
+
+.tae-actions-explore {
+    margin-top: 6px;
+}
 
 .tae-placeholder {
     color: #888;

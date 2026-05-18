@@ -13,6 +13,8 @@
  */
 
 import { TextAdventureSubstrateWrapperPanel } from './textAdventureSubstrateWrapperPanel.js';
+import { getDiscoverySettings } from '../discovery/index.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
@@ -24,8 +26,10 @@ export const moduleInfo = {
         'Parallel text-adventure renderer driven by the synthetic engine. '
         + 'Phase 1: standalone rules.json playback only. Coexists with '
         + 'textAdventureSubstrate; intended to eventually replace it.',
-    requires: ['stateManager', 'gameState', 'iframeAdapter'],
+    requires: ['stateManager', 'gameState', 'discovery', 'iframeAdapter'],
 };
+
+const INITIAL_STATE_EVENT = 'textAdventureSubstrateWrapper:initialState';
 
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
@@ -39,9 +43,47 @@ export function register(registrationApi) {
         'textAdventureSubstrateWrapperPanel',
         TextAdventureSubstrateWrapperPanel,
     );
+
+    registrationApi.registerEventBusPublisher(INITIAL_STATE_EVENT);
+    registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
 }
 
-export function initialize(_moduleId, _priorityIndex, _initializationApi) {
-    // Nothing host-side to do for phase 1 — the bridge inside the
-    // iframe handles all AP-host subscriptions via IframeClient.
+export function initialize(_moduleId, _priorityIndex, initializationApi) {
+    const eventBus = initializationApi.getEventBus();
+    if (!eventBus) return;
+
+    // When ANY iframe app reports ready, broadcast the current
+    // discovery state. The bridge subscribes to this event and
+    // applies the state on receipt — fixing the "discovery mode not
+    // set on first load" gap (the iframe protocol has no native
+    // discovery snapshot to query).
+    //
+    // Publishing on every iframe:appReady (not just our own) is
+    // harmless: the event is idempotent, payload is small, and our
+    // bridge is the only subscriber to this custom event name.
+    eventBus.subscribe('iframe:appReady', () => {
+        const settings = getDiscoverySettings();
+        const active = !!settings?.enableDiscoveryMode;
+        let discoveredRegions = [];
+        let discoveredLocations = [];
+        let discoveredExits = [];
+        try {
+            discoveredRegions = Array.from(discoveryStateSingleton.getDiscoveredRegions());
+            discoveredLocations = Array.from(discoveryStateSingleton.getDiscoveredLocations());
+            const exitsMap = discoveryStateSingleton.getDiscoveredExits();  // Map<regionName, Set<exitName>>
+            for (const [regionName, exitSet] of exitsMap.entries()) {
+                for (const exitName of exitSet) {
+                    discoveredExits.push({ regionName, exitName });
+                }
+            }
+        } catch {
+            // Singleton may not be fully initialized; carry on with empties.
+        }
+        eventBus.publish(INITIAL_STATE_EVENT, {
+            discoveryMode: active ? 'discovered' : 'full',
+            discoveredRegions,
+            discoveredLocations,
+            discoveredExits,
+        });
+    });
 }

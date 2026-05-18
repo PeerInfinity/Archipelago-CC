@@ -208,12 +208,27 @@ async function main() {
         });
     });
 
+    engine.on('command:explore', ({ roomId }) => {
+        log('debug', 'engine command:explore', { roomId });
+        // Out-of-loop-mode behavior: dispatch loop:exploreCompleted
+        // directly. Discovery module's handler picks one undiscovered
+        // location or exit and reveals it; the discovery events fire
+        // back through our existing subscriptions.
+        client.publishEventDispatcher('loop:exploreCompleted', {
+            regionName: roomId,
+        });
+    });
+
     // World cache — rebuild if rules change.
     let world = null;
     let rebuildInFlight = false;
     // Last region seen via gameState:regionChanged. Tracked so we can
     // pick it up if the event fires before the world is built.
     let lastSeenRegion = null;
+    // Last initialState received. Cached so rebuildWorld can re-apply
+    // discovered flags after the world is built (initialState often
+    // arrives before staticData polling completes).
+    let pendingInitialState = null;
 
     /**
      * Wait for staticData to arrive in the client cache. The
@@ -262,6 +277,12 @@ async function main() {
             if (currentRegion) {
                 evaluateAccessibilityForRoom(engine, client, w, currentRegion);
             }
+            // Re-apply any initialState that arrived before the world
+            // was built (discoveryMode already applied; this fills in
+            // room/item discovered flags now that we have a world).
+            if (pendingInitialState) {
+                applyInitialState(pendingInitialState);
+            }
             setStatus('Connected', 'connected');
             log('info', `world built: ${Object.keys(w.rooms).length} rooms, current=${currentRegion}`);
         } finally {
@@ -294,6 +315,77 @@ async function main() {
         } else {
             applySnapshot();
         }
+    });
+
+    function applyInitialState(data) {
+        if (!data) return;
+        if (data.discoveryMode) {
+            engine.setDiscoveryMode(data.discoveryMode);
+        }
+        if (!world) return;
+        engine.batchUpdate(() => {
+            for (const regionName of data.discoveredRegions ?? []) {
+                if (world.rooms[regionName]) {
+                    engine.setRoomDiscovered(regionName, true);
+                }
+            }
+            for (const locationName of data.discoveredLocations ?? []) {
+                for (const room of Object.values(world.rooms)) {
+                    if (room.items.some(i => i.id === locationName)) {
+                        engine.setItemDiscovered(room.id, locationName, true);
+                        break;
+                    }
+                }
+            }
+            // discoveredExits is an array of {regionName, exitName} pairs.
+            for (const { regionName, exitName } of data.discoveredExits ?? []) {
+                if (world.rooms[regionName]?.exits.some(e => e.id === exitName)) {
+                    engine.setExitDiscovered(regionName, exitName, true);
+                }
+            }
+        });
+    }
+
+    // Discovery initial state — relayed by the wrapper's host-side
+    // index.js on iframe:appReady. Carries the current discovery
+    // mode and the sets of already-discovered regions / locations
+    // (the iframe protocol has no native way to query these on
+    // connect).
+    client.subscribeEventBus('textAdventureSubstrateWrapper:initialState', (data) => {
+        log('debug', 'initialState received', data);
+        pendingInitialState = data;
+        applyInitialState(data);  // applies what it can; if no world, only mode applies
+    });
+
+    // Discovery incremental events.
+    client.subscribeEventBus('discovery:modeChanged', (data) => {
+        const mode = data?.active ? 'discovered' : 'full';
+        log('debug', 'discovery:modeChanged', mode);
+        engine.setDiscoveryMode(mode);
+    });
+
+    client.subscribeEventBus('discovery:regionDiscovered', (data) => {
+        const regionName = data?.regionName;
+        if (!regionName || !world?.rooms[regionName]) return;
+        engine.setRoomDiscovered(regionName, true);
+    });
+
+    client.subscribeEventBus('discovery:locationDiscovered', (data) => {
+        const locationName = data?.locationName;
+        if (!locationName || !world) return;
+        // Find which room the location belongs to.
+        for (const room of Object.values(world.rooms)) {
+            if (room.items.some(i => i.id === locationName)) {
+                engine.setItemDiscovered(room.id, locationName, true);
+                return;
+            }
+        }
+    });
+
+    client.subscribeEventBus('discovery:exitDiscovered', (data) => {
+        const { regionName, exitName } = data ?? {};
+        if (!regionName || !exitName || !world) return;
+        engine.setExitDiscovered(regionName, exitName, true);
     });
 
     client.subscribeEventBus('gameState:regionChanged', (data) => {
