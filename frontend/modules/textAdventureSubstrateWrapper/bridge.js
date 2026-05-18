@@ -20,6 +20,8 @@
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { TextAdventureEngine } from '../textAdventureEngine/engine.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
 
 const statusEl = document.getElementById('status');
 const appEl = document.getElementById('app');
@@ -53,6 +55,10 @@ function buildWorldFromStaticData(staticData, currentRegion) {
     if (!staticData?.regions) return null;
     const regions = staticData.regions;
     const rooms = {};
+    // Side-table: access_rule per exit / item, keyed by room id.
+    // The engine itself doesn't care about rules; the bridge stores
+    // them so it can evaluate accessibility when state changes.
+    const accessRules = {};
     for (const [regionName, regionData] of regions.entries()) {
         if (!regionName || !regionData) continue;
         rooms[regionName] = {
@@ -74,12 +80,20 @@ function buildWorldFromStaticData(staticData, currentRegion) {
                     : loc.name,
             })),
         };
+        accessRules[regionName] = {
+            exits: Object.fromEntries(
+                (regionData.exits ?? []).map(e => [e.name, e.access_rule ?? null])
+            ),
+            items: Object.fromEntries(
+                (regionData.locations ?? []).map(l => [l.name, l.access_rule ?? null])
+            ),
+        };
     }
     const startRoomId = currentRegion && rooms[currentRegion]
         ? currentRegion
         : (rooms['Menu'] ? 'Menu' : Object.keys(rooms)[0]);
     if (!startRoomId) return null;
-    return { rooms, startRoomId };
+    return { rooms, startRoomId, accessRules };
 }
 
 // ─── Snapshot → engine state ──────────────────────────────────────
@@ -95,6 +109,48 @@ function applyInventoryFromSnapshot(engine, snapshot) {
         items[name] = { count, label: name };
     }
     engine.setInventory(items);
+}
+
+/**
+ * Evaluate access rules for one room's exits and items, push results
+ * to the engine. Defaults to accessible=true if a rule is null or
+ * evaluation throws.
+ */
+function evaluateAccessibilityForRoom(engine, client, world, roomId) {
+    if (!world || !roomId) return;
+    const room = world.rooms[roomId];
+    const rules = world.accessRules?.[roomId];
+    if (!room || !rules) return;
+    const snapshot = client.getStateSnapshot();
+    const staticData = client.getStaticData();
+    if (!snapshot || !staticData) return;
+
+    let ctx;
+    try {
+        ctx = createSnapshotInterface(snapshot, staticData, {});
+    } catch (err) {
+        log('warn', 'createSnapshotInterface failed:', err);
+        return;
+    }
+
+    function evalRule(rule) {
+        if (rule == null) return true;
+        try {
+            return !!evaluateRule(rule, ctx);
+        } catch (err) {
+            log('debug', 'rule eval threw, defaulting accessible:', err);
+            return true;
+        }
+    }
+
+    engine.batchUpdate(() => {
+        for (const exit of room.exits) {
+            engine.setExitAccessible(roomId, exit.id, evalRule(rules.exits[exit.id]));
+        }
+        for (const item of room.items) {
+            engine.setItemAccessible(roomId, item.id, evalRule(rules.items[item.id]));
+        }
+    });
 }
 
 function applyCheckedLocationsFromSnapshot(engine, snapshot, world) {
@@ -203,6 +259,9 @@ async function main() {
                     engine.setCurrentRoom(currentRegion);
                 }
             });
+            if (currentRegion) {
+                evaluateAccessibilityForRoom(engine, client, w, currentRegion);
+            }
             setStatus('Connected', 'connected');
             log('info', `world built: ${Object.keys(w.rooms).length} rooms, current=${currentRegion}`);
         } finally {
@@ -217,6 +276,9 @@ async function main() {
             applyInventoryFromSnapshot(engine, snapshot);
             applyCheckedLocationsFromSnapshot(engine, snapshot, world);
         });
+        if (lastSeenRegion) {
+            evaluateAccessibilityForRoom(engine, client, world, lastSeenRegion);
+        }
     }
 
     // AP → engine: subscribe to host events.
@@ -241,6 +303,7 @@ async function main() {
         if (!world) return;  // world not built yet; rebuildWorld will pick up lastSeenRegion
         if (world.rooms[newRegion]) {
             engine.setCurrentRoom(newRegion);
+            evaluateAccessibilityForRoom(engine, client, world, newRegion);
         } else {
             log('warn', 'gameState:regionChanged for unknown room', newRegion);
         }
