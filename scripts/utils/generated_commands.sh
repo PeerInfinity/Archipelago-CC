@@ -651,9 +651,3 @@ python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla World
 # ===== Cleanup =====
 
 find frontend/presets -type d -empty -delete
-# Update textAdventure-remote shared directory
-rm -rf frontend/modules/textAdventure-remote/shared
-cp -r frontend/modules/shared frontend/modules/textAdventure-remote/
-find frontend/modules/textAdventure-remote/shared/gameLogic -mindepth 1 -maxdepth 1 -type d "!" -name generic -exec rm -rf {} +
-cp frontend/modules/shared/gameLogic/gameLogicRegistry.empty.js frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.js
-rm frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.empty.js

@@ -77,7 +77,7 @@ async function loadAdventureRulesAndSetupWindow(testController, targetRegion = '
   const windowLoadedPromise = testController.waitForEvent('windowPanel:opened', 10000);
 
   testController.eventBus.publish('window:loadUrl', {
-    url: './modules/textAdventure-remote/index-window.html'
+    url: './modules/textAdventureWrapper/index-window.html'
   });
 
   const windowLoaded = await windowLoadedPromise;
@@ -534,7 +534,7 @@ export async function textAdventureWindowConnectionTest(testController) {
     const windowOpenedPromise = testController.waitForEvent('windowPanel:opened', 8000);
 
     testController.eventBus.publish('window:loadUrl', {
-      url: './modules/textAdventure-remote/index-window.html'
+      url: './modules/textAdventureWrapper/index-window.html'
     });
 
     const windowOpened = await windowOpenedPromise;

@@ -652,16 +652,6 @@ section "Cleanup"
 # Remove empty preset directories
 run_cmd find frontend/presets -type d -empty -delete
 
-# Update textAdventure-remote shared directory (without game-specific JS helpers)
-comment "Update textAdventure-remote shared directory"
-run_cmd rm -rf frontend/modules/textAdventure-remote/shared
-run_cmd cp -r frontend/modules/shared frontend/modules/textAdventure-remote/
-# Remove game-specific JS helper directories (keep only generic/)
-run_cmd find frontend/modules/textAdventure-remote/shared/gameLogic -mindepth 1 -maxdepth 1 -type d ! -name generic -exec rm -rf {} +
-# Use empty registry (no game-specific imports)
-run_cmd cp frontend/modules/shared/gameLogic/gameLogicRegistry.empty.js frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.js
-run_cmd rm frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.empty.js
-
 if [ "$SCRIPT_MODE" = true ]; then
   echo ""
   echo "Script written to: $OUTPUT_SCRIPT"

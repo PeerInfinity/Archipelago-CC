@@ -4,7 +4,7 @@
 export const knownWindowPages = [
     {
         name: "Text Adventure (Standalone)",
-        url: "./modules/textAdventure-remote/index-iframe.html",
+        url: "./modules/textAdventureWrapper/index-iframe.html",
         description: "Interactive text adventure in separate window",
         shortName: "textadventure"
     },

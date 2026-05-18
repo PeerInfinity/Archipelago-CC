@@ -123,7 +123,6 @@ jobs:
               git diff --name-only -z origin/main HEAD --diff-filter=A -- . \
                 ':(exclude)frontend/presets/' \
                 ':(exclude)worlds/*_worldgen*/' \
-                ':(exclude)frontend/modules/textAdventure-remote/shared/' \
                 ':(exclude)scripts/data/world-mapping.json' \
                 ':(exclude)scripts/output/' \
               | xargs -r -0 git rm -f
