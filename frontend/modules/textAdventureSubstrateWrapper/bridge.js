@@ -22,6 +22,7 @@ import { IframeClient } from '../iframe-base/iframeClient.js';
 import { TextAdventureEngine } from '../textAdventureEngine/engine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
+import { installPlaybackBridge } from './playbackBridge.js';
 
 const statusEl = document.getElementById('status');
 const appEl = document.getElementById('app');
@@ -424,6 +425,20 @@ async function main() {
     // calls are safe.
     client.subscribeEventBus('textAdventure:loadRegion', (data) => {
         applyRegionChange(data?.region_id, 'textAdventure:loadRegion');
+    });
+
+    // Install the playback bridge so the host-side PlaybackProxy can
+    // drive walkTo / play / step / etc. from the playback bot. The
+    // bridge owns its own clock and dispatches AP events directly via
+    // the client (it doesn't touch the engine; bot-issued walks
+    // resolve through the standard user:regionMove / user:locationCheck
+    // chain, which discovery + gameState already handle, and the
+    // engine UI updates from the host snapshots that come back).
+    installPlaybackBridge({
+        client,
+        getWorld: () => world,
+        getCurrentRegion: () => lastSeenRegion,
+        log,
     });
 
     client.notifyAppReady();

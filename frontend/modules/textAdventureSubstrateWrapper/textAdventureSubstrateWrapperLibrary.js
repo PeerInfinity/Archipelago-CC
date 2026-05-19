@@ -18,6 +18,7 @@ import {
     tileGridSerializer,
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
+import { getPlaybackProxy } from './index.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -44,11 +45,11 @@ export const substrateRegistryEntry = Object.freeze({
     // the procgen pipeline still expects deserializeWorld to succeed.
     deserializeWorld: tileGridDeserializer,
 
-    // Phase 2 limitation: the playback bot can't drive iframe-based
-    // substrates synchronously. Returning null means the bot no-ops
-    // for this substrate. An async-aware refactor of the bot is a
-    // separate future project.
-    getPlaybackController: () => null,
+    // Returns the host-side PlaybackProxy when initialize() has run.
+    // The proxy publishes textAdventureSubstrateWrapper:control events
+    // that the in-iframe playbackBridge subscribes to. Null before
+    // initialize() runs (registry callers already handle null).
+    getPlaybackController: () => getPlaybackProxy(),
 
     // Build-time adapters — same as existing. These run host-side
     // during procgen seed generation.

@@ -17,6 +17,7 @@ import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
+import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
@@ -33,6 +34,14 @@ export const moduleInfo = {
 
 const INITIAL_STATE_EVENT = 'textAdventureSubstrateWrapper:initialState';
 
+// Singleton PlaybackProxy — created in initialize() once the eventBus
+// is available. The substrate registry entry's getPlaybackController
+// returns it so the playback bot can drive the iframe-side controller.
+// Returns null before initialize() has run (registry callers handle
+// the null case as "no panel mounted / no controller available").
+let _playbackProxy = null;
+export function getPlaybackProxy() { return _playbackProxy; }
+
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
         const link = document.createElement('link');
@@ -48,6 +57,9 @@ export function register(registrationApi) {
 
     registrationApi.registerEventBusPublisher(INITIAL_STATE_EVENT);
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // Bot → bridge control channel. Published by PlaybackProxy on the
+    // host side; subscribed by the iframe's playbackBridge.js.
+    registrationApi.registerEventBusPublisher(PLAYBACK_CONTROL_EVENT);
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
 
@@ -63,6 +75,11 @@ export function register(registrationApi) {
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
+
+    // Build the host-side PlaybackProxy. Returned by the substrate
+    // registry entry's getPlaybackController; publishes control events
+    // that the in-iframe playbackBridge subscribes to.
+    _playbackProxy = new PlaybackProxy({ eventBus });
 
     // When ANY iframe app reports ready, broadcast the current
     // discovery state. The bridge subscribes to this event and

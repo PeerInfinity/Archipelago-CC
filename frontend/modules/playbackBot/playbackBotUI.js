@@ -727,13 +727,28 @@ export class PlaybackBotUI {
      * Resolve the active substrate's PlaybackController and invoke
      * `method(...args)` on it. Silent no-op when no controller is
      * available (e.g. no panel mounted yet, no current region known).
+     *
+     * Controller methods return void or Promise<void>; the bot is
+     * fire-and-forget and does not await. Iframe-backed controllers
+     * (e.g. textAdventureSubstrateWrapper) naturally produce a promise
+     * via the postMessage round-trip. Swallow any rejection here so an
+     * iframe-side error doesn't leak as an unhandled promise rejection.
      */
     _dispatch(method, args = []) {
         const controller = this._resolveController();
         if (!controller) return;
         const fn = controller[method];
         if (typeof fn !== 'function') return;
-        fn.apply(controller, args);
+        try {
+            const result = fn.apply(controller, args);
+            if (result && typeof result.then === 'function') {
+                result.catch(() => { /* fire-and-forget */ });
+            }
+        } catch (e) {
+            if (typeof window !== 'undefined' && window.logger) {
+                window.logger.warn('playbackBot', `controller.${method} threw`, e);
+            }
+        }
     }
 
     /**
