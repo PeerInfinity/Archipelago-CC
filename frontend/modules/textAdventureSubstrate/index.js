@@ -1,16 +1,10 @@
 /**
- * textAdventureSubstrate — substrate-style replacement for the
- * existing `textAdventure/` module. Subscribes to
- * textAdventure:loadRegion (published by procgenPlayer when a procgen
- * world transitions to a region whose substrate is 'text_adventure'),
- * activates the panel, and renders the region as a textual
- * description with clickable exits and locations.
- *
- * The existing `textAdventure/` module continues to handle non-
- * procgen rules.json playback (load via stateManager + render via
- * `textAdventurePanel`); this substrate module handles the
- * procgen path via its own `textAdventureSubstratePanel` Golden
- * Layout component. They coexist.
+ * textAdventureSubstrate — subscribes to textAdventure:loadRegion
+ * (published by procgenPlayer when a procgen world transitions to a
+ * region whose substrate is 'text_adventure'), activates the panel,
+ * and renders the region as a textual description with clickable
+ * exits and locations. Uses its own `textAdventureSubstratePanel`
+ * Golden Layout component.
  *
  * See NewDocs/plans/procedural-generation/text-adventure-substrate.md
  * §"Text Adventure substrate" for the design.

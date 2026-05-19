@@ -67,7 +67,7 @@ export class EventBus {
         'stateManager', 'modules', 'events', 'client', 'timer', 'timerPanel', 'inventory', 'editor', 'settings',
         'commonUI', 'locations', 'exits', 'regions', 'loops', 'tests', 'json', 'pathAnalyzer',
         'pathAnalyzerPanel', 'discovery', 'presets', 'testCases', 'dungeons', 'helpers',
-        'textAdventure', 'textAdventureUI', 'iframePanel', 'panelManager', 'messageHandler',
+        'iframePanel', 'panelManager', 'messageHandler',
         'locationManager', 'gameState', 'gameStatePanel', 'spoilerTest', 'progressBarPanel',
         'progressBar', 'ProgressBar', 'iframeAdapter', 'core', 'metaGame', 'metaGamePanel',
         'iframeManagerPanel', 'editorCore', 'editorCodeMirror6',

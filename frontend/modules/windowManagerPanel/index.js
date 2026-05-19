@@ -53,11 +53,6 @@ export async function register(registrationApi) {
             type: 'array',
             default: [
                 {
-                    name: "Text Adventure (Standalone)",
-                    url: "./modules/textAdventureWrapper/index-window.html",
-                    description: "Interactive text adventure running in separate window"
-                },
-                {
                     name: "Window Base",
                     url: "./modules/window-base/index.html",
                     description: "Basic window module showing connection status and heartbeat"

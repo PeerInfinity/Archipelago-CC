@@ -41,7 +41,6 @@ Generated: 2026-01-10T19:59:58.329Z
 | spoilerChecklist | spoilerChecklist | Spoiler Checklist | spoilerChecklistPanel | 📋 | Middle | Displays sphere log data as... | ❌ | ❌ | ❌ |
 | spoilerTest | spoilerTest | Spoiler Test | spoilerTestPanel | 🔍 | Middle | Provides UI for loading and... | ❌ | ❌ | ❌ |
 | tests | tests | Tests | testsPanel | ✅ | Left | Automated application featu... | ❌ | ❌ | ❌ |
-| textAdventure | textAdventure | Text Adventure | textAdventurePanel | 📖 | Right | Text Adventure display panel. | ❌ | ❌ | ❌ |
 | timerPanel | timerPanel | Timer Panel | timerPanel | ⏱️ | Middle | A dedicated panel for displ... | ❌ | ❌ | ❌ |
 | windowManagerPanel | windowManagerPanel | Window Manager | windowManagerPanel | 🪟 | Middle | Window Manager display panel. | ❌ | ❌ | ❌ |
 | windowPanel | windowPanel | Window Panel | windowPanel | 🪟 | Right | Window Panel display panel. | ❌ | ❌ | ❌ |
@@ -94,5 +93,5 @@ Based on the analysis, consider adding the following fields to modules that are 
 |--------|-------|---------|
 | Left (1) | 5 | events, inventory, json, modules, tests |
 | Middle (2) | 16 | client, discoveryPanel, editor, editorCodeMirror6, iframeManagerPanel, metaGamePanel, pathAnalyzerPanel, gameStatePanel, presets, progressBarPanel, regionGraph, settings, spoilerChecklist, spoilerTest, timerPanel, windowManagerPanel |
-| Right (3) | 9 | dungeons, exits, helpers, iframePanel, locations, loops, regions, textAdventure, windowPanel |
+| Right (3) | 8 | dungeons, exits, helpers, iframePanel, locations, loops, regions, windowPanel |
 | Unspecified | 1 | ruleConverter |

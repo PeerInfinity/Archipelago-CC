@@ -23,7 +23,7 @@ source .venv/bin/activate
 - **Don't modify**: Original Archipelago code files or original world files in `worlds/`
 - **Seed 1 always produces**: `AP_14089154938208861744`
 - **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "http.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
-- **Submodule paths**: `frontend/modules/shared/` and `frontend/modules/textAdventure-remote/` are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
+- **Submodule paths**: `frontend/modules/shared/` and `frontend/modules/textAdventureEngine/` are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
 
 ---
 

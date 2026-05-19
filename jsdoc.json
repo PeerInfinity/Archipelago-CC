@@ -1,7 +1,6 @@
 {
   "source": {
-    "include": ["frontend/modules"],
-    "excludePattern": "textAdventure-remote/shared"
+    "include": ["frontend/modules"]
   },
   "opts": {
     "destination": "./docs/json/api",

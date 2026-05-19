@@ -170,12 +170,6 @@ export const moduleMetadata = {
     name: 'loops',
     column: 3
   },
-  textAdventurePanel: {
-    title: 'Text Adventure',
-    icon: '📖',
-    name: 'textAdventure',
-    column: 3
-  },
   textAdventureSubstratePanel: {
     title: 'Text Adventure',
     icon: '📜',

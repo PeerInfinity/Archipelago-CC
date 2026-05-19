@@ -3,12 +3,6 @@
 
 export const knownWindowPages = [
     {
-        name: "Text Adventure (Standalone)",
-        url: "./modules/textAdventureWrapper/index-iframe.html",
-        description: "Interactive text adventure in separate window",
-        shortName: "textadventure"
-    },
-    {
         name: "Window Base",
         url: "./modules/window-base/index.html",
         description: "Basic window module showing connection status and heartbeat",

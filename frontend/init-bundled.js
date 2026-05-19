@@ -93,7 +93,6 @@ import * as presetsModule from './modules/presets/index.js';
 import * as spoilerTestModule from './modules/spoilerTest/index.js';
 import * as sphereStateModule from './modules/sphereState/index.js';
 import * as spoilerChecklistModule from './modules/spoilerChecklist/index.js';
-import * as textAdventureModule from './modules/textAdventure/index.js';
 import * as testsModule from './modules/tests/index.js';
 import * as progressBarModule from './modules/progressBar/index.js';
 import * as progressBarPanelModule from './modules/progressBarPanel/index.js';
@@ -139,9 +138,6 @@ import './modules/tests/testCases/settingsPanelTests.js';
 import './modules/tests/testCases/JSONPanelTests.js';
 import './modules/tests/testCases/progressBarTests.js';
 import './modules/tests/testCases/metaGamePanelTests.js';
-import './modules/tests/testCases/textAdventurePanelTests.js';
-import './modules/tests/testCases/textAdventure-iframeTests.js';
-import './modules/tests/testCases/textAdventure-windowTests.js';
 import './modules/tests/testCases/iframe-baseTests.js';
 import './modules/tests/testCases/window-baseTests.js';
 import './modules/tests/testCases/timerTests.js';
@@ -185,7 +181,6 @@ const BUNDLED_MODULES = {
   spoilerTest: spoilerTestModule,
   sphereState: sphereStateModule,
   spoilerChecklist: spoilerChecklistModule,
-  textAdventure: textAdventureModule,
   tests: testsModule,
   progressBar: progressBarModule,
   progressBarPanel: progressBarPanelModule,

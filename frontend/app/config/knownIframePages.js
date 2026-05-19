@@ -3,12 +3,6 @@
 
 export const knownIframePages = [
     {
-        name: "Text Adventure (Standalone)",
-        url: "./modules/textAdventureWrapper/index-iframe.html",
-        description: "Interactive text adventure running in iframe",
-        shortName: "textadventure"
-    },
-    {
         name: "Iframe Base",
         url: "./modules/iframe-base/index.html",
         description: "Basic iframe module showing connection status and heartbeat",

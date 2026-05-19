@@ -183,11 +183,6 @@
             },
             {
               "type": "component",
-              "componentType": "textAdventurePanel",
-              "title": "Text Adventure"
-            },
-            {
-              "type": "component",
               "componentType": "helpersPanel",
               "title": "Helpers"
             },
