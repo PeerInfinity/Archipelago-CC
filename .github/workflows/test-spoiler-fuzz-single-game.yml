@@ -80,6 +80,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -429,6 +431,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -594,6 +598,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5

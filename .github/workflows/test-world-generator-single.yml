@@ -36,6 +36,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Create or switch to test-results-world-generator branch
         run: |
