@@ -4,3 +4,6 @@
 [submodule "frontend/modules/textAdventure-remote"]
 	path = frontend/modules/textAdventure-remote
 	url = https://github.com/PeerInfinity/archipelago-textadventure-remote.git
+[submodule "frontend/modules/textAdventureEngine"]
+	path = frontend/modules/textAdventureEngine
+	url = https://github.com/PeerInfinity/archipelago-textadventure-engine.git
