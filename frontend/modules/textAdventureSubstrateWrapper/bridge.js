@@ -231,21 +231,31 @@ async function main() {
     let pendingInitialState = null;
 
     /**
-     * Wait for staticData to arrive in the client cache. The
-     * AdapterClient auto-requests on connect, but that initial
-     * response may be null if it happens before rules load
-     * host-side. On rulesLoaded we re-request and poll until the
+     * Force a fresh staticData fetch and wait for the response.
+     *
+     * Why force-fresh: the AdapterClient caches staticData from the
+     * first response and keeps returning it via getStaticData() until
+     * a new response overwrites it. On rules-change events (e.g.
+     * switching from a standalone preset to a procgen one), the
+     * cached value is stale. We request fresh and wait until the
+     * cached reference changes (each response is a freshly-serialized
+     * object, so a new response = new reference).
+     *
+     * Falls back to whatever's in the cache after timeout if no fresh
      * response arrives.
      */
     async function ensureStaticData(timeoutMs = 3000, intervalMs = 100) {
+        const before = client.getStaticData();
+        client.requestStaticData();
         const start = Date.now();
         while (Date.now() - start < timeoutMs) {
-            const sd = client.getStaticData();
-            if (sd?.regions) return sd;
-            client.requestStaticData();
+            const now = client.getStaticData();
+            if (now?.regions && now !== before) return now;
             await new Promise(r => setTimeout(r, intervalMs));
+            client.requestStaticData();
         }
-        return null;
+        // Timed out waiting for a fresh response; return whatever we have.
+        return client.getStaticData();
     }
 
     async function rebuildWorld() {
@@ -388,17 +398,32 @@ async function main() {
         engine.setExitDiscovered(regionName, exitName, true);
     });
 
-    client.subscribeEventBus('gameState:regionChanged', (data) => {
-        const newRegion = data?.newRegion;
+    function applyRegionChange(newRegion, source) {
         if (!newRegion) return;
         lastSeenRegion = newRegion;
-        if (!world) return;  // world not built yet; rebuildWorld will pick up lastSeenRegion
+        if (!world) return;
         if (world.rooms[newRegion]) {
             engine.setCurrentRoom(newRegion);
             evaluateAccessibilityForRoom(engine, client, world, newRegion);
         } else {
-            log('warn', 'gameState:regionChanged for unknown room', newRegion);
+            log('warn', `${source} for unknown room`, newRegion);
         }
+    }
+
+    client.subscribeEventBus('gameState:regionChanged', (data) => {
+        applyRegionChange(data?.newRegion, 'gameState:regionChanged');
+    });
+
+    // Procgen mode: procgenPlayer fires textAdventure:loadRegion with
+    // {region_id, world, arrivedFrom}. We ignore `world` (tile-grid
+    // data the engine doesn't need) and `arrivedFrom`; staticData
+    // already has the procgen-compiled rules, so the full-world model
+    // works the same as in standalone mode. Only region_id matters.
+    // Both this event and gameState:regionChanged typically fire on
+    // procgen transitions; setCurrentRoom is idempotent so duplicate
+    // calls are safe.
+    client.subscribeEventBus('textAdventure:loadRegion', (data) => {
+        applyRegionChange(data?.region_id, 'textAdventure:loadRegion');
     });
 
     client.notifyAppReady();

@@ -242,7 +242,7 @@
     },
     "textAdventureSubstrate": {
       "path": "./modules/textAdventureSubstrate/index.js",
-      "enabled": true
+      "enabled": false
     },
     "textAdventureSubstrateWrapper": {
       "path": "./modules/textAdventureSubstrateWrapper/index.js",

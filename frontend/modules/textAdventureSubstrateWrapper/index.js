@@ -15,6 +15,8 @@
 import { TextAdventureSubstrateWrapperPanel } from './textAdventureSubstrateWrapperPanel.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
@@ -45,7 +47,17 @@ export function register(registrationApi) {
     );
 
     registrationApi.registerEventBusPublisher(INITIAL_STATE_EVENT);
+    registrationApi.registerEventBusPublisher('ui:activatePanel');
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
+    registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
+
+    // Register the substrate entry so procgen recognizes
+    // 'text_adventure' and dispatches loadRegion events to our panel.
+    // Guarded by has() so we lose gracefully if the existing
+    // textAdventureSubstrate is also enabled.
+    if (!substrateRegistry.has(substrateRegistryEntry.id)) {
+        substrateRegistry.register(substrateRegistryEntry);
+    }
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
@@ -61,6 +73,21 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // Publishing on every iframe:appReady (not just our own) is
     // harmless: the event is idempotent, payload is small, and our
     // bridge is the only subscriber to this custom event name.
+    // When procgen dispatches textAdventure:loadRegion (e.g. on a
+    // region transition from a maze region back to a text-adventure
+    // one), bring the wrapper's panel forward in its Golden Layout
+    // stack. Mirrors textAdventureSubstrate's handleLoadRegion.
+    // Skipped when loops is focus-locking another panel.
+    eventBus.subscribe('textAdventure:loadRegion', () => {
+        // Skip activation when loops is focus-locking another panel
+        // (the "Keep this panel focused" toggle in the Loops UI). The
+        // bridge still picks up the loadRegion via its own iframe-
+        // protocol subscription; only the tab-switch is suppressed.
+        const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
+        if (isFocusLocked?.()) return;
+        eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
+    });
+
     eventBus.subscribe('iframe:appReady', () => {
         const settings = getDiscoverySettings();
         const active = !!settings?.enableDiscoveryMode;
