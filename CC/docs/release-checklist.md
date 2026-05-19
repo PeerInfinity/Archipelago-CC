@@ -165,7 +165,7 @@ Quick local checks that don't require workflow infrastructure. Run these before 
 
 ### 4.1 Run unit tests locally (optional early check)
 
-These are also run by workflows in Phase 5 (`unittests.yml` and `unittests_json.yml`). Running them locally first gives faster feedback before committing to workflow runs.
+These are also run by workflows in Phase 5 (`unittests.yml` and `unittests_frontend.yml`). Running them locally first gives faster feedback before committing to workflow runs.
 
 ```bash
 pytest                    # Python unit tests (test/, test_json/, worlds/)
@@ -217,7 +217,7 @@ Run **all** of the following workflows (can be started in parallel):
 | Test Spoiler Fuzzer | `test-spoiler-fuzz.yml` | Bundled and apworld modes |
 | Test World Generator | `test-world-generator.yml` | `test_mode`: both |
 | Unit Tests | `unittests.yml` | |
-| Unit Tests (JSON) | `unittests_json.yml` | |
+| JavaScript Unit Tests | `unittests_frontend.yml` | |
 
 The UT Fuzzer workflow should be run for each mode that feeds into the tracking mode config: `original`, `worldgen`, and `pickle`. These can run in parallel.
 

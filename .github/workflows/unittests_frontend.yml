@@ -8,7 +8,7 @@ on:
       - 'vitest.config.js'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/unittests_json.yml'
+      - '.github/workflows/unittests_frontend.yml'
   pull_request:
     paths:
       - 'frontend/**/*.js'
@@ -16,7 +16,7 @@ on:
       - 'vitest.config.js'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/unittests_json.yml'
+      - '.github/workflows/unittests_frontend.yml'
   workflow_dispatch:
 
 jobs:

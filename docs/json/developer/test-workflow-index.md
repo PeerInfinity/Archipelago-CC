@@ -12,7 +12,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Workflow | File | Trigger | Description |
 |----------|------|---------|-------------|
 | Unit Tests | `unittests.yml` | push, PR | Python pytest (`pytest -n auto`) |
-| JavaScript Unit Tests | `unittests_json.yml` | push, PR, dispatch | JS Vitest (`npm run test:unit`) |
+| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | JS Vitest (`npm run test:unit`) |
 | Test ALTTP & Regression | `test-templates.yml` | push (main), PR | Spoiler test + frontend regression |
 | Test All Templates (Sequential) | `test-all-sequential.yml` | dispatch | Comprehensive: spoilers, multiclient, multiworld (original/worldgen/apworld) |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | dispatch | UT fuzz across all modes, 10-way parallel split |
@@ -63,7 +63,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Framework | Command | Workflow(s) | Notes |
 |-----------|---------|-------------|-------|
 | pytest | `pytest` | `unittests.yml` | push/PR trigger |
-| Vitest | `npm run test:unit` | `unittests_json.yml` | push/PR trigger |
+| Vitest | `npm run test:unit` | `unittests_frontend.yml` | push/PR trigger |
 | Vitest benchmarks | `npm run bench` | **No workflow** | Performance benchmarks |
 | Playwright (spoilers) | `npm test -- --mode=test-spoilers` | `test-templates.yml` + others | Invoked indirectly by Python test scripts |
 | Playwright (regression) | `npm test -- --mode=test-regression` | `test-templates.yml` | push/PR trigger |
