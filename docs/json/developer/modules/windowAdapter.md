@@ -45,3 +45,7 @@ This module is a core service and does not register public functions for other m
 -   **`windowManagerPanel` Module**: This UI panel allows users to open URLs in new windows. The `windowAdapter` then automatically detects and connects to the client running in the newly opened window.
 -   **`eventBus` & `eventDispatcher`**: The adapter is deeply integrated with the main eventing systems, acting as a two-way bridge to allow separate windows to participate as if they were native modules.
 -   **`StateManager`**: The adapter provides a read-only bridge to the `StateManager` by handling requests for state snapshots and static data from connected windows.
+
+#### Security
+
+See [External Module Security](../guides/external-module-security.md) for the trust model, sandbox policy, origin validation, and URL-entry hardening that govern this module.

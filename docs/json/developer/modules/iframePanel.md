@@ -41,3 +41,7 @@ This module is self-contained and controlled by events; it does not register any
 -   **`iframeAdapter` Module**: This is the panel's most critical counterpart. The `iframePanel` creates the `<iframe>`, but it is the `iframeAdapter` that handles all subsequent communication and event bridging with the content running inside it.
 -   **`iframeManagerPanel` Module**: This UI panel is the primary source of `iframe:loadUrl` and `iframe:unload` events. It provides the user-facing controls to load and unload content from `iframePanel` instances.
 -   **Golden Layout**: Manages the creation, destruction, and lifecycle of the `iframePanel` itself.
+
+#### Security
+
+See [External Module Security](../guides/external-module-security.md) for the trust model, sandbox policy, origin validation, and URL-entry hardening that govern this module.

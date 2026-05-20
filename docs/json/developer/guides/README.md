@@ -17,6 +17,7 @@ These guides explain the fundamental systems that power the web client:
 Practical guides for common development tasks:
 
 - **[Creating Modules](./creating-modules.md)**: Step-by-step guide to building a new frontend module
+- **[External Module Security](./external-module-security.md)**: Trust model and security hardening for iframe/window-hosted external modules
 - **[Testing Pipeline](./testing-pipeline.md)**: How the automated testing system validates game logic accuracy
 - **[Test Results](./test-results.md)**: Understanding and generating test result reports
 - **[Fuzzer Debugging](./fuzzer-debugging.md)**: Running the UT fuzzer and debugging logic mismatches

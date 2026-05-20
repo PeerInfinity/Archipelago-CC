@@ -13,7 +13,7 @@
 // A registered entry loads without the custom-URL risk warning; ad-hoc URLs
 // typed into the Iframe Manager are treated as custom and warn first.
 //
-// Two remote cases (see CC/docs/plans/partial/external-iframe-modules.md):
+// Two remote cases (see CC/docs/plans/completed/external-iframe-modules.md):
 //  - Same-origin remote — a different path on this app's own origin (e.g.
 //    another GitHub Pages project under the same account). No CORS concerns;
 //    not browser-isolated from the host.

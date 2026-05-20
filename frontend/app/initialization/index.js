@@ -15,7 +15,7 @@ const IFRAME_LOAD_DELAY_MS = 500;
  * only on these hosts; on any other host (GitHub Pages, a custom domain) they
  * are ignored. This is fail-safe: every production host is covered without
  * per-host configuration, and CI serves the app from localhost so testing
- * loses nothing. See CC/docs/plans/partial/external-iframe-modules.md (Phase 3).
+ * loses nothing. See CC/docs/plans/completed/external-iframe-modules.md (Phase 3).
  * @param {string} hostname - typically window.location.hostname
  * @returns {boolean}
  */

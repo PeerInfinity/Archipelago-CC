@@ -13,7 +13,7 @@ import {
 // Must match the `defaultSandbox` schema default in index.js.
 // `allow-same-origin` is required so the loaded module can fetch its own
 // ES module graph; `allow-scripts` is required to run it at all. See the
-// trust model in CC/docs/plans/partial/external-iframe-modules.md.
+// trust model in CC/docs/plans/completed/external-iframe-modules.md.
 const DEFAULT_SANDBOX = 'allow-scripts allow-same-origin allow-forms';
 
 // Derive the origin a loaded URL will post messages from. Relative URLs
@@ -268,7 +268,7 @@ export class IframePanelUI {
             // boundary — it limits the blast radius of bugs. `allow-same-origin`
             // is unavoidable here because the module loads its own ES module
             // graph; the resulting browser "can escape sandboxing" warning is
-            // expected. See CC/docs/plans/partial/external-iframe-modules.md.
+            // expected. See CC/docs/plans/completed/external-iframe-modules.md.
             if (this.sandboxValue) {
                 this.iframe.setAttribute('sandbox', this.sandboxValue);
             }

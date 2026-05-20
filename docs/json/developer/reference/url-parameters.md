@@ -302,6 +302,12 @@ These parameters control automatic connection to an Archipelago server.
 - Falls back to the `iframeAutoLoad` setting from mode settings (e.g., `settings-jta.json` has `"iframeAutoLoad": "jta"`)
 - Publishes `iframe:loadUrl` (or `window:loadUrl` when `useWindow=1`)
 - Loading happens after the panel manager initializes, with a 500ms delay
+- **Dev-host only:** `?iframe=` is a local-testing affordance. It is honored
+  only when the app is served from a dev host (`localhost`, `127.0.0.1`,
+  `[::1]`); on any other host (GitHub Pages, a custom domain) the parameter is
+  ignored with a logged warning. The `iframeAutoLoad` *setting* is deployment
+  config and is **not** gated by this check. See
+  [External Module Security](../guides/external-module-security.md).
 
 #### `useWindow`
 
@@ -318,6 +324,8 @@ These parameters control automatic connection to an Archipelago server.
 - Works with both `?iframe=` parameter and `iframeAutoLoad` setting
 - Also affects metagame configurations: maze challenges open/close in separate windows instead of switching iframe panel tabs
 - The same HTML pages work in both iframe and window contexts thanks to the unified AdapterClient
+- **Dev-host only:** like `?iframe=`, the `?useWindow=` URL parameter is
+  honored only on dev hosts and is ignored elsewhere.
 
 #### `metagame`
 
@@ -357,6 +365,18 @@ These parameters are used by the unified `AdapterClient` (in iframe or window co
 **Usage:** `?windowName=<name>` or `?iframeName=<name>`
 
 **Default:** `window-client` or `iframe-client` (based on auto-detected mode)
+
+#### `hostOrigin`
+
+**Purpose:** Tells the embedded module which origin the host app is served from, so it can target its outbound `postMessage` at the host.
+
+**Usage:** `?hostOrigin=<url-encoded origin>`
+
+**Details:**
+- Set automatically by the iframe panel and window panel when loading content (the value is `window.location.origin` of the host app).
+- Needed for **true cross-origin** modules: a module's `window.location.origin` is its *own* origin, which differs from the host's. `AdapterClient` posts to `hostOrigin` instead so the message is not silently dropped by the browser.
+- If absent (legacy/standalone loads), `AdapterClient` falls back to `'*'` until it learns the host origin from the first inbound message.
+- See [External Module Security](../guides/external-module-security.md).
 
 #### `heartbeatInterval`
 
@@ -451,7 +471,7 @@ URL parameters are processed in multiple locations during initialization:
 | `frontend/app/mode/modeDataLoader.js` | `rules`, `game`, `seed`, `player` |
 | `frontend/app/initialization/index.js` | `mode`, `focusPanel`, `movePanel`, `loadModule`, `iframe`, `useWindow`, `metagame` |
 | `frontend/modules/client/index.js` | `autoConnect`, `server`, `playerName` |
-| `frontend/modules/shared/adapterClient.js` | `windowId`, `iframeId`, `clientId`, `windowName`, `iframeName`, `heartbeatInterval` |
+| `frontend/modules/shared/adapterClient.js` | `windowId`, `iframeId`, `clientId`, `windowName`, `iframeName`, `heartbeatInterval`, `hostOrigin` |
 | `frontend/modules/tests/testLogic.js` | `mode`, `testOrderSeed` |
 
 ---

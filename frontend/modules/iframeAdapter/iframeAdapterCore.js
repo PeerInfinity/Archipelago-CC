@@ -31,7 +31,7 @@ export class IframeAdapterCore {
         // Expected origin per iframe, derived from the resolved load URL by
         // iframePanelUI. Used to validate inbound postMessage origins and to
         // target outbound postMessage. See Phase 2 of
-        // CC/docs/plans/partial/external-iframe-modules.md.
+        // CC/docs/plans/completed/external-iframe-modules.md.
         this.expectedOrigins = new Map(); // iframeId -> origin string
 
         // Event subscriptions tracking

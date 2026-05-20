@@ -30,7 +30,7 @@ export class WindowAdapterCore {
         // Expected origin per window, derived from the resolved load URL by
         // windowPanelUI. Used to validate inbound postMessage origins and to
         // target outbound postMessage. See Phase 2 of
-        // CC/docs/plans/partial/external-iframe-modules.md.
+        // CC/docs/plans/completed/external-iframe-modules.md.
         this.expectedOrigins = new Map(); // windowId -> origin string
 
         // Event subscriptions tracking

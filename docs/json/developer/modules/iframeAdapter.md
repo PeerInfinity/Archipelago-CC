@@ -45,3 +45,7 @@ This module is a core service and does not register public functions for other m
 -   **`iframeManagerPanel` Module**: This UI panel allows users to load different URLs into `iframePanel` instances, indirectly utilizing the `iframeAdapter` to connect to the new content.
 -   **`eventBus` & `eventDispatcher`**: The adapter is deeply integrated with the main eventing systems, acting as a two-way bridge to allow iframes to participate as if they were native modules.
 -   **`StateManager`**: The adapter provides a read-only bridge to the `StateManager` by handling requests for state snapshots and static data from connected iframes.
+
+#### Security
+
+See [External Module Security](../guides/external-module-security.md) for the trust model, sandbox policy, origin validation, and URL-entry hardening that govern this module.

@@ -21,7 +21,7 @@ import {
 // So `defaultWindowFeatures` is window *geometry* only, not a security
 // control. A same-origin popup retains full host access via `window.opener`;
 // origin validation (Phase 2) is the only hardening the window variant gets.
-// See CC/docs/plans/partial/external-iframe-modules.md.
+// See CC/docs/plans/completed/external-iframe-modules.md.
 const DEFAULT_WINDOW_FEATURES = 'width=800,height=600,scrollbars=yes,resizable=yes';
 
 // Derive the origin a loaded URL will post messages from. Relative URLs

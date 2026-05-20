@@ -44,3 +44,7 @@ This module is self-contained and controlled by events; it does not register any
 -   **`windowAdapter` Module**: This is the panel's most critical counterpart. The `windowAdapter` manages the actual communication with the separate window and publishes the `window:connected` and `window:disconnected` events that this panel relies on for its status display. It also forwards heartbeat messages.
 -   **`windowManagerPanel` Module**: This UI panel is the source of the `window:loadUrl` and `window:close` events that the `windowPanel` listens to in order to manage its lifecycle and association with an external window.
 -   **Golden Layout**: Manages the creation, destruction, and lifecycle of the `windowPanel` itself.
+
+#### Security
+
+See [External Module Security](../guides/external-module-security.md) for the trust model, sandbox policy, origin validation, and URL-entry hardening that govern this module.

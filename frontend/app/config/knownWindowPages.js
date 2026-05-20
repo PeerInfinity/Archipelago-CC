@@ -14,7 +14,7 @@
 // typed into the Window Manager are treated as custom and warn first.
 //
 // NOTE: unlike the iframe variant, a separate window cannot be sandboxed at
-// all (see CC/docs/plans/partial/external-iframe-modules.md, Phase 1). The
+// all (see CC/docs/plans/completed/external-iframe-modules.md, Phase 1). The
 // adapter handshake still works cross-origin — the host passes its origin via
 // the `hostOrigin` URL param so the module can target postMessage back at the
 // host — but a same-origin remote window has full host access via

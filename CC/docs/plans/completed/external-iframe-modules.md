@@ -1,7 +1,7 @@
 # External Iframe/Window Module Loading — Plan
 
 **Date:** 2026-05-20
-**Status:** Partial — Phases 1–4 complete (2026-05-20)
+**Status:** ✅ Complete — all 5 phases complete (2026-05-20)
 
 ## Overview
 
@@ -271,11 +271,22 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
       block to `knownIframePages.js` / `knownWindowPages.js` (absolute `url`
       entry; same-origin-remote vs true-cross-origin-remote distinction).
 
-### Phase 5: Cleanup and documentation
+### Phase 5: Cleanup and documentation — ✅ complete (2026-05-20)
 
-- [ ] Remove any remaining vestigial sandbox config once the real setting is
-      wired up.
-- [ ] Document the trust model and sandbox policy in module/developer docs.
+- [x] Remove any remaining vestigial sandbox config. Verified by a repo-wide
+      scan: nothing vestigial remains. `defaultSandbox` (iframePanel) and
+      `defaultWindowFeatures` (windowPanel) were the only candidates and both
+      are now wired up (Phase 1) per the plan's "wire up rather than remove"
+      decision. No removal needed.
+- [x] Document the trust model and sandbox policy in module/developer docs.
+      New guide `docs/json/developer/guides/external-module-security.md`
+      (trust model, sandbox policy, window-variant limitation, origin
+      validation, URL-entry hardening, cross-origin remote loading, external
+      module registration); linked from the guides README. `url-parameters.md`
+      updated for the `?iframe=`/`?useWindow=` dev-host gating and the new
+      `hostOrigin` param. A "Security" cross-reference section was appended to
+      the six relevant developer module docs (iframe/window Panel, Adapter,
+      ManagerPanel).
 
 ## Open Questions / Accepted Risks
 

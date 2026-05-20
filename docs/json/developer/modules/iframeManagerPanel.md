@@ -42,3 +42,7 @@ This module is self-contained and does not register any public functions.
 -   **`iframePanel` Module**: This is the module that the `iframeManagerPanel` controls. It sends `iframe:loadUrl` and `iframe:unload` events that `iframePanel` instances are designed to receive and act upon.
 -   **`iframeAdapter` Module**: It indirectly depends on the `iframeAdapter` by listening for the `iframe:connected` and `iframe:disconnected` events that the adapter publishes. This allows the manager panel to know the real-time connection status of all iframes.
 -   **Golden Layout**: Manages the lifecycle and display of the `iframeManagerPanel` itself.
+
+#### Security
+
+See [External Module Security](../guides/external-module-security.md) for the trust model, sandbox policy, origin validation, and URL-entry hardening that govern this module.

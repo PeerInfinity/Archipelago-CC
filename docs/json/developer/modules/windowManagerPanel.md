@@ -42,3 +42,7 @@ This module is self-contained and does not register any public functions.
 -   **`windowPanel` Module**: This module works in concert with `windowPanel` instances. It opens the external windows, and the `windowPanel` provides a space within the main UI to display the status of those external windows.
 -   **`windowAdapter` Module**: It indirectly depends on the `windowAdapter` by listening for the `window:connected` and `window:disconnected` events that the adapter publishes. This allows the manager panel to know the real-time connection status of all separate windows.
 -   **Golden Layout**: Manages the lifecycle and display of the `windowManagerPanel` itself.
+
+#### Security
+
+See [External Module Security](../guides/external-module-security.md) for the trust model, sandbox policy, origin validation, and URL-entry hardening that govern this module.
