@@ -1,7 +1,7 @@
 # External Iframe/Window Module Loading — Plan
 
 **Date:** 2026-05-20
-**Status:** Partial — Phases 1–2 complete (2026-05-20)
+**Status:** Partial — Phases 1–3 complete (2026-05-20)
 
 ## Overview
 
@@ -226,21 +226,25 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
 > origin instead. Audit/fix this under Phase 4 (it has a `'*'` fallback today,
 > so nothing is broken yet).
 
-### Phase 3: URL-entry hardening
+### Phase 3: URL-entry hardening — ✅ complete (2026-05-20)
 
-- [ ] Add a dev-host allowlist (`localhost`, `127.0.0.1`, `[::1]`). The
-      `?iframe=` auto-load (and the paired `?useWindow=1`) acts only on
-      allowlisted dev hosts; on any other host the parameter is ignored. This
-      is fail-safe — any production host (GitHub Pages, a future custom domain)
-      is covered without per-host configuration. The parameter is a testing
-      affordance, and testing runs locally (including CI, which serves the app
-      from `localhost`), so production loses nothing.
-- [ ] Keep custom in-app URL entry enabled, but when the entered URL is not a
-      `knownIframePages` / `knownWindowPages` entry, gate the load behind a
-      warning describing the risk of loading arbitrary URLs; the user must
-      acknowledge before the URL loads.
-- [ ] Apply the same dev-host gating and risk warning to the window variant
-      (`?iframe=...&useWindow=1`, `windowManagerPanel` custom URLs).
+- [x] Add a dev-host allowlist (`localhost`, `127.0.0.1`, `[::1]`, `::1`).
+      `app/initialization/index.js` gains an `isDevHost()` check; the
+      `?iframe=` / `?useWindow=` URL parameters are nulled (with a logged
+      warning) on any non-dev host. The `iframeAutoLoad` mode setting is a
+      deployment-controlled config and is deliberately **not** gated — only
+      the URL parameters are.
+- [x] Keep custom in-app URL entry enabled, but gate non-known URLs behind an
+      acknowledged risk warning. New shared modal
+      `modules/shared/customUrlWarning.js` (`confirmCustomUrlLoad`): shown on
+      every custom-URL load, with a "Don't show this warning again" checkbox
+      that persists suppression to `localStorage`
+      (`externalModule.customUrlWarning.suppressed`). "Known" is decided by
+      new `isKnownIframePage` / `isKnownWindowPage` helpers (shortname or
+      exact known-URL match).
+- [x] Apply the same dev-host gating (one shared `?iframe=`/`?useWindow=`
+      gate) and risk warning to the window variant (`windowManagerPanel`
+      `handleOpenClick`, now async like `iframeManagerPanel.handleLoadClick`).
 
 ### Phase 4: Cross-origin / external-URL remote loading
 
@@ -258,9 +262,9 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
 
 ## Open Questions / Accepted Risks
 
-- **Custom-URL warning frequency.** Whether the arbitrary-URL warning (Phase 3)
-  is acknowledged once per session or shown on every custom-URL load — decide
-  during implementation.
+- **Custom-URL warning frequency.** ✅ Resolved (2026-05-20). The warning is
+  shown on *every* custom-URL load, but the modal carries a "Don't show this
+  warning again" checkbox that persists suppression to `localStorage`.
 - **Window-variant sandboxing.** ✅ Resolved (2026-05-20). The separate-window
   path cannot be sandboxed at all — `noopener`/`noreferrer`/COOP all break the
   windowAdapter handshake (see Phase 1). Documented as a known limitation;

@@ -1,6 +1,7 @@
 // UI component for iframe manager panel module
 import { getModuleEventBus } from './index.js';
-import { knownIframePages } from '../../app/config/knownIframePages.js';
+import { knownIframePages, isKnownIframePage } from '../../app/config/knownIframePages.js';
+import { confirmCustomUrlLoad } from '../shared/customUrlWarning.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -359,16 +360,27 @@ export class IframeManagerUI {
     /**
      * Handle load button click
      */
-    handleLoadClick() {
+    async handleLoadClick() {
         const url = this.urlInput.value.trim();
-        
+
         if (!url) {
             this.updateStatus('Please enter a URL or select a known page');
             return;
         }
 
+        // Custom (non-known) URLs are gated behind an acknowledged risk
+        // warning. Known pages load without a prompt.
+        if (!isKnownIframePage(url)) {
+            const confirmed = await confirmCustomUrlLoad(url, 'iframe');
+            if (!confirmed) {
+                log('info', `Custom iframe URL load cancelled by user: ${url}`);
+                this.updateStatus('Load cancelled');
+                return;
+            }
+        }
+
         log('info', `Loading iframe with URL: ${url}`);
-        
+
         // Publish load event
         if (this.eventBus) {
             this.eventBus.publish('iframe:loadUrl', {

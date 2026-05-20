@@ -43,3 +43,20 @@ export function resolveIframeUrl(input) {
     // Otherwise treat as a URL passthrough
     return trimmed;
 }
+
+/**
+ * Whether an input refers to a known iframe page — either by shortname
+ * (case-insensitive) or by an exact match of a known page URL. Used to
+ * decide whether a custom-URL risk warning is needed before loading.
+ * @param {string} input - A shortname or URL
+ * @returns {boolean}
+ */
+export function isKnownIframePage(input) {
+    if (!input) return false;
+    const trimmed = input.trim();
+    if (!trimmed) return false;
+    const lowerInput = trimmed.toLowerCase();
+    return knownIframePages.some(
+        page => page.shortName === lowerInput || page.url === trimmed
+    );
+}

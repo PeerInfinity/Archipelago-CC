@@ -1,6 +1,7 @@
 // UI component for window manager panel module
 import { getModuleEventBus } from './index.js';
-import { knownWindowPages } from '../../app/config/knownWindowPages.js';
+import { knownWindowPages, isKnownWindowPage } from '../../app/config/knownWindowPages.js';
+import { confirmCustomUrlLoad } from '../shared/customUrlWarning.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -353,16 +354,27 @@ export class WindowManagerUI {
     /**
      * Handle open button click
      */
-    handleOpenClick() {
+    async handleOpenClick() {
         const url = this.urlInput.value.trim();
-        
+
         if (!url) {
             this.updateStatus('Please enter a URL or select a known page');
             return;
         }
 
+        // Custom (non-known) URLs are gated behind an acknowledged risk
+        // warning. Known pages open without a prompt.
+        if (!isKnownWindowPage(url)) {
+            const confirmed = await confirmCustomUrlLoad(url, 'window');
+            if (!confirmed) {
+                log('info', `Custom window URL load cancelled by user: ${url}`);
+                this.updateStatus('Open cancelled');
+                return;
+            }
+        }
+
         log('info', `Opening window with URL: ${url}`);
-        
+
         // Publish open window event
         if (this.eventBus) {
             this.eventBus.publish('window:loadUrl', {

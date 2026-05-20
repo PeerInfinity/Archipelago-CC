@@ -9,6 +9,25 @@ import { resolveMetaGamePath } from '../config/knownMetaGames.js';
 // Delay (ms) between panel activation and iframe/metagame loading
 const IFRAME_LOAD_DELAY_MS = 500;
 
+/**
+ * Whether the current host is a local development host. The ?iframe= /
+ * ?useWindow= URL parameters are a local testing affordance and are honored
+ * only on these hosts; on any other host (GitHub Pages, a custom domain) they
+ * are ignored. This is fail-safe: every production host is covered without
+ * per-host configuration, and CI serves the app from localhost so testing
+ * loses nothing. See CC/docs/plans/partial/external-iframe-modules.md (Phase 3).
+ * @param {string} hostname - typically window.location.hostname
+ * @returns {boolean}
+ */
+function isDevHost(hostname) {
+  return (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '[::1]' ||
+    hostname === '::1'
+  );
+}
+
 // Import mode management
 import { determineActiveMode } from '../mode/modeManager.js';
 import { loadModesConfiguration } from '../mode/modeConfigResolver.js';
@@ -524,9 +543,23 @@ export async function initializeApplication(dependencies) {
   // Handle panel URL parameter (comma-separated to activate one panel per stack)
   // Uses event bus so both desktop PanelManager and MobileLayoutManager can respond
   const panelParam = urlParams.get('focusPanel');
-  const iframeParam = urlParams.get('iframe');
   const metagameParam = urlParams.get('metagame');
-  const useWindowParam = urlParams.get('useWindow');
+
+  // ?iframe= (and the paired ?useWindow=) is a local-testing affordance only.
+  // On any non-dev host the parameters are ignored — fail-safe for production
+  // hosts. The iframeAutoLoad mode setting (below) is a deployment-controlled
+  // config and is NOT gated by this check.
+  const onDevHost = isDevHost(window.location.hostname);
+  let iframeParam = urlParams.get('iframe');
+  let useWindowParam = urlParams.get('useWindow');
+  if ((iframeParam || useWindowParam) && !onDevHost) {
+    logger.warn(
+      'init',
+      `Ignoring ?iframe=/?useWindow= URL parameter on non-dev host "${window.location.hostname}" — these are local-testing affordances only`
+    );
+    iframeParam = null;
+    useWindowParam = null;
+  }
   // ?movePanel=componentType:stackId,... — move panels to specific stacks before activating
   const moveParam = urlParams.get('movePanel');
 
