@@ -34,7 +34,13 @@ export class TextAdventureSubstrateWrapperPanel {
         this.iframe.className = 'tasw-iframe';
         this.iframe.src = IFRAME_SRC;
         this.iframe.setAttribute('title', 'Text Adventure (wrapper)');
-        // Allow scripts + same-origin so the bridge can use IframeClient
+        // Both flags are required; the resulting "can escape sandboxing"
+        // browser warning is unavoidable. allow-scripts runs bridge.js;
+        // allow-same-origin lets the iframe fetch its own ES module graph
+        // (an opaque-origin sandbox can't load same-server module scripts —
+        // they go through CORS and get blocked). Verified 2026-05-20:
+        // dropping allow-same-origin fails with "Module source URI is not
+        // allowed in this document".
         this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
         this.rootElement.appendChild(this.iframe);
     }
