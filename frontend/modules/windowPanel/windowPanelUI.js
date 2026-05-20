@@ -348,13 +348,16 @@ export class WindowPanelUI {
             this.updateStatus(`Opening window: ${url}`);
             this.hideError();
             
-            // Add window ID parameter to URL
+            // Add window ID parameter to URL. hostOrigin lets a cross-origin
+            // module target its outbound postMessage at this host (see
+            // adapterClient.sendToParent).
             let urlWithId;
             if (url.includes('?')) {
                 urlWithId = `${url}&windowId=${this.windowId}`;
             } else {
                 urlWithId = `${url}?windowId=${this.windowId}`;
             }
+            urlWithId += `&hostOrigin=${encodeURIComponent(window.location.origin)}`;
             
             log('debug', `Opening window with URL: ${urlWithId}`);
 

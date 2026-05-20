@@ -1,5 +1,28 @@
 // Shared known iframe pages configuration
 // Used by iframeManagerPanel UI and URL parameter handling
+//
+// Registering an external-URL (remote) module
+// -------------------------------------------
+// Each entry's `url` may be a relative path (same-origin, served from this
+// app) OR an absolute URL to a remote module. To register a remote module,
+// add an entry with an absolute `url`, e.g.:
+//
+//   { name: "Example Remote", url: "https://example.github.io/my-module/index-iframe.html",
+//     description: "...", shortName: "exampleremote" }
+//
+// A registered entry loads without the custom-URL risk warning; ad-hoc URLs
+// typed into the Iframe Manager are treated as custom and warn first.
+//
+// Two remote cases (see CC/docs/plans/partial/external-iframe-modules.md):
+//  - Same-origin remote — a different path on this app's own origin (e.g.
+//    another GitHub Pages project under the same account). No CORS concerns;
+//    not browser-isolated from the host.
+//  - True cross-origin remote — a different domain. Browser-isolated from the
+//    host. The module still loads its own ES module graph fine (same-origin
+//    to itself) given the `allow-same-origin` sandbox token, and the adapter
+//    handshake works cross-origin: the host passes its origin to the module
+//    via the `hostOrigin` URL param so the module can target postMessage back
+//    at the host. Verified end-to-end 2026-05-20.
 
 export const knownIframePages = [
     {

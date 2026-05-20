@@ -1,7 +1,7 @@
 # External Iframe/Window Module Loading — Plan
 
 **Date:** 2026-05-20
-**Status:** Partial — Phases 1–3 complete (2026-05-20)
+**Status:** Partial — Phases 1–4 complete (2026-05-20)
 
 ## Overview
 
@@ -219,12 +219,10 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
 - [x] Mirror all of the above in `windowAdapterCore` / `windowPanelUI`
       (keyed on `windowId`, derived in `openWindow`).
 
-> **Phase 4 note found during implementation:** `adapterClient.js` (window
-> mode, line ~535) posts back to the host with `window.location.origin` as the
-> `targetOrigin` — that is the *module's own* origin, correct only for
-> same-origin modules. A true cross-origin module must target the *host's*
-> origin instead. Audit/fix this under Phase 4 (it has a `'*'` fallback today,
-> so nothing is broken yet).
+> **Phase 4 note found during implementation:** `adapterClient.js`
+> `sendToParent` posts back to the host with `window.location.origin` as the
+> `targetOrigin` — the *module's own* origin, correct only for same-origin
+> modules. ✅ Fixed in Phase 4 via the `hostOrigin` URL param.
 
 ### Phase 3: URL-entry hardening — ✅ complete (2026-05-20)
 
@@ -246,13 +244,32 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
       gate) and risk warning to the window variant (`windowManagerPanel`
       `handleOpenClick`, now async like `iframeManagerPanel.handleLoadClick`).
 
-### Phase 4: Cross-origin / external-URL remote loading
+### Phase 4: Cross-origin / external-URL remote loading — ✅ complete (2026-05-20)
 
-- [ ] Audit the `adapterClient` ↔ `iframeAdapterCore` handshake for cross-origin
-      correctness (the `?iframeId=` param, READY messages, snapshot request).
-- [ ] Test loading a module from a genuine external URL end-to-end.
-- [ ] Document how to register an external-URL module in `knownIframePages` /
-      `knownWindowPages`.
+- [x] Audit the `adapterClient` ↔ `iframeAdapterCore` handshake for cross-origin
+      correctness. **Found one real bug:** `adapterClient.sendToParent` posted
+      with `window.location.origin` as `targetOrigin` — the *module's own*
+      origin. For a cross-origin module that does not equal the host's origin,
+      so the browser silently drops the message (no exception — the existing
+      `catch`/`'*'` fallback never fired). **Fix:** the host panels append a
+      `hostOrigin` URL param; `adapterClient` reads it (`detectContext`) and
+      targets outbound `postMessage` at it. As a fallback for loads without
+      the param, the client also learns the host origin from the first inbound
+      message. The `?iframeId=` param, READY messages and snapshot request are
+      otherwise cross-origin-correct as-is (`window.parent` is a valid
+      cross-origin postMessage target; query params survive).
+- [x] Test loading a module from a genuine external URL end-to-end. Verified
+      with a Playwright script: app served at `http://localhost:8000`, module
+      loaded from `http://127.0.0.1:8000` — a genuine different origin on the
+      same dev server. The cross-origin `iframe-base` module completed the
+      adapter handshake (reached `connected`). A negative test (baseline
+      `adapterClient.js` stashed back in) confirmed the fix is necessary — the
+      cross-origin handshake fails without it while same-origin still works.
+      The one-off script was not kept (a permanent CI test would need a
+      second-origin server; out of scope).
+- [x] Document how to register an external-URL module — added a how-to comment
+      block to `knownIframePages.js` / `knownWindowPages.js` (absolute `url`
+      entry; same-origin-remote vs true-cross-origin-remote distinction).
 
 ### Phase 5: Cleanup and documentation
 

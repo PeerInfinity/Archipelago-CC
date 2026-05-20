@@ -284,13 +284,16 @@ export class IframePanelUI {
                 this.handleIframeError('Failed to load iframe content');
             };
             
-            // Set URL with iframe ID parameter and append to content area
+            // Set URL with iframe ID parameter and append to content area.
+            // hostOrigin lets a cross-origin module target its outbound
+            // postMessage at this host (see adapterClient.sendToParent).
             let urlWithId;
             if (url.includes('?')) {
                 urlWithId = `${url}&iframeId=${this.iframeId}`;
             } else {
                 urlWithId = `${url}?iframeId=${this.iframeId}`;
             }
+            urlWithId += `&hostOrigin=${encodeURIComponent(window.location.origin)}`;
             // Tell the adapter core which origin to expect from this iframe,
             // so it can validate inbound postMessage and target outbound ones.
             if (window.iframeAdapterCore?.setExpectedOrigin) {

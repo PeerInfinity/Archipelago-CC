@@ -1,5 +1,24 @@
 // Shared known window pages configuration
 // Used by windowManagerPanel UI and URL parameter handling
+//
+// Registering an external-URL (remote) module
+// -------------------------------------------
+// Each entry's `url` may be a relative path (same-origin) OR an absolute URL
+// to a remote module. To register a remote module, add an entry with an
+// absolute `url`, e.g.:
+//
+//   { name: "Example Remote", url: "https://example.github.io/my-module/index-iframe.html",
+//     description: "...", shortName: "exampleremote" }
+//
+// A registered entry loads without the custom-URL risk warning; ad-hoc URLs
+// typed into the Window Manager are treated as custom and warn first.
+//
+// NOTE: unlike the iframe variant, a separate window cannot be sandboxed at
+// all (see CC/docs/plans/partial/external-iframe-modules.md, Phase 1). The
+// adapter handshake still works cross-origin — the host passes its origin via
+// the `hostOrigin` URL param so the module can target postMessage back at the
+// host — but a same-origin remote window has full host access via
+// `window.opener`. Prefer the iframe variant for untrusted-ish remotes.
 
 export const knownWindowPages = [
     {
