@@ -28,6 +28,12 @@ export class IframeAdapterCore {
         // Registry of connected iframes
         this.iframes = new Map(); // iframeId -> { window, subscriptions, lastHeartbeat }
 
+        // Expected origin per iframe, derived from the resolved load URL by
+        // iframePanelUI. Used to validate inbound postMessage origins and to
+        // target outbound postMessage. See Phase 2 of
+        // CC/docs/plans/partial/external-iframe-modules.md.
+        this.expectedOrigins = new Map(); // iframeId -> origin string
+
         // Event subscriptions tracking
         this.eventBusSubscriptions = new Map(); // iframeId -> Set of event names
         this.dispatcherSubscriptions = new Map(); // iframeId -> Set of event names
@@ -74,6 +80,35 @@ export class IframeAdapterCore {
     }
 
     /**
+     * Record the expected origin for an iframe, derived from its resolved
+     * load URL. Called by iframePanelUI when an iframe is loaded.
+     * @param {string} iframeId - Iframe identifier
+     * @param {string|null} origin - Expected origin (e.g. 'https://host.example')
+     */
+    setExpectedOrigin(iframeId, origin) {
+        if (!iframeId) return;
+        if (origin) {
+            this.expectedOrigins.set(iframeId, origin);
+            log('debug', `Expected origin for iframe ${iframeId}: ${origin}`);
+        } else {
+            // Could not derive an origin (e.g. malformed URL) — fail open:
+            // no entry means no inbound check and '*' outbound targetOrigin.
+            this.expectedOrigins.delete(iframeId);
+            log('warn', `No expected origin derivable for iframe ${iframeId}; origin validation disabled for it`);
+        }
+    }
+
+    /**
+     * Resolve the outbound postMessage targetOrigin for an iframe.
+     * Falls back to '*' when the origin is unknown.
+     * @param {string} iframeId - Iframe identifier
+     * @returns {string} targetOrigin for postMessage
+     */
+    _targetOrigin(iframeId) {
+        return this.expectedOrigins.get(iframeId) || '*';
+    }
+
+    /**
      * Handle incoming postMessage events
      * @param {MessageEvent} event - PostMessage event
      */
@@ -88,6 +123,17 @@ export class IframeAdapterCore {
 
         // Silently ignore window-specific messages (they're for windowAdapterCore)
         if (message.type === 'WINDOW_READY' || message.type === 'WINDOW_APP_READY') {
+            return;
+        }
+
+        // Validate inbound origin against the expected origin for this iframe.
+        // Real MessageEvents always carry a string event.origin; synthetic
+        // events relayed by iframePanelUI ({ source, data }) have no origin
+        // and are trusted (the panel already matched event.source to its own
+        // iframe). Mismatches are dropped with a logged warning.
+        const expectedOrigin = this.expectedOrigins.get(message.iframeId);
+        if (expectedOrigin && typeof event.origin === 'string' && event.origin !== expectedOrigin) {
+            log('warn', `Dropping ${message.type} for iframe ${message.iframeId}: origin "${event.origin}" does not match expected "${expectedOrigin}"`);
             return;
         }
 
@@ -190,7 +236,8 @@ export class IframeAdapterCore {
             this.iframes.delete(iframeId);
             this.eventBusSubscriptions.delete(iframeId);
             this.dispatcherSubscriptions.delete(iframeId);
-            
+            this.expectedOrigins.delete(iframeId);
+
             log('info', `Iframe unregistered: ${iframeId}`);
             
             // Publish disconnection event
@@ -232,8 +279,8 @@ export class IframeAdapterCore {
             capabilities: ['eventBus', 'dispatcher', 'stateManager', 'logging'],
             loggingConfig: loggingConfig
         });
-        
-        safePostMessage(source, response);
+
+        safePostMessage(source, response, this._targetOrigin(iframeId));
     }
 
     /**
@@ -275,7 +322,7 @@ export class IframeAdapterCore {
                 timestamp: Date.now()
             });
 
-            safePostMessage(source, response);
+            safePostMessage(source, response, this._targetOrigin(iframeId));
         }
     }
 
@@ -477,8 +524,8 @@ export class IframeAdapterCore {
         const response = createMessage(MessageTypes.STATIC_DATA_RESPONSE, iframeId, {
             staticData
         });
-        
-        safePostMessage(source, response);
+
+        safePostMessage(source, response, this._targetOrigin(iframeId));
     }
 
     /**
@@ -518,7 +565,7 @@ export class IframeAdapterCore {
                             snapshot: stateSnapshot
                         });
                         log('debug', `Sending FRESH STATE_SNAPSHOT response to iframe ${iframeId}`);
-                        safePostMessage(source, response);
+                        safePostMessage(source, response, this._targetOrigin(iframeId));
                     })
                     .catch((error) => {
                         log('warn', 'Ping failed, using cached snapshot:', error);
@@ -528,7 +575,7 @@ export class IframeAdapterCore {
                             snapshot: stateSnapshot
                         });
                         log('debug', `Sending fallback STATE_SNAPSHOT response to iframe ${iframeId}`);
-                        safePostMessage(source, response);
+                        safePostMessage(source, response, this._targetOrigin(iframeId));
                     });
                 
                 // Return early since we're handling this asynchronously
@@ -546,7 +593,7 @@ export class IframeAdapterCore {
             snapshot: null
         });
         log('debug', `Sending null STATE_SNAPSHOT response to iframe ${iframeId}`);
-        safePostMessage(source, response);
+        safePostMessage(source, response, this._targetOrigin(iframeId));
     }
 
     /**
@@ -600,8 +647,8 @@ export class IframeAdapterCore {
         const response = createMessage(MessageTypes.LOG_CONFIG_RESPONSE, iframeId, {
             loggingConfig
         });
-        
-        safePostMessage(source, response);
+
+        safePostMessage(source, response, this._targetOrigin(iframeId));
     }
 
     /**
@@ -616,8 +663,8 @@ export class IframeAdapterCore {
                 const message = createMessage(MessageTypes.LOG_CONFIG_UPDATE, iframeId, {
                     loggingConfig
                 });
-                
-                safePostMessage(iframe.window, message);
+
+                safePostMessage(iframe.window, message, this._targetOrigin(iframeId));
             }
         }
     }
@@ -637,8 +684,8 @@ export class IframeAdapterCore {
                         eventName,
                         eventData
                     });
-                    
-                    safePostMessage(iframe.window, message);
+
+                    safePostMessage(iframe.window, message, this._targetOrigin(iframeId));
                 }
             }
         }
@@ -664,8 +711,8 @@ export class IframeAdapterCore {
                         eventData,
                         propagationOptions
                     });
-                    
-                    safePostMessage(iframe.window, message);
+
+                    safePostMessage(iframe.window, message, this._targetOrigin(iframeId));
                 }
             }
         }
@@ -680,7 +727,7 @@ export class IframeAdapterCore {
      */
     sendErrorToIframe(iframeWindow, iframeId, errorType, errorMessage) {
         const errorMsg = createErrorMessage(iframeId, errorType, errorMessage);
-        safePostMessage(iframeWindow, errorMsg);
+        safePostMessage(iframeWindow, errorMsg, this._targetOrigin(iframeId));
     }
 
     /**

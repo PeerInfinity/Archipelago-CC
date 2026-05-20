@@ -1,7 +1,7 @@
 # External Iframe/Window Module Loading — Plan
 
 **Date:** 2026-05-20
-**Status:** Pending
+**Status:** Partial — Phases 1–2 complete (2026-05-20)
 
 ## Overview
 
@@ -178,22 +178,53 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
 
 ## Implementation Plan
 
-### Phase 1: Sandbox hardening
+### Phase 1: Sandbox hardening — ✅ complete (2026-05-20)
 
-- [ ] Wire up the `defaultSandbox` setting in `iframePanelUI.js` (apply it to
-      the created iframe element).
-- [ ] Add an equivalent sandbox setting + application to `windowPanelUI.js`
-      (note: `sandbox` semantics differ for popup windows — confirm the
-      window-variant mechanism; it may need `noopener`/feature-policy instead).
-- [ ] Replace the outdated "trusted and same-origin" comments with an accurate
+- [x] Wire up the `defaultSandbox` setting in `iframePanelUI.js` (apply it to
+      the created iframe element). Read via
+      `settingsManager.getSetting('moduleSettings.iframePanel.defaultSandbox', …)`
+      in the constructor, seeded with a `DEFAULT_SANDBOX` fallback, applied as
+      the `sandbox` attribute in `loadIframe`.
+- [x] Window variant: confirmed the separate-window path **cannot be
+      sandboxed**. `window.open()` has no `sandbox`-equivalent feature; the
+      only isolation tokens (`noopener`/`noreferrer`) sever `window.opener` in
+      both directions, which breaks the windowAdapter handshake — the host
+      loses the returned window ref it needs for `postMessage`/close-polling/
+      `.close()`, and `adapterClient` (window mode) loses the `window.opener`
+      transport it posts back on. COOP would also sever the relationship and
+      is host-wide, not per-window. Decision (confirmed with user 2026-05-20):
+      document the limitation in code + this plan, and wire up the
+      previously-dead `defaultWindowFeatures` setting (parallel cleanup to
+      `defaultSandbox`) — explicitly window *geometry*, not a security control.
+      Origin validation (Phase 2) is the only hardening the window variant gets.
+- [x] Replace the outdated "trusted and same-origin" comments with an accurate
       note referencing the trust model.
 
-### Phase 2: Origin validation
+### Phase 2: Origin validation — ✅ complete (2026-05-20)
 
-- [ ] Track expected origin per connection in `iframeAdapterCore`.
-- [ ] Validate inbound `event.origin`; drop mismatches with a logged warning.
-- [ ] Use explicit `targetOrigin` for outbound `postMessage`.
-- [ ] Mirror all of the above in `windowAdapterCore`.
+- [x] Track expected origin per connection in `iframeAdapterCore`. Added an
+      `expectedOrigins` Map plus a public `setExpectedOrigin(iframeId, origin)`;
+      `iframePanelUI.loadIframe` derives the origin from the resolved URL via
+      `new URL(url, location.href).origin` and registers it before setting
+      `iframe.src`. Cleared in `unregisterIframe`.
+- [x] Validate inbound `event.origin`; drop mismatches with a logged warning.
+      `handlePostMessage` compares `event.origin` against the expected origin.
+      Synthetic relay events from `iframePanelUI` (`{ source, data }`, no
+      `origin`) skip the check — they are already trusted (the panel matched
+      `event.source` to its own iframe). Fail-open when no expected origin is
+      known (malformed URL).
+- [x] Use explicit `targetOrigin` for outbound `postMessage`. Added
+      `_targetOrigin(iframeId)` (expected origin, or `'*'` fallback); threaded
+      it through all 11 `safePostMessage` call sites.
+- [x] Mirror all of the above in `windowAdapterCore` / `windowPanelUI`
+      (keyed on `windowId`, derived in `openWindow`).
+
+> **Phase 4 note found during implementation:** `adapterClient.js` (window
+> mode, line ~535) posts back to the host with `window.location.origin` as the
+> `targetOrigin` — that is the *module's own* origin, correct only for
+> same-origin modules. A true cross-origin module must target the *host's*
+> origin instead. Audit/fix this under Phase 4 (it has a `'*'` fallback today,
+> so nothing is broken yet).
 
 ### Phase 3: URL-entry hardening
 
@@ -230,10 +261,10 @@ sandboxing" warning is accepted (see *Design — Sandbox policy*).
 - **Custom-URL warning frequency.** Whether the arbitrary-URL warning (Phase 3)
   is acknowledged once per session or shown on every custom-URL load — decide
   during implementation.
-- **Window-variant sandboxing.** `sandbox` is an iframe attribute; the
-  separate-window path may need a different mechanism (`window.open` features,
-  `noopener`). Phase 1 must confirm what the window variant can actually
-  enforce.
+- **Window-variant sandboxing.** ✅ Resolved (2026-05-20). The separate-window
+  path cannot be sandboxed at all — `noopener`/`noreferrer`/COOP all break the
+  windowAdapter handshake (see Phase 1). Documented as a known limitation;
+  origin validation (Phase 2) is the only hardening windows receive.
 - **Extra sandbox tokens.** Whether cooperating modules need `allow-popups` /
   `allow-modals` / `allow-downloads` is per-module and TBD; the configurable
   setting accommodates it.

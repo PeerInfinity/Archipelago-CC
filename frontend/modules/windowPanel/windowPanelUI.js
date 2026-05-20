@@ -1,5 +1,6 @@
 // UI component for window panel module - displays connection status and heartbeat counter
 import { getModuleEventBus } from './index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 import {
     MessageTypes,
     createMessage,
@@ -7,6 +8,32 @@ import {
     safePostMessage,
     generateWindowId
 } from '../windowAdapter/communicationProtocol.js';
+
+// Fallback window features, used until the configured setting resolves.
+// Must match the `defaultWindowFeatures` schema default in index.js.
+//
+// NOTE: unlike the iframe variant, the separate-window path CANNOT be
+// sandboxed. `window.open()` has no `sandbox`-equivalent feature; the only
+// isolation tokens (`noopener`/`noreferrer`) sever `window.opener` in both
+// directions, which breaks the windowAdapter handshake (the host loses the
+// returned window ref it needs for postMessage / close-polling / .close(),
+// and adapterClient loses the `window.opener` transport it posts back on).
+// So `defaultWindowFeatures` is window *geometry* only, not a security
+// control. A same-origin popup retains full host access via `window.opener`;
+// origin validation (Phase 2) is the only hardening the window variant gets.
+// See CC/docs/plans/partial/external-iframe-modules.md.
+const DEFAULT_WINDOW_FEATURES = 'width=800,height=600,scrollbars=yes,resizable=yes';
+
+// Derive the origin a loaded URL will post messages from. Relative URLs
+// resolve against the host origin (same-origin modules). Returns null for
+// malformed URLs, which disables origin validation for that window.
+function originForUrl(url) {
+    try {
+        return new URL(url, window.location.href).origin;
+    } catch (error) {
+        return null;
+    }
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -40,10 +67,26 @@ export class WindowPanelUI {
         
         // Event subscriptions
         this.unsubscribeHandles = [];
-        
+
+        // Window features (geometry) applied when opening a window. Seeded
+        // with the fallback and refreshed from settings; resolves well before
+        // a user opens one. This is not a security control — see the note on
+        // DEFAULT_WINDOW_FEATURES above.
+        this.windowFeatures = DEFAULT_WINDOW_FEATURES;
+        settingsManager
+            .getSetting('moduleSettings.windowPanel.defaultWindowFeatures', DEFAULT_WINDOW_FEATURES)
+            .then((value) => {
+                if (typeof value === 'string' && value.trim()) {
+                    this.windowFeatures = value;
+                }
+            })
+            .catch((error) => {
+                log('warn', 'Failed to read defaultWindowFeatures setting; using fallback', error);
+            });
+
         this.initialize();
         this.setupEventSubscriptions();
-        
+
         log('info', `WindowPanel initialized with ID: ${this.windowId}`);
     }
 
@@ -314,9 +357,16 @@ export class WindowPanelUI {
             }
             
             log('debug', `Opening window with URL: ${urlWithId}`);
-            
-            // Open the new window
-            this.connectedWindowRef = window.open(urlWithId, `window_${this.windowId}`, 'width=800,height=600,scrollbars=yes,resizable=yes');
+
+            // Tell the adapter core which origin to expect from this window,
+            // so it can validate inbound postMessage and target outbound ones.
+            if (window.windowAdapterCore?.setExpectedOrigin) {
+                window.windowAdapterCore.setExpectedOrigin(this.windowId, originForUrl(url));
+            }
+
+            // Open the new window. The features string is geometry only; it
+            // cannot sandbox the window (see DEFAULT_WINDOW_FEATURES note).
+            this.connectedWindowRef = window.open(urlWithId, `window_${this.windowId}`, this.windowFeatures);
             
             if (this.connectedWindowRef) {
                 this.updateStatus(`Window opened: ${url}`);

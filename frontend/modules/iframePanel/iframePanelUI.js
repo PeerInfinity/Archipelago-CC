@@ -1,5 +1,6 @@
 // UI component for iframe panel module
 import { getModuleEventBus } from './index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 import {
     MessageTypes,
     createMessage,
@@ -7,6 +8,24 @@ import {
     safePostMessage,
     generateIframeId
 } from '../iframeAdapter/communicationProtocol.js';
+
+// Fallback sandbox policy, used until the configured setting resolves.
+// Must match the `defaultSandbox` schema default in index.js.
+// `allow-same-origin` is required so the loaded module can fetch its own
+// ES module graph; `allow-scripts` is required to run it at all. See the
+// trust model in CC/docs/plans/partial/external-iframe-modules.md.
+const DEFAULT_SANDBOX = 'allow-scripts allow-same-origin allow-forms';
+
+// Derive the origin a loaded URL will post messages from. Relative URLs
+// resolve against the host origin (same-origin modules). Returns null for
+// malformed URLs, which disables origin validation for that iframe.
+function originForUrl(url) {
+    try {
+        return new URL(url, window.location.href).origin;
+    } catch (error) {
+        return null;
+    }
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -39,10 +58,24 @@ export class IframePanelUI {
         
         // Event subscriptions
         this.unsubscribeHandles = [];
-        
+
+        // Sandbox policy applied to loaded iframes. Seeded with the fallback
+        // and refreshed from settings; resolves well before a user loads one.
+        this.sandboxValue = DEFAULT_SANDBOX;
+        settingsManager
+            .getSetting('moduleSettings.iframePanel.defaultSandbox', DEFAULT_SANDBOX)
+            .then((value) => {
+                if (typeof value === 'string' && value.trim()) {
+                    this.sandboxValue = value;
+                }
+            })
+            .catch((error) => {
+                log('warn', 'Failed to read defaultSandbox setting; using fallback', error);
+            });
+
         this.initialize();
         this.setupEventSubscriptions();
-        
+
         log('info', `IframePanel initialized with ID: ${this.iframeId}`);
     }
 
@@ -229,7 +262,16 @@ export class IframePanelUI {
             this.iframe.style.border = 'none';
             // Hide until loaded to prevent forced layout before stylesheets are ready
             this.iframe.style.visibility = 'hidden';
-            // Note: sandbox attribute removed - not needed since iframe content is trusted and same-origin
+            // Apply the configured sandbox policy. Loaded modules are
+            // user-trusted (they implement the iframeAdapter protocol), so the
+            // sandbox is defence-in-depth / accident containment, not a malice
+            // boundary — it limits the blast radius of bugs. `allow-same-origin`
+            // is unavoidable here because the module loads its own ES module
+            // graph; the resulting browser "can escape sandboxing" warning is
+            // expected. See CC/docs/plans/partial/external-iframe-modules.md.
+            if (this.sandboxValue) {
+                this.iframe.setAttribute('sandbox', this.sandboxValue);
+            }
 
             // Set up iframe event listeners
             this.iframe.onload = () => {
@@ -249,6 +291,12 @@ export class IframePanelUI {
             } else {
                 urlWithId = `${url}?iframeId=${this.iframeId}`;
             }
+            // Tell the adapter core which origin to expect from this iframe,
+            // so it can validate inbound postMessage and target outbound ones.
+            if (window.iframeAdapterCore?.setExpectedOrigin) {
+                window.iframeAdapterCore.setExpectedOrigin(this.iframeId, originForUrl(url));
+            }
+
             this.iframe.src = urlWithId;
             log('debug', `Setting iframe src to: ${urlWithId}`);
             

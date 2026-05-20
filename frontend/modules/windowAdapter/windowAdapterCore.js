@@ -27,6 +27,12 @@ export class WindowAdapterCore {
         // Registry of connected windows
         this.windows = new Map(); // windowId -> { window, subscriptions, lastHeartbeat }
 
+        // Expected origin per window, derived from the resolved load URL by
+        // windowPanelUI. Used to validate inbound postMessage origins and to
+        // target outbound postMessage. See Phase 2 of
+        // CC/docs/plans/partial/external-iframe-modules.md.
+        this.expectedOrigins = new Map(); // windowId -> origin string
+
         // Event subscriptions tracking
         this.eventBusSubscriptions = new Map(); // windowId -> Set of event names
         this.dispatcherSubscriptions = new Map(); // windowId -> Set of event names
@@ -78,6 +84,35 @@ export class WindowAdapterCore {
     }
 
     /**
+     * Record the expected origin for a window, derived from its resolved
+     * load URL. Called by windowPanelUI when a window is opened.
+     * @param {string} windowId - Window identifier
+     * @param {string|null} origin - Expected origin (e.g. 'https://host.example')
+     */
+    setExpectedOrigin(windowId, origin) {
+        if (!windowId) return;
+        if (origin) {
+            this.expectedOrigins.set(windowId, origin);
+            log('debug', `Expected origin for window ${windowId}: ${origin}`);
+        } else {
+            // Could not derive an origin (e.g. malformed URL) — fail open:
+            // no entry means no inbound check and '*' outbound targetOrigin.
+            this.expectedOrigins.delete(windowId);
+            log('warn', `No expected origin derivable for window ${windowId}; origin validation disabled for it`);
+        }
+    }
+
+    /**
+     * Resolve the outbound postMessage targetOrigin for a window.
+     * Falls back to '*' when the origin is unknown.
+     * @param {string} windowId - Window identifier
+     * @returns {string} targetOrigin for postMessage
+     */
+    _targetOrigin(windowId) {
+        return this.expectedOrigins.get(windowId) || '*';
+    }
+
+    /**
      * Handle incoming postMessage events
      * @param {MessageEvent} event - PostMessage event
      */
@@ -91,6 +126,18 @@ export class WindowAdapterCore {
 
         // Skip messages intended for iframeAdapter (have iframeId but no windowId)
         if (message.iframeId && !message.windowId) {
+            return;
+        }
+
+        // Validate inbound origin against the expected origin for this window.
+        // Real MessageEvents always carry a string event.origin; synthetic
+        // events relayed by windowPanelUI ({ source, data }) have no origin
+        // and are trusted (the panel already matched event.source to its own
+        // window). Mismatches are dropped with a logged warning.
+        const messageWindowId = message.windowId || message.iframeId;
+        const expectedOrigin = this.expectedOrigins.get(messageWindowId);
+        if (expectedOrigin && typeof event.origin === 'string' && event.origin !== expectedOrigin) {
+            log('warn', `Dropping ${message.type} for window ${messageWindowId}: origin "${event.origin}" does not match expected "${expectedOrigin}"`);
             return;
         }
         
@@ -177,7 +224,8 @@ export class WindowAdapterCore {
             this.windows.delete(windowId);
             this.eventBusSubscriptions.delete(windowId);
             this.dispatcherSubscriptions.delete(windowId);
-            
+            this.expectedOrigins.delete(windowId);
+
             log('info', `Window unregistered: ${windowId}`);
             
             // Publish disconnection event
@@ -245,8 +293,8 @@ export class WindowAdapterCore {
             capabilities: ['eventBus', 'dispatcher', 'stateManager', 'logging'],
             loggingConfig: loggingConfig
         });
-        
-        safePostMessage(source, response);
+
+        safePostMessage(source, response, this._targetOrigin(windowId));
     }
 
     /**
@@ -265,8 +313,8 @@ export class WindowAdapterCore {
             const response = createMessage(MessageTypes.HEARTBEAT_RESPONSE, windowId, {
                 timestamp: Date.now()
             });
-            
-            safePostMessage(source, response);
+
+            safePostMessage(source, response, this._targetOrigin(windowId));
         }
     }
 
@@ -441,8 +489,8 @@ export class WindowAdapterCore {
         const response = createMessage(MessageTypes.STATIC_DATA_RESPONSE, windowId, {
             staticData
         });
-        
-        safePostMessage(source, response);
+
+        safePostMessage(source, response, this._targetOrigin(windowId));
     }
 
     /**
@@ -482,7 +530,7 @@ export class WindowAdapterCore {
                             snapshot: stateSnapshot
                         });
                         log('debug', `Sending FRESH STATE_SNAPSHOT response to window ${windowId}`);
-                        safePostMessage(source, response);
+                        safePostMessage(source, response, this._targetOrigin(windowId));
                     })
                     .catch((error) => {
                         log('warn', 'Ping failed, using cached snapshot:', error);
@@ -492,7 +540,7 @@ export class WindowAdapterCore {
                             snapshot: stateSnapshot
                         });
                         log('debug', `Sending fallback STATE_SNAPSHOT response to window ${windowId}`);
-                        safePostMessage(source, response);
+                        safePostMessage(source, response, this._targetOrigin(windowId));
                     });
                 
                 // Return early since we're handling this asynchronously
@@ -510,7 +558,7 @@ export class WindowAdapterCore {
             snapshot: null
         });
         log('debug', `Sending null STATE_SNAPSHOT response to window ${windowId}`);
-        safePostMessage(source, response);
+        safePostMessage(source, response, this._targetOrigin(windowId));
     }
 
     /**
@@ -564,8 +612,8 @@ export class WindowAdapterCore {
         const response = createMessage(MessageTypes.LOG_CONFIG_RESPONSE, windowId, {
             loggingConfig
         });
-        
-        safePostMessage(source, response);
+
+        safePostMessage(source, response, this._targetOrigin(windowId));
     }
 
     /**
@@ -580,8 +628,8 @@ export class WindowAdapterCore {
                 const message = createMessage(MessageTypes.LOG_CONFIG_UPDATE, windowId, {
                     loggingConfig
                 });
-                
-                safePostMessage(windowRef.window, message);
+
+                safePostMessage(windowRef.window, message, this._targetOrigin(windowId));
             }
         }
     }
@@ -601,8 +649,8 @@ export class WindowAdapterCore {
                         eventName,
                         eventData
                     });
-                    
-                    safePostMessage(windowRef.window, message);
+
+                    safePostMessage(windowRef.window, message, this._targetOrigin(windowId));
                 }
             }
         }
@@ -628,8 +676,8 @@ export class WindowAdapterCore {
                         eventData,
                         propagationOptions
                     });
-                    
-                    safePostMessage(windowRef.window, message);
+
+                    safePostMessage(windowRef.window, message, this._targetOrigin(windowId));
                 }
             }
         }
@@ -644,7 +692,7 @@ export class WindowAdapterCore {
      */
     sendErrorToWindow(windowRef, windowId, errorType, errorMessage) {
         const errorMsg = createErrorMessage(windowId, errorType, errorMessage);
-        safePostMessage(windowRef, errorMsg);
+        safePostMessage(windowRef, errorMsg, this._targetOrigin(windowId));
     }
 
     /**
