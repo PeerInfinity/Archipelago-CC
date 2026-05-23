@@ -243,6 +243,11 @@
             },
             {
               "type": "component",
+              "componentType": "jtaSubstrateWrapperPanel",
+              "title": "Journey to Ascension"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             },
