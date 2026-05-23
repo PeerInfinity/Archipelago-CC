@@ -71,7 +71,6 @@ function buildWorldFromStaticData(staticData, currentRegion) {
         && _procgenSidecarRegions instanceof Set
         && _procgenSidecarRegions.size > 0
     );
-    console.log(`[tasw-bridge] buildWorldFromStaticData: procgenMode=${_procgenMode}, sidecarRegions=${_procgenSidecarRegions instanceof Set ? [..._procgenSidecarRegions] : _procgenSidecarRegions}, filterActive=${filterToSidecarRegions}, totalRegionsInStaticData=${regions.size ?? Object.keys(regions).length}`);
     const rooms = {};
     // Side-table: access_rule per exit / item, keyed by room id.
     // The engine itself doesn't care about rules; the bridge stores
@@ -353,27 +352,20 @@ async function main() {
         if (data.discoveryMode) {
             engine.setDiscoveryMode(data.discoveryMode);
         }
-        // Update procgen-mode filter state. If the mode or sidecar
-        // region set changed and we already have a world, rebuild it
-        // so the engine reflects the new filter.
-        const newMode = !!data.procgenMode;
-        const newRegions = Array.isArray(data.procgenSidecarRegions)
+        // Update procgen-mode filter state from the host. We do NOT
+        // trigger a rebuildWorld here — staticData isn't refreshed
+        // until stateManager:rulesLoaded fires (which happens AFTER
+        // rawJsonDataLoaded → initialState). Triggering a rebuild now
+        // would pick up the previous preset's regions, filter them
+        // all out, and produce an empty world; the subsequent
+        // rulesLoaded-triggered rebuild would then be blocked by
+        // rebuildInFlight. Trust the rulesLoaded subscription to do
+        // the rebuild with both the new procgen state and fresh
+        // staticData in place.
+        _procgenMode = !!data.procgenMode;
+        _procgenSidecarRegions = Array.isArray(data.procgenSidecarRegions)
             ? new Set(data.procgenSidecarRegions)
             : null;
-        const modeChanged = newMode !== _procgenMode;
-        const regionsChanged = (
-            (!!newRegions !== !!_procgenSidecarRegions)
-            || (newRegions && _procgenSidecarRegions
-                && (newRegions.size !== _procgenSidecarRegions.size
-                    || [...newRegions].some((r) => !_procgenSidecarRegions.has(r))))
-        );
-        _procgenMode = newMode;
-        _procgenSidecarRegions = newRegions;
-        if (world && (modeChanged || regionsChanged)) {
-            log('info', 'procgen mode/sidecar regions changed; rebuilding world');
-            rebuildWorld();
-            return; // rebuildWorld replays pendingInitialState
-        }
         if (!world) return;
         engine.batchUpdate(() => {
             for (const regionName of data.discoveredRegions ?? []) {
@@ -404,7 +396,7 @@ async function main() {
     // (the iframe protocol has no native way to query these on
     // connect).
     client.subscribeEventBus('textAdventureSubstrateWrapper:initialState', (data) => {
-        log('info', `initialState received: procgenMode=${data?.procgenMode}, sidecarRegions=${JSON.stringify(data?.procgenSidecarRegions)}`);
+        log('debug', 'initialState received', data);
         pendingInitialState = data;
         applyInitialState(data);  // applies what it can; if no world, only mode applies
     });

@@ -158,28 +158,7 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         const sidecars = rulesJson?.preset_sidecars?.[playerId];
         _procgenMode = !!sidecars;
         _procgenSidecarRegions = sidecars ? Object.keys(sidecars) : [];
-        console.log(`[textAdventureSubstrateWrapper] rawJsonDataLoaded: procgenMode=${_procgenMode}, sidecarRegions=${JSON.stringify(_procgenSidecarRegions)}`);
-        try {
-            eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
-            console.log(`[textAdventureSubstrateWrapper] published ${INITIAL_STATE_EVENT}`);
-        } catch (err) {
-            console.error(`[textAdventureSubstrateWrapper] publish threw:`, err);
-        }
-        // Also inspect iframeAdapter's view of subscribed iframes so we
-        // can tell whether the bridge is still connected at this point.
-        // eslint-disable-next-line no-undef
-        const adapter = (typeof window !== 'undefined') ? window.iframeAdapterCore : null;
-        if (adapter && typeof adapter.getConnectedIframes === 'function') {
-            const iframes = adapter.getConnectedIframes();
-            const taswIframes = iframes.filter((f) =>
-                f.eventBusSubscriptions?.includes?.(INITIAL_STATE_EVENT)
-            );
-            console.log(
-                `[textAdventureSubstrateWrapper] iframeAdapter has ${iframes.length} iframe(s); `
-                + `${taswIframes.length} subscribed to ${INITIAL_STATE_EVENT}: `
-                + JSON.stringify(taswIframes.map((f) => ({ id: f.iframeId, connected: f.connected })))
-            );
-        }
+        eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
     });
 
     eventBus.subscribe('iframe:appReady', () => {
