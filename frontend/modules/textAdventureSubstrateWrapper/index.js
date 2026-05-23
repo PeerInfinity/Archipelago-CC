@@ -158,6 +158,7 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         const sidecars = rulesJson?.preset_sidecars?.[playerId];
         _procgenMode = !!sidecars;
         _procgenSidecarRegions = sidecars ? Object.keys(sidecars) : [];
+        console.log(`[textAdventureSubstrateWrapper] rawJsonDataLoaded: procgenMode=${_procgenMode}, sidecarRegions=${JSON.stringify(_procgenSidecarRegions)}`);
         eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
     });
 

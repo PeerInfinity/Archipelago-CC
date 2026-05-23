@@ -71,6 +71,7 @@ function buildWorldFromStaticData(staticData, currentRegion) {
         && _procgenSidecarRegions instanceof Set
         && _procgenSidecarRegions.size > 0
     );
+    console.log(`[tasw-bridge] buildWorldFromStaticData: procgenMode=${_procgenMode}, sidecarRegions=${_procgenSidecarRegions instanceof Set ? [..._procgenSidecarRegions] : _procgenSidecarRegions}, filterActive=${filterToSidecarRegions}, totalRegionsInStaticData=${regions.size ?? Object.keys(regions).length}`);
     const rooms = {};
     // Side-table: access_rule per exit / item, keyed by room id.
     // The engine itself doesn't care about rules; the bridge stores
@@ -403,7 +404,7 @@ async function main() {
     // (the iframe protocol has no native way to query these on
     // connect).
     client.subscribeEventBus('textAdventureSubstrateWrapper:initialState', (data) => {
-        log('debug', 'initialState received', data);
+        log('info', `initialState received: procgenMode=${data?.procgenMode}, sidecarRegions=${JSON.stringify(data?.procgenSidecarRegions)}`);
         pendingInitialState = data;
         applyInitialState(data);  // applies what it can; if no world, only mode applies
     });
