@@ -61,10 +61,40 @@ def project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def _build_sidecar_exits(ap_exits: list) -> list:
+    """Mirror the AP region-graph exits into the sidecar's
+    playable_payload.exits format.
+
+    The JtA bridge looks exits up via staticData.regions, not via the
+    sidecar — but the Presets panel's procgen-stats summary (and any
+    other consumer that scans sidecar exits) reads them from here.
+    Including them keeps reported region/exit counts accurate.
+
+    Spatial fields (x/y/side) are meaningless for the JtA substrate
+    and omitted. isBackExit / isTeleporter are emitted as false so
+    Presets-panel's filter (`!isBackExit && !isTeleporter`) counts
+    them.
+    """
+    out = []
+    for e in (ap_exits or []):
+        name = e.get("name")
+        if not name:
+            continue
+        out.append({
+            "exit_id": name,
+            "exitName": name,
+            "targetRegion": e.get("connected_region"),
+            "targetExitId": None,
+            "isBackExit": False,
+            "isTeleporter": False,
+        })
+    return out
+
+
 def build_sidecars(regions: dict, zone_map: dict) -> tuple[dict, list[str]]:
     sidecars: dict = {}
     unmapped: list[str] = []
-    for region_name in regions.keys():
+    for region_name, region in regions.items():
         if region_name in zone_map:
             sidecars[region_name] = {
                 "substrate": "jta",
@@ -75,6 +105,7 @@ def build_sidecars(regions: dict, zone_map: dict) -> tuple[dict, list[str]]:
                     # only when this is true. Matches the procgen pipeline
                     # convention.
                     "manaEnabled": True,
+                    "exits": _build_sidecar_exits(region.get("exits", [])),
                 },
             }
         else:

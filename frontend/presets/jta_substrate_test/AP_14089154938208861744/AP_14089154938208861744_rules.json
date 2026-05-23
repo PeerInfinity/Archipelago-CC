@@ -1808,7 +1808,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 0,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Village -> The Village Watch",
+              "exitName": "The Village -> The Village Watch",
+              "targetRegion": "The Village Watch",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Village Watch": {
@@ -1816,7 +1826,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 1,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Village Watch -> The Raid",
+              "exitName": "The Village Watch -> The Raid",
+              "targetRegion": "The Raid",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Raid": {
@@ -1824,7 +1844,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 2,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Raid -> The Wilderness",
+              "exitName": "The Raid -> The Wilderness",
+              "targetRegion": "The Wilderness",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Wilderness": {
@@ -1832,7 +1862,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 3,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Wilderness -> The Cave System",
+              "exitName": "The Wilderness -> The Cave System",
+              "targetRegion": "The Cave System",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Cave System": {
@@ -1840,7 +1880,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 4,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Cave System -> The Road to the City",
+              "exitName": "The Cave System -> The Road to the City",
+              "targetRegion": "The Road to the City",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Road to the City": {
@@ -1848,7 +1898,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 5,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Road to the City -> The City Outskirts",
+              "exitName": "The Road to the City -> The City Outskirts",
+              "targetRegion": "The City Outskirts",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The City Outskirts": {
@@ -1856,7 +1916,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 6,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The City Outskirts -> The City",
+              "exitName": "The City Outskirts -> The City",
+              "targetRegion": "The City",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The City": {
@@ -1864,7 +1934,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 7,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The City -> The Forest",
+              "exitName": "The City -> The Forest",
+              "targetRegion": "The Forest",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Forest": {
@@ -1872,7 +1952,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 8,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Forest -> The Magician",
+              "exitName": "The Forest -> The Magician",
+              "targetRegion": "The Magician",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Magician": {
@@ -1880,7 +1970,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 9,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Magician -> The Ocean",
+              "exitName": "The Magician -> The Ocean",
+              "targetRegion": "The Ocean",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Ocean": {
@@ -1888,7 +1988,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 10,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Ocean -> The Island",
+              "exitName": "The Ocean -> The Island",
+              "targetRegion": "The Island",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Island": {
@@ -1896,7 +2006,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 11,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Island -> The Desert",
+              "exitName": "The Island -> The Desert",
+              "targetRegion": "The Desert",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Desert": {
@@ -1904,7 +2024,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 12,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Desert -> The Oasis",
+              "exitName": "The Desert -> The Oasis",
+              "targetRegion": "The Oasis",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Oasis": {
@@ -1912,7 +2042,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 13,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Oasis -> The Ritual",
+              "exitName": "The Oasis -> The Ritual",
+              "targetRegion": "The Ritual",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Ritual": {
@@ -1920,7 +2060,17 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 14,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": [
+            {
+              "exit_id": "The Ritual -> The Dream",
+              "exitName": "The Ritual -> The Dream",
+              "targetRegion": "The Dream",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ]
         }
       },
       "The Dream": {
@@ -1928,7 +2078,8 @@
         "render_hint": "jta",
         "playable_payload": {
           "jtaZone": 15,
-          "manaEnabled": true
+          "manaEnabled": true,
+          "exits": []
         }
       }
     }
