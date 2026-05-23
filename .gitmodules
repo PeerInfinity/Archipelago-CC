@@ -4,3 +4,7 @@
 [submodule "frontend/modules/textAdventureEngine"]
 	path = frontend/modules/textAdventureEngine
 	url = https://github.com/PeerInfinity/archipelago-textadventure-engine.git
+[submodule "frontend/modules/journey-to-ascension"]
+	path = frontend/modules/journey-to-ascension
+	url = https://github.com/PeerInfinity/journey-to-ascension.git
+	branch = substrate
