@@ -140,13 +140,45 @@ function _syncEnergyFromPool() {
  * Look up the region's exits in the cached static data. Returns
  * an array of { name, connected_region } or an empty array if the
  * region or static data isn't available.
+ *
+ * Defensive logging at each failure point so misshapen staticData
+ * (e.g. a stale cache or a procgen path that doesn't surface
+ * exits) is easy to diagnose from console.
  */
 function _getRegionExits(regionId) {
     const staticData = _client?.getStaticData?.();
-    const regions = staticData?.regions;
-    if (!regions || typeof regions.get !== 'function') return [];
-    const region = regions.get(regionId);
-    if (!region || !Array.isArray(region.exits)) return [];
+    if (!staticData) {
+        log('warn', `_getRegionExits(${regionId}): staticData is null/undefined`);
+        return [];
+    }
+    const regions = staticData.regions;
+    if (!regions) {
+        log('warn', `_getRegionExits(${regionId}): staticData has no regions`);
+        return [];
+    }
+    let region;
+    if (typeof regions.get === 'function') {
+        region = regions.get(regionId);
+    } else if (typeof regions === 'object') {
+        // Defensive: handle plain-object case in case staticData
+        // didn't get the Map conversion treatment.
+        region = regions[regionId];
+        log('debug', `_getRegionExits(${regionId}): regions is a plain object, falling back to indexed access`);
+    }
+    if (!region) {
+        const keys = typeof regions.keys === 'function'
+            ? [...regions.keys()].slice(0, 10)
+            : Object.keys(regions).slice(0, 10);
+        log('warn', `_getRegionExits(${regionId}): region not present in staticData; first 10 keys = ${JSON.stringify(keys)}`);
+        return [];
+    }
+    if (!Array.isArray(region.exits)) {
+        log('warn', `_getRegionExits(${regionId}): region has no exits array; region keys = ${JSON.stringify(Object.keys(region))}`);
+        return [];
+    }
+    if (region.exits.length === 0) {
+        log('warn', `_getRegionExits(${regionId}): exits array is empty`);
+    }
     return region.exits;
 }
 
@@ -217,6 +249,15 @@ function _handleLoadRegion(payload) {
     _world = world;
     _isActive = true;
     _lastSampledEnergy = _hostCurrentMana;
+
+    // Defensive: if static data isn't cached yet (e.g. the initial
+    // post-connect request fired before rules were loaded and no
+    // stateManager:rulesLoaded has arrived since), kick off another
+    // request now. We don't await — the next exit lookup picks up
+    // the populated cache.
+    if (!_client?.getStaticData?.()) {
+        _client?.requestStaticData?.();
+    }
 
     // On re-entry to a completed region, inject exit tasks so the
     // player has something to click (the Travel task is already done).
@@ -326,6 +367,16 @@ async function main() {
 
     // Region activation events (from procgenPlayer).
     _client.subscribeEventBus('jta:loadRegion', _handleLoadRegion);
+
+    // Static data refresh — AdapterClient requests static data once
+    // immediately after connect, but if rules weren't loaded yet at
+    // that point, the host returns null and the cached value stays
+    // null. Re-request whenever rules (re)load so subsequent exit
+    // lookups (Travel-task callbacks) find populated regions.
+    _client.subscribeEventBus('stateManager:rulesLoaded', () => {
+        log('debug', 'stateManager:rulesLoaded — re-requesting static data');
+        _client?.requestStaticData?.();
+    });
 
     // Step 4: register the Travel-task callback on the JtA side.
     if (typeof _w.setTravelTaskCallback === 'function') {
