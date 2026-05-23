@@ -244,6 +244,10 @@
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
       "enabled": true
     },
+    "jtaSubstrateWrapper": {
+      "path": "./modules/jtaSubstrateWrapper/index.js",
+      "enabled": true
+    },
     "procgenPipeline": {
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
@@ -319,6 +323,7 @@
     "mazeRoom",
     "textAdventureSubstrate",
     "textAdventureSubstrateWrapper",
+    "jtaSubstrateWrapper",
     "procgenPipeline",
     "procgenPlayer",
     "playbackBot"
