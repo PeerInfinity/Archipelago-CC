@@ -139,9 +139,11 @@ function _syncEnergyFromPool() {
 /**
  * Look up the current region's exits from the sidecar's
  * playable_payload.exits (delivered as `_world.exits` after
- * deserializeWorld passed it through). Sidecar exits carry a
- * directional `side` (N/E/S/W) that AP region-graph exits don't,
- * which is why we prefer the sidecar source over staticData.regions.
+ * deserializeWorld converted the array into a Map<exitName, exit>).
+ * The bridge's consumers want an array, so we materialize the Map's
+ * values here. Sidecar exits carry a directional `side` (N/E/S/W)
+ * that AP region-graph exits don't, which is why we prefer the
+ * sidecar source over staticData.regions.
  *
  * Expected per-exit shape (a subset of the procgen sidecar format):
  *   { exit_id, exitName, targetRegion, side?, isBackExit?, isTeleporter? }
@@ -152,11 +154,14 @@ function _getRegionExits() {
         return [];
     }
     const exits = _world.exits;
-    if (!Array.isArray(exits)) {
-        log('warn', `_getRegionExits: _world has no exits array; keys = ${JSON.stringify(Object.keys(_world))}`);
-        return [];
+    if (exits instanceof Map) {
+        return [...exits.values()];
     }
-    return exits;
+    if (Array.isArray(exits)) {
+        return exits;
+    }
+    log('warn', `_getRegionExits: _world.exits is neither Map nor Array; type=${typeof exits}`);
+    return [];
 }
 
 function _dispatchRegionMove(targetRegion, exitName) {

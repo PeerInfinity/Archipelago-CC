@@ -26,10 +26,24 @@ export const substrateRegistryEntry = Object.freeze({
     // the whole sidecar) to this function. The bridge then reads
     // `world.jtaZone` directly. Expected payload shape for a jta
     // region:
-    //   { jtaZone: <number> }
-    // Additional fields (e.g. future per-region tuning) are passed
-    // through unchanged.
-    deserializeWorld: (payload) => ({ ...(payload ?? {}) }),
+    //   { jtaZone: <number>, exits: [...], ... }
+    //
+    // Exits are converted from the on-disk array form into a Map
+    // keyed by exitName — same shape mazeRoom's deserializer uses —
+    // because procgenPlayer.handleRegionMove calls
+    // sourceWorld.exits.has(exitName) when resolving the targetExitId
+    // for a region transition. Leaving exits as an array breaks that
+    // lookup with "exits.has is not a function".
+    deserializeWorld: (payload) => {
+        const p = payload ?? {};
+        const exitsArray = Array.isArray(p.exits) ? p.exits : [];
+        const exitsMap = new Map();
+        for (const e of exitsArray) {
+            const key = e?.exitName ?? e?.exit_id;
+            if (key) exitsMap.set(key, e);
+        }
+        return { ...p, exits: exitsMap };
+    },
 
     // Playback bot integration is deferred to a later phase. Until
     // then, the registry's getPlaybackController returns null and the
