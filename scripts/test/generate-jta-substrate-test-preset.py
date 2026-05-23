@@ -65,14 +65,18 @@ def _build_sidecar_exits(ap_exits: list) -> list:
     """Mirror the AP region-graph exits into the sidecar's
     playable_payload.exits format.
 
-    The JtA bridge looks exits up via staticData.regions, not via the
-    sidecar — but the Presets panel's procgen-stats summary (and any
-    other consumer that scans sidecar exits) reads them from here.
-    Including them keeps reported region/exit counts accurate.
+    The JtA bridge reads from these sidecar exits (not from
+    staticData.regions) because sidecar exits carry a directional
+    `side` (N/E/S/W) that the AP region graph doesn't surface. The
+    Presets panel also reads from here for its per-region exit counts.
 
-    Spatial fields (x/y/side) are meaningless for the JtA substrate
-    and omitted. isBackExit / isTeleporter are emitted as false so
-    Presets-panel's filter (`!isBackExit && !isTeleporter`) counts
+    The x/y spatial fields are meaningless for the JtA substrate and
+    omitted. `side` is emitted as a placeholder value (see comment in
+    main()) — JtA zones in the vanilla chain don't have an intrinsic
+    spatial direction, so we default to "E" for all forward exits.
+
+    isBackExit / isTeleporter are emitted as false explicitly so the
+    Presets panel's filter (`!isBackExit && !isTeleporter`) counts
     them.
     """
     out = []
@@ -85,6 +89,7 @@ def _build_sidecar_exits(ap_exits: list) -> list:
             "exitName": name,
             "targetRegion": e.get("connected_region"),
             "targetExitId": None,
+            "side": "E",
             "isBackExit": False,
             "isTeleporter": False,
         })

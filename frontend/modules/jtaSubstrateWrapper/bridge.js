@@ -137,49 +137,26 @@ function _syncEnergyFromPool() {
 // ────────────────────────────────────────────────────────────────
 
 /**
- * Look up the region's exits in the cached static data. Returns
- * an array of { name, connected_region } or an empty array if the
- * region or static data isn't available.
+ * Look up the current region's exits from the sidecar's
+ * playable_payload.exits (delivered as `_world.exits` after
+ * deserializeWorld passed it through). Sidecar exits carry a
+ * directional `side` (N/E/S/W) that AP region-graph exits don't,
+ * which is why we prefer the sidecar source over staticData.regions.
  *
- * Defensive logging at each failure point so misshapen staticData
- * (e.g. a stale cache or a procgen path that doesn't surface
- * exits) is easy to diagnose from console.
+ * Expected per-exit shape (a subset of the procgen sidecar format):
+ *   { exit_id, exitName, targetRegion, side?, isBackExit?, isTeleporter? }
  */
-function _getRegionExits(regionId) {
-    const staticData = _client?.getStaticData?.();
-    if (!staticData) {
-        log('warn', `_getRegionExits(${regionId}): staticData is null/undefined`);
+function _getRegionExits() {
+    if (!_world) {
+        log('warn', '_getRegionExits: no _world (jta:loadRegion not yet handled)');
         return [];
     }
-    const regions = staticData.regions;
-    if (!regions) {
-        log('warn', `_getRegionExits(${regionId}): staticData has no regions`);
+    const exits = _world.exits;
+    if (!Array.isArray(exits)) {
+        log('warn', `_getRegionExits: _world has no exits array; keys = ${JSON.stringify(Object.keys(_world))}`);
         return [];
     }
-    let region;
-    if (typeof regions.get === 'function') {
-        region = regions.get(regionId);
-    } else if (typeof regions === 'object') {
-        // Defensive: handle plain-object case in case staticData
-        // didn't get the Map conversion treatment.
-        region = regions[regionId];
-        log('debug', `_getRegionExits(${regionId}): regions is a plain object, falling back to indexed access`);
-    }
-    if (!region) {
-        const keys = typeof regions.keys === 'function'
-            ? [...regions.keys()].slice(0, 10)
-            : Object.keys(regions).slice(0, 10);
-        log('warn', `_getRegionExits(${regionId}): region not present in staticData; first 10 keys = ${JSON.stringify(keys)}`);
-        return [];
-    }
-    if (!Array.isArray(region.exits)) {
-        log('warn', `_getRegionExits(${regionId}): region has no exits array; region keys = ${JSON.stringify(Object.keys(region))}`);
-        return [];
-    }
-    if (region.exits.length === 0) {
-        log('warn', `_getRegionExits(${regionId}): exits array is empty`);
-    }
-    return region.exits;
+    return exits;
 }
 
 function _dispatchRegionMove(targetRegion, exitName) {
@@ -189,6 +166,17 @@ function _dispatchRegionMove(targetRegion, exitName) {
         targetRegion,
         exitName: exitName ?? null,
     }, { initialTarget: 'bottom' });
+}
+
+const SIDE_LABEL = { N: 'North', E: 'East', S: 'South', W: 'West' };
+
+function _exitLabel(exit) {
+    const target = exit?.targetRegion;
+    const side = exit?.side;
+    if (side && SIDE_LABEL[side] && target) return `Go ${SIDE_LABEL[side]} (to ${target})`;
+    if (side && SIDE_LABEL[side]) return `Go ${SIDE_LABEL[side]}`;
+    if (target) return `Take exit: ${exit?.exitName ?? '?'} (to ${target})`;
+    return `Take exit: ${exit?.exitName ?? '?'}`;
 }
 
 /**
@@ -202,13 +190,10 @@ function _injectExitTasks(exits) {
     }
     for (const exit of exits) {
         const taskId = _allocSyntheticId();
-        const label = exit.connected_region
-            ? `Take exit: ${exit.name} (to ${exit.connected_region})`
-            : `Take exit: ${exit.name}`;
         _w.injectSyntheticTask(
-            { id: taskId, name: label, costMultiplier: 0 },
+            { id: taskId, name: _exitLabel(exit), costMultiplier: 0 },
             () => {
-                _dispatchRegionMove(exit.connected_region ?? null, exit.name);
+                _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
             },
         );
     }
@@ -262,7 +247,7 @@ function _handleLoadRegion(payload) {
     // On re-entry to a completed region, inject exit tasks so the
     // player has something to click (the Travel task is already done).
     if (completed) {
-        const exits = _getRegionExits(regionId);
+        const exits = _getRegionExits();
         if (exits.length === 0) {
             log('warn', `Completed region ${regionId} has no exits`);
         } else {
@@ -286,7 +271,7 @@ function _handleTravelTaskCompleted(zone, task) {
     // load it in completed state (only exit tasks visible).
     _completedThisLoop.add(_currentRegionId);
 
-    const exits = _getRegionExits(_currentRegionId);
+    const exits = _getRegionExits();
     if (exits.length === 0) {
         log('warn', `Travel task in ${_currentRegionId} completed but region has no exits`);
         return;
@@ -294,7 +279,7 @@ function _handleTravelTaskCompleted(zone, task) {
     if (exits.length === 1) {
         // Single exit: dispatch directly. No synthetic task needed.
         const exit = exits[0];
-        _dispatchRegionMove(exit.connected_region ?? null, exit.name);
+        _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
         return;
     }
     // Multiple exits: inject one synthetic task per exit.

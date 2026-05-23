@@ -1815,6 +1815,7 @@
               "exitName": "The Village -> The Village Watch",
               "targetRegion": "The Village Watch",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1833,6 +1834,7 @@
               "exitName": "The Village Watch -> The Raid",
               "targetRegion": "The Raid",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1851,6 +1853,7 @@
               "exitName": "The Raid -> The Wilderness",
               "targetRegion": "The Wilderness",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1869,6 +1872,7 @@
               "exitName": "The Wilderness -> The Cave System",
               "targetRegion": "The Cave System",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1887,6 +1891,7 @@
               "exitName": "The Cave System -> The Road to the City",
               "targetRegion": "The Road to the City",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1905,6 +1910,7 @@
               "exitName": "The Road to the City -> The City Outskirts",
               "targetRegion": "The City Outskirts",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1923,6 +1929,7 @@
               "exitName": "The City Outskirts -> The City",
               "targetRegion": "The City",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1941,6 +1948,7 @@
               "exitName": "The City -> The Forest",
               "targetRegion": "The Forest",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1959,6 +1967,7 @@
               "exitName": "The Forest -> The Magician",
               "targetRegion": "The Magician",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1977,6 +1986,7 @@
               "exitName": "The Magician -> The Ocean",
               "targetRegion": "The Ocean",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -1995,6 +2005,7 @@
               "exitName": "The Ocean -> The Island",
               "targetRegion": "The Island",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -2013,6 +2024,7 @@
               "exitName": "The Island -> The Desert",
               "targetRegion": "The Desert",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -2031,6 +2043,7 @@
               "exitName": "The Desert -> The Oasis",
               "targetRegion": "The Oasis",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -2049,6 +2062,7 @@
               "exitName": "The Oasis -> The Ritual",
               "targetRegion": "The Ritual",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
@@ -2067,6 +2081,7 @@
               "exitName": "The Ritual -> The Dream",
               "targetRegion": "The Dream",
               "targetExitId": null,
+              "side": "E",
               "isBackExit": false,
               "isTeleporter": false
             }
