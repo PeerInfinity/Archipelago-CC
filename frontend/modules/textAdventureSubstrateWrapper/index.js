@@ -62,6 +62,12 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher(PLAYBACK_CONTROL_EVENT);
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
+    // Procgen mode detection — subscribe to rawJsonDataLoaded to spot
+    // preset_sidecars and forward the substrate's sidecar-region set
+    // to the bridge so it can filter Menu / other non-sidecar regions
+    // out of the engine's world. Mirrors the procgen vs standalone
+    // mode detection in textAdventureSubstrate/index.js.
+    registrationApi.registerEventBusSubscriberIntent('stateManager:rawJsonDataLoaded');
 
     // Register the substrate entry so procgen recognizes
     // 'text_adventure' and dispatches loadRegion events to our panel.
@@ -70,6 +76,43 @@ export function register(registrationApi) {
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
     }
+}
+
+// Procgen mode tracking — populated from stateManager:rawJsonDataLoaded.
+// procgenMode is true when the current rules.json carries a
+// preset_sidecars block (i.e. regions are tagged with substrates).
+// procgenSidecarRegions is the set of region names that have a sidecar
+// entry; the bridge uses it to filter non-sidecar regions (Menu, etc.)
+// out of the engine's world.
+let _procgenMode = false;
+let _procgenSidecarRegions = [];
+
+function _buildInitialStatePayload() {
+    const settings = getDiscoverySettings();
+    const active = !!settings?.enableDiscoveryMode;
+    let discoveredRegions = [];
+    let discoveredLocations = [];
+    let discoveredExits = [];
+    try {
+        discoveredRegions = Array.from(discoveryStateSingleton.getDiscoveredRegions());
+        discoveredLocations = Array.from(discoveryStateSingleton.getDiscoveredLocations());
+        const exitsMap = discoveryStateSingleton.getDiscoveredExits();
+        for (const [regionName, exitSet] of exitsMap.entries()) {
+            for (const exitName of exitSet) {
+                discoveredExits.push({ regionName, exitName });
+            }
+        }
+    } catch {
+        // Singleton may not be fully initialized; carry on with empties.
+    }
+    return {
+        discoveryMode: active ? 'discovered' : 'full',
+        discoveredRegions,
+        discoveredLocations,
+        discoveredExits,
+        procgenMode: _procgenMode,
+        procgenSidecarRegions: _procgenSidecarRegions,
+    };
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
@@ -105,29 +148,20 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
     });
 
+    // Procgen mode detection: when rules load with a preset_sidecars
+    // block, capture the sidecar-region set and re-broadcast initial
+    // state so the bridge can filter Menu / other non-sidecar regions
+    // out of the engine's world.
+    eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
+        const rulesJson = data?.rawJsonData;
+        const playerId = data?.selectedPlayerInfo?.playerId ?? '1';
+        const sidecars = rulesJson?.preset_sidecars?.[playerId];
+        _procgenMode = !!sidecars;
+        _procgenSidecarRegions = sidecars ? Object.keys(sidecars) : [];
+        eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
+    });
+
     eventBus.subscribe('iframe:appReady', () => {
-        const settings = getDiscoverySettings();
-        const active = !!settings?.enableDiscoveryMode;
-        let discoveredRegions = [];
-        let discoveredLocations = [];
-        let discoveredExits = [];
-        try {
-            discoveredRegions = Array.from(discoveryStateSingleton.getDiscoveredRegions());
-            discoveredLocations = Array.from(discoveryStateSingleton.getDiscoveredLocations());
-            const exitsMap = discoveryStateSingleton.getDiscoveredExits();  // Map<regionName, Set<exitName>>
-            for (const [regionName, exitSet] of exitsMap.entries()) {
-                for (const exitName of exitSet) {
-                    discoveredExits.push({ regionName, exitName });
-                }
-            }
-        } catch {
-            // Singleton may not be fully initialized; carry on with empties.
-        }
-        eventBus.publish(INITIAL_STATE_EVENT, {
-            discoveryMode: active ? 'discovered' : 'full',
-            discoveredRegions,
-            discoveredLocations,
-            discoveredExits,
-        });
+        eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
     });
 }

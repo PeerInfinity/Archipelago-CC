@@ -52,9 +52,25 @@ function log(level, ...args) {
  * Engine world shape (per spec):
  *   { rooms: {[id]: {id, title, description, exits, items}}, startRoomId }
  */
+// Procgen mode tracking — populated from the host's initialState
+// event (which the host derives from stateManager:rawJsonDataLoaded
+// detecting preset_sidecars). When _procgenMode is true and
+// _procgenSidecarRegions has entries, buildWorldFromStaticData
+// excludes regions not in that set — so synthetic Menu wrappers and
+// other non-substrate regions don't appear in the engine's world.
+// In standalone mode (no sidecars) the filter is bypassed and every
+// AP region becomes a room, preserving the original behavior.
+let _procgenMode = false;
+let _procgenSidecarRegions = null;  // Set<string> | null
+
 function buildWorldFromStaticData(staticData, currentRegion) {
     if (!staticData?.regions) return null;
     const regions = staticData.regions;
+    const filterToSidecarRegions = (
+        _procgenMode
+        && _procgenSidecarRegions instanceof Set
+        && _procgenSidecarRegions.size > 0
+    );
     const rooms = {};
     // Side-table: access_rule per exit / item, keyed by room id.
     // The engine itself doesn't care about rules; the bridge stores
@@ -62,6 +78,9 @@ function buildWorldFromStaticData(staticData, currentRegion) {
     const accessRules = {};
     for (const [regionName, regionData] of regions.entries()) {
         if (!regionName || !regionData) continue;
+        if (filterToSidecarRegions && !_procgenSidecarRegions.has(regionName)) {
+            continue;
+        }
         rooms[regionName] = {
             id: regionName,
             title: regionName,
@@ -332,6 +351,27 @@ async function main() {
         if (!data) return;
         if (data.discoveryMode) {
             engine.setDiscoveryMode(data.discoveryMode);
+        }
+        // Update procgen-mode filter state. If the mode or sidecar
+        // region set changed and we already have a world, rebuild it
+        // so the engine reflects the new filter.
+        const newMode = !!data.procgenMode;
+        const newRegions = Array.isArray(data.procgenSidecarRegions)
+            ? new Set(data.procgenSidecarRegions)
+            : null;
+        const modeChanged = newMode !== _procgenMode;
+        const regionsChanged = (
+            (!!newRegions !== !!_procgenSidecarRegions)
+            || (newRegions && _procgenSidecarRegions
+                && (newRegions.size !== _procgenSidecarRegions.size
+                    || [...newRegions].some((r) => !_procgenSidecarRegions.has(r))))
+        );
+        _procgenMode = newMode;
+        _procgenSidecarRegions = newRegions;
+        if (world && (modeChanged || regionsChanged)) {
+            log('info', 'procgen mode/sidecar regions changed; rebuilding world');
+            rebuildWorld();
+            return; // rebuildWorld replays pendingInitialState
         }
         if (!world) return;
         engine.batchUpdate(() => {
