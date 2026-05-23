@@ -200,6 +200,24 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'triggerLoopReset', () => {
         return getGameStateSingleton().triggerLoopReset();
     });
+    registrationApi.registerPublicFunction(moduleId, 'getLoopResetCount', () => {
+        return getGameStateSingleton().getLoopResetCount();
+    });
+    registrationApi.registerPublicFunction(moduleId, 'getSubstrateMaxManaBonus', (substrateId) => {
+        return getGameStateSingleton().getSubstrateMaxManaBonus(substrateId);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'setSubstrateMaxManaBonus', (substrateId, bonus) => {
+        return getGameStateSingleton().setSubstrateMaxManaBonus(substrateId, bonus);
+    });
+    registrationApi.registerPublicFunction(moduleId, 'getAllSubstrateMaxManaBonuses', () => {
+        return getGameStateSingleton().getAllSubstrateMaxManaBonuses();
+    });
+    registrationApi.registerPublicFunction(moduleId, 'getIncludePerItemMaxMana', () => {
+        return getGameStateSingleton().getIncludePerItemMaxMana();
+    });
+    registrationApi.registerPublicFunction(moduleId, 'setIncludePerItemMaxMana', (enabled) => {
+        return getGameStateSingleton().setIncludePerItemMaxMana(enabled);
+    });
     // Best-path persistence (Phase 5).
     registrationApi.registerPublicFunction(moduleId, 'recordBestPath', (key, steps, cost) => {
         return getGameStateSingleton().recordBestPath(key, steps, cost);

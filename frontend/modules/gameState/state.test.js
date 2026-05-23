@@ -184,6 +184,152 @@ describe('GameState — loop-mode resource API', () => {
       gs.triggerLoopReset();
       expect(gs.getCurrentRegion()).toBe('Far');
     });
+
+    it('increments loopResetCount and includes it in the event payload', () => {
+      gs.setStartRegions(['Menu']);
+      expect(gs.getLoopResetCount()).toBe(0);
+      bus.events.length = 0;
+      gs.triggerLoopReset();
+      expect(gs.getLoopResetCount()).toBe(1);
+      const ev = bus.events.find((e) => e.name === 'gameState:loopReset');
+      expect(ev.data.resetCount).toBe(1);
+
+      gs.triggerLoopReset();
+      gs.triggerLoopReset();
+      expect(gs.getLoopResetCount()).toBe(3);
+    });
+  });
+
+  describe('substrate max-mana bonuses', () => {
+    it('defaults to 0 for an unregistered substrate', () => {
+      expect(gs.getSubstrateMaxManaBonus('jta')).toBe(0);
+    });
+
+    it('contributes additively to maxMana', () => {
+      // base 100, no items, no bonuses → 100
+      expect(gs.getMaxMana()).toBe(100);
+      gs.setSubstrateMaxManaBonus('jta', 50);
+      expect(gs.getMaxMana()).toBe(150);
+      gs.setSubstrateMaxManaBonus('maze', 25);
+      expect(gs.getMaxMana()).toBe(175);
+    });
+
+    it('updates the existing bonus rather than accumulating', () => {
+      gs.setSubstrateMaxManaBonus('jta', 50);
+      gs.setSubstrateMaxManaBonus('jta', 30);
+      expect(gs.getSubstrateMaxManaBonus('jta')).toBe(30);
+      expect(gs.getMaxMana()).toBe(130);
+    });
+
+    it('stacks with the AP-item term', () => {
+      gs.recalculateMaxMana({ inventory: { sword: 2 } });
+      // 100 + 2*10 = 120
+      expect(gs.getMaxMana()).toBe(120);
+      gs.setSubstrateMaxManaBonus('jta', 40);
+      // 100 + 40 + 2*10 = 160
+      expect(gs.getMaxMana()).toBe(160);
+    });
+
+    it('emits gameState:manaChanged on update', () => {
+      bus.events.length = 0;
+      gs.setSubstrateMaxManaBonus('jta', 30);
+      expect(bus.events.find((e) => e.name === 'gameState:manaChanged')).toBeDefined();
+    });
+
+    it('caps currentMana when a bonus is removed and max drops below it', () => {
+      gs.setSubstrateMaxManaBonus('jta', 100); // max 200
+      gs.currentMana = 200;
+      gs.setSubstrateMaxManaBonus('jta', 0);   // max back to 100
+      expect(gs.getCurrentMana()).toBe(100);
+    });
+
+    it('getAllSubstrateMaxManaBonuses returns a copy', () => {
+      gs.setSubstrateMaxManaBonus('jta', 10);
+      const copy = gs.getAllSubstrateMaxManaBonuses();
+      copy.set('jta', 999);
+      expect(gs.getSubstrateMaxManaBonus('jta')).toBe(10);
+    });
+  });
+
+  describe('includePerItemMaxMana toggle', () => {
+    it('defaults to true (preserves prior behavior)', () => {
+      expect(gs.getIncludePerItemMaxMana()).toBe(true);
+    });
+
+    it('disabling removes the AP-item contribution', () => {
+      gs.recalculateMaxMana({ inventory: { a: 3 } }); // 100 + 30 = 130
+      expect(gs.getMaxMana()).toBe(130);
+      gs.setIncludePerItemMaxMana(false);
+      expect(gs.getMaxMana()).toBe(100);
+    });
+
+    it('re-enabling re-adds the contribution using cached itemCount', () => {
+      gs.recalculateMaxMana({ inventory: { a: 5 } }); // cached count = 5
+      gs.setIncludePerItemMaxMana(false);
+      expect(gs.getMaxMana()).toBe(100);
+      gs.setIncludePerItemMaxMana(true);
+      expect(gs.getMaxMana()).toBe(150);
+    });
+
+    it('still respects substrate bonuses when disabled', () => {
+      gs.recalculateMaxMana({ inventory: { a: 3 } });
+      gs.setSubstrateMaxManaBonus('jta', 50);
+      gs.setIncludePerItemMaxMana(false);
+      // 100 + 50 (no item term) = 150
+      expect(gs.getMaxMana()).toBe(150);
+    });
+
+    it('emits gameState:manaChanged on toggle', () => {
+      bus.events.length = 0;
+      gs.setIncludePerItemMaxMana(false);
+      expect(bus.events.find((e) => e.name === 'gameState:manaChanged')).toBeDefined();
+    });
+  });
+
+  describe('reset() clears the new max-mana state', () => {
+    it('clears substrate bonuses, itemCount, and loopResetCount; preserves the toggle', () => {
+      gs.setStartRegions(['Menu']);
+      gs.recalculateMaxMana({ inventory: { a: 2 } });
+      gs.setSubstrateMaxManaBonus('jta', 50);
+      gs.triggerLoopReset();
+      gs.triggerLoopReset();
+      gs.setIncludePerItemMaxMana(false);
+      expect(gs.getMaxMana()).toBe(150); // 100 + 50, item term off
+
+      gs.reset();
+
+      expect(gs.getAllSubstrateMaxManaBonuses().size).toBe(0);
+      expect(gs.getLoopResetCount()).toBe(0);
+      // toggle is a setting, preserved across reset
+      expect(gs.getIncludePerItemMaxMana()).toBe(false);
+      // maxMana back to default; no item term applied (toggle off)
+      expect(gs.getMaxMana()).toBe(100);
+      expect(gs.getCurrentMana()).toBe(100);
+    });
+  });
+
+  describe('serialize / deserialize round-trip of new max-mana state', () => {
+    it('round-trips substrate bonuses, itemCount, toggle, and loopResetCount', () => {
+      gs.setStartRegions(['Menu']);
+      gs.recalculateMaxMana({ inventory: { a: 3 } });
+      gs.setSubstrateMaxManaBonus('jta', 40);
+      gs.setSubstrateMaxManaBonus('maze', 10);
+      gs.setIncludePerItemMaxMana(false);
+      gs.triggerLoopReset();
+      gs.triggerLoopReset();
+
+      const data = gs.serialize();
+      const gs2 = new GameState(makeBus());
+      gs2.deserialize(data);
+
+      expect(gs2.getSubstrateMaxManaBonus('jta')).toBe(40);
+      expect(gs2.getSubstrateMaxManaBonus('maze')).toBe(10);
+      expect(gs2.getIncludePerItemMaxMana()).toBe(false);
+      expect(gs2.getLoopResetCount()).toBe(2);
+      // Recompute matches: 100 + 50 (bonuses) + 0 (toggle off) = 150
+      gs2._recomputeMaxMana();
+      expect(gs2.getMaxMana()).toBe(150);
+    });
   });
 
   describe('setCurrentRegion extra fields', () => {

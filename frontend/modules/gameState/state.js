@@ -34,11 +34,33 @@ export class GameState {
         // Loop-mode resource state — owned here so substrates can deduct mana
         // and gain XP without coupling to the loops module. Loops, maze, and
         // textAdventure all consume this through gameState's API.
+        //
+        // Max-mana formula:
+        //   maxMana = defaultMaxMana + Σ(substrate bonuses) + (toggle ? items × manaPerItem : 0)
+        // Per-substrate bonuses let substrate-local progression (e.g. JtA
+        // prestige / item gains) raise the shared pool without other
+        // substrates needing to know about it; the AP-item term is
+        // gated by `includePerItemMaxMana` so it can be turned off.
+        this.defaultMaxMana = 100;
         this.currentMana = 100;
         this.maxMana = 100;
         this.manaPerItem = 10;
         this.manaDebt = 0;
         this.noManaDepletionReset = false;
+        // substrateId -> number. Updated via setSubstrateMaxManaBonus.
+        this._substrateBonuses = new Map();
+        // Most-recent AP-item count from recalculateMaxMana(snapshot),
+        // cached so the per-item contribution can be re-applied when
+        // bonuses or the toggle change without needing a fresh snapshot.
+        this._itemCount = 0;
+        // Whether the AP-item term contributes to maxMana. Default true
+        // preserves prior behavior; toggleable via setIncludePerItemMaxMana.
+        this.includePerItemMaxMana = true;
+        // Monotonic count of loop resets, incremented by triggerLoopReset.
+        // A substrate that was inactive across resets can compare its
+        // last-seen count and apply its internal reset logic once per
+        // intervening reset on reactivation (the JtA bridge sync pattern).
+        this.loopResetCount = 0;
         this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
 
         // Best-path persistence. Maps a caller-composed string key to
@@ -126,22 +148,79 @@ export class GameState {
     }
 
     /**
-     * Recalculate maxMana from a state snapshot (base + manaPerItem * itemCount).
-     * Caps currentMana to the new max. Emits `gameState:manaChanged`.
+     * Recalculate maxMana from a state snapshot. Caches the inventory
+     * item count so the per-item contribution can be re-applied when
+     * substrate bonuses or the includePerItemMaxMana toggle change.
+     * Emits `gameState:manaChanged`.
      */
     recalculateMaxMana(snapshot) {
-        const baseMana = 100;
         let itemCount = 0;
         if (snapshot && snapshot.inventory) {
             for (const [, count] of Object.entries(snapshot.inventory)) {
                 if (count > 0) itemCount += count;
             }
         }
-        this.maxMana = baseMana + itemCount * this.manaPerItem;
+        this._itemCount = itemCount;
+        this._recomputeMaxMana();
+    }
+
+    /**
+     * Recompute maxMana from defaultMaxMana + Σ(substrate bonuses) +
+     * (optional) item contribution. Caps currentMana. Internal — called
+     * by setters / recalculateMaxMana when any input changes.
+     */
+    _recomputeMaxMana() {
+        let bonusSum = 0;
+        for (const bonus of this._substrateBonuses.values()) {
+            bonusSum += bonus;
+        }
+        const itemContribution = this.includePerItemMaxMana
+            ? this._itemCount * this.manaPerItem
+            : 0;
+        this.maxMana = this.defaultMaxMana + bonusSum + itemContribution;
         if (this.currentMana > this.maxMana) {
             this.currentMana = this.maxMana;
         }
         this.emitManaChanged();
+    }
+
+    /**
+     * Get the max-mana bonus a substrate currently contributes. Returns
+     * 0 if no bonus has been registered.
+     */
+    getSubstrateMaxManaBonus(substrateId) {
+        return this._substrateBonuses.get(substrateId) ?? 0;
+    }
+
+    /**
+     * Set a substrate's max-mana bonus contribution. The substrate-local
+     * progression that drives this (e.g. JtA prestige / item gains) is
+     * substrate-internal; this exposes only the resulting bonus to the
+     * shared pool. Recomputes maxMana and emits `gameState:manaChanged`.
+     */
+    setSubstrateMaxManaBonus(substrateId, bonus) {
+        const b = Number(bonus) || 0;
+        this._substrateBonuses.set(substrateId, b);
+        this._recomputeMaxMana();
+    }
+
+    /** Copy of all per-substrate max-mana bonuses. */
+    getAllSubstrateMaxManaBonuses() {
+        return new Map(this._substrateBonuses);
+    }
+
+    /** Whether the AP-item term contributes to maxMana. */
+    getIncludePerItemMaxMana() {
+        return this.includePerItemMaxMana;
+    }
+
+    /**
+     * Toggle whether the AP-item count contributes to maxMana. Recomputes
+     * immediately using the cached item count.
+     */
+    setIncludePerItemMaxMana(enabled) {
+        this.includePerItemMaxMana = !!enabled;
+        this._recomputeMaxMana();
     }
 
     // -------------------- Region XP API --------------------
@@ -247,12 +326,24 @@ export class GameState {
     triggerLoopReset() {
         this.currentMana = this.maxMana;
         this.manaDebt = 0;
+        this.loopResetCount += 1;
         if (this.eventBus) {
             this.eventBus.publish('gameState:loopReset', {
                 mana: { current: this.currentMana, max: this.maxMana },
+                resetCount: this.loopResetCount,
             });
         }
         this.emitManaChanged();
+    }
+
+    /**
+     * Monotonic count of loop resets. A substrate that was inactive
+     * across resets compares this against its last-seen value and runs
+     * its internal reset logic once per intervening reset on
+     * reactivation (the JtA bridge synchronize pattern).
+     */
+    getLoopResetCount() {
+        return this.loopResetCount;
     }
 
     /**
@@ -928,8 +1019,15 @@ export class GameState {
         this.path = [];
         this.regionInstanceCounts.clear();
 
-        // Reset loop-mode resource state
-        this.maxMana = 100;
+        // Reset loop-mode resource state. Substrate bonuses are cleared
+        // (no substrate has accumulated progression yet on rules-load),
+        // _itemCount is cleared, and loopResetCount restarts at 0. The
+        // includePerItemMaxMana flag is preserved — it's a setting, not
+        // per-game state.
+        this._substrateBonuses.clear();
+        this._itemCount = 0;
+        this.loopResetCount = 0;
+        this.maxMana = this.defaultMaxMana;
         this.currentMana = this.maxMana;
         this.manaDebt = 0;
         this.regionXP.clear();
@@ -984,6 +1082,10 @@ export class GameState {
             startRegions: [...this.startRegions],
             currentMana: this.currentMana,
             maxMana: this.maxMana,
+            substrateBonuses: Array.from(this._substrateBonuses.entries()),
+            itemCount: this._itemCount,
+            includePerItemMaxMana: this.includePerItemMaxMana,
+            loopResetCount: this.loopResetCount,
             regionXP: Array.from(this.regionXP.entries()),
             bestPaths: Array.from(this.bestPaths.entries()).map(([k, v]) => [
                 k,
@@ -1020,6 +1122,18 @@ export class GameState {
             }
             if (typeof data.maxMana === 'number') {
                 this.maxMana = data.maxMana;
+            }
+            if (Array.isArray(data.substrateBonuses)) {
+                this._substrateBonuses = new Map(data.substrateBonuses);
+            }
+            if (typeof data.itemCount === 'number') {
+                this._itemCount = data.itemCount;
+            }
+            if (typeof data.includePerItemMaxMana === 'boolean') {
+                this.includePerItemMaxMana = data.includePerItemMaxMana;
+            }
+            if (typeof data.loopResetCount === 'number') {
+                this.loopResetCount = data.loopResetCount;
             }
             if (data.regionXP) {
                 this.regionXP = new Map(data.regionXP);
