@@ -71,11 +71,29 @@ def build_sidecars(regions: dict, zone_map: dict) -> tuple[dict, list[str]]:
                 "render_hint": "jta",
                 "playable_payload": {
                     "jtaZone": zone_map[region_name],
+                    # Loop-mode opt-in: substrates drain the shared pool
+                    # only when this is true. Matches the procgen pipeline
+                    # convention.
+                    "manaEnabled": True,
                 },
             }
         else:
             unmapped.append(region_name)
     return sidecars, unmapped
+
+
+# Defaults for the top-level loop_costs block. The jta bridge ignores
+# loop_costs entirely (jta drains the shared pool via its own per-tick
+# energy calc, not via per-region move costs), but the loops module's
+# auto-enter-loop-mode trigger is "cost data is loaded" — so SOME
+# loop_costs block has to be present for runtime to flip into loop
+# mode. These defaults are arbitrary; they never get consulted.
+DEFAULT_LOOP_COSTS = {
+    "regions": {},
+    "locations": {},
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10,
+}
 
 
 def main():
@@ -125,6 +143,9 @@ def main():
     # Splice preset_sidecars onto the rules.json. Existing block (if
     # any) is replaced.
     rules["preset_sidecars"] = {args.player_id: sidecars}
+    # Loop_costs is what triggers the loops module's "auto-enter loop
+    # mode" path at runtime. See DEFAULT_LOOP_COSTS comment above.
+    rules["loop_costs"] = DEFAULT_LOOP_COSTS
 
     tgt_dir.mkdir(parents=True, exist_ok=True)
     with tgt.open("w") as f:

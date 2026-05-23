@@ -94,9 +94,11 @@ function _pollTick() {
         return;
     }
     const delta = _lastSampledEnergy - currentEnergy;
-    if (delta > 0 && _client) {
-        // The host module handles the gameState mutation + the
-        // out-of-mana → triggerLoopReset path.
+    // Mirror drain into the shared pool only when this region opts in
+    // (matches the maze / textAdventure pattern of gating on
+    // world.manaEnabled). v1 of the JtA substrate does NOT also check
+    // loopModeActive — the loop queue isn't wired to drive JtA yet.
+    if (delta > 0 && _client && _world?.manaEnabled) {
         _client.publishEventBus('jta:bridgeDeductMana', { amount: delta });
     }
     _lastSampledEnergy = currentEnergy;

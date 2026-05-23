@@ -10154,5 +10154,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "jta_mixed_test": {
+    "name": "JtA (mixed substrate test)",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "JtA (mixed substrate test)"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

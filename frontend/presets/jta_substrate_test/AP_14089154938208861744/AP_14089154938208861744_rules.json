@@ -1807,114 +1807,136 @@
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 0
+          "jtaZone": 0,
+          "manaEnabled": true
         }
       },
       "The Village Watch": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 1
+          "jtaZone": 1,
+          "manaEnabled": true
         }
       },
       "The Raid": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 2
+          "jtaZone": 2,
+          "manaEnabled": true
         }
       },
       "The Wilderness": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 3
+          "jtaZone": 3,
+          "manaEnabled": true
         }
       },
       "The Cave System": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 4
+          "jtaZone": 4,
+          "manaEnabled": true
         }
       },
       "The Road to the City": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 5
+          "jtaZone": 5,
+          "manaEnabled": true
         }
       },
       "The City Outskirts": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 6
+          "jtaZone": 6,
+          "manaEnabled": true
         }
       },
       "The City": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 7
+          "jtaZone": 7,
+          "manaEnabled": true
         }
       },
       "The Forest": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 8
+          "jtaZone": 8,
+          "manaEnabled": true
         }
       },
       "The Magician": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 9
+          "jtaZone": 9,
+          "manaEnabled": true
         }
       },
       "The Ocean": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 10
+          "jtaZone": 10,
+          "manaEnabled": true
         }
       },
       "The Island": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 11
+          "jtaZone": 11,
+          "manaEnabled": true
         }
       },
       "The Desert": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 12
+          "jtaZone": 12,
+          "manaEnabled": true
         }
       },
       "The Oasis": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 13
+          "jtaZone": 13,
+          "manaEnabled": true
         }
       },
       "The Ritual": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 14
+          "jtaZone": 14,
+          "manaEnabled": true
         }
       },
       "The Dream": {
         "substrate": "jta",
         "render_hint": "jta",
         "playable_payload": {
-          "jtaZone": 15
+          "jtaZone": 15,
+          "manaEnabled": true
         }
       }
     }
+  },
+  "loop_costs": {
+    "regions": {},
+    "locations": {},
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10
   }
 }
