@@ -63,10 +63,14 @@ export function register(registrationApi) {
     // up via the iframeAdapter eventBus relay.
     registrationApi.registerEventBusPublisher('jta:loadRegion');
     registrationApi.registerEventBusPublisher(INITIAL_STATE_EVENT);
+    // Published by this module on jta:loadRegion so Golden Layout
+    // brings the jta panel forward when the player enters a jta region.
+    registrationApi.registerEventBusPublisher('ui:activatePanel');
 
     // Events the host module subscribes to.
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_DEDUCT_MANA_EVENT);
+    registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
 
     // Guarded register so re-registration of the same id is harmless
     // (mirrors the textAdventureSubstrateWrapper pattern).
@@ -94,6 +98,20 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             maxMana: gs.getMaxMana(),
             loopResetCount: gs.getLoopResetCount(),
         });
+    });
+
+    // When procgen dispatches jta:loadRegion (e.g. on a transition
+    // from a maze or text-adventure region into a jta one), bring the
+    // jta panel forward in its Golden Layout stack. Mirrors the same
+    // handler in textAdventureSubstrateWrapper/index.js. Skipped when
+    // loops is focus-locking another panel (the "Keep this panel
+    // focused" toggle); the bridge still picks up the loadRegion via
+    // its own iframe-protocol subscription, only the tab-switch is
+    // suppressed.
+    eventBus.subscribe('jta:loadRegion', () => {
+        const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
+        if (isFocusLocked?.()) return;
+        eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
     });
 
     // Bridge → host: mirror JtA's energy drain into the shared pool.
