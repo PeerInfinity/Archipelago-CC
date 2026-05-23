@@ -127,8 +127,16 @@ def build_rules() -> dict:
     }
 
     # ── Minimal AP metadata + miscellaneous ──────────────────────
+    #
+    # schema_version is an integer (currently 3) — the
+    # initialization layer rejects anything else with "Invalid JSON
+    # schema version: <X>. Expected 3.".
+    #
+    # items / item_groups / itempool_counts: a victory item is
+    # included so AP has a goal to track; the "Everything" group
+    # mirrors what working presets use.
     rules = {
-        "schema_version": "1.0.0",
+        "schema_version": 3,
         "game_name": "JtA (mixed substrate test)",
         "game_directory": "jta_mixed_test",
         "archipelago_version": "0.0.0",
@@ -137,9 +145,20 @@ def build_rules() -> dict:
         "player_names": {PLAYER_ID: "Player1"},
         "regions": {PLAYER_ID: regions},
         "start_regions": {PLAYER_ID: {"default": ["Menu"], "available": []}},
-        "items": {PLAYER_ID: {}},
-        "item_groups": {PLAYER_ID: {}},
-        "itempool_counts": {PLAYER_ID: {}},
+        "items": {
+            PLAYER_ID: {
+                "victory": {
+                    "name": "victory",
+                    "id": 1,
+                    "groups": ["Everything"],
+                    "classification": "progression",
+                    "type": None,
+                    "max_count": 1,
+                },
+            },
+        },
+        "item_groups": {PLAYER_ID: ["Everything"]},
+        "itempool_counts": {PLAYER_ID: {"victory": 1}},
         "canonical_placements": {PLAYER_ID: []},
         "progression_mapping": {PLAYER_ID: {}},
         "starting_items": {PLAYER_ID: []},

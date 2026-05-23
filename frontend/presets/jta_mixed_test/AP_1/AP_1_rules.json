@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": 3,
   "game_name": "JtA (mixed substrate test)",
   "game_directory": "jta_mixed_test",
   "archipelago_version": "0.0.0",
@@ -52,13 +52,28 @@
     }
   },
   "items": {
-    "1": {}
+    "1": {
+      "victory": {
+        "name": "victory",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
   },
   "item_groups": {
-    "1": {}
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
-    "1": {}
+    "1": {
+      "victory": 1
+    }
   },
   "canonical_placements": {
     "1": []
