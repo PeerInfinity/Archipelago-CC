@@ -22,9 +22,14 @@ export const substrateRegistryEntry = Object.freeze({
         'region_topology_from_source',
     ]),
 
-    // Pass through the sidecar; the bridge reads `jtaZone` (and any
-    // other v1-relevant fields) directly off the payload.
-    deserializeWorld: (sidecar) => ({ ...(sidecar ?? {}) }),
+    // procgenPlayer passes the sidecar entry's `playable_payload` (not
+    // the whole sidecar) to this function. The bridge then reads
+    // `world.jtaZone` directly. Expected payload shape for a jta
+    // region:
+    //   { jtaZone: <number> }
+    // Additional fields (e.g. future per-region tuning) are passed
+    // through unchanged.
+    deserializeWorld: (payload) => ({ ...(payload ?? {}) }),
 
     // Playback bot integration is deferred to a later phase. Until
     // then, the registry's getPlaybackController returns null and the
