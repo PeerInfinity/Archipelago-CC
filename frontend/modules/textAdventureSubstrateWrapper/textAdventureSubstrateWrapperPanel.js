@@ -5,7 +5,17 @@
  * uses the existing iframeAdapter postMessage protocol).
  */
 
-const IFRAME_SRC = './modules/textAdventureSubstrateWrapper/index-iframe.html';
+// Unique iframeId so multiple wrapper panels each get their own slot
+// in iframeAdapterCore.iframes — without this, the in-iframe
+// AdapterClient defaults to generateClientId('iframe-client'),
+// which returns the customName unchanged. Every wrapper would then
+// register as "iframe-client" and the second mount would silently
+// overwrite the first one's window pointer (every subsequent
+// forwarded event would go only to whichever wrapper registered
+// most recently). See modules/shared/communicationProtocol.js
+// generateClientId() for the unchanged-passthrough.
+const IFRAME_ID = 'textAdventureSubstrateWrapper';
+const IFRAME_SRC = `./modules/textAdventureSubstrateWrapper/index-iframe.html?iframeId=${IFRAME_ID}`;
 
 export class TextAdventureSubstrateWrapperPanel {
     constructor(container, componentState) {

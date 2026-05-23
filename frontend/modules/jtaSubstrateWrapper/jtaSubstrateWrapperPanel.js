@@ -19,7 +19,15 @@
  *    in isolation.
  */
 
-const JTA_IFRAME_SRC = './modules/journey-to-ascension/index.html';
+// Unique iframeId so this wrapper doesn't collide with the
+// textAdventureSubstrateWrapper iframe in iframeAdapterCore.iframes.
+// Without it, both wrappers' AdapterClients default to
+// generateClientId('iframe-client') — which is a passthrough — and
+// register as the same id; the second one overwrites the first's
+// window pointer, so forwarded events only reach whichever wrapper
+// mounted most recently.
+const IFRAME_ID = 'jtaSubstrateWrapper';
+const JTA_IFRAME_SRC = `./modules/journey-to-ascension/index.html?iframeId=${IFRAME_ID}`;
 const BRIDGE_SRC = '../jtaSubstrateWrapper/bridge.js';  // relative to JTA_IFRAME_SRC
 
 export class JtaSubstrateWrapperPanel {
