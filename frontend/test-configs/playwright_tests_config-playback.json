@@ -12,6 +12,16 @@
       "enabled": true,
       "order": 0,
       "category": "Playback Bot"
+    },
+    {
+      "comment_disabled": "Currently times out at 'Sphere 0.1 → waiting for region (1/3)' — the bot picks up the queue but the procgen player doesn't appear to route through the maze automatically the way the live UI does. Needs a separate investigation into what activation step is missing (likely something a user click triggers in the procgenPlayer or loops panel). Keeping the test in code under playbackBotTests.js for future revival.",
+      "id": "playback-bot-instant-completion",
+      "name": "Playback Bot: instant-mode completion",
+      "description": "Drives the bot at instant speed through procgen_maze_worldgen (4 regions, 3 locations) and asserts it reaches the \"finished\" status.",
+      "functionName": "playbackBotInstantPlaybackTest",
+      "enabled": false,
+      "order": 1,
+      "category": "Playback Bot"
     }
   ]
 }
