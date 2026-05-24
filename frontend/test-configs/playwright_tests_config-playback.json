@@ -14,12 +14,11 @@
       "category": "Playback Bot"
     },
     {
-      "comment_disabled": "Bot stays on _currentRegion=null after rulesLoaded even with stateManager:rawJsonDataLoaded re-emitted from loadRulesFromFile. procgenPlayer must rely on more of the production load flow than just that one event (warehouse build, dispatcher routing of user:regionMove to playbackBot, etc.). Needs deeper investigation into procgen activation under a test-driven load.",
       "id": "playback-bot-instant-completion",
       "name": "Playback Bot: instant-mode completion",
       "description": "Drives the bot at instant speed through procgen_maze_worldgen (4 regions, 3 locations) and asserts it reaches the \"finished\" status.",
       "functionName": "playbackBotInstantPlaybackTest",
-      "enabled": false,
+      "enabled": true,
       "order": 1,
       "category": "Playback Bot"
     }

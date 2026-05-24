@@ -287,11 +287,18 @@ export class TestController {
     // doesn't fire this itself. Must happen BEFORE awaiting rulesLoaded
     // because procgenPlayer's handleRulesLoaded reads pendingStartTransition,
     // which is set by rawJsonDataLoaded.
-    this.eventBus?.publish?.('stateManager:rawJsonDataLoaded', {
+    //
+    // publishAs: the eventBus drops publishes whose publisherModuleName
+    // isn't a registered publisher of that event (silently — only a warn
+    // log). `tests` isn't registered for stateManager:rawJsonDataLoaded;
+    // the only registered publisher is stateManager itself, which both
+    // production code paths route through. Use publishAs to publish on
+    // behalf of stateManager so the dispatch actually fires.
+    this.eventBus?.publishAs?.('stateManager:rawJsonDataLoaded', {
       source: rulesPath,
       rawJsonData: rulesData,
       selectedPlayerInfo: playerInfo,
-    });
+    }, 'stateManager');
     await rulesLoadedPromise;
   }
 

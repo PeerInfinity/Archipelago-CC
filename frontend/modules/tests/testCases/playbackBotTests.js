@@ -8,6 +8,7 @@
 import { registerTest } from '../testRegistry.js';
 import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
+import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
 
 const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 // Tiny procgen+maze preset (4 regions, 3 locations) — picked specifically
@@ -77,28 +78,15 @@ registerTest({
 
 /**
  * End-to-end: drive the bot through a tiny procgen+maze preset at instant
- * speed and verify it reaches the "finished" status.
+ * speed and verify it reaches the "finished" status. Three sphere entries
+ * across two regions, so this exercises the full chain:
+ *   sphere queue → bot.instant() → maze controller → exit cross →
+ *   procgenPlayer → maze:loadRegion → next leg.
  *
- * Status: disabled pending investigation.
- *
- * What's been confirmed working: the bot panel mounts, the bot is reachable,
- * sphere data parses from the explicit loadSphereLog call. loadRulesFromFile
- * was extended to publish stateManager:rawJsonDataLoaded after the proxy
- * loadRules call (matching the production postInitialize + files:jsonLoaded
- * paths), which is necessary for procgenPlayer to build its warehouse.
- *
- * What's still missing: even with rawJsonDataLoaded emitted, the bot's
- * _currentRegion stays null after rulesLoaded. procgenPlayer publishes
- * its synthetic user:regionMove via the *dispatcher* (not eventBus), and
- * the bot subscribes via registerDispatcherReceiver — so the dispatcher
- * has to be initialized AND priority-routed correctly between the modules
- * for the bot to hear the event. Some piece of the production load flow
- * still isn't exercised by loadRulesFromFile.
- *
- * Next investigation: subscribe via eventBus to user:regionMove during
- * the test to see whether procgenPlayer even publishes it (vs. publishes
- * but routing skips the bot). Probably also worth checking whether the
- * dispatcher is wired before the bot panel mounts in this code path.
+ * Each reportCondition is a semantic checkpoint — when a future regression
+ * stalls the bot, the failing assertion narrows where to look (e.g. a
+ * failed "procgenPlayer built a warehouse" points at the warehouse builder
+ * or the rawJsonDataLoaded plumbing, not the visualizer).
  */
 async function playbackBotInstantPlaybackTest(testController) {
   // Activate the bot panel BEFORE loading rules. procgenPlayer publishes
@@ -127,32 +115,58 @@ async function playbackBotInstantPlaybackTest(testController) {
   await sphereState.loadSphereLog(
     PROCGEN_MAZE_RULES.replace('_rules.json', '_sphere_log.jsonl')
   );
-  const sphereQueueLen = sphereState.getSphereData()?.length ?? 0;
-  testController.reportCondition('sphere data non-empty', sphereQueueLen > 0);
-  testController.log(`Bot currentRegion after rulesLoaded: "${bot.getCurrentRegion()}"`);
+  testController.reportCondition(
+    'sphere data non-empty',
+    (sphereState.getSphereData()?.length ?? 0) > 0,
+  );
+
+  // procgenPlayer's warehouse is built from preset_sidecars during
+  // handleRawJsonLoaded. If this fails: loadRulesFromFile isn't getting
+  // rawJsonDataLoaded to procgenPlayer, the sidecars aren't where the
+  // builder expects them, or the substrate registry didn't load.
+  const warehouse = _testOnly_getWarehouse();
+  testController.reportCondition(
+    'procgenPlayer built a warehouse',
+    !!warehouse && warehouse.size() > 0,
+  );
+
+  // procgenPlayer publishes its synthetic initial user:regionMove via the
+  // dispatcher; the bot's dispatcher receiver records every inbound event.
+  // These two probes narrow whether a future regression broke the publish,
+  // the dispatcher chain, or the bot's onRegionMove handler.
+  const sawRegionMove = (bot.getDispatcherLog?.() ?? [])
+    .some((e) => e.eventName === 'user:regionMove');
+  testController.reportCondition('bot dispatcher receiver saw user:regionMove', sawRegionMove);
   testController.reportCondition(
     'bot picked up starting region from procgenPlayer',
-    !!bot.getCurrentRegion()
+    !!bot.getCurrentRegion(),
   );
 
   // refresh() picks up the newly-loaded sphere data so the bot's status
   // line reflects the queue (helpful for diagnostic logs on failure).
   bot.refresh();
 
-  testController.log(`Bot status before instant(): "${bot.getStatus()}"`);
   await bot.instant();
 
   // Poll until the bot reaches a terminal state. "finished — N location(s)
   // visited" is the success signal (set in playbackBotUI.js around line 618).
-  // 20s timeout is generous — the preset has 3 locations.
+  // 40s is generous — the bot drives instant() synchronously as far as it
+  // can, then falls back to the 4Hz clock for cross-region legs (the bot's
+  // pingWorker await yields out of the synchronous loop).
   const finished = await testController.pollForCondition(
     () => (bot.getStatus() || '').startsWith('finished'),
     'bot reaches finished status',
-    20000,
-    250
+    40000,
+    250,
   );
   testController.reportCondition('bot drained queue to completion', finished);
-  testController.log(`Bot final status: "${bot.getStatus()}"`);
+  if (!finished) {
+    testController.log(`Bot final status: "${bot.getStatus()}"`);
+    testController.log(`Bot transition log (tail): ${JSON.stringify(bot.getLog?.().slice(-12) ?? [])}`);
+    testController.log(`Bot dispatcher log: ${JSON.stringify(
+      (bot.getDispatcherLog?.() ?? []).map((e) => ({ ev: e.eventName, tgt: e.target, disp: e.disposition }))
+    )}`);
+  }
 
   return testController.getOverallResult();
 }

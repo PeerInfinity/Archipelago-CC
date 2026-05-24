@@ -1498,14 +1498,19 @@ export class MazeRoomUI {
             const exits = world.exits;
             if (!exits) return null;
             // Try exit_id first (Map key), then fall back to a scan
-            // matching exitName — the caller may pass either depending
-            // on how PathFinder names the connection.
+            // matching exitName, exit_id, or the AP-namespaced form
+            // `{regionId}__{exit_id}` that PathFinder produces from the
+            // AP-side region exit names.
             if (exits.has(target.name)) {
                 const e = exits.get(target.name);
                 return { x: e.x, y: e.y };
             }
+            const regionPrefix = this.currentRegionId ? `${this.currentRegionId}__` : null;
             for (const e of exits.values()) {
                 if (e.exitName === target.name || e.exit_id === target.name) {
+                    return { x: e.x, y: e.y };
+                }
+                if (regionPrefix && target.name === `${regionPrefix}${e.exit_id}`) {
                     return { x: e.x, y: e.y };
                 }
             }
