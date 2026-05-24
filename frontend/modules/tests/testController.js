@@ -1,6 +1,12 @@
 // frontend/modules/tests/testController.js
+//
+// Writing new tests? See ./README.md for the project's testing discipline.
+// Short version: call `eventBus.publish`, `stateManager.pingWorker`, and
+// module APIs directly. Assert on state, not DOM. Use `assertEqual` /
+// `reportCondition` for assertions, and `return testController.getOverallResult()`
+// to auto-complete the test. Keep domain-specific helpers in their own module,
+// not in this controller.
 import { stateManagerProxySingleton } from '../stateManager/index.js';
-import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 // --- TestController Class ---
@@ -26,6 +32,13 @@ export class TestController {
     // Track active event listeners for automatic cleanup
     this.activeEventListeners = new Map(); // eventName -> Set of handlers
     this.isCompleted = false; // Flag to track if test has completed
+
+    // Failed-assertion count. `assertEqual` increments this on mismatch;
+    // `reportCondition` increments it when called with `false`. Tests can
+    // `return testController.getOverallResult()` to auto-complete with the
+    // AND of all assertions rather than threading a manual `overallResult`
+    // boolean through every condition.
+    this._failedConditionCount = 0;
   }
 
   log(message, type = 'info') {
@@ -34,6 +47,7 @@ export class TestController {
 
   reportCondition(description, passed) {
     this.log(`Condition: "${description}" - ${passed ? 'PASSED' : 'FAILED'}`);
+    if (!passed) this._failedConditionCount += 1;
     this.callbacks.reportCondition(
       this.testId,
       description,
@@ -41,744 +55,32 @@ export class TestController {
     );
   }
 
-  async performAction(actionDetails) {
-    const actionValue =
-      actionDetails.payload ||
-      actionDetails.itemName ||
-      actionDetails.locationName ||
-      actionDetails.selector;
-    let detailsString =
-      actionValue !== undefined && actionValue !== null
-        ? String(actionValue)
-        : '(no details)';
-    if (typeof actionValue === 'object' && actionValue !== null) {
-      try {
-        detailsString = JSON.stringify(actionValue);
-      } catch (e) {
-        /* ignore */
-      }
+  /**
+   * Assert two values are equal via `Object.is`. On mismatch, logs both the
+   * expected and actual value so failures are diagnosable from the test log
+   * alone (no need to add ad-hoc `log(...)` calls before the assertion).
+   * Returns the boolean result so callers can short-circuit if they want.
+   */
+  assertEqual(description, expected, actual) {
+    const passed = Object.is(expected, actual);
+    if (!passed) {
+      this.log(
+        `Assertion mismatch for "${description}": expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`,
+        'error'
+      );
     }
-    this.log(
-      `Performing action: ${actionDetails.type}. Details: ${detailsString}`,
-      'info'
-    );
+    this.reportCondition(description, passed);
+    return passed;
+  }
 
-    // Ensure StateManager is ready for most actions
-    if (
-      actionDetails.type !== 'DISPATCH_EVENT' &&
-      actionDetails.type !== 'SIMULATE_CLICK' &&
-      // actionDetails.type !== 'LOAD_RULES_DATA' && // LOAD_RULES_DATA will use stateManager
-      actionDetails.type !== 'GET_SETTING' &&
-      actionDetails.type !== 'UPDATE_SETTING' &&
-      actionDetails.type !== 'SIMULATE_SERVER_MESSAGE'
-    ) {
-      if (!this.stateManager) {
-        const msg = 'StateManager (Proxy) not available for action.';
-        this.log(msg, 'error');
-        throw new Error(msg);
-      }
-      try {
-        // ensureReady might need a slightly longer timeout for initial loads during tests
-        await this.stateManager.ensureReady(5000);
-      } catch (e) {
-        const msg = `StateManager (Proxy) not ready for action: ${e.message}`;
-        this.log(msg, 'error');
-        throw new Error(msg);
-      }
-    }
-
-    let result;
-
-    switch (actionDetails.type) {
-      case 'DISPATCH_EVENT':
-        if (this.eventBus) {
-          this.eventBus.publish(actionDetails.eventName, actionDetails.payload);
-        } else {
-          this.log(
-            'Error: eventBus not available for DISPATCH_EVENT.',
-            'error'
-          );
-        }
-        return;
-
-      case 'LOAD_RULES_DATA':
-        if (
-          this.stateManager &&
-          typeof this.stateManager.loadRules === 'function'
-        ) {
-          this.log('Calling StateManager.loadRules...');
-          try {
-            const playerInfo = {
-              playerId: actionDetails.playerId || DEFAULT_PLAYER_ID,
-              playerName:
-                actionDetails.playerName ||
-                `TestPlayer${actionDetails.playerId || DEFAULT_PLAYER_ID}`,
-            };
-
-            // Set up the event listener BEFORE calling loadRules to avoid race condition
-            const rulesLoadedPromise = this.waitForEvent(
-              'stateManager:rulesLoaded',
-              5000
-            );
-
-            // loadRules is fire-and-forget to the worker, but it triggers rulesLoadedConfirmation.
-            await this.stateManager.loadRules(
-              actionDetails.payload,
-              playerInfo
-            );
-            this.log('StateManager.loadRules command sent.');
-
-            // Wait for the worker to process and confirm, which includes the first snapshot.
-            await rulesLoadedPromise; // Use the pre-established promise
-            this.log(
-              'stateManager:rulesLoaded event received after LOAD_RULES_DATA.'
-            );
-          } catch (error) {
-            this.log(
-              `Error calling StateManager.loadRules or waiting for event: ${error.message}`,
-              'error'
-            );
-            throw error;
-          }
-        } else {
-          const errMsg =
-            'StateManager proxy or its loadRules method not available.';
-          this.log(errMsg, 'error');
-          throw new Error(errMsg);
-        }
-        return; // This action is for setup
-
-      case 'ADD_ITEM_TO_INVENTORY':
-        if (this.stateManager && actionDetails.itemName) {
-          // Set up the event listener BEFORE calling addItemToInventory to avoid race condition
-          const snapshotUpdatedPromise = this.waitForEvent(
-            'stateManager:snapshotUpdated',
-            3000
-          );
-
-          // stateManager.addItemToInventory sends command to worker, worker sends snapshot back
-          await this.stateManager.addItemToInventory(actionDetails.itemName);
-          this.log(
-            `Action ADD_ITEM_TO_INVENTORY for "${actionDetails.itemName}" sent.`
-          );
-
-          // Wait for the snapshot reflecting this change
-          await snapshotUpdatedPromise; // Use the pre-established promise
-          this.log(
-            'stateManager:snapshotUpdated event received after ADD_ITEM_TO_INVENTORY.'
-          );
-        } else {
-          throw new Error(
-            'Missing itemName or StateManager for ADD_ITEM_TO_INVENTORY'
-          );
-        }
-        return;
-
-      case 'CHECK_LOCATION':
-        if (this.stateManager && actionDetails.locationName) {
-          // Set up the event listener BEFORE calling checkLocation to avoid race condition
-          const snapshotUpdatedPromise = this.waitForEvent(
-            'stateManager:snapshotUpdated',
-            3000
-          );
-
-          await this.stateManager.checkLocation(actionDetails.locationName);
-          this.log(
-            `Action CHECK_LOCATION for "${actionDetails.locationName}" sent.`
-          );
-
-          await snapshotUpdatedPromise; // Use the pre-established promise
-          this.log(
-            'stateManager:snapshotUpdated event received after CHECK_LOCATION.'
-          );
-        } else {
-          throw new Error(
-            'Missing locationName or StateManager for CHECK_LOCATION'
-          );
-        }
-        return;
-
-      case 'GET_INVENTORY_ITEM_COUNT': {
-        // This action reads state, assumes prior sync point (like awaited snapshotUpdated) has occurred.
-        const snapshot = this.stateManager.getSnapshot(); // Reads proxy's uiCache
-        if (snapshot && snapshot.inventory && actionDetails.itemName) {
-          result = snapshot.inventory[actionDetails.itemName] || 0;
-        } else {
-          this.log(
-            'Warning: Could not get item count, snapshot or inventory missing.',
-            'warn'
-          );
-          result = 0;
-        }
-        break;
-      }
-
-      case 'IS_LOCATION_ACCESSIBLE': {
-        // This action reads state, assumes prior sync point.
-        const snapshot = this.stateManager.getSnapshot();
-        const staticData = this.stateManager.getStaticData();
-        if (snapshot && staticData && actionDetails.locationName) {
-          const snapshotInterface = createSnapshotInterface(
-            snapshot,
-            staticData
-          );
-          let locData = staticData.locations.get(actionDetails.locationName);
-          if (!locData && staticData.regions) {
-            // Basic search in regions if not direct
-            // staticData.regions is always a Map after initialization
-            for (const [regionKey, region] of staticData.regions.entries()) {
-              if (region.locations && Array.isArray(region.locations)) {
-                const foundLoc = region.locations.find(
-                  (l) => l.name === actionDetails.locationName
-                );
-                if (foundLoc) {
-                  locData = {
-                    ...foundLoc,
-                    parent_region: region.name || regionKey,
-                  };
-                  break;
-                }
-              }
-            }
-          }
-
-          if (!locData) {
-            this.log(
-              `Location data for "${actionDetails.locationName}" not found in staticData or its regions.`,
-              'warn'
-            );
-            result = false;
-          } else {
-            const regionToEvaluate = locData.parent_region || locData.region;
-            if (!regionToEvaluate) {
-              this.log(
-                `Location "${actionDetails.locationName}" has no parent_region or region defined.`,
-                'warn'
-              );
-              result = false;
-            } else {
-              const regionReachable =
-                snapshotInterface.isRegionReachable(regionToEvaluate);
-              if (!regionReachable) {
-                this.log(
-                  `Region '${regionToEvaluate}' for location '${actionDetails.locationName}' is NOT reachable.`,
-                  'warn'
-                );
-                result = false;
-              } else {
-                result = snapshotInterface.evaluateRule(locData.access_rule);
-              }
-            }
-          }
-        } else {
-          this.log(
-            'Warning: Could not check location accessibility, context missing.',
-            'warn'
-          );
-          result = false;
-        }
-        break;
-      }
-
-      case 'IS_REGION_REACHABLE': {
-        const snapshot = this.stateManager.getSnapshot();
-        if (snapshot && snapshot.regionReachability && actionDetails.regionName) {
-          const status = snapshot.regionReachability?.[actionDetails.regionName];
-          return (
-            status === 'reachable' || status === 'checked' || status === true
-          );
-        }
-        this.log(
-          'Warning: Could not check region reachability, context missing.',
-          'warn'
-        );
-        return false;
-      }
-
-      case 'AWAIT_WORKER_PING':
-        if (
-          this.stateManager &&
-          typeof this.stateManager.pingWorker === 'function'
-        ) {
-          this.log(`Pinging worker with payload: ${actionDetails.payload}`);
-          try {
-            const pongPayload = await this.stateManager.pingWorker(
-              actionDetails.payload,
-              5000
-            );
-            this.log(`Received pong from worker with payload: ${pongPayload}`);
-            return pongPayload;
-          } catch (error) {
-            this.log(`Error during worker ping: ${error.message}`, 'error');
-            throw error;
-          }
-        } else {
-          const errMsg =
-            'StateManager proxy or pingWorker method not available.';
-          this.log(errMsg, 'error');
-          throw new Error(errMsg);
-        }
-      // break; // Unreachable code after throw/return
-
-      case 'SIMULATE_CLICK':
-        // After simulating click, if the click is expected to change state,
-        // the test should then await 'stateManager:snapshotUpdated' if needed.
-        // Or, the specific UI handler for the click might trigger a more specific event.
-        // For now, SIMULATE_CLICK is fire-and-forget from controller's perspective.
-        // The actual state change verification would come from subsequent GET_X or IS_X actions.
-        if (actionDetails.selector) {
-          const element = document.querySelector(actionDetails.selector);
-          if (element) {
-            element.click();
-            this.log(`Clicked element: ${actionDetails.selector}`);
-            // If this click is known to cause state changes processed by StateManager,
-            // the test script might need to follow this with a waitForEvent('stateManager:snapshotUpdated')
-          } else {
-            this.log(
-              `Element not found for click: ${actionDetails.selector}`,
-              'error'
-            );
-            throw new Error(
-              `Element not found for SIMULATE_CLICK: ${actionDetails.selector}`
-            );
-          }
-        } else {
-          throw new Error('Missing selector for SIMULATE_CLICK');
-        }
-        return; // Fire-and-forget
-
-      case 'GET_SETTING':
-        if (
-          actionDetails.settingKey &&
-          typeof actionDetails.settingKey === 'string'
-        ) {
-          const settingsManager = (
-            await import('../../app/core/settingsManager.js')
-          ).default;
-          if (!settingsManager)
-            throw new Error('settingsManager not found for GET_SETTING');
-          return await settingsManager.getSetting(
-            actionDetails.settingKey,
-            actionDetails.defaultValue
-          );
-        }
-        throw new Error('Missing settingKey for GET_SETTING');
-
-      case 'UPDATE_SETTING':
-        if (
-          actionDetails.settingKey &&
-          typeof actionDetails.settingKey === 'string' &&
-          actionDetails.value !== undefined
-        ) {
-          const settingsManagerModule = await import(
-            '../../app/core/settingsManager.js'
-          );
-          const settingsManager = settingsManagerModule.default;
-          if (!settingsManager)
-            throw new Error('settingsManager not found for UPDATE_SETTING');
-
-          // Set up the event listener BEFORE calling updateSetting to avoid race condition
-          const settingsChangedPromise = this.waitForEvent(
-            'settings:changed',
-            1000
-          );
-
-          await settingsManager.updateSetting(
-            actionDetails.settingKey,
-            actionDetails.value
-          );
-
-          // Wait for the settings:changed event to ensure the update has propagated
-          await settingsChangedPromise; // Use the pre-established promise
-          this.log(
-            `settings:changed event received after UPDATE_SETTING for ${actionDetails.settingKey}.`
-          );
-          return;
-        }
-        throw new Error('Missing settingKey or value for UPDATE_SETTING');
-
-      case 'SIMULATE_SERVER_MESSAGE':
-        if (
-          actionDetails.commandObject &&
-          typeof actionDetails.commandObject === 'object'
-        ) {
-          const messageHandler = (
-            await import('../client/core/messageHandler.js')
-          ).default;
-          if (!messageHandler)
-            throw new Error(
-              'MessageHandler not found for SIMULATE_SERVER_MESSAGE'
-            );
-          messageHandler.processMessage(actionDetails.commandObject);
-          return; // Relies on events/pings for sync
-        }
-        throw new Error('Missing commandObject for SIMULATE_SERVER_MESSAGE');
-
-      case 'IS_LOCATION_CHECKED': {
-        const snapshot = this.stateManager.getSnapshot();
-        if (snapshot && snapshot.checkedLocations && actionDetails.locationName) {
-          result = snapshot.checkedLocations.includes(actionDetails.locationName);
-        } else {
-          this.log(
-            'Warning: Could not determine if location is checked for IS_LOCATION_CHECKED.',
-            'warn'
-          );
-          result = false;
-        }
-        break;
-      }
-
-      case 'RELOAD_CURRENT_RULES':
-        if (this.stateManager) {
-          this.log('Getting current rules source...');
-          
-          // Get the current rules source
-          const currentSource = this.stateManager.getRawJsonDataSource();
-          if (!currentSource) {
-            const errMsg = 'No rules source available to reload.';
-            this.log(errMsg, 'error');
-            throw new Error(errMsg);
-          }
-          
-          this.log(`Reloading rules from source: ${currentSource}`);
-          
-          try {
-            // Determine if it's a file path or direct data
-            let rulesData;
-            let playerInfo = {
-              playerId: actionDetails.playerId || DEFAULT_PLAYER_ID,
-              playerName: actionDetails.playerName || `TestPlayer${actionDetails.playerId || DEFAULT_PLAYER_ID}`,
-            };
-
-            if (typeof currentSource === 'string' && currentSource.includes('.json')) {
-              // It's a file path, need to fetch the data
-              this.log(`Fetching rules data from file: ${currentSource}`);
-              const response = await fetch(currentSource);
-              if (!response.ok) {
-                throw new Error(`Failed to fetch rules: ${response.status} ${response.statusText}`);
-              }
-              rulesData = await response.json();
-            } else {
-              // For other cases, we'd need access to the original data
-              // For now, throw an error as we can't reload non-file sources easily
-              throw new Error(`Cannot reload rules from source type: ${currentSource}. Only file paths are supported.`);
-            }
-
-            // Set up the event listener BEFORE calling loadRules to avoid race condition
-            const rulesLoadedPromise = this.waitForEvent(
-              'stateManager:rulesLoaded',
-              8000 // Longer timeout for reloading
-            );
-
-            // Reload the rules
-            await this.stateManager.loadRules(rulesData, playerInfo, currentSource);
-            this.log('StateManager.loadRules command sent for reload.');
-
-            // Wait for the worker to process and confirm
-            await rulesLoadedPromise;
-            this.log('stateManager:rulesLoaded event received after RELOAD_CURRENT_RULES.');
-            
-          } catch (error) {
-            this.log(
-              `Error reloading current rules: ${error.message}`,
-              'error'
-            );
-            throw error;
-          }
-        } else {
-          const errMsg = 'StateManager proxy not available for RELOAD_CURRENT_RULES.';
-          this.log(errMsg, 'error');
-          throw new Error(errMsg);
-        }
-        return; // This action is for setup
-
-      case 'LOAD_ALTTP_RULES':
-        if (this.stateManager) {
-          // Load ALTTP rules for tests that require this specific game mode
-          const alttpRulesPath = './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
-
-          this.log(`Loading ALTTP rules from: ${alttpRulesPath}`);
-          
-          try {
-            let rulesData;
-            let playerInfo = {
-              playerId: actionDetails.playerId || DEFAULT_PLAYER_ID,
-              playerName: actionDetails.playerName || `TestPlayer${actionDetails.playerId || DEFAULT_PLAYER_ID}`,
-            };
-
-            // Fetch the ALTTP rules data
-            this.log(`Fetching ALTTP rules data from file: ${alttpRulesPath}`);
-            const response = await fetch(alttpRulesPath);
-            if (!response.ok) {
-              throw new Error(`Failed to fetch ALTTP rules: ${response.status} ${response.statusText}`);
-            }
-            rulesData = await response.json();
-
-            // Set up the event listener BEFORE calling loadRules to avoid race condition
-            const rulesLoadedPromise = this.waitForEvent(
-              'stateManager:rulesLoaded',
-              8000 // Longer timeout for loading
-            );
-
-            // Load the ALTTP rules
-            await this.stateManager.loadRules(rulesData, playerInfo, alttpRulesPath);
-            this.log('StateManager.loadRules command sent for ALTTP rules.');
-
-            // Wait for the worker to process and confirm
-            await rulesLoadedPromise;
-            this.log('stateManager:rulesLoaded event received after LOAD_ALTTP_RULES.');
-            
-          } catch (error) {
-            this.log(
-              `Error loading ALTTP rules: ${error.message}`,
-              'error'
-            );
-            throw error;
-          }
-        } else {
-          const errMsg = 'StateManager proxy not available for LOAD_ALTTP_RULES.';
-          this.log(errMsg, 'error');
-          throw new Error(errMsg);
-        }
-        return; // This action is for setup
-
-      case 'LOAD_RULES_FROM_FILE':
-        if (this.stateManager) {
-          const rulesPath = actionDetails.rulesPath;
-          if (!rulesPath) {
-            throw new Error('LOAD_RULES_FROM_FILE requires a rulesPath parameter');
-          }
-
-          this.log(`Loading rules from file: ${rulesPath}`);
-
-          try {
-            let rulesData;
-            let playerInfo = {
-              playerId: actionDetails.playerId || DEFAULT_PLAYER_ID,
-              playerName: actionDetails.playerName || `TestPlayer${actionDetails.playerId || DEFAULT_PLAYER_ID}`,
-            };
-
-            // Fetch the rules data from the specified file
-            this.log(`Fetching rules data from file: ${rulesPath}`);
-            const response = await fetch(rulesPath);
-            if (!response.ok) {
-              throw new Error(`Failed to fetch rules from ${rulesPath}: ${response.status} ${response.statusText}`);
-            }
-            rulesData = await response.json();
-
-            // Set up the event listener BEFORE calling loadRules to avoid race condition
-            const rulesLoadedPromise = this.waitForEvent(
-              'stateManager:rulesLoaded',
-              8000 // Longer timeout for loading
-            );
-
-            // Load the rules
-            await this.stateManager.loadRules(rulesData, playerInfo, rulesPath);
-            this.log('StateManager.loadRules command sent for custom rules file.');
-
-            // Wait for the worker to process and confirm
-            await rulesLoadedPromise;
-            this.log('stateManager:rulesLoaded event received after LOAD_RULES_FROM_FILE.');
-
-          } catch (error) {
-            this.log(
-              `Error loading rules from file: ${error.message}`,
-              'error'
-            );
-            throw error;
-          }
-        } else {
-          const errMsg = 'StateManager proxy not available for LOAD_RULES_FROM_FILE.';
-          this.log(errMsg, 'error');
-          throw new Error(errMsg);
-        }
-        return; // This action is for setup
-
-      // === Loop-specific actions ===
-      case 'GET_LOOP_STATE': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState) {
-            this.log('LoopState singleton not available', 'warn');
-            return null;
-          }
-          result = {
-            mana: loopState.getCurrentMana?.() ?? 0,
-            maxMana: loopState.getMaxMana?.() ?? 100,
-            isPaused: loopState.isPaused ?? true,
-            isProcessing: loopState.isProcessing ?? false,
-            gameSpeed: loopState.gameSpeed ?? 1,
-            loopCount: loopState.loopCount ?? 0,
-            totalXP: loopState.totalXP ?? 0,
-            actionsCompleted: loopState.actionsCompleted ?? 0,
-          };
-          this.log(`GET_LOOP_STATE result: ${JSON.stringify(result)}`);
-        } catch (error) {
-          this.log(`Error getting loop state: ${error.message}`, 'error');
-          result = null;
-        }
-        break;
-      }
-
-      case 'SET_LOOP_SPEED': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.setGameSpeed !== 'function') {
-            throw new Error('LoopState.setGameSpeed not available');
-          }
-          const speed = actionDetails.speed ?? 1;
-          loopState.setGameSpeed(speed);
-          this.log(`SET_LOOP_SPEED: speed set to ${speed}`);
-          result = true;
-        } catch (error) {
-          this.log(`Error setting loop speed: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'LOOP_START_PROCESSING': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.startProcessing !== 'function') {
-            throw new Error('LoopState.startProcessing not available');
-          }
-          loopState.startProcessing();
-          this.log('LOOP_START_PROCESSING: processing started');
-          result = true;
-        } catch (error) {
-          this.log(`Error starting loop processing: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'LOOP_STOP_PROCESSING': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.stopProcessing !== 'function') {
-            throw new Error('LoopState.stopProcessing not available');
-          }
-          loopState.stopProcessing();
-          this.log('LOOP_STOP_PROCESSING: processing stopped');
-          result = true;
-        } catch (error) {
-          this.log(`Error stopping loop processing: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'LOOP_SET_PAUSED': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.setPaused !== 'function') {
-            throw new Error('LoopState.setPaused not available');
-          }
-          const paused = actionDetails.paused ?? true;
-          loopState.setPaused(paused);
-          this.log(`LOOP_SET_PAUSED: paused set to ${paused}`);
-          result = true;
-        } catch (error) {
-          this.log(`Error setting loop paused state: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'LOOP_HARD_RESET': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.hardReset !== 'function') {
-            throw new Error('LoopState.hardReset not available');
-          }
-          await loopState.hardReset();
-          this.log('LOOP_HARD_RESET: loop state reset');
-          result = true;
-        } catch (error) {
-          this.log(`Error resetting loop state: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'GET_REGION_XP': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.getRegionXP !== 'function') {
-            throw new Error('LoopState.getRegionXP not available');
-          }
-          const regionName = actionDetails.regionName;
-          if (!regionName) {
-            throw new Error('GET_REGION_XP requires regionName parameter');
-          }
-          result = loopState.getRegionXP(regionName);
-          this.log(`GET_REGION_XP for "${regionName}": ${JSON.stringify(result)}`);
-        } catch (error) {
-          this.log(`Error getting region XP: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'ADD_REGION_XP': {
-        try {
-          const loopStateModule = await import('../../loops/loopStateSingleton.js');
-          const loopState = loopStateModule.default;
-          if (!loopState || typeof loopState.addRegionXP !== 'function') {
-            throw new Error('LoopState.addRegionXP not available');
-          }
-          const regionName = actionDetails.regionName;
-          const xpAmount = actionDetails.xpAmount ?? 10;
-          if (!regionName) {
-            throw new Error('ADD_REGION_XP requires regionName parameter');
-          }
-          result = loopState.addRegionXP(regionName, xpAmount);
-          this.log(`ADD_REGION_XP: added ${xpAmount} XP to "${regionName}", result: ${JSON.stringify(result)}`);
-        } catch (error) {
-          this.log(`Error adding region XP: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'WAIT_FOR_LOOP_ACTION_COMPLETE': {
-        try {
-          const timeout = actionDetails.timeout ?? 10000;
-          result = await this.waitForEvent('loopState:actionCompleted', timeout);
-          this.log('WAIT_FOR_LOOP_ACTION_COMPLETE: action completed');
-        } catch (error) {
-          this.log(`Error waiting for loop action: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      case 'WAIT_FOR_LOOP_RESET': {
-        try {
-          const timeout = actionDetails.timeout ?? 10000;
-          result = await this.waitForEvent('loopState:loopReset', timeout);
-          this.log('WAIT_FOR_LOOP_RESET: loop reset');
-        } catch (error) {
-          this.log(`Error waiting for loop reset: ${error.message}`, 'error');
-          throw error;
-        }
-        break;
-      }
-
-      default:
-        this.log(`Unknown action type: ${actionDetails.type}`, 'warn');
-        return Promise.resolve();
-    }
-
-    return result;
+  /**
+   * AND of every assertion run so far via `assertEqual` / `reportCondition`.
+   * Tests can `return testController.getOverallResult()` as the last line and
+   * the orchestrator will auto-complete with that boolean (see testLogic.js's
+   * "if (typeof testResult === 'boolean')" path).
+   */
+  getOverallResult() {
+    return this._failedConditionCount === 0;
   }
 
   waitForEvent(eventName, timeoutMilliseconds = 5000) {
@@ -853,20 +155,6 @@ export class TestController {
         reject(new Error(msg));
       }
     });
-  }
-
-  async loadConfiguration(/*filePath, type*/) {
-    // This method might be better placed in the orchestrator (testLogic.js)
-    // if it needs appInitializationApiInstance directly.
-    // For now, assuming it's complex and might be refactored later or removed
-    // if test setup data is loaded differently.
-    this.log(
-      'loadConfiguration is a placeholder in this refactor and should be re-evaluated.',
-      'warn'
-    );
-    throw new Error(
-      'loadConfiguration not fully implemented in TestController post-refactor.'
-    );
   }
 
   async completeTest(overallPassStatus) {
@@ -959,57 +247,73 @@ export class TestController {
   }
 
   /**
-   * Reloads the most recently loaded rules.json file and waits for completion.
-   * This is useful for tests that need to start with a fresh state.
-   * 
-   * @param {Object} options - Optional configuration
-   * @param {string} options.playerId - Player ID to use (defaults to '1')
-   * @param {string} options.playerName - Player name to use (defaults to 'TestPlayer1')
-   * @returns {Promise<void>} - Resolves when rules are reloaded and ready
-   */
-  async reloadCurrentRules(options = {}) {
-    return await this.performAction({
-      type: 'RELOAD_CURRENT_RULES',
-      playerId: options.playerId || DEFAULT_PLAYER_ID,
-      playerName: options.playerName || `TestPlayer${options.playerId || DEFAULT_PLAYER_ID}`
-    });
-  }
-
-  /**
-   * Loads the ALTTP (A Link to the Past) rules for tests that require this specific game mode.
-   * This always loads the same ALTTP file regardless of what was previously loaded,
-   * ensuring test isolation and consistent starting state for ALTTP-specific tests.
-   *
-   * @param {Object} options - Optional configuration
-   * @param {string} options.playerId - Player ID to use (defaults to '1')
-   * @param {string} options.playerName - Player name to use (defaults to 'TestPlayer1')
-   * @returns {Promise<void>} - Resolves when ALTTP rules are loaded and ready
-   */
-  async loadALTTPRules(options = {}) {
-    return await this.performAction({
-      type: 'LOAD_ALTTP_RULES',
-      playerId: options.playerId || DEFAULT_PLAYER_ID,
-      playerName: options.playerName || `TestPlayer${options.playerId || DEFAULT_PLAYER_ID}`
-    });
-  }
-
-  /**
-   * Load rules from a specific file path.
-   * Useful for loading specific game mode rules (e.g., ALTTP, Adventure, etc.)
+   * Fetch a rules.json file by path and hand it to the StateManager worker,
+   * waiting for the worker to confirm via `stateManager:rulesLoaded` before
+   * resolving. Shared backbone for `loadALTTPRules` and `reloadCurrentRules`.
    *
    * @param {string} rulesPath - Path to the rules JSON file
-   * @param {Object} options - Optional configuration
-   * @param {string} options.playerId - Player ID to use (defaults to '1')
-   * @param {string} options.playerName - Player name to use (defaults to 'TestPlayer1')
+   * @param {{playerId?: string, playerName?: string}} [options]
    * @returns {Promise<void>} - Resolves when rules are loaded and ready
    */
   async loadRulesFromFile(rulesPath, options = {}) {
-    return await this.performAction({
-      type: 'LOAD_RULES_FROM_FILE',
-      rulesPath: rulesPath,
-      playerId: options.playerId || DEFAULT_PLAYER_ID,
-      playerName: options.playerName || `TestPlayer${options.playerId || DEFAULT_PLAYER_ID}`
-    });
+    if (!this.stateManager) {
+      throw new Error('StateManager proxy not available for loadRulesFromFile.');
+    }
+    await this.stateManager.ensureReady(5000);
+
+    const playerId = options.playerId || DEFAULT_PLAYER_ID;
+    const playerInfo = {
+      playerId,
+      playerName: options.playerName || `TestPlayer${playerId}`,
+    };
+
+    this.log(`Loading rules from file: ${rulesPath}`);
+    const response = await fetch(rulesPath);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch rules from ${rulesPath}: ${response.status} ${response.statusText}`
+      );
+    }
+    const rulesData = await response.json();
+
+    // Subscribe BEFORE issuing the command to avoid the race where the
+    // worker confirms before we're listening.
+    const rulesLoadedPromise = this.waitForEvent('stateManager:rulesLoaded', 8000);
+    await this.stateManager.loadRules(rulesData, playerInfo, rulesPath);
+    await rulesLoadedPromise;
+  }
+
+  /**
+   * Load the canonical ALTTP rules for tests that require that game mode.
+   * Always loads the same file regardless of what was previously loaded.
+   */
+  async loadALTTPRules(options = {}) {
+    return this.loadRulesFromFile(
+      './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json',
+      options
+    );
+  }
+
+  /**
+   * Reload whatever rules.json file is currently loaded. Useful when a test
+   * wants to start from a fresh state without knowing which preset is active.
+   * Only file-path sources are supported (i.e. rules loaded via
+   * `loadRulesFromFile` / `loadALTTPRules`).
+   */
+  async reloadCurrentRules(options = {}) {
+    if (!this.stateManager) {
+      throw new Error('StateManager proxy not available for reloadCurrentRules.');
+    }
+    const currentSource = this.stateManager.getRawJsonDataSource();
+    if (!currentSource) {
+      throw new Error('No rules source available to reload.');
+    }
+    if (typeof currentSource !== 'string' || !currentSource.includes('.json')) {
+      throw new Error(
+        `Cannot reload rules from source type: ${currentSource}. Only file paths are supported.`
+      );
+    }
+    return this.loadRulesFromFile(currentSource, options);
   }
 
   // === Event Listener Tracking and Cleanup Methods ===

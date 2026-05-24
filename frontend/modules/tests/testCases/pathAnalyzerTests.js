@@ -35,10 +35,8 @@ export async function testPathAnalyzerPanel(testController) {
     testController.log(
       `[${testRunId}] Step 3: Activating Path Analyzer panel...`
     );
-    await testController.performAction({
-      type: 'DISPATCH_EVENT',
-      eventName: 'ui:activatePanel',
-      payload: { panelId: 'pathAnalyzerPanel' },
+    testController.eventBus.publish('ui:activatePanel', {
+      panelId: 'pathAnalyzerPanel',
     });
     testController.reportCondition(
       'Path Analyzer panel activation event published',
@@ -673,10 +671,8 @@ export async function testPathAnalyzerUILibrary(testController) {
 
     // Step 2: Activate Path Analyzer panel
     testController.log(`[${testRunId}] Activating Path Analyzer panel...`);
-    await testController.performAction({
-      type: 'DISPATCH_EVENT',
-      eventName: 'ui:activatePanel',
-      payload: { panelId: 'pathAnalyzerPanel' },
+    testController.eventBus.publish('ui:activatePanel', {
+      panelId: 'pathAnalyzerPanel',
     });
     // Removed fixed delay - use dynamic polling instead
 
@@ -818,10 +814,8 @@ export async function testPathAnalyzerUIMiseryMireEntrance(testController) {
 
     // Step 2: Activate Path Analyzer panel
     testController.log(`[${testRunId}] Activating Path Analyzer panel...`);
-    await testController.performAction({
-      type: 'DISPATCH_EVENT',
-      eventName: 'ui:activatePanel',
-      payload: { panelId: 'pathAnalyzerPanel' },
+    testController.eventBus.publish('ui:activatePanel', {
+      panelId: 'pathAnalyzerPanel',
     });
 
     // Step 3: Wait for panel elements to be available
@@ -1011,10 +1005,8 @@ export async function debugPathAnalyzerLibraryPaths(testController) {
     }
 
     // Step 2: Activate Path Analyzer panel
-    await testController.performAction({
-      type: 'DISPATCH_EVENT',
-      eventName: 'ui:activatePanel',
-      payload: { panelId: 'pathAnalyzerPanel' },
+    testController.eventBus.publish('ui:activatePanel', {
+      panelId: 'pathAnalyzerPanel',
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
