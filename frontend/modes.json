@@ -51,6 +51,12 @@
       "enabled": true
     }
   },
+  "test-playback": {
+    "testsConfig": {
+      "path": "./test-configs/playwright_tests_config-playback.json",
+      "enabled": true
+    }
+  },
   "test-spoilers": {
     "moduleConfig": {
       "path": "./module-configs/modules-test-spoilers.json",

@@ -1,0 +1,17 @@
+{
+  "autoStartTestsOnLoad": true,
+  "hideDisabledTests": true,
+  "randomizeOrder": false,
+  "defaultEnabledState": false,
+  "tests": [
+    {
+      "id": "playback-bot-smoke",
+      "name": "Playback Bot: smoke",
+      "description": "Loads apcalc, activates the playback bot panel, verifies the bot instance is reachable and sphere data is parsed. No playback driven.",
+      "functionName": "playbackBotSmokeTest",
+      "enabled": true,
+      "order": 0,
+      "category": "Playback Bot"
+    }
+  ]
+}
