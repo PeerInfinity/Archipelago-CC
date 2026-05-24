@@ -280,6 +280,18 @@ export class TestController {
     // worker confirms before we're listening.
     const rulesLoadedPromise = this.waitForEvent('stateManager:rulesLoaded', 8000);
     await this.stateManager.loadRules(rulesData, playerInfo, rulesPath);
+    // Match the production load paths (stateManager's postInitialize and
+    // its files:jsonLoaded re-emitter): publish rawJsonDataLoaded so
+    // downstream modules (procgenPlayer, editorDataService, ...) do their
+    // per-load setup before rulesLoaded lands. The proxy's loadRules
+    // doesn't fire this itself. Must happen BEFORE awaiting rulesLoaded
+    // because procgenPlayer's handleRulesLoaded reads pendingStartTransition,
+    // which is set by rawJsonDataLoaded.
+    this.eventBus?.publish?.('stateManager:rawJsonDataLoaded', {
+      source: rulesPath,
+      rawJsonData: rulesData,
+      selectedPlayerInfo: playerInfo,
+    });
     await rulesLoadedPromise;
   }
 

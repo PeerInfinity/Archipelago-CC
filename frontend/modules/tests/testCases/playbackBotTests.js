@@ -77,27 +77,37 @@ registerTest({
 
 /**
  * End-to-end: drive the bot through a tiny procgen+maze preset at instant
- * speed and verify it reaches the "finished" status. This exercises the
- * bot → substrateRegistry → maze controller → state mutation chain.
+ * speed and verify it reaches the "finished" status.
  *
- * Status: currently times out at "Sphere 0.1 → waiting for region (1/3)".
- * The bot picks up the sphere queue but the procgen player doesn't route
- * through the maze automatically the way the live UI does — there's some
- * activation step (probably surfaced by a user click in the procgenPlayer
- * or loops panel) that this test doesn't reproduce. Disabled in
- * playwright_tests_config-playback.json pending investigation; the
- * partial test is kept here as a starting point for whoever picks it up.
+ * Status: disabled pending investigation.
+ *
+ * What's been confirmed working: the bot panel mounts, the bot is reachable,
+ * sphere data parses from the explicit loadSphereLog call. loadRulesFromFile
+ * was extended to publish stateManager:rawJsonDataLoaded after the proxy
+ * loadRules call (matching the production postInitialize + files:jsonLoaded
+ * paths), which is necessary for procgenPlayer to build its warehouse.
+ *
+ * What's still missing: even with rawJsonDataLoaded emitted, the bot's
+ * _currentRegion stays null after rulesLoaded. procgenPlayer publishes
+ * its synthetic user:regionMove via the *dispatcher* (not eventBus), and
+ * the bot subscribes via registerDispatcherReceiver — so the dispatcher
+ * has to be initialized AND priority-routed correctly between the modules
+ * for the bot to hear the event. Some piece of the production load flow
+ * still isn't exercised by loadRulesFromFile.
+ *
+ * Next investigation: subscribe via eventBus to user:regionMove during
+ * the test to see whether procgenPlayer even publishes it (vs. publishes
+ * but routing skips the bot). Probably also worth checking whether the
+ * dispatcher is wired before the bot panel mounts in this code path.
  */
 async function playbackBotInstantPlaybackTest(testController) {
-  testController.log('Loading procgen_maze_worldgen rules + sphere log...');
-  await testController.loadRulesFromFile(PROCGEN_MAZE_RULES);
-  const sphereState = getSphereStateSingleton();
-  await sphereState.loadSphereLog(
-    PROCGEN_MAZE_RULES.replace('_rules.json', '_sphere_log.jsonl')
-  );
-  const sphereQueueLen = sphereState.getSphereData()?.length ?? 0;
-  testController.reportCondition('sphere data non-empty', sphereQueueLen > 0);
-
+  // Activate the bot panel BEFORE loading rules. procgenPlayer publishes
+  // a synthetic user:regionMove on stateManager:rulesLoaded; the bot's
+  // _currentRegion only updates if its onRegionMove handler exists when
+  // that event fires (which means the panel — and its bot instance —
+  // must already be mounted). If we activate after loading rules, the
+  // bot never learns its starting region and gets stuck "waiting for
+  // region" forever.
   testController.eventBus.publish('ui:activatePanel', {
     panelId: 'playbackBotPanel',
   });
@@ -110,6 +120,20 @@ async function playbackBotInstantPlaybackTest(testController) {
   const bot = panel?.getBot?.();
   testController.reportCondition('bot reachable', !!bot);
   if (!bot) return testController.getOverallResult();
+
+  testController.log('Loading procgen_maze_worldgen rules + sphere log...');
+  await testController.loadRulesFromFile(PROCGEN_MAZE_RULES);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog(
+    PROCGEN_MAZE_RULES.replace('_rules.json', '_sphere_log.jsonl')
+  );
+  const sphereQueueLen = sphereState.getSphereData()?.length ?? 0;
+  testController.reportCondition('sphere data non-empty', sphereQueueLen > 0);
+  testController.log(`Bot currentRegion after rulesLoaded: "${bot.getCurrentRegion()}"`);
+  testController.reportCondition(
+    'bot picked up starting region from procgenPlayer',
+    !!bot.getCurrentRegion()
+  );
 
   // refresh() picks up the newly-loaded sphere data so the bot's status
   // line reflects the queue (helpful for diagnostic logs on failure).
