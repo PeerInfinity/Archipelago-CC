@@ -335,6 +335,42 @@ export class TestController {
     return this.loadRulesFromFile(currentSource, options);
   }
 
+  /**
+   * POST a JSON snapshot to the dev server's /_dump endpoint, which
+   * writes it to test_dumps/{timestamp}_{name}.json on the host.
+   * Diagnostic-only — use during in-app tests to surface arbitrary
+   * state (rules.json, region maps, inventory, etc.) for offline
+   * inspection.
+   *
+   * Requires scripts/utils/dev-server-nocache.py (npm run dev).
+   * Silently no-ops on non-2xx responses or fetch failures so the
+   * test isn't derailed by an unavailable server — the call returns
+   * `{ ok, path? }`.
+   *
+   * @param {string} name        short filename segment (sanitized)
+   * @param {*}      payload     JSON-serializable snapshot
+   */
+  async dumpSnapshot(name, payload) {
+    const safe = encodeURIComponent(String(name || 'dump').slice(0, 64));
+    try {
+      const response = await fetch(`/_dump?name=${safe}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        this.log(`dumpSnapshot('${name}') failed: HTTP ${response.status}`, 'warn');
+        return { ok: false };
+      }
+      const result = await response.json();
+      this.log(`dumpSnapshot('${name}') → ${result.path}`, 'info');
+      return { ok: true, path: result.path };
+    } catch (e) {
+      this.log(`dumpSnapshot('${name}') failed: ${e.message}`, 'warn');
+      return { ok: false };
+    }
+  }
+
   // === Event Listener Tracking and Cleanup Methods ===
   
   /**

@@ -37,6 +37,7 @@ What to write today:
 | Drive a loop reset | `import gameState from '.../gameState/index.js'; gameState.triggerLoopReset()` |
 | Load rules from a file | `await testController.loadRulesFromFile(path)` (kept as a convenience) |
 | Load the ALTTP preset | `await testController.loadALTTPRules()` |
+| Dump a state snapshot to disk | `await testController.dumpSnapshot('name', payload)` — POSTs to dev-server `/_dump`, writes to `test_dumps/{ts}_{name}.json` |
 
 The primitives you actually need:
 
