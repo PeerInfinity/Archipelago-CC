@@ -140,6 +140,16 @@ function applyInventoryFromSnapshot(engine, snapshot) {
  * Evaluate access rules for one room's exits and items, push results
  * to the engine. Defaults to accessible=true if a rule is null or
  * evaluation throws.
+ *
+ * Procgen note: obstacles are not evaluated here as a separate gate.
+ * The procgen pipeline (shared/procgen/pathsAndObstaclesCompiler.js)
+ * compiles per-tile obstacles into the exit/location's access_rule
+ * before they land in rules.json, so evaluating access_rule alone
+ * captures both standalone-style "needs item X" gates and procgen-
+ * style "tile is blocked by obstacle Y" gates. The original substrate
+ * had a separate _isObstacleAtCleared path only because it consumed
+ * raw sidecar data; the wrapper consumes staticData and gets the
+ * compiled equivalent.
  */
 function evaluateAccessibilityForRoom(engine, client, world, roomId) {
     if (!world || !roomId) return;
