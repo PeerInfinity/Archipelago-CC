@@ -62,6 +62,11 @@ function log(level, ...args) {
 // AP region becomes a room, preserving the original behavior.
 let _procgenMode = false;
 let _procgenSidecarRegions = null;  // Set<string> | null
+// Custom-data document cache. Populated from initialState; consumed
+// by the templating layer when it lands. null until the host pushes
+// a value (typically after stateManager:rawJsonDataLoaded fires).
+let _customData = null;
+export function getCustomData() { return _customData; }
 
 function buildWorldFromStaticData(staticData, currentRegion) {
     if (!staticData?.regions) return null;
@@ -356,6 +361,11 @@ async function main() {
             for (const [key, value] of Object.entries(data.engineSettings)) {
                 engine.setOption(key, value);
             }
+        }
+        if ('customData' in data) {
+            // null is a valid reset (rules changed, no prose for the
+            // new game); explicitly accept it instead of ignoring.
+            _customData = data.customData;
         }
         // Update procgen-mode filter state from the host. We do NOT
         // trigger a rebuildWorld here — staticData isn't refreshed

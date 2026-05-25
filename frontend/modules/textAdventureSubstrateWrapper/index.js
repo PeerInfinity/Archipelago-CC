@@ -47,6 +47,51 @@ const SETTINGS_SCHEMA = Object.freeze({
 let _settings = { ...SETTINGS_DEFAULTS };
 export function getTextAdventureSubstrateWrapperSettings() { return _settings; }
 
+// Custom-data cache. Holds the most recently auto-loaded prose
+// document; null until rules load (or after a fetch failure). Used by
+// the bridge to template region/location/exit descriptions when
+// custom-data templating lands.
+let _customData = null;
+export function getCustomData() { return _customData; }
+
+// Resolve a setting value to a fetch URL. Bare names map to the
+// conventional ./modules/shared/customData/<name>_textadventure.json
+// path; anything with a slash or protocol is treated as a literal URL;
+// empty returns null. Mirrors the original substrate so users can
+// migrate their settings unchanged.
+function resolveCustomDataUrl(value) {
+    if (!value || typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    if (trimmed.includes('/') || /^[a-z]+:/i.test(trimmed)) return trimmed;
+    return customDataUrlForGame(trimmed);
+}
+
+function customDataUrlForGame(gameName) {
+    if (!gameName || typeof gameName !== 'string') return null;
+    const slug = gameName.trim().toLowerCase();
+    if (!slug) return null;
+    return `./modules/shared/customData/${slug}_textadventure.json`;
+}
+
+function pickAutoLoadCustomDataUrl(rulesJson, playerId, settingValue) {
+    const explicit = resolveCustomDataUrl(settingValue);
+    if (explicit) return explicit;
+    const gameName = rulesJson?.world?.[playerId]?.game;
+    return customDataUrlForGame(gameName);
+}
+
+async function fetchAndCacheCustomData(url) {
+    if (!url) { _customData = null; return; }
+    try {
+        const response = await fetch(url);
+        if (!response.ok) { _customData = null; return; }
+        _customData = await response.json();
+    } catch {
+        _customData = null;
+    }
+}
+
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
     title: 'Text Adventure (wrapper)',
@@ -171,6 +216,10 @@ function _buildInitialStatePayload() {
             messageHistoryLimit: _settings.messageHistoryLimit,
             autoFocusCommandInput: _settings.autoFocusCommandInput,
         },
+        // Custom-data document for prose templating. Bridge caches it;
+        // consumed once templating lands. null is a valid value (no
+        // data fetched, or fetch failed).
+        customData: _customData,
     };
 }
 
@@ -223,13 +272,16 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     // Procgen mode detection: when rules load with a preset_sidecars
     // block, capture the sidecar-region set and re-broadcast initial
     // state so the bridge can filter Menu / other non-sidecar regions
-    // out of the engine's world.
-    eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
+    // out of the engine's world. Also kicks off the custom-data auto-
+    // load so prose for the current game is ready when templating runs.
+    eventBus.subscribe('stateManager:rawJsonDataLoaded', async (data) => {
         const rulesJson = data?.rawJsonData;
         const playerId = data?.selectedPlayerInfo?.playerId ?? '1';
         const sidecars = rulesJson?.preset_sidecars?.[playerId];
         _procgenMode = !!sidecars;
         _procgenSidecarRegions = sidecars ? Object.keys(sidecars) : [];
+        const url = pickAutoLoadCustomDataUrl(rulesJson, playerId, _settings.autoLoadCustomData);
+        await fetchAndCacheCustomData(url);
         eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
     });
 
