@@ -15,6 +15,7 @@ import {
     findDisconnectedCell,
     topDownFromRulesJson,
     pickSubstrate, rollSubstrateMix,
+    pickSubstrateWithQuota, totalRemainingQuota,
     computeSourceCounts,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
@@ -2200,6 +2201,92 @@ describe('pickSubstrate', () => {
             rng,
         )).toBe('text_adventure');
     });
+
+    it('substrateQuotas takes priority over substrateMix', () => {
+        // Quotas with capacity should be used; mix is ignored.
+        expect(pickSubstrate('R1', null, {
+            substrateQuotas: { text_adventure: 1 },
+            substrateCounts: {},
+            substrateMix: { maze: 1 },
+        }, rng)).toBe('text_adventure');
+    });
+
+    it('substrateQuotas falls through to mix when all quotas exhausted', () => {
+        expect(pickSubstrate('R1', null, {
+            substrateQuotas: { text_adventure: 1 },
+            substrateCounts: { text_adventure: 1 },
+            substrateMix: { maze: 1 },
+        }, rng)).toBe('maze');
+    });
+});
+
+describe('pickSubstrateWithQuota', () => {
+    it('returns null when every quota is filled', () => {
+        const rng = createRng(1);
+        expect(pickSubstrateWithQuota({ maze: 2 }, { maze: 2 }, rng)).toBe(null);
+        expect(pickSubstrateWithQuota({ maze: 2, text_adventure: 1 },
+            { maze: 2, text_adventure: 1 }, rng)).toBe(null);
+    });
+
+    it('returns null when quotas dict is empty', () => {
+        const rng = createRng(1);
+        expect(pickSubstrateWithQuota({}, {}, rng)).toBe(null);
+    });
+
+    it('returns the only substrate with remaining capacity', () => {
+        const rng = createRng(1);
+        // maze is full, text_adventure still has room.
+        for (let i = 0; i < 20; i++) {
+            expect(pickSubstrateWithQuota(
+                { maze: 1, text_adventure: 5 },
+                { maze: 1, text_adventure: 0 },
+                rng,
+            )).toBe('text_adventure');
+        }
+    });
+
+    it('approximates remaining-capacity weighting over many rolls', () => {
+        const rng = createRng(7);
+        // Remaining capacity: maze=3, text_adventure=1 → ~75/25.
+        const counts = { maze: 0, text_adventure: 0 };
+        const N = 1000;
+        for (let i = 0; i < N; i++) {
+            const picked = pickSubstrateWithQuota(
+                { maze: 3, text_adventure: 1 },
+                { maze: 0, text_adventure: 0 },
+                rng,
+            );
+            counts[picked]++;
+        }
+        expect(counts.maze / N).toBeGreaterThan(0.65);
+        expect(counts.maze / N).toBeLessThan(0.85);
+    });
+
+    it('is deterministic for a fixed seed', () => {
+        const seq = (seed) => {
+            const rng = createRng(seed);
+            return Array.from({ length: 20 }, () =>
+                pickSubstrateWithQuota(
+                    { maze: 5, text_adventure: 5 },
+                    {},
+                    rng,
+                ));
+        };
+        expect(seq(3)).toEqual(seq(3));
+    });
+});
+
+describe('totalRemainingQuota', () => {
+    it('sums positive remainders only', () => {
+        expect(totalRemainingQuota(
+            { maze: 5, text_adventure: 2 },
+            { maze: 3, text_adventure: 4 },  // text_adventure over-placed
+        )).toBe(2);
+    });
+
+    it('returns 0 when null quotas', () => {
+        expect(totalRemainingQuota(null, {})).toBe(0);
+    });
 });
 
 describe('mixed substrates — end to end', () => {
@@ -2345,6 +2432,123 @@ describe('mixed substrates — end to end', () => {
             const aOut = buildRulesJson(a.grid, { startCell: a.startCell });
             const bOut = buildRulesJson(b.grid, { startCell: b.startCell });
             expect(regionSubstrates(aOut)).toEqual(regionSubstrates(bOut));
+        });
+
+        it('substrateQuotas produces exact per-substrate region counts', () => {
+            // Pool big enough that pool-empty never fires; grid big
+            // enough that frontier never dies before quotas fill.
+            const { stats } = growMaze({
+                gridDims: { width: 5, height: 5 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 20 },
+                obstaclePool: { door_red: 20 },
+                seed: 17,
+                growthParams: {
+                    substrateQuotas: { maze: 3, text_adventure: 2 },
+                    branchProbability: 0.9,
+                },
+            });
+            expect(stats.stopReason).toBe('quotas_filled');
+            expect(stats.regionsBuilt).toBe(5);
+            expect(stats.substrateCounts).toEqual({ maze: 3, text_adventure: 2 });
+        });
+
+        it('startSubstrate pins the start region and counts against its quota', () => {
+            const { grid, startCell, stats } = growMaze({
+                gridDims: { width: 5, height: 5 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 20 },
+                obstaclePool: { door_red: 20 },
+                seed: 17,
+                growthParams: {
+                    substrateQuotas: { maze: 3, text_adventure: 2 },
+                    startSubstrate: 'text_adventure',
+                    branchProbability: 0.9,
+                },
+            });
+            const startId = `region_${startCell.gx}_${startCell.gy}`;
+            expect(grid.getRegion(startCell).substrate).toBe('text_adventure');
+            expect(stats.substrateCounts).toEqual({ maze: 3, text_adventure: 2 });
+            // Sanity: the start region's id is in the rules sidecars
+            // as text_adventure.
+            const out = buildRulesJson(grid, { startCell });
+            expect(out.preset_sidecars['1'][startId].substrate).toBe('text_adventure');
+        });
+
+        it('startSubstrate=auto falls back to weighted picker', () => {
+            // With quotas {maze: 1}, the auto pick at the start has
+            // only maze available — so the start substrate is maze.
+            const { stats } = growMaze({
+                gridDims: { width: 5, height: 5 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 20 },
+                obstaclePool: { door_red: 20 },
+                seed: 17,
+                growthParams: {
+                    substrateQuotas: { maze: 1 },
+                    startSubstrate: 'auto',
+                    branchProbability: 0.9,
+                },
+            });
+            expect(stats.substrateCounts).toEqual({ maze: 1 });
+            expect(stats.stopReason).toBe('quotas_filled');
+        });
+
+        it('stopOnPoolEmpty=true ends growth when item pool is exhausted', () => {
+            const { stats } = growMaze({
+                gridDims: { width: 5, height: 5 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 1 },
+                obstaclePool: { door_red: 1 },
+                seed: 17,
+                growthParams: {
+                    substrateQuotas: { maze: 10 },  // unfillable
+                    stopOnPoolEmpty: true,
+                    branchProbability: 0.9,
+                },
+            });
+            expect(stats.stopReason).toBe('pool_empty');
+            expect(stats.regionsBuilt).toBeLessThan(10);
+        });
+
+        it('stopOnPoolEmpty=false keeps growing past pool exhaustion', () => {
+            // Small pool; quotas should still fill via item-less
+            // regions. Bigger quotas than item budget to force the
+            // post-exhaustion code path.
+            const { stats } = growMaze({
+                gridDims: { width: 5, height: 5 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 1 },
+                obstaclePool: { door_red: 1 },
+                seed: 17,
+                growthParams: {
+                    substrateQuotas: { maze: 4 },
+                    stopOnPoolEmpty: false,
+                    branchProbability: 0.9,
+                },
+            });
+            expect(stats.stopReason).toBe('quotas_filled');
+            expect(stats.regionsBuilt).toBe(4);
+        });
+
+        it('quota mode is deterministic for a fixed seed', () => {
+            const config = {
+                gridDims: { width: 5, height: 5 },
+                regionSize: { width: 6, height: 6 },
+                itemPool: { key_red: 20 },
+                obstaclePool: { door_red: 20 },
+                seed: 23,
+                growthParams: {
+                    substrateQuotas: { maze: 3, text_adventure: 3 },
+                    branchProbability: 0.7,
+                },
+            };
+            const a = growMaze(config);
+            const b = growMaze(config);
+            const aOut = buildRulesJson(a.grid, { startCell: a.startCell });
+            const bOut = buildRulesJson(b.grid, { startCell: b.startCell });
+            expect(regionSubstrates(aOut)).toEqual(regionSubstrates(bOut));
+            expect(a.stats.substrateCounts).toEqual(b.stats.substrateCounts);
         });
     });
 

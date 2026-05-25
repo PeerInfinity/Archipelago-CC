@@ -45,9 +45,14 @@ function getAdapter(substrateId) {
 //   2. Source region's `substrate` field (top-down only; grid-growth
 //      synthesises regions and has no source tag to read)
 //   3. opts.substratePicker(regionName, sourceRegion, ctx) — custom
-//      callback. Replaces step 4 if provided.
-//   4. Weighted roll against opts.substrateMix
-//   5. Default 'maze'
+//      callback. Replaces steps 4-5 if provided.
+//   4. opts.substrateQuotas (+ opts.substrateCounts): weighted roll
+//      against remaining per-substrate capacity. Caller is responsible
+//      for incrementing counts after building each region. Returns
+//      null when every quota is exhausted — callers in quota mode
+//      should detect this and stop the loop.
+//   5. Weighted roll against opts.substrateMix
+//   6. Default 'maze'
 //
 // `sourceRegion` is the source rules.json region object for top-down
 // callers, or null for grid-growth (no source rules.json exists).
@@ -63,6 +68,16 @@ export function pickSubstrate(regionName, sourceRegion, opts, rng) {
     if (typeof opts?.substratePicker === 'function') {
         const picked = opts.substratePicker(regionName, sourceRegion, { rng });
         if (picked) return picked;
+    }
+    if (opts?.substrateQuotas) {
+        const picked = pickSubstrateWithQuota(
+            opts.substrateQuotas, opts.substrateCounts || {}, rng,
+        );
+        if (picked) return picked;
+        // All quotas exhausted. Fall through to mix / default rather
+        // than throw — growMaze checks remaining capacity before the
+        // call so this branch is only reached in unusual setups
+        // (e.g. caller passed empty quotas with no mix fallback).
     }
     if (opts?.substrateMix) {
         return rollSubstrateMix(opts.substrateMix, rng);
@@ -92,6 +107,44 @@ export function rollSubstrateMix(mix, rng) {
     // Floating-point edge: r > 0 after walking all weights (rounding
     // accumulated across the subtractions). Last entry wins.
     return entries[entries.length - 1][0];
+}
+
+/**
+ * Sum of remaining per-substrate capacity. 0 means every quota is
+ * filled; positive means at least one substrate has room. Used by
+ * growMaze to decide whether to keep growing in quota mode.
+ */
+export function totalRemainingQuota(quotas, counts) {
+    if (!quotas) return 0;
+    let sum = 0;
+    for (const [id, quota] of Object.entries(quotas)) {
+        const rem = quota - (counts?.[id] || 0);
+        if (rem > 0) sum += rem;
+    }
+    return sum;
+}
+
+/**
+ * Weighted random pick by remaining quota capacity. `quotas` is
+ * `{ id: total, ... }` and `counts` is `{ id: placed_so_far, ... }`.
+ * Each substrate's weight = max(0, quota - placed). Returns null
+ * when nothing has capacity left — callers in quota mode should
+ * treat that as the stop signal.
+ */
+export function pickSubstrateWithQuota(quotas, counts, rng) {
+    const remaining = [];
+    for (const [id, quota] of Object.entries(quotas)) {
+        const rem = quota - (counts?.[id] || 0);
+        if (rem > 0) remaining.push([id, rem]);
+    }
+    if (remaining.length === 0) return null;
+    const total = remaining.reduce((s, [, r]) => s + r, 0);
+    let r = rng.next() * total;
+    for (const [id, rem] of remaining) {
+        r -= rem;
+        if (r <= 0) return id;
+    }
+    return remaining[remaining.length - 1][0];
 }
 
 // Re-export so existing callers (tests, UI) that imported ScenarioPool
@@ -574,13 +627,28 @@ export function growMaze(config) {
         // driver.md §2.
         assumeBidirectional = true,
         // Substrate selection. Source-tag branch is a no-op here
-        // (grid-growth synthesises regions with no source); the other
-        // three resolution branches (byRegion / picker / mix / 'maze'
-        // default) all apply.
+        // (grid-growth synthesises regions with no source); the
+        // remaining resolution branches (byRegion / picker / quotas
+        // / mix / 'maze' default) all apply.
         substrateByRegion,
         substrateMix,
+        substrateQuotas,
         substratePicker,
+        // Quota mode only: optional fixed substrate for the start
+        // region. When null/'auto', the start substrate is chosen
+        // via pickSubstrate (weighted by remaining quota or by mix).
+        // The start region's substrate counts against its quota.
+        startSubstrate = null,
+        // Quota mode only: when true, an empty item pool ends growth
+        // early. When false (default), growth continues and later
+        // regions are built with empty item plans.
+        stopOnPoolEmpty = false,
     } = growthParams;
+
+    // Per-substrate running counter for quota mode. Mutated as each
+    // region is built; passed to pickSubstrate so the weighted roll
+    // sees up-to-date remaining capacity.
+    const substrateCounts = {};
 
     const rng = createRng(seed);
     const pool = new ScenarioPool({
@@ -593,6 +661,9 @@ export function growMaze(config) {
         regionsSkipped: 0,
         teleportersPlaced: 0,
         stopReason: null,
+        // Live reference — mutated as regions are built. Callers in
+        // quota mode use this for the per-substrate breakdown.
+        substrateCounts,
     };
 
     // --- Start region ---
@@ -605,10 +676,26 @@ export function growMaze(config) {
         throw new Error('growMaze: start cell has no in-bounds neighbors (grid too small?)');
     }
     const startRegionId = regionIdForCell(startCell);
+    // Resolve start substrate. In quota mode, honor an explicit
+    // startSubstrate when it has capacity; otherwise fall through to
+    // pickSubstrate (which itself uses the quota / mix / default
+    // chain). Either way, the start substrate counts against its
+    // quota — incremented just below.
+    let startSub;
+    if (startSubstrate && startSubstrate !== 'auto'
+            && (!substrateQuotas
+                || ((substrateQuotas[startSubstrate] ?? 0)
+                    - (substrateCounts[startSubstrate] || 0)) > 0)) {
+        startSub = startSubstrate;
+    } else {
+        startSub = pickSubstrate(startRegionId, null, {
+            substrateByRegion, substrateMix, substrateQuotas,
+            substrateCounts, substratePicker,
+        }, rng);
+    }
+    substrateCounts[startSub] = (substrateCounts[startSub] || 0) + 1;
     const startRegion = buildSubstrateRegion({
-        substrate: pickSubstrate(startRegionId, null, {
-            substrateByRegion, substrateMix, substratePicker,
-        }, rng),
+        substrate: startSub,
         region_id: startRegionId,
         size: regionSize,
         entrances: [],                     // start region — substrate picks middle
@@ -638,12 +725,17 @@ export function growMaze(config) {
 
     // --- Main loop ---
     while (frontier.length > 0) {
-        if (pool.itemsRemaining() === 0) {
+        if (stopOnPoolEmpty && pool.itemsRemaining() === 0) {
             stats.stopReason = 'pool_empty';
             break;
         }
         if (maxRegions != null && stats.regionsBuilt >= maxRegions) {
             stats.stopReason = 'max_regions';
+            break;
+        }
+        if (substrateQuotas
+                && totalRemainingQuota(substrateQuotas, substrateCounts) === 0) {
+            stats.stopReason = 'quotas_filled';
             break;
         }
 
@@ -700,10 +792,13 @@ export function growMaze(config) {
         });
 
         const childRegionId = regionIdForCell(childCell);
+        const childSub = pickSubstrate(childRegionId, null, {
+            substrateByRegion, substrateMix, substrateQuotas,
+            substrateCounts, substratePicker,
+        }, rng);
+        substrateCounts[childSub] = (substrateCounts[childSub] || 0) + 1;
         const region = buildSubstrateRegion({
-            substrate: pickSubstrate(childRegionId, null, {
-                substrateByRegion, substrateMix, substratePicker,
-            }, rng),
+            substrate: childSub,
             region_id: childRegionId,
             size: regionSize,
             entrances: [{ side: entranceSide, tile: entranceTile }],

@@ -131,6 +131,17 @@ const DEFAULT_PARAMS = {
     regionHeight: 6,
     maxItemsPerRegion: 2,
     maxRegions: null,
+    // Quota-mode start-region override. 'auto' (or empty) lets
+    // pickSubstrate choose via the active quota / mix chain. Setting
+    // it to a specific substrate id pins the start region's
+    // substrate; in quota mode that pick still counts against the
+    // substrate's quota.
+    startSubstrate: 'auto',
+    // When true, growMaze ends the moment the item pool is empty.
+    // When false (default), growth continues and later regions are
+    // built with empty item plans — useful in quota mode where the
+    // user wants a fixed region count regardless of items left.
+    stopOnPoolEmpty: false,
     // Loop-mode toggle (Phase 2/3 of loop-mode-substrate-integration).
     // When on, buildRulesJson computes a loop_costs sidecar AND every
     // region's playable_payload gets manaEnabled=true so substrates
@@ -325,8 +336,20 @@ export class ProcgenPipelineUI {
         // Substrate weights for mixed-substrate generation. Map of
         // { [substrateId]: weight }. Empty → engine falls back to its
         // default ('maze' for both growMaze and topDownFromRulesJson),
-        // matching pre-mixed-substrate behaviour.
+        // matching pre-mixed-substrate behaviour. Used when
+        // substrateMode === 'mix'.
         this.substrateMix = {};
+        // Per-substrate region quotas for fixed-count generation.
+        // Map of { [substrateId]: regionCount }. Used when
+        // substrateMode === 'quotas'. growMaze stops once every
+        // substrate's count has been reached (or earlier on
+        // frontier-empty / pool-empty per stopOnPoolEmpty).
+        this.substrateQuotas = {};
+        // Which allocation strategy the substrate picker uses.
+        // 'quotas' (default for new users) → fixed per-substrate
+        // region counts. 'mix' → weighted-random sampling per region.
+        // Top-down driver always uses the mix.
+        this.substrateMode = 'quotas';
         // View preference: when true, the Library subsection shows an
         // "Unsupported by selected substrates" group with library
         // entries no selected substrate declares. Default off so
@@ -609,6 +632,17 @@ export class ProcgenPipelineUI {
     }
 
     _renderSubstratesSubsection() {
+        const wrap = document.createElement('div');
+
+        // Top: mode toggle (quotas vs mix). Grid-growth only — top-down
+        // always uses the mix.
+        if (this.mode === 'gridGrowth') {
+            wrap.appendChild(this._renderSubstrateModeToggle());
+        }
+
+        const dict = this._activeSubstrateDict();
+        const isQuotas = this.mode === 'gridGrowth' && this.substrateMode === 'quotas';
+
         const grid = document.createElement('div');
         grid.className = 'procgen-pipeline-scenario-grid';
 
@@ -632,15 +666,15 @@ export class ProcgenPipelineUI {
             }
         }
 
-        // Right: selected substrates with weights.
+        // Right: selected substrates with weights/quotas.
         const right = document.createElement('div');
         right.className = 'procgen-pipeline-scenario-selected';
         const rightHeader = document.createElement('div');
         rightHeader.className = 'procgen-pipeline-scenario-subheader';
-        rightHeader.textContent = 'Substrate weights';
+        rightHeader.textContent = isQuotas ? 'Substrate quotas' : 'Substrate weights';
         right.appendChild(rightHeader);
 
-        const selectedIds = Object.keys(this.substrateMix);
+        const selectedIds = Object.keys(dict);
         if (selectedIds.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'procgen-pipeline-scenario-empty';
@@ -648,13 +682,107 @@ export class ProcgenPipelineUI {
             right.appendChild(empty);
         } else {
             for (const id of selectedIds) {
-                right.appendChild(this._renderSubstrateSelectedRow(id, this.substrateMix[id]));
+                right.appendChild(this._renderSubstrateSelectedRow(id, dict[id]));
+            }
+            if (isQuotas) {
+                const total = selectedIds.reduce(
+                    (s, id) => s + (Number(dict[id]) > 0 ? Number(dict[id]) : 0), 0,
+                );
+                const totalRow = document.createElement('div');
+                totalRow.className = 'procgen-pipeline-scenario-empty';
+                totalRow.textContent = `Total regions: ${total}`;
+                right.appendChild(totalRow);
             }
         }
 
         grid.appendChild(left);
         grid.appendChild(right);
-        return grid;
+        wrap.appendChild(grid);
+
+        // Start-substrate dropdown — applies in both modes. 'auto'
+        // delegates to pickSubstrate (weighted-by-mix or weighted-by-
+        // remaining-quota depending on substrateMode).
+        if (this.mode === 'gridGrowth') {
+            wrap.appendChild(this._renderStartSubstrateRow());
+        }
+
+        return wrap;
+    }
+
+    _renderSubstrateModeToggle() {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-field';
+        const label = document.createElement('label');
+        label.textContent = 'Substrate allocation';
+        label.title = 'Quotas: fixed per-substrate region count. Mix: weighted random per region.';
+        row.appendChild(label);
+
+        const group = document.createElement('span');
+        for (const opt of [
+            { value: 'quotas', text: 'Quotas (fixed counts)' },
+            { value: 'mix', text: 'Mix (weighted random)' },
+        ]) {
+            const wrap = document.createElement('label');
+            wrap.style.marginRight = '8px';
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'procgen-pipeline-substrate-mode';
+            radio.value = opt.value;
+            radio.checked = this.substrateMode === opt.value;
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    this.substrateMode = opt.value;
+                    this._saveToLocalStorage();
+                    this.render();
+                }
+            });
+            wrap.appendChild(radio);
+            wrap.appendChild(document.createTextNode(` ${opt.text}`));
+            group.appendChild(wrap);
+        }
+        row.appendChild(group);
+        return row;
+    }
+
+    _renderStartSubstrateRow() {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-field';
+        const label = document.createElement('label');
+        label.textContent = 'Start substrate';
+        label.title = "Substrate for the start region. 'Auto' uses the active picker (quotas or mix).";
+        row.appendChild(label);
+
+        const select = document.createElement('select');
+        const autoOpt = document.createElement('option');
+        autoOpt.value = 'auto';
+        autoOpt.textContent = 'Auto';
+        select.appendChild(autoOpt);
+        for (const id of Object.keys(this._activeSubstrateDict())) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = id;
+            select.appendChild(opt);
+        }
+        select.value = this.params.startSubstrate ?? 'auto';
+        select.addEventListener('change', () => {
+            this.params.startSubstrate = select.value;
+            this._saveToLocalStorage();
+        });
+        row.appendChild(select);
+        return row;
+    }
+
+    /**
+     * The currently-active substrate dictionary — quotas dict in
+     * quotas mode (grid-growth only), otherwise the mix dict. The UI
+     * mutates whichever this returns when the user clicks "add" or
+     * edits a numeric input.
+     */
+    _activeSubstrateDict() {
+        if (this.mode === 'gridGrowth' && this.substrateMode === 'quotas') {
+            return this.substrateQuotas;
+        }
+        return this.substrateMix;
     }
 
     _renderSubstrateLibraryRow(entry) {
@@ -665,15 +793,16 @@ export class ProcgenPipelineUI {
         name.textContent = entry.id;
         row.appendChild(name);
 
-        // Disabled-look when already in the mix; clicking again is a
-        // no-op rather than an increment, which would conflict with
-        // the weight semantics.
-        const alreadySelected = Object.prototype.hasOwnProperty.call(this.substrateMix, entry.id);
+        // Disabled-look when already in the active dict; clicking
+        // again is a no-op rather than an increment, which would
+        // conflict with the weight/quota semantics.
+        const dict = this._activeSubstrateDict();
+        const alreadySelected = Object.prototype.hasOwnProperty.call(dict, entry.id);
         if (alreadySelected) {
             row.classList.add('procgen-pipeline-library-row-disabled');
         } else {
             row.addEventListener('click', () => {
-                this.substrateMix[entry.id] = 1;
+                dict[entry.id] = 1;
                 this._saveToLocalStorage();
                 this.render();
             });
@@ -681,7 +810,8 @@ export class ProcgenPipelineUI {
         return row;
     }
 
-    _renderSubstrateSelectedRow(id, weight) {
+    _renderSubstrateSelectedRow(id, value) {
+        const dict = this._activeSubstrateDict();
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-selected-row';
         const name = document.createElement('span');
@@ -694,14 +824,14 @@ export class ProcgenPipelineUI {
         input.min = 0;
         input.max = 999;
         input.step = 1;
-        input.value = weight;
+        input.value = value;
         input.className = 'procgen-pipeline-count-input';
         input.addEventListener('change', () => {
             const v = parseInt(input.value, 10);
             if (Number.isFinite(v) && v > 0) {
-                this.substrateMix[id] = v;
+                dict[id] = v;
             } else {
-                delete this.substrateMix[id];
+                delete dict[id];
             }
             this._saveToLocalStorage();
             this.render();
@@ -713,7 +843,7 @@ export class ProcgenPipelineUI {
         rm.textContent = '×';
         rm.title = `Remove ${id}`;
         rm.addEventListener('click', () => {
-            delete this.substrateMix[id];
+            delete dict[id];
             this._saveToLocalStorage();
             this.render();
         });
@@ -758,8 +888,9 @@ export class ProcgenPipelineUI {
             ...Object.entries(DEFAULT_ITEMS).map(([id, def]) => ({ id, def, kind: 'item' })),
             ...Object.entries(DEFAULT_OBSTACLES).map(([id, def]) => ({ id, def, kind: 'obstacle' })),
         ];
-        const selectedEntries = Object.keys(this.substrateMix)
-            .filter((id) => this.substrateMix[id] > 0)
+        const activeDict = this._activeSubstrateDict();
+        const selectedEntries = Object.keys(activeDict)
+            .filter((id) => activeDict[id] > 0)
             .sort()
             .map((id) => substrateRegistry.get(id))
             .filter(Boolean);
@@ -883,7 +1014,6 @@ export class ProcgenPipelineUI {
             { key: 'regionWidth',       label: 'Region width',     min: 2, max: 40 },
             { key: 'regionHeight',      label: 'Region height',    min: 2, max: 40 },
             { key: 'maxItemsPerRegion', label: 'Max items/region', min: 0, max: 10 },
-            { key: 'maxRegions',        label: 'Max regions',      min: 1, max: 99, nullable: true, placeholder: 'auto' },
         ];
 
         for (const f of fields) {
@@ -936,6 +1066,27 @@ export class ProcgenPipelineUI {
         xpEffectRow.appendChild(xpEffectLabel);
         xpEffectRow.appendChild(xpEffectSelect);
         section.appendChild(xpEffectRow);
+
+        // Stop-on-pool-empty toggle. When on, growMaze ends the
+        // moment the item pool is exhausted; when off (default),
+        // growth continues with empty item plans. Most useful in
+        // quota mode, where the user wants exact region counts.
+        if (this.mode === 'gridGrowth') {
+            const stopRow = document.createElement('div');
+            stopRow.className = 'procgen-pipeline-field';
+            const stopLabel = document.createElement('label');
+            stopLabel.textContent = 'Stop when item pool empty';
+            stopLabel.title = 'End grid-growth as soon as the item pool runs out. Off → continue with empty item plans.';
+            const stopInput = document.createElement('input');
+            stopInput.type = 'checkbox';
+            stopInput.checked = !!this.params.stopOnPoolEmpty;
+            stopInput.addEventListener('change', () => {
+                this.params.stopOnPoolEmpty = !!stopInput.checked;
+            });
+            stopRow.appendChild(stopLabel);
+            stopRow.appendChild(stopInput);
+            section.appendChild(stopRow);
+        }
 
         // Loop-mode toggle. Renders below the numeric grid. When on,
         // every generated rules.json carries loop_costs + manaEnabled
@@ -1467,7 +1618,11 @@ export class ProcgenPipelineUI {
 
     _runGridGrowth() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
-            maxItemsPerRegion, maxRegions } = this.params;
+            maxItemsPerRegion, maxRegions, startSubstrate,
+            stopOnPoolEmpty } = this.params;
+        const useQuotas = this.substrateMode === 'quotas';
+        const quotas = useQuotas ? this._effectiveSubstrateQuotas() : null;
+        const mix = !useQuotas ? this._effectiveSubstrateMix() : null;
         const { grid, pool, stats, startCell } = growMaze({
             gridDims: { width: gridWidth, height: gridHeight },
             regionSize: { width: regionWidth, height: regionHeight },
@@ -1478,7 +1633,11 @@ export class ProcgenPipelineUI {
             growthParams: {
                 maxItemsPerRegion,
                 maxRegions: maxRegions ?? null,
-                ...(this._effectiveSubstrateMix() ? { substrateMix: this._effectiveSubstrateMix() } : {}),
+                stopOnPoolEmpty: !!stopOnPoolEmpty,
+                ...(quotas ? { substrateQuotas: quotas } : {}),
+                ...(mix ? { substrateMix: mix } : {}),
+                ...(startSubstrate && startSubstrate !== 'auto'
+                    ? { startSubstrate } : {}),
             },
             hazardOpts: this._effectiveHazardOpts(),
         });
@@ -1588,6 +1747,17 @@ export class ProcgenPipelineUI {
     }
 
     /**
+     * Same filtering / null-on-empty contract as
+     * _effectiveSubstrateMix, but for the per-substrate region quotas.
+     * Used only in grid-growth quotas mode.
+     */
+    _effectiveSubstrateQuotas() {
+        const positive = Object.entries(this.substrateQuotas).filter(([, q]) => q > 0);
+        if (positive.length === 0) return null;
+        return Object.fromEntries(positive);
+    }
+
+    /**
      * Build the hazardOpts payload for growMaze / topDownFromRulesJson
      * from the panel's UI state. Returns null when hazards are
      * disabled — both engine entries treat null as "no hazards."
@@ -1674,6 +1844,8 @@ export class ProcgenPipelineUI {
                 params: this.params,
                 scenario: this.scenario,
                 substrateMix: this.substrateMix,
+                substrateQuotas: this.substrateQuotas,
+                substrateMode: this.substrateMode,
                 mode: this.mode,
             }));
             this.message = 'Saved.';
@@ -1696,16 +1868,22 @@ export class ProcgenPipelineUI {
                     obstacles: { ...(parsed.scenario.obstacles ?? {}) },
                 };
             }
-            if (parsed.substrateMix && typeof parsed.substrateMix === 'object') {
-                // Drop entries for substrates that aren't currently
-                // registered (e.g. saved before a substrate module
-                // was removed).
-                this.substrateMix = {};
-                for (const [id, weight] of Object.entries(parsed.substrateMix)) {
-                    if (substrateRegistry.has(id) && weight > 0) {
-                        this.substrateMix[id] = weight;
+            // Drop entries for substrates that aren't currently
+            // registered (e.g. saved before a substrate module was
+            // removed). Same filter for mix and quotas dicts.
+            const filterDict = (raw) => {
+                const out = {};
+                if (raw && typeof raw === 'object') {
+                    for (const [id, v] of Object.entries(raw)) {
+                        if (substrateRegistry.has(id) && v > 0) out[id] = v;
                     }
                 }
+                return out;
+            };
+            this.substrateMix = filterDict(parsed.substrateMix);
+            this.substrateQuotas = filterDict(parsed.substrateQuotas);
+            if (parsed.substrateMode === 'quotas' || parsed.substrateMode === 'mix') {
+                this.substrateMode = parsed.substrateMode;
             }
             if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown') {
                 this.mode = parsed.mode;
