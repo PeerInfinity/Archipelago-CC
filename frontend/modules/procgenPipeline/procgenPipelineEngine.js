@@ -1868,6 +1868,301 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
     };
 }
 
+// --- Shuffled-spiral layout driver ---
+//
+// Alternative to growMaze. Auto-sizes a grid that fits sum(quotas)
+// regions, places one region per cell in a clockwise square spiral
+// starting east of the center, and wires every cell to its
+// in-bounds neighbors with always-accessible exits. Substrates are
+// shuffled across the spiral sequence (substrate quotas determine
+// multiplicity); within each substrate, regions are emitted in
+// substrate-native order so a zone-based substrate like JtA sees
+// zone 0, 1, 2, ... in spiral order regardless of where its slots
+// land in the shuffle.
+//
+// v1 scope:
+//   - 4-way always-accessible exits per cell
+//   - no items / obstacles for zone-based substrates (procedural
+//     substrates still draw from the pool via buildSubstrateRegion)
+//   - clockwise spiral, east first step (not configurable yet)
+//   - no difficulty progression for procedural substrates
+
+/**
+ * Generator: yields cells in a clockwise square spiral starting at
+ * `start` and stepping `firstStep` first. Coords can go negative;
+ * call sites that need a finite slice should offset by min(gx)/min(gy).
+ *
+ * Step counts follow the classic outward-spiral pattern 1,1,2,2,3,3,
+ * ... — one leg in the current direction, then a 90° CW turn, repeat.
+ */
+export function* spiralCells(start = { gx: 0, gy: 0 }, firstStep = 'E') {
+    const DIRS = { E: [1, 0], S: [0, 1], W: [-1, 0], N: [0, -1] };
+    const TURN_CW = { E: 'S', S: 'W', W: 'N', N: 'E' };
+    if (!DIRS[firstStep]) {
+        throw new Error(`spiralCells: invalid firstStep '${firstStep}'`);
+    }
+    let cell = { gx: start.gx, gy: start.gy };
+    yield cell;
+    let dir = firstStep;
+    let stepCount = 1;
+    while (true) {
+        for (let leg = 0; leg < 2; leg++) {
+            const [dx, dy] = DIRS[dir];
+            for (let i = 0; i < stepCount; i++) {
+                cell = { gx: cell.gx + dx, gy: cell.gy + dy };
+                yield cell;
+            }
+            dir = TURN_CW[dir];
+        }
+        stepCount++;
+    }
+}
+
+/**
+ * Build the ordered substrate sequence for a shuffled-spiral run.
+ * For quotas {A:3, B:2}, returns a 5-element array containing 3 'A'
+ * and 2 'B' entries in a shuffled order. When `startSubstrate` is
+ * provided (and has remaining quota), it's pinned to position 0;
+ * the remainder is shuffled.
+ */
+export function buildShuffledSubstrateSequence(quotas, startSubstrate, rng) {
+    const slots = [];
+    for (const [id, count] of Object.entries(quotas)) {
+        for (let i = 0; i < count; i++) slots.push(id);
+    }
+    // Pull one startSubstrate slot off first if requested.
+    let head = null;
+    if (startSubstrate && startSubstrate !== 'auto') {
+        const idx = slots.indexOf(startSubstrate);
+        if (idx < 0) {
+            throw new Error(
+                `arrangeShuffledSpiral: startSubstrate '${startSubstrate}' `
+                + `has no quota`,
+            );
+        }
+        head = slots.splice(idx, 1)[0];
+    }
+    // Fisher–Yates shuffle on the remainder.
+    for (let i = slots.length - 1; i > 0; i--) {
+        const j = Math.floor(rng.next() * (i + 1));
+        [slots[i], slots[j]] = [slots[j], slots[i]];
+    }
+    return head !== null ? [head, ...slots] : slots;
+}
+
+// Perimeter midpoint for a synthetic exit on the given side. Used
+// only for zone-based substrates where tile geometry is fictional
+// but the procgen pipeline still wants a tile_position. The values
+// satisfy stitchGrid's posKey lookup and procgenPlayer's entrance
+// tracking; the substrate runtime ignores them.
+function perimeterMidpoint(side, size) {
+    const w = size.width, h = size.height;
+    if (side === 'N') return { x: Math.floor(w / 2), y: 0 };
+    if (side === 'S') return { x: Math.floor(w / 2), y: h - 1 };
+    if (side === 'W') return { x: 0, y: Math.floor(h / 2) };
+    if (side === 'E') return { x: w - 1, y: Math.floor(h / 2) };
+    throw new Error(`perimeterMidpoint: invalid side '${side}'`);
+}
+
+/**
+ * Build a region for a zone-based substrate (one with no
+ * generateRegionCore — currently just JtA). The result shape mirrors
+ * what buildSubstrateRegion returns so downstream code (stitchGrid,
+ * wallOff, buildPresetSidecars, buildRulesJson) can consume it
+ * uniformly.
+ */
+function synthesizeZoneRegion({
+    substrate, region_id, zoneIdx, regionSize, exitSides, adapter,
+}) {
+    const exitsMap = new Map();
+    const exitsPlaced = [];
+    const extractedExits = [];
+    // One synthetic exit per in-bounds neighbor side. id format
+    // 'exit_<side>' is unique per region and survives serialization.
+    for (const side of exitSides) {
+        const exit_id = `exit_${side}`;
+        const tile = perimeterMidpoint(side, regionSize);
+        exitsMap.set(exit_id, {
+            exit_id,
+            x: tile.x,
+            y: tile.y,
+            side,
+            exitName: exit_id,
+            targetRegion: null,   // resolved by stitchGrid
+            isBackExit: false,
+            isTeleporter: false,
+        });
+        exitsPlaced.push({ exit_id, side, tile_position: { x: tile.x, y: tile.y } });
+        extractedExits.push({
+            id: exit_id,
+            position: { x: tile.x, y: tile.y },
+            target_region: null,
+            paths: [{ path_id: 'p1', obstacles: [] }],
+        });
+    }
+    const zonePayload = adapter.synthesizeZonePayload
+        ? adapter.synthesizeZonePayload(zoneIdx)
+        : {};
+    return {
+        substrate,
+        region_id,
+        playable_payload: { ...zonePayload, exits: exitsMap },
+        extracted_rules: { exits: extractedExits, locations: [] },
+        placed_items: [],
+        placed_obstacles: [],
+        exits_placed: exitsPlaced,
+        render_hint: substrate,
+        sidecar_filename: `${region_id}.json`,
+        wall_stats: null,
+        biome: null,
+        grow_telemetry: null,
+    };
+}
+
+export function arrangeShuffledSpiral(config) {
+    const {
+        regionSize,
+        itemPool = {},
+        obstaclePool = {},
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        seed = 1,
+        regionParams = {},
+        growthParams = {},
+        hazardOpts = null,
+    } = config;
+    if (!regionSize || !regionSize.width || !regionSize.height) {
+        throw new Error('arrangeShuffledSpiral: regionSize.{width,height} required');
+    }
+    const {
+        substrateQuotas,
+        startSubstrate = null,
+        maxItemsPerRegion = 2,
+        assumeBidirectional = true,
+    } = growthParams;
+    if (!substrateQuotas || Object.keys(substrateQuotas).length === 0) {
+        throw new Error('arrangeShuffledSpiral: growthParams.substrateQuotas required');
+    }
+    // Upfront validation: every substrate must be registered, and any
+    // zone-based substrate's quota must fit within its zoneCount.
+    for (const [sub, count] of Object.entries(substrateQuotas)) {
+        if (count <= 0) continue;
+        const adapter = substrateRegistry.get(sub);
+        if (!adapter) {
+            throw new Error(
+                `arrangeShuffledSpiral: substrate '${sub}' is not registered`,
+            );
+        }
+        if (typeof adapter.zoneCount === 'number' && count > adapter.zoneCount) {
+            throw new Error(
+                `arrangeShuffledSpiral: quota for '${sub}' (${count}) `
+                + `exceeds substrate zoneCount (${adapter.zoneCount})`,
+            );
+        }
+    }
+
+    const rng = createRng(seed);
+    const sequence = buildShuffledSubstrateSequence(
+        substrateQuotas, startSubstrate, rng,
+    );
+    if (sequence.length === 0) {
+        throw new Error('arrangeShuffledSpiral: substrateQuotas sum to zero');
+    }
+
+    // Auto-size grid: take the first N spiral cells, then offset so
+    // every coord is non-negative.
+    const rawCells = [];
+    const gen = spiralCells({ gx: 0, gy: 0 }, 'E');
+    for (let i = 0; i < sequence.length; i++) rawCells.push(gen.next().value);
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const c of rawCells) {
+        if (c.gx < minX) minX = c.gx;
+        if (c.gx > maxX) maxX = c.gx;
+        if (c.gy < minY) minY = c.gy;
+        if (c.gy > maxY) maxY = c.gy;
+    }
+    const gridDims = { width: maxX - minX + 1, height: maxY - minY + 1 };
+    const cells = rawCells.map((c) => ({ gx: c.gx - minX, gy: c.gy - minY }));
+    const startCell = cells[0];
+
+    const grid = new Grid(gridDims);
+    const pool = new ScenarioPool({
+        items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
+    });
+    const zoneCounter = {};  // per-substrate "Nth zone" counter
+    const occupied = new Set(cells.map((c) => cellKey(c)));
+
+    for (let i = 0; i < cells.length; i++) {
+        const cell = cells[i];
+        const substrate = sequence[i];
+        const adapter = getAdapter(substrate);
+        const zoneIdx = zoneCounter[substrate] ?? 0;
+        zoneCounter[substrate] = zoneIdx + 1;
+
+        // Sides whose geographic neighbor is in-bounds AND will hold
+        // a spiral region (occupied set is the universe of cells).
+        const exitSides = [];
+        for (const side of SIDES) {
+            const neighbor = grid.neighborCell(cell, side);
+            if (!neighbor) continue;
+            if (occupied.has(cellKey(neighbor))) exitSides.push(side);
+        }
+
+        let region;
+        if (typeof adapter.zoneCount === 'number') {
+            region = synthesizeZoneRegion({
+                substrate,
+                region_id: regionIdForCell(cell),
+                zoneIdx,
+                regionSize,
+                exitSides,
+                adapter,
+            });
+        } else {
+            const arrival = accumulatedInventory(grid);
+            const plan = pool.planPlacement({
+                arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
+            });
+            region = buildSubstrateRegion({
+                substrate,
+                region_id: regionIdForCell(cell),
+                size: regionSize,
+                entrances: [],
+                exit_sides: exitSides,
+                arrival_inventory: arrival,
+                items_to_place: plan.items_to_place,
+                obstacles_to_place: plan.obstacles_to_place,
+                itemLib, obstacleLib, rng, params: regionParams,
+                hazardOpts,
+            });
+            pool.markPlaced({
+                placed_items: region.placed_items,
+                placed_obstacles: region.placed_obstacles,
+            });
+        }
+        grid.placeRegion(cell, region);
+    }
+
+    // Resolve exit targets to neighbor region ids. Same pass the
+    // grid-growth driver uses; for zone-based regions our synthetic
+    // tile positions match the perimeter-midpoint convention so the
+    // posKey lookup inside stitchGrid hits.
+    stitchGrid(grid);
+    if (assumeBidirectional) {
+        reconcileBidirectionalExits(grid, regionSize, 'add');
+    }
+    wallOffUnusedExits(grid);
+
+    const stats = {
+        regionsBuilt: cells.length,
+        regionsSkipped: 0,
+        teleportersPlaced: 0,
+        stopReason: 'spiral_complete',
+        substrateCounts: { ...zoneCounter },
+    };
+    return { grid, pool, stats, startCell };
+}
+
 export function buildPresetSidecars(grid, {
     playerId = '1',
     baseObstacleLib = DEFAULT_OBSTACLES,

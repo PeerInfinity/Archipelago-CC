@@ -6,6 +6,7 @@ import { createRng } from '../shared/rng.js';
 // available for the mixed-substrate end-to-end checks at the bottom.
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
@@ -17,6 +18,7 @@ import {
     pickSubstrate, rollSubstrateMix,
     pickSubstrateWithQuota, totalRemainingQuota,
     reconcileBidirectionalExits,
+    spiralCells, buildShuffledSubstrateSequence, arrangeShuffledSpiral,
     computeSourceCounts,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
@@ -2781,5 +2783,194 @@ describe('mixed substrates — end to end', () => {
                 expect(r.biome?.id).toBe('classic');
             }
         });
+    });
+});
+
+describe('spiralCells', () => {
+    function take(n, gen) {
+        const out = [];
+        for (let i = 0; i < n; i++) out.push(gen.next().value);
+        return out;
+    }
+
+    it('yields the first 9 cells filling a centered 3x3 (CW from E)', () => {
+        // Expected pattern from origin, CW, E first:
+        // 7 8 9
+        // 6 1 2
+        // 5 4 3
+        const cells = take(9, spiralCells({ gx: 0, gy: 0 }, 'E'));
+        expect(cells).toEqual([
+            { gx: 0,  gy: 0 },   // 1
+            { gx: 1,  gy: 0 },   // 2 E
+            { gx: 1,  gy: 1 },   // 3 S
+            { gx: 0,  gy: 1 },   // 4 W
+            { gx: -1, gy: 1 },   // 5 W
+            { gx: -1, gy: 0 },   // 6 N
+            { gx: -1, gy: -1 },  // 7 N
+            { gx: 0,  gy: -1 },  // 8 E
+            { gx: 1,  gy: -1 },  // 9 E
+        ]);
+    });
+
+    it('cell 10 is east of cell 9, continuing the spiral outward', () => {
+        const cells = take(10, spiralCells({ gx: 0, gy: 0 }, 'E'));
+        expect(cells[9]).toEqual({ gx: 2, gy: -1 });
+    });
+
+    it('rejects invalid firstStep', () => {
+        expect(() => [...take(1, spiralCells({ gx: 0, gy: 0 }, 'XX'))])
+            .toThrow(/invalid firstStep/);
+    });
+});
+
+describe('buildShuffledSubstrateSequence', () => {
+    it('produces a sequence of length sum(quotas) with correct multiplicities', () => {
+        const rng = createRng(1);
+        const seq = buildShuffledSubstrateSequence(
+            { jta: 3, maze: 2 }, null, rng,
+        );
+        expect(seq).toHaveLength(5);
+        const counts = seq.reduce((c, s) => { c[s] = (c[s] || 0) + 1; return c; }, {});
+        expect(counts).toEqual({ jta: 3, maze: 2 });
+    });
+
+    it("pins startSubstrate to position 0 (and counts against its quota)", () => {
+        const rng = createRng(1);
+        const seq = buildShuffledSubstrateSequence(
+            { jta: 3, maze: 2 }, 'jta', rng,
+        );
+        expect(seq[0]).toBe('jta');
+        const counts = seq.reduce((c, s) => { c[s] = (c[s] || 0) + 1; return c; }, {});
+        expect(counts).toEqual({ jta: 3, maze: 2 });
+    });
+
+    it('throws when startSubstrate has no quota', () => {
+        const rng = createRng(1);
+        expect(() => buildShuffledSubstrateSequence(
+            { jta: 3 }, 'maze', rng,
+        )).toThrow(/no quota/);
+    });
+
+    it('is deterministic for a fixed rng seed', () => {
+        const a = buildShuffledSubstrateSequence(
+            { jta: 3, maze: 2 }, null, createRng(7),
+        );
+        const b = buildShuffledSubstrateSequence(
+            { jta: 3, maze: 2 }, null, createRng(7),
+        );
+        expect(a).toEqual(b);
+    });
+});
+
+describe('arrangeShuffledSpiral', () => {
+    function defaultConfig(overrides = {}) {
+        return {
+            regionSize: { width: 8, height: 6 },
+            seed: 1,
+            ...overrides,
+        };
+    }
+
+    it('places one region per quota, builds an auto-sized grid', () => {
+        const { grid, stats } = arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { jta: 5 } },
+        }));
+        expect(stats.regionsBuilt).toBe(5);
+        expect(stats.stopReason).toBe('spiral_complete');
+        expect(stats.substrateCounts).toEqual({ jta: 5 });
+        // 5 spiral cells fit in a 3-wide × 2-tall bounding box.
+        const cells = [...grid.cells.keys()];
+        expect(cells).toHaveLength(5);
+    });
+
+    it("assigns jta zone indices in order (0, 1, 2, ...) regardless of spiral position", () => {
+        const { grid } = arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { jta: 4 }, startSubstrate: 'jta' },
+        }));
+        const zones = [...grid.cells.values()]
+            .filter((r) => r.substrate === 'jta')
+            .map((r) => r.playable_payload.jtaZone)
+            .sort((a, b) => a - b);
+        expect(zones).toEqual([0, 1, 2, 3]);
+    });
+
+    it('throws when a quota exceeds the substrate zoneCount', () => {
+        expect(() => arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { jta: 20 } },
+        }))).toThrow(/exceeds substrate zoneCount/);
+    });
+
+    it('throws when growthParams.substrateQuotas is missing or empty', () => {
+        expect(() => arrangeShuffledSpiral(defaultConfig({
+            growthParams: {},
+        }))).toThrow(/substrateQuotas required/);
+        expect(() => arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: {} },
+        }))).toThrow(/substrateQuotas required/);
+    });
+
+    it('throws when a substrate id is not registered', () => {
+        expect(() => arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { bogus: 1 } },
+        }))).toThrow(/not registered/);
+    });
+
+    it('every exit has a reciprocal pointing back (always-accessible 4-way)', () => {
+        const { grid } = arrangeShuffledSpiral(defaultConfig({
+            seed: 3,
+            growthParams: { substrateQuotas: { jta: 3, maze: 2 }, startSubstrate: 'jta' },
+            itemPool: { key_red: 4 },
+            obstaclePool: { door_red: 4 },
+        }));
+        const pairs = [];
+        for (const region of grid.allRegions()) {
+            for (const [, e] of region.playable_payload.exits) {
+                if (e.targetRegion) {
+                    pairs.push({ from: region.region_id, to: e.targetRegion });
+                }
+            }
+        }
+        for (const p of pairs) {
+            const reciprocal = pairs.find((q) => q.from === p.to && q.to === p.from);
+            expect(reciprocal).toBeTruthy();
+        }
+    });
+
+    it('start substrate pin lands on the startCell', () => {
+        const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { jta: 3, maze: 2 }, startSubstrate: 'maze' },
+            itemPool: { key_red: 4 },
+            obstaclePool: { door_red: 4 },
+        }));
+        const startRegion = grid.getRegion(startCell);
+        expect(startRegion.substrate).toBe('maze');
+    });
+
+    it('runs end-to-end into buildRulesJson without errors', () => {
+        const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { jta: 4, maze: 2 }, startSubstrate: 'jta' },
+            itemPool: { key_red: 4 },
+            obstaclePool: { door_red: 4 },
+        }));
+        const rules = buildRulesJson(grid, { startCell, seed: 1 });
+        expect(rules.regions['1']).toBeTruthy();
+        const sidecars = rules.preset_sidecars['1'];
+        const jtaRegions = Object.values(sidecars).filter((r) => r.substrate === 'jta');
+        expect(jtaRegions).toHaveLength(4);
+        for (const r of jtaRegions) {
+            expect(typeof r.playable_payload.jtaZone).toBe('number');
+        }
+    });
+
+    it('is deterministic for a fixed seed', () => {
+        const cfg = defaultConfig({
+            seed: 11,
+            growthParams: { substrateQuotas: { jta: 3, maze: 2 } },
+        });
+        const a = arrangeShuffledSpiral(cfg);
+        const b = arrangeShuffledSpiral(cfg);
+        const aIds = [...a.grid.cells.values()].map((r) => r.region_id + ':' + r.substrate);
+        const bIds = [...b.grid.cells.values()].map((r) => r.region_id + ':' + r.substrate);
+        expect(aIds).toEqual(bIds);
     });
 });

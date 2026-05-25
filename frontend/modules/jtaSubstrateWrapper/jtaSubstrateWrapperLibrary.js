@@ -9,6 +9,8 @@
  * substrate just renders the corresponding zone.
  */
 
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'jta',
@@ -45,6 +47,20 @@ export const substrateRegistryEntry = Object.freeze({
         return { ...p, exits: exitsMap };
     },
 
+    // Inverse of deserializeWorld for write-to-disk. buildPresetSidecars
+    // invokes this on every region during preset emission; without it
+    // jta regions emitted by a procgen layout driver (e.g.
+    // arrangeShuffledSpiral) would fail at sidecar build time. Only
+    // the runtime-Map exits field needs special handling — everything
+    // else round-trips as-is.
+    serializeWorld: (world) => {
+        const w = world ?? {};
+        const exitsArray = w.exits instanceof Map
+            ? [...w.exits.values()]
+            : (Array.isArray(w.exits) ? w.exits : []);
+        return { ...w, exits: exitsArray };
+    },
+
     // Playback bot integration is deferred to a later phase. Until
     // then, the registry's getPlaybackController returns null and the
     // bot no-ops on JtA regions (per the substrate registry contract).
@@ -53,4 +69,31 @@ export const substrateRegistryEntry = Object.freeze({
     // Build-time hooks (generateRegionCore / placeFromItems / etc.)
     // are omitted in v1 — procgen does not generate JtA-specific
     // region content; it just records `jtaZone` in the sidecar.
+    //
+    // --- Zone-based substrate metadata ---
+    //
+    // Layout drivers that map grid positions to ordered "zones"
+    // (currently arrangeShuffledSpiral) read these two fields:
+    //   - zoneCount: how many discrete zones this substrate exposes.
+    //     Drivers refuse to allocate more than this many regions to
+    //     the substrate.
+    //   - synthesizeZonePayload(zoneIdx): returns a playable_payload
+    //     fragment for the Nth zone. The driver merges this with the
+    //     layout's own fields (exits, etc.) before stamping the
+    //     sidecar.
+    //
+    // Total zone count is owned by the JtA build at
+    // iframe_games/journey-to-ascension/build/zones.js. Kept in sync
+    // by hand for now; if it drifts the runtime warns on loadZone
+    // and refuses the bad index.
+    zoneCount: 16,
+    synthesizeZonePayload: (zoneIdx) => ({ jtaZone: zoneIdx }),
 });
+
+// Side-effect on import: register the JtA substrate so the procgen
+// pipeline can resolve it without booting the panel module. Same
+// pattern as mazeRoom/textAdventureSubstrate libraries — idempotent
+// because index.js's host hook also calls register() in the live app.
+if (!substrateRegistry.has(substrateRegistryEntry.id)) {
+    substrateRegistry.register(substrateRegistryEntry);
+}

@@ -8,6 +8,7 @@ import { setPanelInstance, getModuleApis } from './index.js';
 import eventBus from '../../app/core/eventBus.js';
 import {
     growMaze,
+    arrangeShuffledSpiral,
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
@@ -519,6 +520,7 @@ export class ProcgenPipelineUI {
         row.className = 'procgen-pipeline-mode-row';
         for (const [value, label] of [
             ['gridGrowth', 'Grid growth (build from a scenario pool)'],
+            ['shuffledSpiral', 'Shuffled spiral (zones laid out from center)'],
             ['topDown', 'Top-down (realise an existing rules.json)'],
         ]) {
             const btn = document.createElement('label');
@@ -624,12 +626,13 @@ export class ProcgenPipelineUI {
         section.className = 'procgen-pipeline-scenario';
         // Title supplied by the collapsible wrapper in render().
 
-        // Top: Substrates (always visible — both modes).
+        // Top: Substrates (always visible — every mode needs them).
         section.appendChild(this._renderSubstratesSubsection());
 
-        // Bottom: Library + Counts (grid-growth-only; top-down's
-        // items come from its source rules.json, not the pool).
-        if (this.mode === 'gridGrowth') {
+        // Bottom: Library + Counts. Shown for the two modes that
+        // build regions from a scenario pool. Top-down's items come
+        // from its source rules.json, not the pool, so it skips.
+        if (this.mode === 'gridGrowth' || this.mode === 'shuffledSpiral') {
             section.appendChild(this._renderLibrarySubsection());
         }
 
@@ -639,14 +642,16 @@ export class ProcgenPipelineUI {
     _renderSubstratesSubsection() {
         const wrap = document.createElement('div');
 
-        // Top: mode toggle (quotas vs mix). Grid-growth only — top-down
-        // always uses the mix.
+        // Top: mode toggle (quotas vs mix). Grid-growth only —
+        // shuffled-spiral always uses quotas; top-down always uses
+        // the mix.
         if (this.mode === 'gridGrowth') {
             wrap.appendChild(this._renderSubstrateModeToggle());
         }
 
         const dict = this._activeSubstrateDict();
-        const isQuotas = this.mode === 'gridGrowth' && this.substrateMode === 'quotas';
+        const isQuotas = this.mode === 'shuffledSpiral'
+            || (this.mode === 'gridGrowth' && this.substrateMode === 'quotas');
 
         const grid = document.createElement('div');
         grid.className = 'procgen-pipeline-scenario-grid';
@@ -704,10 +709,11 @@ export class ProcgenPipelineUI {
         grid.appendChild(right);
         wrap.appendChild(grid);
 
-        // Start-substrate dropdown — applies in both modes. 'auto'
-        // delegates to pickSubstrate (weighted-by-mix or weighted-by-
-        // remaining-quota depending on substrateMode).
-        if (this.mode === 'gridGrowth') {
+        // Start-substrate dropdown — applies to both pool-building
+        // modes. 'auto' delegates to pickSubstrate (weighted-by-mix
+        // or weighted-by-remaining-quota) in grid-growth, and lets
+        // the shuffle choose in shuffled-spiral.
+        if (this.mode === 'gridGrowth' || this.mode === 'shuffledSpiral') {
             wrap.appendChild(this._renderStartSubstrateRow());
         }
 
@@ -784,6 +790,10 @@ export class ProcgenPipelineUI {
      * edits a numeric input.
      */
     _activeSubstrateDict() {
+        // Shuffled-spiral always uses fixed per-substrate counts; the
+        // mix dict is meaningless there. Grid-growth honors the mode
+        // toggle. Top-down (no toggle) keeps the legacy mix dict.
+        if (this.mode === 'shuffledSpiral') return this.substrateQuotas;
         if (this.mode === 'gridGrowth' && this.substrateMode === 'quotas') {
             return this.substrateQuotas;
         }
@@ -1012,10 +1022,17 @@ export class ProcgenPipelineUI {
         const grid = document.createElement('div');
         grid.className = 'procgen-pipeline-grid';
 
+        // Grid dims are user-controlled in grid-growth / top-down,
+        // but shuffled-spiral auto-sizes the grid from the quotas
+        // sum — hide the inputs in that mode so the user isn't led
+        // to think they take effect.
+        const showGridDims = this.mode !== 'shuffledSpiral';
         const fields = [
             { key: 'seed',              label: 'Seed',             min: 0 },
-            { key: 'gridWidth',         label: 'Grid width',       min: 1, max: 10 },
-            { key: 'gridHeight',        label: 'Grid height',      min: 1, max: 10 },
+            ...(showGridDims ? [
+                { key: 'gridWidth',     label: 'Grid width',       min: 1, max: 10 },
+                { key: 'gridHeight',    label: 'Grid height',      min: 1, max: 10 },
+            ] : []),
             { key: 'regionWidth',       label: 'Region width',     min: 2, max: 40 },
             { key: 'regionHeight',      label: 'Region height',    min: 2, max: 40 },
             { key: 'maxItemsPerRegion', label: 'Max items/region', min: 0, max: 10 },
@@ -1638,6 +1655,8 @@ export class ProcgenPipelineUI {
         try {
             if (this.mode === 'topDown') {
                 this._runTopDown();
+            } else if (this.mode === 'shuffledSpiral') {
+                this._runShuffledSpiral();
             } else {
                 this._runGridGrowth();
             }
@@ -1688,6 +1707,50 @@ export class ProcgenPipelineUI {
             completionConditionItem: victoryItemId,
             procgenMetadata: {
                 driver: 'grid-growth',
+                stop_reason: stats.stopReason,
+            },
+        });
+        this.result = {
+            grid,
+            regionSize: { width: regionWidth, height: regionHeight },
+            stats,
+            poolRemaining: pool.snapshot(),
+            rulesJson,
+        };
+    }
+
+    _runShuffledSpiral() {
+        const { seed, regionWidth, regionHeight, maxItemsPerRegion,
+            startSubstrate } = this.params;
+        const quotas = this._effectiveSubstrateQuotas();
+        if (!quotas) {
+            throw new Error('shuffled-spiral requires at least one substrate '
+                + 'with a positive quota (set Substrate allocation to Quotas)');
+        }
+        const { grid, pool, stats, startCell } = arrangeShuffledSpiral({
+            regionSize: { width: regionWidth, height: regionHeight },
+            itemPool: { ...this.scenario.items },
+            obstaclePool: { ...this.scenario.obstacles },
+            seed,
+            regionParams: {},
+            growthParams: {
+                substrateQuotas: quotas,
+                maxItemsPerRegion,
+                ...(startSubstrate && startSubstrate !== 'auto'
+                    ? { startSubstrate } : {}),
+            },
+            hazardOpts: this._effectiveHazardOpts(),
+        });
+        const victoryItemId = Object.entries(this.scenario.items)
+            .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0]
+            ?? null;
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed,
+            enableLoopMode: !!this.params.enableLoopMode,
+            regionXpEffect: this.params.regionXpEffect ?? 'cost',
+            completionConditionItem: victoryItemId,
+            procgenMetadata: {
+                driver: 'shuffled-spiral',
                 stop_reason: stats.stopReason,
             },
         });
@@ -1919,7 +1982,8 @@ export class ProcgenPipelineUI {
             if (parsed.substrateMode === 'quotas' || parsed.substrateMode === 'mix') {
                 this.substrateMode = parsed.substrateMode;
             }
-            if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown') {
+            if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown'
+                    || parsed.mode === 'shuffledSpiral') {
                 this.mode = parsed.mode;
             }
         } catch (e) {
