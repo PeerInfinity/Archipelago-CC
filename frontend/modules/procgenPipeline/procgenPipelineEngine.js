@@ -400,6 +400,108 @@ export function wallOffUnusedExits(grid) {
     }
 }
 
+/**
+ * Bidirectional-exit invariant pass. After stitchGrid wires every
+ * forward exit to its geographic neighbor, two regions can end up
+ * with an asymmetric pair: region A has an exit to region B but
+ * region B has none back. This happens at cross-branch boundaries
+ * — the BFS-tree back-exit code only ever adds back-exits pointing
+ * at the parent, not at stitched-neighbor cells.
+ *
+ * `mode` decides how to reconcile:
+ *   - 'add' (default): create a reciprocal back-exit on the target.
+ *     The back-exit lands on the opposite side at the mirrored
+ *     tile, matching the existing parent-child back-exit shape so
+ *     the runtime and the rules compiler see the same structure.
+ *   - 'remove': null the source exit's target_region. The next call
+ *     to wallOffUnusedExits drops it from playable_payload,
+ *     extracted_rules, and exits_placed.
+ *
+ * Must run after stitchGrid (so targetRegion fields are resolved)
+ * and before wallOffUnusedExits (so 'remove' mode's nulled targets
+ * get cleaned up in one place).
+ */
+export function reconcileBidirectionalExits(grid, regionSize, mode = 'add') {
+    if (mode !== 'add' && mode !== 'remove') {
+        throw new Error(`reconcileBidirectionalExits: unknown mode '${mode}'`);
+    }
+    const byName = new Map();
+    for (const region of grid.allRegions()) {
+        byName.set(region.region_id, region);
+    }
+    for (const sourceRegion of grid.allRegions()) {
+        const exits = sourceRegion.playable_payload?.exits;
+        if (!exits) continue;
+        // Snapshot — addReciprocalBackExit mutates the target's
+        // exits, not the source's, so iteration of `exits` is safe;
+        // but snapshotting keeps the loop trivially correct as the
+        // function evolves.
+        for (const [sourceExitId, sourceExit] of [...exits]) {
+            if (!sourceExit?.targetRegion) continue;
+            const target = byName.get(sourceExit.targetRegion);
+            if (!target) continue;
+            const targetExits = target.playable_payload?.exits;
+            if (!targetExits) continue;
+            let hasReciprocal = false;
+            for (const [, te] of targetExits) {
+                if (te?.targetRegion === sourceRegion.region_id) {
+                    hasReciprocal = true;
+                    break;
+                }
+            }
+            if (hasReciprocal) continue;
+            if (mode === 'add') {
+                addReciprocalBackExit(
+                    sourceRegion, sourceExit, sourceExitId, target, regionSize,
+                );
+            } else {
+                removeAsymmetricExit(sourceRegion, sourceExit, sourceExitId);
+            }
+        }
+    }
+}
+
+function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetRegion, regionSize) {
+    const backSide = OPPOSITE_SIDE[sourceExit.side];
+    if (!backSide) return;  // null/unknown side — can't mirror
+    const backTile = mirrorTileAcrossSide(
+        { x: sourceExit.x, y: sourceExit.y },
+        sourceExit.side,
+        regionSize,
+    );
+    const backExitId = sourceRegion.region_id;
+    // Don't collide with an existing exit of the same id. Should be
+    // rare — region ids are unique — but a defensive guard.
+    if (targetRegion.playable_payload.exits.has(backExitId)) return;
+    targetRegion.playable_payload.exits.set(backExitId, {
+        exit_id: backExitId,
+        x: backTile.x,
+        y: backTile.y,
+        side: backSide,
+        exitName: backExitId,
+        targetRegion: sourceRegion.region_id,
+        targetExitId: sourceExitId,
+        isBackExit: true,
+        isTeleporter: !!sourceExit.isTeleporter,
+    });
+    if (Array.isArray(targetRegion.extracted_rules?.exits)) {
+        targetRegion.extracted_rules.exits.push({
+            id: backExitId,
+            position: { x: backTile.x, y: backTile.y },
+            target_region: sourceRegion.region_id,
+            paths: [{ path_id: 'p1', obstacles: [] }],
+        });
+    }
+    // Round-trip link so transitions can resolve the entrance tile.
+    sourceExit.targetExitId = backExitId;
+}
+
+function removeAsymmetricExit(sourceRegion, sourceExit, sourceExitId) {
+    sourceExit.targetRegion = null;
+    const er = sourceRegion.extracted_rules?.exits?.find((e) => e.id === sourceExitId);
+    if (er) er.target_region = null;
+}
+
 // --- Growth loop helpers ---
 
 function regionIdForCell(cell) {
@@ -643,6 +745,13 @@ export function growMaze(config) {
         // early. When false (default), growth continues and later
         // regions are built with empty item plans.
         stopOnPoolEmpty = false,
+        // How the bidirectional post-pass reconciles asymmetric exit
+        // pairs left by cross-branch stitching:
+        //   - 'add' (default): create a reciprocal back-exit on the
+        //     target region so the player can walk back.
+        //   - 'remove': drop the one-way forward exit instead.
+        // No-op when assumeBidirectional is false.
+        asymmetricExits = 'add',
     } = growthParams;
 
     // Per-substrate running counter for quota mode. Mutated as each
@@ -868,6 +977,14 @@ export function growMaze(config) {
 
     if (!stats.stopReason) {
         stats.stopReason = 'frontier_empty';
+    }
+
+    // Cross-branch stitching can leave one-way exits. When the user
+    // wants bidirectional traversal, reconcile asymmetric pairs
+    // before walling off unused exits — 'remove' mode nulls the
+    // target_region, and wallOff then drops it.
+    if (assumeBidirectional) {
+        reconcileBidirectionalExits(grid, regionSize, asymmetricExits);
     }
 
     wallOffUnusedExits(grid);

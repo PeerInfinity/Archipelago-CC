@@ -142,6 +142,11 @@ const DEFAULT_PARAMS = {
     // built with empty item plans — useful in quota mode where the
     // user wants a fixed region count regardless of items left.
     stopOnPoolEmpty: false,
+    // How the bidirectional post-pass reconciles cross-branch
+    // asymmetric exit pairs. 'add' (default) inserts a reciprocal
+    // back-exit on the target region; 'remove' drops the one-way
+    // forward exit.
+    asymmetricExits: 'add',
     // Loop-mode toggle (Phase 2/3 of loop-mode-substrate-integration).
     // When on, buildRulesJson computes a loop_costs sidecar AND every
     // region's playable_payload gets manaEnabled=true so substrates
@@ -1086,6 +1091,34 @@ export class ProcgenPipelineUI {
             stopRow.appendChild(stopLabel);
             stopRow.appendChild(stopInput);
             section.appendChild(stopRow);
+
+            // Asymmetric-exit reconciliation mode. Cross-branch
+            // stitching can leave one region with an exit to its
+            // neighbor but no reciprocal. 'Add' inserts a back-exit
+            // on the neighbor; 'Remove' drops the one-way forward
+            // exit instead.
+            const asymRow = document.createElement('div');
+            asymRow.className = 'procgen-pipeline-field';
+            const asymLabel = document.createElement('label');
+            asymLabel.textContent = 'Asymmetric exits';
+            asymLabel.title = 'How to reconcile one-way exits created by cross-branch stitching.';
+            const asymSelect = document.createElement('select');
+            for (const opt of [
+                { value: 'add', text: 'Add reciprocal back-exit' },
+                { value: 'remove', text: 'Remove one-way forward exit' },
+            ]) {
+                const o = document.createElement('option');
+                o.value = opt.value;
+                o.textContent = opt.text;
+                asymSelect.appendChild(o);
+            }
+            asymSelect.value = this.params.asymmetricExits ?? 'add';
+            asymSelect.addEventListener('change', () => {
+                this.params.asymmetricExits = asymSelect.value;
+            });
+            asymRow.appendChild(asymLabel);
+            asymRow.appendChild(asymSelect);
+            section.appendChild(asymRow);
         }
 
         // Loop-mode toggle. Renders below the numeric grid. When on,
@@ -1619,7 +1652,7 @@ export class ProcgenPipelineUI {
     _runGridGrowth() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
             maxItemsPerRegion, maxRegions, startSubstrate,
-            stopOnPoolEmpty } = this.params;
+            stopOnPoolEmpty, asymmetricExits } = this.params;
         const useQuotas = this.substrateMode === 'quotas';
         const quotas = useQuotas ? this._effectiveSubstrateQuotas() : null;
         const mix = !useQuotas ? this._effectiveSubstrateMix() : null;
@@ -1634,6 +1667,7 @@ export class ProcgenPipelineUI {
                 maxItemsPerRegion,
                 maxRegions: maxRegions ?? null,
                 stopOnPoolEmpty: !!stopOnPoolEmpty,
+                asymmetricExits: asymmetricExits === 'remove' ? 'remove' : 'add',
                 ...(quotas ? { substrateQuotas: quotas } : {}),
                 ...(mix ? { substrateMix: mix } : {}),
                 ...(startSubstrate && startSubstrate !== 'auto'

@@ -16,6 +16,7 @@ import {
     topDownFromRulesJson,
     pickSubstrate, rollSubstrateMix,
     pickSubstrateWithQuota, totalRemainingQuota,
+    reconcileBidirectionalExits,
     computeSourceCounts,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
@@ -582,12 +583,199 @@ describe('growMaze', () => {
             if (isStart) {
                 expect(backExits).toHaveLength(0);
             } else {
-                expect(backExits).toHaveLength(1);
+                // At least one back-exit (BFS parent). With branch
+                // probability 0 there's no cross-branch asymmetry so
+                // the post-pass adds nothing extra; the count is
+                // exactly 1.
+                expect(backExits.length).toBeGreaterThanOrEqual(1);
                 // Back-exit's targetExitId points at the parent's
                 // forward exit; reciprocal link is on the parent.
                 expect(backExits[0].targetExitId).toBeTruthy();
             }
         }
+    });
+
+    describe('asymmetricExits post-pass', () => {
+        // User's repro: 3x2 grid, quotas {maze:2, text_adventure:2},
+        // start pinned to maze. Seed 1 produces a layout where the
+        // start region's E forward exit gets stitched to a text-
+        // adventure region built via a different BFS branch — so
+        // without the post-pass that text-adventure region has no
+        // back-exit to the start.
+        const reproConfig = {
+            gridDims: { width: 3, height: 2 },
+            regionSize: { width: 8, height: 6 },
+            itemPool: { key_red: 4 },
+            obstaclePool: { door_red: 4 },
+            seed: 1,
+            growthParams: {
+                substrateQuotas: { maze: 2, text_adventure: 2 },
+                startSubstrate: 'maze',
+                branchProbability: 0.5,
+                assumeBidirectional: true,
+            },
+        };
+
+        function exitPairs(grid) {
+            // [{ from: regionId, to: regionId, isBackExit }, ...]
+            const out = [];
+            for (const region of grid.allRegions()) {
+                const exits = region.playable_payload?.exits;
+                if (!exits) continue;
+                for (const [, e] of exits) {
+                    if (!e?.targetRegion) continue;
+                    out.push({
+                        from: region.region_id,
+                        to: e.targetRegion,
+                        isBackExit: !!e.isBackExit,
+                    });
+                }
+            }
+            return out;
+        }
+
+        it("'add' (default) inserts a reciprocal back-exit for every cross-branch one-way", () => {
+            const { grid } = growMaze(reproConfig);
+            const pairs = exitPairs(grid);
+            // Every (A -> B) exit must have a matching (B -> A).
+            for (const p of pairs) {
+                const reciprocal = pairs.find(
+                    (q) => q.from === p.to && q.to === p.from,
+                );
+                expect(reciprocal).toBeTruthy();
+            }
+        });
+
+        it("'remove' drops the one-way forward exit so the asymmetry is gone", () => {
+            const { grid } = growMaze({
+                ...reproConfig,
+                growthParams: { ...reproConfig.growthParams, asymmetricExits: 'remove' },
+            });
+            const pairs = exitPairs(grid);
+            for (const p of pairs) {
+                const reciprocal = pairs.find(
+                    (q) => q.from === p.to && q.to === p.from,
+                );
+                expect(reciprocal).toBeTruthy();
+            }
+        });
+
+        it("'add' back-exit carries side, targetExitId, and isBackExit", () => {
+            const { grid } = growMaze(reproConfig);
+            for (const region of grid.allRegions()) {
+                for (const [, e] of region.playable_payload.exits) {
+                    if (!e.isBackExit) continue;
+                    expect(e.side).toBeTruthy();
+                    expect(e.targetExitId).toBeTruthy();
+                    expect(e.targetRegion).toBeTruthy();
+                }
+            }
+        });
+
+        it('no-op when assumeBidirectional is false', () => {
+            const { grid } = growMaze({
+                ...reproConfig,
+                growthParams: {
+                    ...reproConfig.growthParams,
+                    assumeBidirectional: false,
+                },
+            });
+            // With bidirectional off, no back-exits anywhere — including
+            // the BFS parent ones — so post-pass never runs.
+            for (const region of grid.allRegions()) {
+                for (const [, e] of region.playable_payload.exits) {
+                    expect(e.isBackExit).toBeFalsy();
+                }
+            }
+        });
+    });
+
+    describe('reconcileBidirectionalExits (direct unit)', () => {
+        it("'add' creates a reciprocal back-exit when only one direction exists", () => {
+            // Build two regions with an asymmetric pair by hand.
+            const grid = new Grid({ width: 2, height: 1 });
+            const sizeXY = { width: 6, height: 6 };
+            const A = {
+                region_id: 'A', cell: { gx: 0, gy: 0 },
+                playable_payload: {
+                    exits: new Map([['a_to_b', {
+                        exit_id: 'a_to_b',
+                        x: 5, y: 3, side: 'E',
+                        exitName: 'a_to_b',
+                        targetRegion: 'B',
+                        isBackExit: false,
+                        isTeleporter: false,
+                    }]]),
+                },
+                extracted_rules: { exits: [{
+                    id: 'a_to_b',
+                    position: { x: 5, y: 3 },
+                    target_region: 'B',
+                    paths: [{ path_id: 'p1', obstacles: [] }],
+                }] },
+                exits_placed: [],
+            };
+            const B = {
+                region_id: 'B', cell: { gx: 1, gy: 0 },
+                playable_payload: { exits: new Map() },
+                extracted_rules: { exits: [] },
+                exits_placed: [],
+            };
+            grid.cells.set('0,0', A);
+            grid.cells.set('1,0', B);
+
+            reconcileBidirectionalExits(grid, sizeXY, 'add');
+
+            const back = B.playable_payload.exits.get('A');
+            expect(back).toBeTruthy();
+            expect(back.isBackExit).toBe(true);
+            expect(back.side).toBe('W');
+            expect(back.targetRegion).toBe('A');
+            expect(back.targetExitId).toBe('a_to_b');
+            // Round-trip link on the forward exit.
+            expect(A.playable_payload.exits.get('a_to_b').targetExitId).toBe('A');
+            // extracted_rules mirrored.
+            expect(B.extracted_rules.exits.find((e) => e.id === 'A')).toBeTruthy();
+        });
+
+        it("'remove' nulls the forward exit's target_region", () => {
+            const grid = new Grid({ width: 2, height: 1 });
+            const sizeXY = { width: 6, height: 6 };
+            const A = {
+                region_id: 'A', cell: { gx: 0, gy: 0 },
+                playable_payload: {
+                    exits: new Map([['a_to_b', {
+                        exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
+                        targetRegion: 'B', isBackExit: false,
+                    }]]),
+                },
+                extracted_rules: { exits: [{
+                    id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
+                    paths: [{ path_id: 'p1', obstacles: [] }],
+                }] },
+                exits_placed: [],
+            };
+            const B = {
+                region_id: 'B', cell: { gx: 1, gy: 0 },
+                playable_payload: { exits: new Map() },
+                extracted_rules: { exits: [] },
+                exits_placed: [],
+            };
+            grid.cells.set('0,0', A);
+            grid.cells.set('1,0', B);
+
+            reconcileBidirectionalExits(grid, sizeXY, 'remove');
+
+            expect(A.playable_payload.exits.get('a_to_b').targetRegion).toBe(null);
+            expect(A.extracted_rules.exits[0].target_region).toBe(null);
+            expect(B.playable_payload.exits.size).toBe(0);
+        });
+
+        it('throws on unknown mode', () => {
+            const grid = new Grid({ width: 1, height: 1 });
+            expect(() => reconcileBidirectionalExits(grid, { width: 6, height: 6 }, 'flip'))
+                .toThrow(/unknown mode/);
+        });
     });
 
     it('routes via teleporter when the geographic neighbor is OOB', () => {

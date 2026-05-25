@@ -27,6 +27,8 @@
  *   --obstacles id=N         obstacle pool entry; repeat per obstacle
  *   --branch P               branchProbability (default 0.5)
  *   --no-bidirectional       disable assumeBidirectional (default on)
+ *   --asymmetric add|remove  cross-branch one-way exit reconciliation
+ *                            (default add)
  *   -o, --out PATH           output JSON path (default ./grid-growth-dump.json)
  *
  * Output JSON shape:
@@ -67,6 +69,7 @@ function parseArgs(argv) {
         obstacles: {},
         branch: 0.5,
         bidirectional: true,
+        asymmetric: 'add',
         out: './grid-growth-dump.json',
     };
     const parseWxH = (s) => {
@@ -113,6 +116,14 @@ function parseArgs(argv) {
             }
             case '--branch': out.branch = parseFloat(next()); break;
             case '--no-bidirectional': out.bidirectional = false; break;
+            case '--asymmetric': {
+                const v = next();
+                if (v !== 'add' && v !== 'remove') {
+                    throw new Error(`--asymmetric expects 'add' or 'remove', got '${v}'`);
+                }
+                out.asymmetric = v;
+                break;
+            }
             case '-o':
             case '--out': out.out = next(); break;
             case '-h':
@@ -191,6 +202,7 @@ async function main() {
         branchProbability: config.branch,
         assumeBidirectional: config.bidirectional,
         stopOnPoolEmpty: config.stopOnPoolEmpty,
+        asymmetricExits: config.asymmetric,
         ...(config.maxRegions != null ? { maxRegions: config.maxRegions } : {}),
         ...(Object.keys(config.quotas).length > 0
             ? { substrateQuotas: config.quotas } : {}),
