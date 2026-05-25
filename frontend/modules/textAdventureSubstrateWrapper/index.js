@@ -18,6 +18,34 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
+import settingsManager from '../../app/core/settingsManager.js';
+
+const SETTINGS_DEFAULTS = Object.freeze({
+    messageHistoryLimit: 10,
+    autoFocusCommandInput: true,
+    autoLoadCustomData: '',
+});
+
+const SETTINGS_SCHEMA = Object.freeze({
+    messageHistoryLimit: {
+        type: 'number',
+        default: SETTINGS_DEFAULTS.messageHistoryLimit,
+        description: 'Maximum number of messages to keep in the iframe engine\'s scrollback.',
+    },
+    autoFocusCommandInput: {
+        type: 'boolean',
+        default: SETTINGS_DEFAULTS.autoFocusCommandInput,
+        description: 'Re-focus the command input after every click action in the engine.',
+    },
+    autoLoadCustomData: {
+        type: 'string',
+        default: SETTINGS_DEFAULTS.autoLoadCustomData,
+        description: 'Override URL (or bare name) for the custom-data JSON to load. Empty = auto-detect by game name.',
+    },
+});
+
+let _settings = { ...SETTINGS_DEFAULTS };
+export function getTextAdventureSubstrateWrapperSettings() { return _settings; }
 
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
@@ -68,6 +96,7 @@ export function register(registrationApi) {
     // out of the engine's world. Mirrors the procgen vs standalone
     // mode detection in textAdventureSubstrate/index.js.
     registrationApi.registerEventBusSubscriberIntent('stateManager:rawJsonDataLoaded');
+    registrationApi.registerEventBusSubscriberIntent('settings:changed');
 
     // Register the substrate entry so procgen recognizes
     // 'text_adventure' and dispatches loadRegion events to our panel.
@@ -75,6 +104,29 @@ export function register(registrationApi) {
     // textAdventureSubstrate is also enabled.
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
+    }
+
+    if (typeof registrationApi.registerSettingsSchema === 'function') {
+        registrationApi.registerSettingsSchema(
+            'textAdventureSubstrateWrapper',
+            SETTINGS_SCHEMA,
+        );
+    }
+}
+
+async function loadSettings() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const next = { ..._settings };
+        for (const key of Object.keys(SETTINGS_SCHEMA)) {
+            next[key] = await settingsManager.getSetting(
+                `moduleSettings.textAdventureSubstrateWrapper.${key}`,
+                SETTINGS_DEFAULTS[key],
+            );
+        }
+        _settings = next;
+    } catch {
+        // Settings unavailable — keep current cache.
     }
 }
 
@@ -112,17 +164,37 @@ function _buildInitialStatePayload() {
         discoveredExits,
         procgenMode: _procgenMode,
         procgenSidecarRegions: _procgenSidecarRegions,
+        // Host settings pushed to the engine via setOption(). Bridge
+        // applies them on receipt; runtime changes re-broadcast on
+        // settings:changed.
+        engineSettings: {
+            messageHistoryLimit: _settings.messageHistoryLimit,
+            autoFocusCommandInput: _settings.autoFocusCommandInput,
+        },
     };
 }
 
-export function initialize(_moduleId, _priorityIndex, initializationApi) {
+export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
+
+    // Load persisted settings before broadcasting initialState, so the
+    // first iframe:appReady fire-back carries the user's saved values
+    // instead of defaults.
+    await loadSettings();
 
     // Build the host-side PlaybackProxy. Returned by the substrate
     // registry entry's getPlaybackController; publishes control events
     // that the in-iframe playbackBridge subscribes to.
     _playbackProxy = new PlaybackProxy({ eventBus });
+
+    // Reload settings on change and re-broadcast initialState so the
+    // bridge applies them. Cheap (small payload, idempotent for
+    // unchanged fields) and the iframe ignores irrelevant fields.
+    eventBus.subscribe('settings:changed', async () => {
+        await loadSettings();
+        eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());
+    });
 
     // When ANY iframe app reports ready, broadcast the current
     // discovery state. The bridge subscribes to this event and

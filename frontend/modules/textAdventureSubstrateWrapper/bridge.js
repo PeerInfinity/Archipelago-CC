@@ -352,6 +352,11 @@ async function main() {
         if (data.discoveryMode) {
             engine.setDiscoveryMode(data.discoveryMode);
         }
+        if (data.engineSettings && typeof data.engineSettings === 'object') {
+            for (const [key, value] of Object.entries(data.engineSettings)) {
+                engine.setOption(key, value);
+            }
+        }
         // Update procgen-mode filter state from the host. We do NOT
         // trigger a rebuildWorld here — staticData isn't refreshed
         // until stateManager:rulesLoaded fires (which happens AFTER
