@@ -775,13 +775,35 @@ export class ProcgenPipelineUI {
             opt.textContent = id;
             select.appendChild(opt);
         }
-        select.value = this.params.startSubstrate ?? 'auto';
+        // Normalize: a stored startSubstrate that's no longer in the
+        // active dict (substrate removed since last load) would set
+        // select.value to a non-existent option, rendering as blank.
+        // Fall back to 'auto' and write it back so the params and the
+        // UI stay in sync.
+        const stored = this.params.startSubstrate ?? 'auto';
+        const valid = stored === 'auto' || stored in this._activeSubstrateDict();
+        if (!valid) this.params.startSubstrate = 'auto';
+        select.value = valid ? stored : 'auto';
         select.addEventListener('change', () => {
             this.params.startSubstrate = select.value;
             this._saveToLocalStorage();
         });
         row.appendChild(select);
         return row;
+    }
+
+    /**
+     * If `removedId` matches the current start-substrate selection,
+     * reset to 'auto'. Called from the quota row's × button and from
+     * the count-input "set to 0/empty" path. Without this, the select
+     * value goes stale (the option no longer exists) and renders blank,
+     * and arrangeShuffledSpiral throws
+     * `startSubstrate '<id>' has no quota` at generate time.
+     */
+    _resetStartSubstrateIfRemoved(removedId) {
+        if (this.params.startSubstrate === removedId) {
+            this.params.startSubstrate = 'auto';
+        }
     }
 
     /**
@@ -848,6 +870,7 @@ export class ProcgenPipelineUI {
                 dict[id] = v;
             } else {
                 delete dict[id];
+                this._resetStartSubstrateIfRemoved(id);
             }
             this._saveToLocalStorage();
             this.render();
@@ -860,6 +883,7 @@ export class ProcgenPipelineUI {
         rm.title = `Remove ${id}`;
         rm.addEventListener('click', () => {
             delete dict[id];
+            this._resetStartSubstrateIfRemoved(id);
             this._saveToLocalStorage();
             this.render();
         });
