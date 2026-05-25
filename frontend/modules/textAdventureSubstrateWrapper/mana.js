@@ -21,6 +21,7 @@
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
+import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 
 const HEADER_INFO_EVENT = 'textAdventureSubstrateWrapper:headerInfo';
 
@@ -41,6 +42,12 @@ export function initManaWiring({ eventBus, dispatcher }) {
     _eventBus = eventBus;
     _dispatcher = dispatcher;
     if (!eventBus?.subscribe) return () => {};
+
+    // Late-mount backfill: gameState may already have a current region
+    // and loops may already be active by the time we subscribe (e.g.
+    // wrapper module loads after a save restores state). Read the
+    // current values directly so we don't wait for the next event.
+    backfillFromCurrentState();
 
     const unsubs = [];
 
@@ -231,4 +238,34 @@ function checkedLocationsFromSnapshot(snapshot) {
     if (v instanceof Set) return v;
     if (Array.isArray(v)) return new Set(v);
     return new Set();
+}
+
+/**
+ * Pull whatever state already exists from gameState / loops at init
+ * time, so events that fired before we subscribed don't leave us
+ * with a null current region or a stale loop-mode flag.
+ */
+function backfillFromCurrentState() {
+    const gs = getGameStateSingleton?.();
+    if (gs?.getCurrentRegion) {
+        _currentRegionId = gs.getCurrentRegion() ?? null;
+        _currentRegionHasMana = !!resolveRegionInfo(_currentRegionId)?.manaEnabled;
+    }
+    try {
+        const isActive = centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive');
+        if (typeof isActive === 'function') {
+            _isLoopModeActive = !!isActive();
+        }
+    } catch {
+        // loops not present; leave default.
+    }
+    // Seed previousChecked from the current stateManager snapshot so
+    // the first snapshotUpdated doesn't treat already-checked
+    // locations as "newly" checked and double-charge.
+    try {
+        const snap = stateManagerProxySingleton?.getStateSnapshot?.();
+        _previousChecked = checkedLocationsFromSnapshot(snap);
+    } catch {
+        // Stale or absent proxy; leave default empty set.
+    }
 }
