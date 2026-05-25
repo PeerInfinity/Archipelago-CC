@@ -2962,6 +2962,26 @@ describe('arrangeShuffledSpiral', () => {
         }
     });
 
+    // Regression: synthesizeZoneRegion used to omit region_id from
+    // extracted_rules, so compileRegion produced region_name=undefined.
+    // compileRegionGraph then collapsed every zone-based region onto
+    // regions[undefined] and Menu's GameStart exit dangled, leaving the
+    // Region Graph panel empty except for the Menu node.
+    it('emits one named region entry per quota (no regions[undefined] collapse)', () => {
+        const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
+            growthParams: { substrateQuotas: { jta: 4 } },
+        }));
+        const rules = buildRulesJson(grid, { startCell, seed: 1 });
+        const regionMap = rules.regions['1'];
+        // Menu + 4 jta regions, all keyed by string region_id.
+        expect(Object.keys(regionMap)).toHaveLength(5);
+        expect(regionMap.undefined).toBeUndefined();
+        const menuExit = regionMap.Menu.exits.find((e) => e.name === 'GameStart');
+        expect(menuExit).toBeTruthy();
+        // GameStart must point at an actual region in the map.
+        expect(regionMap[menuExit.connected_region]).toBeTruthy();
+    });
+
     it('is deterministic for a fixed seed', () => {
         const cfg = defaultConfig({
             seed: 11,

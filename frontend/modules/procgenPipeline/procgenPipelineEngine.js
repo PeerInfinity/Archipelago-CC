@@ -2015,7 +2015,11 @@ function synthesizeZoneRegion({
         substrate,
         region_id,
         playable_payload: { ...zonePayload, exits: exitsMap },
-        extracted_rules: { exits: extractedExits, locations: [] },
+        // region_id mirrors what procedural adapters' extractPathsAndObstacles
+        // emits. compileRegion reads it as the region_name; without it,
+        // compileRegionGraph collapses every zone-based region onto
+        // regions[undefined] and Menu's GameStart exit dangles.
+        extracted_rules: { region_id, exits: extractedExits, locations: [] },
         placed_items: [],
         placed_obstacles: [],
         exits_placed: exitsPlaced,
