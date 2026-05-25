@@ -534,6 +534,7 @@ export class ProcgenPipelineUI {
                 this.mode = value;
                 this.result = null;
                 this.message = '';
+                this._saveToLocalStorage();
                 this.render();
             });
             const span = document.createElement('span');
@@ -972,6 +973,7 @@ export class ProcgenPipelineUI {
         row.addEventListener('click', () => {
             const bucket = kind === 'item' ? this.scenario.items : this.scenario.obstacles;
             bucket[id] = (bucket[id] || 0) + 1;
+            this._saveToLocalStorage();
             this.render();
         });
         return row;
@@ -996,6 +998,7 @@ export class ProcgenPipelineUI {
             const bucket = kind === 'item' ? this.scenario.items : this.scenario.obstacles;
             if (Number.isFinite(v) && v > 0) bucket[id] = v;
             else delete bucket[id];
+            this._saveToLocalStorage();
             this.render();
         });
         row.appendChild(input);
@@ -1006,6 +1009,7 @@ export class ProcgenPipelineUI {
         rm.addEventListener('click', () => {
             const bucket = kind === 'item' ? this.scenario.items : this.scenario.obstacles;
             delete bucket[id];
+            this._saveToLocalStorage();
             this.render();
         });
         row.appendChild(rm);
@@ -1056,6 +1060,7 @@ export class ProcgenPipelineUI {
                     const v = parseInt(input.value, 10);
                     if (Number.isFinite(v)) this.params[f.key] = v;
                 }
+                this._saveToLocalStorage();
             });
             row.appendChild(label);
             row.appendChild(input);
@@ -1084,6 +1089,7 @@ export class ProcgenPipelineUI {
         xpEffectSelect.value = this.params.regionXpEffect ?? 'cost';
         xpEffectSelect.addEventListener('change', () => {
             this.params.regionXpEffect = xpEffectSelect.value;
+            this._saveToLocalStorage();
         });
         xpEffectRow.appendChild(xpEffectLabel);
         xpEffectRow.appendChild(xpEffectSelect);
@@ -1104,6 +1110,7 @@ export class ProcgenPipelineUI {
             stopInput.checked = !!this.params.stopOnPoolEmpty;
             stopInput.addEventListener('change', () => {
                 this.params.stopOnPoolEmpty = !!stopInput.checked;
+                this._saveToLocalStorage();
             });
             stopRow.appendChild(stopLabel);
             stopRow.appendChild(stopInput);
@@ -1132,6 +1139,7 @@ export class ProcgenPipelineUI {
             asymSelect.value = this.params.asymmetricExits ?? 'add';
             asymSelect.addEventListener('change', () => {
                 this.params.asymmetricExits = asymSelect.value;
+                this._saveToLocalStorage();
             });
             asymRow.appendChild(asymLabel);
             asymRow.appendChild(asymSelect);
@@ -1152,6 +1160,7 @@ export class ProcgenPipelineUI {
         loopModeInput.checked = !!this.params.enableLoopMode;
         loopModeInput.addEventListener('change', () => {
             this.params.enableLoopMode = !!loopModeInput.checked;
+            this._saveToLocalStorage();
         });
         loopModeRow.appendChild(loopModeLabel);
         loopModeRow.appendChild(loopModeInput);
@@ -1172,6 +1181,7 @@ export class ProcgenPipelineUI {
         hazardInput.checked = !!this.params.enableHazards;
         hazardInput.addEventListener('change', () => {
             this.params.enableHazards = !!hazardInput.checked;
+            this._saveToLocalStorage();
             this.render();
         });
         hazardRow.appendChild(hazardLabel);
@@ -1184,7 +1194,7 @@ export class ProcgenPipelineUI {
 
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';
-        const saveBtn = this._btn('Save Params', () => this._saveToLocalStorage());
+        const saveBtn = this._btn('Save Params', () => this._saveToLocalStorage({ showFeedback: true }));
         const loadBtn = this._btn('Load Params', () => { this._loadFromLocalStorage(); this.render(); });
         const resetBtn = this._btn('Reset Defaults', () => {
             this.params = { ...DEFAULT_PARAMS };
@@ -1192,6 +1202,7 @@ export class ProcgenPipelineUI {
                 items: { ...DEFAULT_SCENARIO.items },
                 obstacles: { ...DEFAULT_SCENARIO.obstacles },
             };
+            this._saveToLocalStorage();
             this.render();
         });
         btnRow.appendChild(saveBtn);
@@ -1555,11 +1566,25 @@ export class ProcgenPipelineUI {
 
         ctx.save();
         ctx.fillStyle = COLORS.textAdventureFg;
-        ctx.font = '10px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const label = region?.substrate ?? region?.render_hint ?? '?';
-        ctx.fillText(`(${label})`, offX + cellW / 2, offY + cellH / 2);
+        // Zone-based substrates carry a numeric index in
+        // playable_payload (currently just JtA's jtaZone). Surface it
+        // here so the shuffled-spiral preview shows zone ordering at
+        // a glance; procedural substrates render unchanged.
+        const zoneIdx = region?.playable_payload?.jtaZone;
+        const hasZone = typeof zoneIdx === 'number';
+        const cx = offX + cellW / 2;
+        if (hasZone) {
+            ctx.font = `bold ${Math.max(14, Math.floor(cellH * 0.25))}px sans-serif`;
+            ctx.fillText(`Zone ${zoneIdx}`, cx, offY + cellH / 2 - 6);
+            ctx.font = '10px sans-serif';
+            ctx.fillText(`(${label})`, cx, offY + cellH / 2 + 12);
+        } else {
+            ctx.font = '10px sans-serif';
+            ctx.fillText(`(${label})`, cx, offY + cellH / 2);
+        }
         ctx.restore();
     }
 
@@ -1894,6 +1919,7 @@ export class ProcgenPipelineUI {
         countInput.addEventListener('change', () => {
             const v = Math.max(0, Math.floor(Number(countInput.value) || 0));
             this.params.hazardCount = v;
+            this._saveToLocalStorage();
         });
         countRow.appendChild(countLabel);
         countRow.appendChild(countInput);
@@ -1912,6 +1938,7 @@ export class ProcgenPipelineUI {
         failInput.addEventListener('change', () => {
             const v = Math.max(1, Math.floor(Number(failInput.value) || 1));
             this.params.hazardMaxConsecutiveFails = v;
+            this._saveToLocalStorage();
         });
         failRow.appendChild(failLabel);
         failRow.appendChild(failInput);
@@ -1927,6 +1954,7 @@ export class ProcgenPipelineUI {
         overlapInput.checked = !!this.params.hazardWallOverlapAllowed;
         overlapInput.addEventListener('change', () => {
             this.params.hazardWallOverlapAllowed = !!overlapInput.checked;
+            this._saveToLocalStorage();
         });
         overlapRow.appendChild(overlapLabel);
         overlapRow.appendChild(overlapInput);
@@ -1935,7 +1963,14 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    _saveToLocalStorage() {
+    /**
+     * Persist panel state to localStorage. Called silently from every
+     * change handler so a page refresh preserves the user's setup.
+     * Pass `showFeedback: true` to also flash a 'Saved.' message and
+     * re-render — the explicit Save Params button uses that mode;
+     * per-keystroke handlers don't, to avoid render churn.
+     */
+    _saveToLocalStorage({ showFeedback = false } = {}) {
         try {
             localStorage.setItem(LS_KEY, JSON.stringify({
                 params: this.params,
@@ -1945,8 +1980,10 @@ export class ProcgenPipelineUI {
                 substrateMode: this.substrateMode,
                 mode: this.mode,
             }));
-            this.message = 'Saved.';
-            this.render();
+            if (showFeedback) {
+                this.message = 'Saved.';
+                this.render();
+            }
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
             this.render();

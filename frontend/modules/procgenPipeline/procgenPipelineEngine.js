@@ -586,6 +586,14 @@ function buildSubstrateRegion({
     hazardOpts = null,
 }) {
     const adapter = getAdapter(substrate);
+    if (typeof adapter.generateRegionCore !== 'function') {
+        throw new Error(
+            `Substrate '${substrate}' has no generateRegionCore — it is a `
+            + 'zone-based substrate (e.g. JtA) and cannot be used with the '
+            + 'grid-growth driver. Use the shuffled-spiral layout instead, '
+            + 'or remove this substrate from the quotas / mix.',
+        );
+    }
     const core = adapter.generateRegionCore({
         region_id,
         size,
@@ -2043,8 +2051,10 @@ export function arrangeShuffledSpiral(config) {
     if (!substrateQuotas || Object.keys(substrateQuotas).length === 0) {
         throw new Error('arrangeShuffledSpiral: growthParams.substrateQuotas required');
     }
-    // Upfront validation: every substrate must be registered, and any
-    // zone-based substrate's quota must fit within its zoneCount.
+    // Upfront validation: every substrate must be registered with
+    // either a build-time generateRegionCore (procedural) or a
+    // zoneCount (zone-based). Zone-based substrates' quotas must
+    // also fit within their zoneCount.
     for (const [sub, count] of Object.entries(substrateQuotas)) {
         if (count <= 0) continue;
         const adapter = substrateRegistry.get(sub);
@@ -2053,7 +2063,17 @@ export function arrangeShuffledSpiral(config) {
                 `arrangeShuffledSpiral: substrate '${sub}' is not registered`,
             );
         }
-        if (typeof adapter.zoneCount === 'number' && count > adapter.zoneCount) {
+        const hasZones = typeof adapter.zoneCount === 'number';
+        const hasGen = typeof adapter.generateRegionCore === 'function';
+        if (!hasZones && !hasGen) {
+            throw new Error(
+                `arrangeShuffledSpiral: substrate '${sub}' has neither `
+                + 'zoneCount nor generateRegionCore. Its registry entry '
+                + 'may be stale — hard-refresh the page (Ctrl+Shift+R) and '
+                + 'try again.',
+            );
+        }
+        if (hasZones && count > adapter.zoneCount) {
             throw new Error(
                 `arrangeShuffledSpiral: quota for '${sub}' (${count}) `
                 + `exceeds substrate zoneCount (${adapter.zoneCount})`,
