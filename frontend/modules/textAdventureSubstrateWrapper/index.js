@@ -12,7 +12,7 @@
  * for the engine contract.
  */
 
-import { TextAdventureSubstrateWrapperPanel } from './textAdventureSubstrateWrapperPanel.js';
+import { TextAdventureSubstrateWrapperPanel, PANEL_SHOWN_EVENT } from './textAdventureSubstrateWrapperPanel.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -136,6 +136,9 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher(PLAYBACK_CONTROL_EVENT);
     // Mana/header readout pushed to the bridge for engine.setHeaderInfo.
     registrationApi.registerEventBusPublisher(getHeaderInfoEvent());
+    // Panel-shown event published by the panel's onShow lifecycle.
+    // Bridge subscribes and refocuses the engine's command input.
+    registrationApi.registerEventBusPublisher(PANEL_SHOWN_EVENT);
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
     // Procgen mode detection — subscribe to rawJsonDataLoaded to spot

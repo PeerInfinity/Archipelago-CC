@@ -5,6 +5,10 @@
  * uses the existing iframeAdapter postMessage protocol).
  */
 
+import eventBus from '../../app/core/eventBus.js';
+
+export const PANEL_SHOWN_EVENT = 'textAdventureSubstrateWrapper:panelShown';
+
 // Unique iframeId so multiple wrapper panels each get their own slot
 // in iframeAdapterCore.iframes — without this, the in-iframe
 // AdapterClient defaults to generateClientId('iframe-client'),
@@ -34,6 +38,19 @@ export class TextAdventureSubstrateWrapperPanel {
         if (container && typeof container.setTitle === 'function') {
             container.setTitle('Text Adventure (wrapper)');
         }
+    }
+
+    /**
+     * Called by panelManager when this panel becomes the active tab
+     * in its Golden Layout stack. Used to refocus the engine's
+     * command input across the iframe boundary — the iframe content
+     * stays alive when GL hides the tab (CSS display:none), but
+     * focus is lost. Publish a host-side event the bridge subscribes
+     * to so the engine can re-focus its input when the player
+     * returns.
+     */
+    onShow() {
+        eventBus.publish(PANEL_SHOWN_EVENT, {});
     }
 
     _initializeUI() {

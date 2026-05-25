@@ -79,11 +79,67 @@ function escapeHtmlPlain(s) {
 // AP region becomes a room, preserving the original behavior.
 let _procgenMode = false;
 let _procgenSidecarRegions = null;  // Set<string> | null
+// Per-region exit-side overrides extracted from procgen sidecar
+// payloads on textAdventure:loadRegion. The bridge's primary world
+// model is built from staticData.regions (which carries no side info);
+// these overrides re-introduce N/E/S/W tagging so the engine renders
+// procgen exits in the compass grid. Keyed by regionName → Map of
+// exitName → side ('N' | 'E' | 'S' | 'W').
+const _exitSideOverrides = new Map();
 // Custom-data document cache. Populated from initialState; consumed
 // by the templating layer when it lands. null until the host pushes
 // a value (typically after stateManager:rawJsonDataLoaded fires).
 let _customData = null;
 export function getCustomData() { return _customData; }
+
+/**
+ * Pull per-exit side info out of a procgen sidecar payload. The
+ * payload shape varies slightly between substrates; check both
+ * exitName and exit_id key names so this works with both engine-
+ * native and bridge-native exit ids.
+ */
+function captureExitSidesFromSidecar(regionName, world) {
+    if (!regionName || !world || !Array.isArray(world.exits)) return;
+    const map = new Map();
+    for (const exit of world.exits) {
+        const name = exit?.exitName ?? exit?.exit_id;
+        const side = exit?.side;
+        if (name && (side === 'N' || side === 'E' || side === 'S' || side === 'W')) {
+            map.set(name, side);
+        }
+    }
+    if (map.size === 0) {
+        _exitSideOverrides.delete(regionName);
+    } else {
+        _exitSideOverrides.set(regionName, map);
+    }
+}
+
+/**
+ * Mutate one room's exits to carry the cached side overrides so the
+ * engine's compass-grid renderer picks them up on its next render.
+ * Idempotent; safe to call on every loadRegion.
+ */
+function applyExitSideOverridesToWorld(regionName) {
+    if (!regionName) return;
+    const overrides = _exitSideOverrides.get(regionName);
+    if (!overrides) return;
+    // World is module-scope in main(); pulled in via closure when
+    // this is reached. Guard against early calls before rebuildWorld
+    // has populated it.
+    if (typeof _activeWorld !== 'object' || !_activeWorld) return;
+    const room = _activeWorld.rooms?.[regionName];
+    if (!room?.exits) return;
+    for (const exit of room.exits) {
+        const side = overrides.get(exit.id);
+        if (side) exit.side = side;
+    }
+}
+
+// Active world reference set by rebuildWorld so the side-override
+// applier (which fires from event handlers, not main's closure) can
+// reach it. Mirrors the `world` local in main(); kept in sync there.
+let _activeWorld = null;
 
 function buildWorldFromStaticData(staticData, currentRegion) {
     if (!staticData?.regions) return null;
@@ -391,6 +447,15 @@ async function main() {
                 return;
             }
             world = w;
+            _activeWorld = w;
+            // Replay any cached side overrides — sidecar loadRegion
+            // events may have fired before the world was built, in
+            // which case the overrides got cached but couldn't be
+            // applied. Apply them now so the first compass render is
+            // correct.
+            for (const regionName of _exitSideOverrides.keys()) {
+                applyExitSideOverridesToWorld(regionName);
+            }
             engine.loadWorld(w);
             engine.batchUpdate(() => {
                 applyInventoryFromSnapshot(engine, snapshot);
@@ -512,6 +577,14 @@ async function main() {
         engine.setHeaderInfo(data && data.text ? { text: data.text } : null);
     });
 
+    // Panel became the active tab in its Golden Layout stack. Refocus
+    // the engine's command input so the player can immediately type
+    // without clicking. Setting-gated via autoFocusCommandInput inside
+    // the engine.
+    client.subscribeEventBus('textAdventureSubstrateWrapper:panelShown', () => {
+        engine.maybeFocus();
+    });
+
     // Discovery incremental events.
     client.subscribeEventBus('discovery:modeChanged', (data) => {
         const mode = data?.active ? 'discovered' : 'full';
@@ -570,15 +643,16 @@ async function main() {
     });
 
     // Procgen mode: procgenPlayer fires textAdventure:loadRegion with
-    // {region_id, world, arrivedFrom}. We ignore `world` (tile-grid
-    // data the engine doesn't need) and `arrivedFrom`; staticData
-    // already has the procgen-compiled rules, so the full-world model
-    // works the same as in standalone mode. Only region_id matters.
-    // Both this event and gameState:regionChanged typically fire on
-    // procgen transitions; setCurrentRoom is idempotent so duplicate
-    // calls are safe.
+    // {region_id, world, arrivedFrom}. The tile-grid bits inside
+    // `world` aren't needed (compiled access_rules cover gating), but
+    // exit `side` IS needed for compass-grid rendering and isn't in
+    // staticData. Extract it here, cache for later loads, and apply
+    // to the current world if it's already built.
     client.subscribeEventBus('textAdventure:loadRegion', (data) => {
-        applyRegionChange(data?.region_id, 'textAdventure:loadRegion');
+        const regionName = data?.region_id;
+        captureExitSidesFromSidecar(regionName, data?.world);
+        applyExitSideOverridesToWorld(regionName);
+        applyRegionChange(regionName, 'textAdventure:loadRegion');
     });
 
     // Install the playback bridge so the host-side PlaybackProxy can
