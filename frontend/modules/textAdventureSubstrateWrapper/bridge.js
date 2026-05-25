@@ -416,6 +416,12 @@ async function main() {
         applyInitialState(data);  // applies what it can; if no world, only mode applies
     });
 
+    // Host-pushed header info (mana readout etc.). The host computes
+    // the text; the engine just renders it. Null text hides the bar.
+    client.subscribeEventBus('textAdventureSubstrateWrapper:headerInfo', (data) => {
+        engine.setHeaderInfo(data && data.text ? { text: data.text } : null);
+    });
+
     // Discovery incremental events.
     client.subscribeEventBus('discovery:modeChanged', (data) => {
         const mode = data?.active ? 'discovered' : 'full';

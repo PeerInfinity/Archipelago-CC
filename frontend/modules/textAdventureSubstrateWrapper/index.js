@@ -19,6 +19,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { initManaWiring, getHeaderInfoEvent } from './mana.js';
 
 const SETTINGS_DEFAULTS = Object.freeze({
     messageHistoryLimit: 10,
@@ -133,6 +134,8 @@ export function register(registrationApi) {
     // Bot → bridge control channel. Published by PlaybackProxy on the
     // host side; subscribed by the iframe's playbackBridge.js.
     registrationApi.registerEventBusPublisher(PLAYBACK_CONTROL_EVENT);
+    // Mana/header readout pushed to the bridge for engine.setHeaderInfo.
+    registrationApi.registerEventBusPublisher(getHeaderInfoEvent());
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
     // Procgen mode detection — subscribe to rawJsonDataLoaded to spot
@@ -142,6 +145,20 @@ export function register(registrationApi) {
     // mode detection in textAdventureSubstrate/index.js.
     registrationApi.registerEventBusSubscriberIntent('stateManager:rawJsonDataLoaded');
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
+    // Mana-tracking subscriptions (see mana.js).
+    registrationApi.registerEventBusSubscriberIntent('loopUI:modeChanged');
+    registrationApi.registerEventBusSubscriberIntent('gameState:manaChanged');
+    registrationApi.registerEventBusSubscriberIntent('gameState:regionChanged');
+    registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
+    registrationApi.registerEventBusSubscriberIntent('costDataManager:loaded');
+    registrationApi.registerEventBusSubscriberIntent('costDataManager:cleared');
+
+    // Loop-reset triggered by mana hitting zero out-of-loop-mode
+    // publishes a fresh user:regionMove. Register as dispatcher sender
+    // so the chain accepts the publish.
+    if (typeof registrationApi.registerDispatcherSender === 'function') {
+        registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+    }
 
     // Register the substrate entry so procgen recognizes
     // 'text_adventure' and dispatches loadRegion events to our panel.
@@ -225,6 +242,7 @@ function _buildInitialStatePayload() {
 
 export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     const eventBus = initializationApi.getEventBus();
+    const dispatcher = initializationApi.getDispatcher?.();
     if (!eventBus) return;
 
     // Load persisted settings before broadcasting initialState, so the
@@ -236,6 +254,11 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     // registry entry's getPlaybackController; publishes control events
     // that the in-iframe playbackBridge subscribes to.
     _playbackProxy = new PlaybackProxy({ eventBus });
+
+    // Mana display + deduction wiring. Publishes a header-info event
+    // the bridge subscribes to; deducts mana on observed user actions
+    // when the current region has manaEnabled and loop mode is off.
+    initManaWiring({ eventBus, dispatcher });
 
     // Reload settings on change and re-broadcast initialState so the
     // bridge applies them. Cheap (small payload, idempotent for
