@@ -40,6 +40,12 @@ function log(level, ...args) {
 const POLL_INTERVAL_MS = 50;
 const SYNTHETIC_TASK_ID_BASE = 10000;
 
+// SkillType.Travel from journey-to-ascension/skills.ts. Hardcoded as
+// an integer because the fork doesn't expose the SkillType enum on
+// window. Position is stable — moving an existing entry would also
+// invalidate the fork's save files. Update if the fork ever does.
+const JTA_SKILL_TYPE_TRAVEL = 7;
+
 const _w = /** @type {any} */ (window);   // JtA globals (set by the fork)
 let _client = null;
 
@@ -185,8 +191,11 @@ function _exitLabel(exit) {
 }
 
 /**
- * Inject one synthetic exit-choice task per exit. The fork accepts
- * cost_multiplier = 0 so exit tasks drain no energy in v1.
+ * Inject one synthetic exit-choice task per exit. `free: true` makes
+ * the fork's calcEnergyDrainPerTick return 0 for these (cost_multiplier
+ * alone is not enough — the first tick still drains the per-zone amount
+ * before the rep finishes). `skills: [Travel]` grants Travel XP on
+ * completion and also avoids the empty-skills NaN in tooltips.
  */
 function _injectExitTasks(exits) {
     if (typeof _w.injectSyntheticTask !== 'function') {
@@ -196,7 +205,13 @@ function _injectExitTasks(exits) {
     for (const exit of exits) {
         const taskId = _allocSyntheticId();
         _w.injectSyntheticTask(
-            { id: taskId, name: _exitLabel(exit), costMultiplier: 0 },
+            {
+                id: taskId,
+                name: _exitLabel(exit),
+                costMultiplier: 0,
+                free: true,
+                skills: [JTA_SKILL_TYPE_TRAVEL],
+            },
             () => {
                 _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
             },
