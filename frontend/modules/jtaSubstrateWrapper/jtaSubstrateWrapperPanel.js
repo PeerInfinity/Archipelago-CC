@@ -27,7 +27,13 @@
 // window pointer, so forwarded events only reach whichever wrapper
 // mounted most recently.
 const IFRAME_ID = 'jtaSubstrateWrapper';
-const JTA_IFRAME_SRC = `./modules/journey-to-ascension/index.html?iframeId=${IFRAME_ID}`;
+// `managed=1` tells the JtA fork to flip on managed mode at module load
+// (before DOMContentLoaded), so its auto-bootstrap doesn't load/save state
+// or start the tick loop. Without it, the fork builds task DOM whose
+// click handlers close over Task instances the bridge would later orphan
+// when wiping GAMESTATE — producing the "first-load clicks register no
+// completion until the next reset" bug.
+const JTA_IFRAME_SRC = `./modules/journey-to-ascension/index.html?iframeId=${IFRAME_ID}&managed=1`;
 const BRIDGE_SRC = '../jtaSubstrateWrapper/bridge.js';  // relative to JTA_IFRAME_SRC
 
 export class JtaSubstrateWrapperPanel {
@@ -68,13 +74,14 @@ export class JtaSubstrateWrapperPanel {
         this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
 
         // Inject the bridge after the iframe finishes loading JtA. By
-        // this point JtA has constructed GAMESTATE, run start() (which
-        // calls loadGame), kicked off rendering, and started its tick
-        // loop. The bridge then calls setManagedMode(true), pauses the
-        // loop, and calls initializeHeadless() to wipe the loaded
-        // state. There is a brief window where JtA's localStorage is
-        // touched before the bridge can suppress saves; this is
-        // acceptable for v1 and revisitable post-v1 if it matters.
+        // this point JtA has already flipped on managed mode (via the
+        // ?managed=1 URL param read in game.ts before DOMContentLoaded),
+        // initialized a fresh GAMESTATE, built its task DOM bound to
+        // that GAMESTATE's Task instances, and skipped the tick loop.
+        // The bridge then completes the iframeAdapter handshake and
+        // drives region transitions via loadZone (which rebuilds the
+        // task DOM on each call so click handlers stay bound to the
+        // current GAMESTATE.tasks).
         this.iframe.addEventListener('load', () => this._injectBridge());
 
         this.rootElement.appendChild(this.iframe);

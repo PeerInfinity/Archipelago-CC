@@ -297,17 +297,20 @@ function _handleTravelTaskCompleted(zone, task) {
 // ────────────────────────────────────────────────────────────────
 
 async function main() {
-    // Step 1: switch JtA into managed mode. See Phase 4 commit for
-    // why this happens here (the iframe `load` injection point is
-    // after JtA's own DOMContentLoaded; we wipe and re-init).
+    // Step 1: confirm JtA is in managed mode. The ?managed=1 URL param
+    // (set by jtaSubstrateWrapperPanel) flips this on at module load,
+    // before DOMContentLoaded — so GAMESTATE is already initialized
+    // fresh under managed mode and the tick loop never started. The
+    // setManagedMode + pauseGameLoop calls below are defensive no-ops
+    // for that path; they still cover the case where the URL param
+    // gets stripped somehow.
     if (typeof _w.setManagedMode !== 'function') {
         log('error', 'JtA managed-mode hook not present; aborting bridge');
         return;
     }
     _w.setManagedMode(true);
     if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
-    if (typeof _w.initializeHeadless === 'function') _w.initializeHeadless();
-    log('info', 'JtA in managed mode (loop paused, state wiped)');
+    log('info', 'JtA in managed mode (loop paused)');
 
     // Step 2: complete the iframeAdapter handshake.
     _client = new IframeClient();
