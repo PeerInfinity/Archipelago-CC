@@ -23,6 +23,14 @@ import { TextAdventureEngine } from '../textAdventureEngine/engine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { installPlaybackBridge } from './playbackBridge.js';
+import {
+    customRegionEnterMessage,
+    customLocationCheckMessage,
+    customLocationInaccessibleMessage,
+    customLocationAlreadyCheckedMessage,
+    customExitMoveMessage,
+    customExitInaccessibleMessage,
+} from './templating.js';
 
 const statusEl = document.getElementById('status');
 const appEl = document.getElementById('app');
@@ -36,6 +44,15 @@ function setStatus(text, kind = '') {
 function log(level, ...args) {
     const fn = console[level] || console.log;
     fn('[tasw-bridge]', ...args);
+}
+
+// Plain HTML escaper for the generic-fallback discovery message. The
+// templating module has its own copy for templated content; this one
+// is used only for the small inline span we build directly.
+function escapeHtmlPlain(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
 }
 
 // ─── World translation ────────────────────────────────────────────
@@ -227,6 +244,14 @@ async function main() {
     // textAdventureSubstrateUI.js and locations/locationUI.js).
     engine.on('command:move', ({ fromRoomId, exitId, targetRoomId }) => {
         log('debug', 'engine command:move', { fromRoomId, exitId, targetRoomId });
+        // Push the exit's move prose (custom or generic) before
+        // dispatching, so the message lands before the region change.
+        const templated = customExitMoveMessage(_customData, exitId, {
+            destinationRegion: targetRoomId,
+        });
+        if (templated) {
+            engine.displayMessage(templated, 'normal', { html: true });
+        }
         client.publishEventDispatcher('user:regionMove', {
             sourceRegion: fromRoomId,
             targetRegion: targetRoomId,
@@ -236,11 +261,66 @@ async function main() {
 
     engine.on('command:examine', ({ roomId, itemId }) => {
         log('debug', 'engine command:examine', { roomId, itemId });
+        // Resolve the item label for {item} substitution. The item
+        // hasn't been collected yet at this point (engine fires
+        // command:examine before the snapshot round-trip), so
+        // wasUnchecked is true and {item} gets the styled span.
+        const item = world?.rooms[roomId]?.items.find(i => i.id === itemId);
+        const itemLabel = item?.label ?? itemId;
+        const templated = customLocationCheckMessage(_customData, itemId, {
+            item: itemLabel,
+            wasUnchecked: true,
+        });
+        if (templated) {
+            engine.displayMessage(templated, 'discovery', { html: true });
+        } else {
+            // No custom prose — emit the same generic discovery line
+            // the engine uses in standalone mode, so managed mode
+            // doesn't lose discovery feedback entirely.
+            engine.displayMessage(
+                `You discover: <span class="tae-item-name">${escapeHtmlPlain(itemLabel)}</span>`,
+                'discovery',
+                { html: true },
+            );
+        }
         client.publishEventDispatcher('user:locationCheck', {
             locationName: itemId,
             regionName: roomId,
             originator: 'textAdventureSubstrateWrapper',
         });
+    });
+
+    engine.on('command:examineBlocked', ({ roomId, itemId, reason }) => {
+        const item = world?.rooms[roomId]?.items.find(i => i.id === itemId);
+        const itemLabel = item?.label ?? itemId;
+        if (reason === 'collected') {
+            const t = customLocationAlreadyCheckedMessage(_customData, itemId, { item: itemLabel });
+            engine.displayMessage(
+                t ?? `${itemLabel}: already examined.`,
+                'system',
+                t ? { html: true } : {},
+            );
+        } else {
+            const t = customLocationInaccessibleMessage(_customData, itemId, { item: itemLabel });
+            engine.displayMessage(
+                t ?? `You can't interact with that: ${itemLabel}.`,
+                'error',
+                t ? { html: true } : {},
+            );
+        }
+    });
+
+    engine.on('command:moveBlocked', ({ fromRoomId, exitId, targetRoomId }) => {
+        const exit = world?.rooms[fromRoomId]?.exits.find(e => e.id === exitId);
+        const exitLabel = exit?.label ?? exitId;
+        const t = customExitInaccessibleMessage(_customData, exitId, {
+            destinationRegion: targetRoomId,
+        });
+        engine.displayMessage(
+            t ?? `You can't go that way: ${exitLabel}.`,
+            'error',
+            t ? { html: true } : {},
+        );
     });
 
     engine.on('command:explore', ({ roomId }) => {
@@ -316,12 +396,12 @@ async function main() {
                 applyInventoryFromSnapshot(engine, snapshot);
                 applyCheckedLocationsFromSnapshot(engine, snapshot, w);
                 if (currentRegion && w.rooms[currentRegion]) {
-                    engine.setCurrentRoom(currentRegion);
+                    // Route through applyRegionChange so the templated
+                    // enter message fires on the initial mount too,
+                    // not just on subsequent gameState transitions.
+                    applyRegionChange(currentRegion, 'rebuildWorld');
                 }
             });
-            if (currentRegion) {
-                evaluateAccessibilityForRoom(engine, client, w, currentRegion);
-            }
             // Re-apply any initialState that arrived before the world
             // was built (discoveryMode already applied; this fills in
             // room/item discovered flags now that we have a world).
@@ -468,6 +548,16 @@ async function main() {
         lastSeenRegion = newRegion;
         if (!world) return;
         if (world.rooms[newRegion]) {
+            // Push the templated (or generic) enter message before
+            // setCurrentRoom — the engine's managed mode skips its
+            // own room description, so this is the only enter prose
+            // the player sees.
+            const templated = customRegionEnterMessage(_customData, newRegion);
+            engine.displayMessage(
+                templated ?? `You are in ${newRegion}.`,
+                'normal',
+                templated ? { html: true } : {},
+            );
             engine.setCurrentRoom(newRegion);
             evaluateAccessibilityForRoom(engine, client, world, newRegion);
         } else {
