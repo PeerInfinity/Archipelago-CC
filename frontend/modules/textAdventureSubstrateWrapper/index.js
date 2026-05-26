@@ -156,10 +156,12 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent('costDataManager:loaded');
     registrationApi.registerEventBusSubscriberIntent('costDataManager:cleared');
 
-    // Loop-reset triggered by mana hitting zero out-of-loop-mode
-    // publishes a fresh user:regionMove. Register as dispatcher sender
-    // so the chain accepts the publish.
+    // Click handlers in the bridge publish user:locationCheck and
+    // user:regionMove (loop reset on mana-zero also publishes a fresh
+    // user:regionMove). Register as dispatcher sender so the chain
+    // accepts the publishes; mirrors the original textAdventureSubstrate.
     if (typeof registrationApi.registerDispatcherSender === 'function') {
+        registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
         registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     }
 

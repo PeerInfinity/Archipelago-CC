@@ -173,6 +173,13 @@ function buildWorldFromStaticData(staticData, currentRegion) {
             items: (regionData.locations ?? []).map(loc => ({
                 id: loc.name,
                 label: loc.name,
+                // itemName is the AP item the location contains (e.g.
+                // "Sword"), distinct from the location name itself
+                // (e.g. "Slay Yorgle"). Used by the templating layer
+                // for the {item} placeholder and by the generic check
+                // message. May be null when the AP rules don't expose
+                // an item (synthetic / placeholder locations).
+                itemName: loc.item?.name ?? null,
                 description: loc.item?.name
                     ? `${loc.name} — checking sends '${loc.item.name}'.`
                     : loc.name,
@@ -317,24 +324,31 @@ async function main() {
 
     engine.on('command:examine', ({ roomId, itemId }) => {
         log('debug', 'engine command:examine', { roomId, itemId });
-        // Resolve the item label for {item} substitution. The item
-        // hasn't been collected yet at this point (engine fires
-        // command:examine before the snapshot round-trip), so
-        // wasUnchecked is true and {item} gets the styled span.
+        // Resolve the item the location contains (loc.item.name) vs.
+        // the location name itself. Templates expect {item} = the
+        // actual reward and {locationName} = the spot being searched;
+        // conflating the two showed location names where item names
+        // should appear. wasUnchecked is true (the engine fires
+        // command:examine before the snapshot round-trip), so {item}
+        // gets the styled tae-item-name span.
         const item = world?.rooms[roomId]?.items.find(i => i.id === itemId);
-        const itemLabel = item?.label ?? itemId;
+        const locationName = item?.label ?? itemId;
+        const itemNameRaw = item?.itemName ?? null;
         const templated = customLocationCheckMessage(_customData, itemId, {
-            item: itemLabel,
+            item: itemNameRaw ?? 'something',
             wasUnchecked: true,
         });
         if (templated) {
             engine.displayMessage(templated, 'discovery', { html: true });
         } else {
-            // No custom prose — emit the same generic discovery line
-            // the engine uses in standalone mode, so managed mode
-            // doesn't lose discovery feedback entirely.
+            // Mirror the original substrate's generic check message
+            // so the verb makes the action's intent ("search") clear
+            // — "discover" was being mistaken for the explore action.
+            const itemHtml = itemNameRaw
+                ? `<span class="tae-item-name">${escapeHtmlPlain(itemNameRaw)}</span>`
+                : 'something';
             engine.displayMessage(
-                `You discover: <span class="tae-item-name">${escapeHtmlPlain(itemLabel)}</span>`,
+                `You search ${escapeHtmlPlain(locationName)} and find ${itemHtml}.`,
                 'discovery',
                 { html: true },
             );
