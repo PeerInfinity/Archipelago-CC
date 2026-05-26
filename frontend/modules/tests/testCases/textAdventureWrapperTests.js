@@ -21,6 +21,14 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import {
+    arrangeShuffledSpiral,
+    buildRulesJson,
+} from '../../procgenPipeline/procgenPipelineEngine.js';
+import {
+    DEFAULT_ITEMS,
+    DEFAULT_OBSTACLES,
+} from '../../shared/procgen/library.js';
 
 const PROCGEN_RULES_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
@@ -313,16 +321,6 @@ async function locationCheckRealClick(testController) {
         300,
     );
     if (!ready) {
-        // Diagnostics: report what we found instead.
-        const iframe = document.querySelector('iframe.tasw-iframe');
-        const status = iframe?.contentDocument?.getElementById?.('status')?.textContent ?? '(no status)';
-        const appHtml = iframe?.contentDocument?.getElementById?.('app')?.innerHTML?.slice(0, 500) ?? '(no app)';
-        const dataActionCount = iframe?.contentDocument?.querySelectorAll?.('[data-action]')?.length ?? -1;
-        const dataExitCount = iframe?.contentDocument?.querySelectorAll?.('[data-exit-id]')?.length ?? -1;
-        testController.log(`iframe status: ${status}`);
-        testController.log(`iframe app html (first 500): ${appHtml}`);
-        testController.log(`data-action elements: ${dataActionCount}`);
-        testController.log(`data-exit-id elements: ${dataExitCount}`);
         testController.reportCondition('wrapper iframe rendered a clickable location', false);
         return testController.getOverallResult();
     }
@@ -370,6 +368,212 @@ registerTest({
                + 'asserts the location ends up in checkedLocations. Reproduces '
                + 'the user-reported bug end-to-end through the real bridge.',
     testFunction: locationCheckRealClick,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: true,
+});
+
+
+/**
+ * The actual bug repro: a freshly-generated shuffled-spiral world with
+ * text_adventure regions. Mirrors the user's manual flow:
+ *
+ *   1. Set up scenario (6 text_adventure + 3 maze, text_adventure
+ *      start, shuffled spiral).
+ *   2. Generate rules via arrangeShuffledSpiral + buildRulesJson —
+ *      the same calls the procgenPipeline panel's Generate button
+ *      makes.
+ *   3. Publish files:jsonLoaded — the same event the Load-into-
+ *      frontend button publishes.
+ *   4. Wait for the wrapper iframe + bridge to settle.
+ *   5. Click [x] explore until at least one [data-item-id] is
+ *      rendered (discovery mode is on by default in fresh worlds).
+ *   6. Click the rendered location and assert checkedLocations
+ *      updates in the snapshot.
+ *
+ * If this reproduces the bug, we know it's the procgen-generated
+ * rules.json + wrapper combination, not procgen_maze loaded from
+ * disk. From there we can diff the two rules.json shapes to find
+ * what's different.
+ */
+async function locationCheckFreshProcgen(testController) {
+    testController.log('Generating fresh shuffled-spiral rules…');
+
+    const itemPool = {
+        victory: 1,
+        key_red: 1,
+        key_green: 1,
+        key_blue: 1,
+    };
+    const obstaclePool = {
+        door_red: 1,
+        door_green: 1,
+        door_blue: 1,
+    };
+    const substrateQuotas = { text_adventure: 6, maze: 3 };
+    const seed = 'tasw-test-1';
+
+    let grid, startCell, stats, pool;
+    try {
+        const result = arrangeShuffledSpiral({
+            regionSize: { width: 7, height: 7 },
+            itemPool: { ...itemPool },
+            obstaclePool: { ...obstaclePool },
+            seed,
+            regionParams: {},
+            growthParams: {
+                substrateQuotas,
+                maxItemsPerRegion: 2,
+                startSubstrate: 'text_adventure',
+            },
+            hazardOpts: {},
+        });
+        grid = result.grid; startCell = result.startCell;
+        stats = result.stats; pool = result.pool;
+    } catch (e) {
+        testController.log(`arrangeShuffledSpiral threw: ${e.message}`, 'error');
+        testController.reportCondition('generated shuffled-spiral grid', false);
+        return testController.getOverallResult();
+    }
+    testController.log(`Generated grid: ${stats.regionsPlaced} regions, stop=${stats.stopReason}`);
+    testController.reportCondition('generated shuffled-spiral grid', true);
+
+    const rulesJson = buildRulesJson(grid, {
+        startCell,
+        seed,
+        enableLoopMode: false,
+        regionXpEffect: 'cost',
+        completionConditionItem: 'victory',
+        procgenMetadata: { driver: 'shuffled-spiral-test', stop_reason: stats.stopReason },
+    });
+    testController.reportCondition('built rules.json', !!rulesJson);
+
+    // Mirror the Load-into-frontend button flow.
+    const rulesLoadedPromise = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+    testController.eventBus.publish('files:jsonLoaded', {
+        jsonData: rulesJson,
+        selectedPlayerId: '1',
+        sourceName: 'procgenPipeline-test',
+    });
+    await rulesLoadedPromise;
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded into frontend', true);
+
+    // Make the wrapper panel active so its iframe mounts.
+    testController.eventBus.publish('ui:activatePanel', {
+        panelId: 'textAdventureSubstrateWrapperPanel',
+    });
+
+    // Wait for the iframe to render its current room. The fresh
+    // procgen world starts the player in a text_adventure region;
+    // the engine will paint exits and maybe an explore link.
+    let iframeWin = null;
+    const mounted = await testController.pollForCondition(
+        () => {
+            const iframe = document.querySelector('iframe.tasw-iframe');
+            if (!iframe?.contentDocument) return false;
+            iframeWin = iframe.contentWindow;
+            // "tae-actions" div exists once the engine has rendered a
+            // room (even with no items). Use that as the readiness
+            // signal — not [data-item-id] (which may not exist if
+            // discovery mode hides everything).
+            return iframe.contentDocument.querySelector('.tae-actions') !== null;
+        },
+        'wrapper iframe rendered a room',
+        15000,
+        300,
+    );
+    if (!mounted) {
+        testController.reportCondition('wrapper iframe rendered a room', false);
+        return testController.getOverallResult();
+    }
+    const iframe = document.querySelector('iframe.tasw-iframe');
+    testController.log(`Initial room state: ${iframe.contentDocument.querySelector('.tae-actions-title')?.textContent}`);
+
+    // Click [x] explore repeatedly until at least one location link
+    // appears. Mirrors the user's "click Explore until everything
+    // revealed" step. Cap iterations so a broken explore can't loop
+    // forever.
+    let foundItem = false;
+    for (let i = 0; i < 20; i++) {
+        const item = iframe.contentDocument.querySelector('[data-item-id]');
+        if (item) { foundItem = true; break; }
+        const explore = iframe.contentDocument.querySelector('[data-action="explore"]');
+        if (!explore) break;
+        const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
+        explore.dispatchEvent(evt);
+        await new Promise(r => setTimeout(r, 200));
+    }
+    if (!foundItem) {
+        const explore = iframe.contentDocument.querySelector('[data-action="explore"]');
+        const itemCount = iframe.contentDocument.querySelectorAll('[data-item-id]').length;
+        const actionCount = iframe.contentDocument.querySelectorAll('[data-action]').length;
+        testController.log(`After explore loop: items=${itemCount}, actions=${actionCount}, explore-present=${!!explore}`);
+        testController.reportCondition('found a clickable location after explore', false);
+        return testController.getOverallResult();
+    }
+    testController.reportCondition('found a clickable location after explore', true);
+
+    const targetSpan = iframe.contentDocument.querySelector('[data-item-id]');
+    const locationName = targetSpan.dataset.itemId;
+    const regionName = targetSpan.dataset.roomId;
+    testController.log(`Clicking location: ${locationName} in ${regionName}`);
+
+    // Verify the location IS known to stateManager before clicking
+    // — if this fails, we've isolated the bug to the rules.json /
+    // stateManager mismatch.
+    const staticData = testController.stateManager.getStaticData?.();
+    const regionData = staticData?.regions?.get?.(regionName);
+    const knownInRegion = regionData?.locations?.some?.(l => l.name === locationName);
+    testController.assertEqual(
+        `location ${locationName} is in staticData.regions[${regionName}].locations`,
+        true,
+        !!knownInRegion,
+    );
+    // Also check staticData.locations (the worker's lookup map).
+    const knownInLocations = staticData?.locations?.has?.(locationName);
+    testController.assertEqual(
+        `location ${locationName} is in staticData.locations`,
+        true,
+        !!knownInLocations,
+    );
+
+    const beforeSnap = testController.stateManager.getSnapshot();
+    const beforeChecked = (beforeSnap?.checkedLocations instanceof Set
+        ? beforeSnap.checkedLocations.has(locationName)
+        : (Array.isArray(beforeSnap?.checkedLocations) && beforeSnap.checkedLocations.includes(locationName)));
+    testController.assertEqual('location not yet checked before click', false, beforeChecked);
+
+    const snapshotPromise = testController.waitForEvent('stateManager:snapshotUpdated', 5000)
+        .catch(() => null);
+
+    const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
+    targetSpan.dispatchEvent(evt);
+
+    await snapshotPromise;
+    await testController.stateManager.pingWorker('after-fresh-click', 3000);
+
+    const afterSnap = testController.stateManager.getSnapshot();
+    const afterChecked = (afterSnap?.checkedLocations instanceof Set
+        ? afterSnap.checkedLocations.has(locationName)
+        : (Array.isArray(afterSnap?.checkedLocations) && afterSnap.checkedLocations.includes(locationName)));
+    testController.assertEqual(
+        `location ${locationName} appears in checkedLocations after fresh click`,
+        true,
+        afterChecked,
+    );
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'tasw-location-check-fresh-procgen',
+    name: 'Wrapper: clicking a location in a freshly-generated procgen world',
+    description: 'Generates a shuffled-spiral world with text_adventure regions, '
+               + 'loads it via files:jsonLoaded, mounts the wrapper, clicks Explore '
+               + 'until a location is revealed, clicks the location, and asserts '
+               + 'it ends up in checkedLocations. The bug-repro for the user-reported '
+               + '"click does nothing" issue against fresh procgen worlds.',
+    testFunction: locationCheckFreshProcgen,
     category: 'textAdventureSubstrateWrapper',
     enabled: true,
 });

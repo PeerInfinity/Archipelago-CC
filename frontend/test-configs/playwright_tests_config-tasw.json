@@ -30,6 +30,15 @@
       "enabled": true,
       "order": 2,
       "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-fresh-procgen",
+      "name": "Wrapper: clicking a location in a freshly-generated procgen world",
+      "description": "Bug repro: generate shuffled-spiral, load, click Explore, click location.",
+      "functionName": "locationCheckFreshProcgen",
+      "enabled": true,
+      "order": 3,
+      "category": "textAdventureSubstrateWrapper"
     }
   ]
 }
