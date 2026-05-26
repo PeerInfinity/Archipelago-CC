@@ -458,6 +458,24 @@ async function locationCheckFreshProcgen(testController) {
     await testController.stateManager.pingWorker('after-rules-load', 3000);
     testController.reportCondition('rules loaded into frontend', true);
 
+    // Probe loops state pre-disable. Loops auto-enters loop mode when
+    // rules.json has loop_costs (procgen "Enable loop mode" toggle).
+    // In loop mode, handleUserLocationCheckForLoops INTERCEPTS the
+    // user:locationCheck and tries to queue it (or silently swallows
+    // it when pathfinding fails). That's the user's bug — fresh
+    // procgen worlds with loop_costs have this behavior.
+    const { centralRegistry: cr0 } = await import('../../../app/core/centralRegistry.js');
+    const loopUI0 = cr0.getPublicFunction?.('loops', 'getLoopState')?.();
+    testController.log(`loops state post-load: ${JSON.stringify(loopUI0)}`);
+
+    testController.log('Disabling loop mode to test hypothesis…');
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable' });
+    await new Promise(r => setTimeout(r, 200));
+    testController.eventBus.publish('loopUI:modeChanged', { active: false });
+    await new Promise(r => setTimeout(r, 200));
+    const loopUI1 = cr0.getPublicFunction?.('loops', 'getLoopState')?.();
+    testController.log(`loops state post-disable: ${JSON.stringify(loopUI1)}`);
+
     // Make the wrapper panel active so its iframe mounts.
     testController.eventBus.publish('ui:activatePanel', {
         panelId: 'textAdventureSubstrateWrapperPanel',
