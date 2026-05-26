@@ -1,0 +1,35 @@
+{
+  "autoStartTestsOnLoad": true,
+  "hideDisabledTests": true,
+  "randomizeOrder": false,
+  "defaultEnabledState": false,
+  "tests": [
+    {
+      "id": "tasw-location-check-direct-dispatch",
+      "name": "Wrapper: user:locationCheck via host dispatcher updates checkedLocations",
+      "description": "Isolates the host-side chain from the iframe transport.",
+      "functionName": "locationCheckDirectDispatch",
+      "enabled": true,
+      "order": 0,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-iframe-dispatch",
+      "name": "Wrapper: user:locationCheck via iframe postMessage updates checkedLocations",
+      "description": "Mounts the wrapper iframe and dispatches via the bridge's postMessage path.",
+      "functionName": "locationCheckIframeDispatch",
+      "enabled": true,
+      "order": 1,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-real-click",
+      "name": "Wrapper: clicking a rendered location updates checkedLocations",
+      "description": "End-to-end click through the real bridge.",
+      "functionName": "locationCheckRealClick",
+      "enabled": true,
+      "order": 2,
+      "category": "textAdventureSubstrateWrapper"
+    }
+  ]
+}

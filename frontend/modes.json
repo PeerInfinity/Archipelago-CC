@@ -57,6 +57,12 @@
       "enabled": true
     }
   },
+  "test-tasw": {
+    "testsConfig": {
+      "path": "./test-configs/playwright_tests_config-tasw.json",
+      "enabled": true
+    }
+  },
   "test-spoilers": {
     "moduleConfig": {
       "path": "./module-configs/modules-test-spoilers.json",
