@@ -42,11 +42,22 @@ function makeMockDispatcher() {
 }
 
 function makeMockRegistrationApi() {
-    const calls = { dispatcherReceivers: [], dispatcherSenders: [] };
+    const calls = {
+        dispatcherReceivers: [],
+        dispatcherSenders: [],
+        publicFunctions: new Map(),
+        eventBusPublishers: new Set(),
+    };
     return {
         registerDispatcherReceiver: (...args) => { calls.dispatcherReceivers.push(args); },
         registerDispatcherSender: (eventName, direction, target) => {
             calls.dispatcherSenders.push({ eventName, direction, target });
+        },
+        registerPublicFunction: (moduleName, fnName, fn) => {
+            calls.publicFunctions.set(`${moduleName}.${fnName}`, fn);
+        },
+        registerEventBusPublisher: (eventName) => {
+            calls.eventBusPublishers.add(eventName);
         },
         _calls: calls,
     };
@@ -79,6 +90,8 @@ const SAMPLE_RULES = {
 
 const FAKE_MAZE_ENTRY = {
     id: 'maze',
+    label: 'Maze',
+    panelComponentType: 'mazeRoomPanel',
     loadRegionEvent: 'maze:loadRegion',
     deserializeWorld: (sidecar) => ({ kind: 'world', tag: sidecar.tag }),
 };
@@ -256,5 +269,90 @@ describe('procgenPlayer index', () => {
             .filter((p) => p.event === 'maze:loadRegion');
         expect(newLoadEvents).toHaveLength(0);
         expect(dispatcher.forwarded).toHaveLength(1);
+    });
+
+    describe('procgen:activeSubstrateChanged', () => {
+        function setup() {
+            _testOnly_resetModuleState();
+            const reg = makeMockRegistrationApi();
+            register(reg);
+            const bus = makeMockEventBus();
+            const disp = makeMockDispatcher();
+            initialize('procgenPlayer', 0, makeMockInitApi(bus, disp));
+            return { reg, bus, disp };
+        }
+
+        function activeSubstrateEvents(bus) {
+            return bus.published.filter((p) => p.event === 'procgen:activeSubstrateChanged');
+        }
+
+        it('registers procgen:activeSubstrateChanged as a publisher', () => {
+            const reg = makeMockRegistrationApi();
+            _testOnly_resetModuleState();
+            register(reg);
+            expect(reg._calls.eventBusPublishers.has('procgen:activeSubstrateChanged')).toBe(true);
+        });
+
+        it('exposes getActiveSubstrate as a public function', () => {
+            const reg = makeMockRegistrationApi();
+            _testOnly_resetModuleState();
+            register(reg);
+            expect(reg._calls.publicFunctions.has('procgenPlayer.getActiveSubstrate')).toBe(true);
+        });
+
+        it('emits the active substrate payload when entering a warehoused region', () => {
+            const { reg, bus } = setup();
+            bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+            // initial-load synthesis goes through the dispatcher, so
+            // drive the receiver directly to simulate the regionMove
+            // landing back on this module.
+            const handler = reg._calls.dispatcherReceivers[0][2];
+            handler({ targetRegion: 'region_0_0', exitName: 'GameStart', sourceRegion: 'Menu' });
+            const events = activeSubstrateEvents(bus);
+            expect(events).toHaveLength(1);
+            expect(events[0].data).toEqual({
+                substrate: 'maze',
+                componentType: 'mazeRoomPanel',
+                label: 'Maze',
+                regionId: 'region_0_0',
+            });
+        });
+
+        it('emits null payload when moving to a non-warehoused region (e.g. Menu)', () => {
+            const { reg, bus } = setup();
+            bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+            const handler = reg._calls.dispatcherReceivers[0][2];
+            // Move into a warehoused region first.
+            handler({ targetRegion: 'region_0_0', exitName: 'GameStart', sourceRegion: 'Menu' });
+            // Then move back out to Menu (not in the warehouse).
+            handler({ targetRegion: 'Menu', exitName: null, sourceRegion: 'region_0_0' });
+            const events = activeSubstrateEvents(bus);
+            expect(events.length).toBeGreaterThanOrEqual(2);
+            expect(events[events.length - 1].data).toBeNull();
+        });
+
+        it('emits null when a subsequent rawJsonDataLoaded is non-procgen (warehouse cleared)', () => {
+            const { bus } = setup();
+            bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+            bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: { start_regions: { 1: ['Menu'] } }, selectedPlayerInfo: { playerId: '1' } });
+            const events = activeSubstrateEvents(bus);
+            expect(events[events.length - 1].data).toBeNull();
+        });
+
+        it('getActiveSubstrate returns the most recently broadcast payload', () => {
+            const { reg, bus } = setup();
+            bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+            const handler = reg._calls.dispatcherReceivers[0][2];
+            handler({ targetRegion: 'region_0_1', exitName: 'exit', sourceRegion: 'region_0_0' });
+            const getActiveSubstrate = reg._calls.publicFunctions.get('procgenPlayer.getActiveSubstrate');
+            expect(getActiveSubstrate()).toEqual({
+                substrate: 'maze',
+                componentType: 'mazeRoomPanel',
+                label: 'Maze',
+                regionId: 'region_0_1',
+            });
+            handler({ targetRegion: 'Menu', exitName: null, sourceRegion: 'region_0_1' });
+            expect(getActiveSubstrate()).toBeNull();
+        });
     });
 });

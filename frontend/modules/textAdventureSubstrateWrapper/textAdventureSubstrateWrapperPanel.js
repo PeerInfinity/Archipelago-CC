@@ -6,6 +6,9 @@
  */
 
 import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
+import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 
 export const PANEL_SHOWN_EVENT = 'textAdventureSubstrateWrapper:panelShown';
 
@@ -27,7 +30,14 @@ export class TextAdventureSubstrateWrapperPanel {
         this.componentState = componentState;
         this.rootElement = null;
         this.iframe = null;
+        this._inactiveOverlay = null;
+        this._activeSubstrate = null;
+        this._isLoopModeActive = false;
+        this._unsubActiveSubstrate = null;
+        this._unsubLoopMode = null;
         this._initializeUI();
+        this._subscribeToActiveSubstrate();
+        this._subscribeToLoopMode();
     }
 
     getRootElement() {
@@ -56,6 +66,9 @@ export class TextAdventureSubstrateWrapperPanel {
     _initializeUI() {
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'tasw-root';
+        // Overlay positions itself absolute over the iframe; the
+        // wrapper needs a containing block.
+        this.rootElement.style.position = 'relative';
 
         this.iframe = document.createElement('iframe');
         this.iframe.className = 'tasw-iframe';
@@ -70,9 +83,78 @@ export class TextAdventureSubstrateWrapperPanel {
         // allowed in this document".
         this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
         this.rootElement.appendChild(this.iframe);
+
+        this._inactiveOverlay = new SubstrateInactiveOverlay({
+            onActivateSubstrate: () => this._activateCurrentSubstratePanel(),
+            onActivateLoops: () => this._activateLoopsPanel(),
+        });
+        this.rootElement.appendChild(this._inactiveOverlay.root);
+    }
+
+    _subscribeToActiveSubstrate() {
+        if (!eventBus?.subscribe) return;
+        const handler = (payload) => {
+            this._activeSubstrate = payload || null;
+            this._updateInactiveOverlay();
+        };
+        eventBus.subscribe('procgen:activeSubstrateChanged', handler, 'textAdventureSubstrateWrapper');
+        this._unsubActiveSubstrate = () =>
+            eventBus.unsubscribe?.('procgen:activeSubstrateChanged', handler, 'textAdventureSubstrateWrapper');
+
+        const initial = centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.();
+        this._activeSubstrate = initial || null;
+        this._updateInactiveOverlay();
+    }
+
+    _subscribeToLoopMode() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            this._isLoopModeActive = !!data?.active;
+            this._updateInactiveOverlay();
+        };
+        eventBus.subscribe('loopUI:modeChanged', handler, 'textAdventureSubstrateWrapper');
+        this._unsubLoopMode = () =>
+            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'textAdventureSubstrateWrapper');
+    }
+
+    _activateCurrentSubstratePanel() {
+        const target = this._activeSubstrate?.componentType;
+        if (target && eventBus?.publish) {
+            eventBus.publish('ui:activatePanel', { panelId: target }, 'textAdventureSubstrateWrapper');
+        }
+    }
+
+    _activateLoopsPanel() {
+        if (eventBus?.publish) {
+            eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'textAdventureSubstrateWrapper');
+        }
+    }
+
+    _updateInactiveOverlay() {
+        if (!this._inactiveOverlay || !this.iframe) return;
+        const myComponent = substrateRegistryEntry.panelComponentType;
+        const active = this._activeSubstrate;
+        const isActiveForMe = !!(active && active.componentType === myComponent);
+
+        if (isActiveForMe) {
+            this._inactiveOverlay.setVisible(false);
+            this.iframe.style.display = '';
+            return;
+        }
+
+        const state = active ? 'wrong-substrate' : 'no-active-substrate';
+        this._inactiveOverlay.update({
+            state,
+            activeSubstrate: active,
+            loopModeActive: !!this._isLoopModeActive,
+        });
+        this._inactiveOverlay.setVisible(true);
+        this.iframe.style.display = 'none';
     }
 
     destroy() {
+        if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
+        if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
         if (this.iframe) {
             this.iframe.src = 'about:blank';
             this.iframe = null;
@@ -81,5 +163,6 @@ export class TextAdventureSubstrateWrapperPanel {
             this.rootElement.parentNode.removeChild(this.rootElement);
         }
         this.rootElement = null;
+        this._inactiveOverlay = null;
     }
 }

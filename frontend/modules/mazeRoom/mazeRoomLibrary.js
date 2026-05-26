@@ -33,6 +33,7 @@ import { getPanelInstance } from './index.js';
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'maze',
+    label: 'Maze',
     panelComponentType: 'mazeRoomPanel',
     loadRegionEvent: 'maze:loadRegion',
     supportedFeatures: Object.freeze([

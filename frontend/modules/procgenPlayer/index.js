@@ -51,6 +51,32 @@ let pendingStartTransition = null;
 // (e.g. the first real region after a synthetic 'Menu'). Cached here
 // so substrate-driven loop resets can teleport directly to it.
 let resolvedStartRegion = null;
+// Last-broadcast active substrate. Cached so late-mounted substrate
+// panels can query getActiveSubstrate() at mount time — the eventBus
+// has no replay semantics for late subscribers.
+let activeSubstrate = null;
+
+function buildActiveSubstratePayload(regionId) {
+    if (!warehouse || !regionId) return null;
+    const entry = warehouse.get(regionId);
+    if (!entry) return null;
+    const registryEntry = entry.substrate ? substrateRegistry.get(entry.substrate) : null;
+    if (!registryEntry || !registryEntry.panelComponentType) return null;
+    return {
+        substrate: entry.substrate,
+        componentType: registryEntry.panelComponentType,
+        label: registryEntry.label ?? entry.substrate,
+        regionId,
+    };
+}
+
+function publishActiveSubstrateChanged(regionId) {
+    const payload = buildActiveSubstratePayload(regionId);
+    activeSubstrate = payload;
+    if (eventBus?.publish) {
+        eventBus.publish('procgen:activeSubstrateChanged', payload);
+    }
+}
 
 function publishLoadRegion(regionId, arrivedFrom) {
     if (!warehouse || !eventBus?.publish) return false;
@@ -61,6 +87,7 @@ function publishLoadRegion(regionId, arrivedFrom) {
         world: entry.world,
         arrivedFrom,
     });
+    publishActiveSubstrateChanged(regionId);
     return true;
 }
 
@@ -75,6 +102,10 @@ function handleRawJsonLoaded(data) {
         warehouse = null;
         pendingStartTransition = null;
         resolvedStartRegion = null;
+        activeSubstrate = null;
+        if (eventBus?.publish) {
+            eventBus.publish('procgen:activeSubstrateChanged', null);
+        }
         return;
     }
     warehouse = built;
@@ -129,6 +160,12 @@ function handleRegionMove(data) {
         }
         const arrivedFrom = arrivedExitId ? { exit_id: arrivedExitId } : null;
         publishLoadRegion(target, arrivedFrom);
+    } else if (warehouse) {
+        // Target is a region the warehouse doesn't own (e.g. AP-native
+        // Menu, or a non-procgen region). No substrate panel is "the
+        // right one" — broadcast null so already-mounted substrate
+        // panels switch to their no-active-substrate overlay.
+        publishActiveSubstrateChanged(null);
     }
     if (dispatcher?.publishToNextModule) {
         dispatcher.publishToNextModule('procgenPlayer', 'user:regionMove', data, { direction: 'up' });
@@ -147,6 +184,14 @@ export function register(registrationApi) {
     // carry gameState through the Menu -> first real region transition.
     if (typeof registrationApi.registerDispatcherSender === 'function') {
         registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+    }
+
+    // Broadcast event for substrate panels: which substrate owns the
+    // current region, or null if no procgen warehouse is loaded /
+    // current region has no substrate. Late subscribers can query
+    // getActiveSubstrate() since the eventBus does not replay.
+    if (typeof registrationApi.registerEventBusPublisher === 'function') {
+        registrationApi.registerEventBusPublisher('procgen:activeSubstrateChanged');
     }
 
     // Resolved start region — substrates use this for loop-mode
@@ -176,6 +221,15 @@ export function register(registrationApi) {
                     manaEnabled: entry.world?.manaEnabled === true,
                 };
             },
+        );
+
+        // Last-broadcast value of procgen:activeSubstrateChanged.
+        // Lets late-mounting substrate panels initialize their overlay
+        // state without waiting for the next regionMove.
+        registrationApi.registerPublicFunction(
+            'procgenPlayer',
+            'getActiveSubstrate',
+            () => activeSubstrate,
         );
     }
 }
@@ -207,6 +261,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         warehouse = null;
         pendingStartTransition = null;
         resolvedStartRegion = null;
+        activeSubstrate = null;
         eventBus = null;
         dispatcher = null;
         logger = null;
@@ -219,6 +274,8 @@ export function _testOnly_resetModuleState() {
     if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
     warehouse = null;
     pendingStartTransition = null;
+    resolvedStartRegion = null;
+    activeSubstrate = null;
     eventBus = null;
     dispatcher = null;
     logger = null;

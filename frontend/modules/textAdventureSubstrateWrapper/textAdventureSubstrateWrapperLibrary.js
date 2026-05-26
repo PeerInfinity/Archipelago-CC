@@ -23,6 +23,7 @@ import { getPlaybackProxy } from './index.js';
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'text_adventure',
+    label: 'Text Adventure',
     panelComponentType: 'textAdventureSubstrateWrapperPanel',
     loadRegionEvent: 'textAdventure:loadRegion',
 

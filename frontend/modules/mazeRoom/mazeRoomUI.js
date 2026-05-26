@@ -40,6 +40,8 @@ import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
 import { bestPathKey, findPath, stepsToActions } from './mazeAutopather.js';
+import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
+import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import {
     MazeRoomQueue,
     ACTION_MOVE,
@@ -296,14 +298,41 @@ export class MazeRoomUI {
         // Guard DOM creation so the panel constructs cleanly in
         // headless test environments (vitest runs under 'node').
         // Mirrors the textAdventureSubstrateUI pattern.
+        //
+        // outerWrapper hosts both the panel content (rootElement) and
+        // the inactive-substrate overlay. GoldenLayout receives the
+        // wrapper via getRootElement(); render() continues to target
+        // rootElement.
         if (typeof document !== 'undefined') {
+            this.outerWrapper = document.createElement('div');
+            this.outerWrapper.className = 'maze-room-outer-wrapper';
+            Object.assign(this.outerWrapper.style, {
+                position: 'relative',
+                height: '100%',
+                width: '100%',
+            });
+
             this.rootElement = document.createElement('div');
             this.rootElement.className = 'maze-room-panel';
             this.rootElement.tabIndex = 0;
             this.rootElement.addEventListener('keydown', (e) => this._handleKeydown(e));
+            this.outerWrapper.appendChild(this.rootElement);
+
+            this._inactiveOverlay = new SubstrateInactiveOverlay({
+                onActivateSubstrate: () => this._activateCurrentSubstratePanel(),
+                onActivateLoops: () => this._activateLoopsPanel(),
+            });
+            this.outerWrapper.appendChild(this._inactiveOverlay.root);
         } else {
+            this.outerWrapper = null;
             this.rootElement = null;
+            this._inactiveOverlay = null;
         }
+
+        // Active-substrate tracking — fed by procgen:activeSubstrateChanged
+        // and used to drive the inactive-substrate overlay.
+        this._activeSubstrate = null;
+        this._unsubActiveSubstrate = null;
 
         setPanelInstance(this);
         this._loadFromLocalStorage();
@@ -313,6 +342,7 @@ export class MazeRoomUI {
         this._subscribeToManaChanges();
         this._subscribeToCostDataChanges();
         this._subscribeToLoopsQueue();
+        this._subscribeToActiveSubstrate();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -383,10 +413,78 @@ export class MazeRoomUI {
         if (!eventBus?.subscribe) return;
         const handler = (data) => {
             this._isLoopModeActive = !!data?.active;
+            // Loops button visibility on the inactive overlay depends
+            // on loop mode being active.
+            this._updateInactiveOverlay();
         };
         eventBus.subscribe('loopUI:modeChanged', handler, 'mazeRoom');
         this._unsubLoopMode =
             () => eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'mazeRoom');
+    }
+
+    /**
+     * Subscribe to procgen:activeSubstrateChanged and prime from the
+     * cached value (the eventBus has no replay for late subscribers).
+     * Drives the inactive-substrate overlay: when the active substrate
+     * is null or has a different componentType, the overlay is shown
+     * and the panel's own content is hidden.
+     */
+    _subscribeToActiveSubstrate() {
+        if (!eventBus?.subscribe) return;
+        const handler = (payload) => {
+            this._activeSubstrate = payload || null;
+            this._updateInactiveOverlay();
+        };
+        eventBus.subscribe('procgen:activeSubstrateChanged', handler, 'mazeRoom');
+        this._unsubActiveSubstrate =
+            () => eventBus.unsubscribe?.('procgen:activeSubstrateChanged', handler, 'mazeRoom');
+
+        // Prime from procgenPlayer's cached value so a panel mounted
+        // after the substrate change event still picks up the current
+        // state. Returns null when procgenPlayer hasn't loaded a
+        // warehouse yet — that's the no-active-substrate case.
+        const initial = centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.();
+        this._activeSubstrate = initial || null;
+        this._updateInactiveOverlay();
+    }
+
+    _activateCurrentSubstratePanel() {
+        const target = this._activeSubstrate?.componentType;
+        if (target && eventBus?.publish) {
+            eventBus.publish('ui:activatePanel', { panelId: target }, 'mazeRoom');
+        }
+    }
+
+    _activateLoopsPanel() {
+        if (eventBus?.publish) {
+            eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'mazeRoom');
+        }
+    }
+
+    /**
+     * Compute and apply overlay state from the cached active-substrate
+     * and loop-mode values. Idempotent.
+     */
+    _updateInactiveOverlay() {
+        if (!this._inactiveOverlay || !this.rootElement) return;
+        const myComponent = substrateRegistryEntry.panelComponentType;
+        const active = this._activeSubstrate;
+        const isActiveForMe = !!(active && active.componentType === myComponent);
+
+        if (isActiveForMe) {
+            this._inactiveOverlay.setVisible(false);
+            this.rootElement.style.display = '';
+            return;
+        }
+
+        const state = active ? 'wrong-substrate' : 'no-active-substrate';
+        this._inactiveOverlay.update({
+            state,
+            activeSubstrate: active,
+            loopModeActive: !!this._isLoopModeActive,
+        });
+        this._inactiveOverlay.setVisible(true);
+        this.rootElement.style.display = 'none';
     }
 
     /** Re-render the mana display whenever currentMana / maxMana change. */
@@ -1246,7 +1344,7 @@ export class MazeRoomUI {
 
     get apis() { return MazeRoomUI.moduleApis || getModuleApis(); }
 
-    getRootElement() { return this.rootElement; }
+    getRootElement() { return this.outerWrapper ?? this.rootElement; }
     destroy() {
         if (this._unsubSnapshot) { this._unsubSnapshot(); this._unsubSnapshot = null; }
         if (this._unsubPlaybackSnapshot) { this._unsubPlaybackSnapshot(); this._unsubPlaybackSnapshot = null; }
@@ -1256,6 +1354,7 @@ export class MazeRoomUI {
         if (this._unsubManaChanged) { this._unsubManaChanged(); this._unsubManaChanged = null; }
         if (this._unsubCostData) { this._unsubCostData(); this._unsubCostData = null; }
         if (this._unsubLoopsBegan) { this._unsubLoopsBegan(); this._unsubLoopsBegan = null; }
+        if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         this._stopReplay();

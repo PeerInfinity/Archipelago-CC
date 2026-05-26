@@ -14,6 +14,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'jta',
+    label: 'JtA',
     panelComponentType: 'jtaSubstrateWrapperPanel',
     loadRegionEvent: 'jta:loadRegion',
 

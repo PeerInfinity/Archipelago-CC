@@ -19,6 +19,11 @@
  *    in isolation.
  */
 
+import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
+import { substrateRegistryEntry } from './jtaSubstrateWrapperLibrary.js';
+
 // Unique iframeId so this wrapper doesn't collide with the
 // textAdventureSubstrateWrapper iframe in iframeAdapterCore.iframes.
 // Without it, both wrappers' AdapterClients default to
@@ -42,7 +47,14 @@ export class JtaSubstrateWrapperPanel {
         this.componentState = componentState;
         this.rootElement = null;
         this.iframe = null;
+        this._inactiveOverlay = null;
+        this._activeSubstrate = null;
+        this._isLoopModeActive = false;
+        this._unsubActiveSubstrate = null;
+        this._unsubLoopMode = null;
         this._initializeUI();
+        this._subscribeToActiveSubstrate();
+        this._subscribeToLoopMode();
     }
 
     getRootElement() {
@@ -58,6 +70,9 @@ export class JtaSubstrateWrapperPanel {
     _initializeUI() {
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'jtasw-root';
+        // Overlay positions itself absolute over the iframe; the
+        // wrapper needs a containing block.
+        this.rootElement.style.position = 'relative';
 
         this.iframe = document.createElement('iframe');
         this.iframe.className = 'jtasw-iframe';
@@ -85,6 +100,73 @@ export class JtaSubstrateWrapperPanel {
         this.iframe.addEventListener('load', () => this._injectBridge());
 
         this.rootElement.appendChild(this.iframe);
+
+        this._inactiveOverlay = new SubstrateInactiveOverlay({
+            onActivateSubstrate: () => this._activateCurrentSubstratePanel(),
+            onActivateLoops: () => this._activateLoopsPanel(),
+        });
+        this.rootElement.appendChild(this._inactiveOverlay.root);
+    }
+
+    _subscribeToActiveSubstrate() {
+        if (!eventBus?.subscribe) return;
+        const handler = (payload) => {
+            this._activeSubstrate = payload || null;
+            this._updateInactiveOverlay();
+        };
+        eventBus.subscribe('procgen:activeSubstrateChanged', handler, 'jtaSubstrateWrapper');
+        this._unsubActiveSubstrate = () =>
+            eventBus.unsubscribe?.('procgen:activeSubstrateChanged', handler, 'jtaSubstrateWrapper');
+
+        const initial = centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.();
+        this._activeSubstrate = initial || null;
+        this._updateInactiveOverlay();
+    }
+
+    _subscribeToLoopMode() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            this._isLoopModeActive = !!data?.active;
+            this._updateInactiveOverlay();
+        };
+        eventBus.subscribe('loopUI:modeChanged', handler, 'jtaSubstrateWrapper');
+        this._unsubLoopMode = () =>
+            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'jtaSubstrateWrapper');
+    }
+
+    _activateCurrentSubstratePanel() {
+        const target = this._activeSubstrate?.componentType;
+        if (target && eventBus?.publish) {
+            eventBus.publish('ui:activatePanel', { panelId: target }, 'jtaSubstrateWrapper');
+        }
+    }
+
+    _activateLoopsPanel() {
+        if (eventBus?.publish) {
+            eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'jtaSubstrateWrapper');
+        }
+    }
+
+    _updateInactiveOverlay() {
+        if (!this._inactiveOverlay || !this.iframe) return;
+        const myComponent = substrateRegistryEntry.panelComponentType;
+        const active = this._activeSubstrate;
+        const isActiveForMe = !!(active && active.componentType === myComponent);
+
+        if (isActiveForMe) {
+            this._inactiveOverlay.setVisible(false);
+            this.iframe.style.display = '';
+            return;
+        }
+
+        const state = active ? 'wrong-substrate' : 'no-active-substrate';
+        this._inactiveOverlay.update({
+            state,
+            activeSubstrate: active,
+            loopModeActive: !!this._isLoopModeActive,
+        });
+        this._inactiveOverlay.setVisible(true);
+        this.iframe.style.display = 'none';
     }
 
     _injectBridge() {
@@ -106,6 +188,8 @@ export class JtaSubstrateWrapperPanel {
     }
 
     destroy() {
+        if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
+        if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
         if (this.iframe) {
             this.iframe.src = 'about:blank';
             this.iframe = null;
@@ -114,5 +198,6 @@ export class JtaSubstrateWrapperPanel {
             this.rootElement.parentNode.removeChild(this.rootElement);
         }
         this.rootElement = null;
+        this._inactiveOverlay = null;
     }
 }
