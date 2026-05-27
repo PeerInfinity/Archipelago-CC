@@ -18,6 +18,7 @@ import {
 import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -85,6 +86,23 @@ export class LoopState {
     // regionMove case to suppress its user:regionMove dispatch when
     // the substrate already dispatched one from onExitCross.
     this._completedViaDelegation = false;
+
+    // Manual mode state. When the queue's current action is of type
+    // 'manual', _processFrame stops accruing progress, auto-activates
+    // the substrate panel for the region, and waits for either a
+    // gameState:manaChanged → 0 (triggers loop reset) or a
+    // user:regionMove (advances past the manual entry if the target
+    // region matches the next regionMove in the queue; otherwise
+    // sets _queuePausedUntilReset).
+    //
+    // _manualActionEntered is a guard so the auto-activate +
+    // _manualEntered publish only fire once per manual entry, not on
+    // every frame.
+    this._manualActionEntered = false;
+    // When true, _processFrame bails immediately without advancing
+    // the queue. Cleared by _resetLoop. Set when manual mode detects
+    // the player exited to an unexpected region.
+    this._queuePausedUntilReset = false;
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -184,6 +202,22 @@ export class LoopState {
     // and the action cursor reset.
     this.eventBus.subscribe('gameState:loopReset', () => {
       this._resetActionsProgress();
+    });
+
+    // Manual mode wake handlers. Active only while a manual entry is
+    // the queue's current action (the handlers themselves bail out
+    // otherwise). Mana-zero triggers a loop reset; region change
+    // either advances past the manual entry (on matching destination)
+    // or sets _queuePausedUntilReset (on mismatch). We subscribe to
+    // gameState:regionChanged rather than dispatcher's user:regionMove
+    // because the regionChanged event is the authoritative "player
+    // is now in region X" signal — it fires after gameState's
+    // handler completes, so currentRegion reflects the move.
+    this.eventBus.subscribe('gameState:manaChanged', () => {
+      this._handleManualWake_mana();
+    });
+    this.eventBus.subscribe('gameState:regionChanged', (data) => {
+      this._handleManualWake_regionMove({ targetRegion: data?.newRegion });
     });
   }
 
@@ -829,6 +863,15 @@ export class LoopState {
       this._animationFrameId = null;
       return;
     }
+    // Manual mode hard-pause: once the player exited to a region the
+    // queue didn't expect, processing is locked off until _resetLoop
+    // clears the flag. The queue is still authored / inspectable;
+    // it just won't auto-advance.
+    if (this._queuePausedUntilReset) {
+      this._animationFrameId = null;
+      this.isProcessing = false;
+      return;
+    }
     if (this._tickSubstrateDelegation()) return;
     if (!this._primeFrameClock(timestamp)) return;
 
@@ -837,6 +880,14 @@ export class LoopState {
 
     try {
       if (!this._ensureCurrentAction()) return;
+      // Manual entry: stop accruing progress, hand control to the
+      // player via the substrate panel. The wake handlers (subscribed
+      // in _setupEventListeners) advance past this entry on the next
+      // matching user:regionMove, or trigger a reset on mana-zero.
+      if (this.currentAction.type === 'manual') {
+        this._handleManualEntry(this.currentAction);
+        return;
+      }
       this._advanceActionProgress(deltaTime);
       this._maybeCompleteCurrentAction();
       // Queue ran to the end — no current action to reset, terminal events
@@ -924,6 +975,123 @@ export class LoopState {
     }
     this.stopProcessing();
     return false;
+  }
+
+  // -------------------- Manual mode --------------------
+
+  /**
+   * Called from _processFrame whenever the current action is type
+   * 'manual'. On the first hit per entry:
+   *   - Activate the substrate panel for the manual entry's region
+   *     (via procgenPlayer.getRegionInfo → registry componentType).
+   *   - Stop queue processing so no further frames tick.
+   *   - Publish loopState:manualEntered with the next expected
+   *     region (the queue's next regionMove entry's destination,
+   *     used by the wake handler to detect mismatched exits).
+   * Subsequent hits are no-ops until _resetLoop or a successful wake.
+   */
+  _handleManualEntry(action) {
+    if (this._manualActionEntered) return;
+    this._manualActionEntered = true;
+
+    const componentType = this._lookupSubstrateComponentType(action.sourceRegion);
+    if (componentType && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+
+    this.stopProcessing();
+
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:manualEntered', {
+        regionName: action.sourceRegion,
+        expectedNextRegion: this._getExpectedNextRegion(),
+      });
+    }
+  }
+
+  /**
+   * Find the next regionMove entry after the current action and
+   * return its destinationRegion. That's the region the player is
+   * expected to exit into when leaving a Manual entry.
+   * Returns null if no further regionMove is queued.
+   */
+  _getExpectedNextRegion() {
+    const queue = this.getActionQueue();
+    for (let i = this.currentActionIndex + 1; i < queue.length; i++) {
+      if (queue[i]?.type === 'regionMove') {
+        return queue[i].destinationRegion ?? null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Read the substrate's GoldenLayout componentType for a region via
+   * procgenPlayer.getRegionInfo + substrateRegistry. Returns null
+   * when the region has no substrate (AP-native, e.g. Menu) or when
+   * procgenPlayer isn't registered (test harness).
+   */
+  _lookupSubstrateComponentType(regionName) {
+    if (!regionName) return null;
+    try {
+      const getRegionInfo = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      if (typeof getRegionInfo !== 'function') return null;
+      const info = getRegionInfo(regionName);
+      if (!info?.substrate) return null;
+      return substrateRegistry?.get?.(info.substrate)?.panelComponentType ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Wake from manual mode in response to a user:regionMove event.
+   * If the target matches the queue's next expected region, advance
+   * past the manual entry and resume processing. Otherwise mark the
+   * queue paused-until-reset and publish a warning.
+   */
+  _handleManualWake_regionMove(data) {
+    if (!this._manualActionEntered) return;
+    if (!this.currentAction || this.currentAction.type !== 'manual') return;
+    const expected = this._getExpectedNextRegion();
+    if (data?.targetRegion && data.targetRegion === expected) {
+      // Match — advance past the manual entry.
+      this._manualActionEntered = false;
+      this.currentActionIndex += 1;
+      const queue = this.getActionQueue();
+      this.currentAction = this.currentActionIndex < queue.length
+        ? queue[this.currentActionIndex]
+        : null;
+      if (this.eventBus?.publish) {
+        this.eventBus.publish('loopState:manualResumed', {
+          targetRegion: data.targetRegion,
+        });
+      }
+      // Resume processing from the current index (do NOT use
+      // startProcessing — that resets currentActionIndex to 0 and
+      // would re-enter the manual entry forever).
+      this.resumeProcessing?.();
+      return;
+    }
+    // Mismatch — disable playback until the next loop reset.
+    this._queuePausedUntilReset = true;
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:queuePausedUntilReset', {
+        actualRegion: data?.targetRegion ?? null,
+        expectedRegion: expected,
+        reason: 'manualWrongRegion',
+      });
+    }
+  }
+
+  /** Mana-zero during manual mode → standard loop reset. */
+  _handleManualWake_mana() {
+    if (!this._manualActionEntered) return;
+    if (!this.currentAction || this.currentAction.type !== 'manual') return;
+    const gs = this._gs();
+    if (typeof gs?.getCurrentMana !== 'function') return;
+    if (gs.getCurrentMana() > 0) return;
+    this._resetLoop();
   }
 
   /**
@@ -1346,6 +1514,12 @@ export class LoopState {
           // Explore cost = 2x region's moveCost
           baseCost = this.costDataManager.getRegionCost(action.sourceRegion) * 2;
           break;
+        case 'manual':
+          // Manual entries park the queue and let the player drive
+          // the substrate directly. No queue-side mana cost — the
+          // substrate's own actions consume mana as the player acts.
+          baseCost = 0;
+          break;
         default:
           baseCost = 50;
       }
@@ -1360,6 +1534,9 @@ export class LoopState {
           break;
         case 'regionMove':
           baseCost = 50;
+          break;
+        case 'manual':
+          baseCost = 0;
           break;
         default:
           baseCost = 50;
@@ -1441,6 +1618,11 @@ export class LoopState {
     this.currentActionIndex = 0;
     this.currentAction = queue.length > 0 ? queue[0] : null;
     this._queueCompleted = false;
+    // Clear manual-mode flags: a fresh loop starts at index 0, and
+    // any prior "paused-until-reset" condition is the user's signal
+    // that this reset is the unlock.
+    this._manualActionEntered = false;
+    this._queuePausedUntilReset = false;
 
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {

@@ -49,7 +49,8 @@ export class ActionQueueManager {
       // Pass through raw path entry types without renaming.
       // Only add overlay data: id, pathIndex, progress, completed.
       if (entry.type === 'regionMove' || entry.type === 'locationCheck' ||
-          (entry.type === 'customAction' && entry.actionName === 'explore')) {
+          (entry.type === 'customAction' && entry.actionName === 'explore') ||
+          entry.type === 'manual') {
         const action = {
           ...entry,
           id: `action-${index}`,

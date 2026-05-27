@@ -560,7 +560,46 @@ export class GameState {
         // Emit path updated event
         this.emitPathUpdated();
     }
-    
+
+    /**
+     * Append a "manual" entry to the path. When the loops queue reaches
+     * this entry it pauses, auto-activates the substrate panel for the
+     * region, and waits for the player to either run out of mana (loop
+     * reset) or cross an exit. The substrate is implicit in the region
+     * (procgenPlayer.getRegionInfo resolves it).
+     *
+     * @param {string} regionName - The region the manual entry is for.
+     *   If omitted, falls back to the last regionMove's destination
+     *   (same as addLocationCheck), then to currentRegion.
+     */
+    addManualAction(regionName = null) {
+        let lastRegionMove = null;
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            if (this.path[i].type === 'regionMove') {
+                lastRegionMove = this.path[i];
+                break;
+            }
+        }
+        const sourceRegion =
+            regionName
+            ?? lastRegionMove?.destinationRegion
+            ?? this.currentRegion;
+        if (!sourceRegion) {
+            console.warn('[GameState] Cannot add manual action: no source region');
+            return;
+        }
+        const instanceNumber =
+            (lastRegionMove && lastRegionMove.destinationRegion === sourceRegion)
+                ? lastRegionMove.instanceNumber
+                : (this.regionInstanceCounts.get(sourceRegion) || 1);
+        this.path.push({
+            type: 'manual',
+            sourceRegion,
+            instanceNumber,
+        });
+        this.emitPathUpdated();
+    }
+
     /**
      * Insert a location check entry at a specific region instance
      * @param {string} locationName - Name of the location to check

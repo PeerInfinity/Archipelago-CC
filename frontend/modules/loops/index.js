@@ -323,6 +323,9 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopUI:autoBuildPathOnClickChanged');
   registrationApi.registerEventBusPublisher('loops:setLoopMode');
   registrationApi.registerEventBusPublisher('loops:clickIgnored');
+  registrationApi.registerEventBusPublisher('loopState:manualEntered');
+  registrationApi.registerEventBusPublisher('loopState:manualResumed');
+  registrationApi.registerEventBusPublisher('loopState:queuePausedUntilReset');
 
   // Cost generation events
   registrationApi.registerEventBusPublisher('costGenerator:progress');
@@ -352,6 +355,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     setAllowLoops: initializationApi.getModuleFunction('gameState', 'setAllowLoops'),
     addLocationCheck: initializationApi.getModuleFunction('gameState', 'addLocationCheck'),
     addCustomAction: initializationApi.getModuleFunction('gameState', 'addCustomAction'),
+    addManualAction: initializationApi.getModuleFunction('gameState', 'addManualAction'),
     insertLocationCheckAt: initializationApi.getModuleFunction('gameState', 'insertLocationCheckAt'),
     insertCustomActionAt: initializationApi.getModuleFunction('gameState', 'insertCustomActionAt'),
     removePathEntry: initializationApi.getModuleFunction('gameState', 'removePathEntry'),

@@ -202,6 +202,14 @@ export class LoopBlockBuilder {
         this.addExploreButton(detailsEl, regionName);
       }
 
+      // Manual mode button — pauses the queue when reached and hands
+      // control to the substrate panel for this region. Only shown for
+      // regions that have a substrate (AP-native regions like Menu
+      // have no panel to hand off to).
+      if (this.loopUI.isLoopModeActive && this._getSubstrateLabel(regionName)) {
+        this.addManualButton(detailsEl, regionName);
+      }
+
       // Compact display: exits then locations (no entrances)
       if (regionStaticData?.exits && regionStaticData.exits.length > 0) {
         this.addExits(
@@ -311,6 +319,35 @@ export class LoopBlockBuilder {
     exploreContainer.appendChild(statusSpacer);
 
     detailsEl.appendChild(exploreContainer);
+  }
+
+  /**
+   * Adds a Manual action button to the region block. Appending a
+   * Manual entry pauses the loops queue when it reaches that point,
+   * auto-activates the substrate panel, and waits for the player to
+   * exit the region (or run out of mana, which triggers a loop reset).
+   */
+  addManualButton(detailsEl, regionName) {
+    const container = document.createElement('div');
+    container.className = 'region-manual-container';
+    Object.assign(container.style, {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '6px',
+      marginTop: '4px',
+    });
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'manual-btn';
+    btn.textContent = 'Add Manual entry';
+    btn.title = 'Pause the queue here and let the player drive this region directly.';
+    btn.addEventListener('click', () => {
+      this.loopUI.gameStateAPI?.addManualAction?.(regionName);
+    });
+    container.appendChild(btn);
+
+    detailsEl.appendChild(container);
   }
 
   /**

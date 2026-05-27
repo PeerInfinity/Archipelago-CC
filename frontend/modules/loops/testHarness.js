@@ -62,6 +62,7 @@ export function makeWired({ snapshot, staticData, startRegion = 'Menu' } = {}) {
       trimPath: (r, i) => gs.trimPath(r, i),
       addLocationCheck: (l, r, sd) => gs.addLocationCheck(l, r, sd),
       addCustomAction: (a, p) => gs.addCustomAction(a, p),
+      addManualAction: (r) => gs.addManualAction(r),
       removePathEntry: (idx) => gs.removePathEntry(idx),
       removeLocationCheckAt: (l, r, i) => gs.removeLocationCheckAt(l, r, i),
       removeCustomActionAt: (a, r, i, m) => gs.removeCustomActionAt(a, r, i, m),

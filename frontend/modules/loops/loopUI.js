@@ -241,6 +241,7 @@ export class LoopUI {
             <!-- Mana bar and current action display will go here -->
         </div>
         <div id="loop-feedback-banner" class="loop-feedback-banner" style="display: none; flex-shrink: 0; padding: 6px 10px; background: #3a2a2a; color: #f0d0a0; border-bottom: 1px solid #553; font-size: 12px;"></div>
+        <div id="loop-state-banner" class="loop-state-banner" style="display: none; flex-shrink: 0; padding: 6px 10px; background: #2a3a2a; color: #d0f0c0; border-bottom: 1px solid #355; font-size: 12px;"></div>
         <div id="loop-regions-area" class="loop-regions-area" style="flex-grow: 1; overflow-y: auto; min-height: 0;">
             <!-- Scrollable region/action list -->
         </div>
@@ -414,6 +415,58 @@ export class LoopUI {
         await this.displaySettings.setSetting('autoBuildPathOnClick', newState, true);
         this.eventBus.publish('loopUI:autoBuildPathOnClickChanged', { active: newState });
       });
+    }
+
+    // Persistent state banner for manual mode + queue-paused-until-reset.
+    // Distinct from the transient clickIgnored banner above — these
+    // states persist until the loop resets (paused-until-reset) or
+    // the manual entry is resolved (manualEntered → manualResumed).
+    if (!this._stateBannerUnsubscribes) {
+      this._stateBannerUnsubscribes = [];
+      const stateBannerEl = querySelector('#loop-state-banner');
+      const showStateBanner = (text, kind) => {
+        if (!stateBannerEl) return;
+        stateBannerEl.textContent = text;
+        stateBannerEl.style.background = kind === 'warn' ? '#3a2a2a' : '#2a3a2a';
+        stateBannerEl.style.color = kind === 'warn' ? '#f0d0a0' : '#d0f0c0';
+        stateBannerEl.style.borderBottomColor = kind === 'warn' ? '#553' : '#355';
+        stateBannerEl.style.display = 'block';
+      };
+      const hideStateBanner = () => {
+        if (!stateBannerEl) return;
+        stateBannerEl.style.display = 'none';
+      };
+      const onManualEntered = ({ regionName }) => {
+        showStateBanner(
+          `Manual mode — finish in the ${regionName} panel (run out of mana or cross an exit).`,
+          'info',
+        );
+      };
+      const onManualResumed = () => {
+        hideStateBanner();
+      };
+      const onQueuePaused = ({ actualRegion, expectedRegion, reason }) => {
+        const reasonText = reason === 'manualWrongRegion'
+          ? `you exited to ${actualRegion ?? 'an unexpected region'}, but the queue expected ${expectedRegion ?? 'a different region'}`
+          : 'an unexpected state was reached';
+        showStateBanner(
+          `Loop queue paused — ${reasonText}. Reset the loop (or wait for it to reset on mana zero) to resume.`,
+          'warn',
+        );
+      };
+      const onLoopReset = () => {
+        hideStateBanner();
+      };
+      this.eventBus.subscribe('loopState:manualEntered', onManualEntered);
+      this.eventBus.subscribe('loopState:manualResumed', onManualResumed);
+      this.eventBus.subscribe('loopState:queuePausedUntilReset', onQueuePaused);
+      this.eventBus.subscribe('loopState:loopReset', onLoopReset);
+      this._stateBannerUnsubscribes.push(
+        () => this.eventBus.unsubscribe?.('loopState:manualEntered', onManualEntered),
+        () => this.eventBus.unsubscribe?.('loopState:manualResumed', onManualResumed),
+        () => this.eventBus.unsubscribe?.('loopState:queuePausedUntilReset', onQueuePaused),
+        () => this.eventBus.unsubscribe?.('loopState:loopReset', onLoopReset),
+      );
     }
 
     // Show a transient banner for loops:clickIgnored. Fires when a
@@ -1205,6 +1258,10 @@ export class LoopUI {
     if (this._clickIgnoredHideTimeout) {
       clearTimeout(this._clickIgnoredHideTimeout);
       this._clickIgnoredHideTimeout = null;
+    }
+    if (this._stateBannerUnsubscribes) {
+      this._stateBannerUnsubscribes.forEach((fn) => { try { fn(); } catch { /* ignore */ } });
+      this._stateBannerUnsubscribes = null;
     }
   }
 
@@ -2280,6 +2337,8 @@ export class LoopUI {
         return `Check ${action.locationName}`;
       case 'regionMove':
         return `Move to ${action.destinationRegion}`;
+      case 'manual':
+        return `Manual in ${action.sourceRegion}`;
       default:
         return `${action.type}`;
     }
