@@ -220,6 +220,7 @@ export class LoopUI {
                 <label class="auto-resume-label"><input type="checkbox" id="loop-ui-toggle-auto-resume" /> Auto-resume on new action</label>
                 <label class="auto-remove-label"><input type="checkbox" id="loop-ui-toggle-auto-remove" /> Auto-remove completed actions</label>
                 <label class="keep-focused-label" title="Suppress substrate panel activation while the queue is running"><input type="checkbox" id="loop-ui-toggle-keep-focused" /> Keep this panel focused</label>
+                <label class="auto-build-path-label" title="Advanced: rebuild the queue as a path on every external click"><input type="checkbox" id="loop-ui-toggle-auto-build-path-on-click" /> Auto-build path on click (advanced)</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button" title="Save the current game state to local storage">Save Game</button>
@@ -239,6 +240,7 @@ export class LoopUI {
         <div id="loop-fixed-area" class="loop-fixed-area" style="flex-shrink: 0;">
             <!-- Mana bar and current action display will go here -->
         </div>
+        <div id="loop-feedback-banner" class="loop-feedback-banner" style="display: none; flex-shrink: 0; padding: 6px 10px; background: #3a2a2a; color: #f0d0a0; border-bottom: 1px solid #553; font-size: 12px;"></div>
         <div id="loop-regions-area" class="loop-regions-area" style="flex-grow: 1; overflow-y: auto; min-height: 0;">
             <!-- Scrollable region/action list -->
         </div>
@@ -377,6 +379,64 @@ export class LoopUI {
         loopState.keepFocused = newState;
         await this.displaySettings.setSetting('keepFocused', newState, true);
       });
+    }
+
+    // Advanced: auto-build path on click. Enabling shows a confirm()
+    // gate because the behavior (clear + rebuild queue on every
+    // external location/exit click) is destructive to in-flight queues.
+    const autoBuildPathCheckbox = querySelector('#loop-ui-toggle-auto-build-path-on-click');
+    if (autoBuildPathCheckbox) {
+      const persistedAutoBuild = !!this.displaySettings.getSetting('autoBuildPathOnClick');
+      autoBuildPathCheckbox.checked = persistedAutoBuild;
+      // Publish the persisted value once so loopEvents.js picks up a
+      // restored true value across reloads (its own state defaults to
+      // false at module-load time).
+      this.eventBus.publish(
+        'loopUI:autoBuildPathOnClickChanged',
+        { active: persistedAutoBuild },
+      );
+      autoBuildPathCheckbox.addEventListener('change', async () => {
+        const newState = autoBuildPathCheckbox.checked;
+        if (newState) {
+          const confirmed = confirm(
+            'Enable "Auto-build path on click"?\n\n' +
+            'When ON: clicking a location or exit in another panel will CLEAR your current queue ' +
+            'and replace it with a path from your current region to the click target.\n\n' +
+            'When OFF (the default): clicks instead append a single action to the end of your queue, ' +
+            'and are ignored if the click is for a different region than the queue currently ends in.\n\n' +
+            'Recommended only when you understand the queue-rebuilding behavior.'
+          );
+          if (!confirmed) {
+            autoBuildPathCheckbox.checked = false;
+            return;
+          }
+        }
+        await this.displaySettings.setSetting('autoBuildPathOnClick', newState, true);
+        this.eventBus.publish('loopUI:autoBuildPathOnClickChanged', { active: newState });
+      });
+    }
+
+    // Show a transient banner for loops:clickIgnored. Fires when a
+    // substrate-panel click is dropped because the click's region
+    // doesn't match the loops queue's current end region.
+    if (!this._clickIgnoredUnsubscribe) {
+      const bannerEl = querySelector('#loop-feedback-banner');
+      const handler = ({ kind, regionName, expectedRegion }) => {
+        if (!bannerEl) return;
+        const kindLabel = kind === 'exit' ? 'exit click' : 'location check';
+        const expectedText = expectedRegion
+          ? `the queue ends in ${expectedRegion}`
+          : 'the queue has no region yet';
+        bannerEl.textContent =
+          `Ignored ${kindLabel}: clicked in ${regionName}, but ${expectedText}. ` +
+          `Queue a regionMove to ${regionName} first, or enable "Auto-build path on click" in Controls.`;
+        bannerEl.style.display = 'block';
+        clearTimeout(this._clickIgnoredHideTimeout);
+        this._clickIgnoredHideTimeout = setTimeout(() => {
+          if (bannerEl) bannerEl.style.display = 'none';
+        }, 5000);
+      };
+      this._clickIgnoredUnsubscribe = this.eventBus.subscribe('loops:clickIgnored', handler);
     }
 
     attachButtonHandler('loop-ui-expand-collapse-all', function () {
@@ -1137,6 +1197,14 @@ export class LoopUI {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe(); // Unsubscribe
       this.settingsUnsubscribe = null;
+    }
+    if (this._clickIgnoredUnsubscribe) {
+      this._clickIgnoredUnsubscribe();
+      this._clickIgnoredUnsubscribe = null;
+    }
+    if (this._clickIgnoredHideTimeout) {
+      clearTimeout(this._clickIgnoredHideTimeout);
+      this._clickIgnoredHideTimeout = null;
     }
   }
 

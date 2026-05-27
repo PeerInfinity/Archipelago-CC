@@ -6,6 +6,20 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 // Track loop mode state
 let isLoopModeActive = false;
 
+// Track the "auto-build path on click" advanced setting. When false
+// (the default), substrate-panel clicks append a single action to the
+// queue iff the click's region matches the queue's current end region
+// — mismatches are dropped with feedback (loops:clickIgnored). When
+// true, the legacy "clear queue and pathfind from current to target"
+// behavior runs instead. Synced from the loops UI via the
+// 'loopUI:autoBuildPathOnClickChanged' event in initializeLoopEvents.
+let autoBuildPathOnClick = false;
+
+// EventBus reference captured at initialization so the click-ignored
+// feedback event can be published from the intercept handlers without
+// re-importing.
+let _eventBus = null;
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -50,8 +64,42 @@ function buildMoveSequence(path) {
 }
 
 /**
- * Initialize event handlers and subscribe to loop mode changes
- * Should be called when the module initializes
+ * Compute the "end region" of the loops queue: the destinationRegion
+ * of the last `regionMove` entry in gameState.path, falling back to
+ * the player's currentRegion when no regionMove entries exist.
+ * Mirrors the implicit-region resolution in gameState's
+ * addLocationCheck / addCustomAction.
+ *
+ * @returns {string|null}
+ */
+function getQueueEndRegion(gameStateAPI) {
+  const path = gameStateAPI?.getPath?.() || [];
+  for (let i = path.length - 1; i >= 0; i--) {
+    if (path[i]?.type === 'regionMove') {
+      return path[i].destinationRegion;
+    }
+  }
+  return gameStateAPI?.getCurrentRegion?.() ?? null;
+}
+
+/**
+ * Emit loops:clickIgnored so the loops panel can show inline feedback
+ * for a dropped click. Best-effort — silently no-ops if the eventBus
+ * isn't wired (e.g. headless tests that don't initialize loopEvents).
+ */
+function publishClickIgnored({ kind, regionName, expectedRegion, payload }) {
+  if (!_eventBus?.publish) return;
+  _eventBus.publish('loops:clickIgnored', {
+    kind,                  // 'location' | 'exit'
+    regionName,            // region of the click
+    expectedRegion,        // region the queue currently ends in
+    payload,               // original event payload for downstream consumers
+  });
+}
+
+/**
+ * Initialize event handlers and subscribe to loop mode + advanced-toggle
+ * changes. Should be called when the module initializes.
  * @param {EventBus} eventBus - The event bus instance
  */
 export function initializeLoopEvents(eventBus) {
@@ -59,6 +107,8 @@ export function initializeLoopEvents(eventBus) {
     log('error', '[LoopEvents] Cannot initialize: EventBus not provided');
     return;
   }
+
+  _eventBus = eventBus;
 
   // Subscribe to loop mode changes from the UI
   eventBus.subscribe('loopUI:modeChanged', (data) => {
@@ -68,63 +118,25 @@ export function initializeLoopEvents(eventBus) {
     }
   });
 
+  // Subscribe to the autoBuildPathOnClick advanced-setting toggle.
+  // Default stays false until the UI tells us otherwise.
+  eventBus.subscribe('loopUI:autoBuildPathOnClickChanged', (data) => {
+    if (data && typeof data.active === 'boolean') {
+      autoBuildPathOnClick = data.active;
+      log('info', '[LoopEvents] autoBuildPathOnClick changed:', autoBuildPathOnClick);
+    }
+  });
+
   // Note: user:exitClicked is now handled via dispatcher (handleUserExitClickedForLoops)
 }
 
 /**
- * When true, loop-mode user:locationCheck events rebuild the queue with
- * a path-to-location (clearQueue → buildMoveSequence → addLocationCheck
- * or customAction(explore)). When false, propagates up the chain
- * unchanged. system:locationCheck is always propagated regardless —
- * it's used by substrates for tile-internal events (e.g. the maze
- * panel publishes system:locationCheck when the player steps on a
- * location tile, including mid-Explore) where queue rebuilds would
- * wipe in-flight actions.
+ * Path-rebuild branch: clear the queue, pathfind from the current
+ * location to the clicked region, then append the final action
+ * (locationCheck or explore). This is the legacy behavior, now gated
+ * behind the autoBuildPathOnClick advanced setting.
  */
-const AUTO_QUEUE_ON_LOCATION_CHECK = true;
-
-/**
- * Handles the 'user:locationCheck' / 'system:locationCheck' events
- * for the Loops module. When loop mode is active AND the event is
- * user:locationCheck AND AUTO_QUEUE_ON_LOCATION_CHECK is on, rebuilds
- * the queue with a path to the location. Otherwise propagates up.
- * @param {object} eventData - The data associated with the event.
- * @param {string} eventName - 'user:locationCheck' or 'system:locationCheck'.
- */
-export function handleUserLocationCheckForLoops(eventData, eventName = 'user:locationCheck') {
-  const dispatcher = getLoopsModuleDispatcher();
-
-  // Pass-through cases:
-  //   - loop mode is off (regions / locations / etc. panels handle
-  //     the click via the up-chain handler)
-  //   - the intercept is feature-flagged off
-  //   - system:locationCheck (substrate-internal, never a queue rebuild
-  //     trigger — see flag docstring)
-  const isSystemEvent = eventName === 'system:locationCheck';
-  if (!isLoopModeActive || !AUTO_QUEUE_ON_LOCATION_CHECK || isSystemEvent) {
-    if (dispatcher) {
-      dispatcher.publishToNextModule(moduleInfo.name, eventName, eventData, { direction: 'up' });
-    }
-    return;
-  }
-
-  // --- Loop mode is active and the event is a genuine user click:
-  // intercept and rebuild the queue with a path to the clicked location.
-  const locationName = eventData?.locationName;
-  const regionName = eventData?.regionName;
-  if (!locationName || !regionName) {
-    log('warn', '[LoopsModule] Missing locationName or regionName in event data');
-    return;
-  }
-
-  const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
-  const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
-
-  if (!isRegionDiscovered) {
-    log('info', `[LoopsModule] Region ${regionName} not discovered, ignoring click`);
-    return;
-  }
-
+function rebuildQueueToLocation(locationName, regionName, isLocationDiscovered) {
   const gameStateAPI = getGameStateAPI();
   if (!gameStateAPI) {
     log('error', '[LoopsModule] GameState API not available');
@@ -155,7 +167,6 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
   // delegated action runs.
   loopStateSingleton.clearQueue();
 
-  // Build move sequence along the path
   const moves = buildMoveSequence(path);
   if (!moves) return; // buildMoveSequence logs on failure
 
@@ -177,20 +188,100 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
   }
 
   if (isLocationDiscovered) {
-    // Discovered location: queue a location check
     if (gameStateAPI.addLocationCheck) {
       gameStateAPI.addLocationCheck(locationName, regionName);
       log('info', `[LoopsModule] Added location check for ${locationName}`);
     }
+  } else if (gameStateAPI.addCustomAction) {
+    gameStateAPI.addCustomAction('explore', {
+      regionName,
+      repeatExplore: true,
+    });
+    log('info', `[LoopsModule] Added explore action for ${regionName}`);
+  }
+}
+
+/**
+ * Append-or-feedback branch: if the click's region matches the queue's
+ * current end region, append a single action (locationCheck for
+ * discovered locations, customAction:explore for undiscovered). On
+ * mismatch, drop the click and publish loops:clickIgnored so the UI
+ * can show inline feedback.
+ */
+function appendLocationOrFeedback(locationName, regionName, isLocationDiscovered) {
+  const gameStateAPI = getGameStateAPI();
+  if (!gameStateAPI) {
+    log('error', '[LoopsModule] GameState API not available');
+    return;
+  }
+  const queueEnd = getQueueEndRegion(gameStateAPI);
+  if (queueEnd !== regionName) {
+    log('info', `[LoopsModule] Dropping locationCheck for ${locationName} in ${regionName}: queue ends in ${queueEnd}`);
+    publishClickIgnored({
+      kind: 'location',
+      regionName,
+      expectedRegion: queueEnd,
+      payload: { locationName },
+    });
+    return;
+  }
+  if (isLocationDiscovered) {
+    gameStateAPI.addLocationCheck?.(locationName, regionName);
+    log('info', `[LoopsModule] Appended location check for ${locationName} in ${regionName}`);
   } else {
-    // Undiscovered location: queue an explore action
-    if (gameStateAPI.addCustomAction) {
-      gameStateAPI.addCustomAction('explore', {
-        regionName: regionName,
-        repeatExplore: true
-      });
-      log('info', `[LoopsModule] Added explore action for ${regionName}`);
+    gameStateAPI.addCustomAction?.('explore', {
+      regionName,
+      repeatExplore: true,
+    });
+    log('info', `[LoopsModule] Appended explore action for ${regionName} (undiscovered location)`);
+  }
+}
+
+/**
+ * Handles the 'user:locationCheck' / 'system:locationCheck' events
+ * for the Loops module. Three branches:
+ *   - Loop mode off OR system event → propagate up unchanged.
+ *   - Loop mode on + autoBuildPathOnClick on → rebuild queue with path.
+ *   - Loop mode on + autoBuildPathOnClick off → append or feedback.
+ *
+ * The system:locationCheck path always passes through — substrates use
+ * it for tile-internal events (e.g. mid-Explore pickups) where queue
+ * mutations would wipe in-flight actions.
+ *
+ * @param {object} eventData - The data associated with the event.
+ * @param {string} eventName - 'user:locationCheck' or 'system:locationCheck'.
+ */
+export function handleUserLocationCheckForLoops(eventData, eventName = 'user:locationCheck') {
+  const dispatcher = getLoopsModuleDispatcher();
+
+  // Pass-through: loop mode off, or substrate-internal event.
+  const isSystemEvent = eventName === 'system:locationCheck';
+  if (!isLoopModeActive || isSystemEvent) {
+    if (dispatcher) {
+      dispatcher.publishToNextModule(moduleInfo.name, eventName, eventData, { direction: 'up' });
     }
+    return;
+  }
+
+  // Loop mode is active and this is a genuine user click → intercept.
+  const locationName = eventData?.locationName;
+  const regionName = eventData?.regionName;
+  if (!locationName || !regionName) {
+    log('warn', '[LoopsModule] Missing locationName or regionName in event data');
+    return;
+  }
+
+  if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
+    log('info', `[LoopsModule] Region ${regionName} not discovered, ignoring click`);
+    return;
+  }
+
+  const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
+
+  if (autoBuildPathOnClick) {
+    rebuildQueueToLocation(locationName, regionName, isLocationDiscovered);
+  } else {
+    appendLocationOrFeedback(locationName, regionName, isLocationDiscovered);
   }
 }
 
@@ -201,7 +292,7 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
  * @param {object} propagationOptions - Options related to event propagation.
  */
 export function handleUserItemCheckForLoops(eventData, propagationOptions) {
-  log('info', 
+  log('info',
     '[LoopsModule] handleUserItemCheckForLoops received event:',
     eventData ? JSON.parse(JSON.stringify(eventData)) : 'undefined',
     'Propagation:',
@@ -211,10 +302,10 @@ export function handleUserItemCheckForLoops(eventData, propagationOptions) {
 
   // For now, Loops module just passes the event on unconditionally
   // In the future, this could handle item checking in loop mode
-  log('info', 
+  log('info',
     '[LoopsModule] Passing user:itemCheck event to next module.'
   );
-  
+
   if (dispatcher) {
     // Propagation direction is 'up' as specified in registerDispatcherReceiver
     dispatcher.publishToNextModule(
@@ -223,7 +314,7 @@ export function handleUserItemCheckForLoops(eventData, propagationOptions) {
       eventData,
       { direction: 'up' }
     );
-    log('info', 
+    log('info',
       '[LoopsModule] Propagated user:itemCheck up.',
       eventData
     );
@@ -235,38 +326,12 @@ export function handleUserItemCheckForLoops(eventData, propagationOptions) {
 }
 
 /**
- * Handles the 'user:exitClicked' event from the Exits module via dispatcher.
- * When loop mode is active, intercepts the event and builds a path to the exit.
- * When loop mode is not active, propagates to the next handler (regions module).
- * @param {object} eventData - The exit click data
- * @param {object} propagationOptions - Options related to event propagation
+ * Path-rebuild branch for exit clicks. Clears the queue, pathfinds to
+ * the source region, appends the final regionMove (if discovered) or
+ * an explore action (if not). Legacy behavior gated behind the
+ * autoBuildPathOnClick advanced setting.
  */
-export function handleUserExitClickedForLoops(eventData, propagationOptions) {
-  log('info', '[LoopEvents] Received user:exitClicked event:', eventData);
-
-  const dispatcher = getLoopsModuleDispatcher();
-
-  // If loop mode is NOT active, propagate to next handler (regions module will handle it)
-  if (!isLoopModeActive) {
-    log('info', '[LoopEvents] Loop mode not active, propagating to next handler');
-    if (dispatcher) {
-      dispatcher.publishToNextModule(
-        moduleInfo.name,
-        'user:exitClicked',
-        eventData,
-        { direction: 'up' }
-      );
-    } else {
-      log('error', '[LoopEvents] Dispatcher not available for propagation');
-    }
-    return;
-  }
-
-  // Loop mode IS active - intercept and handle the event (don't propagate)
-  log('info', '[LoopEvents] Loop mode active, intercepting exit click');
-
-  const { exitName, sourceRegion, destinationRegion, isDiscovered } = eventData;
-
+function rebuildQueueToExit({ exitName, sourceRegion, destinationRegion, isDiscovered }) {
   const gameStateAPI = getGameStateAPI();
   if (!gameStateAPI) {
     log('error', '[LoopEvents] GameState API not available');
@@ -290,29 +355,20 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   log('info', `[LoopEvents] Found path to exit: ${path.join(' -> ')}`);
 
-  // Clear the current queue before building new one. clearQueue
-  // teleports the player to the resolved loop start region (Menu's
-  // synthetic-wrapper-bypassed equivalent for procgen) so the substrate
-  // panel is in the right region by the time the queue's first
-  // delegated action runs.
   loopStateSingleton.clearQueue();
 
-  // Build the path moves to the source region
   const moves = buildMoveSequence(path);
   if (!moves) return;
 
-  // If exit is discovered, add the final move through it
   if (isDiscovered) {
     moves.push({
       type: 'regionMove',
-      sourceRegion: sourceRegion,
+      sourceRegion,
       targetRegion: destinationRegion,
-      exitUsed: exitName
+      exitUsed: exitName,
     });
   }
 
-  // Phase 6g: append moves to the path WITHOUT dispatching user:regionMove
-  // for each step. See handleUserLocationCheckForLoops for the rationale.
   if (moves.length > 0) {
     moves.forEach((move) => {
       gameStateAPI.updatePath(
@@ -323,14 +379,92 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
     });
   }
 
-  // Add explore action if exit is undiscovered
-  if (!isDiscovered) {
-    if (gameStateAPI.addCustomAction) {
-      gameStateAPI.addCustomAction('explore', {
-        regionName: sourceRegion,
-        repeatExplore: true
-      });
-      log('info', `[LoopEvents] Added explore action for ${sourceRegion}`);
-    }
+  if (!isDiscovered && gameStateAPI.addCustomAction) {
+    gameStateAPI.addCustomAction('explore', {
+      regionName: sourceRegion,
+      repeatExplore: true,
+    });
+    log('info', `[LoopEvents] Added explore action for ${sourceRegion}`);
   }
+}
+
+/**
+ * Append-or-feedback branch for exit clicks: if the click's
+ * sourceRegion matches the queue's current end region, append a
+ * regionMove (or an explore action for undiscovered exits). On
+ * mismatch, drop and publish loops:clickIgnored.
+ */
+function appendExitOrFeedback({ exitName, sourceRegion, destinationRegion, isDiscovered }) {
+  const gameStateAPI = getGameStateAPI();
+  if (!gameStateAPI) {
+    log('error', '[LoopEvents] GameState API not available');
+    return;
+  }
+  const queueEnd = getQueueEndRegion(gameStateAPI);
+  if (queueEnd !== sourceRegion) {
+    log('info', `[LoopEvents] Dropping exitClicked for ${exitName} in ${sourceRegion}: queue ends in ${queueEnd}`);
+    publishClickIgnored({
+      kind: 'exit',
+      regionName: sourceRegion,
+      expectedRegion: queueEnd,
+      payload: { exitName, destinationRegion, isDiscovered },
+    });
+    return;
+  }
+  if (isDiscovered) {
+    gameStateAPI.updatePath?.(destinationRegion, exitName, sourceRegion);
+    log('info', `[LoopEvents] Appended regionMove ${sourceRegion} → ${destinationRegion} via ${exitName}`);
+  } else if (gameStateAPI.addCustomAction) {
+    gameStateAPI.addCustomAction('explore', {
+      regionName: sourceRegion,
+      repeatExplore: true,
+    });
+    log('info', `[LoopEvents] Appended explore action for ${sourceRegion} (undiscovered exit)`);
+  }
+}
+
+/**
+ * Handles the 'user:exitClicked' event from the Exits module via dispatcher.
+ * Three branches mirroring handleUserLocationCheckForLoops:
+ *   - Loop mode off → propagate to the next handler.
+ *   - Loop mode on + autoBuildPathOnClick on → rebuild queue with path.
+ *   - Loop mode on + autoBuildPathOnClick off → append or feedback.
+ *
+ * @param {object} eventData - The exit click data
+ * @param {object} propagationOptions - Options related to event propagation
+ */
+export function handleUserExitClickedForLoops(eventData, propagationOptions) {
+  log('info', '[LoopEvents] Received user:exitClicked event:', eventData);
+
+  const dispatcher = getLoopsModuleDispatcher();
+
+  if (!isLoopModeActive) {
+    log('info', '[LoopEvents] Loop mode not active, propagating to next handler');
+    if (dispatcher) {
+      dispatcher.publishToNextModule(
+        moduleInfo.name,
+        'user:exitClicked',
+        eventData,
+        { direction: 'up' }
+      );
+    } else {
+      log('error', '[LoopEvents] Dispatcher not available for propagation');
+    }
+    return;
+  }
+
+  log('info', '[LoopEvents] Loop mode active, intercepting exit click');
+
+  if (autoBuildPathOnClick) {
+    rebuildQueueToExit(eventData);
+  } else {
+    appendExitOrFeedback(eventData);
+  }
+}
+
+// Test-only — reset module-scope state between cases.
+export function _testOnly_resetLoopEvents() {
+  isLoopModeActive = false;
+  autoBuildPathOnClick = false;
+  _eventBus = null;
 }

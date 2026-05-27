@@ -27,6 +27,15 @@ const DEFAULTS = {
   // (maze, textAdventure) check loops.isFocusLocked() before
   // publishing ui:activatePanel on loadRegion.
   keepFocused: false,
+
+  // Advanced. When true, a user:locationCheck or user:exitClicked
+  // from another panel CLEARS the queue and rebuilds it as a path
+  // from the current location to the click target. When false (the
+  // default), the click instead appends a single action to the end
+  // of the queue iff the click's region matches the queue's current
+  // end region; mismatches drop the click and emit loops:clickIgnored.
+  // First enable from the UI is gated by a confirmation modal.
+  autoBuildPathOnClick: false,
 };
 
 /**
@@ -101,6 +110,11 @@ export class DisplaySettingsManager extends DisplaySettingsBase {
     // Keep-focused checkbox
     const keepFocusedCheckbox = this.rootElement.querySelector('#loop-ui-toggle-keep-focused');
     if (keepFocusedCheckbox) keepFocusedCheckbox.checked = !!this.settings.keepFocused;
+
+    // Advanced: auto-build path on click
+    const autoBuildPathCheckbox =
+      this.rootElement.querySelector('#loop-ui-toggle-auto-build-path-on-click');
+    if (autoBuildPathCheckbox) autoBuildPathCheckbox.checked = !!this.settings.autoBuildPathOnClick;
 
     logger.debug('Settings synced to UI');
   }
