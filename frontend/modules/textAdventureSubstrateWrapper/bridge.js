@@ -320,6 +320,15 @@ async function main() {
             targetRegion: targetRoomId,
             exitName: exitId,
         });
+        // Substrate-internal recording signal. Bypasses the dispatcher
+        // chain (so loops intercepts can't swallow it) and carries the
+        // exact action shape the saved-queue recorder will persist.
+        client.publishEventBus('textAdventure:commandRecorded', {
+            type: 'regionMove',
+            sourceRegion: fromRoomId,
+            targetRegion: targetRoomId,
+            exitName: exitId,
+        });
     });
 
     engine.on('command:examine', ({ roomId, itemId }) => {
@@ -357,6 +366,11 @@ async function main() {
             locationName: itemId,
             regionName: roomId,
             originator: 'textAdventureSubstrateWrapper',
+        });
+        client.publishEventBus('textAdventure:commandRecorded', {
+            type: 'locationCheck',
+            locationName: itemId,
+            regionName: roomId,
         });
     });
 
@@ -400,6 +414,10 @@ async function main() {
         // location or exit and reveals it; the discovery events fire
         // back through our existing subscriptions.
         client.publishEventDispatcher('loop:exploreCompleted', {
+            regionName: roomId,
+        });
+        client.publishEventBus('textAdventure:commandRecorded', {
+            type: 'explore',
             regionName: roomId,
         });
     });
