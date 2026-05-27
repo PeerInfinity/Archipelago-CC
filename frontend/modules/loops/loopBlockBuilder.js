@@ -8,6 +8,8 @@ import { getCostDataManager } from './index.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { getSavedQueues } from './savedQueueStore.js';
+import { hashRulesData } from '../shared/rulesHash.js';
 import {
   manaColorClass,
   formatTime,
@@ -208,6 +210,10 @@ export class LoopBlockBuilder {
       // have no panel to hand off to).
       if (this.loopUI.isLoopModeActive && this._getSubstrateLabel(regionName)) {
         this.addManualButton(detailsEl, regionName);
+        // Custom Queue dropdown — lists previously-saved queues for
+        // this region/substrate so the user can append a customQueue
+        // action that replays one of them.
+        this.addCustomQueueDropdown(detailsEl, regionName);
       }
 
       // Compact display: exits then locations (no entrances)
@@ -348,6 +354,87 @@ export class LoopBlockBuilder {
     container.appendChild(btn);
 
     detailsEl.appendChild(container);
+  }
+
+  /**
+   * Add a Custom Queue dropdown that lets the user append a customQueue
+   * action referencing one of the saved queues recorded for this
+   * region/substrate. Shows a disabled placeholder when no saved
+   * queues exist (jta regions or freshly-loaded rules).
+   */
+  addCustomQueueDropdown(detailsEl, regionName) {
+    const container = document.createElement('div');
+    container.className = 'region-custom-queue-container';
+    Object.assign(container.style, {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '6px',
+      marginTop: '4px',
+    });
+
+    const label = document.createElement('label');
+    label.textContent = 'Custom queue:';
+    label.style.fontSize = '12px';
+    container.appendChild(label);
+
+    const select = document.createElement('select');
+    select.className = 'custom-queue-select';
+    select.style.fontSize = '12px';
+
+    const queues = this._lookupSavedQueuesForRegion(regionName);
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = queues.length
+      ? '— select a saved queue —'
+      : '— no saved queues yet —';
+    placeholder.disabled = queues.length === 0;
+    select.appendChild(placeholder);
+    queues.forEach((q) => {
+      const opt = document.createElement('option');
+      opt.value = String(q.recordedAt);
+      const dMana = (q.manaAtEntry ?? 0) - (q.manaAtExit ?? 0);
+      const cost = (q.manaAtEntry ?? 0) - (q.manaMin ?? q.manaAtEntry ?? 0);
+      const detail = cost > 0 ? ` — Δ${dMana} (cost ${cost})` : ` — Δ${dMana}`;
+      opt.textContent = `${q.name ?? `queue#${q.recordedAt}`}${detail}`;
+      select.appendChild(opt);
+    });
+    if (queues.length === 0) select.disabled = true;
+
+    select.addEventListener('change', () => {
+      const value = select.value;
+      if (!value) return;
+      const queue = queues.find((q) => String(q.recordedAt) === value);
+      if (!queue) return;
+      this.loopUI.gameStateAPI?.addCustomQueueAction?.(
+        regionName,
+        { recordedAt: queue.recordedAt },
+        queue.name ?? null,
+      );
+      // Reset the dropdown to the placeholder so the same queue can
+      // be added again (the action was already appended).
+      select.value = '';
+    });
+
+    container.appendChild(select);
+    detailsEl.appendChild(container);
+  }
+
+  /**
+   * Resolve saved queues for the given region. Returns [] when the
+   * region has no substrate, when rules data isn't cached on
+   * loopState yet, or when no queues have been recorded.
+   */
+  _lookupSavedQueuesForRegion(regionName) {
+    const rulesData = loopState._cachedRulesData;
+    if (!rulesData) return [];
+    const rulesHash = hashRulesData(rulesData);
+    if (!rulesHash) return [];
+    const getRegionInfo = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+    const substrate = typeof getRegionInfo === 'function'
+      ? getRegionInfo(regionName)?.substrate
+      : null;
+    if (!substrate) return [];
+    return getSavedQueues(rulesHash, regionName, substrate);
   }
 
   /**

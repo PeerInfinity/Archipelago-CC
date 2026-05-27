@@ -63,6 +63,7 @@ export function makeWired({ snapshot, staticData, startRegion = 'Menu' } = {}) {
       addLocationCheck: (l, r, sd) => gs.addLocationCheck(l, r, sd),
       addCustomAction: (a, p) => gs.addCustomAction(a, p),
       addManualAction: (r) => gs.addManualAction(r),
+      addCustomQueueAction: (r, ref, n) => gs.addCustomQueueAction(r, ref, n),
       removePathEntry: (idx) => gs.removePathEntry(idx),
       removeLocationCheckAt: (l, r, i) => gs.removeLocationCheckAt(l, r, i),
       removeCustomActionAt: (a, r, i, m) => gs.removeCustomActionAt(a, r, i, m),

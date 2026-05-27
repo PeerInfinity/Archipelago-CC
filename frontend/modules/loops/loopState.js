@@ -19,6 +19,8 @@ import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { getSavedQueues } from './savedQueueStore.js';
+import { hashRulesData } from '../shared/rulesHash.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -103,6 +105,11 @@ export class LoopState {
     // the queue. Cleared by _resetLoop. Set when manual mode detects
     // the player exited to an unexpected region.
     this._queuePausedUntilReset = false;
+    // Cached raw rules data — populated by the
+    // stateManager:rawJsonDataLoaded subscriber in _setupEventListeners.
+    // Used by the customQueue action's saved-queue lookup (needs the
+    // rules-hash to key savedQueueStore buckets).
+    this._cachedRulesData = null;
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -218,6 +225,13 @@ export class LoopState {
     });
     this.eventBus.subscribe('gameState:regionChanged', (data) => {
       this._handleManualWake_regionMove({ targetRegion: data?.newRegion });
+    });
+
+    // Cache raw rules data for the customQueue action's saved-queue
+    // lookup. stateManager doesn't expose a persistent getter, so
+    // each consumer that needs the raw JSON caches its own copy.
+    this.eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
+      this._cachedRulesData = data?.rawJsonData ?? null;
     });
   }
 
@@ -888,6 +902,14 @@ export class LoopState {
         this._handleManualEntry(this.currentAction);
         return;
       }
+      // Custom Queue: look up the saved queue and dispatch through
+      // the substrate's replayActions. Same wake / advance / paused-
+      // until-reset semantics as manual mode — _manualActionEntered
+      // doubles as the "parked, waiting for an exit" guard.
+      if (this.currentAction.type === 'customQueue') {
+        this._handleCustomQueueEntry(this.currentAction);
+        return;
+      }
       this._advanceActionProgress(deltaTime);
       this._maybeCompleteCurrentAction();
       // Queue ran to the end — no current action to reset, terminal events
@@ -1045,6 +1067,99 @@ export class LoopState {
   }
 
   /**
+   * Resolve the substrate id ('maze', 'text_adventure', ...) for a
+   * region so callers can dispatch saved-queue actions through that
+   * substrate's controller. Returns null when the region has no
+   * substrate or procgenPlayer isn't registered (test envs).
+   */
+  _lookupSubstrateId(regionName) {
+    if (!regionName) return null;
+    try {
+      const getRegionInfo = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      if (typeof getRegionInfo !== 'function') return null;
+      return getRegionInfo(regionName)?.substrate ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Look up a saved queue by (rules-hash, region, substrate,
+   * recordedAt). Returns null on miss (rules not yet cached, no
+   * substrate, queue evicted by FIFO cap).
+   */
+  _lookupSavedQueue(regionName, recordedAt) {
+    if (!regionName || recordedAt == null) return null;
+    if (!this._cachedRulesData) return null;
+    const substrate = this._lookupSubstrateId(regionName);
+    if (!substrate) return null;
+    const rulesHash = hashRulesData(this._cachedRulesData);
+    if (!rulesHash) return null;
+    const queues = getSavedQueues(rulesHash, regionName, substrate);
+    const target = String(recordedAt);
+    return queues.find((q) => String(q.recordedAt) === target) ?? null;
+  }
+
+  /**
+   * Called from _processFrame whenever the current action is type
+   * 'customQueue'. On the first hit per entry:
+   *   - Activate the substrate panel.
+   *   - Stop queue processing.
+   *   - Look up the saved queue (async); on hit, call the substrate's
+   *     PlaybackController.replayActions. On miss (or substrate has no
+   *     replayActions), fall back to publishing manualEntered so the
+   *     player can drive manually.
+   *   - Publish loopState:manualEntered (with queueRef in the payload
+   *     so the UI banner can show the queue name).
+   * The same wake handlers used by manual mode (regionChanged + manaChanged)
+   * advance past this entry or set _queuePausedUntilReset on mismatch.
+   */
+  _handleCustomQueueEntry(action) {
+    if (this._manualActionEntered) return;
+    this._manualActionEntered = true;
+
+    const componentType = this._lookupSubstrateComponentType(action.sourceRegion);
+    if (componentType && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+    this.stopProcessing();
+
+    // Resolve the saved queue + dispatch through the substrate's
+    // replayActions controller. Missing queue, substrate without
+    // replay support, or replay errors all silently fall through to
+    // manual-mode semantics (banner + wake-on-exit are the same).
+    const saved = this._lookupSavedQueue(action.sourceRegion, action.queueRef?.recordedAt);
+    if (saved) {
+      const substrate = this._lookupSubstrateId(action.sourceRegion);
+      const controller = substrate
+        ? substrateRegistry?.get?.(substrate)?.getPlaybackController?.()
+        : null;
+      if (typeof controller?.replayActions === 'function') {
+        try {
+          controller.replayActions(saved.actions, {
+            onComplete: () => { /* reserved for future UI */ },
+          });
+        } catch (err) {
+          log('warn', '[LoopState] customQueue replayActions threw:', err);
+        }
+      }
+    }
+
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:manualEntered', {
+        regionName: action.sourceRegion,
+        expectedNextRegion: this._getExpectedNextRegion(),
+        // Custom-queue marker so the UI banner can say "Custom queue:
+        // X" instead of the generic "Manual mode" wording.
+        customQueue: {
+          queueName: action.queueName ?? null,
+          recordedAt: action.queueRef?.recordedAt ?? null,
+        },
+      });
+    }
+  }
+
+  /**
    * Wake from manual mode in response to a user:regionMove event.
    * If the target matches the queue's next expected region, advance
    * past the manual entry and resume processing. Otherwise mark the
@@ -1052,7 +1167,9 @@ export class LoopState {
    */
   _handleManualWake_regionMove(data) {
     if (!this._manualActionEntered) return;
-    if (!this.currentAction || this.currentAction.type !== 'manual') return;
+    if (!this.currentAction) return;
+    const t = this.currentAction.type;
+    if (t !== 'manual' && t !== 'customQueue') return;
     const expected = this._getExpectedNextRegion();
     if (data?.targetRegion && data.targetRegion === expected) {
       // Match — advance past the manual entry.
@@ -1087,7 +1204,9 @@ export class LoopState {
   /** Mana-zero during manual mode → standard loop reset. */
   _handleManualWake_mana() {
     if (!this._manualActionEntered) return;
-    if (!this.currentAction || this.currentAction.type !== 'manual') return;
+    if (!this.currentAction) return;
+    const t = this.currentAction.type;
+    if (t !== 'manual' && t !== 'customQueue') return;
     const gs = this._gs();
     if (typeof gs?.getCurrentMana !== 'function') return;
     if (gs.getCurrentMana() > 0) return;
@@ -1515,9 +1634,11 @@ export class LoopState {
           baseCost = this.costDataManager.getRegionCost(action.sourceRegion) * 2;
           break;
         case 'manual':
-          // Manual entries park the queue and let the player drive
-          // the substrate directly. No queue-side mana cost — the
-          // substrate's own actions consume mana as the player acts.
+        case 'customQueue':
+          // Manual / customQueue entries park the queue and let the
+          // substrate (player or replayed actions) drive directly.
+          // No queue-side mana cost — the substrate's own actions
+          // consume mana as they run.
           baseCost = 0;
           break;
         default:
@@ -1536,6 +1657,7 @@ export class LoopState {
           baseCost = 50;
           break;
         case 'manual':
+        case 'customQueue':
           baseCost = 0;
           break;
         default:

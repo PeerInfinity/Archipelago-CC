@@ -1668,9 +1668,26 @@ export class MazeRoomUI {
                 reset:   () => this._visualizer?.freshStart(),
                 setRate: (rateHz) => this._visualizer?.setRate(rateHz),
                 walkTo:  (target) => this._handleWalkToCommand(target),
+                replayActions: (actions, opts) => this._replaySavedActions(actions, opts),
             };
         }
         return this._playbackController;
+    }
+
+    /**
+     * Append substrate-native actions to the maze queue and start the
+     * replay driver. Used by the loops customQueue action type. Fires
+     * `opts.onComplete()` (best-effort) when the queue drains.
+     * Returns true if a replay was started; false when actions is
+     * empty or invalid.
+     */
+    _replaySavedActions(actions, { onComplete } = {}) {
+        if (!Array.isArray(actions) || actions.length === 0) return false;
+        this._stopReplay();
+        this._mazeQueue.appendAll(actions);
+        this._startReplayDriver({ onComplete });
+        this.render();
+        return true;
     }
 
     _resolveWalkToTile(target, world) {
@@ -3279,11 +3296,12 @@ export class MazeRoomUI {
         return queues.find((q) => String(q.recordedAt) === target) ?? null;
     }
 
-    _startReplayDriver() {
+    _startReplayDriver({ onComplete } = {}) {
         if (this._replayDriver) return;
+        this._replayCompletionCallback = typeof onComplete === 'function' ? onComplete : null;
         const tick = () => {
             if (this._mazeQueue.isIdle()) {
-                this._stopReplay();
+                this._stopReplay({ fireCompletion: true });
                 this.render();
                 return;
             }
@@ -3293,10 +3311,20 @@ export class MazeRoomUI {
         this._replayDriver = setInterval(tick, this._replayTickMs);
     }
 
-    _stopReplay() {
+    _stopReplay({ fireCompletion = false } = {}) {
         if (this._replayDriver) {
             clearInterval(this._replayDriver);
             this._replayDriver = null;
+        }
+        const cb = this._replayCompletionCallback;
+        this._replayCompletionCallback = null;
+        if (fireCompletion && typeof cb === 'function') {
+            try { cb(); } catch (err) {
+                // Best-effort signal; don't let consumer errors poison
+                // the replay driver state.
+                // eslint-disable-next-line no-console
+                console.warn('[mazeRoomUI] replay onComplete callback threw:', err);
+            }
         }
     }
 

@@ -50,7 +50,8 @@ export class ActionQueueManager {
       // Only add overlay data: id, pathIndex, progress, completed.
       if (entry.type === 'regionMove' || entry.type === 'locationCheck' ||
           (entry.type === 'customAction' && entry.actionName === 'explore') ||
-          entry.type === 'manual') {
+          entry.type === 'manual' ||
+          entry.type === 'customQueue') {
         const action = {
           ...entry,
           id: `action-${index}`,

@@ -2339,6 +2339,8 @@ export class LoopUI {
         return `Move to ${action.destinationRegion}`;
       case 'manual':
         return `Manual in ${action.sourceRegion}`;
+      case 'customQueue':
+        return `Replay "${action.queueName ?? 'queue'}" in ${action.sourceRegion}`;
       default:
         return `${action.type}`;
     }

@@ -270,4 +270,206 @@ describe('Manual mode — cost calculation', () => {
         const action = loopState.getActionQueue()[0];
         expect(loopState._calculateActionCost(action)).toBe(0);
     });
+
+    it('customQueue entries cost 0 mana (substrate consumes during replay)', () => {
+        gs.addCustomQueueAction('Menu', { recordedAt: 1 }, 'queue-name');
+        const action = loopState.getActionQueue()[0];
+        expect(loopState._calculateActionCost(action)).toBe(0);
+    });
+});
+
+describe('Custom Queue — processFrame handling', () => {
+    let loopState, gs, bus;
+    let tick;
+    const replayCalls = [];
+    const FAKE_SUBSTRATE_ENTRY = {
+        id: 'test_substrate',
+        label: 'Test',
+        panelComponentType: 'testSubstratePanel',
+        loadRegionEvent: 'test:loadRegion',
+        getPlaybackController: () => ({
+            replayActions: (actions, opts) => {
+                replayCalls.push({ actions, opts });
+            },
+        }),
+    };
+
+    beforeEach(() => {
+        ({ loopState, gs, bus } = wireWithFunctionalBus());
+        tick = makeTicker();
+        replayCalls.length = 0;
+        try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+        substrateRegistry.register?.(FAKE_SUBSTRATE_ENTRY);
+        try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+        centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => {
+            if (region === 'cqRegion') {
+                return { substrate: 'test_substrate', label: 'Test', manaEnabled: true };
+            }
+            return null;
+        });
+        // Seed loopState's cached rules data so the savedQueue lookup
+        // can compute a rules-hash.
+        bus.publish('stateManager:rawJsonDataLoaded', {
+            rawJsonData: { regions: { 1: ['cqRegion'] } },
+        });
+    });
+
+    function setupCustomQueueQueue() {
+        // Pre-seed a saved queue for cqRegion via the savedQueueStore.
+        const rulesHash = require('../shared/rulesHash.js').hashRulesData({ regions: { 1: ['cqRegion'] } });
+        // Use a synchronous import indirection via the dynamic require
+        // — vitest under node supports both.
+        return rulesHash;
+    }
+
+    it('looks up the saved queue and dispatches replayActions on the substrate', async () => {
+        const { saveQueue, _testOnly_clearAll } = await import('./savedQueueStore.js');
+        const { hashRulesData, clearRulesHashCache } = await import('../shared/rulesHash.js');
+        _testOnly_clearAll();
+        clearRulesHashCache();
+        const rulesHash = hashRulesData({ regions: { 1: ['cqRegion'] } });
+        saveQueue(rulesHash, {
+            regionName: 'cqRegion',
+            substrate: 'test_substrate',
+            arrivalExitId: 'entrance',
+            departureExitId: 'north',
+            actions: [{ type: 'move', dir: 'N' }, { type: 'move', dir: 'E' }],
+            manaAtEntry: 100, manaAtExit: 90, manaMin: 88,
+            locationsChecked: [], itemsPickedUp: [],
+            recordedAt: 7777,
+        });
+
+        // Build a queue: regionMove(Menu→cqRegion), customQueue(cqRegion), regionMove(cqRegion→after)
+        gs.updatePath('cqRegion', 'go', 'Menu');
+        gs.addCustomQueueAction('cqRegion', { recordedAt: 7777 }, 'my saved queue');
+        gs.updatePath('after', 'north', 'cqRegion');
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+
+        tick(loopState);
+
+        expect(replayCalls).toHaveLength(1);
+        expect(replayCalls[0].actions).toEqual([
+            { type: 'move', dir: 'N' },
+            { type: 'move', dir: 'E' },
+        ]);
+        expect(loopState._manualActionEntered).toBe(true);
+        expect(loopState.isProcessing).toBe(false);
+    });
+
+    it('publishes manualEntered with customQueue metadata', async () => {
+        const { saveQueue, _testOnly_clearAll } = await import('./savedQueueStore.js');
+        const { hashRulesData, clearRulesHashCache } = await import('../shared/rulesHash.js');
+        _testOnly_clearAll();
+        clearRulesHashCache();
+        const rulesHash = hashRulesData({ regions: { 1: ['cqRegion'] } });
+        saveQueue(rulesHash, {
+            regionName: 'cqRegion',
+            substrate: 'test_substrate',
+            arrivalExitId: 'entrance',
+            departureExitId: 'n',
+            actions: [{ type: 'wait' }],
+            manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
+            locationsChecked: [], itemsPickedUp: [],
+            recordedAt: 9000,
+        });
+
+        gs.updatePath('cqRegion', 'go', 'Menu');
+        gs.addCustomQueueAction('cqRegion', { recordedAt: 9000 }, 'queue9');
+        gs.updatePath('after', 'n', 'cqRegion');
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+
+        const entered = [];
+        bus.subscribe('loopState:manualEntered', (data) => entered.push(data));
+        tick(loopState);
+
+        expect(entered).toHaveLength(1);
+        expect(entered[0]).toMatchObject({
+            regionName: 'cqRegion',
+            expectedNextRegion: 'after',
+            customQueue: { queueName: 'queue9', recordedAt: 9000 },
+        });
+    });
+
+    it('falls through to manual-mode banner when the saved queue is missing', async () => {
+        const { _testOnly_clearAll } = await import('./savedQueueStore.js');
+        const { clearRulesHashCache } = await import('../shared/rulesHash.js');
+        _testOnly_clearAll();
+        clearRulesHashCache();
+
+        gs.updatePath('cqRegion', 'go', 'Menu');
+        gs.addCustomQueueAction('cqRegion', { recordedAt: 12345 }, 'missing');
+        gs.updatePath('after', 'n', 'cqRegion');
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+
+        tick(loopState);
+
+        // No replay was dispatched (no saved queue exists).
+        expect(replayCalls).toEqual([]);
+        // Manual-mode flags are still set so the player can drive
+        // and the same wake handlers fire on exit.
+        expect(loopState._manualActionEntered).toBe(true);
+        expect(loopState.isProcessing).toBe(false);
+    });
+
+    it('matching regionChanged advances past the customQueue entry', async () => {
+        const { saveQueue, _testOnly_clearAll } = await import('./savedQueueStore.js');
+        const { hashRulesData, clearRulesHashCache } = await import('../shared/rulesHash.js');
+        _testOnly_clearAll();
+        clearRulesHashCache();
+        const rulesHash = hashRulesData({ regions: { 1: ['cqRegion'] } });
+        saveQueue(rulesHash, {
+            regionName: 'cqRegion', substrate: 'test_substrate',
+            arrivalExitId: 'entrance', departureExitId: 'n',
+            actions: [{ type: 'wait' }],
+            manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
+            locationsChecked: [], itemsPickedUp: [],
+            recordedAt: 5,
+        });
+
+        gs.updatePath('cqRegion', 'go', 'Menu');
+        gs.addCustomQueueAction('cqRegion', { recordedAt: 5 });
+        gs.updatePath('after', 'n', 'cqRegion');
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+        tick(loopState);
+
+        bus.publish('gameState:regionChanged', { newRegion: 'after' });
+        expect(loopState.currentActionIndex).toBe(2);
+        expect(loopState._manualActionEntered).toBe(false);
+        expect(loopState._queuePausedUntilReset).toBe(false);
+    });
+
+    it('mismatched regionChanged sets _queuePausedUntilReset (same as manual mode)', async () => {
+        const { saveQueue, _testOnly_clearAll } = await import('./savedQueueStore.js');
+        const { hashRulesData, clearRulesHashCache } = await import('../shared/rulesHash.js');
+        _testOnly_clearAll();
+        clearRulesHashCache();
+        const rulesHash = hashRulesData({ regions: { 1: ['cqRegion'] } });
+        saveQueue(rulesHash, {
+            regionName: 'cqRegion', substrate: 'test_substrate',
+            arrivalExitId: 'entrance', departureExitId: 'n',
+            actions: [{ type: 'wait' }],
+            manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
+            locationsChecked: [], itemsPickedUp: [],
+            recordedAt: 5,
+        });
+
+        gs.updatePath('cqRegion', 'go', 'Menu');
+        gs.addCustomQueueAction('cqRegion', { recordedAt: 5 });
+        gs.updatePath('after', 'n', 'cqRegion');
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+        tick(loopState);
+
+        bus.publish('gameState:regionChanged', { newRegion: 'wrongRegion' });
+        expect(loopState._queuePausedUntilReset).toBe(true);
+    });
 });

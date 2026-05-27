@@ -115,6 +115,11 @@ export async function register(registrationApi) {
         return gameState.addManualAction(regionName);
     });
 
+    registrationApi.registerPublicFunction(moduleId, 'addCustomQueueAction', (regionName, queueRef, queueName) => {
+        const gameState = getGameStateSingleton();
+        return gameState.addCustomQueueAction(regionName, queueRef, queueName);
+    });
+
 
     registrationApi.registerPublicFunction(moduleId, 'insertLocationCheckAt', (locationName, targetRegionName, targetInstanceNumber, locationRegionName) => {
         const gameState = getGameStateSingleton();

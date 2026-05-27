@@ -573,6 +573,58 @@ export class GameState {
      *   (same as addLocationCheck), then to currentRegion.
      */
     addManualAction(regionName = null) {
+        const { sourceRegion, instanceNumber } = this._resolveRegionAndInstance(regionName);
+        if (!sourceRegion) {
+            console.warn('[GameState] Cannot add manual action: no source region');
+            return;
+        }
+        this.path.push({
+            type: 'manual',
+            sourceRegion,
+            instanceNumber,
+        });
+        this.emitPathUpdated();
+    }
+
+    /**
+     * Append a "customQueue" entry to the path. References a saved
+     * queue by recordedAt timestamp; the loops module looks it up in
+     * savedQueueStore at execution time and dispatches its actions
+     * through the substrate's replay controller. Same wrong-region
+     * detection as manual mode (warns + pauses queue until reset).
+     *
+     * @param {string} regionName - region the saved queue is scoped to
+     * @param {object} queueRef - { recordedAt: number } identifier
+     * @param {string} [queueName] - human label for display (e.g. "auto: A→B")
+     */
+    addCustomQueueAction(regionName, queueRef, queueName = null) {
+        const { sourceRegion, instanceNumber } = this._resolveRegionAndInstance(regionName);
+        if (!sourceRegion) {
+            console.warn('[GameState] Cannot add customQueue action: no source region');
+            return;
+        }
+        if (!queueRef || queueRef.recordedAt == null) {
+            console.warn('[GameState] Cannot add customQueue action: missing queueRef.recordedAt');
+            return;
+        }
+        this.path.push({
+            type: 'customQueue',
+            sourceRegion,
+            queueRef: { recordedAt: queueRef.recordedAt },
+            queueName: queueName ?? `queue#${queueRef.recordedAt}`,
+            instanceNumber,
+        });
+        this.emitPathUpdated();
+    }
+
+    /**
+     * Shared helper for manual / customQueue path entries. Resolves
+     * the source region (explicit param > last regionMove's destination
+     * > currentRegion) and the instance number using the same scheme
+     * as addCustomAction.
+     * @private
+     */
+    _resolveRegionAndInstance(regionName) {
         let lastRegionMove = null;
         for (let i = this.path.length - 1; i >= 0; i--) {
             if (this.path[i].type === 'regionMove') {
@@ -584,20 +636,12 @@ export class GameState {
             regionName
             ?? lastRegionMove?.destinationRegion
             ?? this.currentRegion;
-        if (!sourceRegion) {
-            console.warn('[GameState] Cannot add manual action: no source region');
-            return;
-        }
+        if (!sourceRegion) return { sourceRegion: null, instanceNumber: 1 };
         const instanceNumber =
             (lastRegionMove && lastRegionMove.destinationRegion === sourceRegion)
                 ? lastRegionMove.instanceNumber
                 : (this.regionInstanceCounts.get(sourceRegion) || 1);
-        this.path.push({
-            type: 'manual',
-            sourceRegion,
-            instanceNumber,
-        });
-        this.emitPathUpdated();
+        return { sourceRegion, instanceNumber };
     }
 
     /**

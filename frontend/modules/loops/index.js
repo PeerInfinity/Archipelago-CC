@@ -356,6 +356,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     addLocationCheck: initializationApi.getModuleFunction('gameState', 'addLocationCheck'),
     addCustomAction: initializationApi.getModuleFunction('gameState', 'addCustomAction'),
     addManualAction: initializationApi.getModuleFunction('gameState', 'addManualAction'),
+    addCustomQueueAction: initializationApi.getModuleFunction('gameState', 'addCustomQueueAction'),
     insertLocationCheckAt: initializationApi.getModuleFunction('gameState', 'insertLocationCheckAt'),
     insertCustomActionAt: initializationApi.getModuleFunction('gameState', 'insertCustomActionAt'),
     removePathEntry: initializationApi.getModuleFunction('gameState', 'removePathEntry'),
