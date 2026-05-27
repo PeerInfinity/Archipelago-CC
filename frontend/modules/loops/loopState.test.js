@@ -254,22 +254,15 @@ describe('LoopState — clearQueue (Phase 6g)', () => {
     expect(gs.getPath()).toEqual([]);
   });
 
-  it('preserves mana / XP / bestPaths (does NOT call gameState.reset)', () => {
+  it('preserves mana / XP (does NOT call gameState.reset)', () => {
     gs.setStartRegions(['Menu']);
     gs.deductMana(40);
     gs.addRegionXP('region_0_0', 60);
-    gs.recordBestPath('a:b:c', {
-      actions: [{ type: 'move', dir: 'E' }],
-      totalCost: 1,
-      itemsPickedUp: [],
-      locationsChecked: [],
-    });
 
     loopState.clearQueue();
 
     expect(gs.getCurrentMana()).toBe(60);
     expect(gs.getRegionXP('region_0_0').xp).toBeGreaterThan(0);
-    expect(gs.getBestPath('a:b:c')).not.toBeNull();
   });
 
   it('teleports to procgenPlayer.getResolvedStartRegion when registered', () => {

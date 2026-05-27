@@ -218,16 +218,9 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'setIncludePerItemMaxMana', (enabled) => {
         return getGameStateSingleton().setIncludePerItemMaxMana(enabled);
     });
-    // Best-path persistence (Phase 5).
-    registrationApi.registerPublicFunction(moduleId, 'recordBestPath', (key, steps, cost) => {
-        return getGameStateSingleton().recordBestPath(key, steps, cost);
-    });
-    registrationApi.registerPublicFunction(moduleId, 'getBestPath', (key) => {
-        return getGameStateSingleton().getBestPath(key);
-    });
-    registrationApi.registerPublicFunction(moduleId, 'clearBestPaths', () => {
-        return getGameStateSingleton().clearBestPaths();
-    });
+    // Note: recordBestPath / getBestPath / clearBestPaths were removed
+    // when saved queues moved to loops/savedQueueStore.js. New consumers
+    // should import that module directly.
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {

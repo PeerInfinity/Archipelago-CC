@@ -62,24 +62,13 @@ export class GameState {
         // intervening reset on reactivation (the JtA bridge sync pattern).
         this.loopResetCount = 0;
         this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
-
-        // Best-path persistence. Maps a caller-composed string key to
-        // the best-cost route discovered so far through some (region,
-        // entry, target) triple. Keys are opaque to gameState — see
-        // mazeRoomUI.bestPathKey() for the conventional shape.
-        // Persisted across loop resets within a session; cleared on
-        // reset() (i.e. when a new ruleset loads).
-        //
-        // Value shape (maze content modules Phase 1):
-        //   {
-        //     actions: [{type:'move',dir}, {type:'wait'}, {type:'locationCheck',locationName}, ...],
-        //     totalCost: number,
-        //     itemsPickedUp: string[],
-        //     locationsChecked: string[],
-        //   }
-        // Stored actions carry the verb data only (no id/status), per
-        // Cavernous's "strip-progress-on-save" convention.
-        this.bestPaths = new Map();
+        // Note: the per-region "best path" Map (previously here as
+        // `this.bestPaths`) was migrated to the substrate-aware
+        // savedQueueStore in loops/savedQueueStore.js. Saved queues
+        // are now keyed by (rules-hash, region, substrate), capped
+        // per region, and persist on every region exit (not just on
+        // "better than the previous best"). See
+        // NewDocs/plans/procedural-generation/loops-queue-and-manual-mode.md.
     }
 
     // -------------------- Mana API --------------------
@@ -259,51 +248,6 @@ export class GameState {
 
     clearRegionXP() {
         this.regionXP.clear();
-    }
-
-    // -------------------- Best-path persistence (Phase 5) --------------------
-
-    /**
-     * Record a discovered route under `key` if it's better (lower cost)
-     * than what we already have.
-     * @param {string} key
-     * @param {Array<{x: number, y: number}>} steps
-     * @param {number} cost
-     * @returns {boolean} true when stored (new or improved); false otherwise
-     */
-    recordBestPath(key, value) {
-        if (typeof key !== 'string' || !value || typeof value !== 'object') return false;
-        if (!Array.isArray(value.actions)) return false;
-        if (typeof value.totalCost !== 'number') return false;
-        const existing = this.bestPaths.get(key);
-        if (existing && existing.totalCost <= value.totalCost) return false;
-        // Strip ids/statuses on save (Cavernous strip-progress-on-save):
-        // stored actions are pure verb data, never live queue state.
-        const cleanActions = value.actions.map((a) => {
-            const out = { type: a.type };
-            if (a.dir !== undefined) out.dir = a.dir;
-            if (a.locationName !== undefined) out.locationName = a.locationName;
-            return out;
-        });
-        this.bestPaths.set(key, {
-            actions: cleanActions,
-            totalCost: value.totalCost,
-            itemsPickedUp: Array.isArray(value.itemsPickedUp)
-                ? [...value.itemsPickedUp] : [],
-            locationsChecked: Array.isArray(value.locationsChecked)
-                ? [...value.locationsChecked] : [],
-        });
-        return true;
-    }
-
-    /** Return the best-known route for `key`, or null. */
-    getBestPath(key) {
-        return this.bestPaths.get(key) ?? null;
-    }
-
-    /** Drop all stored best paths. Called by reset() on rules-load. */
-    clearBestPaths() {
-        this.bestPaths.clear();
     }
 
     /**
@@ -1000,7 +944,7 @@ export class GameState {
      * (otherwise procgenPlayer would reload the substrate panel
      * mid-queue-build and the user would see a flicker).
      *
-     * Mana / XP / bestPaths are preserved — those represent player
+     * Mana / XP / saved queues are preserved — those represent player
      * progress across loop iterations, not per-queue state.
      */
     clearPath() {
@@ -1031,7 +975,9 @@ export class GameState {
         this.currentMana = this.maxMana;
         this.manaDebt = 0;
         this.regionXP.clear();
-        this.bestPaths.clear();
+        // Note: per-region saved queues are owned by loops/savedQueueStore
+        // and persist across rules reloads (keyed by rules-hash, they
+        // naturally bucket per ruleset). No clear call here.
 
         // Emit events for the reset
         if (this.eventBus) {
@@ -1087,15 +1033,6 @@ export class GameState {
             includePerItemMaxMana: this.includePerItemMaxMana,
             loopResetCount: this.loopResetCount,
             regionXP: Array.from(this.regionXP.entries()),
-            bestPaths: Array.from(this.bestPaths.entries()).map(([k, v]) => [
-                k,
-                {
-                    actions: v.actions.map((a) => ({ ...a })),
-                    totalCost: v.totalCost,
-                    itemsPickedUp: [...(v.itemsPickedUp ?? [])],
-                    locationsChecked: [...(v.locationsChecked ?? [])],
-                },
-            ]),
         };
     }
 
@@ -1138,9 +1075,9 @@ export class GameState {
             if (data.regionXP) {
                 this.regionXP = new Map(data.regionXP);
             }
-            if (Array.isArray(data.bestPaths)) {
-                this.bestPaths = new Map(data.bestPaths);
-            }
+            // Legacy `bestPaths` field on serialized data is silently
+            // ignored — saved queues moved to localStorage in
+            // loops/savedQueueStore.js, keyed by rules-hash.
 
             // Emit events for the loaded state
             this.emitPathUpdated();

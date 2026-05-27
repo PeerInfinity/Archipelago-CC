@@ -39,9 +39,11 @@ import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
-import { bestPathKey, findPath, stepsToActions } from './mazeAutopather.js';
+import { findPath, stepsToActions } from './mazeAutopather.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
+import { saveQueue, getSavedQueues } from '../loops/savedQueueStore.js';
+import { hashRulesData } from '../shared/rulesHash.js';
 import {
     MazeRoomQueue,
     ACTION_MOVE,
@@ -203,6 +205,20 @@ export class MazeRoomUI {
         this._unsubLoopMode = null;
         this._unsubManaChanged = null;
 
+        // Region-visit recording for the savedQueueStore. Populated
+        // by _startVisitRecording on region entry, mutated as actions
+        // are appended to the maze queue (we record the slice of
+        // _mazeQueue.actions executed during this visit) and as mana
+        // changes (rolling min), and flushed by _finalizeVisitOnExit
+        // when an exit is crossed. Null when no recording is active
+        // (e.g. before any region has loaded).
+        this._visitRecording = null;
+        // Cached raw rules.json content used to derive the rules-hash
+        // for the saved-queue store. Refreshed on
+        // stateManager:rawJsonDataLoaded.
+        this._cachedRulesData = null;
+        this._unsubRulesLoaded = null;
+
         // Phase 6: substrate-handled completion. Non-null while the
         // panel is walking through a loops queue action's autopath via
         // the visualizer. Signals to dispatched events that they
@@ -343,6 +359,7 @@ export class MazeRoomUI {
         this._subscribeToCostDataChanges();
         this._subscribeToLoopsQueue();
         this._subscribeToActiveSubstrate();
+        this._subscribeToRulesData();
 
         // If a maze:loadRegion event was published before this panel
         // mounted, the index.js handler buffered the payload. Pick it
@@ -490,10 +507,115 @@ export class MazeRoomUI {
     /** Re-render the mana display whenever currentMana / maxMana change. */
     _subscribeToManaChanges() {
         if (!eventBus?.subscribe) return;
-        const handler = () => { this.render(); };
+        const handler = () => {
+            // Update the visit recording's rolling minimum mana so the
+            // saved queue captures the "biggest dip" during the visit
+            // (used later to compute the queue's effective cost).
+            this._updateVisitMinMana();
+            this.render();
+        };
         eventBus.subscribe('gameState:manaChanged', handler, 'mazeRoom');
         this._unsubManaChanged =
             () => eventBus.unsubscribe?.('gameState:manaChanged', handler, 'mazeRoom');
+    }
+
+    /**
+     * Cache the raw rules.json content so the savedQueueStore can key
+     * its buckets by a stable content-hash. Subscribes to
+     * stateManager:rawJsonDataLoaded so the cache stays in sync when
+     * a new rules file is loaded mid-session.
+     */
+    _subscribeToRulesData() {
+        if (!eventBus?.subscribe) return;
+        const handler = (payload) => {
+            this._cachedRulesData = payload?.rawJsonData ?? null;
+        };
+        eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'mazeRoom');
+        this._unsubRulesLoaded =
+            () => eventBus.unsubscribe?.('stateManager:rawJsonDataLoaded', handler, 'mazeRoom');
+        // Best-effort prime: stateManagerProxy may already have rules
+        // loaded by the time this panel mounts. The proxy doesn't
+        // expose a raw-data getter, so we just wait for the next event;
+        // recordings will skip persistence until rulesData arrives.
+    }
+
+    // -------------------- Saved-queue visit recording --------------------
+
+    /**
+     * Begin recording the current region visit. Captures arrival
+     * exit + entry mana so a SavedQueue can be assembled at exit
+     * time. If a prior recording is still open (e.g. the player
+     * teleported out without crossing an exit, like on a loop reset),
+     * it is discarded silently.
+     */
+    _startVisitRecording(payload) {
+        const gs = (() => { try { return getGameStateSingleton?.(); } catch { return null; } })();
+        const manaAtEntry = typeof gs?.getCurrentMana === 'function' ? gs.getCurrentMana() : 0;
+        const arrivalExitId = payload?.arrivedFrom?.exit_id ?? 'entrance';
+        this._visitRecording = {
+            regionName: payload?.region_id ?? null,
+            arrivalExitId,
+            actionsAtStart: this._mazeQueue?.executionIndex ?? 0,
+            manaAtEntry,
+            manaMin: manaAtEntry,
+        };
+    }
+
+    /** Rolling-minimum update for the current visit's mana tracker. */
+    _updateVisitMinMana() {
+        if (!this._visitRecording) return;
+        const gs = (() => { try { return getGameStateSingleton?.(); } catch { return null; } })();
+        if (typeof gs?.getCurrentMana !== 'function') return;
+        const cur = gs.getCurrentMana();
+        if (typeof cur === 'number' && cur < this._visitRecording.manaMin) {
+            this._visitRecording.manaMin = cur;
+        }
+    }
+
+    /**
+     * Snapshot the visit recording and hand it to savedQueueStore.
+     * Called from _onVisualizerExitCross with the departure exit id.
+     * Skips persistence when rules data isn't cached yet (e.g. tests
+     * that drive the panel directly without a stateManager).
+     */
+    _finalizeVisitOnExit(departureExitId) {
+        const rec = this._visitRecording;
+        if (!rec || !rec.regionName) {
+            this._visitRecording = null;
+            return;
+        }
+        this._visitRecording = null;
+        const rulesHash = this._cachedRulesData ? hashRulesData(this._cachedRulesData) : null;
+        if (!rulesHash) return;
+
+        const executionIndex = this._mazeQueue?.executionIndex ?? 0;
+        const queueActions = this._mazeQueue?.actions ?? [];
+        const sliceStart = Math.min(rec.actionsAtStart ?? 0, executionIndex);
+        const actions = queueActions.slice(sliceStart, executionIndex).map((a) => {
+            const out = { type: a.type };
+            if (a.dir !== undefined) out.dir = a.dir;
+            if (a.locationName !== undefined) out.locationName = a.locationName;
+            return out;
+        });
+        const locationsChecked = actions
+            .filter((a) => a.type === 'locationCheck' && a.locationName)
+            .map((a) => a.locationName);
+
+        const gs = (() => { try { return getGameStateSingleton?.(); } catch { return null; } })();
+        const manaAtExit = typeof gs?.getCurrentMana === 'function' ? gs.getCurrentMana() : rec.manaMin;
+
+        saveQueue(rulesHash, {
+            regionName: rec.regionName,
+            substrate: 'maze',
+            arrivalExitId: rec.arrivalExitId,
+            departureExitId: departureExitId ?? null,
+            actions,
+            manaAtEntry: rec.manaAtEntry,
+            manaAtExit,
+            manaMin: rec.manaMin,
+            locationsChecked,
+            itemsPickedUp: [],
+        });
     }
 
     /**
@@ -560,9 +682,10 @@ export class MazeRoomUI {
         // Mark walk as queue-driven so dispatched events carry
         // fromLoop:true.
         this._loopsDrivenAction = action;
-        // Phase 6e: best-path tracking. Capture the starting tile and
-        // arrival exit; accumulate steps + cost as the visualizer walks.
-        // Recorded into gameState.bestPaths on successful completion.
+        // Loops-driven walk tracking. The step buffer is still used
+        // for cost accumulation and side-effect tracking during the
+        // walk; the saved-queue recording lives separately on
+        // _visitRecording and persists on region exit.
         const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
         this._loopsDrivenSteps = [{ x: startPos.x, y: startPos.y }];
         this._loopsDrivenCost = 0;
@@ -686,43 +809,6 @@ export class MazeRoomUI {
         v.play?.();
     }
 
-    /**
-     * Record the path actually walked into gameState's bestPaths if it
-     * beats the existing entry. Called on successful queue-driven walk
-     * completion (not on reset). `toRef` is the destination shape that
-     * bestPathKey understands —
-     * { kind: 'exit', exitId } or { kind: 'location', locationName }.
-     *
-     * Translates the loops-delegation walk's tile-coord sequence into
-     * the canonical action-verb shape (move N/S/E/W) so saved entries
-     * have a single format regardless of which walk path produced them.
-     * Side-effect aggregates (items picked up, locations checked) are
-     * captured from tracking state — populated during the walk via
-     * substrate's pickup callbacks.
-     */
-    _recordBestPathIfBetter(toRef) {
-        const gs = getGameStateSingleton?.();
-        if (!gs || !this.currentRegionId) return;
-        if (!Array.isArray(this._loopsDrivenSteps) || this._loopsDrivenSteps.length === 0) return;
-        const key = bestPathKey(this.currentRegionId, this._loopsDrivenArrivedFrom, toRef);
-        if (!key) return;
-        const actions = stepsToActions(this._loopsDrivenSteps);
-        // Append the explicit terminal verb for location targets so the
-        // saved queue replays the check at arrival (exits cross
-        // naturally via _publishPlaybackEvents on tile entry).
-        if (toRef.kind === 'location' && toRef.locationName) {
-            actions.push({ type: 'locationCheck', locationName: toRef.locationName });
-        }
-        gs.recordBestPath(key, {
-            actions,
-            totalCost: this._loopsDrivenCost,
-            itemsPickedUp: Array.isArray(this._loopsDrivenItems)
-                ? [...this._loopsDrivenItems] : [],
-            locationsChecked: Array.isArray(this._loopsDrivenLocations)
-                ? [...this._loopsDrivenLocations] : [],
-        });
-    }
-
     _clearLoopsDrivenTracking() {
         this._loopsDrivenAction = null;
         this._loopsDrivenSteps = null;
@@ -827,29 +913,30 @@ export class MazeRoomUI {
      * is the first candidate so the caller never gets null.
      */
     _pickBestExit(candidates) {
-        // getGameStateSingleton throws when uninitialized (some test
-        // contexts; not expected in production). Treat it as "no
-        // saved-path data available" rather than crashing the panel.
-        let gs = null;
-        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
-        const arrivedFrom = this.arrivedFromExitId;
+        const arrivedFrom = this.arrivedFromExitId ?? 'entrance';
 
-        // 1. Saved best-path winner (lowest cost).
-        if (gs) {
-            let bestByCost = null;
-            let bestCost = Infinity;
-            for (const exit of candidates) {
-                const key = bestPathKey(this.currentRegionId, arrivedFrom, {
-                    kind: 'exit', exitId: exit.exit_id,
-                });
-                if (!key) continue;
-                const stored = gs.getBestPath(key);
-                if (stored && stored.totalCost < bestCost) {
-                    bestCost = stored.totalCost;
-                    bestByCost = exit;
+        // 1. Saved-queue winner: pick the exit with the lowest mana
+        //    cost (entry - min) across all saved queues that left
+        //    through it. Skips when rules data isn't cached yet.
+        if (this._cachedRulesData && this.currentRegionId) {
+            const rulesHash = hashRulesData(this._cachedRulesData);
+            if (rulesHash) {
+                const queues = getSavedQueues(rulesHash, this.currentRegionId, 'maze')
+                    .filter((q) => q.arrivalExitId === arrivedFrom && q.departureExitId);
+                let bestByCost = null;
+                let bestCost = Infinity;
+                for (const exit of candidates) {
+                    for (const q of queues) {
+                        if (q.departureExitId !== exit.exit_id) continue;
+                        const cost = (q.manaAtEntry ?? 0) - (q.manaMin ?? q.manaAtEntry ?? 0);
+                        if (cost < bestCost) {
+                            bestCost = cost;
+                            bestByCost = exit;
+                        }
+                    }
                 }
+                if (bestByCost) return bestByCost;
             }
-            if (bestByCost) return bestByCost;
         }
 
         // 2. Closest by BFS distance from current player position.
@@ -1270,6 +1357,12 @@ export class MazeRoomUI {
         // — its actions are for the previous region.
         this._stopReplay?.();
         this._mazeQueue?.clearAll();
+        // Start a new saved-queue visit recording. Any in-flight
+        // recording from a previous region (not finalized by an exit
+        // cross) is discarded — that path was non-departing and not
+        // useful to save. The new recording's actionsAtStart aligns
+        // with the now-cleared maze queue's executionIndex (0).
+        this._startVisitRecording(payload);
         // Reset direct-walk tracking. Items / locations are session-
         // scoped to the region; cost accumulates from the entrance.
         this._directWalkCost = 0;
@@ -1355,6 +1448,7 @@ export class MazeRoomUI {
         if (this._unsubCostData) { this._unsubCostData(); this._unsubCostData = null; }
         if (this._unsubLoopsBegan) { this._unsubLoopsBegan(); this._unsubLoopsBegan = null; }
         if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
+        if (this._unsubRulesLoaded) { this._unsubRulesLoaded(); this._unsubRulesLoaded = null; }
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         this._stopReplay();
@@ -1649,11 +1743,15 @@ export class MazeRoomUI {
             ...(fromLoop ? { fromLoop: true } : {}),
         }, { initialTarget: 'bottom' });
 
-        // Hand control back to the loops queue. Record the walked path
-        // first (Phase 6e), then clear the queue-driven marker BEFORE
-        // publishing completion so any re-entrant flows see we're idle.
+        // Finalize the region-visit recording with the departure exit
+        // id and hand it to savedQueueStore (always-on; replaces the
+        // bestPaths-style "only-on-loops-driven-completion" capture).
+        this._finalizeVisitOnExit(exit.exit_id ?? exit.exitName ?? null);
+
+        // Hand control back to the loops queue. Clear the queue-driven
+        // marker BEFORE publishing completion so any re-entrant flows
+        // see we're idle.
         if (fromLoop) {
-            this._recordBestPathIfBetter({ kind: 'exit', exitId: exit.exit_id });
             this._mazeQueue?.drainPending();
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
@@ -1699,8 +1797,10 @@ export class MazeRoomUI {
         this._pendingFreshLocationCheck = locationName;
 
         // Track side effects of the current loops-driven walk so
-        // _recordBestPathIfBetter can stamp itemsPickedUp /
-        // locationsChecked into the bestPaths entry on completion.
+        // queue-level consumers can read the items and locations
+        // touched during this action. (No longer used for saved-queue
+        // serialization — that reads from _mazeQueue.actions in
+        // _finalizeVisitOnExit.)
         if (this._loopsDrivenAction) {
             if (Array.isArray(this._loopsDrivenLocations)
                 && !this._loopsDrivenLocations.includes(locationName)) {
@@ -1723,8 +1823,11 @@ export class MazeRoomUI {
         // the action. Incidental pickups along the way (a regionMove
         // walk passing over a location tile) shouldn't trigger
         // completion — the queue is targeting a different tile.
+        // Note: path-to-location recording (the old bestPaths flow)
+        // is gone; saved queues only persist on region exit (see
+        // _finalizeVisitOnExit). A location check that doesn't exit
+        // the region just contributes to the visit's action buffer.
         if (fromLoopThisLocation) {
-            this._recordBestPathIfBetter({ kind: 'location', locationName });
             this._mazeQueue?.drainPending();
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
@@ -3149,25 +3252,31 @@ export class MazeRoomUI {
     }
 
     /**
-     * Load a saved best-queue into the maze queue and start a replay
-     * driver that calls stepOne() on a fixed clock. Saved actions are
-     * appended after any existing pending actions (which are kept) so
-     * the user's in-progress queue isn't silently destroyed. Cancels
-     * any prior replay first.
+     * Load a saved-queue's actions into the maze queue and start a
+     * replay driver. Saved actions are appended after any existing
+     * pending actions (which are kept) so the user's in-progress
+     * queue isn't silently destroyed. Cancels any prior replay first.
      *
-     * @param {string} key - bestPathKey() result for the entry.
+     * @param {string} recordedAtKey - the SavedQueue.recordedAt
+     *   timestamp, used as the picker's stable identity per visit.
      */
-    _replayBestPath(key) {
-        let gs = null;
-        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
-        if (!gs) return;
-        const stored = gs.getBestPath(key);
-        if (!stored || !Array.isArray(stored.actions) || stored.actions.length === 0) return;
+    _replayBestPath(recordedAtKey) {
+        const queue = this._lookupSavedQueueByRecordedAt(recordedAtKey);
+        if (!queue || !Array.isArray(queue.actions) || queue.actions.length === 0) return;
         this._stopReplay();
-        this._mazeQueue.appendAll(stored.actions);
+        this._mazeQueue.appendAll(queue.actions);
         this._startReplayDriver();
         this.render();
         this.rootElement?.focus();
+    }
+
+    _lookupSavedQueueByRecordedAt(recordedAt) {
+        if (!this._cachedRulesData || !this.currentRegionId) return null;
+        const rulesHash = hashRulesData(this._cachedRulesData);
+        if (!rulesHash) return null;
+        const queues = getSavedQueues(rulesHash, this.currentRegionId, 'maze');
+        const target = String(recordedAt);
+        return queues.find((q) => String(q.recordedAt) === target) ?? null;
     }
 
     _startReplayDriver() {
@@ -3192,87 +3301,36 @@ export class MazeRoomUI {
     }
 
     /**
-     * Collect saved best-queue entries for the current (region,
+     * Collect saved-queue entries for the current (region,
      * arrivedFromExitId) so the UI can render replay buttons. Each
-     * entry is decoded from its key into a human-readable label —
-     * "exit: <exitName>" / "check: <locationName>". Sorted cheapest
-     * first.
+     * entry's label encodes its departure exit so the user can pick
+     * "the path that goes east" vs "the path that goes south". Sorted
+     * by lowest mana cost (entry - min) first; ties broken by oldest.
+     *
+     * Returns [] when rules data isn't cached yet or when we have no
+     * current region — both transient states during panel mount.
      */
     _getReplayableTargets() {
-        // Called from _renderActionQueue, which may run before any
-        // module has initialized the gameState singleton (GL builds
-        // panels during its own init). getGameStateSingleton throws
-        // in that window — treat as "no saved entries yet."
-        let gs = null;
-        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
-        if (!gs || !this.currentRegionId) return [];
-        const fromPart = this.arrivedFromExitId ?? 'entrance';
-        const prefix = `${this.currentRegionId}|${fromPart}|`;
-        const out = [];
-        for (const [key, value] of gs.bestPaths.entries()) {
-            if (!key.startsWith(prefix)) continue;
-            const tail = key.substring(prefix.length);
-            let label = null;
-            if (tail.startsWith('exit:')) {
-                const exitId = tail.substring('exit:'.length);
-                const exit = this.world?.exits?.get?.(exitId);
-                const exitLabel = exit?.exitName ?? exit?.targetRegion ?? exitId;
-                label = `exit: ${exitLabel}`;
-            } else if (tail.startsWith('loc:')) {
-                label = `check: ${tail.substring('loc:'.length)}`;
-            }
-            if (label) {
-                out.push({
-                    key,
-                    label,
-                    totalCost: value.totalCost,
-                    actionCount: value.actions.length,
-                });
-            }
-        }
+        if (!this._cachedRulesData || !this.currentRegionId) return [];
+        const rulesHash = hashRulesData(this._cachedRulesData);
+        if (!rulesHash) return [];
+        const arrivalExitId = this.arrivedFromExitId ?? 'entrance';
+        const queues = getSavedQueues(rulesHash, this.currentRegionId, 'maze')
+            .filter((q) => q.arrivalExitId === arrivalExitId)
+            .filter((q) => q.departureExitId);
+        const out = queues.map((q) => {
+            const exit = this.world?.exits?.get?.(q.departureExitId);
+            const exitLabel = exit?.exitName ?? exit?.targetRegion ?? q.departureExitId;
+            const manaCost = (q.manaAtEntry ?? 0) - (q.manaMin ?? q.manaAtEntry ?? 0);
+            return {
+                key: String(q.recordedAt),
+                label: `exit: ${exitLabel}`,
+                totalCost: manaCost,
+                actionCount: q.actions.length,
+            };
+        });
         out.sort((a, b) => a.totalCost - b.totalCost);
         return out;
-    }
-
-    /**
-     * Record the direct-keyboard walk's path-so-far into gameState's
-     * bestPaths if it beats the existing entry. Called on fresh
-     * pickup / exit cross during direct play (not loops-delegated).
-     *
-     * Uses the queue's done actions as the action sequence — every
-     * keypress that ran via append-and-execute produced exactly one
-     * done action. Skips when manaEnabled is off (cost = 0 makes
-     * "best" comparisons meaningless).
-     */
-    _recordDirectWalkIfBetter(toRef) {
-        let gs = null;
-        try { gs = getGameStateSingleton?.(); } catch { gs = null; }
-        if (!gs || !this.currentRegionId) return;
-        if (!this.world?.manaEnabled) return;
-        if (this.externalInventory === null) return;
-        if (this._loopsDrivenAction) return;
-        const key = bestPathKey(this.currentRegionId, this.arrivedFromExitId, toRef);
-        if (!key) return;
-        const doneSlice = this._mazeQueue.actions.slice(0, this._mazeQueue.executionIndex);
-        if (doneSlice.length === 0) return;
-        const actions = doneSlice.map((a) => {
-            const out = { type: a.type };
-            if (a.dir !== undefined) out.dir = a.dir;
-            if (a.locationName !== undefined) out.locationName = a.locationName;
-            return out;
-        });
-        // For location targets the pickup happened as a side effect of
-        // the last move (no locationCheck verb in the done slice). Add
-        // the explicit verb so saved-queue replay reproduces the check.
-        if (toRef.kind === 'location' && toRef.locationName) {
-            actions.push({ type: 'locationCheck', locationName: toRef.locationName });
-        }
-        gs.recordBestPath(key, {
-            actions,
-            totalCost: this._directWalkCost,
-            itemsPickedUp: [...this._directWalkItems],
-            locationsChecked: [...this._directWalkLocations],
-        });
     }
 
     /**
@@ -3556,7 +3614,10 @@ export class MazeRoomUI {
                     if (!this._directWalkLocations.includes(locationName)) {
                         this._directWalkLocations.push(locationName);
                     }
-                    this._recordDirectWalkIfBetter({ kind: 'location', locationName });
+                    // Path-to-location captures (the old bestPaths
+                    // recording) are gone; saved queues persist only
+                    // on region exit (see _finalizeVisitOnExit, called
+                    // from the exit_cross branch below).
                 }
                 // system:locationCheck (not user:) — keyboard play
                 // and bot play both route through here; using system:
@@ -3569,12 +3630,11 @@ export class MazeRoomUI {
             } else if (ev.type === 'exit_cross') {
                 const exit = this.world.exits.get(ev.exit_id);
                 if (!exit?.targetRegion) continue;
-                // Record direct walk to this exit BEFORE publishing —
-                // the publish triggers the region transition, which
-                // clears the queue + tracking state.
-                if (this.world?.manaEnabled && !this._loopsDrivenAction) {
-                    this._recordDirectWalkIfBetter({ kind: 'exit', exitId: ev.exit_id });
-                }
+                // Finalize the saved-queue recording for the
+                // departing region BEFORE publishing user:regionMove
+                // — the publish triggers _adoptLoadedRegion, which
+                // clears _mazeQueue and starts a new recording.
+                this._finalizeVisitOnExit(ev.exit_id ?? exit.exitName ?? null);
                 dispatcher.publish('user:regionMove', {
                     sourceRegion: this.currentRegionId,
                     targetRegion: exit.targetRegion,

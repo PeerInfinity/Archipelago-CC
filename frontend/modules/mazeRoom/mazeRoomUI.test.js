@@ -4,6 +4,12 @@ import { MazeRoomUI } from './mazeRoomUI.js';
 import { _testOnly_resetModuleState } from './index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { ACTION_MOVE, ACTION_WAIT, ACTION_LOCATION_CHECK } from './mazeRoomQueue.js';
+import {
+    getSavedQueues,
+    saveQueue,
+    _testOnly_clearAll as _resetSavedQueueStore,
+} from '../loops/savedQueueStore.js';
+import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
 
 // Vitest runs under the 'node' environment (no DOM). The panel's
 // constructor guards document access for exactly this reason — these
@@ -851,23 +857,29 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(target).toEqual({ x: 3, y: 4, name: 'Slay Yorgle' });
     });
 
-    it('_pickBestExit — prefers lowest saved best-path cost (Phase 6f)', () => {
-        const gs = createGameStateSingleton(null);
-        // Pre-record best paths: exit_a is cheap (10), exit_b is expensive (50).
-        gs.recordBestPath('Forest|south|exit:exit_a', {
+    it('_pickBestExit — prefers lowest saved-queue mana cost', () => {
+        _resetSavedQueueStore();
+        clearRulesHashCache();
+        const rulesData = { regions: { 1: ['Forest'] } };
+        const rulesHash = hashRulesData(rulesData);
+        // exit_a: cheap (10 mana cost). exit_b: expensive (50 mana cost).
+        saveQueue(rulesHash, {
+            regionName: 'Forest', substrate: 'maze',
+            arrivalExitId: 'south', departureExitId: 'exit_a',
             actions: [{ type: 'move', dir: 'E' }],
-            totalCost: 10,
-            itemsPickedUp: [],
-            locationsChecked: [],
+            manaAtEntry: 100, manaAtExit: 90, manaMin: 90,
+            locationsChecked: [], itemsPickedUp: [], recordedAt: 1,
         });
-        gs.recordBestPath('Forest|south|exit:exit_b', {
+        saveQueue(rulesHash, {
+            regionName: 'Forest', substrate: 'maze',
+            arrivalExitId: 'south', departureExitId: 'exit_b',
             actions: [{ type: 'move', dir: 'S' }],
-            totalCost: 50,
-            itemsPickedUp: [],
-            locationsChecked: [],
+            manaAtEntry: 100, manaAtExit: 50, manaMin: 50,
+            locationsChecked: [], itemsPickedUp: [], recordedAt: 2,
         });
 
         const panel = new MazeRoomUI(null, {});
+        panel._cachedRulesData = rulesData;
         panel.world = { width: 10, height: 10, tiles: new Int8Array(100) };
         panel.currentRegionId = 'Forest';
         panel.arrivedFromExitId = 'south';
@@ -882,9 +894,10 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
     });
 
     it('_pickBestExit — falls back to closest BFS distance when no saved data', () => {
-        // Fresh gameState; no saved paths.
-        const gs = createGameStateSingleton(null);
+        _resetSavedQueueStore();
+        clearRulesHashCache();
         const panel = new MazeRoomUI(null, {});
+        panel._cachedRulesData = { empty: true };
         panel.world = { width: 10, height: 1, tiles: new Int8Array(10), exits: new Map() };
         panel.currentRegionId = 'Forest';
         panel.arrivedFromExitId = 'south';
@@ -896,8 +909,6 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         ];
         const picked = panel._pickBestExit(candidates);
         expect(picked.exit_id).toBe('near');
-        // gameState was unused for selection (no recordings)
-        expect(gs.bestPaths.size).toBe(0);
     });
 
     it('_pickBestExit — defensive fallback to first candidate when no info', () => {
@@ -988,56 +999,81 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(panel._shouldDeductMazeMana()).toBe(true);
     });
 
-    it('_recordBestPathIfBetter writes the walked path as actions + aggregates', () => {
-        const gs = createGameStateSingleton(null);
+    it('_finalizeVisitOnExit persists a SavedQueue with action slice + mana fields', () => {
+        _resetSavedQueueStore();
+        clearRulesHashCache();
+        createGameStateSingleton(null); // gameState.getCurrentMana fallback
+        const rulesData = { regions: { 1: ['Forest'] } };
+        const rulesHash = hashRulesData(rulesData);
         const panel = new MazeRoomUI(null, {});
+        panel._cachedRulesData = rulesData;
         panel.currentRegionId = 'Forest';
-        panel._loopsDrivenSteps = [
-            { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 },
-        ];
-        panel._loopsDrivenCost = 7.5;
-        panel._loopsDrivenArrivedFrom = 'south_door';
-        panel._loopsDrivenItems = ['sword'];
-        panel._loopsDrivenLocations = ['Slay Yorgle'];
-        panel._recordBestPathIfBetter({ kind: 'exit', exitId: 'north_door' });
-        const stored = gs.getBestPath('Forest|south_door|exit:north_door');
-        // Steps (0,0)→(0,1)→(1,1) translate to move S, move E.
-        expect(stored).toEqual({
+        panel._mazeQueue._executor = () => {};
+        // Begin recording, with arrival exit + entry mana.
+        panel._startVisitRecording({
+            region_id: 'Forest',
+            arrivedFrom: { exit_id: 'south_door' },
+        });
+        // Simulate the visit: a couple of moves through the maze queue.
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'S' });
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
+        // Mid-visit mana dip — drives the rolling min lower than entry.
+        const gs = createGameStateSingleton(null);
+        gs.currentMana = 60;
+        panel._updateVisitMinMana();
+        gs.currentMana = 75;
+        panel._updateVisitMinMana(); // min stays at 60
+        // Cross an exit to depart.
+        panel._finalizeVisitOnExit('north_door');
+        const queues = getSavedQueues(rulesHash, 'Forest', 'maze');
+        expect(queues).toHaveLength(1);
+        expect(queues[0]).toMatchObject({
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'south_door',
+            departureExitId: 'north_door',
             actions: [
                 { type: 'move', dir: 'S' },
                 { type: 'move', dir: 'E' },
             ],
-            totalCost: 7.5,
-            itemsPickedUp: ['sword'],
-            locationsChecked: ['Slay Yorgle'],
+            manaMin: 60,
         });
     });
 
-    it('_recordBestPathIfBetter appends a locationCheck verb for location targets', () => {
-        const gs = createGameStateSingleton(null);
+    it('_finalizeVisitOnExit silently skips persistence when no rules are cached', () => {
+        _resetSavedQueueStore();
+        clearRulesHashCache();
         const panel = new MazeRoomUI(null, {});
+        // _cachedRulesData stays null
         panel.currentRegionId = 'Forest';
-        panel._loopsDrivenSteps = [{ x: 0, y: 0 }, { x: 1, y: 0 }];
-        panel._loopsDrivenCost = 3;
-        panel._loopsDrivenArrivedFrom = 'south';
-        panel._loopsDrivenItems = [];
-        panel._loopsDrivenLocations = ['Slay Yorgle'];
-        panel._recordBestPathIfBetter({ kind: 'location', locationName: 'Slay Yorgle' });
-        const stored = gs.getBestPath('Forest|south|loc:Slay Yorgle');
-        expect(stored.actions).toEqual([
-            { type: 'move', dir: 'E' },
-            { type: 'locationCheck', locationName: 'Slay Yorgle' },
-        ]);
+        panel._startVisitRecording({
+            region_id: 'Forest',
+            arrivedFrom: { exit_id: 'south' },
+        });
+        panel._finalizeVisitOnExit('north');
+        const rulesHash = hashRulesData({ any: true });
+        expect(getSavedQueues(rulesHash, 'Forest', 'maze')).toEqual([]);
     });
 
-    it('_recordBestPathIfBetter is a no-op without tracking state', () => {
-        const gs = createGameStateSingleton(null);
+    it('_finalizeVisitOnExit extracts locationCheck actions into locationsChecked', () => {
+        _resetSavedQueueStore();
+        clearRulesHashCache();
+        createGameStateSingleton(null);
+        const rulesData = { regions: { 1: ['Forest'] } };
+        const rulesHash = hashRulesData(rulesData);
         const panel = new MazeRoomUI(null, {});
+        panel._cachedRulesData = rulesData;
         panel.currentRegionId = 'Forest';
-        panel._loopsDrivenSteps = null; // not tracking
-        expect(() => panel._recordBestPathIfBetter({ kind: 'exit', exitId: 'e' }))
-            .not.toThrow();
-        expect(gs.bestPaths.size).toBe(0);
+        panel._mazeQueue._executor = () => {};
+        panel._startVisitRecording({
+            region_id: 'Forest',
+            arrivedFrom: { exit_id: 'south' },
+        });
+        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
+        panel._mazeQueue.handleInput({ type: ACTION_LOCATION_CHECK, locationName: 'Slay Yorgle' });
+        panel._finalizeVisitOnExit('north');
+        const [q] = getSavedQueues(rulesHash, 'Forest', 'maze');
+        expect(q.locationsChecked).toEqual(['Slay Yorgle']);
     });
 
     it('_deductMazeStepMana with freshLocationCheck override charges location cost', () => {
@@ -1260,49 +1296,89 @@ describe('MazeRoomUI — action queue integration (Phase 1)', () => {
     });
 });
 
-describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
-    let createGameStateSingleton, _testOnly_resetGameStateSingleton;
+describe('MazeRoomUI — saved queue replay', () => {
+    const RULES_DATA = { regions: { 1: ['Forest'] } };
+    let _testOnly_resetGameStateSingleton;
     beforeEach(async () => {
-        ({ createGameStateSingleton, _testOnly_resetGameStateSingleton } =
+        ({ _testOnly_resetGameStateSingleton } =
             await import('../gameState/singleton.js'));
         _testOnly_resetGameStateSingleton();
         _testOnly_resetModuleState();
         resetDiscoverySingleton();
+        _resetSavedQueueStore();
+        clearRulesHashCache();
     });
 
-    it('_getReplayableTargets returns entries matching current region + arrivedFrom', () => {
-        const gs = createGameStateSingleton(null);
-        gs.recordBestPath('Forest|south|exit:exit_a', {
+    function panelWithRules() {
+        const panel = new MazeRoomUI(null, {});
+        panel._cachedRulesData = RULES_DATA;
+        return panel;
+    }
+
+    it('_getReplayableTargets returns saved queues for matching (region, arrival)', () => {
+        const rulesHash = hashRulesData(RULES_DATA);
+        // Matching queue, departs via 'exit_a'.
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'south',
+            departureExitId: 'exit_a',
             actions: [{ type: 'move', dir: 'N' }],
-            totalCost: 5,
-            itemsPickedUp: [],
+            manaAtEntry: 100,
+            manaAtExit: 95,
+            manaMin: 95,
             locationsChecked: [],
-        });
-        gs.recordBestPath('Forest|south|loc:Slay Yorgle', {
-            actions: [{ type: 'move', dir: 'E' }, { type: 'locationCheck', locationName: 'Slay Yorgle' }],
-            totalCost: 3,
             itemsPickedUp: [],
-            locationsChecked: [],
+            recordedAt: 1000,
         });
-        // Wrong region — filtered out
-        gs.recordBestPath('Cave|south|exit:e', {
+        // Wrong region — filtered out.
+        saveQueue(rulesHash, {
+            regionName: 'Cave',
+            substrate: 'maze',
+            arrivalExitId: 'south',
+            departureExitId: 'e',
             actions: [{ type: 'wait' }],
-            totalCost: 1,
-            itemsPickedUp: [],
+            manaAtEntry: 100,
+            manaAtExit: 99,
+            manaMin: 99,
             locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 1001,
         });
-        // Wrong arrivedFrom — filtered out
-        gs.recordBestPath('Forest|north|exit:exit_a', {
+        // Wrong arrivedFrom — filtered out.
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'north',
+            departureExitId: 'exit_a',
             actions: [{ type: 'wait' }],
-            totalCost: 2,
-            itemsPickedUp: [],
+            manaAtEntry: 100,
+            manaAtExit: 98,
+            manaMin: 98,
             locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 1002,
+        });
+        // Same region+arrival, different departure, lower cost — should sort first.
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'south',
+            departureExitId: 'exit_b',
+            actions: [{ type: 'move', dir: 'E' }],
+            manaAtEntry: 100,
+            manaAtExit: 99,
+            manaMin: 99,
+            locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 1003,
         });
 
-        const panel = new MazeRoomUI(null, {});
+        const panel = panelWithRules();
         panel.world = {
             exits: new Map([
                 ['exit_a', { exit_id: 'exit_a', x: 0, y: 0, targetRegion: 'A', exitName: 'north_door' }],
+                ['exit_b', { exit_id: 'exit_b', x: 0, y: 0, targetRegion: 'B', exitName: 'east_door' }],
             ]),
         };
         panel.currentRegionId = 'Forest';
@@ -1310,22 +1386,29 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
 
         const targets = panel._getReplayableTargets();
         expect(targets).toHaveLength(2);
-        // Sorted cheapest-first
-        expect(targets[0].label).toBe('check: Slay Yorgle');
-        expect(targets[0].totalCost).toBe(3);
+        // Sorted cheapest-first by manaEntry - manaMin.
+        expect(targets[0].label).toBe('exit: east_door');
+        expect(targets[0].totalCost).toBe(1);
         expect(targets[1].label).toBe('exit: north_door');
         expect(targets[1].totalCost).toBe(5);
     });
 
     it('_getReplayableTargets uses "entrance" sentinel when arrivedFromExitId is null', () => {
-        const gs = createGameStateSingleton(null);
-        gs.recordBestPath('Forest|entrance|exit:a', {
+        const rulesHash = hashRulesData(RULES_DATA);
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'entrance',
+            departureExitId: 'a',
             actions: [{ type: 'move', dir: 'N' }],
-            totalCost: 7,
-            itemsPickedUp: [],
+            manaAtEntry: 100,
+            manaAtExit: 93,
+            manaMin: 93,
             locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 2000,
         });
-        const panel = new MazeRoomUI(null, {});
+        const panel = panelWithRules();
         panel.world = {
             exits: new Map([['a', { exit_id: 'a', x: 0, y: 0, targetRegion: 'B' }]]),
         };
@@ -1334,29 +1417,39 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
         expect(panel._getReplayableTargets()).toHaveLength(1);
     });
 
+    it('_getReplayableTargets returns empty when rules data isn\'t cached', () => {
+        const panel = new MazeRoomUI(null, {});
+        // _cachedRulesData stays null — represents "stateManager hasn't loaded yet"
+        panel.currentRegionId = 'Forest';
+        expect(panel._getReplayableTargets()).toEqual([]);
+    });
+
     it('_replayBestPath appends the saved actions to the queue', () => {
-        const gs = createGameStateSingleton(null);
-        gs.recordBestPath('Forest|south|exit:e', {
+        const rulesHash = hashRulesData(RULES_DATA);
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'south',
+            departureExitId: 'e',
             actions: [
                 { type: 'move', dir: 'N' },
                 { type: 'move', dir: 'E' },
                 { type: 'wait' },
             ],
-            totalCost: 10,
-            itemsPickedUp: [],
+            manaAtEntry: 100,
+            manaAtExit: 90,
+            manaMin: 90,
             locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 3000,
         });
-        const panel = new MazeRoomUI(null, {});
-        // Stub render so it doesn't try to write to a null rootElement.
+        const panel = panelWithRules();
         panel.render = () => {};
         panel.currentRegionId = 'Forest';
         panel.arrivedFromExitId = 'south';
-        // Replace executor with a tracker so we don't run the real
-        // engine.step; we only care that the queue got loaded.
         const ran = [];
         panel._mazeQueue._executor = (a) => ran.push(a.type);
-        panel._replayBestPath('Forest|south|exit:e');
-        // Driver is set; replay is running on an interval.
+        panel._replayBestPath('3000');
         expect(panel._replayDriver).not.toBeNull();
         expect(panel._mazeQueue.length).toBe(3);
         expect(panel._mazeQueue.actions.map((a) => a.type)).toEqual([
@@ -1366,26 +1459,17 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
     });
 
     it('_replayBestPath no-ops on missing key', () => {
-        createGameStateSingleton(null);
-        const panel = new MazeRoomUI(null, {});
+        const panel = panelWithRules();
         panel.render = () => {};
+        panel.currentRegionId = 'Forest';
         panel._replayBestPath('nonexistent');
         expect(panel._replayDriver).toBeNull();
         expect(panel._mazeQueue.length).toBe(0);
     });
 
     it('_stopReplay clears the driver and is idempotent', () => {
-        const gs = createGameStateSingleton(null);
-        gs.recordBestPath('k', {
-            actions: [{ type: 'wait' }],
-            totalCost: 1,
-            itemsPickedUp: [],
-            locationsChecked: [],
-        });
         const panel = new MazeRoomUI(null, {});
         panel.render = () => {};
-        panel.currentRegionId = 'r';
-        panel.arrivedFromExitId = null;
         // Hand-start the driver to test stop in isolation.
         panel._mazeQueue.append({ type: ACTION_WAIT });
         panel._startReplayDriver();
@@ -1394,88 +1478,6 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
         expect(panel._replayDriver).toBeNull();
         panel._stopReplay(); // idempotent
         expect(panel._replayDriver).toBeNull();
-    });
-
-    it('_recordDirectWalkIfBetter saves queue done actions on direct play', () => {
-        const gs = createGameStateSingleton(null);
-        const panel = new MazeRoomUI(null, {});
-        panel.world = { manaEnabled: true };
-        panel.externalInventory = new Set();
-        panel.currentRegionId = 'Forest';
-        panel.arrivedFromExitId = 'south';
-        panel._loopsDrivenAction = null;
-        panel._directWalkCost = 12.5;
-        panel._directWalkItems = ['sword'];
-        panel._directWalkLocations = [];
-        // Seed the queue's done section with three actions.
-        panel._mazeQueue._executor = () => {};
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
-        panel._mazeQueue.handleInput({ type: ACTION_WAIT });
-        panel._recordDirectWalkIfBetter({ kind: 'exit', exitId: 'north_door' });
-        const stored = gs.getBestPath('Forest|south|exit:north_door');
-        expect(stored).toEqual({
-            actions: [
-                { type: 'move', dir: 'N' },
-                { type: 'move', dir: 'E' },
-                { type: 'wait' },
-            ],
-            totalCost: 12.5,
-            itemsPickedUp: ['sword'],
-            locationsChecked: [],
-        });
-    });
-
-    it('_recordDirectWalkIfBetter skips when loops is driving (loops has its own path)', () => {
-        const gs = createGameStateSingleton(null);
-        const panel = new MazeRoomUI(null, {});
-        panel.world = { manaEnabled: true };
-        panel.externalInventory = new Set();
-        panel.currentRegionId = 'Forest';
-        panel.arrivedFromExitId = 'south';
-        panel._loopsDrivenAction = { type: 'regionMove' };
-        panel._directWalkCost = 5;
-        panel._mazeQueue._executor = () => {};
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
-        panel._recordDirectWalkIfBetter({ kind: 'exit', exitId: 'e' });
-        expect(gs.bestPaths.size).toBe(0);
-    });
-
-    it('_recordDirectWalkIfBetter skips when manaEnabled is off', () => {
-        const gs = createGameStateSingleton(null);
-        const panel = new MazeRoomUI(null, {});
-        panel.world = { manaEnabled: false };
-        panel.externalInventory = new Set();
-        panel.currentRegionId = 'Forest';
-        panel.arrivedFromExitId = 'south';
-        panel._directWalkCost = 5;
-        panel._mazeQueue._executor = () => {};
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
-        panel._recordDirectWalkIfBetter({ kind: 'exit', exitId: 'e' });
-        expect(gs.bestPaths.size).toBe(0);
-    });
-
-    it('_recordDirectWalkIfBetter appends locationCheck verb for location targets', () => {
-        const gs = createGameStateSingleton(null);
-        const panel = new MazeRoomUI(null, {});
-        panel.world = { manaEnabled: true };
-        panel.externalInventory = new Set();
-        panel.currentRegionId = 'Forest';
-        panel.arrivedFromExitId = 'south';
-        panel._directWalkCost = 3;
-        panel._directWalkItems = ['sword'];
-        panel._directWalkLocations = ['Slay Yorgle'];
-        panel._mazeQueue._executor = () => {};
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
-        panel._recordDirectWalkIfBetter({ kind: 'location', locationName: 'Slay Yorgle' });
-        const stored = gs.getBestPath('Forest|south|loc:Slay Yorgle');
-        expect(stored.actions).toEqual([
-            { type: 'move', dir: 'E' },
-            { type: 'locationCheck', locationName: 'Slay Yorgle' },
-        ]);
-        expect(stored.totalCost).toBe(3);
-        expect(stored.itemsPickedUp).toEqual(['sword']);
-        expect(stored.locationsChecked).toEqual(['Slay Yorgle']);
     });
 
     it('region adoption resets direct-walk tracking', () => {
@@ -1578,19 +1580,27 @@ describe('MazeRoomUI — saved best-queue replay (Phase 1)', () => {
     });
 
     it('region adoption stops an active replay', () => {
-        const gs = createGameStateSingleton(null);
-        gs.recordBestPath('r|entrance|exit:e', {
+        _resetSavedQueueStore();
+        clearRulesHashCache();
+        const rulesData = { regions: { 1: ['r'] } };
+        const rulesHash = hashRulesData(rulesData);
+        saveQueue(rulesHash, {
+            regionName: 'r',
+            substrate: 'maze',
+            arrivalExitId: 'entrance',
+            departureExitId: 'e',
             actions: [{ type: 'wait' }, { type: 'wait' }],
-            totalCost: 2,
-            itemsPickedUp: [],
-            locationsChecked: [],
+            manaAtEntry: 100, manaAtExit: 98, manaMin: 98,
+            locationsChecked: [], itemsPickedUp: [],
+            recordedAt: 5000,
         });
         const panel = new MazeRoomUI(null, {});
+        panel._cachedRulesData = rulesData;
         panel.render = () => {};
         panel.currentRegionId = 'r';
         panel.arrivedFromExitId = null;
         panel._mazeQueue._executor = () => {}; // suppress side effects
-        panel._replayBestPath('r|entrance|exit:e');
+        panel._replayBestPath('5000');
         expect(panel._replayDriver).not.toBeNull();
         // Adopting a region clears the queue + stops the replay.
         panel.applyLoadedRegion({
