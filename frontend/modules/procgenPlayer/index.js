@@ -216,8 +216,12 @@ export function register(registrationApi) {
                 if (!warehouse || !regionName) return null;
                 const entry = warehouse.get(regionName);
                 if (!entry) return null;
+                const registryEntry = entry.substrate
+                    ? substrateRegistry.get(entry.substrate)
+                    : null;
                 return {
                     substrate: entry.substrate,
+                    label: registryEntry?.label ?? entry.substrate ?? null,
                     manaEnabled: entry.world?.manaEnabled === true,
                 };
             },

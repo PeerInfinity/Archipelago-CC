@@ -7,6 +7,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { getCostDataManager } from './index.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
   manaColorClass,
   formatTime,
@@ -118,9 +119,18 @@ export class LoopBlockBuilder {
     const speedBonus = xpData.level * 5;
     const xpProgress = xpData.xpForNextLevel > 0 ? (xpData.xp / xpData.xpForNextLevel) * 100 : 0;
 
+    // Substrate label (e.g. 'Maze', 'Text Adventure', 'JtA') — read via
+    // procgenPlayer.getRegionInfo. Empty span when the region has no
+    // procgen substrate (e.g. AP-native Menu).
+    const substrateLabel = this._getSubstrateLabel(regionName);
+    const substrateLabelHtml = substrateLabel
+      ? `<span class="region-substrate-label" style="margin-left: 8px; padding: 1px 6px; border-radius: 3px; background: #2a2a2a; color: #bbb; font-size: 11px;">${substrateLabel}</span>`
+      : '';
+
     headerEl.innerHTML = `
       <span class="loop-expand-indicator" style="margin-right: 8px;">${isExpanded ? '▼' : '▶'}</span>
       <span class="loop-region-name" style="flex: 1;">${displayName}</span>
+      ${substrateLabelHtml}
       <span class="region-xp-level" style="margin-left: 12px;">Level ${xpData.level}</span>
       <span class="region-xp-efficiency" style="margin-left: 8px; color: #8c8;">+${speedBonus}%</span>
       <div class="region-header-xp-bar-container">
@@ -134,6 +144,19 @@ export class LoopBlockBuilder {
     }
 
     return headerEl;
+  }
+
+  /**
+   * Looks up the substrate label for a region via procgenPlayer.
+   * Returns an empty string for AP-native regions (no substrate) and
+   * for environments without procgenPlayer (legacy non-procgen rules
+   * or test harnesses that don't register it).
+   */
+  _getSubstrateLabel(regionName) {
+    const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+    if (typeof fn !== 'function') return '';
+    const info = fn(regionName);
+    return info?.label ?? '';
   }
 
   /**
