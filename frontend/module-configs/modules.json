@@ -248,8 +248,8 @@
       "path": "./modules/jtaSubstrateWrapper/index.js",
       "enabled": true
     },
-    "swfrecompSubstrate": {
-      "path": "./modules/swfrecompSubstrate/index.js",
+    "flashSubstrate": {
+      "path": "./modules/flashSubstrate/index.js",
       "enabled": true
     },
     "procgenPipeline": {
@@ -328,7 +328,7 @@
     "textAdventureSubstrate",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
-    "swfrecompSubstrate",
+    "flashSubstrate",
     "procgenPipeline",
     "procgenPlayer",
     "playbackBot"

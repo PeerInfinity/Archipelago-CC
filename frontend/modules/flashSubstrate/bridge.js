@@ -1,10 +1,10 @@
 /**
  * Bridge — runs inside the SWFRecomp game iframe. Injected by
- * swfrecompSubstratePanel after the iframe's `load` event fires.
+ * flashSubstratePanel after the iframe's `load` event fires.
  *
  * Responsibilities (Mode 1 / v1):
  *   - Complete the iframeAdapter handshake (IframeClient).
- *   - On swfrecomp:loadRegion: configure the in-iframe game from the
+ *   - On flash:loadRegion: configure the in-iframe game from the
  *     region payload via the window-exposed `__swfBridge.configure`
  *     contract, then push any already-received items via pollItems.
  *   - Wire the game's cooperative outward call: when the game's
@@ -20,16 +20,16 @@
  * sendLocation). The real recompiled page fulfils the same contract via
  * the runtime's ExternalInterface outward path (AVM1 confirmed).
  *
- * Host-side counterpart wiring lives in ../swfrecompSubstrate/index.js —
+ * Host-side counterpart wiring lives in ../flashSubstrate/index.js —
  * that module registers the panel/substrate and brings the panel forward
- * on swfrecomp:loadRegion.
+ * on flash:loadRegion.
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
-    fn('[swfrecomp-bridge]', ...args);
+    fn('[flash-bridge]', ...args);
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -98,7 +98,7 @@ function _onSendLocation(flashName) {
     _client.publishEventDispatcher('user:locationCheck', {
         locationName,
         regionName: _currentRegionId,
-        originator: 'swfrecompSubstrate',
+        originator: 'flashSubstrate',
     }, { initialTarget: 'bottom' });
     log('debug', `objective '${flashName}' -> user:locationCheck (locationName=${locationName})`);
 }
@@ -130,7 +130,7 @@ function _pollItemsIntoGame() {
 
 function _handleLoadRegion(payload) {
     if (!payload || !payload.region_id) {
-        log('warn', 'swfrecomp:loadRegion with no region_id', payload);
+        log('warn', 'flash:loadRegion with no region_id', payload);
         return;
     }
     const regionId = payload.region_id;
@@ -191,7 +191,7 @@ async function main() {
     _w.__swfBridge.sendLocation = _onSendLocation;
 
     // Step 3: subscribe to host events.
-    _client.subscribeEventBus('swfrecomp:loadRegion', _handleLoadRegion);
+    _client.subscribeEventBus('flash:loadRegion', _handleLoadRegion);
 
     // When AP state changes (item received elsewhere, etc.), re-poll so
     // the game applies any newly-received items.

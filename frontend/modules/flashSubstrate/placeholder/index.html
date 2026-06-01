@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Placeholder game page for the swfrecompSubstrate (v1).
+  Placeholder game page for the flashSubstrate (v1).
 
   Stands in for the real recompiled Flash game page (SWF -> WASM via
   SWFRecomp-CC) until that page exists. It exposes the same __swfBridge
@@ -19,14 +19,14 @@
   __swfBridge.sendLocation from ActionScript via the runtime's
   ExternalInterface outward path.
 
-  bridge.js is injected by swfrecompSubstratePanel after this page loads;
+  bridge.js is injected by flashSubstratePanel after this page loads;
   it adds __swfBridge.sendLocation and completes the iframeAdapter
   handshake.
 -->
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>SWFRecomp substrate — placeholder</title>
+    <title>Flash substrate — placeholder</title>
     <style>
         html, body {
             margin: 0;
@@ -80,7 +80,7 @@
 </head>
 <body>
     <div id="app">
-        <div class="banner">SWFRecomp substrate — placeholder game (no real WASM yet)</div>
+        <div class="banner">Flash substrate — placeholder game (no real runtime yet)</div>
         <div class="region" id="region">Waiting for a region…</div>
         <div class="objectives" id="objectives"></div>
         <div id="items"></div>
@@ -116,7 +116,7 @@
                             window.__swfBridge.sendLocation(flashName);
                             btn.disabled = true;
                         } else {
-                            console.warn('[swfrecomp-placeholder] __swfBridge.sendLocation not wired yet');
+                            console.warn('[flash-placeholder] __swfBridge.sendLocation not wired yet');
                         }
                     });
                     objectivesEl.appendChild(btn);
@@ -132,16 +132,16 @@
                 regionEl.innerHTML =
                     `Region <b>${cfg?.regionId ?? '?'}</b> — game <b>${cfg?.gameId ?? '?'}</b>`;
                 renderObjectives();
-                console.log('[swfrecomp-placeholder] configure', cfg);
+                console.log('[flash-placeholder] configure', cfg);
             };
 
             window.__swfBridge.pollItems = function (items) {
                 const count = Array.isArray(items) ? items.length : 0;
                 itemsEl.textContent = `Received items applied: ${count}`;
-                console.log('[swfrecomp-placeholder] pollItems', items);
+                console.log('[flash-placeholder] pollItems', items);
             };
 
-            console.log('[swfrecomp-placeholder] page ready; __swfBridge contract exposed');
+            console.log('[flash-placeholder] page ready; __swfBridge contract exposed');
         })();
     </script>
 </body>

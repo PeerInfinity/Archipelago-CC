@@ -248,8 +248,8 @@
             },
             {
               "type": "component",
-              "componentType": "swfrecompSubstratePanel",
-              "title": "Flash (SWFRecomp)"
+              "componentType": "flashSubstratePanel",
+              "title": "Flash"
             },
             {
               "type": "component",

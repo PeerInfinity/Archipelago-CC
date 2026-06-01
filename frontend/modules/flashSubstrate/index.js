@@ -1,41 +1,43 @@
 /**
- * swfrecompSubstrate — host module that:
+ * flashSubstrate — host module that:
  *  - Registers a Golden Layout panel that mounts a same-origin local
  *    iframe pointing at a recompiled Flash game page (SWF -> C -> WASM
  *    via SWFRecomp-CC). v1 ships a placeholder page so the module is
  *    testable before the real recompiled-game page lands.
- *  - Registers a substrate registry entry (id: 'swfrecomp'), so
- *    procgenPlayer publishes swfrecomp:loadRegion when the player enters
+ *  - Registers a substrate registry entry (id: 'flash'), so
+ *    procgenPlayer publishes flash:loadRegion when the player enters
  *    a region tagged with this substrate.
  *  - Acts as the host-side broker for the in-iframe bridge: relays the
- *    swfrecomp:loadRegion activation and brings the panel forward.
+ *    flash:loadRegion activation and brings the panel forward.
  *
  * The in-iframe bridge (bridge.js) completes the iframeAdapter
  * handshake, configures the game from the region payload, applies
  * received items (pollItems), and dispatches user:locationCheck when the
  * game's ActionScript cooperatively calls __swfBridge.sendLocation.
  *
- * See NewDocs/plans/procedural-generation/swfrecomp-substrate-converged.md
+ * See NewDocs/plans/procedural-generation/flash-substrate-converged.md
  * for the broader design (one substrate, two modes) and how this fits
  * with the maze / text-adventure / JtA substrates (the iframe-substrate
  * precedents this module clones).
  */
 
-import { SwfrecompSubstratePanel } from './swfrecompSubstratePanel.js';
+import { FlashSubstratePanel } from './flashSubstratePanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { substrateRegistryEntry } from './swfrecompSubstrateLibrary.js';
+import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
 
 export const moduleInfo = {
-    name: 'swfrecompSubstrate',
-    title: 'Flash (SWFRecomp)',
-    componentType: 'swfrecompSubstratePanel',
+    name: 'flashSubstrate',
+    title: 'Flash',
+    componentType: 'flashSubstratePanel',
     icon: '🎞️',
     column: 3,
     description:
-        'A recompiled Flash game (SWF -> WASM via SWFRecomp-CC) hosted in '
-        + 'an iframe as a procgen substrate. Mode 1: one AP region = one '
-        + 'game instance; the region\'s AP locations = the game\'s in-game '
-        + 'objectives, reported cooperatively via the __swfBridge contract.',
+        'A Flash game hosted in an iframe as a procgen substrate, runtime-'
+        + 'neutral across SWFRecomp (SWF -> WASM), Ruffle, and native Flash '
+        + '(the runtime is chosen by the game page, not this module). Mode 1: '
+        + 'one AP region = one game instance; the region\'s AP locations = the '
+        + 'game\'s in-game objectives, reported cooperatively via the '
+        + '__swfBridge contract.',
     requires: ['stateManager', 'iframeAdapter'],
 };
 
@@ -45,13 +47,13 @@ export function register(registrationApi) {
     if (typeof document !== 'undefined') {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'modules/swfrecompSubstrate/swfrecompSubstrate.css';
+        link.href = 'modules/flashSubstrate/flashSubstrate.css';
         document.head.appendChild(link);
     }
 
     registrationApi.registerPanelComponent(
-        'swfrecompSubstratePanel',
-        SwfrecompSubstratePanel,
+        'flashSubstratePanel',
+        FlashSubstratePanel,
     );
 
     // The bridge dispatches user:locationCheck (objective complete) and
@@ -62,16 +64,16 @@ export function register(registrationApi) {
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
 
     // Events the bridge subscribes to. procgenPlayer publishes
-    // swfrecomp:loadRegion on swfrecomp-region transitions; the bridge
+    // flash:loadRegion on flash-region transitions; the bridge
     // picks it up via the iframeAdapter eventBus relay.
-    registrationApi.registerEventBusPublisher('swfrecomp:loadRegion');
-    // Published by this module on swfrecomp:loadRegion so Golden Layout
-    // brings the swfrecomp panel forward when the player enters one of
+    registrationApi.registerEventBusPublisher('flash:loadRegion');
+    // Published by this module on flash:loadRegion so Golden Layout
+    // brings the flash panel forward when the player enters one of
     // its regions.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
 
     // Events the host module subscribes to.
-    registrationApi.registerEventBusSubscriberIntent('swfrecomp:loadRegion');
+    registrationApi.registerEventBusSubscriberIntent('flash:loadRegion');
 
     // Guarded register so re-registration of the same id is harmless
     // (mirrors the jtaSubstrateWrapper / textAdventureSubstrateWrapper
@@ -86,17 +88,17 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
 
-    // When procgen dispatches swfrecomp:loadRegion (e.g. on a transition
-    // from a maze or text-adventure region into a swfrecomp one), bring
-    // the swfrecomp panel forward in its Golden Layout stack. Mirrors the
+    // When procgen dispatches flash:loadRegion (e.g. on a transition
+    // from a maze or text-adventure region into a flash one), bring
+    // the flash panel forward in its Golden Layout stack. Mirrors the
     // same handler in jtaSubstrateWrapper/index.js. Skipped when loops is
     // focus-locking another panel (the "Keep this panel focused" toggle);
     // the bridge still picks up the loadRegion via its own iframe-protocol
     // subscription, only the tab-switch is suppressed.
-    eventBus.subscribe('swfrecomp:loadRegion', () => {
+    eventBus.subscribe('flash:loadRegion', () => {
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
-        eventBus.publish('ui:activatePanel', { panelId: 'swfrecompSubstratePanel' });
+        eventBus.publish('ui:activatePanel', { panelId: 'flashSubstratePanel' });
     });
 }
 

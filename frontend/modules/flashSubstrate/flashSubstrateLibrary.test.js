@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 
-import { substrateRegistryEntry } from './swfrecompSubstrateLibrary.js';
+import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
-describe('swfrecompSubstrateLibrary substrateRegistryEntry', () => {
-    it('declares the swfrecomp identity, panel type, and load event', () => {
-        expect(substrateRegistryEntry.id).toBe('swfrecomp');
-        expect(substrateRegistryEntry.panelComponentType).toBe('swfrecompSubstratePanel');
-        expect(substrateRegistryEntry.loadRegionEvent).toBe('swfrecomp:loadRegion');
+describe('flashSubstrateLibrary substrateRegistryEntry', () => {
+    it('declares the flash identity, panel type, and load event', () => {
+        expect(substrateRegistryEntry.id).toBe('flash');
+        expect(substrateRegistryEntry.panelComponentType).toBe('flashSubstratePanel');
+        expect(substrateRegistryEntry.loadRegionEvent).toBe('flash:loadRegion');
     });
 
     it('declares a minimal supported-feature set (opaque minigame)', () => {
@@ -19,8 +19,8 @@ describe('swfrecompSubstrateLibrary substrateRegistryEntry', () => {
     });
 
     it('registers itself on import (idempotent)', () => {
-        expect(substrateRegistry.has('swfrecomp')).toBe(true);
-        expect(substrateRegistry.get('swfrecomp')).toBe(substrateRegistryEntry);
+        expect(substrateRegistry.has('flash')).toBe(true);
+        expect(substrateRegistry.get('flash')).toBe(substrateRegistryEntry);
     });
 
     it('defers playback (getPlaybackController returns null in v1)', () => {

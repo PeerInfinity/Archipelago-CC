@@ -1,7 +1,7 @@
 /**
  * Substrate registry entry for SWFRecomp Flash games as a procgen
  * substrate (one substrate, two modes — see
- * NewDocs/plans/procedural-generation/swfrecomp-substrate-converged.md).
+ * NewDocs/plans/procedural-generation/flash-substrate-converged.md).
  *
  * Mode 1 (this entry): opaque fixed minigame. A region = one recompiled
  * Flash game instance; the region's AP locations = the game's in-game
@@ -24,10 +24,10 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
-    id: 'swfrecomp',
-    label: 'Flash (SWFRecomp)',
-    panelComponentType: 'swfrecompSubstratePanel',
-    loadRegionEvent: 'swfrecomp:loadRegion',
+    id: 'flash',
+    label: 'Flash',
+    panelComponentType: 'flashSubstratePanel',
+    loadRegionEvent: 'flash:loadRegion',
 
     // v1: opaque minigame — only arbitrary AP locations. No NESW exits,
     // no source-derived topology, no logic gates. Extended in later
@@ -38,7 +38,7 @@ export const substrateRegistryEntry = Object.freeze({
 
     // procgenPlayer passes the sidecar entry's `playable_payload` (not
     // the whole sidecar) to this function. Expected payload shape for a
-    // swfrecomp region (Mode 1):
+    // flash region (Mode 1):
     //   {
     //     gameId: <string>,          // which recompiled game to load
     //     params?: { ... },          // optional per-region difficulty/variant
@@ -84,7 +84,7 @@ export const substrateRegistryEntry = Object.freeze({
 
     // Playback bot integration is deferred (Mode 1 / v1). Until then the
     // registry's getPlaybackController returns null and the bot no-ops on
-    // swfrecomp regions (per the substrate registry contract). When it
+    // flash regions (per the substrate registry contract). When it
     // lands, drive the logic-only / stub backend headless so the test
     // harness never needs WebGPU; the graphics build is for live play.
     getPlaybackController: () => null,

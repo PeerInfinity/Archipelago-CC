@@ -7,7 +7,7 @@
  * IframeClient.
  *
  * v1 points the iframe at a bundled placeholder page
- * (./modules/swfrecompSubstrate/placeholder/index.html) that stubs the
+ * (./modules/flashSubstrate/placeholder/index.html) that stubs the
  * __swfBridge contract, so the whole substrate (registry entry, panel,
  * host module, bridge handshake, loadRegion -> configure, objective ->
  * user:locationCheck) is testable before the real recompiled-game page
@@ -23,7 +23,7 @@
 import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
-import { substrateRegistryEntry } from './swfrecompSubstrateLibrary.js';
+import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
 
 // Unique iframeId so this wrapper doesn't collide with the
 // textAdventureSubstrateWrapper / jtaSubstrateWrapper iframes in
@@ -31,16 +31,16 @@ import { substrateRegistryEntry } from './swfrecompSubstrateLibrary.js';
 // the same passthrough id and the second one overwrites the first's
 // window pointer, so forwarded events only reach whichever wrapper
 // mounted most recently.
-const IFRAME_ID = 'swfrecompSubstrate';
+const IFRAME_ID = 'flashSubstrate';
 // Placeholder game page for v1. `managed=1` is forwarded for parity with
 // the JtA pattern (the real recompiled page can read it to suppress
 // auto-start); the placeholder ignores it.
-const SWF_IFRAME_SRC = `./modules/swfrecompSubstrate/placeholder/index.html?iframeId=${IFRAME_ID}&managed=1`;
-// Relative to SWF_IFRAME_SRC (.../swfrecompSubstrate/placeholder/index.html),
-// `../bridge.js` resolves to .../swfrecompSubstrate/bridge.js.
+const SWF_IFRAME_SRC = `./modules/flashSubstrate/placeholder/index.html?iframeId=${IFRAME_ID}&managed=1`;
+// Relative to SWF_IFRAME_SRC (.../flashSubstrate/placeholder/index.html),
+// `../bridge.js` resolves to .../flashSubstrate/bridge.js.
 const BRIDGE_SRC = '../bridge.js';
 
-export class SwfrecompSubstratePanel {
+export class FlashSubstratePanel {
     constructor(container, componentState) {
         this.container = container;
         this.componentState = componentState;
@@ -62,21 +62,21 @@ export class SwfrecompSubstratePanel {
 
     onMount(container) {
         if (container && typeof container.setTitle === 'function') {
-            container.setTitle('Flash (SWFRecomp)');
+            container.setTitle('Flash');
         }
     }
 
     _initializeUI() {
         this.rootElement = document.createElement('div');
-        this.rootElement.className = 'swfsub-root';
+        this.rootElement.className = 'flashsub-root';
         // Overlay positions itself absolute over the iframe; the wrapper
         // needs a containing block.
         this.rootElement.style.position = 'relative';
 
         this.iframe = document.createElement('iframe');
-        this.iframe.className = 'swfsub-iframe';
+        this.iframe.className = 'flashsub-iframe';
         this.iframe.src = SWF_IFRAME_SRC;
-        this.iframe.setAttribute('title', 'Flash (SWFRecomp)');
+        this.iframe.setAttribute('title', 'Flash');
         // allow-scripts: needed to run the game + the bridge.
         // allow-same-origin: needed so the iframe's ES module graph can
         // load — an opaque-origin sandbox can't CORS-fetch its own module
@@ -87,7 +87,7 @@ export class SwfrecompSubstratePanel {
 
         // Inject the bridge after the iframe finishes loading the game
         // page. The bridge completes the iframeAdapter handshake and
-        // drives the game from swfrecomp:loadRegion via __swfBridge.
+        // drives the game from flash:loadRegion via __swfBridge.
         this.iframe.addEventListener('load', () => this._injectBridge());
 
         this.rootElement.appendChild(this.iframe);
@@ -105,9 +105,9 @@ export class SwfrecompSubstratePanel {
             this._activeSubstrate = payload || null;
             this._updateInactiveOverlay();
         };
-        eventBus.subscribe('procgen:activeSubstrateChanged', handler, 'swfrecompSubstrate');
+        eventBus.subscribe('procgen:activeSubstrateChanged', handler, 'flashSubstrate');
         this._unsubActiveSubstrate = () =>
-            eventBus.unsubscribe?.('procgen:activeSubstrateChanged', handler, 'swfrecompSubstrate');
+            eventBus.unsubscribe?.('procgen:activeSubstrateChanged', handler, 'flashSubstrate');
 
         const initial = centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.();
         this._activeSubstrate = initial || null;
@@ -120,21 +120,21 @@ export class SwfrecompSubstratePanel {
             this._isLoopModeActive = !!data?.active;
             this._updateInactiveOverlay();
         };
-        eventBus.subscribe('loopUI:modeChanged', handler, 'swfrecompSubstrate');
+        eventBus.subscribe('loopUI:modeChanged', handler, 'flashSubstrate');
         this._unsubLoopMode = () =>
-            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'swfrecompSubstrate');
+            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'flashSubstrate');
     }
 
     _activateCurrentSubstratePanel() {
         const target = this._activeSubstrate?.componentType;
         if (target && eventBus?.publish) {
-            eventBus.publish('ui:activatePanel', { panelId: target }, 'swfrecompSubstrate');
+            eventBus.publish('ui:activatePanel', { panelId: target }, 'flashSubstrate');
         }
     }
 
     _activateLoopsPanel() {
         if (eventBus?.publish) {
-            eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'swfrecompSubstrate');
+            eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'flashSubstrate');
         }
     }
 
@@ -164,17 +164,17 @@ export class SwfrecompSubstratePanel {
         try {
             const doc = this.iframe?.contentDocument;
             if (!doc) {
-                console.warn('[swfrecompSubstrate] no contentDocument; bridge not injected');
+                console.warn('[flashSubstrate] no contentDocument; bridge not injected');
                 return;
             }
             const script = doc.createElement('script');
             script.type = 'module';
-            // Resolves to ./modules/swfrecompSubstrate/bridge.js relative
+            // Resolves to ./modules/flashSubstrate/bridge.js relative
             // to the iframe's URL (.../placeholder/index.html).
             script.src = BRIDGE_SRC;
             doc.body.appendChild(script);
         } catch (err) {
-            console.error('[swfrecompSubstrate] bridge injection failed:', err);
+            console.error('[flashSubstrate] bridge injection failed:', err);
         }
     }
 
