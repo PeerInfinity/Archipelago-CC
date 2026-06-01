@@ -248,6 +248,11 @@
             },
             {
               "type": "component",
+              "componentType": "swfrecompSubstratePanel",
+              "title": "Flash (SWFRecomp)"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             },

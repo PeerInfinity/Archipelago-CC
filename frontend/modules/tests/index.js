@@ -69,6 +69,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('tests:allCategoriesChanged');
   registrationApi.registerEventBusPublisher('tests:testEventAfterDelay');
   registrationApi.registerEventBusPublisher('window:loadUrl'); // For window-base tests
+  registrationApi.registerEventBusPublisher('procgen:activeSubstrateChanged'); // swfrecompSubstrate tests
+  registrationApi.registerEventBusPublisher('swfrecomp:loadRegion'); // swfrecompSubstrate tests
   registrationApi.registerEventBusPublisher('tests:allTestsChanged');
   
   // Progress bar test events

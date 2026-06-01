@@ -43,6 +43,7 @@ const TEST_CASE_FILES = [
   './testCases/spoilerTestPanelTests.js',
   './testCases/playbackBotTests.js',
   './testCases/textAdventureWrapperTests.js',
+  './testCases/swfrecompSubstrateTests.js',
   //'./testCases/manualTests.js',
 ];
 
