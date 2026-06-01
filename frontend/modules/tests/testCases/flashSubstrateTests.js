@@ -24,6 +24,8 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { createFlashSubstrateEntry } from '../../flashSubstrate/flashSubstrateLibrary.js';
 
 const PROCGEN_RULES_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
@@ -249,6 +251,138 @@ registerTest({
                + 'checkedLocations through the full bridge chain (sendLocation -> '
                + 'iframeAdapter -> dispatcher -> stateManager).',
     testFunction: locationCheckPlaceholderClick,
+    category: 'flashSubstrate',
+    enabled: true,
+});
+
+
+/**
+ * Leg 3 — Shape 1: a SECOND, distinct flash substrate id routes through
+ * the SAME shared panel + bridge. Registers a per-game entry via
+ * createFlashSubstrateEntry, confirms it resolves to the shared
+ * panelComponentType + loadRegionEvent, then drives the same placeholder
+ * flow under that distinct id and asserts a location check lands. Proves
+ * "each game = its own substrate entry, one shared panel" works end-to-end.
+ */
+async function secondEntryRoutesThroughSharedPanel(testController) {
+    // Register a second per-game entry (idempotent across re-runs).
+    const secondId = 'flash_demo2';
+    if (!substrateRegistry.has(secondId)) {
+        substrateRegistry.register(createFlashSubstrateEntry({
+            id: secondId,
+            label: 'Flash Demo 2',
+        }));
+    }
+    const entry = substrateRegistry.get(secondId);
+    testController.assertEqual('second entry resolves to shared panel', 'flashSubstratePanel',
+        entry?.panelComponentType);
+    testController.assertEqual('second entry resolves to shared load event', 'flash:loadRegion',
+        entry?.loadRegionEvent);
+
+    testController.log('Loading procgen_maze preset…');
+    await testController.loadRulesFromFile(PROCGEN_RULES_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded', true);
+
+    const pick = pickAnyLocation(testController.stateManager.getStaticData?.());
+    if (!pick) {
+        testController.reportCondition('found a location to map', false);
+        return testController.getOverallResult();
+    }
+    const { locationName, regionName } = pick;
+    const flashName = 'objective_beta';
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'flashSubstratePanel' });
+
+    // Announce the SECOND substrate id owns the region — same shared panel.
+    testController.eventBus.publish('procgen:activeSubstrateChanged', {
+        substrate: secondId,
+        componentType: 'flashSubstratePanel',
+        label: 'Flash Demo 2',
+        regionId: regionName,
+    });
+
+    let iframeWin = null;
+    const bridgeReady = await testController.pollForCondition(
+        () => {
+            const iframe = document.querySelector('iframe.flashsub-iframe');
+            if (!iframe?.contentWindow) return false;
+            iframeWin = iframe.contentWindow;
+            const b = iframeWin.__swfBridge;
+            return !!(b && typeof b.sendLocation === 'function' && typeof b.configure === 'function');
+        },
+        'shared flash iframe mounted for second entry',
+        15000,
+        300,
+    );
+    if (!bridgeReady) {
+        testController.reportCondition('shared flash iframe mounted for second entry', false);
+        return testController.getOverallResult();
+    }
+    testController.reportCondition('shared flash iframe mounted for second entry', true);
+
+    await new Promise(r => setTimeout(r, 1000));
+
+    // The SAME flash:loadRegion event carries the second game's payload.
+    testController.eventBus.publish('flash:loadRegion', {
+        region_id: regionName,
+        world: {
+            gameId: 'placeholder-demo-2',
+            ap_locations: { [flashName]: locationName },
+        },
+    });
+
+    const iframe = document.querySelector('iframe.flashsub-iframe');
+    let targetBtn = null;
+    const rendered = await testController.pollForCondition(
+        () => {
+            const doc = iframe?.contentDocument;
+            if (!doc) return false;
+            const buttons = [...doc.querySelectorAll('button.obj')];
+            targetBtn = buttons.find(b => b.textContent.includes(flashName)) ?? null;
+            return targetBtn !== null;
+        },
+        'shared panel rendered second game objective',
+        10000,
+        300,
+    );
+    if (!rendered) {
+        testController.reportCondition('shared panel rendered second game objective', false);
+        return testController.getOverallResult();
+    }
+    testController.reportCondition('shared panel rendered second game objective', true);
+
+    const before = testController.stateManager.getSnapshot();
+    testController.assertEqual('location not yet checked before click', false,
+        snapshotHasLocation(before, locationName));
+
+    const snapshotPromise = testController.waitForEvent('stateManager:snapshotUpdated', 5000)
+        .catch(() => null);
+    const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
+    targetBtn.dispatchEvent(evt);
+
+    await snapshotPromise;
+    await testController.stateManager.pingWorker('after-second-entry-click', 3000);
+
+    const after = testController.stateManager.getSnapshot();
+    testController.assertEqual(
+        `location ${locationName} checked via second flash id through shared panel`,
+        true,
+        snapshotHasLocation(after, locationName),
+    );
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'flash-second-entry-shared-panel',
+    name: 'Flash: a second substrate id routes through the shared panel (Shape 1)',
+    description: 'Registers a second per-game flash substrate entry via '
+               + 'createFlashSubstrateEntry, confirms it resolves to the shared '
+               + 'panelComponentType + loadRegionEvent, then drives the placeholder '
+               + 'flow under that distinct id and asserts a location check lands. '
+               + 'Proves "each game = its own substrate entry, one shared panel".',
+    testFunction: secondEntryRoutesThroughSharedPanel,
     category: 'flashSubstrate',
     enabled: true,
 });

@@ -24,6 +24,11 @@
 import { FlashSubstratePanel } from './flashSubstratePanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
+// createFlashSubstrateEntry is exported for per-game entries (Shape 1):
+// each real Flash game registers its own substrate id + supportedFeatures
+// via the factory, all sharing this module's one panel + 'flash:loadRegion'
+// event. The module itself registers only the generic 'flash' entry;
+// per-game entries are added where real games are defined.
 
 export const moduleInfo = {
     name: 'flashSubstrate',
