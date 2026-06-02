@@ -45,8 +45,18 @@ export const FLASH_LOAD_REGION_EVENT = 'flash:loadRegion';
 //     params?: { ... },          // optional per-region difficulty/variant
 //     ap_items?: { ap_item_name: flash_name },
 //     ap_locations?: { flash_name: ap_location_name },
+//     flashCapabilities?: {      // integration axis (Option B, see plan).
+//       locations?: 'cooperative',  //   how the game reports locations
+//       items?: 'pull',             //   how the game receives items
+//     },                         //   omitted == cooperative + pull (back-compat)
 //     exits: [...],              // region-graph exits
 //   }
+//
+// flashCapabilities declares HOW a game integrates (which bridge styles it
+// uses) — consumed only by the in-iframe bridge, so it rides this payload
+// rather than the registry entry (no main-window code reads it). Open-bag
+// vocabulary, formalized as each style lands. See bridge.js for the
+// authoritative defaults + gating.
 //
 // ap_locations maps an in-game objective (flash_name) to an AP *location
 // name* — the frontend stateManager is name-keyed (its user:locationCheck

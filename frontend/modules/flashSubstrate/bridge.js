@@ -49,6 +49,44 @@ let _isActive = false;                      // True when this substrate is the c
 const _reportedLocationNames = new Set();
 
 // ────────────────────────────────────────────────────────────────
+// Capabilities (integration axis — Option B, payload-carried)
+// ────────────────────────────────────────────────────────────────
+//
+// A region's `world.flashCapabilities` declares HOW this game integrates
+// — which bridge methods/styles it uses. It rides the flash:loadRegion
+// payload (not the substrate registry), because only the in-iframe bridge
+// consumes it. See flash-substrate-unification.md §"Capability axis".
+//
+// Vocabulary is an OPEN BAG, formalized incrementally as each style is
+// implemented. Declared so far:
+//   - locations: 'cooperative'   — the game reports objective completion
+//                                   outward via __swfBridge.sendLocation
+//                                   (the only style implemented in Mode 1).
+//                                   Future: 'memory_poke' (host polls game
+//                                   state via readState — plan step 5).
+//   - items:     'pull'          — the bridge hands received items to the
+//                                   game via __swfBridge.pollItems.
+//                                   Future: 'push' (getItemQueue-style —
+//                                   plan step 4).
+//
+// Defaults preserve the pre-capability behavior: a region with no
+// flashCapabilities is treated as cooperative locations + pull items, so
+// existing payloads keep working unchanged.
+const CAP_DEFAULTS = Object.freeze({
+    locations: 'cooperative',
+    items: 'pull',
+});
+
+function _capabilities() {
+    const c = _world?.flashCapabilities;
+    if (!c || typeof c !== 'object') return CAP_DEFAULTS;
+    return {
+        locations: c.locations ?? CAP_DEFAULTS.locations,
+        items: c.items ?? CAP_DEFAULTS.items,
+    };
+}
+
+// ────────────────────────────────────────────────────────────────
 // __swfBridge access
 // ────────────────────────────────────────────────────────────────
 
@@ -85,6 +123,14 @@ function _onSendLocation(flashName) {
         log('warn', `sendLocation('${flashName}') while inactive — ignored`);
         return;
     }
+    if (_capabilities().locations !== 'cooperative') {
+        // This region's game doesn't report locations cooperatively (e.g.
+        // a future memory-poke game). An outward sendLocation here is
+        // unexpected — ignore rather than dispatch a check the game model
+        // doesn't own.
+        log('warn', `sendLocation('${flashName}') but region locations='${_capabilities().locations}' (not cooperative) — ignored`);
+        return;
+    }
     const locationName = _resolveLocationName(flashName);
     if (locationName === null) {
         log('warn', `sendLocation('${flashName}') has no ap_locations mapping — ignored`);
@@ -110,6 +156,12 @@ function _onSendLocation(flashName) {
  * -> effect). The game is responsible for idempotency / de-duping.
  */
 function _pollItemsIntoGame() {
+    if (_capabilities().items !== 'pull') {
+        // This region's game receives items by another style (e.g. a
+        // future 'push' / getItemQueue model where the game pulls on its
+        // own cadence). Don't push via pollItems.
+        return;
+    }
     const b = _bridge();
     if (!b || typeof b.pollItems !== 'function') return;
     const snapshot = _client?.getStateSnapshot?.() ?? null;
@@ -152,6 +204,7 @@ function _handleLoadRegion(payload) {
             params: world.params ?? {},
             ap_items: world.ap_items ?? {},
             ap_locations: world.ap_locations ?? {},
+            flashCapabilities: _capabilities(),
             regionId,
         });
     } catch (err) {

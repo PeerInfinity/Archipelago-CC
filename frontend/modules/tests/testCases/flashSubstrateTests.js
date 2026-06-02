@@ -386,3 +386,120 @@ registerTest({
     category: 'flashSubstrate',
     enabled: true,
 });
+
+
+/**
+ * Leg 4 — capability gating (Option B). A region declaring
+ * flashCapabilities.locations !== 'cooperative' (here 'memory_poke', not
+ * yet implemented) must NOT turn an outward sendLocation into a check —
+ * the bridge gates on the per-region capability. Proves flashCapabilities
+ * actually changes bridge behavior, not just rides along inertly.
+ *
+ * The placeholder's objective button calls __swfBridge.sendLocation; under
+ * a non-cooperative capability the bridge should ignore it, so the
+ * location stays unchecked.
+ */
+async function capabilityGatingSuppressesNonCooperative(testController) {
+    testController.log('Loading procgen_maze preset…');
+    await testController.loadRulesFromFile(PROCGEN_RULES_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded', true);
+
+    const pick = pickAnyLocation(testController.stateManager.getStaticData?.());
+    if (!pick) {
+        testController.reportCondition('found a location to map', false);
+        return testController.getOverallResult();
+    }
+    const { locationName, regionName } = pick;
+    const flashName = 'objective_gamma';
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'flashSubstratePanel' });
+    testController.eventBus.publish('procgen:activeSubstrateChanged', {
+        substrate: 'flash',
+        componentType: 'flashSubstratePanel',
+        label: 'Flash',
+        regionId: regionName,
+    });
+
+    let iframeWin = null;
+    const bridgeReady = await testController.pollForCondition(
+        () => {
+            const iframe = document.querySelector('iframe.flashsub-iframe');
+            if (!iframe?.contentWindow) return false;
+            iframeWin = iframe.contentWindow;
+            const b = iframeWin.__swfBridge;
+            return !!(b && typeof b.sendLocation === 'function' && typeof b.configure === 'function');
+        },
+        'flash iframe mounted + __swfBridge wired',
+        15000,
+        300,
+    );
+    if (!bridgeReady) {
+        testController.reportCondition('flash iframe mounted + __swfBridge wired', false);
+        return testController.getOverallResult();
+    }
+    await new Promise(r => setTimeout(r, 1000));
+
+    // Region declares a NON-cooperative locations capability.
+    testController.eventBus.publish('flash:loadRegion', {
+        region_id: regionName,
+        world: {
+            gameId: 'placeholder-noncoop',
+            ap_locations: { [flashName]: locationName },
+            flashCapabilities: { locations: 'memory_poke' },
+        },
+    });
+
+    const iframe = document.querySelector('iframe.flashsub-iframe');
+    let targetBtn = null;
+    const rendered = await testController.pollForCondition(
+        () => {
+            const doc = iframe?.contentDocument;
+            if (!doc) return false;
+            const buttons = [...doc.querySelectorAll('button.obj')];
+            targetBtn = buttons.find(b => b.textContent.includes(flashName)) ?? null;
+            return targetBtn !== null;
+        },
+        'placeholder rendered the objective button',
+        10000,
+        300,
+    );
+    if (!rendered) {
+        testController.reportCondition('placeholder rendered the objective button', false);
+        return testController.getOverallResult();
+    }
+
+    const before = testController.stateManager.getSnapshot();
+    testController.assertEqual('location not checked before click', false,
+        snapshotHasLocation(before, locationName));
+
+    // Click — sendLocation fires, but the bridge should SUPPRESS it
+    // because locations !== 'cooperative'.
+    const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
+    targetBtn.dispatchEvent(evt);
+    // Give the (suppressed) path time to NOT happen, then re-sync.
+    await new Promise(r => setTimeout(r, 1200));
+    await testController.stateManager.pingWorker('after-noncoop-click', 3000);
+
+    const after = testController.stateManager.getSnapshot();
+    testController.assertEqual(
+        `location ${locationName} stays UNCHECKED under non-cooperative capability`,
+        false,
+        snapshotHasLocation(after, locationName),
+    );
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'flash-capability-gating',
+    name: 'Flash: non-cooperative capability suppresses sendLocation (Option B gating)',
+    description: 'Loads a region declaring flashCapabilities.locations=memory_poke '
+               + '(not cooperative), clicks the placeholder objective (which calls '
+               + 'sendLocation), and asserts the location stays UNCHECKED — proving '
+               + 'the bridge gates behavior on the per-region capability rather than '
+               + 'always treating sendLocation as a check.',
+    testFunction: capabilityGatingSuppressesNonCooperative,
+    category: 'flashSubstrate',
+    enabled: true,
+});
