@@ -57,6 +57,16 @@ export function createGameSession(level, opts = {}) {
             abilities = itemsToAbilities(itemNames);
         },
 
+        /**
+         * Seed already-collected pickups from host AP state. A region
+         * revisit creates a FRESH session; without this the level
+         * re-offers checked pickups and re-landing re-fires 'pickup'
+         * (the host then warns the location was already checked).
+         */
+        seedCollected(pickupIds) {
+            for (const id of pickupIds ?? []) collected.add(id);
+        },
+
         /** Back to the entrance. Collected pickups persist (AP state). */
         reset() {
             state = spawnState(level, C);

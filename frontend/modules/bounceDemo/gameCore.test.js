@@ -40,6 +40,16 @@ describe('createGameSession', () => {
         expect(runFrames(session, 200).filter((e) => e.type !== 'fell')).toEqual([]);
     });
 
+    it('seeded pickups never re-fire (region revisit)', () => {
+        const session = createGameSession(bounceStack);
+        session.seedCollected(['loc_arrow']);
+        const events = runFrames(session, 500);
+        expect(events.filter((e) => e.type === 'pickup')).toEqual([]);
+        expect(session.collected.has('loc_arrow')).toBe(true);
+        // the exit still fires — only pickups are AP-persistent
+        expect(events.some((e) => e.type === 'exit')).toBe(true);
+    });
+
     it('falls, respawns, and keeps collected pickups (AP checks persist)', () => {
         const level = makeLevel({
             platforms: [{ id: 'p0', x: 200, y: 1100, type: 'green' }],

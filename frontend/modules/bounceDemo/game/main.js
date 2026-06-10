@@ -64,6 +64,9 @@ const gameSide = {
         portalSides = Object.fromEntries(
             Object.entries(sidePortals).map(([side, id]) => [id, side]));
         session = createGameSession(params.bounceLevel);
+        // Pickups the host already has checked (region revisits) — by
+        // their in-game ids; the bridge inverts ap_locations for us.
+        session.seedCollected(config?.checkedLocations);
         session.setItems(lastItems);
         statusEl.textContent = `region: ${config.regionId ?? '?'} — level: `
             + `${params.bounceLevel.id} — arrows/A/D to move (when unlocked)`;
@@ -79,6 +82,17 @@ const gameSide = {
     },
 };
 window.__swfBridge = Object.assign(window.__swfBridge ?? {}, gameSide);
+
+// Test/debug surface (NOT part of the __swfBridge contract):
+// verify-bounce-embed.mjs reads this to assert that host-granted items
+// actually reached the game (the bridge pollItems path), not just the
+// host inventory.
+window.__bounceDebug = () => ({
+    items: [...lastItems],
+    abilities: session ? { ...session.abilities } : null,
+    collected: session ? [...session.collected] : null,
+    levelId: session?.level?.id ?? null,
+});
 
 // ── standalone dev harness ──────────────────────────────────────
 if (window === window.parent) {

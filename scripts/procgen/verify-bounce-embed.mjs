@@ -39,6 +39,10 @@ async function snapshot() {
     });
 }
 
+async function gameDebug() {
+    return bounceFrame().evaluate(() => window.__bounceDebug?.() ?? null);
+}
+
 async function waitFor(desc, fn, timeoutMs = 30000) {
     const start = Date.now();
     for (;;) {
@@ -63,6 +67,16 @@ let s = await snapshot();
 console.log('AFTER PHASE A: checked =', JSON.stringify(s.checked),
     'Right arrow =', JSON.stringify(s.inventory?.['Right arrow']));
 
+// The granted item must flow BACK into the game (snapshotUpdated ->
+// bridge pollItems -> setItems), not just into the host inventory —
+// this is what unlocks abilities/suppressed geometry in-game.
+const dbgA = await waitFor('Right arrow ability active IN-GAME', async () => {
+    const d = await gameDebug();
+    return d?.abilities?.right ? d : null;
+});
+console.log('IN-GAME after A: items =', JSON.stringify(dbgA.items),
+    'abilities =', JSON.stringify(dbgA.abilities));
+
 // ── Phase B: drive the rest via the bridge contract ──
 async function sendExit(portalId, side, expectRegion) {
     await bounceFrame().evaluate(([p, sd]) => window.__swfBridge.sendExit(p, sd), [portalId, side]);
@@ -79,13 +93,35 @@ async function sendLocation(pickupId, expectLocation, expectItem) {
         const x = await snapshot();
         return x.checked?.includes?.(expectLocation) ? x : null;
     });
+    // ...and the item must reach the game session, not just the host.
+    const dbg = await waitFor(`${expectItem} received IN-GAME`, async () => {
+        const d = await gameDebug();
+        return d?.items?.includes?.(expectItem) ? d : null;
+    });
     console.log(`CHECK ${pickupId} -> ${expectLocation}; ${expectItem} =`,
-        JSON.stringify(snap.inventory?.[expectItem]));
+        JSON.stringify(snap.inventory?.[expectItem]),
+        `(in-game: ${dbg.items.includes(expectItem)})`);
 }
 
 await sendExit('side_exit_E', 'E', 'region_2_0');
 await sendLocation('loc_easy', 'region_2_0__loc_easy', 'Left arrow');
 await sendLocation('loc_easy2', 'region_2_0__loc_easy2', 'Springs');
+
+// ── revisit leg: a fresh session must be seeded with the host's
+// already-checked pickups (no re-offer, no double locationCheck) ──
+await sendExit('side_exit_W', 'W', 'region_1_0');
+const dbgBack = await gameDebug();
+if (!dbgBack?.collected?.includes('loc_arrow')) {
+    throw new Error(`revisit region_1_0: collected not seeded: ${JSON.stringify(dbgBack)}`);
+}
+console.log('REVISIT region_1_0: collected seeded =', JSON.stringify(dbgBack.collected));
+await sendExit('side_exit_E', 'E', 'region_2_0');
+const dbgBack2 = await gameDebug();
+if (!dbgBack2?.collected?.includes('loc_easy') || !dbgBack2?.collected?.includes('loc_easy2')) {
+    throw new Error(`revisit region_2_0: collected not seeded: ${JSON.stringify(dbgBack2)}`);
+}
+console.log('REVISIT region_2_0: collected seeded =', JSON.stringify(dbgBack2.collected));
+
 await sendExit('side_exit_S', 'S', 'region_2_1');
 await sendExit('side_exit_W', 'W', 'region_1_1');
 await sendLocation('loc_spring', 'region_1_1__loc_spring', 'Jetpacks');
@@ -96,6 +132,8 @@ await sendLocation('loc_left', 'region_0_1__loc_left', 'Victory');
 s = await snapshot();
 console.log('FINAL inventory:', JSON.stringify(s.inventory));
 console.log('FINAL checked:', JSON.stringify(s.checked));
+const dbgFinal = await gameDebug();
+console.log('FINAL in-game:', JSON.stringify(dbgFinal));
 
 const errors = logs.filter((l) => l.startsWith('[error]') || l.startsWith('[pageerror]'))
     .filter((l) => !l.includes("Couldn't find skill") && !l.includes('isLoopModeActive'));

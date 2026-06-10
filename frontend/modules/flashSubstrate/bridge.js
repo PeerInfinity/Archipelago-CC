@@ -213,10 +213,18 @@ function _pollItemsIntoGame() {
     const b = _bridge();
     if (!b || typeof b.pollItems !== 'function') return;
     const snapshot = _client?.getStateSnapshot?.() ?? null;
-    // receivedItems shape is owned by stateManager's snapshot; pass it
-    // through verbatim and let the game map ids via ap_items. Defensive:
-    // tolerate absence.
-    const received = snapshot?.receivedItems ?? snapshot?.items ?? [];
+    // The snapshot relayed to iframes is stateManagerProxy's uiCache:
+    // owned items live in `inventory` as a {itemName: count} object.
+    // Hand the game the owned item NAMES; it maps names to effects via
+    // ap_items / its own table. (No snapshot shape carries a
+    // receivedItems array — an earlier draft of this function expected
+    // one and consequently always polled an empty list.)
+    const inv = snapshot?.inventory;
+    const received = (inv && typeof inv === 'object')
+        ? Object.entries(inv)
+            .filter(([, count]) => Number(count) > 0)
+            .map(([name]) => name)
+        : [];
     try {
         b.pollItems(received);
     } catch (err) {
@@ -239,7 +247,22 @@ function _handleLoadRegion(payload) {
     _currentRegionId = regionId;
     _world = world;
     _isActive = true;
+
+    // Locations of THIS region the host already has checked (region
+    // revisits): re-seed the dedupe set with their AP names so a
+    // re-fired objective never double-dispatches, and hand the game
+    // their in-game ids so it can mark them collected up front instead
+    // of re-offering them.
     _reportedLocationNames.clear();
+    const checkedNames = new Set(
+        _client?.getStateSnapshot?.()?.checkedLocations ?? []);
+    const checkedFlashNames = [];
+    for (const [flashName, apName] of Object.entries(world.ap_locations ?? {})) {
+        if (checkedNames.has(apName)) {
+            _reportedLocationNames.add(apName);
+            checkedFlashNames.push(flashName);
+        }
+    }
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -254,6 +277,7 @@ function _handleLoadRegion(payload) {
             ap_locations: world.ap_locations ?? {},
             flashCapabilities: _capabilities(),
             regionId,
+            checkedLocations: checkedFlashNames,
         });
     } catch (err) {
         log('error', 'configure threw:', err);
