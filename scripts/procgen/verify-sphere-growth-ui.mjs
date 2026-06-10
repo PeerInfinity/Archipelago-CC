@@ -184,35 +184,43 @@ await waitFor(`sphere-1 items in inventory [${sphere1.join(', ')}]`, async () =>
 const s1 = await snapshot();
 console.log('SPHERE-1 COLLECTED:', JSON.stringify(s1.inventory));
 
-// 2. Wait for the auto-play to settle (no region change for a while).
-let settled = null;
-for (;;) {
-    const before = await status();
-    await page.waitForTimeout(4000);
-    const after = await status();
-    if (before === after && after.includes('region:')) { settled = after; break; }
-}
-const currentRegion = settled.match(/region: (\S+)/)?.[1];
-const currentNode = tree.nodes.find((n) => n.region_id === currentRegion);
-if (!currentNode) throw new Error(`settled in unknown region '${currentRegion}'`);
-console.log('AUTO-PLAY SETTLED IN:', currentRegion, `(wave ${currentNode.wave})`);
+// 2. Let the auto-play roam a little more. With guaranteed back
+//    portals an idle player can ping-pong between arrowless-linked
+//    regions forever (on-column back portal ↔ forward portal), so we
+//    don't wait for it to settle — we just need to catch it in some
+//    NON-START region to exercise the back portal.
+let observed = null;
+await waitFor('auto-play observed in a non-start region', async () => {
+    const st = await status();
+    const region = st.match(/region: (\S+)/)?.[1];
+    const node = tree.nodes.find((n) => n.region_id === region);
+    if (node && node.parent != null) { observed = node; return true; }
+    return null;
+}, 60000);
+console.log('AUTO-PLAY OBSERVED IN:', observed.region_id, `(wave ${observed.wave})`);
 
-// 3. Fall-back exit: the region's configure carried backExitSide;
-//    sending it resolves to the driver's back-exit and moves us to
-//    the parent (asserted via the bridge's regionMove dispatch — the
-//    auto-play may immediately wander again afterwards).
-if (currentNode.parent == null) throw new Error('auto-play settled in the start region — '
-    + 'cannot exercise the fall-back exit');
-const parentRegion = tree.nodes[currentNode.parent].region_id;
-const dbg = await gameDebug();
-if (!dbg?.backExitSide) throw new Error('settled region has no backExitSide configured');
-await bounceFrame().evaluate(
-    (side) => window.__swfBridge.sendExit('__fall_back', side), dbg.backExitSide);
-await waitFor(`fall-back regionMove ${currentRegion} -> ${parentRegion}`, async () => {
-    return logs.some((l) => l.includes(`exit '__fall_back'`)
-        && l.includes(`${currentRegion} -> ${parentRegion}`)) ? true : null;
-});
-console.log('FALL-BACK OK:', currentRegion, '->', parentRegion);
+// 3. The guaranteed back portal: every non-start region's level
+//    carries a return portal whose side resolves to the driver's
+//    back-exit. Send it via the bridge contract from whatever region
+//    we're in (re-read per attempt — auto-play may move us) and
+//    assert a child→parent regionMove fires.
+const validBackEdges = new Set(tree.nodes
+    .filter((n) => n.parent != null)
+    .map((n) => `${n.region_id} -> ${tree.nodes[n.parent].region_id}`));
+await waitFor('back-portal regionMove (child -> parent)', async () => {
+    const dbg = await gameDebug();
+    if (!dbg?.backExitSide) return null; // currently in the start region
+    if (dbg.fallBehavior !== 'current') {
+        throw new Error(`expected default fallBehavior 'current', got '${dbg.fallBehavior}'`);
+    }
+    await bounceFrame().evaluate(
+        (side) => window.__swfBridge.sendExit('verify_back', side), dbg.backExitSide);
+    await page.waitForTimeout(800);
+    const hit = logs.find((l) => l.includes(`exit 'verify_back'`)
+        && [...validBackEdges].some((e) => l.includes(e)));
+    return hit ?? null;
+}, 60000);
+console.log('BACK PORTAL OK (child -> parent move verified)');
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {

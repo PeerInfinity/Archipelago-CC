@@ -178,7 +178,18 @@ const DEFAULT_PARAMS = {
     sphereCount: 3,
     fillerCount: 0,
     revisitPercent: 25,
+    // Bounce-specific: what falling off the level bottom does.
+    // 'current' respawns at the entrance; 'previous' exits to the
+    // previous region; 'start' is reserved. Routing never depends on
+    // it — every non-start region carries a real back portal.
+    bounceFallBehavior: 'current',
 };
+
+const BOUNCE_FALL_OPTIONS = [
+    { value: 'current', label: 'Restart current region', disabled: false },
+    { value: 'previous', label: 'Return to previous region', disabled: false },
+    { value: 'start', label: 'Return to starting region (v2)', disabled: true },
+];
 
 const REGION_XP_EFFECT_OPTIONS = [
     { value: 'cost', label: 'Cost', disabled: false },
@@ -1256,31 +1267,12 @@ export class ProcgenPipelineUI {
         loopModeRow.appendChild(loopModeInput);
         section.appendChild(loopModeRow);
 
-        // Hazard authoring (maze content modules Phase 2e). Same row
-        // pattern as the loop-mode toggle. When enabled, a follow-up
-        // group shows count + max-fails + wall-overlap inputs. Toggle
-        // triggers re-render so the sub-fields appear / disappear in
-        // place.
-        const hazardRow = document.createElement('div');
-        hazardRow.className = 'procgen-pipeline-field';
-        const hazardLabel = document.createElement('label');
-        hazardLabel.textContent = 'Enable hazards';
-        hazardLabel.title = 'Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region';
-        const hazardInput = document.createElement('input');
-        hazardInput.type = 'checkbox';
-        hazardInput.checked = !!this.params.enableHazards;
-        hazardInput.addEventListener('change', () => {
-            this.params.enableHazards = !!hazardInput.checked;
-            this._saveToLocalStorage();
-            this.render();
-        });
-        hazardRow.appendChild(hazardLabel);
-        hazardRow.appendChild(hazardInput);
-        section.appendChild(hazardRow);
-
-        if (this.params.enableHazards) {
-            section.appendChild(this._renderHazardSubFields());
-        }
+        // Per-substrate parameter subsections — one per selected
+        // substrate that declares panel parameters (maze: hazards;
+        // bounce: fall behavior). Common parameters stay above; with
+        // nothing selected the engine defaults to maze, so its
+        // subsection shows then too.
+        section.appendChild(this._renderSubstrateParamSections());
 
         const btnRow = document.createElement('div');
         btnRow.className = 'procgen-pipeline-btn-row';
@@ -1906,6 +1898,11 @@ export class ProcgenPipelineUI {
             regionSize: { width: regionWidth, height: regionHeight },
             itemLib,
             seed,
+            // Substrate-specific knobs ride regionParams (maze ignores
+            // unknown keys; bounce stamps fallBehavior into payloads).
+            regionParams: {
+                fallBehavior: this.params.bounceFallBehavior ?? 'current',
+            },
             growthParams: {
                 spherePlan: plan,
                 maxItemsPerRegion,
@@ -2129,6 +2126,89 @@ export class ProcgenPipelineUI {
         overlapRow.appendChild(overlapInput);
         wrap.appendChild(overlapRow);
 
+        return wrap;
+    }
+
+    /**
+     * Per-substrate parameter subsections inside Parameters. v1 is a
+     * hardcoded map (a registry-declared param schema is the eventual
+     * generic mechanism); substrates without parameters render
+     * nothing. Empty selection falls back to maze — matching the
+     * engine's substrate default.
+     */
+    _renderSubstrateParamSections() {
+        const wrap = document.createElement('div');
+        const renderers = {
+            maze: () => this._renderMazeParams(),
+            bounce: () => this._renderBounceParams(),
+        };
+        const dict = this._activeSubstrateDict();
+        let ids = Object.keys(dict).filter((id) => Number(dict[id]) > 0).sort();
+        if (ids.length === 0) ids = ['maze'];
+        for (const id of ids) {
+            const renderer = renderers[id];
+            if (!renderer) continue;
+            const header = document.createElement('div');
+            header.className = 'procgen-pipeline-scenario-subheader';
+            header.textContent = `${id} parameters`;
+            wrap.appendChild(header);
+            wrap.appendChild(renderer());
+        }
+        return wrap;
+    }
+
+    _renderMazeParams() {
+        const wrap = document.createElement('div');
+        // Hazard authoring (maze content modules Phase 2e). When
+        // enabled, a follow-up group shows count + max-fails +
+        // wall-overlap inputs. Toggle triggers re-render so the
+        // sub-fields appear / disappear in place.
+        const hazardRow = document.createElement('div');
+        hazardRow.className = 'procgen-pipeline-field';
+        const hazardLabel = document.createElement('label');
+        hazardLabel.textContent = 'Enable hazards';
+        hazardLabel.title = 'Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region';
+        const hazardInput = document.createElement('input');
+        hazardInput.type = 'checkbox';
+        hazardInput.checked = !!this.params.enableHazards;
+        hazardInput.addEventListener('change', () => {
+            this.params.enableHazards = !!hazardInput.checked;
+            this._saveToLocalStorage();
+            this.render();
+        });
+        hazardRow.appendChild(hazardLabel);
+        hazardRow.appendChild(hazardInput);
+        wrap.appendChild(hazardRow);
+
+        if (this.params.enableHazards) {
+            wrap.appendChild(this._renderHazardSubFields());
+        }
+        return wrap;
+    }
+
+    _renderBounceParams() {
+        const wrap = document.createElement('div');
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-field';
+        const label = document.createElement('label');
+        label.textContent = 'Fall behavior';
+        label.title = 'What falling off the level bottom does. Routing never depends on it — every non-start region has a real back portal.';
+        const select = document.createElement('select');
+        for (const opt of BOUNCE_FALL_OPTIONS) {
+            const o = document.createElement('option');
+            o.value = opt.value;
+            o.textContent = opt.label;
+            if (opt.disabled) o.disabled = true;
+            select.appendChild(o);
+        }
+        select.value = this.params.bounceFallBehavior ?? 'current';
+        select.addEventListener('change', () => {
+            this.params.bounceFallBehavior = select.value;
+            this._saveToLocalStorage();
+        });
+        row.appendChild(label);
+        row.appendChild(select);
+        wrap.appendChild(row);
         return wrap;
     }
 

@@ -50,8 +50,13 @@ describe('buildSphereTree', () => {
     it('enforces the stratification rule on entry gates', () => {
         const plan = makePlan();
         for (const node of tree.nodes) {
-            if (node.wave === 0) {
+            if (node.wave === 0 && !node.isFiller) {
                 expect(node.gate).toEqual([]);
+            } else if (node.isFiller && node.wave === 0) {
+                // wave-0 fillers carry no items, so they may gate on
+                // sphere-1 items (frees the host's arrowless slot)
+                expect(node.gate.every(
+                    (i) => plan.spheres[0].items.includes(i))).toBe(true);
             } else {
                 // gate = exactly one item from sphere `wave`
                 expect(node.gate).toHaveLength(1);
@@ -207,6 +212,7 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             const { grid, stats, startCell } = growSpheres({
                 regionSize: { width: 8, height: 6 },
                 seed,
+                regionParams: { fallBehavior: 'current' },
                 growthParams: {
                     spherePlan: plan,
                     substrateQuotas: { bounce: 99 },
@@ -216,12 +222,18 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             });
             expect(stats.substrateCounts.bounce).toBe(stats.regionsBuilt);
 
-            // every bounce level in the payloads validates and leaf
-            // regions carry a return portal on the entrance side
+            // every bounce level validates, and every NON-START region
+            // carries a guaranteed back portal on its entrance side
+            const startRegionId = grid.getRegion(startCell).region_id;
             for (const region of grid.allRegions()) {
-                const level = region.playable_payload?.params?.bounceLevel;
-                expect(level).toBeTruthy();
-                expect(validateLevel(level)).toEqual([]);
+                const params = region.playable_payload?.params;
+                expect(params?.bounceLevel).toBeTruthy();
+                expect(validateLevel(params.bounceLevel)).toEqual([]);
+                if (region.region_id !== startRegionId) {
+                    expect(params.backExitSide).toBeTruthy();
+                    expect(params.sidePortals[params.backExitSide]).toBeTruthy();
+                    expect(params.fallBehavior).toBe('current');
+                }
             }
 
             const rulesJson = buildRulesJson(grid, {
@@ -237,11 +249,15 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             'Right arrow': 1, 'Left arrow': 1, 'Springs': 1,
             key_red: 1, key_blue: 1, victory: 1,
         };
+        // gateableItems guarantees every non-final sphere carries a
+        // bounce-gateable item — bounce children can't sit behind key
+        // gates (their guaranteed back portal carries the entry gate).
         const plan = planSpheres({
             itemPool: pool,
             sphereCount: 3,
             pins: { 'Right arrow': 1, 'Left arrow': 1 },
             victoryItem: 'victory',
+            gateableItems: GATEABLE_ITEMS,
             seed: 4,
         });
         const { grid, stats, startCell } = growSpheres({

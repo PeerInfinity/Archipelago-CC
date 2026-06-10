@@ -2301,14 +2301,14 @@ export function buildSphereTree(plan, opts = {}, rng) {
     };
 
     const nodes = [];
-    const addNode = ({ wave, gate, parent, isFiller = false }) => {
+    const addNode = ({ wave, gate, parent, substrate, isFiller = false }) => {
         const node = {
             index: nodes.length,
             wave,
             gate,             // entry-gate item names ([] = ungated)
             parent,           // parent node index (null for the root)
             side: null,       // side ON THE PARENT hosting this child
-            substrate: pickSub(parent == null ? startSubstrate : null),
+            substrate,
             items: [],        // [{ id, item }] location specs
             isFiller,
             childGates: [],
@@ -2321,6 +2321,16 @@ export function buildSphereTree(plan, opts = {}, rng) {
             host.usedSides.add(node.side);
             host.childGates.push(gate);
             node.usedSides.add(OPPOSITE_SIDE[node.side]);
+            // The region's GUARANTEED BACK PORTAL is structurally a
+            // gate it must realise (requirement = its entry gate: a
+            // branch tip when that contains an arrow, the on-column
+            // top otherwise). Seed it so canHostExitGates accounts
+            // for it when child gates are assigned — e.g. an
+            // arrowless-entered bounce region's top slot is taken,
+            // so it can host no arrowless child gate. Inert for
+            // substrates without the veto hook (maze walks back via
+            // its entrance tile).
+            node.childGates.push(gate);
         }
         nodes.push(node);
         return node;
@@ -2343,12 +2353,33 @@ export function buildSphereTree(plan, opts = {}, rng) {
     // ungated to wave-0 hosts; wave k ≥ 1 gates on one sphere-k item.
     // revisitRatio steers toward older hosts (the "come back with the
     // new item" texture); the frontier pool falls back either way.
-    const pickHostAndGate = (wave) => {
-        const gateChoices = wave === 0
+    // `gateWave` overrides which sphere supplies the gate items —
+    // fillers carry no items, so wave-0 fillers gate on sphere-1
+    // items instead of [] (an arrowless [] gate would fight the back
+    // portal for the host's single arrowless slot on substrates like
+    // bounce). `childSubstrate` constrains the gate to items the
+    // CHILD can realise too — its guaranteed back portal carries the
+    // entry gate, so e.g. a bounce region can't sit behind a key gate.
+    const pickHostAndGate = (wave, { gateWave = wave, childSubstrate = null } = {}) => {
+        let gateChoices = gateWave === 0
             ? [[]]
-            : rng.shuffle([...new Set(spheres[wave - 1].items)]).map((item) => [item]);
+            : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]);
+        const childAdapter = childSubstrate ? substrateRegistry.get(childSubstrate) : null;
+        const childGateable = (childAdapter
+            && typeof childAdapter.generateZoneForSpecs === 'function'
+            && childAdapter.gateableItems) || null;
+        if (childGateable) {
+            gateChoices = gateChoices.filter((gate) =>
+                gate.every((item) => childGateable.includes(item)));
+            if (gateChoices.length === 0) {
+                throw new Error(`growSpheres: substrate '${childSubstrate}' cannot realise `
+                    + `a back portal for any sphere-${gateWave} gate item — plan the `
+                    + 'spheres with gateableItems (or pins) so every sphere carries an '
+                    + `item '${childSubstrate}' can gate on`);
+            }
+        }
         const eligible = nodes.filter((h) => h.usedSides.size < 4
-            && (wave === 0 ? h.wave === 0 : true));
+            && (gateWave === 0 ? h.wave === 0 : true));
         const older = eligible.filter((h) => h.wave < wave - 1);
         const frontier = eligible.filter((h) => h.wave >= wave - 1);
         const useOlder = older.length > 0 && rng.next() < revisitRatio;
@@ -2360,8 +2391,12 @@ export function buildSphereTree(plan, opts = {}, rng) {
                 }
             }
         }
-        throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate — `
-            + 'add fillers for capacity or adjust the plan/quotas');
+        throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate. `
+            + 'For bounce-only worlds note that each level supports ONE arrowless '
+            + 'portal, and guaranteed back portals consume it on every non-start '
+            + 'region — so sphere 1 must fit in at most 2 regions (raise "Max '
+            + 'items/region", lower the sphere count, or pin fewer items to '
+            + 'sphere 1).');
     };
 
     // Filler waves chosen up front so each wave knows its region count.
@@ -2376,11 +2411,18 @@ export function buildSphereTree(plan, opts = {}, rng) {
         const waveNodes = [];
         for (let i = 0; i < hostingRegions; i++) {
             if (w === 0 && i === 0) {
-                waveNodes.push(addNode({ wave: 0, gate: [], parent: null }));
+                waveNodes.push(addNode({
+                    wave: 0, gate: [], parent: null,
+                    substrate: pickSub(startSubstrate),
+                }));
                 continue;
             }
-            const { host, gate } = pickHostAndGate(w);
-            waveNodes.push(addNode({ wave: w, gate, parent: host.index }));
+            // Substrate first: the child's guaranteed back portal
+            // carries the entry gate, so the gate pick must respect
+            // the child's gate vocabulary.
+            const substrate = pickSub();
+            const { host, gate } = pickHostAndGate(w, { childSubstrate: substrate });
+            waveNodes.push(addNode({ wave: w, gate, parent: host.index, substrate }));
         }
         // Round-robin the wave's items across its hosting regions.
         items.forEach((item, idx) => {
@@ -2388,11 +2430,16 @@ export function buildSphereTree(plan, opts = {}, rng) {
             node.items.push({ id: `loc_${node.items.length}`, item });
         });
         // Fillers assigned to this wave attach like regular wave
-        // regions (gated for w ≥ 1) but carry no items.
+        // regions but carry no items — so their gates are free to use
+        // sphere-1 items even at wave 0 (no stratification impact).
         for (const fw of fillerWaves) {
             if (fw !== w) continue;
-            const { host, gate } = pickHostAndGate(w);
-            addNode({ wave: w, gate, parent: host.index, isFiller: true });
+            const substrate = pickSub();
+            const { host, gate } = pickHostAndGate(w, {
+                gateWave: w === 0 && waves > 1 ? 1 : w,
+                childSubstrate: substrate,
+            });
+            addNode({ wave: w, gate, parent: host.index, substrate, isFiller: true });
         }
     }
 
@@ -2481,23 +2528,26 @@ function buildSphereProceduralRegion({
 // strategy). The driver's gates ride as requirement arrays (AP item
 // names); the hook returns derived rules verified to match exactly.
 //
-// LEAF regions (no children) have no forward exits, but a level needs
-// at least one portal — they get a RETURN PORTAL on the entrance side
-// with an empty requirement. It rides only the payload (sidePortals +
-// geometry): landing on it sends the entrance side, which resolves to
-// the driver's back-exit. Non-leaf regions go back by falling off the
-// level bottom (the fall-back exit — runtime wiring on the game side;
-// rules-side the back-exit covers it).
+// Every non-start region gets a GUARANTEED BACK PORTAL on its
+// entrance side, gated on its own ENTRY gate (anyone inside holds
+// those items): a branch tip when the gate contains an arrow, the
+// on-column top otherwise (the slot canHostExitGates reserved during
+// tree building). The portal rides only the payload (sidePortals +
+// geometry): landing on it sends the entrance side, which the bridge
+// resolves to the driver's back-exit — whose rules.json rule is the
+// forward gate's copy, matching the portal's derived rule exactly.
+// Routing never relies on falling; fall behavior is a per-world
+// bounce parameter (regionParams.fallBehavior).
 function buildSphereZoneRegion({
-    substrate, region_id, regionSize, exitPlans, locations, entranceSide, seed, adapter,
+    substrate, region_id, regionSize, exitPlans, locations,
+    entranceSide, entryGate = [], regionParams = {}, seed, adapter,
 }) {
     const exitSpecs = exitPlans.map((e) => ({ side: e.side, requirement: e.gate }));
-    if (exitSpecs.length === 0) {
-        if (!entranceSide) {
-            throw new Error(`growSpheres: zone region '${region_id}' has neither `
-                + 'children nor a parent — single-region zone worlds are not supported');
-        }
-        exitSpecs.push({ side: entranceSide, requirement: [] });
+    if (entranceSide) {
+        exitSpecs.push({ side: entranceSide, requirement: entryGate });
+    } else if (exitSpecs.length === 0) {
+        throw new Error(`growSpheres: zone region '${region_id}' has neither `
+            + 'children nor a parent — single-region zone worlds are not supported');
     }
     const zoneRules = adapter.generateZoneForSpecs({
         region_id,
@@ -2515,11 +2565,13 @@ function buildSphereZoneRegion({
         zoneRules,
         zonePayload: {},
     });
-    // Stamp the fall-back exit side: falling off the level bottom
-    // returns to the parent (the game page resolves the side to the
-    // driver's back-exit via the bridge's side lookup).
     if (entranceSide && region.playable_payload?.params) {
         region.playable_payload.params.backExitSide = entranceSide;
+        // Per-world fall behavior ('current' default; 'previous'
+        // re-enables fall-through-bottom = go back).
+        if (regionParams.fallBehavior) {
+            region.playable_payload.params.fallBehavior = regionParams.fallBehavior;
+        }
     }
     return region;
 }
@@ -2684,6 +2736,8 @@ export function growSpheres(config) {
                 exitPlans,
                 locations,
                 entranceSide,
+                entryGate: node.gate,
+                regionParams,
                 seed: (rng.next() * 0x7fffffff) | 0,
                 adapter,
             });

@@ -29,8 +29,15 @@ const statusEl = document.getElementById('status');
 
 let session = null;
 let portalSides = {};   // portal id -> grid side (from params.sidePortals)
-let backExitSide = null; // fall-through-bottom returns to the parent region
-let fellExitSent = false; // one fall-back exit per configure (no double moves)
+let backExitSide = null; // the entrance side (the region's back exit)
+// What falling off the level bottom does (params.fallBehavior):
+//   'current'  — respawn at this level's entrance (default)
+//   'previous' — exit to the previous region via the back exit
+//   'start'    — reserved (return to the starting region; v2)
+// Routing never depends on this: every non-start region carries a
+// real back portal in its geometry.
+let fallBehavior = 'current';
+let fellExitSent = false; // one fall exit per configure (no double moves)
 let lastItems = [];
 let message = '';
 let messageTimer = 0;
@@ -66,6 +73,7 @@ const gameSide = {
         portalSides = Object.fromEntries(
             Object.entries(sidePortals).map(([side, id]) => [id, side]));
         backExitSide = params.backExitSide ?? null;
+        fallBehavior = params.fallBehavior ?? 'current';
         fellExitSent = false;
         session = createGameSession(params.bounceLevel);
         // Pickups the host already has checked (region revisits) — by
@@ -97,6 +105,7 @@ window.__bounceDebug = () => ({
     collected: session ? [...session.collected] : null,
     levelId: session?.level?.id ?? null,
     backExitSide,
+    fallBehavior,
 });
 
 // ── standalone dev harness ──────────────────────────────────────
@@ -115,17 +124,15 @@ function handleEvent(ev) {
         setMessage(`exit ${ev.direction ?? '?'}${side ? ` (side ${side})` : ''}`);
         bridge.sendExit?.(ev.portalId, side);
     } else if (ev.type === 'fell') {
-        // Sphere-grown worlds: falling off the bottom is the way BACK
-        // (the host resolves the side to the region's back-exit and
-        // reconfigures us with the parent region). One shot per
-        // configure so a fall during the host round-trip can't move
-        // twice. Worlds without a backExitSide (fixtures, the start
-        // region, the spiral) keep the respawn behavior.
-        if (backExitSide && !fellExitSent) {
+        // gameCore auto-respawns at the entrance either way; in
+        // 'previous' mode we additionally exit via the back side (one
+        // shot per configure so a fall during the host round-trip
+        // can't move twice).
+        if (fallBehavior === 'previous' && backExitSide && !fellExitSent) {
             fellExitSent = true;
             setMessage('fell! back to the previous level');
             bridge.sendExit?.('__fall_back', backExitSide);
-        } else if (!backExitSide) {
+        } else {
             setMessage('fell! back to the entrance');
         }
     }
