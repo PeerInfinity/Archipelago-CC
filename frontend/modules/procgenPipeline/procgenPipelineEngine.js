@@ -13,7 +13,8 @@ import { createRng } from '../shared/rng.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
-import { makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
+import { makeRulesJsonScaffold, makeHasRule, makeAndRule } from '../shared/rulesJsonBuilder.js';
+import { validateSpherePlan } from './spherePlanner.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
 import { computeLongestShortestPath } from '../mazeRoom/mazeGeometry.js';
@@ -2217,6 +2218,446 @@ export function arrangeShuffledSpiral(config) {
         substrateCounts: { ...zoneCounter },
     };
     return { grid, pool, stats, startCell };
+}
+
+// --- Sphere-driven growth driver ---
+//
+// The sphere-plan-first wave grower
+// (NewDocs/plans/procedural-generation/sphere-driven-growth.md).
+// Two phases:
+//
+//   buildSphereTree — pure bookkeeping: given the sphere plan, decide
+//     every region up front (wave, items, entry gate, parent, side,
+//     substrate). Wave 0 hosts sphere-1 items behind no gates; wave k
+//     regions attach behind gates containing ≥1 sphere-k item (the
+//     STRATIFICATION RULE that makes the plan an exact sphere-log
+//     oracle); fillers carry no items. Because the whole tree is
+//     decided before any geometry, every region is built ONCE with
+//     all its exits known — this supersedes the plan doc's
+//     stub-then-wall mechanism (no stubs needed; nothing is walled).
+//
+//   growSpheres — realise the tree in wave order on a Grid using the
+//     same machinery as grid-growth (cell adjacency else teleporter,
+//     back-exits, stitchGrid, wallOff). Maze regions realise gates
+//     via placeFromRules (the top-down driver's requirement-targeted
+//     path); zone-based substrates must expose generateZoneForSpecs.
+//
+// Gate composition is single-item in v1 (one sphere-k item per
+// gate). Host selection respects substrate gate compatibility:
+// adapter.gateableItems (when present) limits the gate vocabulary,
+// and adapter.canHostExitGates(existingGates, newGate) lets a
+// substrate veto structurally-unrealisable combinations (bounce's
+// arrowless-exit rules).
+
+/**
+ * Decide the abstract region tree for a sphere plan. Pure given rng.
+ * Returns { nodes, substrateCounts }; nodes are in realisation order
+ * (parents always precede children).
+ */
+export function buildSphereTree(plan, opts = {}, rng) {
+    const {
+        maxItemsPerRegion = 2,
+        fillerCount = 0,
+        revisitRatio = 0.25,
+        substrateQuotas = null,
+        startSubstrate = null,
+    } = opts;
+    const spheres = plan.spheres;
+    const waves = spheres.length;
+
+    const substrateCounts = {};
+    const pickSub = (preferred = null) => {
+        let sub = null;
+        if (preferred && preferred !== 'auto') {
+            const remaining = substrateQuotas
+                ? (substrateQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
+                : 1;
+            if (remaining > 0) sub = preferred;
+        }
+        if (!sub && substrateQuotas) {
+            sub = pickSubstrateWithQuota(substrateQuotas, substrateCounts, rng);
+        }
+        if (!sub) sub = 'maze';
+        substrateCounts[sub] = (substrateCounts[sub] || 0) + 1;
+        return sub;
+    };
+
+    const nodes = [];
+    const addNode = ({ wave, gate, parent, isFiller = false }) => {
+        const node = {
+            index: nodes.length,
+            wave,
+            gate,             // entry-gate item names ([] = ungated)
+            parent,           // parent node index (null for the root)
+            side: null,       // side ON THE PARENT hosting this child
+            substrate: pickSub(parent == null ? startSubstrate : null),
+            items: [],        // [{ id, item }] location specs
+            isFiller,
+            childGates: [],
+            usedSides: new Set(),
+        };
+        if (parent != null) {
+            const host = nodes[parent];
+            const free = SIDES.filter((s) => !host.usedSides.has(s));
+            node.side = free[Math.floor(rng.next() * free.length)];
+            host.usedSides.add(node.side);
+            host.childGates.push(gate);
+            node.usedSides.add(OPPOSITE_SIDE[node.side]);
+        }
+        nodes.push(node);
+        return node;
+    };
+
+    const canHost = (host, gate) => {
+        if (host.usedSides.size >= 4) return false;
+        const adapter = substrateRegistry.get(host.substrate);
+        if (!adapter) return false;
+        const gateable = adapter.gateableItems ?? null;
+        if (gateable && gate.some((item) => !gateable.includes(item))) return false;
+        if (typeof adapter.canHostExitGates === 'function'
+                && !adapter.canHostExitGates([...host.childGates], gate)) {
+            return false;
+        }
+        return true;
+    };
+
+    // Pick (host, gate) for a wave-w attachment. Wave 0 attaches
+    // ungated to wave-0 hosts; wave k ≥ 1 gates on one sphere-k item.
+    // revisitRatio steers toward older hosts (the "come back with the
+    // new item" texture); the frontier pool falls back either way.
+    const pickHostAndGate = (wave) => {
+        const gateChoices = wave === 0
+            ? [[]]
+            : rng.shuffle([...new Set(spheres[wave - 1].items)]).map((item) => [item]);
+        const eligible = nodes.filter((h) => h.usedSides.size < 4
+            && (wave === 0 ? h.wave === 0 : true));
+        const older = eligible.filter((h) => h.wave < wave - 1);
+        const frontier = eligible.filter((h) => h.wave >= wave - 1);
+        const useOlder = older.length > 0 && rng.next() < revisitRatio;
+        const pools = useOlder ? [older, frontier] : [frontier, older];
+        for (const pool of pools) {
+            for (const host of rng.shuffle([...pool])) {
+                for (const gate of gateChoices) {
+                    if (canHost(host, gate)) return { host, gate };
+                }
+            }
+        }
+        throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate — `
+            + 'add fillers for capacity or adjust the plan/quotas');
+    };
+
+    // Filler waves chosen up front so each wave knows its region count.
+    const fillerWaves = [];
+    for (let i = 0; i < fillerCount; i++) {
+        fillerWaves.push(Math.floor(rng.next() * waves));
+    }
+
+    for (let w = 0; w < waves; w++) {
+        const items = spheres[w].items; // sphere w+1 items hosted by wave w
+        const hostingRegions = Math.max(1, Math.ceil(items.length / maxItemsPerRegion));
+        const waveNodes = [];
+        for (let i = 0; i < hostingRegions; i++) {
+            if (w === 0 && i === 0) {
+                waveNodes.push(addNode({ wave: 0, gate: [], parent: null }));
+                continue;
+            }
+            const { host, gate } = pickHostAndGate(w);
+            waveNodes.push(addNode({ wave: w, gate, parent: host.index }));
+        }
+        // Round-robin the wave's items across its hosting regions.
+        items.forEach((item, idx) => {
+            const node = waveNodes[idx % waveNodes.length];
+            node.items.push({ id: `loc_${node.items.length}`, item });
+        });
+        // Fillers assigned to this wave attach like regular wave
+        // regions (gated for w ≥ 1) but carry no items.
+        for (const fw of fillerWaves) {
+            if (fw !== w) continue;
+            const { host, gate } = pickHostAndGate(w);
+            addNode({ wave: w, gate, parent: host.index, isFiller: true });
+        }
+    }
+
+    return { nodes, substrateCounts };
+}
+
+// Realise one tree node as a maze-style (procedural) region with
+// requirement-targeted gates — generateRegionCore + placeFromRules
+// (the top-down driver's sequence), then override the extracted rules
+// with the composed gates (compileRegion's access_rule escape hatch).
+function buildSphereProceduralRegion({
+    substrate, region_id, size, entrances, exitPlans, locations,
+    itemLib, obstacleLib, rng, params, hazardOpts,
+}) {
+    const adapter = getAdapter(substrate);
+    const core = adapter.generateRegionCore({
+        region_id,
+        size,
+        entrances,
+        exits: exitPlans.map((e) => ({ side: e.side })),
+        item_lib: itemLib,
+        obstacle_lib: obstacleLib,
+        rng,
+        params,
+        biome: null,
+    });
+    const ruleBySide = {};
+    for (const e of exitPlans) {
+        if (e.rule) ruleBySide[e.side] = e.rule;
+    }
+    const exit_rules = {};
+    for (const placed of core.exits_placed) {
+        const rule = ruleBySide[placed.side];
+        if (rule) exit_rules[placed.exit_id] = rule;
+    }
+    const location_rules = {};
+    const item_placements = [];
+    for (const loc of locations) {
+        if (loc.rule) location_rules[loc.id] = loc.rule;
+        item_placements.push({ item_id: loc.item, location_id: loc.id });
+    }
+    const placement = adapter.placeFromRules(core.world, {
+        exit_rules, location_rules, item_placements, rng,
+    });
+    const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: region_id });
+
+    // Override BFS-derived location ids/rules with the driver's specs
+    // (same reasoning as top-down: path-walk pollution must not leak
+    // into access rules; the composed gate IS the rule).
+    const ruleByLocation = Object.fromEntries(locations.map((l) => [l.id, l.rule]));
+    const locationIdByPos = new Map();
+    for (const placed of placement.placed_locations ?? []) {
+        locationIdByPos.set(posKey(placed.position), placed.location_id);
+    }
+    for (const loc of extracted_rules.locations) {
+        const specLocId = locationIdByPos.get(posKey(loc.position));
+        if (!specLocId) continue;
+        loc.id = specLocId;
+        loc.access_rule = ruleByLocation[specLocId] ?? { rule: 'True_' };
+    }
+    for (const ex of extracted_rules.exits) {
+        if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
+    }
+
+    if (substrate === 'maze') applyHazardModule(core.world, hazardOpts, rng);
+
+    return {
+        substrate,
+        region_id,
+        playable_payload: core.world,
+        extracted_rules,
+        placed_items: placement.placed_items,
+        placed_obstacles: [],
+        placed_logic_gates: placement.placed_logic_gates,
+        exits_placed: core.exits_placed,
+        render_hint: substrate,
+        sidecar_filename: `${region_id}.json`,
+        wall_stats: core.wall_stats ?? null,
+        biome: core.biome ?? null,
+        grow_telemetry: core.grow_telemetry ?? null,
+    };
+}
+
+/**
+ * Sphere-driven growth: realise a sphere plan as a region graph.
+ * Output shape matches growMaze ({ grid, stats, startCell }) so the
+ * existing compile/emit tail consumes it unchanged; `tree` rides along
+ * for tests and debugging.
+ */
+export function growSpheres(config) {
+    const {
+        regionSize,
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        seed = 1,
+        regionParams = {},
+        growthParams = {},
+        hazardOpts = null,
+    } = config;
+    if (!regionSize || !regionSize.width || !regionSize.height) {
+        throw new Error('growSpheres: regionSize.{width,height} required');
+    }
+    const {
+        spherePlan,
+        maxItemsPerRegion = 2,
+        fillerCount = 0,
+        revisitRatio = 0.25,
+        substrateQuotas = null,
+        startSubstrate = null,
+        gridDims = null,
+        teleporterMinGap = 2,
+        assumeBidirectional = true,
+    } = growthParams;
+    if (!spherePlan) {
+        throw new Error('growSpheres: growthParams.spherePlan required');
+    }
+    const planErrors = validateSpherePlan(spherePlan);
+    if (planErrors.length > 0) {
+        throw new Error(`growSpheres: invalid sphere plan — ${planErrors[0]}`);
+    }
+    // Upfront quota validation (same contract as the spiral): every
+    // substrate must be registered and realisable by this driver —
+    // procedurally (generateRegionCore) or via the sphere hook
+    // (generateZoneForSpecs, landing with bounce in step 5).
+    for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0) continue;
+        const adapter = substrateRegistry.get(sub);
+        if (!adapter) {
+            throw new Error(`growSpheres: substrate '${sub}' is not registered`);
+        }
+        if (typeof adapter.generateRegionCore !== 'function'
+                && typeof adapter.generateZoneForSpecs !== 'function') {
+            throw new Error(`growSpheres: substrate '${sub}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs — it cannot '
+                + 'realise requirement-targeted regions');
+        }
+    }
+
+    const rng = createRng(seed);
+    const tree = buildSphereTree(spherePlan, {
+        maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
+    }, rng);
+
+    // Auto-size a grid with room for tree growth + teleporter targets.
+    const side = Math.max(5, Math.ceil(Math.sqrt(tree.nodes.length)) * 2 + 1);
+    const dims = gridDims ?? { width: side, height: side };
+    const grid = new Grid(dims);
+    const startCell = {
+        gx: Math.floor(dims.width / 2),
+        gy: Math.floor(dims.height / 2),
+    };
+
+    const stats = {
+        regionsBuilt: 0,
+        regionsSkipped: 0,
+        teleportersPlaced: 0,
+        stopReason: null,
+        substrateCounts: tree.substrateCounts,
+    };
+
+    const childrenByParent = new Map();
+    for (const node of tree.nodes) {
+        if (node.parent == null) continue;
+        if (!childrenByParent.has(node.parent)) childrenByParent.set(node.parent, []);
+        childrenByParent.get(node.parent).push(node);
+    }
+    const gateRule = (gate) => (gate.length === 0
+        ? null
+        : makeAndRule(gate.map((item) => makeHasRule(item))));
+
+    for (const node of tree.nodes) {
+        const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
+
+        // Cell: geographic neighbor of the parent on the assigned side
+        // when free, teleporter to a disconnected cell otherwise.
+        let cell;
+        let isTeleporter = false;
+        if (!parentNode) {
+            cell = startCell;
+        } else {
+            const geo = grid.neighborCell(parentNode.cell, node.side);
+            if (geo && !grid.hasRegion(geo)) {
+                cell = geo;
+            } else {
+                cell = findDisconnectedCell(grid, rng, teleporterMinGap);
+                if (!cell) {
+                    throw new Error('growSpheres: no free cell for region — '
+                        + 'pass larger growthParams.gridDims');
+                }
+                isTeleporter = true;
+            }
+        }
+        node.cell = cell;
+        const region_id = regionIdForCell(cell);
+
+        const exitPlans = (childrenByParent.get(node.index) ?? [])
+            .map((child) => ({ side: child.side, rule: gateRule(child.gate) }));
+
+        let entrances = [];
+        let parentExitPlaced = null;
+        let entranceSide = null;
+        let entranceTile = null;
+        if (parentNode) {
+            const parentRegion = grid.getRegion(parentNode.cell);
+            parentExitPlaced = parentRegion.exits_placed.find((e) => e.side === node.side);
+            if (!parentExitPlaced) {
+                throw new Error(`growSpheres: parent '${parentRegion.region_id}' has no `
+                    + `exit on side ${node.side} for '${region_id}'`);
+            }
+            entranceSide = OPPOSITE_SIDE[node.side];
+            entranceTile = mirrorTileAcrossSide(
+                parentExitPlaced.tile_position, node.side, regionSize);
+            entrances = [{ side: entranceSide, tile: entranceTile }];
+        }
+
+        const locations = node.items.map((it) => ({ id: it.id, item: it.item, rule: null }));
+
+        const adapter = getAdapter(node.substrate);
+        let region;
+        if (typeof adapter.generateRegionCore === 'function') {
+            region = buildSphereProceduralRegion({
+                substrate: node.substrate,
+                region_id,
+                size: regionSize,
+                entrances,
+                exitPlans,
+                locations,
+                itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+            });
+        } else {
+            // Zone-based substrates need the requirement-targeted hook
+            // (bounce lands in build-order step 5; JtA later).
+            throw new Error(`growSpheres: substrate '${node.substrate}' has no `
+                + 'generateRegionCore and zone-based realisation is not wired yet — '
+                + 'remove it from the quotas');
+        }
+
+        grid.placeRegion(cell, region);
+        if (isTeleporter) {
+            grid.setTeleporter(parentNode.cell, node.side, cell);
+            stats.teleportersPlaced += 1;
+        }
+
+        if (assumeBidirectional && parentNode) {
+            // Back-exit to the parent on the entrance tile — same
+            // pattern as growMaze; buildRulesJson's post-pass copies
+            // the forward gate's rule onto it.
+            const parentRegion = grid.getRegion(parentNode.cell);
+            const backExitId = parentRegion.region_id;
+            region.playable_payload.exits.set(backExitId, {
+                exit_id: backExitId,
+                x: entranceTile.x,
+                y: entranceTile.y,
+                side: entranceSide,
+                exitName: backExitId,
+                targetRegion: parentRegion.region_id,
+                targetExitId: parentExitPlaced.exit_id,
+                isBackExit: true,
+                isTeleporter,
+            });
+            region.extracted_rules.exits.push({
+                id: backExitId,
+                position: { x: entranceTile.x, y: entranceTile.y },
+                target_region: parentRegion.region_id,
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            });
+            const parentWorldExit = parentRegion.playable_payload?.exits
+                ?.get(parentExitPlaced.exit_id);
+            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
+        }
+        stats.regionsBuilt += 1;
+    }
+
+    // Every exit was allocated to a specific child (or teleporter), so
+    // stitching is purely confirmatory and nothing needs the
+    // cross-branch reconcile pass — shortcuts can't exist by
+    // construction, which is exactly what keeps the plan an exact
+    // sphere oracle.
+    stitchGrid(grid);
+    wallOffUnusedExits(grid);
+    stats.stopReason = 'plan_complete';
+
+    return { grid, stats, startCell, tree };
 }
 
 export function buildPresetSidecars(grid, {

@@ -30,6 +30,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
+import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 
 /**
  * Plan the spheres.
@@ -234,5 +235,59 @@ export function validateSpherePlan(plan, { itemPool = null, gateableItems = null
         }
     }
 
+    return errors;
+}
+
+// ── The verification oracle ──────────────────────────────────────────
+//
+// The sphere plan doubles as the EXPECTED sphere log: a fixpoint sweep
+// over the emitted rules.json must bucket items into exactly the
+// planned spheres. generateSphereLog already implements AP's
+// get_spheres semantics (snapshot reachability at each sphere
+// boundary), so the oracle is bucket-and-compare.
+
+/**
+ * Bucket the items of a rules.json by sphere, using the same
+ * AP-faithful sweep the pipeline embeds as sphere_log. Returns
+ * [{ sphere: 1, items: [...] }, ...] in planSpheres' shape (the log's
+ * 0-indexed pick batches map to 1-indexed plan spheres).
+ */
+export function computeItemSpheres(rulesJson, { playerId = '1' } = {}) {
+    const entries = generateSphereLog(rulesJson, { playerId });
+    const buckets = new Map();
+    for (const e of entries) {
+        if (e.type !== 'state_update') continue;
+        if (typeof e.sphere_index !== 'string' || !e.sphere_index.includes('.')) continue;
+        const sphere = parseInt(e.sphere_index.split('.')[0], 10) + 1;
+        const baseItems = e.player_data?.[playerId]?.new_inventory_details?.base_items ?? {};
+        if (!buckets.has(sphere)) buckets.set(sphere, []);
+        for (const [name, count] of Object.entries(baseItems)) {
+            for (let i = 0; i < count; i++) buckets.get(sphere).push(name);
+        }
+    }
+    return [...buckets.keys()].sort((a, b) => a - b)
+        .map((sphere) => ({ sphere, items: buckets.get(sphere) }));
+}
+
+/**
+ * Compare computed sphere buckets against the plan (multisets per
+ * sphere). Returns error strings; empty = the world realises the plan
+ * exactly.
+ */
+export function compareSpheresToPlan(computed, plan) {
+    const errors = [];
+    if (computed.length !== plan.spheres.length) {
+        errors.push(`sphere count mismatch: computed ${computed.length}, `
+            + `planned ${plan.spheres.length}`);
+    }
+    const n = Math.min(computed.length, plan.spheres.length);
+    for (let i = 0; i < n; i++) {
+        const got = [...computed[i].items].sort();
+        const want = [...plan.spheres[i].items].sort();
+        if (got.length !== want.length || got.some((x, j) => x !== want[j])) {
+            errors.push(`sphere ${i + 1}: computed [${got.join(', ')}] != `
+                + `planned [${want.join(', ')}]`);
+        }
+    }
     return errors;
 }
