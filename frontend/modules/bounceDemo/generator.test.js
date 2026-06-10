@@ -1,0 +1,141 @@
+/**
+ * Step-7 generator: generate-and-test. The verify half is the same
+ * derive-rules verifier the pipeline runs, so a passing generateLevel
+ * IS a machine-checked level: every pickup and the top exit require
+ * exactly the requested ability set.
+ */
+import { describe, it, expect } from 'vitest';
+import { generateLevel, generateZoneSet } from './generator.js';
+import { deriveAccessRules } from './deriveRules.js';
+import { validateLevel } from './level.js';
+import { createBounceSubstrateEntry } from './bounceDemoLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+    arrangeShuffledSpiral,
+    buildRulesJson,
+} from '../procgenPipeline/procgenPipelineEngine.js';
+import { VICTORY_ITEM_NAME } from './apRules.js';
+
+const expectRequires = (level, requirement) => {
+    expect(validateLevel(level)).toEqual([]);
+    const derived = deriveAccessRules(level);
+    expect(derived.defects).toEqual([]);
+    const want = [...requirement].sort();
+    for (const pk of level.pickups) {
+        expect(derived.pickups[pk.id].minimalSets).toEqual([want]);
+    }
+    expect(derived.exits.exit_up.minimalSets).toEqual([want]);
+};
+
+describe('generateLevel', () => {
+    it('generates verified levels for every single-ability requirement', () => {
+        for (const ability of ['springs', 'jetpacks', 'blue', 'brown', 'left', 'right']) {
+            const level = generateLevel({ id: `t_${ability}`, requirement: [ability], seed: 1 });
+            expectRequires(level, [ability]);
+        }
+    });
+
+    it('generates multi-ability and empty requirements across seeds', () => {
+        for (const seed of [1, 2, 3]) {
+            expectRequires(
+                generateLevel({ id: 's', requirement: [], pickupCount: 2, seed }), []);
+            expectRequires(
+                generateLevel({ id: 'sr', requirement: ['springs', 'right'], seed }),
+                ['springs', 'right']);
+            expectRequires(
+                generateLevel({ id: 'bl', requirement: ['blue', 'left'], seed }),
+                ['blue', 'left']);
+        }
+    });
+
+    it('is deterministic for a given seed', () => {
+        const a = generateLevel({ id: 'd', requirement: ['springs'], seed: 7 });
+        const b = generateLevel({ id: 'd', requirement: ['springs'], seed: 7 });
+        expect(a).toEqual(b);
+    });
+});
+
+describe('generateZoneSet', () => {
+    it('builds a structurally sound zone table', () => {
+        const zones = generateZoneSet({ count: 7, seed: 1 });
+        expect(zones).toHaveLength(7);
+        // starter grants both arrows with no requirement
+        expect(Object.values(zones[0].items).sort())
+            .toEqual(['Left arrow', 'Right arrow']);
+        // exactly one Victory, on the last zone
+        const victoryZones = zones.filter((z) =>
+            Object.values(z.items).includes(VICTORY_ITEM_NAME));
+        expect(victoryZones).toEqual([zones[zones.length - 1]]);
+        // exactly one filler (count 7 = 6 structural + 1)
+        expect(zones.filter((z) => z.level.pickups.length === 0)).toHaveLength(1);
+    });
+});
+
+// ── end-to-end: generated zones through the spiral, winnable ──────────
+
+function evalRule(rule, items) {
+    switch (rule.rule) {
+        case 'True_': return true;
+        case 'False_': return false;
+        case 'Has': return items.has(rule.args.item_name);
+        case 'And': return rule.children.every((c) => evalRule(c, items));
+        case 'Or': return rule.children.some((c) => evalRule(c, items));
+        default: throw new Error(`evalRule: unhandled rule '${rule.rule}'`);
+    }
+}
+
+function sweep(regions) {
+    const items = new Set();
+    const reachable = new Set(['Menu']);
+    const checked = new Set();
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const name of [...reachable]) {
+            for (const exit of regions[name].exits ?? []) {
+                if (!exit.connected_region || reachable.has(exit.connected_region)) continue;
+                if (evalRule(exit.access_rule ?? { rule: 'True_' }, items)) {
+                    reachable.add(exit.connected_region);
+                    changed = true;
+                }
+            }
+            for (const loc of regions[name].locations ?? []) {
+                if (checked.has(loc.name)) continue;
+                if (evalRule(loc.access_rule ?? { rule: 'True_' }, items)) {
+                    checked.add(loc.name);
+                    if (loc.item?.name) items.add(loc.item.name);
+                    changed = true;
+                }
+            }
+        }
+    }
+    return { items, reachable, checked };
+}
+
+describe('generated zone set through the spiral (e2e)', () => {
+    it.each([
+        ['directional', 11],
+        ['arbitrary', 12],
+    ])('%s portal placement: rules.json is winnable (seed %i)', (placement, seed) => {
+        const id = `bounce_gen_${placement}`;
+        if (!substrateRegistry.has(id)) {
+            substrateRegistry.register(createBounceSubstrateEntry({
+                id,
+                zones: generateZoneSet({ count: 7, seed }),
+                portalPlacement: placement,
+            }));
+        }
+        const { grid, startCell } = arrangeShuffledSpiral({
+            regionSize: { width: 8, height: 6 },
+            seed,
+            growthParams: { substrateQuotas: { [id]: 7 } },
+        });
+        const rulesJson = buildRulesJson(grid, { startCell, seed, embedSphereLog: false });
+        const regions = rulesJson.regions['1'];
+        expect(Object.keys(regions)).toHaveLength(8); // Menu + 7 zones
+
+        const result = sweep(regions);
+        expect(result.reachable.size).toBe(8);
+        expect(result.items).toContain(VICTORY_ITEM_NAME);
+    }, 60000);
+});

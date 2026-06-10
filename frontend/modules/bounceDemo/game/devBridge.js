@@ -8,6 +8,7 @@
  */
 
 import { ZONES } from '../bounceDemoLibrary.js';
+import { generateZoneSet } from '../generator.js';
 import { attachSideExits } from '../sideExits.js';
 import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from '../apRules.js';
 
@@ -16,6 +17,15 @@ const ALL_SIDES = ['N', 'E', 'S', 'W'];
 export function installDevHarness(bridge, container) {
     container.innerHTML = `
         <h3>dev harness (standalone)</h3>
+        <div>zones: <select id="dev-source">
+                <option value="fixtures">fixtures</option>
+                <option value="gen">generated (seed)</option>
+             </select>
+             seed <input id="dev-seed" type="number" value="1" style="width:4em">
+             placement: <select id="dev-placement">
+                <option value="directional">directional</option>
+                <option value="arbitrary">arbitrary</option>
+             </select></div>
         <div>level: <select id="dev-zone"></select>
              <button id="dev-reset">reset level</button></div>
         <h3>items (pollItems)</h3>
@@ -51,24 +61,47 @@ export function installDevHarness(bridge, container) {
     };
     itemsEl.addEventListener('change', pushItems);
 
-    // zone select -> configure (same transform the pipeline applies)
+    // zone-source + placement + zone select -> configure (same
+    // transform the pipeline applies)
+    const sourceEl = container.querySelector('#dev-source');
+    const seedEl = container.querySelector('#dev-seed');
+    const placementEl = container.querySelector('#dev-placement');
     const zoneEl = container.querySelector('#dev-zone');
-    ZONES.forEach((zone, idx) => {
-        const opt = document.createElement('option');
-        opt.value = String(idx);
-        opt.textContent = `${idx}: ${zone.level.id}`;
-        zoneEl.append(opt);
-    });
+    let zones = ZONES;
+
+    const rebuildZoneList = () => {
+        zoneEl.innerHTML = '';
+        zones.forEach((zone, idx) => {
+            const opt = document.createElement('option');
+            opt.value = String(idx);
+            const grants = Object.values(zone.items).join('+') || 'filler';
+            opt.textContent = `${idx}: ${zone.level.id} [${grants}]`;
+            zoneEl.append(opt);
+        });
+    };
     const loadZone = (idx) => {
-        const { level, sidePortals } = attachSideExits(ZONES[idx].level, ALL_SIDES);
+        const { level, sidePortals } = attachSideExits(zones[idx].level, ALL_SIDES, {
+            placement: placementEl.value,
+        });
         bridge.configure({
             regionId: `standalone_z${idx}`,
             params: { bounceLevel: level, sidePortals },
         });
-        log(`configure(zone ${idx}: ${level.id})`);
+        log(`configure(zone ${idx}: ${level.id}, ${placementEl.value})`);
     };
+    const reloadSource = () => {
+        zones = sourceEl.value === 'gen'
+            ? generateZoneSet({ count: 7, seed: Number(seedEl.value) || 1 })
+            : ZONES;
+        rebuildZoneList();
+        loadZone(0);
+    };
+    sourceEl.addEventListener('change', reloadSource);
+    seedEl.addEventListener('change', () => { if (sourceEl.value === 'gen') reloadSource(); });
+    placementEl.addEventListener('change', () => loadZone(Number(zoneEl.value)));
     zoneEl.addEventListener('change', () => loadZone(Number(zoneEl.value)));
     container.querySelector('#dev-reset').addEventListener('click', () => bridge.reset?.());
 
+    rebuildZoneList();
     loadZone(0);
 }
