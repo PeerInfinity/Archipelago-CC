@@ -24,6 +24,11 @@
  *   --frames N         max frames to simulate (default 1200)
  *   --cols N           ASCII render width in characters (default 50)
  *   --json PATH        also dump the raw simulate() result as JSON
+ *   --graph            also build the per-jump platform graph (canJump
+ *                      under --abilities) and print adjacency +
+ *                      reachable set
+ *   --path TARGET      also print the shortest jump path entrance ->
+ *                      TARGET (via simulatorCore reach)
  *
  * Legend: S spawn, . trajectory, * landing, = green platform,
  * B/b blue (active/suppressed), #/x brown (active/suppressed),
@@ -46,6 +51,8 @@ import {
 } from '../../frontend/modules/bounceDemo/suppression.js';
 import { bounceStack } from
     '../../frontend/modules/bounceDemo/fixtures/bounceStack.js';
+import { ENTRANCE, buildPlatformGraph, findJumpPath, reachablePlatforms } from
+    '../../frontend/modules/bounceDemo/canJump.js';
 
 const ABILITY_NAMES = ['left', 'right', 'springs', 'jetpacks', 'blue', 'brown'];
 
@@ -57,6 +64,8 @@ function parseArgs(argv) {
         frames: 1200,
         cols: 50,
         json: null,
+        graph: false,
+        path: null,
     };
     for (let i = 2; i < argv.length; i++) {
         const a = argv[i];
@@ -67,6 +76,8 @@ function parseArgs(argv) {
         else if (a === '--frames') out.frames = Number(next());
         else if (a === '--cols') out.cols = Number(next());
         else if (a === '--json') out.json = next();
+        else if (a === '--graph') out.graph = true;
+        else if (a === '--path') out.path = next();
         else if (a === '--help' || a === '-h') {
             console.log('See the header comment of this script for usage.');
             process.exit(0);
@@ -197,6 +208,29 @@ const result = simulate(level, abilities, policy, { maxFrames: args.frames });
 
 console.log(render(level, abilities, result, args.cols));
 console.log(summarize(level, abilities, result, args.frames));
+
+if (args.graph || args.path) {
+    const graph = buildPlatformGraph(level, abilities);
+    if (args.graph) {
+        console.log('\n=== per-jump platform graph ===');
+        for (const node of graph.nodes) {
+            const targets = [...graph.edges.get(node)];
+            console.log(`${node} -> ${targets.join(' ') || '(nothing)'}`);
+        }
+        const reachable = reachablePlatforms(graph);
+        const all = level.platforms.map((p) => p.id);
+        const unreachable = all.filter((id) => !reachable.has(id));
+        console.log(`reachable from entrance: ${[...reachable].join(' ') || '(none)'}`
+            + ` (${reachable.size}/${all.length})`);
+        if (unreachable.length) console.log(`unreachable: ${unreachable.join(' ')}`);
+    }
+    if (args.path) {
+        const r = findJumpPath(graph, args.path);
+        console.log(r.ok
+            ? `path ${ENTRANCE} -> ${args.path}: ${r.plan.join(' -> ')} (${r.steps} jumps)`
+            : `path ${ENTRANCE} -> ${args.path}: UNREACHABLE (${r.reason})`);
+    }
+}
 
 if (args.json) {
     const out = resolve(args.json);
