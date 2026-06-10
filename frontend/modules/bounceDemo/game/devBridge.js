@@ -22,6 +22,7 @@ export function installDevHarness(bridge, container) {
                 <option value="gen">generated (seed)</option>
              </select>
              seed <input id="dev-seed" type="number" value="1" style="width:4em">
+             jitter <input id="dev-jitter" type="number" value="0" min="0" max="40" style="width:4em">
              placement: <select id="dev-placement">
                 <option value="directional">directional</option>
                 <option value="arbitrary">arbitrary</option>
@@ -65,6 +66,7 @@ export function installDevHarness(bridge, container) {
     // transform the pipeline applies)
     const sourceEl = container.querySelector('#dev-source');
     const seedEl = container.querySelector('#dev-seed');
+    const jitterEl = container.querySelector('#dev-jitter');
     const placementEl = container.querySelector('#dev-placement');
     const zoneEl = container.querySelector('#dev-zone');
     let zones = ZONES;
@@ -90,14 +92,25 @@ export function installDevHarness(bridge, container) {
         log(`configure(zone ${idx}: ${level.id}, ${placementEl.value})`);
     };
     const reloadSource = () => {
+        // jitter applies to generated zones only (fixtures are static);
+        // generateZoneSet adds both arrows to non-starter requirements
+        // when jittered, since jitter only verifies under two-way
+        // correction. Generation runs the full verifier — expect a
+        // short pause at higher jitter.
         zones = sourceEl.value === 'gen'
-            ? generateZoneSet({ count: 7, seed: Number(seedEl.value) || 1 })
+            ? generateZoneSet({
+                count: 7,
+                seed: Number(seedEl.value) || 1,
+                jitter: Math.max(0, Number(jitterEl.value) || 0),
+            })
             : ZONES;
         rebuildZoneList();
         loadZone(0);
     };
     sourceEl.addEventListener('change', reloadSource);
-    seedEl.addEventListener('change', () => { if (sourceEl.value === 'gen') reloadSource(); });
+    const regen = () => { if (sourceEl.value === 'gen') reloadSource(); };
+    seedEl.addEventListener('change', regen);
+    jitterEl.addEventListener('change', regen);
     placementEl.addEventListener('change', () => loadZone(Number(zoneEl.value)));
     zoneEl.addEventListener('change', () => loadZone(Number(zoneEl.value)));
     container.querySelector('#dev-reset').addEventListener('click', () => bridge.reset?.());

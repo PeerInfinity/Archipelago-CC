@@ -52,20 +52,21 @@ function sameSets(minimalSets, want) {
 }
 
 /** One proposal. Returns a level (bottom margin/height computed last). */
-function proposeLevel({ id, requirement, pickupCount, rng, stepsBetween }) {
+function proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter = 0 }) {
     // steps grow upward as deltas; realized into platforms afterwards.
-    // NO x-jitter on plain steps in v1: a no-arrows player's x never
-    // changes, so an arrowless chain must be exactly aligned, and even
-    // past an arrow gate a SINGLE arrow only corrects one direction —
-    // the solver's ∀-launch-position check rejects any jitter a player
-    // at the wrong edge couldn't correct. (Empirical: jitter after a
-    // left-only gate failed every proposal.) Visual variety must come
-    // from gate structure, not column noise, until the policy family
-    // can fine-tune drift.
+    // Plain-step x-jitter (opts.jitter, px amplitude) DEFAULTS TO 0: a
+    // no-arrows player's x never changes, so an arrowless chain must
+    // be exactly aligned — ANY jitter delta fails the solver's
+    // ∀-launch-position check (the span-edge launch can't correct).
+    // One held arrow only corrects one direction, so single-arrow
+    // requirements fail too. Jitter only verifies when the requirement
+    // includes BOTH arrows; the verify loop is the gatekeeper either
+    // way — a jittered proposal that fails verification is rejected,
+    // never emitted.
     const steps = [];
     const plains = () => {
         const n = 1 + Math.floor(rng.next() * stepsBetween);
-        for (let i = 0; i < n; i++) steps.push({ dy: PLAIN_DY });
+        for (let i = 0; i < n; i++) steps.push({ dy: PLAIN_DY, jitter: true });
     };
 
     const gates = rng.shuffle([...requirement]);
@@ -120,7 +121,9 @@ function proposeLevel({ id, requirement, pickupCount, rng, stepsBetween }) {
         if (s.jetpack) jetpacks.push({ id: `j${n}`, x: prev.x, y: prev.y - 5, on: prev.id });
         x += s.dx ?? 0;
         y -= s.dy;
-        prev = place(x, y, s.type ?? 'green');
+        // non-cumulative: jitter offsets the platform, not the column
+        const dx = (s.jitter && jitter > 0) ? (rng.next() - 0.5) * 2 * jitter : 0;
+        prev = place(x + dx, y, s.type ?? 'green');
         if (s.pickup) {
             pickups.push({ id: `loc_${pickupN++}`, x: prev.x, y: prev.y - 20, on: prev.id });
         }
@@ -149,12 +152,13 @@ export function generateLevel({
     stepsBetween = 2,
     seed = 1,
     attempts = 8,
+    jitter = 0,
 } = {}) {
     const want = [...requirement].sort();
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
-        const level = proposeLevel({ id, requirement, pickupCount, rng, stepsBetween });
+        const level = proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter });
         const modelErrors = validateLevel(level);
         if (modelErrors.length > 0) {
             rejected.push(`attempt ${attempt}: ${modelErrors[0]}`);
@@ -181,8 +185,13 @@ export function generateLevel({
  * items}]) for createBounceSubstrateEntry. `count` >= 6: zone 0
  * (two-arrow starter) + 4 feature zones + the Victory zone; anything
  * beyond is filler.
+ *
+ * `jitter` (px): when > 0, every non-starter zone adds BOTH arrows to
+ * its requirement — jitter only verifies under two-way correction, and
+ * the arrows are granted in zone 0, so the set stays winnable. The
+ * starter stays exactly aligned (it must be playable with nothing).
  */
-export function generateZoneSet({ count = 7, seed = 1 } = {}) {
+export function generateZoneSet({ count = 7, seed = 1, jitter = 0 } = {}) {
     if (count < 6) throw new Error('generateZoneSet: count must be >= 6');
     const rng = createRng(seed);
     const featureGrants = rng.shuffle(['springs', 'blue', 'brown', 'jetpacks']);
@@ -211,6 +220,11 @@ export function generateZoneSet({ count = 7, seed = 1 } = {}) {
                 if (more.length) requirement.push(pick(more));
             }
         }
+        if (jitter > 0 && !isStarter) {
+            for (const arrow of ['left', 'right']) {
+                if (!requirement.includes(arrow)) requirement.push(arrow);
+            }
+        }
         const grants = plan.victory ? [] : (plan.grants ?? []);
         const pickupCount = plan.victory ? 1 : grants.length;
         const level = generateLevel({
@@ -218,6 +232,7 @@ export function generateZoneSet({ count = 7, seed = 1 } = {}) {
             requirement,
             pickupCount: plan.filler ? 0 : pickupCount,
             seed: (seed * 31 + i) | 0,
+            jitter: isStarter ? 0 : jitter,
         });
         const items = {};
         level.pickups.forEach((pk, idx) => {

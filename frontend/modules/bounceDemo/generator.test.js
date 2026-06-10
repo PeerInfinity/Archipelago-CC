@@ -48,6 +48,23 @@ describe('generateLevel', () => {
         }
     });
 
+    it('jitter verifies only when BOTH arrows are required', () => {
+        // arrowless: even ±1px breaks the span-edge launch position;
+        // one arrow corrects only one direction. Both arrows: seek can
+        // correct either way, so jittered proposals verify.
+        expect(() => generateLevel({ id: 'j0', requirement: [], jitter: 1, seed: 3 }))
+            .toThrow(/no valid proposal/);
+        expect(() => generateLevel({ id: 'j1', requirement: ['left'], jitter: 25, seed: 3 }))
+            .toThrow(/no valid proposal/);
+        const level = generateLevel({
+            id: 'j2', requirement: ['left', 'right'], jitter: 25, seed: 3,
+        });
+        expectRequires(level, ['left', 'right']);
+        // and the jitter actually moved something off-column
+        expect(level.platforms.some((p) => p.x !== 200 && p.x !== 340 && p.x !== 60))
+            .toBe(true);
+    });
+
     it('is deterministic for a given seed', () => {
         const a = generateLevel({ id: 'd', requirement: ['springs'], seed: 7 });
         const b = generateLevel({ id: 'd', requirement: ['springs'], seed: 7 });
@@ -114,14 +131,15 @@ function sweep(regions) {
 
 describe('generated zone set through the spiral (e2e)', () => {
     it.each([
-        ['directional', 11],
-        ['arbitrary', 12],
-    ])('%s portal placement: rules.json is winnable (seed %i)', (placement, seed) => {
-        const id = `bounce_gen_${placement}`;
+        ['directional', 11, 0],
+        ['arbitrary', 12, 0],
+        ['directional', 13, 25], // jittered set (non-starters gain both arrows)
+    ])('%s placement, seed %i, jitter %i: rules.json is winnable', (placement, seed, jitter) => {
+        const id = `bounce_gen_${placement}_j${jitter}`;
         if (!substrateRegistry.has(id)) {
             substrateRegistry.register(createBounceSubstrateEntry({
                 id,
-                zones: generateZoneSet({ count: 7, seed }),
+                zones: generateZoneSet({ count: 7, seed, jitter }),
                 portalPlacement: placement,
             }));
         }
