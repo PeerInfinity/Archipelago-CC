@@ -67,8 +67,10 @@ describe('extractZoneRules', () => {
         }]);
         expect(r.exitRules.N).toEqual({ rule: 'True_' });
         expect(r.exitRules.E).toEqual({ rule: 'Has', args: { item_name: 'Right arrow' } });
-        expect(r.payload.bounceLevel.platforms.some((p) => p.id === 'side_pf_E')).toBe(true);
-        expect(r.payload.sidePortals).toEqual({ N: 'exit_up', E: 'side_exit_E' });
+        expect(r.payload.params.bounceLevel.platforms.some((p) => p.id === 'side_pf_E')).toBe(true);
+        expect(r.payload.params.sidePortals).toEqual({ N: 'exit_up', E: 'side_exit_E' });
+        expect(r.payload.ap_locations).toEqual({ loc_arrow: 'r0__loc_arrow' });
+        expect(r.payload.flashCapabilities.start).toBe('auto');
     });
 
     it('filler zones emit no locations', () => {

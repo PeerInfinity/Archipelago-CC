@@ -88,9 +88,25 @@ export function extractZoneRules(zoneIdx, { region_id, exitSides }) {
     return {
         locations,
         exitRules,
+        // Payload shaped for the flashSubstrate bridge's configure()
+        // contract: level geometry rides `params` (the bridge forwards
+        // only world.params, ap_items, ap_locations, flashCapabilities,
+        // gameId, regionId — not arbitrary payload fields).
+        // ap_locations maps the game's pickup ids to AP location names
+        // (compileRegionGraph's `<region>__<id>` convention).
         payload: {
-            bounceLevel: level,     // transformed geometry the renderer draws
-            sidePortals,            // side -> portal id (exit arrows)
+            gameId: 'bounceDemo',
+            params: {
+                bounceLevel: level, // transformed geometry the renderer draws
+                sidePortals,        // side -> portal id (exit arrows)
+            },
+            ap_locations: Object.fromEntries(
+                (level.pickups ?? []).map((pk) => [pk.id, `${region_id}__${pk.id}`])),
+            flashCapabilities: {
+                locations: 'cooperative',
+                items: 'pull',
+                start: 'auto',      // no click needed; the game runs on load
+            },
         },
     };
 }
