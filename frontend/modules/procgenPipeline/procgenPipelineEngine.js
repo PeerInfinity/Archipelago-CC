@@ -2004,7 +2004,22 @@ function synthesizeZoneRegion({
     const zoneRules = adapter.extractZoneRules
         ? adapter.extractZoneRules(zoneIdx, { region_id, exitSides, regionSize })
         : null;
+    const zonePayload = adapter.synthesizeZonePayload
+        ? adapter.synthesizeZonePayload(zoneIdx)
+        : {};
+    return assembleZoneRegion({
+        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
+    });
+}
 
+// Shared tail of zone-region synthesis: synthetic exit scaffolding
+// (exit_<side> at perimeter midpoints — stitchGrid/wallOff
+// conventions) plus the zone-locations channel result. Consumed by
+// both the spiral path (extractZoneRules) and the sphere-growth path
+// (generateZoneForSpecs).
+function assembleZoneRegion({
+    substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
+}) {
     const exitsMap = new Map();
     const exitsPlaced = [];
     const extractedExits = [];
@@ -2035,9 +2050,6 @@ function synthesizeZoneRegion({
             ...(sideRule ? { access_rule: sideRule } : {}),
         });
     }
-    const zonePayload = adapter.synthesizeZonePayload
-        ? adapter.synthesizeZonePayload(zoneIdx)
-        : {};
     const extractedLocations = (zoneRules?.locations ?? []).map((loc) => ({
         id: loc.id,
         item: loc.item ?? null,
@@ -2458,6 +2470,47 @@ function buildSphereProceduralRegion({
     };
 }
 
+// Realise one tree node as a zone-based region via the substrate's
+// generateZoneForSpecs hook (bounce; JtA later as a selection
+// strategy). The driver's gates ride as requirement arrays (AP item
+// names); the hook returns derived rules verified to match exactly.
+//
+// LEAF regions (no children) have no forward exits, but a level needs
+// at least one portal — they get a RETURN PORTAL on the entrance side
+// with an empty requirement. It rides only the payload (sidePortals +
+// geometry): landing on it sends the entrance side, which resolves to
+// the driver's back-exit. Non-leaf regions go back by falling off the
+// level bottom (the fall-back exit — runtime wiring on the game side;
+// rules-side the back-exit covers it).
+function buildSphereZoneRegion({
+    substrate, region_id, regionSize, exitPlans, locations, entranceSide, seed, adapter,
+}) {
+    const exitSpecs = exitPlans.map((e) => ({ side: e.side, requirement: e.gate }));
+    if (exitSpecs.length === 0) {
+        if (!entranceSide) {
+            throw new Error(`growSpheres: zone region '${region_id}' has neither `
+                + 'children nor a parent — single-region zone worlds are not supported');
+        }
+        exitSpecs.push({ side: entranceSide, requirement: [] });
+    }
+    const zoneRules = adapter.generateZoneForSpecs({
+        region_id,
+        exitSpecs,
+        locationSpecs: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
+        seed,
+    });
+    // Scaffold only the CHILD sides — the entrance side's rules.json
+    // exit is the driver's back-exit, not a forward exit.
+    return assembleZoneRegion({
+        substrate,
+        region_id,
+        regionSize,
+        exitSides: exitPlans.map((e) => e.side),
+        zoneRules,
+        zonePayload: {},
+    });
+}
+
 /**
  * Sphere-driven growth: realise a sphere plan as a region graph.
  * Output shape matches growMaze ({ grid, stats, startCell }) so the
@@ -2569,9 +2622,14 @@ export function growSpheres(config) {
         }
         node.cell = cell;
         const region_id = regionIdForCell(cell);
+        node.region_id = region_id;
 
         const exitPlans = (childrenByParent.get(node.index) ?? [])
-            .map((child) => ({ side: child.side, rule: gateRule(child.gate) }));
+            .map((child) => ({
+                side: child.side,
+                gate: child.gate,
+                rule: gateRule(child.gate),
+            }));
 
         let entrances = [];
         let parentExitPlaced = null;
@@ -2604,12 +2662,20 @@ export function growSpheres(config) {
                 locations,
                 itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
             });
+        } else if (typeof adapter.generateZoneForSpecs === 'function') {
+            region = buildSphereZoneRegion({
+                substrate: node.substrate,
+                region_id,
+                regionSize,
+                exitPlans,
+                locations,
+                entranceSide,
+                seed: (rng.next() * 0x7fffffff) | 0,
+                adapter,
+            });
         } else {
-            // Zone-based substrates need the requirement-targeted hook
-            // (bounce lands in build-order step 5; JtA later).
-            throw new Error(`growSpheres: substrate '${node.substrate}' has no `
-                + 'generateRegionCore and zone-based realisation is not wired yet — '
-                + 'remove it from the quotas');
+            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs');
         }
 
         grid.placeRegion(cell, region);

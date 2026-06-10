@@ -158,6 +158,42 @@ function requirementToAbilities(requirement, what) {
 }
 
 /**
+ * Driver-side structural veto for the sphere grower: can a bounce
+ * region host one more exit gate alongside the gates it already
+ * hosts? Mirrors generateLevelFromSpecs' spec constraints (an
+ * arrowless gate is the on-column top — at most one, and nothing may
+ * need column gates beyond it; the non-arrow cores of all gates must
+ * form a nested chain the column can realise). Conservative: a true
+ * here can still be declined by the generator, but only for geometry
+ * dead-ends (retried), not structure.
+ *
+ * Gates arrive in AP item names (the driver's vocabulary).
+ */
+export function canHostExitGates(existingGates, newGate) {
+    const gates = [...existingGates, newGate];
+    const isArrowItem = (name) => name === ABILITY_ITEM_NAMES.left
+        || name === ABILITY_ITEM_NAMES.right;
+    if (gates.some((g) => g.some((item) => !ABILITY_BY_ITEM_NAME[item]))) return false;
+
+    const arrowless = gates.filter((g) => !g.some(isArrowItem));
+    if (arrowless.length > 1) return false;
+
+    // Non-arrow cores must nest (drift arrows ride branch tips, the
+    // column realises the cores).
+    const cores = gates.map((g) => g.filter((item) => !isArrowItem(item)).sort())
+        .sort((a, b) => a.length - b.length);
+    for (let i = 1; i < cores.length; i++) {
+        if (!cores[i - 1].every((x) => cores[i].includes(x))) return false;
+    }
+    // An arrowless gate is the column top: every core must fit below it.
+    if (arrowless.length === 1) {
+        const top = arrowless[0].filter((item) => !isArrowItem(item));
+        if (!cores.every((c) => c.every((x) => top.includes(x)))) return false;
+    }
+    return true;
+}
+
+/**
  * @param {object} specs
  * @param {string} specs.region_id
  * @param {Array<{side: string, requirement: string[]}>} specs.exitSpecs
@@ -275,10 +311,11 @@ export function createBounceSubstrateEntry({
         extractZoneRules: makeExtractZoneRules(zones, { portalPlacement }),
 
         // Sphere-driven growth: requirement-targeted generation + the
-        // gate vocabulary bounce can realize (driver-side gate
-        // compatibility check).
+        // gate vocabulary bounce can realize + the structural veto for
+        // gate combinations (driver-side gate compatibility).
         generateZoneForSpecs,
         gateableItems: GATEABLE_ITEMS,
+        canHostExitGates,
     });
 }
 

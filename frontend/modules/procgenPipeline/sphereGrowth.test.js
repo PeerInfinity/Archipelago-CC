@@ -7,8 +7,10 @@
 import { describe, it, expect } from 'vitest';
 
 import { createRng } from '../shared/rng.js';
-// Side-effect: registers the maze substrate.
+// Side-effect: registers the maze and bounce substrates.
 import '../mazeRoom/mazeRoomLibrary.js';
+import { GATEABLE_ITEMS } from '../bounceDemo/bounceDemoLibrary.js';
+import { validateLevel } from '../bounceDemo/level.js';
 import {
     buildSphereTree, growSpheres, buildRulesJson,
 } from './procgenPipelineEngine.js';
@@ -154,4 +156,90 @@ describe('growSpheres (maze) — the sphere oracle', () => {
             },
         })).toThrow(/'no_such_substrate' is not registered/);
     });
+});
+
+// ── Step 5: bounce in the driver ─────────────────────────────────────
+
+const BOUNCE_POOL = {
+    'Right arrow': 1, 'Left arrow': 1, 'Springs': 1, 'Jetpacks': 1,
+    'Blue platforms': 1, 'Brown platforms': 1, Victory: 1,
+};
+
+const makeBouncePlan = (seed, sphereCount) => planSpheres({
+    itemPool: BOUNCE_POOL,
+    sphereCount,
+    pins: { 'Right arrow': 1, 'Left arrow': 1 },
+    victoryItem: 'Victory',
+    gateableItems: GATEABLE_ITEMS,
+    seed,
+});
+
+describe('growSpheres (bounce) — zone realisation + oracle', () => {
+    it.each([
+        [1, 3],
+        [2, 4],
+        [3, 4],
+    ])('bounce-only world, seed %i, %i spheres: computed spheres == plan',
+        (seed, sphereCount) => {
+            const plan = makeBouncePlan(seed, sphereCount);
+            const { grid, stats, startCell } = growSpheres({
+                regionSize: { width: 8, height: 6 },
+                seed,
+                growthParams: {
+                    spherePlan: plan,
+                    substrateQuotas: { bounce: 99 },
+                    startSubstrate: 'bounce',
+                    maxItemsPerRegion: 2,
+                },
+            });
+            expect(stats.substrateCounts.bounce).toBe(stats.regionsBuilt);
+
+            // every bounce level in the payloads validates and leaf
+            // regions carry a return portal on the entrance side
+            for (const region of grid.allRegions()) {
+                const level = region.playable_payload?.params?.bounceLevel;
+                expect(level).toBeTruthy();
+                expect(validateLevel(level)).toEqual([]);
+            }
+
+            const rulesJson = buildRulesJson(grid, {
+                startCell, seed, embedSphereLog: false,
+                completionConditionItem: 'Victory',
+            });
+            const computed = computeItemSpheres(rulesJson);
+            expect(compareSpheresToPlan(computed, plan)).toEqual([]);
+        }, 120000);
+
+    it('mixed maze+bounce world realises the plan exactly', () => {
+        const pool = {
+            'Right arrow': 1, 'Left arrow': 1, 'Springs': 1,
+            key_red: 1, key_blue: 1, victory: 1,
+        };
+        const plan = planSpheres({
+            itemPool: pool,
+            sphereCount: 3,
+            pins: { 'Right arrow': 1, 'Left arrow': 1 },
+            victoryItem: 'victory',
+            seed: 4,
+        });
+        const { grid, stats, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 4,
+            growthParams: {
+                spherePlan: plan,
+                // exactly one maze region (the start), bounce for the rest
+                substrateQuotas: { maze: 1, bounce: 99 },
+                startSubstrate: 'maze',
+                fillerCount: 1,
+            },
+        });
+        expect(stats.substrateCounts.maze).toBe(1);
+        expect(stats.substrateCounts.bounce).toBeGreaterThan(0);
+
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 4, embedSphereLog: false,
+        });
+        const computed = computeItemSpheres(rulesJson);
+        expect(compareSpheresToPlan(computed, plan)).toEqual([]);
+    }, 120000);
 });
