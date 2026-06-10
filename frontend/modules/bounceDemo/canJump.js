@@ -77,10 +77,12 @@ export function jumpQuery(level, fromId, abilities, opts = {}) {
 
     const pickupsTouched = new Set();
     const portalsTouched = new Set();
+    // pickups are landing-collected (host platform); portals positional
+    // — same semantics as physics.simulate
     const touch = (s) => {
-        for (const pk of level.pickups ?? []) {
-            if (Math.hypot(s.x - pk.x, s.y - pk.y) <= C.TOUCH_RADIUS) {
-                pickupsTouched.add(pk.id);
+        if (s.landedOn) {
+            for (const pk of level.pickups ?? []) {
+                if (pk.on === s.landedOn) pickupsTouched.add(pk.id);
             }
         }
         for (const pt of level.portals ?? []) {
@@ -119,7 +121,10 @@ export function jumpQuery(level, fromId, abilities, opts = {}) {
                 if (state.landedOn !== fromId) return done({});
                 launched = true;
             } else if (state.landedOn !== fromId) {
-                return done({ landedOn: state.landedOn });
+                return done({
+                    landedOn: state.landedOn,
+                    landing: { x: state.x, y: state.y },
+                });
             }
             // re-landing on the launch platform just re-launches — keep going
         }
@@ -138,9 +143,10 @@ function seekPolicy(targetX, abilities, deadzone = 4) {
 /**
  * The sampled input-policy family for a jump aimed at `targetX`. Only
  * unlocked directions appear. Order is cheapest-first; canJump stops
- * at the first witness.
+ * at the first witness. Exported for the derive-rules verifier, which
+ * replays witnessed hops and aims jumps at portals.
  */
-function policiesFor(targetX, abilities) {
+export function policiesFor(targetX, abilities) {
     const policies = [{ name: 'none', fn: () => null }];
     if (!abilities.left && !abilities.right) return policies;
     policies.push({ name: 'seek', fn: seekPolicy(targetX, abilities) });

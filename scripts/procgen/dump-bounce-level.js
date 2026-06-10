@@ -29,6 +29,9 @@
  *                      reachable set
  *   --path TARGET      also print the shortest jump path entrance ->
  *                      TARGET (via simulatorCore reach)
+ *   --rules            also derive per-pickup/per-exit access rules
+ *                      (minimal ability sets over the level's ability
+ *                      universe) and report defects
  *
  * Legend: S spawn, . trajectory, * landing, = green platform,
  * B/b blue (active/suppressed), #/x brown (active/suppressed),
@@ -54,6 +57,8 @@ import { bounceStack } from
 import { ENTRANCE, buildPlatformGraph, findJumpPath, reachablePlatforms } from
     '../../frontend/modules/bounceDemo/canJump.js';
 import { validateLevel } from '../../frontend/modules/bounceDemo/level.js';
+import { deriveAccessRules, formatRule } from
+    '../../frontend/modules/bounceDemo/deriveRules.js';
 
 const ABILITY_NAMES = ['left', 'right', 'springs', 'jetpacks', 'blue', 'brown'];
 
@@ -79,6 +84,7 @@ function parseArgs(argv) {
         else if (a === '--json') out.json = next();
         else if (a === '--graph') out.graph = true;
         else if (a === '--path') out.path = next();
+        else if (a === '--rules') out.rules = true;
         else if (a === '--help' || a === '-h') {
             console.log('See the header comment of this script for usage.');
             process.exit(0);
@@ -236,6 +242,23 @@ if (args.graph || args.path) {
         console.log(r.ok
             ? `path ${ENTRANCE} -> ${args.path}: ${r.plan.join(' -> ')} (${r.steps} jumps)`
             : `path ${ENTRANCE} -> ${args.path}: UNREACHABLE (${r.reason})`);
+    }
+}
+
+if (args.rules) {
+    const r = deriveAccessRules(level);
+    console.log(`\n=== derived access rules (universe: ${r.universe.join(', ')}) ===`);
+    for (const [id, g] of Object.entries(r.pickups)) {
+        console.log(`pickup ${id}: ${formatRule(g.minimalSets)}`);
+    }
+    for (const [id, g] of Object.entries(r.exits)) {
+        console.log(`exit ${id}: ${formatRule(g.minimalSets)}`);
+    }
+    if (r.defects.length) {
+        console.log('DEFECTS:');
+        for (const d of r.defects) console.log(`  - ${d}`);
+    } else {
+        console.log('no defects');
     }
 }
 

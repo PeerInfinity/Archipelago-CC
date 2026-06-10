@@ -139,9 +139,12 @@ export function step(state, input, level, abilities, C = DEFAULTS) {
  * events the solver and tests care about. `policy(state, frame)`
  * returns the frame's input (or null for none).
  *
- * Pickup/portal touches are distance checks against the trajectory —
- * deliberately including mid-flight brushes past pickups on suppressed
- * platforms, so derived rules reflect what the player can actually do.
+ * Collection semantics: a PICKUP is collected by LANDING on its host
+ * platform (`pickup.on`) — so pickup accessibility is exactly host
+ * reachability, with no dependence on where along the platform the
+ * player arrives (a pickup on a suppressed platform is naturally
+ * uncollectable: there is no landing). A PORTAL is touched
+ * positionally (the player bounces through it mid-flight).
  */
 export function simulate(level, abilities, policy = () => null, opts = {}) {
     const C = opts.constants ?? DEFAULTS;
@@ -154,9 +157,9 @@ export function simulate(level, abilities, policy = () => null, opts = {}) {
     let fellAtFrame = null;
 
     const touch = (s) => {
-        for (const pk of level.pickups ?? []) {
-            if (Math.hypot(s.x - pk.x, s.y - pk.y) <= C.TOUCH_RADIUS) {
-                pickupsTouched.add(pk.id);
+        if (s.landedOn) {
+            for (const pk of level.pickups ?? []) {
+                if (pk.on === s.landedOn) pickupsTouched.add(pk.id);
             }
         }
         for (const pt of level.portals ?? []) {
