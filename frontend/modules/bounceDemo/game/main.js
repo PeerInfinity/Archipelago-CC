@@ -29,6 +29,8 @@ const statusEl = document.getElementById('status');
 
 let session = null;
 let portalSides = {};   // portal id -> grid side (from params.sidePortals)
+let backExitSide = null; // fall-through-bottom returns to the parent region
+let fellExitSent = false; // one fall-back exit per configure (no double moves)
 let lastItems = [];
 let message = '';
 let messageTimer = 0;
@@ -63,6 +65,8 @@ const gameSide = {
         const sidePortals = params.sidePortals ?? {};
         portalSides = Object.fromEntries(
             Object.entries(sidePortals).map(([side, id]) => [id, side]));
+        backExitSide = params.backExitSide ?? null;
+        fellExitSent = false;
         session = createGameSession(params.bounceLevel);
         // Pickups the host already has checked (region revisits) — by
         // their in-game ids; the bridge inverts ap_locations for us.
@@ -92,6 +96,7 @@ window.__bounceDebug = () => ({
     abilities: session ? { ...session.abilities } : null,
     collected: session ? [...session.collected] : null,
     levelId: session?.level?.id ?? null,
+    backExitSide,
 });
 
 // ── standalone dev harness ──────────────────────────────────────
@@ -110,7 +115,19 @@ function handleEvent(ev) {
         setMessage(`exit ${ev.direction ?? '?'}${side ? ` (side ${side})` : ''}`);
         bridge.sendExit?.(ev.portalId, side);
     } else if (ev.type === 'fell') {
-        setMessage('fell! back to the entrance');
+        // Sphere-grown worlds: falling off the bottom is the way BACK
+        // (the host resolves the side to the region's back-exit and
+        // reconfigures us with the parent region). One shot per
+        // configure so a fall during the host round-trip can't move
+        // twice. Worlds without a backExitSide (fixtures, the start
+        // region, the spiral) keep the respawn behavior.
+        if (backExitSide && !fellExitSent) {
+            fellExitSent = true;
+            setMessage('fell! back to the previous level');
+            bridge.sendExit?.('__fall_back', backExitSide);
+        } else if (!backExitSide) {
+            setMessage('fell! back to the entrance');
+        }
     }
 }
 

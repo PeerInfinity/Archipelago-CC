@@ -9,12 +9,16 @@ import eventBus from '../../app/core/eventBus.js';
 import {
     growMaze,
     arrangeShuffledSpiral,
+    growSpheres,
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
     computeSourceCounts,
     Grid,
 } from './procgenPipelineEngine.js';
+import {
+    planSpheres, computeItemSpheres, compareSpheresToPlan,
+} from './spherePlanner.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
@@ -166,6 +170,14 @@ const DEFAULT_PARAMS = {
     hazardCount: 3,
     hazardMaxConsecutiveFails: 10,
     hazardWallOverlapAllowed: false,
+    // Sphere-growth mode parameters (sphere-driven-growth.md). The
+    // planner assigns the scenario items to `sphereCount` spheres;
+    // fillerCount adds itemless regions; revisitPercent is the chance
+    // a wave's attachment lands on an older region instead of the
+    // frontier (the "come back with the new item" texture).
+    sphereCount: 3,
+    fillerCount: 0,
+    revisitPercent: 25,
 };
 
 const REGION_XP_EFFECT_OPTIONS = [
@@ -520,6 +532,7 @@ export class ProcgenPipelineUI {
         row.className = 'procgen-pipeline-mode-row';
         for (const [value, label] of [
             ['gridGrowth', 'Grid growth (build from a scenario pool)'],
+            ['sphereGrowth', 'Sphere growth (plan spheres, grow waves)'],
             ['shuffledSpiral', 'Shuffled spiral (zones laid out from center)'],
             ['topDown', 'Top-down (realise an existing rules.json)'],
         ]) {
@@ -630,10 +643,11 @@ export class ProcgenPipelineUI {
         // Top: Substrates (always visible — every mode needs them).
         section.appendChild(this._renderSubstratesSubsection());
 
-        // Bottom: Library + Counts. Shown for the two modes that
-        // build regions from a scenario pool. Top-down's items come
-        // from its source rules.json, not the pool, so it skips.
-        if (this.mode === 'gridGrowth' || this.mode === 'shuffledSpiral') {
+        // Bottom: Library + Counts. Shown for the modes that build
+        // regions from a scenario pool. Top-down's items come from
+        // its source rules.json, not the pool, so it skips.
+        if (this.mode === 'gridGrowth' || this.mode === 'shuffledSpiral'
+                || this.mode === 'sphereGrowth') {
             section.appendChild(this._renderLibrarySubsection());
         }
 
@@ -652,6 +666,7 @@ export class ProcgenPipelineUI {
 
         const dict = this._activeSubstrateDict();
         const isQuotas = this.mode === 'shuffledSpiral'
+            || this.mode === 'sphereGrowth'
             || (this.mode === 'gridGrowth' && this.substrateMode === 'quotas');
 
         const grid = document.createElement('div');
@@ -710,11 +725,12 @@ export class ProcgenPipelineUI {
         grid.appendChild(right);
         wrap.appendChild(grid);
 
-        // Start-substrate dropdown — applies to both pool-building
+        // Start-substrate dropdown — applies to the pool-building
         // modes. 'auto' delegates to pickSubstrate (weighted-by-mix
         // or weighted-by-remaining-quota) in grid-growth, and lets
         // the shuffle choose in shuffled-spiral.
-        if (this.mode === 'gridGrowth' || this.mode === 'shuffledSpiral') {
+        if (this.mode === 'gridGrowth' || this.mode === 'shuffledSpiral'
+                || this.mode === 'sphereGrowth') {
             wrap.appendChild(this._renderStartSubstrateRow());
         }
 
@@ -813,10 +829,13 @@ export class ProcgenPipelineUI {
      * edits a numeric input.
      */
     _activeSubstrateDict() {
-        // Shuffled-spiral always uses fixed per-substrate counts; the
-        // mix dict is meaningless there. Grid-growth honors the mode
-        // toggle. Top-down (no toggle) keeps the legacy mix dict.
-        if (this.mode === 'shuffledSpiral') return this.substrateQuotas;
+        // Shuffled-spiral and sphere-growth always use fixed
+        // per-substrate counts; the mix dict is meaningless there.
+        // Grid-growth honors the mode toggle. Top-down (no toggle)
+        // keeps the legacy mix dict.
+        if (this.mode === 'shuffledSpiral' || this.mode === 'sphereGrowth') {
+            return this.substrateQuotas;
+        }
         if (this.mode === 'gridGrowth' && this.substrateMode === 'quotas') {
             return this.substrateQuotas;
         }
@@ -831,8 +850,9 @@ export class ProcgenPipelineUI {
     // invisible to the scenario pool). Null when neither contributes —
     // buildRulesJson then keeps the scaffold's constant-true default.
     _resolveVictoryItemId() {
+        const lib = this._mergedItemLib();
         const fromScenario = Object.entries(this.scenario.items)
-            .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0];
+            .find(([id, count]) => count > 0 && lib[id]?.is_victory)?.[0];
         if (fromScenario) return fromScenario;
         for (const [id, count] of Object.entries(this._activeSubstrateDict())) {
             if (!(Number(count) > 0)) continue;
@@ -840,6 +860,24 @@ export class ProcgenPipelineUI {
             if (victoryItem) return victoryItem;
         }
         return null;
+    }
+
+    /**
+     * The shared item library plus any `libraryItems` declared by the
+     * selected substrates (e.g. bounce's ability items — registry-
+     * declared so the shared library submodule needn't carry them).
+     * Used by the library picker, victory resolution, and as the
+     * itemLib handed to the sphere grower / rules.json compiler.
+     */
+    _mergedItemLib() {
+        const merged = { ...DEFAULT_ITEMS };
+        const dict = this._activeSubstrateDict();
+        for (const [id, count] of Object.entries(dict)) {
+            if (!(Number(count) > 0)) continue;
+            const extra = substrateRegistry.get(id)?.libraryItems;
+            if (extra) Object.assign(merged, extra);
+        }
+        return merged;
     }
 
     _renderSubstrateLibraryRow(entry) {
@@ -944,7 +982,7 @@ export class ProcgenPipelineUI {
         left.appendChild(toggleRow);
 
         const allEntries = [
-            ...Object.entries(DEFAULT_ITEMS).map(([id, def]) => ({ id, def, kind: 'item' })),
+            ...Object.entries(this._mergedItemLib()).map(([id, def]) => ({ id, def, kind: 'item' })),
             ...Object.entries(DEFAULT_OBSTACLES).map(([id, def]) => ({ id, def, kind: 'obstacle' })),
         ];
         const activeDict = this._activeSubstrateDict();
@@ -1070,10 +1108,11 @@ export class ProcgenPipelineUI {
         grid.className = 'procgen-pipeline-grid';
 
         // Grid dims are user-controlled in grid-growth / top-down,
-        // but shuffled-spiral auto-sizes the grid from the quotas
-        // sum — hide the inputs in that mode so the user isn't led
-        // to think they take effect.
-        const showGridDims = this.mode !== 'shuffledSpiral';
+        // but shuffled-spiral and sphere-growth auto-size the grid —
+        // hide the inputs in those modes so the user isn't led to
+        // think they take effect.
+        const showGridDims = this.mode !== 'shuffledSpiral'
+            && this.mode !== 'sphereGrowth';
         const fields = [
             { key: 'seed',              label: 'Seed',             min: 0 },
             ...(showGridDims ? [
@@ -1083,6 +1122,11 @@ export class ProcgenPipelineUI {
             { key: 'regionWidth',       label: 'Region width',     min: 2, max: 40 },
             { key: 'regionHeight',      label: 'Region height',    min: 2, max: 40 },
             { key: 'maxItemsPerRegion', label: 'Max items/region', min: 0, max: 10 },
+            ...(this.mode === 'sphereGrowth' ? [
+                { key: 'sphereCount',   label: 'Spheres',          min: 1, max: 20 },
+                { key: 'fillerCount',   label: 'Filler regions',   min: 0, max: 50 },
+                { key: 'revisitPercent', label: 'Revisit %',       min: 0, max: 100 },
+            ] : []),
         ];
 
         for (const f of fields) {
@@ -1725,6 +1769,8 @@ export class ProcgenPipelineUI {
                 this._runTopDown();
             } else if (this.mode === 'shuffledSpiral') {
                 this._runShuffledSpiral();
+            } else if (this.mode === 'sphereGrowth') {
+                this._runSphereGrowth();
             } else {
                 this._runGridGrowth();
             }
@@ -1824,6 +1870,71 @@ export class ProcgenPipelineUI {
             stats,
             poolRemaining: pool.snapshot(),
             rulesJson,
+        };
+    }
+
+    _runSphereGrowth() {
+        const { seed, regionWidth, regionHeight, maxItemsPerRegion,
+            sphereCount, fillerCount, revisitPercent, startSubstrate } = this.params;
+        const itemLib = this._mergedItemLib();
+        const itemPool = { ...this.scenario.items };
+        const victoryItemId = this._resolveVictoryItemId();
+
+        // Phase 1: the sphere plan — item→sphere assignment, Victory
+        // pinned to the final sphere when the pool carries it.
+        const plan = planSpheres({
+            itemPool,
+            sphereCount: sphereCount ?? 3,
+            ...(victoryItemId && (itemPool[victoryItemId] ?? 0) > 0
+                ? { victoryItem: victoryItemId } : {}),
+            seed,
+        });
+
+        // Phase 2: wave growth.
+        const quotas = this._effectiveSubstrateQuotas();
+        const { grid, stats, startCell } = growSpheres({
+            regionSize: { width: regionWidth, height: regionHeight },
+            itemLib,
+            seed,
+            growthParams: {
+                spherePlan: plan,
+                maxItemsPerRegion,
+                fillerCount: fillerCount ?? 0,
+                revisitRatio: (revisitPercent ?? 25) / 100,
+                ...(quotas ? { substrateQuotas: quotas } : {}),
+                ...(startSubstrate && startSubstrate !== 'auto'
+                    ? { startSubstrate } : {}),
+            },
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed,
+            itemLib,
+            enableLoopMode: !!this.params.enableLoopMode,
+            regionXpEffect: this.params.regionXpEffect ?? 'cost',
+            completionConditionItem: victoryItemId,
+            procgenMetadata: {
+                driver: 'sphere-growth',
+                stop_reason: stats.stopReason,
+                sphere_plan: plan,
+            },
+        });
+
+        // Phase 3: the oracle — the emitted world must compute back to
+        // the plan exactly. Surface a mismatch loudly; it means a
+        // driver bug, not a bad seed.
+        const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), plan);
+        this.message = oracleErrors.length > 0
+            ? `SPHERE ORACLE MISMATCH: ${oracleErrors[0]}`
+            : `Sphere plan realised: ${plan.spheres
+                .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`;
+
+        this.result = {
+            grid,
+            regionSize: { width: regionWidth, height: regionHeight },
+            stats,
+            poolRemaining: null,
+            rulesJson,
+            spherePlan: plan,
         };
     }
 
@@ -2059,7 +2170,8 @@ export class ProcgenPipelineUI {
                 this.substrateMode = parsed.substrateMode;
             }
             if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown'
-                    || parsed.mode === 'shuffledSpiral') {
+                    || parsed.mode === 'shuffledSpiral'
+                    || parsed.mode === 'sphereGrowth') {
                 this.mode = parsed.mode;
             }
         } catch (e) {

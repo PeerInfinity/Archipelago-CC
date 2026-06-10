@@ -146,6 +146,37 @@ const ABILITY_BY_ITEM_NAME = Object.freeze(Object.fromEntries(
  *  compatibility — see the plan doc's "Gate compatibility"). */
 export const GATEABLE_ITEMS = Object.freeze(Object.values(ABILITY_ITEM_NAMES));
 
+/**
+ * Registry-declared item library: bounce's ability items + Victory in
+ * the shared-library entry shape, so the procgen pipeline panel can
+ * offer them in its scenario pool (merged with DEFAULT_ITEMS by the
+ * UI — declared here instead of the shared submodule). Ids ARE the AP
+ * item names; rules.json item names come out verbatim.
+ */
+export const BOUNCE_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
+    ['Right arrow', '#e0a030'],
+    ['Left arrow', '#e0c030'],
+    ['Springs', '#40c060'],
+    ['Jetpacks', '#d04040'],
+    ['Blue platforms', '#4080d0'],
+    ['Brown platforms', '#a06a40'],
+].map(([name, color]) => [name, {
+    id: name,
+    name,
+    classification: 'progression',
+    color,
+    symbol: 'star',
+    feature: 'bounce_abilities',
+}]).concat([[VICTORY_ITEM_NAME, {
+    id: VICTORY_ITEM_NAME,
+    name: VICTORY_ITEM_NAME,
+    classification: 'progression',
+    color: '#f5d020',
+    symbol: 'star',
+    feature: 'bounce_abilities',
+    is_victory: true,
+}]])));
+
 function requirementToAbilities(requirement, what) {
     return (requirement ?? []).map((name) => {
         const ability = ABILITY_BY_ITEM_NAME[name];
@@ -312,10 +343,13 @@ export function createBounceSubstrateEntry({
 
         // Sphere-driven growth: requirement-targeted generation + the
         // gate vocabulary bounce can realize + the structural veto for
-        // gate combinations (driver-side gate compatibility).
+        // gate combinations (driver-side gate compatibility) + the
+        // panel-facing item library (abilities + Victory).
         generateZoneForSpecs,
         gateableItems: GATEABLE_ITEMS,
         canHostExitGates,
+        libraryItems: BOUNCE_LIBRARY_ITEMS,
+        supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'bounce_abilities']),
     });
 }
 

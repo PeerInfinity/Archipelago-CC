@@ -2501,7 +2501,7 @@ function buildSphereZoneRegion({
     });
     // Scaffold only the CHILD sides — the entrance side's rules.json
     // exit is the driver's back-exit, not a forward exit.
-    return assembleZoneRegion({
+    const region = assembleZoneRegion({
         substrate,
         region_id,
         regionSize,
@@ -2509,6 +2509,13 @@ function buildSphereZoneRegion({
         zoneRules,
         zonePayload: {},
     });
+    // Stamp the fall-back exit side: falling off the level bottom
+    // returns to the parent (the game page resolves the side to the
+    // driver's back-exit via the bridge's side lookup).
+    if (entranceSide && region.playable_payload?.params) {
+        region.playable_payload.params.backExitSide = entranceSide;
+    }
+    return region;
 }
 
 /**
