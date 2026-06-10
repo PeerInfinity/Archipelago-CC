@@ -15,9 +15,9 @@
  * - `springs[].on` / `jetpacks[].on` are LOAD-BEARING: they decide
  *   which platform's launch is boosted and tie the item's existence to
  *   its host (suppression.js).
- * - `pickups[].on` is LOAD-BEARING too: pickups are collected by
- *   LANDING on their host platform, so pickup accessibility is exactly
- *   host reachability. The pickup's x/y is for rendering.
+ * - `pickups[].on` and `portals[].on` are LOAD-BEARING too: both are
+ *   triggered by LANDING on the host platform, so goal accessibility
+ *   is exactly host reachability. Their x/y is for rendering.
  * - `portals[].target_region` stays null in fixtures; the procgen
  *   pipeline fills it when stitching regions.
  */
@@ -81,9 +81,9 @@ export function validateLevel(level) {
 
     checkEntities(errors, level, 'springs', { requireOn: true });
     checkEntities(errors, level, 'jetpacks', { requireOn: true });
-    // pickups are landing-collected, so the host platform is semantic
+    // pickups and portals are landing-triggered, so hosts are semantic
     checkEntities(errors, level, 'pickups', { requireOn: true });
-    const portalIds = checkEntities(errors, level, 'portals');
+    const portalIds = checkEntities(errors, level, 'portals', { requireOn: true });
     for (const pt of level.portals ?? []) {
         if (pt.direction !== undefined
             && !['up', 'down', 'left', 'right'].includes(pt.direction)) {

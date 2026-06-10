@@ -6,14 +6,14 @@
  * universe and derives, per goal, the MINIMAL ability sets that make
  * it reachable. Goals are pickups and portals only:
  *
- * - A PICKUP is reachable iff its host platform is reachable
- *   (landing-collection semantics — physics.simulate).
- * - A PORTAL is reachable iff some reachable platform can launch a
- *   trajectory through it (∀ arrival x0, ∃ policy — same conservative
- *   shape as canJump).
+ * - PICKUPS and PORTALS are both landing-triggered on their host
+ *   platform (physics.simulate), so goal reachable ⇔ host platform
+ *   reachable. (An earlier positional-portal design needed trajectory
+ *   checks quantified over canonical arrival positions; landing-entry
+ *   made all of that unnecessary.)
  * - Plain platforms are NOT goals: normal play skips platforms, and a
  *   level with unreachable decorative platforms is fine. Only pickup
- *   hosts and exits must be reachable.
+ *   hosts and exit hosts must be reachable.
  *
  * The verifier also checks MONOTONICITY: Archipelago access rules mean
  * "has these items ⇒ accessible", so gaining an item must never make a
@@ -26,12 +26,7 @@
  */
 
 import { activePlatforms } from './suppression.js';
-import {
-    ENTRANCE,
-    jumpQuery,
-    policiesFor,
-    buildPlatformGraph,
-} from './canJump.js';
+import { buildPlatformGraph, reachablePlatforms } from './canJump.js';
 
 const ALL_ABILITIES = ['left', 'right', 'springs', 'jetpacks', 'blue', 'brown'];
 
@@ -60,47 +55,6 @@ function abilitySetOf(names) {
 const setKey = (names) => [...names].sort().join('+') || '(none)';
 
 /**
- * Canonical arrivals: where the player actually lands on each
- * reachable platform when following witnessed jumps from the entrance
- * (BFS over the possible-jump graph, simulating each hop). This is the
- * arrival set the portal check quantifies over — quantifying over the
- * full launch span instead is wrong: a no-arrows player's play is
- * deterministic, so positions the chain never produces cannot occur
- * (the bounce stack's exit would falsely demand arrows).
- *
- * Returns Map<platformId, arrivalX>. A platform whose canonical hops
- * all fail simply gets no arrival (conservative: it then can't witness
- * a portal).
- */
-function canonicalArrivals(level, graph, abilities, opts) {
-    const arrivals = new Map();
-    const queue = [[ENTRANCE, undefined]]; // [node, arrival x]
-    while (queue.length > 0) {
-        const [node, x0] = queue.shift();
-        for (const target of graph.edges.get(node) ?? []) {
-            if (arrivals.has(target)) continue;
-            const to = level.platforms.find((p) => p.id === target);
-            for (const policy of policiesFor(to.x, abilities)) {
-                const r = jumpQuery(level, node, abilities, { ...opts, x0, policy: policy.fn });
-                if (r.landedOn === target) {
-                    arrivals.set(target, r.landing.x);
-                    queue.push([target, r.landing.x]);
-                    break;
-                }
-            }
-        }
-    }
-    return arrivals;
-}
-
-/** ∃ policy whose jump from (`platformId`, arrival x) touches `portal`. */
-function canTouchPortalFrom(level, platformId, x0, portal, abilities, opts) {
-    return policiesFor(portal.x, abilities).some((p) =>
-        jumpQuery(level, platformId, abilities, { ...opts, x0, policy: p.fn })
-            .portalsTouched.includes(portal.id));
-}
-
-/**
  * Reachability of every goal under every subset of the ability
  * universe. Returns `Map<setKey, { names, platforms, pickups, exits }>`.
  *
@@ -126,14 +80,12 @@ export function reachabilityTable(level, opts = {}) {
         let entry = bySignature.get(signature);
         if (!entry) {
             const graph = buildPlatformGraph(level, abilities, opts);
-            const arrivals = canonicalArrivals(level, graph, abilities, opts);
-            const platforms = new Set(arrivals.keys());
+            const platforms = reachablePlatforms(graph);
             const pickups = new Set((level.pickups ?? [])
                 .filter((pk) => platforms.has(pk.on))
                 .map((pk) => pk.id));
             const exits = new Set((level.portals ?? [])
-                .filter((pt) => [...arrivals].some(([pid, x0]) =>
-                    canTouchPortalFrom(level, pid, x0, pt, abilities, opts)))
+                .filter((pt) => platforms.has(pt.on))
                 .map((pt) => pt.id));
             entry = { platforms, pickups, exits };
             bySignature.set(signature, entry);

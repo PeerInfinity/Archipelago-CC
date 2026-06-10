@@ -61,7 +61,7 @@ describe('verifier defect detection', () => {
             springs: [],
             jetpacks: [],
             pickups: [{ id: 'loc', x: 200, y: 960, on: 'p1' }],
-            portals: [{ id: 'exit_up', x: 200, y: 880, target_region: null, direction: 'up' }],
+            portals: [{ id: 'exit_up', x: 200, y: 880, on: 'p1', target_region: null, direction: 'up' }],
         };
         const r = deriveAccessRules(level);
         expect(r.defects).toEqual([]);
@@ -79,7 +79,7 @@ describe('verifier defect detection', () => {
             springs: [],
             jetpacks: [],
             pickups: [{ id: 'loc_island', x: 200, y: 380, on: 'island' }],
-            portals: [{ id: 'exit_up', x: 200, y: 1000, target_region: null, direction: 'up' }],
+            portals: [{ id: 'exit_up', x: 200, y: 1000, on: 'p0', target_region: null, direction: 'up' }],
         };
         const r = deriveAccessRules(level);
         expect(r.pickups.loc_island.minimalSets).toEqual([]);
@@ -105,7 +105,7 @@ describe('verifier defect detection', () => {
             springs: [{ id: 's', x: 200, y: 1095, on: 'a' }],
             jetpacks: [],
             pickups: [{ id: 'loc_b', x: 200, y: 680, on: 'b' }],
-            portals: [{ id: 'exit_up', x: 200, y: 1000, target_region: null, direction: 'up' }],
+            portals: [{ id: 'exit_up', x: 200, y: 1000, on: 'a', target_region: null, direction: 'up' }],
         };
         const r = deriveAccessRules(level);
         expect(r.pickups.loc_b.violations).toEqual(

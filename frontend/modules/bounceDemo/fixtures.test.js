@@ -65,13 +65,14 @@ describe('spring_gap ground truth', () => {
 
     it('with springs: everything reachable, routed over the spring', () => {
         const graph = buildPlatformGraph(springGap, abilities('springs'));
-        expect(reachablePlatforms(graph)).toEqual(new Set(['p0', 'p1', 'p2', 'p3']));
+        expect(reachablePlatforms(graph)).toEqual(new Set(['p0', 'p1', 'p2', 'p3', 'p4']));
         expect(findJumpPath(graph, 'p3').plan).toEqual(['p0', 'p1', 'p2', 'p3']);
     });
 
-    it('pickup and portal are touched from p3', () => {
+    it('pickup collected on p3; portal entered by landing on p4', () => {
         const r = jumpQuery(springGap, 'p3', abilities('springs'));
         expect(r.pickupsTouched).toContain('loc_spring');
+        expect(r.landedOn).toBe('p4');
         expect(r.portalsTouched).toContain('exit_up');
     });
 });
@@ -80,7 +81,7 @@ describe('fork ground truth', () => {
     it('per-ability-set reachability table', () => {
         expect(reachableUnder(fork, noAbilities())).toEqual(new Set(['p0']));
         expect(reachableUnder(fork, abilities('right')))
-            .toEqual(new Set(['p0', 'p1r', 'p2r']));
+            .toEqual(new Set(['p0', 'p1r', 'p2r', 'p3r']));
         expect(reachableUnder(fork, abilities('left'))).toEqual(new Set(['p0']));
         expect(reachableUnder(fork, abilities('blue'))).toEqual(new Set(['p0']));
         expect(reachableUnder(fork, abilities('left', 'blue')))

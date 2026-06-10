@@ -77,18 +77,15 @@ export function jumpQuery(level, fromId, abilities, opts = {}) {
 
     const pickupsTouched = new Set();
     const portalsTouched = new Set();
-    // pickups are landing-collected (host platform); portals positional
+    // pickups and portals are landing-triggered on their host platform
     // — same semantics as physics.simulate
     const touch = (s) => {
-        if (s.landedOn) {
-            for (const pk of level.pickups ?? []) {
-                if (pk.on === s.landedOn) pickupsTouched.add(pk.id);
-            }
+        if (!s.landedOn) return;
+        for (const pk of level.pickups ?? []) {
+            if (pk.on === s.landedOn) pickupsTouched.add(pk.id);
         }
         for (const pt of level.portals ?? []) {
-            if (Math.hypot(s.x - pt.x, s.y - pt.y) <= C.TOUCH_RADIUS) {
-                portalsTouched.add(pt.id);
-            }
+            if (pt.on === s.landedOn) portalsTouched.add(pt.id);
         }
     };
 

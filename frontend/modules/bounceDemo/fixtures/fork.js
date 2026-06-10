@@ -23,6 +23,7 @@ export const fork = {
         // right branch
         { id: 'p1r', x: 430, y: 680, type: 'green' },
         { id: 'p2r', x: 430, y: 560, type: 'green' },
+        { id: 'p3r', x: 430, y: 460, type: 'green' }, // exit platform
         // left branch
         { id: 'b1l', x: 170, y: 680, type: 'blue' },
     ],
@@ -35,7 +36,7 @@ export const fork = {
         { id: 'loc_left', x: 170, y: 660, on: 'b1l' },
     ],
     portals: [
-        { id: 'exit_up', x: 430, y: 460, target_region: null, direction: 'up' },
+        { id: 'exit_up', x: 430, y: 440, on: 'p3r', target_region: null, direction: 'up' },
     ],
 };
 

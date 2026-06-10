@@ -25,6 +25,7 @@ export const bounceStack = {
         { id: 'p6', x: 200, y: 380, type: 'green' },
         { id: 'p7', x: 200, y: 260, type: 'green' },
         { id: 'p8', x: 200, y: 140, type: 'green' },
+        { id: 'p9', x: 200, y: 60, type: 'green' }, // exit platform
     ],
     springs: [],
     jetpacks: [],
@@ -32,7 +33,7 @@ export const bounceStack = {
         { id: 'loc_arrow', x: 200, y: 120, on: 'p8' },
     ],
     portals: [
-        { id: 'exit_up', x: 200, y: 50, target_region: null, direction: 'up' },
+        { id: 'exit_up', x: 200, y: 40, on: 'p9', target_region: null, direction: 'up' },
     ],
 };
 

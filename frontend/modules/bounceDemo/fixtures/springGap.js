@@ -21,6 +21,7 @@ export const springGap = {
         { id: 'p1', x: 200, y: 980, type: 'green' },
         { id: 'p2', x: 200, y: 560, type: 'green' }, // 420 above p1: spring only
         { id: 'p3', x: 200, y: 440, type: 'green' },
+        { id: 'p4', x: 200, y: 340, type: 'green' }, // exit platform
     ],
     springs: [
         { id: 's0', x: 200, y: 975, on: 'p1' },
@@ -30,7 +31,7 @@ export const springGap = {
         { id: 'loc_spring', x: 200, y: 420, on: 'p3' },
     ],
     portals: [
-        { id: 'exit_up', x: 200, y: 340, target_region: null, direction: 'up' },
+        { id: 'exit_up', x: 200, y: 320, on: 'p4', target_region: null, direction: 'up' },
     ],
 };
 

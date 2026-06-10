@@ -37,7 +37,6 @@ export const DEFAULTS = Object.freeze({
     MAX_VX: 6,             // px/frame
     PLATFORM_WIDTH: 60,    // px; platforms collide as segments at p.y
     PLAYER_HALF_WIDTH: 12, // px
-    TOUCH_RADIUS: 24,      // px; pickup/portal touch distance
     SPAWN_HEIGHT: 120,     // spawn this many px above the level bottom
     FALL_MARGIN: 60,       // px below level bottom before "fallen"
 });
@@ -139,12 +138,13 @@ export function step(state, input, level, abilities, C = DEFAULTS) {
  * events the solver and tests care about. `policy(state, frame)`
  * returns the frame's input (or null for none).
  *
- * Collection semantics: a PICKUP is collected by LANDING on its host
- * platform (`pickup.on`) — so pickup accessibility is exactly host
- * reachability, with no dependence on where along the platform the
- * player arrives (a pickup on a suppressed platform is naturally
- * uncollectable: there is no landing). A PORTAL is touched
- * positionally (the player bounces through it mid-flight).
+ * Collection semantics: PICKUPS and PORTALS are both LANDING-triggered
+ * — landing on the host platform (`.on`) collects the pickup / enters
+ * the portal. So goal accessibility is exactly host reachability, with
+ * no dependence on where along the platform the player arrives, and no
+ * accidental mid-flight portal entries. (A goal on a suppressed
+ * platform is naturally inaccessible: there is no landing.) Goal x/y
+ * positions are for rendering only.
  */
 export function simulate(level, abilities, policy = () => null, opts = {}) {
     const C = opts.constants ?? DEFAULTS;
@@ -157,15 +157,12 @@ export function simulate(level, abilities, policy = () => null, opts = {}) {
     let fellAtFrame = null;
 
     const touch = (s) => {
-        if (s.landedOn) {
-            for (const pk of level.pickups ?? []) {
-                if (pk.on === s.landedOn) pickupsTouched.add(pk.id);
-            }
+        if (!s.landedOn) return;
+        for (const pk of level.pickups ?? []) {
+            if (pk.on === s.landedOn) pickupsTouched.add(pk.id);
         }
         for (const pt of level.portals ?? []) {
-            if (Math.hypot(s.x - pt.x, s.y - pt.y) <= C.TOUCH_RADIUS) {
-                portalsTouched.add(pt.id);
-            }
+            if (pt.on === s.landedOn) portalsTouched.add(pt.id);
         }
     };
 
