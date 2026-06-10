@@ -19,7 +19,7 @@
 import { PlaybackBotUI } from './playbackBotUI.js';
 import { setActivePanel } from './index.js';
 import { getSphereStateSingleton } from '../sphereState/singleton.js';
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { PathFinder } from '../shared/pathfinder.js';
 // Imported directly so the panel can subscribe even when its
 // constructor runs before the module's initialize() has wired up
@@ -131,6 +131,16 @@ export class PlaybackBotPanel {
         this._sphereDataSubscriptions.push(() => {
             eventBus.unsubscribe?.('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
         });
+
+        // Catch up on the initial load: rawJsonDataLoaded fires during
+        // init phase 10, BEFORE this deferred (readyForUiDataLoad-gated)
+        // subscription exists — without this pull, _cachedRulesJson
+        // stays null until the user reloads rules, and per-region
+        // substrate lookups silently come up empty. No reset() here:
+        // the bot is freshly constructed, there's no stale state.
+        if (!this._cachedRulesJson) {
+            this._cachedRulesJson = getLastRawJsonData()?.rawJsonData ?? null;
+        }
     }
 
     _hasSphereLog() {

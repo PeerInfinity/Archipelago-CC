@@ -11,7 +11,7 @@
  */
 
 import { getModuleEventBus } from './index.js';
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import RuleTreeEditor from './ruleTreeEditor.js';
 import {
   validateRules,
@@ -532,6 +532,12 @@ class ApworldEditorUI {
   }
 
   _getCurrentAppRules() {
+    // Last rules.json the app published (covers any load, not just the
+    // startup one). The G_combinedModeData global is the legacy
+    // fallback — it only reflects the startup load and goes stale
+    // after preset switches.
+    const last = getLastRawJsonData()?.rawJsonData;
+    if (last) return last;
     return (typeof window !== 'undefined'
       && window.G_combinedModeData
       && window.G_combinedModeData.rulesConfig) || null;
