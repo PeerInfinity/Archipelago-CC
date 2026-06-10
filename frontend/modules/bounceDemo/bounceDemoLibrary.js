@@ -24,7 +24,8 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
-import { minimalSetsToRule, VICTORY_ITEM_NAME } from './apRules.js';
+import { generateLevelFromSpecs } from './generator.js';
+import { ABILITY_ITEM_NAMES, minimalSetsToRule, VICTORY_ITEM_NAME } from './apRules.js';
 import { validateLevel } from './level.js';
 import { bounceStack } from './fixtures/bounceStack.js';
 import { easyTower } from './fixtures/easyTower.js';
@@ -44,6 +45,30 @@ export const ZONES = Object.freeze([
     { level: springGap, items: { loc_spring: 'Jetpacks' } },
     { level: fork, items: { loc_right: 'Blue platforms', loc_left: VICTORY_ITEM_NAME } },
 ]);
+
+/**
+ * Payload shaped for the flashSubstrate bridge's configure() contract:
+ * level geometry rides `params` (the bridge forwards only world.params,
+ * ap_items, ap_locations, flashCapabilities, gameId, regionId — not
+ * arbitrary payload fields). ap_locations maps the game's pickup ids to
+ * AP location names (compileRegionGraph's `<region>__<id>` convention).
+ */
+function buildZonePayload(region_id, level, sidePortals) {
+    return {
+        gameId: 'bounceDemo',
+        params: {
+            bounceLevel: level, // transformed geometry the renderer draws
+            sidePortals,        // side -> portal id (exit arrows)
+        },
+        ap_locations: Object.fromEntries(
+            (level.pickups ?? []).map((pk) => [pk.id, `${region_id}__${pk.id}`])),
+        flashCapabilities: {
+            locations: 'cooperative',
+            items: 'pull',
+            start: 'auto',      // no click needed; the game runs on load
+        },
+    };
+}
 
 /**
  * The zone-locations channel hook (see synthesizeZoneRegion). Attaches
@@ -95,27 +120,109 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
         return {
             locations,
             exitRules,
-            // Payload shaped for the flashSubstrate bridge's configure()
-            // contract: level geometry rides `params` (the bridge forwards
-            // only world.params, ap_items, ap_locations, flashCapabilities,
-            // gameId, regionId — not arbitrary payload fields).
-            // ap_locations maps the game's pickup ids to AP location names
-            // (compileRegionGraph's `<region>__<id>` convention).
-            payload: {
-                gameId: 'bounceDemo',
-                params: {
-                    bounceLevel: level, // transformed geometry the renderer draws
-                    sidePortals,        // side -> portal id (exit arrows)
-                },
-                ap_locations: Object.fromEntries(
-                    (level.pickups ?? []).map((pk) => [pk.id, `${region_id}__${pk.id}`])),
-                flashCapabilities: {
-                    locations: 'cooperative',
-                    items: 'pull',
-                    start: 'auto',      // no click needed; the game runs on load
-                },
-            },
+            payload: buildZonePayload(region_id, level, sidePortals),
         };
+    };
+}
+
+// ── Sphere-driven growth hook (generateZoneForSpecs, step 2) ─────────
+//
+// Requirement-targeted region realization for the sphere grower
+// (NewDocs/plans/procedural-generation/sphere-driven-growth.md): the
+// driver specifies per-exit and per-location target requirements in AP
+// item names; bounce maps them to ability ids at this boundary,
+// generates a verified prefix-graded chain level, and returns the same
+// { locations, exitRules, payload } shape extractZoneRules produces.
+// Unsatisfiable specs THROW — that is the "adapter declines" channel
+// (unknown gate items, non-nested requirements, more than one
+// arrowless-gated exit).
+
+const SIDE_DIRECTIONS = { N: 'up', S: 'down', E: 'right', W: 'left' };
+
+const ABILITY_BY_ITEM_NAME = Object.freeze(Object.fromEntries(
+    Object.entries(ABILITY_ITEM_NAMES).map(([ability, name]) => [name, ability])));
+
+/** AP item names bounce can realize gates for (driver-side gate
+ *  compatibility — see the plan doc's "Gate compatibility"). */
+export const GATEABLE_ITEMS = Object.freeze(Object.values(ABILITY_ITEM_NAMES));
+
+function requirementToAbilities(requirement, what) {
+    return (requirement ?? []).map((name) => {
+        const ability = ABILITY_BY_ITEM_NAME[name];
+        if (!ability) {
+            throw new Error(`bounce ${what}: cannot gate on item '${name}' — `
+                + `gateable items are: ${GATEABLE_ITEMS.join(', ')}`);
+        }
+        return ability;
+    });
+}
+
+/**
+ * @param {object} specs
+ * @param {string} specs.region_id
+ * @param {Array<{side: string, requirement: string[]}>} specs.exitSpecs
+ *   — requirement in AP item names; one exit platform per side.
+ * @param {Array<{id: string, item: string|null, requirement: string[]}>}
+ *   [specs.locationSpecs] — pickups; `item` is the canonical placement.
+ * @param {number} [specs.seed]
+ * @param {number} [specs.stepsBetween]
+ * @param {number} [specs.jitter]
+ * @returns {{locations: Array, exitRules: Object, payload: Object}}
+ */
+export function generateZoneForSpecs({
+    region_id,
+    exitSpecs = [],
+    locationSpecs = [],
+    seed = 1,
+    stepsBetween = 2,
+    jitter = 0,
+} = {}) {
+    const exits = exitSpecs.map((s) => {
+        if (!SIDE_DIRECTIONS[s.side]) {
+            throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
+        }
+        return {
+            id: `side_exit_${s.side}`,
+            side: s.side,
+            direction: SIDE_DIRECTIONS[s.side],
+            requirement: requirementToAbilities(s.requirement, `zone '${region_id}' exit ${s.side}`),
+        };
+    });
+    const pickups = locationSpecs.map((s) => ({
+        id: s.id,
+        requirement: requirementToAbilities(s.requirement, `zone '${region_id}' location '${s.id}'`),
+    }));
+
+    const level = generateLevelFromSpecs({
+        id: region_id,
+        exitSpecs: exits,
+        pickupSpecs: pickups,
+        seed,
+        stepsBetween,
+        jitter,
+    });
+
+    const derived = deriveAccessRules(level);
+    if (derived.defects.length > 0) {
+        throw new Error(`bounce zone '${region_id}' has rule defects: `
+            + derived.defects.join('; '));
+    }
+    const sidePortals = {};
+    for (const e of exits) sidePortals[e.side] = e.id;
+    const exitRules = {};
+    for (const e of exits) {
+        exitRules[e.side] = minimalSetsToRule(derived.exits[e.id].minimalSets);
+    }
+    const locations = locationSpecs.map((s) => ({
+        id: s.id,
+        item: s.item ?? null,
+        access_rule: minimalSetsToRule(derived.pickups[s.id].minimalSets),
+        position: null, // level-local px would be misread as tile coords
+    }));
+    return {
+        locations,
+        exitRules,
+        payload: buildZonePayload(region_id, level, sidePortals),
     };
 }
 
@@ -166,6 +273,12 @@ export function createBounceSubstrateEntry({
         // All payload content comes from extractZoneRules (which knows
         // the exit sides); no separate synthesizeZonePayload needed.
         extractZoneRules: makeExtractZoneRules(zones, { portalPlacement }),
+
+        // Sphere-driven growth: requirement-targeted generation + the
+        // gate vocabulary bounce can realize (driver-side gate
+        // compatibility check).
+        generateZoneForSpecs,
+        gateableItems: GATEABLE_ITEMS,
     });
 }
 
