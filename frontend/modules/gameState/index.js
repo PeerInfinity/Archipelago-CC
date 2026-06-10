@@ -345,10 +345,17 @@ function handleRegionMove(data, propagationOptions) {
         // Always update current region. Pass fromReset through so
         // substrate panels can skip mana deduction on the reset
         // transition (gameState.triggerLoopReset → user:regionMove
-        // dispatch with fromReset: true).
+        // dispatch with fromReset: true). Exit/source ride along so
+        // the discovery module can discover the exit that was used —
+        // generically, for every substrate (maze additionally calls
+        // discoverExit itself; the set semantics make that harmless).
         gameState.setCurrentRegion(
             data.targetRegion,
-            data.fromReset ? { fromReset: true } : {},
+            {
+                ...(data.fromReset ? { fromReset: true } : {}),
+                ...(data.exitName ? { exitName: data.exitName } : {}),
+                ...(data.sourceRegion ? { sourceRegion: data.sourceRegion } : {}),
+            },
         );
     }
     

@@ -549,6 +549,24 @@ function handlePlayerRegionChanged(eventData) {
     }
   }
 
+  // Discover the exit that was used, when the event carries it
+  // (gameState forwards exitName/sourceRegion from user:regionMove).
+  // This is the generic per-substrate exit-discovery path — iframe
+  // substrates (bounce, jta, flash) have no host-side UI to call
+  // discoverExit themselves the way the maze panel does. Mirrors
+  // handleMoveCompleted's loop-mode logic, including region discovery
+  // under the 'onExitDiscovered' trigger.
+  const sourceRegion = eventData.sourceRegion ?? eventData.oldRegion;
+  if (eventData.exitName && sourceRegion) {
+    discoveryStateSingleton.discoverExit(sourceRegion, eventData.exitName);
+    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered') {
+      const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(regionName);
+      if (wasNewlyDiscovered) {
+        log('info', `[Discovery Module] Discovered region via used exit: ${regionName}`);
+      }
+    }
+  }
+
   // Auto-discover locations and exits if the region is discovered and settings allow
   if (discoveryStateSingleton.isRegionDiscovered(regionName)) {
     autoDiscoverLocationsInRegion(regionName);
