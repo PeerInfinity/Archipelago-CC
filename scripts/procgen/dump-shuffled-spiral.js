@@ -38,6 +38,7 @@ import { fileURLToPath } from 'node:url';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
 import { arrangeShuffledSpiral, buildRulesJson } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';

@@ -1974,14 +1974,36 @@ function perimeterMidpoint(side, size) {
 
 /**
  * Build a region for a zone-based substrate (one with no
- * generateRegionCore — currently just JtA). The result shape mirrors
+ * generateRegionCore — JtA, Bounce Demo). The result shape mirrors
  * what buildSubstrateRegion returns so downstream code (stitchGrid,
  * wallOff, buildPresetSidecars, buildRulesJson) can consume it
  * uniformly.
+ *
+ * Optional adapter hook `extractZoneRules(zoneIdx, ctx)` lets a
+ * zone-based substrate contribute AP locations and per-side exit
+ * access rules (the "zone-locations channel" —
+ * NewDocs/plans/procedural-generation/dj-metroidvania-v2.md §"Pipeline
+ * integration"). ctx is { region_id, exitSides, regionSize }; the
+ * return shape is:
+ *
+ *   { locations: [{ id, item, access_rule, position? }],  // AP locations
+ *     exitRules: { [side]: <Rule Builder rule> },         // per-side gate
+ *     payload:   { ... } }                                // merged into playable_payload
+ *
+ * The synthetic exit scaffolding (exit_<side> ids at perimeter
+ * midpoints) is unchanged — stitchGrid/wallOff/reconcile conventions
+ * stay intact; the hook only attaches rules and locations to it.
+ * Adapters without the hook behave exactly as before (always-open
+ * exits, no locations). JtA's planned extract-locations-from-zone-data
+ * will implement this same hook.
  */
 function synthesizeZoneRegion({
     substrate, region_id, zoneIdx, regionSize, exitSides, adapter,
 }) {
+    const zoneRules = adapter.extractZoneRules
+        ? adapter.extractZoneRules(zoneIdx, { region_id, exitSides, regionSize })
+        : null;
+
     const exitsMap = new Map();
     const exitsPlaced = [];
     const extractedExits = [];
@@ -2001,25 +2023,35 @@ function synthesizeZoneRegion({
             isTeleporter: false,
         });
         exitsPlaced.push({ exit_id, side, tile_position: { x: tile.x, y: tile.y } });
+        const sideRule = zoneRules?.exitRules?.[side];
         extractedExits.push({
             id: exit_id,
             position: { x: tile.x, y: tile.y },
             target_region: null,
             paths: [{ path_id: 'p1', obstacles: [] }],
+            // compileRegion's escape hatch: when present, used verbatim
+            // instead of the (always-open) path walk above.
+            ...(sideRule ? { access_rule: sideRule } : {}),
         });
     }
     const zonePayload = adapter.synthesizeZonePayload
         ? adapter.synthesizeZonePayload(zoneIdx)
         : {};
+    const extractedLocations = (zoneRules?.locations ?? []).map((loc) => ({
+        id: loc.id,
+        item: loc.item ?? null,
+        position: loc.position ?? null,
+        access_rule: loc.access_rule,
+    }));
     return {
         substrate,
         region_id,
-        playable_payload: { ...zonePayload, exits: exitsMap },
+        playable_payload: { ...zonePayload, ...(zoneRules?.payload ?? {}), exits: exitsMap },
         // region_id mirrors what procedural adapters' extractPathsAndObstacles
         // emits. compileRegion reads it as the region_name; without it,
         // compileRegionGraph collapses every zone-based region onto
         // regions[undefined] and Menu's GameStart exit dangles.
-        extracted_rules: { region_id, exits: extractedExits, locations: [] },
+        extracted_rules: { region_id, exits: extractedExits, locations: extractedLocations },
         placed_items: [],
         placed_obstacles: [],
         exits_placed: exitsPlaced,
