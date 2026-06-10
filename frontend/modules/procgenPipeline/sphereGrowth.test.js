@@ -146,6 +146,28 @@ describe('growSpheres (maze) — the sphere oracle', () => {
         })).toThrow(/invalid sphere plan/);
     });
 
+    it('counts quota fallbacks when the plan needs more regions than the quotas allow', () => {
+        const plan = makePlan(1, 3); // needs several regions
+        const { stats } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 1,
+            growthParams: {
+                spherePlan: plan,
+                maxItemsPerRegion: 1,        // one region per item → many regions
+                substrateQuotas: { maze: 2 }, // far too few
+            },
+        });
+        expect(stats.quotaFallbacks).toBeGreaterThan(0);
+        expect(stats.quotaFallbacks).toBe(stats.regionsBuilt - 2);
+        // no quotas at all → the maze default is intentional, not a fallback
+        const { stats: statsNoQuota } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 1,
+            growthParams: { spherePlan: makePlan(1, 3) },
+        });
+        expect(statsNoQuota.quotaFallbacks).toBe(0);
+    });
+
     it('rejects unregistered substrates in the quotas upfront', () => {
         expect(() => growSpheres({
             regionSize: { width: 8, height: 6 },

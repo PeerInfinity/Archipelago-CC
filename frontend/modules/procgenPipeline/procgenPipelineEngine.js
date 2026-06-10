@@ -2278,6 +2278,11 @@ export function buildSphereTree(plan, opts = {}, rng) {
     const waves = spheres.length;
 
     const substrateCounts = {};
+    // Regions that defaulted to 'maze' because every quota was already
+    // filled — the plan needs more regions than the quotas allow.
+    // Surfaced so the UI can warn loudly (a silent maze region in a
+    // bounce-only world reads as a bug).
+    let quotaFallbacks = 0;
     const pickSub = (preferred = null) => {
         let sub = null;
         if (preferred && preferred !== 'auto') {
@@ -2288,6 +2293,7 @@ export function buildSphereTree(plan, opts = {}, rng) {
         }
         if (!sub && substrateQuotas) {
             sub = pickSubstrateWithQuota(substrateQuotas, substrateCounts, rng);
+            if (!sub) quotaFallbacks += 1;
         }
         if (!sub) sub = 'maze';
         substrateCounts[sub] = (substrateCounts[sub] || 0) + 1;
@@ -2390,7 +2396,7 @@ export function buildSphereTree(plan, opts = {}, rng) {
         }
     }
 
-    return { nodes, substrateCounts };
+    return { nodes, substrateCounts, quotaFallbacks };
 }
 
 // Realise one tree node as a maze-style (procedural) region with
@@ -2593,6 +2599,7 @@ export function growSpheres(config) {
         teleportersPlaced: 0,
         stopReason: null,
         substrateCounts: tree.substrateCounts,
+        quotaFallbacks: tree.quotaFallbacks,
     };
 
     const childrenByParent = new Map();

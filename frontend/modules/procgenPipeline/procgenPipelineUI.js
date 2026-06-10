@@ -395,6 +395,9 @@ export class ProcgenPipelineUI {
         this.result = null;
         this.isGenerating = false;
         this.message = '';
+        // Prominent post-generation warning (rendered red, on its own
+        // line under the message) — e.g. sphere-growth quota fallback.
+        this.warning = '';
 
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'procgen-pipeline-panel';
@@ -1342,6 +1345,12 @@ export class ProcgenPipelineUI {
             msg.textContent = this.message;
             section.appendChild(msg);
         }
+        if (this.warning) {
+            const warn = document.createElement('div');
+            warn.className = 'procgen-pipeline-warning';
+            warn.textContent = this.warning;
+            section.appendChild(warn);
+        }
         return section;
     }
 
@@ -1761,6 +1770,7 @@ export class ProcgenPipelineUI {
         }
         this.isGenerating = true;
         this.message = '';
+        this.warning = '';
         this.result = null;
         this.render();
 
@@ -1927,6 +1937,15 @@ export class ProcgenPipelineUI {
             ? `SPHERE ORACLE MISMATCH: ${oracleErrors[0]}`
             : `Sphere plan realised: ${plan.spheres
                 .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`;
+
+        // The plan needed more regions than the quotas allow — the
+        // extras silently became maze regions, which reads as a bug in
+        // a single-substrate world. Warn prominently.
+        if (stats.quotaFallbacks > 0) {
+            this.warning = `WARNING: substrate quotas exhausted — ${stats.quotaFallbacks} `
+                + `region(s) fell back to 'maze' (the plan needs ${stats.regionsBuilt} `
+                + 'regions). Raise the quotas for a pure-substrate world.';
+        }
 
         this.result = {
             grid,
