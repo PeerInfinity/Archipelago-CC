@@ -253,6 +253,11 @@
             },
             {
               "type": "component",
+              "componentType": "bounceDemoPanel",
+              "title": "Bounce Demo"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             },

@@ -42,6 +42,8 @@ import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
 import { arrangeShuffledSpiral, buildRulesJson } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { substrateRegistry } from
+    '../../frontend/modules/shared/procgen/substrateRegistry.js';
 
 function parseArgs(argv) {
     const out = {
@@ -167,7 +169,19 @@ async function main() {
                 ? { startSubstrate: config.start } : {}),
         },
     });
-    const rulesJson = buildRulesJson(grid, { startCell, seed: config.seed });
+    // Completion-condition item: first quota'd substrate declaring a
+    // victoryItem on its registry entry (e.g. bounce — its zone table
+    // places the item itself). Mirrors the pipeline UI's substrate
+    // fallback in _resolveVictoryItemId; without it the emitted world
+    // has no goal and AP defaults to trivially-true completion.
+    const victoryItem = Object.entries(config.quotas)
+        .map(([id, n]) => (n > 0 ? substrateRegistry.get(id)?.victoryItem : null))
+        .find(Boolean) ?? null;
+    const rulesJson = buildRulesJson(grid, {
+        startCell,
+        seed: config.seed,
+        completionConditionItem: victoryItem,
+    });
     const dump = {
         config,
         startCell,

@@ -823,6 +823,25 @@ export class ProcgenPipelineUI {
         return this.substrateMix;
     }
 
+    // Completion-condition item for the emitted rules.json. Scenario
+    // pool first (first item flagged is_victory with a positive
+    // count); failing that, the first selected substrate that declares
+    // a `victoryItem` on its registry entry (zone-based substrates
+    // like bounce place their victory item from their own zone tables,
+    // invisible to the scenario pool). Null when neither contributes —
+    // buildRulesJson then keeps the scaffold's constant-true default.
+    _resolveVictoryItemId() {
+        const fromScenario = Object.entries(this.scenario.items)
+            .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0];
+        if (fromScenario) return fromScenario;
+        for (const [id, count] of Object.entries(this._activeSubstrateDict())) {
+            if (!(Number(count) > 0)) continue;
+            const victoryItem = substrateRegistry.get(id)?.victoryItem;
+            if (victoryItem) return victoryItem;
+        }
+        return null;
+    }
+
     _renderSubstrateLibraryRow(entry) {
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-library-row procgen-pipeline-library-row-substrate';
@@ -1743,12 +1762,10 @@ export class ProcgenPipelineUI {
             },
             hazardOpts: this._effectiveHazardOpts(),
         });
-        // First scenario item whose lib def is `is_victory: true` with
-        // a positive count becomes the auto-completion-condition item.
-        // Opt-out: drop all such items from the scenario's item pool.
-        const victoryItemId = Object.entries(this.scenario.items)
-            .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0]
-            ?? null;
+        // Auto-completion-condition item — scenario is_victory item or
+        // a selected substrate's declared victoryItem (see
+        // _resolveVictoryItemId). Opt-out: drop all such items.
+        const victoryItemId = this._resolveVictoryItemId();
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,
@@ -1790,9 +1807,7 @@ export class ProcgenPipelineUI {
             },
             hazardOpts: this._effectiveHazardOpts(),
         });
-        const victoryItemId = Object.entries(this.scenario.items)
-            .find(([id, count]) => count > 0 && DEFAULT_ITEMS[id]?.is_victory)?.[0]
-            ?? null;
+        const victoryItemId = this._resolveVictoryItemId();
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,

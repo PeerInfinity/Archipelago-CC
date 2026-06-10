@@ -1,11 +1,14 @@
 /**
  * Substrate registry entry for the Bounce Demo (DJ-Metroidvania) —
- * build-order step 5
+ * build-order step 5 + the embed phase
  * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
  *
- * Build-time-only registration for now (the registry contract allows
- * it): zoneCount + extractZoneRules drive the procgen pipeline;
- * runtime panel fields arrive with the step-6 renderer.
+ * The entry is a MERGE: flash runtime plumbing (de/serializeWorld,
+ * playback stub — via createFlashSubstrateEntry) + bounce's own panel
+ * identity + the build-time zone hooks. Bounce rides flashSubstrate's
+ * bridge and panel CLASS (see index.js) but registers its own panel
+ * component + loadRegion event, because the flash panel instance shows
+ * one hardcoded page and host activation keys on panelComponentType.
  *
  * Each zone is a fixture level plus its CANONICAL item assignment
  * (the "original" placement rules.json records; AP re-randomizes).
@@ -18,6 +21,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
 import { minimalSetsToRule, VICTORY_ITEM_NAME } from './apRules.js';
@@ -115,11 +119,25 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
     };
 }
 
+// Shared across every bounce entry — same Shape-1 reasoning as flash's
+// FLASH_PANEL_COMPONENT_TYPE/FLASH_LOAD_REGION_EVENT: all bounce zone-set
+// ids resolve to the ONE bounce panel + load event. Bounce gets its OWN
+// event (not flash:loadRegion) so the flash placeholder's bridge isn't
+// configured by bounce region loads and host activation brings the right
+// panel forward.
+export const BOUNCE_PANEL_COMPONENT_TYPE = 'bounceDemoPanel';
+export const BOUNCE_LOAD_REGION_EVENT = 'bounce:loadRegion';
+export const BOUNCE_IFRAME_ID = 'bounceDemo';
+
 /**
  * Build a bounce substrate registry entry for a zone set — the same
- * per-entry factory pattern flashSubstrate uses per game. `zones` is
- * a ZONES-shaped table (fixtures or generator.generateZoneSet output);
- * `portalPlacement` is 'directional' | 'arbitrary' (sideExits.js).
+ * per-entry factory pattern flashSubstrate uses per game, and literally
+ * built on it: createFlashSubstrateEntry supplies the runtime plumbing
+ * (exits-Map de/serializeWorld for the sidecar round-trip, playback
+ * stub), then bounce overrides the panel identity and adds the
+ * zone-based build-time hooks. `zones` is a ZONES-shaped table
+ * (fixtures or generator.generateZoneSet output); `portalPlacement` is
+ * 'directional' | 'arbitrary' (sideExits.js).
  */
 export function createBounceSubstrateEntry({
     id = 'bounce',
@@ -128,31 +146,20 @@ export function createBounceSubstrateEntry({
     portalPlacement = 'directional',
 } = {}) {
     return Object.freeze({
-        // Identity
-        id,
-        label,
+        ...createFlashSubstrateEntry({ id, label, iframeId: BOUNCE_IFRAME_ID }),
 
-        // Runtime fields (panel, loadRegionEvent, playback) arrive with
-        // the step-6 embed work. Sidecar round-trip works today: the
-        // exits Map is the only non-JSON field, same as JtA.
-        deserializeWorld: (payload) => {
-            const p = payload ?? {};
-            const exitsArray = Array.isArray(p.exits) ? p.exits : [];
-            const exitsMap = new Map();
-            for (const e of exitsArray) {
-                const key = e?.exitName ?? e?.exit_id;
-                if (key) exitsMap.set(key, e);
-            }
-            return { ...p, exits: exitsMap };
-        },
-        serializeWorld: (world) => {
-            const w = world ?? {};
-            const exitsArray = w.exits instanceof Map
-                ? [...w.exits.values()]
-                : (Array.isArray(w.exits) ? w.exits : []);
-            return { ...w, exits: exitsArray };
-        },
-        getPlaybackController: () => null,
+        // Bounce's own panel + load event (see constants above).
+        panelComponentType: BOUNCE_PANEL_COMPONENT_TYPE,
+        loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
+
+        // The substrate's zone table places this item itself (fork's
+        // loc_left in the fixture set; generateZoneSet's last zone).
+        // Emission paths use it as the completion-condition item when
+        // the scenario pool contributes no is_victory item — without
+        // it the AP world gets NO goal and AP defaults to trivially
+        // true (BaseClasses.set_player_attr), which makes the seed
+        // "beaten" at sphere 0.
+        victoryItem: VICTORY_ITEM_NAME,
 
         // Zone-based substrate metadata (read by layout drivers)
         zoneCount: zones.length,

@@ -42,6 +42,7 @@ let dispatcher = null;
 let logger = null;
 let unsubRawJsonLoaded = null;
 let unsubRulesLoaded = null;
+let unsubIframeAppReady = null;
 let warehouse = null;
 // The synthesized initial transition is deferred until
 // stateManager:rulesLoaded fires — see handleFilesJsonLoaded /
@@ -257,11 +258,27 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     if (eventBus?.subscribe) {
         unsubRawJsonLoaded = eventBus.subscribe('stateManager:rawJsonDataLoaded', handleRawJsonLoaded);
         unsubRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
+        // Iframe-hosted substrates can miss the active region's
+        // loadRegion: their bridge subscribes only after the iframe
+        // page loads + handshakes, which can land AFTER the initial
+        // Menu -> start-region transition published it. When an iframe
+        // announces ready and it IS the active substrate's iframe
+        // (registry entries opt in by declaring `iframeId`), re-publish
+        // the current region so the late bridge configures itself.
+        // Also covers iframe reloads. Substrates without an iframeId
+        // field (maze, jta, textAdventure) are unaffected.
+        unsubIframeAppReady = eventBus.subscribe('iframe:appReady', (data) => {
+            if (!activeSubstrate?.regionId || !data?.iframeId) return;
+            const entry = substrateRegistry.get(activeSubstrate.substrate);
+            if (!entry?.iframeId || entry.iframeId !== data.iframeId) return;
+            publishLoadRegion(activeSubstrate.regionId, null);
+        });
     }
 
     return () => {
         if (unsubRawJsonLoaded) { unsubRawJsonLoaded(); unsubRawJsonLoaded = null; }
         if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
+        if (unsubIframeAppReady) { unsubIframeAppReady(); unsubIframeAppReady = null; }
         warehouse = null;
         pendingStartTransition = null;
         resolvedStartRegion = null;
@@ -276,6 +293,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 export function _testOnly_resetModuleState() {
     if (unsubRawJsonLoaded) { unsubRawJsonLoaded(); unsubRawJsonLoaded = null; }
     if (unsubRulesLoaded) { unsubRulesLoaded(); unsubRulesLoaded = null; }
+    if (unsubIframeAppReady) { unsubIframeAppReady(); unsubIframeAppReady = null; }
     warehouse = null;
     pendingStartTransition = null;
     resolvedStartRegion = null;

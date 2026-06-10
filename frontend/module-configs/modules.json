@@ -252,6 +252,10 @@
       "path": "./modules/flashSubstrate/index.js",
       "enabled": true
     },
+    "bounceDemo": {
+      "path": "./modules/bounceDemo/index.js",
+      "enabled": true
+    },
     "procgenPipeline": {
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
@@ -329,6 +333,7 @@
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
     "flashSubstrate",
+    "bounceDemo",
     "procgenPipeline",
     "procgenPlayer",
     "playbackBot"

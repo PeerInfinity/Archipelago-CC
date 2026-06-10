@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import './bounceDemoLibrary.js'; // registers the 'bounce' substrate
-import { extractZoneRules, ZONES } from './bounceDemoLibrary.js';
+import { extractZoneRules, ZONES, substrateRegistryEntry } from './bounceDemoLibrary.js';
 import { attachSideExits } from './sideExits.js';
 import { minimalSetsToRule } from './apRules.js';
 import { validateLevel } from './level.js';
@@ -139,8 +139,24 @@ describe('spiral -> rules.json end-to-end', () => {
             seed: 1,
             growthParams: { substrateQuotas: { bounce: 5 } },
         });
-        return buildRulesJson(grid, { startCell, seed: 1, embedSphereLog: false });
+        return buildRulesJson(grid, {
+            startCell, seed: 1, embedSphereLog: false,
+            // What the pipeline UI passes for a bounce quota set: the
+            // substrate's declared victory item (no scenario is_victory
+            // item participates). Without this the AP world gets no
+            // goal and AP's default completion is trivially true.
+            completionConditionItem: substrateRegistryEntry.victoryItem,
+        });
     };
+
+    it('emits the substrate-declared victory item as the completion condition', () => {
+        const rulesJson = build();
+        expect(substrateRegistryEntry.victoryItem).toBe('Victory');
+        expect(rulesJson.game_info['1'].completion_condition).toEqual({
+            type: 'item_check',
+            item: 'Victory',
+        });
+    });
 
     it('emits all five zones with derived rules and reaches Victory (winnable)', () => {
         const rulesJson = build();

@@ -4,15 +4,23 @@
  *
  * Responsibilities (Mode 1 / v1):
  *   - Complete the iframeAdapter handshake (IframeClient).
- *   - On flash:loadRegion: configure the in-iframe game from the
+ *   - On the loadRegion event: configure the in-iframe game from the
  *     region payload via the window-exposed `__swfBridge.configure`
  *     contract, then push any already-received items via pollItems.
- *   - Wire the game's cooperative outward call: when the game's
- *     ActionScript calls __swfBridge.sendLocation(flashName), translate
- *     flashName -> AP location id via the region's ap_locations map and
- *     dispatch user:locationCheck up the dispatcher chain.
+ *   - Wire the game's cooperative outward calls: when the game calls
+ *     __swfBridge.sendLocation(flashName), translate flashName -> AP
+ *     location name via the region's ap_locations map and dispatch
+ *     user:locationCheck up the dispatcher chain; when it calls
+ *     __swfBridge.sendExit(portalId, side), resolve the exit from the
+ *     region payload's exits and dispatch user:regionMove.
  *   - On stateManager state changes: re-poll received items into the
  *     game so newly-received items get applied.
+ *
+ * The loadRegion event name is read from the iframe URL's
+ * `loadRegionEvent` query param (set by the panel's iframeSrc), so
+ * substrates that reuse this bridge with their own panel + registry
+ * entry (e.g. bounceDemo's 'bounce:loadRegion') don't get configured by
+ * the other substrate's region loads. Defaults to 'flash:loadRegion'.
  *
  * The `__swfBridge` contract is whatever the recompiled game page
  * exposes on its window. v1's placeholder page stubs it (configure /
@@ -38,6 +46,11 @@ function log(level, ...args) {
 
 const _w = /** @type {any} */ (window);   // __swfBridge lives here (set by the game page)
 let _client = null;
+
+// Which host event delivers this iframe's region loads (see header).
+const LOAD_REGION_EVENT =
+    new URLSearchParams(window.location.search).get('loadRegionEvent')
+    || 'flash:loadRegion';
 
 // Active-region state
 let _currentRegionId = null;
@@ -150,6 +163,41 @@ function _onSendLocation(flashName) {
 }
 
 /**
+ * The game's cooperative exit call — the region-move counterpart of
+ * sendLocation. The game reports WHICH portal the player landed on and
+ * the grid side it serves (it learns the side from params.sidePortals);
+ * the region payload's exits carry side -> {exitName, targetRegion}, so
+ * the side picks the exit and we dispatch user:regionMove the same way
+ * the JtA bridge does. portalId is a fallback key (and log context) for
+ * payloads whose exits are keyed by portal id rather than side.
+ */
+function _onSendExit(portalId, side) {
+    if (!_isActive) {
+        log('warn', `sendExit('${portalId}', side=${side}) while inactive — ignored`);
+        return;
+    }
+    const exits = _world?.exits;
+    // Exits arrive as the deserialized Map<exitName, exit> when the
+    // payload structured-clones intact; tolerate the on-disk array too.
+    const list = exits instanceof Map ? [...exits.values()]
+        : (Array.isArray(exits) ? exits : []);
+    const exit = (side ? list.find((e) => e?.side === side) : null)
+        ?? list.find((e) => e?.exitName === portalId || e?.exit_id === portalId);
+    if (!exit) {
+        log('warn', `sendExit('${portalId}', side=${side}) matches no region exit — ignored`);
+        return;
+    }
+    if (!_client) return;
+    _client.publishEventDispatcher('user:regionMove', {
+        sourceRegion: _currentRegionId,
+        targetRegion: exit.targetRegion ?? null,
+        exitName: exit.exitName ?? exit.exit_id ?? null,
+    }, { initialTarget: 'bottom' });
+    log('debug', `exit '${portalId}' (side=${side}) -> user:regionMove `
+        + `(${_currentRegionId} -> ${exit.targetRegion ?? '?'})`);
+}
+
+/**
  * Push received items into the game. Reads the checked/received state
  * from the host snapshot and hands the game its received-item ids via
  * __swfBridge.pollItems so the game can apply effects (id -> flash_name
@@ -182,7 +230,7 @@ function _pollItemsIntoGame() {
 
 function _handleLoadRegion(payload) {
     if (!payload || !payload.region_id) {
-        log('warn', 'flash:loadRegion with no region_id', payload);
+        log('warn', `${LOAD_REGION_EVENT} with no region_id`, payload);
         return;
     }
     const regionId = payload.region_id;
@@ -235,16 +283,17 @@ async function main() {
         return;
     }
 
-    // Step 2: expose the cooperative outward call on __swfBridge. The
+    // Step 2: expose the cooperative outward calls on __swfBridge. The
     // game page may have created __swfBridge already (with configure /
-    // pollItems); we add/override sendLocation to route into AP. If the
-    // page hasn't created it yet, seed a minimal object — the page's own
-    // configure/pollItems will be merged when it loads.
+    // pollItems); we add/override sendLocation + sendExit to route into
+    // AP. If the page hasn't created it yet, seed a minimal object — the
+    // page's own configure/pollItems will be merged when it loads.
     if (!_w.__swfBridge) _w.__swfBridge = {};
     _w.__swfBridge.sendLocation = _onSendLocation;
+    _w.__swfBridge.sendExit = _onSendExit;
 
     // Step 3: subscribe to host events.
-    _client.subscribeEventBus('flash:loadRegion', _handleLoadRegion);
+    _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
 
     // When AP state changes (item received elsewhere, etc.), re-poll so
     // the game applies any newly-received items.
@@ -266,7 +315,8 @@ async function main() {
 
     // Step 4: announce ready.
     _client.notifyAppReady();
-    log('info', 'connected to host; appReady sent; __swfBridge.sendLocation wired');
+    log('info', `connected to host; appReady sent; __swfBridge.sendLocation/sendExit `
+        + `wired; loadRegion event: ${LOAD_REGION_EVENT}`);
 }
 
 main().catch((err) => {

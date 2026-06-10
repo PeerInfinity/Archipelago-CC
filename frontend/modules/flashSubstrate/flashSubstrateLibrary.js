@@ -102,12 +102,18 @@ function serializeWorld(world) {
  * @param {string}   opts.id               unique substrate id (e.g. 'flash', 'flash_seedling')
  * @param {string}  [opts.label]           display name (defaults to id)
  * @param {string[]}[opts.supportedFeatures] procgen-pipeline features (default: arbitrary_ap_locations)
+ * @param {string}  [opts.iframeId]        the iframeAdapter id of the panel's iframe
+ *   (default: 'flashSubstrate' — the shared flash panel's). procgenPlayer uses
+ *   this to re-publish the active region's loadRegion when THIS iframe
+ *   announces appReady, closing the race where the initial loadRegion fires
+ *   before the iframe's bridge has subscribed (and covering iframe reloads).
  * @returns {object} a frozen substrate registry entry
  */
 export function createFlashSubstrateEntry({
     id,
     label,
     supportedFeatures = ['arbitrary_ap_locations'],
+    iframeId = 'flashSubstrate',
 } = {}) {
     if (!id || typeof id !== 'string') {
         throw new Error('createFlashSubstrateEntry: id must be a non-empty string');
@@ -125,6 +131,7 @@ export function createFlashSubstrateEntry({
         // load event — this is what makes Shape 1 a single panel/bridge).
         panelComponentType: FLASH_PANEL_COMPONENT_TYPE,
         loadRegionEvent: FLASH_LOAD_REGION_EVENT,
+        iframeId,
         deserializeWorld,
         serializeWorld,
 
