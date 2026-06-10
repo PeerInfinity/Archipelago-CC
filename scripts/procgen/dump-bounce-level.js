@@ -53,6 +53,7 @@ import { bounceStack } from
     '../../frontend/modules/bounceDemo/fixtures/bounceStack.js';
 import { ENTRANCE, buildPlatformGraph, findJumpPath, reachablePlatforms } from
     '../../frontend/modules/bounceDemo/canJump.js';
+import { validateLevel } from '../../frontend/modules/bounceDemo/level.js';
 
 const ABILITY_NAMES = ['left', 'right', 'springs', 'jetpacks', 'blue', 'brown'];
 
@@ -202,6 +203,12 @@ function summarize(level, abilities, result, frames) {
 
 const args = parseArgs(process.argv);
 const level = await loadLevel(args.level);
+const modelErrors = validateLevel(level);
+if (modelErrors.length > 0) {
+    console.error(`level '${level.id}' has model errors:`);
+    for (const e of modelErrors) console.error(`  - ${e}`);
+    process.exit(1);
+}
 const abilities = parseAbilities(args.abilities);
 const policy = parseInputSpec(args.input);
 const result = simulate(level, abilities, policy, { maxFrames: args.frames });

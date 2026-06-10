@@ -99,15 +99,30 @@ export function jumpQuery(level, fromId, abilities, opts = {}) {
         ...over,
     });
 
+    // The policy engages at the launch bounce, not during the drop —
+    // x0 is where the player ARRIVED on the platform; steering starts
+    // when they jump. (Entrance queries steer from the first frame:
+    // the spawn fall is itself the move.)
+    let launched = fromId === ENTRANCE;
+    let policyFrame = 0;
+
     touch(state);
-    for (let frame = 1; frame <= maxFrames; frame++) {
-        state = physicsStep(state, policy(state, frame), level, abilities, C);
+    for (let i = 1; i <= maxFrames; i++) {
+        const input = launched ? policy(state, ++policyFrame) : null;
+        state = physicsStep(state, input, level, abilities, C);
         touch(state);
         if (state.fallen) return done({ fell: true });
-        if (state.landedOn && state.landedOn !== fromId) {
-            return done({ landedOn: state.landedOn });
+        if (state.landedOn) {
+            if (!launched) {
+                // the pre-launch drop must land on the launch platform;
+                // anything else means x0 wasn't really a spot on it
+                if (state.landedOn !== fromId) return done({});
+                launched = true;
+            } else if (state.landedOn !== fromId) {
+                return done({ landedOn: state.landedOn });
+            }
+            // re-landing on the launch platform just re-launches — keep going
         }
-        // re-landing on the launch platform just re-launches — keep going
     }
     return done({ timedOut: true });
 }
