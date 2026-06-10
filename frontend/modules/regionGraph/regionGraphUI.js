@@ -1,7 +1,7 @@
 import { getModuleEventBus, registerPanelInstance, unregisterPanelInstance, getPendingOverlayProvider, getNodeLabelProvider, getKeyForwarder } from './index.js';
 import { NodeOverlayManager } from './nodeOverlayManager.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
@@ -861,9 +861,28 @@ export class RegionGraphUI {
     // Small delay to ensure stateManager is fully initialized
     setTimeout(() => {
       try {
+        // Catch up on the raw rules.json if it loaded before this
+        // panel subscribed (stateManager:rawJsonDataLoaded fires
+        // during init; our subscriptions are gated on
+        // app:readyForUiDataLoad). This is what populates
+        // this.gridLayout from preset_sidecars' grid_cell on initial
+        // load — without it, procgen graphs fall back to cose until
+        // the next rules reload.
+        if (!this.gridLayout) {
+          const rawPayload = getLastRawJsonData();
+          if (rawPayload) {
+            this.captureGridLayoutFromRules(rawPayload);
+            // If the graph already built (rulesLoaded beat us here),
+            // it was laid out without the grid — re-run now.
+            if (this.gridLayout && this.graphInitialized) {
+              this.runLayout(true);
+            }
+          }
+        }
+
         const staticData = stateManager.getStaticData();
         const snapshot = stateManager.getLatestStateSnapshot();
-        
+
         if (staticData && staticData.regions && snapshot && !this.graphInitialized) {
           logger.debug('Data already available, loading graph immediately');
           this.loadGraphData();

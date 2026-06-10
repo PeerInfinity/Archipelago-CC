@@ -123,6 +123,18 @@ export { initialize, postInitialize };
 // Export the singleton instance of the proxy
 export { stateManagerProxySingleton };
 
+// Last payload published as stateManager:rawJsonDataLoaded. The event
+// fires during init, typically BEFORE panels whose subscriptions are
+// gated on app:readyForUiDataLoad (e.g. regionGraph) have subscribed —
+// late consumers call getLastRawJsonData() as their catch-up path
+// instead of racing the event. The proxy's staticData does NOT retain
+// raw-rules-only fields like preset_sidecars, so this is the only
+// after-the-fact source for them.
+let lastRawJsonPayload = null;
+export function getLastRawJsonData() {
+  return lastRawJsonPayload;
+}
+
 /**
  * Registration function for the StateManager module.
  * Registers events published by the StateManagerProxy.
@@ -252,11 +264,12 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
         playerId: String(eventData.selectedPlayerId),
         playerName: `Player${eventData.selectedPlayerId}`,
       };
-      eventBus.publish('stateManager:rawJsonDataLoaded', {
+      lastRawJsonPayload = {
         source: eventData.sourceName || eventData.filename || eventData.source || 'userLoadedFile',
         rawJsonData: eventData.jsonData,
         selectedPlayerInfo,
-      });
+      };
+      eventBus.publish('stateManager:rawJsonDataLoaded', lastRawJsonPayload);
     });
     log('info', '[StateManager Module] Subscribed to files:jsonLoaded events (for rawJsonDataLoaded re-emit)');
   }
@@ -453,12 +466,13 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
       '[StateManager Module] StateManagerProxy.loadRules() call completed.'
     );
 
+    lastRawJsonPayload = {
+      source: sourceNameForTheseRules, // MODIFIED: Use the same accurately determined source
+      rawJsonData: rulesConfigToUse,
+      selectedPlayerInfo: playerInfo,
+    };
     if (eventBus) {
-      eventBus.publish('stateManager:rawJsonDataLoaded', {
-        source: sourceNameForTheseRules, // MODIFIED: Use the same accurately determined source
-        rawJsonData: rulesConfigToUse,
-        selectedPlayerInfo: playerInfo,
-      });
+      eventBus.publish('stateManager:rawJsonDataLoaded', lastRawJsonPayload);
       logger.info(
         moduleInfo.name,
         '[StateManager Module] Published stateManager:rawJsonDataLoaded.'

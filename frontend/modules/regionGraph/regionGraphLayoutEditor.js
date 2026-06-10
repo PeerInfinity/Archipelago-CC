@@ -232,6 +232,7 @@ export class RegionGraphLayoutEditor {
           <div class="section">
             <label>Layout Preset:</label>
             <select id="layoutPreset" style="width: 100%;">
+              <option value="procgen-grid">Procgen Grid (from rules.json)</option>
               <option value="cose" selected>COSE (Classic) - Default</option>
               <option value="fcose-default">Force-Directed</option>
               <option value="fcose-hub">Force-Directed (Hub Optimized)</option>
@@ -347,6 +348,23 @@ export class RegionGraphLayoutEditor {
     if (controls.layoutPreset) {
       controls.layoutPreset.addEventListener('change', (e) => {
         const preset = e.target.value;
+        if (preset === 'procgen-grid') {
+          // Dynamic layout — positions derive from rules.json's
+          // preset_sidecars grid_cell plus current node sizes, so
+          // there's no static JSON to edit. runLayout already prefers
+          // the grid when the loaded rules carry one (this option
+          // exists so the dropdown can REFLECT that auto-pick, and so
+          // a user who tried another layout can switch back).
+          controls.layoutJson.value = JSON.stringify({
+            name: 'preset',
+            _comment: 'Positions come from preset_sidecars grid_cell; not editable here',
+          }, null, 2);
+          this.clearJsonMessages();
+          if (controls.autoApplyPreset && controls.autoApplyPreset.checked) {
+            setTimeout(() => this.applyProcgenGridLayout(regionGraphUI), 100);
+          }
+          return;
+        }
         if (preset !== 'custom') {
           this.loadPresetIntoEditor(preset);
         } else {
@@ -477,10 +495,37 @@ export class RegionGraphLayoutEditor {
     }
   }
 
+  /**
+   * Apply the procgen grid layout (positions from preset_sidecars
+   * grid_cell). Errors visibly when the loaded rules.json has no grid
+   * data — the option is always in the dropdown, but only procgen
+   * rules can satisfy it.
+   */
+  applyProcgenGridLayout(regionGraphUI) {
+    const gridOptions = regionGraphUI.layoutControlsManager.buildProcgenGridLayout();
+    if (!gridOptions) {
+      this.showJsonError('No procgen grid data in the loaded rules.json (preset_sidecars grid_cell)');
+      return;
+    }
+    regionGraphUI.updateStatus('Running procgen grid layout...');
+    this.currentLayout = this.cy.layout(gridOptions);
+    this.currentLayout.run();
+    this.showJsonSuccess('Procgen grid layout applied!');
+  }
+
   applyLayoutFromJson(regionGraphUI) {
+    // The procgen grid is dynamic (built from grid_cell + node sizes),
+    // not the JSON in the editor — delegate when it's the selected
+    // preset so the Apply button does the right thing.
+    const presetSelect = this.controlPanel.querySelector('#layoutPreset');
+    if (presetSelect?.value === 'procgen-grid') {
+      this.applyProcgenGridLayout(regionGraphUI);
+      return;
+    }
+
     const jsonTextarea = this.controlPanel.querySelector('#layoutJson');
     const jsonText = jsonTextarea.value.trim();
-    
+
     if (!this.validateLayoutJson()) {
       return;
     }
