@@ -363,6 +363,19 @@ export function generateZoneForSpecs({
 export const BOUNCE_PANEL_COMPONENT_TYPE = 'bounceDemoPanel';
 export const BOUNCE_LOAD_REGION_EVENT = 'bounce:loadRegion';
 export const BOUNCE_IFRAME_ID = 'bounceDemo';
+// Playback-bot control channel: the host-side PlaybackProxy publishes
+// controller commands here; the shared flash bridge subscribes (it
+// learns the event name from the iframe URL's playbackControlEvent
+// param, same pattern as loadRegionEvent).
+export const BOUNCE_PLAYBACK_CONTROL_EVENT = 'bounce:playbackControl';
+
+// Host-side PlaybackProxy, injected by bounceDemo/index.js at
+// initialize() (the library stays dependency-free so headless CLI
+// drivers can import it without pulling in panel/eventBus code).
+// Before injection — and headless — getPlaybackController returns
+// null and the playback bot no-ops on bounce regions.
+let _playbackProxy = null;
+export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
 
 /**
  * Build a bounce substrate registry entry for a zone set — the same
@@ -386,6 +399,13 @@ export function createBounceSubstrateEntry({
         // Bounce's own panel + load event (see constants above).
         panelComponentType: BOUNCE_PANEL_COMPONENT_TYPE,
         loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
+
+        // Playback bot: overrides the flash entry's `() => null` stub.
+        // The proxy publishes controller commands on
+        // BOUNCE_PLAYBACK_CONTROL_EVENT; the in-iframe flash bridge
+        // translates walkTo targets and the game's botDriver plays the
+        // real physics (input synthesis, not event dispatch).
+        getPlaybackController: () => _playbackProxy,
 
         // The substrate's zone table places this item itself (fork's
         // loc_left in the fixture set; generateZoneSet's last zone).

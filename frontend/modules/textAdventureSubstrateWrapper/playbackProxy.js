@@ -22,11 +22,21 @@
 const CONTROL_EVENT = 'textAdventureSubstrateWrapper:control';
 
 export class PlaybackProxy {
-    constructor({ eventBus }) {
+    /**
+     * @param {object} deps
+     * @param {object} deps.eventBus
+     * @param {string} [deps.controlEvent] — which eventBus event carries
+     *   the commands. Defaults to this wrapper's own channel; other
+     *   iframe substrates reuse the proxy with their own event (e.g.
+     *   bounceDemo's 'bounce:playbackControl', received by the shared
+     *   flash bridge's playback receiver).
+     */
+    constructor({ eventBus, controlEvent = CONTROL_EVENT }) {
         if (!eventBus || typeof eventBus.publish !== 'function') {
             throw new Error('PlaybackProxy: eventBus.publish is required');
         }
         this._eventBus = eventBus;
+        this._controlEvent = controlEvent;
     }
 
     play(rateHz)    { this._send('play', [rateHz]); }
@@ -38,7 +48,7 @@ export class PlaybackProxy {
     walkTo(target)  { this._send('walkTo', [target]); }
 
     _send(method, args) {
-        this._eventBus.publish(CONTROL_EVENT, { method, args });
+        this._eventBus.publish(this._controlEvent, { method, args });
     }
 }
 

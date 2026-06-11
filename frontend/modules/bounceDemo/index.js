@@ -24,10 +24,13 @@
 
 import { createSubstrateIframePanelClass } from '../flashSubstrate/flashSubstratePanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
 import {
     substrateRegistryEntry,
+    setPlaybackProxy,
     BOUNCE_PANEL_COMPONENT_TYPE,
     BOUNCE_LOAD_REGION_EVENT,
+    BOUNCE_PLAYBACK_CONTROL_EVENT,
     BOUNCE_IFRAME_ID,
 } from './bounceDemoLibrary.js';
 
@@ -42,7 +45,8 @@ const IFRAME_ID = BOUNCE_IFRAME_ID;
 // the __swfBridge game side; loadRegionEvent tells the injected bridge
 // which host event delivers this iframe's region loads.
 const GAME_IFRAME_SRC = `./modules/bounceDemo/game/index.html?iframeId=${IFRAME_ID}`
-    + `&loadRegionEvent=${BOUNCE_LOAD_REGION_EVENT}`;
+    + `&loadRegionEvent=${BOUNCE_LOAD_REGION_EVENT}`
+    + `&playbackControlEvent=${BOUNCE_PLAYBACK_CONTROL_EVENT}`;
 
 export const BounceDemoPanel = createSubstrateIframePanelClass({
     componentType: BOUNCE_PANEL_COMPONENT_TYPE,
@@ -100,6 +104,10 @@ export function register(registrationApi) {
     // transitions (the registry entry's loadRegionEvent); the bridge
     // picks it up via the iframeAdapter eventBus relay.
     registrationApi.registerEventBusPublisher(BOUNCE_LOAD_REGION_EVENT);
+    // Bot → bridge control channel: published by the host-side
+    // PlaybackProxy (built in initialize), subscribed by the in-iframe
+    // flash bridge's playback receiver.
+    registrationApi.registerEventBusPublisher(BOUNCE_PLAYBACK_CONTROL_EVENT);
     // Published by this module on bounce:loadRegion so Golden Layout
     // brings the bounce panel forward when the player enters one of
     // its regions.
@@ -119,6 +127,16 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     _initApi = initializationApi;
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
+
+    // Host-side playback controller for the bot: the landed
+    // textAdventureSubstrateWrapper proxy, pointed at bounce's own
+    // control event. Injected into the library so the registry
+    // entry's getPlaybackController returns it (null until now, and
+    // forever in headless CLI contexts).
+    setPlaybackProxy(new PlaybackProxy({
+        eventBus,
+        controlEvent: BOUNCE_PLAYBACK_CONTROL_EVENT,
+    }));
 
     // When procgen dispatches bounce:loadRegion (e.g. on a transition
     // from a maze or flash region into a bounce one), bring the bounce
