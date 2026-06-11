@@ -99,6 +99,7 @@ const gameSide = {
         // world plays under the constants its rules were derived with.
         const constants = resolvePhysicsStamp(params.physics);
         physicsProfileId = params.physics?.profile ?? 'classic';
+        frameMs = 1000 / (constants.TICK_HZ || 60);
         // Goal ids are region-local: a target from the previous region
         // is meaningless here. The host bridge re-sends botWalkTo for
         // this region (it holds the pending AP-name target) right
@@ -208,15 +209,18 @@ function handleEvent(ev) {
     }
 }
 
-// ── fixed-timestep loop (60Hz logic, rAF render) ────────────────
-const FRAME_MS = 1000 / 60;
+// ── fixed-timestep loop (C.TICK_HZ logic, rAF render) ───────────
+// classic runs 60Hz; the dj profile runs its native 20Hz — the
+// constants are DJ-native px/tick, so the tick rate is part of the
+// physics. frameMs follows the configured region's resolved profile.
+let frameMs = 1000 / 60;
 let acc = 0;
 let last = performance.now();
 function frame(now) {
     acc = Math.min(acc + (now - last), 250); // clamp away tab-switch spirals
     last = now;
-    while (acc >= FRAME_MS) {
-        acc -= FRAME_MS;
+    while (acc >= frameMs) {
+        acc -= frameMs;
         if (session) {
             // Bot input merges with (never blocks) the keyboard. The
             // driver sees the PREVIOUS tick's state, so it observes

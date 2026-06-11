@@ -6,6 +6,7 @@
  * translucent ghost, exactly the set the physics ignores.
  */
 
+import { platformXAt } from '../physics.js';
 import {
     isPlatformActive,
     activeSprings,
@@ -36,24 +37,32 @@ export function renderFrame(ctx, session, ui = {}) {
     ctx.fillRect(0, 0, W, H);
 
     // platforms (ghosted when suppressed) — width from the session's
-    // resolved physics constants (profile-stamped worlds may differ)
-    const pw = session.constants.PLATFORM_WIDTH * scale;
+    // resolved physics constants (profile-stamped worlds may differ).
+    // Moving blues draw at their CURRENT swept x (platformXAt, dj
+    // behaviors); broken browns are gone (debris not modeled).
+    const C = session.constants;
+    const brokenSet = new Set(state.broken ?? []);
+    const pw = C.PLATFORM_WIDTH * scale;
     for (const p of level.platforms) {
+        if (brokenSet.has(p.id)) continue;
         ctx.globalAlpha = isPlatformActive(p, abilities) ? 1 : 0.22;
         ctx.fillStyle = PLATFORM_COLORS[p.type] ?? '#888';
-        ctx.fillRect(sx(p.x) - pw / 2, sy(p.y), pw, 7);
+        ctx.fillRect(sx(platformXAt(p, state.t ?? 0, C)) - pw / 2, sy(p.y), pw, 7);
     }
     ctx.globalAlpha = 1;
 
-    // springs and jetpacks (ghosted when locked or host-suppressed)
+    // springs and jetpacks (ghosted when locked or host-suppressed,
+    // gone with a broken host)
     const springsOn = new Set(activeSprings(level, abilities).map((s) => s.id));
     for (const s of level.springs ?? []) {
+        if (brokenSet.has(s.on)) continue;
         ctx.globalAlpha = springsOn.has(s.id) ? 1 : 0.22;
         ctx.fillStyle = '#e6c84a';
         ctx.fillRect(sx(s.x) - 6, sy(s.y) - 6, 12, 6);
     }
     const jetsOn = new Set(activeJetpacks(level, abilities).map((j) => j.id));
     for (const j of level.jetpacks ?? []) {
+        if (brokenSet.has(j.on)) continue;
         ctx.globalAlpha = jetsOn.has(j.id) ? 1 : 0.22;
         ctx.fillStyle = '#e08840';
         ctx.fillRect(sx(j.x) - 5, sy(j.y) - 12, 10, 12);
