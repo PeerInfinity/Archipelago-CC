@@ -138,6 +138,20 @@ await runScenario('B — mixed maze+bounce cross-substrate handoff', {
     victoryItem: 'victory',
 });
 
+// dj profile: real measured Doodle Jump physics at native 20Hz —
+// latched no-snap landings, edge wrap, flat ±10 control, full-width
+// swept blue movers (∃-phase waits) and breaking browns (reset on
+// respawn). The bot replans from live state on every landing, so
+// mover phases and broken platforms are handled by simulation, not
+// special cases. 20Hz also means everything takes 3x the wall-clock
+// of classic — hence the longer timeout.
+await runScenario('C — dj-profile playthrough (movers + breaking browns)', {
+    url: '?game=bounce_dj_worldgen&seed=1',
+    expectedLocations: 7,
+    victoryItem: 'Victory',
+    timeoutMs: 480000,
+});
+
 console.log('\nVERIFY BOT PLAYTHROUGH: ALL OK');
 await browser.close();
 process.exit(0);

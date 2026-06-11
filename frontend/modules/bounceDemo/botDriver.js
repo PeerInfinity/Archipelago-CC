@@ -85,17 +85,35 @@ function abilitiesKey(abilities) {
 }
 
 /**
+ * Moving-blue platform ids (dj behaviors, active under the blue item).
+ * The bot passes THROUGH these, exactly like canJump's edges: a mover
+ * landing keeps the player's x and re-launches next tick, so it's part
+ * of a composite jump — never a planning anchor, never a leg end.
+ */
+function moverIds(level, abilities, C) {
+    if (C.PLATFORM_BEHAVIORS?.blue !== 'moving' || !abilities?.blue) return null;
+    const ids = (level.platforms ?? [])
+        .filter((p) => p.type === 'blue' && p.sweep)
+        .map((p) => p.id);
+    return ids.length > 0 ? new Set(ids) : null;
+}
+
+/**
  * Forward-simulate one policy from the live state until the player
  * lands on a platform other than `fromId` (re-landing on the launch
- * platform re-launches, as in jumpQuery), falls, or times out.
- * Returns the landing platform id or null.
+ * platform re-launches, as in jumpQuery; bouncing through a pass-
+ * through mover continues the leg), falls, or times out. Returns the
+ * landing platform id or null.
  */
-function simulatePolicy(level, startState, abilities, policyFn, fromId, C) {
+function simulatePolicy(level, startState, abilities, policyFn, fromId, C, through = null) {
     let state = startState;
     for (let frame = 1; frame <= SIM_MAX_FRAMES; frame++) {
         state = physicsStep(state, policyFn(state, frame), level, abilities, C);
         if (state.fallen) return null;
-        if (state.landedOn && state.landedOn !== fromId) return state.landedOn;
+        if (state.landedOn && state.landedOn !== fromId
+                && !through?.has(state.landedOn)) {
+            return state.landedOn;
+        }
     }
     return null;
 }
@@ -186,9 +204,16 @@ export function createBotDriver(opts = {}) {
         const legPlatform = platformById(level, legTo);
         if (!legPlatform) { stuck = true; return; }
 
+        // validation passes THROUGH movers (other than the leg target
+        // itself) — the composite wait-land-bounce-off is one jump
+        let through = moverIds(level, abilities, C);
+        if (through?.has(legTo)) {
+            through = new Set(through);
+            through.delete(legTo);
+        }
         const candidates = policiesFor(legPlatform.x, abilities, C);
         for (const candidate of candidates) {
-            if (simulatePolicy(level, state, abilities, candidate.fn, lastPlatform, C) === legTo) {
+            if (simulatePolicy(level, state, abilities, candidate.fn, lastPlatform, C, through) === legTo) {
                 policyFn = candidate.fn;
                 policyName = candidate.name;
                 nextPlatform = legTo;
@@ -255,8 +280,20 @@ export function createBotDriver(opts = {}) {
             // Track landings even while idle: auto-play moves the
             // player long before the first walkTo arrives, and a plan
             // made from a stale platform aims at the wrong leg.
-            if (state?.landedOn) lastPlatform = state.landedOn;
+            // EXCEPT moving blues: a mover landing keeps the player's
+            // x and re-launches next tick — it's the middle of a
+            // composite jump, never a planning anchor (planning "from"
+            // a mover has no outgoing edges, which used to trigger the
+            // DESCEND fallback and a fall-retry loop).
+            const onMover = !!(state?.landedOn && level
+                && moverIds(level, abilities, C)?.has(state.landedOn));
+            if (state?.landedOn && !onMover) lastPlatform = state.landedOn;
             if (!target || !level) return null;
+            if (onMover && policyFn) {
+                // mid-composite mover bounce: keep flying the leg
+                policyFrame += 1;
+                return policyFn(state, policyFrame);
+            }
             if (state.landedOn) {
                 replan(state, level, abilities, helpers);
             } else if (policyFrame === -1) {

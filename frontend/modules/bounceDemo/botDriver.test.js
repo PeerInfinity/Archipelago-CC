@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createBotDriver, shortestPath } from './botDriver.js';
-import { step as physicsStep, spawnState } from './physics.js';
+import { step as physicsStep, spawnState, PROFILES } from './physics.js';
 import { noAbilities } from './suppression.js';
 import { bounceStack } from './fixtures/bounceStack.js';
 import { fork } from './fixtures/fork.js';
@@ -22,18 +22,21 @@ function runDriver(level, abilities, driver, {
     isPortalOpen,
     until = () => false,
     startState = null,
+    constants = undefined,
 } = {}) {
-    let state = startState ?? spawnState(level);
+    let state = startState ?? spawnState(level, constants);
     const pickupsTouched = new Set();
     const portalsTouched = new Set();
     const inputs = [];
+    let falls = 0;
     for (let f = 0; f < maxFrames; f++) {
         const input = driver.nextInput(state, level, abilities, { isPortalOpen });
         inputs.push(input);
-        state = physicsStep(state, input, level, abilities);
+        state = physicsStep(state, input, level, abilities, constants);
         if (state.fallen) {
+            falls += 1;
             driver.notifyFell();
-            state = spawnState(level);
+            state = spawnState(level, constants);
             continue;
         }
         if (state.landedOn) {
@@ -45,10 +48,10 @@ function runDriver(level, abilities, driver, {
             }
         }
         if (until({ state, pickupsTouched, portalsTouched })) {
-            return { state, pickupsTouched, portalsTouched, inputs, frames: f + 1 };
+            return { state, pickupsTouched, portalsTouched, inputs, frames: f + 1, falls };
         }
     }
-    return { state, pickupsTouched, portalsTouched, inputs, frames: maxFrames };
+    return { state, pickupsTouched, portalsTouched, inputs, frames: maxFrames, falls };
 }
 
 describe('shortestPath', () => {
@@ -272,5 +275,38 @@ describe('botDriver — edge cases', () => {
             until: ({ pickupsTouched }) => pickupsTouched.has('loc_arrow'),
         });
         expect(r.pickupsTouched.has('loc_arrow')).toBe(true);
+    });
+});
+
+describe('dj movers: composite legs pass through blue platforms', () => {
+    const DJ = PROFILES.dj.constants;
+    // the in-browser bug repro (2026-06-11): the bot waited on the
+    // green, landed on the full-width mover — and then, with the mover
+    // as its planning anchor (no outgoing edges), fired the DESCEND
+    // fallback: held its one arrow and fell off the map, forever.
+    const level = {
+        id: 'dj_bot_blue',
+        size: { width: 600, height: 700 },
+        platforms: [
+            { id: 'g0', x: 300, y: 620, type: 'green' },
+            { id: 'bl', x: 300, y: 530, type: 'blue', sweep: { min: 15, max: 585 } },
+            { id: 'g1', x: 300, y: 440, type: 'green' },
+        ],
+        springs: [],
+        jetpacks: [],
+        pickups: [{ id: 'loc_a', x: 300, y: 420, on: 'g1' }],
+        portals: [],
+    };
+
+    it('waits for the sweep, bounces THROUGH the mover and collects above — no descend loop', () => {
+        const driver = createBotDriver({ constants: DJ });
+        driver.setTarget({ kind: 'pickup', id: 'loc_a' });
+        const r = runDriver(level, abilitiesWith('blue', 'left'), driver, {
+            constants: DJ,
+            maxFrames: 4000,
+            until: ({ pickupsTouched }) => pickupsTouched.has('loc_a'),
+        });
+        expect([...r.pickupsTouched]).toContain('loc_a');
+        expect(r.falls).toBe(0);
     });
 });
