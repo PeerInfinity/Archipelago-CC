@@ -20,6 +20,7 @@
  */
 
 import { createGameSession } from '../gameCore.js';
+import { createBotDriver } from '../botDriver.js';
 import { renderFrame } from './render.js';
 import { installDevHarness } from './devBridge.js';
 
@@ -41,6 +42,20 @@ let fellExitSent = false; // one fall exit per configure (no double moves)
 let lastItems = [];
 let message = '';
 let messageTimer = 0;
+
+// Playback-bot driver (botDriver.js). Engaged via the optional
+// __swfBridge.botWalkTo / botStop contract methods — the host bridge
+// translates AP location/exit names to game-local goal ids before
+// calling in. The driver synthesizes per-frame inputs that merge with
+// (and never block) real keyboard input.
+const botDriver = createBotDriver();
+
+// gateStates getter for the driver's route planning: an OPEN
+// non-target portal en route would exit the region mid-leg, so the
+// driver avoids its host platform when an alternative exists.
+function isPortalOpen(id) {
+    return session ? session.gateStates.portals[id] !== false : true;
+}
 
 function setMessage(text) {
     message = text;
@@ -75,6 +90,11 @@ const gameSide = {
         backExitSide = params.backExitSide ?? null;
         fallBehavior = params.fallBehavior ?? 'current';
         fellExitSent = false;
+        // Goal ids are region-local: a target from the previous region
+        // is meaningless here. The host bridge re-sends botWalkTo for
+        // this region (it holds the pending AP-name target) right
+        // after configure.
+        botDriver.clearTarget();
         session = createGameSession(params.bounceLevel);
         // Pickups the host already has checked (region revisits) — by
         // their in-game ids; the bridge inverts ap_locations for us.
@@ -106,6 +126,19 @@ const gameSide = {
         session?.reset();
         setMessage('level reset');
     },
+    /**
+     * Playback bot: steer toward a game-local goal
+     * ({ kind: 'pickup' | 'portal', id }). The driver re-plans on
+     * every landing, so a mid-flight call engages cleanly.
+     */
+    botWalkTo(goal) {
+        botDriver.setTarget(goal);
+        if (goal?.id) setMessage(`bot: heading to ${goal.id}`);
+    },
+    /** Playback bot: release synthesized inputs (keyboard untouched). */
+    botStop() {
+        botDriver.clearTarget();
+    },
 };
 window.__swfBridge = Object.assign(window.__swfBridge ?? {}, gameSide);
 
@@ -121,6 +154,7 @@ window.__bounceDebug = () => ({
     levelId: session?.level?.id ?? null,
     backExitSide,
     fallBehavior,
+    botStatus: botDriver.getStatus(),
 });
 
 // ── standalone dev harness ──────────────────────────────────────
@@ -131,16 +165,24 @@ if (window === window.parent) {
 // ── events out ──────────────────────────────────────────────────
 function handleEvent(ev) {
     const bridge = window.__swfBridge;
+    const botTarget = botDriver.getStatus().target;
     if (ev.type === 'pickup') {
         setMessage(`checked: ${ev.id}`);
+        if (botTarget?.kind === 'pickup' && botTarget.id === ev.id) {
+            botDriver.clearTarget(); // arrived — next walkTo comes from the bot
+        }
         bridge.sendLocation?.(ev.id);
     } else if (ev.type === 'lockedPickup' || ev.type === 'lockedPortal') {
         setMessage('locked — something is still missing');
     } else if (ev.type === 'exit') {
         const side = portalSides[ev.portalId] ?? null;
         setMessage(`exit ${ev.direction ?? '?'}${side ? ` (side ${side})` : ''}`);
+        if (botTarget?.kind === 'portal' && botTarget.id === ev.portalId) {
+            botDriver.clearTarget(); // region unloads; bridge re-targets after configure
+        }
         bridge.sendExit?.(ev.portalId, side);
     } else if (ev.type === 'fell') {
+        botDriver.notifyFell();
         // gameCore auto-respawns at the entrance either way; in
         // 'previous' mode we additionally exit via the back side (one
         // shot per configure so a fall during the host round-trip
@@ -165,7 +207,15 @@ function frame(now) {
     while (acc >= FRAME_MS) {
         acc -= FRAME_MS;
         if (session) {
-            for (const ev of session.tick({ left: keys.left, right: keys.right })) {
+            // Bot input merges with (never blocks) the keyboard. The
+            // driver sees the PREVIOUS tick's state, so it observes
+            // each landing exactly once — its re-plan trigger.
+            const bot = botDriver.nextInput(
+                session.state, session.level, session.abilities, { isPortalOpen });
+            for (const ev of session.tick({
+                left: keys.left || !!bot?.left,
+                right: keys.right || !!bot?.right,
+            })) {
                 handleEvent(ev);
             }
         }
