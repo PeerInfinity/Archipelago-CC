@@ -366,6 +366,31 @@ describe('PlaybackBotUI — sphere-log play loop', () => {
         expect(bot.getCursor()).toBe(2);
     });
 
+    it('seeds checked locations from the stateManager snapshot on play', () => {
+        // Checks that happened before the bot could observe them
+        // (panel mounted late, or an auto-playing substrate like
+        // bounce collected pickups before the user pressed Play) must
+        // not stall the cursor — walking to an already-checked
+        // location never produces a locationCheck event.
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: makeSphereData,
+            getStaticData: makeStaticData,
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits: () => null },
+            stateManagerProxy: {
+                getLatestStateSnapshot: () => ({ checkedLocations: ['Loc A'] }),
+            },
+        });
+        bot.onRegionMove({ targetRegion: 'region_b' });
+        bot.play();
+        // Head skipped Loc A (snapshot-checked) and went straight to
+        // Loc B in the current region.
+        const walkTo = controller.calls.find((c) => c.method === 'walkTo');
+        expect(walkTo.args[0]).toEqual({ kind: 'location', name: 'Loc B' });
+        expect(bot.getCursor()).toBe(1);
+    });
+
     it('region change retriggers walkTo for the new region', () => {
         const pathFinder = {
             findPathWithExits: () => ({ steps: [

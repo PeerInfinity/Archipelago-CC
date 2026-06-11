@@ -234,6 +234,7 @@ export class PlaybackBotUI {
     async play(rateHz = this._rate) {
         this._rate = rateHz;
         this._ensureQueueBuilt();
+        this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
             // Thin-remote fallback: no sphere queue to drive, so we
             // just kick the visualizer's clock and let its greedy
@@ -260,6 +261,7 @@ export class PlaybackBotUI {
 
     step() {
         this._ensureQueueBuilt();
+        this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
             this._dispatch('step');
             return;
@@ -270,6 +272,7 @@ export class PlaybackBotUI {
 
     async instant() {
         this._ensureQueueBuilt();
+        this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
             this._dispatch('instant');
             return;
@@ -585,6 +588,25 @@ export class PlaybackBotUI {
         this._queue = buildSphereQueue(sphereData, idx);
         this._cursor = 0;
         this._lastPublishedTarget = null;
+    }
+
+    /**
+     * Merge the stateManager snapshot's checked locations into
+     * `_checkedSoFar`. The observed-event set only covers checks the
+     * bot SAW — but checks can land before the panel's deferred init
+     * wires the dispatcher receivers, and auto-playing substrates
+     * (bounce collects on-column pickups from the moment its iframe
+     * boots) check locations long before the user presses Play.
+     * Without this seed the cursor would walk to an already-checked
+     * location and stall forever: the substrate suppresses the
+     * duplicate pickup, so no locationCheck event ever advances it.
+     * Called at the play/step/instant entry points; mid-run checks
+     * arrive through the normal event path.
+     */
+    _seedCheckedFromSnapshot() {
+        const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
+        if (!Array.isArray(checked)) return;
+        for (const name of checked) this._checkedSoFar.add(name);
     }
 
     /**
