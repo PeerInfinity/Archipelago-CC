@@ -2267,7 +2267,11 @@ export function arrangeShuffledSpiral(config) {
 // adapter.gateableItems (when present) limits the gate vocabulary,
 // and adapter.canHostExitGates(existingGates, newGate) lets a
 // substrate veto structurally-unrealisable combinations (bounce's
-// arrowless-exit rules).
+// arrowless-exit rules). Gates are handed to substrates as term
+// arrays [{ item, count }] — bounce realises non-ability (and
+// count > 1) terms as authored bridge-evaluated locks rather than
+// geometry (rule-gated portals/pickups), so any item can gate any
+// substrate's exits.
 
 /**
  * Decide the abstract region tree for a sphere plan. Pure given rng.
@@ -2347,7 +2351,13 @@ export function buildSphereTree(plan, opts = {}, rng) {
             const free = SIDES.filter((s) => !host.usedSides.has(s));
             node.side = free[Math.floor(rng.next() * free.length)];
             host.usedSides.add(node.side);
-            host.childGates.push(gate);
+            // childGates carry counts as [{ item, count }] terms so
+            // substrate vetoes can tell physics gates (count 1
+            // abilities) from authored locks.
+            const gateTerms = gate.map((item) => ({
+                item, count: gateCounts[item] ?? 1,
+            }));
+            host.childGates.push(gateTerms);
             node.usedSides.add(OPPOSITE_SIDE[node.side]);
             // The region's GUARANTEED BACK PORTAL is structurally a
             // gate it must realise (requirement = its entry gate: a
@@ -2358,30 +2368,27 @@ export function buildSphereTree(plan, opts = {}, rng) {
             // so it can host no arrowless child gate. Inert for
             // substrates without the veto hook (maze walks back via
             // its entrance tile).
-            node.childGates.push(gate);
+            node.childGates.push(gateTerms);
         }
         nodes.push(node);
         return node;
     };
 
-    const canHost = (host, gate, gateCount) => {
+    const canHost = (host, gateTerms) => {
         if (host.usedSides.size >= 4) return false;
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
-        // A substrate with a declared gate vocabulary (bounce: the six
-        // abilities) realises gates as physics constructions — those
-        // are binary, so count gates (required count > 1) are out of
-        // its reach. Full-rule-vocabulary substrates (gateableItems ==
-        // null; maze's logic-gate obstacles) realise any count.
-        // TEMPORARY restriction: dissolves when bounce's rule-gated
-        // portals land (priority list #2 in the plan doc).
-        if (gateable && gate.some((item) => !gateable.includes(item)
-                || gateCount(item) > 1)) {
+        // A substrate with a declared gate vocabulary can only realise
+        // gates on those items. Bounce now declares null — authored
+        // bridge-evaluated locks cover the full vocabulary including
+        // count gates (rule-gated portals, priority #2); the check
+        // remains for future fixed-zone substrates (e.g. JtA).
+        if (gateable && gateTerms.some(({ item }) => !gateable.includes(item))) {
             return false;
         }
         if (typeof adapter.canHostExitGates === 'function'
-                && !adapter.canHostExitGates([...host.childGates], gate)) {
+                && !adapter.canHostExitGates([...host.childGates], gateTerms)) {
             return false;
         }
         return true;
@@ -2395,36 +2402,18 @@ export function buildSphereTree(plan, opts = {}, rng) {
     // fillers carry no items, so wave-0 fillers gate on sphere-1
     // items instead of [] (an arrowless [] gate would fight the back
     // portal for the host's single arrowless slot on substrates like
-    // bounce). `childSubstrate` constrains the gate to items the
-    // CHILD can realise too — its guaranteed back portal carries the
-    // entry gate, so e.g. a bounce region can't sit behind a key gate.
-    const pickHostAndGate = (wave, { gateWave = wave, childSubstrate = null } = {}) => {
+    // bounce). The CHILD's substrate doesn't constrain the gate:
+    // bounce realises any entry gate's back portal via authored
+    // locks (anyone inside satisfies the entry gate by construction).
+    const pickHostAndGate = (wave, { gateWave = wave } = {}) => {
         // Required count for a gate item at this gate's sphere: the
         // cumulative instance count through sphere gateWave (1 for
         // single-instance items — the common case).
         const cum = gateWave > 0 ? cumCounts[gateWave - 1] : null;
         const gateCount = (item) => cum?.get(item) ?? 1;
-        let gateChoices = gateWave === 0
+        const gateChoices = gateWave === 0
             ? [[]]
             : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]);
-        const childAdapter = childSubstrate ? substrateRegistry.get(childSubstrate) : null;
-        const childGateable = (childAdapter
-            && typeof childAdapter.generateZoneForSpecs === 'function'
-            && childAdapter.gateableItems) || null;
-        if (childGateable) {
-            // The child's guaranteed back portal carries the entry
-            // gate, so the gate must fit the child's vocabulary too —
-            // including the count restriction (see canHost).
-            gateChoices = gateChoices.filter((gate) =>
-                gate.every((item) => childGateable.includes(item)
-                    && gateCount(item) === 1));
-            if (gateChoices.length === 0) {
-                throw new Error(`growSpheres: substrate '${childSubstrate}' cannot realise `
-                    + `a back portal for any sphere-${gateWave} gate item — plan the `
-                    + 'spheres with gateableItems (or pins) so every sphere carries a '
-                    + `single-instance item '${childSubstrate}' can gate on`);
-            }
-        }
         const eligible = nodes.filter((h) => h.usedSides.size < 4
             && (gateWave === 0 ? h.wave === 0 : true));
         const older = eligible.filter((h) => h.wave < wave - 1);
@@ -2434,7 +2423,10 @@ export function buildSphereTree(plan, opts = {}, rng) {
         for (const pool of pools) {
             for (const host of rng.shuffle([...pool])) {
                 for (const gate of gateChoices) {
-                    if (canHost(host, gate, gateCount)) {
+                    const gateTerms = gate.map((item) => ({
+                        item, count: gateCount(item),
+                    }));
+                    if (canHost(host, gateTerms)) {
                         return {
                             host,
                             gate,
@@ -2446,11 +2438,12 @@ export function buildSphereTree(plan, opts = {}, rng) {
             }
         }
         throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate. `
-            + 'For bounce-only worlds note that each level supports ONE arrowless '
-            + 'portal, and guaranteed back portals consume it on every non-start '
-            + 'region — so sphere 1 must fit in at most 2 regions (raise "Max '
-            + 'items/region", lower the sphere count, or pin fewer items to '
-            + 'sphere 1).');
+            + 'For bounce-only worlds note that each level supports ONE '
+            + 'physics-arrowless portal (key/count gates included — an unlocked '
+            + 'on-column portal swallows every climb past it), and guaranteed '
+            + 'back portals consume it on every non-start region — so sphere 1 '
+            + 'must fit in at most 2 regions (raise "Max items/region", lower '
+            + 'the sphere count, or pin fewer items to sphere 1).');
     };
 
     // Filler waves chosen up front so each wave knows its region count.
@@ -2471,11 +2464,8 @@ export function buildSphereTree(plan, opts = {}, rng) {
                 }));
                 continue;
             }
-            // Substrate first: the child's guaranteed back portal
-            // carries the entry gate, so the gate pick must respect
-            // the child's gate vocabulary.
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w, { childSubstrate: substrate });
+            const { host, gate, gateCounts } = pickHostAndGate(w);
             waveNodes.push(addNode({ wave: w, gate, gateCounts, parent: host.index, substrate }));
         }
         // Round-robin the wave's items across its hosting regions.
@@ -2491,7 +2481,6 @@ export function buildSphereTree(plan, opts = {}, rng) {
             const substrate = pickSub();
             const { host, gate, gateCounts } = pickHostAndGate(w, {
                 gateWave: w === 0 && waves > 1 ? 1 : w,
-                childSubstrate: substrate,
             });
             addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
         }
@@ -2594,11 +2583,16 @@ function buildSphereProceduralRegion({
 // bounce parameter (regionParams.fallBehavior).
 function buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
-    entranceSide, entryGate = [], regionParams = {}, seed, adapter,
+    entranceSide, entryGate = [], entryGateCounts = {},
+    regionParams = {}, seed, adapter,
 }) {
-    const exitSpecs = exitPlans.map((e) => ({ side: e.side, requirement: e.gate }));
+    const exitSpecs = exitPlans.map((e) => ({
+        side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
+    }));
     if (entranceSide) {
-        exitSpecs.push({ side: entranceSide, requirement: entryGate });
+        exitSpecs.push({
+            side: entranceSide, requirement: entryGate, counts: entryGateCounts,
+        });
     } else if (exitSpecs.length === 0) {
         throw new Error(`growSpheres: zone region '${region_id}' has neither `
             + 'children nor a parent — single-region zone worlds are not supported');
@@ -2751,6 +2745,7 @@ export function growSpheres(config) {
             .map((child) => ({
                 side: child.side,
                 gate: child.gate,
+                gateCounts: child.gateCounts,
                 rule: gateRule(child.gate, child.gateCounts),
             }));
 
@@ -2794,6 +2789,7 @@ export function growSpheres(config) {
                 locations,
                 entranceSide,
                 entryGate: node.gate,
+                entryGateCounts: node.gateCounts,
                 regionParams,
                 seed: (rng.next() * 0x7fffffff) | 0,
                 adapter,

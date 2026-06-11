@@ -299,11 +299,12 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
         expect(wave1.gateCounts).toEqual({ key_red: 1 });
     });
 
-    it('bounce cannot realise a count gate — loud failure, not a broken world', () => {
-        // TEMPORARY restriction until bounce's rule-gated portals land
-        // (priority list #2): a multi-instance gate item never lands on
-        // a bounce-owned exit / back portal. A bounce-only world whose
-        // only sphere-2 gate item is multi-instance must fail loudly.
+    it('bounce realises a count gate as an authored lock (rule-gated portals)', () => {
+        // Used to be a loud failure (the TEMPORARY count-gate filter);
+        // with rule-gated portals a multi-instance gate item lands on a
+        // bounce exit as an authored bridge-evaluated lock: the emitted
+        // rule carries Has(Springs, 2), the payload carries gate_rules,
+        // and the oracle still equals the plan.
         const plan = {
             seed: 1,
             spheres: [
@@ -312,7 +313,7 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
                 { sphere: 3, items: ['Victory'] },
             ],
         };
-        expect(() => growSpheres({
+        const { grid, startCell } = growSpheres({
             regionSize: { width: 8, height: 6 },
             seed: 1,
             growthParams: {
@@ -320,10 +321,28 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
                 substrateQuotas: { bounce: 99 },
                 startSubstrate: 'bounce',
             },
-        })).toThrow(/cannot realise a back portal|no host can realise/);
-    });
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 1, embedSphereLog: false,
+            completionConditionItem: 'Victory',
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
 
-    it('mixed world: count gates land on maze exits, bounce keeps single-instance gates', () => {
+        const countGates = collectCountGates(rulesJson);
+        expect(countGates.length).toBeGreaterThan(0);
+        for (const g of countGates) {
+            expect(g.item_name).toBe('Springs');
+            expect(g.count).toBe(2);
+        }
+        // The authored lock rides some bounce payload for the bridge.
+        const gateRules = [...grid.allRegions()]
+            .map((r) => r.playable_payload?.gate_rules)
+            .filter(Boolean);
+        expect(gateRules.length).toBeGreaterThan(0);
+        expect(JSON.stringify(gateRules)).toContain('"count":2');
+    }, 120000);
+
+    it('mixed world with a split key: count gates may land on any substrate, oracle holds', () => {
         const pool = {
             'Right arrow': 1, Springs: 1,
             key_red: 2, key_blue: 1, victory: 1,
@@ -336,7 +355,7 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
                 victoryItem: 'victory', seed,
             });
             if (plan.spheres.filter((s) => s.items.includes('key_red')).length < 2) continue;
-            const { grid, startCell, tree } = growSpheres({
+            const { grid, startCell } = growSpheres({
                 regionSize: { width: 8, height: 6 },
                 seed,
                 growthParams: {
@@ -345,13 +364,6 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
                     startSubstrate: 'maze',
                 },
             });
-            // No bounce node carries (or is gated by) a count > 1.
-            for (const node of tree.nodes) {
-                if (node.substrate !== 'bounce') continue;
-                for (const c of Object.values(node.gateCounts ?? {})) {
-                    expect(c).toBe(1);
-                }
-            }
             const rulesJson = buildRulesJson(grid, {
                 startCell, seed, embedSphereLog: false,
                 startingItems: ['Left arrow'],
@@ -366,6 +378,62 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
             return; // one verified split seed is enough
         }
         throw new Error('no seed in 1..12 split key_red — adjust the fixture');
+    }, 120000);
+
+    it('a bounce region sits behind a key gate (the dissolved back-portal constraint)', () => {
+        // Spheres carry ONLY maze keys — every bounce region's entry
+        // gate and back portal must be authored locks. Previously this
+        // threw ("cannot realise a back portal"); now it must realise
+        // exactly. Arrows ride starting items so bounce columns are
+        // traversable.
+        const pool = { key_red: 1, key_blue: 1, victory: 1 };
+        for (let seed = 1; seed <= 12; seed++) {
+            const plan = planSpheres({
+                itemPool: pool, sphereCount: 3,
+                victoryItem: 'victory', seed,
+            });
+            let built;
+            try {
+                built = growSpheres({
+                    regionSize: { width: 8, height: 6 },
+                    seed,
+                    growthParams: {
+                        spherePlan: plan,
+                        substrateQuotas: { maze: 1, bounce: 99 },
+                        startSubstrate: 'maze',
+                    },
+                });
+            } catch {
+                continue; // structural dead-end for this seed; try the next
+            }
+            const { grid, startCell, tree } = built;
+            const keyGatedBounce = tree.nodes.find((n) => n.substrate === 'bounce'
+                && n.gate.some((item) => item.startsWith('key_')));
+            if (!keyGatedBounce) continue;
+
+            // Its back portal carries the entry key as an authored lock.
+            const region = grid.getRegion(keyGatedBounce.cell);
+            const portalLocks = region.playable_payload?.gate_rules?.portals ?? {};
+            expect(JSON.stringify(portalLocks)).toContain(keyGatedBounce.gate[0]);
+
+            const rulesJson = buildRulesJson(grid, {
+                startCell, seed, embedSphereLog: false,
+                startingItems: ['Right arrow', 'Left arrow'],
+                sourceItems: {
+                    'Right arrow': {
+                        name: 'Right arrow', id: 998,
+                        classification: 'progression', groups: ['Everything'],
+                    },
+                    'Left arrow': {
+                        name: 'Left arrow', id: 999,
+                        classification: 'progression', groups: ['Everything'],
+                    },
+                },
+            });
+            expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+            return;
+        }
+        throw new Error('no seed in 1..12 produced a key-gated bounce region — adjust the fixture');
     }, 120000);
 });
 
@@ -475,9 +543,10 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             'Right arrow': 1, 'Left arrow': 1, 'Springs': 1,
             key_red: 1, key_blue: 1, victory: 1,
         };
-        // gateableItems guarantees every non-final sphere carries a
-        // bounce-gateable item — bounce children can't sit behind key
-        // gates (their guaranteed back portal carries the entry gate).
+        // gateableItems steers the planner toward physics-gateable
+        // items per sphere (no longer required for correctness —
+        // bounce realises key gates as authored locks — but kept to
+        // exercise the planner option).
         const plan = planSpheres({
             itemPool: pool,
             sphereCount: 3,
