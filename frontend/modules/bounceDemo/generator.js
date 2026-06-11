@@ -65,6 +65,7 @@ import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './apRules.js';
 
 export const CLASSIC_GEOMETRY = Object.freeze({
     WIDTH: 400,          // single-target level width (multi-target is dynamic)
+    WIDTH_MODE: 'dynamic', // multi-target width fits the platform extents
     PLAIN_DY: 120,       // plain bounce step (apex 169 clears with margin)
     SPRING_GAP: Object.freeze({ min: 380, span: 60 }),   // plain 169 fails, spring 484 clears
     JETPACK_GAP: Object.freeze({ min: 1180, span: 60 }), // spring 484 fails, jetpack 1296 clears
@@ -175,7 +176,13 @@ export function validateGeometry(G, C) {
  * make TALL levels.
  */
 export const DJ_GEOMETRY = Object.freeze({
-    WIDTH: 400,
+    // FIXED width (user requirement, 2026-06-11 browser test): the
+    // wrap point and the renderer's zoom must not depend on platform
+    // placement — every dj level is exactly this wide, like DJ's
+    // fixed 240px stage. 600 = the arrow-gating floor (one flat-
+    // control flight can't cross the wrap seam from the column).
+    WIDTH: 600,
+    WIDTH_MODE: 'fixed',
     PLAIN_DY: 90,
     SPRING_GAP: Object.freeze({ min: 480, span: 60 }),
     JETPACK_GAP: Object.freeze({ min: 6186, span: 60 }),
@@ -479,7 +486,10 @@ const isSubsetReq = (a, b) => a.every((x) => b.includes(x));
 // Classic behaviors keep the colored stepping-stone gates unchanged.
 const colorHostMode = (C) => C.PLATFORM_BEHAVIORS?.blue === 'moving'
     || C.PLATFORM_BEHAVIORS?.brown === 'breaking';
-const BLUE_SWEEP_AMP = 30; // px each side; period 24 ticks at BLUE_SPEED 5
+// Moving blues sweep the FULL level width (like DJ: centers 15..195
+// of the 240 stage) — the sweep bounds are level data assigned after
+// width normalization, with this center-margin at each edge.
+const BLUE_SWEEP_EDGE_MARGIN = 15;
 const colorsOf = (req) => req.filter((a) => COLOR_ABILITIES.includes(a));
 
 function normalizeRequirement(req, what) {
@@ -534,6 +544,13 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs, colorHost = false) {
         if (coloredArrowless.length > 1) {
             throw new Error('generateLevelFromSpecs: at most one arrowless colored goal per '
                 + `level under dj behaviors (got ${coloredArrowless.map((g) => `'${g.id}'`).join(', ')})`);
+        }
+        for (const g of exits) {
+            if (g.hostColor === 'blue' && hasArrow(g.req)) {
+                throw new Error(`generateLevelFromSpecs: exit '${g.id}' combines blue with an `
+                    + 'arrow — a blue host sweeps the full level width, so an arrow cannot '
+                    + 'gate it (dj behaviors)');
+            }
         }
         for (const pk of pickups) {
             if (pk.hostColor && hasArrow(pk.req)) {
@@ -710,13 +727,11 @@ function proposeLevelFromSpecs({
     const portals = [];
     const rungs = [];
     let n = 0;
+    // Blue hosts under moving behaviors get FULL-WIDTH sweeps — the
+    // bounds are assigned after width normalization (the sweep is in
+    // level coords); until then the bare 'blue' type marks them.
     const place = (px, py, type = 'green') => {
         const platform = { id: `p${n++}`, x: px, y: py, type };
-        // a blue host under moving behaviors sweeps ±BLUE_SWEEP_AMP
-        // around its placement x (deterministic phase, no RNG)
-        if (type === 'blue' && C.PLATFORM_BEHAVIORS?.blue === 'moving') {
-            platform.sweep = { min: px - BLUE_SWEEP_AMP, max: px + BLUE_SWEEP_AMP };
-        }
         platforms.push(platform);
         return platform;
     };
@@ -760,17 +775,17 @@ function proposeLevelFromSpecs({
     // half a plain step vertically (classic 60).
     const clearX = C.PLATFORM_WIDTH + C.PLATFORM_WIDTH / 2 + C.PLAYER_HALF_WIDTH;
     const clearY = PLAIN_DY / 2;
-    // sweep-aware: a moving blue's footprint is its whole sweep range
-    const spotClear = (sx, sy, amp = 0) => !platforms.some((p) => {
-        const pAmp = p.sweep ? (p.sweep.max - p.sweep.min) / 2 : 0;
-        return Math.abs(p.x - sx) < clearX + amp + pAmp && Math.abs(p.y - sy) < clearY;
+    // A moving blue sweeps the FULL width: nothing may share its
+    // height band (vertical-only check); statics use the x clearance.
+    const movingBlue = (p) => p.type === 'blue' && C.PLATFORM_BEHAVIORS?.blue === 'moving';
+    const spotClear = (sx, sy) => !platforms.some((p) => {
+        if (Math.abs(p.y - sy) >= clearY) return false;
+        return movingBlue(p) || Math.abs(p.x - sx) < clearX;
     });
     for (const exit of branchExits) {
         const key = reqKey(exit.attachKey);
         const d = exit.drift;
         const dir = d === 'right' ? +1 : -1;
-        const tipAmp = exit.hostColor === 'blue'
-            && C.PLATFORM_BEHAVIORS?.blue === 'moving' ? BLUE_SWEEP_AMP : 0;
         const candidates = rng.shuffle(rungs.filter(
             (r) => r.key === key && !r.isPortalHost && !r.isColoredHost));
         let placed = false;
@@ -779,7 +794,7 @@ function proposeLevelFromSpecs({
             if (usedSlots.has(slot)) continue;
             const sx = rung.x + dir * G.BRANCH_DX;
             const sy = rung.y - PLAIN_DY;
-            if (!spotClear(sx, sy, tipAmp)) continue;
+            if (!spotClear(sx, sy)) continue;
             usedSlots.add(slot);
             const host = place(sx, sy, exit.hostColor ?? 'green');
             portals.push({
@@ -801,35 +816,53 @@ function proposeLevelFromSpecs({
     let maxAbsX = 0;
     let minY = 0;
     for (const p of platforms) {
-        const pAmp = p.sweep ? (p.sweep.max - p.sweep.min) / 2 : 0;
-        maxAbsX = Math.max(maxAbsX, Math.abs(p.x) + pAmp);
+        maxAbsX = Math.max(maxAbsX, Math.abs(p.x));
         minY = Math.min(minY, p.y);
     }
-    // Width discipline under screen wrap: single-arrow goals stay
-    // single-arrow only when the wrap path is too long for the
-    // available arcs. The asymmetry sweep (wrapAsymmetry.test.js)
-    // shows ±140 branch tips are wrong-arrow-reachable below ~600px
-    // width (spring/jetpack airtime wraps a 420px level), so levels
-    // with any arrow-gated goal get a width floor (sweep-calibrated
-    // per profile; G.ARROW_HALF_WIDTH_FLOOR). The verify loop remains
-    // the gatekeeper either way.
-    const anyArrowGoal = [...exits, ...pickups]
-        .some((g) => g.req.some((a) => ARROW_ABILITIES.includes(a)));
-    const halfSpan = Math.max(maxAbsX + 70, anyArrowGoal ? G.ARROW_HALF_WIDTH_FLOOR : 0);
+    let halfSpan;
+    if (G.WIDTH_MODE === 'fixed') {
+        // dj: the level width is a profile CONSTANT — the wrap point
+        // and the renderer's zoom never depend on platform placement.
+        halfSpan = G.WIDTH / 2;
+        if (maxAbsX + 70 > halfSpan) {
+            throw new Error(`column span ${Math.round(maxAbsX)} does not fit the fixed `
+                + `${G.WIDTH}px width`);
+        }
+    } else {
+        // Width discipline under screen wrap: single-arrow goals stay
+        // single-arrow only when the wrap path is too long for the
+        // available arcs. The asymmetry sweep (wrapAsymmetry.test.js)
+        // shows ±140 branch tips are wrong-arrow-reachable below
+        // ~600px width (spring/jetpack airtime wraps a 420px level),
+        // so levels with any arrow-gated goal get a width floor
+        // (G.ARROW_HALF_WIDTH_FLOOR). The verify loop remains the
+        // gatekeeper either way.
+        const anyArrowGoal = [...exits, ...pickups]
+            .some((g) => g.req.some((a) => ARROW_ABILITIES.includes(a)));
+        halfSpan = Math.max(maxAbsX + 70, anyArrowGoal ? G.ARROW_HALF_WIDTH_FLOOR : 0);
+    }
     const shiftX = halfSpan;
     const shiftY = 60 - minY;
-    const shift = (e) => {
-        e.x += shiftX;
-        e.y += shiftY;
-        if (e.sweep) {
-            e.sweep = { ...e.sweep, min: e.sweep.min + shiftX, max: e.sweep.max + shiftX };
-        }
-    };
+    const shift = (e) => { e.x += shiftX; e.y += shiftY; };
     platforms.forEach(shift);
     springs.forEach(shift);
     jetpacks.forEach(shift);
     pickupEntities.forEach(shift);
     portals.forEach(shift);
+
+    // Full-width sweeps for moving blues (level coords, so assigned
+    // after the shift): centers run MARGIN .. WIDTH-MARGIN, like DJ's
+    // 15..195 on the 240 stage. Deterministic phase 0 (state tick 0 =
+    // the sweep's left bound, moving right).
+    if (C.PLATFORM_BEHAVIORS?.blue === 'moving') {
+        for (const p of platforms) {
+            if (p.type !== 'blue') continue;
+            p.sweep = {
+                min: BLUE_SWEEP_EDGE_MARGIN,
+                max: 2 * halfSpan - BLUE_SWEEP_EDGE_MARGIN,
+            };
+        }
+    }
 
     return {
         id,

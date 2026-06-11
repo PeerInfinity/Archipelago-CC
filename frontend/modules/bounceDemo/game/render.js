@@ -69,10 +69,19 @@ export function renderFrame(ctx, session, ui = {}) {
     }
     ctx.globalAlpha = 1;
 
+    // Goal markers ride their HOST platform: a goal hosted on a moving
+    // blue draws at the host's current swept x (collection/teleport are
+    // landing-triggered on the host, so the marker must track it).
+    const hostById = new Map(level.platforms.map((p) => [p.id, p]));
+    const goalX = (g) => {
+        const host = hostById.get(g.on);
+        return host?.sweep ? platformXAt(host, state.t ?? 0, C) : g.x;
+    };
+
     // pickups: squares (outline once collected; padlocked while a
     // rule gate holds them closed — the metroidvania tease)
     for (const pk of level.pickups ?? []) {
-        const x = sx(pk.x);
+        const x = sx(goalX(pk));
         const y = sy(pk.y);
         if (collected.has(pk.id)) {
             ctx.strokeStyle = '#666';
@@ -96,7 +105,7 @@ export function renderFrame(ctx, session, ui = {}) {
     // portals: circles with direction arrows (gray padlock while a
     // rule gate holds them closed)
     for (const pt of level.portals ?? []) {
-        const x = sx(pt.x);
+        const x = sx(goalX(pt));
         const y = sy(pt.y);
         const locked = isLocked('portals', pt.id);
         ctx.strokeStyle = locked ? '#777' : '#b08ae0';

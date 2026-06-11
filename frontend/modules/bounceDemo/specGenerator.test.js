@@ -473,9 +473,13 @@ describe('generateLevelFromSpecs — dj color-as-host mode', () => {
             physics: 'dj',
             seed: 3,
         });
+        // dj width is a profile CONSTANT: zoom and wrap point never
+        // depend on platform placement
+        expect(level.size.width).toBe(600);
         const blues = level.platforms.filter((p) => p.type === 'blue');
         expect(blues).toHaveLength(1);
-        expect(blues[0].sweep.max - blues[0].sweep.min).toBe(60); // ±BLUE_SWEEP_AMP
+        // full-width sweep, like DJ: centers MARGIN..WIDTH-MARGIN
+        expect(blues[0].sweep).toEqual({ min: 15, max: 585 });
         // blue-after-green by construction: the host's exit portal rides it
         const topPortal = level.portals.find((pt) => pt.id === 'exit_top');
         expect(topPortal.on).toBe(blues[0].id);
@@ -505,7 +509,7 @@ describe('generateLevelFromSpecs — dj color-as-host mode', () => {
         });
     });
 
-    it('declines: two arrowless colored goals; blue AND brown on one goal', () => {
+    it('declines: two arrowless colored goals; blue AND brown on one goal; blue + arrow', () => {
         expect(() => generateLevelFromSpecs({
             id: 'x',
             exitSpecs: [{ id: 'e', requirement: ['blue'] }],
@@ -517,6 +521,13 @@ describe('generateLevelFromSpecs — dj color-as-host mode', () => {
             exitSpecs: [{ id: 'e', requirement: ['blue', 'brown'] }],
             physics: 'dj',
         })).toThrow(/both blue.*and brown|blue and brown/);
+        // a full-width mover sweeps over the column too — an arrow
+        // cannot gate it
+        expect(() => generateLevelFromSpecs({
+            id: 'x',
+            exitSpecs: [{ id: 't', requirement: [] }, { id: 'e', requirement: ['blue', 'right'] }],
+            physics: 'dj',
+        })).toThrow(/full level width/);
     });
 
     it('classic keeps colored stepping-stone gates (no sweep, no host coloring rules)', () => {
