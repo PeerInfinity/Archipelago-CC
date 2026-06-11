@@ -1,0 +1,775 @@
+{
+  "region_3_3": {
+    "substrate": "bounce",
+    "render_hint": "bounce",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 3
+    },
+    "playable_payload": {
+      "gameId": "bounceDemo",
+      "params": {
+        "bounceLevel": {
+          "id": "region_3_3",
+          "size": {
+            "width": 600,
+            "height": 1794.3490631924942
+          },
+          "platforms": [
+            {
+              "id": "p0",
+              "x": 300,
+              "y": 1694.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p1",
+              "x": 300,
+              "y": 1574.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p2",
+              "x": 300,
+              "y": 1454.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p3",
+              "x": 300,
+              "y": 1334.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p4",
+              "x": 300,
+              "y": 1214.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 300,
+              "y": 1094.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p6",
+              "x": 300,
+              "y": 974.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p7",
+              "x": 300,
+              "y": 540,
+              "type": "green"
+            },
+            {
+              "id": "p8",
+              "x": 300,
+              "y": 420,
+              "type": "green"
+            },
+            {
+              "id": "p9",
+              "x": 300,
+              "y": 300,
+              "type": "green"
+            },
+            {
+              "id": "p10",
+              "x": 300,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p11",
+              "x": 300,
+              "y": 60,
+              "type": "green"
+            },
+            {
+              "id": "p12",
+              "x": 440,
+              "y": 1214.3490631924942,
+              "type": "green"
+            },
+            {
+              "id": "p13",
+              "x": 440,
+              "y": 1454.3490631924942,
+              "type": "green"
+            }
+          ],
+          "springs": [
+            {
+              "id": "s7",
+              "x": 300,
+              "y": 969.3490631924942,
+              "on": "p6"
+            }
+          ],
+          "jetpacks": [],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "x": 300,
+              "y": 1194.3490631924942,
+              "on": "p4"
+            }
+          ],
+          "portals": [
+            {
+              "id": "side_exit_S",
+              "x": 300,
+              "y": 40,
+              "on": "p11",
+              "target_region": null,
+              "direction": "down"
+            },
+            {
+              "id": "side_exit_E",
+              "x": 440,
+              "y": 1194.3490631924942,
+              "on": "p12",
+              "target_region": null,
+              "direction": "right"
+            },
+            {
+              "id": "side_exit_N",
+              "x": 440,
+              "y": 1434.3490631924942,
+              "on": "p13",
+              "target_region": null,
+              "direction": "up"
+            }
+          ]
+        },
+        "sidePortals": {
+          "E": "side_exit_E",
+          "N": "side_exit_N",
+          "S": "side_exit_S"
+        }
+      },
+      "ap_locations": {
+        "loc_0": "region_3_3__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "x": 7,
+          "y": 3,
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_4_3",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_3_3"
+        },
+        {
+          "exit_id": "exit_N",
+          "x": 4,
+          "y": 0,
+          "side": "N",
+          "exitName": "exit_N",
+          "targetRegion": "region_3_2",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_3_3"
+        },
+        {
+          "exit_id": "exit_S",
+          "x": 4,
+          "y": 5,
+          "side": "S",
+          "exitName": "exit_S",
+          "targetRegion": "region_3_4",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_3_3"
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_4_3": {
+    "substrate": "bounce",
+    "render_hint": "bounce",
+    "grid_cell": {
+      "gx": 4,
+      "gy": 3
+    },
+    "playable_payload": {
+      "gameId": "bounceDemo",
+      "params": {
+        "bounceLevel": {
+          "id": "region_4_3",
+          "size": {
+            "width": 700,
+            "height": 1000
+          },
+          "platforms": [
+            {
+              "id": "p0",
+              "x": 350,
+              "y": 900,
+              "type": "green"
+            },
+            {
+              "id": "p1",
+              "x": 350,
+              "y": 780,
+              "type": "green"
+            },
+            {
+              "id": "p2",
+              "x": 350,
+              "y": 660,
+              "type": "green"
+            },
+            {
+              "id": "p3",
+              "x": 350,
+              "y": 540,
+              "type": "green"
+            },
+            {
+              "id": "p4",
+              "x": 350,
+              "y": 420,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 490,
+              "y": 300,
+              "type": "green"
+            },
+            {
+              "id": "p6",
+              "x": 490,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p7",
+              "x": 490,
+              "y": 60,
+              "type": "green"
+            },
+            {
+              "id": "p8",
+              "x": 630,
+              "y": 60,
+              "type": "green"
+            }
+          ],
+          "springs": [],
+          "jetpacks": [],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "x": 350,
+              "y": 640,
+              "on": "p2"
+            },
+            {
+              "id": "loc_1",
+              "x": 350,
+              "y": 520,
+              "on": "p3"
+            }
+          ],
+          "portals": [
+            {
+              "id": "side_exit_W",
+              "x": 630,
+              "y": 40,
+              "on": "p8",
+              "target_region": null,
+              "direction": "left"
+            }
+          ]
+        },
+        "sidePortals": {
+          "W": "side_exit_W"
+        },
+        "backExitSide": "W",
+        "fallBehavior": "current"
+      },
+      "ap_locations": {
+        "loc_0": "region_4_3__loc_0",
+        "loc_1": "region_4_3__loc_1"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "region_3_3",
+          "x": 0,
+          "y": 3,
+          "side": "W",
+          "exitName": "region_3_3",
+          "targetRegion": "region_3_3",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_3_2": {
+    "substrate": "bounce",
+    "render_hint": "bounce",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "bounceDemo",
+      "params": {
+        "bounceLevel": {
+          "id": "region_3_2",
+          "size": {
+            "width": 700,
+            "height": 1360
+          },
+          "platforms": [
+            {
+              "id": "p0",
+              "x": 350,
+              "y": 1260,
+              "type": "green"
+            },
+            {
+              "id": "p1",
+              "x": 350,
+              "y": 1140,
+              "type": "green"
+            },
+            {
+              "id": "p2",
+              "x": 350,
+              "y": 1020,
+              "type": "green"
+            },
+            {
+              "id": "p3",
+              "x": 350,
+              "y": 900,
+              "type": "green"
+            },
+            {
+              "id": "p4",
+              "x": 350,
+              "y": 780,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 350,
+              "y": 660,
+              "type": "green"
+            },
+            {
+              "id": "p6",
+              "x": 210,
+              "y": 540,
+              "type": "green"
+            },
+            {
+              "id": "p7",
+              "x": 210,
+              "y": 420,
+              "type": "green"
+            },
+            {
+              "id": "p8",
+              "x": 210,
+              "y": 300,
+              "type": "green"
+            },
+            {
+              "id": "p9",
+              "x": 210,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p10",
+              "x": 70,
+              "y": 60,
+              "type": "green"
+            },
+            {
+              "id": "p11",
+              "x": 490,
+              "y": 660,
+              "type": "green"
+            }
+          ],
+          "springs": [],
+          "jetpacks": [],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "x": 350,
+              "y": 880,
+              "on": "p3"
+            }
+          ],
+          "portals": [
+            {
+              "id": "side_exit_E",
+              "x": 70,
+              "y": 40,
+              "on": "p10",
+              "target_region": null,
+              "direction": "right"
+            },
+            {
+              "id": "side_exit_S",
+              "x": 490,
+              "y": 640,
+              "on": "p11",
+              "target_region": null,
+              "direction": "down"
+            }
+          ]
+        },
+        "sidePortals": {
+          "E": "side_exit_E",
+          "S": "side_exit_S"
+        },
+        "backExitSide": "S",
+        "fallBehavior": "current"
+      },
+      "ap_locations": {
+        "loc_0": "region_3_2__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "x": 7,
+          "y": 3,
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_4_2",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_3_2"
+        },
+        {
+          "exit_id": "region_3_3",
+          "x": 4,
+          "y": 5,
+          "side": "S",
+          "exitName": "region_3_3",
+          "targetRegion": "region_3_3",
+          "targetExitId": "exit_N",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_4_2": {
+    "substrate": "bounce",
+    "render_hint": "bounce",
+    "grid_cell": {
+      "gx": 4,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "bounceDemo",
+      "params": {
+        "bounceLevel": {
+          "id": "region_4_2",
+          "size": {
+            "width": 700,
+            "height": 1360
+          },
+          "platforms": [
+            {
+              "id": "p0",
+              "x": 350,
+              "y": 1260,
+              "type": "green"
+            },
+            {
+              "id": "p1",
+              "x": 350,
+              "y": 1140,
+              "type": "green"
+            },
+            {
+              "id": "p2",
+              "x": 350,
+              "y": 1020,
+              "type": "green"
+            },
+            {
+              "id": "p3",
+              "x": 350,
+              "y": 900,
+              "type": "green"
+            },
+            {
+              "id": "p4",
+              "x": 350,
+              "y": 780,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 350,
+              "y": 660,
+              "type": "green"
+            },
+            {
+              "id": "p6",
+              "x": 350,
+              "y": 540,
+              "type": "green"
+            },
+            {
+              "id": "p7",
+              "x": 210,
+              "y": 420,
+              "type": "green"
+            },
+            {
+              "id": "p8",
+              "x": 210,
+              "y": 300,
+              "type": "green"
+            },
+            {
+              "id": "p9",
+              "x": 210,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p10",
+              "x": 210,
+              "y": 60,
+              "type": "green"
+            },
+            {
+              "id": "p11",
+              "x": 70,
+              "y": 180,
+              "type": "green"
+            }
+          ],
+          "springs": [],
+          "jetpacks": [],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "x": 350,
+              "y": 880,
+              "on": "p3"
+            },
+            {
+              "id": "loc_1",
+              "x": 350,
+              "y": 760,
+              "on": "p4"
+            }
+          ],
+          "portals": [
+            {
+              "id": "side_exit_W",
+              "x": 70,
+              "y": 160,
+              "on": "p11",
+              "target_region": null,
+              "direction": "left"
+            }
+          ]
+        },
+        "sidePortals": {
+          "W": "side_exit_W"
+        },
+        "backExitSide": "W",
+        "fallBehavior": "current"
+      },
+      "ap_locations": {
+        "loc_0": "region_4_2__loc_0",
+        "loc_1": "region_4_2__loc_1"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "region_3_2",
+          "x": 0,
+          "y": 3,
+          "side": "W",
+          "exitName": "region_3_2",
+          "targetRegion": "region_3_2",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_3_4": {
+    "substrate": "bounce",
+    "render_hint": "bounce",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 4
+    },
+    "playable_payload": {
+      "gameId": "bounceDemo",
+      "params": {
+        "bounceLevel": {
+          "id": "region_3_4",
+          "size": {
+            "width": 140,
+            "height": 1521.9188039191067
+          },
+          "platforms": [
+            {
+              "id": "p0",
+              "x": 70,
+              "y": 1421.9188039191067,
+              "type": "green"
+            },
+            {
+              "id": "p1",
+              "x": 70,
+              "y": 1301.9188039191067,
+              "type": "green"
+            },
+            {
+              "id": "p2",
+              "x": 70,
+              "y": 1181.9188039191067,
+              "type": "green"
+            },
+            {
+              "id": "p3",
+              "x": 70,
+              "y": 1061.9188039191067,
+              "type": "green"
+            },
+            {
+              "id": "p4",
+              "x": 70,
+              "y": 941.9188039191067,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 70,
+              "y": 821.9188039191067,
+              "type": "green"
+            },
+            {
+              "id": "p6",
+              "x": 70,
+              "y": 420,
+              "type": "green"
+            },
+            {
+              "id": "p7",
+              "x": 70,
+              "y": 300,
+              "type": "green"
+            },
+            {
+              "id": "p8",
+              "x": 70,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p9",
+              "x": 70,
+              "y": 60,
+              "type": "green"
+            }
+          ],
+          "springs": [
+            {
+              "id": "s6",
+              "x": 70,
+              "y": 816.9188039191067,
+              "on": "p5"
+            }
+          ],
+          "jetpacks": [],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "x": 70,
+              "y": 1041.9188039191067,
+              "on": "p3"
+            }
+          ],
+          "portals": [
+            {
+              "id": "side_exit_N",
+              "x": 70,
+              "y": 40,
+              "on": "p9",
+              "target_region": null,
+              "direction": "up"
+            }
+          ]
+        },
+        "sidePortals": {
+          "N": "side_exit_N"
+        },
+        "backExitSide": "N",
+        "fallBehavior": "current"
+      },
+      "ap_locations": {
+        "loc_0": "region_3_4__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "region_3_3",
+          "x": 4,
+          "y": 0,
+          "side": "N",
+          "exitName": "region_3_3",
+          "targetRegion": "region_3_3",
+          "targetExitId": "exit_S",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  }
+}

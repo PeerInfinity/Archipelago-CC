@@ -32,6 +32,11 @@
  *   --fillers N              filler regions, no items (default 0)
  *   --revisit P              revisit ratio for attachments (default 0.25)
  *   --no-bidirectional       disable back-exits
+ *   --no-arrow-entry         skip the panel's bounce arrow-entry
+ *                            orchestration (exclusive sphere 1 /
+ *                            starting item)
+ *   --fall-behavior MODE     bounce fallBehavior regionParam (default 'current')
+ *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
  *
  * Output JSON shape:
@@ -59,6 +64,9 @@ import { planSpheres, computeItemSpheres, compareSpheresToPlan } from
     '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from
     '../../frontend/modules/shared/procgen/library.js';
+import { substrateRegistry } from
+    '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { createRng } from '../../frontend/modules/shared/rng.js';
 
 // --- CLI parser ---
 
@@ -78,6 +86,9 @@ function parseArgs(argv) {
         fillers: 0,
         revisit: 0.25,
         bidirectional: true,
+        arrowEntry: true,
+        fallBehavior: 'current',
+        rulesOut: null,
         out: './sphere-growth-dump.json',
     };
     const parseWxH = (s) => {
@@ -127,6 +138,9 @@ function parseArgs(argv) {
             case '--fillers': out.fillers = parseInt(next(), 10); break;
             case '--revisit': out.revisit = parseFloat(next()); break;
             case '--no-bidirectional': out.bidirectional = false; break;
+            case '--no-arrow-entry': out.arrowEntry = false; break;
+            case '--fall-behavior': out.fallBehavior = next(); break;
+            case '--rules-out': out.rulesOut = next(); break;
             case '-o':
             case '--out': out.out = next(); break;
             case '-h':
@@ -178,26 +192,80 @@ function shapeRegions(grid) {
 async function main() {
     const config = parseArgs(process.argv.slice(2));
 
-    // Victory default: an is_victory item present in the pool.
+    // Merged item library, mirroring the panel's _mergedItemLib():
+    // DEFAULT_ITEMS plus any libraryItems declared by selected
+    // substrates (quotas + start substrate).
+    const selectedSubs = new Set(Object.keys(config.quotas));
+    if (config.start) selectedSubs.add(config.start);
+    const itemLib = { ...DEFAULT_ITEMS };
+    for (const id of selectedSubs) {
+        const extra = substrateRegistry.get(id)?.libraryItems;
+        if (extra) Object.assign(itemLib, extra);
+    }
+
+    // Victory resolution, mirroring _resolveVictoryItemId(): explicit
+    // flag, else an is_victory item in the pool (merged lib), else a
+    // selected substrate's registry victoryItem.
     let victory = config.victory;
     if (!victory) {
         victory = Object.keys(config.items)
-            .find((id) => DEFAULT_ITEMS[id]?.is_victory) ?? null;
+            .find((id) => itemLib[id]?.is_victory) ?? null;
+    }
+    if (!victory) {
+        for (const id of selectedSubs) {
+            const vi = substrateRegistry.get(id)?.victoryItem;
+            if (vi) { victory = vi; break; }
+        }
+    }
+
+    // Bounce arrow entry, mirroring the panel's _runSphereGrowth():
+    // bounce START → sphere 1 is EXACTLY one seeded-random arrow (the
+    // start-stack intro); any other start → the arrow leaves the pool
+    // and becomes a starting item.
+    const itemPool = { ...config.items };
+    const quotaIds = Object.keys(config.quotas);
+    const bounceSelected = (config.quotas.bounce ?? 0) > 0 || config.start === 'bounce';
+    const bounceStarts = config.start === 'bounce'
+        || (config.start == null && bounceSelected
+            && quotaIds.length > 0 && quotaIds.every((id) => id === 'bounce'));
+    const exclusiveSpheres = {};
+    const startingItems = [];
+    let arrowNote = '';
+    if (config.arrowEntry && bounceSelected) {
+        const arrows = ['Left arrow', 'Right arrow']
+            .filter((a) => (itemPool[a] ?? 0) > 0);
+        if (arrows.length > 0) {
+            const pick = arrows[Math.floor(
+                createRng((config.seed * 31 + 17) | 0).next() * arrows.length)];
+            if (bounceStarts) {
+                exclusiveSpheres[1] = [pick];
+                arrowNote = `${pick} = sphere 1 (the start stack)`;
+            } else {
+                startingItems.push(pick);
+                itemPool[pick] -= 1;
+                if (itemPool[pick] <= 0) delete itemPool[pick];
+                arrowNote = `${pick} granted as a starting item`;
+            }
+        }
     }
 
     const plan = planSpheres({
-        itemPool: config.items,
+        itemPool,
         ...(config.spheres != null
             ? { sphereCount: config.spheres }
             : { itemsPerSphere: config.itemsPerSphere }),
         pins: config.pins,
-        ...(victory ? { victoryItem: victory } : {}),
+        exclusiveSpheres,
+        ...(victory && (itemPool[victory] ?? 0) > 0
+            ? { victoryItem: victory } : {}),
         seed: config.seed,
     });
 
     const { grid, stats, startCell, tree } = growSpheres({
         regionSize: config.region,
+        itemLib,
         seed: config.seed,
+        regionParams: { fallBehavior: config.fallBehavior },
         growthParams: {
             spherePlan: plan,
             maxItemsPerRegion: config.maxItemsPerRegion,
@@ -214,7 +282,22 @@ async function main() {
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: config.seed,
+        itemLib,
+        startingItems,
+        ...(startingItems.length > 0 ? {
+            sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
+                name,
+                id: 999 - i,
+                classification: 'progression',
+                groups: ['Everything'],
+            }])),
+        } : {}),
         ...(victory ? { completionConditionItem: victory } : {}),
+        procgenMetadata: {
+            driver: 'sphere-growth',
+            stop_reason: stats.stopReason,
+            sphere_plan: plan,
+        },
     });
 
     // The oracle: the emitted world must compute back to the plan.
@@ -246,10 +329,20 @@ async function main() {
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
     console.log(`Wrote ${outPath}`);
+    if (config.rulesOut) {
+        const rulesPath = resolve(process.cwd(), config.rulesOut);
+        mkdirSync(dirname(rulesPath), { recursive: true });
+        writeFileSync(rulesPath, JSON.stringify(rulesJson, null, 2));
+        console.log(`Wrote ${rulesPath}`);
+    }
     console.log(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  teleporters: ${stats.teleportersPlaced}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
     console.log(`  plan: ${plan.spheres.map((s) => `S${s.sphere}=[${s.items.join(',')}]`).join(' ')}`);
+    if (arrowNote) console.log(`  arrow entry: ${arrowNote}`);
+    if (startingItems.length > 0) {
+        console.log(`  starting items: ${startingItems.join(', ')}`);
+    }
     if (oracleErrors.length > 0) {
         console.error('SPHERE ORACLE FAILED:');
         for (const e of oracleErrors) console.error(`  ${e}`);
