@@ -21,8 +21,9 @@ function runDriver(level, abilities, driver, {
     maxFrames = 5000,
     isPortalOpen,
     until = () => false,
+    startState = null,
 } = {}) {
-    let state = spawnState(level);
+    let state = startState ?? spawnState(level);
     const pickupsTouched = new Set();
     const portalsTouched = new Set();
     const inputs = [];
@@ -172,6 +173,60 @@ describe('botDriver — steered targets (fork)', () => {
             until: ({ pickupsTouched }) => pickupsTouched.has('loc_left'),
         });
         expect(second.pickupsTouched.has('loc_left')).toBe(true);
+    });
+});
+
+describe('botDriver — descend fallback (target below an overshot climb)', () => {
+    // Real geometry from the committed bounce_sphere_worldgen preset's
+    // start region (region_3_3), where the first in-browser run got
+    // stuck: branch tips p12/p13 hang off the LOWER column (p13 is the
+    // target portal's host) while the no-input auto-climb parks the
+    // player high on p6 — and bounce physics cannot descend a column.
+    // The driver must deliberately fall off the level, respawn at the
+    // entrance, and take the verified low route (p0 → p1 → p13).
+    const overshootLevel = {
+        id: 'region_3_3_like',
+        size: { width: 600, height: 1794 },
+        platforms: [
+            ...[0, 1, 2, 3, 4, 5, 6].map((i) => (
+                { id: `p${i}`, x: 300, y: 1694 - 120 * i, type: 'green' })),
+            // Upper column across an unjumpable 434px gap (later-wave
+            // content) — the climb dead-ends on p6.
+            { id: 'p7', x: 300, y: 540, type: 'green' },
+            { id: 'p8', x: 300, y: 420, type: 'green' },
+            { id: 'p11', x: 300, y: 60, type: 'green' },
+            // Branch tips off the lower column.
+            { id: 'p12', x: 440, y: 1214, type: 'green' },
+            { id: 'p13', x: 440, y: 1454, type: 'green' },
+        ],
+        springs: [],
+        jetpacks: [],
+        pickups: [{ id: 'loc_0', x: 300, y: 1194, on: 'p4' }],
+        portals: [
+            { id: 'side_exit_E', x: 440, y: 1194, on: 'p12' },
+            { id: 'side_exit_N', x: 440, y: 1434, on: 'p13' },
+        ],
+    };
+
+    it('falls out, respawns, and reaches a branch tip below the overshoot', () => {
+        const abilities = abilitiesWith('right');
+        const driver = createBotDriver();
+        // Phase 1: no target — the auto-climb overshoots to p6.
+        const climb = runDriver(overshootLevel, abilities, driver, {
+            maxFrames: 4000,
+            until: () => driver.getStatus().lastPlatform === 'p6',
+        });
+        expect(driver.getStatus().lastPlatform).toBe('p6');
+        // Phase 2: target the low branch-tip portal, CONTINUING from
+        // the overshot state. No jump path exists from p6; the driver
+        // must descend (fall out, respawn) and take the low route.
+        driver.setTarget({ kind: 'portal', id: 'side_exit_N' });
+        const r = runDriver(overshootLevel, abilities, driver, {
+            maxFrames: 8000,
+            startState: climb.state,
+            until: ({ portalsTouched }) => portalsTouched.has('side_exit_N'),
+        });
+        expect(r.portalsTouched.has('side_exit_N')).toBe(true);
     });
 });
 

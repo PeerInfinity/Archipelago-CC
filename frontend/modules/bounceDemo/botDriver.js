@@ -21,6 +21,18 @@
  * On-column legs naturally synthesize NO input (policy 'none' is the
  * cheapest candidate), so the observed auto-play of sphere worlds is
  * the degenerate case of this driver, not a separate mode.
+ *
+ * Bounce physics cannot descend a column (every launch lands you back
+ * on the same platform or higher), so a target BELOW the player can
+ * be jump-unreachable from the current platform while perfectly
+ * reachable from the entrance — branch tips attach to specific column
+ * rungs, and the auto-climb routinely overshoots them. The driver's
+ * answer is the DESCEND fallback: when no jump path exists from here
+ * but one exists from the entrance, hold a drift direction to fall
+ * off the level; the engine respawns at the entrance (real game
+ * physics, fallBehavior 'current') and the next plan starts from the
+ * verified low route. Any accidental landing on the way down just
+ * re-plans — greedy re-plan makes the fall safe.
  */
 
 import { DEFAULTS, step as physicsStep } from './physics.js';
@@ -148,6 +160,20 @@ export function createBotDriver(opts = {}) {
         const path = shortestPath(g, lastPlatform, goalHost, blocked)
             ?? shortestPath(g, lastPlatform, goalHost);
         if (!path || path.length < 2) {
+            // No jump route from here. If the entrance can reach the
+            // goal and we can steer, deliberately fall off the level —
+            // the respawn IS the route down (see header). Without
+            // arrows we can't leave the column, so park and wait
+            // (items may still arrive and change the graph).
+            const fromEntrance = shortestPath(g, ENTRANCE, goalHost, blocked)
+                ?? shortestPath(g, ENTRANCE, goalHost);
+            if (fromEntrance && lastPlatform !== ENTRANCE
+                    && (abilities.left || abilities.right)) {
+                const dir = abilities.right ? { right: true } : { left: true };
+                policyFn = () => dir;
+                policyName = 'descend';
+                return;
+            }
             stuck = true;                   // retry at the next landing
             return;
         }
@@ -155,7 +181,8 @@ export function createBotDriver(opts = {}) {
         const legPlatform = platformById(level, legTo);
         if (!legPlatform) { stuck = true; return; }
 
-        for (const candidate of policiesFor(legPlatform.x, abilities)) {
+        const candidates = policiesFor(legPlatform.x, abilities);
+        for (const candidate of candidates) {
             if (simulatePolicy(level, state, abilities, candidate.fn, lastPlatform, C) === legTo) {
                 policyFn = candidate.fn;
                 policyName = candidate.name;
@@ -163,7 +190,20 @@ export function createBotDriver(opts = {}) {
                 return;
             }
         }
-        stuck = true;                       // no witness from this exact x
+        // The edge exists (canJump witnessed it from sampled launch
+        // positions) but no candidate validates from THIS exact x.
+        // Parking would re-land here at the same x forever; running
+        // the unvalidated seek at least perturbs the state — wherever
+        // we end up (the leg platform, elsewhere, or a fall-respawn),
+        // the next landing re-plans.
+        const seek = candidates.find((c) => c.name === 'seek');
+        if (seek) {
+            policyFn = seek.fn;
+            policyName = 'seek-forced';
+            nextPlatform = legTo;
+            return;
+        }
+        stuck = true;                       // no arrows — cannot steer
     }
 
     return {
@@ -207,9 +247,12 @@ export function createBotDriver(opts = {}) {
          * policy says "no input this frame".
          */
         nextInput(state, level, abilities, helpers = {}) {
+            // Track landings even while idle: auto-play moves the
+            // player long before the first walkTo arrives, and a plan
+            // made from a stale platform aims at the wrong leg.
+            if (state?.landedOn) lastPlatform = state.landedOn;
             if (!target || !level) return null;
             if (state.landedOn) {
-                lastPlatform = state.landedOn;
                 replan(state, level, abilities, helpers);
             } else if (policyFrame === -1) {
                 replan(state, level, abilities, helpers);
