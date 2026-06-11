@@ -24,6 +24,19 @@
  *     after configure and on every state change — the same cadence as
  *     pollItems. The game stays Archipelago-naive: it only ever sees
  *     booleans, and renders locked goals visibly locked.
+ *   - Playback bot (optional): when the iframe URL carries a
+ *     `playbackControlEvent` query param, subscribe to that event and
+ *     execute PlaybackController commands published by the host-side
+ *     proxy (the landed textAdventureSubstrateWrapper pattern). walkTo
+ *     targets arrive in AP vocabulary ({kind:'location'|'exit', name})
+ *     and are translated to game-local goal ids (ap_locations inverted
+ *     for pickups; exits → side → params.sidePortals for portals)
+ *     before being handed to the game via the optional
+ *     __swfBridge.botWalkTo contract method. A target that doesn't
+ *     resolve yet (the bot's walkTo can outrun the region's loadRegion
+ *     after a transition) is held pending and re-applied after
+ *     configure. The game plays itself through its real physics — the
+ *     bridge never simulates anything.
  *
  * The loadRegion event name is read from the iframe URL's
  * `loadRegionEvent` query param (set by the panel's iframeSrc), so
@@ -61,6 +74,12 @@ let _client = null;
 const LOAD_REGION_EVENT =
     new URLSearchParams(window.location.search).get('loadRegionEvent')
     || 'flash:loadRegion';
+
+// Which host event delivers playback-bot controller commands (see
+// header). No param = no playback support (plain flash games).
+const PLAYBACK_CONTROL_EVENT =
+    new URLSearchParams(window.location.search).get('playbackControlEvent')
+    || null;
 
 // Active-region state
 let _currentRegionId = null;
@@ -274,6 +293,95 @@ function _pushGateStates() {
 }
 
 // ────────────────────────────────────────────────────────────────
+// Playback bot (host PlaybackProxy → game botWalkTo/botStop)
+// ────────────────────────────────────────────────────────────────
+
+// The bot's walkTo for a region can arrive BEFORE that region's
+// loadRegion (both ride the same eventBus relay, published by
+// different host modules during the same region transition). Held
+// here and re-applied after configure; last write wins.
+let _pendingWalkTo = null;
+
+/**
+ * Translate an AP-vocabulary walkTo target into a game-local goal.
+ * Returns { kind: 'pickup' | 'portal', id } or null when the target
+ * doesn't resolve in the active region (wrong region, or a tile
+ * target — bounce has no tile semantics).
+ */
+function _translateWalkTo(target) {
+    if (!target || !_world) return null;
+    if (target.kind === 'location') {
+        for (const [flashName, apName] of Object.entries(_world.ap_locations ?? {})) {
+            if (apName === target.name) return { kind: 'pickup', id: flashName };
+        }
+        return null;
+    }
+    if (target.kind === 'exit') {
+        const exits = _world.exits;
+        const list = exits instanceof Map ? [...exits.values()]
+            : (Array.isArray(exits) ? exits : []);
+        // The bot publishes PathFinder's exit names — the AP-namespaced
+        // `{regionId}__{exitName}` form from staticData. Sidecar exits
+        // carry the bare exitName/exit_id, so match both shapes (the
+        // same tolerance mazeRoomUI's resolver applies).
+        const prefix = _currentRegionId ? `${_currentRegionId}__` : null;
+        const exit = list.find((e) => e?.exitName === target.name
+            || e?.exit_id === target.name
+            || (prefix && (target.name === `${prefix}${e?.exitName}`
+                || target.name === `${prefix}${e?.exit_id}`)));
+        if (!exit) return null;
+        const portalId = _world.params?.sidePortals?.[exit.side];
+        return portalId ? { kind: 'portal', id: portalId } : null;
+    }
+    return null;
+}
+
+/** Resolve + hand the target to the game. False = keep it pending. */
+function _applyWalkTo(target) {
+    if (!_isActive) return false;
+    const b = _bridge();
+    if (!b || typeof b.botWalkTo !== 'function') return false;
+    const goal = _translateWalkTo(target);
+    if (!goal) return false;
+    b.botWalkTo(goal);
+    log('debug', `walkTo ${target.kind} '${target.name}' -> bot goal`, goal);
+    return true;
+}
+
+function _handlePlaybackControl(payload) {
+    const method = payload?.method;
+    const args = Array.isArray(payload?.args) ? payload.args : [];
+    const b = _bridge();
+    switch (method) {
+        case 'walkTo': {
+            _pendingWalkTo = args[0] ?? null;
+            if (_applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
+            return;
+        }
+        case 'stop':
+            _pendingWalkTo = null;
+            b?.botStop?.();
+            return;
+        case 'reset':
+            _pendingWalkTo = null;
+            b?.botStop?.();
+            b?.reset?.();
+            return;
+        case 'play':
+        case 'step':
+        case 'instant':
+            // The game's own 60Hz loop always runs; "engaged" simply
+            // means the driver has a target. Re-try a pending one.
+            if (_pendingWalkTo && _applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
+            return;
+        case 'setRate':
+            return; // no scriptable clock to retune
+        default:
+            log('warn', 'playback control: unknown method', method);
+    }
+}
+
+// ────────────────────────────────────────────────────────────────
 // Region loading
 // ────────────────────────────────────────────────────────────────
 
@@ -334,6 +442,8 @@ function _handleLoadRegion(payload) {
     // states for any rule-gated portals/pickups.
     _pollItemsIntoGame();
     _pushGateStates();
+    // A bot walkTo that outran this loadRegion resolves now.
+    if (_pendingWalkTo && _applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
     log('debug', `loaded region ${regionId} (gameId=${world.gameId ?? '?'})`);
 }
 
@@ -361,6 +471,12 @@ async function main() {
 
     // Step 3: subscribe to host events.
     _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
+
+    // Playback-bot control channel (only when the embedding panel
+    // declared one via the iframe URL — see header).
+    if (PLAYBACK_CONTROL_EVENT) {
+        _client.subscribeEventBus(PLAYBACK_CONTROL_EVENT, _handlePlaybackControl);
+    }
 
     // When AP state changes (item received elsewhere, etc.), re-poll so
     // the game applies any newly-received items, and re-evaluate the
