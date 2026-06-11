@@ -2,26 +2,26 @@
   "driver": "sphere-growth",
   "stop_reason": "plan_complete",
   "sphere_plan": {
-    "seed": 4,
+    "seed": 1,
     "spheres": [
       {
         "sphere": 1,
         "items": [
-          "key_green",
-          "Springs"
+          "key_blue",
+          "Left arrow"
         ]
       },
       {
         "sphere": 2,
         "items": [
-          "Left arrow",
+          "Springs",
           "key_red"
         ]
       },
       {
         "sphere": 3,
         "items": [
-          "key_blue"
+          "key_green"
         ]
       },
       {
@@ -34,7 +34,7 @@
   },
   "region_count": 4,
   "grid_dims": {
-    "width": 3,
-    "height": 3
+    "width": 4,
+    "height": 4
   }
 }

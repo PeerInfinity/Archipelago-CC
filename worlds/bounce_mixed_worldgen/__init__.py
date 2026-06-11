@@ -23,12 +23,12 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "victory": 1,
+    "Springs": 1,
+    "key_red": 1,
     "key_blue": 1,
     "Left arrow": 1,
-    "key_red": 1,
     "key_green": 1,
-    "Springs": 1,
+    "victory": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
@@ -88,7 +88,7 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["victory", "key_blue", "Left arrow", "key_red", "key_green", "Springs", "Right arrow"]),
+        "Everything": frozenset(["Springs", "key_red", "key_blue", "Left arrow", "key_green", "victory", "Right arrow"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -97,34 +97,34 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "region_1_0__loc_0": "victory",
-        "region_2_0__loc_0__2_4": "key_blue",
-        "region_2_1__loc_0": "Left arrow",
-        "region_2_1__loc_1": "key_red",
-        "region_2_2__loc_0__4_0": "key_green",
-        "region_2_2__loc_1__4_2": "Springs",
+        "region_1_2__loc_0": "Springs",
+        "region_1_2__loc_1": "key_red",
+        "region_2_2__loc_0__4_1": "key_blue",
+        "region_2_2__loc_1__3_4": "Left arrow",
+        "region_3_2__loc_0__0_4": "key_green",
+        "region_3_3__loc_0": "victory",
     }
 
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
-        "region_1_0__loc_0": "victory",
-        "region_2_0__loc_0__2_4": "key_blue",
-        "region_2_1__loc_0": "Left arrow",
-        "region_2_1__loc_1": "key_red",
-        "region_2_2__loc_0__4_0": "key_green",
-        "region_2_2__loc_1__4_2": "Springs",
+        "region_1_2__loc_0": "Springs",
+        "region_1_2__loc_1": "key_red",
+        "region_2_2__loc_0__4_1": "key_blue",
+        "region_2_2__loc_1__3_4": "Left arrow",
+        "region_3_2__loc_0__0_4": "key_green",
+        "region_3_3__loc_0": "victory",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "region_1_0__loc_0": True,
-        "region_2_0__loc_0__2_4": True,
-        "region_2_1__loc_0": True,
-        "region_2_1__loc_1": True,
-        "region_2_2__loc_0__4_0": True,
-        "region_2_2__loc_1__4_2": True,
+        "region_1_2__loc_0": True,
+        "region_1_2__loc_1": True,
+        "region_2_2__loc_0__4_1": True,
+        "region_2_2__loc_1__3_4": True,
+        "region_3_2__loc_0__0_4": True,
+        "region_3_3__loc_0": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):

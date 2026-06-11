@@ -30,10 +30,10 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
-    "region_1_0__loc_0": LocationData("region_1_0", "region_1_0__loc_0", 1000, False),
-    "region_2_0__loc_0__2_4": LocationData("region_2_0", "region_2_0__loc_0__2_4", 1001, False),
-    "region_2_1__loc_0": LocationData("region_2_1", "region_2_1__loc_0", 1002, False),
-    "region_2_1__loc_1": LocationData("region_2_1", "region_2_1__loc_1", 1003, False),
-    "region_2_2__loc_0__4_0": LocationData("region_2_2", "region_2_2__loc_0__4_0", 1004, False),
-    "region_2_2__loc_1__4_2": LocationData("region_2_2", "region_2_2__loc_1__4_2", 1005, False),
+    "region_1_2__loc_0": LocationData("region_1_2", "region_1_2__loc_0", 1000, False),
+    "region_1_2__loc_1": LocationData("region_1_2", "region_1_2__loc_1", 1001, False),
+    "region_2_2__loc_0__4_1": LocationData("region_2_2", "region_2_2__loc_0__4_1", 1002, False),
+    "region_2_2__loc_1__3_4": LocationData("region_2_2", "region_2_2__loc_1__3_4", 1003, False),
+    "region_3_2__loc_0__0_4": LocationData("region_3_2", "region_3_2__loc_0__0_4", 1004, False),
+    "region_3_3__loc_0": LocationData("region_3_3", "region_3_3__loc_0", 1005, False),
 }

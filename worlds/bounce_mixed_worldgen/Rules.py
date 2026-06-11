@@ -21,31 +21,31 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("region_2_0", player),
+        multiworld.get_entrance("region_1_2__region_2_2", player),
         Has('key_blue', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("region_2_0__exit", player),
+        multiworld.get_entrance("exit_0", player),
         Has('key_blue', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("region_2_1", player),
-        Has('Left arrow', 1)
+        multiworld.get_entrance("exit_1", player),
+        Has('key_red', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("exit_N", player),
-        Has('Left arrow', 1)
+        multiworld.get_entrance("exit", player),
+        Has('key_green', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("region_2_2", player),
-        Has('Springs', 1)
+        multiworld.get_entrance("region_3_2__region_2_2", player),
+        Has('key_red', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("region_2_2__exit", player),
-        Has('Springs', 1)
+        multiworld.get_entrance("region_3_2", player),
+        Has('key_green', 1)
     )

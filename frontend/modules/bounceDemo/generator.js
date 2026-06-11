@@ -64,8 +64,20 @@ import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './apRules.js';
 // either way.
 
 export const CLASSIC_GEOMETRY = Object.freeze({
-    WIDTH: 400,          // single-target level width (multi-target is dynamic)
-    WIDTH_MODE: 'dynamic', // multi-target width fits the platform extents
+    WIDTH: 400,          // single-target (legacy zone-set) level width
+    // Multi-target levels are a FIXED width (user decision 2026-06-11,
+    // applied to classic after the dj fix): the wrap point and the
+    // renderer's zoom never depend on platform placement. 700 is the
+    // smallest width that fits classic's worst column extent — the
+    // column wanders ±BRANCH_DX (140) through arrow gates and tips
+    // hang another ±140 beyond, so max |x| = 280, plus the 70px
+    // placement margin = a 350px half-span. Wider than the 600px
+    // arrow-gating floor, so wrap gating only gets safer. NOTE this
+    // moved the frozen-classic artifact baseline —
+    // bounce_sphere_worldgen and bounce_mixed_worldgen presets were
+    // regenerated (the verify loop re-derived all rules).
+    WIDTH_MODE: 'fixed',
+    FIXED_WIDTH: 700,
     PLAIN_DY: 120,       // plain bounce step (apex 169 clears with margin)
     SPRING_GAP: Object.freeze({ min: 380, span: 60 }),   // plain 169 fails, spring 484 clears
     JETPACK_GAP: Object.freeze({ min: 1180, span: 60 }), // spring 484 fails, jetpack 1296 clears
@@ -821,12 +833,13 @@ function proposeLevelFromSpecs({
     }
     let halfSpan;
     if (G.WIDTH_MODE === 'fixed') {
-        // dj: the level width is a profile CONSTANT — the wrap point
-        // and the renderer's zoom never depend on platform placement.
-        halfSpan = G.WIDTH / 2;
+        // The level width is a profile CONSTANT — the wrap point and
+        // the renderer's zoom never depend on platform placement.
+        const fixedWidth = G.FIXED_WIDTH ?? G.WIDTH;
+        halfSpan = fixedWidth / 2;
         if (maxAbsX + 70 > halfSpan) {
             throw new Error(`column span ${Math.round(maxAbsX)} does not fit the fixed `
-                + `${G.WIDTH}px width`);
+                + `${fixedWidth}px width`);
         }
     } else {
         // Width discipline under screen wrap: single-arrow goals stay

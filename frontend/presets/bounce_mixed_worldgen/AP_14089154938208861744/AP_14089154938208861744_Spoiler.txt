@@ -26,12 +26,12 @@ Right arrow
 
 Locations:
 
-region_1_0__loc_0: victory
-region_2_0__loc_0__2_4: key_blue
-region_2_1__loc_0: Left arrow
-region_2_1__loc_1: key_red
-region_2_2__loc_0__4_0: key_green
-region_2_2__loc_1__4_2: Springs
+region_1_2__loc_0: Springs
+region_1_2__loc_1: key_red
+region_2_2__loc_0__4_1: key_blue
+region_2_2__loc_1__3_4: Left arrow
+region_3_2__loc_0__0_4: key_green
+region_3_3__loc_0: victory
 
 Playthrough:
 
@@ -39,16 +39,16 @@ Playthrough:
   Right arrow
 }
 1: {
-  region_2_2__loc_0__4_0: key_green
-  region_2_2__loc_1__4_2: Springs
+  region_2_2__loc_0__4_1: key_blue
+  region_2_2__loc_1__3_4: Left arrow
 }
 2: {
-  region_2_1__loc_0: Left arrow
-  region_2_1__loc_1: key_red
+  region_1_2__loc_0: Springs
+  region_1_2__loc_1: key_red
 }
 3: {
-  region_2_0__loc_0__2_4: key_blue
+  region_3_2__loc_0__0_4: key_green
 }
 4: {
-  region_1_0__loc_0: victory
+  region_3_3__loc_0: victory
 }

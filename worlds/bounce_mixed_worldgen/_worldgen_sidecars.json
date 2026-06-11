@@ -14,15 +14,7 @@
         1,
         1,
         1,
-        0,
-        0,
         1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        0,
         1,
         1,
         1,
@@ -31,11 +23,11 @@
         1,
         1,
         0,
-        1,
-        1,
-        1,
-        1,
-        1,
+        0,
+        0,
+        0,
+        0,
+        0,
         1,
         1,
         0,
@@ -43,10 +35,18 @@
         1,
         1,
         1,
+        0,
+        0,
+        1,
+        0,
         1,
         1,
         1,
         1,
+        1,
+        0,
+        0,
+        0,
         1,
         1,
         1,
@@ -65,12 +65,23 @@
       },
       "exits": [
         {
-          "exit_id": "exit",
-          "x": 5,
-          "y": 0,
-          "side": "N",
-          "exitName": "exit",
-          "targetRegion": "region_2_1",
+          "exit_id": "exit_0",
+          "x": 0,
+          "y": 2,
+          "side": "W",
+          "exitName": "exit_0",
+          "targetRegion": "region_1_2",
+          "targetExitId": "region_2_2",
+          "isBackExit": false,
+          "isTeleporter": false
+        },
+        {
+          "exit_id": "exit_1",
+          "x": 7,
+          "y": 1,
+          "side": "E",
+          "exitName": "exit_1",
+          "targetRegion": "region_3_2",
           "targetExitId": "region_2_2",
           "isBackExit": false,
           "isTeleporter": false
@@ -78,350 +89,28 @@
       ],
       "obstacles": [
         {
-          "x": 5,
-          "y": 0,
-          "id": "logic_gate_0"
-        }
-      ],
-      "items": [
-        {
-          "x": 4,
-          "y": 0,
-          "id": "key_green",
-          "locationName": "region_2_2__loc_0__4_0"
-        },
-        {
-          "x": 4,
+          "x": 0,
           "y": 2,
-          "id": "Springs",
-          "locationName": "region_2_2__loc_1__4_2"
-        }
-      ],
-      "obstacleLib": {
-        "logic_gate_0": {
-          "name": "Logic Gate",
-          "id": "logic_gate_0",
-          "clear_set_type": "rule",
-          "clear_rule": {
-            "rule": "Has",
-            "args": {
-              "item_name": "Springs"
-            }
-          },
-          "color": "#b06eb8",
-          "display": {
-            "mode": "tree"
-          },
-          "feature": "logic_gate"
-        }
-      },
-      "itemLib": {},
-      "longestShortestPath": 4,
-      "fogEnabled": true
-    },
-    "biome": {
-      "id": "classic"
-    },
-    "grow_telemetry": {
-      "requested_size": {
-        "width": 8,
-        "height": 6
-      },
-      "final_size": {
-        "width": 8,
-        "height": 6
-      },
-      "grow_attempts": 0
-    }
-  },
-  "region_2_1": {
-    "substrate": "bounce",
-    "render_hint": "bounce",
-    "grid_cell": {
-      "gx": 2,
-      "gy": 1
-    },
-    "playable_payload": {
-      "gameId": "bounceDemo",
-      "params": {
-        "bounceLevel": {
-          "id": "region_2_1",
-          "size": {
-            "width": 600,
-            "height": 1878.4047502744943
-          },
-          "platforms": [
-            {
-              "id": "p0",
-              "x": 300,
-              "y": 1778.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p1",
-              "x": 300,
-              "y": 1658.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p2",
-              "x": 300,
-              "y": 1538.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p3",
-              "x": 300,
-              "y": 1418.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p4",
-              "x": 300,
-              "y": 1298.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p5",
-              "x": 300,
-              "y": 1178.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p6",
-              "x": 300,
-              "y": 1058.4047502744943,
-              "type": "green"
-            },
-            {
-              "id": "p7",
-              "x": 300,
-              "y": 660,
-              "type": "green"
-            },
-            {
-              "id": "p8",
-              "x": 300,
-              "y": 540,
-              "type": "green"
-            },
-            {
-              "id": "p9",
-              "x": 300,
-              "y": 420,
-              "type": "green"
-            },
-            {
-              "id": "p10",
-              "x": 300,
-              "y": 300,
-              "type": "green"
-            },
-            {
-              "id": "p11",
-              "x": 300,
-              "y": 180,
-              "type": "green"
-            },
-            {
-              "id": "p12",
-              "x": 300,
-              "y": 60,
-              "type": "green"
-            },
-            {
-              "id": "p13",
-              "x": 160,
-              "y": 1058.4047502744943,
-              "type": "green"
-            }
-          ],
-          "springs": [
-            {
-              "id": "s7",
-              "x": 300,
-              "y": 1053.4047502744943,
-              "on": "p6"
-            }
-          ],
-          "jetpacks": [],
-          "pickups": [
-            {
-              "id": "loc_0",
-              "x": 300,
-              "y": 1398.4047502744943,
-              "on": "p3"
-            },
-            {
-              "id": "loc_1",
-              "x": 300,
-              "y": 1278.4047502744943,
-              "on": "p4"
-            }
-          ],
-          "portals": [
-            {
-              "id": "side_exit_S",
-              "x": 300,
-              "y": 40,
-              "on": "p12",
-              "target_region": null,
-              "direction": "down"
-            },
-            {
-              "id": "side_exit_N",
-              "x": 160,
-              "y": 1038.4047502744943,
-              "on": "p13",
-              "target_region": null,
-              "direction": "up"
-            }
-          ]
-        },
-        "sidePortals": {
-          "N": "side_exit_N",
-          "S": "side_exit_S"
-        },
-        "backExitSide": "S",
-        "fallBehavior": "current"
-      },
-      "ap_locations": {
-        "loc_0": "region_2_1__loc_0",
-        "loc_1": "region_2_1__loc_1"
-      },
-      "flashCapabilities": {
-        "locations": "cooperative",
-        "items": "pull",
-        "start": "auto"
-      },
-      "exits": [
-        {
-          "exit_id": "exit_N",
-          "x": 4,
-          "y": 0,
-          "side": "N",
-          "exitName": "exit_N",
-          "targetRegion": "region_2_0",
-          "isBackExit": false,
-          "isTeleporter": false,
-          "targetExitId": "region_2_1"
-        },
-        {
-          "exit_id": "region_2_2",
-          "x": 5,
-          "y": 5,
-          "side": "S",
-          "exitName": "region_2_2",
-          "targetRegion": "region_2_2",
-          "targetExitId": "exit",
-          "isBackExit": true,
-          "isTeleporter": false
-        }
-      ],
-      "fogEnabled": true
-    }
-  },
-  "region_2_0": {
-    "substrate": "maze",
-    "render_hint": "maze",
-    "grid_cell": {
-      "gx": 2,
-      "gy": 0
-    },
-    "playable_payload": {
-      "width": 8,
-      "height": 6,
-      "tiles": [
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        0,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        0,
-        1,
-        1,
-        1
-      ],
-      "entrance": {
-        "x": 4,
-        "y": 5
-      },
-      "exits": [
-        {
-          "exit_id": "exit",
-          "x": 0,
-          "y": 3,
-          "side": "W",
-          "exitName": "exit",
-          "targetRegion": "region_1_0",
-          "targetExitId": "region_2_0",
-          "isBackExit": false,
-          "isTeleporter": false
-        },
-        {
-          "exit_id": "region_2_1",
-          "x": 4,
-          "y": 5,
-          "side": "S",
-          "exitName": "region_2_1",
-          "targetRegion": "region_2_1",
-          "targetExitId": "exit_N",
-          "isBackExit": true,
-          "isTeleporter": false
-        }
-      ],
-      "obstacles": [
-        {
-          "x": 0,
-          "y": 3,
           "id": "logic_gate_0"
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "id": "logic_gate_1"
         }
       ],
       "items": [
         {
-          "x": 2,
-          "y": 4,
+          "x": 4,
+          "y": 1,
           "id": "key_blue",
-          "locationName": "region_2_0__loc_0__2_4"
+          "locationName": "region_2_2__loc_0__4_1"
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "id": "Left arrow",
+          "locationName": "region_2_2__loc_1__3_4"
         }
       ],
       "obstacleLib": {
@@ -440,10 +129,26 @@
             "mode": "tree"
           },
           "feature": "logic_gate"
+        },
+        "logic_gate_1": {
+          "name": "Logic Gate",
+          "id": "logic_gate_1",
+          "clear_set_type": "rule",
+          "clear_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "key_red"
+            }
+          },
+          "color": "#b06eb8",
+          "display": {
+            "mode": "tree"
+          },
+          "feature": "logic_gate"
         }
       },
       "itemLib": {},
-      "longestShortestPath": 6,
+      "longestShortestPath": 12,
       "fogEnabled": true
     },
     "biome": {
@@ -461,50 +166,56 @@
       "grow_attempts": 0
     }
   },
-  "region_1_0": {
+  "region_1_2": {
     "substrate": "bounce",
     "render_hint": "bounce",
     "grid_cell": {
       "gx": 1,
-      "gy": 0
+      "gy": 2
     },
     "playable_payload": {
       "gameId": "bounceDemo",
       "params": {
         "bounceLevel": {
-          "id": "region_1_0",
+          "id": "region_1_2",
           "size": {
-            "width": 140,
-            "height": 640
+            "width": 700,
+            "height": 760
           },
           "platforms": [
             {
               "id": "p0",
-              "x": 70,
-              "y": 540,
+              "x": 350,
+              "y": 660,
               "type": "green"
             },
             {
               "id": "p1",
-              "x": 70,
-              "y": 420,
+              "x": 350,
+              "y": 540,
               "type": "green"
             },
             {
               "id": "p2",
-              "x": 70,
-              "y": 300,
+              "x": 350,
+              "y": 420,
               "type": "green"
             },
             {
               "id": "p3",
-              "x": 70,
-              "y": 180,
+              "x": 350,
+              "y": 300,
               "type": "green"
             },
             {
               "id": "p4",
-              "x": 70,
+              "x": 350,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 350,
               "y": 60,
               "type": "green"
             }
@@ -514,17 +225,23 @@
           "pickups": [
             {
               "id": "loc_0",
-              "x": 70,
-              "y": 280,
+              "x": 350,
+              "y": 400,
               "on": "p2"
+            },
+            {
+              "id": "loc_1",
+              "x": 350,
+              "y": 280,
+              "on": "p3"
             }
           ],
           "portals": [
             {
               "id": "side_exit_E",
-              "x": 70,
+              "x": 350,
               "y": 40,
-              "on": "p4",
+              "on": "p5",
               "target_region": null,
               "direction": "right"
             }
@@ -537,7 +254,8 @@
         "fallBehavior": "current"
       },
       "ap_locations": {
-        "loc_0": "region_1_0__loc_0"
+        "loc_0": "region_1_2__loc_0",
+        "loc_1": "region_1_2__loc_1"
       },
       "flashCapabilities": {
         "locations": "cooperative",
@@ -557,12 +275,274 @@
       },
       "exits": [
         {
-          "exit_id": "region_2_0",
+          "exit_id": "region_2_2",
           "x": 7,
-          "y": 3,
+          "y": 2,
           "side": "E",
-          "exitName": "region_2_0",
-          "targetRegion": "region_2_0",
+          "exitName": "region_2_2",
+          "targetRegion": "region_2_2",
+          "targetExitId": "exit_0",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_3_2": {
+    "substrate": "maze",
+    "render_hint": "maze",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 2
+    },
+    "playable_payload": {
+      "width": 8,
+      "height": 6,
+      "tiles": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "entrance": {
+        "x": 0,
+        "y": 1
+      },
+      "exits": [
+        {
+          "exit_id": "exit",
+          "x": 1,
+          "y": 5,
+          "side": "S",
+          "exitName": "exit",
+          "targetRegion": "region_3_3",
+          "targetExitId": "region_3_2",
+          "isBackExit": false,
+          "isTeleporter": false
+        },
+        {
+          "exit_id": "region_2_2",
+          "x": 0,
+          "y": 1,
+          "side": "W",
+          "exitName": "region_2_2",
+          "targetRegion": "region_2_2",
+          "targetExitId": "exit_1",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "obstacles": [
+        {
+          "x": 1,
+          "y": 5,
+          "id": "logic_gate_0"
+        }
+      ],
+      "items": [
+        {
+          "x": 0,
+          "y": 4,
+          "id": "key_green",
+          "locationName": "region_3_2__loc_0__0_4"
+        }
+      ],
+      "obstacleLib": {
+        "logic_gate_0": {
+          "name": "Logic Gate",
+          "id": "logic_gate_0",
+          "clear_set_type": "rule",
+          "clear_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "key_green"
+            }
+          },
+          "color": "#b06eb8",
+          "display": {
+            "mode": "tree"
+          },
+          "feature": "logic_gate"
+        }
+      },
+      "itemLib": {},
+      "longestShortestPath": 7,
+      "fogEnabled": true
+    },
+    "biome": {
+      "id": "classic"
+    },
+    "grow_telemetry": {
+      "requested_size": {
+        "width": 8,
+        "height": 6
+      },
+      "final_size": {
+        "width": 8,
+        "height": 6
+      },
+      "grow_attempts": 0
+    }
+  },
+  "region_3_3": {
+    "substrate": "bounce",
+    "render_hint": "bounce",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 3
+    },
+    "playable_payload": {
+      "gameId": "bounceDemo",
+      "params": {
+        "bounceLevel": {
+          "id": "region_3_3",
+          "size": {
+            "width": 700,
+            "height": 880
+          },
+          "platforms": [
+            {
+              "id": "p0",
+              "x": 350,
+              "y": 780,
+              "type": "green"
+            },
+            {
+              "id": "p1",
+              "x": 350,
+              "y": 660,
+              "type": "green"
+            },
+            {
+              "id": "p2",
+              "x": 350,
+              "y": 540,
+              "type": "green"
+            },
+            {
+              "id": "p3",
+              "x": 350,
+              "y": 420,
+              "type": "green"
+            },
+            {
+              "id": "p4",
+              "x": 350,
+              "y": 300,
+              "type": "green"
+            },
+            {
+              "id": "p5",
+              "x": 350,
+              "y": 180,
+              "type": "green"
+            },
+            {
+              "id": "p6",
+              "x": 350,
+              "y": 60,
+              "type": "green"
+            }
+          ],
+          "springs": [],
+          "jetpacks": [],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "x": 350,
+              "y": 400,
+              "on": "p3"
+            }
+          ],
+          "portals": [
+            {
+              "id": "side_exit_N",
+              "x": 350,
+              "y": 40,
+              "on": "p6",
+              "target_region": null,
+              "direction": "up"
+            }
+          ]
+        },
+        "sidePortals": {
+          "N": "side_exit_N"
+        },
+        "backExitSide": "N",
+        "fallBehavior": "current"
+      },
+      "ap_locations": {
+        "loc_0": "region_3_3__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "gate_rules": {
+        "portals": {
+          "side_exit_N": {
+            "rule": "Has",
+            "args": {
+              "item_name": "key_green"
+            }
+          }
+        },
+        "pickups": {}
+      },
+      "exits": [
+        {
+          "exit_id": "region_3_2",
+          "x": 1,
+          "y": 0,
+          "side": "N",
+          "exitName": "region_3_2",
+          "targetRegion": "region_3_2",
           "targetExitId": "exit",
           "isBackExit": true,
           "isTeleporter": false
