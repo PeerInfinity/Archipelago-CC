@@ -70,17 +70,29 @@ export function renderFrame(ctx, session, ui = {}) {
     ctx.globalAlpha = 1;
 
     // Goal markers ride their HOST platform: a goal hosted on a moving
-    // blue draws at the host's current swept x (collection/teleport are
-    // landing-triggered on the host, so the marker must track it).
+    // blue draws at the host's current swept x (collection/teleport
+    // are landing-triggered on the host, so the marker must track it),
+    // and a goal whose host doesn't exist doesn't either — ghosted
+    // with a suppressed host (same visual language as the platform),
+    // gone with a broken one (until the respawn restores it).
     const hostById = new Map(level.platforms.map((p) => [p.id, p]));
     const goalX = (g) => {
         const host = hostById.get(g.on);
         return host?.sweep ? platformXAt(host, state.t ?? 0, C) : g.x;
     };
+    const hostAlpha = (g) => {
+        const host = hostById.get(g.on);
+        if (!host) return 1;
+        if (brokenSet.has(host.id)) return 0;
+        return isPlatformActive(host, abilities) ? 1 : 0.22;
+    };
 
     // pickups: squares (outline once collected; padlocked while a
     // rule gate holds them closed — the metroidvania tease)
     for (const pk of level.pickups ?? []) {
+        const alpha = hostAlpha(pk);
+        if (alpha === 0) continue;
+        ctx.globalAlpha = alpha;
         const x = sx(goalX(pk));
         const y = sy(pk.y);
         if (collected.has(pk.id)) {
@@ -101,10 +113,14 @@ export function renderFrame(ctx, session, ui = {}) {
             ctx.fillText('?', x, y + 4);
         }
     }
+    ctx.globalAlpha = 1;
 
     // portals: circles with direction arrows (gray padlock while a
     // rule gate holds them closed)
     for (const pt of level.portals ?? []) {
+        const alpha = hostAlpha(pt);
+        if (alpha === 0) continue;
+        ctx.globalAlpha = alpha;
         const x = sx(goalX(pt));
         const y = sy(pt.y);
         const locked = isLocked('portals', pt.id);
@@ -122,6 +138,7 @@ export function renderFrame(ctx, session, ui = {}) {
             ctx.fillText(ARROWS[pt.direction] ?? '?', x, y + 5);
         }
     }
+    ctx.globalAlpha = 1;
 
     // player
     const px = sx(state.x);
