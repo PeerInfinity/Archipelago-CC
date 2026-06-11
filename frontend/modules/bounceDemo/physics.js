@@ -119,10 +119,6 @@ export const PROFILES = Object.freeze({
     dj: Object.freeze({
         id: 'dj',
         label: 'Doodle Jump',
-        // Generator geometry is still classic-copied for the
-        // sweep-calibrated values; cleared when the dj wrap sweep
-        // lands (generator.js GEOMETRIES).
-        provisional: true,
         constants: Object.freeze({
             ...DEFAULTS,
             TICK_HZ: 20,

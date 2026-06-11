@@ -162,9 +162,30 @@ export function validateGeometry(G, C) {
     return errors;
 }
 
+/**
+ * dj geometry, PINNED from deriveGeometry(PROFILES.dj.constants) plus
+ * the flat-control sweep results (canJump.test.js "dj branch tips"):
+ * flat ±10 px/tick covers ~120px of drift within a plain-bounce
+ * flight, and the tip must clear both the 106px catch envelope
+ * (2 * 53, no-cheese margin) and the 113px interception clearance
+ * (width 60 + half-span 53, branch placement) — 115 is the first
+ * placeable value, still inside the verified flat-control range
+ * (∀-launch-offset witnesses confirmed at 115 and 120). The jetpack
+ * window rides the sustained-thrust rise (6250px): dj jetpack gates
+ * make TALL levels.
+ */
+export const DJ_GEOMETRY = Object.freeze({
+    WIDTH: 400,
+    PLAIN_DY: 90,
+    SPRING_GAP: Object.freeze({ min: 480, span: 60 }),
+    JETPACK_GAP: Object.freeze({ min: 6186, span: 60 }),
+    BRANCH_DX: 115,
+    ARROW_HALF_WIDTH_FLOOR: 300,
+});
+
 // Per-profile pinned geometry; profiles absent here derive from their
-// constants. dj gets pinned once probe-calibrated constants land.
-const GEOMETRIES = Object.freeze({ classic: CLASSIC_GEOMETRY });
+// constants.
+const GEOMETRIES = Object.freeze({ classic: CLASSIC_GEOMETRY, dj: DJ_GEOMETRY });
 
 /**
  * Resolve a generator `physics` option to { profileId, C, G }.
@@ -428,11 +449,38 @@ export function generateZoneSet({ count = 7, seed = 1, jitter = 0 } = {}) {
 // branch tips and column shifts never collide with walls.
 
 const ARROW_ABILITIES = ['left', 'right'];
+const COLOR_ABILITIES = ['blue', 'brown'];
 const KNOWN_ABILITIES = new Set(['springs', 'jetpacks', 'blue', 'brown', 'left', 'right']);
 
 const reqKey = (req) => req.join('+');
 const hasArrow = (req) => req.some((a) => ARROW_ABILITIES.includes(a));
 const isSubsetReq = (a, b) => a.every((x) => b.includes(x));
+
+// ── Color-as-host mode (dj platform behaviors) ──────────────────────
+//
+// Under dj behaviors blue/brown CANNOT be column-core stepping stones:
+// a breaking brown has no outgoing edges (the weak bounce depends on
+// arrival speed), and an arrowless jump FROM a moving blue fails the
+// ∀-arrival-phase check (the sweep+offset envelope misses the target).
+// So a color in a goal's requirement is realized on the GOAL'S OWN
+// HOST platform instead of as a gate segment below it:
+//
+//  - arrow + color exit  → branch tip whose host platform is colored
+//    (the drift supplies steering; a blue host gets a ±BLUE_SWEEP_AMP
+//    sweep, reached ∃-phase — its rung below is always a static green,
+//    the blue-after-green rule by construction).
+//  - arrowless colored goal → the unique column-TOP slot (climbing
+//    past a colored host is impossible: suppressed = a 2x gap, present
+//    = no/limited outgoing edges). At most ONE per level, its
+//    requirement must be the column ceiling, and it cannot coexist
+//    with an (uncolored) arrowless top exit. Colored pickups with
+//    arrows are declined in v1 (pickups have no tip machinery).
+//
+// Classic behaviors keep the colored stepping-stone gates unchanged.
+const colorHostMode = (C) => C.PLATFORM_BEHAVIORS?.blue === 'moving'
+    || C.PLATFORM_BEHAVIORS?.brown === 'breaking';
+const BLUE_SWEEP_AMP = 30; // px each side; period 24 ticks at BLUE_SPEED 5
+const colorsOf = (req) => req.filter((a) => COLOR_ABILITIES.includes(a));
 
 function normalizeRequirement(req, what) {
     const norm = [...new Set(req ?? [])].sort();
@@ -449,7 +497,7 @@ function normalizeRequirement(req, what) {
  * are non-retryable: no proposal can satisfy them). Returns
  * { exits, pickups, arrowFree, ceiling } with sorted requirements.
  */
-function normalizeSpecGoals(exitSpecs, pickupSpecs) {
+function normalizeSpecGoals(exitSpecs, pickupSpecs, colorHost = false) {
     if (!Array.isArray(exitSpecs) || exitSpecs.length === 0) {
         throw new Error('generateLevelFromSpecs: at least one exit spec required');
     }
@@ -469,6 +517,31 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs) {
         id: takeId(s.id, 'pickup spec'),
         req: normalizeRequirement(s.requirement, `pickup '${s.id}'`),
     }));
+
+    if (colorHost) {
+        // dj behaviors: colors ride the goal's host platform (see the
+        // color-as-host header). Validate and tag.
+        for (const g of [...exits, ...pickups]) {
+            const colors = colorsOf(g.req);
+            if (colors.length > 1) {
+                throw new Error(`generateLevelFromSpecs: goal '${g.id}' requires both blue `
+                    + 'and brown — one host platform cannot be two types (dj behaviors)');
+            }
+            g.hostColor = colors[0] ?? null;
+        }
+        const coloredArrowless = [...exits, ...pickups]
+            .filter((g) => g.hostColor && !hasArrow(g.req));
+        if (coloredArrowless.length > 1) {
+            throw new Error('generateLevelFromSpecs: at most one arrowless colored goal per '
+                + `level under dj behaviors (got ${coloredArrowless.map((g) => `'${g.id}'`).join(', ')})`);
+        }
+        for (const pk of pickups) {
+            if (pk.hostColor && hasArrow(pk.req)) {
+                throw new Error(`generateLevelFromSpecs: pickup '${pk.id}' combines a color `
+                    + 'with an arrow — colored tip pickups are not supported (dj behaviors)');
+            }
+        }
+    }
 
     const arrowlessExits = exits.filter((e) => !hasArrow(e.req));
     if (arrowlessExits.length > 1) {
@@ -510,6 +583,29 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs) {
             }
         }
     }
+    if (colorHost) {
+        // An arrowless colored goal's host interrupts the column for
+        // everyone (suppressed = a 2x gap; present = no/limited
+        // outgoing edges), so it must be the column CEILING: every
+        // column key inside its requirement, and no top portal above
+        // it to climb to.
+        const topColored = [...pickups, ...(arrowFree ? [arrowFree] : [])]
+            .find((g) => g.hostColor && !hasArrow(g.req));
+        if (topColored) {
+            if (topColored !== arrowFree && arrowFree) {
+                throw new Error(`generateLevelFromSpecs: colored pickup '${topColored.id}' `
+                    + `cannot coexist with the arrowless exit '${arrowFree.id}' — nothing `
+                    + 'climbs past a colored host (dj behaviors)');
+            }
+            for (const key of columnKeys) {
+                if (!isSubsetReq(key, topColored.req)) {
+                    throw new Error(`generateLevelFromSpecs: colored goal '${topColored.id}' `
+                        + `must be the column ceiling — [${key.join(',')}] is not within `
+                        + `[${topColored.req.join(',')}] (dj behaviors)`);
+                }
+            }
+        }
+    }
 
     // Greedy attach-key choice per branch exit, smallest requirement
     // first. Preferred: attach at the requirement's own segment
@@ -522,9 +618,12 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs) {
     const chosenKeys = [...columnKeys];
     for (const e of [...branchExits].sort((a, b) => a.req.length - b.req.length)) {
         const drifts = ARROW_ABILITIES.filter((a) => e.req.includes(a));
+        // colorHost: colors ride the tip's host platform, not the
+        // column — strip them from attach-key candidates
+        const baseReq = colorHost ? e.req.filter((a) => !COLOR_ABILITIES.includes(a)) : e.req;
         const options = [
-            ...drifts.map((d) => ({ d, key: e.req })),
-            ...drifts.map((d) => ({ d, key: e.req.filter((a) => a !== d) })),
+            ...drifts.map((d) => ({ d, key: baseReq })),
+            ...drifts.map((d) => ({ d, key: baseReq.filter((a) => a !== d) })),
         ];
         let chosen = null;
         for (const opt of options) {
@@ -548,7 +647,9 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs) {
 }
 
 /** One multi-target proposal. Throws on placement dead-ends (retryable). */
-function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter, C, G }) {
+function proposeLevelFromSpecs({
+    id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter, C, G, colorHost,
+}) {
     const PLAIN_DY = G.PLAIN_DY;
     const branchExits = exits.filter((e) => e !== arrowFree);
 
@@ -572,7 +673,10 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
         for (let i = 0; i < n; i++) steps.push({ dy: PLAIN_DY, jitter: true, key: current });
     };
     for (const segment of segments) {
-        const newGates = rng.shuffle(segment.filter((a) => !current.includes(a)));
+        // colorHost: colors never become gate segments — they ride the
+        // goal's own host platform (the colored pickup/top-exit below).
+        const newGates = rng.shuffle(segment.filter((a) => !current.includes(a)
+            && !(colorHost && COLOR_ABILITIES.includes(a))));
         for (const ability of newGates) {
             plains();
             const parts = gateSteps(ability, rng, G);
@@ -589,12 +693,12 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
         plains(demand);
         for (const pk of pickups) {
             if (reqKey(pk.req) !== reqKey(segment)) continue;
-            steps.push({ dy: PLAIN_DY, pickup: pk.id, key: current });
+            steps.push({ dy: PLAIN_DY, pickup: pk.id, key: current, hostType: pk.hostColor });
         }
     }
     if (arrowFree) {
         plains();
-        steps.push({ dy: PLAIN_DY, exitTop: arrowFree, key: current });
+        steps.push({ dy: PLAIN_DY, exitTop: arrowFree, key: current, hostType: arrowFree.hostColor });
     }
 
     // Realise the column in relative coords (entrance at 0,0; y up is
@@ -608,6 +712,11 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     let n = 0;
     const place = (px, py, type = 'green') => {
         const platform = { id: `p${n++}`, x: px, y: py, type };
+        // a blue host under moving behaviors sweeps ±BLUE_SWEEP_AMP
+        // around its placement x (deterministic phase, no RNG)
+        if (type === 'blue' && C.PLATFORM_BEHAVIORS?.blue === 'moving') {
+            platform.sweep = { min: px - BLUE_SWEEP_AMP, max: px + BLUE_SWEEP_AMP };
+        }
         platforms.push(platform);
         return platform;
     };
@@ -621,8 +730,14 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
         x += s.dx ?? 0;
         y -= s.dy;
         const dx = (s.jitter && jitter > 0) ? (rng.next() - 0.5) * 2 * jitter : 0;
-        prev = place(x + dx, y, s.type ?? 'green');
-        const rung = { x: prev.x, y: prev.y, platform: prev, key: reqKey(s.key), isPortalHost: false };
+        prev = place(x + dx, y, s.hostType ?? s.type ?? 'green');
+        const rung = {
+            x: prev.x, y: prev.y, platform: prev, key: reqKey(s.key),
+            isPortalHost: false,
+            // nothing launches off a colored host (dj behaviors) —
+            // branch tips must not attach here
+            isColoredHost: !!s.hostType,
+        };
         rungs.push(rung);
         if (s.pickup) {
             pickupEntities.push({ id: s.pickup, x: prev.x, y: prev.y - 20, on: prev.id });
@@ -645,22 +760,28 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     // half a plain step vertically (classic 60).
     const clearX = C.PLATFORM_WIDTH + C.PLATFORM_WIDTH / 2 + C.PLAYER_HALF_WIDTH;
     const clearY = PLAIN_DY / 2;
-    const spotClear = (sx, sy) => !platforms.some(
-        (p) => Math.abs(p.x - sx) < clearX && Math.abs(p.y - sy) < clearY);
+    // sweep-aware: a moving blue's footprint is its whole sweep range
+    const spotClear = (sx, sy, amp = 0) => !platforms.some((p) => {
+        const pAmp = p.sweep ? (p.sweep.max - p.sweep.min) / 2 : 0;
+        return Math.abs(p.x - sx) < clearX + amp + pAmp && Math.abs(p.y - sy) < clearY;
+    });
     for (const exit of branchExits) {
         const key = reqKey(exit.attachKey);
         const d = exit.drift;
         const dir = d === 'right' ? +1 : -1;
-        const candidates = rng.shuffle(rungs.filter((r) => r.key === key && !r.isPortalHost));
+        const tipAmp = exit.hostColor === 'blue'
+            && C.PLATFORM_BEHAVIORS?.blue === 'moving' ? BLUE_SWEEP_AMP : 0;
+        const candidates = rng.shuffle(rungs.filter(
+            (r) => r.key === key && !r.isPortalHost && !r.isColoredHost));
         let placed = false;
         for (const rung of candidates) {
             const slot = `${rung.platform.id}:${d}`;
             if (usedSlots.has(slot)) continue;
             const sx = rung.x + dir * G.BRANCH_DX;
             const sy = rung.y - PLAIN_DY;
-            if (!spotClear(sx, sy)) continue;
+            if (!spotClear(sx, sy, tipAmp)) continue;
             usedSlots.add(slot);
-            const host = place(sx, sy);
+            const host = place(sx, sy, exit.hostColor ?? 'green');
             portals.push({
                 id: exit.id, x: sx, y: sy - 20, on: host.id,
                 target_region: null,
@@ -680,7 +801,8 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     let maxAbsX = 0;
     let minY = 0;
     for (const p of platforms) {
-        maxAbsX = Math.max(maxAbsX, Math.abs(p.x));
+        const pAmp = p.sweep ? (p.sweep.max - p.sweep.min) / 2 : 0;
+        maxAbsX = Math.max(maxAbsX, Math.abs(p.x) + pAmp);
         minY = Math.min(minY, p.y);
     }
     // Width discipline under screen wrap: single-arrow goals stay
@@ -696,7 +818,13 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     const halfSpan = Math.max(maxAbsX + 70, anyArrowGoal ? G.ARROW_HALF_WIDTH_FLOOR : 0);
     const shiftX = halfSpan;
     const shiftY = 60 - minY;
-    const shift = (e) => { e.x += shiftX; e.y += shiftY; };
+    const shift = (e) => {
+        e.x += shiftX;
+        e.y += shiftY;
+        if (e.sweep) {
+            e.sweep = { ...e.sweep, min: e.sweep.min + shiftX, max: e.sweep.max + shiftX };
+        }
+    };
     platforms.forEach(shift);
     springs.forEach(shift);
     jetpacks.forEach(shift);
@@ -736,14 +864,16 @@ export function generateLevelFromSpecs({
     physics = 'classic',
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
-    const { exits, pickups, arrowFree, ceiling } = normalizeSpecGoals(exitSpecs, pickupSpecs);
+    const colorHost = colorHostMode(C);
+    const { exits, pickups, arrowFree, ceiling } = normalizeSpecGoals(
+        exitSpecs, pickupSpecs, colorHost);
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         let level;
         try {
             level = proposeLevelFromSpecs({
-                id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter, C, G,
+                id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter, C, G, colorHost,
             });
         } catch (err) {
             rejected.push(`attempt ${attempt}: ${err.message}`);

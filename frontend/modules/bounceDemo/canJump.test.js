@@ -241,16 +241,17 @@ describe('dj phase-aware edges', () => {
         expect(canJump(level, 'br', 'g1', { brown: true })).toBe(true);
     });
 
-    it('dj branch tips: ±100 drift needs the matching arrow (flat control, no momentum)', () => {
+    it('dj branch tips: ±115 drift needs the matching arrow (flat control, no momentum)', () => {
         // the dj sweep result: flat ±10 control covers ~120px of drift
         // within a plain-bounce flight, so classic's ±140 tips are
         // infeasible from the worst landing offset — dj geometry pins
-        // BRANCH_DX 100 (see GEOMETRIES.dj)
+        // BRANCH_DX 115 (the first value past the 113px interception
+        // clearance; see DJ_GEOMETRY)
         const level = djLevel({
             size: { width: 400, height: 600 },
             platforms: [
                 { id: 'g0', x: 200, y: 500, type: 'green' },
-                { id: 'tip', x: 300, y: 410, type: 'green' },
+                { id: 'tip', x: 315, y: 410, type: 'green' },
             ],
         });
         expect(canJump(level, 'g0', 'tip', { right: true }, djOpts)).toBe(true);

@@ -7,6 +7,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { generateLevelFromSpecs } from './generator.js';
+import { PROFILES } from './physics.js';
 import {
     generateZoneForSpecs, canHostExitGates, GATEABLE_ITEMS,
     substrateRegistryEntry,
@@ -445,5 +446,110 @@ describe('generateZoneForSpecs — physics profile stamp', () => {
     it('unknown profile fails loudly', () => {
         expect(() => generateZoneForSpecs({ ...SPECS, physicsProfile: 'moon' }))
             .toThrow(/moon/);
+    });
+});
+
+// ── dj behaviors: colors ride the goal's host platform ──────────────
+describe('generateLevelFromSpecs — dj color-as-host mode', () => {
+    const DJ = PROFILES.dj.constants;
+
+    const derivedSets = (level) => {
+        const d = deriveAccessRules(level, { constants: DJ });
+        expect(d.defects).toEqual([]);
+        const sets = {};
+        for (const [id, a] of Object.entries(d.exits)) sets[id] = a.minimalSets;
+        for (const [id, a] of Object.entries(d.pickups)) sets[id] = a.minimalSets;
+        return sets;
+    };
+
+    it('blue arrowless exit = swept blue host at the column top (∃-phase reachable)', () => {
+        const level = generateLevelFromSpecs({
+            id: 'dj_blue_top',
+            exitSpecs: [
+                { id: 'exit_top', requirement: ['blue'] },
+                { id: 'exit_e', requirement: ['right'] },
+            ],
+            pickupSpecs: [{ id: 'loc_a', requirement: [] }],
+            physics: 'dj',
+            seed: 3,
+        });
+        const blues = level.platforms.filter((p) => p.type === 'blue');
+        expect(blues).toHaveLength(1);
+        expect(blues[0].sweep.max - blues[0].sweep.min).toBe(60); // ±BLUE_SWEEP_AMP
+        // blue-after-green by construction: the host's exit portal rides it
+        const topPortal = level.portals.find((pt) => pt.id === 'exit_top');
+        expect(topPortal.on).toBe(blues[0].id);
+        expect(derivedSets(level)).toEqual({
+            exit_top: [['blue']],
+            exit_e: [['right']],
+            loc_a: [[]],
+        });
+    });
+
+    it('brown + arrow exit = breaking brown host on a branch tip', () => {
+        const level = generateLevelFromSpecs({
+            id: 'dj_brown_tip',
+            exitSpecs: [
+                { id: 'exit_top', requirement: [] },
+                { id: 'exit_w', requirement: ['brown', 'left'] },
+            ],
+            physics: 'dj',
+            seed: 5,
+        });
+        const tipPortal = level.portals.find((pt) => pt.id === 'exit_w');
+        const host = level.platforms.find((p) => p.id === tipPortal.on);
+        expect(host.type).toBe('brown');
+        expect(derivedSets(level)).toEqual({
+            exit_top: [[]],
+            exit_w: [['brown', 'left']],
+        });
+    });
+
+    it('declines: two arrowless colored goals; blue AND brown on one goal', () => {
+        expect(() => generateLevelFromSpecs({
+            id: 'x',
+            exitSpecs: [{ id: 'e', requirement: ['blue'] }],
+            pickupSpecs: [{ id: 'p', requirement: ['brown'] }],
+            physics: 'dj',
+        })).toThrow(/at most one arrowless colored goal/);
+        expect(() => generateLevelFromSpecs({
+            id: 'x',
+            exitSpecs: [{ id: 'e', requirement: ['blue', 'brown'] }],
+            physics: 'dj',
+        })).toThrow(/both blue.*and brown|blue and brown/);
+    });
+
+    it('classic keeps colored stepping-stone gates (no sweep, no host coloring rules)', () => {
+        const level = generateLevelFromSpecs({
+            id: 'classic_blue',
+            exitSpecs: [{ id: 'exit_top', requirement: ['blue'] }],
+            seed: 3,
+        });
+        const blues = level.platforms.filter((p) => p.type === 'blue');
+        expect(blues.length).toBeGreaterThan(0);
+        expect(blues.every((p) => !p.sweep)).toBe(true); // static stones
+    });
+});
+
+describe('generateZoneForSpecs — dj profile end-to-end', () => {
+    it('generates, verifies and stamps a dj zone with a blue-gated exit', () => {
+        const zone = generateZoneForSpecs({
+            region_id: 'region_dj',
+            exitSpecs: [
+                { side: 'N', requirement: ['Blue platforms'] },
+                { side: 'E', requirement: ['Right arrow'] },
+            ],
+            locationSpecs: [{ id: 'loc_0', item: 'Springs', requirement: [] }],
+            seed: 7,
+            physicsProfile: 'dj',
+        });
+        expect(zone.exitRules.N).toEqual({ rule: 'Has', args: { item_name: 'Blue platforms' } });
+        expect(zone.exitRules.E).toEqual({ rule: 'Has', args: { item_name: 'Right arrow' } });
+        const stamp = zone.payload.params.physics;
+        expect(stamp.profile).toBe('dj');
+        expect(stamp.constants.TICK_HZ).toBe(20);
+        const level = zone.payload.params.bounceLevel;
+        expect(level.platforms.some((p) => p.type === 'blue' && p.sweep)).toBe(true);
+        expect(validateLevel(level)).toEqual([]);
     });
 });

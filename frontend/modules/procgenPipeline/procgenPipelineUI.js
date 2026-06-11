@@ -203,7 +203,7 @@ const BOUNCE_FALL_OPTIONS = [
 // registry-declared param schema is the eventual generic mechanism).
 const BOUNCE_PHYSICS_PROFILE_OPTIONS = [
     { value: 'classic', label: 'Classic', disabled: false },
-    { value: 'dj', label: 'Doodle Jump (provisional — awaiting probe calibration)', disabled: false },
+    { value: 'dj', label: 'Doodle Jump (measured, 20Hz)', disabled: false },
 ];
 
 const REGION_XP_EFFECT_OPTIONS = [
