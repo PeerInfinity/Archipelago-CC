@@ -23,7 +23,7 @@
  * replays.
  */
 
-import { DEFAULTS, step as physicsStep, spawnState } from './physics.js';
+import { DEFAULTS, step as physicsStep, spawnState, wrapX } from './physics.js';
 import {
     isPlatformActive,
     activePlatforms,
@@ -168,7 +168,8 @@ function launchVyFor(level, fromId, abilities, C) {
     return C.BOUNCE_VY;
 }
 
-/** Sampled launch x positions across the from-platform's catch span. */
+/** Sampled launch x positions across the from-platform's catch span
+ *  (wrap-normalized — there are no side walls). */
 function launchXs(level, fromId, abilities, C, opts) {
     if (fromId === ENTRANCE) return [level.size.width / 2];
     const from = platformById(level, fromId);
@@ -176,7 +177,7 @@ function launchXs(level, fromId, abilities, C, opts) {
     const x0Step = opts.x0Step ?? halfSpan / 2;
     const xs = new Set();
     for (let dx = -halfSpan; dx <= halfSpan + 1e-9; dx += x0Step) {
-        xs.add(clamp(from.x + dx, C.PLAYER_HALF_WIDTH, level.size.width - C.PLAYER_HALF_WIDTH));
+        xs.add(wrapX(from.x + dx, level.size.width));
     }
     return [...xs];
 }

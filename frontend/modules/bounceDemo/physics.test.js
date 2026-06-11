@@ -182,11 +182,26 @@ describe('step: input gating and walls', () => {
         expect(s.vx).toBe(0);
     });
 
-    it('clamps at side walls and zeroes vx', () => {
+    it('wraps around the sides without losing vx (screen wrap)', () => {
         let s = airborne({ x: 30 });
-        for (let i = 0; i < 60; i++) s = step(s, { left: true }, level, allAbilities());
-        expect(s.x).toBe(DEFAULTS.PLAYER_HALF_WIDTH);
-        expect(s.vx).toBe(0);
+        for (let i = 0; i < 12; i++) s = step(s, { left: true }, level, allAbilities());
+        // moved off the left edge and re-entered on the right
+        expect(s.x).toBeGreaterThan(level.size.width / 2);
+        expect(s.vx).toBeLessThan(0); // still drifting left
+    });
+
+    it('lands across the wrap seam (wrap-aware span check)', () => {
+        const seamLevel = {
+            ...level,
+            platforms: [{ id: 'seam', x: 2, y: 300, type: 'green' }],
+        };
+        // falling at the far-right edge — the seam platform at x=2 is
+        // within wrap distance
+        let s = { x: seamLevel.size.width - 2, y: 280, vx: 0, vy: 4, fallen: false, landedOn: null, launch: null };
+        for (let i = 0; i < 10 && !s.landedOn; i++) {
+            s = step(s, null, seamLevel, allAbilities());
+        }
+        expect(s.landedOn).toBe('seam');
     });
 
     it('drag decays vx when no direction is held', () => {

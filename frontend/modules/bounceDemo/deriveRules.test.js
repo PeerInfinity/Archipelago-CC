@@ -35,10 +35,18 @@ describe('derived rules match fixture ground truth', () => {
 
     it('fork: branch requirements derived; jetpack provably not required', () => {
         const r = deriveAccessRules(fork);
+        // Under screen wrap on this 400px-wide fixture the right branch
+        // stays right-only (the left wrap path is too long for its
+        // arcs) but the LEFT branch is also reachable rightward via the
+        // seam — an honest either-arrow OR. See wrapAsymmetry.test.js
+        // for the systematic width/launch sweep behind this.
         expect(r.pickups.loc_right.minimalSets).toEqual([['right']]);
-        expect(r.pickups.loc_left.minimalSets).toEqual([['blue', 'left']]);
+        expect(r.pickups.loc_left.minimalSets).toEqual([
+            ['blue', 'left'], ['blue', 'right'],
+        ]);
         expect(r.exits.exit_up.minimalSets).toEqual([['right']]);
-        expect(formatRule(r.pickups.loc_left.minimalSets)).toBe('(blue AND left)');
+        expect(formatRule(r.pickups.loc_left.minimalSets))
+            .toBe('(blue AND left) OR (blue AND right)');
         // helpful-but-not-required, machine-verified:
         for (const s of Object.values(r.pickups).flatMap((g) => g.minimalSets)) {
             expect(s).not.toContain('jetpacks');

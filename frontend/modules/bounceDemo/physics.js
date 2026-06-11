@@ -15,6 +15,9 @@
  * - y increases DOWNWARD (screen-style); gravity is +vy, launches are
  *   negative vy. The level entrance is bottom-center.
  * - `platform.x`, pickup and portal positions are CENTERS.
+ * - SCREEN WRAP (like Doodle Jump): moving off one side re-enters the
+ *   other; x is modular in [0, level.size.width) and landing spans are
+ *   wrap-aware. There are no side walls.
  * - Frame-based: one step() call = one logical 60fps frame. No RNG, no
  *   Date — determinism is a design principle (no algorithm may rely on
  *   RNG determinism, so there is none to begin with).
@@ -43,6 +46,17 @@ export const DEFAULTS = Object.freeze({
 
 function clamp(v, lo, hi) {
     return v < lo ? lo : v > hi ? hi : v;
+}
+
+/** Normalize an x coordinate into [0, width) under screen wrap. */
+export function wrapX(x, width) {
+    return ((x % width) + width) % width;
+}
+
+/** Horizontal distance between two x coordinates under screen wrap. */
+export function wrapDistance(a, b, width) {
+    const d = Math.abs(wrapX(a, width) - wrapX(b, width));
+    return Math.min(d, width - d);
 }
 
 /** The entrance state: bottom-center, at rest, about to fall. */
@@ -96,21 +110,22 @@ export function step(state, input, level, abilities, C = DEFAULTS) {
 
     let vy = Math.min(state.vy + C.GRAVITY, C.MAX_FALL);
 
-    const rawX = state.x + vx;
-    const x = clamp(rawX, C.PLAYER_HALF_WIDTH, level.size.width - C.PLAYER_HALF_WIDTH);
-    if (x !== rawX) vx = 0; // hit a side wall
+    // Screen wrap: x is modular; there are no side walls.
+    const x = wrapX(state.x + vx, level.size.width);
     let y = state.y + vy;
 
     // One-way landing: only while falling, only when the player's feet
     // cross the platform's top line this frame. If the sweep crosses
     // several platforms, land on the highest one (smallest y) — that is
-    // the first hit along the fall.
+    // the first hit along the fall. The span check is wrap-aware so
+    // platforms by the seam catch a wrapping player.
     let landedOn = null;
     let launch = null;
     if (vy > 0) {
         const halfSpan = C.PLATFORM_WIDTH / 2 + C.PLAYER_HALF_WIDTH;
         for (const p of activePlatforms(level, abilities)) {
-            if (state.y <= p.y && y >= p.y && Math.abs(x - p.x) <= halfSpan) {
+            if (state.y <= p.y && y >= p.y
+                    && wrapDistance(x, p.x, level.size.width) <= halfSpan) {
                 if (!landedOn || p.y < landedOn.y) landedOn = p;
             }
         }

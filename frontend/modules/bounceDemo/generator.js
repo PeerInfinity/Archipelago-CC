@@ -521,15 +521,24 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     }
 
     // Normalise: symmetric width around the spawn column (physics
-    // spawns at width/2 and clamps to [0, width]), vertical margins
-    // matching the single-target generator's.
+    // spawns at width/2; x is modular under screen wrap), vertical
+    // margins matching the single-target generator's.
     let maxAbsX = 0;
     let minY = 0;
     for (const p of platforms) {
         maxAbsX = Math.max(maxAbsX, Math.abs(p.x));
         minY = Math.min(minY, p.y);
     }
-    const halfSpan = maxAbsX + 70;
+    // Width discipline under screen wrap: single-arrow goals stay
+    // single-arrow only when the wrap path is too long for the
+    // available arcs. The asymmetry sweep (wrapAsymmetry.test.js)
+    // shows ±140 branch tips are wrong-arrow-reachable below ~600px
+    // width (spring/jetpack airtime wraps a 420px level), so levels
+    // with any arrow-gated goal get a 600px floor. The verify loop
+    // remains the gatekeeper either way.
+    const anyArrowGoal = [...exits, ...pickups]
+        .some((g) => g.req.some((a) => ARROW_ABILITIES.includes(a)));
+    const halfSpan = Math.max(maxAbsX + 70, anyArrowGoal ? 300 : 0);
     const shiftX = halfSpan;
     const shiftY = 60 - minY;
     const shift = (e) => { e.x += shiftX; e.y += shiftY; };
