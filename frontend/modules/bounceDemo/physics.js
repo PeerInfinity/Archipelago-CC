@@ -42,7 +42,84 @@ export const DEFAULTS = Object.freeze({
     PLAYER_HALF_WIDTH: 12, // px
     SPAWN_HEIGHT: 120,     // spawn this many px above the level bottom
     FALL_MARGIN: 60,       // px below level bottom before "fallen"
+    // Structural behavior fields — data, not mode strings: `step`
+    // branches on the specific field, never on a profile name, so any
+    // future profile is pure data and serializes into the payload
+    // stamp. 'accel' = vx state + drag (the classic model above);
+    // 'flat' = Doodle Jump's hero._x += MOVE_FLAT per held tick, no
+    // momentum. (PLATFORM_BEHAVIORS — blue movement, brown breaking —
+    // lands here the same way once the dj probe data is in.)
+    AIR_CONTROL: 'accel',
+    MOVE_FLAT: 0,          // px/frame under 'flat' air control
 });
+
+/**
+ * Physics profiles. Constants are LOGIC-AFFECTING — access rules are
+ * derived from `step` — so a world must be played under the profile it
+ * was generated with:
+ *
+ * - 'classic' is the current model, FROZEN: all committed presets,
+ *   fixtures, ground-truth tests and AP round-trip artifacts are
+ *   generated under it, and an ABSENT payload stamp means classic.
+ * - 'dj' will match real Doodle Jump as the SWFRecomp-CC probe data
+ *   supports (measurement spec:
+ *   NewDocs/plans/procedural-generation/dj-physics-measurement-spec.md).
+ *   Until calibration lands it is a PROVISIONAL placeholder: classic
+ *   constants plus the one structural fact already known (flat ±10
+ *   air control, clip_action_29) — the number is DJ-native px/tick,
+ *   unconverted.
+ *
+ * Generated worlds stamp `playable_payload.params.physics =
+ * { profile, constants }` (see physicsStampFor); the runtime trusts
+ * the EMBEDDED constants, so retuning a profile here never silently
+ * changes physics under already-generated worlds.
+ */
+export const PROFILES = Object.freeze({
+    classic: Object.freeze({
+        id: 'classic',
+        label: 'Classic',
+        constants: DEFAULTS,
+    }),
+    dj: Object.freeze({
+        id: 'dj',
+        label: 'Doodle Jump (provisional)',
+        provisional: true,
+        constants: Object.freeze({
+            ...DEFAULTS,
+            AIR_CONTROL: 'flat',
+            MOVE_FLAT: 10,
+        }),
+    }),
+});
+
+/**
+ * Build the payload stamp for a profile id. Classic returns null —
+ * the stamp is OMITTED so classic worlds stay byte-identical to
+ * pre-profile payloads (absent stamp = classic).
+ */
+export function physicsStampFor(profileId) {
+    if (!profileId || profileId === 'classic') return null;
+    const profile = PROFILES[profileId];
+    if (!profile) throw new Error(`physicsStampFor: unknown physics profile '${profileId}'`);
+    return { profile: profile.id, constants: profile.constants };
+}
+
+/**
+ * Resolve a payload physics stamp to runtime constants. Embedded
+ * constants win (merged over DEFAULTS so fields added after a world
+ * was generated fall back to classic behavior); a bare profile id
+ * resolves via the registry; absent stamp = classic DEFAULTS.
+ */
+export function resolvePhysicsStamp(stamp) {
+    if (stamp?.constants) return Object.freeze({ ...DEFAULTS, ...stamp.constants });
+    if (stamp?.profile || typeof stamp === 'string') {
+        const id = typeof stamp === 'string' ? stamp : stamp.profile;
+        const profile = PROFILES[id];
+        if (profile) return profile.constants;
+        console.warn(`resolvePhysicsStamp: unknown profile '${id}', using classic`);
+    }
+    return DEFAULTS;
+}
 
 function clamp(v, lo, hi) {
     return v < lo ? lo : v > hi ? hi : v;
@@ -103,10 +180,17 @@ export function step(state, input, level, abilities, C = DEFAULTS) {
 
     const dir = ((input?.right && abilities.right) ? 1 : 0)
         - ((input?.left && abilities.left) ? 1 : 0);
-    let vx = dir !== 0
-        ? state.vx + dir * C.MOVE_ACCEL
-        : state.vx * C.AIR_DRAG;
-    vx = clamp(vx, -C.MAX_VX, C.MAX_VX);
+    let vx;
+    if (C.AIR_CONTROL === 'flat') {
+        // Doodle Jump: flat per-tick displacement while a key is held,
+        // no momentum (release = instant stop).
+        vx = dir * C.MOVE_FLAT;
+    } else {
+        vx = dir !== 0
+            ? state.vx + dir * C.MOVE_ACCEL
+            : state.vx * C.AIR_DRAG;
+        vx = clamp(vx, -C.MAX_VX, C.MAX_VX);
+    }
 
     let vy = Math.min(state.vy + C.GRAVITY, C.MAX_FALL);
 

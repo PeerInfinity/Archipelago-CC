@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { DEFAULTS, step, spawnState, simulate } from './physics.js';
+import {
+    DEFAULTS, PROFILES, physicsStampFor, resolvePhysicsStamp,
+    step, spawnState, simulate,
+} from './physics.js';
 import {
     isPlatformActive,
     activePlatforms,
@@ -241,5 +244,84 @@ describe('fixture ground truth: the no-input bounce stack', () => {
             }
         }
         for (let i = 1; i < tops.length; i++) expect(tops[i]).toBeLessThan(tops[i - 1]);
+    });
+});
+
+describe('physics profiles (PROFILES / stamp helpers)', () => {
+    it('classic profile IS the frozen DEFAULTS object', () => {
+        expect(PROFILES.classic.constants).toBe(DEFAULTS);
+        expect(Object.isFrozen(DEFAULTS)).toBe(true);
+        expect(DEFAULTS.AIR_CONTROL).toBe('accel');
+    });
+
+    it('physicsStampFor: classic (and absent) stamp to null — payloads stay unstamped', () => {
+        expect(physicsStampFor('classic')).toBeNull();
+        expect(physicsStampFor(null)).toBeNull();
+        expect(physicsStampFor(undefined)).toBeNull();
+    });
+
+    it('physicsStampFor: dj stamps profile id + resolved constants', () => {
+        const stamp = physicsStampFor('dj');
+        expect(stamp.profile).toBe('dj');
+        expect(stamp.constants.AIR_CONTROL).toBe('flat');
+        expect(stamp.constants.GRAVITY).toBe(DEFAULTS.GRAVITY);
+    });
+
+    it('physicsStampFor: unknown profile throws', () => {
+        expect(() => physicsStampFor('moon')).toThrow(/moon/);
+    });
+
+    it('resolvePhysicsStamp: absent stamp = classic DEFAULTS identity', () => {
+        expect(resolvePhysicsStamp(undefined)).toBe(DEFAULTS);
+        expect(resolvePhysicsStamp(null)).toBe(DEFAULTS);
+    });
+
+    it('resolvePhysicsStamp: embedded constants win and merge over DEFAULTS', () => {
+        const C = resolvePhysicsStamp({ profile: 'dj', constants: { GRAVITY: 0.25 } });
+        expect(C.GRAVITY).toBe(0.25);
+        // fields absent from an old stamp fall back to classic behavior
+        expect(C.AIR_CONTROL).toBe('accel');
+        expect(C.MAX_FALL).toBe(DEFAULTS.MAX_FALL);
+    });
+
+    it('resolvePhysicsStamp: bare profile id resolves via the registry', () => {
+        expect(resolvePhysicsStamp('dj')).toBe(PROFILES.dj.constants);
+        expect(resolvePhysicsStamp({ profile: 'dj' })).toBe(PROFILES.dj.constants);
+        expect(resolvePhysicsStamp('moon')).toBe(DEFAULTS); // unknown -> classic
+    });
+});
+
+describe('flat air control (AIR_CONTROL: "flat")', () => {
+    const FLAT = { ...DEFAULTS, AIR_CONTROL: 'flat', MOVE_FLAT: 10 };
+    const level = makeLevel();
+    const all = allAbilities();
+
+    it('moves exactly MOVE_FLAT px per held tick, regardless of duration', () => {
+        let s = airborne();
+        s = step(s, { right: true }, level, all, FLAT);
+        expect(s.x).toBe(210);
+        s = step(s, { right: true }, level, all, FLAT);
+        expect(s.x).toBe(220); // no acceleration: still exactly +10
+    });
+
+    it('release means instant stop — no momentum, no drag tail', () => {
+        let s = airborne();
+        s = step(s, { right: true }, level, all, FLAT);
+        s = step(s, null, level, all, FLAT);
+        expect(s.x).toBe(210); // unchanged after release
+        expect(s.vx).toBe(0);
+    });
+
+    it('still gates on arrow abilities like the accel model', () => {
+        let s = airborne();
+        s = step(s, { right: true }, level, noAbilities(), FLAT);
+        expect(s.x).toBe(200);
+    });
+
+    it('classic accel model is untouched (AIR_CONTROL absent or "accel")', () => {
+        let s = airborne();
+        s = step(s, { right: true }, level, all, DEFAULTS);
+        expect(s.x).toBeCloseTo(200 + DEFAULTS.MOVE_ACCEL);
+        expect(s.vx).toBeCloseTo(DEFAULTS.MOVE_ACCEL);
     });
 });
