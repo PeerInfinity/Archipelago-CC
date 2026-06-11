@@ -1,0 +1,54 @@
+﻿Archipelago Version 0.6.7  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Bounce Mixed WorldGen
+Location Count:                  6
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+
+
+Starting Items:
+
+Right arrow
+
+Locations:
+
+region_1_0__loc_0: victory
+region_2_0__loc_0__2_4: key_blue
+region_2_1__loc_0: Left arrow
+region_2_1__loc_1: key_red
+region_2_2__loc_0__4_0: key_green
+region_2_2__loc_1__4_2: Springs
+
+Playthrough:
+
+0: {
+  Right arrow
+}
+1: {
+  region_2_2__loc_0__4_0: key_green
+  region_2_2__loc_1__4_2: Springs
+}
+2: {
+  region_2_1__loc_0: Left arrow
+  region_2_1__loc_1: key_red
+}
+3: {
+  region_2_0__loc_0__2_4: key_blue
+}
+4: {
+  region_1_0__loc_0: victory
+}

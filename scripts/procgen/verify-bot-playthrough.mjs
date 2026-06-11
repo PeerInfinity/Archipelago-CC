@@ -128,6 +128,16 @@ await runScenario('A — bounce-only full sphere playthrough', {
     victoryItem: 'Victory',
 });
 
+// Mixed maze+bounce: the sphere order alternates substrates
+// (maze region_2_2 → bounce region_2_1 → maze region_2_0 → bounce
+// region_1_0/victory), so the bot hands off maze→bounce and
+// bounce→maze twice each — the seamless-switch requirement.
+await runScenario('B — mixed maze+bounce cross-substrate handoff', {
+    url: '?game=bounce_mixed_worldgen&seed=1',
+    expectedLocations: 6,
+    victoryItem: 'victory',
+});
+
 console.log('\nVERIFY BOT PLAYTHROUGH: ALL OK');
 await browser.close();
 process.exit(0);
