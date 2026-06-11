@@ -204,6 +204,171 @@ const makeBouncePlan = (seed, sphereCount) => planSpheres({
     seed,
 });
 
+describe('growSpheres — count gates (duplicate-instance pools)', () => {
+    // The duplicate-instance fix: when the planner splits N instances
+    // of one item across spheres, a gate on that item demands its
+    // CUMULATIVE count through the gate's sphere (Has with
+    // args.count), so the region opens exactly at its planned sphere
+    // instead of a sphere early.
+    const DUP_POOL = { key_red: 2, key_blue: 1, victory: 1 };
+
+    const collectCountGates = (rulesJson) => {
+        const found = [];
+        const walk = (rule, where) => {
+            if (!rule || typeof rule !== 'object') return;
+            if (rule.rule === 'Has' && (rule.args?.count ?? 1) > 1) {
+                found.push({ where, ...rule.args });
+            }
+            for (const c of rule.children ?? []) walk(c, where);
+        };
+        for (const region of Object.values(rulesJson.regions['1'])) {
+            for (const ex of region.exits) walk(ex.access_rule, ex.name);
+        }
+        return found;
+    };
+
+    // Seeds where the planner splits key_red across spheres 1 and 2
+    // (verified by inspection) — the case that used to fail the
+    // oracle with single-item Has gates.
+    it.each([[2], [3], [7]])(
+        'seed %i: split key_red realises the plan exactly via a count gate',
+        (seed) => {
+            const plan = planSpheres({
+                itemPool: DUP_POOL, sphereCount: 3,
+                victoryItem: 'victory', seed,
+            });
+            const spheresWithKeyRed = plan.spheres
+                .filter((s) => s.items.includes('key_red')).length;
+            expect(spheresWithKeyRed).toBeGreaterThan(1); // the split happened
+
+            const { grid, startCell } = growSpheres({
+                regionSize: { width: 8, height: 6 },
+                seed,
+                growthParams: { spherePlan: plan },
+            });
+            const rulesJson = buildRulesJson(grid, {
+                startCell, seed, embedSphereLog: false,
+            });
+            expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan))
+                .toEqual([]);
+
+            // Any gate on key_red at sphere 2 must demand both copies.
+            const countGates = collectCountGates(rulesJson);
+            for (const g of countGates) {
+                expect(g.item_name).toBe('key_red');
+                expect(g.count).toBe(2);
+            }
+        });
+
+    it('both instances in ONE sphere needs no count gate (and still verifies)', () => {
+        // Seed 1 puts both key_red copies in sphere 1 — gates on it
+        // are plain Has; the oracle must hold either way.
+        const plan = planSpheres({
+            itemPool: DUP_POOL, sphereCount: 3,
+            victoryItem: 'victory', seed: 1,
+        });
+        expect(plan.spheres[0].items.filter((i) => i === 'key_red')).toHaveLength(2);
+        const { grid, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 1,
+            growthParams: { spherePlan: plan },
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 1, embedSphereLog: false,
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+    });
+
+    it('buildSphereTree stamps cumulative gateCounts on count-gated nodes', () => {
+        // Hand-written split plan: the wave-2 gate on key_red must
+        // demand cumulative count 2 (one instance per sphere 1-2).
+        const plan = {
+            seed: 1,
+            spheres: [
+                { sphere: 1, items: ['key_red'] },
+                { sphere: 2, items: ['key_red'] },
+                { sphere: 3, items: ['victory'] },
+            ],
+        };
+        const tree = buildSphereTree(plan, {}, createRng(1));
+        const wave2 = tree.nodes.find((n) => n.wave === 2 && !n.isFiller);
+        expect(wave2.gate).toEqual(['key_red']);
+        expect(wave2.gateCounts).toEqual({ key_red: 2 });
+        const wave1 = tree.nodes.find((n) => n.wave === 1 && !n.isFiller);
+        expect(wave1.gate).toEqual(['key_red']);
+        expect(wave1.gateCounts).toEqual({ key_red: 1 });
+    });
+
+    it('bounce cannot realise a count gate — loud failure, not a broken world', () => {
+        // TEMPORARY restriction until bounce's rule-gated portals land
+        // (priority list #2): a multi-instance gate item never lands on
+        // a bounce-owned exit / back portal. A bounce-only world whose
+        // only sphere-2 gate item is multi-instance must fail loudly.
+        const plan = {
+            seed: 1,
+            spheres: [
+                { sphere: 1, items: ['Right arrow'] },
+                { sphere: 2, items: ['Springs', 'Springs'] },
+                { sphere: 3, items: ['Victory'] },
+            ],
+        };
+        expect(() => growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 1,
+            growthParams: {
+                spherePlan: plan,
+                substrateQuotas: { bounce: 99 },
+                startSubstrate: 'bounce',
+            },
+        })).toThrow(/cannot realise a back portal|no host can realise/);
+    });
+
+    it('mixed world: count gates land on maze exits, bounce keeps single-instance gates', () => {
+        const pool = {
+            'Right arrow': 1, Springs: 1,
+            key_red: 2, key_blue: 1, victory: 1,
+        };
+        // Find a seed whose plan splits key_red; assert the world
+        // still realises exactly with bounce in the mix.
+        for (let seed = 1; seed <= 12; seed++) {
+            const plan = planSpheres({
+                itemPool: pool, sphereCount: 3,
+                victoryItem: 'victory', seed,
+            });
+            if (plan.spheres.filter((s) => s.items.includes('key_red')).length < 2) continue;
+            const { grid, startCell, tree } = growSpheres({
+                regionSize: { width: 8, height: 6 },
+                seed,
+                growthParams: {
+                    spherePlan: plan,
+                    substrateQuotas: { maze: 99, bounce: 2 },
+                    startSubstrate: 'maze',
+                },
+            });
+            // No bounce node carries (or is gated by) a count > 1.
+            for (const node of tree.nodes) {
+                if (node.substrate !== 'bounce') continue;
+                for (const c of Object.values(node.gateCounts ?? {})) {
+                    expect(c).toBe(1);
+                }
+            }
+            const rulesJson = buildRulesJson(grid, {
+                startCell, seed, embedSphereLog: false,
+                startingItems: ['Left arrow'],
+                sourceItems: {
+                    'Left arrow': {
+                        name: 'Left arrow', id: 999,
+                        classification: 'progression', groups: ['Everything'],
+                    },
+                },
+            });
+            expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+            return; // one verified split seed is enough
+        }
+        throw new Error('no seed in 1..12 split key_red — adjust the fixture');
+    }, 120000);
+});
+
 describe('growSpheres (bounce) — zone realisation + oracle', () => {
     it.each([
         [1, 3],

@@ -317,6 +317,7 @@ async function main() {
             index: n.index,
             wave: n.wave,
             gate: n.gate,
+            gateCounts: n.gateCounts,
             parent: n.parent,
             side: n.side,
             substrate: n.substrate,

@@ -2285,6 +2285,23 @@ export function buildSphereTree(plan, opts = {}, rng) {
     const spheres = plan.spheres;
     const waves = spheres.length;
 
+    // Cumulative instance counts per sphere: cumCounts[k] maps item →
+    // number of instances in spheres 1..k+1. A wave-w gate on item X
+    // must demand the cumulative count through sphere w (a plain
+    // Has(X) would be satisfied by an EARLIER instance of X, opening
+    // the region a sphere early — the duplicate-instance oracle
+    // failure). Single-instance items keep count 1 == plain Has.
+    const cumCounts = [];
+    {
+        const running = new Map();
+        for (const s of spheres) {
+            for (const item of s.items) {
+                running.set(item, (running.get(item) ?? 0) + 1);
+            }
+            cumCounts.push(new Map(running));
+        }
+    }
+
     const substrateCounts = {};
     // Regions that defaulted to 'maze' because every quota was already
     // filled — the plan needs more regions than the quotas allow.
@@ -2309,11 +2326,14 @@ export function buildSphereTree(plan, opts = {}, rng) {
     };
 
     const nodes = [];
-    const addNode = ({ wave, gate, parent, substrate, isFiller = false }) => {
+    const addNode = ({ wave, gate, gateCounts = {}, parent, substrate, isFiller = false }) => {
         const node = {
             index: nodes.length,
             wave,
             gate,             // entry-gate item names ([] = ungated)
+            gateCounts,       // item → required count (> 1 only for
+                              // multi-instance items; emitted as
+                              // Has(item, count) — the count gate)
             parent,           // parent node index (null for the root)
             side: null,       // side ON THE PARENT hosting this child
             substrate,
@@ -2344,12 +2364,22 @@ export function buildSphereTree(plan, opts = {}, rng) {
         return node;
     };
 
-    const canHost = (host, gate) => {
+    const canHost = (host, gate, gateCount) => {
         if (host.usedSides.size >= 4) return false;
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
-        if (gateable && gate.some((item) => !gateable.includes(item))) return false;
+        // A substrate with a declared gate vocabulary (bounce: the six
+        // abilities) realises gates as physics constructions — those
+        // are binary, so count gates (required count > 1) are out of
+        // its reach. Full-rule-vocabulary substrates (gateableItems ==
+        // null; maze's logic-gate obstacles) realise any count.
+        // TEMPORARY restriction: dissolves when bounce's rule-gated
+        // portals land (priority list #2 in the plan doc).
+        if (gateable && gate.some((item) => !gateable.includes(item)
+                || gateCount(item) > 1)) {
+            return false;
+        }
         if (typeof adapter.canHostExitGates === 'function'
                 && !adapter.canHostExitGates([...host.childGates], gate)) {
             return false;
@@ -2369,6 +2399,11 @@ export function buildSphereTree(plan, opts = {}, rng) {
     // CHILD can realise too — its guaranteed back portal carries the
     // entry gate, so e.g. a bounce region can't sit behind a key gate.
     const pickHostAndGate = (wave, { gateWave = wave, childSubstrate = null } = {}) => {
+        // Required count for a gate item at this gate's sphere: the
+        // cumulative instance count through sphere gateWave (1 for
+        // single-instance items — the common case).
+        const cum = gateWave > 0 ? cumCounts[gateWave - 1] : null;
+        const gateCount = (item) => cum?.get(item) ?? 1;
         let gateChoices = gateWave === 0
             ? [[]]
             : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]);
@@ -2377,13 +2412,17 @@ export function buildSphereTree(plan, opts = {}, rng) {
             && typeof childAdapter.generateZoneForSpecs === 'function'
             && childAdapter.gateableItems) || null;
         if (childGateable) {
+            // The child's guaranteed back portal carries the entry
+            // gate, so the gate must fit the child's vocabulary too —
+            // including the count restriction (see canHost).
             gateChoices = gateChoices.filter((gate) =>
-                gate.every((item) => childGateable.includes(item)));
+                gate.every((item) => childGateable.includes(item)
+                    && gateCount(item) === 1));
             if (gateChoices.length === 0) {
                 throw new Error(`growSpheres: substrate '${childSubstrate}' cannot realise `
                     + `a back portal for any sphere-${gateWave} gate item — plan the `
-                    + 'spheres with gateableItems (or pins) so every sphere carries an '
-                    + `item '${childSubstrate}' can gate on`);
+                    + 'spheres with gateableItems (or pins) so every sphere carries a '
+                    + `single-instance item '${childSubstrate}' can gate on`);
             }
         }
         const eligible = nodes.filter((h) => h.usedSides.size < 4
@@ -2395,7 +2434,14 @@ export function buildSphereTree(plan, opts = {}, rng) {
         for (const pool of pools) {
             for (const host of rng.shuffle([...pool])) {
                 for (const gate of gateChoices) {
-                    if (canHost(host, gate)) return { host, gate };
+                    if (canHost(host, gate, gateCount)) {
+                        return {
+                            host,
+                            gate,
+                            gateCounts: Object.fromEntries(
+                                gate.map((item) => [item, gateCount(item)])),
+                        };
+                    }
                 }
             }
         }
@@ -2429,8 +2475,8 @@ export function buildSphereTree(plan, opts = {}, rng) {
             // carries the entry gate, so the gate pick must respect
             // the child's gate vocabulary.
             const substrate = pickSub();
-            const { host, gate } = pickHostAndGate(w, { childSubstrate: substrate });
-            waveNodes.push(addNode({ wave: w, gate, parent: host.index, substrate }));
+            const { host, gate, gateCounts } = pickHostAndGate(w, { childSubstrate: substrate });
+            waveNodes.push(addNode({ wave: w, gate, gateCounts, parent: host.index, substrate }));
         }
         // Round-robin the wave's items across its hosting regions.
         items.forEach((item, idx) => {
@@ -2443,11 +2489,11 @@ export function buildSphereTree(plan, opts = {}, rng) {
         for (const fw of fillerWaves) {
             if (fw !== w) continue;
             const substrate = pickSub();
-            const { host, gate } = pickHostAndGate(w, {
+            const { host, gate, gateCounts } = pickHostAndGate(w, {
                 gateWave: w === 0 && waves > 1 ? 1 : w,
                 childSubstrate: substrate,
             });
-            addNode({ wave: w, gate, parent: host.index, substrate, isFiller: true });
+            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
         }
     }
 
@@ -2668,9 +2714,12 @@ export function growSpheres(config) {
         if (!childrenByParent.has(node.parent)) childrenByParent.set(node.parent, []);
         childrenByParent.get(node.parent).push(node);
     }
-    const gateRule = (gate) => (gate.length === 0
+    // Count gates: a multi-instance gate item demands its cumulative
+    // count through the gate's sphere (makeHasRule emits args.count
+    // only when > 1, so single-instance gates stay plain Has).
+    const gateRule = (gate, gateCounts = {}) => (gate.length === 0
         ? null
-        : makeAndRule(gate.map((item) => makeHasRule(item))));
+        : makeAndRule(gate.map((item) => makeHasRule(item, gateCounts[item] ?? 1))));
 
     for (const node of tree.nodes) {
         const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
@@ -2702,7 +2751,7 @@ export function growSpheres(config) {
             .map((child) => ({
                 side: child.side,
                 gate: child.gate,
-                rule: gateRule(child.gate),
+                rule: gateRule(child.gate, child.gateCounts),
             }));
 
         let entrances = [];
