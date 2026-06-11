@@ -37,13 +37,135 @@
  */
 
 import { createRng } from '../shared/rng.js';
+import { DEFAULTS, PROFILES } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
 import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './apRules.js';
 
-const WIDTH = 400;
-const COLUMN = WIDTH / 2;
-const PLAIN_DY = 120;
+// ── Profile geometry ─────────────────────────────────────────────────
+//
+// The generator's spacing is a function of the physics constants (a
+// gate gap only gates if the failing launch's apex can't clear it), so
+// each physics profile carries its own geometry. Two kinds of value:
+//
+//  - APEX-DERIVED (PLAIN_DY, the spring/jetpack gap windows):
+//    deriveGeometry computes them from C via apex = vy^2 / 2g.
+//  - SWEEP-CALIBRATED (BRANCH_DX, ARROW_HALF_WIDTH_FLOOR): empirical —
+//    the width floor comes from the wrapAsymmetry sweep (single-arrow
+//    gating collapses under screen wrap below ~600px width for
+//    classic). deriveGeometry copies classic's values as placeholders;
+//    recalibrate with a wrapAsymmetry-style sweep when a profile's
+//    constants land.
+//
+// CLASSIC_GEOMETRY is PINNED to the legacy literals (not derived) so
+// committed presets reproduce byte-identically; validateGeometry
+// asserts the structural constraints both pinned and derived values
+// must satisfy, and the generate-verify loop remains the gatekeeper
+// either way.
+
+export const CLASSIC_GEOMETRY = Object.freeze({
+    WIDTH: 400,          // single-target level width (multi-target is dynamic)
+    PLAIN_DY: 120,       // plain bounce step (apex 169 clears with margin)
+    SPRING_GAP: Object.freeze({ min: 380, span: 60 }),   // plain 169 fails, spring 484 clears
+    JETPACK_GAP: Object.freeze({ min: 1180, span: 60 }), // spring 484 fails, jetpack 1296 clears
+    BRANCH_DX: 140,      // arrow-gate column shift / branch-tip offset
+    ARROW_HALF_WIDTH_FLOOR: 300, // 600px width floor for arrow-gated goals (wrap sweep)
+});
+
+/** Apex height of a launch with initial speed |vy| under C's gravity. */
+export function launchApex(vy, C) {
+    return (vy * vy) / (2 * C.GRAVITY);
+}
+
+/**
+ * Derive a profile's generator geometry from its physics constants.
+ * Used for profiles without pinned geometry (dj until calibration);
+ * classic stays pinned. `base` supplies the sweep-calibrated values.
+ */
+export function deriveGeometry(C, base = CLASSIC_GEOMETRY) {
+    const round10 = (v) => Math.round(v / 10) * 10;
+    const plainApex = launchApex(C.BOUNCE_VY, C);
+    // A comfortable plain step: ~70% of the plain apex (classic: 120
+    // of 169). Gate windows sit as high as possible while the
+    // overshoot (clearApex - gap) stays under one plain step, so the
+    // rung above a gate is never intercepted; 60px of window span for
+    // the rng to roam.
+    const PLAIN_DY = round10(plainApex * 0.7);
+    const gateWindow = (clearApex) => Object.freeze({
+        min: round10(clearApex - PLAIN_DY + 15),
+        span: 60,
+    });
+    return Object.freeze({
+        WIDTH: base.WIDTH,
+        PLAIN_DY,
+        SPRING_GAP: gateWindow(launchApex(C.SPRING_VY, C)),
+        JETPACK_GAP: gateWindow(launchApex(C.JETPACK_VY, C)),
+        BRANCH_DX: base.BRANCH_DX,
+        ARROW_HALF_WIDTH_FLOOR: base.ARROW_HALF_WIDTH_FLOOR,
+    });
+}
+
+/**
+ * Structural constraints geometry must satisfy under its constants —
+ * checked for pinned and derived geometry alike (tests); returns a
+ * list of violation strings, empty = valid.
+ */
+export function validateGeometry(G, C) {
+    const errors = [];
+    const plainApex = launchApex(C.BOUNCE_VY, C);
+    const springApex = launchApex(C.SPRING_VY, C);
+    const jetApex = launchApex(C.JETPACK_VY, C);
+    if (G.PLAIN_DY >= plainApex) {
+        errors.push(`PLAIN_DY ${G.PLAIN_DY} not clearable (plain apex ${plainApex})`);
+    }
+    const checkWindow = (name, w, clearApex, failApex) => {
+        if (w.min <= failApex) {
+            errors.push(`${name} min ${w.min} clearable by the failing launch (apex ${failApex})`);
+        }
+        if (w.min + w.span >= clearApex) {
+            errors.push(`${name} max ${w.min + w.span} not clearable (apex ${clearApex})`);
+        }
+        if (clearApex - w.min >= G.PLAIN_DY) {
+            errors.push(`${name} overshoot ${clearApex - w.min} >= PLAIN_DY ${G.PLAIN_DY}`
+                + ' (next rung intercepted)');
+        }
+    };
+    checkWindow('SPRING_GAP', G.SPRING_GAP, springApex, plainApex);
+    checkWindow('JETPACK_GAP', G.JETPACK_GAP, jetApex, springApex);
+    const catchSpan = C.PLATFORM_WIDTH + 2 * C.PLAYER_HALF_WIDTH;
+    if (G.BRANCH_DX <= catchSpan) {
+        errors.push(`BRANCH_DX ${G.BRANCH_DX} within the catch span ${catchSpan}`
+            + ' (branch tip reachable without drift)');
+    }
+    return errors;
+}
+
+// Per-profile pinned geometry; profiles absent here derive from their
+// constants. dj gets pinned once probe-calibrated constants land.
+const GEOMETRIES = Object.freeze({ classic: CLASSIC_GEOMETRY });
+
+/**
+ * Resolve a generator `physics` option to { profileId, C, G }.
+ * Accepts a profile id (default 'classic') or an explicit
+ * { constants, geometry } object (tests, future custom profiles).
+ */
+export function resolveGenPhysics(physics) {
+    if (!physics || physics === 'classic') {
+        return { profileId: 'classic', C: DEFAULTS, G: CLASSIC_GEOMETRY };
+    }
+    if (typeof physics === 'string') {
+        const profile = PROFILES[physics];
+        if (!profile) throw new Error(`bounce generator: unknown physics profile '${physics}'`);
+        const C = profile.constants;
+        return { profileId: physics, C, G: GEOMETRIES[physics] ?? deriveGeometry(C) };
+    }
+    const C = physics.constants ?? DEFAULTS;
+    return {
+        profileId: physics.profile ?? null,
+        C,
+        G: physics.geometry ?? deriveGeometry(C),
+    };
+}
 
 function sameSets(minimalSets, want) {
     if (minimalSets.length !== 1) return false;
@@ -52,26 +174,29 @@ function sameSets(minimalSets, want) {
 }
 
 /** Gate-segment steps for one ability (shared by both proposal paths). */
-function gateSteps(ability, rng) {
+function gateSteps(ability, rng, G) {
     switch (ability) {
         case 'springs':
-            return [{ dy: 380 + rng.next() * 60, spring: true }];
+            return [{ dy: G.SPRING_GAP.min + rng.next() * G.SPRING_GAP.span, spring: true }];
         case 'jetpacks':
-            return [{ dy: 1180 + rng.next() * 60, jetpack: true }];
+            return [{ dy: G.JETPACK_GAP.min + rng.next() * G.JETPACK_GAP.span, jetpack: true }];
         case 'blue':
         case 'brown':
-            return [{ dy: PLAIN_DY, type: ability }, { dy: PLAIN_DY }];
+            return [{ dy: G.PLAIN_DY, type: ability }, { dy: G.PLAIN_DY }];
         case 'left':
-            return [{ dy: PLAIN_DY, dx: -140 }];
+            return [{ dy: G.PLAIN_DY, dx: -G.BRANCH_DX }];
         case 'right':
-            return [{ dy: PLAIN_DY, dx: +140 }];
+            return [{ dy: G.PLAIN_DY, dx: +G.BRANCH_DX }];
         default:
             throw new Error(`generateLevel: no gate builder for '${ability}'`);
     }
 }
 
 /** One proposal. Returns a level (bottom margin/height computed last). */
-function proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter = 0 }) {
+function proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter = 0, G }) {
+    const WIDTH = G.WIDTH;
+    const COLUMN = WIDTH / 2;
+    const PLAIN_DY = G.PLAIN_DY;
     // steps grow upward as deltas; realized into platforms afterwards.
     // Plain-step x-jitter (opts.jitter, px amplitude) DEFAULTS TO 0: a
     // no-arrows player's x never changes, so an arrowless chain must
@@ -91,7 +216,7 @@ function proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter 
     const gates = rng.shuffle([...requirement]);
     for (const ability of gates) {
         plains();
-        steps.push(...gateSteps(ability, rng));
+        steps.push(...gateSteps(ability, rng, G));
     }
     plains();
     for (let i = 0; i < pickupCount; i++) steps.push({ dy: PLAIN_DY, pickup: true });
@@ -152,18 +277,20 @@ export function generateLevel({
     seed = 1,
     attempts = 8,
     jitter = 0,
+    physics = 'classic',
 } = {}) {
+    const { C, G } = resolveGenPhysics(physics);
     const want = [...requirement].sort();
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
-        const level = proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter });
+        const level = proposeLevel({ id, requirement, pickupCount, rng, stepsBetween, jitter, G });
         const modelErrors = validateLevel(level);
         if (modelErrors.length > 0) {
             rejected.push(`attempt ${attempt}: ${modelErrors[0]}`);
             continue;
         }
-        const derived = deriveAccessRules(level);
+        const derived = deriveAccessRules(level, { constants: C });
         if (derived.defects.length > 0) {
             rejected.push(`attempt ${attempt}: ${derived.defects[0]}`);
             continue;
@@ -280,7 +407,6 @@ export function generateZoneSet({ count = 7, seed = 1, jitter = 0 } = {}) {
 
 const ARROW_ABILITIES = ['left', 'right'];
 const KNOWN_ABILITIES = new Set(['springs', 'jetpacks', 'blue', 'brown', 'left', 'right']);
-const BRANCH_DX = 140;
 
 const reqKey = (req) => req.join('+');
 const hasArrow = (req) => req.some((a) => ARROW_ABILITIES.includes(a));
@@ -400,7 +526,8 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs) {
 }
 
 /** One multi-target proposal. Throws on placement dead-ends (retryable). */
-function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter }) {
+function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter, C, G }) {
+    const PLAIN_DY = G.PLAIN_DY;
     const branchExits = exits.filter((e) => e !== arrowFree);
 
     // Segment chain: every key the column must realise, smallest first.
@@ -426,7 +553,7 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
         const newGates = rng.shuffle(segment.filter((a) => !current.includes(a)));
         for (const ability of newGates) {
             plains();
-            const parts = gateSteps(ability, rng);
+            const parts = gateSteps(ability, rng, G);
             current = [...current, ability].sort();
             // The rung above a gate has the gate passed; blue/brown's
             // trailing plain shares the completed key.
@@ -491,8 +618,13 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     // sharing a (rung, side); the proximity check keeps tips clear of
     // every other platform (interception territory).
     const usedSlots = new Set();
+    // Interception clearance around a prospective branch tip: one
+    // platform width + the catch half-span horizontally (classic 102),
+    // half a plain step vertically (classic 60).
+    const clearX = C.PLATFORM_WIDTH + C.PLATFORM_WIDTH / 2 + C.PLAYER_HALF_WIDTH;
+    const clearY = PLAIN_DY / 2;
     const spotClear = (sx, sy) => !platforms.some(
-        (p) => Math.abs(p.x - sx) < 102 && Math.abs(p.y - sy) < 60);
+        (p) => Math.abs(p.x - sx) < clearX && Math.abs(p.y - sy) < clearY);
     for (const exit of branchExits) {
         const key = reqKey(exit.attachKey);
         const d = exit.drift;
@@ -502,7 +634,7 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
         for (const rung of candidates) {
             const slot = `${rung.platform.id}:${d}`;
             if (usedSlots.has(slot)) continue;
-            const sx = rung.x + dir * BRANCH_DX;
+            const sx = rung.x + dir * G.BRANCH_DX;
             const sy = rung.y - PLAIN_DY;
             if (!spotClear(sx, sy)) continue;
             usedSlots.add(slot);
@@ -534,11 +666,12 @@ function proposeLevelFromSpecs({ id, exits, pickups, arrowFree, ceiling, rng, st
     // available arcs. The asymmetry sweep (wrapAsymmetry.test.js)
     // shows ±140 branch tips are wrong-arrow-reachable below ~600px
     // width (spring/jetpack airtime wraps a 420px level), so levels
-    // with any arrow-gated goal get a 600px floor. The verify loop
-    // remains the gatekeeper either way.
+    // with any arrow-gated goal get a width floor (sweep-calibrated
+    // per profile; G.ARROW_HALF_WIDTH_FLOOR). The verify loop remains
+    // the gatekeeper either way.
     const anyArrowGoal = [...exits, ...pickups]
         .some((g) => g.req.some((a) => ARROW_ABILITIES.includes(a)));
-    const halfSpan = Math.max(maxAbsX + 70, anyArrowGoal ? 300 : 0);
+    const halfSpan = Math.max(maxAbsX + 70, anyArrowGoal ? G.ARROW_HALF_WIDTH_FLOOR : 0);
     const shiftX = halfSpan;
     const shiftY = 60 - minY;
     const shift = (e) => { e.x += shiftX; e.y += shiftY; };
@@ -578,7 +711,9 @@ export function generateLevelFromSpecs({
     seed = 1,
     attempts = 8,
     jitter = 0,
+    physics = 'classic',
 } = {}) {
+    const { C, G } = resolveGenPhysics(physics);
     const { exits, pickups, arrowFree, ceiling } = normalizeSpecGoals(exitSpecs, pickupSpecs);
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
@@ -586,7 +721,7 @@ export function generateLevelFromSpecs({
         let level;
         try {
             level = proposeLevelFromSpecs({
-                id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter,
+                id, exits, pickups, arrowFree, ceiling, rng, stepsBetween, jitter, C, G,
             });
         } catch (err) {
             rejected.push(`attempt ${attempt}: ${err.message}`);
@@ -597,7 +732,7 @@ export function generateLevelFromSpecs({
             rejected.push(`attempt ${attempt}: ${modelErrors[0]}`);
             continue;
         }
-        const derived = deriveAccessRules(level);
+        const derived = deriveAccessRules(level, { constants: C });
         if (derived.defects.length > 0) {
             rejected.push(`attempt ${attempt}: ${derived.defects[0]}`);
             continue;

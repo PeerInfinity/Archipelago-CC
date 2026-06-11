@@ -5,7 +5,11 @@
  * exactly the requested ability set.
  */
 import { describe, it, expect } from 'vitest';
-import { generateLevel, generateZoneSet } from './generator.js';
+import {
+    generateLevel, generateZoneSet,
+    CLASSIC_GEOMETRY, deriveGeometry, validateGeometry, resolveGenPhysics,
+} from './generator.js';
+import { DEFAULTS, PROFILES } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
 import { createBounceSubstrateEntry } from './bounceDemoLibrary.js';
@@ -156,4 +160,57 @@ describe('generated zone set through the spiral (e2e)', () => {
         expect(result.reachable.size).toBe(8);
         expect(result.items).toContain(VICTORY_ITEM_NAME);
     }, 60000);
+});
+
+describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysics)', () => {
+    it('pinned classic geometry satisfies its own structural constraints', () => {
+        expect(validateGeometry(CLASSIC_GEOMETRY, DEFAULTS)).toEqual([]);
+    });
+
+    it('deriveGeometry(classic constants) reproduces the apex-derived classic values', () => {
+        const G = deriveGeometry(DEFAULTS);
+        expect(G.PLAIN_DY).toBe(CLASSIC_GEOMETRY.PLAIN_DY); // 120 = round10(0.7 * 169)
+        expect(G.SPRING_GAP.min).toBe(CLASSIC_GEOMETRY.SPRING_GAP.min); // 380
+        expect(validateGeometry(G, DEFAULTS)).toEqual([]);
+        // sweep-calibrated values are copied, not derived
+        expect(G.BRANCH_DX).toBe(CLASSIC_GEOMETRY.BRANCH_DX);
+        expect(G.ARROW_HALF_WIDTH_FLOOR).toBe(CLASSIC_GEOMETRY.ARROW_HALF_WIDTH_FLOOR);
+    });
+
+    it('derived geometry stays valid when launch impulses are retuned', () => {
+        // a softer-gravity, weaker-spring profile (dj-shaped numbers)
+        const C = { ...DEFAULTS, GRAVITY: 0.35, BOUNCE_VY: -11, SPRING_VY: -19, JETPACK_VY: -30 };
+        expect(validateGeometry(deriveGeometry(C), C)).toEqual([]);
+    });
+
+    it('validateGeometry flags an interceptable gate window', () => {
+        const G = {
+            ...CLASSIC_GEOMETRY,
+            SPRING_GAP: { min: 300, span: 60 }, // overshoot 184 >= PLAIN_DY
+        };
+        expect(validateGeometry(G, DEFAULTS).join(' ')).toMatch(/overshoot/);
+    });
+
+    it('resolveGenPhysics: classic default; dj derives geometry; unknown throws', () => {
+        const classic = resolveGenPhysics(undefined);
+        expect(classic.C).toBe(DEFAULTS);
+        expect(classic.G).toBe(CLASSIC_GEOMETRY);
+        const dj = resolveGenPhysics('dj');
+        expect(dj.C).toBe(PROFILES.dj.constants);
+        expect(validateGeometry(dj.G, dj.C)).toEqual([]);
+        expect(() => resolveGenPhysics('moon')).toThrow(/moon/);
+    });
+
+    it('generateLevel under the provisional dj profile still verifies (gateless column)', () => {
+        const level = generateLevel({ id: 'dj_smoke', requirement: [], physics: 'dj' });
+        const derived = deriveAccessRules(level, { constants: PROFILES.dj.constants });
+        expect(derived.defects).toEqual([]);
+        expect(derived.exits.exit_up.minimalSets).toEqual([[]]);
+    });
+
+    it('classic generation is byte-identical with and without the physics opt', () => {
+        const a = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5 });
+        const b = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5, physics: 'classic' });
+        expect(b).toEqual(a);
+    });
 });
