@@ -22,6 +22,9 @@ const ABILITY_HUD = [
 
 export function renderFrame(ctx, session, ui = {}) {
     const { level, state, abilities, collected } = session;
+    // Rule-gated goals (host-evaluated booleans; absent id = open).
+    const gateStates = session.gateStates ?? { portals: {}, pickups: {} };
+    const isLocked = (kind, id) => gateStates[kind]?.[id] === false;
     const W = ctx.canvas.width;
     const H = ctx.canvas.height;
     const scale = W / level.size.width;
@@ -57,13 +60,20 @@ export function renderFrame(ctx, session, ui = {}) {
     }
     ctx.globalAlpha = 1;
 
-    // pickups: squares (outline once collected)
+    // pickups: squares (outline once collected; padlocked while a
+    // rule gate holds them closed — the metroidvania tease)
     for (const pk of level.pickups ?? []) {
         const x = sx(pk.x);
         const y = sy(pk.y);
         if (collected.has(pk.id)) {
             ctx.strokeStyle = '#666';
             ctx.strokeRect(x - 9, y - 9, 18, 18);
+        } else if (isLocked('pickups', pk.id)) {
+            ctx.fillStyle = '#7a7a7a';
+            ctx.fillRect(x - 9, y - 9, 18, 18);
+            ctx.font = '12px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔒', x, y + 4);
         } else {
             ctx.fillStyle = '#d8d8d8';
             ctx.fillRect(x - 9, y - 9, 18, 18);
@@ -74,19 +84,25 @@ export function renderFrame(ctx, session, ui = {}) {
         }
     }
 
-    // portals: circles with direction arrows
+    // portals: circles with direction arrows (gray padlock while a
+    // rule gate holds them closed)
     for (const pt of level.portals ?? []) {
         const x = sx(pt.x);
         const y = sy(pt.y);
-        ctx.strokeStyle = '#b08ae0';
+        const locked = isLocked('portals', pt.id);
+        ctx.strokeStyle = locked ? '#777' : '#b08ae0';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(x, y, 13, 0, Math.PI * 2);
         ctx.stroke();
-        ctx.fillStyle = '#b08ae0';
         ctx.font = '14px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText(ARROWS[pt.direction] ?? '?', x, y + 5);
+        if (locked) {
+            ctx.fillText('🔒', x, y + 5);
+        } else {
+            ctx.fillStyle = '#b08ae0';
+            ctx.fillText(ARROWS[pt.direction] ?? '?', x, y + 5);
+        }
     }
 
     // player

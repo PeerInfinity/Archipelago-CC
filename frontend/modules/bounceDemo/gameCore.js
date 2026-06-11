@@ -20,6 +20,15 @@
  *                unloads the region on the first one anyway).
  *  - 'fell'    — fell out of the level; the session auto-respawns at
  *                the entrance.
+ *  - 'lockedPortal' / 'lockedPickup' — landed on a goal whose gate
+ *                state is closed (rule-gated portals/pickups: the host
+ *                bridge evaluates authored access rules and pushes
+ *                per-goal booleans via setGateStates). Locked goals
+ *                don't trigger — a locked portal doesn't teleport (and
+ *                doesn't enter the once-per-session exit dedupe), a
+ *                locked pickup doesn't collect; both fire again on a
+ *                later landing once the gate opens. Fired per landing
+ *                so the page can show the locked message.
  */
 
 import { DEFAULTS, step, spawnState } from './physics.js';
@@ -44,6 +53,11 @@ export function createGameSession(level, opts = {}) {
     const C = opts.constants ?? DEFAULTS;
     let state = spawnState(level, C);
     let abilities = noAbilities();
+    // Gate states for rule-gated portals/pickups: id -> boolean
+    // (true = open). Ids absent from the maps are OPEN — only goals
+    // the host's gate_rules mention can lock.
+    let gateStates = { portals: {}, pickups: {} };
+    const isOpen = (kind, id) => gateStates[kind][id] !== false;
     const collected = new Set();
     const exitedPortals = new Set();
 
@@ -52,9 +66,18 @@ export function createGameSession(level, opts = {}) {
         get state() { return state; },
         get abilities() { return abilities; },
         get collected() { return collected; },
+        get gateStates() { return gateStates; },
 
         setItems(itemNames) {
             abilities = itemsToAbilities(itemNames);
+        },
+
+        /** Host-evaluated lock booleans ({ portals, pickups }). */
+        setGateStates(states) {
+            gateStates = {
+                portals: { ...(states?.portals ?? {}) },
+                pickups: { ...(states?.pickups ?? {}) },
+            };
         },
 
         /**
@@ -84,20 +107,26 @@ export function createGameSession(level, opts = {}) {
             }
             if (state.landedOn) {
                 for (const pk of level.pickups ?? []) {
-                    if (pk.on === state.landedOn && !collected.has(pk.id)) {
-                        collected.add(pk.id);
-                        events.push({ type: 'pickup', id: pk.id });
+                    if (pk.on !== state.landedOn || collected.has(pk.id)) continue;
+                    if (!isOpen('pickups', pk.id)) {
+                        events.push({ type: 'lockedPickup', id: pk.id });
+                        continue;
                     }
+                    collected.add(pk.id);
+                    events.push({ type: 'pickup', id: pk.id });
                 }
                 for (const pt of level.portals ?? []) {
-                    if (pt.on === state.landedOn && !exitedPortals.has(pt.id)) {
-                        exitedPortals.add(pt.id);
-                        events.push({
-                            type: 'exit',
-                            portalId: pt.id,
-                            direction: pt.direction ?? null,
-                        });
+                    if (pt.on !== state.landedOn || exitedPortals.has(pt.id)) continue;
+                    if (!isOpen('portals', pt.id)) {
+                        events.push({ type: 'lockedPortal', portalId: pt.id });
+                        continue;
                     }
+                    exitedPortals.add(pt.id);
+                    events.push({
+                        type: 'exit',
+                        portalId: pt.id,
+                        direction: pt.direction ?? null,
+                    });
                 }
             }
             return events;

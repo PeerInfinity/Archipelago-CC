@@ -80,12 +80,26 @@ const gameSide = {
         // their in-game ids; the bridge inverts ap_locations for us.
         session.seedCollected(config?.checkedLocations);
         session.setItems(lastItems);
+        // Gate states start open (the session default). NOT carried
+        // across configure like lastItems: ids are region-local, and
+        // the bridge pushes this region's fresh states (when it has
+        // gate_rules) in the same task as configure — no frame runs
+        // in between.
         statusEl.textContent = `region: ${config.regionId ?? '?'} — level: `
             + `${params.bounceLevel.id} — arrows/A/D to move (when unlocked)`;
     },
     pollItems(received) {
         lastItems = Array.isArray(received) ? received : [];
         session?.setItems(lastItems);
+    },
+    /**
+     * Rule-gated portals/pickups: the bridge evaluates the region's
+     * authored gate rules against live inventory and pushes per-goal
+     * booleans ({ portals: {id: bool}, pickups: {id: bool} },
+     * true = open). The game never sees the rules — only the booleans.
+     */
+    setGateStates(states) {
+        session?.setGateStates(states);
     },
     /** Restart the current level (collected checks persist). */
     reset() {
@@ -103,6 +117,7 @@ window.__bounceDebug = () => ({
     items: [...lastItems],
     abilities: session ? { ...session.abilities } : null,
     collected: session ? [...session.collected] : null,
+    gateStates: session ? session.gateStates : null,
     levelId: session?.level?.id ?? null,
     backExitSide,
     fallBehavior,
@@ -119,6 +134,8 @@ function handleEvent(ev) {
     if (ev.type === 'pickup') {
         setMessage(`checked: ${ev.id}`);
         bridge.sendLocation?.(ev.id);
+    } else if (ev.type === 'lockedPickup' || ev.type === 'lockedPortal') {
+        setMessage('locked — something is still missing');
     } else if (ev.type === 'exit') {
         const side = portalSides[ev.portalId] ?? null;
         setMessage(`exit ${ev.direction ?? '?'}${side ? ` (side ${side})` : ''}`);

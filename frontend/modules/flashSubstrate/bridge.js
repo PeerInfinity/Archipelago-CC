@@ -15,6 +15,15 @@
  *     region payload's exits and dispatch user:regionMove.
  *   - On stateManager state changes: re-poll received items into the
  *     game so newly-received items get applied.
+ *   - Rule-gated portals/pickups: when the region payload carries
+ *     `gate_rules` ({ portals: {id: rule}, pickups: {id: rule} } in
+ *     Rule Builder JSON — authored gate terms the game's own physics
+ *     can't realise), evaluate each rule against the live inventory
+ *     and push per-goal BOOLEANS into the game via
+ *     __swfBridge.setGateStates({ portals, pickups }) (true = open),
+ *     after configure and on every state change — the same cadence as
+ *     pollItems. The game stays Archipelago-naive: it only ever sees
+ *     booleans, and renders locked goals visibly locked.
  *
  * The loadRegion event name is read from the iframe URL's
  * `loadRegionEvent` query param (set by the panel's iframeSrc), so
@@ -34,6 +43,7 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
+import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -232,6 +242,37 @@ function _pollItemsIntoGame() {
     }
 }
 
+/**
+ * Evaluate the region's authored gate rules (payload `gate_rules`)
+ * against the live inventory and push the resulting booleans into the
+ * game via __swfBridge.setGateStates. True = open; goals without a
+ * rule are open by default (the game treats absent ids as unlocked).
+ * No-op when the region carries no gate_rules or the game page
+ * doesn't implement setGateStates (e.g. plain flash games).
+ */
+function _pushGateStates() {
+    const gateRules = _world?.gate_rules;
+    if (!gateRules || typeof gateRules !== 'object') return;
+    const b = _bridge();
+    if (!b || typeof b.setGateStates !== 'function') return;
+    // The snapshot's inventory is {itemName: count}; the evaluator
+    // wants a Map for count-aware Has(item, n) rules.
+    const inv = _client?.getStateSnapshot?.()?.inventory;
+    const inventory = new Map(
+        (inv && typeof inv === 'object') ? Object.entries(inv) : []);
+    const evaluate = (rules) => Object.fromEntries(
+        Object.entries(rules ?? {}).map(([id, rule]) =>
+            [id, evaluateRuleAgainstInventory(rule, inventory)]));
+    try {
+        b.setGateStates({
+            portals: evaluate(gateRules.portals),
+            pickups: evaluate(gateRules.pickups),
+        });
+    } catch (err) {
+        log('error', 'setGateStates threw:', err);
+    }
+}
+
 // ────────────────────────────────────────────────────────────────
 // Region loading
 // ────────────────────────────────────────────────────────────────
@@ -289,8 +330,10 @@ function _handleLoadRegion(payload) {
     if (!_client?.getStaticData?.()) {
         _client?.requestStaticData?.();
     }
-    // Apply whatever's already been received.
+    // Apply whatever's already been received, and the current lock
+    // states for any rule-gated portals/pickups.
     _pollItemsIntoGame();
+    _pushGateStates();
     log('debug', `loaded region ${regionId} (gameId=${world.gameId ?? '?'})`);
 }
 
@@ -320,9 +363,13 @@ async function main() {
     _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
 
     // When AP state changes (item received elsewhere, etc.), re-poll so
-    // the game applies any newly-received items.
+    // the game applies any newly-received items, and re-evaluate the
+    // authored gate rules (a new key may open a locked portal/pickup).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
-        if (_isActive) _pollItemsIntoGame();
+        if (_isActive) {
+            _pollItemsIntoGame();
+            _pushGateStates();
+        }
     });
 
     // If we move away from this region, go inactive.

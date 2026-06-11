@@ -85,6 +85,40 @@ describe('createGameSession', () => {
         expect(events.some((e) => e.type === 'pickup' && e.id === 'loc_b')).toBe(true);
     });
 
+    it('locked goals do not trigger; opening the gate mid-session arms them', () => {
+        const level = makeLevel({
+            platforms: [{ id: 'p0', x: 200, y: 1100, type: 'green' }],
+            pickups: [{ id: 'loc', x: 200, y: 1080, on: 'p0' }],
+            portals: [{ id: 'exit_up', x: 200, y: 1060, on: 'p0', target_region: null, direction: 'up' }],
+        });
+        const session = createGameSession(level);
+        session.setGateStates({
+            portals: { exit_up: false },
+            pickups: { loc: false },
+        });
+        const lockedEvents = runFrames(session, 300);
+        // landings fire locked events instead of pickup/exit...
+        expect(lockedEvents.some((e) => e.type === 'lockedPickup' && e.id === 'loc')).toBe(true);
+        expect(lockedEvents.some((e) => e.type === 'lockedPortal' && e.portalId === 'exit_up')).toBe(true);
+        expect(lockedEvents.filter((e) => e.type === 'pickup' || e.type === 'exit')).toEqual([]);
+        // ...and nothing is consumed: the exit dedupe stays un-armed
+        expect(session.collected.size).toBe(0);
+
+        // the host's next push opens both gates — the next landing triggers
+        session.setGateStates({ portals: { exit_up: true }, pickups: { loc: true } });
+        const events = runFrames(session, 300);
+        expect(events.some((e) => e.type === 'pickup' && e.id === 'loc')).toBe(true);
+        expect(events.filter((e) => e.type === 'exit')).toHaveLength(1);
+    });
+
+    it('gate states default open: ids absent from the maps never lock', () => {
+        const session = createGameSession(bounceStack);
+        session.setGateStates({ portals: { some_other_portal: false }, pickups: {} });
+        const events = runFrames(session, 500);
+        expect(events.some((e) => e.type === 'pickup' && e.id === 'loc_arrow')).toBe(true);
+        expect(events.some((e) => e.type === 'exit' && e.portalId === 'exit_up')).toBe(true);
+    });
+
     it('reset() returns to the entrance but keeps checks; exits can re-fire', () => {
         const session = createGameSession(bounceStack);
         runFrames(session, 500);
