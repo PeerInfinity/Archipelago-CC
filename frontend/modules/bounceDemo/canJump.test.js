@@ -9,6 +9,7 @@ import {
     reachablePlatforms,
 } from './canJump.js';
 import { noAbilities, allAbilities } from './suppression.js';
+import { PROFILES } from './physics.js';
 import { bounceStack } from './fixtures/bounceStack.js';
 
 const makeLevel = (over = {}) => ({
@@ -158,5 +159,113 @@ describe('platform graph + simulatorCore integration', () => {
         });
         const graph = buildPlatformGraph(level, noAbilities());
         expect(graph.nodes).toEqual([ENTRANCE, 'g0']);
+    });
+});
+
+// ── dj phase-aware edges (moving blues, breaking browns) ────────────
+describe('dj phase-aware edges', () => {
+    const DJ = PROFILES.dj.constants;
+    const djOpts = { constants: DJ };
+    const djLevel = (over = {}) => ({
+        id: 'dj_solver_test',
+        size: { width: 240, height: 600 },
+        platforms: [],
+        springs: [],
+        jetpacks: [],
+        pickups: [],
+        portals: [],
+        ...over,
+    });
+
+    it('plain dj column edges work (90px rungs under latched landings)', () => {
+        const level = djLevel({
+            platforms: [
+                { id: 'g0', x: 120, y: 500, type: 'green' },
+                { id: 'g1', x: 120, y: 410, type: 'green' },
+            ],
+        });
+        expect(canJump(level, 'g0', 'g1', noAbilities(), djOpts)).toBe(true);
+        // and the upward pre-filter holds: too far is out
+        const far = djLevel({
+            platforms: [
+                { id: 'g0', x: 120, y: 500, type: 'green' },
+                { id: 'g1', x: 120, y: 340, type: 'green' }, // 160 > 114.4 + 22
+            ],
+        });
+        expect(canJump(far, 'g0', 'g1', noAbilities(), djOpts)).toBe(false);
+    });
+
+    it('green→blue: ∃-reachable-phase — waiting on the green catches the sweep', () => {
+        // the blue sweeps across the column; with NO arrows the player
+        // can only bounce in place, so the edge exists iff SOME
+        // waiting-reachable phase puts the blue overhead
+        const level = djLevel({
+            platforms: [
+                { id: 'g0', x: 120, y: 500, type: 'green' },
+                { id: 'bl', x: 120, y: 410, type: 'blue', sweep: { min: 60, max: 180 } },
+            ],
+        });
+        expect(canJump(level, 'g0', 'bl', { blue: true }, djOpts)).toBe(true);
+        // suppressed without the item, exactly like a static blue
+        expect(canJump(level, 'g0', 'bl', noAbilities(), djOpts)).toBe(false);
+    });
+
+    it('blue→up: ∀-arrival-phase — fails arrowless (the sweep+offset envelope misses)', () => {
+        // the player cannot choose the arrival phase or offset on the
+        // blue; with no steering, launches from the sweep edges miss
+        // the static target above, so the edge must NOT exist
+        const level = djLevel({
+            platforms: [
+                { id: 'bl', x: 120, y: 410, type: 'blue', sweep: { min: 60, max: 180 } },
+                { id: 'g1', x: 120, y: 320, type: 'green' },
+            ],
+        });
+        expect(canJump(level, 'bl', 'g1', { blue: true }, djOpts)).toBe(false);
+        // arrows restore it: seek corrects from every phase/offset
+        expect(canJump(level, 'bl', 'g1',
+            { blue: true, left: true, right: true }, djOpts)).toBe(true);
+    });
+
+    it('brown is a goal host, never a launch step (no outgoing edges under dj)', () => {
+        const level = djLevel({
+            platforms: [
+                { id: 'g0', x: 120, y: 500, type: 'green' },
+                { id: 'br', x: 120, y: 410, type: 'brown' },
+                { id: 'g1', x: 120, y: 320, type: 'green' },
+            ],
+        });
+        const ab = { brown: true };
+        expect(canJump(level, 'g0', 'br', ab, djOpts)).toBe(true);   // INTO brown ok
+        expect(canJump(level, 'br', 'g1', ab, djOpts)).toBe(false);  // FROM brown never
+        // classic browns keep their step role (static, full bounce)
+        expect(canJump(level, 'br', 'g1', { brown: true })).toBe(true);
+    });
+
+    it('dj branch tips: ±100 drift needs the matching arrow (flat control, no momentum)', () => {
+        // the dj sweep result: flat ±10 control covers ~120px of drift
+        // within a plain-bounce flight, so classic's ±140 tips are
+        // infeasible from the worst landing offset — dj geometry pins
+        // BRANCH_DX 100 (see GEOMETRIES.dj)
+        const level = djLevel({
+            size: { width: 400, height: 600 },
+            platforms: [
+                { id: 'g0', x: 200, y: 500, type: 'green' },
+                { id: 'tip', x: 300, y: 410, type: 'green' },
+            ],
+        });
+        expect(canJump(level, 'g0', 'tip', { right: true }, djOpts)).toBe(true);
+        expect(canJump(level, 'g0', 'tip', { left: true }, djOpts)).toBe(false);
+        expect(canJump(level, 'g0', 'tip', noAbilities(), djOpts)).toBe(false);
+    });
+
+    it('dj: classic\'s ±140 tip is OUT of flat-control range from the worst offset', () => {
+        const level = djLevel({
+            size: { width: 400, height: 600 },
+            platforms: [
+                { id: 'g0', x: 200, y: 500, type: 'green' },
+                { id: 'tip', x: 340, y: 410, type: 'green' },
+            ],
+        });
+        expect(canJump(level, 'g0', 'tip', { right: true }, djOpts)).toBe(false);
     });
 });

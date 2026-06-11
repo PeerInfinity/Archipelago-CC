@@ -153,10 +153,15 @@ export function createBotDriver(opts = {}) {
 
         const g = ensureGraph(level, abilities);
         const isPortalOpen = helpers?.isPortalOpen ?? (() => true);
+        // Avoid hosts of OPEN non-target portals (landing exits the
+        // region mid-route) and platforms broken THIS attempt (dj
+        // browns — the graph is attempt-agnostic; the live state knows;
+        // a fall-respawn restores them along with state.broken).
         const blocked = new Set(
             (level.portals ?? [])
                 .filter((pt) => pt.id !== target?.id && isPortalOpen(pt.id))
                 .map((pt) => pt.on));
+        for (const id of state.broken ?? []) blocked.add(id);
         const path = shortestPath(g, lastPlatform, goalHost, blocked)
             ?? shortestPath(g, lastPlatform, goalHost);
         if (!path || path.length < 2) {
@@ -181,7 +186,7 @@ export function createBotDriver(opts = {}) {
         const legPlatform = platformById(level, legTo);
         if (!legPlatform) { stuck = true; return; }
 
-        const candidates = policiesFor(legPlatform.x, abilities);
+        const candidates = policiesFor(legPlatform.x, abilities, C);
         for (const candidate of candidates) {
             if (simulatePolicy(level, state, abilities, candidate.fn, lastPlatform, C) === legTo) {
                 policyFn = candidate.fn;
