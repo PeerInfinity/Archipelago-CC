@@ -23,7 +23,7 @@
  * replays.
  */
 
-import { DEFAULTS, step as physicsStep, spawnState, wrapX } from './physics.js';
+import { DEFAULTS, step as physicsStep, spawnState, wrapX, launchRise } from './physics.js';
 import {
     isPlatformActive,
     activePlatforms,
@@ -160,12 +160,11 @@ export function policiesFor(targetX, abilities) {
     return policies;
 }
 
-/** Launch vy granted by `fromId` under `abilities` (suppression-aware). */
-function launchVyFor(level, fromId, abilities, C) {
-    if (fromId === ENTRANCE) return 0;
-    if (activeJetpacks(level, abilities).some((j) => j.on === fromId)) return C.JETPACK_VY;
-    if (activeSprings(level, abilities).some((s) => s.on === fromId)) return C.SPRING_VY;
-    return C.BOUNCE_VY;
+/** Launch type granted by `fromId` under `abilities` (suppression-aware). */
+function launchTypeFor(level, fromId, abilities) {
+    if (activeJetpacks(level, abilities).some((j) => j.on === fromId)) return 'jetpack';
+    if (activeSprings(level, abilities).some((s) => s.on === fromId)) return 'spring';
+    return 'bounce';
 }
 
 /** Sampled launch x positions across the from-platform's catch span
@@ -202,10 +201,17 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
     }
 
     // Cheap pre-filter: a launch can never gain more height than its
-    // impulse apex; skip the simulation when `to` is above that.
-    const vy0 = launchVyFor(level, fromId, abilities, C);
-    const apexGain = (vy0 * vy0) / (2 * C.GRAVITY);
-    if (fromY - to.y > apexGain) return fail;
+    // measured discrete rise (plus the latched-mode hover allowance —
+    // the launch point can rest up to ~MAX_FALL above the line); skip
+    // the simulation when `to` is above that. The entrance has no
+    // launch: its only gain is the spawn drop itself (none).
+    if (fromId !== ENTRANCE) {
+        const rise = launchRise(launchTypeFor(level, fromId, abilities), C);
+        const hover = C.LANDING === 'latched' ? C.MAX_FALL : 0;
+        if (fromY - to.y > rise + hover) return fail;
+    } else if (fromY - to.y > 0) {
+        return fail;
+    }
 
     const witnesses = [];
     for (const x0 of launchXs(level, fromId, abilities, C, opts)) {

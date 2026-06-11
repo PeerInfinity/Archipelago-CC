@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     DEFAULTS, PROFILES, physicsStampFor, resolvePhysicsStamp,
-    step, spawnState, simulate,
+    step, spawnState, simulate, platformXAt,
 } from './physics.js';
 import {
     isPlatformActive,
@@ -264,7 +264,8 @@ describe('physics profiles (PROFILES / stamp helpers)', () => {
         const stamp = physicsStampFor('dj');
         expect(stamp.profile).toBe('dj');
         expect(stamp.constants.AIR_CONTROL).toBe('flat');
-        expect(stamp.constants.GRAVITY).toBe(DEFAULTS.GRAVITY);
+        expect(stamp.constants.GRAVITY).toBe(4);   // measured, 20Hz-native
+        expect(stamp.constants.TICK_HZ).toBe(20);
     });
 
     it('physicsStampFor: unknown profile throws', () => {
@@ -323,5 +324,258 @@ describe('flat air control (AIR_CONTROL: "flat")', () => {
         s = step(s, { right: true }, level, all, DEFAULTS);
         expect(s.x).toBeCloseTo(200 + DEFAULTS.MOVE_ACCEL);
         expect(s.vx).toBeCloseTo(DEFAULTS.MOVE_ACCEL);
+    });
+});
+
+// ── DJ calibration tests ─────────────────────────────────────────────
+// Ground truth: the SWFRecomp-CC measurements of real Doodle Jump
+// (2026-06-11) — summary + per-tick traces in
+// NewDocs/plans/procedural-generation/dj-measurements/ (gitignored;
+// expectations inlined here with run-id provenance). All values are
+// DJ-native px/ticks at 20Hz; the dj profile uses them verbatim.
+describe('dj profile calibration (measured 2026-06-11)', () => {
+    const DJ = PROFILES.dj.constants;
+    const all = allAbilities();
+    const IMPULSE = 17 * 1.89999997615814; // jumpspeed * jumpspeed_factor
+
+    const djLevel = (over = {}) => ({
+        id: 'dj_test',
+        size: { width: 240, height: 400 },
+        platforms: [],
+        springs: [],
+        jetpacks: [],
+        pickups: [],
+        portals: [],
+        ...over,
+    });
+
+    const falling = (over = {}) => ({
+        x: 158.6, y: 203.2, vx: 0, vy: 12, fallen: false,
+        landedOn: null, launch: null, t: 5, broken: [], latched: null, jetpackTicks: 0,
+        ...over,
+    });
+
+    it('reproduces bounce_ruffle_01 ticks 5-8 exactly (hit, no snap, latched impulse)', () => {
+        // Trace: y 203.2 (vy 12) -> 219.2 (vy 16, HIT: vy=0, j latched)
+        // -> 190.9 (vy -28.3) -> 166.6 (vy -24.3). Block top at 234.55.
+        const level = djLevel({
+            platforms: [{ id: 'b2', x: 153.85, y: 234.55, type: 'green' }],
+        });
+        let s = falling();
+        s = step(s, null, level, all, DJ);             // tick 6: hit
+        expect(s.y).toBeCloseTo(219.2, 9);             // moved, NOT snapped to 234.55
+        expect(s.vy).toBe(0);                          // zeroed in place
+        expect(s.landedOn).toBe('b2');
+        expect(s.latched).toBe('bounce');
+        s = step(s, null, level, all, DJ);             // tick 7: impulse
+        expect(s.vy).toBe(0 - IMPULSE + 4);            // -28.2999995946884
+        expect(s.y).toBeCloseTo(190.9, 9);
+        s = step(s, null, level, all, DJ);             // tick 8
+        expect(s.y).toBeCloseTo(166.6, 9);
+        expect(s.vy).toBeCloseTo(-24.2999995946884, 9);
+    });
+
+    it('plain bounce apex is the discrete-integrator 114.4 above the hover point', () => {
+        // Measured 114.1 (bounce_ruffle_01) includes DJ's container
+        // scroll truncating each scroll DELTA to twips; our absolute
+        // coordinates truncate POSITIONS instead — a documented
+        // <=0.05px/tick divergence on scrolled rises (~0.3px/apex).
+        const level = djLevel({
+            platforms: [{ id: 'p', x: 120, y: 300, type: 'green' }],
+        });
+        const r = simulate(level, all, () => null, { constants: DJ, maxFrames: 80 });
+        // measure ONE flight: a later cycle's hover point differs, so
+        // hit-to-its-own-apex is the per-cycle invariant
+        const hitIdx = r.trajectory.findIndex((s, i) => i > 0 && s.landedOn === 'p');
+        let endIdx = r.trajectory.findIndex((s, i) => i > hitIdx && s.landedOn);
+        if (endIdx < 0) endIdx = r.trajectory.length;
+        const yHover = r.trajectory[hitIdx].y;
+        const yApex = Math.min(...r.trajectory.slice(hitIdx, endIdx).map((s) => s.y));
+        expect(yHover - yApex).toBeCloseTo(114.4, 1);
+    });
+
+    it('never snaps: the hover gap stays within [0, MAX_FALL) above the line', () => {
+        const level = djLevel({
+            platforms: [{ id: 'p', x: 120, y: 300, type: 'green' }],
+        });
+        for (const dropY of [100, 137, 180, 222.2, 260]) {
+            const r = simulate(level, all, () => null, {
+                constants: DJ, maxFrames: 60,
+                start: { ...falling({ x: 120, y: dropY, vy: 0, t: 0 }) },
+            });
+            const hit = r.trajectory.find((s) => s.landedOn === 'p');
+            expect(hit).toBeTruthy();
+            const gap = 300 - hit.y;
+            expect(gap).toBeGreaterThanOrEqual(0);
+            expect(gap).toBeLessThan(DJ.MAX_FALL + 1e-9);
+        }
+    });
+
+    it('spring apex is exactly 544 (spring_native_01 / bounce_ruffle_01 natural spring)', () => {
+        const level = djLevel({
+            size: { width: 240, height: 1000 },
+            platforms: [{ id: 'p', x: 120, y: 900, type: 'green' }],
+            springs: [{ id: 's', x: 120, y: 895, on: 'p' }],
+        });
+        const r = simulate(level, all, () => null, {
+            constants: DJ, maxFrames: 80,
+            start: { ...falling({ x: 120, y: 800, vy: 0, t: 0 }) },
+        });
+        const hitIdx = r.trajectory.findIndex((s) => s.landedOn === 'p');
+        expect(r.trajectory[hitIdx + 1].vy).toBe(0 - 17 * 4 + 4); // -64
+        const yHover = r.trajectory[hitIdx].y;
+        const yApex = Math.min(...r.trajectory.slice(hitIdx).map((s) => s.y));
+        expect(yHover - yApex).toBeCloseTo(544, 6);
+    });
+
+    it('brown: weakened un-zeroed bounce, breaks same tick, resets on respawn', () => {
+        // brown_ruffle_01: vy_next = vy_at_hit - 32.3 + 4 (-6.3 at terminal 22)
+        const level = djLevel({
+            platforms: [{ id: 'br', x: 120, y: 300, type: 'brown' }],
+        });
+        // long fall reaches terminal vy 22 before the catch
+        let s = { ...falling({ x: 120, y: 80, vy: 0, t: 0 }) };
+        let hitState = null;
+        for (let i = 0; i < 40 && !hitState; i++) {
+            s = step(s, null, level, all, DJ);
+            if (s.landedOn === 'br') hitState = s;
+        }
+        expect(hitState.vy).toBe(DJ.MAX_FALL);          // NOT zeroed on hit
+        expect(hitState.latched).toBe('brown');
+        expect(hitState.broken).toContain('br');
+        s = step(hitState, null, level, all, DJ);
+        expect(s.vy).toBe(DJ.MAX_FALL - IMPULSE + 4);   // -6.2999995946884
+        // broken platform no longer catches: ride the weak bounce down
+        let caughtAgain = false;
+        for (let i = 0; i < 200 && !s.fallen; i++) {
+            s = step(s, null, level, all, DJ);
+            if (s.landedOn) caughtAgain = true;
+        }
+        expect(caughtAgain).toBe(false);
+        expect(s.fallen).toBe(true);
+        // respawn = fresh spawnState -> breaks reset
+        expect(spawnState(level, DJ).broken).toEqual([]);
+    });
+
+    it('brown under classic behaviors stays a static (no break)', () => {
+        const level = djLevel({
+            platforms: [{ id: 'br', x: 120, y: 300, type: 'brown' }],
+        });
+        const r = simulate(level, { ...allAbilities() }, () => null, { maxFrames: 200 });
+        const landings = r.landings.filter((l) => l.platformId === 'br');
+        expect(landings.length).toBeGreaterThan(1);     // bounces forever
+    });
+
+    it('flat keys: ±10/tick, both keys cancel, instant stop (keys_*_01)', () => {
+        const level = djLevel();
+        let s = { ...falling({ x: 100, y: 50, vy: -30, t: 0 }) };
+        s = step(s, { right: true }, level, all, DJ);
+        expect(s.x).toBe(110);
+        s = step(s, { right: true, left: true }, level, all, DJ);
+        expect(s.x).toBe(110);                          // both held = 0
+        s = step(s, null, level, all, DJ);
+        expect(s.x).toBe(110);                          // instant stop
+    });
+
+    it('edge wrap: teleports to the bare far edge only when entirely offscreen', () => {
+        const level = djLevel();
+        // rightward: x - 23 > 240 -> 0 (measured 268.6 -> 0)
+        let s = { ...falling({ x: 258.6, y: 50, vy: -30, t: 0 }) };
+        s = step(s, { right: true }, level, all, DJ);   // 268.6: fully off
+        expect(s.x).toBe(0);
+        // partially visible: stays
+        s = { ...falling({ x: 250, y: 50, vy: -30, t: 0 }) };
+        s = step(s, null, level, all, DJ);
+        expect(s.x).toBe(250);
+        // leftward: x < -23 -> 240 (measured -30 -> 240)
+        s = { ...falling({ x: -20, y: 50, vy: -30, t: 0 }) };
+        s = step(s, { left: true }, level, all, DJ);    // -30
+        expect(s.x).toBe(240);
+    });
+
+    it('catch half-span is 53 (block 60/2 + xradius 23; catch_native_01)', () => {
+        const mk = (dx) => {
+            const level = djLevel({
+                platforms: [{ id: 'p', x: 120, y: 300, type: 'green' }],
+            });
+            const r = simulate(level, all, () => null, {
+                constants: DJ, maxFrames: 60,
+                start: { ...falling({ x: 120 + dx, y: 200, vy: 0, t: 0 }) },
+            });
+            return r.trajectory.some((s) => s.landedOn === 'p');
+        };
+        expect(mk(53)).toBe(true);
+        expect(mk(54)).toBe(false);
+    });
+
+    it('terminal fall is 22 with no rising cap', () => {
+        const level = djLevel({ size: { width: 240, height: 10000 } });
+        let s = { ...falling({ x: 120, y: 100, vy: 0, t: 0 }) };
+        for (let i = 0; i < 30; i++) s = step(s, null, level, all, DJ);
+        expect(s.vy).toBe(22);
+    });
+
+    it('jetpack: sustained net -1/tick² for exactly 100 ticks (jetpack_native_01)', () => {
+        const level = djLevel({
+            size: { width: 240, height: 12000 },
+            platforms: [{ id: 'p', x: 120, y: 11900, type: 'green' }],
+            jetpacks: [{ id: 'j', x: 120, y: 11895, on: 'p' }],
+        });
+        let s = { ...falling({ x: 120, y: 11800, vy: 0, t: 0 }) };
+        while (!s.landedOn) s = step(s, null, level, all, DJ);
+        expect(s.latched).toBe('jetpack');
+        const vys = [];
+        for (let i = 0; i < 110; i++) {
+            s = step(s, null, level, all, DJ);
+            vys.push(s.vy);
+        }
+        expect(vys[0]).toBe(-1);                        // -5 thrust + 4 gravity
+        expect(vys[1]).toBe(-2);
+        expect(vys[99]).toBe(-100);                     // peak after 100 thrust ticks
+        expect(vys[100]).toBe(-96);                     // ballistic decay (+4)
+        expect(Math.min(...vys)).toBe(-100);            // no rising cap engaged
+    });
+
+    it('blue mover: deterministic ±5 triangle, period 72 over a 180px span (blue_ruffle_01)', () => {
+        const p = { id: 'bl', x: 105, y: 300, type: 'blue', sweep: { min: 15, max: 195 } };
+        expect(platformXAt(p, 0, DJ)).toBe(15);
+        expect(platformXAt(p, 18, DJ)).toBe(105);
+        expect(platformXAt(p, 36, DJ)).toBe(195);       // reverses at the bound
+        expect(platformXAt(p, 54, DJ)).toBe(105);
+        expect(platformXAt(p, 72, DJ)).toBe(15);        // full period
+        expect(platformXAt(p, 73, DJ)).toBe(20);        // moving right again
+        // static under classic behaviors (and for sweep-less platforms)
+        expect(platformXAt(p, 36, DEFAULTS)).toBe(105);
+        expect(platformXAt({ ...p, sweep: undefined }, 36, DJ)).toBe(105);
+    });
+
+    it('catch tests the blue at its CURRENT swept x, not the placement x', () => {
+        const level = djLevel({
+            platforms: [{
+                id: 'bl', x: 105, y: 300, type: 'blue', sweep: { min: 15, max: 195 },
+            }],
+        });
+        // drop at x=15 starting at t=0: the platform is AT 15 early on
+        const rNear = simulate(level, all, () => null, {
+            constants: DJ, maxFrames: 12,
+            start: { ...falling({ x: 15, y: 250, vy: 0, t: 0 }) },
+        });
+        expect(rNear.trajectory.some((s) => s.landedOn === 'bl')).toBe(true);
+        // same drop with the platform mid-sweep (t=36 -> x=195): misses
+        const rFar = simulate(level, all, () => null, {
+            constants: DJ, maxFrames: 12,
+            start: { ...falling({ x: 15, y: 250, vy: 0, t: 33 }) },
+        });
+        expect(rFar.trajectory.some((s) => s.landedOn === 'bl')).toBe(false);
+    });
+
+    it('classic states still carry and advance the session fields', () => {
+        const s0 = spawnState(makeLevel());
+        expect(s0.t).toBe(0);
+        expect(s0.broken).toEqual([]);
+        const s1 = step(s0, null, makeLevel(), allAbilities(), DEFAULTS);
+        expect(s1.t).toBe(1);
+        expect(s1.broken).toEqual([]);
+        expect(s1.latched).toBeNull();
     });
 });

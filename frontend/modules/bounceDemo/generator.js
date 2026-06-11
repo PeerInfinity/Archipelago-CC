@@ -37,7 +37,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { DEFAULTS, PROFILES } from './physics.js';
+import { DEFAULTS, PROFILES, launchRise } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
 import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './apRules.js';
@@ -72,34 +72,51 @@ export const CLASSIC_GEOMETRY = Object.freeze({
     ARROW_HALF_WIDTH_FLOOR: 300, // 600px width floor for arrow-gated goals (wrap sweep)
 });
 
-/** Apex height of a launch with initial speed |vy| under C's gravity. */
-export function launchApex(vy, C) {
-    return (vy * vy) / (2 * C.GRAVITY);
-}
+/** Worst-case extra launch height above the platform LINE: latched
+ *  landings rest at a hover point up to ~MAX_FALL above the line
+ *  (no-snap lookahead catch); immediate landings snap to the line. */
+const hoverMax = (C) => (C.LANDING === 'latched' ? C.MAX_FALL : 0);
 
 /**
  * Derive a profile's generator geometry from its physics constants.
- * Used for profiles without pinned geometry (dj until calibration);
- * classic stays pinned. `base` supplies the sweep-calibrated values.
+ * Used for profiles without pinned geometry; classic stays pinned.
+ * Rises come from physics.launchRise — the TRUE discrete rise measured
+ * by running `step` (the closed form vy^2/2g misses discrete effects:
+ * classic plain is 162.5, not 169; dj-latched plain is 114.4).
+ * `base` supplies the sweep-calibrated values.
  */
 export function deriveGeometry(C, base = CLASSIC_GEOMETRY) {
+    const floor10 = (v) => Math.floor(v / 10) * 10;
     const round10 = (v) => Math.round(v / 10) * 10;
-    const plainApex = launchApex(C.BOUNCE_VY, C);
-    // A comfortable plain step: ~70% of the plain apex (classic: 120
-    // of 169). Gate windows sit as high as possible while the
-    // overshoot (clearApex - gap) stays under one plain step, so the
-    // rung above a gate is never intercepted; 60px of window span for
-    // the rng to roam.
-    const PLAIN_DY = round10(plainApex * 0.7);
-    const gateWindow = (clearApex) => Object.freeze({
-        min: round10(clearApex - PLAIN_DY + 15),
-        span: 60,
-    });
+    const plainRise = launchRise('bounce', C);
+    const fudge = hoverMax(C);
+    // A comfortable plain step: ~75% of the guaranteed plain rise
+    // (classic: 120 of 162.5). A gate window's min is bounded BELOW by
+    // interception (overshoot clearRise + hover - min must stay under
+    // one plain step) and by unclearability (above the weaker launch's
+    // best hover), and bounded ABOVE by clearability from the line
+    // (min + span < clearRise). The midpoint of that range — which
+    // reproduces classic's pinned 380/1180 exactly — leaves margin on
+    // both sides; validateGeometry rejects infeasible combinations.
+    const PLAIN_DY = round10(plainRise * 0.75);
+    const span = 60;
+    const gateWindow = (clearRise, failRise) => {
+        const lower = Math.max(clearRise + fudge - PLAIN_DY, failRise + fudge);
+        const upper = clearRise - span;
+        const mid = (lower + upper) / 2;
+        // prefer a 10-aligned min; tight ranges (huge rises leave only
+        // a sliver between interception and clearability) fall back to
+        // the integer midpoint
+        let min = floor10(mid);
+        if (min <= lower) min = Math.floor(mid);
+        return Object.freeze({ min, span });
+    };
+    const springRise = launchRise('spring', C);
     return Object.freeze({
         WIDTH: base.WIDTH,
         PLAIN_DY,
-        SPRING_GAP: gateWindow(launchApex(C.SPRING_VY, C)),
-        JETPACK_GAP: gateWindow(launchApex(C.JETPACK_VY, C)),
+        SPRING_GAP: gateWindow(springRise, plainRise),
+        JETPACK_GAP: gateWindow(launchRise('jetpack', C), springRise),
         BRANCH_DX: base.BRANCH_DX,
         ARROW_HALF_WIDTH_FLOOR: base.ARROW_HALF_WIDTH_FLOOR,
     });
@@ -108,30 +125,35 @@ export function deriveGeometry(C, base = CLASSIC_GEOMETRY) {
 /**
  * Structural constraints geometry must satisfy under its constants —
  * checked for pinned and derived geometry alike (tests); returns a
- * list of violation strings, empty = valid.
+ * list of violation strings, empty = valid. Gates must be unclearable
+ * by the weaker launch even from its highest hover point
+ * (rise + hoverMax), and clearable by the stronger one from the LINE
+ * (rise alone — the guaranteed minimum).
  */
 export function validateGeometry(G, C) {
     const errors = [];
-    const plainApex = launchApex(C.BOUNCE_VY, C);
-    const springApex = launchApex(C.SPRING_VY, C);
-    const jetApex = launchApex(C.JETPACK_VY, C);
-    if (G.PLAIN_DY >= plainApex) {
-        errors.push(`PLAIN_DY ${G.PLAIN_DY} not clearable (plain apex ${plainApex})`);
+    const plainRise = launchRise('bounce', C);
+    const springRise = launchRise('spring', C);
+    const jetRise = launchRise('jetpack', C);
+    const fudge = hoverMax(C);
+    if (G.PLAIN_DY >= plainRise) {
+        errors.push(`PLAIN_DY ${G.PLAIN_DY} not clearable (plain rise ${plainRise})`);
     }
-    const checkWindow = (name, w, clearApex, failApex) => {
-        if (w.min <= failApex) {
-            errors.push(`${name} min ${w.min} clearable by the failing launch (apex ${failApex})`);
+    const checkWindow = (name, w, clearRise, failRise) => {
+        if (w.min <= failRise + fudge) {
+            errors.push(`${name} min ${w.min} clearable by the failing launch `
+                + `(rise ${failRise} + hover ${fudge})`);
         }
-        if (w.min + w.span >= clearApex) {
-            errors.push(`${name} max ${w.min + w.span} not clearable (apex ${clearApex})`);
+        if (w.min + w.span >= clearRise) {
+            errors.push(`${name} max ${w.min + w.span} not clearable (rise ${clearRise})`);
         }
-        if (clearApex - w.min >= G.PLAIN_DY) {
-            errors.push(`${name} overshoot ${clearApex - w.min} >= PLAIN_DY ${G.PLAIN_DY}`
+        if (clearRise + fudge - w.min >= G.PLAIN_DY) {
+            errors.push(`${name} overshoot ${clearRise + fudge - w.min} >= PLAIN_DY ${G.PLAIN_DY}`
                 + ' (next rung intercepted)');
         }
     };
-    checkWindow('SPRING_GAP', G.SPRING_GAP, springApex, plainApex);
-    checkWindow('JETPACK_GAP', G.JETPACK_GAP, jetApex, springApex);
+    checkWindow('SPRING_GAP', G.SPRING_GAP, springRise, plainRise);
+    checkWindow('JETPACK_GAP', G.JETPACK_GAP, jetRise, springRise);
     const catchSpan = C.PLATFORM_WIDTH + 2 * C.PLAYER_HALF_WIDTH;
     if (G.BRANCH_DX <= catchSpan) {
         errors.push(`BRANCH_DX ${G.BRANCH_DX} within the catch span ${catchSpan}`
