@@ -111,6 +111,56 @@ describe('growSpheres (maze) — the sphere oracle', () => {
             expect(compareSpheresToPlan(computed, plan)).toEqual([]);
         });
 
+    it('never produces asymmetric exit pairs (reconcile-add stays moot)', () => {
+        // The oracle-safety answer for reconcileBidirectionalExits
+        // 'add' (priority #3): 'add' inherits the FORWARD exit's rule
+        // onto the reciprocal, which is NOT the target's entry gate —
+        // a cross-branch shortcut into a gated region could open it a
+        // sphere early. growSpheres is exempt BY CONSTRUCTION: every
+        // exit is allocated to a specific child (or is an explicitly
+        // paired back-exit), so no one-way pair can exist and the
+        // pass is never invoked. This test pins that invariant — if
+        // it ever fails, the 'add' question becomes live again
+        // (restrict to 'remove' or gate added exits on the target's
+        // planned entry gate).
+        for (const [seed, quotas, start] of [
+            [1, null, null],
+            [4, { maze: 1, bounce: 99 }, 'maze'],
+        ]) {
+            const plan = seed === 1 ? makePlan(1, 3) : planSpheres({
+                itemPool: {
+                    'Right arrow': 1, 'Left arrow': 1, Springs: 1,
+                    key_red: 1, key_blue: 1, victory: 1,
+                },
+                sphereCount: 3,
+                pins: { 'Right arrow': 1, 'Left arrow': 1 },
+                victoryItem: 'victory',
+                seed,
+            });
+            const { grid } = growSpheres({
+                regionSize: { width: 8, height: 6 },
+                seed,
+                growthParams: {
+                    spherePlan: plan, fillerCount: 1,
+                    ...(quotas ? { substrateQuotas: quotas } : {}),
+                    ...(start ? { startSubstrate: start } : {}),
+                },
+            });
+            const byName = new Map(
+                [...grid.allRegions()].map((r) => [r.region_id, r]));
+            for (const region of grid.allRegions()) {
+                for (const exit of region.playable_payload?.exits?.values() ?? []) {
+                    if (!exit.targetRegion) continue;
+                    const target = byName.get(exit.targetRegion);
+                    const reciprocal = [...target.playable_payload.exits.values()]
+                        .some((e) => e.targetRegion === region.region_id);
+                    expect(reciprocal, `${region.region_id} -> ${exit.targetRegion} `
+                        + 'has no reciprocal exit').toBe(true);
+                }
+            }
+        }
+    }, 120000);
+
     it('places every region and wires every gate to a built child', () => {
         const plan = makePlan(1, 3);
         const { grid, stats, tree } = growSpheres({
