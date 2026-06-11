@@ -25,7 +25,7 @@ import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibra
 import { physicsStampFor } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
-import { generateLevelFromSpecsGen, resolveGenPhysics } from './generator.js';
+import { generateLevelFromSpecsGen } from './generator.js';
 import {
     ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
     authoredTermsToRule, VICTORY_ITEM_NAME,
@@ -312,7 +312,6 @@ export function* generateZoneForSpecsGen({
     jitter = 0,
     physicsProfile = 'classic',
 } = {}) {
-    const { C } = resolveGenPhysics(physicsProfile);
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
             throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
@@ -331,7 +330,10 @@ export function* generateZoneForSpecsGen({
         return { id: s.id, requirement: physics, authored };
     });
 
-    const level = yield* generateLevelFromSpecsGen({
+    // The winning attempt's derivation is reused for rule emission —
+    // re-deriving here would re-run the verifier (the most expensive
+    // step for dj mover levels) on the identical level and constants.
+    const { level, derived } = yield* generateLevelFromSpecsGen({
         id: region_id,
         exitSpecs: exits,
         pickupSpecs: pickups,
@@ -340,12 +342,6 @@ export function* generateZoneForSpecsGen({
         jitter,
         physics: physicsProfile,
     });
-
-    const derived = deriveAccessRules(level, { constants: C });
-    if (derived.defects.length > 0) {
-        throw new Error(`bounce zone '${region_id}' has rule defects: `
-            + derived.defects.join('; '));
-    }
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;
     // Emitted rule = derived physics rule AND authored terms; the

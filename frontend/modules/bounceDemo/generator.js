@@ -891,15 +891,18 @@ export function generateLevelFromSpecs(opts = {}) {
     const gen = generateLevelFromSpecsGen(opts);
     let r = gen.next();
     while (!r.done) r = gen.next();
-    return r.value;
+    return r.value.level;
 }
 
 /**
  * Generator form of generateLevelFromSpecs: yields
  * { type: 'attempt', attempt, attempts } before each generate-and-test
  * attempt (each attempt runs the full verifier — that's where the time
- * goes) and returns the verified level. The sync wrapper above drains
- * it with no pauses, so behavior and output are identical.
+ * goes) and returns { level, derived } — the verified level TOGETHER
+ * with the winning attempt's deriveAccessRules result, so callers
+ * emitting rules don't re-run the verifier (it's the single most
+ * expensive step for dj mover levels). The sync wrapper above drains
+ * it with no pauses and returns just the level (stable public shape).
  */
 export function* generateLevelFromSpecsGen({
     id,
@@ -951,7 +954,7 @@ export function* generateLevelFromSpecsGen({
                     + `${JSON.stringify(derived.exits[e.id].minimalSets)} != [${e.req}]`);
             }
         }
-        if (mismatches.length === 0) return level;
+        if (mismatches.length === 0) return { level, derived };
         rejected.push(`attempt ${attempt}: ${mismatches[0]}`);
     }
     throw new Error(`generateLevelFromSpecs('${id}'): no valid proposal in ${attempts} `
