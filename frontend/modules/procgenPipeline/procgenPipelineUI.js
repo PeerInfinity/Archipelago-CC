@@ -202,11 +202,9 @@ const REGION_XP_EFFECT_OPTIONS = [
 const DEFAULT_SCENARIO = {
     // `victory` is the auto-completion-condition item — opt out by
     // removing it from the items pool. See library.js for details.
-    // Distinct keys (not key_red: 2): duplicate instances of one item
-    // split across spheres aren't stratifiable with single-item Has()
-    // gates, so the default scenario would fail sphereGrowth's oracle
-    // (the v1 single-item-gate limitation; see
-    // sphere-driven-growth.md §As-built).
+    // Duplicate pools (key_red: 2) work too since count gates landed
+    // (a split instance gates on its cumulative count); distinct keys
+    // are kept as the default for the friendlier two-color texture.
     items: { victory: 1, key_red: 1, key_blue: 1 },
     obstacles: { door_red: 1, door_blue: 1 },
 };
