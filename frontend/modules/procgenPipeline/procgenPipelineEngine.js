@@ -2581,7 +2581,7 @@ function buildSphereProceduralRegion({
 // forward gate's copy, matching the portal's derived rule exactly.
 // Routing never relies on falling; fall behavior is a per-world
 // bounce parameter (regionParams.fallBehavior).
-function buildSphereZoneRegion({
+function* buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
     entranceSide, entryGate = [], entryGateCounts = {},
     regionParams = {}, seed, adapter,
@@ -2597,7 +2597,7 @@ function buildSphereZoneRegion({
         throw new Error(`growSpheres: zone region '${region_id}' has neither `
             + 'children nor a parent — single-region zone worlds are not supported');
     }
-    const zoneRules = adapter.generateZoneForSpecs({
+    const specs = {
         region_id,
         exitSpecs,
         locationSpecs: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
@@ -2607,7 +2607,13 @@ function buildSphereZoneRegion({
         // byte-identical and other zone adapters see unchanged args.
         ...(regionParams.physicsProfile && regionParams.physicsProfile !== 'classic'
             ? { physicsProfile: regionParams.physicsProfile } : {}),
-    });
+    };
+    // Adapters with a generator hook forward per-attempt progress
+    // events (the generate-and-test retries are where the time goes);
+    // plain adapters run in one chunk.
+    const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
+        ? yield* adapter.generateZoneForSpecsGen(specs)
+        : adapter.generateZoneForSpecs(specs);
     // Scaffold only the CHILD sides — the entrance side's rules.json
     // exit is the driver's back-exit, not a forward exit.
     const region = assembleZoneRegion({
@@ -2635,7 +2641,24 @@ function buildSphereZoneRegion({
  * existing compile/emit tail consumes it unchanged; `tree` rides along
  * for tests and debugging.
  */
-export function growSpheres(config) {
+/**
+ * Generator core of growSpheres: yields PROGRESS EVENTS between the
+ * expensive steps and returns the result. Yields never touch the rng,
+ * so draining synchronously (growSpheres) is byte-identical to the
+ * pre-generator implementation; the panel drains asynchronously
+ * (growSpheresAsync) so the UI can repaint between events.
+ *
+ * Event shapes:
+ *   { type: 'plan', regions, spheres }            — tree decided
+ *   { type: 'region', index, total, region_id,
+ *     substrate, sphere, placements }             — region build starting
+ *   { type: 'attempt', attempt, attempts }        — zone-substrate
+ *     generate-and-test attempt (forwarded from the adapter's
+ *     generateZoneForSpecsGen when it has one)
+ *   { type: 'regionDone', index, total, region_id }
+ *   { type: 'phase', name }                       — stitch/walls tail
+ */
+export function* growSpheresGen(config) {
     const {
         regionSize,
         itemLib = DEFAULT_ITEMS,
@@ -2688,6 +2711,11 @@ export function growSpheres(config) {
     const tree = buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
     }, rng);
+    yield {
+        type: 'plan',
+        regions: tree.nodes.length,
+        spheres: spherePlan.spheres.length,
+    };
 
     // Auto-size a grid with room for tree growth + teleporter targets.
     const side = Math.max(5, Math.ceil(Math.sqrt(tree.nodes.length)) * 2 + 1);
@@ -2773,6 +2801,16 @@ export function growSpheres(config) {
 
         const locations = node.items.map((it) => ({ id: it.id, item: it.item, rule: null }));
 
+        yield {
+            type: 'region',
+            index: node.index,
+            total: tree.nodes.length,
+            region_id,
+            substrate: node.substrate,
+            sphere: node.wave,
+            placements: locations.length,
+        };
+
         const adapter = getAdapter(node.substrate);
         let region;
         if (typeof adapter.generateRegionCore === 'function') {
@@ -2785,8 +2823,9 @@ export function growSpheres(config) {
                 locations,
                 itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
             });
-        } else if (typeof adapter.generateZoneForSpecs === 'function') {
-            region = buildSphereZoneRegion({
+        } else if (typeof adapter.generateZoneForSpecs === 'function'
+                || typeof adapter.generateZoneForSpecsGen === 'function') {
+            region = yield* buildSphereZoneRegion({
                 substrate: node.substrate,
                 region_id,
                 regionSize,
@@ -2838,6 +2877,12 @@ export function growSpheres(config) {
             if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
         stats.regionsBuilt += 1;
+        yield {
+            type: 'regionDone',
+            index: node.index,
+            total: tree.nodes.length,
+            region_id,
+        };
     }
 
     // Every exit was allocated to a specific child (or teleporter), so
@@ -2845,11 +2890,41 @@ export function growSpheres(config) {
     // cross-branch reconcile pass — shortcuts can't exist by
     // construction, which is exactly what keeps the plan an exact
     // sphere oracle.
+    yield { type: 'phase', name: 'stitch + walls' };
     stitchGrid(grid);
     wallOffUnusedExits(grid);
     stats.stopReason = 'plan_complete';
 
     return { grid, stats, startCell, tree };
+}
+
+/**
+ * Sphere-driven growth, synchronous: drains growSpheresGen with no
+ * pauses — byte-identical to the pre-generator implementation (yields
+ * never touch the rng). All headless callers and tests use this.
+ */
+export function growSpheres(config) {
+    const gen = growSpheresGen(config);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
+}
+
+/**
+ * Sphere-driven growth, asynchronous: forwards each progress event to
+ * `onProgress` and yields to the event loop between events so the UI
+ * can repaint (the panel's Generate progress indicator). Identical
+ * output to growSpheres.
+ */
+export async function growSpheresAsync(config, onProgress = null) {
+    const gen = growSpheresGen(config);
+    let r = gen.next();
+    while (!r.done) {
+        onProgress?.(r.value);
+        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        r = gen.next();
+    }
+    return r.value;
 }
 
 export function buildPresetSidecars(grid, {

@@ -9,10 +9,11 @@ import { describe, it, expect } from 'vitest';
 import { createRng } from '../shared/rng.js';
 // Side-effect: registers the maze and bounce substrates.
 import '../mazeRoom/mazeRoomLibrary.js';
-import { GATEABLE_ITEMS } from '../bounceDemo/bounceDemoLibrary.js';
+import { GATEABLE_ITEMS, BOUNCE_LIBRARY_ITEMS } from '../bounceDemo/bounceDemoLibrary.js';
+import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { validateLevel } from '../bounceDemo/level.js';
 import {
-    buildSphereTree, growSpheres, buildRulesJson,
+    buildSphereTree, growSpheres, growSpheresAsync, buildRulesJson,
 } from './procgenPipelineEngine.js';
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
@@ -625,4 +626,65 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
         const computed = computeItemSpheres(rulesJson);
         expect(compareSpheresToPlan(computed, plan)).toEqual([]);
     }, 120000);
+});
+
+describe('growSpheresGen / growSpheresAsync (progress events)', () => {
+    const CONFIG = {
+        regionSize: { width: 8, height: 6 },
+        seed: 1,
+        growthParams: {
+            spherePlan: planSpheres({
+                itemPool: { key_red: 1, key_blue: 1, victory: 1 },
+                sphereCount: 3,
+                victoryItem: 'victory',
+                seed: 1,
+            }),
+            maxItemsPerRegion: 2,
+        },
+    };
+
+    it('async drain produces the identical world and a sane event stream', async () => {
+        const sync = growSpheres(CONFIG);
+        const events = [];
+        const async_ = await growSpheresAsync(CONFIG, (ev) => events.push(ev));
+        // identical output (yields never touch the rng)
+        expect(JSON.stringify(buildRulesJson(async_.grid, { startCell: async_.startCell, seed: 1 })))
+            .toBe(JSON.stringify(buildRulesJson(sync.grid, { startCell: sync.startCell, seed: 1 })));
+        // event stream shape: plan first, one region+regionDone pair
+        // per region, finalize phase last
+        expect(events[0].type).toBe('plan');
+        expect(events[0].regions).toBe(sync.stats.regionsBuilt);
+        const regionEvents = events.filter((e) => e.type === 'region');
+        expect(regionEvents).toHaveLength(sync.stats.regionsBuilt);
+        expect(regionEvents.every((e) => e.region_id && e.substrate
+            && typeof e.placements === 'number')).toBe(true);
+        expect(events.filter((e) => e.type === 'regionDone'))
+            .toHaveLength(sync.stats.regionsBuilt);
+        expect(events[events.length - 1].type).toBe('phase');
+    });
+
+    it('zone substrates forward generate-and-test attempt events', async () => {
+        const events = [];
+        await growSpheresAsync({
+            ...CONFIG,
+            growthParams: {
+                ...CONFIG.growthParams,
+                spherePlan: planSpheres({
+                    itemPool: {
+                        'Right arrow': 1, 'Left arrow': 1, Springs: 1, Victory: 1,
+                    },
+                    sphereCount: 3,
+                    victoryItem: 'Victory',
+                    exclusiveSpheres: { 1: ['Right arrow'] },
+                    seed: 1,
+                }),
+                substrateQuotas: { bounce: 99 },
+            },
+            itemLib: { ...DEFAULT_ITEMS, ...BOUNCE_LIBRARY_ITEMS },
+        }, (ev) => events.push(ev));
+        const attempts = events.filter((e) => e.type === 'attempt');
+        expect(attempts.length).toBeGreaterThan(0);
+        expect(attempts[0].attempt).toBe(1);
+        expect(attempts[0].attempts).toBeGreaterThan(0);
+    });
 });

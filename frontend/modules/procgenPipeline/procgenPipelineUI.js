@@ -9,7 +9,7 @@ import eventBus from '../../app/core/eventBus.js';
 import {
     growMaze,
     arrangeShuffledSpiral,
-    growSpheres,
+    growSpheresAsync,
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
@@ -426,6 +426,10 @@ export class ProcgenPipelineUI {
         this.loadedRulesJsonLabel = '';
         this.result = null;
         this.isGenerating = false;
+        // Live generation progress (sphere mode): event-stream state +
+        // the indicator element below the Generate button.
+        this._progressState = null;
+        this._progressEl = null;
         this.message = '';
         // Prominent post-generation warning (rendered red, on its own
         // line under the message) — e.g. sphere-growth quota fallback.
@@ -1327,6 +1331,20 @@ export class ProcgenPipelineUI {
         gen.addEventListener('click', () => this._runGeneration());
         section.appendChild(gen);
 
+        // Live progress indicator (sphere mode): full-width row below
+        // the button, rewritten per progress event by direct DOM
+        // mutation while the async generation drain yields between
+        // regions and generate-and-test attempts.
+        if (this.isGenerating) {
+            const prog = document.createElement('div');
+            prog.className = 'procgen-pipeline-progress';
+            this._progressEl = prog;
+            section.appendChild(prog);
+            this._updateProgressEl();
+        } else {
+            this._progressEl = null;
+        }
+
         // Post-generation export actions, shown next to Generate once
         // a result is available. Hidden until then to keep the panel
         // uncluttered before there's anything to export.
@@ -1774,7 +1792,7 @@ export class ProcgenPipelineUI {
 
     // --- Run ---
 
-    _runGeneration() {
+    async _runGeneration() {
         if (this.isGenerating) return;
         if (this.mode === 'topDown' && !this.topDownSource) {
             this.message = 'Pick a source rules.json first.';
@@ -1793,7 +1811,10 @@ export class ProcgenPipelineUI {
             } else if (this.mode === 'shuffledSpiral') {
                 this._runShuffledSpiral();
             } else if (this.mode === 'sphereGrowth') {
-                this._runSphereGrowth();
+                // async: yields to the event loop between regions and
+                // generate-and-test attempts so the progress indicator
+                // below the Generate button can repaint
+                await this._runSphereGrowth();
             } else {
                 this._runGridGrowth();
             }
@@ -1802,7 +1823,76 @@ export class ProcgenPipelineUI {
         }
 
         this.isGenerating = false;
+        this._progressState = null;
         this.render();
+    }
+
+    /**
+     * Live progress for sphere-mode generation: tracks the event
+     * stream from growSpheresAsync and rewrites the indicator element
+     * below the Generate button (direct DOM mutation — a full render
+     * per event would be churn). Also accumulates light per-step
+     * timings, logged to the console when generation completes.
+     */
+    _onGenerationProgress(ev) {
+        const s = this._progressState;
+        if (!s) return;
+        const now = performance.now();
+        if (s.lastEvent) {
+            s.timings.push({
+                step: s.lastEvent.type === 'region'
+                    ? `region ${s.lastEvent.region_id} (${s.lastEvent.substrate})`
+                    : s.lastEvent.type,
+                ms: Math.round(now - s.lastAt),
+            });
+        }
+        s.lastEvent = ev;
+        s.lastAt = now;
+        if (ev.type === 'plan') {
+            s.totalRegions = ev.regions;
+            s.totalSpheres = ev.spheres;
+        } else if (ev.type === 'region') {
+            s.region = ev;
+            s.attempt = null;
+            s.doneRegions = ev.index;
+        } else if (ev.type === 'attempt') {
+            s.attempt = ev;
+        } else if (ev.type === 'regionDone') {
+            s.doneRegions = ev.index + 1;
+            s.region = null;
+            s.attempt = null;
+        } else if (ev.type === 'phase') {
+            s.phase = ev.name;
+            s.region = null;
+            s.attempt = null;
+        }
+        this._updateProgressEl();
+    }
+
+    _updateProgressEl() {
+        if (!this._progressEl || !this._progressState) return;
+        const s = this._progressState;
+        const lines = [];
+        if (s.region) {
+            const r = s.region;
+            const attempt = s.attempt
+                ? ` · attempt ${s.attempt.attempt}/${s.attempt.attempts}` : '';
+            lines.push(`Building region ${r.index + 1}/${s.totalRegions} — `
+                + `${r.region_id} (${r.substrate}, sphere ${r.sphere}, `
+                + `${r.placements} placement${r.placements === 1 ? '' : 's'})${attempt}`);
+            const spheresLeft = Math.max(0, s.totalSpheres - r.sphere);
+            lines.push(`Remaining: ${spheresLeft} sphere${spheresLeft === 1 ? '' : 's'} · `
+                + `${s.totalRegions - r.index} region${s.totalRegions - r.index === 1 ? '' : 's'} · `
+                + `${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+        } else if (s.phase) {
+            lines.push(`Finalizing: ${s.phase} · ${s.doneRegions}/${s.totalRegions} regions built`);
+        } else if (s.totalRegions) {
+            lines.push(`Planned: ${s.totalSpheres} spheres, ${s.totalRegions} regions`);
+        } else {
+            lines.push('Planning spheres…');
+        }
+        lines.push(`Elapsed: ${((performance.now() - s.startedAt) / 1000).toFixed(1)}s`);
+        this._progressEl.textContent = lines.join('\n');
     }
 
     _runGridGrowth() {
@@ -1896,9 +1986,22 @@ export class ProcgenPipelineUI {
         };
     }
 
-    _runSphereGrowth() {
+    async _runSphereGrowth() {
         const { seed, regionWidth, regionHeight, maxItemsPerRegion,
             sphereCount, fillerCount, revisitPercent, startSubstrate } = this.params;
+        this._progressState = {
+            startedAt: performance.now(),
+            totalRegions: 0,
+            totalSpheres: 0,
+            doneRegions: 0,
+            region: null,
+            attempt: null,
+            phase: null,
+            timings: [],
+            lastEvent: null,
+            lastAt: 0,
+        };
+        this._updateProgressEl();
         const itemLib = this._mergedItemLib();
         const itemPool = { ...this.scenario.items };
         const victoryItemId = this._resolveVictoryItemId();
@@ -1958,7 +2061,7 @@ export class ProcgenPipelineUI {
         });
 
         // Phase 2: wave growth.
-        const { grid, stats, startCell } = growSpheres({
+        const { grid, stats, startCell } = await growSpheresAsync({
             regionSize: { width: regionWidth, height: regionHeight },
             itemLib,
             seed,
@@ -1978,7 +2081,14 @@ export class ProcgenPipelineUI {
                 ...(startSubstrate && startSubstrate !== 'auto'
                     ? { startSubstrate } : {}),
             },
-        });
+        }, (ev) => this._onGenerationProgress(ev));
+        if (this._progressState) {
+            // light timing stats — non-priority, console-only
+            const total = ((performance.now() - this._progressState.startedAt) / 1000);
+            console.log('[procgenPipeline] generation timings '
+                + `(${total.toFixed(1)}s total)`, this._progressState.timings);
+            this._progressState.totalSeconds = total;
+        }
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             itemLib,
@@ -2010,9 +2120,11 @@ export class ProcgenPipelineUI {
         // the plan exactly. Surface a mismatch loudly; it means a
         // driver bug, not a bad seed.
         const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), plan);
+        const elapsedNote = this._progressState?.totalSeconds
+            ? ` (${this._progressState.totalSeconds.toFixed(1)}s)` : '';
         this.message = oracleErrors.length > 0
             ? `SPHERE ORACLE MISMATCH: ${oracleErrors[0]}`
-            : `Sphere plan realised: ${plan.spheres
+            : `Sphere plan realised${elapsedNote}: ${plan.spheres
                 .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`
                 + (arrowNote ? ` — ${arrowNote}` : '');
 

@@ -887,7 +887,21 @@ function proposeLevelFromSpecs({
  * and throw after `attempts`. Verified by deriveAccessRules: every
  * goal's minimal sets must be exactly [its requirement], no defects.
  */
-export function generateLevelFromSpecs({
+export function generateLevelFromSpecs(opts = {}) {
+    const gen = generateLevelFromSpecsGen(opts);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
+}
+
+/**
+ * Generator form of generateLevelFromSpecs: yields
+ * { type: 'attempt', attempt, attempts } before each generate-and-test
+ * attempt (each attempt runs the full verifier — that's where the time
+ * goes) and returns the verified level. The sync wrapper above drains
+ * it with no pauses, so behavior and output are identical.
+ */
+export function* generateLevelFromSpecsGen({
     id,
     exitSpecs,
     pickupSpecs = [],
@@ -903,6 +917,7 @@ export function generateLevelFromSpecs({
         exitSpecs, pickupSpecs, colorHost);
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
+        yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         let level;
         try {

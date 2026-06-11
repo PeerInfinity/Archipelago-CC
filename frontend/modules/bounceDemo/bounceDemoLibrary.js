@@ -25,7 +25,7 @@ import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibra
 import { physicsStampFor } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
-import { generateLevelFromSpecs, resolveGenPhysics } from './generator.js';
+import { generateLevelFromSpecsGen, resolveGenPhysics } from './generator.js';
 import {
     ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
     authoredTermsToRule, VICTORY_ITEM_NAME,
@@ -288,7 +288,22 @@ export function canHostExitGates(existingGates, newGate) {
  *   payload stamp all ride the same profile.
  * @returns {{locations: Array, exitRules: Object, payload: Object}}
  */
-export function generateZoneForSpecs({
+export function generateZoneForSpecs(specs = {}) {
+    const gen = generateZoneForSpecsGen(specs);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
+}
+
+/**
+ * Generator form of generateZoneForSpecs: forwards the level
+ * generator's per-attempt progress events ({ type: 'attempt', ... })
+ * and returns the zone-rules result. The sync wrapper above drains it
+ * with no pauses — identical behavior and output. The sphere driver
+ * prefers this hook when present so the panel's progress indicator
+ * can show generate-and-test attempts live.
+ */
+export function* generateZoneForSpecsGen({
     region_id,
     exitSpecs = [],
     locationSpecs = [],
@@ -316,7 +331,7 @@ export function generateZoneForSpecs({
         return { id: s.id, requirement: physics, authored };
     });
 
-    const level = generateLevelFromSpecs({
+    const level = yield* generateLevelFromSpecsGen({
         id: region_id,
         exitSpecs: exits,
         pickupSpecs: pickups,
@@ -443,6 +458,7 @@ export function createBounceSubstrateEntry({
         // realised as authored bridge-evaluated locks, not geometry
         // (rule-gated portals/pickups, priority #2).
         generateZoneForSpecs,
+        generateZoneForSpecsGen,
         gateableItems: null,
         canHostExitGates,
         libraryItems: BOUNCE_LIBRARY_ITEMS,
