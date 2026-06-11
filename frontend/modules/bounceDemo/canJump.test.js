@@ -298,3 +298,43 @@ describe('dj pass-through movers (composite wait-land-bounce-off)', () => {
         expect(canJump(level, 'g0', 'bl', { blue: true }, o)).toBe(true);
     });
 });
+
+describe('dj aligned-stride fast path ≡ exhaustive phase enumeration', () => {
+    const DJ = PROFILES.dj.constants;
+    // full-width mover (fast path applies: BLUE_SPEED * cycle ≈ 75-80
+    // ≤ catch window 106) — compare every edge/ability combination
+    // against the exhaustive residue enumeration
+    const level = {
+        id: 'dj_equiv',
+        size: { width: 600, height: 700 },
+        platforms: [
+            { id: 'g0', x: 300, y: 500, type: 'green' },
+            { id: 'bl', x: 300, y: 410, type: 'blue', sweep: { min: 15, max: 585 } },
+            { id: 'g1', x: 300, y: 320, type: 'green' },
+            { id: 'tip', x: 415, y: 410, type: 'green' },
+        ],
+        springs: [], jetpacks: [], pickups: [], portals: [],
+    };
+
+    it('agrees with the exhaustive path on every edge', () => {
+        const abilitySets = [
+            { blue: true },
+            { blue: true, right: true },
+            { blue: true, left: true, right: true },
+            { right: true },
+        ];
+        const ids = ['g0', 'bl', 'g1', 'tip'];
+        for (const ab of abilitySets) {
+            for (const from of ids) {
+                for (const to of ids) {
+                    if (from === to) continue;
+                    const fast = canJump(level, from, to, ab, { constants: DJ });
+                    const exhaustive = canJump(level, from, to, ab, {
+                        constants: DJ, exhaustivePhases: true,
+                    });
+                    expect(fast, `${from}->${to} ${JSON.stringify(ab)}`).toBe(exhaustive);
+                }
+            }
+        }
+    }, 300000);
+});

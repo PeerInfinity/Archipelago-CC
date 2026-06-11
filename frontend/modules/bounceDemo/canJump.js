@@ -83,10 +83,42 @@ function passThroughIds(level, abilities, C) {
     return blues.length > 0 ? new Set(blues.map((p) => p.id)) : null;
 }
 
-/** lcm of the active moving blues' sweep periods (1 = no motion). */
-function bluePhaseLcm(level, abilities, C) {
+/**
+ * The movers an edge run launched from `fromY` can possibly TOUCH.
+ * Phase (state.t) only enters `step` through mover catch tests, so a
+ * run that cannot reach any mover's catch band is IDENTICAL at every
+ * phase — its edge needs exactly one phase. A mover is touchable iff
+ * the run's highest point reaches its band's bottom (falls reach
+ * everything below for free), and touching one mover lifts the bound
+ * by another plain bounce (cascade to fixpoint).
+ */
+function touchableMovers(level, fromY, fromLaunch, C, movers) {
+    if (movers.length === 0) return [];
+    const hover = C.MAX_FALL; // latched landings rest up to here above the line
+    let apex = fromLaunch === null
+        ? fromY // ENTRANCE: the spawn drop gains no height
+        : fromY - hover - launchRise(fromLaunch, C);
+    const touched = new Set();
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const p of movers) {
+            if (touched.has(p.id)) continue;
+            if (apex <= p.y + C.CATCH_BAND) { // band reachable (y grows down)
+                touched.add(p.id);
+                const lifted = p.y - hover - launchRise('bounce', C);
+                if (lifted < apex) apex = lifted;
+                changed = true;
+            }
+        }
+    }
+    return movers.filter((p) => touched.has(p.id));
+}
+
+/** lcm of the given movers' sweep periods (1 = no motion). */
+function phaseLcm(movers, C) {
     let L = 1;
-    for (const p of movingBlues(level, abilities, C)) {
+    for (const p of movers) {
         const span = p.sweep.max - p.sweep.min;
         const period = Math.max(1, Math.round((2 * span) / C.BLUE_SPEED));
         L = lcm(L, period);
@@ -329,14 +361,17 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
     // measured discrete rise (plus the latched-mode hover allowance —
     // the launch point can rest up to ~MAX_FALL above the line), and a
     // run that bounces THROUGH pass-through movers gains one more
-    // plain rise per mover; skip the simulation when `to` is above
-    // that. The entrance has no launch: its only gain is the spawn
-    // drop itself (none) plus any pass-through bounces.
+    // plain rise per TOUCHABLE mover; skip the simulation when `to` is
+    // above that. The entrance has no launch: its only gain is the
+    // spawn drop itself (none) plus any pass-through bounces.
     const hover = C.LANDING === 'latched' ? C.MAX_FALL : 0;
-    const throughGain = (passThroughIds(level, abilities, C)?.size ?? 0)
-        * (launchRise('bounce', C) + hover);
+    const fromLaunch = fromId === ENTRANCE
+        ? null : launchTypeFor(level, fromId, abilities);
+    const touchable = touchableMovers(
+        level, fromY, fromLaunch, C, movingBlues(level, abilities, C));
+    const throughGain = touchable.length * (launchRise('bounce', C) + hover);
     if (fromId !== ENTRANCE) {
-        const rise = launchRise(launchTypeFor(level, fromId, abilities), C);
+        const rise = launchRise(fromLaunch, C);
         if (fromY - to.y > rise + hover + throughGain) return fail;
     } else if (fromY - to.y > throughGain) {
         return fail;
@@ -402,8 +437,14 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
     // escape — the generator's overshoot margins keep those away.
     const hovers = [0, 7.3, 14.7, Math.max(0, C.MAX_FALL - 0.05)];
 
-    const L = bluePhaseLcm(level, abilities, C);
-    const fromMoving = movingBlues(level, abilities, C).some((p) => p.id === fromId);
+    const movers = movingBlues(level, abilities, C);
+    const fromMoving = movers.some((p) => p.id === fromId);
+    // Phase only enters `step` through mover catch tests, so only the
+    // movers this run can TOUCH matter — an edge that can't reach any
+    // mover band is identical at every phase (one phase suffices).
+    const relevant = fromMoving ? movers : touchableMovers(
+        level, from.y, launchTypeFor(level, fromId, abilities), C, movers);
+    const L = phaseLcm(relevant, C);
 
     // Phase sets to satisfy: from a moving platform EVERY phase must
     // have a witness; from a static one, every residue class mod
@@ -416,12 +457,37 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
         phaseGroups = Array.from({ length: L }, (_, t) => [t]);
     } else {
         const cycle = bounceCycle(level, fromId, abilities, C);
-        const g = cycle > 0 ? gcd(cycle, L) : L;
-        phaseGroups = Array.from({ length: g }, (_, r) => {
+        const window = C.PLATFORM_WIDTH + 2 * C.PLAYER_HALF_WIDTH;
+        if (relevant.length === 1 && cycle > 0
+                && C.BLUE_SPEED * cycle <= window && !opts.exhaustivePhases) {
+            // ALIGNED-STRIDE FAST PATH (the tolerance theorem): while
+            // waiting on this static platform, catch opportunities come
+            // every `cycle` ticks and the mover travels at most
+            // BLUE_SPEED*cycle arc-px between them. Unfolding the
+            // triangle sweep to a circle, the positions sampled within
+            // ANY residue class form an arithmetic orbit with step
+            // gcd(BLUE_SPEED*cycle, 2*span) ≤ BLUE_SPEED*cycle, so when
+            // that step fits inside the catch window (width 60+46=106)
+            // the orbit cannot skip over it: EVERY alignment is
+            // reachable in EVERY class, and the player's x is preserved
+            // through the landing, so a witness at one sampled phase
+            // implies witnesses in all classes. We therefore test ONE
+            // group of phases sampled at a stride that shifts the
+            // mover's schedule by at most half the window
+            // (BLUE_SPEED * stride ≤ window/2) — every claim is still
+            // backed by a real simulated trajectory.
+            const stride = Math.max(1, Math.floor(window / (2 * C.BLUE_SPEED)));
             const group = [];
-            for (let t = r; t < L; t += g) group.push(t);
-            return group;
-        });
+            for (let t = 0; t < L; t += stride) group.push(t);
+            phaseGroups = [group];
+        } else {
+            const g = cycle > 0 ? gcd(cycle, L) : L;
+            phaseGroups = Array.from({ length: g }, (_, r) => {
+                const group = [];
+                for (let t = r; t < L; t += g) group.push(t);
+                return group;
+            });
+        }
     }
 
     const witnesses = [];
