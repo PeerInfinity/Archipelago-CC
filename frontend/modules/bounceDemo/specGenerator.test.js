@@ -7,7 +7,10 @@
  */
 import { describe, it, expect } from 'vitest';
 import { generateLevelFromSpecs } from './generator.js';
-import { generateZoneForSpecs, GATEABLE_ITEMS } from './bounceDemoLibrary.js';
+import {
+    generateZoneForSpecs, canHostExitGates, GATEABLE_ITEMS,
+    substrateRegistryEntry,
+} from './bounceDemoLibrary.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
 
@@ -280,21 +283,136 @@ describe('generateZoneForSpecs (adapter hook)', () => {
         expect(generateZoneForSpecs(SPECS)).toEqual(generateZoneForSpecs(SPECS));
     });
 
-    it('declines non-gateable items and unknown sides', () => {
-        expect(() => generateZoneForSpecs({
-            region_id: 'r',
-            exitSpecs: [{ side: 'N', requirement: ['key_red'] }],
-        })).toThrow(/cannot gate on item 'key_red'/);
+    it('omits gate_rules when no spec carries authored terms', () => {
+        expect(generateZoneForSpecs(SPECS).payload.gate_rules).toBeUndefined();
+    });
+
+    it('declines unknown sides', () => {
         expect(() => generateZoneForSpecs({
             region_id: 'r',
             exitSpecs: [{ side: 'Q', requirement: [] }],
         })).toThrow(/unknown exit side 'Q'/);
     });
 
-    it('declares the six abilities as the gate vocabulary', () => {
+    it('keeps the six abilities as the PHYSICS vocabulary; registry declares full vocabulary', () => {
         expect([...GATEABLE_ITEMS].sort()).toEqual([
             'Blue platforms', 'Brown platforms', 'Jetpacks',
             'Left arrow', 'Right arrow', 'Springs',
         ]);
+        // Rule-gated portals make every AP item gateable (authored terms).
+        expect(substrateRegistryEntry.gateableItems).toBeNull();
+    });
+});
+
+describe('generateZoneForSpecs — authored gate terms (rule-gated portals/pickups)', () => {
+    it('a non-ability exit gate becomes an authored lock: composed rule + gate_rules', () => {
+        const zone = generateZoneForSpecs({
+            region_id: 'r_key',
+            exitSpecs: [{ side: 'N', requirement: ['key_red'] }],
+            seed: 1,
+        });
+        // No physics part: the emitted rule is the authored term alone.
+        expect(zone.exitRules.N).toEqual({
+            rule: 'Has', args: { item_name: 'key_red' },
+        });
+        // The authored lock rides the payload for the host bridge.
+        expect(zone.payload.gate_rules).toEqual({
+            portals: { side_exit_N: { rule: 'Has', args: { item_name: 'key_red' } } },
+            pickups: {},
+        });
+        // The level itself realises a plain (physics-free) exit.
+        const derived = deriveAccessRules(zone.payload.params.bounceLevel);
+        expect(derived.exits.side_exit_N.minimalSets).toEqual([[]]);
+    });
+
+    it('mixed gate: physics AND authored compose on the emitted rule', () => {
+        const zone = generateZoneForSpecs({
+            region_id: 'r_mix',
+            exitSpecs: [{ side: 'E', requirement: ['Springs', 'Right arrow', 'key_blue'] }],
+            seed: 2,
+        });
+        expect(zone.exitRules.E).toEqual({
+            rule: 'And',
+            children: [
+                {
+                    rule: 'And',
+                    children: [
+                        { rule: 'Has', args: { item_name: 'Right arrow' } },
+                        { rule: 'Has', args: { item_name: 'Springs' } },
+                    ],
+                },
+                { rule: 'Has', args: { item_name: 'key_blue' } },
+            ],
+        });
+        expect(zone.payload.gate_rules.portals.side_exit_E).toEqual({
+            rule: 'Has', args: { item_name: 'key_blue' },
+        });
+        // Physics part verified as geometry: the portal derives the abilities.
+        const derived = deriveAccessRules(zone.payload.params.bounceLevel);
+        expect(derived.exits.side_exit_E.minimalSets).toEqual([['right', 'springs']]);
+    });
+
+    it('a count > 1 ability gate is authored, not physics (count gates on bounce)', () => {
+        const zone = generateZoneForSpecs({
+            region_id: 'r_count',
+            exitSpecs: [{ side: 'N', requirement: ['Springs'], counts: { Springs: 2 } }],
+            seed: 1,
+        });
+        expect(zone.exitRules.N).toEqual({
+            rule: 'Has', args: { item_name: 'Springs', count: 2 },
+        });
+        expect(zone.payload.gate_rules.portals.side_exit_N).toEqual({
+            rule: 'Has', args: { item_name: 'Springs', count: 2 },
+        });
+        const derived = deriveAccessRules(zone.payload.params.bounceLevel);
+        expect(derived.exits.side_exit_N.minimalSets).toEqual([[]]);
+    });
+
+    it('rule-gated pickups: authored terms on locationSpecs (internalRequirement plumbing)', () => {
+        const zone = generateZoneForSpecs({
+            region_id: 'r_loc',
+            exitSpecs: [{ side: 'N', requirement: [] }],
+            locationSpecs: [
+                { id: 'loc_gated', item: 'victory', requirement: ['key_red'] },
+                { id: 'loc_free', item: 'Springs', requirement: [] },
+            ],
+            seed: 1,
+        });
+        const gated = zone.locations.find((l) => l.id === 'loc_gated');
+        expect(gated.access_rule).toEqual({
+            rule: 'Has', args: { item_name: 'key_red' },
+        });
+        expect(zone.payload.gate_rules.pickups).toEqual({
+            loc_gated: { rule: 'Has', args: { item_name: 'key_red' } },
+        });
+        const free = zone.locations.find((l) => l.id === 'loc_free');
+        expect(free.access_rule).toEqual({ rule: 'True_' });
+    });
+
+    it('two wholly-authored exits still violate the arrowless-slot structure', () => {
+        // Once unlocked, an on-column portal swallows every climb past
+        // it — so authored-only gates still compete for the single
+        // column-top slot, in the generator and the veto alike.
+        expect(() => generateZoneForSpecs({
+            region_id: 'r_two',
+            exitSpecs: [
+                { side: 'N', requirement: ['key_red'] },
+                { side: 'E', requirement: ['key_blue'] },
+            ],
+            seed: 1,
+        })).toThrow(/at most one arrowless/);
+        expect(canHostExitGates([['key_red']], ['key_blue'])).toBe(false);
+    });
+
+    it('canHostExitGates runs the structural veto on physics parts only', () => {
+        // Authored terms are structurally free: a key gate + an
+        // arrow-drift key gate coexist (the arrow makes it a branch tip).
+        expect(canHostExitGates([['key_red']], ['Left arrow', 'key_blue'])).toBe(true);
+        // {item, count} terms: count > 1 abilities are authored, so
+        // this is two physics-arrowless gates — rejected.
+        expect(canHostExitGates(
+            [[{ item: 'Springs', count: 2 }]], ['key_red'])).toBe(false);
+        // Unknown items no longer reject by vocabulary.
+        expect(canHostExitGates([], ['key_red'])).toBe(true);
     });
 });

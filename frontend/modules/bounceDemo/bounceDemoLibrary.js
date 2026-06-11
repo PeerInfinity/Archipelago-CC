@@ -25,7 +25,10 @@ import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibra
 import { deriveAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
 import { generateLevelFromSpecs } from './generator.js';
-import { ABILITY_ITEM_NAMES, minimalSetsToRule, VICTORY_ITEM_NAME } from './apRules.js';
+import {
+    ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
+    authoredTermsToRule, VICTORY_ITEM_NAME,
+} from './apRules.js';
 import { validateLevel } from './level.js';
 import { bounceStack } from './fixtures/bounceStack.js';
 import { easyTower } from './fixtures/easyTower.js';
@@ -125,26 +128,57 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
     };
 }
 
-// ── Sphere-driven growth hook (generateZoneForSpecs, step 2) ─────────
+// ── Sphere-driven growth hook (generateZoneForSpecs, step 2 + the
+//    rule-gated portals/pickups extension, priority #2) ───────────────
 //
 // Requirement-targeted region realization for the sphere grower
 // (NewDocs/plans/procedural-generation/sphere-driven-growth.md): the
 // driver specifies per-exit and per-location target requirements in AP
-// item names; bounce maps them to ability ids at this boundary,
-// generates a verified prefix-graded chain level, and returns the same
-// { locations, exitRules, payload } shape extractZoneRules produces.
+// item names (plus optional per-item counts). Bounce SPLITS each
+// requirement at this boundary:
+//
+//   - PHYSICS part — ability items with required count 1, realised as
+//     gate geometry by the verified prefix-graded chain generator.
+//   - AUTHORED part — everything else (non-ability items like keys,
+//     and count > 1 instances of anything, incl. abilities). These
+//     impose NO geometry: they ride the payload as `gate_rules`, the
+//     host bridge evaluates them against live inventory, and the game
+//     renders the portal/pickup locked until they're satisfied (the
+//     metroidvania tease). The EMITTED rule is the composition:
+//     physics AND authored.
+//
 // Unsatisfiable specs THROW — that is the "adapter declines" channel
-// (unknown gate items, non-nested requirements, more than one
-// arrowless-gated exit).
+// (non-nested physics requirements, more than one physics-arrowless
+// exit). There is no gate vocabulary anymore: any AP item gates any
+// portal/pickup via the authored channel.
 
 const SIDE_DIRECTIONS = { N: 'up', S: 'down', E: 'right', W: 'left' };
 
 const ABILITY_BY_ITEM_NAME = Object.freeze(Object.fromEntries(
     Object.entries(ABILITY_ITEM_NAMES).map(([ability, name]) => [name, ability])));
 
-/** AP item names bounce can realize gates for (driver-side gate
- *  compatibility — see the plan doc's "Gate compatibility"). */
+/** AP item names bounce realizes as PHYSICS gate geometry. No longer a
+ *  vocabulary limit (the registry declares `gateableItems: null` —
+ *  authored gate terms cover everything else); still meaningful to the
+ *  planner as "items every substrate can gate on physically". */
 export const GATEABLE_ITEMS = Object.freeze(Object.values(ABILITY_ITEM_NAMES));
+
+/**
+ * Split a driver requirement (AP item names + optional counts) into
+ * the physics part (ability ids for the chain generator) and the
+ * authored part ([{ item, count }] for the bridge-evaluated lock).
+ */
+function splitRequirement(requirement, counts = {}) {
+    const physics = [];
+    const authored = [];
+    for (const name of requirement ?? []) {
+        const count = counts?.[name] ?? 1;
+        const ability = ABILITY_BY_ITEM_NAME[name];
+        if (ability && count === 1) physics.push(ability);
+        else authored.push({ item: name, count });
+    }
+    return { physics, authored };
+}
 
 /**
  * Registry-declared item library: bounce's ability items + Victory in
@@ -177,41 +211,45 @@ export const BOUNCE_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
     is_victory: true,
 }]])));
 
-function requirementToAbilities(requirement, what) {
-    return (requirement ?? []).map((name) => {
-        const ability = ABILITY_BY_ITEM_NAME[name];
-        if (!ability) {
-            throw new Error(`bounce ${what}: cannot gate on item '${name}' — `
-                + `gateable items are: ${GATEABLE_ITEMS.join(', ')}`);
-        }
-        return ability;
-    });
-}
-
 /**
  * Driver-side structural veto for the sphere grower: can a bounce
  * region host one more exit gate alongside the gates it already
- * hosts? Mirrors generateLevelFromSpecs' spec constraints (an
- * arrowless gate is the on-column top — at most one, and nothing may
- * need column gates beyond it; the non-arrow cores of all gates must
- * form a nested chain the column can realise). Conservative: a true
- * here can still be declined by the generator, but only for geometry
- * dead-ends (retried), not structure.
+ * hosts? Mirrors generateLevelFromSpecs' spec constraints, applied to
+ * each gate's PHYSICS PART (authored terms impose no geometry):
  *
- * Gates arrive in AP item names (the driver's vocabulary).
+ *   - A physics-arrowless gate's portal sits on the forced column, so
+ *     it must be the on-column TOP: while LOCKED it doesn't block (a
+ *     locked portal swallows nothing), but once its authored terms are
+ *     satisfied it swallows every climb past it — and AP rules are
+ *     monotone, so "reachable only while still locked" is not
+ *     emittable. Hence at most ONE physics-arrowless gate per region,
+ *     wholly-authored gates included.
+ *   - The non-arrow physics cores of all gates must form a nested
+ *     chain the column can realise, all fitting below the arrowless
+ *     top when one exists.
+ *
+ * Conservative: a true here can still be declined by the generator,
+ * but only for geometry dead-ends (retried), not structure.
+ *
+ * Gates arrive in the driver's vocabulary: arrays of AP item names
+ * (count 1) or { item, count } terms.
  */
 export function canHostExitGates(existingGates, newGate) {
-    const gates = [...existingGates, newGate];
+    // Physics part per gate: ability items with required count 1.
+    // Everything else is an authored term — structurally free.
+    const physicsParts = [...existingGates, newGate].map((gate) =>
+        gate.map((term) => (typeof term === 'string' ? { item: term, count: 1 } : term))
+            .filter(({ item, count }) => ABILITY_BY_ITEM_NAME[item] && (count ?? 1) === 1)
+            .map(({ item }) => item));
     const isArrowItem = (name) => name === ABILITY_ITEM_NAMES.left
         || name === ABILITY_ITEM_NAMES.right;
-    if (gates.some((g) => g.some((item) => !ABILITY_BY_ITEM_NAME[item]))) return false;
 
-    const arrowless = gates.filter((g) => !g.some(isArrowItem));
+    const arrowless = physicsParts.filter((g) => !g.some(isArrowItem));
     if (arrowless.length > 1) return false;
 
     // Non-arrow cores must nest (drift arrows ride branch tips, the
     // column realises the cores).
-    const cores = gates.map((g) => g.filter((item) => !isArrowItem(item)).sort())
+    const cores = physicsParts.map((g) => g.filter((item) => !isArrowItem(item)).sort())
         .sort((a, b) => a.length - b.length);
     for (let i = 1; i < cores.length; i++) {
         if (!cores[i - 1].every((x) => cores[i].includes(x))) return false;
@@ -227,10 +265,13 @@ export function canHostExitGates(existingGates, newGate) {
 /**
  * @param {object} specs
  * @param {string} specs.region_id
- * @param {Array<{side: string, requirement: string[]}>} specs.exitSpecs
- *   — requirement in AP item names; one exit platform per side.
- * @param {Array<{id: string, item: string|null, requirement: string[]}>}
- *   [specs.locationSpecs] — pickups; `item` is the canonical placement.
+ * @param {Array<{side: string, requirement: string[],
+ *   counts?: Object<string, number>}>} specs.exitSpecs — requirement in
+ *   AP item names (any items; `counts` gives per-item required counts,
+ *   default 1); one exit platform per side.
+ * @param {Array<{id: string, item: string|null, requirement: string[],
+ *   counts?: Object<string, number>}>} [specs.locationSpecs] — pickups;
+ *   `item` is the canonical placement.
  * @param {number} [specs.seed]
  * @param {number} [specs.stepsBetween]
  * @param {number} [specs.jitter]
@@ -248,17 +289,19 @@ export function generateZoneForSpecs({
         if (!SIDE_DIRECTIONS[s.side]) {
             throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
         }
+        const { physics, authored } = splitRequirement(s.requirement, s.counts);
         return {
             id: `side_exit_${s.side}`,
             side: s.side,
             direction: SIDE_DIRECTIONS[s.side],
-            requirement: requirementToAbilities(s.requirement, `zone '${region_id}' exit ${s.side}`),
+            requirement: physics,
+            authored,
         };
     });
-    const pickups = locationSpecs.map((s) => ({
-        id: s.id,
-        requirement: requirementToAbilities(s.requirement, `zone '${region_id}' location '${s.id}'`),
-    }));
+    const pickups = locationSpecs.map((s) => {
+        const { physics, authored } = splitRequirement(s.requirement, s.counts);
+        return { id: s.id, requirement: physics, authored };
+    });
 
     const level = generateLevelFromSpecs({
         id: region_id,
@@ -276,21 +319,39 @@ export function generateZoneForSpecs({
     }
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;
+    // Emitted rule = derived physics rule AND authored terms; the
+    // authored terms alone also ride the payload as gate_rules so the
+    // host bridge can evaluate them at runtime (locked portal/pickup).
+    const gateRules = { portals: {}, pickups: {} };
     const exitRules = {};
     for (const e of exits) {
-        exitRules[e.side] = minimalSetsToRule(derived.exits[e.id].minimalSets);
+        exitRules[e.side] = composeAuthoredRule(
+            minimalSetsToRule(derived.exits[e.id].minimalSets), e.authored);
+        if (e.authored.length > 0) {
+            gateRules.portals[e.id] = authoredTermsToRule(e.authored);
+        }
     }
-    const locations = locationSpecs.map((s) => ({
-        id: s.id,
-        item: s.item ?? null,
-        access_rule: minimalSetsToRule(derived.pickups[s.id].minimalSets),
-        position: null, // level-local px would be misread as tile coords
-    }));
-    return {
-        locations,
-        exitRules,
-        payload: buildZonePayload(region_id, level, sidePortals),
-    };
+    const authoredByLocation = Object.fromEntries(
+        pickups.map((p) => [p.id, p.authored]));
+    const locations = locationSpecs.map((s) => {
+        const authored = authoredByLocation[s.id];
+        if (authored.length > 0) {
+            gateRules.pickups[s.id] = authoredTermsToRule(authored);
+        }
+        return {
+            id: s.id,
+            item: s.item ?? null,
+            access_rule: composeAuthoredRule(
+                minimalSetsToRule(derived.pickups[s.id].minimalSets), authored),
+            position: null, // level-local px would be misread as tile coords
+        };
+    });
+    const payload = buildZonePayload(region_id, level, sidePortals);
+    if (Object.keys(gateRules.portals).length > 0
+            || Object.keys(gateRules.pickups).length > 0) {
+        payload.gate_rules = gateRules;
+    }
+    return { locations, exitRules, payload };
 }
 
 // Shared across every bounce entry — same Shape-1 reasoning as flash's
@@ -342,11 +403,13 @@ export function createBounceSubstrateEntry({
         extractZoneRules: makeExtractZoneRules(zones, { portalPlacement }),
 
         // Sphere-driven growth: requirement-targeted generation + the
-        // gate vocabulary bounce can realize + the structural veto for
-        // gate combinations (driver-side gate compatibility) + the
-        // panel-facing item library (abilities + Victory).
+        // structural veto for gate combinations + the panel-facing
+        // item library (abilities + Victory). gateableItems is null —
+        // FULL vocabulary: non-ability (and count > 1) gate terms are
+        // realised as authored bridge-evaluated locks, not geometry
+        // (rule-gated portals/pickups, priority #2).
         generateZoneForSpecs,
-        gateableItems: GATEABLE_ITEMS,
+        gateableItems: null,
         canHostExitGates,
         libraryItems: BOUNCE_LIBRARY_ITEMS,
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'bounce_abilities']),

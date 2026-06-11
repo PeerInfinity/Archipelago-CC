@@ -36,3 +36,27 @@ export function minimalSetsToRule(minimalSets) {
             return makeHasRule(itemName);
         }))));
 }
+
+/**
+ * AND a goal's AUTHORED gate terms onto its physics-derived rule —
+ * the rule-gated portals/pickups composition (sphere-driven growth
+ * priority #2): emitted rule = physics requirement AND authored rule.
+ * `authoredTerms` is [{ item, count }] in AP item names (anything the
+ * physics can't realise: non-ability items like keys, and count > 1
+ * instances of any item). Empty terms return `physicsRule` UNCHANGED,
+ * so worlds without authored gates emit byte-identical rules.
+ */
+export function composeAuthoredRule(physicsRule, authoredTerms) {
+    if (!authoredTerms || authoredTerms.length === 0) return physicsRule;
+    const terms = authoredTerms.map(({ item, count }) => makeHasRule(item, count ?? 1));
+    if (physicsRule && physicsRule.rule !== 'True_') {
+        return makeAndRule([physicsRule, ...terms]);
+    }
+    return makeAndRule(terms);
+}
+
+/** The authored terms alone as one rule (the bridge-evaluated lock). */
+export function authoredTermsToRule(authoredTerms) {
+    return makeAndRule(
+        (authoredTerms ?? []).map(({ item, count }) => makeHasRule(item, count ?? 1)));
+}
