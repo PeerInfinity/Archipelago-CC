@@ -202,8 +202,13 @@ const REGION_XP_EFFECT_OPTIONS = [
 const DEFAULT_SCENARIO = {
     // `victory` is the auto-completion-condition item — opt out by
     // removing it from the items pool. See library.js for details.
-    items: { victory: 1, key_red: 2 },
-    obstacles: { door_red: 2 },
+    // Distinct keys (not key_red: 2): duplicate instances of one item
+    // split across spheres aren't stratifiable with single-item Has()
+    // gates, so the default scenario would fail sphereGrowth's oracle
+    // (the v1 single-item-gate limitation; see
+    // sphere-driven-growth.md §As-built).
+    items: { victory: 1, key_red: 1, key_blue: 1 },
+    obstacles: { door_red: 1, door_blue: 1 },
 };
 
 /**
@@ -390,10 +395,13 @@ export class ProcgenPipelineUI {
         // user's preferences survive panel rebuilds and reloads.
         // Persisted via LS_VIEW_KEY alongside showUnsupportedLibrary.
         this.collapsedSections = new Set();
-        // 'gridGrowth' (default) builds a fresh world from a scenario
-        // pool. 'topDown' realises an existing rules.json as maze
-        // regions on a grid.
-        this.mode = 'gridGrowth';
+        // 'sphereGrowth' (default — the sphere-plan-first driver,
+        // replacing gridGrowth as the default world-building mode per
+        // sphere-driven-growth.md step 8) builds a fresh world from a
+        // scenario pool with an exact sphere oracle. 'gridGrowth' is
+        // the legacy pool-driven grower; 'topDown' realises an
+        // existing rules.json as maze regions on a grid.
+        this.mode = 'sphereGrowth';
         // Top-down's source rules.json (raw object) and a friendly
         // label used in the panel UI. null until the user picks a file
         // or copies in the currently-loaded rules.json.
@@ -1942,6 +1950,7 @@ export class ProcgenPipelineUI {
             regionSize: { width: regionWidth, height: regionHeight },
             itemLib,
             seed,
+            hazardOpts: this._effectiveHazardOpts(),
             // Substrate-specific knobs ride regionParams (maze ignores
             // unknown keys; bounce stamps fallBehavior into payloads).
             regionParams: {
