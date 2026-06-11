@@ -270,3 +270,31 @@ describe('dj phase-aware edges', () => {
         expect(canJump(level, 'g0', 'tip', { right: true }, djOpts)).toBe(false);
     });
 });
+
+describe('dj pass-through movers (composite wait-land-bounce-off)', () => {
+    const DJ = PROFILES.dj.constants;
+    const level = {
+        id: 'dj_through',
+        size: { width: 600, height: 700 },
+        platforms: [
+            { id: 'g0', x: 300, y: 500, type: 'green' },
+            { id: 'bl', x: 300, y: 410, type: 'blue', sweep: { min: 15, max: 585 } },
+            { id: 'g1', x: 300, y: 320, type: 'green' },
+        ],
+        springs: [], jetpacks: [], pickups: [], portals: [],
+    };
+    const o = { constants: DJ };
+
+    it('green→green THROUGH a full-width mover, arrowless: the player waits on the green,'
+        + ' lands on the stone when aligned, and bounces straight off (x preserved)', () => {
+        expect(canJump(level, 'g0', 'g1', { blue: true }, o)).toBe(true);
+    });
+
+    it('without the blue item the stone does not exist and the gap is unclearable', () => {
+        expect(canJump(level, 'g0', 'g1', {}, o)).toBe(false);
+    });
+
+    it('an edge INTO the mover still terminates on it', () => {
+        expect(canJump(level, 'g0', 'bl', { blue: true }, o)).toBe(true);
+    });
+});

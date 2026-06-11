@@ -449,8 +449,8 @@ describe('generateZoneForSpecs — physics profile stamp', () => {
     });
 });
 
-// ── dj behaviors: colors ride the goal's host platform ──────────────
-describe('generateLevelFromSpecs — dj color-as-host mode', () => {
+// ── dj behaviors: brown rides the goal's host; blue stays a stone ────
+describe('generateLevelFromSpecs — dj brown-as-host mode', () => {
     const DJ = PROFILES.dj.constants;
 
     const derivedSets = (level) => {
@@ -462,9 +462,9 @@ describe('generateLevelFromSpecs — dj color-as-host mode', () => {
         return sets;
     };
 
-    it('blue arrowless exit = swept blue host at the column top (∃-phase reachable)', () => {
+    it('blue gate = full-width swept stepping stone (wait-land-bounce-off, pass-through verified)', () => {
         const level = generateLevelFromSpecs({
-            id: 'dj_blue_top',
+            id: 'dj_blue_gate',
             exitSpecs: [
                 { id: 'exit_top', requirement: ['blue'] },
                 { id: 'exit_e', requirement: ['right'] },
@@ -480,15 +480,48 @@ describe('generateLevelFromSpecs — dj color-as-host mode', () => {
         expect(blues).toHaveLength(1);
         // full-width sweep, like DJ: centers MARGIN..WIDTH-MARGIN
         expect(blues[0].sweep).toEqual({ min: 15, max: 585 });
-        // blue-after-green by construction: the host's exit portal rides it
+        // the stone is a COLUMN STEP, not the portal host — the portal
+        // sits on a static platform above it (classic gate shape)
         const topPortal = level.portals.find((pt) => pt.id === 'exit_top');
-        expect(topPortal.on).toBe(blues[0].id);
+        const portalHost = level.platforms.find((p) => p.id === topPortal.on);
+        expect(portalHost.type).toBe('green');
+        expect(portalHost.y).toBeLessThan(blues[0].y); // above the stone
         expect(derivedSets(level)).toEqual({
             exit_top: [['blue']],
             exit_e: [['right']],
             loc_a: [[]],
         });
-    });
+    }, 180000);
+
+    it('blue + arrow exit works again (stone in the column, drift tip above)', () => {
+        const level = generateLevelFromSpecs({
+            id: 'dj_blue_arrow',
+            exitSpecs: [
+                { id: 'exit_top', requirement: ['blue'] },
+                { id: 'exit_e', requirement: ['blue', 'right'] },
+            ],
+            physics: 'dj',
+            seed: 5,
+        });
+        expect(derivedSets(level)).toEqual({
+            exit_top: [['blue']],
+            exit_e: [['blue', 'right']],
+        });
+    }, 180000);
+
+    it('blue AND brown compose: blue stone in the chain, brown on the goal host', () => {
+        const level = generateLevelFromSpecs({
+            id: 'dj_blue_brown',
+            exitSpecs: [{ id: 'e', requirement: ['blue', 'brown'] }],
+            physics: 'dj',
+            seed: 3,
+        });
+        const portal = level.portals.find((pt) => pt.id === 'e');
+        const host = level.platforms.find((p) => p.id === portal.on);
+        expect(host.type).toBe('brown');
+        expect(level.platforms.some((p) => p.type === 'blue' && p.sweep)).toBe(true);
+        expect(derivedSets(level)).toEqual({ e: [['blue', 'brown']] });
+    }, 180000);
 
     it('brown + arrow exit = breaking brown host on a branch tip', () => {
         const level = generateLevelFromSpecs({
@@ -509,25 +542,19 @@ describe('generateLevelFromSpecs — dj color-as-host mode', () => {
         });
     });
 
-    it('declines: two arrowless colored goals; blue AND brown on one goal; blue + arrow', () => {
+    it('declines: two arrowless brown goals; brown pickup with an arrow', () => {
         expect(() => generateLevelFromSpecs({
             id: 'x',
-            exitSpecs: [{ id: 'e', requirement: ['blue'] }],
+            exitSpecs: [{ id: 'e', requirement: ['brown'] }],
             pickupSpecs: [{ id: 'p', requirement: ['brown'] }],
             physics: 'dj',
-        })).toThrow(/at most one arrowless colored goal/);
+        })).toThrow(/at most one arrowless brown goal/);
         expect(() => generateLevelFromSpecs({
             id: 'x',
-            exitSpecs: [{ id: 'e', requirement: ['blue', 'brown'] }],
+            exitSpecs: [{ id: 'e', requirement: ['brown', 'right'] }],
+            pickupSpecs: [{ id: 'p', requirement: ['brown', 'right'] }],
             physics: 'dj',
-        })).toThrow(/both blue.*and brown|blue and brown/);
-        // a full-width mover sweeps over the column too — an arrow
-        // cannot gate it
-        expect(() => generateLevelFromSpecs({
-            id: 'x',
-            exitSpecs: [{ id: 't', requirement: [] }, { id: 'e', requirement: ['blue', 'right'] }],
-            physics: 'dj',
-        })).toThrow(/full level width/);
+        })).toThrow(/brown.*with an arrow|brown tip pickups/);
     });
 
     it('classic keeps colored stepping-stone gates (no sweep, no host coloring rules)', () => {
@@ -562,5 +589,5 @@ describe('generateZoneForSpecs — dj profile end-to-end', () => {
         const level = zone.payload.params.bounceLevel;
         expect(level.platforms.some((p) => p.type === 'blue' && p.sweep)).toBe(true);
         expect(validateLevel(level)).toEqual([]);
-    });
+    }, 180000);
 });

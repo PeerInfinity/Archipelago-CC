@@ -468,41 +468,39 @@ export function generateZoneSet({ count = 7, seed = 1, jitter = 0 } = {}) {
 // branch tips and column shifts never collide with walls.
 
 const ARROW_ABILITIES = ['left', 'right'];
-const COLOR_ABILITIES = ['blue', 'brown'];
 const KNOWN_ABILITIES = new Set(['springs', 'jetpacks', 'blue', 'brown', 'left', 'right']);
 
 const reqKey = (req) => req.join('+');
 const hasArrow = (req) => req.some((a) => ARROW_ABILITIES.includes(a));
 const isSubsetReq = (a, b) => a.every((x) => b.includes(x));
 
-// ── Color-as-host mode (dj platform behaviors) ──────────────────────
+// ── Brown-as-host mode (dj platform behaviors) ──────────────────────
 //
-// Under dj behaviors blue/brown CANNOT be column-core stepping stones:
-// a breaking brown has no outgoing edges (the weak bounce depends on
-// arrival speed), and an arrowless jump FROM a moving blue fails the
-// ∀-arrival-phase check (the sweep+offset envelope misses the target).
-// So a color in a goal's requirement is realized on the GOAL'S OWN
-// HOST platform instead of as a gate segment below it:
+// Under dj behaviors BROWN cannot be a column-core stepping stone: a
+// breaking brown has no outgoing edges (the weak bounce depends on
+// arrival speed), so brown in a goal's requirement is realized on the
+// GOAL'S OWN host platform instead of as a gate segment below it:
 //
-//  - arrow + color exit  → branch tip whose host platform is colored
-//    (the drift supplies steering; a blue host gets a ±BLUE_SWEEP_AMP
-//    sweep, reached ∃-phase — its rung below is always a static green,
-//    the blue-after-green rule by construction).
-//  - arrowless colored goal → the unique column-TOP slot (climbing
-//    past a colored host is impossible: suppressed = a 2x gap, present
-//    = no/limited outgoing edges). At most ONE per level, its
-//    requirement must be the column ceiling, and it cannot coexist
-//    with an (uncolored) arrowless top exit. Colored pickups with
-//    arrows are declined in v1 (pickups have no tip machinery).
+//  - arrow + brown exit  → branch tip whose host platform is brown
+//    (the drift supplies steering).
+//  - arrowless brown goal → the unique column-TOP slot (climbing past
+//    a brown host is impossible: suppressed = a 2x gap, present = no
+//    outgoing edges). At most ONE per level, its requirement must be
+//    the column ceiling, and it cannot coexist with an (uncolored)
+//    arrowless top exit. Brown pickups with arrows are declined in v1
+//    (pickups have no tip machinery).
 //
-// Classic behaviors keep the colored stepping-stone gates unchanged.
-const colorHostMode = (C) => C.PLATFORM_BEHAVIORS?.blue === 'moving'
-    || C.PLATFORM_BEHAVIORS?.brown === 'breaking';
+// BLUE stays a stepping-stone gate in BOTH profiles — under dj the
+// stone gets a full-width sweep, and the solver's pass-through edges
+// verify the wait-on-the-green / land / bounce-straight-off maneuver
+// (the player's x is preserved through the landing, so the onward
+// launch happens from the column, not from the sweep extremes).
+// Classic behaviors keep all colored stepping-stone gates unchanged.
+const colorHostMode = (C) => C.PLATFORM_BEHAVIORS?.brown === 'breaking';
 // Moving blues sweep the FULL level width (like DJ: centers 15..195
 // of the 240 stage) — the sweep bounds are level data assigned after
 // width normalization, with this center-margin at each edge.
 const BLUE_SWEEP_EDGE_MARGIN = 15;
-const colorsOf = (req) => req.filter((a) => COLOR_ABILITIES.includes(a));
 
 function normalizeRequirement(req, what) {
     const norm = [...new Set(req ?? [])].sort();
@@ -541,33 +539,21 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs, colorHost = false) {
     }));
 
     if (colorHost) {
-        // dj behaviors: colors ride the goal's host platform (see the
-        // color-as-host header). Validate and tag.
+        // dj behaviors: brown rides the goal's host platform (see the
+        // brown-as-host header); blue stays a stepping-stone gate.
         for (const g of [...exits, ...pickups]) {
-            const colors = colorsOf(g.req);
-            if (colors.length > 1) {
-                throw new Error(`generateLevelFromSpecs: goal '${g.id}' requires both blue `
-                    + 'and brown — one host platform cannot be two types (dj behaviors)');
-            }
-            g.hostColor = colors[0] ?? null;
+            g.hostColor = g.req.includes('brown') ? 'brown' : null;
         }
         const coloredArrowless = [...exits, ...pickups]
             .filter((g) => g.hostColor && !hasArrow(g.req));
         if (coloredArrowless.length > 1) {
-            throw new Error('generateLevelFromSpecs: at most one arrowless colored goal per '
+            throw new Error('generateLevelFromSpecs: at most one arrowless brown goal per '
                 + `level under dj behaviors (got ${coloredArrowless.map((g) => `'${g.id}'`).join(', ')})`);
-        }
-        for (const g of exits) {
-            if (g.hostColor === 'blue' && hasArrow(g.req)) {
-                throw new Error(`generateLevelFromSpecs: exit '${g.id}' combines blue with an `
-                    + 'arrow — a blue host sweeps the full level width, so an arrow cannot '
-                    + 'gate it (dj behaviors)');
-            }
         }
         for (const pk of pickups) {
             if (pk.hostColor && hasArrow(pk.req)) {
-                throw new Error(`generateLevelFromSpecs: pickup '${pk.id}' combines a color `
-                    + 'with an arrow — colored tip pickups are not supported (dj behaviors)');
+                throw new Error(`generateLevelFromSpecs: pickup '${pk.id}' combines brown `
+                    + 'with an arrow — brown tip pickups are not supported (dj behaviors)');
             }
         }
     }
@@ -647,9 +633,10 @@ function normalizeSpecGoals(exitSpecs, pickupSpecs, colorHost = false) {
     const chosenKeys = [...columnKeys];
     for (const e of [...branchExits].sort((a, b) => a.req.length - b.req.length)) {
         const drifts = ARROW_ABILITIES.filter((a) => e.req.includes(a));
-        // colorHost: colors ride the tip's host platform, not the
-        // column — strip them from attach-key candidates
-        const baseReq = colorHost ? e.req.filter((a) => !COLOR_ABILITIES.includes(a)) : e.req;
+        // colorHost: brown rides the tip's host platform, not the
+        // column — strip it from attach-key candidates (blue stays:
+        // it's a column stepping stone in both profiles)
+        const baseReq = colorHost ? e.req.filter((a) => a !== 'brown') : e.req;
         const options = [
             ...drifts.map((d) => ({ d, key: baseReq })),
             ...drifts.map((d) => ({ d, key: baseReq.filter((a) => a !== d) })),
@@ -702,10 +689,11 @@ function proposeLevelFromSpecs({
         for (let i = 0; i < n; i++) steps.push({ dy: PLAIN_DY, jitter: true, key: current });
     };
     for (const segment of segments) {
-        // colorHost: colors never become gate segments — they ride the
-        // goal's own host platform (the colored pickup/top-exit below).
+        // colorHost: brown never becomes a gate segment — it rides the
+        // goal's own host platform (the brown pickup/top-exit below).
+        // Blue remains a stepping-stone gate segment in both profiles.
         const newGates = rng.shuffle(segment.filter((a) => !current.includes(a)
-            && !(colorHost && COLOR_ABILITIES.includes(a))));
+            && !(colorHost && a === 'brown')));
         for (const ability of newGates) {
             plains();
             const parts = gateSteps(ability, rng, G);

@@ -48,8 +48,16 @@ export const ENTRANCE = 'entrance';
 //    the choosable phases alias to residues mod gcd(cycle, L) (L = lcm
 //    of the blues' periods). The arrival residue is route-dependent,
 //    so the edge needs a witness in EVERY residue class.
-//  - From a MOVING blue the arrival phase is not choosable at all:
-//    witnesses must cover EVERY phase in [0, L).
+//  - Edge runs pass THROUGH moving blues: landing on one keeps the
+//    player's x (no snap, no velocity inheritance — measured) and the
+//    next-tick bounce relaunches from that same x, so "wait on the
+//    static rung for the right phase, land on the mover, bounce
+//    straight off" is one composite maneuver controlled entirely by
+//    the launch phase. The edge green→C is witnessed by the real
+//    chained trajectory; the blue is an implementation detail of the
+//    jump. (Direct from-a-moving-blue edges still exist for
+//    completeness and quantify ∀ phases — without a known
+//    predecessor the arrival state is route-dependent.)
 //  - From a breaking BROWN there are no edges: the measured weak
 //    bounce (impact vy - 32.3 + 4, ≈ -6 at terminal) depends on the
 //    route's arrival speed, so browns are goal hosts / one-landing
@@ -66,6 +74,13 @@ function movingBlues(level, abilities, C) {
     if (C.PLATFORM_BEHAVIORS?.blue !== 'moving') return [];
     return activePlatforms(level, abilities)
         .filter((p) => p.type === 'blue' && p.sweep);
+}
+
+/** Ids of platforms an edge run may bounce THROUGH without ending the
+ *  leg (moving blues — see the pass-through note in the header). */
+function passThroughIds(level, abilities, C) {
+    const blues = movingBlues(level, abilities, C);
+    return blues.length > 0 ? new Set(blues.map((p) => p.id)) : null;
 }
 
 /** lcm of the active moving blues' sweep periods (1 = no motion). */
@@ -198,13 +213,15 @@ export function jumpQuery(level, fromId, abilities, opts = {}) {
                 // anything else means x0 wasn't really a spot on it
                 if (state.landedOn !== fromId) return done({});
                 launched = true;
-            } else if (state.landedOn !== fromId) {
+            } else if (state.landedOn !== fromId
+                    && !opts.through?.has(state.landedOn)) {
                 return done({
                     landedOn: state.landedOn,
                     landing: { x: state.x, y: state.y },
                 });
             }
-            // re-landing on the launch platform just re-launches — keep going
+            // re-landing on the launch platform (or bouncing through a
+            // pass-through mover) just re-launches — keep going
         }
     }
     return done({ timedOut: true });
@@ -266,15 +283,19 @@ function launchXs(level, fromId, abilities, C, opts) {
 }
 
 /** Run one latched-mode launch from a synthesized just-landed state
- *  until the player lands elsewhere, falls, or times out. */
-function latchedJumpRun(level, from, abilities, C, startSpec, policy, maxFrames) {
+ *  until the player lands elsewhere (pass-through movers excepted),
+ *  falls, or times out. */
+function latchedJumpRun(level, from, abilities, C, startSpec, policy, maxFrames, through) {
     let state = launchedState(level, from, abilities, C, startSpec);
     let policyFrame = 0;
     for (let i = 1; i <= maxFrames; i++) {
         state = physicsStep(state, policy(state, ++policyFrame), level, abilities, C);
         if (state.fallen) return null;
-        if (state.landedOn && state.landedOn !== from.id) return state.landedOn;
-        // re-landing on `from` re-launches (waiting / drift correction)
+        if (state.landedOn && state.landedOn !== from.id
+                && !through?.has(state.landedOn)) {
+            return state.landedOn;
+        }
+        // re-landing on `from` (or bouncing through a mover) re-launches
     }
     return null;
 }
@@ -306,19 +327,31 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
 
     // Cheap pre-filter: a launch can never gain more height than its
     // measured discrete rise (plus the latched-mode hover allowance —
-    // the launch point can rest up to ~MAX_FALL above the line); skip
-    // the simulation when `to` is above that. The entrance has no
-    // launch: its only gain is the spawn drop itself (none).
+    // the launch point can rest up to ~MAX_FALL above the line), and a
+    // run that bounces THROUGH pass-through movers gains one more
+    // plain rise per mover; skip the simulation when `to` is above
+    // that. The entrance has no launch: its only gain is the spawn
+    // drop itself (none) plus any pass-through bounces.
+    const hover = C.LANDING === 'latched' ? C.MAX_FALL : 0;
+    const throughGain = (passThroughIds(level, abilities, C)?.size ?? 0)
+        * (launchRise('bounce', C) + hover);
     if (fromId !== ENTRANCE) {
         const rise = launchRise(launchTypeFor(level, fromId, abilities), C);
-        const hover = C.LANDING === 'latched' ? C.MAX_FALL : 0;
-        if (fromY - to.y > rise + hover) return fail;
-    } else if (fromY - to.y > 0) {
+        if (fromY - to.y > rise + hover + throughGain) return fail;
+    } else if (fromY - to.y > throughGain) {
         return fail;
     }
 
     if (C.LANDING === 'latched' && fromId !== ENTRANCE) {
         return latchedCanJump(level, fromId, to, abilities, C, opts);
+    }
+
+    // Pass-through movers (minus the target itself — an edge INTO a
+    // blue must still end there). Empty/null under classic behaviors.
+    let through = passThroughIds(level, abilities, C);
+    if (through?.has(toId)) {
+        through = new Set(through);
+        through.delete(toId);
     }
 
     // Classic path (and latched ENTRANCE queries — the spawn drop at
@@ -327,7 +360,9 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
     for (const x0 of launchXs(level, fromId, abilities, C, opts)) {
         let witness = null;
         for (const policy of policiesFor(to.x, abilities, C)) {
-            const r = jumpQuery(level, fromId, abilities, { ...opts, x0, policy: policy.fn });
+            const r = jumpQuery(level, fromId, abilities, {
+                ...opts, x0, policy: policy.fn, through,
+            });
             if (r.landedOn === toId) {
                 witness = { x0, policy: policy.name };
                 break;
@@ -352,6 +387,11 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
     const maxFrames = opts.maxFrames ?? 600;
     const targetX = to.sweep ? (to.sweep.min + to.sweep.max) / 2 : to.x;
     const policies = policiesFor(targetX, abilities, C);
+    let through = passThroughIds(level, abilities, C);
+    if (through?.has(to.id)) {
+        through = new Set(through);
+        through.delete(to.id);
+    }
 
     const halfSpan = C.PLATFORM_WIDTH / 2 + C.PLAYER_HALF_WIDTH;
     const x0Step = opts.x0Step ?? halfSpan / 2;
@@ -393,7 +433,7 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
                     for (const policy of policies) {
                         const landed = latchedJumpRun(
                             level, from, abilities, C,
-                            { rel, hover, t0 }, policy.fn, maxFrames,
+                            { rel, hover, t0 }, policy.fn, maxFrames, through,
                         );
                         if (landed === to.id) {
                             witness = { x0: rel, hover, t0, policy: policy.name };
