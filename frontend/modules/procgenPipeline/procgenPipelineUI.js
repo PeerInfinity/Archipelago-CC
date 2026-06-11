@@ -19,6 +19,7 @@ import {
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
 } from './spherePlanner.js';
+import { createRng } from '../shared/rng.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
@@ -1881,19 +1882,57 @@ export class ProcgenPipelineUI {
         const itemLib = this._mergedItemLib();
         const itemPool = { ...this.scenario.items };
         const victoryItemId = this._resolveVictoryItemId();
+        const quotas = this._effectiveSubstrateQuotas();
+
+        // Bounce arrow entry (user design 2026-06-10). A bounce region
+        // is only traversable beyond its forced column with an arrow,
+        // so when bounce is in the world one arrow (randomized) is
+        // made available up front:
+        // - bounce START: the classic intro — sphere 1 is EXACTLY that
+        //   arrow, collected in the start stack.
+        // - any other start: the arrow becomes a STARTING ITEM
+        //   (removed from the pool), so bounce regions are fully
+        //   traversable on first encounter.
+        // NOTE (verify-sphere-growth-ui.mjs mirrors this block):
+        const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
+        const quotaIds = Object.keys(quotas ?? {});
+        const bounceSelected = (quotas?.bounce ?? 0) > 0 || startSub === 'bounce';
+        const bounceStarts = startSub === 'bounce'
+            || (startSub == null && bounceSelected
+                && quotaIds.length > 0 && quotaIds.every((id) => id === 'bounce'));
+        const exclusiveSpheres = {};
+        const startingItems = [];
+        let arrowNote = '';
+        if (bounceSelected) {
+            const arrows = ['Left arrow', 'Right arrow']
+                .filter((a) => (itemPool[a] ?? 0) > 0);
+            if (arrows.length > 0) {
+                const pick = arrows[Math.floor(
+                    createRng((seed * 31 + 17) | 0).next() * arrows.length)];
+                if (bounceStarts) {
+                    exclusiveSpheres[1] = [pick];
+                    arrowNote = `${pick} = sphere 1 (the start stack)`;
+                } else {
+                    startingItems.push(pick);
+                    itemPool[pick] -= 1;
+                    if (itemPool[pick] <= 0) delete itemPool[pick];
+                    arrowNote = `${pick} granted as a starting item`;
+                }
+            }
+        }
 
         // Phase 1: the sphere plan — item→sphere assignment, Victory
         // pinned to the final sphere when the pool carries it.
         const plan = planSpheres({
             itemPool,
             sphereCount: sphereCount ?? 3,
+            exclusiveSpheres,
             ...(victoryItemId && (itemPool[victoryItemId] ?? 0) > 0
                 ? { victoryItem: victoryItemId } : {}),
             seed,
         });
 
         // Phase 2: wave growth.
-        const quotas = this._effectiveSubstrateQuotas();
         const { grid, stats, startCell } = growSpheres({
             regionSize: { width: regionWidth, height: regionHeight },
             itemLib,
@@ -1916,6 +1955,19 @@ export class ProcgenPipelineUI {
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             itemLib,
+            startingItems,
+            // A starting arrow is placed at no location, so the
+            // compiled items pool doesn't carry it — backfill its
+            // definition (ids 999↓ stay clear of the compiled pool's
+            // ITEM_ID_BASE upward numbering).
+            ...(startingItems.length > 0 ? {
+                sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
+                    name,
+                    id: 999 - i,
+                    classification: 'progression',
+                    groups: ['Everything'],
+                }])),
+            } : {}),
             enableLoopMode: !!this.params.enableLoopMode,
             regionXpEffect: this.params.regionXpEffect ?? 'cost',
             completionConditionItem: victoryItemId,
@@ -1933,7 +1985,8 @@ export class ProcgenPipelineUI {
         this.message = oracleErrors.length > 0
             ? `SPHERE ORACLE MISMATCH: ${oracleErrors[0]}`
             : `Sphere plan realised: ${plan.spheres
-                .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`;
+                .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`
+                + (arrowNote ? ` — ${arrowNote}` : '');
 
         // The plan needed more regions than the quotas allow — the
         // extras silently became maze regions, which reads as a bug in

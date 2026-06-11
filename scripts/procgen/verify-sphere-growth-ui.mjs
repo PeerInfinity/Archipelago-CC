@@ -41,11 +41,18 @@ const PANEL_PARAMS = {
     sphereCount: 3, fillerCount: 0, revisitPercent: 25,
 };
 
-// Mirror the panel's _runSphereGrowth exactly (no pins, victory from
-// the merged lib's is_victory entry).
+// Mirror the panel's _runSphereGrowth exactly (victory from the merged
+// lib's is_victory entry; bounce-only quotas → bounce START → sphere 1
+// is exactly one seeded-random arrow, the start-stack intro).
+import { createRng } from '../../frontend/modules/shared/rng.js';
+const arrows = ['Left arrow', 'Right arrow'].filter((a) => (ITEM_POOL[a] ?? 0) > 0);
+const startArrow = arrows[Math.floor(createRng((SEED * 31 + 17) | 0).next() * arrows.length)];
 const plan = planSpheres({
-    itemPool: ITEM_POOL, sphereCount: 3, victoryItem: 'Victory', seed: SEED,
+    itemPool: ITEM_POOL, sphereCount: 3,
+    exclusiveSpheres: { 1: [startArrow] },
+    victoryItem: 'Victory', seed: SEED,
 });
+console.log('START ARROW (seeded):', startArrow);
 const { tree } = growSpheres({
     regionSize: { width: 8, height: 6 },
     itemLib: { ...DEFAULT_ITEMS, ...BOUNCE_LIBRARY_ITEMS },
@@ -184,20 +191,23 @@ await waitFor(`sphere-1 items in inventory [${sphere1.join(', ')}]`, async () =>
 const s1 = await snapshot();
 console.log('SPHERE-1 COLLECTED:', JSON.stringify(s1.inventory));
 
-// 2. Let the auto-play roam a little more. With guaranteed back
-//    portals an idle player can ping-pong between arrowless-linked
-//    regions forever (on-column back portal ↔ forward portal), so we
-//    don't wait for it to settle — we just need to catch it in some
-//    NON-START region to exercise the back portal.
-let observed = null;
-await waitFor('auto-play observed in a non-start region', async () => {
+// 2. Wave-1 exits off the start are arrow-gated BRANCH TIPS — an
+//    idle player can't take them (the intro works: you must steer).
+//    Drive the first hop via the bridge contract (the same call a
+//    portal landing makes), gate now satisfied by the collected arrow.
+const firstChild = tree.nodes.find((n) => n.parent === startNode.index);
+if (!firstChild) throw new Error('start region has no children');
+await bounceFrame().evaluate(
+    (side) => window.__swfBridge.sendExit('verify_forward', side), firstChild.side);
+await waitFor(`driven move to ${firstChild.region_id}`, async () => {
     const st = await status();
     const region = st.match(/region: (\S+)/)?.[1];
     const node = tree.nodes.find((n) => n.region_id === region);
-    if (node && node.parent != null) { observed = node; return true; }
-    return null;
-}, 60000);
-console.log('AUTO-PLAY OBSERVED IN:', observed.region_id, `(wave ${observed.wave})`);
+    // auto-play may immediately wander onward through arrowless
+    // gates — any non-start region proves the move chain works
+    return node && node.parent != null ? node : null;
+});
+console.log('DRIVEN MOVE OK: left the start region');
 
 // 3. The guaranteed back portal: every non-start region's level
 //    carries a return portal whose side resolves to the driver's

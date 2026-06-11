@@ -150,6 +150,62 @@ describe('planSpheres — pins and victory', () => {
     });
 });
 
+describe('planSpheres — exclusive spheres', () => {
+    it('an exclusive sphere contains exactly its items and is closed', () => {
+        const plan = planSpheres({
+            itemPool: BOUNCE_POOL,
+            sphereCount: 4,
+            exclusiveSpheres: { 1: ['Right arrow'] },
+            victoryItem: 'Victory',
+            seed: 3,
+        });
+        expect(plan.spheres[0].items).toEqual(['Right arrow']);
+        expect(validateSpherePlan(plan, { itemPool: BOUNCE_POOL })).toEqual([]);
+        // remaining items balance across the OPEN spheres only
+        const sizes = plan.spheres.slice(1).map((s) => s.items.length);
+        expect(Math.max(...sizes) - Math.min(...sizes)).toBeLessThanOrEqual(1);
+    });
+
+    it('rejects conflicts: foreign pin into an exclusive sphere, victory excluded', () => {
+        expect(() => planSpheres({
+            itemPool: BOUNCE_POOL,
+            sphereCount: 3,
+            exclusiveSpheres: { 1: ['Right arrow'] },
+            pins: { Springs: 1 },
+        })).toThrow(/targets exclusive sphere 1/);
+        expect(() => planSpheres({
+            itemPool: BOUNCE_POOL,
+            sphereCount: 3,
+            exclusiveSpheres: { 3: ['Springs'] },
+            victoryItem: 'Victory',
+        })).toThrow(/final sphere is exclusive/);
+        expect(() => planSpheres({
+            itemPool: BOUNCE_POOL,
+            sphereCount: 3,
+            exclusiveSpheres: { 5: ['Springs'] },
+        })).toThrow(/out of range/);
+    });
+
+    it('gateability accepts a gateable exclusive sphere and rejects a bare one', () => {
+        const pool = { ability_a: 1, junk: 3, oddity: 1 };
+        const plan = planSpheres({
+            itemPool: pool,
+            sphereCount: 2,
+            exclusiveSpheres: { 1: ['ability_a'] },
+            gateableItems: ['ability_a'],
+            seed: 1,
+        });
+        expect(plan.spheres[0].items).toEqual(['ability_a']);
+        expect(() => planSpheres({
+            itemPool: pool,
+            sphereCount: 3,
+            exclusiveSpheres: { 1: ['junk'] },
+            gateableItems: ['ability_a'],
+            seed: 1,
+        })).toThrow(/exclusive sphere 1 has no gateable item/);
+    });
+});
+
 describe('planSpheres — gateability', () => {
     it('guarantees a gateable item in every sphere but the last', () => {
         // 2 gateables among 8 items, 3 spheres → spheres 1 and 2 must

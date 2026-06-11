@@ -192,10 +192,13 @@ const BOUNCE_POOL = {
     'Blue platforms': 1, 'Brown platforms': 1, Victory: 1,
 };
 
+// Mirrors the panel's bounce-start orchestration: sphere 1 is EXACTLY
+// one arrow (the start-stack intro); the other arrow is an ordinary
+// pool item.
 const makeBouncePlan = (seed, sphereCount) => planSpheres({
     itemPool: BOUNCE_POOL,
     sphereCount,
-    pins: { 'Right arrow': 1, 'Left arrow': 1 },
+    exclusiveSpheres: { 1: ['Right arrow'] },
     victoryItem: 'Victory',
     gateableItems: GATEABLE_ITEMS,
     seed,
@@ -236,6 +239,12 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
                 }
             }
 
+            // the start stack hosts exactly the sphere-1 arrow
+            const startRegion = grid.getRegion(startCell);
+            const startLocs = startRegion.extracted_rules.locations;
+            expect(startLocs).toHaveLength(1);
+            expect(startLocs[0].item).toBe('Right arrow');
+
             const rulesJson = buildRulesJson(grid, {
                 startCell, seed, embedSphereLog: false,
                 completionConditionItem: 'Victory',
@@ -243,6 +252,46 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             const computed = computeItemSpheres(rulesJson);
             expect(compareSpheresToPlan(computed, plan)).toEqual([]);
         }, 120000);
+
+    it('a starting-item arrow rides rules.json and the oracle still holds (mixed start)', () => {
+        // The panel's non-bounce-start path: the arrow leaves the pool
+        // and becomes a starting item; bounce regions are traversable
+        // on first encounter.
+        const pool = {
+            'Left arrow': 1, Springs: 1, 'Blue platforms': 1,
+            key_red: 1, victory: 1,
+        };
+        const plan = planSpheres({
+            itemPool: pool,
+            sphereCount: 3,
+            victoryItem: 'victory',
+            gateableItems: GATEABLE_ITEMS,
+            seed: 6,
+        });
+        const { grid, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 6,
+            growthParams: {
+                spherePlan: plan,
+                substrateQuotas: { maze: 1, bounce: 99 },
+                startSubstrate: 'maze',
+            },
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 6, embedSphereLog: false,
+            startingItems: ['Right arrow'],
+            sourceItems: {
+                'Right arrow': {
+                    name: 'Right arrow', id: 999,
+                    classification: 'progression', groups: ['Everything'],
+                },
+            },
+        });
+        expect(rulesJson.starting_items['1']).toEqual(['Right arrow']);
+        expect(rulesJson.items['1']['Right arrow']).toBeTruthy();
+        const computed = computeItemSpheres(rulesJson);
+        expect(compareSpheresToPlan(computed, plan)).toEqual([]);
+    }, 120000);
 
     it('mixed maze+bounce world realises the plan exactly', () => {
         const pool = {
