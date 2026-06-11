@@ -22,9 +22,10 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { physicsStampFor } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
-import { generateLevelFromSpecs } from './generator.js';
+import { generateLevelFromSpecs, resolveGenPhysics } from './generator.js';
 import {
     ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
     authoredTermsToRule, VICTORY_ITEM_NAME,
@@ -56,12 +57,19 @@ export const ZONES = Object.freeze([
  * arbitrary payload fields). ap_locations maps the game's pickup ids to
  * AP location names (compileRegionGraph's `<region>__<id>` convention).
  */
-function buildZonePayload(region_id, level, sidePortals) {
+function buildZonePayload(region_id, level, sidePortals, physicsProfile = 'classic') {
+    // Physics profile stamp: { profile, constants } for non-classic
+    // profiles, OMITTED for classic (physicsStampFor returns null) so
+    // existing payloads stay byte-identical. Constants are embedded
+    // because they're logic-affecting: the world must replay under the
+    // C its rules were derived with, even if the profile is retuned.
+    const physics = physicsStampFor(physicsProfile);
     return {
         gameId: 'bounceDemo',
         params: {
             bounceLevel: level, // transformed geometry the renderer draws
             sidePortals,        // side -> portal id (exit arrows)
+            ...(physics ? { physics } : {}),
         },
         ap_locations: Object.fromEntries(
             (level.pickups ?? []).map((pk) => [pk.id, `${region_id}__${pk.id}`])),
@@ -275,6 +283,9 @@ export function canHostExitGates(existingGates, newGate) {
  * @param {number} [specs.seed]
  * @param {number} [specs.stepsBetween]
  * @param {number} [specs.jitter]
+ * @param {string} [specs.physicsProfile] — physics.js PROFILES id
+ *   (default 'classic'); generation, verification and the emitted
+ *   payload stamp all ride the same profile.
  * @returns {{locations: Array, exitRules: Object, payload: Object}}
  */
 export function generateZoneForSpecs({
@@ -284,7 +295,9 @@ export function generateZoneForSpecs({
     seed = 1,
     stepsBetween = 2,
     jitter = 0,
+    physicsProfile = 'classic',
 } = {}) {
+    const { C } = resolveGenPhysics(physicsProfile);
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
             throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
@@ -310,9 +323,10 @@ export function generateZoneForSpecs({
         seed,
         stepsBetween,
         jitter,
+        physics: physicsProfile,
     });
 
-    const derived = deriveAccessRules(level);
+    const derived = deriveAccessRules(level, { constants: C });
     if (derived.defects.length > 0) {
         throw new Error(`bounce zone '${region_id}' has rule defects: `
             + derived.defects.join('; '));
@@ -346,7 +360,7 @@ export function generateZoneForSpecs({
             position: null, // level-local px would be misread as tile coords
         };
     });
-    const payload = buildZonePayload(region_id, level, sidePortals);
+    const payload = buildZonePayload(region_id, level, sidePortals, physicsProfile);
     if (Object.keys(gateRules.portals).length > 0
             || Object.keys(gateRules.pickups).length > 0) {
         payload.gate_rules = gateRules;

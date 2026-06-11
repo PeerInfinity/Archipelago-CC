@@ -416,3 +416,34 @@ describe('generateZoneForSpecs — authored gate terms (rule-gated portals/picku
         expect(canHostExitGates([], ['key_red'])).toBe(true);
     });
 });
+
+describe('generateZoneForSpecs — physics profile stamp', () => {
+    const SPECS = {
+        region_id: 'region_p',
+        exitSpecs: [{ side: 'N', requirement: [] }],
+        locationSpecs: [{ id: 'loc_p', item: 'Springs', requirement: [] }],
+        seed: 3,
+    };
+
+    it('classic stamps NOTHING — params.physics absent, explicit === default', () => {
+        const zone = generateZoneForSpecs(SPECS);
+        expect('physics' in zone.payload.params).toBe(false);
+        expect(generateZoneForSpecs({ ...SPECS, physicsProfile: 'classic' }))
+            .toEqual(zone);
+    });
+
+    it('dj stamps { profile, constants } and still derives verified rules', () => {
+        const zone = generateZoneForSpecs({ ...SPECS, physicsProfile: 'dj' });
+        const stamp = zone.payload.params.physics;
+        expect(stamp.profile).toBe('dj');
+        expect(stamp.constants.AIR_CONTROL).toBe('flat');
+        expect(stamp.constants.GRAVITY).toBeDefined();
+        expect(zone.exitRules.N).toEqual({ rule: 'True_' });
+        expect(validateLevel(zone.payload.params.bounceLevel)).toEqual([]);
+    });
+
+    it('unknown profile fails loudly', () => {
+        expect(() => generateZoneForSpecs({ ...SPECS, physicsProfile: 'moon' }))
+            .toThrow(/moon/);
+    });
+});

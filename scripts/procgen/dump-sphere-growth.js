@@ -36,6 +36,8 @@
  *                            orchestration (exclusive sphere 1 /
  *                            starting item)
  *   --fall-behavior MODE     bounce fallBehavior regionParam (default 'current')
+ *   --physics-profile ID     bounce physics profile (default 'classic';
+ *                            non-classic stamps params.physics into payloads)
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
  *
@@ -88,6 +90,7 @@ function parseArgs(argv) {
         bidirectional: true,
         arrowEntry: true,
         fallBehavior: 'current',
+        physicsProfile: 'classic',
         rulesOut: null,
         out: './sphere-growth-dump.json',
     };
@@ -140,6 +143,7 @@ function parseArgs(argv) {
             case '--no-bidirectional': out.bidirectional = false; break;
             case '--no-arrow-entry': out.arrowEntry = false; break;
             case '--fall-behavior': out.fallBehavior = next(); break;
+            case '--physics-profile': out.physicsProfile = next(); break;
             case '--rules-out': out.rulesOut = next(); break;
             case '-o':
             case '--out': out.out = next(); break;
@@ -267,7 +271,10 @@ async function main() {
         regionSize: config.region,
         itemLib,
         seed: config.seed,
-        regionParams: { fallBehavior: config.fallBehavior },
+        regionParams: {
+            fallBehavior: config.fallBehavior,
+            physicsProfile: config.physicsProfile,
+        },
         growthParams: {
             spherePlan: plan,
             maxItemsPerRegion: config.maxItemsPerRegion,

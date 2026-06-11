@@ -2602,6 +2602,11 @@ function buildSphereZoneRegion({
         exitSpecs,
         locationSpecs: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
         seed,
+        // Physics profile (bounce): generation + the payload stamp ride
+        // it. Omitted for classic so existing payloads stay
+        // byte-identical and other zone adapters see unchanged args.
+        ...(regionParams.physicsProfile && regionParams.physicsProfile !== 'classic'
+            ? { physicsProfile: regionParams.physicsProfile } : {}),
     });
     // Scaffold only the CHILD sides — the entrance side's rules.json
     // exit is the driver's back-exit, not a forward exit.

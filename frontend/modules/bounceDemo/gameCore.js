@@ -67,6 +67,7 @@ export function createGameSession(level, opts = {}) {
         get abilities() { return abilities; },
         get collected() { return collected; },
         get gateStates() { return gateStates; },
+        get constants() { return C; },
 
         setItems(itemNames) {
             abilities = itemsToAbilities(itemNames);

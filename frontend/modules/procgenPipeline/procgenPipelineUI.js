@@ -184,12 +184,26 @@ const DEFAULT_PARAMS = {
     // previous region; 'start' is reserved. Routing never depends on
     // it — every non-start region carries a real back portal.
     bounceFallBehavior: 'current',
+    // Bounce-specific physics profile (bounceDemo/physics.js
+    // PROFILES). LOGIC-AFFECTING: access rules derive from the
+    // profile's step constants, so the profile is stamped into every
+    // bounce payload and the world plays under the constants it was
+    // generated with. 'classic' stamps nothing (frozen default).
+    bouncePhysicsProfile: 'classic',
 };
 
 const BOUNCE_FALL_OPTIONS = [
     { value: 'current', label: 'Restart current region', disabled: false },
     { value: 'previous', label: 'Return to previous region', disabled: false },
     { value: 'start', label: 'Return to starting region (v2)', disabled: true },
+];
+
+// Mirrors bounceDemo/physics.js PROFILES (the per-substrate parameter
+// subsections are a hardcoded v1, like the renderers map — a
+// registry-declared param schema is the eventual generic mechanism).
+const BOUNCE_PHYSICS_PROFILE_OPTIONS = [
+    { value: 'classic', label: 'Classic', disabled: false },
+    { value: 'dj', label: 'Doodle Jump (provisional — awaiting probe calibration)', disabled: false },
 ];
 
 const REGION_XP_EFFECT_OPTIONS = [
@@ -1953,6 +1967,7 @@ export class ProcgenPipelineUI {
             // unknown keys; bounce stamps fallBehavior into payloads).
             regionParams: {
                 fallBehavior: this.params.bounceFallBehavior ?? 'current',
+                physicsProfile: this.params.bouncePhysicsProfile ?? 'classic',
             },
             growthParams: {
                 spherePlan: plan,
@@ -2275,6 +2290,30 @@ export class ProcgenPipelineUI {
         row.appendChild(label);
         row.appendChild(select);
         wrap.appendChild(row);
+
+        const physRow = document.createElement('div');
+        physRow.className = 'procgen-pipeline-field';
+        const physLabel = document.createElement('label');
+        physLabel.textContent = 'Physics profile';
+        physLabel.title = 'Logic-affecting: access rules derive from the profile\'s physics, '
+            + 'and the profile is stamped into every bounce payload so the world plays under '
+            + 'the constants it was generated with. dj is provisional until probe calibration.';
+        const physSelect = document.createElement('select');
+        for (const opt of BOUNCE_PHYSICS_PROFILE_OPTIONS) {
+            const o = document.createElement('option');
+            o.value = opt.value;
+            o.textContent = opt.label;
+            if (opt.disabled) o.disabled = true;
+            physSelect.appendChild(o);
+        }
+        physSelect.value = this.params.bouncePhysicsProfile ?? 'classic';
+        physSelect.addEventListener('change', () => {
+            this.params.bouncePhysicsProfile = physSelect.value;
+            this._saveToLocalStorage();
+        });
+        physRow.appendChild(physLabel);
+        physRow.appendChild(physSelect);
+        wrap.appendChild(physRow);
         return wrap;
     }
 

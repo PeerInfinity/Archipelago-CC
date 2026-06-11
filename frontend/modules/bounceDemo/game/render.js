@@ -6,7 +6,6 @@
  * translucent ghost, exactly the set the physics ignores.
  */
 
-import { DEFAULTS } from '../physics.js';
 import {
     isPlatformActive,
     activeSprings,
@@ -36,8 +35,9 @@ export function renderFrame(ctx, session, ui = {}) {
     ctx.fillStyle = '#101418';
     ctx.fillRect(0, 0, W, H);
 
-    // platforms (ghosted when suppressed)
-    const pw = DEFAULTS.PLATFORM_WIDTH * scale;
+    // platforms (ghosted when suppressed) — width from the session's
+    // resolved physics constants (profile-stamped worlds may differ)
+    const pw = session.constants.PLATFORM_WIDTH * scale;
     for (const p of level.platforms) {
         ctx.globalAlpha = isPlatformActive(p, abilities) ? 1 : 0.22;
         ctx.fillStyle = PLATFORM_COLORS[p.type] ?? '#888';

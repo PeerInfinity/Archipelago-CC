@@ -19,6 +19,7 @@
  * Auto-start: the loop runs from page load (capability start:'auto').
  */
 
+import { resolvePhysicsStamp } from '../physics.js';
 import { createGameSession } from '../gameCore.js';
 import { createBotDriver } from '../botDriver.js';
 import { renderFrame } from './render.js';
@@ -38,6 +39,7 @@ let backExitSide = null; // the entrance side (the region's back exit)
 // Routing never depends on this: every non-start region carries a
 // real back portal in its geometry.
 let fallBehavior = 'current';
+let physicsProfileId = 'classic'; // from params.physics?.profile (debug surface)
 let fellExitSent = false; // one fall exit per configure (no double moves)
 let lastItems = [];
 let message = '';
@@ -47,8 +49,9 @@ let messageTimer = 0;
 // __swfBridge.botWalkTo / botStop contract methods — the host bridge
 // translates AP location/exit names to game-local goal ids before
 // calling in. The driver synthesizes per-frame inputs that merge with
-// (and never block) real keyboard input.
-const botDriver = createBotDriver();
+// (and never block) real keyboard input. Rebuilt per configure so its
+// solver graph uses the region's resolved physics constants.
+let botDriver = createBotDriver();
 
 // gateStates getter for the driver's route planning: an OPEN
 // non-target portal en route would exit the region mid-leg, so the
@@ -90,12 +93,19 @@ const gameSide = {
         backExitSide = params.backExitSide ?? null;
         fallBehavior = params.fallBehavior ?? 'current';
         fellExitSent = false;
+        // Physics profile stamp ({ profile, constants } on params;
+        // absent = classic). The session, the bot driver's solver
+        // graph, and the renderer all read the SAME resolved C — a
+        // world plays under the constants its rules were derived with.
+        const constants = resolvePhysicsStamp(params.physics);
+        physicsProfileId = params.physics?.profile ?? 'classic';
         // Goal ids are region-local: a target from the previous region
         // is meaningless here. The host bridge re-sends botWalkTo for
         // this region (it holds the pending AP-name target) right
-        // after configure.
-        botDriver.clearTarget();
-        session = createGameSession(params.bounceLevel);
+        // after configure. Rebuilding the driver also drops the old
+        // region's cached graph.
+        botDriver = createBotDriver({ constants });
+        session = createGameSession(params.bounceLevel, { constants });
         // Pickups the host already has checked (region revisits) — by
         // their in-game ids; the bridge inverts ap_locations for us.
         session.seedCollected(config?.checkedLocations);
@@ -154,6 +164,7 @@ window.__bounceDebug = () => ({
     levelId: session?.level?.id ?? null,
     backExitSide,
     fallBehavior,
+    physicsProfile: physicsProfileId,
     botStatus: botDriver.getStatus(),
 });
 
