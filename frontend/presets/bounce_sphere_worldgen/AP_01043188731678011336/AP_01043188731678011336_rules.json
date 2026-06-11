@@ -1,0 +1,1211 @@
+{
+  "schema_version": 3,
+  "game_name": "Bounce Sphere WorldGen",
+  "game_directory": "bounce_sphere_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 2,
+  "seed_name": "01043188731678011336",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_3_2": {
+        "name": "region_3_2",
+        "exits": [
+          {
+            "name": "region_3_2__exit_E",
+            "connected_region": "region_4_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Left arrow"
+              }
+            }
+          },
+          {
+            "name": "region_3_2__region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Right arrow"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_2__loc_0",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Brown platforms",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_4_2": {
+        "name": "region_4_2",
+        "exits": [
+          {
+            "name": "region_3_2",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Left arrow"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_4_2__loc_0",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Springs",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "region_4_2__loc_1",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blue platforms",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_3_3": {
+        "name": "region_3_3",
+        "exits": [
+          {
+            "name": "region_3_3__exit_E",
+            "connected_region": "region_4_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Right arrow"
+              }
+            }
+          },
+          {
+            "name": "exit_N",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Right arrow"
+              }
+            }
+          },
+          {
+            "name": "exit_S",
+            "connected_region": "region_3_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Springs"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_3__loc_0",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Right arrow",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_4_3": {
+        "name": "region_4_3",
+        "exits": [
+          {
+            "name": "region_4_3__region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Right arrow"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_4_3__loc_0",
+            "id": 1004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Left arrow",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "region_4_3__loc_1",
+            "id": 1005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Jetpacks",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_3_4": {
+        "name": "region_3_4",
+        "exits": [
+          {
+            "name": "region_3_4__region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Springs"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_4__loc_0",
+            "id": 1006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Left arrow": {
+        "name": "Left arrow",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Brown platforms": {
+        "name": "Brown platforms",
+        "id": 3,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Right arrow": {
+        "name": "Right arrow",
+        "id": 4,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Blue platforms": {
+        "name": "Blue platforms",
+        "id": 5,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Springs": {
+        "name": "Springs",
+        "id": 6,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Jetpacks": {
+        "name": "Jetpacks",
+        "id": 7,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Blue platforms": 1,
+      "Brown platforms": 1,
+      "Jetpacks": 1,
+      "Left arrow": 1,
+      "Right arrow": 1,
+      "Springs": 1,
+      "Victory": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "region_3_2__loc_0": "Left arrow",
+      "region_4_2__loc_0": "Victory",
+      "region_4_2__loc_1": "Brown platforms",
+      "region_3_3__loc_0": "Right arrow",
+      "region_4_3__loc_0": "Blue platforms",
+      "region_4_3__loc_1": "Springs",
+      "region_3_4__loc_0": "Jetpacks"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_3_3": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 3
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_3_3",
+              "size": {
+                "width": 600,
+                "height": 1794.3490631924942
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 300,
+                  "y": 1694.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 300,
+                  "y": 1574.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 300,
+                  "y": 1454.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 300,
+                  "y": 1334.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 300,
+                  "y": 1214.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 300,
+                  "y": 1094.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 300,
+                  "y": 974.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 300,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 300,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p9",
+                  "x": 300,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p10",
+                  "x": 300,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p11",
+                  "x": 300,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p12",
+                  "x": 440,
+                  "y": 1214.3490631924942,
+                  "type": "green"
+                },
+                {
+                  "id": "p13",
+                  "x": 440,
+                  "y": 1454.3490631924942,
+                  "type": "green"
+                }
+              ],
+              "springs": [
+                {
+                  "id": "s7",
+                  "x": 300,
+                  "y": 969.3490631924942,
+                  "on": "p6"
+                }
+              ],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 300,
+                  "y": 1194.3490631924942,
+                  "on": "p4"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_S",
+                  "x": 300,
+                  "y": 40,
+                  "on": "p11",
+                  "target_region": null,
+                  "direction": "down"
+                },
+                {
+                  "id": "side_exit_E",
+                  "x": 440,
+                  "y": 1194.3490631924942,
+                  "on": "p12",
+                  "target_region": null,
+                  "direction": "right"
+                },
+                {
+                  "id": "side_exit_N",
+                  "x": 440,
+                  "y": 1434.3490631924942,
+                  "on": "p13",
+                  "target_region": null,
+                  "direction": "up"
+                }
+              ]
+            },
+            "sidePortals": {
+              "E": "side_exit_E",
+              "N": "side_exit_N",
+              "S": "side_exit_S"
+            }
+          },
+          "ap_locations": {
+            "loc_0": "region_3_3__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_4_3",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_3_3"
+            },
+            {
+              "exit_id": "exit_N",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_3_2",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_3_3"
+            },
+            {
+              "exit_id": "exit_S",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_S",
+              "targetRegion": "region_3_4",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_3_3"
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_4_3": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 3
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_4_3",
+              "size": {
+                "width": 700,
+                "height": 1000
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 350,
+                  "y": 900,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 350,
+                  "y": 780,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 350,
+                  "y": 660,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 350,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 350,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 490,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 490,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 490,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 630,
+                  "y": 60,
+                  "type": "green"
+                }
+              ],
+              "springs": [],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 350,
+                  "y": 640,
+                  "on": "p2"
+                },
+                {
+                  "id": "loc_1",
+                  "x": 350,
+                  "y": 520,
+                  "on": "p3"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_W",
+                  "x": 630,
+                  "y": 40,
+                  "on": "p8",
+                  "target_region": null,
+                  "direction": "left"
+                }
+              ]
+            },
+            "sidePortals": {
+              "W": "side_exit_W"
+            },
+            "backExitSide": "W",
+            "fallBehavior": "current"
+          },
+          "ap_locations": {
+            "loc_0": "region_4_3__loc_0",
+            "loc_1": "region_4_3__loc_1"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_3",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit_E",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_3_2": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_3_2",
+              "size": {
+                "width": 700,
+                "height": 1360
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 350,
+                  "y": 1260,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 350,
+                  "y": 1140,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 350,
+                  "y": 1020,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 350,
+                  "y": 900,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 350,
+                  "y": 780,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 350,
+                  "y": 660,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 210,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 210,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 210,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p9",
+                  "x": 210,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p10",
+                  "x": 70,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p11",
+                  "x": 490,
+                  "y": 660,
+                  "type": "green"
+                }
+              ],
+              "springs": [],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 350,
+                  "y": 880,
+                  "on": "p3"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_E",
+                  "x": 70,
+                  "y": 40,
+                  "on": "p10",
+                  "target_region": null,
+                  "direction": "right"
+                },
+                {
+                  "id": "side_exit_S",
+                  "x": 490,
+                  "y": 640,
+                  "on": "p11",
+                  "target_region": null,
+                  "direction": "down"
+                }
+              ]
+            },
+            "sidePortals": {
+              "E": "side_exit_E",
+              "S": "side_exit_S"
+            },
+            "backExitSide": "S",
+            "fallBehavior": "current"
+          },
+          "ap_locations": {
+            "loc_0": "region_3_2__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_4_2",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_3_2"
+            },
+            {
+              "exit_id": "region_3_3",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit_N",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_4_2": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_4_2",
+              "size": {
+                "width": 700,
+                "height": 1360
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 350,
+                  "y": 1260,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 350,
+                  "y": 1140,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 350,
+                  "y": 1020,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 350,
+                  "y": 900,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 350,
+                  "y": 780,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 350,
+                  "y": 660,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 350,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 210,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 210,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p9",
+                  "x": 210,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p10",
+                  "x": 210,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p11",
+                  "x": 70,
+                  "y": 180,
+                  "type": "green"
+                }
+              ],
+              "springs": [],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 350,
+                  "y": 880,
+                  "on": "p3"
+                },
+                {
+                  "id": "loc_1",
+                  "x": 350,
+                  "y": 760,
+                  "on": "p4"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_W",
+                  "x": 70,
+                  "y": 160,
+                  "on": "p11",
+                  "target_region": null,
+                  "direction": "left"
+                }
+              ]
+            },
+            "sidePortals": {
+              "W": "side_exit_W"
+            },
+            "backExitSide": "W",
+            "fallBehavior": "current"
+          },
+          "ap_locations": {
+            "loc_0": "region_4_2__loc_0",
+            "loc_1": "region_4_2__loc_1"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_2",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "region_3_2",
+              "targetRegion": "region_3_2",
+              "targetExitId": "exit_E",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_3_4": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 4
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_3_4",
+              "size": {
+                "width": 140,
+                "height": 1521.9188039191067
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 70,
+                  "y": 1421.9188039191067,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 70,
+                  "y": 1301.9188039191067,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 70,
+                  "y": 1181.9188039191067,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 70,
+                  "y": 1061.9188039191067,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 70,
+                  "y": 941.9188039191067,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 70,
+                  "y": 821.9188039191067,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 70,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 70,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 70,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p9",
+                  "x": 70,
+                  "y": 60,
+                  "type": "green"
+                }
+              ],
+              "springs": [
+                {
+                  "id": "s6",
+                  "x": 70,
+                  "y": 816.9188039191067,
+                  "on": "p5"
+                }
+              ],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 70,
+                  "y": 1041.9188039191067,
+                  "on": "p3"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_N",
+                  "x": 70,
+                  "y": 40,
+                  "on": "p9",
+                  "target_region": null,
+                  "direction": "up"
+                }
+              ]
+            },
+            "sidePortals": {
+              "N": "side_exit_N"
+            },
+            "backExitSide": "N",
+            "fallBehavior": "current"
+          },
+          "ap_locations": {
+            "loc_0": "region_3_4__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_3",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit_S",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Bounce Sphere WorldGen",
+      "world_class_name": "ProcgenMazeWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": true,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "Bounce Sphere WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Bounce Sphere WorldGen world for Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Auto-generated"
+            ]
+          }
+        ]
+      },
+      "world_directory": "bounce_sphere_worldgen"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "is_canonical": true
+}
