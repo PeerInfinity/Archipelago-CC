@@ -1902,6 +1902,7 @@ export class ProcgenPipelineUI {
                 && quotaIds.length > 0 && quotaIds.every((id) => id === 'bounce'));
         const exclusiveSpheres = {};
         const startingItems = [];
+        const lockedCanonicalItems = [];
         let arrowNote = '';
         if (bounceSelected) {
             const arrows = ['Left arrow', 'Right arrow']
@@ -1911,6 +1912,10 @@ export class ProcgenPipelineUI {
                     createRng((seed * 31 + 17) | 0).next() * arrows.length)];
                 if (bounceStarts) {
                     exclusiveSpheres[1] = [pick];
+                    // Lock the canonical placement so even multiworld
+                    // fill keeps the start-stack pickup an arrow (solo
+                    // seeds are already logic-forced).
+                    lockedCanonicalItems.push(pick);
                     arrowNote = `${pick} = sphere 1 (the start stack)`;
                 } else {
                     startingItems.push(pick);
@@ -1956,6 +1961,7 @@ export class ProcgenPipelineUI {
             startCell, seed,
             itemLib,
             startingItems,
+            lockedCanonicalItems,
             // A starting arrow is placed at no location, so the
             // compiled items pool doesn't carry it — backfill its
             // definition (ids 999↓ stay clear of the compiled pool's

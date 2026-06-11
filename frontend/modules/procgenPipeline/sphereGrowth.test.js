@@ -248,9 +248,21 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             const rulesJson = buildRulesJson(grid, {
                 startCell, seed, embedSphereLog: false,
                 completionConditionItem: 'Victory',
+                // the panel locks the start-stack arrow's canonical
+                // placement (multiworld fill must keep it an arrow)
+                lockedCanonicalItems: ['Right arrow'],
             });
             const computed = computeItemSpheres(rulesJson);
             expect(compareSpheresToPlan(computed, plan)).toEqual([]);
+
+            // locked:true landed on exactly the start-stack arrow location
+            const lockedLocs = Object.values(rulesJson.regions['1'])
+                .flatMap((r) => r.locations.filter((l) => l.locked));
+            expect(lockedLocs).toHaveLength(1);
+            expect(lockedLocs[0].item.name).toBe('Right arrow');
+            const startRegionName = grid.getRegion(startCell).region_id;
+            expect(rulesJson.regions['1'][startRegionName].locations
+                .some((l) => l.locked)).toBe(true);
         }, 120000);
 
     it('a starting-item arrow rides rules.json and the oracle still holds (mixed start)', () => {

@@ -1649,7 +1649,13 @@ export function compileRegionGraph(grid, opts = {}) {
         itemLib = DEFAULT_ITEMS,
         startCell,
         playerId = 1,
+        // Item names whose canonical placement must ALWAYS hold — the
+        // compiled location gets `locked: true`, which world_generator
+        // turns into place_locked_item (so even multiworld fill keeps
+        // the item there). Used for the bounce start-stack arrow.
+        lockedItems = [],
     } = opts;
+    const lockedItemSet = new Set(lockedItems);
     const numericPlayerId = Number.isFinite(Number(playerId)) ? Number(playerId) : 1;
 
     if (!startCell) throw new Error('compileRegionGraph: startCell required');
@@ -1724,6 +1730,8 @@ export function compileRegionGraph(grid, opts = {}) {
                 id: numericId,
                 access_rule: loc.rule,
                 ...(itemPlacement ? { item: itemPlacement } : {}),
+                ...(itemPlacement && lockedItemSet.has(loc.item)
+                    ? { locked: true } : {}),
             };
         });
 
@@ -2920,6 +2928,12 @@ export function buildRulesJson(grid, opts = {}) {
         // any region — APCalc has these). Default empty.
         startingItems = [],
         sourceItems = null,
+        // Item names whose canonical placement is ALWAYS locked
+        // (compiled location gets locked:true → world_generator uses
+        // place_locked_item). The sphere-growth bounce start passes
+        // its start-stack arrow here so even multiworld fill keeps
+        // the intro pickup an arrow.
+        lockedCanonicalItems = [],
         // When set to an item name, overwrite the scaffold's default
         // constant-true completion_condition with an item_check on
         // this item (state.has(itemName) at runtime). Grid-growth
@@ -2931,7 +2945,10 @@ export function buildRulesJson(grid, opts = {}) {
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
 
-    const compiled = compileRegionGraph(grid, { startCell, itemLib, obstacleLib, playerId });
+    const compiled = compileRegionGraph(grid, {
+        startCell, itemLib, obstacleLib, playerId,
+        lockedItems: lockedCanonicalItems,
+    });
 
     const scaffold = makeRulesJsonScaffold({
         gameName,

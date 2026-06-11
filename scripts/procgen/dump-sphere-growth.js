@@ -230,6 +230,7 @@ async function main() {
             && quotaIds.length > 0 && quotaIds.every((id) => id === 'bounce'));
     const exclusiveSpheres = {};
     const startingItems = [];
+    const lockedCanonicalItems = [];
     let arrowNote = '';
     if (config.arrowEntry && bounceSelected) {
         const arrows = ['Left arrow', 'Right arrow']
@@ -239,6 +240,7 @@ async function main() {
                 createRng((config.seed * 31 + 17) | 0).next() * arrows.length)];
             if (bounceStarts) {
                 exclusiveSpheres[1] = [pick];
+                lockedCanonicalItems.push(pick);
                 arrowNote = `${pick} = sphere 1 (the start stack)`;
             } else {
                 startingItems.push(pick);
@@ -284,6 +286,7 @@ async function main() {
         seed: config.seed,
         itemLib,
         startingItems,
+        lockedCanonicalItems,
         ...(startingItems.length > 0 ? {
             sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
                 name,

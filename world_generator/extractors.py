@@ -193,6 +193,13 @@ class ExtractedData:
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
     completion_condition: Optional[Dict[str, Any]] = None  # Analyzed completion condition rule
+    # Whether locked_placements carry authored always-lock intent. True for
+    # procgen-emitted rules.json (procgen_metadata present): locked:true means
+    # "place via place_locked_item even for non-event items" (e.g. the bounce
+    # start-stack arrow). False for original-world exports, where locked merely
+    # records generation-time placement (e.g. Lufia II Iris treasures) and
+    # non-event locked items must stay randomizable — see b891b9cda.
+    honor_locked_placements: bool = False
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -1348,6 +1355,10 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Check if placements are vanilla (match original non-randomized game)
     is_vanilla = json_data.get('is_vanilla', False)
 
+    # Procgen-emitted rules.json marks locked locations as authored intent
+    # (always place via place_locked_item, even non-events).
+    honor_locked_placements = bool(json_data.get('procgen_metadata'))
+
     # Get preset label for frontend display (e.g., "canth s4")
     preset_label = json_data.get('preset_label', '')
 
@@ -1451,4 +1462,5 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         world_attributes=world_attributes,
         dungeons=dungeons,
         completion_condition=completion_condition,
+        honor_locked_placements=honor_locked_placements,
     )

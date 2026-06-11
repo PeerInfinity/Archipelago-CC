@@ -26,7 +26,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Left arrow": 1,
     "Victory": 1,
     "Brown platforms": 1,
-    "Right arrow": 1,
     "Blue platforms": 1,
     "Springs": 1,
     "Jetpacks": 1,
@@ -34,7 +33,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-
+    "region_3_3__loc_0": "Right arrow",
 }
 
 # Starting items - items the player begins with (precollected)

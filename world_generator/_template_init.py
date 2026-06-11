@@ -499,6 +499,9 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # We determine this by checking if the item is an event (id=None).
     # When canonical_seed is set, we build canonical_placements from original_placements,
     # so non-event items will be placed via canonical_placements instead of LOCKED_PLACEMENTS.
+    # EXCEPTION: procgen-emitted rules.json (data.honor_locked_placements) marks
+    # locked locations as authored always-lock intent, so non-event locked
+    # placements go into LOCKED_PLACEMENTS too (e.g. the bounce start-stack arrow).
     locked_entries = []
     if data.canonical_placements or canonical_seed is not None:
         # Only include truly locked items (events) - not canonical placements
@@ -509,7 +512,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 loc_data = data.locations.get(loc_name)
                 is_event_item = item_data and item_data.is_event
                 is_event_location = loc_data and loc_data.is_event
-                if is_event_item or is_event_location:
+                if is_event_item or is_event_location or data.honor_locked_placements:
                     loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
                     item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                     locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
@@ -903,7 +906,8 @@ class _ShopWrapper:
     itempool_entries = []
     if data.canonical_placements or canonical_seed is not None:
         # Only subtract items that are in LOCKED_PLACEMENTS
-        # (event items or items at event locations)
+        # (event items or items at event locations; ALL locked placements
+        # when honor_locked_placements — must mirror the filter above)
         locked_event_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
@@ -911,7 +915,7 @@ class _ShopWrapper:
                 loc_data = data.locations.get(loc_name)
                 is_event_item = item_data and item_data.is_event
                 is_event_location = loc_data and loc_data.is_event
-                if is_event_item or is_event_location:
+                if is_event_item or is_event_location or data.honor_locked_placements:
                     locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():

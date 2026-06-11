@@ -2001,6 +2001,7 @@ class BaseGameExportHandler(
         if self.is_worldgen_world(world):
             self._discover_worldgen_helpers_for_preservation(world)
             self._inject_worldgen_sidecars(world, export_data, player)
+            self._inject_worldgen_procgen_metadata(world, export_data)
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package
@@ -2034,6 +2035,39 @@ class BaseGameExportHandler(
             logger.warning(f"Failed to read worldgen sidecars at {sidecars_path}: {exc}")
             return
         export_data.setdefault('preset_sidecars', {})[str(player)] = sidecars
+
+    def _inject_worldgen_procgen_metadata(self, world, export_data: Dict[str, Any]) -> None:
+        """Load `_worldgen_procgen_metadata.json` from the worldgen world's
+        package directory and set it as export_data['procgen_metadata'].
+
+        procgen_metadata is a top-level field of procgen-emitted rules.json
+        (driver, sphere_plan, ...). Carrying it through the export keeps a
+        re-derived world's semantics stable — extractors key
+        honor_locked_placements (always-lock non-event locked placements)
+        on its presence. Top-level and informational, so the first worldgen
+        world to inject wins; solo procgen seeds are the primary case.
+        """
+        if 'procgen_metadata' in export_data:
+            return
+        try:
+            world_module = type(world).__module__
+            module = importlib.import_module(world_module)
+        except ImportError:
+            return
+        module_file = getattr(module, '__file__', None)
+        if not module_file:
+            return
+        metadata_path = os.path.join(
+            os.path.dirname(module_file), '_worldgen_procgen_metadata.json')
+        if not os.path.exists(metadata_path):
+            return
+        try:
+            with open(metadata_path, encoding='utf-8') as f:
+                metadata = json.load(f)
+        except (json.JSONDecodeError, OSError) as exc:
+            logger.warning(f"Failed to read procgen metadata at {metadata_path}: {exc}")
+            return
+        export_data['procgen_metadata'] = metadata
 
     def _discover_worldgen_helpers_for_preservation(self, world) -> None:
         """Discover helper function names from a worldgen Rules.py and auto-preserve them.

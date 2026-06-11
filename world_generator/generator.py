@@ -259,6 +259,23 @@ class WorldGenerator:
             else:
                 logger.info(f"Would write: {sidecars_path}")
 
+        # Preserve procgen_metadata (driver, sphere_plan, ...) the same
+        # way. The export handler re-injects it into rules.json, so a
+        # world re-derived from an exported preset keeps procgen
+        # semantics — in particular honor_locked_placements, which keys
+        # on this field (see extractors.extract_all).
+        procgen_metadata = source_json.get('procgen_metadata')
+        if procgen_metadata:
+            metadata_path = output_dir / '_worldgen_procgen_metadata.json'
+            if not dry_run:
+                metadata_path.write_text(
+                    json.dumps(procgen_metadata, indent=2),
+                    encoding='utf-8',
+                )
+                logger.info(f"Wrote procgen metadata to {metadata_path}")
+            else:
+                logger.info(f"Would write: {metadata_path}")
+
         for filename, content in files.items():
             file_path = output_dir / filename
 

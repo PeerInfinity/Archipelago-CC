@@ -23,12 +23,12 @@ Use Canonical Options:           Yes
 Locations:
 
 region_3_2__loc_0: Brown platforms
-region_4_2__loc_0: Springs
-region_4_2__loc_1: Blue platforms
+region_4_2__loc_0: Victory
+region_4_2__loc_1: Jetpacks
 region_3_3__loc_0: Right arrow
-region_4_3__loc_0: Left arrow
-region_4_3__loc_1: Jetpacks
-region_3_4__loc_0: Victory
+region_4_3__loc_0: Springs
+region_4_3__loc_1: Blue platforms
+region_3_4__loc_0: Left arrow
 
 Playthrough:
 
@@ -40,13 +40,13 @@ Playthrough:
 }
 2: {
   region_3_2__loc_0: Brown platforms
-  region_4_3__loc_0: Left arrow
-  region_4_3__loc_1: Jetpacks
+  region_4_3__loc_0: Springs
+  region_4_3__loc_1: Blue platforms
 }
 3: {
-  region_4_2__loc_0: Springs
-  region_4_2__loc_1: Blue platforms
+  region_3_4__loc_0: Left arrow
 }
 4: {
-  region_3_4__loc_0: Victory
+  region_4_2__loc_0: Victory
+  region_4_2__loc_1: Jetpacks
 }

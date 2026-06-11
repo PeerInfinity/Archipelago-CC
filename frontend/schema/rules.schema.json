@@ -602,6 +602,10 @@
         "item": {
           "$ref": "#/$defs/itemPlacement",
           "description": "The item placed at this location."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "True if the item was placed via place_locked_item at generation time. In procgen-emitted rules.json (procgen_metadata present) this is authored intent: world_generator places the item via place_locked_item so the placement holds even in multiworld fill."
         }
       },
       "required": ["name", "id", "access_rule"],
