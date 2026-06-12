@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Doodle Jump — real recompiled DJ renderer</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #1a1a2e; color: #ccc;
+               font-family: monospace; height: 100%; }
+  #stage { width: 600px; height: 400px; margin: 8px auto 4px;
+           background: #fff; outline: none; position: relative; }
+  #stage canvas { display: block; }
+  #status { text-align: center; font-size: 12px; padding: 2px; }
+  #dropzone { position: absolute; inset: 0; display: none;
+              align-items: center; justify-content: center; text-align: center;
+              color: #555; background: #f4f4f4; border: 3px dashed #aaa;
+              box-sizing: border-box; font-size: 14px; padding: 24px; }
+  #dropzone.armed { display: flex; }
+  #dropzone.hover { border-color: #e94560; color: #e94560; }
+</style>
+</head>
+<body>
+<!-- Real-DJ renderer page for dj-profile bounce regions: the real Doodle
+     Jump SWF, with SWFRecomp-CC's level-loader bytecode spliced in, fulfils
+     the __swfBridge contract via injected ActionScript + ExternalInterface.
+     The host-side flashSubstrate/bridge.js is injected by the panel exactly
+     like the JS renderer page; dj_swf_bridge.js (verbatim copy from
+     SWFRecomp-CC's dj_loader harness — keep in sync) is the game side.
+
+     The ORIGINAL Doodle Jump SWF is NOT in this repository. The page
+     acquires it, in order:
+       1. ./Doodle_Jump.swf next to this page (gitignored — drop your copy
+          in frontend/modules/bounceDemo/djReal/),
+       2. the copy cached in IndexedDB from a previous drag-and-drop,
+       3. drag-and-drop onto the stage area.
+     The loader bytecode (loader_bytecode.bin, compiled from SWFRecomp-CC's
+     Loader.as — contains no game content) is then spliced in IN-BROWSER by
+     swfPatch.js, which also widens the header RECT to 600px (DJ's wrap is
+     Stage.width-relative, so that header patch is the whole wide story).
+
+     The Flash player bootstraps LAZILY on the first configure() so the page
+     costs nothing while the JS renderer is the selected bounce renderer
+     (this iframe is mounted in the layout regardless of the setting).
+
+     Runtime tiers (auto-detected, or forced via ?player=ruffle|wasm):
+       wasm   — SWFRecomp browser-WASM build (production), served from
+                ./runtime/Doodle_Jump_loader.{js,wasm} when present
+                (gitignored; see runtime/README.md — the recompile bakes the
+                injected SWF in, so this tier needs no SWF acquisition)
+       ruffle — Ruffle from CDN playing the in-browser-patched SWF
+                (ground-truth tier; the default) -->
+<div id="stage" tabindex="0">
+  <div id="dropzone">drop your original Doodle Jump SWF here<br>
+    (or place it at modules/bounceDemo/djReal/Doodle_Jump.swf)</div>
+</div>
+<div id="status">waiting for region (configure)…</div>
+<script>window.__DJ_STAGE_W = 600;</script>
+<script src="dj_swf_bridge.js"></script>
+<script type="module">
+import { buildLoaderSwf } from './swfPatch.js';
+
+const STAGE_W = 600, STAGE_H = 400;
+const ORIGINAL_SWF_URL = 'Doodle_Jump.swf';
+const IDB_NAME = 'bounceDjReal', IDB_STORE = 'swf', IDB_KEY = 'original';
+const stageEl = document.getElementById('stage');
+const statusEl = document.getElementById('status');
+const dropzoneEl = document.getElementById('dropzone');
+
+let bootStarted = false;
+let configured = false;
+let originalSwf = null; // Uint8Array of the user's original DJ SWF
+
+function setStatus(text) {
+    statusEl.textContent = text;
+    console.log('[djReal] ' + text);
+}
+
+// ── original-SWF acquisition (fetch → IndexedDB → drag-and-drop) ──
+
+function idbOpen() {
+    return new Promise((resolve, reject) => {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = () => req.result.createObjectStore(IDB_STORE);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+    });
+}
+
+async function idbGet() {
+    try {
+        const db = await idbOpen();
+        return await new Promise((resolve) => {
+            const req = db.transaction(IDB_STORE).objectStore(IDB_STORE).get(IDB_KEY);
+            req.onsuccess = () => resolve(req.result ?? null);
+            req.onerror = () => resolve(null);
+        });
+    } catch { return null; }
+}
+
+async function idbPut(buf) {
+    try {
+        const db = await idbOpen();
+        db.transaction(IDB_STORE, 'readwrite').objectStore(IDB_STORE).put(buf, IDB_KEY);
+    } catch (err) {
+        console.warn('[djReal] IndexedDB cache failed (non-fatal):', err);
+    }
+}
+
+function looksLikeSwf(bytes) {
+    const sig = String.fromCharCode(bytes[0] ?? 0, bytes[1] ?? 0, bytes[2] ?? 0);
+    return sig === 'CWS' || sig === 'FWS' || sig === 'ZWS';
+}
+
+async function acquireOriginalSwf() {
+    try {
+        const r = await fetch(ORIGINAL_SWF_URL);
+        if (r.ok) {
+            const bytes = new Uint8Array(await r.arrayBuffer());
+            if (looksLikeSwf(bytes)) return bytes;
+            console.warn('[djReal] Doodle_Jump.swf present but not a SWF — ignoring');
+        }
+    } catch { /* dev servers 404 as a rejection sometimes; fall through */ }
+    const cached = await idbGet();
+    if (cached) return new Uint8Array(cached);
+    return null;
+}
+
+dropzoneEl.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzoneEl.classList.add('hover');
+});
+dropzoneEl.addEventListener('dragleave', () => dropzoneEl.classList.remove('hover'));
+dropzoneEl.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    dropzoneEl.classList.remove('hover');
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    const buf = await file.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    if (!looksLikeSwf(bytes)) {
+        setStatus(`"${file.name}" is not a SWF`);
+        return;
+    }
+    originalSwf = bytes;
+    idbPut(buf); // remembered for next session
+    dropzoneEl.classList.remove('armed');
+    setStatus(`got ${file.name} (${bytes.length} bytes)`);
+    if (configured) bootPlayer();
+});
+
+// ── player tiers ──
+
+// Keep keyboard input working after clicks anywhere on the page (the
+// arrow-gating increment reads DOM keys; Ruffle's element grabs focus
+// itself, the WASM canvas needs it explicitly).
+document.addEventListener('mousedown', () => {
+    const c = stageEl.querySelector('canvas');
+    (c || stageEl).focus();
+});
+
+async function bootRuffle() {
+    if (!originalSwf) {
+        dropzoneEl.classList.add('armed');
+        setStatus('waiting for your Doodle Jump SWF (drop it on the stage)');
+        return; // the drop handler re-enters bootPlayer
+    }
+    setStatus('patching SWF (loader inject + 600px stage)…');
+    let injected;
+    try {
+        const bin = await fetch('loader_bytecode.bin');
+        if (!bin.ok) throw new Error(`loader_bytecode.bin: HTTP ${bin.status}`);
+        injected = await buildLoaderSwf(
+            originalSwf, new Uint8Array(await bin.arrayBuffer()),
+            { stageWidth: STAGE_W });
+    } catch (err) {
+        setStatus('SWF patch FAILED: ' + err);
+        return;
+    }
+    setStatus('loading Ruffle…');
+    window.RufflePlayer = window.RufflePlayer || {};
+    const rs = document.createElement('script');
+    rs.src = 'https://unpkg.com/@ruffle-rs/ruffle';
+    rs.onload = () => {
+        window.RufflePlayer.config = {
+            allowScriptAccess: true,
+            autoplay: 'on',
+            unmuteOverlay: 'hidden',
+            splashScreen: false,
+            warnOnUnsupportedContent: false,
+            logLevel: 'info',
+        };
+        const player = window.RufflePlayer.newest().createPlayer();
+        player.style.width = STAGE_W + 'px';
+        player.style.height = STAGE_H + 'px';
+        stageEl.appendChild(player);
+        // Newer Ruffle builds moved the element methods behind
+        // player.ruffle() (the versioned PlayerV1 API); older builds
+        // expose load/traceObserver on the element itself.
+        const api = typeof player.load === 'function'
+            ? player : player.ruffle();
+        try { api.traceObserver = (m) => console.log(m); } catch { /* optional */ }
+        api.load({ data: injected, allowScriptAccess: true, autoplay: 'on' })
+            .then(() => setStatus('running (Ruffle)'))
+            .catch((e) => setStatus('Ruffle load FAILED: ' + e));
+    };
+    rs.onerror = () => setStatus('FAILED to load Ruffle from CDN');
+    document.head.appendChild(rs);
+}
+
+function bootWasm() {
+    setStatus('loading SWFRecomp WASM…');
+    const canvas = document.createElement('canvas');
+    canvas.id = 'canvas';
+    canvas.width = STAGE_W;
+    canvas.height = STAGE_H;
+    canvas.tabIndex = 0;
+    stageEl.appendChild(canvas);
+    // dj_swf_bridge.js already installed window.__swfBridge — required
+    // BEFORE the Module initializes (the runtime's ensureGlobalInit only
+    // installs the ExternalInterface handler when __swfBridge exists).
+    window.Module = {
+        locateFile: (p) => 'runtime/' + p,
+        canvas,
+        print: (t) => console.log(t),
+        printErr: (t) => console.log('[err] ' + t),
+        onRuntimeInitialized: () => {
+            setStatus('running (SWFRecomp WASM)');
+            canvas.focus();
+            window.Module.ccall('runSWF', null, [], [], { async: true });
+        },
+    };
+    const ms = document.createElement('script');
+    ms.src = 'runtime/Doodle_Jump_loader.js';
+    ms.onerror = () => {
+        setStatus('WASM glue missing — falling back to Ruffle');
+        stageEl.removeChild(canvas);
+        delete window.Module;
+        bootRuffle();
+    };
+    document.body.appendChild(ms);
+}
+
+async function bootPlayer() {
+    if (bootStarted) return;
+    const forced = new URLSearchParams(window.location.search).get('player');
+    if (forced === 'wasm') { bootStarted = true; bootWasm(); return; }
+    if (forced !== 'ruffle') {
+        // Auto: prefer the production WASM runtime when its artifacts are
+        // present (runtime/ is gitignored; bakes the SWF in — no
+        // acquisition needed), else the always-available Ruffle tier.
+        try {
+            const r = await fetch('runtime/Doodle_Jump_loader.js', { method: 'HEAD' });
+            if (r.ok) { bootStarted = true; bootWasm(); return; }
+        } catch { /* fall through to Ruffle */ }
+    }
+    // Ruffle needs the original SWF; without it, arm the drop zone and
+    // retry from the drop handler (bootStarted stays false until then).
+    if (!originalSwf) {
+        await bootRuffle(); // arms the drop zone
+        return;
+    }
+    bootStarted = true;
+    bootRuffle();
+}
+
+// ── lazy bootstrap on first configure ──
+// Loader.as retries ExternalInterface.call("__swfConfig") every tick until
+// non-empty, so configure-before-player and player-before-configure both
+// converge.
+const shimConfigure = window.__swfBridge.configure;
+window.__swfBridge.configure = (config) => {
+    shimConfigure(config);
+    configured = true;
+    setStatus('region ' + (config?.regionId ?? '?') + ' received');
+    bootPlayer();
+};
+
+// Pre-acquire so the drop zone shows early when the SWF is missing and a
+// region is already routed here; harmless when the JS renderer is active
+// (one 404 + one IDB miss, no player load).
+acquireOriginalSwf().then((bytes) => {
+    if (bytes && !originalSwf) {
+        originalSwf = bytes;
+        if (configured) bootPlayer();
+    }
+});
+</script>
+</body>
+</html>

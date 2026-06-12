@@ -258,6 +258,11 @@
             },
             {
               "type": "component",
+              "componentType": "bounceDjRealPanel",
+              "title": "Doodle Jump"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             },

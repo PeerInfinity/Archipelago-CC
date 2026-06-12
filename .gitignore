@@ -311,3 +311,11 @@ iframe_games/journey-to-ascension/node_modules/
 fuzz_output/
 test_dumps/
 grid-growth-dump.json
+
+# Real-DJ renderer: no SWF is ever committed — the user supplies the
+# original Doodle Jump SWF (dropped in or fetched from this path), and the
+# SWFRecomp browser-WASM artifacts are built+copied from SWFRecomp-CC
+# (see frontend/modules/bounceDemo/djReal/runtime/README.md)
+frontend/modules/bounceDemo/djReal/*.swf
+frontend/modules/bounceDemo/djReal/runtime/Doodle_Jump_loader.*
+

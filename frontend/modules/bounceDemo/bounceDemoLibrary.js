@@ -388,6 +388,23 @@ export function* generateZoneForSpecsGen({
 export const BOUNCE_PANEL_COMPONENT_TYPE = 'bounceDemoPanel';
 export const BOUNCE_LOAD_REGION_EVENT = 'bounce:loadRegion';
 export const BOUNCE_IFRAME_ID = 'bounceDemo';
+// The real-DJ renderer (loader-injected recompiled Doodle Jump page,
+// modules/bounceDemo/djReal/) gets its own panel identity so region
+// loads route to exactly one renderer iframe: same substrate id, the
+// entry's identity fields switch via setBounceRenderer below.
+export const BOUNCE_DJ_PANEL_COMPONENT_TYPE = 'bounceDjRealPanel';
+export const BOUNCE_DJ_LOAD_REGION_EVENT = 'bounceDjReal:loadRegion';
+export const BOUNCE_DJ_IFRAME_ID = 'bounceDjReal';
+
+// Which renderer bounce region loads route to: 'js' (the canvas
+// renderer, default) or 'dj' (the real recompiled Doodle Jump page).
+// Host module wires this to the moduleSettings.bounceDemo.renderer
+// setting; the library default keeps headless imports on 'js'.
+let _renderer = 'js';
+export function setBounceRenderer(renderer) {
+    _renderer = renderer === 'dj' ? 'dj' : 'js';
+}
+export function getBounceRenderer() { return _renderer; }
 // Playback-bot control channel: the host-side PlaybackProxy publishes
 // controller commands here; the shared flash bridge subscribes (it
 // learns the event name from the iframe URL's playbackControlEvent
@@ -421,9 +438,23 @@ export function createBounceSubstrateEntry({
     return Object.freeze({
         ...createFlashSubstrateEntry({ id, label, iframeId: BOUNCE_IFRAME_ID }),
 
-        // Bounce's own panel + load event (see constants above).
-        panelComponentType: BOUNCE_PANEL_COMPONENT_TYPE,
-        loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
+        // Bounce's own panel + load event (see constants above). Live
+        // getters so the renderer setting switches the routing identity
+        // per access: procgenPlayer reads these on every region move
+        // (publishLoadRegion / activeSubstrateChanged / appReady
+        // re-publish), so flipping the renderer takes effect on the
+        // next bounce region entry with no re-registration.
+        get panelComponentType() {
+            return _renderer === 'dj'
+                ? BOUNCE_DJ_PANEL_COMPONENT_TYPE : BOUNCE_PANEL_COMPONENT_TYPE;
+        },
+        get loadRegionEvent() {
+            return _renderer === 'dj'
+                ? BOUNCE_DJ_LOAD_REGION_EVENT : BOUNCE_LOAD_REGION_EVENT;
+        },
+        get iframeId() {
+            return _renderer === 'dj' ? BOUNCE_DJ_IFRAME_ID : BOUNCE_IFRAME_ID;
+        },
 
         // Playback bot: overrides the flash entry's `() => null` stub.
         // The proxy publishes controller commands on
