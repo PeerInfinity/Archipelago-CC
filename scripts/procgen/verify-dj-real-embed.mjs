@@ -20,16 +20,33 @@
  * Run: node scripts/procgen/verify-dj-real-embed.mjs
  */
 import { chromium } from 'playwright';
-import { existsSync } from 'node:fs';
+import { existsSync, renameSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const SWF = join(HERE, '..', '..', 'frontend', 'modules', 'bounceDemo', 'djReal', 'Doodle_Jump.swf');
+const DJREAL = join(HERE, '..', '..', 'frontend', 'modules', 'bounceDemo', 'djReal');
+const SWF = join(DJREAL, 'Doodle_Jump.swf');
 if (!existsSync(SWF)) {
     console.log(`SKIP: original DJ SWF not present at ${SWF}`);
     process.exit(0);
 }
+
+// Pin the Ruffle tier: the page auto-prefers the SWFRecomp browser-WASM
+// runtime when runtime/ is populated (the production tier for hand-play),
+// but that needs WebGPU, which headless Chromium lacks. Move the glue
+// aside for the run and restore it after.
+const WASM_GLUE = join(DJREAL, 'runtime', 'Doodle_Jump_loader.js');
+const WASM_GLUE_BAK = WASM_GLUE + '.verify-bak';
+const hadWasm = existsSync(WASM_GLUE);
+if (hadWasm) {
+    renameSync(WASM_GLUE, WASM_GLUE_BAK);
+    console.log('(runtime/ WASM glue moved aside for the headless run)');
+}
+const restoreWasm = () => {
+    if (hadWasm && existsSync(WASM_GLUE_BAK)) renameSync(WASM_GLUE_BAK, WASM_GLUE);
+};
+process.on('exit', restoreWasm);
 
 const URL = 'http://localhost:8000/frontend/?game=bounce_dj_worldgen&seed=1';
 const browser = await chromium.launch();
