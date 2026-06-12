@@ -223,9 +223,15 @@ function bootWasm() {
         print: (t) => console.log(t),
         printErr: (t) => console.log('[err] ' + t),
         onRuntimeInitialized: () => {
-            setStatus('running (SWFRecomp WASM)');
-            canvas.focus();
-            window.Module.ccall('runSWF', null, [], [], { async: true });
+            // Start the SWF from a fresh macrotask, NOT re-entrantly from
+            // onRuntimeInitialized — the ASYNCIFY'd runSWF never ticks when
+            // ccall'd from inside the init callback (their wasm harness
+            // polls a ready flag for the same reason).
+            setTimeout(() => {
+                setStatus('running (SWFRecomp WASM)');
+                canvas.focus();
+                window.Module.ccall('runSWF', null, [], [], { async: true });
+            }, 0);
         },
     };
     const ms = document.createElement('script');
