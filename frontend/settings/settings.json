@@ -192,6 +192,10 @@
       "disableLocationCheckUI": false,
       "showUndiscoveredDetails": false,
       "showUndiscoveredRegionNames": false
+    },
+    "bounceDemo": {
+      "//": "renderer: 'js' (canvas renderer) or 'dj' (real Doodle Jump SWF, modules/bounceDemo/djReal/)",
+      "renderer": "js"
     }
   }
 }
