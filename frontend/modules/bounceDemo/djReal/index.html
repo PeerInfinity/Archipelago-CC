@@ -41,13 +41,19 @@
      costs nothing while the JS renderer is the selected bounce renderer
      (this iframe is mounted in the layout regardless of the setting).
 
-     Runtime tiers (auto-detected, or forced via ?player=ruffle|wasm):
+     Runtime tiers — chosen by the host's renderer setting (relayed via
+     localStorage 'bounceDjReal.player'), overridable for direct opens via
+     ?player=ruffle|wasm|flash, else auto-detected:
        wasm   — SWFRecomp browser-WASM build (production), served from
                 ./runtime/Doodle_Jump_loader.{js,wasm} when present
                 (gitignored; see runtime/README.md — the recompile bakes the
                 injected SWF in, so this tier needs no SWF acquisition)
        ruffle — Ruffle from CDN playing the in-browser-patched SWF
-                (ground-truth tier; the default) -->
+                (ground-truth tier; the auto fallback)
+       flash  — native NPAPI Flash Player (Basilisk + Clean Flash etc.):
+                plugins need a URL, not bytes, so this tier loads the
+                pre-built ./dj_loader.swf (gitignored; generate it with
+                scripts/procgen/build-dj-loader-swf.mjs) -->
 <div id="stage" tabindex="0">
   <div id="dropzone">drop your original Doodle Jump SWF here<br>
     (or place it at modules/bounceDemo/djReal/Doodle_Jump.swf)</div>
@@ -245,11 +251,48 @@ function bootWasm() {
     document.body.appendChild(ms);
 }
 
+function bootFlash() {
+    setStatus('loading native Flash (NPAPI)…');
+    // NPAPI plugins stream the movie by URL — in-browser-patched bytes
+    // can't be handed over, so this tier uses the pre-built (gitignored)
+    // dj_loader.swf. Probe for it first so a missing file gives a clear
+    // message instead of an empty plugin box.
+    fetch('dj_loader.swf', { method: 'HEAD' }).then((r) => {
+        if (!r.ok) throw new Error('not found');
+        const embed = document.createElement('embed');
+        embed.type = 'application/x-shockwave-flash';
+        embed.src = 'dj_loader.swf';
+        embed.width = String(STAGE_W);
+        embed.height = String(STAGE_H);
+        embed.setAttribute('allowScriptAccess', 'always');
+        embed.setAttribute('quality', 'high');
+        stageEl.appendChild(embed);
+        setStatus('running (native Flash — needs an NPAPI browser, '
+            + 'e.g. Basilisk + Clean Flash)');
+    }).catch(() => {
+        setStatus('native Flash tier needs ./dj_loader.swf — build it with '
+            + 'scripts/procgen/build-dj-loader-swf.mjs');
+    });
+}
+
+function resolveTier() {
+    // Priority: explicit ?player= (direct page opens / harnesses) →
+    // the host's renderer setting relayed via localStorage → auto.
+    const forced = new URLSearchParams(window.location.search).get('player');
+    if (forced === 'wasm' || forced === 'ruffle' || forced === 'flash') return forced;
+    try {
+        const stored = localStorage.getItem('bounceDjReal.player');
+        if (stored === 'wasm' || stored === 'ruffle' || stored === 'flash') return stored;
+    } catch { /* storage unavailable — auto */ }
+    return 'auto';
+}
+
 async function bootPlayer() {
     if (bootStarted) return;
-    const forced = new URLSearchParams(window.location.search).get('player');
-    if (forced === 'wasm') { bootStarted = true; bootWasm(); return; }
-    if (forced !== 'ruffle') {
+    const tier = resolveTier();
+    if (tier === 'wasm') { bootStarted = true; bootWasm(); return; }
+    if (tier === 'flash') { bootStarted = true; bootFlash(); return; }
+    if (tier !== 'ruffle') {
         // Auto: prefer the production WASM runtime when its artifacts are
         // present (runtime/ is gitignored; bakes the SWF in — no
         // acquisition needed), else the always-available Ruffle tier.

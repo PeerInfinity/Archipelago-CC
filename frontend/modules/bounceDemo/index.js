@@ -40,10 +40,33 @@ import {
 } from './bounceDemoLibrary.js';
 
 // Which renderer bounce region loads route to: 'js' (canvas renderer,
-// default) or 'dj' (the real recompiled Doodle Jump page below).
-// Settable from the Settings panel; read at initialize() and live via
-// settings:changed — takes effect on the next bounce region entry.
+// default), or the real-DJ page below with an explicit player tier —
+// 'ruffle', 'swfrecomp' (browser-WASM), 'flash' (native NPAPI Flash,
+// needs a Flash-capable browser like Basilisk + Clean Flash and a
+// pre-built djReal/dj_loader.swf — see scripts/procgen/
+// build-dj-loader-swf.mjs) — or legacy 'dj' (auto tier). Settable from
+// the Settings panel; read at initialize() and live via
+// settings:changed. js<->dj switches apply on the next bounce region
+// entry; tier changes within the dj page apply on its next boot (page
+// reload), since the player loads once per iframe lifetime.
 const RENDERER_SETTING_KEY = 'moduleSettings.bounceDemo.renderer';
+// Same-origin relay of the tier choice to the dj page (it reads this
+// at player-boot time, which is always after initialize() wrote it;
+// the page's ?player= query param still overrides for direct opens).
+const DJ_PLAYER_STORAGE_KEY = 'bounceDjReal.player';
+
+function applyRendererSetting(value) {
+    setBounceRenderer(value);
+    try {
+        const tier = { ruffle: 'ruffle', swfrecomp: 'wasm', flash: 'flash' }[value];
+        if (tier) {
+            localStorage.setItem(DJ_PLAYER_STORAGE_KEY, tier);
+        } else {
+            // 'js' (irrelevant) or legacy 'dj' (page auto-detects).
+            localStorage.removeItem(DJ_PLAYER_STORAGE_KEY);
+        }
+    } catch { /* storage unavailable (tests/headless) — page auto-detects */ }
+}
 
 // Unique iframeId so this wrapper doesn't collide with the flash / JtA /
 // textAdventure wrapper iframes in iframeAdapterCore.iframes (colliding
@@ -173,15 +196,15 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // library value on every region move, so a change applies on the
     // next bounce region entry — no re-registration.
     settingsManager.getSetting(RENDERER_SETTING_KEY, 'js')
-        .then((value) => setBounceRenderer(value))
+        .then((value) => applyRendererSetting(value))
         .catch(() => { /* keep the 'js' default */ });
     eventBus.subscribe('settings:changed', (data) => {
         if (data?.key === RENDERER_SETTING_KEY) {
-            setBounceRenderer(data.value);
+            applyRendererSetting(data.value);
         } else if (data?.key === '*') {
             // Bulk write (Settings panel "Apply") — re-read the key.
             settingsManager.getSetting(RENDERER_SETTING_KEY, 'js')
-                .then((value) => setBounceRenderer(value))
+                .then((value) => applyRendererSetting(value))
                 .catch(() => {});
         }
     }, 'bounceDemo');

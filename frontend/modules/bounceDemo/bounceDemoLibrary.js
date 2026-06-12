@@ -397,14 +397,21 @@ export const BOUNCE_DJ_LOAD_REGION_EVENT = 'bounceDjReal:loadRegion';
 export const BOUNCE_DJ_IFRAME_ID = 'bounceDjReal';
 
 // Which renderer bounce region loads route to: 'js' (the canvas
-// renderer, default) or 'dj' (the real recompiled Doodle Jump page).
-// Host module wires this to the moduleSettings.bounceDemo.renderer
-// setting; the library default keeps headless imports on 'js'.
+// renderer, default) or one of the real-DJ page's player tiers —
+// 'ruffle', 'swfrecomp' (browser-WASM), 'flash' (native NPAPI), or
+// the legacy 'dj' (auto: swfrecomp when runtime/ artifacts exist,
+// else ruffle). Everything non-'js' routes to the dj panel; the tier
+// itself is consumed by the dj page (host module relays it via
+// localStorage — see index.js). Host module wires this to the
+// moduleSettings.bounceDemo.renderer setting; the library default
+// keeps headless imports on 'js'. Unknown values fall back to 'js'.
+export const BOUNCE_DJ_RENDERERS = Object.freeze(['dj', 'ruffle', 'swfrecomp', 'flash']);
 let _renderer = 'js';
 export function setBounceRenderer(renderer) {
-    _renderer = renderer === 'dj' ? 'dj' : 'js';
+    _renderer = BOUNCE_DJ_RENDERERS.includes(renderer) ? renderer : 'js';
 }
 export function getBounceRenderer() { return _renderer; }
+export function isDjRenderer() { return _renderer !== 'js'; }
 // Playback-bot control channel: the host-side PlaybackProxy publishes
 // controller commands here; the shared flash bridge subscribes (it
 // learns the event name from the iframe URL's playbackControlEvent
@@ -445,15 +452,15 @@ export function createBounceSubstrateEntry({
         // re-publish), so flipping the renderer takes effect on the
         // next bounce region entry with no re-registration.
         get panelComponentType() {
-            return _renderer === 'dj'
+            return _renderer !== 'js'
                 ? BOUNCE_DJ_PANEL_COMPONENT_TYPE : BOUNCE_PANEL_COMPONENT_TYPE;
         },
         get loadRegionEvent() {
-            return _renderer === 'dj'
+            return _renderer !== 'js'
                 ? BOUNCE_DJ_LOAD_REGION_EVENT : BOUNCE_LOAD_REGION_EVENT;
         },
         get iframeId() {
-            return _renderer === 'dj' ? BOUNCE_DJ_IFRAME_ID : BOUNCE_IFRAME_ID;
+            return _renderer !== 'js' ? BOUNCE_DJ_IFRAME_ID : BOUNCE_IFRAME_ID;
         },
 
         // Playback bot: overrides the flash entry's `() => null` stub.

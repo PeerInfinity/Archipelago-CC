@@ -1,7 +1,7 @@
 /**
  * In-app verify for the REAL-DJ renderer embed: with
- * moduleSettings.bounceDemo.renderer = 'dj', bounce region loads route
- * to the bounceDjRealPanel iframe (modules/bounceDemo/djReal/), whose
+ * moduleSettings.bounceDemo.renderer = 'ruffle', bounce region loads
+ * route to the bounceDjRealPanel iframe (modules/bounceDemo/djReal/), whose
  * page patches the user-supplied original Doodle Jump SWF in-browser
  * (loader bytecode splice + 600px header RECT) and runs it under
  * Ruffle. The injected loader then plays the committed
@@ -20,7 +20,7 @@
  * Run: node scripts/procgen/verify-dj-real-embed.mjs
  */
 import { chromium } from 'playwright';
-import { existsSync, renameSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -32,21 +32,10 @@ if (!existsSync(SWF)) {
     process.exit(0);
 }
 
-// Pin the Ruffle tier: the page auto-prefers the SWFRecomp browser-WASM
-// runtime when runtime/ is populated (the production tier for hand-play),
-// but that needs WebGPU, which headless Chromium lacks. Move the glue
-// aside for the run and restore it after.
-const WASM_GLUE = join(DJREAL, 'runtime', 'Doodle_Jump_loader.js');
-const WASM_GLUE_BAK = WASM_GLUE + '.verify-bak';
-const hadWasm = existsSync(WASM_GLUE);
-if (hadWasm) {
-    renameSync(WASM_GLUE, WASM_GLUE_BAK);
-    console.log('(runtime/ WASM glue moved aside for the headless run)');
-}
-const restoreWasm = () => {
-    if (hadWasm && existsSync(WASM_GLUE_BAK)) renameSync(WASM_GLUE_BAK, WASM_GLUE);
-};
-process.on('exit', restoreWasm);
+// The renderer is set to 'ruffle' explicitly (below), which pins the
+// page's player tier through the host's localStorage relay — the
+// SWFRecomp browser-WASM tier needs WebGPU, which headless Chromium
+// lacks, so a populated runtime/ must not be auto-preferred here.
 
 const URL = 'http://localhost:8000/frontend/?game=bounce_dj_worldgen&seed=1';
 const browser = await chromium.launch();
@@ -73,12 +62,12 @@ async function waitFor(desc, fn, ms = 90000) {
 }
 const sawLog = (needle) => () => logs.some((l) => l.includes(needle)) || null;
 
-console.log('━━ boot 1: persist renderer=dj');
+console.log('━━ boot 1: persist renderer=ruffle');
 await page.goto(URL);
 await page.waitForTimeout(8000);
 await page.evaluate(async () => {
     const { default: settingsManager } = await import('./app/core/settingsManager.js');
-    await settingsManager.updateSetting('moduleSettings.bounceDemo.renderer', 'dj');
+    await settingsManager.updateSetting('moduleSettings.bounceDemo.renderer', 'ruffle');
     settingsManager.flushPendingSave();
 });
 

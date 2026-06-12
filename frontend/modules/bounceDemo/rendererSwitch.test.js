@@ -45,6 +45,17 @@ describe('bounce renderer switch', () => {
             .toBe(BOUNCE_PANEL_COMPONENT_TYPE);
     });
 
+    it('routes every dj player tier to the real-DJ panel', () => {
+        for (const tier of ['ruffle', 'swfrecomp', 'flash', 'dj']) {
+            setBounceRenderer(tier);
+            expect(getBounceRenderer()).toBe(tier);
+            expect(substrateRegistryEntry.panelComponentType)
+                .toBe(BOUNCE_DJ_PANEL_COMPONENT_TYPE);
+            expect(substrateRegistryEntry.loadRegionEvent)
+                .toBe(BOUNCE_DJ_LOAD_REGION_EVENT);
+        }
+    });
+
     it('treats unknown values as js (defensive default)', () => {
         setBounceRenderer('dj');
         setBounceRenderer('something-else');

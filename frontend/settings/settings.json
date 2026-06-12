@@ -194,7 +194,7 @@
       "showUndiscoveredRegionNames": false
     },
     "bounceDemo": {
-      "//": "renderer: 'js' (canvas renderer) or 'dj' (real Doodle Jump SWF, modules/bounceDemo/djReal/)",
+      "//": "renderer: 'js' (canvas renderer) | 'ruffle' | 'swfrecomp' (browser-WASM) | 'flash' (native NPAPI, needs Basilisk+CleanFlash and a pre-built dj_loader.swf) | 'dj' (legacy auto). Non-js values run the real Doodle Jump SWF (modules/bounceDemo/djReal/)",
       "renderer": "js"
     }
   }

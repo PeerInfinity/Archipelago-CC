@@ -5,10 +5,23 @@ SWFRecomp-CC's injected-ActionScript level loader, instead of the JS canvas
 renderer (`../game/`). Same `__swfBridge` contract, same injected host
 bridge (`flashSubstrate/bridge.js`) — a different page.
 
-Select it with the `moduleSettings.bounceDemo.renderer` setting
-(`"dj"`; default `"js"` keeps the JS renderer). Takes effect on the next
-bounce region entry. Non-dj-profile payloads are refused loudly by the
-page (this renderer IS the dj physics).
+Select it with the `moduleSettings.bounceDemo.renderer` setting:
+
+| Value | Player |
+|---|---|
+| `"js"` (default) | the JS canvas renderer (`../game/`) — not this page |
+| `"ruffle"` | Ruffle (CDN), playing the in-browser-patched SWF |
+| `"swfrecomp"` | SWFRecomp browser-WASM build from `runtime/` (production tier; needs WebGPU + the synced artifacts, see `runtime/README.md`) |
+| `"flash"` | native NPAPI Flash Player (Basilisk + Clean Flash etc.); plugins need a URL, so first build `dj_loader.swf` with `node scripts/procgen/build-dj-loader-swf.mjs` |
+| `"dj"` (legacy) | auto: `swfrecomp` when `runtime/` is populated, else `ruffle` |
+
+js↔dj switches apply on the next bounce region entry; tier changes
+within the dj page apply on its next boot (reload the app), since the
+player loads once per iframe lifetime. The host relays the tier to the
+page via localStorage `bounceDjReal.player`; `?player=ruffle|wasm|flash`
+on the page URL overrides it for direct opens/harnesses. Non-dj-profile
+payloads are refused loudly by the page (this renderer IS the dj
+physics).
 
 ## No SWF in this repository
 
