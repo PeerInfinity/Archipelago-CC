@@ -34,7 +34,9 @@
        3. drag-and-drop onto the stage area.
      The loader bytecode (loader_bytecode.bin, compiled from SWFRecomp-CC's
      Loader.as — contains no game content) is then spliced in IN-BROWSER by
-     swfPatch.js, which also widens the header RECT to 600px (DJ's wrap is
+     swf_inject.mjs (vendored verbatim from SWFRecomp-CC's
+     tools/divergence/ — the canonical injector), which also widens the
+     header RECT to 600px (DJ's wrap is
      Stage.width-relative, so that header patch is the whole wide story).
 
      The Flash player bootstraps LAZILY on the first configure() so the page
@@ -62,7 +64,7 @@
 <script>window.__DJ_STAGE_W = 600;</script>
 <script src="dj_swf_bridge.js"></script>
 <script type="module">
-import { buildLoaderSwf } from './swfPatch.js';
+import { injectSwf } from './swf_inject.mjs';
 
 const STAGE_W = 600, STAGE_H = 400;
 const ORIGINAL_SWF_URL = 'Doodle_Jump.swf';
@@ -174,7 +176,7 @@ async function bootRuffle() {
     try {
         const bin = await fetch('loader_bytecode.bin');
         if (!bin.ok) throw new Error(`loader_bytecode.bin: HTTP ${bin.status}`);
-        injected = await buildLoaderSwf(
+        injected = await injectSwf(
             originalSwf, new Uint8Array(await bin.arrayBuffer()),
             { stageWidth: STAGE_W });
     } catch (err) {

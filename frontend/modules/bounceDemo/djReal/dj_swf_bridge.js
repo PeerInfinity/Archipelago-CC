@@ -26,7 +26,8 @@
 	const TYPE_CODE = { green: 'g', brown: 'b', blue: 'm' };
 
 	let pendingCfg = '';
-	let heldItems = [];
+	let cfgGen = 0;     // bumped per configure(); the loader polls this 1 int
+	let heldItems = []; // per tick and re-pulls the config string on change
 
 	function encodeLevel(config) {
 		const params = (config && config.params) || {};
@@ -60,8 +61,12 @@
 		const plats = [...lvl.platforms].sort((a, b) => b.y - a.y);
 		plats.forEach((p, i) => {
 			const g = goals[p.id] || { kind: '', id: '', side: '' };
+			// P| FORMAT v2: trailing center-sweep bounds for blue movers
+			// (empty for static platforms) — keep in sync with gen_fixture.py.
+			const smin = p.sweep ? p.sweep.min - xOff : '';
+			const smax = p.sweep ? p.sweep.max - xOff : '';
 			recs.push(['P', i, p.id, TYPE_CODE[p.type] || 'g', p.x - xOff, p.y - yOff,
-				GATE_ITEM[p.type] || '', g.kind, g.id, g.side].join('|'));
+				GATE_ITEM[p.type] || '', g.kind, g.id, g.side, smin, smax].join('|'));
 		});
 		const checkedIds = config.checkedLocations || [];
 		if (checkedIds.length) recs.push('C|' + checkedIds.join(','));
@@ -72,8 +77,10 @@
 	window.__swfBridge = Object.assign(window.__swfBridge || {}, {
 		configure(config) {
 			pendingCfg = encodeLevel(config);
+			if (pendingCfg) cfgGen++;
 			console.log('[dj-bridge] configure(' + ((config && config.regionId) || '?')
-				+ ') -> ' + (pendingCfg ? pendingCfg.length + ' chars' : 'REFUSED'));
+				+ ') -> ' + (pendingCfg ? pendingCfg.length + ' chars, gen ' + cfgGen
+					: 'REFUSED'));
 		},
 		pollItems(received) {
 			heldItems = Array.isArray(received) ? received.slice() : [];
@@ -83,6 +90,7 @@
 	// EI surface the injected loader calls (window-level, per the proven
 	// SWFRecomp swf_browser_external_call + Ruffle ExternalInterface paths).
 	window.__swfConfig = function () { return pendingCfg; };
+	window.__swfConfigGen = function () { return String(cfgGen); };
 	window.__swfPoll = function () { return heldItems.join(','); };
 	window.__swfSendLocation = function (id) {
 		console.log('[dj-bridge] sendLocation(' + id + ')');
@@ -98,4 +106,19 @@
 		if (window.__swfBridge.sendExit) window.__swfBridge.sendExit(id, side);
 		return '';
 	};
+
+	// ── arrow-input gating (increment 2) ────────────────────────────────
+	// ArrowLeft/ArrowRight reach DJ's Key.isDown only while the matching AP
+	// item is held — gate the KEY, not the physics. Capture-phase on window
+	// fires before Ruffle's element listeners AND emscripten's canvas
+	// keydown, so one gate covers both players. Only keydown is gated: a
+	// blocked keyup would wedge an already-held key down in the runtime if
+	// the item were revoked mid-press.
+	const ARROW_GATE = { ArrowLeft: 'Left arrow', ArrowRight: 'Right arrow' };
+	window.addEventListener('keydown', function (e) {
+		const item = ARROW_GATE[e.key];
+		if (!item || heldItems.indexOf(item) >= 0) return;
+		e.preventDefault();
+		e.stopImmediatePropagation();
+	}, true);
 })();

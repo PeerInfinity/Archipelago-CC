@@ -5,7 +5,7 @@
  * the movie by URL) and the SWFRecomp recompile input
  * (flasharchive/Doodle_Jump_loader/test.swf).
  *
- * Uses the same swfPatch.js the page uses in-browser, on the same
+ * Uses the same swf_inject.mjs the page uses in-browser, on the same
  * inputs: your original Doodle Jump SWF (NOT committed — place it at
  * frontend/modules/bounceDemo/djReal/Doodle_Jump.swf) + the committed
  * loader_bytecode.bin. Output is gitignored (djReal/*.swf).
@@ -16,7 +16,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildLoaderSwf } from '../../frontend/modules/bounceDemo/djReal/swfPatch.js';
+import { injectSwf } from '../../frontend/modules/bounceDemo/djReal/swf_inject.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DJREAL = join(HERE, '..', '..', 'frontend', 'modules', 'bounceDemo', 'djReal');
@@ -37,7 +37,7 @@ if (!existsSync(originalPath)) {
 }
 const original = new Uint8Array(readFileSync(originalPath));
 const bytecode = new Uint8Array(readFileSync(join(DJREAL, 'loader_bytecode.bin')));
-const out = await buildLoaderSwf(original, bytecode, { stageWidth });
+const out = await injectSwf(original, bytecode, { stageWidth });
 writeFileSync(outPath, out);
 console.log(`wrote ${outPath} (${out.length} bytes, stage ${stageWidth}px, `
     + `bytecode ${bytecode.length} bytes)`);

@@ -1,5 +1,6 @@
 // verify-dj-swf-patch.mjs — assert the in-browser SWF patcher
-// (frontend/modules/bounceDemo/djReal/swfPatch.js) produces output
+// (frontend/modules/bounceDemo/djReal/swf_inject.mjs, vendored verbatim
+// from SWFRecomp-CC tools/divergence/) produces output
 // byte-identical to SWFRecomp-CC's reference tool:
 //   inject_tracer.py <original DJ swf> --bytecode loader_bytecode.bin --stage-width 600
 //
@@ -14,7 +15,7 @@ import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildLoaderSwf } from '../../frontend/modules/bounceDemo/djReal/swfPatch.js';
+import { injectSwf } from '../../frontend/modules/bounceDemo/djReal/swf_inject.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -39,7 +40,7 @@ execFileSync('python3', [INJECTOR, ORIGINAL, refPath,
     '--bytecode', BYTECODE, '--stage-width', '600'], { stdio: 'inherit' });
 const ref = new Uint8Array(readFileSync(refPath));
 
-const ours = await buildLoaderSwf(original, bytecode, { stageWidth: 600 });
+const ours = await injectSwf(original, bytecode, { stageWidth: 600 });
 
 if (ours.length !== ref.length) {
     console.error(`FAIL: length mismatch ours=${ours.length} ref=${ref.length}`);
@@ -52,5 +53,5 @@ for (let i = 0; i < ref.length; i++) {
         process.exit(1);
     }
 }
-console.log(`PASS: swfPatch.js output byte-identical to inject_tracer.py `
+console.log(`PASS: swf_inject.mjs output byte-identical to inject_tracer.py `
     + `--stage-width 600 (${ref.length} bytes)`);
