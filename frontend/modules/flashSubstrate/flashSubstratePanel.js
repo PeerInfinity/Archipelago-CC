@@ -33,19 +33,30 @@ import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js'
  * @param {string} config.componentType  Golden Layout component type this
  *   panel is registered under — also what procgen:activeSubstrateChanged
  *   payloads are compared against for the inactive overlay.
- * @param {string} config.title          Panel tab title.
- * @param {string} config.iframeSrc      Game page URL. Must carry a unique
- *   `iframeId` query param so this wrapper doesn't collide with the other
- *   substrate iframes in iframeAdapterCore.iframes — without it, the
- *   AdapterClients default to the same passthrough id and the second one
- *   overwrites the first's window pointer, so forwarded events only reach
- *   whichever wrapper mounted most recently. The bridge also reads its
- *   loadRegion event name from a `loadRegionEvent` query param here
- *   (defaults to flash:loadRegion — see bridge.js).
+ * @param {string|function():string} config.title  Panel tab title, or a
+ *   thunk resolved at mount and on each reloadEvent (lets a multi-renderer
+ *   substrate retitle the tab when its iframe swaps).
+ * @param {string|function():string} config.iframeSrc  Game page URL, or a
+ *   thunk resolving to one (re-read at mount and on reloadEvent — see
+ *   below). Must carry a unique `iframeId` query param so this wrapper
+ *   doesn't collide with the other substrate iframes in
+ *   iframeAdapterCore.iframes — without it, the AdapterClients default to
+ *   the same passthrough id and the second one overwrites the first's
+ *   window pointer, so forwarded events only reach whichever wrapper
+ *   mounted most recently. The bridge also reads its loadRegion event name
+ *   from a `loadRegionEvent` query param here (defaults to flash:loadRegion
+ *   — see bridge.js).
  * @param {string} config.bridgeSrc      URL of bridge.js as resolvable
  *   FROM THE IFRAME PAGE's URL (script src is injected into the iframe
  *   document, so relative paths resolve against iframeSrc, not the host).
  * @param {string} config.moduleName     eventBus subscriber id + log tag.
+ * @param {string} [config.reloadEvent]  Optional eventBus event name. When
+ *   it fires, the panel re-resolves `iframeSrc` (and `title`); if the URL
+ *   changed it reloads the iframe — the existing `load` listener re-injects
+ *   the bridge, which re-handshakes under the same iframeId. Used by
+ *   bounceDemo to swap between its JS and real-DJ renderer pages within one
+ *   panel when the renderer setting changes. Substrates with a fixed page
+ *   (flash / tasw / jta) omit it.
  */
 export function createSubstrateIframePanelClass({
     componentType,
@@ -53,21 +64,28 @@ export function createSubstrateIframePanelClass({
     iframeSrc,
     bridgeSrc,
     moduleName,
+    reloadEvent = null,
 }) {
+    const resolveSrc = () => (typeof iframeSrc === 'function' ? iframeSrc() : iframeSrc);
+    const resolveTitle = () => (typeof title === 'function' ? title() : title);
+
     return class SubstrateIframePanel {
         constructor(container, componentState) {
             this.container = container;
             this.componentState = componentState;
             this.rootElement = null;
             this.iframe = null;
+            this._currentSrc = null;
             this._inactiveOverlay = null;
             this._activeSubstrate = null;
             this._isLoopModeActive = false;
             this._unsubActiveSubstrate = null;
             this._unsubLoopMode = null;
+            this._unsubReload = null;
             this._initializeUI();
             this._subscribeToActiveSubstrate();
             this._subscribeToLoopMode();
+            this._subscribeToReload();
         }
 
         getRootElement() {
@@ -76,7 +94,7 @@ export function createSubstrateIframePanelClass({
 
         onMount(container) {
             if (container && typeof container.setTitle === 'function') {
-                container.setTitle(title);
+                container.setTitle(resolveTitle());
             }
         }
 
@@ -89,15 +107,19 @@ export function createSubstrateIframePanelClass({
 
             this.iframe = document.createElement('iframe');
             this.iframe.className = 'flashsub-iframe';
-            this.iframe.src = iframeSrc;
-            this.iframe.setAttribute('title', title);
-            // allow-scripts: needed to run the game + the bridge.
-            // allow-same-origin: needed so the iframe's ES module graph can
-            // load — an opaque-origin sandbox can't CORS-fetch its own module
-            // graph. Same-origin substrate iframes are accident containment,
-            // not a malice boundary (per the external-iframe-modules trust
-            // model — same trade-off as jtaSubstrateWrapper).
-            this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+            this._currentSrc = resolveSrc();
+            this.iframe.src = this._currentSrc;
+            this.iframe.setAttribute('title', resolveTitle());
+            // No sandbox attribute: this iframe loads first-party, same-origin
+            // content that must run scripts AND fetch its own ES module graph
+            // (an opaque-origin sandbox can't CORS-fetch same-server modules).
+            // Both requirements force `allow-scripts allow-same-origin`, which
+            // already disables origin isolation — so the sandbox attribute
+            // provided no real boundary while emitting the browser's
+            // "can escape its sandboxing" warning on every load. Same-origin
+            // substrate iframes are accident containment, not a malice boundary
+            // (per the external-iframe-modules trust model), so the attribute
+            // is omitted entirely.
 
             // Inject the bridge after the iframe finishes loading the game
             // page. The bridge completes the iframeAdapter handshake and
@@ -137,6 +159,33 @@ export function createSubstrateIframePanelClass({
             eventBus.subscribe('loopUI:modeChanged', handler, moduleName);
             this._unsubLoopMode = () =>
                 eventBus.unsubscribe?.('loopUI:modeChanged', handler, moduleName);
+        }
+
+        // When the configured reloadEvent fires, re-resolve the iframe src
+        // (and title) and reload only if the URL actually changed — so an
+        // unrelated event (or a no-op renderer write) costs nothing.
+        _subscribeToReload() {
+            if (!reloadEvent || !eventBus?.subscribe) return;
+            const handler = () => this._reloadIfChanged();
+            eventBus.subscribe(reloadEvent, handler, moduleName);
+            this._unsubReload = () =>
+                eventBus.unsubscribe?.(reloadEvent, handler, moduleName);
+        }
+
+        _reloadIfChanged() {
+            if (!this.iframe) return;
+            const next = resolveSrc();
+            if (next === this._currentSrc) return;
+            this._currentSrc = next;
+            // Setting src triggers the iframe's 'load' listener, which
+            // re-injects the bridge; it re-handshakes under the same
+            // iframeId (the old page's window pointer is replaced).
+            this.iframe.src = next;
+            const t = resolveTitle();
+            this.iframe.setAttribute('title', t);
+            if (this.container && typeof this.container.setTitle === 'function') {
+                this.container.setTitle(t);
+            }
         }
 
         _activateCurrentSubstratePanel() {
@@ -192,6 +241,7 @@ export function createSubstrateIframePanelClass({
         destroy() {
             if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
             if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
+            if (this._unsubReload) { this._unsubReload(); this._unsubReload = null; }
             if (this.iframe) {
                 this.iframe.src = 'about:blank';
                 this.iframe = null;

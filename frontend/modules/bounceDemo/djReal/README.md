@@ -1,9 +1,12 @@
-# Real-DJ renderer (`bounceDjRealPanel`)
+# Real-DJ renderer (the dj page of `bounceDemoPanel`)
 
 Renders dj-profile bounce regions inside the **real Doodle Jump SWF** via
 SWFRecomp-CC's injected-ActionScript level loader, instead of the JS canvas
 renderer (`../game/`). Same `__swfBridge` contract, same injected host
-bridge (`flashSubstrate/bridge.js`) — a different page.
+bridge (`flashSubstrate/bridge.js`) — a different page. Both pages are
+hosted by the ONE `bounceDemoPanel` (it swaps its iframe src on the
+renderer setting); they share its iframeId (`bounceDemo`) and loadRegion
+event (`bounce:loadRegion`).
 
 Select it with the `moduleSettings.bounceDemo.renderer` setting:
 
@@ -15,9 +18,10 @@ Select it with the `moduleSettings.bounceDemo.renderer` setting:
 | `"flash"` | native NPAPI Flash Player (Basilisk + Clean Flash etc.); plugins need a URL, so first build `dj_loader.swf` with `node scripts/procgen/build-dj-loader-swf.mjs` |
 | `"dj"` (legacy) | auto: `swfrecomp` when `runtime/` is populated, else `ruffle` |
 
-js↔dj switches apply on the next bounce region entry; tier changes
-within the dj page apply on its next boot (reload the app), since the
-player loads once per iframe lifetime. The host relays the tier to the
+js↔dj switches reload the panel's iframe immediately (the host publishes
+`bounce:rendererChanged`; the panel swaps its src). Tier changes within
+the dj page apply on its next boot (reload the app), since the player
+loads once per iframe lifetime. The host relays the tier to the
 page via localStorage `bounceDjReal.player`; `?player=ruffle|wasm|flash`
 on the page URL overrides it for direct opens/harnesses. Non-dj-profile
 payloads are refused loudly by the page (this renderer IS the dj

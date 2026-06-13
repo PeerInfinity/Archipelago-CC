@@ -388,13 +388,13 @@ export function* generateZoneForSpecsGen({
 export const BOUNCE_PANEL_COMPONENT_TYPE = 'bounceDemoPanel';
 export const BOUNCE_LOAD_REGION_EVENT = 'bounce:loadRegion';
 export const BOUNCE_IFRAME_ID = 'bounceDemo';
-// The real-DJ renderer (loader-injected recompiled Doodle Jump page,
-// modules/bounceDemo/djReal/) gets its own panel identity so region
-// loads route to exactly one renderer iframe: same substrate id, the
-// entry's identity fields switch via setBounceRenderer below.
-export const BOUNCE_DJ_PANEL_COMPONENT_TYPE = 'bounceDjRealPanel';
-export const BOUNCE_DJ_LOAD_REGION_EVENT = 'bounceDjReal:loadRegion';
-export const BOUNCE_DJ_IFRAME_ID = 'bounceDjReal';
+// Published by the host module (index.js) after the renderer setting
+// changes; the single bounceDemoPanel subscribes (via the panel factory's
+// reloadEvent) and swaps its iframe between the JS and real-DJ pages. The
+// real-DJ page (modules/bounceDemo/djReal/) loads under the SAME iframeId
+// and loadRegionEvent — only the page URL differs — so the registry
+// identity above stays constant across renderers.
+export const BOUNCE_RENDERER_CHANGED_EVENT = 'bounce:rendererChanged';
 
 // Which renderer bounce region loads route to: 'js' (the canvas
 // renderer, default) or one of the real-DJ page's player tiers —
@@ -445,23 +445,16 @@ export function createBounceSubstrateEntry({
     return Object.freeze({
         ...createFlashSubstrateEntry({ id, label, iframeId: BOUNCE_IFRAME_ID }),
 
-        // Bounce's own panel + load event (see constants above). Live
-        // getters so the renderer setting switches the routing identity
-        // per access: procgenPlayer reads these on every region move
-        // (publishLoadRegion / activeSubstrateChanged / appReady
-        // re-publish), so flipping the renderer takes effect on the
-        // next bounce region entry with no re-registration.
-        get panelComponentType() {
-            return _renderer !== 'js'
-                ? BOUNCE_DJ_PANEL_COMPONENT_TYPE : BOUNCE_PANEL_COMPONENT_TYPE;
-        },
-        get loadRegionEvent() {
-            return _renderer !== 'js'
-                ? BOUNCE_DJ_LOAD_REGION_EVENT : BOUNCE_LOAD_REGION_EVENT;
-        },
-        get iframeId() {
-            return _renderer !== 'js' ? BOUNCE_DJ_IFRAME_ID : BOUNCE_IFRAME_ID;
-        },
+        // Bounce's single panel identity (one component / event / iframeId
+        // for BOTH renderers). The renderer setting no longer switches the
+        // routing identity — the one bounceDemoPanel swaps its own iframe
+        // src between the JS and real-DJ pages (both speak the same
+        // __swfBridge contract under this iframeId), so procgenPlayer reads
+        // a constant identity here and the renderer choice is a panel-local
+        // concern. See index.js (getIframeSrc + reloadEvent).
+        panelComponentType: BOUNCE_PANEL_COMPONENT_TYPE,
+        loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
+        iframeId: BOUNCE_IFRAME_ID,
 
         // Playback bot: overrides the flash entry's `() => null` stub.
         // The proxy publishes controller commands on

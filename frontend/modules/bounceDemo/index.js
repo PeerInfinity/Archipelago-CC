@@ -30,13 +30,12 @@ import {
     substrateRegistryEntry,
     setPlaybackProxy,
     setBounceRenderer,
+    isDjRenderer,
     BOUNCE_PANEL_COMPONENT_TYPE,
     BOUNCE_LOAD_REGION_EVENT,
     BOUNCE_PLAYBACK_CONTROL_EVENT,
     BOUNCE_IFRAME_ID,
-    BOUNCE_DJ_PANEL_COMPONENT_TYPE,
-    BOUNCE_DJ_LOAD_REGION_EVENT,
-    BOUNCE_DJ_IFRAME_ID,
+    BOUNCE_RENDERER_CHANGED_EVENT,
 } from './bounceDemoLibrary.js';
 
 // Which renderer bounce region loads route to: 'js' (canvas renderer,
@@ -72,9 +71,12 @@ function applyRendererSetting(value) {
 // textAdventure wrapper iframes in iframeAdapterCore.iframes (colliding
 // ids overwrite each other's window pointer — events then reach only the
 // most recently mounted wrapper). Shared with the registry entry so
-// procgenPlayer can re-publish loadRegion on this iframe's appReady.
+// procgenPlayer can re-publish loadRegion on this iframe's appReady. BOTH
+// renderer pages load under this ONE id (only one is live at a time — the
+// single panel swaps its src), so there's no collision.
 const IFRAME_ID = BOUNCE_IFRAME_ID;
-// The standalone-first game page (build-order step 6). In an iframe
+
+// The standalone-first JS game page (build-order step 6). In an iframe
 // (window !== window.parent) it skips its dev harness and just exposes
 // the __swfBridge game side; loadRegionEvent tells the injected bridge
 // which host event delivers this iframe's region loads.
@@ -82,32 +84,32 @@ const GAME_IFRAME_SRC = `./modules/bounceDemo/game/index.html?iframeId=${IFRAME_
     + `&loadRegionEvent=${BOUNCE_LOAD_REGION_EVENT}`
     + `&playbackControlEvent=${BOUNCE_PLAYBACK_CONTROL_EVENT}`;
 
-export const BounceDemoPanel = createSubstrateIframePanelClass({
-    componentType: BOUNCE_PANEL_COMPONENT_TYPE,
-    title: 'Bounce Demo',
-    iframeSrc: GAME_IFRAME_SRC,
-    // Resolved against the iframe page URL (.../modules/bounceDemo/game/
-    // index.html) — the shared flash bridge, not a bounce copy.
-    bridgeSrc: '../../flashSubstrate/bridge.js',
-    moduleName: 'bounceDemo',
-});
-
 // The real-DJ renderer: the loader-injected recompiled Doodle Jump SWF
 // (SWFRecomp-CC's dj_loader, wide 600px build) behind the same
 // __swfBridge contract. Its page bootstraps the Flash player lazily on
-// first configure, so mounting this panel costs nothing while the JS
-// renderer is selected. No playbackControlEvent: the playback bot is
-// deferred for this renderer (input synthesis needs the botDriver,
+// first configure, so it isn't loaded at all while the JS renderer is
+// selected. Loads under the SAME iframeId + loadRegionEvent as the JS page
+// — only the page URL differs. No playbackControlEvent: the playback bot
+// is deferred for this renderer (input synthesis needs the botDriver,
 // which lives in the JS page).
-const DJ_IFRAME_SRC = `./modules/bounceDemo/djReal/index.html?iframeId=${BOUNCE_DJ_IFRAME_ID}`
-    + `&loadRegionEvent=${BOUNCE_DJ_LOAD_REGION_EVENT}`;
+const DJ_IFRAME_SRC = `./modules/bounceDemo/djReal/index.html?iframeId=${IFRAME_ID}`
+    + `&loadRegionEvent=${BOUNCE_LOAD_REGION_EVENT}`;
 
-export const BounceDjRealPanel = createSubstrateIframePanelClass({
-    componentType: BOUNCE_DJ_PANEL_COMPONENT_TYPE,
-    title: 'Doodle Jump',
-    iframeSrc: DJ_IFRAME_SRC,
+// One panel for both renderers. The src + tab title resolve from the live
+// renderer setting; the panel re-reads them (and reloads the iframe) when
+// the host publishes BOUNCE_RENDERER_CHANGED_EVENT after a setting change.
+const getIframeSrc = () => (isDjRenderer() ? DJ_IFRAME_SRC : GAME_IFRAME_SRC);
+const getPanelTitle = () => (isDjRenderer() ? 'Doodle Jump' : 'Bounce Demo');
+
+export const BounceDemoPanel = createSubstrateIframePanelClass({
+    componentType: BOUNCE_PANEL_COMPONENT_TYPE,
+    title: getPanelTitle,
+    iframeSrc: getIframeSrc,
+    // Resolved against the iframe page URL (.../modules/bounceDemo/{game,
+    // djReal}/index.html) — the shared flash bridge, not a bounce copy.
     bridgeSrc: '../../flashSubstrate/bridge.js',
     moduleName: 'bounceDemo',
+    reloadEvent: BOUNCE_RENDERER_CHANGED_EVENT,
 });
 
 export const moduleInfo = {
@@ -141,13 +143,11 @@ export function register(registrationApi) {
         document.head.appendChild(link);
     }
 
+    // One panel for both renderers; it swaps its own iframe src between the
+    // JS and real-DJ pages on the renderer setting (see BounceDemoPanel).
     registrationApi.registerPanelComponent(
         BOUNCE_PANEL_COMPONENT_TYPE,
         BounceDemoPanel,
-    );
-    registrationApi.registerPanelComponent(
-        BOUNCE_DJ_PANEL_COMPONENT_TYPE,
-        BounceDjRealPanel,
     );
 
     // The bridge dispatches user:locationCheck (pickup landed) and
@@ -158,13 +158,13 @@ export function register(registrationApi) {
 
     // procgenPlayer publishes bounce:loadRegion on bounce-region
     // transitions (the registry entry's loadRegionEvent); the bridge
-    // picks it up via the iframeAdapter eventBus relay.
+    // picks it up via the iframeAdapter eventBus relay. Both renderer
+    // pages use this one event, so there's no second load event.
     registrationApi.registerEventBusPublisher(BOUNCE_LOAD_REGION_EVENT);
-    // The dj renderer's load event: procgenPlayer registers the entry's
-    // loadRegionEvent at its own init, but that getter reflects the
-    // renderer selected at that moment — register the alternate event
-    // up front so flipping the setting mid-session publishes cleanly.
-    registrationApi.registerEventBusPublisher(BOUNCE_DJ_LOAD_REGION_EVENT);
+    // Renderer-switch signal: published by initialize() after the renderer
+    // setting changes; the single bounce panel reloads its iframe in
+    // response (panel factory reloadEvent).
+    registrationApi.registerEventBusPublisher(BOUNCE_RENDERER_CHANGED_EVENT);
     // Bot → bridge control channel: published by the host-side
     // PlaybackProxy (built in initialize), subscribed by the in-iframe
     // flash bridge's playback receiver.
@@ -176,7 +176,6 @@ export function register(registrationApi) {
 
     // Events the host module subscribes to.
     registrationApi.registerEventBusSubscriberIntent(BOUNCE_LOAD_REGION_EVENT);
-    registrationApi.registerEventBusSubscriberIntent(BOUNCE_DJ_LOAD_REGION_EVENT);
 
     // Guarded register so re-registration of the same id is harmless
     // (the library's import side-effect may already have run).
@@ -190,21 +189,27 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
 
-    // Renderer selection: seed the library from the persisted setting
-    // and track live changes (the Settings panel writes through
-    // settingsManager). The registry entry's identity getters read the
-    // library value on every region move, so a change applies on the
-    // next bounce region entry — no re-registration.
+    // Renderer selection: seed the library from the persisted setting and
+    // track live changes (the Settings panel writes through
+    // settingsManager). After applying, publish BOUNCE_RENDERER_CHANGED_EVENT
+    // so the mounted bounce panel re-resolves its iframe src and reloads if
+    // the renderer (js <-> dj page) changed. Publishing after
+    // setBounceRenderer guarantees the panel reads the new value; an
+    // unchanged src makes the panel's reload a no-op.
+    const applyAndNotify = (value) => {
+        applyRendererSetting(value);
+        eventBus.publish(BOUNCE_RENDERER_CHANGED_EVENT, { renderer: value });
+    };
     settingsManager.getSetting(RENDERER_SETTING_KEY, 'js')
-        .then((value) => applyRendererSetting(value))
+        .then((value) => applyAndNotify(value))
         .catch(() => { /* keep the 'js' default */ });
     eventBus.subscribe('settings:changed', (data) => {
         if (data?.key === RENDERER_SETTING_KEY) {
-            applyRendererSetting(data.value);
+            applyAndNotify(data.value);
         } else if (data?.key === '*') {
             // Bulk write (Settings panel "Apply") — re-read the key.
             settingsManager.getSetting(RENDERER_SETTING_KEY, 'js')
-                .then((value) => applyRendererSetting(value))
+                .then((value) => applyAndNotify(value))
                 .catch(() => {});
         }
     }, 'bounceDemo');
@@ -229,13 +234,6 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
         eventBus.publish('ui:activatePanel', { panelId: BOUNCE_PANEL_COMPONENT_TYPE });
-    });
-    // Same for the real-DJ renderer's panel (its own load event, so only
-    // the selected renderer's iframe gets configured + surfaced).
-    eventBus.subscribe(BOUNCE_DJ_LOAD_REGION_EVENT, () => {
-        const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
-        if (isFocusLocked?.()) return;
-        eventBus.publish('ui:activatePanel', { panelId: BOUNCE_DJ_PANEL_COMPONENT_TYPE });
     });
 }
 
