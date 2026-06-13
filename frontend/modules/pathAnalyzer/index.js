@@ -70,7 +70,7 @@ export function register(registrationApi) {
       },
       maxAnalysisTimeMs: {
         type: 'integer',
-        default: 5000,
+        default: 10000,
         minimum: 1000,
         maximum: 30000,
         description: 'Maximum time in milliseconds before analysis times out',
