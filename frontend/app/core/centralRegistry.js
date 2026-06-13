@@ -175,6 +175,56 @@ class CentralRegistry {
     // We might want to merge this into a single master schema for validation or UI generation later
   }
 
+  /**
+   * Resolve the schema-declared default for a `moduleSettings.<mod>.<prop>`
+   * key. This is the single source of truth for moduleSettings defaults —
+   * settingsManager.getSetting consults it between the persisted value and
+   * the call-site fallback (see app/core/settingsManager.js).
+   *
+   * Handles the heterogeneous schema shapes that modules register
+   * (mirrors the normalizer in scripts/audit-settings.mjs):
+   *   - standard:        { type:'object', properties: { <prop>: {default} } }
+   *   - double-wrapped:  { <moduleId>: { properties: {...} } }
+   *   - flat:            { <prop>: {default}, ... }  (e.g. discovery)
+   *
+   * @param {string} key e.g. 'moduleSettings.inventory.showLabel1'
+   * @returns {{ found: boolean, value: * }} `found` is true only when the
+   *   schema declares a `default` for the prop; `value` is that default.
+   *   Non-`moduleSettings.<mod>.<prop>` keys always return found:false so
+   *   the caller falls through to its own default.
+   */
+  getSchemaDefault(key) {
+    const notFound = { found: false, value: undefined };
+    if (typeof key !== 'string') return notFound;
+    const parts = key.split('.');
+    if (parts.length !== 3 || parts[0] !== 'moduleSettings') return notFound;
+    const [, moduleId, prop] = parts;
+
+    const snippet = this.settingsSchemas.get(moduleId);
+    if (!snippet || typeof snippet !== 'object') return notFound;
+
+    // Unwrap a double-wrapped { <moduleId>: {...} } snippet.
+    let node = snippet;
+    if (!node.properties && !node.type
+      && node[moduleId] && typeof node[moduleId] === 'object') {
+      node = node[moduleId];
+    }
+
+    // Locate the properties bag: explicit `properties`, else a flat
+    // properties object (no `type` at the top level).
+    let props = null;
+    if (node.properties && typeof node.properties === 'object') {
+      props = node.properties;
+    } else if (!node.type) {
+      props = node;
+    }
+    if (!props || typeof props !== 'object') return notFound;
+
+    const spec = props[prop];
+    if (!spec || typeof spec !== 'object' || !('default' in spec)) return notFound;
+    return { found: true, value: spec.default };
+  }
+
   registerPublicFunction(moduleId, functionName, functionRef) {
     if (!this.publicFunctions.has(moduleId)) {
       this.publicFunctions.set(moduleId, new Map());

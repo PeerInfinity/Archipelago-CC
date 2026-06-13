@@ -1,4 +1,5 @@
 import eventBus from './eventBus.js';
+import { centralRegistry } from './centralRegistry.js';
 import { deepMerge } from '../../utils/settingsMerger.js';
 
 
@@ -304,6 +305,16 @@ export class SettingsManager {
    * Gets a specific setting value using a dot-notation key. Ensures settings are loaded first.
    * Session overrides (set via updateSetting with persist:false) take
    * precedence over the persisted base.
+   * Resolution precedence:
+   *   session override  >  persisted value  >  SCHEMA default  >  call-site default
+   *
+   * The schema default (for `moduleSettings.<mod>.<prop>` keys) is read
+   * from the registered schema via centralRegistry, so defaults need only
+   * be declared once (in the schema) rather than duplicated across the
+   * schema, settings.json, and the call-site fallback. The call-site
+   * `defaultValue` remains the final fallback for keys with no schema
+   * default (top-level settings, stubbed settingsManager, etc.).
+   *
    * @param {string} key - The setting key (e.g., 'generalSettings.theme' or 'moduleSettings.client.defaultServer')
    * @param {*} defaultValue - Value to return if key not found.
    * @returns {Promise<*>} A promise resolving to the setting value or defaultValue.
@@ -313,14 +324,24 @@ export class SettingsManager {
     if (this._overrides.has(key)) return this._overrides.get(key);
     const keys = key.split('.');
     let current = this.settings;
+    let foundInSettings = true;
     for (const k of keys) {
       if (current && typeof current === 'object' && k in current) {
         current = current[k];
       } else {
-        return defaultValue;
+        foundInSettings = false;
+        break;
       }
     }
-    return current;
+    if (foundInSettings) return current;
+
+    // Not persisted — consult the registered schema default before the
+    // call-site fallback. Non-moduleSettings keys (and keys with no schema
+    // default) return found:false and fall through to defaultValue.
+    const schemaDefault = centralRegistry.getSchemaDefault(key);
+    if (schemaDefault.found) return schemaDefault.value;
+
+    return defaultValue;
   }
 
   /**

@@ -13,6 +13,7 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { SettingsManager } from './settingsManager.js';
+import { centralRegistry } from './centralRegistry.js';
 
 function makeLocalStorageStub() {
   let store = {};
@@ -425,6 +426,103 @@ describe('SettingsManager — getSettings vs getEffectiveSettings', () => {
     snapshot.moduleSettings.loops.autoRestart = 'mutated';
     const fresh = await sm.getEffectiveSettings();
     expect(fresh.moduleSettings.loops.autoRestart).toBe(true);
+  });
+});
+
+describe('SettingsManager — getSetting precedence (override > persisted > schema > call-site)', () => {
+  // Schema-default resolution reads the live centralRegistry singleton.
+  // Register schemas covering the heterogeneous shapes the resolver must
+  // handle, then clean them up so the tests don't leak into siblings.
+  const SCHEMA_MODULES = ['phase1Std', 'phase1Wrapped', 'phase1Flat'];
+
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    // Standard shape: { type:'object', properties:{...} }.
+    centralRegistry.settingsSchemas.set('phase1Std', {
+      type: 'object',
+      properties: {
+        widgetSize: { type: 'number', default: 42 },
+        // A property declared with NO default → resolver must report
+        // found:false so getSetting falls through to the call-site default.
+        noDefaultProp: { type: 'string' },
+      },
+    });
+    // Double-wrapped shape: { <moduleId>: { properties:{...} } }.
+    centralRegistry.settingsSchemas.set('phase1Wrapped', {
+      phase1Wrapped: {
+        type: 'object',
+        properties: { wrappedToggle: { type: 'boolean', default: true } },
+      },
+    });
+    // Flat shape (e.g. discovery): { <prop>: {default}, ... }.
+    centralRegistry.settingsSchemas.set('phase1Flat', {
+      flatColor: { type: 'string', default: '#abcdef' },
+    });
+  });
+  afterEach(() => {
+    for (const m of SCHEMA_MODULES) centralRegistry.settingsSchemas.delete(m);
+    delete globalThis.localStorage;
+  });
+
+  function makeSm(settings = { moduleSettings: {} }) {
+    const sm = new SettingsManager();
+    sm.setInitialSettings(settings);
+    return sm;
+  }
+
+  it('returns the schema default when the key is absent from persisted settings', async () => {
+    const sm = makeSm();
+    // No call-site default supplied → schema default (42) wins.
+    expect(await sm.getSetting('moduleSettings.phase1Std.widgetSize')).toBe(42);
+  });
+
+  it('schema default beats the call-site default', async () => {
+    const sm = makeSm();
+    expect(await sm.getSetting('moduleSettings.phase1Std.widgetSize', 999)).toBe(42);
+  });
+
+  it('persisted value beats the schema default', async () => {
+    const sm = makeSm({ moduleSettings: { phase1Std: { widgetSize: 7 } } });
+    expect(await sm.getSetting('moduleSettings.phase1Std.widgetSize', 999)).toBe(7);
+  });
+
+  it('session override beats the persisted value AND the schema default', async () => {
+    const sm = makeSm({ moduleSettings: { phase1Std: { widgetSize: 7 } } });
+    await sm.updateSetting('moduleSettings.phase1Std.widgetSize', 123, { persist: false });
+    expect(await sm.getSetting('moduleSettings.phase1Std.widgetSize', 999)).toBe(123);
+  });
+
+  it('falls through to the call-site default when the schema prop has no default', async () => {
+    const sm = makeSm();
+    expect(await sm.getSetting('moduleSettings.phase1Std.noDefaultProp', 'fallback')).toBe('fallback');
+  });
+
+  it('falls through to the call-site default when there is no schema entry at all', async () => {
+    const sm = makeSm();
+    expect(await sm.getSetting('moduleSettings.noSuchModule.prop', 'fallback')).toBe('fallback');
+  });
+
+  it('resolves defaults from the double-wrapped schema shape', async () => {
+    const sm = makeSm();
+    expect(await sm.getSetting('moduleSettings.phase1Wrapped.wrappedToggle', false)).toBe(true);
+  });
+
+  it('resolves defaults from the flat schema shape', async () => {
+    const sm = makeSm();
+    expect(await sm.getSetting('moduleSettings.phase1Flat.flatColor')).toBe('#abcdef');
+  });
+
+  it('a persisted value of false still beats a schema default (no truthiness confusion)', async () => {
+    const sm = makeSm({ moduleSettings: { phase1Wrapped: { wrappedToggle: false } } });
+    // Persisted false must win over schema default true.
+    expect(await sm.getSetting('moduleSettings.phase1Wrapped.wrappedToggle', true)).toBe(false);
+  });
+
+  it('does not apply schema defaults to top-level (non-moduleSettings) keys', async () => {
+    const sm = makeSm({ generalSettings: { theme: 'dark' } });
+    // Even though a 'phase1Std' module schema exists, a top-level key is
+    // not schema-able and must use the call-site default.
+    expect(await sm.getSetting('generalSettings.missing', 'topLevelFallback')).toBe('topLevelFallback');
   });
 });
 
