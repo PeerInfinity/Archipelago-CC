@@ -122,6 +122,10 @@ export function register(registrationApi) {
         enum: ['hover', 'zoom', 'force-show', 'force-hide'],
         label: 'Location visibility',
       },
+      showName: { type: 'boolean', default: true, label: 'Show name' },
+      showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
+      showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
+      wheelSensitivity: { type: 'number', default: 1, label: 'Wheel sensitivity' },
     },
   });
 }

@@ -65,8 +65,15 @@ export function register(registrationApi) {
   // Declare that this module sends 'user:locationCheck' via the dispatcher
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
 
-  // Register settings schema if needed
-  // No settings schema specific to Locations registration.
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      columns: { type: 'number', default: 3, label: 'Columns' },
+      showName: { type: 'boolean', default: true, label: 'Show name' },
+      showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
+      showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
+    },
+  });
 
   // Register EventBus publisher intentions (used by LocationUI)
   registrationApi.registerEventBusPublisher('stateManager:locationCollectionChanged');

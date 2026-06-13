@@ -269,7 +269,26 @@ export function register(registrationApi) {
         enum: ['off', 'append', 'rebuildPath'],
         label: 'Click to queue',
       },
-      // Add other loop-specific settings here
+      autoResumeOnNewAction: {
+        type: 'boolean',
+        default: false,
+        label: 'Auto-Resume on New Action',
+      },
+      autoRemoveCompleted: {
+        type: 'boolean',
+        default: false,
+        label: 'Auto-Remove Completed Actions',
+      },
+      instantMode: {
+        type: 'boolean',
+        default: false,
+        label: 'Instant Mode',
+      },
+      keepFocused: {
+        type: 'boolean',
+        default: false,
+        label: 'Keep This Panel Focused',
+      },
     },
   });
 

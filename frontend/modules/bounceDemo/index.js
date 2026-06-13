@@ -177,6 +177,18 @@ export function register(registrationApi) {
     // Events the host module subscribes to.
     registrationApi.registerEventBusSubscriberIntent(BOUNCE_LOAD_REGION_EVENT);
 
+    registrationApi.registerSettingsSchema({
+        type: 'object',
+        properties: {
+            renderer: {
+                type: 'string',
+                default: 'js',
+                enum: ['js', 'ruffle', 'swfrecomp', 'flash', 'dj'],
+                label: 'Renderer',
+            },
+        },
+    });
+
     // Guarded register so re-registration of the same id is harmless
     // (the library's import side-effect may already have run).
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {

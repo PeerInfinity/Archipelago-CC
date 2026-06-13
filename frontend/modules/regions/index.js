@@ -105,8 +105,14 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'unconditional', timing: 'immediate' }
   );
 
-  // Register settings schema if needed
-  // registrationApi.registerSettingsSchema(moduleId, { /* ... schema ... */ });
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      showName: { type: 'boolean', default: true, label: 'Show name' },
+      showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
+      showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
+    },
+  });
 }
 
 // Handler for user:regionMove events

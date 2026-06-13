@@ -66,6 +66,13 @@ export function register(registrationApi) {
   // ADDED: Declare that this module sends 'user:locationCheck' via the dispatcher
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
 
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      verboseSpoilerTests: { type: 'boolean', default: false, label: 'Verbose spoiler tests' },
+    },
+  });
+
   log('info', '[SpoilerTest Module] Registration complete.');
 }
 

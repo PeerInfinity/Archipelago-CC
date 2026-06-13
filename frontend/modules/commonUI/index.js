@@ -32,6 +32,13 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:navigateToRegion');
   
   registrationApi.registerEventBusPublisher('ui:navigateToLocation');
+
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      showLocationItems: { type: 'boolean', default: true, label: 'Show location items' },
+    },
+  });
 }
 
 // --- Module Initialization ---

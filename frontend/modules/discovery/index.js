@@ -118,6 +118,11 @@ export function register(registrationApi) {
       type: 'boolean',
       default: false,
       description: 'Tint undiscovered regions/locations by reachability instead of a uniform undiscovered color'
+    },
+    showUndiscoveredRegionNames: {
+      type: 'boolean',
+      default: false,
+      description: 'Show region names for undiscovered regions instead of hiding them'
     }
   });
 

@@ -361,6 +361,13 @@ export function register(registrationApi) {
       coreMessageHandler._internalSendLocationChecks(serverIds);
     }
   });
+
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      defaultServer: { type: 'string', default: 'ws://localhost:38281', label: 'Default server' },
+    },
+  });
 }
 
 // --- Initialization --- //
