@@ -1,6 +1,13 @@
 // frontend/modules/timer/timerLogic.js
 import { Config } from '../client/core/config.js'; // Assuming Config might be needed for defaults
 import { createSnapshotInterface } from '../shared/snapshotInterface.js'; // For evaluating rules
+import settingsManager from '../../app/core/settingsManager.js';
+
+// settingsManager key for the batch-checks toggle (schema registered in
+// timer/index.js). When true (default) the timer batch-checks all accessible
+// locations in one tick; when false it dispatches one user:locationCheck per
+// tick through the dispatcher so the loops panel can steer it.
+const BATCH_CHECKS_SETTING_KEY = 'moduleSettings.timer.batchChecks';
 
 
 // Helper function for logging with fallback
@@ -64,6 +71,11 @@ export class TimerLogic {
     this.gameInterval = null;
     this.startTime = 0;
     this.endTime = 0;
+    // Whether to batch-check all accessible locations in one tick (default,
+    // current behavior) or dispatch one per tick (lets loops steer). Seeded
+    // from moduleSettings.timer.batchChecks in initialize() and kept live via
+    // settings:changed.
+    this.batchChecks = true;
     this.unsubscribeHandles = [];
 
     // Track locations we've attempted to check during this timer session
@@ -93,7 +105,27 @@ export class TimerLogic {
     // loops panel by dispatching user:locationCheck while loop mode is
     // active. Removed 2026-06-13; the timer is now loop-mode-agnostic.
 
-    // TODO: Add listener for settings:changed if delays become configurable
+    // Seed the batch-checks toggle and keep it live. getSetting is async;
+    // the default (true) holds until it resolves.
+    settingsManager.getSetting(BATCH_CHECKS_SETTING_KEY, true)
+      .then((v) => { this.batchChecks = v !== false; })
+      .catch(() => { /* keep default true */ });
+    const settingsHandler = (data) => {
+      if (data?.key === BATCH_CHECKS_SETTING_KEY) {
+        this.batchChecks = data.value !== false;
+        log('info', `[TimerLogic] batchChecks set to ${this.batchChecks}`);
+      } else if (data?.key === '*') {
+        // Bulk write (Settings panel "Apply") — re-read the key.
+        settingsManager.getSetting(BATCH_CHECKS_SETTING_KEY, true)
+          .then((v) => { this.batchChecks = v !== false; })
+          .catch(() => {});
+      }
+    };
+    this.unsubscribeHandles.push(
+      this.eventBus.subscribe('settings:changed', settingsHandler)
+    );
+
+    // TODO: Load minCheckDelay/maxCheckDelay from settings if they become configurable
   }
 
   isRunning() {
@@ -437,6 +469,30 @@ export class TimerLogic {
     }
 
     if (locationsToCheck.length > 0) {
+      // No-batch mode: dispatch exactly ONE check per tick through the
+      // dispatcher, so the loops panel can steer it (build a path to that
+      // target / append it) when loop mode is active and clickToQueue ≠ off.
+      // The next tick re-evaluates and picks the next location. Only the
+      // dispatched one is marked attempted, leaving the rest for later ticks.
+      if (!this.batchChecks) {
+        const loc = locationsToCheck[0];
+        this.attemptedChecks.add(loc.name);
+        log('info',
+          `[TimerLogic] No-batch: dispatching single check ${loc.name} (one per tick)`
+        );
+        this.dispatcher.publish(
+          'user:locationCheck',
+          {
+            locationName: loc.name,
+            regionName: loc.region || loc.parent_region,
+            originator: 'TimerModuleAuto',
+            originalDOMEvent: false,
+          },
+          { initialTarget: 'bottom' }
+        );
+        return true;
+      }
+
       // Mark all as attempted before dispatching
       for (const loc of locationsToCheck) {
         this.attemptedChecks.add(loc.name);

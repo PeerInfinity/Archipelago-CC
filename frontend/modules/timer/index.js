@@ -138,6 +138,22 @@ export function register(registrationApi) {
   // ADDED: Declare that this module sends 'user:locationCheck' via the dispatcher
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
 
+  // Timer settings. batchChecks (default true) = check all accessible
+  // locations in one tick via stateManager.batchCheckLocations (fast, bypasses
+  // the dispatcher). When false, the timer dispatches one user:locationCheck
+  // per tick through the dispatcher so the loops panel can steer it.
+  // Key: moduleSettings.timer.batchChecks (read in timerLogic).
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      batchChecks: {
+        type: 'boolean',
+        default: true,
+        label: 'Batch location checks',
+      },
+    },
+  });
+
   log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }
 
