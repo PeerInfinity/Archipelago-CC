@@ -7,9 +7,9 @@
     "autoLoadMode": true,
     "useSubstitutedNames": true
   },
-  "//": "playerId can be a string or number. It is used by StateManager.",
+  "//playerId": "playerId can be a string or number. It is used by StateManager.",
   "playerId": "1",
-  "//": "playerName is primarily for display and client hello message.",
+  "//playerName": "playerName is primarily for display and client hello message.",
   "playerName": "Player1",
   "colorblindMode": {
     "locations": false,
@@ -199,7 +199,6 @@
       "colorUndiscoveredByReachability": false
     },
     "bounceDemo": {
-      "//": "renderer: 'js' (canvas renderer) | 'ruffle' | 'swfrecomp' (browser-WASM) | 'flash' (native NPAPI, needs Basilisk+CleanFlash and a pre-built dj_loader.swf) | 'dj' (legacy auto). Non-js values run the real Doodle Jump SWF (modules/bounceDemo/djReal/)",
       "renderer": "js"
     },
     "iframeAdapter": {

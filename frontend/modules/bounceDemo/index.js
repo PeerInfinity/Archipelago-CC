@@ -185,6 +185,11 @@ export function register(registrationApi) {
                 default: 'js',
                 enum: ['js', 'ruffle', 'swfrecomp', 'flash', 'dj'],
                 label: 'Renderer',
+                description: "'js' (canvas renderer) | 'ruffle' | 'swfrecomp' "
+                    + "(browser-WASM) | 'flash' (native NPAPI, needs "
+                    + 'Basilisk+CleanFlash and a pre-built dj_loader.swf) | '
+                    + "'dj' (legacy auto). Non-js values run the real Doodle "
+                    + 'Jump SWF (modules/bounceDemo/djReal/)',
             },
         },
     });
