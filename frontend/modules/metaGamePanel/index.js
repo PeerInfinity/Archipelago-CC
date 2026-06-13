@@ -23,12 +23,10 @@ export function register(registrationApi) {
   
   // Register settings schema
   registrationApi.registerSettingsSchema({
-    metaGamePanel: {
-      type: 'object',
-      properties: {
-        defaultFilePath: { type: 'string', default: '' },
-        enableSyntaxHighlighting: { type: 'boolean', default: true }
-      }
+    type: 'object',
+    properties: {
+      defaultFilePath: { type: 'string', default: '' },
+      enableSyntaxHighlighting: { type: 'boolean', default: true }
     }
   });
 }

@@ -81,12 +81,10 @@ export function register(registrationApi) {
   
   // Register settings schema
   registrationApi.registerSettingsSchema({
-    metaGame: {
-      type: 'object',
-      properties: {
-        enableDebugLogging: { type: 'boolean', default: false },
-        defaultConfigurationPath: { type: 'string', default: '' }
-      }
+    type: 'object',
+    properties: {
+      enableDebugLogging: { type: 'boolean', default: false },
+      defaultConfigurationPath: { type: 'string', default: '' }
     }
   });
 }
