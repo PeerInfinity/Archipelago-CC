@@ -38,6 +38,16 @@
  *   --fall-behavior MODE     bounce fallBehavior regionParam (default 'current')
  *   --physics-profile ID     bounce physics profile (default 'classic';
  *                            non-classic stamps params.physics into payloads)
+ *   --enable-loop-mode       embed loop_costs in rules.json (mirrors the
+ *                            procgen panel's "Enable loop mode" toggle —
+ *                            the runtime loops module auto-enters loop
+ *                            mode when loop_costs is present). Off by
+ *                            default; needs the sphere_log, which is
+ *                            embedded by default.
+ *   --region-xp-effect MODE  per-region xpEffect stamped on loop_costs
+ *                            entries: 'cost' (default) | 'speed' | 'both'
+ *                            | 'none'. Only meaningful with
+ *                            --enable-loop-mode.
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
  *
@@ -91,6 +101,8 @@ function parseArgs(argv) {
         arrowEntry: true,
         fallBehavior: 'current',
         physicsProfile: 'classic',
+        enableLoopMode: false,
+        regionXpEffect: 'cost',
         rulesOut: null,
         out: './sphere-growth-dump.json',
     };
@@ -144,6 +156,8 @@ function parseArgs(argv) {
             case '--no-arrow-entry': out.arrowEntry = false; break;
             case '--fall-behavior': out.fallBehavior = next(); break;
             case '--physics-profile': out.physicsProfile = next(); break;
+            case '--enable-loop-mode': out.enableLoopMode = true; break;
+            case '--region-xp-effect': out.regionXpEffect = next(); break;
             case '--rules-out': out.rulesOut = next(); break;
             case '-o':
             case '--out': out.out = next(); break;
@@ -303,6 +317,12 @@ async function main() {
             }])),
         } : {}),
         ...(victory ? { completionConditionItem: victory } : {}),
+        // Loop mode: stamp loop_costs (derived from the embedded sphere
+        // log) so the runtime loops module auto-enters loop mode on
+        // load. enableLoopMode defaults false → byte-identical to the
+        // pre-flag output for non-loop runs.
+        enableLoopMode: config.enableLoopMode,
+        regionXpEffect: config.regionXpEffect,
         procgenMetadata: {
             driver: 'sphere-growth',
             stop_reason: stats.stopReason,
@@ -353,6 +373,17 @@ async function main() {
     if (arrowNote) console.log(`  arrow entry: ${arrowNote}`);
     if (startingItems.length > 0) {
         console.log(`  starting items: ${startingItems.join(', ')}`);
+    }
+    if (config.enableLoopMode) {
+        const lc = rulesJson.loop_costs;
+        console.log(`  loop mode: ON — loop_costs ${lc ? 'embedded' : 'MISSING'}`
+            + (lc ? ` (${Object.keys(lc.regions ?? {}).length} regions,`
+                + ` ${Object.keys(lc.locations ?? {}).length} locations,`
+                + ` xpEffect=${config.regionXpEffect})` : ''));
+        if (!lc) {
+            console.error('  WARNING: --enable-loop-mode set but no loop_costs emitted'
+                + ' (sphere_log missing?)');
+        }
     }
     if (oracleErrors.length > 0) {
         console.error('SPHERE ORACLE FAILED:');
