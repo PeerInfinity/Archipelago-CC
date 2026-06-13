@@ -105,12 +105,48 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'unconditional', timing: 'immediate' }
   );
 
+  // Schema defaults MUST stay in sync with the DEFAULTS table in
+  // displaySettingsManager.js (the DisplaySettingsBase cache shape). The
+  // schema is authoritative for defaults (schema-as-default-source); the
+  // DEFAULTS table mirrors it + defines which keys the cache tracks.
   registrationApi.registerSettingsSchema({
     type: 'object',
     properties: {
+      // Per-region display
       showName: { type: 'boolean', default: true, label: 'Show name' },
       showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
       showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
+      colorblindMode: { type: 'boolean', default: false, label: 'Colorblind mode' },
+      // Panel filter / view toggles
+      showReachable: { type: 'boolean', default: true, label: 'Show reachable' },
+      showUnreachable: { type: 'boolean', default: true, label: 'Show unreachable' },
+      showAll: { type: 'boolean', default: false, label: 'Show all regions' },
+      showPaths: { type: 'boolean', default: true, label: 'Show paths' },
+      showEntrances: { type: 'boolean', default: true, label: 'Show entrances' },
+      showExits: { type: 'boolean', default: true, label: 'Show exits' },
+      showLocations: { type: 'boolean', default: true, label: 'Show locations' },
+      showLogicTrees: { type: 'boolean', default: true, label: 'Show logic trees' },
+      showUndiscovered: { type: 'boolean', default: true, label: 'Show undiscovered' },
+      // Layout / sort
+      sectionOrder: {
+        type: 'string',
+        default: 'entrances-exits-locations',
+        enum: [
+          'entrances-exits-locations',
+          'entrances-locations-exits',
+          'exits-entrances-locations',
+          'exits-locations-entrances',
+          'locations-entrances-exits',
+          'locations-exits-entrances',
+        ],
+        label: 'Section order',
+      },
+      sortMethod: {
+        type: 'string',
+        default: 'original',
+        enum: ['original', 'alphabetical', 'accessibility_original', 'accessibility'],
+        label: 'Sort method',
+      },
     },
   });
 }

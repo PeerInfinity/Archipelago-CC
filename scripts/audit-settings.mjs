@@ -287,6 +287,10 @@ function parseLiteralDefault(text) {
   const dynamicKeys = [...codeKeys.keys()].filter((k) => k.includes('${')).sort();
 
   section('D. getSetting() keys absent from BOTH schema and settings.json (invisible; call-site default only)');
+  console.log('  (NOTE: a bare-key DISPLAYSETTINGS read — displaySettings.getSetting(\'x\') — is');
+  console.log('   remapped by the subclass getSettingsKey() to its real path, which the scanner');
+  console.log('   cannot see. Such keys (e.g. regions colorblindMode → moduleSettings.regions.*,');
+  console.log('   useSubstitutedNames → generalSettings.useSubstitutedNames) are false positives.)\n');
   const dMiss = [...codeKeys.keys()]
     .filter((k) => !k.includes('${') && !inSchema(k) && !inJson(k))
     // ignore keys that are prefixes/children of a json key (whole-object reads)

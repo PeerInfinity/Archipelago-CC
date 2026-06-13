@@ -4,12 +4,18 @@ import { DisplaySettingsBase } from '../shared/displaySettingsBase.js';
 
 const logger = createUniversalLogger('regionUI:DisplaySettings');
 
+// Cache shape + fallbacks for DisplaySettingsBase. Values MUST match the
+// regions schema defaults in index.js (registerSettingsSchema) — the schema is
+// the authoritative default source (schema-as-default-source); this table
+// defines which keys the cache tracks and provides the no-schema fallback.
+// useSubstitutedNames is the one exception (remapped to generalSettings.* via
+// getSettingsKey, defaulted by the top-level schema).
 const DEFAULTS = {
   // Cross-session display settings
   colorblindMode: false,
   showName: true,
-  showLabel1: false,
-  showLabel2: false,
+  showLabel1: true,
+  showLabel2: true,
   useSubstitutedNames: true, // Special path: generalSettings.useSubstitutedNames
 
   // UI control settings (filter / layout / sort)
