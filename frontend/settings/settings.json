@@ -160,7 +160,8 @@
     },
     "pathAnalyzer": {
       "maxPaths": 100,
-      "maxAnalysisTimeMs": 10000
+      "maxAnalysisTimeMs": 10000,
+      "maxPathFinderIterations": 1000
     },
     "regionGraph": {
       "showName": true,
@@ -196,6 +197,74 @@
     "bounceDemo": {
       "//": "renderer: 'js' (canvas renderer) | 'ruffle' | 'swfrecomp' (browser-WASM) | 'flash' (native NPAPI, needs Basilisk+CleanFlash and a pre-built dj_loader.swf) | 'dj' (legacy auto). Non-js values run the real Doodle Jump SWF (modules/bounceDemo/djReal/)",
       "renderer": "js"
+    },
+    "iframeAdapter": {
+      "maxIframes": 1,
+      "connectionTimeout": 5000,
+      "heartbeatInterval": 30000
+    },
+    "iframeManagerPanel": {
+      "knownPages": [
+        {
+          "name": "Iframe Base",
+          "url": "./modules/iframe-base/index.html",
+          "description": "Basic iframe module showing connection status and heartbeat"
+        },
+        {
+          "name": "A-Mazing-Idle",
+          "url": "./modules/a-mazing-idle-remote/index-iframe.html",
+          "description": "Incremental maze game with bot automation"
+        },
+        {
+          "name": "Journey to Ascension",
+          "url": "./modules/jta-remote/index-iframe.html",
+          "description": "Incremental RPG adventure game"
+        }
+      ],
+      "allowCustomUrls": true
+    },
+    "iframePanel": {
+      "defaultSandbox": "allow-scripts allow-same-origin allow-forms",
+      "loadTimeout": 30000
+    },
+    "loopStats": {
+      "showManaCost": false,
+      "showRemainingMana": true
+    },
+    "metaGame": {
+      "enableDebugLogging": false,
+      "defaultConfigurationPath": ""
+    },
+    "metaGamePanel": {
+      "defaultFilePath": "",
+      "enableSyntaxHighlighting": true
+    },
+    "textAdventureSubstrateWrapper": {
+      "messageHistoryLimit": 10,
+      "autoFocusCommandInput": true,
+      "autoLoadCustomData": ""
+    },
+    "timer": {
+      "batchChecks": true
+    },
+    "windowAdapter": {
+      "maxWindows": 1,
+      "connectionTimeout": 5000,
+      "heartbeatInterval": 30000
+    },
+    "windowManagerPanel": {
+      "knownPages": [
+        {
+          "name": "Window Base",
+          "url": "./modules/window-base/index.html",
+          "description": "Basic window module showing connection status and heartbeat"
+        }
+      ],
+      "allowCustomUrls": true
+    },
+    "windowPanel": {
+      "defaultWindowFeatures": "width=800,height=600,scrollbars=yes,resizable=yes",
+      "connectionTimeout": 30000
     }
   }
 }
