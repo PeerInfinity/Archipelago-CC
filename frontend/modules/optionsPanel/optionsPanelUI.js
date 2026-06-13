@@ -3,6 +3,14 @@
 import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { DiscoveryPanelUI } from '../discoveryPanel/discoveryPanelUI.js';
+import {
+  humanizeKey,
+  chooseControlType,
+  resolveLabel,
+  coerceNumber,
+  coerceEnum,
+  buildSearchText,
+} from './schemaControlHelpers.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -327,6 +335,80 @@ export class OptionsPanelUI {
           display: flex;
           flex-direction: column;
         }
+
+        /* --- All Settings (schema-generated) sub-view --- */
+        .options-setting-key {
+          font-family: monospace;
+          font-size: 0.75em;
+          color: #6a6a6a;
+          margin-bottom: 0.25rem;
+          word-break: break-all;
+        }
+        .options-number-input,
+        .options-select {
+          width: calc(100% - 1rem);
+          padding: 0.35rem 0.5rem;
+          margin-left: 0.5rem;
+          background-color: #3c3c3c;
+          color: #e0e0e0;
+          border: 1px solid #555;
+          border-radius: 3px;
+          font-size: 13px;
+          font-family: inherit;
+        }
+        .options-number-input:focus,
+        .options-select:focus {
+          outline: none;
+          border-color: #0e639c;
+        }
+        .options-number-input.invalid {
+          border-color: #f44336;
+        }
+        .options-json-input {
+          width: calc(100% - 1rem);
+          min-height: 3.5em;
+          padding: 0.35rem 0.5rem;
+          margin-left: 0.5rem;
+          background-color: #1c1c1c;
+          color: #e0e0e0;
+          border: 1px solid #555;
+          border-radius: 3px;
+          font-size: 12px;
+          font-family: monospace;
+          resize: vertical;
+        }
+        .options-json-input:focus {
+          outline: none;
+          border-color: #0e639c;
+        }
+        .options-json-input.invalid {
+          border-color: #f44336;
+        }
+        .options-filter-bar {
+          padding: 0.5rem 0;
+          position: sticky;
+          top: 0;
+        }
+        .options-filter-input {
+          width: 100%;
+          padding: 0.4rem 0.5rem;
+          background-color: #3c3c3c;
+          color: #e0e0e0;
+          border: 1px solid #555;
+          border-radius: 3px;
+          font-size: 13px;
+          font-family: inherit;
+          box-sizing: border-box;
+        }
+        .options-filter-input:focus {
+          outline: none;
+          border-color: #0e639c;
+        }
+        .options-allsettings-empty {
+          color: #888;
+          font-style: italic;
+          padding: 0.5rem;
+        }
       `;
       this.rootElement.appendChild(style);
 
@@ -403,6 +485,10 @@ export class OptionsPanelUI {
 
   subscribeToEvents() {
     const settingsChangedHandler = async ({ key }) => {
+      if (this.currentView === 'allSettings') {
+        this._refreshAllSettingsControls(key);
+        return;
+      }
       if (this.currentView === 'options' && (
         key === '*' ||
         key.startsWith('generalSettings') ||
@@ -448,6 +534,12 @@ export class OptionsPanelUI {
         view: 'options',
       },
       {
+        icon: '≡',
+        title: 'All Settings',
+        desc: 'Every registered module setting, generated from the schema',
+        view: 'allSettings',
+      },
+      {
         icon: '{ }',
         title: 'Settings (JSON)',
         desc: 'View and edit the raw settings JSON directly',
@@ -490,6 +582,7 @@ export class OptionsPanelUI {
   navigateTo(view) {
     switch (view) {
       case 'options': this.showOptionsView(); break;
+      case 'allSettings': this.showAllSettingsView(); break;
       case 'settings': this.showSettingsView(); break;
       case 'discovery': this.showDiscoveryView(); break;
       default: this.showHome(); break;
@@ -713,6 +806,359 @@ export class OptionsPanelUI {
   teardownSettingsEditor() {
     this.textAreaElement = null;
     this.applyButton = null;
+  }
+
+  // ========================================================================
+  // All Settings sub-view (schema-generated)
+  // ========================================================================
+
+  async showAllSettingsView() {
+    this.currentView = 'allSettings';
+    this.clearContent();
+
+    const header = this.createSubviewHeader('All Settings');
+    this.rootElement.insertBefore(header, this.contentContainer);
+
+    // Filter bar (sticky at the top of the scrollable content).
+    const filterBar = document.createElement('div');
+    filterBar.className = 'options-filter-bar';
+    const filterInput = document.createElement('input');
+    filterInput.type = 'text';
+    filterInput.className = 'options-filter-input';
+    filterInput.placeholder = 'Filter settings…';
+    filterInput.value = this._allSettingsFilter || '';
+    filterInput.addEventListener('input', () => {
+      this._allSettingsFilter = filterInput.value;
+      this._applyAllSettingsFilter(filterInput.value);
+    });
+    filterBar.appendChild(filterInput);
+    this.contentContainer.appendChild(filterBar);
+
+    const registry = window.centralRegistry;
+    const entries = registry && typeof registry.getAllSettingSchemas === 'function'
+      ? registry.getAllSettingSchemas()
+      : [];
+
+    if (!entries.length) {
+      const empty = document.createElement('div');
+      empty.className = 'options-allsettings-empty';
+      empty.textContent = 'No module settings are registered.';
+      this.contentContainer.appendChild(empty);
+      return;
+    }
+
+    // Resolve current effective values (override > persisted > schema default).
+    const values = await Promise.all(
+      entries.map((e) => settingsManager.getSetting(e.key, e.spec.default))
+    );
+
+    // The await above can race a navigation away; bail if we left the view.
+    if (this.currentView !== 'allSettings') return;
+
+    // Group by module, preserving the sorted order from getAllSettingSchemas.
+    const byModule = new Map();
+    entries.forEach((e, i) => {
+      if (!byModule.has(e.moduleId)) byModule.set(e.moduleId, []);
+      byModule.get(e.moduleId).push({ entry: e, value: values[i] });
+    });
+
+    for (const [moduleId, items] of byModule) {
+      const { section, content } = this._createSchemaSection(moduleId);
+      for (const { entry, value } of items) {
+        content.appendChild(this.createSchemaControl(entry, value));
+      }
+      this.contentContainer.appendChild(section);
+    }
+
+    // Re-apply any active filter (e.g. when returning to the view).
+    if (this._allSettingsFilter) this._applyAllSettingsFilter(this._allSettingsFilter);
+  }
+
+  teardownAllSettingsView() {
+    // No sub-panels or listeners beyond the DOM that clearContent() removes;
+    // the persisted filter string (this._allSettingsFilter) is intentionally
+    // kept so it survives navigating away and back.
+  }
+
+  /**
+   * Collapsible section for one module. Collapse state is tracked under
+   * `schema:<moduleId>` in this.sectionsCollapsed (collapsed by default —
+   * 23 modules is a lot; the filter box is the primary navigation).
+   */
+  _createSchemaSection(moduleId) {
+    const collapseKey = `schema:${moduleId}`;
+    if (this.sectionsCollapsed[collapseKey] === undefined) {
+      this.sectionsCollapsed[collapseKey] = true;
+    }
+
+    const section = document.createElement('div');
+    section.className = 'options-section';
+    section.dataset.moduleId = moduleId;
+
+    const head = document.createElement('div');
+    head.className = 'options-section-header';
+    const titleSpan = document.createElement('span');
+    titleSpan.textContent = humanizeKey(moduleId);
+    head.appendChild(titleSpan);
+    const toggle = document.createElement('span');
+    toggle.className = 'options-section-toggle';
+    toggle.textContent = this.sectionsCollapsed[collapseKey] ? '[+]' : '[-]';
+    head.appendChild(toggle);
+
+    const content = document.createElement('div');
+    content.className = 'options-section-content';
+    if (this.sectionsCollapsed[collapseKey]) content.classList.add('collapsed');
+
+    head.addEventListener('click', () => {
+      const next = !this.sectionsCollapsed[collapseKey];
+      this.sectionsCollapsed[collapseKey] = next;
+      toggle.textContent = next ? '[+]' : '[-]';
+      content.classList.toggle('collapsed', next);
+    });
+
+    section.appendChild(head);
+    section.appendChild(content);
+    return { section, content };
+  }
+
+  /** Dispatch to the per-type control builder for a schema entry. */
+  createSchemaControl(entry, value) {
+    switch (chooseControlType(entry.spec)) {
+      case 'boolean': return this._schemaBooleanControl(entry, value);
+      case 'enum': return this._schemaEnumControl(entry, value);
+      case 'number': return this._schemaNumberControl(entry, value);
+      case 'string': return this._schemaStringControl(entry, value);
+      default: return this._schemaJsonControl(entry, value);
+    }
+  }
+
+  /** Shared scaffold: label + optional description + raw dotted-key sub-label. */
+  _schemaControlGroup(entry) {
+    const group = document.createElement('div');
+    group.className = 'options-setting-group';
+    group.dataset.settingKey = entry.key;
+
+    const label = resolveLabel(entry);
+    group.dataset.searchText = buildSearchText(entry, label);
+
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'options-setting-label';
+    labelDiv.textContent = label;
+    group.appendChild(labelDiv);
+
+    if (entry.spec.description) {
+      const desc = document.createElement('div');
+      desc.className = 'options-setting-description';
+      desc.textContent = entry.spec.description;
+      group.appendChild(desc);
+    }
+
+    const keyDiv = document.createElement('div');
+    keyDiv.className = 'options-setting-key';
+    keyDiv.textContent = entry.key;
+    group.appendChild(keyDiv);
+
+    return group;
+  }
+
+  _schemaBooleanControl(entry, value) {
+    const group = this._schemaControlGroup(entry);
+    const radioGroup = document.createElement('div');
+    radioGroup.className = 'options-radio-group';
+
+    const safeId = entry.key.replace(/[^a-zA-Z0-9]/g, '_');
+    const mkOption = (optVal, text) => {
+      const opt = document.createElement('div');
+      opt.className = 'options-radio-option';
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = `allsettings-${safeId}`;
+      input.id = `allsettings-${safeId}-${text}`;
+      input.checked = value === optVal;
+      input.addEventListener('change', () => this.handleSchemaSettingChange(entry.key, optVal));
+      const lbl = document.createElement('label');
+      lbl.htmlFor = input.id;
+      lbl.textContent = text;
+      opt.appendChild(input);
+      opt.appendChild(lbl);
+      return opt;
+    };
+    radioGroup.appendChild(mkOption(true, 'Yes'));
+    radioGroup.appendChild(mkOption(false, 'No'));
+    group.appendChild(radioGroup);
+    return group;
+  }
+
+  _schemaEnumControl(entry, value) {
+    const group = this._schemaControlGroup(entry);
+    const select = document.createElement('select');
+    select.className = 'options-select';
+    for (const optVal of entry.spec.enum) {
+      const o = document.createElement('option');
+      o.value = String(optVal);
+      o.textContent = String(optVal);
+      if (optVal === value) o.selected = true;
+      select.appendChild(o);
+    }
+    select.addEventListener('change', () => {
+      const { ok, value: coerced } = coerceEnum(entry.spec, select.value);
+      if (ok) this.handleSchemaSettingChange(entry.key, coerced);
+    });
+    group.appendChild(select);
+    return group;
+  }
+
+  _schemaNumberControl(entry, value) {
+    const group = this._schemaControlGroup(entry);
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'options-number-input';
+    if (entry.spec.type === 'integer') input.step = '1';
+    if (typeof entry.spec.minimum === 'number') input.min = String(entry.spec.minimum);
+    if (typeof entry.spec.maximum === 'number') input.max = String(entry.spec.maximum);
+    input.value = value === undefined || value === null ? '' : String(value);
+    input.addEventListener('change', () => {
+      const { ok, value: num } = coerceNumber(entry.spec, input.value);
+      if (!ok) { input.classList.add('invalid'); return; }
+      input.classList.remove('invalid');
+      this.handleSchemaSettingChange(entry.key, num);
+    });
+    group.appendChild(input);
+    return group;
+  }
+
+  _schemaStringControl(entry, value) {
+    const group = this._schemaControlGroup(entry);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'options-text-input';
+    input.value = value === undefined || value === null ? '' : String(value);
+
+    let debounceTimer = null;
+    const commit = () => this.handleSchemaSettingChange(entry.key, input.value);
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(commit, 500);
+    });
+    input.addEventListener('blur', () => {
+      clearTimeout(debounceTimer);
+      commit();
+    });
+    group.appendChild(input);
+    return group;
+  }
+
+  // Fallback for array / object / unknown types: an editable JSON box,
+  // validated on blur. Better than silently dropping the (few) such settings.
+  _schemaJsonControl(entry, value) {
+    const group = this._schemaControlGroup(entry);
+    const ta = document.createElement('textarea');
+    ta.className = 'options-json-input';
+    ta.value = JSON.stringify(value);
+    ta.addEventListener('blur', () => {
+      try {
+        const parsed = JSON.parse(ta.value);
+        ta.classList.remove('invalid');
+        this.handleSchemaSettingChange(entry.key, parsed);
+      } catch {
+        ta.classList.add('invalid');
+      }
+    });
+    group.appendChild(ta);
+    return group;
+  }
+
+  async handleSchemaSettingChange(key, value) {
+    log('info', `[OptionsPanelUI] All Settings change: ${key} =`, value);
+    try {
+      await settingsManager.updateSetting(key, value);
+    } catch (error) {
+      log('error', `[OptionsPanelUI] Error updating ${key}:`, error);
+    }
+  }
+
+  /**
+   * Filter the All Settings list. Hides non-matching setting-groups, hides
+   * sections with no matches, and (while a query is active) force-expands
+   * matching sections so hits are visible. Clearing the query restores each
+   * section's persisted collapse state.
+   */
+  _applyAllSettingsFilter(query) {
+    if (!this.contentContainer) return;
+    const q = (query || '').trim().toLowerCase();
+    const sections = this.contentContainer.querySelectorAll('.options-section[data-module-id]');
+    sections.forEach((section) => {
+      const moduleId = section.dataset.moduleId;
+      let anyVisible = false;
+      section.querySelectorAll('.options-setting-group').forEach((group) => {
+        const match = !q || (group.dataset.searchText || '').includes(q);
+        group.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+      });
+      section.style.display = anyVisible ? '' : 'none';
+
+      const content = section.querySelector('.options-section-content');
+      const toggle = section.querySelector('.options-section-toggle');
+      if (q) {
+        content.classList.remove('collapsed');
+        if (toggle) toggle.textContent = '[-]';
+      } else {
+        const collapsed = this.sectionsCollapsed[`schema:${moduleId}`];
+        content.classList.toggle('collapsed', collapsed);
+        if (toggle) toggle.textContent = collapsed ? '[+]' : '[-]';
+      }
+    });
+  }
+
+  /**
+   * Update controls in place when settings change elsewhere — avoids a full
+   * re-render that would drop focus, scroll, and collapse state. Refreshes
+   * only the changed key (or all controls for a bulk '*' change), and never
+   * clobbers the control the user is actively editing.
+   */
+  async _refreshAllSettingsControls(changedKey) {
+    if (!this.contentContainer) return;
+    const groups = this.contentContainer.querySelectorAll('.options-setting-group[data-setting-key]');
+    for (const group of groups) {
+      const key = group.dataset.settingKey;
+      if (changedKey && changedKey !== '*' && changedKey !== key) continue;
+      const value = await settingsManager.getSetting(key);
+      this._setControlValue(group, value);
+    }
+  }
+
+  _setControlValue(group, value) {
+    const active = document.activeElement;
+    const asText = (v) => (v === undefined || v === null ? '' : String(v));
+
+    const radios = group.querySelectorAll('input[type="radio"]');
+    if (radios.length) {
+      radios.forEach((r) => {
+        if (r === active) return;
+        r.checked = r.id.endsWith('-Yes') ? value === true : value === false;
+      });
+      return;
+    }
+    const select = group.querySelector('select');
+    if (select) {
+      if (select !== active) select.value = String(value);
+      return;
+    }
+    const number = group.querySelector('.options-number-input');
+    if (number) {
+      if (number !== active) { number.value = asText(value); number.classList.remove('invalid'); }
+      return;
+    }
+    const text = group.querySelector('.options-text-input');
+    if (text) {
+      if (text !== active) text.value = asText(value);
+      return;
+    }
+    const json = group.querySelector('.options-json-input');
+    if (json && json !== active) {
+      json.value = JSON.stringify(value);
+      json.classList.remove('invalid');
+    }
   }
 
   // ========================================================================
@@ -1025,6 +1471,7 @@ export class OptionsPanelUI {
   clearContent() {
     this.teardownDiscoveryPanel();
     this.teardownSettingsEditor();
+    this.teardownAllSettingsView();
 
     // Remove any sub-view header that was inserted before the content container
     const existingHeader = this.rootElement.querySelector('.options-subview-header');
