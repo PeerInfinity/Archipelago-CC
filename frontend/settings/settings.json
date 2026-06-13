@@ -16,7 +16,9 @@
     "exits": false,
     "regions": false,
     "dungeons": false,
-    "loops": false
+    "loops": false,
+    "helpers": false,
+    "pathAnalyzer": false
   },
   "logging": {
     "defaultLevel": "WARN",
@@ -162,7 +164,9 @@
       "showName": true,
       "showLabel1": true,
       "showLabel2": true,
-      "wheelSensitivity": 1
+      "wheelSensitivity": 1,
+      "addLocationsToPath": false,
+      "locationVisibility": "hover"
     },
     "loops": {
       "defaultSpeed": 100,
@@ -171,10 +175,14 @@
       "loopModeEnabled": false,
       "instantMode": false,
       "autoRemoveCompleted": false,
-      "keepFocused": false
+      "keepFocused": false,
+      "clickToQueue": "off"
     },
     "spoilerTest": {
       "verboseSpoilerTests": false
+    },
+    "spoilerChecklist": {
+      "simulateReceivedItems": false
     },
     "discovery": {
       "enableDiscoveryMode": false,
@@ -187,7 +195,8 @@
       "clickDiscoversRegion": false,
       "disableLocationCheckUI": false,
       "showUndiscoveredDetails": false,
-      "showUndiscoveredRegionNames": false
+      "showUndiscoveredRegionNames": false,
+      "colorUndiscoveredByReachability": false
     },
     "bounceDemo": {
       "//": "renderer: 'js' (canvas renderer) | 'ruffle' | 'swfrecomp' (browser-WASM) | 'flash' (native NPAPI, needs Basilisk+CleanFlash and a pre-built dj_loader.swf) | 'dj' (legacy auto). Non-js values run the real Doodle Jump SWF (modules/bounceDemo/djReal/)",

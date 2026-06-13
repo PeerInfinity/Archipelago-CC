@@ -263,6 +263,12 @@ export function register(registrationApi) {
         default: false,
         label: 'Auto-Enter Loop Mode',
       },
+      clickToQueue: {
+        type: 'string',
+        default: 'off',
+        enum: ['off', 'append', 'rebuildPath'],
+        label: 'Click to queue',
+      },
       // Add other loop-specific settings here
     },
   });

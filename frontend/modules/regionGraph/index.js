@@ -107,6 +107,23 @@ export function register(registrationApi) {
   registrationApi.registerPublicFunction('regionGraph', 'registerKeyForwarder', (callback) => {
     _keyForwarder = callback;
   });
+
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      addLocationsToPath: {
+        type: 'boolean',
+        default: false,
+        label: 'Add locations to path on click',
+      },
+      locationVisibility: {
+        type: 'string',
+        default: 'hover',
+        enum: ['hover', 'zoom', 'force-show', 'force-hide'],
+        label: 'Location visibility',
+      },
+    },
+  });
 }
 
 export function initialize(mId, priorityIndex, initializationApi) {

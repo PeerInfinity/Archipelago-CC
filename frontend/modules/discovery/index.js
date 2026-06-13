@@ -113,6 +113,11 @@ export function register(registrationApi) {
       type: 'boolean',
       default: false,
       description: 'Show full details (region, rules, status) for undiscovered locations instead of minimal info'
+    },
+    colorUndiscoveredByReachability: {
+      type: 'boolean',
+      default: false,
+      description: 'Tint undiscovered regions/locations by reachability instead of a uniform undiscovered color'
     }
   });
 

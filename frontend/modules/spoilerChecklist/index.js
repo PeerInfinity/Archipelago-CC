@@ -76,6 +76,19 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleInfo.name, 'spoilerChecklist:scrollToSphere');
   }
 
+  if (registrationApi.registerSettingsSchema) {
+    registrationApi.registerSettingsSchema({
+      type: 'object',
+      properties: {
+        simulateReceivedItems: {
+          type: 'boolean',
+          default: false,
+          label: 'Simulate received items',
+        },
+      },
+    });
+  }
+
   log('info', '[spoilerChecklist Module] Registration complete.');
 }
 
