@@ -116,10 +116,6 @@ export function register(registrationApi) {
   // Register events this module subscribes to
   registrationApi.registerEventBusSubscriberIntent(
     moduleInfo.name,
-    'loop:modeChanged'
-  );
-  registrationApi.registerEventBusSubscriberIntent(
-    moduleInfo.name,
     'settings:changed'
   );
   registrationApi.registerEventBusSubscriberIntent(

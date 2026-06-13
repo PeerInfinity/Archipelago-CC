@@ -512,9 +512,9 @@ export class InventoryUI {
       }
     });
 
-    subscribe('loop:modeChanged', (isLoopMode) => {
-      if (this.isInitialized && this.itemData) this.updateDisplay();
-    });
+    // (Removed a dead subscription to 'loop:modeChanged' — that event has
+    // never had a publisher. If the inventory ever needs to refresh on
+    // loop-mode toggle, subscribe to 'gameState:loopModeChanged'.)
 
     log('info', '[InventoryUI] EventBus listeners attached.');
   }

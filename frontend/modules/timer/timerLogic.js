@@ -64,7 +64,6 @@ export class TimerLogic {
     this.gameInterval = null;
     this.startTime = 0;
     this.endTime = 0;
-    this.isLoopModeActive = false; // Internal state to track loop mode for pausing timer
     this.unsubscribeHandles = [];
 
     // Track locations we've attempted to check during this timer session
@@ -87,24 +86,12 @@ export class TimerLogic {
     // TODO: Load minCheckDelay/maxCheckDelay from settings if they become configurable
     // For now, using defaults.
 
-    // Subscribe to loop:modeChanged to pause/resume the timer
-    const loopModeHandler = (data) => {
-      this.isLoopModeActive = data.active;
-      if (this.isLoopModeActive && this.isRunning()) {
-        log('info', '[TimerLogic] Loop mode activated, pausing timer.');
-        this.stop(); // Stop the timer, but don't reset its visual progress entirely (UI might keep last state)
-        // Or, we can let the UI clear the progress bar via timer:stopped event.
-      } else if (!this.isLoopModeActive && !this.isRunning()) {
-        // Potentially auto-restart timer if it was paused due to loop mode.
-        // This might need more nuanced logic (e.g., only restart if it was running before loop mode)
-        // For now, loop mode exiting doesn't auto-restart the timer. User has to click "Begin" again.
-        log('info', '[TimerLogic] Loop mode deactivated.');
-      }
-    };
-    const unsubLoopMode = this.eventBus.subscribe(
-      'loop:modeChanged',
-      loopModeHandler);
-    this.unsubscribeHandles.push(unsubLoopMode);
+    // NOTE: the timer used to subscribe to 'loop:modeChanged' to disable
+    // itself while loop mode was active. That event never had a publisher
+    // (dead since its introduction), and disabling the timer in loop mode is
+    // counter to the planned direction — the timer is meant to STEER the
+    // loops panel by dispatching user:locationCheck while loop mode is
+    // active. Removed 2026-06-13; the timer is now loop-mode-agnostic.
 
     // TODO: Add listener for settings:changed if delays become configurable
   }
@@ -114,15 +101,6 @@ export class TimerLogic {
   }
 
   begin() {
-    if (this.isLoopModeActive) {
-      log('info', '[TimerLogic] Cannot start timer, Loop Mode is active.');
-      this.eventBus.publish('ui:notification', {
-        message: 'Timer disabled while Loop Mode is active.',
-        type: 'warn',
-      });
-      return;
-    }
-
     if (this.isRunning()) {
       this.stop();
       return;
@@ -158,12 +136,6 @@ export class TimerLogic {
       : (Config.TIMER_INTERVAL_MS || 200); // Normal mode: 200ms for smooth progress bar
 
     this.gameInterval = setInterval(async () => {
-      if (this.isLoopModeActive) {
-        // Double check in case mode changes during interval
-        this.stop();
-        return;
-      }
-
       const currentTime = Date.now();
       const elapsed = currentTime - this.startTime;
       const totalDuration = this.endTime - this.startTime;
