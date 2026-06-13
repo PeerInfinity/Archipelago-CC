@@ -276,6 +276,25 @@ class WorldGenerator:
             else:
                 logger.info(f"Would write: {metadata_path}")
 
+        # Preserve loop_costs (per-region/per-location mana costs + the
+        # xpEffect mode the loops module reads). Top-level field of a
+        # loop-mode procgen rules.json. The export handler re-injects it,
+        # so a world re-derived from an exported preset keeps loop mode —
+        # the runtime loops module auto-enters loop mode whenever
+        # loop_costs is present. Without this, the export drops it and a
+        # round-tripped world silently loses loop mode.
+        loop_costs = source_json.get('loop_costs')
+        if loop_costs:
+            loop_costs_path = output_dir / '_worldgen_loop_costs.json'
+            if not dry_run:
+                loop_costs_path.write_text(
+                    json.dumps(loop_costs, indent=2),
+                    encoding='utf-8',
+                )
+                logger.info(f"Wrote loop costs to {loop_costs_path}")
+            else:
+                logger.info(f"Would write: {loop_costs_path}")
+
         for filename, content in files.items():
             file_path = output_dir / filename
 

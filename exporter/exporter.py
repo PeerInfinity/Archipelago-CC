@@ -2614,6 +2614,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'progression_mapping',
         'starting_items',
         'preset_sidecars',
+        'loop_costs',
         'world',
         'exporter',
         'game_info',

@@ -2002,6 +2002,7 @@ class BaseGameExportHandler(
             self._discover_worldgen_helpers_for_preservation(world)
             self._inject_worldgen_sidecars(world, export_data, player)
             self._inject_worldgen_procgen_metadata(world, export_data)
+            self._inject_worldgen_loop_costs(world, export_data)
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package
@@ -2068,6 +2069,42 @@ class BaseGameExportHandler(
             logger.warning(f"Failed to read procgen metadata at {metadata_path}: {exc}")
             return
         export_data['procgen_metadata'] = metadata
+
+    def _inject_worldgen_loop_costs(self, world, export_data: Dict[str, Any]) -> None:
+        """Load `_worldgen_loop_costs.json` from the worldgen world's
+        package directory and set it as export_data['loop_costs'].
+
+        loop_costs is a top-level field of a loop-mode procgen rules.json
+        (per-region moveCost + xpEffect, per-location cost, defaults).
+        Carrying it through the export keeps loop mode alive across the
+        round-trip — the runtime loops module auto-enters loop mode
+        whenever loop_costs is present, so a world re-derived from an
+        exported preset would otherwise silently lose it. Top-level and
+        informational, so the first worldgen world to inject wins; solo
+        procgen seeds are the primary case. Mirrors
+        _inject_worldgen_procgen_metadata.
+        """
+        if 'loop_costs' in export_data:
+            return
+        try:
+            world_module = type(world).__module__
+            module = importlib.import_module(world_module)
+        except ImportError:
+            return
+        module_file = getattr(module, '__file__', None)
+        if not module_file:
+            return
+        loop_costs_path = os.path.join(
+            os.path.dirname(module_file), '_worldgen_loop_costs.json')
+        if not os.path.exists(loop_costs_path):
+            return
+        try:
+            with open(loop_costs_path, encoding='utf-8') as f:
+                loop_costs = json.load(f)
+        except (json.JSONDecodeError, OSError) as exc:
+            logger.warning(f"Failed to read worldgen loop costs at {loop_costs_path}: {exc}")
+            return
+        export_data['loop_costs'] = loop_costs
 
     def _discover_worldgen_helpers_for_preservation(self, world) -> None:
         """Discover helper function names from a worldgen Rules.py and auto-preserve them.
