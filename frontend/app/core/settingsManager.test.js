@@ -526,6 +526,61 @@ describe('SettingsManager — getSetting precedence (override > persisted > sche
   });
 });
 
+describe('SettingsManager — getSettings merges schema defaults (Phase 2)', () => {
+  // moduleSettings defaults live in the schema, not settings.json. getSettings
+  // back-fills them so full-object readers see a complete picture; persisted
+  // values still win.
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    centralRegistry.settingsSchemas.set('p2mod', {
+      type: 'object',
+      properties: {
+        speed: { type: 'number', default: 100 },
+        label: { type: 'string', default: 'hi' },
+        pages: { type: 'array', default: [{ name: 'a' }] },
+      },
+    });
+  });
+  afterEach(() => {
+    centralRegistry.settingsSchemas.delete('p2mod');
+    delete globalThis.localStorage;
+  });
+
+  it('back-fills schema defaults for keys absent from persisted settings', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings({ moduleSettings: {} }); // sparse, like stripped settings.json
+    const gs = await sm.getSettings();
+    expect(gs.moduleSettings.p2mod.speed).toBe(100);
+    expect(gs.moduleSettings.p2mod.label).toBe('hi');
+    expect(gs.moduleSettings.p2mod.pages).toEqual([{ name: 'a' }]);
+  });
+
+  it('persisted values win over schema defaults', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings({ moduleSettings: { p2mod: { speed: 250 } } });
+    const gs = await sm.getSettings();
+    expect(gs.moduleSettings.p2mod.speed).toBe(250);   // persisted wins
+    expect(gs.moduleSettings.p2mod.label).toBe('hi');  // default back-filled
+  });
+
+  it('does not leak schema-default array references (deep-copied)', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings({ moduleSettings: {} });
+    const gs = await sm.getSettings();
+    gs.moduleSettings.p2mod.pages.push({ name: 'mutated' });
+    const fresh = await sm.getSettings();
+    expect(fresh.moduleSettings.p2mod.pages).toEqual([{ name: 'a' }]);
+  });
+
+  it('getSettings still excludes session overrides', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings({ moduleSettings: {} });
+    await sm.updateSetting('moduleSettings.p2mod.speed', 999, { persist: false });
+    const gs = await sm.getSettings();
+    expect(gs.moduleSettings.p2mod.speed).toBe(100); // override excluded; default shown
+  });
+});
+
 describe('SettingsManager — disk-defaults loading for resetToDefaults', () => {
   const DISK_DEFAULTS = {
     generalSettings: { theme: 'dark', autoSaveMode: false },

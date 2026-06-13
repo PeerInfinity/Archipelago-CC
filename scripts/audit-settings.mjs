@@ -212,19 +212,34 @@ function section(title) { console.log(`\n${'─'.repeat(70)}\n${title}\n${'─'.
   if (!malformed.length) console.log('  (none)');
   for (const m of malformed) console.log(`  ⚠ ${m.moduleId}: ${m.reason}`);
 
-  section('B. Schema settings MISSING from settings.json (UI control, no persisted default)');
-  const bMiss = [...schemaKeys.keys()].filter((k) => !inJson(k)).sort();
-  if (!bMiss.length) console.log('  (none)');
-  for (const k of bMiss) console.log(`  ${k}   (schema default: ${JSON.stringify(schemaKeys.get(k).default)})`);
-
-  section('C. settings.json moduleSettings keys with NO schema entry');
-  const cMiss = [...jsonKeys.keys()]
-    .filter((k) => k.startsWith('moduleSettings.') && k.split('.').length >= 3)
-    // compare at moduleSettings.<mod>.<prop> granularity
-    .filter((k) => { const p = k.split('.'); const base = `moduleSettings.${p[1]}.${p[2]}`; return !inSchema(base); })
+  // The schema is the source of truth for moduleSettings.* defaults
+  // (settingsManager.getSetting resolves them; settings.json should no longer
+  // carry them — schema-as-default-source Phase 2). So the gates here are:
+  //   B = no DRIFT between schema and any moduleSettings default still in
+  //       settings.json (catches latent drift before/while stripping, and
+  //       re-introduced drift afterward).
+  //   C = no moduleSettings default leaves left in settings.json at all
+  //       (they belong in the schema).
+  section('B. moduleSettings DRIFT (schema default ≠ settings.json value)');
+  const bDrift = [...schemaKeys.keys()]
+    .filter((k) => inJson(k))
+    .filter((k) => JSON.stringify(schemaKeys.get(k).default) !== JSON.stringify(jsonKeys.get(k)))
     .sort();
-  if (!cMiss.length) console.log('  (none)');
-  for (const k of [...new Set(cMiss)]) console.log(`  ${k}`);
+  if (!bDrift.length) console.log('  (none)');
+  for (const k of bDrift) {
+    console.log(`  ${k}   schema: ${JSON.stringify(schemaKeys.get(k).default)}   settings.json: ${JSON.stringify(jsonKeys.get(k))}`);
+  }
+
+  section('C. moduleSettings default leaves still in settings.json (should be empty after Phase 2)');
+  const cLeft = [...jsonKeys.keys()]
+    .filter((k) => k.startsWith('moduleSettings.') && k.split('.').length >= 3)
+    .sort();
+  if (!cLeft.length) console.log('  (none)');
+  for (const k of [...new Set(cLeft)]) {
+    const p = k.split('.');
+    const base = `moduleSettings.${p[1]}.${p[2]}`;
+    console.log(`  ${k}${inSchema(base) ? '' : '   (no schema entry!)'}`);
+  }
 
   // Keys built from template literals (e.g. `...${key}`) can't be resolved
   // statically — report them separately rather than as bogus "invisible" keys.
@@ -265,8 +280,8 @@ function section(title) { console.log(`\n${'─'.repeat(70)}\n${title}\n${'─'.
   console.log(`  settings.json leaf keys:   ${jsonKeys.size}`);
   console.log(`  getSetting() keys in code: ${codeKeys.size}`);
   console.log(`  malformed schema modules:  ${malformed.filter((m) => !m.reason.includes('parsed anyway')).length}`);
-  console.log(`  B (schema not in json):    ${bMiss.length}`);
-  console.log(`  C (json not in schema):    ${[...new Set(cMiss)].length}`);
+  console.log(`  B (moduleSettings drift):  ${bDrift.length}`);
+  console.log(`  C (moduleSettings in json):${[...new Set(cLeft)].length}`);
   console.log(`  D (invisible):             ${dMiss.length}`);
   console.log(`  E (orphan candidates):     ${eMiss.length}`);
 

@@ -286,19 +286,43 @@ export class SettingsManager {
   }
 
   /**
+   * Build a `{ moduleSettings: { <mod>: { <prop>: default } } }` object from
+   * the registered schemas. Used to back-fill defaults for full-object
+   * readers (getSettings) now that moduleSettings defaults live in the schema
+   * rather than settings.json. Returns {} when no schemas are registered
+   * (e.g. unit tests with a bare centralRegistry).
+   * @private
+   */
+  _buildSchemaDefaults() {
+    const out = {};
+    const entries = (centralRegistry && typeof centralRegistry.getAllSettingSchemas === 'function')
+      ? centralRegistry.getAllSettingSchemas()
+      : [];
+    for (const { moduleId, prop, spec } of entries) {
+      if (!spec || !('default' in spec)) continue;
+      (out.moduleSettings ??= {})[moduleId] ??= {};
+      out.moduleSettings[moduleId][prop] = spec.default;
+    }
+    return out;
+  }
+
+  /**
    * Gets the entire settings object. Ensures settings are loaded first.
+   *
+   * Schema defaults are merged UNDER the persisted settings, so full-object
+   * readers (JSON editor, export, module APIs) see a complete picture even
+   * though moduleSettings defaults no longer live in settings.json (they're
+   * supplied by the schema). Persisted values win over schema defaults;
+   * session overrides are intentionally excluded (use getEffectiveSettings
+   * for those) so the JSON save flow doesn't persist transient overrides.
+   *
    * @returns {Promise<object>} A promise resolving to the current settings object.
    */
   async getSettings() {
     await this.ensureLoaded();
-    log('info', 
-      '[SettingsManager getSettings] this.settings BEFORE stringify/parse:',
-      this.settings
-        ? JSON.parse(JSON.stringify(this.settings))
-        : 'null or undefined'
-    );
+    const merged = deepMerge(this._buildSchemaDefaults(), this.settings);
     // Return a deep copy to prevent accidental mutation
-    return JSON.parse(JSON.stringify(this.settings));
+    return JSON.parse(JSON.stringify(merged));
   }
 
   /**
@@ -614,6 +638,11 @@ export class SettingsManager {
       log('warn', 'No default settings available for reset.');
       return;
     }
+    // _defaultSettings (settings.json) carries only top-level defaults now;
+    // moduleSettings.* defaults come from the schema. Resetting this.settings
+    // to settings.json therefore restores top-level values directly, and
+    // getSetting/getSettings resolve moduleSettings.* back to their schema
+    // defaults — so no explicit moduleSettings reset is needed here.
     this.settings = JSON.parse(JSON.stringify(this._defaultSettings));
     log('info', 'Settings reset to defaults.');
     eventBus.publish('settings:changed', {

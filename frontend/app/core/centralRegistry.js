@@ -265,7 +265,14 @@ class CentralRegistry {
 
     const spec = props[prop];
     if (!spec || typeof spec !== 'object' || !('default' in spec)) return notFound;
-    return { found: true, value: spec.default };
+    // Deep-copy non-primitive defaults (e.g. the knownPages arrays) so a
+    // caller mutating the returned value can't corrupt the shared schema
+    // default for every later read. Primitives are returned as-is.
+    let value = spec.default;
+    if (value !== null && typeof value === 'object') {
+      value = JSON.parse(JSON.stringify(value));
+    }
+    return { found: true, value };
   }
 
   registerPublicFunction(moduleId, functionName, functionRef) {
