@@ -31,6 +31,12 @@ let _moduleEventBus = null;
 let moduleDispatcher = null; // To store the full dispatcher instance
 let _gameStateAPI = null; // Store gameState API for access by loopUI
 
+// Mirrors loopUI.isLoopModeActive, updated from the 'loopUI:modeChanged'
+// event. Exposed via the 'isLoopModeActive' public function so other
+// modules (e.g. the substrate wrappers' mana logic) can read the current
+// loop-mode state at init time without holding a loopUI instance.
+let _isLoopModeActive = false;
+
 // Cost generation instances
 let _costGenerator = null;
 let _costDataManager = null;
@@ -216,6 +222,12 @@ export function register(registrationApi) {
 
   registrationApi.registerPublicFunction(moduleInfo.name, 'getPathFinder', () => {
     return _pathFinder;
+  });
+
+  // Whether loop mode is currently active. Tracked from 'loopUI:modeChanged'
+  // (subscribed in initialize) so callers don't need a loopUI instance.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'isLoopModeActive', () => {
+    return _isLoopModeActive;
   });
 
   // Substrate index modules (maze, textAdventure) consult this before
@@ -556,6 +568,14 @@ loops.queue          - Current action queue
     // freshly-set cost data alone.
     loopUnsubscribeHandles.push(
       _moduleEventBus.subscribe('files:jsonLoaded', handleFilesJsonLoaded)
+    );
+
+    // Keep the module-level loop-mode flag in sync with loopUI so the
+    // 'isLoopModeActive' public function reports the current state.
+    loopUnsubscribeHandles.push(
+      _moduleEventBus.subscribe('loopUI:modeChanged', (data) => {
+        _isLoopModeActive = !!data?.active;
+      })
     );
   } else {
     log('error',
