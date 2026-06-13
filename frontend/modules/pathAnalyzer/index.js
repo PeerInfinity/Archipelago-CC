@@ -50,7 +50,7 @@ export function register(registrationApi) {
   // Remove public function registrations - consumers will import classes directly
 
   // Register settings schema for path analyzer
-  registrationApi.registerSettingsSchema('pathAnalyzer', {
+  registrationApi.registerSettingsSchema({
     type: 'object',
     properties: {
       maxPaths: {

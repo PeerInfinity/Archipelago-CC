@@ -63,7 +63,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('discovery:settingsChanged');
 
   // Register settings schema for discovery module
-  registrationApi.registerSettingsSchema(moduleInfo.name, {
+  registrationApi.registerSettingsSchema({
     enableDiscoveryMode: {
       type: 'boolean',
       default: false,

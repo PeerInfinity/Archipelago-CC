@@ -45,7 +45,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:unload');
 
     // Register module settings schema
-    registrationApi.registerSettingsSchema(moduleId, {
+    registrationApi.registerSettingsSchema({
         defaultSandbox: {
             type: 'string',
             default: 'allow-scripts allow-same-origin allow-forms',

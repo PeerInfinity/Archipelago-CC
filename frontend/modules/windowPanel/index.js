@@ -45,7 +45,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'window:close');
 
     // Register module settings schema
-    registrationApi.registerSettingsSchema(moduleId, {
+    registrationApi.registerSettingsSchema({
         defaultWindowFeatures: {
             type: 'string',
             default: 'width=800,height=600,scrollbars=yes,resizable=yes',

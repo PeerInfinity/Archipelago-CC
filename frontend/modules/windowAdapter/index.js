@@ -52,7 +52,7 @@ export async function register(registrationApi) {
     );
 
     // Register module settings schema
-    registrationApi.registerSettingsSchema(moduleId, {
+    registrationApi.registerSettingsSchema({
         maxWindows: {
             type: 'number',
             default: 1,

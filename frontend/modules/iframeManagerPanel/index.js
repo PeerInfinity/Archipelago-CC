@@ -48,7 +48,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:disconnected');
 
     // Register module settings schema
-    registrationApi.registerSettingsSchema(moduleId, {
+    registrationApi.registerSettingsSchema({
         knownPages: {
             type: 'array',
             default: knownIframePages.map(({ name, url, description }) => ({ name, url, description })),

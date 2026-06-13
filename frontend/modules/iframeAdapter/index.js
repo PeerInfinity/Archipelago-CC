@@ -51,7 +51,7 @@ export async function register(registrationApi) {
     );
 
     // Register module settings schema
-    registrationApi.registerSettingsSchema(moduleId, {
+    registrationApi.registerSettingsSchema({
         maxIframes: {
             type: 'number',
             default: 1,

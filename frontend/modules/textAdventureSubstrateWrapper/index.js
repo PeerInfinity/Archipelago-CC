@@ -180,10 +180,7 @@ export function register(registrationApi) {
     }
 
     if (typeof registrationApi.registerSettingsSchema === 'function') {
-        registrationApi.registerSettingsSchema(
-            'textAdventureSubstrateWrapper',
-            SETTINGS_SCHEMA,
-        );
+        registrationApi.registerSettingsSchema(SETTINGS_SCHEMA);
     }
 }
 
