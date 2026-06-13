@@ -129,9 +129,9 @@ export class JtaSubstrateWrapperPanel {
             this._isLoopModeActive = !!data?.active;
             this._updateInactiveOverlay();
         };
-        eventBus.subscribe('loopUI:modeChanged', handler, 'jtaSubstrateWrapper');
+        eventBus.subscribe('gameState:loopModeChanged', handler, 'jtaSubstrateWrapper');
         this._unsubLoopMode = () =>
-            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'jtaSubstrateWrapper');
+            eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'jtaSubstrateWrapper');
     }
 
     _activateCurrentSubstratePanel() {

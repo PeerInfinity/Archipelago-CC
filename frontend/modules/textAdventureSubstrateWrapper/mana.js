@@ -51,7 +51,7 @@ export function initManaWiring({ eventBus, dispatcher }) {
 
     const unsubs = [];
 
-    unsubs.push(eventBus.subscribe('loopUI:modeChanged', (data) => {
+    unsubs.push(eventBus.subscribe('gameState:loopModeChanged', (data) => {
         _isLoopModeActive = !!data?.active;
     }));
 
@@ -251,14 +251,9 @@ function backfillFromCurrentState() {
         _currentRegionId = gs.getCurrentRegion() ?? null;
         _currentRegionHasMana = !!resolveRegionInfo(_currentRegionId)?.manaEnabled;
     }
-    try {
-        const isActive = centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive');
-        if (typeof isActive === 'function') {
-            _isLoopModeActive = !!isActive();
-        }
-    } catch {
-        // loops not present; leave default.
-    }
+    // Loop-mode flag lives on gameState; read it straight off the singleton
+    // (no loops-module coupling). Defaults false before gameState exists.
+    _isLoopModeActive = !!gs?.isLoopModeActive;
     // Seed previousChecked from the current stateManager snapshot so
     // the first snapshotUpdated doesn't treat already-checked
     // locations as "newly" checked and double-charge.

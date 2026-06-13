@@ -469,10 +469,12 @@ async function locationCheckFreshProcgen(testController) {
     testController.log(`loops state post-load: ${JSON.stringify(loopUI0)}`);
 
     testController.log('Disabling loop mode to test hypothesis…');
+    // loops:setLoopMode → loopUI.toggleLoopMode → gameState.setLoopModeActive
+    // → gameState:loopModeChanged, which mana.js subscribes to. (Previously
+    // this test also manually published loopUI:modeChanged; that event no
+    // longer exists and the manual publish is now redundant.)
     testController.eventBus.publish('loops:setLoopMode', { action: 'disable' });
-    await new Promise(r => setTimeout(r, 200));
-    testController.eventBus.publish('loopUI:modeChanged', { active: false });
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 400));
     const loopUI1 = cr0.getPublicFunction?.('loops', 'getLoopState')?.();
     testController.log(`loops state post-disable: ${JSON.stringify(loopUI1)}`);
 
@@ -650,9 +652,9 @@ async function locationCheckLoopModePassThrough(testController) {
     testController.reportCondition('built rules.json with loop_costs', !!rulesJson?.loop_costs);
 
     // Record loop-mode transitions: loops auto-enters loop mode when
-    // loop_costs is present (loopUI publishes loopUI:modeChanged).
+    // loop_costs is present (gameState.setLoopModeActive → gameState:loopModeChanged).
     let lastModeChange = null;
-    testController.eventBus.subscribe('loopUI:modeChanged', (data) => {
+    testController.eventBus.subscribe('gameState:loopModeChanged', (data) => {
         lastModeChange = data;
     });
 

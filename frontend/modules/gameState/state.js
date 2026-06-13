@@ -61,6 +61,15 @@ export class GameState {
         // last-seen count and apply its internal reset logic once per
         // intervening reset on reactivation (the JtA bridge sync pattern).
         this.loopResetCount = 0;
+        // Whether loop mode is currently active. Owned here (like the
+        // mana/XP/loopResetCount loop-mode state above) so substrates and
+        // the timer can read it WITHOUT coupling to the loops module — they
+        // subscribe to gameState:loopModeChanged and read getLoopModeActive().
+        // The loops module is still the only WRITER (it's the loops feature):
+        // loopUI.toggleLoopMode() calls setLoopModeActive(). Derived at init
+        // from the loopModeEnabled setting / ?mode=loops / loop_costs
+        // auto-enable; not serialized, not cleared by loop resets.
+        this.isLoopModeActive = false;
         this.regionXP = new Map(); // regionName -> {level, xp, xpForNextLevel}
         // Note: the per-region "best path" Map (previously here as
         // `this.bestPaths`) was migrated to the substrate-aware
@@ -99,6 +108,25 @@ export class GameState {
 
     setNoManaDepletionReset(enabled) {
         this.noManaDepletionReset = enabled;
+    }
+
+    // -------------------- Loop-mode flag --------------------
+
+    getLoopModeActive() {
+        return this.isLoopModeActive;
+    }
+
+    /**
+     * Set whether loop mode is active. Called by the loops module (the
+     * only writer). Emits `gameState:loopModeChanged` only on an actual
+     * change so idle re-writes don't churn subscribers (mana gating,
+     * timer pause, substrate overlays).
+     */
+    setLoopModeActive(active) {
+        const next = !!active;
+        if (next === this.isLoopModeActive) return;
+        this.isLoopModeActive = next;
+        this.eventBus?.publish?.('gameState:loopModeChanged', { active: next });
     }
 
     /**

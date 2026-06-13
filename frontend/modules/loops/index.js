@@ -31,12 +31,6 @@ let _moduleEventBus = null;
 let moduleDispatcher = null; // To store the full dispatcher instance
 let _gameStateAPI = null; // Store gameState API for access by loopUI
 
-// Mirrors loopUI.isLoopModeActive, updated from the 'loopUI:modeChanged'
-// event. Exposed via the 'isLoopModeActive' public function so other
-// modules (e.g. the substrate wrappers' mana logic) can read the current
-// loop-mode state at init time without holding a loopUI instance.
-let _isLoopModeActive = false;
-
 // Cost generation instances
 let _costGenerator = null;
 let _costDataManager = null;
@@ -224,10 +218,12 @@ export function register(registrationApi) {
     return _pathFinder;
   });
 
-  // Whether loop mode is currently active. Tracked from 'loopUI:modeChanged'
-  // (subscribed in initialize) so callers don't need a loopUI instance.
+  // Whether loop mode is currently active. The canonical flag lives on
+  // gameState (so substrates/timer can read it without coupling to loops);
+  // this is a convenience accessor over it. New consumers can read
+  // gameState directly (getLoopModeActive() + gameState:loopModeChanged).
   registrationApi.registerPublicFunction(moduleInfo.name, 'isLoopModeActive', () => {
-    return _isLoopModeActive;
+    return _gameStateAPI?.getState?.()?.isLoopModeActive ?? false;
   });
 
   // Substrate index modules (maze, textAdventure) consult this before
@@ -331,7 +327,6 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
   registrationApi.registerEventBusPublisher('loopState:newActionStarted');
   registrationApi.registerEventBusPublisher('loopState:exploreActionRepeated');
-  registrationApi.registerEventBusPublisher('loopUI:modeChanged');
   registrationApi.registerEventBusPublisher('loopUI:clickToQueueChanged');
   registrationApi.registerEventBusPublisher('loops:setLoopMode');
   registrationApi.registerEventBusPublisher('loops:clickIgnored');
@@ -568,14 +563,6 @@ loops.queue          - Current action queue
     // freshly-set cost data alone.
     loopUnsubscribeHandles.push(
       _moduleEventBus.subscribe('files:jsonLoaded', handleFilesJsonLoaded)
-    );
-
-    // Keep the module-level loop-mode flag in sync with loopUI so the
-    // 'isLoopModeActive' public function reports the current state.
-    loopUnsubscribeHandles.push(
-      _moduleEventBus.subscribe('loopUI:modeChanged', (data) => {
-        _isLoopModeActive = !!data?.active;
-      })
     );
   } else {
     log('error',

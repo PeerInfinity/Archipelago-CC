@@ -156,9 +156,9 @@ export function createSubstrateIframePanelClass({
                 this._isLoopModeActive = !!data?.active;
                 this._updateInactiveOverlay();
             };
-            eventBus.subscribe('loopUI:modeChanged', handler, moduleName);
+            eventBus.subscribe('gameState:loopModeChanged', handler, moduleName);
             this._unsubLoopMode = () =>
-                eventBus.unsubscribe?.('loopUI:modeChanged', handler, moduleName);
+                eventBus.unsubscribe?.('gameState:loopModeChanged', handler, moduleName);
         }
 
         // When the configured reloadEvent fires, re-resolve the iframe src

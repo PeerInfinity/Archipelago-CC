@@ -63,6 +63,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('gameState:manaChanged');
     registrationApi.registerEventBusPublisher('gameState:xpChanged');
     registrationApi.registerEventBusPublisher('gameState:loopReset');
+    registrationApi.registerEventBusPublisher('gameState:loopModeChanged');
 
     // Export public functions
     registrationApi.registerPublicFunction(moduleId, 'getCurrentRegion', () => {

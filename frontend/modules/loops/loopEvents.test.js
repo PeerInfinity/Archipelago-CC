@@ -15,6 +15,10 @@ const dispatcher = {
 const gameStateCalls = [];
 let pathState = [];          // mutable view of gameState.path used by getPath()
 let currentRegionValue = null;
+// Loop-mode flag now lives on gameState; loopEvents reads it via
+// getGameStateAPI().getState().isLoopModeActive. Tests flip this directly
+// (was: publish 'loopUI:modeChanged').
+let mockLoopModeActive = false;
 const gameStateAPI = {
   updatePath: (target, exit, source) => {
     gameStateCalls.push({ method: 'updatePath', target, exit, source });
@@ -28,6 +32,7 @@ const gameStateAPI = {
   },
   getPath: () => pathState,
   getCurrentRegion: () => currentRegionValue,
+  getState: () => ({ isLoopModeActive: mockLoopModeActive }),
 };
 
 const pathFinderResults = { value: null };
@@ -121,7 +126,7 @@ beforeEach(() => {
   // Default for the test bed: loop mode on, clickToQueue 'off' (the
   // default — clicks pass through). Describe blocks below opt into
   // 'append' / 'rebuildPath' as needed.
-  bus.publish('loopUI:modeChanged', { active: true });
+  mockLoopModeActive = true;
 });
 
 describe('loopEvents — clickToQueue off (default): pass-through', () => {
@@ -319,7 +324,7 @@ describe('loopEvents — append-or-feedback (clickToQueue append)', () => {
   });
 
   it('loop mode off → user:locationCheck propagates up unchanged', () => {
-    bus.publish('loopUI:modeChanged', { active: false });
+    mockLoopModeActive = false;
 
     handleUserLocationCheckForLoops({
       locationName: 'My Location',

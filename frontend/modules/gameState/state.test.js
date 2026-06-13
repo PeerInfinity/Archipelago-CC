@@ -28,6 +28,38 @@ describe('GameState — loop-mode resource API', () => {
       expect(gs.getManaDebt()).toBe(0);
       expect(gs.regionXP.size).toBe(0);
     });
+
+    it('starts with loop mode inactive', () => {
+      expect(gs.getLoopModeActive()).toBe(false);
+      expect(gs.isLoopModeActive).toBe(false);
+    });
+  });
+
+  describe('setLoopModeActive', () => {
+    it('flips the flag and emits gameState:loopModeChanged on change', () => {
+      gs.setLoopModeActive(true);
+      expect(gs.getLoopModeActive()).toBe(true);
+      const ev = bus.events.find((e) => e.name === 'gameState:loopModeChanged');
+      expect(ev).toBeDefined();
+      expect(ev.data).toEqual({ active: true });
+    });
+
+    it('does not re-emit when the value is unchanged', () => {
+      gs.setLoopModeActive(true);
+      bus.events.length = 0;
+      gs.setLoopModeActive(true);
+      expect(bus.events.find((e) => e.name === 'gameState:loopModeChanged')).toBeUndefined();
+    });
+
+    it('coerces truthiness and emits on a real toggle back to false', () => {
+      gs.setLoopModeActive('yes'); // truthy → true
+      expect(gs.getLoopModeActive()).toBe(true);
+      bus.events.length = 0;
+      gs.setLoopModeActive(0); // falsy → false
+      expect(gs.getLoopModeActive()).toBe(false);
+      const ev = bus.events.find((e) => e.name === 'gameState:loopModeChanged');
+      expect(ev.data).toEqual({ active: false });
+    });
   });
 
   describe('deductMana', () => {

@@ -43,7 +43,9 @@ export class LoopUI {
 
     // UI state
     this.regionsInQueue = new Set(); // Track which regions have actions in the queue
-    this.isLoopModeActive = false;
+    // isLoopModeActive is NOT stored here anymore — it lives on gameState
+    // (so substrates/timer read it without coupling to loops). Exposed
+    // below as a read-only getter; the only writer is toggleLoopMode().
     this.repeatExploreStates = new Map(); // Map to track repeat explore checkbox states per region
     this.settingsUnsubscribe = null; // Add property
 
@@ -850,6 +852,18 @@ export class LoopUI {
 
   getRootElement() {
     return this.rootElement;
+  }
+
+  /**
+   * Whether loop mode is active. Read-only accessor delegating to the
+   * canonical store on gameState (see GameState.isLoopModeActive). loopUI's
+   * own ~20 reads and in-package readers (loopBlockBuilder, eventCoordinator)
+   * go through this; the only writer is toggleLoopMode() via
+   * gameState.setLoopModeActive(). Returns false before the gameState API
+   * is wired (init-time), matching the previous default.
+   */
+  get isLoopModeActive() {
+    return this.gameStateAPI?.getState?.()?.isLoopModeActive ?? false;
   }
 
   /**
@@ -2249,10 +2263,10 @@ export class LoopUI {
    * Toggle loop mode on/off
    */
   toggleLoopMode() {
-    this.isLoopModeActive = !this.isLoopModeActive;
-
-    // If entering loop mode and we don't have the gameState API yet, try to get it
-    if (this.isLoopModeActive && !this.gameStateAPI) {
+    // The flag lives on gameState now, so we need the API BEFORE flipping
+    // it (both enter and exit). Resolve it up front if this instance hasn't
+    // been wired yet.
+    if (!this.gameStateAPI) {
       const gameStateAPI = getGameStateAPI();
       if (gameStateAPI) {
         this.setGameStateAPI(gameStateAPI);
@@ -2261,7 +2275,13 @@ export class LoopUI {
         log('warn', '[LoopUI] GameState API still not available on mode toggle');
       }
     }
-    
+
+    // Flip the canonical flag on gameState; gameState publishes
+    // gameState:loopModeChanged (the single notifier). The this.isLoopModeActive
+    // getter reflects the new value immediately for the rest of this method.
+    const next = !this.isLoopModeActive;
+    this.gameStateAPI?.getState?.()?.setLoopModeActive?.(next);
+
     // If entering loop mode, expand the queue's "ending" region — the
     // destination of the last regionMove. Mirrors the expand-destination
     // behavior in _addMoveAction so first-load and incremental queue
@@ -2287,8 +2307,9 @@ export class LoopUI {
     // --- Update rendering based on mode ---
     this.renderLoopPanel(); // Re-render to show/hide appropriate content
 
-    // --- Emit event for other components ---
-    this.eventBus.publish('loopUI:modeChanged', { active: this.isLoopModeActive });
+    // Note: the change notification (gameState:loopModeChanged) is emitted
+    // by gameState.setLoopModeActive above — loopUI no longer publishes its
+    // own loopUI:modeChanged event.
 
     log('info', `LoopUI: Loop mode toggled. Active: ${this.isLoopModeActive}`);
   }

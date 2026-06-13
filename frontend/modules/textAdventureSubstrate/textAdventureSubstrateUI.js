@@ -199,8 +199,8 @@ export class TextAdventureSubstrateUI {
             // Discovery module not loaded yet (headless tests); default off.
         }
 
-        // Loop-mode tracking — flipped by loopUI:modeChanged. When loop
-        // mode is active, the loops queue handles mana deduction, so the
+        // Loop-mode tracking — flipped by gameState:loopModeChanged. When
+        // loop mode is active, the loops queue handles mana deduction, so the
         // substrate stays passive. When inactive, the substrate deducts
         // mana directly on observed location/region changes (Phase 4).
         this._isLoopModeActive = false;
@@ -320,9 +320,9 @@ export class TextAdventureSubstrateUI {
         const handler = (data) => {
             this._isLoopModeActive = !!data?.active;
         };
-        eventBus.subscribe('loopUI:modeChanged', handler, 'textAdventureSubstrate');
+        eventBus.subscribe('gameState:loopModeChanged', handler, 'textAdventureSubstrate');
         this._unsubLoopMode = () =>
-            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'textAdventureSubstrate');
+            eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'textAdventureSubstrate');
     }
 
     /**

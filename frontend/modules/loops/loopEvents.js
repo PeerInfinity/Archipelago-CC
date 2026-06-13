@@ -3,8 +3,12 @@ import { getLoopsModuleDispatcher, moduleInfo, getGameStateAPI, getPathFinder } 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
-// Track loop mode state
-let isLoopModeActive = false;
+// Whether loop mode is active. The flag lives on gameState now (so
+// substrates/timer read it without coupling to loops); read it through
+// the loops gameState API rather than mirroring a UI event.
+function loopModeActive() {
+  return getGameStateAPI()?.getState?.()?.isLoopModeActive ?? false;
+}
 
 // Track the click-to-queue mode setting. 'off' (the default) lets a
 // user:locationCheck / user:exitClicked from another panel pass
@@ -112,14 +116,6 @@ export function initializeLoopEvents(eventBus) {
   }
 
   _eventBus = eventBus;
-
-  // Subscribe to loop mode changes from the UI
-  eventBus.subscribe('loopUI:modeChanged', (data) => {
-    if (data && typeof data.active === 'boolean') {
-      isLoopModeActive = data.active;
-      log('info', '[LoopEvents] Loop mode changed:', isLoopModeActive);
-    }
-  });
 
   // Subscribe to the click-to-queue mode setting. Default stays 'off'
   // until the UI tells us otherwise.
@@ -261,7 +257,7 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
   // Pass-through: loop mode off, substrate-internal event, or
   // click-to-queue off (interception not opted into).
   const isSystemEvent = eventName === 'system:locationCheck';
-  if (!isLoopModeActive || isSystemEvent || clickToQueueMode === 'off') {
+  if (!loopModeActive() || isSystemEvent || clickToQueueMode === 'off') {
     // Expected-outcome tracking for per-region manual mode: a check
     // performed while the player drives a manual region marks the
     // matching queued entry completed. No-ops otherwise.
@@ -451,7 +447,7 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   const dispatcher = getLoopsModuleDispatcher();
 
-  if (!isLoopModeActive || clickToQueueMode === 'off') {
+  if (!loopModeActive() || clickToQueueMode === 'off') {
     log('info', '[LoopEvents] Loop mode off or clickToQueue off, propagating to next handler');
     if (dispatcher) {
       dispatcher.publishToNextModule(
@@ -475,9 +471,9 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
   }
 }
 
-// Test-only — reset module-scope state between cases.
+// Test-only — reset module-scope state between cases. (Loop-mode active
+// state lives on gameState now, so it isn't reset here.)
 export function _testOnly_resetLoopEvents() {
-  isLoopModeActive = false;
   clickToQueueMode = 'off';
   _eventBus = null;
 }

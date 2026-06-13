@@ -113,9 +113,9 @@ export class TextAdventureSubstrateWrapperPanel {
             this._isLoopModeActive = !!data?.active;
             this._updateInactiveOverlay();
         };
-        eventBus.subscribe('loopUI:modeChanged', handler, 'textAdventureSubstrateWrapper');
+        eventBus.subscribe('gameState:loopModeChanged', handler, 'textAdventureSubstrateWrapper');
         this._unsubLoopMode = () =>
-            eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'textAdventureSubstrateWrapper');
+            eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'textAdventureSubstrateWrapper');
     }
 
     _activateCurrentSubstratePanel() {

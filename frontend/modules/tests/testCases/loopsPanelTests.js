@@ -862,7 +862,7 @@ export async function testEnterExitLoopMode(testController) {
       modeChangeEvents.push(data);
       testController.log(`[${testRunId}] Mode change event: ${JSON.stringify(data)}`);
     };
-    testController.eventBus.subscribe('loopUI:modeChanged', modeHandler);
+    testController.eventBus.subscribe('gameState:loopModeChanged', modeHandler);
     testController.eventBus.subscribe('loops:setLoopMode', modeHandler);
 
     // Toggle mode
@@ -894,7 +894,7 @@ export async function testEnterExitLoopMode(testController) {
     }
 
     // Cleanup
-    testController.eventBus.unsubscribe('loopUI:modeChanged', modeHandler);
+    testController.eventBus.unsubscribe('gameState:loopModeChanged', modeHandler);
     testController.eventBus.unsubscribe('loops:setLoopMode', modeHandler);
 
     testController.log(`[${testRunId}] Enter/exit loop mode test completed`);

@@ -155,7 +155,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent('stateManager:rawJsonDataLoaded');
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
     // Mana-tracking subscriptions (see mana.js).
-    registrationApi.registerEventBusSubscriberIntent('loopUI:modeChanged');
+    registrationApi.registerEventBusSubscriberIntent('gameState:loopModeChanged');
     registrationApi.registerEventBusSubscriberIntent('gameState:manaChanged');
     registrationApi.registerEventBusSubscriberIntent('gameState:regionChanged');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');

@@ -434,9 +434,9 @@ export class MazeRoomUI {
             // on loop mode being active.
             this._updateInactiveOverlay();
         };
-        eventBus.subscribe('loopUI:modeChanged', handler, 'mazeRoom');
+        eventBus.subscribe('gameState:loopModeChanged', handler, 'mazeRoom');
         this._unsubLoopMode =
-            () => eventBus.unsubscribe?.('loopUI:modeChanged', handler, 'mazeRoom');
+            () => eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'mazeRoom');
     }
 
     /**
