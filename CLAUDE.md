@@ -158,7 +158,7 @@ python scripts/setup/update_host_settings.py full-spoilers
 | Rules schema | `frontend/schema/rules.schema.json` |
 | Rule Builder module | `rule_builder/` |
 | Seed ID calculator | `scripts/lib/seed_utils.py` |
-| Frontend logging | `frontend/settings.json` |
+| Frontend logging / settings | `frontend/settings/settings.json` |
 
 ## Documentation
 
