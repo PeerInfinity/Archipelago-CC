@@ -74,14 +74,15 @@ export class TextAdventureSubstrateWrapperPanel {
         this.iframe.className = 'tasw-iframe';
         this.iframe.src = IFRAME_SRC;
         this.iframe.setAttribute('title', 'Text Adventure (wrapper)');
-        // Both flags are required; the resulting "can escape sandboxing"
-        // browser warning is unavoidable. allow-scripts runs bridge.js;
-        // allow-same-origin lets the iframe fetch its own ES module graph
-        // (an opaque-origin sandbox can't load same-server module scripts —
-        // they go through CORS and get blocked). Verified 2026-05-20:
-        // dropping allow-same-origin fails with "Module source URI is not
-        // allowed in this document".
-        this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        // No sandbox attribute: this iframe loads first-party, same-origin
+        // content that must run bridge.js AND fetch its own ES module graph.
+        // Both needs force `allow-scripts allow-same-origin` (verified
+        // 2026-05-20: dropping allow-same-origin fails with "Module source URI
+        // is not allowed in this document"), and that combination already
+        // disables origin isolation — so the sandbox attribute was no real
+        // boundary, only the source of the browser's "can escape its
+        // sandboxing" warning. Same-origin substrate iframes are accident
+        // containment, not a malice boundary, so the attribute is omitted.
         this.rootElement.appendChild(this.iframe);
 
         this._inactiveOverlay = new SubstrateInactiveOverlay({

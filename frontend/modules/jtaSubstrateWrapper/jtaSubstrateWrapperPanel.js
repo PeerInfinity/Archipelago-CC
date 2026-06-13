@@ -78,15 +78,15 @@ export class JtaSubstrateWrapperPanel {
         this.iframe.className = 'jtasw-iframe';
         this.iframe.src = JTA_IFRAME_SRC;
         this.iframe.setAttribute('title', 'Journey to Ascension');
-        // allow-scripts: needed to run JtA and the bridge.
-        // allow-same-origin: needed so the iframe's ES module graph
-        // (JtA's own build/game.js and its imports) can load — an
-        // opaque-origin sandbox can't CORS-fetch its own module graph.
-        // The trade-off (the browser's "can escape sandboxing" warning)
-        // is documented in the external-iframe-modules trust-model
-        // plan: same-origin substrate iframes are accident containment,
-        // not a malice boundary.
-        this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        // No sandbox attribute: this iframe loads first-party, same-origin
+        // content that must run JtA + the bridge AND fetch its own ES module
+        // graph (JtA's build/game.js and its imports; an opaque-origin sandbox
+        // can't CORS-fetch its own module graph). Both needs force
+        // `allow-scripts allow-same-origin`, which already disables origin
+        // isolation — so the sandbox attribute was no real boundary, only the
+        // source of the browser's "can escape its sandboxing" warning.
+        // Same-origin substrate iframes are accident containment, not a malice
+        // boundary (external-iframe-modules trust model), so it is omitted.
 
         // Inject the bridge after the iframe finishes loading JtA. By
         // this point JtA has already flipped on managed mode (via the
