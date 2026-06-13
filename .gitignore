@@ -249,6 +249,7 @@ set.mm
 !scripts/test/lib/
 !frontend/modules/spoilerTest/lib/
 
+scripts/output/settings-audit/
 scripts/output/spoiler-minimal/test-results-*
 scripts/output/spoiler-minimal/test-results_*
 scripts/output/spoiler-minimal-worldgen/test-results-*
