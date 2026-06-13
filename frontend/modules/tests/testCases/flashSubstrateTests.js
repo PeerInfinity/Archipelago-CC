@@ -120,7 +120,7 @@ registerTest({
                + 'checked. Isolates the host-side chain from the iframe transport.',
     testFunction: locationCheckDirectDispatch,
     category: 'flashSubstrate',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 
@@ -252,7 +252,7 @@ registerTest({
                + 'iframeAdapter -> dispatcher -> stateManager).',
     testFunction: locationCheckPlaceholderClick,
     category: 'flashSubstrate',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 
@@ -384,7 +384,7 @@ registerTest({
                + 'Proves "each game = its own substrate entry, one shared panel".',
     testFunction: secondEntryRoutesThroughSharedPanel,
     category: 'flashSubstrate',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 
@@ -501,5 +501,5 @@ registerTest({
                + 'always treating sendLocation as a check.',
     testFunction: capabilityGatingSuppressesNonCooperative,
     category: 'flashSubstrate',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

@@ -123,6 +123,10 @@ jobs:
         run: |
           npm test -- --mode=test-regression
 
+      - name: Run substrate tests
+        run: |
+          npm test -- --mode=test-substrates
+
       - name: Upload test results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4

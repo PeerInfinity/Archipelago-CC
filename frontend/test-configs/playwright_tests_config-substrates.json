@@ -1,0 +1,54 @@
+{
+  "autoStartTestsOnLoad": true,
+  "hideDisabledTests": true,
+  "randomizeOrder": false,
+  "defaultEnabledState": false,
+  "_comment": "Substrate in-app tests (text-adventure wrapper + flash). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+  "tests": [
+    {
+      "id": "tasw-location-check-direct-dispatch",
+      "enabled": true,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-iframe-dispatch",
+      "enabled": true,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-real-click",
+      "enabled": true,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-fresh-procgen",
+      "enabled": true,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-loop-mode-passthrough",
+      "enabled": true,
+      "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "swf-location-check-direct-dispatch",
+      "enabled": true,
+      "category": "flashSubstrate"
+    },
+    {
+      "id": "swf-location-check-placeholder-click",
+      "enabled": true,
+      "category": "flashSubstrate"
+    },
+    {
+      "id": "flash-second-entry-shared-panel",
+      "enabled": true,
+      "category": "flashSubstrate"
+    },
+    {
+      "id": "flash-capability-gating",
+      "enabled": true,
+      "category": "flashSubstrate"
+    }
+  ]
+}

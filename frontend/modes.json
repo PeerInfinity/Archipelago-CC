@@ -63,6 +63,16 @@
       "enabled": true
     }
   },
+  "test-substrates": {
+    "moduleConfig": {
+      "path": "./module-configs/modules.json",
+      "enabled": true
+    },
+    "testsConfig": {
+      "path": "./test-configs/playwright_tests_config-substrates.json",
+      "enabled": true
+    }
+  },
   "test-spoilers": {
     "moduleConfig": {
       "path": "./module-configs/modules-test-spoilers.json",

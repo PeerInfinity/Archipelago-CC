@@ -128,7 +128,7 @@ registerTest({
                + 'can tell which side the "click does nothing" bug lives on.',
     testFunction: locationCheckDirectDispatch,
     category: 'textAdventureSubstrateWrapper',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 
@@ -264,7 +264,7 @@ registerTest({
                + 'bug lives in the iframe→host transport for this event.',
     testFunction: locationCheckIframeDispatch,
     category: 'textAdventureSubstrateWrapper',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 
@@ -369,7 +369,7 @@ registerTest({
                + 'the user-reported bug end-to-end through the real bridge.',
     testFunction: locationCheckRealClick,
     category: 'textAdventureSubstrateWrapper',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 
@@ -593,7 +593,7 @@ registerTest({
                + '"click does nothing" issue against fresh procgen worlds.',
     testFunction: locationCheckFreshProcgen,
     category: 'textAdventureSubstrateWrapper',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
 /**
@@ -763,5 +763,5 @@ registerTest({
                + 'loops-mode rework (regression for the 2026-06-10 intercept confusion).',
     testFunction: locationCheckLoopModePassThrough,
     category: 'textAdventureSubstrateWrapper',
-    enabled: true,
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

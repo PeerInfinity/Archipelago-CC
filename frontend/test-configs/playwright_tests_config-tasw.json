@@ -39,6 +39,15 @@
       "enabled": true,
       "order": 3,
       "category": "textAdventureSubstrateWrapper"
+    },
+    {
+      "id": "tasw-location-check-loop-mode-passthrough",
+      "name": "Wrapper: location click checks immediately while loop mode is active",
+      "description": "Regression for the 2026-06-10 intercept confusion: clickToQueue=off pass-through.",
+      "functionName": "locationCheckLoopModePassThrough",
+      "enabled": true,
+      "order": 4,
+      "category": "textAdventureSubstrateWrapper"
     }
   ]
 }
