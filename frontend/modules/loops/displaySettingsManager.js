@@ -39,8 +39,8 @@ const DEFAULTS = {
   //   'rebuildPath' — CLEAR the queue and rebuild it as a path from
   //                   the current location to the click target.
   // Switching away from 'off' in the UI is gated by a confirmation
-  // modal. Replaces the retired boolean autoBuildPathOnClick setting
-  // (true → 'rebuildPath'); see _migrateAutoBuildPathOnClick.
+  // modal. (Replaced an earlier boolean autoBuildPathOnClick setting,
+  // now fully removed — no migration retained.)
   clickToQueue: 'off',
 };
 
@@ -67,7 +67,6 @@ export class DisplaySettingsManager extends DisplaySettingsBase {
 
   async loadPersistedSettings() {
     await super.loadPersistedSettings();
-    await this._migrateAutoBuildPathOnClick();
     // Sanitize: an unknown persisted clickToQueue value falls back to
     // the safe default.
     if (!CLICK_TO_QUEUE_MODES.includes(this.settings.clickToQueue)) {
@@ -80,31 +79,6 @@ export class DisplaySettingsManager extends DisplaySettingsBase {
     // legacy key is orphaned and harmless, but worth removing so
     // it doesn't linger as confusing debug noise.
     this._removeLegacyStorageKey();
-  }
-
-  /**
-   * One-time migration from the retired boolean autoBuildPathOnClick
-   * setting. A persisted `true` becomes clickToQueue 'rebuildPath'
-   * (the behavior it used to select). `false`/absent maps to the new
-   * 'off' default — the old always-intercept-and-append behavior is
-   * deliberately NOT carried forward; interception is opt-in now.
-   * The orphaned legacy key is left in place; nothing reads it.
-   * @private
-   */
-  async _migrateAutoBuildPathOnClick() {
-    try {
-      const persistedMode = await this.settingsManager.getSetting(
-        'moduleSettings.loops.clickToQueue', null);
-      if (persistedMode !== null) return; // already migrated or user-set
-      const legacy = await this.settingsManager.getSetting(
-        'moduleSettings.loops.autoBuildPathOnClick', null);
-      if (legacy === true) {
-        await this.setSetting('clickToQueue', 'rebuildPath', true);
-        logger.info('Migrated autoBuildPathOnClick=true → clickToQueue=rebuildPath');
-      }
-    } catch (e) {
-      logger.warn('autoBuildPathOnClick migration failed:', e);
-    }
   }
 
   syncFromUI() {

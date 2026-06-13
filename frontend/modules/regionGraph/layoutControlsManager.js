@@ -215,19 +215,11 @@ export class LayoutControlsManager {
     }
 
     // Load location visibility mode (4-way radio: hover | zoom | force-show
-    // | force-hide). Default is 'hover'. Migrates from the previous two
-    // checkbox keys (forceShowLocations / forceHideLocations) when the new
-    // key isn't set yet, so existing users who had a force-mode preference
-    // keep it on first load after the upgrade.
-    let mode = await settingsManager.getSetting(
-      'moduleSettings.regionGraph.locationVisibility', null);
-    if (!mode) {
-      const oldShow = await settingsManager.getSetting(
-        'moduleSettings.regionGraph.forceShowLocations', false);
-      const oldHide = await settingsManager.getSetting(
-        'moduleSettings.regionGraph.forceHideLocations', false);
-      mode = oldShow ? 'force-show' : (oldHide ? 'force-hide' : 'hover');
-    }
+    // | force-hide). Default is 'hover'. (Previously migrated from retired
+    // forceShowLocations / forceHideLocations checkbox keys; that migration
+    // has been removed.)
+    const mode = await settingsManager.getSetting(
+      'moduleSettings.regionGraph.locationVisibility', 'hover');
     this.ui.locationVisibilityMode = mode;
     const radio = this.ui.controlPanel.querySelector(
       `input[name="locationVisibility"][value="${mode}"]`);
