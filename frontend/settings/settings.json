@@ -140,17 +140,12 @@
       "showLabel2": true
     },
     "locations": {
-      "defaultSort": "original",
       "columns": 3,
-      "showFilters": true,
       "showName": true,
       "showLabel1": true,
       "showLabel2": true
     },
     "regions": {
-      "defaultSort": "original",
-      "showFilters": true,
-      "autoExpandCurrent": true,
       "showName": true,
       "showLabel1": true,
       "showLabel2": true
