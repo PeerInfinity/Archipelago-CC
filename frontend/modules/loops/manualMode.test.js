@@ -259,6 +259,200 @@ describe('Manual mode — processFrame handling', () => {
     });
 });
 
+describe('Per-region manual mode (Manual checkbox)', () => {
+    let loopState, gs, bus;
+    let tick;
+
+    beforeEach(() => {
+        ({ loopState, gs, bus } = wireWithFunctionalBus());
+        tick = makeTicker();
+        try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+        try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+        substrateRegistry.register?.({
+            id: 'test_substrate',
+            label: 'Test',
+            panelComponentType: 'testSubstratePanel',
+            loadRegionEvent: 'test:loadRegion',
+            loopSupport: { queueActions: ['regionMove', 'locationCheck'], manual: true, customQueues: false },
+        });
+        centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => {
+            if (region === 'manualRegion') {
+                return { substrate: 'test_substrate', label: 'Test', manaEnabled: true };
+            }
+            return null;
+        });
+    });
+
+    // Queue: regionMove(Menu→manualRegion) [0], locationCheck Loc A [1],
+    // regionMove(manualRegion→nextRegion) [2]. The checkbox flags
+    // manualRegion; the cursor is parked on the first in-region action.
+    function setupManualRegionQueue() {
+        gs.updatePath('manualRegion', 'go', 'Menu');
+        gs.addLocationCheck('Loc A', 'manualRegion');
+        gs.updatePath('nextRegion', 'exit', 'manualRegion');
+        loopState.setManualRegion('manualRegion', true);
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+    }
+
+    it('parks the queue and publishes manualEntered with manualRegion + expected exit', () => {
+        setupManualRegionQueue();
+        const entered = [];
+        const activated = [];
+        bus.subscribe('loopState:manualEntered', (data) => entered.push(data));
+        bus.subscribe('ui:activatePanel', (data) => activated.push(data));
+        tick(loopState);
+        expect(loopState.isProcessing).toBe(false);
+        expect(loopState._manualActionEntered).toBe(true);
+        expect(loopState._manualRegionName).toBe('manualRegion');
+        expect(entered).toEqual([{
+            regionName: 'manualRegion',
+            expectedNextRegion: 'nextRegion',
+            manualRegion: true,
+        }]);
+        expect(activated).toContainEqual({ panelId: 'testSubstratePanel' });
+    });
+
+    it('parks even when the cursor is on the leaving regionMove itself', () => {
+        gs.updatePath('manualRegion', 'go', 'Menu');
+        gs.updatePath('nextRegion', 'exit', 'manualRegion');
+        loopState.setManualRegion('manualRegion', true);
+        loopState.currentActionIndex = 1; // the move OUT of manualRegion
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+        const entered = [];
+        bus.subscribe('loopState:manualEntered', (data) => entered.push(data));
+        tick(loopState);
+        // Expected exit is the current action's own destination —
+        // inclusive scan.
+        expect(entered).toEqual([{
+            regionName: 'manualRegion',
+            expectedNextRegion: 'nextRegion',
+            manualRegion: true,
+        }]);
+    });
+
+    it('does not park on actions in unflagged regions', () => {
+        gs.updatePath('manualRegion', 'go', 'Menu');
+        gs.addLocationCheck('Loc A', 'manualRegion');
+        // No setManualRegion call — checkbox off.
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+        tick(loopState);
+        expect(loopState._manualRegionName).toBeNull();
+        expect(loopState._manualActionEntered).toBe(false);
+    });
+
+    it('expected exit advances past the whole segment and marks it completed', () => {
+        setupManualRegionQueue();
+        tick(loopState);
+        const resumed = [];
+        bus.subscribe('loopState:manualResumed', (data) => resumed.push(data));
+        bus.publish('gameState:regionChanged', { newRegion: 'nextRegion' });
+        expect(resumed).toEqual([{ targetRegion: 'nextRegion' }]);
+        // Cursor jumped past the locationCheck (1) AND the leaving move (2).
+        expect(loopState.currentActionIndex).toBe(3);
+        expect(loopState._manualRegionName).toBeNull();
+        expect(loopState._manualActionEntered).toBe(false);
+        // Both segment entries marked completed.
+        expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+        expect(loopState.actionQueueManager.isCompleted(2)).toBe(true);
+        expect(loopState._queuePausedUntilReset).toBe(false);
+    });
+
+    it('wrong exit sets _queuePausedUntilReset and keeps the cursor', () => {
+        setupManualRegionQueue();
+        tick(loopState);
+        const paused = [];
+        bus.subscribe('loopState:queuePausedUntilReset', (data) => paused.push(data));
+        bus.publish('gameState:regionChanged', { newRegion: 'wrongRegion' });
+        expect(loopState._queuePausedUntilReset).toBe(true);
+        expect(loopState.currentActionIndex).toBe(1);
+        expect(paused[0]).toMatchObject({
+            actualRegion: 'wrongRegion',
+            expectedRegion: 'nextRegion',
+            reason: 'manualWrongRegion',
+        });
+    });
+
+    it('noteLocationChecked marks the expected check completed (display)', () => {
+        setupManualRegionQueue();
+        tick(loopState);
+        loopState.noteLocationChecked('Loc A');
+        expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+        // The leaving move is NOT completed by a check.
+        expect(loopState.actionQueueManager.isCompleted(2)).toBe(false);
+    });
+
+    it('noteLocationChecked ignores unexpected checks and is a no-op outside manual play', () => {
+        setupManualRegionQueue();
+        tick(loopState);
+        loopState.noteLocationChecked('Some Other Loc');
+        expect(loopState.actionQueueManager.isCompleted(1)).toBe(false);
+
+        // Outside manual play (no active manual region) nothing happens.
+        loopState._manualRegionName = null;
+        loopState.noteLocationChecked('Loc A');
+        expect(loopState.actionQueueManager.isCompleted(1)).toBe(false);
+    });
+
+    it('mana-zero during manual region play triggers a loop reset', () => {
+        setupManualRegionQueue();
+        tick(loopState);
+        gs.currentMana = 0;
+        bus.publish('gameState:manaChanged', {});
+        expect(loopState.currentActionIndex).toBe(0);
+        expect(gs.currentMana).toBe(gs.maxMana);
+        expect(loopState._manualRegionName).toBeNull();
+    });
+
+    it('the checkbox survives a loop reset; matching resumes from the top', () => {
+        setupManualRegionQueue();
+        tick(loopState);
+        bus.publish('gameState:regionChanged', { newRegion: 'wrongRegion' });
+        expect(loopState._queuePausedUntilReset).toBe(true);
+
+        loopState._resetLoop();
+
+        expect(loopState._queuePausedUntilReset).toBe(false);
+        expect(loopState._manualRegionName).toBeNull();
+        expect(loopState.getManualRegion('manualRegion')).toBe(true);
+    });
+
+    it('resetForNewRules clears the checkbox states', () => {
+        loopState.setManualRegion('manualRegion', true);
+        loopState.resetForNewRules();
+        expect(loopState.getManualRegion('manualRegion')).toBe(false);
+    });
+
+    it('manualRegionStates round-trips through serialization', () => {
+        loopState.setManualRegion('manualRegion', true);
+        const state = loopState.getSerializableState();
+        expect(state.manualRegionStates).toEqual([['manualRegion', true]]);
+
+        const fresh = wireWithFunctionalBus().loopState;
+        fresh.loadFromSerializedState(state);
+        expect(fresh.getManualRegion('manualRegion')).toBe(true);
+    });
+
+    it('substrate delegation is suppressed for manual-checked regions', () => {
+        // Delegation requires substrate 'maze' + manaEnabled.
+        try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+        centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', () => (
+            { substrate: 'maze', label: 'Maze', manaEnabled: true }
+        ));
+        gs.updatePath('mazeRegion', 'go', 'Menu');
+        gs.addLocationCheck('Loc M', 'mazeRegion');
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        expect(loopState._shouldDelegateCurrentAction()).toBe(true);
+        loopState.setManualRegion('mazeRegion', true);
+        expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+    });
+});
+
 describe('Manual mode — cost calculation', () => {
     let loopState, gs;
     beforeEach(() => {

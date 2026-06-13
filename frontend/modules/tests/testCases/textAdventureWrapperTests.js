@@ -595,3 +595,173 @@ registerTest({
     category: 'textAdventureSubstrateWrapper',
     enabled: true,
 });
+
+/**
+ * Regression test for the loops-mode rework (2026-06-12): with LOOP
+ * MODE ACTIVE, a substrate click must check the location IMMEDIATELY.
+ *
+ * This is the 2026-06-10 confusion case inverted. Historically, a
+ * rules.json carrying loop_costs auto-enabled loop mode, and the
+ * loops dispatcher receiver then INTERCEPTED user:locationCheck —
+ * the engine showed "you discover X" but checkedLocations never
+ * updated. The rework made interception opt-in (clickToQueue setting,
+ * default 'off' = plain pass-through), so the same flow must now
+ * behave exactly as with loop mode off.
+ *
+ * Flow mirrors locationCheckFreshProcgen, except:
+ *   - the world is generated with enableLoopMode: true (loop_costs
+ *     in rules.json → loops auto-enters loop mode on load), and
+ *   - loop mode is left ON for the click.
+ */
+async function locationCheckLoopModePassThrough(testController) {
+    testController.log('Generating fresh shuffled-spiral rules (loop mode ON)…');
+
+    let grid, startCell, stats;
+    try {
+        const result = arrangeShuffledSpiral({
+            regionSize: { width: 7, height: 7 },
+            itemPool: { victory: 1, key_red: 1, key_green: 1, key_blue: 1 },
+            obstaclePool: { door_red: 1, door_green: 1, door_blue: 1 },
+            seed: 'tasw-loop-test-1',
+            regionParams: {},
+            growthParams: {
+                substrateQuotas: { text_adventure: 6, maze: 3 },
+                maxItemsPerRegion: 2,
+                startSubstrate: 'text_adventure',
+            },
+            hazardOpts: {},
+        });
+        grid = result.grid; startCell = result.startCell; stats = result.stats;
+    } catch (e) {
+        testController.log(`arrangeShuffledSpiral threw: ${e.message}`, 'error');
+        testController.reportCondition('generated shuffled-spiral grid', false);
+        return testController.getOverallResult();
+    }
+    testController.reportCondition('generated shuffled-spiral grid', true);
+
+    const rulesJson = buildRulesJson(grid, {
+        startCell,
+        seed: 'tasw-loop-test-1',
+        enableLoopMode: true,
+        regionXpEffect: 'cost',
+        completionConditionItem: 'victory',
+        procgenMetadata: { driver: 'shuffled-spiral-test', stop_reason: stats.stopReason },
+    });
+    testController.reportCondition('built rules.json with loop_costs', !!rulesJson?.loop_costs);
+
+    // Record loop-mode transitions: loops auto-enters loop mode when
+    // loop_costs is present (loopUI publishes loopUI:modeChanged).
+    let lastModeChange = null;
+    testController.eventBus.subscribe('loopUI:modeChanged', (data) => {
+        lastModeChange = data;
+    });
+
+    const rulesLoadedPromise = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+    testController.eventBus.publish('files:jsonLoaded', {
+        jsonData: rulesJson,
+        selectedPlayerId: '1',
+        sourceName: 'procgenPipeline-test',
+    });
+    await rulesLoadedPromise;
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded into frontend', true);
+
+    // Give the auto-enable handler chain a beat, then assert loop mode
+    // IS active — the whole point is that the click below happens
+    // UNDER loop mode.
+    await testController.pollForCondition(
+        () => lastModeChange?.active === true,
+        'loop mode auto-enabled by loop_costs',
+        5000,
+        100,
+    );
+    testController.assertEqual(
+        'loop mode auto-enabled by loop_costs',
+        true,
+        lastModeChange?.active === true,
+    );
+
+    // Make the wrapper panel active so its iframe mounts.
+    testController.eventBus.publish('ui:activatePanel', {
+        panelId: 'textAdventureSubstrateWrapperPanel',
+    });
+
+    let iframeWin = null;
+    const mounted = await testController.pollForCondition(
+        () => {
+            const iframe = document.querySelector('iframe.tasw-iframe');
+            if (!iframe?.contentDocument) return false;
+            iframeWin = iframe.contentWindow;
+            return iframe.contentDocument.querySelector('.tae-actions') !== null;
+        },
+        'wrapper iframe rendered a room',
+        15000,
+        300,
+    );
+    if (!mounted) {
+        testController.reportCondition('wrapper iframe rendered a room', false);
+        return testController.getOverallResult();
+    }
+    const iframe = document.querySelector('iframe.tasw-iframe');
+
+    // Explore until a location link is revealed (discovery default).
+    let foundItem = false;
+    for (let i = 0; i < 20; i++) {
+        const item = iframe.contentDocument.querySelector('[data-item-id]');
+        if (item) { foundItem = true; break; }
+        const explore = iframe.contentDocument.querySelector('[data-action="explore"]');
+        if (!explore) break;
+        const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
+        explore.dispatchEvent(evt);
+        await new Promise(r => setTimeout(r, 200));
+    }
+    if (!foundItem) {
+        testController.reportCondition('found a clickable location after explore', false);
+        return testController.getOverallResult();
+    }
+    testController.reportCondition('found a clickable location after explore', true);
+
+    const targetSpan = iframe.contentDocument.querySelector('[data-item-id]');
+    const locationName = targetSpan.dataset.itemId;
+    testController.log(`Clicking location under ACTIVE loop mode: ${locationName}`);
+
+    const beforeSnap = testController.stateManager.getSnapshot();
+    const beforeChecked = (beforeSnap?.checkedLocations instanceof Set
+        ? beforeSnap.checkedLocations.has(locationName)
+        : (Array.isArray(beforeSnap?.checkedLocations) && beforeSnap.checkedLocations.includes(locationName)));
+    testController.assertEqual('location not yet checked before click', false, beforeChecked);
+
+    const snapshotPromise = testController.waitForEvent('stateManager:snapshotUpdated', 5000)
+        .catch(() => null);
+
+    const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
+    targetSpan.dispatchEvent(evt);
+
+    await snapshotPromise;
+    await testController.stateManager.pingWorker('after-loop-mode-click', 3000);
+
+    const afterSnap = testController.stateManager.getSnapshot();
+    const afterChecked = (afterSnap?.checkedLocations instanceof Set
+        ? afterSnap.checkedLocations.has(locationName)
+        : (Array.isArray(afterSnap?.checkedLocations) && afterSnap.checkedLocations.includes(locationName)));
+    testController.assertEqual(
+        `location ${locationName} checked immediately despite active loop mode (pass-through default)`,
+        true,
+        afterChecked,
+    );
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'tasw-location-check-loop-mode-passthrough',
+    name: 'Wrapper: location click checks immediately while loop mode is active',
+    description: 'Generates a loop-enabled (loop_costs) shuffled-spiral world, lets '
+               + 'loops auto-enter loop mode, clicks a wrapper location WITHOUT '
+               + 'disabling loop mode, and asserts checkedLocations updates '
+               + 'immediately — the clickToQueue=off pass-through default from the '
+               + 'loops-mode rework (regression for the 2026-06-10 intercept confusion).',
+    testFunction: locationCheckLoopModePassThrough,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: true,
+});

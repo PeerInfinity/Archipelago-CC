@@ -141,6 +141,16 @@ export function createFlashSubstrateEntry({
         // headless so the test harness never needs WebGPU.
         getPlaybackController: () => null,
 
+        // Loop-mode capabilities: manual play only for now (user
+        // decision, 2026-06-12). Region traversal stays queueable;
+        // location checks happen inside the game by hand. Per-game
+        // entries built on this factory (e.g. bounce) override.
+        loopSupport: Object.freeze({
+            queueActions: Object.freeze(['regionMove']),
+            manual: true,
+            customQueues: false,
+        }),
+
         // Build-time hooks (generateRegionCore / placeFromItems / etc.)
         // are omitted in Mode 1 — procgen does not generate the game's
         // internal content; it just records gameId + params in the

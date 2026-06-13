@@ -51,6 +51,14 @@ export const substrateRegistryEntry = Object.freeze({
     // bot can drive the visualizer directly. null when no panel mounted.
     getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
+    // Loop-mode capabilities: maze supports everything — all queue
+    // action types, manual play, and saved-queue recording/replay.
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
+        manual: true,
+        customQueues: true,
+    }),
+
     // Build-time adapters
     generateRegionCore: spatialCore,
     placeFromItems: itemBasedPlacer,

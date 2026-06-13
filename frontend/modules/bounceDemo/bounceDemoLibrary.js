@@ -470,6 +470,21 @@ export function createBounceSubstrateEntry({
         // real physics (input synthesis, not event dispatch).
         getPlaybackController: () => _playbackProxy,
 
+        // Loop-mode capabilities: regionMove + locationCheck queue
+        // actions map to the playback bot's implementations (walkTo an
+        // exit portal / a location on real physics) via
+        // executeVia: 'playbackBot' — the loops queue parks and the
+        // bot plays; loops charges the loop_costs value on completion
+        // (bounce tracks no mana natively, v1). NO explore action
+        // exists for bounce. Manual play yes; custom queues judged not
+        // worthwhile (user decision, 2026-06-12).
+        loopSupport: Object.freeze({
+            queueActions: Object.freeze(['regionMove', 'locationCheck']),
+            executeVia: 'playbackBot',
+            manual: true,
+            customQueues: false,
+        }),
+
         // The substrate's zone table places this item itself (fork's
         // loc_left in the fixture set; generateZoneSet's last zone).
         // Emission paths use it as the completion-condition item when

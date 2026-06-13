@@ -118,12 +118,75 @@ beforeEach(() => {
   currentRegionValue = null;
   bus = makeEventBus();
   initializeLoopEvents(bus);
-  // Default for the test bed: loop mode on, autoBuildPathOnClick off
-  // (the new default). Individual tests can flip autoBuildPathOnClick.
+  // Default for the test bed: loop mode on, clickToQueue 'off' (the
+  // default — clicks pass through). Describe blocks below opt into
+  // 'append' / 'rebuildPath' as needed.
   bus.publish('loopUI:modeChanged', { active: true });
 });
 
-describe('loopEvents — append-or-feedback (new default)', () => {
+describe('loopEvents — clickToQueue off (default): pass-through', () => {
+  it('user:locationCheck propagates up unchanged while loop mode is active', () => {
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+
+    // No queue mutation, no rebuild, no feedback — the click goes up.
+    expect(gameStateCalls).toEqual([]);
+    expect(loopStateCalls).toEqual([]);
+    expect(bus.published.filter((p) => p.name === 'loops:clickIgnored')).toEqual([]);
+
+    const propagations = dispatcherCalls.filter(
+      (c) => c.method === 'publishToNextModule' && c.eventName === 'user:locationCheck',
+    );
+    expect(propagations).toHaveLength(1);
+    expect(propagations[0].opts).toEqual({ direction: 'up' });
+    expect(propagations[0].eventData).toEqual({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+  });
+
+  it('user:exitClicked propagates up unchanged while loop mode is active', () => {
+    handleUserExitClickedForLoops({
+      exitName: 'east',
+      sourceRegion: 'region_0_0',
+      destinationRegion: 'region_1_0',
+      isDiscovered: true,
+    });
+
+    expect(gameStateCalls).toEqual([]);
+    expect(loopStateCalls).toEqual([]);
+
+    const propagations = dispatcherCalls.filter(
+      (c) => c.method === 'publishToNextModule' && c.eventName === 'user:exitClicked',
+    );
+    expect(propagations).toHaveLength(1);
+    expect(propagations[0].opts).toEqual({ direction: 'up' });
+  });
+
+  it('ignores malformed clickToQueueChanged payloads (stays in pass-through)', () => {
+    bus.publish('loopUI:clickToQueueChanged', { mode: 'bogus' });
+    bus.publish('loopUI:clickToQueueChanged', { active: true });
+
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+
+    expect(gameStateCalls).toEqual([]);
+    const propagations = dispatcherCalls.filter(
+      (c) => c.method === 'publishToNextModule' && c.eventName === 'user:locationCheck',
+    );
+    expect(propagations).toHaveLength(1);
+  });
+});
+
+describe('loopEvents — append-or-feedback (clickToQueue append)', () => {
+  beforeEach(() => {
+    bus.publish('loopUI:clickToQueueChanged', { mode: 'append' });
+  });
+
   describe('handleUserLocationCheckForLoops', () => {
     it('appends a locationCheck when click region matches the queue end region', () => {
       setQueueEndRegion('region_0_0');
@@ -271,9 +334,9 @@ describe('loopEvents — append-or-feedback (new default)', () => {
   });
 });
 
-describe('loopEvents — autoBuildPathOnClick (advanced legacy behavior)', () => {
+describe('loopEvents — rebuild path (clickToQueue rebuildPath, advanced legacy behavior)', () => {
   beforeEach(() => {
-    bus.publish('loopUI:autoBuildPathOnClickChanged', { active: true });
+    bus.publish('loopUI:clickToQueueChanged', { mode: 'rebuildPath' });
   });
 
   describe('handleUserExitClickedForLoops', () => {

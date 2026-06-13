@@ -6,14 +6,17 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 // Track loop mode state
 let isLoopModeActive = false;
 
-// Track the "auto-build path on click" advanced setting. When false
-// (the default), substrate-panel clicks append a single action to the
-// queue iff the click's region matches the queue's current end region
-// — mismatches are dropped with feedback (loops:clickIgnored). When
-// true, the legacy "clear queue and pathfind from current to target"
-// behavior runs instead. Synced from the loops UI via the
-// 'loopUI:autoBuildPathOnClickChanged' event in initializeLoopEvents.
-let autoBuildPathOnClick = false;
+// Track the click-to-queue mode setting. 'off' (the default) lets a
+// user:locationCheck / user:exitClicked from another panel pass
+// through to stateManager even while loop mode is active — the click
+// checks immediately, exactly as with loop mode off. 'append' appends
+// a single action to the queue iff the click's region matches the
+// queue's current end region — mismatches are dropped with feedback
+// (loops:clickIgnored). 'rebuildPath' is the legacy "clear queue and
+// pathfind from current to target" behavior. Synced from the loops UI
+// via the 'loopUI:clickToQueueChanged' event in initializeLoopEvents.
+const CLICK_TO_QUEUE_MODES = ['off', 'append', 'rebuildPath'];
+let clickToQueueMode = 'off';
 
 // EventBus reference captured at initialization so the click-ignored
 // feedback event can be published from the intercept handlers without
@@ -118,12 +121,12 @@ export function initializeLoopEvents(eventBus) {
     }
   });
 
-  // Subscribe to the autoBuildPathOnClick advanced-setting toggle.
-  // Default stays false until the UI tells us otherwise.
-  eventBus.subscribe('loopUI:autoBuildPathOnClickChanged', (data) => {
-    if (data && typeof data.active === 'boolean') {
-      autoBuildPathOnClick = data.active;
-      log('info', '[LoopEvents] autoBuildPathOnClick changed:', autoBuildPathOnClick);
+  // Subscribe to the click-to-queue mode setting. Default stays 'off'
+  // until the UI tells us otherwise.
+  eventBus.subscribe('loopUI:clickToQueueChanged', (data) => {
+    if (data && CLICK_TO_QUEUE_MODES.includes(data.mode)) {
+      clickToQueueMode = data.mode;
+      log('info', '[LoopEvents] clickToQueue mode changed:', clickToQueueMode);
     }
   });
 
@@ -134,7 +137,7 @@ export function initializeLoopEvents(eventBus) {
  * Path-rebuild branch: clear the queue, pathfind from the current
  * location to the clicked region, then append the final action
  * (locationCheck or explore). This is the legacy behavior, now gated
- * behind the autoBuildPathOnClick advanced setting.
+ * behind the clickToQueue 'rebuildPath' mode.
  */
 function rebuildQueueToLocation(locationName, regionName, isLocationDiscovered) {
   const gameStateAPI = getGameStateAPI();
@@ -239,10 +242,11 @@ function appendLocationOrFeedback(locationName, regionName, isLocationDiscovered
 
 /**
  * Handles the 'user:locationCheck' / 'system:locationCheck' events
- * for the Loops module. Three branches:
- *   - Loop mode off OR system event → propagate up unchanged.
- *   - Loop mode on + autoBuildPathOnClick on → rebuild queue with path.
- *   - Loop mode on + autoBuildPathOnClick off → append or feedback.
+ * for the Loops module. Branches:
+ *   - Loop mode off, system event, OR clickToQueue 'off' (the
+ *     default) → propagate up unchanged; the click checks immediately.
+ *   - Loop mode on + clickToQueue 'rebuildPath' → rebuild queue with path.
+ *   - Loop mode on + clickToQueue 'append' → append or feedback.
  *
  * The system:locationCheck path always passes through — substrates use
  * it for tile-internal events (e.g. mid-Explore pickups) where queue
@@ -254,9 +258,17 @@ function appendLocationOrFeedback(locationName, regionName, isLocationDiscovered
 export function handleUserLocationCheckForLoops(eventData, eventName = 'user:locationCheck') {
   const dispatcher = getLoopsModuleDispatcher();
 
-  // Pass-through: loop mode off, or substrate-internal event.
+  // Pass-through: loop mode off, substrate-internal event, or
+  // click-to-queue off (interception not opted into).
   const isSystemEvent = eventName === 'system:locationCheck';
-  if (!isLoopModeActive || isSystemEvent) {
+  if (!isLoopModeActive || isSystemEvent || clickToQueueMode === 'off') {
+    // Expected-outcome tracking for per-region manual mode: a check
+    // performed while the player drives a manual region marks the
+    // matching queued entry completed. No-ops otherwise.
+    loopStateSingleton.noteLocationChecked?.(eventData?.locationName);
+    // Completion wake for bot-backed queue execution: a bot-driven
+    // pickup's locationCheck completes the parked queue action.
+    loopStateSingleton._handleBotWake_locationCheck?.(eventData?.locationName);
     if (dispatcher) {
       dispatcher.publishToNextModule(moduleInfo.name, eventName, eventData, { direction: 'up' });
     }
@@ -278,7 +290,7 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
 
   const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
 
-  if (autoBuildPathOnClick) {
+  if (clickToQueueMode === 'rebuildPath') {
     rebuildQueueToLocation(locationName, regionName, isLocationDiscovered);
   } else {
     appendLocationOrFeedback(locationName, regionName, isLocationDiscovered);
@@ -329,7 +341,7 @@ export function handleUserItemCheckForLoops(eventData, propagationOptions) {
  * Path-rebuild branch for exit clicks. Clears the queue, pathfinds to
  * the source region, appends the final regionMove (if discovered) or
  * an explore action (if not). Legacy behavior gated behind the
- * autoBuildPathOnClick advanced setting.
+ * clickToQueue 'rebuildPath' mode.
  */
 function rebuildQueueToExit({ exitName, sourceRegion, destinationRegion, isDiscovered }) {
   const gameStateAPI = getGameStateAPI();
@@ -425,10 +437,11 @@ function appendExitOrFeedback({ exitName, sourceRegion, destinationRegion, isDis
 
 /**
  * Handles the 'user:exitClicked' event from the Exits module via dispatcher.
- * Three branches mirroring handleUserLocationCheckForLoops:
- *   - Loop mode off → propagate to the next handler.
- *   - Loop mode on + autoBuildPathOnClick on → rebuild queue with path.
- *   - Loop mode on + autoBuildPathOnClick off → append or feedback.
+ * Branches mirroring handleUserLocationCheckForLoops:
+ *   - Loop mode off OR clickToQueue 'off' (the default) → propagate
+ *     to the next handler; the click moves immediately.
+ *   - Loop mode on + clickToQueue 'rebuildPath' → rebuild queue with path.
+ *   - Loop mode on + clickToQueue 'append' → append or feedback.
  *
  * @param {object} eventData - The exit click data
  * @param {object} propagationOptions - Options related to event propagation
@@ -438,8 +451,8 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   const dispatcher = getLoopsModuleDispatcher();
 
-  if (!isLoopModeActive) {
-    log('info', '[LoopEvents] Loop mode not active, propagating to next handler');
+  if (!isLoopModeActive || clickToQueueMode === 'off') {
+    log('info', '[LoopEvents] Loop mode off or clickToQueue off, propagating to next handler');
     if (dispatcher) {
       dispatcher.publishToNextModule(
         moduleInfo.name,
@@ -455,7 +468,7 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   log('info', '[LoopEvents] Loop mode active, intercepting exit click');
 
-  if (autoBuildPathOnClick) {
+  if (clickToQueueMode === 'rebuildPath') {
     rebuildQueueToExit(eventData);
   } else {
     appendExitOrFeedback(eventData);
@@ -465,6 +478,6 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 // Test-only — reset module-scope state between cases.
 export function _testOnly_resetLoopEvents() {
   isLoopModeActive = false;
-  autoBuildPathOnClick = false;
+  clickToQueueMode = 'off';
   _eventBus = null;
 }

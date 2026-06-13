@@ -67,6 +67,16 @@ export const substrateRegistryEntry = Object.freeze({
     // bot no-ops on JtA regions (per the substrate registry contract).
     getPlaybackController: () => null,
 
+    // Loop-mode capabilities: manual play only for now. Custom queues
+    // are wanted eventually but jta has no queue recording yet — flip
+    // customQueues when that lands. No locations / explore in v1
+    // regions, so regionMove is the only queueable action.
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove']),
+        manual: true,
+        customQueues: false,
+    }),
+
     // Build-time hooks (generateRegionCore / placeFromItems / etc.)
     // are omitted in v1 — procgen does not generate JtA-specific
     // region content; it just records `jtaZone` in the sidecar.

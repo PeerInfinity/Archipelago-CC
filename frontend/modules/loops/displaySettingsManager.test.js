@@ -160,6 +160,53 @@ describe('DisplaySettingsManager — legacy localStorage cleanup (Phase B)', () 
   });
 });
 
+describe('DisplaySettingsManager — clickToQueue default and migration', () => {
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+  });
+  afterEach(() => {
+    delete globalThis.localStorage;
+  });
+
+  it('defaults clickToQueue to off', () => {
+    const mgr = new DisplaySettingsManager(makeSettingsManager(), null);
+    expect(mgr.getSetting('clickToQueue')).toBe('off');
+  });
+
+  it('migrates persisted autoBuildPathOnClick=true to rebuildPath and persists it', async () => {
+    const sm = makeSettingsManager({ 'moduleSettings.loops.autoBuildPathOnClick': true });
+    const mgr = new DisplaySettingsManager(sm, null);
+    await mgr.loadPersistedSettings();
+    expect(mgr.getSetting('clickToQueue')).toBe('rebuildPath');
+    expect(sm.values['moduleSettings.loops.clickToQueue']).toBe('rebuildPath');
+  });
+
+  it('maps persisted autoBuildPathOnClick=false to the new off default (no write)', async () => {
+    const sm = makeSettingsManager({ 'moduleSettings.loops.autoBuildPathOnClick': false });
+    const mgr = new DisplaySettingsManager(sm, null);
+    await mgr.loadPersistedSettings();
+    expect(mgr.getSetting('clickToQueue')).toBe('off');
+    expect(sm.values['moduleSettings.loops.clickToQueue']).toBeUndefined();
+  });
+
+  it('never overwrites an explicitly persisted clickToQueue with legacy data', async () => {
+    const sm = makeSettingsManager({
+      'moduleSettings.loops.autoBuildPathOnClick': true,
+      'moduleSettings.loops.clickToQueue': 'append',
+    });
+    const mgr = new DisplaySettingsManager(sm, null);
+    await mgr.loadPersistedSettings();
+    expect(mgr.getSetting('clickToQueue')).toBe('append');
+  });
+
+  it('sanitizes an unknown persisted clickToQueue value back to off', async () => {
+    const sm = makeSettingsManager({ 'moduleSettings.loops.clickToQueue': 'bogus' });
+    const mgr = new DisplaySettingsManager(sm, null);
+    await mgr.loadPersistedSettings();
+    expect(mgr.getSetting('clickToQueue')).toBe('off');
+  });
+});
+
 describe('DisplaySettingsManager — handleSettingsChanged', () => {
   let sm, mgr;
   beforeEach(() => {

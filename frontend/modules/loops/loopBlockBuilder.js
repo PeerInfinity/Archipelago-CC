@@ -8,6 +8,7 @@ import { getCostDataManager } from './index.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getSavedQueues } from './savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import {
@@ -25,6 +26,16 @@ function log(level, message, ...data) {
     consoleMethod(`[loopBlockBuilder] ${message}`, ...data);
   }
 }
+
+// Capability fallback for substrates that declare no loopSupport:
+// such regions get NO loop-mode affordances (substrate registry
+// contract). AP-native regions are represented as `null` instead and
+// keep the default affordances — loops drives those itself.
+const NO_LOOP_SUPPORT = Object.freeze({
+  queueActions: Object.freeze([]),
+  manual: false,
+  customQueues: false,
+});
 
 /**
  * LoopBlockBuilder class handles the creation of region block DOM elements for the loops panel
@@ -162,6 +173,30 @@ export class LoopBlockBuilder {
   }
 
   /**
+   * Loop-mode capabilities for the region's substrate, read from its
+   * substrate registry entry. Returns null for AP-native regions (no
+   * substrate — loops drives those itself, default affordances apply)
+   * and NO_LOOP_SUPPORT for substrates that declare no loopSupport.
+   */
+  _getLoopSupport(regionName) {
+    const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+    if (typeof fn !== 'function') return null;
+    const substrateId = fn(regionName)?.substrate;
+    if (!substrateId) return null; // AP-native region
+    return substrateRegistry.get(substrateId)?.loopSupport ?? NO_LOOP_SUPPORT;
+  }
+
+  /**
+   * Whether a loop queue action type can be authored for this region.
+   * AP-native regions (loopSupport null) allow everything; substrate
+   * regions allow only their declared queueActions.
+   */
+  _supportsQueueAction(regionName, actionType) {
+    const loopSupport = this._getLoopSupport(regionName);
+    return !loopSupport || (loopSupport.queueActions?.includes(actionType) ?? false);
+  }
+
+  /**
    * Builds the content element for a region block
    * Renders actions (always visible), then region details when expanded
    * using configurable section ordering (entrances-exits-locations)
@@ -198,18 +233,27 @@ export class LoopBlockBuilder {
 
       const staticData = stateManagerProxySingleton.getStaticData();
 
-      // Add explore button if in loop mode (but not for start regions, which are already fully explored)
+      // Add explore button if in loop mode (but not for start regions,
+      // which are already fully explored, and not for substrates that
+      // declare no explore queue action — e.g. bounce).
       const isStartRegion = this.loopUI.gameStateAPI?.isStartRegion?.(regionName) ?? false;
-      if (this.loopUI.isLoopModeActive && !isStartRegion) {
+      if (this.loopUI.isLoopModeActive && !isStartRegion &&
+          this._supportsQueueAction(regionName, 'explore')) {
         this.addExploreButton(detailsEl, regionName);
       }
 
-      // Manual mode button — pauses the queue when reached and hands
-      // control to the substrate panel for this region. Only shown for
-      // regions that have a substrate (AP-native regions like Menu
-      // have no panel to hand off to).
-      if (this.loopUI.isLoopModeActive && this._getSubstrateLabel(regionName)) {
-        this.addManualButton(detailsEl, regionName);
+      // Substrate loop-mode affordances, gated on the substrate's
+      // registry-declared loopSupport. AP-native regions (no
+      // substrate) get neither — there's no panel to hand off to and
+      // nothing to record.
+      const loopSupport = this._getLoopSupport(regionName);
+      if (this.loopUI.isLoopModeActive && loopSupport?.manual) {
+        // Manual checkbox — when on, the queue parks here and the
+        // player drives the region by hand; the queued actions become
+        // the expected outcome of the manual play.
+        this.addManualCheckbox(detailsEl, regionName);
+      }
+      if (this.loopUI.isLoopModeActive && loopSupport?.customQueues) {
         // Custom Queue dropdown — lists previously-saved queues for
         // this region/substrate so the user can append a customQueue
         // action that replays one of them.
@@ -328,12 +372,16 @@ export class LoopBlockBuilder {
   }
 
   /**
-   * Adds a Manual action button to the region block. Appending a
-   * Manual entry pauses the loops queue when it reaches that point,
-   * auto-activates the substrate panel, and waits for the player to
-   * exit the region (or run out of mana, which triggers a loop reset).
+   * Adds the Manual checkbox to the region block (replaces the old
+   * "Add Manual entry" button). When checked, the loops queue parks
+   * whenever its cursor reaches this region: the substrate panel
+   * auto-activates, the region's queued actions display as the
+   * EXPECTED outcome, and the player drives by hand. Exiting through
+   * the expected exit resumes the queue past the region's segment;
+   * any other exit pauses the queue until the next loop reset. The
+   * checkbox survives loop resets.
    */
-  addManualButton(detailsEl, regionName) {
+  addManualCheckbox(detailsEl, regionName) {
     const container = document.createElement('div');
     container.className = 'region-manual-container';
     Object.assign(container.style, {
@@ -343,15 +391,27 @@ export class LoopBlockBuilder {
       marginTop: '4px',
     });
 
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'manual-btn';
-    btn.textContent = 'Add Manual entry';
-    btn.title = 'Pause the queue here and let the player drive this region directly.';
-    btn.addEventListener('click', () => {
-      this.loopUI.gameStateAPI?.addManualAction?.(regionName);
+    const label = document.createElement('label');
+    label.className = 'manual-region-label';
+    label.title =
+      'Play this region by hand when the queue reaches it. The queued actions become ' +
+      'the expected outcome; exiting through the expected exit resumes the queue, any ' +
+      'other exit pauses it until the next loop reset.';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'manual-region-checkbox';
+    checkbox.checked = loopState.getManualRegion(regionName);
+    checkbox.addEventListener('change', () => {
+      loopState.setManualRegion(regionName, checkbox.checked);
+      // Re-render so the region's action entries flip between
+      // 'pending' and 'expected' display immediately.
+      this.loopUI.renderLoopPanel?.();
     });
-    container.appendChild(btn);
+
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(' Manual'));
+    container.appendChild(label);
 
     detailsEl.appendChild(container);
   }
@@ -530,8 +590,10 @@ export class LoopBlockBuilder {
       statusSpan.textContent = isTraversable ? 'Available' : 'Blocked';
       li.appendChild(statusSpan);
 
-      // Click handler for traversable exits (disabled for placeholders)
-      if (isTraversable && connectedRegionName && !showAsPlaceholder) {
+      // Click handler for traversable exits (disabled for placeholders
+      // and for substrates whose loopSupport excludes regionMove)
+      if (isTraversable && connectedRegionName && !showAsPlaceholder &&
+          this._supportsQueueAction(regionName, 'regionMove')) {
         li.style.cursor = 'pointer';
         li.addEventListener('click', (e) => {
           if (e.target.classList.contains('region-link')) return;
@@ -658,10 +720,12 @@ export class LoopBlockBuilder {
       statusSpan.textContent = statusText;
       li.appendChild(statusSpan);
 
-      // Click handler - queue location check (disabled for placeholders and already-checked locations)
+      // Click handler - queue location check (disabled for placeholders, already-checked
+      // locations, and substrates whose loopSupport excludes locationCheck)
       // Note: disableLocationCheckUI is intentionally NOT checked here — it controls the
       // Regions panel, but the Loops panel always allows queuing location checks.
-      if (locAccessible && !locChecked && !showAsPlaceholder) {
+      if (locAccessible && !locChecked && !showAsPlaceholder &&
+          this._supportsQueueAction(regionName, 'locationCheck')) {
         li.style.cursor = 'pointer';
         li.addEventListener('click', () => {
           if (this.loopUI.gameStateAPI?.addLocationCheck) {
@@ -746,6 +810,14 @@ export class LoopBlockBuilder {
     // Display number (1-indexed)
     const displayIndex = index + 1;
 
+    // Per-region manual mode: pending actions in a manual-checked
+    // region are EXPECTED outcomes of the player's hand-play, not
+    // queue work. Same status styling, different label + a class
+    // hook for styling the whole entry.
+    const isManualRegion = loopState.getManualRegion?.(pathEntry.sourceRegion) || false;
+    if (isManualRegion) actionDiv.classList.add('manual-expected');
+    const statusLabel = status === 'pending' && isManualRegion ? 'expected' : status;
+
     // Format cost
     const costStr = manaCost.toFixed(1);
 
@@ -767,7 +839,7 @@ export class LoopBlockBuilder {
         <span class="loop-action-cost">-${costStr}</span>
         <span class="loop-action-remaining ${remainingClass}">${remainingStr}</span>
         <span class="loop-action-time">${timeStr}</span>
-        <span class="loop-action-status status-${status}">${status}</span>
+        <span class="loop-action-status status-${status}">${statusLabel}</span>
       </div>
     `;
 

@@ -101,6 +101,26 @@ export class LoopState {
     // _manualEntered publish only fire once per manual entry, not on
     // every frame.
     this._manualActionEntered = false;
+    // Per-region manual mode (the Manual checkbox on a region block).
+    // When the queue cursor reaches an action whose sourceRegion is
+    // flagged here, the queue parks and the player drives the region
+    // by hand; its queued actions display as the expected outcome.
+    // Exiting through the expected exit resumes the queue past the
+    // region's whole segment; any other exit sets
+    // _queuePausedUntilReset. Survives loop resets (cleared by
+    // resetForNewRules / hard reset, like repeatExploreStates).
+    this.manualRegionStates = new Map(); // regionName -> true
+    // Region currently being played manually via the checkbox; null
+    // when parked on a legacy 'manual' / 'customQueue' entry instead.
+    // Discriminates the two modes inside the shared wake handlers.
+    this._manualRegionName = null;
+    // Bot-backed queue execution (substrates whose loopSupport
+    // declares executeVia: 'playbackBot', e.g. bounce). The queue
+    // parks on the action while the playback bot walks to the target
+    // on real physics; completion arrives via the resulting
+    // locationCheck / regionChanged events. Holds the in-flight
+    // action, like _delegatedAction does for maze delegation.
+    this._botExecutedAction = null;
     // When true, _processFrame bails immediately without advancing
     // the queue. Cleared by _resetLoop. Set when manual mode detects
     // the player exited to an unexpected region.
@@ -225,6 +245,7 @@ export class LoopState {
     });
     this.eventBus.subscribe('gameState:regionChanged', (data) => {
       this._handleManualWake_regionMove({ targetRegion: data?.newRegion });
+      this._handleBotWake_regionChanged(data?.newRegion);
     });
 
     // Cache raw rules data for the customQueue action's saved-queue
@@ -619,6 +640,10 @@ export class LoopState {
     // walk-completion / reset path is responsible for cleanup on its
     // side; we just stop waiting.
     this._delegatedAction = null;
+    // Stop an in-flight bot walk (bot-backed queue execution). The
+    // parked action stays at the cursor, so resuming re-dispatches
+    // walkTo from wherever the player ended up.
+    this._stopBotExecutedAction();
 
     // Don't reset the action progress during a pause,
     // so we can continue from where we left off
@@ -894,6 +919,16 @@ export class LoopState {
 
     try {
       if (!this._ensureCurrentAction()) return;
+      // Per-region manual mode: the current action's region is
+      // checkbox-flagged → park and let the player drive the whole
+      // region segment. Checked before the legacy entry types so a
+      // flagged region wins even if old 'manual' entries are queued
+      // there too.
+      const manualRegion = this._manualRegionForCurrentAction();
+      if (manualRegion) {
+        this._handleManualRegionEntry(manualRegion);
+        return;
+      }
       // Manual entry: stop accruing progress, hand control to the
       // player via the substrate panel. The wake handlers (subscribed
       // in _setupEventListeners) advance past this entry on the next
@@ -908,6 +943,15 @@ export class LoopState {
       // doubles as the "parked, waiting for an exit" guard.
       if (this.currentAction.type === 'customQueue') {
         this._handleCustomQueueEntry(this.currentAction);
+        return;
+      }
+      // Bot-backed execution: substrates like bounce map regionMove /
+      // locationCheck queue actions to the playback bot's walkTo. The
+      // queue parks while the bot plays the real physics; the
+      // resulting locationCheck / regionChanged events complete the
+      // action (and charge its loops-fallback mana cost).
+      if (this._shouldBotExecuteCurrentAction()) {
+        this._handleBotExecutedAction();
         return;
       }
       this._advanceActionProgress(deltaTime);
@@ -1032,19 +1076,108 @@ export class LoopState {
   }
 
   /**
-   * Find the next regionMove entry after the current action and
-   * return its destinationRegion. That's the region the player is
-   * expected to exit into when leaving a Manual entry.
+   * Find the next regionMove entry at or after startIndex and return
+   * its destinationRegion. That's the region the player is expected
+   * to exit into when leaving a Manual entry (default: scan from the
+   * entry AFTER the current action) or a manual-checked region's
+   * segment (scan from the current action INCLUSIVE — the cursor may
+   * be parked on the leaving regionMove itself).
    * Returns null if no further regionMove is queued.
    */
-  _getExpectedNextRegion() {
+  _getExpectedNextRegion(startIndex = this.currentActionIndex + 1) {
     const queue = this.getActionQueue();
-    for (let i = this.currentActionIndex + 1; i < queue.length; i++) {
+    for (let i = startIndex; i < queue.length; i++) {
       if (queue[i]?.type === 'regionMove') {
         return queue[i].destinationRegion ?? null;
       }
     }
     return null;
+  }
+
+  /**
+   * Per-region manual mode (checkbox): resolve the manual-flagged
+   * region for the current action, or null. Every queue action type
+   * carries sourceRegion = the region the action happens in (a
+   * regionMove's sourceRegion is the region being left, so the move
+   * out of a manual region is the player's to perform too).
+   */
+  _manualRegionForCurrentAction() {
+    const region = this.currentAction?.sourceRegion;
+    return region && this.getManualRegion(region) ? region : null;
+  }
+
+  /**
+   * Park the queue on a manual-checked region. Mirrors
+   * _handleManualEntry, but the region's whole queued segment (every
+   * action up to and including the regionMove that leaves the region)
+   * becomes the player's expected outcome instead of a single entry.
+   */
+  _handleManualRegionEntry(regionName) {
+    if (this._manualActionEntered) return;
+    this._manualActionEntered = true;
+    this._manualRegionName = regionName;
+
+    const componentType = this._lookupSubstrateComponentType(regionName);
+    if (componentType && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+
+    this.stopProcessing();
+
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:manualEntered', {
+        regionName,
+        expectedNextRegion: this._getExpectedNextRegion(this.currentActionIndex),
+        manualRegion: true,
+      });
+    }
+  }
+
+  /**
+   * Mark the manual region's queued segment complete and move the
+   * cursor past it: every action from the cursor up to and including
+   * the first regionMove (the leaving move the player just performed).
+   * No mana is charged — manual play's costs are substrate-owned
+   * (maze drains natively per step; substrates without native drain
+   * play free).
+   */
+  _completeManualRegionSegment() {
+    const queue = this.getActionQueue();
+    let i = this.currentActionIndex;
+    for (; i < queue.length; i++) {
+      const entry = queue[i];
+      this.actionQueueManager?.markCompleted(entry.pathIndex);
+      if (entry.type === 'regionMove') {
+        i += 1;
+        break;
+      }
+    }
+    this.currentActionIndex = i;
+  }
+
+  /**
+   * Display hook for per-region manual mode: a location check that
+   * happened while the player drives a manual region marks the
+   * matching queued locationCheck in the active segment completed
+   * (expected-outcome tracking). Called from loopEvents' pass-through
+   * branch for every locationCheck event; no-ops unless a manual
+   * region segment is active. Unexpected checks are ignored by design
+   * (mismatch = wrong-region moves only).
+   */
+  noteLocationChecked(locationName) {
+    if (!this._manualRegionName || !locationName) return;
+    const queue = this.getActionQueue();
+    for (let i = this.currentActionIndex; i < queue.length; i++) {
+      const entry = queue[i];
+      if (entry.type === 'regionMove') break; // segment ends here
+      if (entry.type === 'locationCheck' &&
+          entry.locationName === locationName &&
+          !entry.completed) {
+        this.actionQueueManager?.markCompleted(entry.pathIndex);
+        this.eventBus?.publish('loopState:queueUpdated', {});
+        return;
+      }
+    }
   }
 
   /**
@@ -1159,6 +1292,166 @@ export class LoopState {
     }
   }
 
+  // -------------------- Bot-backed queue execution --------------------
+
+  /**
+   * Whether the current action should be executed by the substrate's
+   * playback bot instead of the generic progress-timer path. Requires
+   * the substrate's registry entry to declare loopSupport.executeVia
+   * === 'playbackBot' with the action's type in queueActions, and a
+   * live playback controller exposing walkTo. A missing controller
+   * (panel not mounted / headless) falls back to generic execution —
+   * the event-driven teleport still works, just without the physics.
+   */
+  _shouldBotExecuteCurrentAction() {
+    const action = this.currentAction;
+    if (!action) return false;
+    if (action.type !== 'regionMove' && action.type !== 'locationCheck') return false;
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    if (!substrate) return false;
+    const entry = substrateRegistry?.get?.(substrate);
+    const loopSupport = entry?.loopSupport;
+    if (loopSupport?.executeVia !== 'playbackBot') return false;
+    if (!loopSupport.queueActions?.includes(action.type)) return false;
+    return typeof entry.getPlaybackController?.()?.walkTo === 'function';
+  }
+
+  /**
+   * Park the queue on the current action and dispatch the bot toward
+   * its target (a location for locationCheck, the exit portal for
+   * regionMove). Mirrors _tickSubstrateDelegation's parking: no RAF
+   * is scheduled, isProcessing stays true, and the wake handlers
+   * (_handleBotWake_locationCheck / _handleBotWake_regionChanged)
+   * resume the queue when the result event arrives.
+   */
+  _handleBotExecutedAction() {
+    if (this._botExecutedAction) {
+      this._animationFrameId = null;
+      return;
+    }
+    const action = this.currentAction;
+    this._botExecutedAction = action;
+    this._lastFrameTime = null;
+    this._animationFrameId = null;
+
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    const controller = substrate
+      ? substrateRegistry?.get?.(substrate)?.getPlaybackController?.()
+      : null;
+    const target = action.type === 'locationCheck'
+      ? { kind: 'location', name: action.locationName }
+      : { kind: 'exit', name: action.exitUsed };
+    try {
+      controller?.walkTo?.(target);
+      log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
+    } catch (err) {
+      log('warn', '[LoopState] Bot walkTo threw:', err);
+    }
+  }
+
+  /**
+   * Stop an in-flight bot walk (best-effort) and clear the parked
+   * action. Called on pause/stop, loop reset, and unexpected-region
+   * detection.
+   */
+  _stopBotExecutedAction() {
+    const action = this._botExecutedAction;
+    if (!action) return;
+    this._botExecutedAction = null;
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    const controller = substrate
+      ? substrateRegistry?.get?.(substrate)?.getPlaybackController?.()
+      : null;
+    try {
+      controller?.stop?.();
+    } catch { /* best-effort */ }
+  }
+
+  /**
+   * Wake for bot-executed locationCheck actions. Called from
+   * loopEvents' pass-through branch for every locationCheck event;
+   * completes the parked action when the checked location is its
+   * target. No-ops otherwise (including for the fromLoop re-dispatch
+   * our own completion emits — the parked action is already cleared
+   * by then).
+   */
+  _handleBotWake_locationCheck(locationName) {
+    const action = this._botExecutedAction;
+    if (!action || action.type !== 'locationCheck') return;
+    if (!locationName || locationName !== action.locationName) return;
+    this._completeBotExecutedAction();
+  }
+
+  /**
+   * Wake for bot-executed actions on a region change. A regionMove
+   * arriving at its destination completes; any other region change
+   * while the bot drives (an open non-target portal swallowed a
+   * landing, the player grabbed the controls...) gets the same
+   * paused-until-reset semantics as a manual wrong-exit.
+   */
+  _handleBotWake_regionChanged(newRegion) {
+    const action = this._botExecutedAction;
+    if (!action || !newRegion) return;
+    if (action.type === 'regionMove' && newRegion === action.destinationRegion) {
+      this._completeBotExecutedAction({ viaRegionMove: true });
+      return;
+    }
+    this._stopBotExecutedAction();
+    this.stopProcessing();
+    this._queuePausedUntilReset = true;
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:queuePausedUntilReset', {
+        actualRegion: newRegion,
+        expectedRegion: action.type === 'regionMove'
+          ? action.destinationRegion
+          : action.sourceRegion,
+        reason: 'botUnexpectedRegion',
+      });
+    }
+  }
+
+  /**
+   * Complete the parked bot-executed action: charge its loops-fallback
+   * mana cost (v1 decision — bounce-style substrates track no mana
+   * natively, so the queue charges the loop_costs value on completion;
+   * a resulting mana ≤ 0 lands on the next frame's _maybeResetForOOM),
+   * then run the normal completion flow. For regionMoves the bridge
+   * already moved the player, so the duplicate user:regionMove
+   * dispatch is suppressed exactly like substrate delegation.
+   */
+  _completeBotExecutedAction({ viaRegionMove = false } = {}) {
+    const action = this._botExecutedAction;
+    this._botExecutedAction = null;
+    if (!action || this.currentAction !== action) return;
+
+    const gs = this._gs();
+    const cost = this._calculateActionCost(action);
+    if (gs?.deductMana && cost > 0) gs.deductMana(cost);
+
+    if (this.actionQueueManager) {
+      this.actionQueueManager.setProgress(action.pathIndex, 100);
+      this.currentAction.progress = 100;
+    }
+    this._completedViaDelegation = viaRegionMove;
+    try {
+      this._completeCurrentAction();
+    } finally {
+      this._completedViaDelegation = false;
+    }
+
+    // Resume the frame loop to tick the next action (or hit the
+    // queue-completed / OOM transitions cleanly).
+    if (this.isProcessing && !this.isPaused) {
+      this._lastFrameTime = null;
+      if (this._animationFrameId) {
+        cancelAnimationFrame(this._animationFrameId);
+      }
+      this._animationFrameId = requestAnimationFrame(
+        this._processFrame.bind(this),
+      );
+    }
+  }
+
   /**
    * Wake from manual mode in response to a user:regionMove event.
    * If the target matches the queue's next expected region, advance
@@ -1168,13 +1461,25 @@ export class LoopState {
   _handleManualWake_regionMove(data) {
     if (!this._manualActionEntered) return;
     if (!this.currentAction) return;
+    const manualRegion = this._manualRegionName;
     const t = this.currentAction.type;
-    if (t !== 'manual' && t !== 'customQueue') return;
-    const expected = this._getExpectedNextRegion();
+    if (!manualRegion && t !== 'manual' && t !== 'customQueue') return;
+    // Per-region manual mode scans from the current action INCLUSIVE
+    // (the cursor may be parked on the leaving regionMove itself);
+    // legacy manual/customQueue entries scan from the next entry.
+    const expected = manualRegion
+      ? this._getExpectedNextRegion(this.currentActionIndex)
+      : this._getExpectedNextRegion();
     if (data?.targetRegion && data.targetRegion === expected) {
-      // Match — advance past the manual entry.
+      // Match — advance past the manual entry (legacy) or the whole
+      // region segment (per-region manual mode).
       this._manualActionEntered = false;
-      this.currentActionIndex += 1;
+      this._manualRegionName = null;
+      if (manualRegion) {
+        this._completeManualRegionSegment();
+      } else {
+        this.currentActionIndex += 1;
+      }
       const queue = this.getActionQueue();
       this.currentAction = this.currentActionIndex < queue.length
         ? queue[this.currentActionIndex]
@@ -1206,7 +1511,7 @@ export class LoopState {
     if (!this._manualActionEntered) return;
     if (!this.currentAction) return;
     const t = this.currentAction.type;
-    if (t !== 'manual' && t !== 'customQueue') return;
+    if (!this._manualRegionName && t !== 'manual' && t !== 'customQueue') return;
     const gs = this._gs();
     if (typeof gs?.getCurrentMana !== 'function') return;
     if (gs.getCurrentMana() > 0) return;
@@ -1473,6 +1778,9 @@ export class LoopState {
    */
   _shouldDelegateCurrentAction() {
     if (!this.currentAction?.sourceRegion) return false;
+    // Manual-checked regions are player-driven — never delegate to
+    // the substrate's auto-walk; _processFrame parks on them instead.
+    if (this.getManualRegion(this.currentAction.sourceRegion)) return false;
     let info = null;
     try {
       const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
@@ -1701,6 +2009,9 @@ export class LoopState {
     // Mana/XP are now reset by gameState.reset() (called via the same
     // stateManager:rulesLoaded handler chain). Just clear loop-specific state.
     this.repeatExploreStates.clear();
+    this.manualRegionStates.clear();
+    this._manualRegionName = null;
+    this._manualActionEntered = false;
     this._delegatedAction = null;
 
     // Reset action progress
@@ -1728,6 +2039,11 @@ export class LoopState {
    * Does NOT modify pause state — the caller decides whether to pause or continue.
    */
   _resetLoop() {
+    // Stop an in-flight bot walk — the reset teleports the player to
+    // the start region; a bot still steering toward a stale target
+    // would fight the fresh loop.
+    this._stopBotExecutedAction();
+
     // Restore mana to full via gameState (fires gameState:manaChanged).
     const gs = this._gs();
     if (gs) gs.refillMana();
@@ -1742,8 +2058,11 @@ export class LoopState {
     this._queueCompleted = false;
     // Clear manual-mode flags: a fresh loop starts at index 0, and
     // any prior "paused-until-reset" condition is the user's signal
-    // that this reset is the unlock.
+    // that this reset is the unlock. The per-region manual CHECKBOX
+    // states (manualRegionStates) deliberately survive — matching
+    // resumes from the top with the checkboxes intact.
     this._manualActionEntered = false;
+    this._manualRegionName = null;
     this._queuePausedUntilReset = false;
 
     // Notify loop reset
@@ -1967,6 +2286,23 @@ export class LoopState {
    * @param {string} regionName
    * @param {boolean} repeat
    */
+  /**
+   * Per-region manual checkbox state. Flagged regions are played by
+   * hand when the queue cursor reaches them (loopBlockBuilder renders
+   * the checkbox). Survives loop resets; cleared by resetForNewRules
+   * like repeatExploreStates.
+   */
+  setManualRegion(regionName, enabled) {
+    if (!regionName) return;
+    if (enabled) this.manualRegionStates.set(regionName, true);
+    else this.manualRegionStates.delete(regionName);
+  }
+
+  /** Whether the region's Manual checkbox is on. */
+  getManualRegion(regionName) {
+    return this.manualRegionStates.get(regionName) || false;
+  }
+
   setRepeatExplore(regionName, repeat) {
     this.repeatExploreStates.set(regionName, repeat);
     // Optionally save this state? For now, it's ephemeral.
@@ -2003,6 +2339,7 @@ export class LoopState {
       actionCompleted: queueState.actionCompleted,
       currentActionIndex: this.currentActionIndex,
       repeatExploreStates: Array.from(this.repeatExploreStates.entries()),
+      manualRegionStates: Array.from(this.manualRegionStates.entries()),
     };
   }
 
@@ -2035,8 +2372,9 @@ export class LoopState {
     }
     this.currentActionIndex = state.currentActionIndex ?? 0;
 
-    // Load repeatExploreStates
+    // Load repeatExploreStates + manual region checkboxes
     this.repeatExploreStates = new Map(state.repeatExploreStates || []);
+    this.manualRegionStates = new Map(state.manualRegionStates || []);
 
     // Notify mana/xp change so consumers reflect the loaded values
     // (the delegated setters above are silent by design).

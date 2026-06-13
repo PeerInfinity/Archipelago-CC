@@ -52,6 +52,16 @@ export const substrateRegistryEntry = Object.freeze({
     // initialize() runs (registry callers already handle null).
     getPlaybackController: () => getPlaybackProxy(),
 
+    // Loop-mode capabilities: manual play yes, custom queues NO — the
+    // engine's actions are exactly the basic loop queue actions, so a
+    // recorded queue would duplicate what the loops queue already
+    // expresses (user decision, 2026-06-12).
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
+        manual: true,
+        customQueues: false,
+    }),
+
     // Build-time adapters — same as existing. These run host-side
     // during procgen seed generation.
     generateRegionCore: spatialCore,

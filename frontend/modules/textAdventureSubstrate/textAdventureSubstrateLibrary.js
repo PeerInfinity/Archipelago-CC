@@ -48,6 +48,14 @@ export const substrateRegistryEntry = Object.freeze({
     // is mounted.
     getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
+    // Loop-mode capabilities — mirrors the wrapper entry (same id,
+    // whichever registers first wins): manual yes, custom queues no.
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
+        manual: true,
+        customQueues: false,
+    }),
+
     // Build-time adapters — same as maze. The text panel reads from
     // the same world shape and ignores the tile-grid fields it
     // doesn't render.

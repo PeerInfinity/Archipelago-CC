@@ -220,7 +220,11 @@ export class LoopUI {
                 <label class="auto-resume-label"><input type="checkbox" id="loop-ui-toggle-auto-resume" /> Auto-resume on new action</label>
                 <label class="auto-remove-label"><input type="checkbox" id="loop-ui-toggle-auto-remove" /> Auto-remove completed actions</label>
                 <label class="keep-focused-label" title="Suppress substrate panel activation while the queue is running"><input type="checkbox" id="loop-ui-toggle-keep-focused" /> Keep this panel focused</label>
-                <label class="auto-build-path-label" title="Advanced: rebuild the queue as a path on every external click"><input type="checkbox" id="loop-ui-toggle-auto-build-path-on-click" /> Auto-build path on click (advanced)</label>
+                <label class="click-to-queue-label" title="What a location/exit click from another panel does in loop mode: Off = checks immediately; Append = adds to the end of the queue; Rebuild path = clears the queue and builds a path to the target">Click-to-queue: <select id="loop-ui-click-to-queue">
+                  <option value="off">Off</option>
+                  <option value="append">Append to queue</option>
+                  <option value="rebuildPath">Rebuild path (advanced)</option>
+                </select></label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button" title="Save the current game state to local storage">Save Game</button>
@@ -382,38 +386,40 @@ export class LoopUI {
       });
     }
 
-    // Advanced: auto-build path on click. Enabling shows a confirm()
-    // gate because the behavior (clear + rebuild queue on every
-    // external location/exit click) is destructive to in-flight queues.
-    const autoBuildPathCheckbox = querySelector('#loop-ui-toggle-auto-build-path-on-click');
-    if (autoBuildPathCheckbox) {
-      const persistedAutoBuild = !!this.displaySettings.getSetting('autoBuildPathOnClick');
-      autoBuildPathCheckbox.checked = persistedAutoBuild;
+    // Click-to-queue mode. Switching away from 'off' shows a confirm()
+    // gate because both queue modes swallow clicks that would otherwise
+    // check immediately, and 'rebuildPath' additionally clears in-flight
+    // queues on every external click.
+    const clickToQueueSelect = querySelector('#loop-ui-click-to-queue');
+    if (clickToQueueSelect) {
+      const persistedMode = this.displaySettings.getSetting('clickToQueue') || 'off';
+      clickToQueueSelect.value = persistedMode;
       // Publish the persisted value once so loopEvents.js picks up a
-      // restored true value across reloads (its own state defaults to
-      // false at module-load time).
-      this.eventBus.publish(
-        'loopUI:autoBuildPathOnClickChanged',
-        { active: persistedAutoBuild },
-      );
-      autoBuildPathCheckbox.addEventListener('change', async () => {
-        const newState = autoBuildPathCheckbox.checked;
-        if (newState) {
+      // restored non-'off' value across reloads (its own state defaults
+      // to 'off' at module-load time).
+      this.eventBus.publish('loopUI:clickToQueueChanged', { mode: persistedMode });
+      clickToQueueSelect.addEventListener('change', async () => {
+        const previousMode = this.displaySettings.getSetting('clickToQueue') || 'off';
+        const newMode = clickToQueueSelect.value;
+        if (newMode !== 'off') {
           const confirmed = confirm(
-            'Enable "Auto-build path on click"?\n\n' +
-            'When ON: clicking a location or exit in another panel will CLEAR your current queue ' +
-            'and replace it with a path from your current region to the click target.\n\n' +
-            'When OFF (the default): clicks instead append a single action to the end of your queue, ' +
-            'and are ignored if the click is for a different region than the queue currently ends in.\n\n' +
-            'Recommended only when you understand the queue-rebuilding behavior.'
+            newMode === 'rebuildPath'
+              ? 'Set click-to-queue to "Rebuild path"?\n\n' +
+                'Clicking a location or exit in another panel will CLEAR your current queue ' +
+                'and replace it with a path from your current region to the click target.\n\n' +
+                'Clicks will no longer check locations immediately while loop mode is active.'
+              : 'Set click-to-queue to "Append to queue"?\n\n' +
+                'Clicking a location or exit in another panel will append a single action to ' +
+                'the end of your queue; clicks for a different region than the queue ends in are ignored.\n\n' +
+                'Clicks will no longer check locations immediately while loop mode is active.'
           );
           if (!confirmed) {
-            autoBuildPathCheckbox.checked = false;
+            clickToQueueSelect.value = previousMode;
             return;
           }
         }
-        await this.displaySettings.setSetting('autoBuildPathOnClick', newState, true);
-        this.eventBus.publish('loopUI:autoBuildPathOnClickChanged', { active: newState });
+        await this.displaySettings.setSetting('clickToQueue', newMode, true);
+        this.eventBus.publish('loopUI:clickToQueueChanged', { mode: newMode });
       });
     }
 
@@ -436,9 +442,14 @@ export class LoopUI {
         if (!stateBannerEl) return;
         stateBannerEl.style.display = 'none';
       };
-      const onManualEntered = ({ regionName }) => {
+      const onManualEntered = ({ regionName, expectedNextRegion, manualRegion }) => {
+        const exitText = expectedNextRegion
+          ? `exit to ${expectedNextRegion} to resume the queue`
+          : 'cross an exit';
         showStateBanner(
-          `Manual mode — finish in the ${regionName} panel (run out of mana or cross an exit).`,
+          manualRegion
+            ? `Manual region — play ${regionName} by hand; ${exitText} (any other exit pauses the queue until reset).`
+            : `Manual mode — finish in the ${regionName} panel (run out of mana or cross an exit).`,
           'info',
         );
       };
@@ -448,7 +459,9 @@ export class LoopUI {
       const onQueuePaused = ({ actualRegion, expectedRegion, reason }) => {
         const reasonText = reason === 'manualWrongRegion'
           ? `you exited to ${actualRegion ?? 'an unexpected region'}, but the queue expected ${expectedRegion ?? 'a different region'}`
-          : 'an unexpected state was reached';
+          : reason === 'botUnexpectedRegion'
+            ? `the bot-driven player ended up in ${actualRegion ?? 'an unexpected region'}, but the queue expected ${expectedRegion ?? 'a different region'}`
+            : 'an unexpected state was reached';
         showStateBanner(
           `Loop queue paused — ${reasonText}. Reset the loop (or wait for it to reset on mana zero) to resume.`,
           'warn',
@@ -482,7 +495,7 @@ export class LoopUI {
           : 'the queue has no region yet';
         bannerEl.textContent =
           `Ignored ${kindLabel}: clicked in ${regionName}, but ${expectedText}. ` +
-          `Queue a regionMove to ${regionName} first, or enable "Auto-build path on click" in Controls.`;
+          `Queue a regionMove to ${regionName} first, or set Click-to-queue to "Rebuild path" in Controls.`;
         bannerEl.style.display = 'block';
         clearTimeout(this._clickIgnoredHideTimeout);
         this._clickIgnoredHideTimeout = setTimeout(() => {
