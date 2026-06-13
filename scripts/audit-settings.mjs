@@ -180,6 +180,22 @@ function scanGetSetting() {
 // ── 5. Reconcile + report ─────────────────────────────────────────────────
 function section(title) { console.log(`\n${'─'.repeat(70)}\n${title}\n${'─'.repeat(70)}`); }
 
+// Best-effort parse of a getSetting() 2nd-arg default's RAW source text into a
+// JS value, so it can be compared to the schema default. Returns {ok:false}
+// for non-literal expressions/variables (which can't be compared statically).
+function parseLiteralDefault(text) {
+  const t = (text || '').trim();
+  if (t === 'true') return { ok: true, value: true };
+  if (t === 'false') return { ok: true, value: false };
+  if (t === 'null') return { ok: true, value: null };
+  if (/^-?\d+(\.\d+)?$/.test(t)) return { ok: true, value: Number(t) };
+  const q = t.match(/^(['"`])([\s\S]*)\1$/);
+  if (q) return { ok: true, value: q[2] };
+  if (t === '[]') return { ok: true, value: [] };
+  if (t === '{}') return { ok: true, value: {} };
+  return { ok: false };
+}
+
 (async () => {
   console.log('Settings audit — schema (live) vs settings.json vs getSetting() call sites');
   console.log(`URL: ${URL}`);
@@ -275,6 +291,27 @@ function section(title) { console.log(`\n${'─'.repeat(70)}\n${title}\n${'─'.
   if (!eMiss.length) console.log('  (none)');
   for (const k of eMiss) console.log(`  ${k} = ${JSON.stringify(jsonKeys.get(k))}`);
 
+  // The schema is the source of truth for defaults; a call-site default that
+  // DISAGREES with the schema is dead + misleading (the schema default wins
+  // for absent keys). Surface it without removing the fallback (it still
+  // guards the no-schema / stubbed-settingsManager path). Literal defaults
+  // only — variable/expression defaults are skipped.
+  section('F. Call-site default ≠ schema default (dead/misleading; schema wins)');
+  const fDrift = [];
+  for (const [k, e] of codeKeys) {
+    if (!e.hasDefault || !inSchema(k)) continue;
+    const lit = parseLiteralDefault(e.default);
+    if (!lit.ok) continue;
+    const schemaDef = schemaKeys.get(k).default;
+    if (JSON.stringify(lit.value) !== JSON.stringify(schemaDef)) {
+      fDrift.push({ k, code: e.default.trim(), schema: schemaDef, file: [...e.files][0] });
+    }
+  }
+  if (!fDrift.length) console.log('  (none)');
+  for (const f of fDrift) {
+    console.log(`  ${f.k}   call-site: ${f.code}   schema: ${JSON.stringify(f.schema)}   (${f.file})`);
+  }
+
   section('Summary');
   console.log(`  schema keys (well-formed): ${schemaKeys.size}`);
   console.log(`  settings.json leaf keys:   ${jsonKeys.size}`);
@@ -284,6 +321,7 @@ function section(title) { console.log(`\n${'─'.repeat(70)}\n${title}\n${'─'.
   console.log(`  C (moduleSettings in json):${[...new Set(cLeft)].length}`);
   console.log(`  D (invisible):             ${dMiss.length}`);
   console.log(`  E (orphan candidates):     ${eMiss.length}`);
+  console.log(`  F (call-site ≠ schema):    ${fDrift.length}`);
 
   if (WRITE_DEFAULTS) {
     const defaults = {};

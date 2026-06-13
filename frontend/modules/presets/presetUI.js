@@ -2394,7 +2394,7 @@ export class PresetUI {
     let showLocationItems = false;
     try {
       showLocationItems = await settingsManager.getSetting(
-        'moduleSettings.commonUI.showLocationItems', false,
+        'moduleSettings.commonUI.showLocationItems', true,
       );
     } catch (e) {
       // settingsManager unavailable — proceed without item names.

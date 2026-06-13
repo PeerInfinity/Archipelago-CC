@@ -1044,7 +1044,7 @@ export class RegionBlockBuilder {
         headerRow.appendChild(locLink);
 
         // Add item name if showLocationItems is enabled
-        settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false).then(showItems => {
+        settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true).then(showItems => {
           if (showItems && staticData?.locationItems) {
             const itemAtLocation = staticData.locationItems.get(locationDef.name);
             if (itemAtLocation && itemAtLocation.name) {

@@ -121,10 +121,10 @@ export class LocationUI {
     // Update local cache on any settings change
     try {
       this.colorblindSettings = await settingsManager.getSetting('colorblindMode.locations', false);
-      this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
+      this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
       this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
-      this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', false);
-      this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', false);
+      this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', true);
+      this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', true);
       this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
       // Load discovery settings
       this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting('moduleSettings.discovery.undiscoveredDisplay', 'hidden');
@@ -150,10 +150,10 @@ export class LocationUI {
           // Update cache
           try {
             this.colorblindSettings = await settingsManager.getSetting('colorblindMode.locations', false);
-            this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
+            this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
             this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
-            this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', false);
-            this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', false);
+            this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', true);
+            this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', true);
             this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
           } catch (error) {
             log('error', 'Error loading settings during update:', error);

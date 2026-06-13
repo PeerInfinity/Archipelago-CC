@@ -317,7 +317,7 @@ export class SpoilerChecklistUI {
 
     // Load settings
     try {
-      this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
+      this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
       this.simulateReceivedItems = await settingsManager.getSetting('moduleSettings.spoilerChecklist.simulateReceivedItems', false);
       const simCheckbox = this.rootElement.querySelector('#simulate-received-items');
       if (simCheckbox) simCheckbox.checked = this.simulateReceivedItems;
@@ -349,7 +349,7 @@ export class SpoilerChecklistUI {
     });
     this.eventBus.subscribe('settings:changed', async ({ key }) => {
       if (key === '*' || key.startsWith('moduleSettings.commonUI.showLocationItems')) {
-        this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
+        this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
         this.updateDisplay();
       }
     });

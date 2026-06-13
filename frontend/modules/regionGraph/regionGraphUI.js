@@ -175,8 +175,8 @@ export class RegionGraphUI {
   async loadDisplaySettings() {
     try {
       this.showName = await settingsManager.getSetting('moduleSettings.regionGraph.showName', true);
-      this.showLabel1 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel1', false);
-      this.showLabel2 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel2', false);
+      this.showLabel1 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel1', true);
+      this.showLabel2 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel2', true);
       this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
       logger.debug(`Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}, useSubstitutedNames=${this.useSubstitutedNames}`);
     } catch (error) {

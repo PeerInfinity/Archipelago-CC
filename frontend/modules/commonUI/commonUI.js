@@ -247,7 +247,7 @@ class CommonUI {
     const itemNames = Object.keys(staticData.items);
 
     // Check if showLocationItems is enabled
-    const showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
+    const showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
 
     // Create a regex pattern to match item names in quotes
     // Match items in single quotes, double quotes, or as identifiers
@@ -506,7 +506,7 @@ class CommonUI {
           root.appendChild(locationPlaceholder);
 
           // Check if setting is enabled (async)
-          settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false).then(showLocationItems => {
+          settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true).then(showLocationItems => {
             if (showLocationItems && locationPlaceholder.parentNode) {
               // Get the CURRENT snapshot at the time of rendering, not the one from closure
               const currentSnapshot = stateSnapshotInterface?._snapshot || stateManager.getLatestStateSnapshot();
@@ -565,7 +565,7 @@ class CommonUI {
           root.appendChild(locationPlaceholder);
 
           // Check if setting is enabled (async)
-          settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false).then(showLocationItems => {
+          settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true).then(showLocationItems => {
             if (showLocationItems && locationPlaceholder.parentNode) {
               // Get the CURRENT snapshot at the time of rendering, not the one from closure
               const currentSnapshot = stateSnapshotInterface?._snapshot || stateManager.getLatestStateSnapshot();

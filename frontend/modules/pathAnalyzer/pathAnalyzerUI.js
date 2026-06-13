@@ -1276,7 +1276,7 @@ export class PathAnalyzerUI {
     // Add location information for items if showLocationItems is enabled
     if (node && (node.type === 'item_check' || node.type === 'count_check')) {
       // Check if the setting is enabled (async but updates existing element)
-      settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false).then(showLocationItems => {
+      settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true).then(showLocationItems => {
         if (!showLocationItems) return;
 
         const itemName = node.item;
