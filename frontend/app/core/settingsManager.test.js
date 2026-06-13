@@ -540,9 +540,15 @@ describe('SettingsManager — getSettings merges schema defaults (Phase 2)', () 
         pages: { type: 'array', default: [{ name: 'a' }] },
       },
     });
+    // Top-level scope (Phase 4) — should also be back-filled by getSettings.
+    centralRegistry.registerTopLevelSettingsSchema('p2scope', {
+      type: 'object',
+      properties: { mode: { type: 'string', default: 'auto' } },
+    });
   });
   afterEach(() => {
     centralRegistry.settingsSchemas.delete('p2mod');
+    centralRegistry.topLevelSettingsSchemas.delete('p2scope');
     delete globalThis.localStorage;
   });
 
@@ -578,6 +584,20 @@ describe('SettingsManager — getSettings merges schema defaults (Phase 2)', () 
     await sm.updateSetting('moduleSettings.p2mod.speed', 999, { persist: false });
     const gs = await sm.getSettings();
     expect(gs.moduleSettings.p2mod.speed).toBe(100); // override excluded; default shown
+  });
+
+  it('back-fills top-level scope defaults too (Phase 4)', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings({ moduleSettings: {} }); // no p2scope persisted
+    const gs = await sm.getSettings();
+    expect(gs.p2scope.mode).toBe('auto');
+  });
+
+  it('persisted top-level value wins over the schema default', async () => {
+    const sm = new SettingsManager();
+    sm.setInitialSettings({ p2scope: { mode: 'desktop' }, moduleSettings: {} });
+    const gs = await sm.getSettings();
+    expect(gs.p2scope.mode).toBe('desktop');
   });
 });
 

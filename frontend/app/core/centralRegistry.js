@@ -16,7 +16,8 @@ class CentralRegistry {
     this.panelComponents = new Map(); // componentType -> { moduleId: string, componentClass: Function }
     this.moduleIdToComponentType = new Map(); // moduleId -> componentType
     this.dispatcherHandlers = new Map(); // eventName -> Array<{moduleId, handlerFunction, propagationDetails, enabled: boolean}>
-    this.settingsSchemas = new Map(); // moduleId -> schemaSnippet
+    this.settingsSchemas = new Map(); // moduleId -> schemaSnippet (moduleSettings.<mod>.*)
+    this.topLevelSettingsSchemas = new Map(); // scope -> schemaSnippet (<scope>.* — e.g. generalSettings, colorblindMode)
     this.publicFunctions = new Map(); // moduleId -> Map<functionName, functionRef>
     this.jsonDataHandlers = new Map(); // dataKey -> { moduleId, displayName, defaultChecked, requiresReload, getSaveDataFunction, applyLoadedDataFunction }
 
@@ -176,6 +177,21 @@ class CentralRegistry {
   }
 
   /**
+   * Register a schema for a TOP-LEVEL (non-moduleSettings) scope — e.g.
+   * `generalSettings` or `colorblindMode`. Defaults are then resolved by
+   * getSchemaDefault for 2-part keys like `generalSettings.layoutMode`,
+   * the same way module schemas back a `moduleSettings.<mod>.<prop>` key.
+   * Registered for core scopes at app bootstrap (see app/core/coreSettingsSchemas.js).
+   */
+  registerTopLevelSettingsSchema(scope, schemaSnippet) {
+    if (this.topLevelSettingsSchemas.has(scope)) {
+      log('warn', `Top-level settings schema for '${scope}' is already registered. Overwriting.`);
+    }
+    log('info', `Registering top-level settings schema for ${scope}`);
+    this.topLevelSettingsSchemas.set(scope, schemaSnippet);
+  }
+
+  /**
    * Locate the `properties` bag inside a registered schema snippet,
    * normalizing the heterogeneous shapes modules register (mirrors the
    * normalizer in scripts/audit-settings.mjs):
@@ -242,25 +258,71 @@ class CentralRegistry {
   }
 
   /**
-   * Resolve the schema-declared default for a `moduleSettings.<mod>.<prop>`
-   * key. This is the single source of truth for moduleSettings defaults —
-   * settingsManager.getSetting consults it between the persisted value and
-   * the call-site fallback (see app/core/settingsManager.js).
+   * Normalized property specs for a registered top-level scope's schema
+   * (e.g. 'generalSettings', 'colorblindMode'). Same shape as
+   * getModuleSettingSchema but keyed by scope, with `<scope>.<prop>` keys.
    *
-   * @param {string} key e.g. 'moduleSettings.inventory.showLabel1'
-   * @returns {{ found: boolean, value: * }} `found` is true only when the
-   *   schema declares a `default` for the prop; `value` is that default.
-   *   Non-`moduleSettings.<mod>.<prop>` keys always return found:false so
-   *   the caller falls through to its own default.
+   * @param {string} scope
+   * @returns {Array<{ key, scope, prop, spec }>}
+   */
+  getTopLevelSettingSchema(scope) {
+    const props = this._normalizeSchemaProps(scope, this.topLevelSettingsSchemas.get(scope));
+    if (!props) return [];
+    const out = [];
+    for (const [prop, spec] of Object.entries(props)) {
+      if (!spec || typeof spec !== 'object') continue;
+      if (!('type' in spec) && !('default' in spec)) continue;
+      out.push({ key: `${scope}.${prop}`, scope, prop, spec });
+    }
+    return out;
+  }
+
+  /**
+   * Every registered top-level (non-moduleSettings) property, flattened
+   * across all scopes, scopes sorted alphabetically. Used by settingsManager
+   * to back-fill top-level defaults into getSettings().
+   *
+   * @returns {Array<{ key, scope, prop, spec }>}
+   */
+  getAllTopLevelSettingSchemas() {
+    const out = [];
+    const scopes = [...this.topLevelSettingsSchemas.keys()].sort((a, b) => a.localeCompare(b));
+    for (const scope of scopes) out.push(...this.getTopLevelSettingSchema(scope));
+    return out;
+  }
+
+  /**
+   * Resolve the schema-declared default for a settings key. The single
+   * source of truth for both moduleSettings and registered top-level
+   * defaults — settingsManager.getSetting consults it between the persisted
+   * value and the call-site fallback (see app/core/settingsManager.js).
+   *
+   * Handles two key shapes:
+   *   - `moduleSettings.<mod>.<prop>` → module schema (settingsSchemas)
+   *   - `<scope>.<prop>`              → top-level schema (topLevelSettingsSchemas)
+   *
+   * @param {string} key e.g. 'moduleSettings.inventory.showLabel1' or 'generalSettings.layoutMode'
+   * @returns {{ found: boolean, value: * }} `found` is true only when a
+   *   schema declares a `default` for the key; otherwise the caller falls
+   *   through to its own default.
    */
   getSchemaDefault(key) {
     const notFound = { found: false, value: undefined };
     if (typeof key !== 'string') return notFound;
     const parts = key.split('.');
-    if (parts.length !== 3 || parts[0] !== 'moduleSettings') return notFound;
-    const [, moduleId, prop] = parts;
 
-    const props = this._normalizeSchemaProps(moduleId, this.settingsSchemas.get(moduleId));
+    let props = null;
+    let prop = null;
+    if (parts.length === 3 && parts[0] === 'moduleSettings') {
+      prop = parts[2];
+      props = this._normalizeSchemaProps(parts[1], this.settingsSchemas.get(parts[1]));
+    } else if (parts.length === 2 && parts[0] !== 'moduleSettings'
+      && this.topLevelSettingsSchemas.has(parts[0])) {
+      prop = parts[1];
+      props = this._normalizeSchemaProps(parts[0], this.topLevelSettingsSchemas.get(parts[0]));
+    } else {
+      return notFound;
+    }
     if (!props) return notFound;
 
     const spec = props[prop];

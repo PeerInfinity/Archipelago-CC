@@ -472,7 +472,7 @@ export class OptionsPanelUI {
       this.settings.playerName = await settingsManager.getSetting('playerName', 'Player1');
       this.settings.defaultServer = await settingsManager.getSetting('moduleSettings.client.defaultServer', 'ws://localhost:38281');
       this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', false);
-      this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', false);
+      this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', true);
       this.settings.logLevel = await settingsManager.getSetting('logging.defaultLevel', 'WARN');
       this.settings.inventoryShowName = await settingsManager.getSetting('moduleSettings.inventory.showName', true);
       this.settings.inventoryShowLabel1 = await settingsManager.getSetting('moduleSettings.inventory.showLabel1', true);

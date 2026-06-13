@@ -34,9 +34,11 @@ const FLAT = {
 };
 
 const MODS = ['stdMod', 'wrappedMod', 'flatMod', 'junkMod', 'emptyMod'];
+const SCOPES = ['generalSettings', 'colorblindMode'];
 
 function clearMods() {
   for (const m of MODS) centralRegistry.settingsSchemas.delete(m);
+  for (const s of SCOPES) centralRegistry.topLevelSettingsSchemas.delete(s);
 }
 
 afterEach(clearMods);
@@ -152,5 +154,61 @@ describe('centralRegistry — getSchemaDefault (refactored onto shared normalize
 
   it('reports found:false for an unregistered module', () => {
     expect(centralRegistry.getSchemaDefault('moduleSettings.nope.prop').found).toBe(false);
+  });
+});
+
+describe('centralRegistry — top-level settings schemas (Phase 4)', () => {
+  const GEN = {
+    type: 'object',
+    properties: {
+      layoutMode: { type: 'string', default: 'auto', enum: ['auto', 'desktop'] },
+      autoLoadMode: { type: 'boolean', default: true },
+    },
+  };
+
+  it('resolves a 2-part top-level key via getSchemaDefault', () => {
+    centralRegistry.registerTopLevelSettingsSchema('generalSettings', GEN);
+    expect(centralRegistry.getSchemaDefault('generalSettings.layoutMode'))
+      .toEqual({ found: true, value: 'auto' });
+    expect(centralRegistry.getSchemaDefault('generalSettings.autoLoadMode'))
+      .toEqual({ found: true, value: true });
+  });
+
+  it('does NOT resolve a 2-part key for an unregistered scope', () => {
+    expect(centralRegistry.getSchemaDefault('generalSettings.layoutMode').found).toBe(false);
+  });
+
+  it('does NOT treat a 2-part moduleSettings.<mod> key as top-level', () => {
+    centralRegistry.settingsSchemas.set('stdMod', STD);
+    expect(centralRegistry.getSchemaDefault('moduleSettings.stdMod').found).toBe(false);
+  });
+
+  it('module (3-part) resolution still works alongside top-level', () => {
+    centralRegistry.settingsSchemas.set('stdMod', STD);
+    centralRegistry.registerTopLevelSettingsSchema('generalSettings', GEN);
+    expect(centralRegistry.getSchemaDefault('moduleSettings.stdMod.widgetSize').value).toBe(42);
+    expect(centralRegistry.getSchemaDefault('generalSettings.layoutMode').value).toBe('auto');
+  });
+
+  it('getAllTopLevelSettingSchemas flattens scopes sorted, props in order', () => {
+    centralRegistry.registerTopLevelSettingsSchema('generalSettings', GEN);
+    centralRegistry.registerTopLevelSettingsSchema('colorblindMode', {
+      type: 'object',
+      properties: { regions: { type: 'boolean', default: false } },
+    });
+    const keys = centralRegistry.getAllTopLevelSettingSchemas().map((e) => e.key);
+    const ours = keys.filter((k) => /^(generalSettings|colorblindMode)\./.test(k));
+    expect(ours).toEqual([
+      'colorblindMode.regions',
+      'generalSettings.layoutMode',
+      'generalSettings.autoLoadMode',
+    ]);
+  });
+
+  it('top-level schemas do NOT leak into getAllSettingSchemas (moduleSettings only)', () => {
+    centralRegistry.registerTopLevelSettingsSchema('generalSettings', GEN);
+    const keys = centralRegistry.getAllSettingSchemas().map((e) => e.key);
+    expect(keys.some((k) => k.startsWith('generalSettings.'))).toBe(false);
+    expect(keys.every((k) => k.startsWith('moduleSettings.'))).toBe(true);
   });
 });

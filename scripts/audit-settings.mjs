@@ -44,10 +44,13 @@ async function dumpSchemas() {
     await page.goto(URL, { waitUntil: 'networkidle', timeout: 30000 });
     await page.waitForTimeout(3000);
     const raw = await page.evaluate(() => {
-      const m = window.centralRegistry && window.centralRegistry.settingsSchemas;
+      const cr = window.centralRegistry;
+      const m = cr && cr.settingsSchemas;
       if (!m || typeof m.entries !== 'function') return null;
-      const out = {};
-      for (const [k, v] of m.entries()) out[k] = v;
+      const out = { modules: {}, topLevel: {} };
+      for (const [k, v] of m.entries()) out.modules[k] = v;
+      const t = cr.topLevelSettingsSchemas;
+      if (t && typeof t.entries === 'function') for (const [k, v] of t.entries()) out.topLevel[k] = v;
       return out;
     });
     if (!raw) throw new Error('window.centralRegistry.settingsSchemas not available');
@@ -115,6 +118,17 @@ function normalizeSchemas(raw) {
     }
   }
   return { keys, malformed };
+}
+
+// Locate the properties bag of a top-level scope snippet (same shape handling
+// as normalizeSchemas / centralRegistry._normalizeSchemaProps).
+function topLevelSchemaProps(scope, snippet) {
+  if (!snippet || typeof snippet !== 'object') return null;
+  let node = snippet;
+  if (!node.properties && !node.type && node[scope] && typeof node[scope] === 'object') node = node[scope];
+  if (node.properties && typeof node.properties === 'object') return node.properties;
+  if (!node.type) return node;
+  return null;
 }
 
 // ── 3. Read + flatten settings.json to leaf dotted keys ───────────────────
@@ -209,7 +223,18 @@ function parseLiteralDefault(text) {
     process.exit(1);
   }
 
-  const { keys: schemaKeys, malformed } = normalizeSchemas(raw);
+  const { keys: schemaKeys, malformed } = normalizeSchemas(raw.modules);
+  // Fold in top-level scope schemas (generalSettings.*, colorblindMode.*, …)
+  // as `<scope>.<prop>` keys, so they count as schema-backed (Phase 4).
+  for (const [scope, snippet] of Object.entries(raw.topLevel || {})) {
+    const props = topLevelSchemaProps(scope, snippet);
+    if (!props) continue;
+    for (const [prop, spec] of Object.entries(props)) {
+      if (!spec || typeof spec !== 'object') continue;
+      if (!('type' in spec) && !('default' in spec)) continue;
+      schemaKeys.set(`${scope}.${prop}`, { default: spec.default });
+    }
+  }
   const settingsObj = JSON.parse(readFileSync(SETTINGS_JSON, 'utf8'));
   const jsonKeys = flatten(settingsObj, '', new Map());
   const codeKeys = scanGetSetting();

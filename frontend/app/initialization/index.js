@@ -42,6 +42,9 @@ import {
   postInitializeSingleModule,
 } from './moduleInitializer.js';
 
+// Import core settings schemas (top-level scopes; schema-as-default-source)
+import { registerCoreSettingsSchemas } from '../core/coreSettingsSchemas.js';
+
 // Import layout management
 import { initializeLayoutManager } from './layoutManager.js';
 
@@ -103,6 +106,11 @@ export async function initializeApplication(dependencies) {
   } = dependencies;
 
   logger.info('init', 'Starting main initialization...');
+
+  // Register core (top-level) settings schemas before settings load / module
+  // register / any getSetting read, so generalSettings.* / colorblindMode.*
+  // resolve their schema defaults (schema-as-default-source Phase 4).
+  registerCoreSettingsSchemas();
 
   // Get URL parameters early
   const urlParams = new URLSearchParams(window.location.search);

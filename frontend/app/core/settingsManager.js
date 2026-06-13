@@ -295,13 +295,20 @@ export class SettingsManager {
    */
   _buildSchemaDefaults() {
     const out = {};
-    const entries = (centralRegistry && typeof centralRegistry.getAllSettingSchemas === 'function')
-      ? centralRegistry.getAllSettingSchemas()
-      : [];
-    for (const { moduleId, prop, spec } of entries) {
-      if (!spec || !('default' in spec)) continue;
-      (out.moduleSettings ??= {})[moduleId] ??= {};
-      out.moduleSettings[moduleId][prop] = spec.default;
+    if (!centralRegistry) return out;
+    if (typeof centralRegistry.getAllSettingSchemas === 'function') {
+      for (const { moduleId, prop, spec } of centralRegistry.getAllSettingSchemas()) {
+        if (!spec || !('default' in spec)) continue;
+        (out.moduleSettings ??= {})[moduleId] ??= {};
+        out.moduleSettings[moduleId][prop] = spec.default;
+      }
+    }
+    // Top-level scopes (generalSettings, colorblindMode, …) — Phase 4.
+    if (typeof centralRegistry.getAllTopLevelSettingSchemas === 'function') {
+      for (const { scope, prop, spec } of centralRegistry.getAllTopLevelSettingSchemas()) {
+        if (!spec || !('default' in spec)) continue;
+        (out[scope] ??= {})[prop] = spec.default;
+      }
     }
     return out;
   }
@@ -616,11 +623,14 @@ export class SettingsManager {
 
   /**
    * Gets the general application settings. Ensures settings are loaded first.
+   * Returns the merged view (schema defaults back-filled under persisted
+   * values) so callers see a complete object even though generalSettings
+   * defaults now live in the schema, not settings.json (Phase 4).
    * @returns {Promise<object>} A promise resolving to the general settings object or an empty object.
    */
   async getGeneralSettings() {
-    await this.ensureLoaded();
-    return this.settings?.generalSettings ?? {};
+    const merged = await this.getSettings();
+    return merged?.generalSettings ?? {};
   }
 
   /**

@@ -1,25 +1,14 @@
 {
   "activeLayout": "default",
   "customLayoutConfig": null,
-  "generalSettings": {
-    "layoutMode": "auto",
-    "autoSaveMode": false,
-    "autoLoadMode": true,
-    "useSubstitutedNames": true
-  },
+  "//generalSettings": "defaults now live in app/core/coreSettingsSchemas.js (top-level schema scope, schema-as-default-source Phase 4); resolved by settingsManager.getSetting. Persisted user changes are still written here at runtime.",
+  "generalSettings": {},
   "//playerId": "playerId can be a string or number. It is used by StateManager.",
   "playerId": "1",
   "//playerName": "playerName is primarily for display and client hello message.",
   "playerName": "Player1",
-  "colorblindMode": {
-    "locations": false,
-    "exits": false,
-    "regions": false,
-    "dungeons": false,
-    "loops": false,
-    "helpers": false,
-    "pathAnalyzer": false
-  },
+  "//colorblindMode": "defaults now live in app/core/coreSettingsSchemas.js (top-level schema scope, schema-as-default-source Phase 4).",
+  "colorblindMode": {},
   "logging": {
     "defaultLevel": "WARN",
     "showTimestamp": true,
