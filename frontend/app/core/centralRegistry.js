@@ -176,16 +176,76 @@ class CentralRegistry {
   }
 
   /**
+   * Locate the `properties` bag inside a registered schema snippet,
+   * normalizing the heterogeneous shapes modules register (mirrors the
+   * normalizer in scripts/audit-settings.mjs):
+   *   - standard:        { type:'object', properties: { <prop>: {...} } }
+   *   - double-wrapped:  { <moduleId>: { properties: {...} } }
+   *   - flat:            { <prop>: {...}, ... }  (e.g. discovery)
+   *
+   * @param {string} moduleId
+   * @param {*} snippet the value stored in settingsSchemas for moduleId
+   * @returns {object|null} the properties object, or null if unusable.
+   * @private
+   */
+  _normalizeSchemaProps(moduleId, snippet) {
+    if (!snippet || typeof snippet !== 'object') return null;
+
+    // Unwrap a double-wrapped { <moduleId>: {...} } snippet.
+    let node = snippet;
+    if (!node.properties && !node.type
+      && node[moduleId] && typeof node[moduleId] === 'object') {
+      node = node[moduleId];
+    }
+
+    if (node.properties && typeof node.properties === 'object') return node.properties;
+    if (!node.type) return node; // flat properties object
+    return null;
+  }
+
+  /**
+   * Normalized property specs for one module's registered schema.
+   *
+   * @param {string} moduleId
+   * @returns {Array<{ key: string, moduleId: string, prop: string, spec: object }>}
+   *   one entry per property that looks like a setting spec (has a `type`
+   *   or a `default`), in schema-declared order; `[]` when the module has
+   *   no usable schema. `key` is the full dotted `moduleSettings.<mod>.<prop>`.
+   */
+  getModuleSettingSchema(moduleId) {
+    const props = this._normalizeSchemaProps(moduleId, this.settingsSchemas.get(moduleId));
+    if (!props) return [];
+    const out = [];
+    for (const [prop, spec] of Object.entries(props)) {
+      if (!spec || typeof spec !== 'object') continue;
+      if (!('type' in spec) && !('default' in spec)) continue;
+      out.push({ key: `moduleSettings.${moduleId}.${prop}`, moduleId, prop, spec });
+    }
+    return out;
+  }
+
+  /**
+   * Every registered moduleSettings property, flattened across all modules.
+   * Modules are sorted alphabetically by id; properties keep their
+   * schema-declared order within a module. Drives the Options panel's
+   * auto-generated "All Settings" view.
+   *
+   * @returns {Array<{ key, moduleId, prop, spec }>}
+   */
+  getAllSettingSchemas() {
+    const out = [];
+    const moduleIds = [...this.settingsSchemas.keys()].sort((a, b) => a.localeCompare(b));
+    for (const moduleId of moduleIds) {
+      out.push(...this.getModuleSettingSchema(moduleId));
+    }
+    return out;
+  }
+
+  /**
    * Resolve the schema-declared default for a `moduleSettings.<mod>.<prop>`
    * key. This is the single source of truth for moduleSettings defaults —
    * settingsManager.getSetting consults it between the persisted value and
    * the call-site fallback (see app/core/settingsManager.js).
-   *
-   * Handles the heterogeneous schema shapes that modules register
-   * (mirrors the normalizer in scripts/audit-settings.mjs):
-   *   - standard:        { type:'object', properties: { <prop>: {default} } }
-   *   - double-wrapped:  { <moduleId>: { properties: {...} } }
-   *   - flat:            { <prop>: {default}, ... }  (e.g. discovery)
    *
    * @param {string} key e.g. 'moduleSettings.inventory.showLabel1'
    * @returns {{ found: boolean, value: * }} `found` is true only when the
@@ -200,25 +260,8 @@ class CentralRegistry {
     if (parts.length !== 3 || parts[0] !== 'moduleSettings') return notFound;
     const [, moduleId, prop] = parts;
 
-    const snippet = this.settingsSchemas.get(moduleId);
-    if (!snippet || typeof snippet !== 'object') return notFound;
-
-    // Unwrap a double-wrapped { <moduleId>: {...} } snippet.
-    let node = snippet;
-    if (!node.properties && !node.type
-      && node[moduleId] && typeof node[moduleId] === 'object') {
-      node = node[moduleId];
-    }
-
-    // Locate the properties bag: explicit `properties`, else a flat
-    // properties object (no `type` at the top level).
-    let props = null;
-    if (node.properties && typeof node.properties === 'object') {
-      props = node.properties;
-    } else if (!node.type) {
-      props = node;
-    }
-    if (!props || typeof props !== 'object') return notFound;
+    const props = this._normalizeSchemaProps(moduleId, this.settingsSchemas.get(moduleId));
+    if (!props) return notFound;
 
     const spec = props[prop];
     if (!spec || typeof spec !== 'object' || !('default' in spec)) return notFound;
