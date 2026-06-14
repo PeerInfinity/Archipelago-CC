@@ -1,9 +1,16 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, configDefaults } from 'vitest/config';
 
 export default defineConfig({
   test: {
     // Test file patterns
     include: ['frontend/**/*.test.js', 'test_json/unit/**/*.test.js'],
+
+    // Heavy, CPU-bound generate-and-test property suites (*.slow.test.js) are
+    // excluded from the default run — they're synchronous and, under parallel
+    // CPU contention, stretch past vitest's (non-interruptible) timeout and
+    // flake with STACK_TRACE_ERROR. Run them serially via `npm run test:unit:slow`
+    // (vitest.slow.config.js). Keep the vitest defaults (node_modules, etc.).
+    exclude: [...configDefaults.exclude, '**/*.slow.test.js'],
 
     // Environment settings
     environment: 'node',

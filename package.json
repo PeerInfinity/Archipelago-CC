@@ -20,6 +20,7 @@
     "test:analyze": "node scripts/test/analyze-test-results.js",
     "test:full-suite": "npm run test:health && npm test && npm run test:analyze",
     "test:unit": "vitest run",
+    "test:unit:slow": "vitest run --config vitest.slow.config.js",
     "test:unit:watch": "vitest",
     "test:unit:ui": "vitest --ui",
     "test:unit:coverage": "vitest run --coverage",
