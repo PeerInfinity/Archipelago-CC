@@ -1,0 +1,709 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`mixed substrates — end to end > top-down > compiles a stable logic graph for an all-maze top-down layout 1`] = `
+{
+  "archipelago_version": "0.6.7",
+  "assume_bidirectional_exits": true,
+  "canonical_placements": {
+    "1": {
+      "region_1_0__key_red_pickup__1_4": "key_red",
+      "region_1_0__key_red_pickup__3_4": "key_red",
+    },
+  },
+  "exporter": {},
+  "game_directory": "procgen_maze_worldgen",
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "constant",
+        "value": true,
+      },
+    },
+  },
+  "game_name": "Procgen Maze",
+  "generation_seed": 1,
+  "helpers": {},
+  "item_groups": {
+    "1": [
+      "Everything",
+    ],
+  },
+  "itempool_counts": {
+    "1": {
+      "key_red": 2,
+    },
+  },
+  "items": {
+    "1": {
+      "key_red": {
+        "classification": "progression",
+        "groups": [
+          "Everything",
+        ],
+        "id": 1,
+        "name": "key_red",
+      },
+    },
+  },
+  "player_names": {
+    "1": "Player1",
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_0_1": {
+        "substrate": "maze",
+      },
+      "region_0_2": {
+        "substrate": "maze",
+      },
+      "region_1_0": {
+        "substrate": "maze",
+      },
+      "region_1_1": {
+        "substrate": "maze",
+      },
+      "region_1_2": {
+        "substrate": "maze",
+      },
+      "region_2_1": {
+        "substrate": "maze",
+      },
+      "region_2_2": {
+        "substrate": "maze",
+      },
+    },
+  },
+  "progression_mapping": {
+    "1": {},
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_1",
+            "name": "GameStart",
+          },
+        ],
+        "locations": [],
+        "name": "Menu",
+      },
+      "region_0_1": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_0_2",
+            "name": "region_0_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_0_1",
+      },
+      "region_0_2": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_0_1",
+            "name": "exit",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_2",
+            "name": "region_1_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_0_2",
+      },
+      "region_1_0": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_1",
+            "name": "region_1_1",
+          },
+        ],
+        "locations": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "id": 1000,
+            "item": {
+              "advancement": true,
+              "name": "key_red",
+              "player": 1,
+              "type": "progression",
+            },
+            "name": "region_1_0__key_red_pickup__3_4",
+          },
+          {
+            "access_rule": {
+              "args": {
+                "item_name": "key_red",
+              },
+              "rule": "Has",
+            },
+            "id": 1001,
+            "item": {
+              "advancement": true,
+              "name": "key_red",
+              "player": 1,
+              "type": "progression",
+            },
+            "name": "region_1_0__key_red_pickup__1_4",
+          },
+        ],
+        "name": "region_1_0",
+      },
+      "region_1_1": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_0",
+            "name": "exit_0",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_2",
+            "name": "exit_1",
+          },
+        ],
+        "locations": [],
+        "name": "region_1_1",
+      },
+      "region_1_2": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_0_2",
+            "name": "exit_0",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_2_2",
+            "name": "exit_1",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_1",
+            "name": "region_1_1",
+          },
+        ],
+        "locations": [],
+        "name": "region_1_2",
+      },
+      "region_2_1": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_2_2",
+            "name": "region_2_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_2_1",
+      },
+      "region_2_2": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_2_1",
+            "name": "exit",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_2",
+            "name": "region_1_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_2_2",
+      },
+    },
+  },
+  "schema_version": 3,
+  "seed_name": "",
+  "sphere_log": [
+    {
+      "event_items": {},
+      "event_locations": {},
+      "seed": 1,
+      "seed_name": "",
+      "type": "metadata",
+    },
+    {
+      "player_data": {
+        "1": {
+          "new_accessible_locations": [
+            "region_1_0__key_red_pickup__3_4",
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_1",
+            "region_0_2",
+            "region_1_0",
+            "region_1_1",
+            "region_1_2",
+            "region_2_1",
+            "region_2_2",
+          ],
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {},
+          },
+          "sphere_locations": [],
+        },
+      },
+      "sphere_index": "0",
+      "type": "state_update",
+    },
+    {
+      "player_data": {
+        "1": {
+          "new_accessible_locations": [
+            "region_1_0__key_red_pickup__1_4",
+          ],
+          "new_accessible_regions": [],
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1,
+            },
+            "resolved_items": {
+              "key_red": 1,
+            },
+          },
+          "sphere_locations": [
+            "region_1_0__key_red_pickup__3_4",
+          ],
+        },
+      },
+      "sphere_index": "0.1",
+      "type": "state_update",
+    },
+    {
+      "player_data": {
+        "1": {
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1,
+            },
+            "resolved_items": {
+              "key_red": 1,
+            },
+          },
+          "sphere_locations": [
+            "region_1_0__key_red_pickup__1_4",
+          ],
+        },
+      },
+      "sphere_index": "1.1",
+      "type": "state_update",
+    },
+  ],
+  "start_regions": {
+    "1": {
+      "available": [],
+      "default": [
+        "Menu",
+      ],
+    },
+  },
+  "starting_items": {
+    "1": [],
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "options": {},
+      "world_class_name": "ProcgenMazeWorld",
+    },
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld",
+  },
+}
+`;
+
+exports[`mixed substrates — end to end > top-down > compiles a stable logic graph for an all-text-adventure top-down layout 1`] = `
+{
+  "archipelago_version": "0.6.7",
+  "assume_bidirectional_exits": true,
+  "canonical_placements": {
+    "1": {
+      "region_1_0__key_red_pickup__1_4": "key_red",
+      "region_1_0__key_red_pickup__3_4": "key_red",
+    },
+  },
+  "exporter": {},
+  "game_directory": "procgen_maze_worldgen",
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "constant",
+        "value": true,
+      },
+    },
+  },
+  "game_name": "Procgen Maze",
+  "generation_seed": 1,
+  "helpers": {},
+  "item_groups": {
+    "1": [
+      "Everything",
+    ],
+  },
+  "itempool_counts": {
+    "1": {
+      "key_red": 2,
+    },
+  },
+  "items": {
+    "1": {
+      "key_red": {
+        "classification": "progression",
+        "groups": [
+          "Everything",
+        ],
+        "id": 1,
+        "name": "key_red",
+      },
+    },
+  },
+  "player_names": {
+    "1": "Player1",
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_0_1": {
+        "substrate": "text_adventure",
+      },
+      "region_0_2": {
+        "substrate": "text_adventure",
+      },
+      "region_1_0": {
+        "substrate": "text_adventure",
+      },
+      "region_1_1": {
+        "substrate": "text_adventure",
+      },
+      "region_1_2": {
+        "substrate": "text_adventure",
+      },
+      "region_2_1": {
+        "substrate": "text_adventure",
+      },
+      "region_2_2": {
+        "substrate": "text_adventure",
+      },
+    },
+  },
+  "progression_mapping": {
+    "1": {},
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_1",
+            "name": "GameStart",
+          },
+        ],
+        "locations": [],
+        "name": "Menu",
+      },
+      "region_0_1": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_0_2",
+            "name": "region_0_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_0_1",
+      },
+      "region_0_2": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_0_1",
+            "name": "exit",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_2",
+            "name": "region_1_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_0_2",
+      },
+      "region_1_0": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_1",
+            "name": "region_1_1",
+          },
+        ],
+        "locations": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "id": 1000,
+            "item": {
+              "advancement": true,
+              "name": "key_red",
+              "player": 1,
+              "type": "progression",
+            },
+            "name": "region_1_0__key_red_pickup__3_4",
+          },
+          {
+            "access_rule": {
+              "args": {
+                "item_name": "key_red",
+              },
+              "rule": "Has",
+            },
+            "id": 1001,
+            "item": {
+              "advancement": true,
+              "name": "key_red",
+              "player": 1,
+              "type": "progression",
+            },
+            "name": "region_1_0__key_red_pickup__1_4",
+          },
+        ],
+        "name": "region_1_0",
+      },
+      "region_1_1": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_0",
+            "name": "exit_0",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_2",
+            "name": "exit_1",
+          },
+        ],
+        "locations": [],
+        "name": "region_1_1",
+      },
+      "region_1_2": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_0_2",
+            "name": "exit_0",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_2_2",
+            "name": "exit_1",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_1",
+            "name": "region_1_1",
+          },
+        ],
+        "locations": [],
+        "name": "region_1_2",
+      },
+      "region_2_1": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_2_2",
+            "name": "region_2_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_2_1",
+      },
+      "region_2_2": {
+        "exits": [
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_2_1",
+            "name": "exit",
+          },
+          {
+            "access_rule": {
+              "rule": "True_",
+            },
+            "connected_region": "region_1_2",
+            "name": "region_1_2",
+          },
+        ],
+        "locations": [],
+        "name": "region_2_2",
+      },
+    },
+  },
+  "schema_version": 3,
+  "seed_name": "",
+  "sphere_log": [
+    {
+      "event_items": {},
+      "event_locations": {},
+      "seed": 1,
+      "seed_name": "",
+      "type": "metadata",
+    },
+    {
+      "player_data": {
+        "1": {
+          "new_accessible_locations": [
+            "region_1_0__key_red_pickup__3_4",
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_1",
+            "region_0_2",
+            "region_1_0",
+            "region_1_1",
+            "region_1_2",
+            "region_2_1",
+            "region_2_2",
+          ],
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {},
+          },
+          "sphere_locations": [],
+        },
+      },
+      "sphere_index": "0",
+      "type": "state_update",
+    },
+    {
+      "player_data": {
+        "1": {
+          "new_accessible_locations": [
+            "region_1_0__key_red_pickup__1_4",
+          ],
+          "new_accessible_regions": [],
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1,
+            },
+            "resolved_items": {
+              "key_red": 1,
+            },
+          },
+          "sphere_locations": [
+            "region_1_0__key_red_pickup__3_4",
+          ],
+        },
+      },
+      "sphere_index": "0.1",
+      "type": "state_update",
+    },
+    {
+      "player_data": {
+        "1": {
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1,
+            },
+            "resolved_items": {
+              "key_red": 1,
+            },
+          },
+          "sphere_locations": [
+            "region_1_0__key_red_pickup__1_4",
+          ],
+        },
+      },
+      "sphere_index": "1.1",
+      "type": "state_update",
+    },
+  ],
+  "start_regions": {
+    "1": {
+      "available": [],
+      "default": [
+        "Menu",
+      ],
+    },
+  },
+  "starting_items": {
+    "1": [],
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "options": {},
+      "world_class_name": "ProcgenMazeWorld",
+    },
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld",
+  },
+}
+`;

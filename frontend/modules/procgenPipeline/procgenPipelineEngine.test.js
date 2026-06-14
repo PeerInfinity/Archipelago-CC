@@ -2584,6 +2584,54 @@ describe('mixed substrates — end to end', () => {
                 }
             }
         });
+
+        // Golden characterization snapshots — pin the COMPILED logic graph
+        // (regions/exits/locations/access-rules/items/placements) for a
+        // fixed seed, with the bulky per-region geometry stripped from the
+        // sidecars. The unified-substrate-interface refactor restructures
+        // the region-build path; these make "behavior-preserving" provable
+        // for both procedural substrates. If geometry/placement drifts, the
+        // position-suffixed location names change and the snapshot fails.
+        // See topdown-bounce-obstacle-refactor.md (Phase 2a).
+        function compiledLogicGraph(out) {
+            const clone = JSON.parse(JSON.stringify(out));
+            const sidecars = clone.preset_sidecars?.['1'] ?? {};
+            for (const k of Object.keys(sidecars)) {
+                // Keep only the substrate tag; drop geometry payload.
+                sidecars[k] = { substrate: sidecars[k]?.substrate ?? null };
+            }
+            return clone;
+        }
+
+        it('compiles a stable logic graph for an all-maze top-down layout', () => {
+            const source = makeGridGrowthRulesJson();
+            const { grid, startCell } = topDownFromRulesJson(source, {
+                gridDims: { width: 5, height: 5 },
+                seed: 1,
+                substrateByRegion: Object.fromEntries(
+                    Object.keys(source.regions['1'])
+                        .filter((n) => n !== 'Menu')
+                        .map((n) => [n, 'maze']),
+                ),
+            });
+            const out = buildRulesJson(grid, { startCell });
+            expect(compiledLogicGraph(out)).toMatchSnapshot();
+        });
+
+        it('compiles a stable logic graph for an all-text-adventure top-down layout', () => {
+            const source = makeGridGrowthRulesJson();
+            const { grid, startCell } = topDownFromRulesJson(source, {
+                gridDims: { width: 5, height: 5 },
+                seed: 1,
+                substrateByRegion: Object.fromEntries(
+                    Object.keys(source.regions['1'])
+                        .filter((n) => n !== 'Menu')
+                        .map((n) => [n, 'text_adventure']),
+                ),
+            });
+            const out = buildRulesJson(grid, { startCell });
+            expect(compiledLogicGraph(out)).toMatchSnapshot();
+        });
     });
 
     describe('grid-growth', () => {
