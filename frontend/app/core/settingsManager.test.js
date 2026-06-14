@@ -291,6 +291,44 @@ describe('SettingsManager — permissive updateSetting (auto-creates missing pat
     const ok = await sm.updateSetting('generalSettings.theme.deeper', 'oops');
     expect(ok).toBe(false);
   });
+
+  it('does NOT warn when auto-creating the scope for a SCHEMA-backed key (routine first write)', async () => {
+    // moduleSettings/generalSettings ship as {} now; the first write to a
+    // schema-backed key auto-creates its scope object — that is expected and
+    // must not log the "typo?" warning.
+    centralRegistry.settingsSchemas.set('warnMod', {
+      type: 'object', properties: { toggle: { type: 'boolean', default: false } },
+    });
+    const fresh = new SettingsManager();
+    fresh.setInitialSettings({ moduleSettings: {} });
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const debug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    try {
+      await fresh.updateSetting('moduleSettings.warnMod.toggle', true);
+      const warned = warn.mock.calls.some(([m]) => String(m).includes('Auto-creating missing settings path'));
+      const debugged = debug.mock.calls.some(([m]) => String(m).includes("schema-backed key 'moduleSettings.warnMod.toggle'"));
+      expect(warned).toBe(false);
+      expect(debugged).toBe(true);
+      expect(await fresh.getSetting('moduleSettings.warnMod.toggle')).toBe(true);
+    } finally {
+      warn.mockRestore();
+      debug.mockRestore();
+      centralRegistry.settingsSchemas.delete('warnMod');
+    }
+  });
+
+  it('STILL warns when auto-creating a path for an unknown (non-schema) key (typo guard)', async () => {
+    const fresh = new SettingsManager();
+    fresh.setInitialSettings({ moduleSettings: {} });
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await fresh.updateSetting('moduleSettings.totallyUnknownMod.prop', 1);
+      const warned = warn.mock.calls.some(([m]) => String(m).includes('Auto-creating missing settings path'));
+      expect(warned).toBe(true);
+    } finally {
+      warn.mockRestore();
+    }
+  });
 });
 
 describe('SettingsManager — session overrides ({persist: false})', () => {

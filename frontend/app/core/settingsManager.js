@@ -419,21 +419,30 @@ export class SettingsManager {
       log('info', `Cleared session override for ${key} (replaced by persistent write)`);
     }
 
+    // A schema-backed key auto-creates its scope object on first write —
+    // that's expected now that moduleSettings/generalSettings/colorblindMode
+    // ship as {} (defaults live in the schema). Only a NON-schema key that
+    // auto-creates a path is worth a typo warning.
+    const schemaBacked = centralRegistry
+      && typeof centralRegistry.getSchemaDefault === 'function'
+      && centralRegistry.getSchemaDefault(key).found;
+
     const keys = key.split('.');
     let current = this.settings;
     for (let i = 0; i < keys.length - 1; i++) {
       const k = keys[i];
       if (current[k] === undefined || current[k] === null) {
-        // Permissive: auto-create the missing intermediate object so
-        // a brand-new setting (declared in code but not yet in
-        // settings.json) can still be saved. Log a warning so a
-        // genuine typo (e.g. 'lops' instead of 'loops') is still
-        // discoverable in the console.
-        log('warn',
-          `Auto-creating missing settings path '${keys
-            .slice(0, i + 1)
-            .join('.')}' (typo, or first use of a new setting?).`
-        );
+        // Permissive: auto-create the missing intermediate object so a new
+        // setting (declared in code/schema but not yet in settings.json) can
+        // still be saved. For a schema-backed key this is a routine first
+        // write (debug); for an unknown key it may be a typo (e.g. 'lops'
+        // instead of 'loops'), so warn to keep it discoverable.
+        const path = keys.slice(0, i + 1).join('.');
+        if (schemaBacked) {
+          log('debug', `Creating settings path '${path}' for schema-backed key '${key}' (first write).`);
+        } else {
+          log('warn', `Auto-creating missing settings path '${path}' (typo, or first use of a new setting?).`);
+        }
         current[k] = {};
       } else if (typeof current[k] !== 'object') {
         // Slot exists as a non-object scalar — overwriting it with
