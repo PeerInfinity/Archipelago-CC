@@ -1664,12 +1664,21 @@ export function compileRegionGraph(grid, opts = {}) {
     });
 
     for (const region of orderedRegions) {
-        // Top-down's placeFromRules registers per-instance logic_gate
-        // entries on the region's local obstacleLib. The compiler
-        // needs to see those alongside the base library, otherwise
-        // their ids resolve to undefined and compileObstacle throws.
+        // Two channels carry per-region obstacle defs the base library
+        // lacks, both needed so compileObstacle doesn't throw on an
+        // undefined id:
+        //   - playable_payload.obstacleLib: top-down's placeFromRules /
+        //     maze's per-instance logic_gate entries (serialized into the
+        //     maze sidecar).
+        //   - region.obstacle_defs: zone substrates' emitted obstacle defs
+        //     (Phase 3 — physics gaps + authored logic gates). A
+        //     region-level field, so it never reaches the serialized
+        //     payload (keeping zone sidecars byte-identical).
         const localLib = region.playable_payload?.obstacleLib;
-        const mergedLib = localLib ? { ...obstacleLib, ...localLib } : obstacleLib;
+        const regionDefs = region.obstacle_defs;
+        const mergedLib = (localLib || regionDefs)
+            ? { ...obstacleLib, ...regionDefs, ...localLib }
+            : obstacleLib;
         const compiled = compileRegion(region.extracted_rules, { obstacleLib: mergedLib });
 
         const regionExits = compiled.exits.map((e) => ({
@@ -2270,15 +2279,19 @@ function* generateRegionZoneGen(spec) {
             isTeleporter: false,
         });
         exitsPlaced.push({ exit_id: exitId, side: e.side, tile_position: { x: tile.x, y: tile.y } });
-        // Top-down preserves the SOURCE rule verbatim; fall back to the
-        // zone's derived rule when the spec carried none.
-        const finalRule = e.access_rule ?? zoneRules?.exitRules?.[e.side];
+        // Phase 3: the substrate emits its derived access as
+        // paths-and-obstacles (the canonical form). Top-down OVERRIDES with
+        // the source rule verbatim (rules realised, not authored), keying
+        // an explicit access_rule; sphere-growth carries no source rule, so
+        // the compiler compiles the obstacle paths. The bounce paths ride
+        // along either way (the obstacle representation for the region).
+        const paths = zoneRules?.exitPaths?.[e.side] ?? [{ path_id: 'p1', obstacles: [] }];
         extractedExits.push({
             id: exitId,
             position: { x: tile.x, y: tile.y },
             target_region: e.target_region ?? null,
-            paths: [{ path_id: 'p1', obstacles: [] }],
-            ...(finalRule ? { access_rule: finalRule } : {}),
+            paths,
+            ...(e.access_rule ? { access_rule: e.access_rule } : {}),
         });
     }
     const extractedLocations = (zoneRules?.locations ?? []).map((loc) => {
@@ -2287,7 +2300,10 @@ function* generateRegionZoneGen(spec) {
             id: loc.id,
             item: loc.item ?? null,
             position: loc.position ?? null,
-            access_rule: sl?.access_rule ?? loc.access_rule,
+            paths: loc.paths ?? [{ path_id: 'p1', obstacles: [] }],
+            // Source rule (top-down) wins; otherwise the compiler compiles
+            // the obstacle paths above.
+            ...(sl?.access_rule ? { access_rule: sl.access_rule } : {}),
             ...(spec.useSourceLocationName ? { global_name: loc.id } : {}),
         };
     });
@@ -2320,6 +2336,13 @@ function* generateRegionZoneGen(spec) {
             exits: extractedExits,
             locations: extractedLocations,
         },
+        // Per-region obstacle library additions (physics gaps the emitted
+        // paths reference + per-instance authored logic gates). A
+        // region-level field — NOT inside playable_payload — so it reaches
+        // the compiler via compileRegionGraph but never the serialized
+        // sidecar (serializeWorld spreads the payload). Empty object when
+        // the substrate emits no obstacle defs.
+        obstacle_defs: zoneRules?.obstacleDefs ?? {},
         placed_items: [],
         placed_obstacles: [],
         placed_logic_gates: [],

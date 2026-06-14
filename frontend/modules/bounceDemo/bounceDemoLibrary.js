@@ -397,14 +397,37 @@ export function* generateZoneForSpecsGen({
     });
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;
-    // Emitted rule = derived physics rule AND authored terms; the
-    // authored terms alone also ride the payload as gate_rules so the
+    // Emit each goal's access in TWO faithful forms (Phase 3):
+    //   - exitRules / location.access_rule: the legacy composed rule
+    //     (derived physics AND authored), kept for back-compat consumers
+    //     and tests.
+    //   - exitPaths / location.paths + obstacleDefs: the shared
+    //     paths-and-obstacles representation, which the engine prefers as
+    //     the CANONICAL emission for sphere-growth (it compiles to the
+    //     same rule). The obstacle defs (physics referenced + per-instance
+    //     logic gates) ride a region-level channel the engine merges into
+    //     the compile lib — NOT the serialized payload.
+    // The authored terms alone also ride the payload as gate_rules so the
     // host bridge can evaluate them at runtime (locked portal/pickup).
     const gateRules = { portals: {}, pickups: {} };
     const exitRules = {};
+    const exitPaths = {};
+    const obstacleDefs = {};
+    const referencedPhysics = new Set();
+    const recordPaths = (paths, authoredDefs) => {
+        Object.assign(obstacleDefs, authoredDefs);
+        for (const p of paths) {
+            for (const o of p.obstacles) {
+                if (BOUNCE_LIBRARY_OBSTACLES[o]) referencedPhysics.add(o);
+            }
+        }
+    };
     for (const e of exits) {
-        exitRules[e.side] = composeAuthoredRule(
-            minimalSetsToRule(derived.exits[e.id].minimalSets), e.authored);
+        const sets = derived.exits[e.id].minimalSets;
+        exitRules[e.side] = composeAuthoredRule(minimalSetsToRule(sets), e.authored);
+        const { paths, authoredDefs } = emitObstaclePaths(sets, e.authored);
+        exitPaths[e.side] = paths;
+        recordPaths(paths, authoredDefs);
         if (e.authored.length > 0) {
             gateRules.portals[e.id] = authoredTermsToRule(e.authored);
         }
@@ -413,23 +436,30 @@ export function* generateZoneForSpecsGen({
         pickups.map((p) => [p.id, p.authored]));
     const locations = locationSpecs.map((s) => {
         const authored = authoredByLocation[s.id];
+        const sets = derived.pickups[s.id].minimalSets;
         if (authored.length > 0) {
             gateRules.pickups[s.id] = authoredTermsToRule(authored);
         }
+        const { paths, authoredDefs } = emitObstaclePaths(sets, authored);
+        recordPaths(paths, authoredDefs);
         return {
             id: s.id,
             item: s.item ?? null,
-            access_rule: composeAuthoredRule(
-                minimalSetsToRule(derived.pickups[s.id].minimalSets), authored),
+            access_rule: composeAuthoredRule(minimalSetsToRule(sets), authored),
+            paths,
             position: null, // level-local px would be misread as tile coords
         };
     });
+    // The physics obstacle defs the emitted paths reference (authored defs
+    // were collected by recordPaths). Together these are the region's lib
+    // additions, merged into the compile lib by the engine.
+    for (const id of referencedPhysics) obstacleDefs[id] = BOUNCE_LIBRARY_OBSTACLES[id];
     const payload = buildZonePayload(region_id, level, sidePortals, physicsProfile);
     if (Object.keys(gateRules.portals).length > 0
             || Object.keys(gateRules.pickups).length > 0) {
         payload.gate_rules = gateRules;
     }
-    return { locations, exitRules, payload };
+    return { locations, exitRules, exitPaths, obstacleDefs, payload };
 }
 
 // Shared across every bounce entry — same Shape-1 reasoning as flash's

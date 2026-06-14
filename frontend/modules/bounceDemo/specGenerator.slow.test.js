@@ -261,12 +261,24 @@ describe('generateZoneForSpecs (adapter hook)', () => {
             {
                 id: 'loc_a', item: 'Jetpacks', position: null,
                 access_rule: { rule: 'True_' },
+                // Phase 3: obstacle-path form alongside the legacy rule.
+                paths: [{ path_id: 'p1', obstacles: [] }],
             },
             {
                 id: 'loc_b', item: 'Blue platforms', position: null,
                 access_rule: { rule: 'Has', args: { item_name: 'Springs' } },
+                paths: [{ path_id: 'p1', obstacles: ['bounce_gate_springs'] }],
             },
         ]);
+        // The new obstacle representation is keyed by side for exits + the
+        // aggregate obstacle defs the emitted paths reference.
+        expect(zone.exitPaths.N).toEqual([{ path_id: 'p1', obstacles: ['bounce_gate_springs'] }]);
+        expect(zone.exitPaths.E).toEqual([{
+            path_id: 'p1', obstacles: ['bounce_gate_right', 'bounce_gate_springs'],
+        }]);
+        expect(zone.obstacleDefs.bounce_gate_springs).toMatchObject({
+            clear_set_type: 'combo_list', clear_set: [['Springs']],
+        });
 
         // payload rides the flash bridge contract
         expect(zone.payload.gameId).toBe('bounceDemo');
