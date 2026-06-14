@@ -8,7 +8,7 @@ import { createSnapshotInterface } from '../shared/snapshotInterface.js'; // Kee
 import commonUI, {
   debounce,
   renderLogicTree,
-  applyColorblindClass,
+  applyColorblindSymbol,
 } from '../commonUI/index.js';
 // Discovery mode tracking will be done via event listener
 import settingsManager from '../../app/core/settingsManager.js';
@@ -1282,7 +1282,14 @@ export class LocationUI {
           shouldUseColorblindOnCard = Object.keys(csObject).length > 0;
         }
 
-        applyColorblindClass(locationCard, shouldUseColorblindOnCard);
+        // Colorblind cue: ✓/✗/? mirroring the card's green/red reachability.
+        let cbStatus = 'inaccessible';
+        if (stateClass === 'checked' || stateClass === 'fully-reachable' || stateClass === 'reachable') {
+          cbStatus = 'accessible';
+        } else if (stateClass === 'pending') {
+          cbStatus = 'unknown';
+        }
+        applyColorblindSymbol(locationCard, cbStatus, shouldUseColorblindOnCard);
 
         try {
           locationCard.dataset.location = encodeURIComponent(

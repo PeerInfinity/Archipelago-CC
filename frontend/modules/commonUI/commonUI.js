@@ -3056,14 +3056,39 @@ class CommonUI {
   }
 
   /**
-   * Toggles the 'colorblind-mode' class on an element.
-   * @param {HTMLElement} element - The element to toggle the class on.
-   * @param {boolean} isEnabled - Whether colorblind mode is enabled for this context.
+   * Prepend a colorblind ✓/✗/? indicator to an element, based on an
+   * accessibility status. Use anywhere a green/red colour encodes
+   * reachability so colourblind users get a non-colour cue (matching the
+   * region-block / region-link / logic-tree symbols).
+   *
+   * Replaces the old applyColorblindClass, whose `.colorblind-mode` class had
+   * NO CSS rule anywhere — so it produced no visible indicator at all.
+   *
+   * Re-render safe: removes any existing direct-child symbol first, and is a
+   * no-op (also strips a stale symbol) when disabled.
+   *
+   * @param {HTMLElement} element - container the symbol is prepended to
+   * @param {'accessible'|'inaccessible'|'unknown'} status
+   * @param {boolean} enabled - whether colorblind mode is on for this context
    */
-  applyColorblindClass(element, isEnabled) {
-    if (element) {
-      element.classList.toggle('colorblind-mode', !!isEnabled);
+  applyColorblindSymbol(element, status, enabled) {
+    if (!element) return;
+    const existing = element.querySelector(':scope > .colorblind-symbol');
+    if (existing) existing.remove();
+    if (!enabled) return;
+    const span = document.createElement('span');
+    span.classList.add('colorblind-symbol');
+    if (status === 'accessible') {
+      span.textContent = '✓ ';
+      span.classList.add('accessible');
+    } else if (status === 'inaccessible') {
+      span.textContent = '✗ ';
+      span.classList.add('inaccessible');
+    } else {
+      span.textContent = '? ';
+      span.classList.add('unknown');
     }
+    element.insertBefore(span, element.firstChild);
   }
 }
 
@@ -3079,8 +3104,8 @@ export const createRegionLink =
   commonUIInstance.createRegionLink.bind(commonUIInstance);
 export const createLocationLink =
   commonUIInstance.createLocationLink.bind(commonUIInstance);
-export const applyColorblindClass =
-  commonUIInstance.applyColorblindClass.bind(commonUIInstance);
+export const applyColorblindSymbol =
+  commonUIInstance.applyColorblindSymbol.bind(commonUIInstance);
 export const resetUnknownEvaluationCounter =
   commonUIInstance.resetUnknownEvaluationCount.bind(commonUIInstance);
 export const logAndGetUnknownEvaluationCounter =

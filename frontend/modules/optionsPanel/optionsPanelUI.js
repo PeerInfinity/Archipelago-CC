@@ -71,6 +71,8 @@ export class OptionsPanelUI {
       colorblindExits: false,
       colorblindDungeons: false,
       colorblindLoops: false,
+      colorblindHelpers: false,
+      colorblindPathAnalyzer: false,
       playerName: 'Player1',
       defaultServer: 'ws://localhost:38281',
       autoSaveMode: false,
@@ -466,6 +468,8 @@ export class OptionsPanelUI {
       this.settings.colorblindExits = await settingsManager.getSetting('colorblindMode.exits', false);
       this.settings.colorblindDungeons = await settingsManager.getSetting('colorblindMode.dungeons', false);
       this.settings.colorblindLoops = await settingsManager.getSetting('colorblindMode.loops', false);
+      this.settings.colorblindHelpers = await settingsManager.getSetting('colorblindMode.helpers', false);
+      this.settings.colorblindPathAnalyzer = await settingsManager.getSetting('colorblindMode.pathAnalyzer', false);
       this.settings.playerName = await settingsManager.getSetting('playerName', 'Player1');
       this.settings.defaultServer = await settingsManager.getSetting('moduleSettings.client.defaultServer', 'ws://localhost:38281');
       this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', false);
@@ -659,6 +663,8 @@ export class OptionsPanelUI {
     content.appendChild(this.createBooleanSetting('colorblindExits', 'Exits', 'Enable colorblind-friendly display for exits'));
     content.appendChild(this.createBooleanSetting('colorblindDungeons', 'Dungeons', 'Enable colorblind-friendly display for dungeons'));
     content.appendChild(this.createBooleanSetting('colorblindLoops', 'Loops', 'Enable colorblind-friendly display for loops'));
+    content.appendChild(this.createBooleanSetting('colorblindHelpers', 'Helpers', 'Enable colorblind-friendly display for helpers'));
+    content.appendChild(this.createBooleanSetting('colorblindPathAnalyzer', 'Path Analyzer', 'Enable colorblind-friendly display for the path analyzer'));
 
     section.appendChild(content);
     this.contentContainer.appendChild(section);
@@ -1400,6 +1406,8 @@ export class OptionsPanelUI {
       colorblindExits: 'colorblindMode.exits',
       colorblindDungeons: 'colorblindMode.dungeons',
       colorblindLoops: 'colorblindMode.loops',
+      colorblindHelpers: 'colorblindMode.helpers',
+      colorblindPathAnalyzer: 'colorblindMode.pathAnalyzer',
       playerName: 'playerName',
       defaultServer: 'moduleSettings.client.defaultServer',
       autoSaveMode: 'generalSettings.autoSaveMode',

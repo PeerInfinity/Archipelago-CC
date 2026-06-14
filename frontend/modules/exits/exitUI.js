@@ -962,7 +962,11 @@ export class ExitUI {
           'non-traversable-locked'
         );
         card.classList.add(stateClass);
-        card.classList.toggle('colorblind-mode', useColorblind); // Simple toggle for now
+        // Colorblind cue: ✓/✗/? mirroring the exit's green/red state.
+        const cbStatus = stateClass === 'traversable' ? 'accessible'
+          : stateClass === 'non-traversable-locked' ? 'inaccessible'
+          : 'unknown';
+        commonUI.applyColorblindSymbol(card, cbStatus, useColorblind);
 
         const isExplored =
           this.isDiscoveryModeActive &&

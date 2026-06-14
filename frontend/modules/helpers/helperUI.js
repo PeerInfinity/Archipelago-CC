@@ -453,11 +453,14 @@ export class HelperUI {
       <button class="collapse-btn">${expanded ? 'Collapse' : 'Expand'}</button>
     `;
 
-    // Apply colorblind mode if enabled
+    // Colorblind cue: ✓/✗/? mirroring the helper's green/red true/false status.
     if (this.colorblindSettings && statusClass) {
       const statusSpan = header.querySelector('.region-status');
       if (statusSpan) {
-        statusSpan.classList.add('colorblind-mode');
+        const cbStatus = statusClass === 'accessible' ? 'accessible'
+          : statusClass === 'inaccessible' ? 'inaccessible'
+          : 'unknown';
+        commonUI.applyColorblindSymbol(statusSpan, cbStatus, true);
       }
     }
 

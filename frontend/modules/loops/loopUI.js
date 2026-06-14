@@ -1996,7 +1996,8 @@ export class LoopUI {
     const actionDiv = document.createElement('div');
     actionDiv.id = `action-${action.id}`;
     actionDiv.className = 'action-item';
-    actionDiv.classList.toggle('colorblind-mode', useColorblind); // <<< Apply class based on setting
+    // No colorblind ✓/✗ here: action items use progress states
+    // (pending/active/completed), not green/red accessibility.
 
     // Determine action name and display
     let actionName = '';

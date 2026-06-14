@@ -115,7 +115,7 @@ export class RegionBlockBuilder {
     regionBlock.dataset.uid = uid;
     regionBlock.dataset.region = regionName;
     regionBlock.classList.add(expanded ? 'expanded' : 'collapsed');
-    regionBlock.classList.toggle('colorblind-mode', useColorblind);
+    // (colorblind ✓/✗ is added in buildHeader, not here)
 
     // Add background color based on accessibility
     if (!regionIsReachable) {
