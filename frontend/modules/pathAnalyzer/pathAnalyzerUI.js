@@ -41,6 +41,13 @@ export class PathAnalyzerUI {
     this.currentAnalysisButton = null;
     this.currentPathsCountSpan = null;
 
+    // Cached colorblind setting (colorblindMode.pathAnalyzer). getSetting is
+    // async, so render paths read this synchronously-available cache instead
+    // of a Promise (a non-awaited Promise is always truthy — which used to
+    // force the ✓/✗ symbols permanently on). Loaded + kept fresh in
+    // subscribeToSettings.
+    this.colorblindMode = false;
+
     // UI configuration options
     this.settingsUnsubscribe = null;
     this.subscribeToSettings();
@@ -324,11 +331,22 @@ export class PathAnalyzerUI {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe();
     }
+    // Seed the cache from the persisted setting (async getSetting resolved once).
+    settingsManager
+      .getSetting('colorblindMode.pathAnalyzer', false)
+      .then((v) => { this.colorblindMode = !!v; })
+      .catch(() => { /* keep default false */ });
     this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
-      ({ key, value }) => {
+      async ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode')) {
           log('info', 'PathAnalyzerUI reacting to settings change:', key);
+          // Refresh the cache before re-rendering indicators so a toggle OFF
+          // actually removes the symbols.
+          this.colorblindMode = !!(await settingsManager.getSetting(
+            'colorblindMode.pathAnalyzer',
+            false
+          ));
           const pathsContainer = document.querySelector(
             '.region-details-content .path-analysis-results'
           );
@@ -759,11 +777,8 @@ export class PathAnalyzerUI {
       regionSpan.classList.add('region-link');
       regionSpan.dataset.region = region;
 
-      // Add colorblind symbol if needed
-      const useColorblindPath = settingsManager.getSetting(
-        'colorblindMode.pathAnalyzer',
-        false
-      );
+      // Add colorblind symbol if needed (cached; getSetting is async)
+      const useColorblindPath = this.colorblindMode;
       if (useColorblindPath) {
         const symbolSpan = document.createElement('span');
         symbolSpan.classList.add('colorblind-symbol');
@@ -919,14 +934,9 @@ export class PathAnalyzerUI {
             ruleContainer.classList.add('path-exit-rule');
             ruleContainer.style.marginTop = '5px';
 
-            const useColorblind = settingsManager.getSetting(
-              'colorblindMode.pathAnalyzer',
-              false
-            );
-
             const ruleElement = commonUI.renderLogicTree(
               accessRule,
-              useColorblind,
+              this.colorblindMode,
               snapshotInterface
             );
             ruleContainer.appendChild(ruleElement);
@@ -1752,10 +1762,10 @@ export class PathAnalyzerUI {
    * Helper method to update colorblind indicators across the UI
    */
   _updateColorblindIndicators() {
-    const useColorblind = settingsManager.getSetting(
-      'colorblindMode.pathAnalyzer',
-      false
-    );
+    // Use the cached value (refreshed by the settings:changed handler before
+    // this runs). getSetting is async; a non-awaited Promise is always truthy,
+    // which previously made toggling OFF unable to remove the symbols.
+    const useColorblind = this.colorblindMode;
 
     // Update all region link indicators
     document.querySelectorAll('.region-link').forEach((link) => {
