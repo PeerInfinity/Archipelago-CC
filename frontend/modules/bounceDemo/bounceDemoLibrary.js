@@ -220,6 +220,57 @@ export const BOUNCE_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
 }]])));
 
 /**
+ * Registry-declared OBSTACLE library — the bounce side of the
+ * obstacles-along-paths refactor
+ * (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md,
+ * Phase 1). One obstacle per ability: "this path crosses the
+ * blue-platform gap" compiles (via shared/procgen/pathsAndObstaclesCompiler.js)
+ * to has("Blue platforms"). Declared here (NOT in the shared submodule)
+ * alongside BOUNCE_LIBRARY_ITEMS; merged with DEFAULT_OBSTACLES by the
+ * consumer, exactly as libraryItems is merged with DEFAULT_ITEMS.
+ *
+ * These are the PHYSICS obstacles: each is a combo_list cleared by its
+ * single ability item ([[itemName]]). Non-physics gates (foreign items,
+ * count > 1) are NOT in this table — they become per-instance
+ * `logic_gate` obstacles with an arbitrary clear_rule, created the way
+ * maze creates them, so physics-first / gate-fallback is one mechanism.
+ *
+ * Obstacle ids are stable identifiers (`bounce_gate_<ability>`), NOT AP
+ * item names; each clear_set references the AP item name (bounce item
+ * ids === AP item names). `bounce_ability` back-references the ability
+ * id so the paths-and-obstacles producer (Phase 2) maps a required
+ * ability -> its obstacle id. Derived from ABILITY_ITEM_NAMES so the
+ * vocabulary can't drift out of sync with the ability set.
+ */
+const BOUNCE_OBSTACLE_PRESENTATION = Object.freeze({
+    right: { name: 'Right Arrow Gate', color: '#e0a030' },
+    left: { name: 'Left Arrow Gate', color: '#e0c030' },
+    springs: { name: 'Spring Gap', color: '#40c060' },
+    jetpacks: { name: 'Jetpack Gap', color: '#d04040' },
+    blue: { name: 'Blue Platform Gap', color: '#4080d0' },
+    brown: { name: 'Brown Platform Gap', color: '#a06a40' },
+});
+
+/** ability id -> obstacle id (the Phase 2 producer's lookup). */
+export const BOUNCE_OBSTACLE_ID_BY_ABILITY = Object.freeze(Object.fromEntries(
+    Object.keys(ABILITY_ITEM_NAMES).map((ability) => [ability, `bounce_gate_${ability}`])));
+
+export const BOUNCE_LIBRARY_OBSTACLES = Object.freeze(Object.fromEntries(
+    Object.entries(ABILITY_ITEM_NAMES).map(([ability, itemName]) => {
+        const id = BOUNCE_OBSTACLE_ID_BY_ABILITY[ability];
+        const pres = BOUNCE_OBSTACLE_PRESENTATION[ability] ?? {};
+        return [id, {
+            id,
+            name: pres.name ?? `${itemName} Gate`,
+            clear_set_type: 'combo_list',
+            clear_set: [[itemName]],
+            color: pres.color ?? '#b06eb8',
+            feature: 'bounce_abilities',
+            bounce_ability: ability,
+        }];
+    })));
+
+/**
  * Driver-side structural veto for the sphere grower: can a bounce
  * region host one more exit gate alongside the gates it already
  * hosts? Mirrors generateLevelFromSpecs' spec constraints, applied to
@@ -504,6 +555,10 @@ export function createBounceSubstrateEntry({
         gateableItems: null,
         canHostExitGates,
         libraryItems: BOUNCE_LIBRARY_ITEMS,
+        // Physics obstacle vocabulary (obstacles-along-paths refactor,
+        // Phase 1). Merged with DEFAULT_OBSTACLES by the consumer, like
+        // libraryItems. The producer + engine merge land in Phase 2.
+        libraryObstacles: BOUNCE_LIBRARY_OBSTACLES,
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'bounce_abilities']),
     });
 }
