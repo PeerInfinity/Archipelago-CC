@@ -1428,6 +1428,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             biome: regionBiome,
             hazardOpts,
             useSourceLocationName: true,
+            stampEntrance: true,
         });
 
         for (const placed of region.exits_placed) {
@@ -2170,6 +2171,7 @@ function generateRegionProcedural(spec) {
         if (spec.useSourceLocationName) loc.global_name = specLocId;
         const sl = specById.get(specLocId);
         if (sl?.access_rule) loc.access_rule = sl.access_rule;
+        else if (spec.defaultLocationRuleToTrue) loc.access_rule = { rule: 'True_' };
     }
     for (const ex of extracted_rules.exits) {
         if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
@@ -2211,20 +2213,33 @@ function* generateRegionZoneGen(spec) {
         side: e.side ?? freeSides.shift(),
     }));
 
-    const exitSpecs = exitsResolved.map((e) => {
-        const { requirement, counts } = extractItemRequirementFromRule(e.access_rule);
-        return { side: e.side, requirement, counts };
-    });
-    const locationSpecs = (spec.locations ?? []).map((loc) => {
-        const { requirement, counts } = extractItemRequirementFromRule(loc.access_rule);
-        return { id: loc.id, item: loc.item ?? null, requirement, counts };
-    });
+    // A gate may arrive as a Rule Builder access_rule (top-down realises
+    // an existing rules.json) OR as a pre-split requirement/counts pair
+    // (sphere-growth composes item-name gates directly). Prefer the
+    // direct pair when present; otherwise extract from the rule.
+    const requirementOf = (g) => (g?.requirement !== undefined
+        ? { requirement: g.requirement, counts: g.counts ?? {} }
+        : extractItemRequirementFromRule(g?.access_rule));
+
+    const exitSpecs = exitsResolved.map((e) => ({ side: e.side, ...requirementOf(e) }));
+    // The entrance side rides the generator (NOT the forward-exit
+    // scaffolding) as the guaranteed back-portal, gated on the region's
+    // entry gate — but only when the caller supplied one (sphere). For
+    // top-down the entrance is geometry-only (the entry gate lives on the
+    // parent's exit), so it is not passed to the generator.
+    const ent = spec.entrances?.[0];
+    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
+        exitSpecs.push({ side: ent.side, ...requirementOf(ent) });
+    }
+    const locationSpecs = (spec.locations ?? []).map((loc) => ({
+        id: loc.id, item: loc.item ?? null, ...requirementOf(loc),
+    }));
 
     const zoneSpecs = {
         region_id: spec.region_id,
         exitSpecs,
         locationSpecs,
-        seed: (spec.rng.next() * 0x7fffffff) | 0,
+        seed: spec.seed ?? ((spec.rng.next() * 0x7fffffff) | 0),
         ...(spec.params?.physicsProfile && spec.params.physicsProfile !== 'classic'
             ? { physicsProfile: spec.params.physicsProfile } : {}),
     };
@@ -2241,6 +2256,9 @@ function* generateRegionZoneGen(spec) {
     for (const e of exitsResolved) {
         const tile = e.tile ?? perimeterMidpoint(e.side, regionSize);
         const exitId = e.exit_id ?? `exit_${e.side}`;
+        // No targetExitId here — it's appended later by linkReverseExits /
+        // the back-exit pass (matching assembleZoneRegion's key order so
+        // serialized zone payloads stay byte-identical).
         exitsMap.set(exitId, {
             exit_id: exitId,
             x: tile.x,
@@ -2248,7 +2266,6 @@ function* generateRegionZoneGen(spec) {
             side: e.side,
             exitName: e.exitName ?? exitId,
             targetRegion: e.target_region ?? null,
-            targetExitId: null,
             isBackExit: false,
             isTeleporter: false,
         });
@@ -2275,16 +2292,23 @@ function* generateRegionZoneGen(spec) {
         };
     });
 
-    // Entrance leak fix: zone regions previously omitted .entrance, so the
-    // top-down bidirectional back-exit pass threw on entranceTile.x. Stamp
-    // it from the parent-mirrored entrance the driver passed in.
     const playable_payload = { ...(zoneRules?.payload ?? {}), exits: exitsMap };
-    if (spec.entrances?.length) {
-        const ent = spec.entrances[0];
-        playable_payload.entrance = ent.tile ?? perimeterMidpoint(ent.side, regionSize);
-        if (playable_payload.params && ent.side) {
-            playable_payload.params.backExitSide = ent.side;
+    // Back-portal routing param (sphere + top-down both want it): landing
+    // on the entrance side resolves to the driver's back-exit. fallBehavior
+    // is per-world.
+    if (playable_payload.params && ent?.side) {
+        playable_payload.params.backExitSide = ent.side;
+        if (spec.params?.fallBehavior) {
+            playable_payload.params.fallBehavior = spec.params.fallBehavior;
         }
+    }
+    // Entrance leak fix: zone regions previously omitted .entrance, so the
+    // top-down bidirectional back-exit pass threw on entranceTile.x. Only
+    // the engine-owned drivers that READ getRegionEntrance need it stamped
+    // (top-down); sphere-growth computes its back-exit tile locally and
+    // omits .entrance to keep its serialized payloads byte-identical.
+    if (spec.stampEntrance && ent) {
+        playable_payload.entrance = ent.tile ?? perimeterMidpoint(ent.side, regionSize);
     }
 
     return {
@@ -2733,81 +2757,34 @@ export function buildSphereTree(plan, opts = {}, rng) {
     return { nodes, substrateCounts, quotaFallbacks };
 }
 
-// Realise one tree node as a maze-style (procedural) region with
-// requirement-targeted gates — generateRegionCore + placeFromRules
-// (the top-down driver's sequence), then override the extracted rules
-// with the composed gates (compileRegion's access_rule escape hatch).
+// Realise one tree node as a maze-style (procedural) region via the
+// shared generateRegion contract. The composed per-exit gate rides as
+// the exit's access_rule; locations default to True_ (the composed gate
+// IS the rule — path-walk pollution must not leak in), and global_name
+// is left to makeLocationName (sphere ids aren't AP-canonical names).
 function buildSphereProceduralRegion({
     substrate, region_id, size, entrances, exitPlans, locations,
     itemLib, obstacleLib, rng, params, hazardOpts,
 }) {
-    const adapter = getAdapter(substrate);
-    const core = adapter.generateRegionCore({
+    return generateRegion({
+        substrate,
         region_id,
         size,
-        entrances,
-        exits: exitPlans.map((e) => ({ side: e.side })),
-        item_lib: itemLib,
-        obstacle_lib: obstacleLib,
         rng,
         params,
         biome: null,
+        itemLib,
+        obstacleLib,
+        hazardOpts,
+        entrances,
+        exits: exitPlans.map((e) => ({
+            side: e.side, ...(e.rule ? { access_rule: e.rule } : {}),
+        })),
+        locations: locations.map((l) => ({
+            id: l.id, item: l.item, ...(l.rule ? { access_rule: l.rule } : {}),
+        })),
+        defaultLocationRuleToTrue: true,
     });
-    const ruleBySide = {};
-    for (const e of exitPlans) {
-        if (e.rule) ruleBySide[e.side] = e.rule;
-    }
-    const exit_rules = {};
-    for (const placed of core.exits_placed) {
-        const rule = ruleBySide[placed.side];
-        if (rule) exit_rules[placed.exit_id] = rule;
-    }
-    const location_rules = {};
-    const item_placements = [];
-    for (const loc of locations) {
-        if (loc.rule) location_rules[loc.id] = loc.rule;
-        item_placements.push({ item_id: loc.item, location_id: loc.id });
-    }
-    const placement = adapter.placeFromRules(core.world, {
-        exit_rules, location_rules, item_placements, rng,
-    });
-    const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: region_id });
-
-    // Override BFS-derived location ids/rules with the driver's specs
-    // (same reasoning as top-down: path-walk pollution must not leak
-    // into access rules; the composed gate IS the rule).
-    const ruleByLocation = Object.fromEntries(locations.map((l) => [l.id, l.rule]));
-    const locationIdByPos = new Map();
-    for (const placed of placement.placed_locations ?? []) {
-        locationIdByPos.set(posKey(placed.position), placed.location_id);
-    }
-    for (const loc of extracted_rules.locations) {
-        const specLocId = locationIdByPos.get(posKey(loc.position));
-        if (!specLocId) continue;
-        loc.id = specLocId;
-        loc.access_rule = ruleByLocation[specLocId] ?? { rule: 'True_' };
-    }
-    for (const ex of extracted_rules.exits) {
-        if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
-    }
-
-    if (substrate === 'maze') applyHazardModule(core.world, hazardOpts, rng);
-
-    return {
-        substrate,
-        region_id,
-        playable_payload: core.world,
-        extracted_rules,
-        placed_items: placement.placed_items,
-        placed_obstacles: [],
-        placed_logic_gates: placement.placed_logic_gates,
-        exits_placed: core.exits_placed,
-        render_hint: substrate,
-        sidecar_filename: `${region_id}.json`,
-        wall_stats: core.wall_stats ?? null,
-        biome: core.biome ?? null,
-        grow_telemetry: core.grow_telemetry ?? null,
-    };
 }
 
 // Realise one tree node as a zone-based region via the substrate's
@@ -2828,55 +2805,33 @@ function buildSphereProceduralRegion({
 function* buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
     entranceSide, entryGate = [], entryGateCounts = {},
-    regionParams = {}, seed, adapter,
+    regionParams = {}, seed,
 }) {
-    const exitSpecs = exitPlans.map((e) => ({
-        side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
-    }));
-    if (entranceSide) {
-        exitSpecs.push({
-            side: entranceSide, requirement: entryGate, counts: entryGateCounts,
-        });
-    } else if (exitSpecs.length === 0) {
+    if (!entranceSide && exitPlans.length === 0) {
         throw new Error(`growSpheres: zone region '${region_id}' has neither `
             + 'children nor a parent — single-region zone worlds are not supported');
     }
-    const specs = {
-        region_id,
-        exitSpecs,
-        locationSpecs: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
-        seed,
-        // Physics profile (bounce): generation + the payload stamp ride
-        // it. Omitted for classic so existing payloads stay
-        // byte-identical and other zone adapters see unchanged args.
-        ...(regionParams.physicsProfile && regionParams.physicsProfile !== 'classic'
-            ? { physicsProfile: regionParams.physicsProfile } : {}),
-    };
-    // Adapters with a generator hook forward per-attempt progress
-    // events (the generate-and-test retries are where the time goes);
-    // plain adapters run in one chunk.
-    const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
-        ? yield* adapter.generateZoneForSpecsGen(specs)
-        : adapter.generateZoneForSpecs(specs);
-    // Scaffold only the CHILD sides — the entrance side's rules.json
-    // exit is the driver's back-exit, not a forward exit.
-    const region = assembleZoneRegion({
+    // The driver's gates are pre-split item-name requirement arrays; the
+    // shared zone branch consumes them directly (no rule round-trip). The
+    // entrance side rides as the guaranteed back-portal (requirement =
+    // the entry gate). stampEntrance is left off so the serialized payload
+    // stays byte-identical to the pre-unification assembleZoneRegion path
+    // (sphere-growth's back-exit pass reads its own local entrance tile,
+    // not getRegionEntrance).
+    return yield* generateRegionGen({
         substrate,
         region_id,
-        regionSize,
-        exitSides: exitPlans.map((e) => e.side),
-        zoneRules,
-        zonePayload: {},
+        size: regionSize,
+        params: regionParams,
+        seed,
+        exits: exitPlans.map((e) => ({
+            side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
+        })),
+        locations: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
+        entrances: entranceSide
+            ? [{ side: entranceSide, requirement: entryGate, counts: entryGateCounts }]
+            : [],
     });
-    if (entranceSide && region.playable_payload?.params) {
-        region.playable_payload.params.backExitSide = entranceSide;
-        // Per-world fall behavior ('current' default; 'previous'
-        // re-enables fall-through-bottom = go back).
-        if (regionParams.fallBehavior) {
-            region.playable_payload.params.fallBehavior = regionParams.fallBehavior;
-        }
-    }
-    return region;
 }
 
 /**
