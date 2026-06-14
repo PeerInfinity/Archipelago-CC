@@ -7,7 +7,7 @@
 import { writeFileSync } from 'node:fs';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import { GATEABLE_ITEMS } from '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import { growSpheres, buildRulesJson } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { growSpheres, buildRulesJson, getRegionExits } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 
 // Serialize a grid's regions deterministically: region object minus the
@@ -16,7 +16,8 @@ function dumpGrid(grid) {
     const out = {};
     for (const region of grid.allRegions()) {
         const pp = region.playable_payload ?? {};
-        const exits = pp.exits instanceof Map ? [...pp.exits.values()] : (pp.exits ?? []);
+        const exitMap = getRegionExits(region);
+        const exits = exitMap instanceof Map ? [...exitMap.values()] : (exitMap ?? []);
         out[region.region_id] = {
             substrate: region.substrate,
             extracted_rules: region.extracted_rules,

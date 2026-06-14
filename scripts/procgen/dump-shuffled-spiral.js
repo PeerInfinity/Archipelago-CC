@@ -40,7 +40,7 @@ import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibr
 import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
-import { arrangeShuffledSpiral, buildRulesJson } from
+import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { substrateRegistry } from
     '../../frontend/modules/shared/procgen/substrateRegistry.js';
@@ -127,7 +127,7 @@ function shapeRegions(grid) {
     const out = [];
     for (const [, region] of grid.cells) {
         const exits = [];
-        const exitMap = region.playable_payload?.exits;
+        const exitMap = getRegionExits(region);
         if (exitMap) {
             for (const [, exit] of exitMap) {
                 exits.push({

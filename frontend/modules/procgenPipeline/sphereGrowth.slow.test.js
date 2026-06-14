@@ -150,10 +150,10 @@ describe('growSpheres (maze) — the sphere oracle', () => {
             const byName = new Map(
                 [...grid.allRegions()].map((r) => [r.region_id, r]));
             for (const region of grid.allRegions()) {
-                for (const exit of region.playable_payload?.exits?.values() ?? []) {
+                for (const exit of region.exits?.values() ?? []) {
                     if (!exit.targetRegion) continue;
                     const target = byName.get(exit.targetRegion);
-                    const reciprocal = [...target.playable_payload.exits.values()]
+                    const reciprocal = [...target.exits.values()]
                         .some((e) => e.targetRegion === region.region_id);
                     expect(reciprocal, `${region.region_id} -> ${exit.targetRegion} `
                         + 'has no reciprocal exit').toBe(true);

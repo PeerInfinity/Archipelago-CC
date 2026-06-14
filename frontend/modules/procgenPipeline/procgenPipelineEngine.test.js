@@ -443,9 +443,8 @@ describe('stitchGrid (teleporters)', () => {
         // to B via teleporter (geographic east of A is empty).
         grid.placeRegion({ gx: 0, gy: 0 }, {
             region_id: 'A',
-            playable_payload: {
-                exits: new Map([['exit', { exit_id: 'exit', x: 5, y: 2, side: 'E', targetRegion: null }]]),
-            },
+            exits: new Map([['exit', { exit_id: 'exit', x: 5, y: 2, side: 'E', targetRegion: null }]]),
+            playable_payload: {},
             extracted_rules: {
                 exits: [{ id: 'exit', position: { x: 5, y: 2 }, target_region: null }],
             },
@@ -453,7 +452,8 @@ describe('stitchGrid (teleporters)', () => {
         });
         grid.placeRegion({ gx: 4, gy: 0 }, {
             region_id: 'B',
-            playable_payload: { exits: new Map() },
+            exits: new Map(),
+            playable_payload: {},
             extracted_rules: { exits: [] },
             exits_placed: [],
         });
@@ -464,16 +464,15 @@ describe('stitchGrid (teleporters)', () => {
         const a = grid.getRegion({ gx: 0, gy: 0 });
         expect(a.extracted_rules.exits[0].target_region).toBe('B');
         // isTeleporter flag rides on the world.exits entry too.
-        expect(a.playable_payload.exits.get('exit').isTeleporter).toBe(true);
+        expect(a.exits.get('exit').isTeleporter).toBe(true);
     });
 
     it('does not flag normal adjacent exits as teleporters', () => {
         const grid = new Grid({ width: 2, height: 1 });
         grid.placeRegion({ gx: 0, gy: 0 }, {
             region_id: 'A',
-            playable_payload: {
-                exits: new Map([['exit', { exit_id: 'exit', x: 5, y: 2, side: 'E', targetRegion: null }]]),
-            },
+            exits: new Map([['exit', { exit_id: 'exit', x: 5, y: 2, side: 'E', targetRegion: null }]]),
+            playable_payload: {},
             extracted_rules: {
                 exits: [{ id: 'exit', position: { x: 5, y: 2 }, target_region: null }],
             },
@@ -481,7 +480,8 @@ describe('stitchGrid (teleporters)', () => {
         });
         grid.placeRegion({ gx: 1, gy: 0 }, {
             region_id: 'B',
-            playable_payload: { exits: new Map() },
+            exits: new Map(),
+            playable_payload: {},
             extracted_rules: { exits: [] },
             exits_placed: [],
         });
@@ -489,7 +489,7 @@ describe('stitchGrid (teleporters)', () => {
         stitchGrid(grid);
 
         const a = grid.getRegion({ gx: 0, gy: 0 });
-        expect(a.playable_payload.exits.get('exit').isTeleporter).toBe(false);
+        expect(a.exits.get('exit').isTeleporter).toBe(false);
     });
 });
 
@@ -580,7 +580,7 @@ describe('growMaze', () => {
         const startKey = `${startCell.gx},${startCell.gy}`;
         for (const region of grid.allRegions()) {
             const isStart = `${region.cell.gx},${region.cell.gy}` === startKey;
-            const backExits = [...region.playable_payload.exits.values()]
+            const backExits = [...region.exits.values()]
                 .filter((e) => e.isBackExit);
             if (isStart) {
                 expect(backExits).toHaveLength(0);
@@ -622,7 +622,7 @@ describe('growMaze', () => {
             // [{ from: regionId, to: regionId, isBackExit }, ...]
             const out = [];
             for (const region of grid.allRegions()) {
-                const exits = region.playable_payload?.exits;
+                const exits = region.exits;
                 if (!exits) continue;
                 for (const [, e] of exits) {
                     if (!e?.targetRegion) continue;
@@ -665,7 +665,7 @@ describe('growMaze', () => {
         it("'add' back-exit carries side, targetExitId, and isBackExit", () => {
             const { grid } = growMaze(reproConfig);
             for (const region of grid.allRegions()) {
-                for (const [, e] of region.playable_payload.exits) {
+                for (const [, e] of region.exits) {
                     if (!e.isBackExit) continue;
                     expect(e.side).toBeTruthy();
                     expect(e.targetExitId).toBeTruthy();
@@ -685,7 +685,7 @@ describe('growMaze', () => {
             // With bidirectional off, no back-exits anywhere — including
             // the BFS parent ones — so post-pass never runs.
             for (const region of grid.allRegions()) {
-                for (const [, e] of region.playable_payload.exits) {
+                for (const [, e] of region.exits) {
                     expect(e.isBackExit).toBeFalsy();
                 }
             }
@@ -699,16 +699,15 @@ describe('growMaze', () => {
             const sizeXY = { width: 6, height: 6 };
             const A = {
                 region_id: 'A', cell: { gx: 0, gy: 0 },
-                playable_payload: {
-                    exits: new Map([['a_to_b', {
-                        exit_id: 'a_to_b',
-                        x: 5, y: 3, side: 'E',
-                        exitName: 'a_to_b',
-                        targetRegion: 'B',
-                        isBackExit: false,
-                        isTeleporter: false,
-                    }]]),
-                },
+                exits: new Map([['a_to_b', {
+                    exit_id: 'a_to_b',
+                    x: 5, y: 3, side: 'E',
+                    exitName: 'a_to_b',
+                    targetRegion: 'B',
+                    isBackExit: false,
+                    isTeleporter: false,
+                }]]),
+                playable_payload: {},
                 extracted_rules: { exits: [{
                     id: 'a_to_b',
                     position: { x: 5, y: 3 },
@@ -719,7 +718,8 @@ describe('growMaze', () => {
             };
             const B = {
                 region_id: 'B', cell: { gx: 1, gy: 0 },
-                playable_payload: { exits: new Map() },
+                exits: new Map(),
+                playable_payload: {},
                 extracted_rules: { exits: [] },
                 exits_placed: [],
             };
@@ -728,14 +728,14 @@ describe('growMaze', () => {
 
             reconcileBidirectionalExits(grid, sizeXY, 'add');
 
-            const back = B.playable_payload.exits.get('A');
+            const back = B.exits.get('A');
             expect(back).toBeTruthy();
             expect(back.isBackExit).toBe(true);
             expect(back.side).toBe('W');
             expect(back.targetRegion).toBe('A');
             expect(back.targetExitId).toBe('a_to_b');
             // Round-trip link on the forward exit.
-            expect(A.playable_payload.exits.get('a_to_b').targetExitId).toBe('A');
+            expect(A.exits.get('a_to_b').targetExitId).toBe('A');
             // extracted_rules mirrored.
             expect(B.extracted_rules.exits.find((e) => e.id === 'A')).toBeTruthy();
         });
@@ -745,12 +745,11 @@ describe('growMaze', () => {
             const sizeXY = { width: 6, height: 6 };
             const A = {
                 region_id: 'A', cell: { gx: 0, gy: 0 },
-                playable_payload: {
-                    exits: new Map([['a_to_b', {
-                        exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
-                        targetRegion: 'B', isBackExit: false,
-                    }]]),
-                },
+                exits: new Map([['a_to_b', {
+                    exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
+                    targetRegion: 'B', isBackExit: false,
+                }]]),
+                playable_payload: {},
                 extracted_rules: { exits: [{
                     id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
                     paths: [{ path_id: 'p1', obstacles: [] }],
@@ -759,7 +758,8 @@ describe('growMaze', () => {
             };
             const B = {
                 region_id: 'B', cell: { gx: 1, gy: 0 },
-                playable_payload: { exits: new Map() },
+                exits: new Map(),
+                playable_payload: {},
                 extracted_rules: { exits: [] },
                 exits_placed: [],
             };
@@ -768,9 +768,9 @@ describe('growMaze', () => {
 
             reconcileBidirectionalExits(grid, sizeXY, 'remove');
 
-            expect(A.playable_payload.exits.get('a_to_b').targetRegion).toBe(null);
+            expect(A.exits.get('a_to_b').targetRegion).toBe(null);
             expect(A.extracted_rules.exits[0].target_region).toBe(null);
-            expect(B.playable_payload.exits.size).toBe(0);
+            expect(B.exits.size).toBe(0);
         });
 
         it('throws on unknown mode', () => {
@@ -1631,7 +1631,7 @@ describe('buildRulesJson', () => {
 
         let inheritedPairs = 0;
         for (const region of grid.allRegions()) {
-            for (const [exitId, worldExit] of region.playable_payload.exits) {
+            for (const [exitId, worldExit] of region.exits) {
                 if (!worldExit.isBackExit) continue;
                 const compiledRegion = out.regions['1'][region.region_id];
                 const compiledBack = compiledRegion.exits.find((e) => e.name === exitId);
@@ -2020,10 +2020,10 @@ describe('topDownFromRulesJson', () => {
         const A = grid.allRegions().find((r) => r.region_id === 'A');
         const B = grid.allRegions().find((r) => r.region_id === 'B');
         const C = grid.allRegions().find((r) => r.region_id === 'C');
-        const aToB = A.playable_payload.exits.get('A_to_B');
-        const bToA = B.playable_payload.exits.get('B_to_A');
-        const aToC = A.playable_payload.exits.get('A_to_C');
-        const cToA = C.playable_payload.exits.get('C_to_A');
+        const aToB = A.exits.get('A_to_B');
+        const bToA = B.exits.get('B_to_A');
+        const aToC = A.exits.get('A_to_C');
+        const cToA = C.exits.get('C_to_A');
         // Sides are opposite (one of E↔W or N↔S).
         const opposite = { N: 'S', S: 'N', E: 'W', W: 'E' };
         expect(bToA.side).toBe(opposite[aToB.side]);
@@ -2085,16 +2085,16 @@ describe('topDownFromRulesJson', () => {
         const A = grid.allRegions().find((r) => r.region_id === 'A');
         const B = grid.allRegions().find((r) => r.region_id === 'B');
         const C = grid.allRegions().find((r) => r.region_id === 'C');
-        expect(A.playable_payload.exits.get('A_to_B').targetExitId).toBe('B_to_A');
-        expect(A.playable_payload.exits.get('A_to_C').targetExitId).toBe('C_to_A');
-        expect(B.playable_payload.exits.get('B_to_A').targetExitId).toBe('A_to_B');
-        expect(C.playable_payload.exits.get('C_to_A').targetExitId).toBe('A_to_C');
+        expect(A.exits.get('A_to_B').targetExitId).toBe('B_to_A');
+        expect(A.exits.get('A_to_C').targetExitId).toBe('C_to_A');
+        expect(B.exits.get('B_to_A').targetExitId).toBe('A_to_B');
+        expect(C.exits.get('C_to_A').targetExitId).toBe('A_to_C');
         // For non-start regions, world.entrance overlaps with the
         // BFS-parent's reverse exit tile so it renders as exit (per
         // §5) and there's no orphan green border on a leftover tile.
-        const bExit = B.playable_payload.exits.get('B_to_A');
+        const bExit = B.exits.get('B_to_A');
         expect(B.playable_payload.entrance).toEqual({ x: bExit.x, y: bExit.y });
-        const cExit = C.playable_payload.exits.get('C_to_A');
+        const cExit = C.exits.get('C_to_A');
         expect(C.playable_payload.entrance).toEqual({ x: cExit.x, y: cExit.y });
     });
 
@@ -2972,7 +2972,7 @@ describe('arrangeShuffledSpiral', () => {
         }));
         const pairs = [];
         for (const region of grid.allRegions()) {
-            for (const [, e] of region.playable_payload.exits) {
+            for (const [, e] of region.exits) {
                 if (e.targetRegion) {
                     pairs.push({ from: region.region_id, to: e.targetRegion });
                 }

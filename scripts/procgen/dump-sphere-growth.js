@@ -70,7 +70,7 @@ import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
-import { growSpheres, buildRulesJson } from
+import { growSpheres, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { planSpheres, computeItemSpheres, compareSpheresToPlan } from
     '../../frontend/modules/procgenPipeline/spherePlanner.js';
@@ -181,7 +181,7 @@ function shapeRegions(grid) {
     const out = [];
     for (const [, region] of grid.cells) {
         const exits = [];
-        const exitMap = region.playable_payload?.exits;
+        const exitMap = getRegionExits(region);
         if (exitMap) {
             for (const [, exit] of exitMap) {
                 exits.push({

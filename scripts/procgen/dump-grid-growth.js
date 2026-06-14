@@ -50,7 +50,7 @@ import { fileURLToPath } from 'node:url';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 
-import { growMaze, buildRulesJson } from
+import { growMaze, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 
 // --- CLI parser ---
@@ -168,7 +168,7 @@ function shapeRegions(grid) {
     const out = [];
     for (const [, region] of grid.cells) {
         const exits = [];
-        const exitMap = region.playable_payload?.exits;
+        const exitMap = getRegionExits(region);
         if (exitMap) {
             for (const [, exit] of exitMap) {
                 exits.push({
