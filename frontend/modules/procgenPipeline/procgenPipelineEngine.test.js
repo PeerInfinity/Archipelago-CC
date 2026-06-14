@@ -2093,9 +2093,9 @@ describe('topDownFromRulesJson', () => {
         // BFS-parent's reverse exit tile so it renders as exit (per
         // §5) and there's no orphan green border on a leftover tile.
         const bExit = B.exits.get('B_to_A');
-        expect(B.playable_payload.entrance).toEqual({ x: bExit.x, y: bExit.y });
+        expect(B.entrance).toEqual({ x: bExit.x, y: bExit.y });
         const cExit = C.exits.get('C_to_A');
-        expect(C.playable_payload.entrance).toEqual({ x: cExit.x, y: cExit.y });
+        expect(C.entrance).toEqual({ x: cExit.x, y: cExit.y });
     });
 
     it('uses the source location name verbatim as the round-tripped location name', () => {
@@ -2246,7 +2246,7 @@ describe('topDownFromRulesJson', () => {
             const h = region.playable_payload.height;
             const isCorner = (x, y) =>
                 (x === 0 || x === w - 1) && (y === 0 || y === h - 1);
-            const ent = region.playable_payload.entrance;
+            const ent = region.entrance;
             expect(isCorner(ent.x, ent.y)).toBe(false);
             for (const e of region.exits_placed ?? []) {
                 expect(isCorner(e.tile_position.x, e.tile_position.y)).toBe(false);

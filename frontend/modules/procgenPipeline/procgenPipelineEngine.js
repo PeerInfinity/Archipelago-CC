@@ -293,14 +293,16 @@ export function findDisconnectedCell(grid, rng, minGap = 2) {
 // A built region's exit table (a Map of exit_id -> exit object) and its
 // entrance are STRUCTURAL bookkeeping the engine owns: stitching,
 // back-exits, reverse links, wall-off. They are distinct from the
-// substrate's opaque runtime payload. Today both still live on
-// playable_payload (maze threads them onto its world; assembleZoneRegion
-// injects the Map for zone substrates). These accessors are the single
-// seam through which all engine code touches them, so a later step can
-// relocate the structural data to an engine-owned region descriptor
-// without revisiting every call site. See
+// substrate's opaque runtime payload. As of Phase 4c they live on the
+// engine-owned region descriptor (region.exits / region.entrance),
+// canonical for ALL substrates: maze ALIASES its world's Map (same
+// object), zone substrates no longer carry a faked Map on the payload.
+// buildPresetSidecars re-attaches both onto the payload right before
+// serialize so the substrate serializeWorld signatures stay unchanged.
+// These accessors are the single seam through which all engine code
+// touches them. See
 // NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md
-// (Phase 2a).
+// (Phase 2a / 4c).
 export function getRegionExits(region) {
     return region?.exits;
 }
@@ -308,10 +310,10 @@ export function setRegionExits(region, exits) {
     if (region) region.exits = exits;
 }
 export function getRegionEntrance(region) {
-    return region?.playable_payload?.entrance;
+    return region?.entrance;
 }
 export function setRegionEntrance(region, entrance) {
-    if (region?.playable_payload) region.playable_payload.entrance = entrance;
+    if (region) region.entrance = entrance;
 }
 
 export function stitchGrid(grid) {
@@ -651,12 +653,14 @@ function buildSubstrateRegion({
         substrate,
         region_id,
         playable_payload: core.world,
-        // Structural exit table — the engine-owned descriptor field
-        // (Phase 4c). Maze ALIASES its world's Map (same object), so
+        // Structural exit table + entrance — the engine-owned descriptor
+        // fields (Phase 4c). Maze ALIASES its world's Map (same object), so
         // back-exit/stitch mutations via getRegionExits also reach the
         // world; serializeMazeWorld reads world.exits directly and
-        // buildPresetSidecars re-attaches region.exits before serialize.
+        // buildPresetSidecars re-attaches region.exits / region.entrance
+        // before serialize.
         exits: core.world.exits,
+        entrance: core.world.entrance,
         extracted_rules,
         placed_items: placement.placed_items,
         placed_obstacles: placement.placed_obstacles,
@@ -1453,11 +1457,13 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         Object.assign(stub, {
             substrate: region.substrate,
             playable_payload: region.playable_payload,
-            // Structural exit table now rides the descriptor (Phase 4c), so
-            // it must be copied onto the grid stub alongside the payload —
-            // the stub is what stitchGrid / back-exit / linkReverseExits
-            // mutate through getRegionExits.
+            // Structural exit table + entrance now ride the descriptor
+            // (Phase 4c), so they must be copied onto the grid stub
+            // alongside the payload — the stub is what stitchGrid /
+            // back-exit / linkReverseExits / entrance-align mutate through
+            // getRegionExits / getRegionEntrance.
             exits: region.exits,
+            entrance: region.entrance,
             extracted_rules: region.extracted_rules,
             placed_items: region.placed_items,
             placed_obstacles: [],
@@ -2220,8 +2226,9 @@ function generateRegionProcedural(spec) {
         substrate: spec.substrate,
         region_id: spec.region_id,
         playable_payload: core.world,
-        // Structural exit table aliases the maze world's Map (Phase 4c).
+        // Structural exit table + entrance alias the maze world (Phase 4c).
         exits: core.world.exits,
+        entrance: core.world.entrance,
         extracted_rules,
         placed_items: placement.placed_items,
         placed_obstacles: [],
@@ -2350,18 +2357,22 @@ function* generateRegionZoneGen(spec) {
     // top-down bidirectional back-exit pass threw on entranceTile.x. Only
     // the engine-owned drivers that READ getRegionEntrance need it stamped
     // (top-down); sphere-growth computes its back-exit tile locally and
-    // omits .entrance to keep its serialized payloads byte-identical.
-    if (spec.stampEntrance && ent) {
-        playable_payload.entrance = ent.tile ?? perimeterMidpoint(ent.side, regionSize);
-    }
+    // leaves .entrance undefined to keep its serialized payloads
+    // byte-identical. As of Phase 4c the entrance rides the descriptor
+    // (region.entrance), not the payload; buildPresetSidecars re-attaches it.
+    const regionEntrance = (spec.stampEntrance && ent)
+        ? (ent.tile ?? perimeterMidpoint(ent.side, regionSize))
+        : undefined;
 
     return {
         substrate: spec.substrate,
         region_id: spec.region_id,
         playable_payload,
-        // Structural exit table — engine-owned descriptor field (Phase 4c).
-        // Keyed by SPEC exit_id; the zone payload no longer carries it.
+        // Structural exit table + entrance — engine-owned descriptor fields
+        // (Phase 4c). Exits keyed by SPEC exit_id; the zone payload no
+        // longer carries either.
         exits: exitsMap,
+        entrance: regionEntrance,
         extracted_rules: {
             region_id: spec.region_id,
             exits: extractedExits,
@@ -3204,16 +3215,21 @@ export function buildPresetSidecars(grid, {
     for (const region of grid.allRegions()) {
         const substrateId = region.substrate ?? 'maze';
         const adapter = getAdapter(substrateId);
-        // Re-attach the engine-owned structural exit table onto the payload
-        // just before serialize (Phase 4c). The descriptor (region.exits)
-        // is canonical for ALL substrates; serializeWorld still reads
-        // world.exits, so merging it here keeps the substrate signatures
-        // unchanged and the emitted sidecar byte-identical (maze aliases
-        // its world Map; zone payloads append exits in the same position
-        // the faked Map used to occupy).
+        // Re-attach the engine-owned structural fields (exits + entrance)
+        // onto the payload just before serialize (Phase 4c). The descriptor
+        // (region.exits / region.entrance) is canonical for ALL substrates;
+        // serializeWorld still reads world.exits / world.entrance, so
+        // merging here keeps the substrate signatures unchanged and the
+        // emitted sidecar byte-identical (maze aliases its world; zone
+        // payloads append exits then entrance in the same positions the
+        // faked Map / stamped entrance used to occupy). Entrance is omitted
+        // when undefined (sphere-growth zone regions) to match the prior
+        // "never stamped" payload.
+        const entrance = getRegionEntrance(region);
         const payloadForSerialize = {
             ...region.playable_payload,
             exits: getRegionExits(region),
+            ...(entrance ? { entrance } : {}),
         };
         const playablePayload = adapter.serializeWorld(
             payloadForSerialize,

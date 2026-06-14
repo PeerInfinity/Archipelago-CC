@@ -7,7 +7,7 @@
 import { writeFileSync } from 'node:fs';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import { GATEABLE_ITEMS } from '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import { growSpheres, buildRulesJson, getRegionExits } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { growSpheres, buildRulesJson, getRegionExits, getRegionEntrance } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 
 // Serialize a grid's regions deterministically: region object minus the
@@ -26,7 +26,7 @@ function dumpGrid(grid) {
             // normalise [] vs undefined (a write-only region field never
             // read for output) so the diff focuses on real artifacts.
             placed_logic_gates: region.placed_logic_gates?.length ? region.placed_logic_gates : null,
-            payload: { ...pp, exits, entrance: pp.entrance ?? null },
+            payload: { ...pp, exits, entrance: getRegionEntrance(region) ?? null },
         };
     }
     return out;
