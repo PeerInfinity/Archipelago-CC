@@ -13,9 +13,6 @@ const logger = createUniversalLogger('regionUI:DisplaySettings');
 const DEFAULTS = {
   // Cross-session display settings
   colorblindMode: false,
-  showName: true,
-  showLabel1: true,
-  showLabel2: true,
   useSubstitutedNames: true, // Special path: generalSettings.useSubstitutedNames
 
   // UI control settings (filter / layout / sort)
@@ -124,27 +121,11 @@ export class DisplaySettingsManager extends DisplaySettingsBase {
    * @returns {Array} Array of display elements: [{type, text}, ...]
    */
   getRegionDisplayElements(regionData) {
-    const elements = [];
-
-    if (this.settings.showName && (regionData.name || regionData)) {
-      const rawName = typeof regionData === 'string' ? regionData : regionData.name;
-      const name = (this.settings.useSubstitutedNames && regionData.displayName)
-        ? regionData.displayName
-        : rawName;
-      elements.push({ type: 'name', text: name });
-    }
-    if (this.settings.showLabel1 && regionData.label1) {
-      elements.push({ type: 'label1', text: regionData.label1 });
-    }
-    if (this.settings.showLabel2 && regionData.label2) {
-      elements.push({ type: 'label2', text: regionData.label2 });
-    }
-    // Fallback: at least show the name when nothing else is enabled.
-    if (elements.length === 0) {
-      const name = typeof regionData === 'string' ? regionData : (regionData.name || 'Unknown');
-      elements.push({ type: 'name', text: name });
-    }
-    return elements;
+    const rawName = typeof regionData === 'string' ? regionData : (regionData.name || 'Unknown');
+    const name = (this.settings.useSubstitutedNames && regionData.displayName)
+      ? regionData.displayName
+      : rawName;
+    return [{ type: 'name', text: name }];
   }
 }
 

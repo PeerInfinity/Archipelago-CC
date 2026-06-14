@@ -69,9 +69,6 @@ export function register(registrationApi) {
     type: 'object',
     properties: {
       columns: { type: 'number', default: 3, label: 'Columns' },
-      showName: { type: 'boolean', default: true, label: 'Show name' },
-      showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
-      showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
     },
   });
 

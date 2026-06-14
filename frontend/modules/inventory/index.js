@@ -64,15 +64,6 @@ export function register(registrationApi) {
   //   { direction: 'up', condition: 'unconditional', timing: 'immediate' } // Propagates
   // );
 
-  registrationApi.registerSettingsSchema({
-    type: 'object',
-    properties: {
-      showName: { type: 'boolean', default: true, label: 'Show name' },
-      showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
-      showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
-    },
-  });
-
   log('info', '[Inventory Module] Registration complete.');
 }
 

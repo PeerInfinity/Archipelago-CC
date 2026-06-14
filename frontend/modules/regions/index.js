@@ -112,11 +112,6 @@ export function register(registrationApi) {
   registrationApi.registerSettingsSchema({
     type: 'object',
     properties: {
-      // Per-region display
-      showName: { type: 'boolean', default: true, label: 'Show name' },
-      showLabel1: { type: 'boolean', default: true, label: 'Show label 1' },
-      showLabel2: { type: 'boolean', default: true, label: 'Show label 2' },
-      colorblindMode: { type: 'boolean', default: false, label: 'Colorblind mode' },
       // Panel filter / view toggles
       showReachable: { type: 'boolean', default: true, label: 'Show reachable' },
       showUnreachable: { type: 'boolean', default: true, label: 'Show unreachable' },

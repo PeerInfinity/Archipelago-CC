@@ -74,9 +74,6 @@ export class RegionGraphUI {
     this.viewportStabilizeDelay = 1000;
 
     // Display settings
-    this.showName = true;
-    this.showLabel1 = false;
-    this.showLabel2 = false;
 
     // Discovery mode state
     this.isDiscoveryModeActive = false;
@@ -174,16 +171,10 @@ export class RegionGraphUI {
 
   async loadDisplaySettings() {
     try {
-      this.showName = await settingsManager.getSetting('moduleSettings.regionGraph.showName', true);
-      this.showLabel1 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel1', true);
-      this.showLabel2 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel2', true);
       this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
-      logger.debug(`Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}, useSubstitutedNames=${this.useSubstitutedNames}`);
+      logger.debug(`Loaded display settings: useSubstitutedNames=${this.useSubstitutedNames}`);
     } catch (error) {
       logger.error('Failed to load display settings:', error);
-      this.showName = true;
-      this.showLabel1 = false;
-      this.showLabel2 = false;
       this.useSubstitutedNames = true;
     }
   }
@@ -198,52 +189,13 @@ export class RegionGraphUI {
       if (customLabel != null) return customLabel;
     }
 
-    const parts = [];
     const name = (this.useSubstitutedNames && regionData?.displayName) ? regionData.displayName : rawName;
-
-    if (this.showName && name) {
-      parts.push(name.replace(/_/g, ' '));
-    }
-
-    if (this.showLabel1 && regionData?.label1) {
-      parts.push(regionData.label1);
-    }
-
-    if (this.showLabel2 && regionData?.label2) {
-      parts.push(regionData.label2);
-    }
-
-    // If nothing is enabled or no data available, default to name
-    if (parts.length === 0 && name) {
-      parts.push(name.replace(/_/g, ' '));
-    }
-
-    return parts.join('\n');
+    return name ? name.replace(/_/g, ' ') : '';
   }
 
   getLocationDisplayText(locationData) {
-    const parts = [];
-
     const name = (this.useSubstitutedNames && locationData?.displayName) ? locationData.displayName : locationData?.name;
-
-    if (this.showName && name) {
-      parts.push(name);
-    }
-
-    if (this.showLabel1 && locationData?.label1) {
-      parts.push(locationData.label1);
-    }
-
-    if (this.showLabel2 && locationData?.label2) {
-      parts.push(locationData.label2);
-    }
-
-    // If nothing is enabled or no data available, default to name
-    if (parts.length === 0 && locationData?.name) {
-      parts.push(locationData.name);
-    }
-
-    return parts.join('\n');
+    return name || '';
   }
 
   loadCytoscape() {

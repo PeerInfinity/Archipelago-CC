@@ -42,9 +42,6 @@ export class LocationUI {
     this.settingsUnsubscribe = null;
     this.colorblindSettings = {}; // Cache colorblind settings
     this.showLocationItems = false; // Cache showLocationItems setting
-    this.showName = true; // Cache showName setting
-    this.showLabel1 = false; // Cache showLabel1 setting
-    this.showLabel2 = false; // Cache showLabel2 setting
     this.isInitialized = false; // Add flag
     this.isDiscoveryModeActive = false; // Track discovery mode state
     this.originalLocationOrder = []; // ADDED: To store original keys
@@ -122,9 +119,6 @@ export class LocationUI {
     try {
       this.colorblindSettings = await settingsManager.getSetting('colorblindMode.locations', false);
       this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
-      this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
-      this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', true);
-      this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', true);
       this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
       // Load discovery settings
       this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting('moduleSettings.discovery.undiscoveredDisplay', 'hidden');
@@ -136,32 +130,23 @@ export class LocationUI {
       log('error', 'Error loading settings:', error);
       this.colorblindSettings = false;
       this.showLocationItems = false;
-      this.showName = true;
-      this.showLabel1 = false;
-      this.showLabel2 = false;
       this.useSubstitutedNames = true;
     }
 
     this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       async ({ key, value }) => {
-        if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('moduleSettings.locations.showName') || key.startsWith('moduleSettings.locations.showLabel1') || key.startsWith('moduleSettings.locations.showLabel2') || key.startsWith('generalSettings.useSubstitutedNames')) {
+        if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('generalSettings.useSubstitutedNames')) {
           log('info', 'LocationUI reacting to settings change:', key);
           // Update cache
           try {
             this.colorblindSettings = await settingsManager.getSetting('colorblindMode.locations', false);
             this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', true);
-            this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
-            this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', true);
-            this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', true);
             this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
           } catch (error) {
             log('error', 'Error loading settings during update:', error);
             this.colorblindSettings = false;
             this.showLocationItems = false;
-            this.showName = true;
-            this.showLabel1 = false;
-            this.showLabel2 = false;
             this.useSubstitutedNames = true;
           }
           this.updateLocationDisplay(); // Trigger redraw
@@ -183,29 +168,8 @@ export class LocationUI {
   }
 
   getLocationDisplayElements(location) {
-    // Build array of display elements based on enabled settings
-    const elements = [];
-
     const name = (this.useSubstitutedNames && location.displayName) ? location.displayName : location.name;
-
-    if (this.showName && name) {
-      elements.push({ type: 'name', text: name });
-    }
-
-    if (this.showLabel1 && location.label1) {
-      elements.push({ type: 'label1', text: location.label1 });
-    }
-
-    if (this.showLabel2 && location.label2) {
-      elements.push({ type: 'label2', text: location.label2 });
-    }
-
-    // If nothing is enabled or no data available, default to name
-    if (elements.length === 0) {
-      elements.push({ type: 'name', text: location.name || 'Unknown' });
-    }
-
-    return elements;
+    return [{ type: 'name', text: name || 'Unknown' }];
   }
 
   // --- NEW: Event Subscription for State/Loop --- //
@@ -1381,8 +1345,6 @@ export class LocationUI {
           // Build tooltip with all available information
           const tooltipParts = [];
           if (location.name) tooltipParts.push(`Name: ${location.name}`);
-          if (location.label1) tooltipParts.push(`Label: ${location.label1}`);
-          if (location.label2) tooltipParts.push(`Expression: ${location.label2}`);
           locationTextContainer.title = tooltipParts.join('\n') || name; // Show all info as tooltip
         }
 
@@ -1663,15 +1625,9 @@ export class LocationUI {
       }</p>`;
     detailsContent += `<p><strong>Type:</strong> ${location.type || 'N/A'}</p>`;
 
-    // Always show name, label1 and label2 in the modal if available
+    // Show the location name in the modal if available
     if (location.name) {
       detailsContent += `<p><strong>Name:</strong> ${location.name}</p>`;
-    }
-    if (location.label1) {
-      detailsContent += `<p><strong>Label:</strong> ${location.label1}</p>`;
-    }
-    if (location.label2) {
-      detailsContent += `<p><strong>Expression:</strong> ${location.label2}</p>`;
     }
     // Add more location details as needed (e.g., item if present in staticData.locations.get(location.name).item)
     const staticLocationData = staticData.locations.get(location.name);

@@ -33,9 +33,6 @@ export class InventoryUI {
     this.flatContainer = null;
     this.unsubscribeHandles = [];
     this.isInitialized = false;
-    this.showName = true; // Cache showName setting
-    this.showLabel1 = false; // Cache showLabel1 setting
-    this.showLabel2 = false; // Cache showLabel2 setting
 
     this._createBaseUI();
 
@@ -236,7 +233,7 @@ export class InventoryUI {
       <button
         class="item-button"
         data-item="${name}"
-        title="${name}${itemData.label1 ? '\nLabel: ' + itemData.label1 : ''}${itemData.label2 ? '\nExpression: ' + itemData.label2 : ''}"
+        title="${name}"
       >
         ${displayText}
       </button>
@@ -393,45 +390,18 @@ export class InventoryUI {
   async loadDisplaySettings() {
     try {
       const settingsManager = await import('../../app/core/settingsManager.js').then(m => m.default);
-      this.showName = await settingsManager.getSetting('moduleSettings.inventory.showName', true);
-      this.showLabel1 = await settingsManager.getSetting('moduleSettings.inventory.showLabel1', true);
-      this.showLabel2 = await settingsManager.getSetting('moduleSettings.inventory.showLabel2', true);
       this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
-      log('debug', `[InventoryUI] Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}, useSubstitutedNames=${this.useSubstitutedNames}`);
+      log('debug', `[InventoryUI] Loaded display settings: useSubstitutedNames=${this.useSubstitutedNames}`);
     } catch (error) {
       log('error', '[InventoryUI] Failed to load display settings:', error);
-      this.showName = true;
-      this.showLabel1 = false;
-      this.showLabel2 = false;
       this.useSubstitutedNames = true;
     }
   }
 
   getItemDisplayElements(itemData) {
-    // Build array of display elements based on enabled settings
-    const elements = [];
-
     const rawName = typeof itemData === 'string' ? itemData : (itemData.name || itemData);
     const name = (this.useSubstitutedNames && itemData && itemData.displayName) ? itemData.displayName : rawName;
-
-    if (this.showName && name) {
-      elements.push({ type: 'name', text: name });
-    }
-
-    if (this.showLabel1 && itemData && itemData.label1) {
-      elements.push({ type: 'label1', text: itemData.label1 });
-    }
-
-    if (this.showLabel2 && itemData && itemData.label2) {
-      elements.push({ type: 'label2', text: itemData.label2 });
-    }
-
-    // If nothing is enabled or no data available, default to name
-    if (elements.length === 0) {
-      elements.push({ type: 'name', text: name || 'Unknown' });
-    }
-
-    return elements;
+    return [{ type: 'name', text: name || 'Unknown' }];
   }
 
   attachEventBusListeners() {
@@ -499,10 +469,7 @@ export class InventoryUI {
 
     // Subscribe to settings changes
     subscribe('settings:changed', async ({ key, value }) => {
-      if (key === '*' || key.startsWith('moduleSettings.inventory.showName') ||
-          key.startsWith('moduleSettings.inventory.showLabel1') ||
-          key.startsWith('moduleSettings.inventory.showLabel2') ||
-          key.startsWith('generalSettings.useSubstitutedNames')) {
+      if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames')) {
         log('info', `[InventoryUI] Display settings changed (${key}), reloading...`);
         await this.loadDisplaySettings();
         // Re-render the inventory with new display settings

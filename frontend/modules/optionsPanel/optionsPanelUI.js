@@ -76,9 +76,6 @@ export class OptionsPanelUI {
       autoSaveMode: false,
       autoLoadMode: false,
       logLevel: 'WARN',
-      inventoryShowName: true,
-      inventoryShowLabel1: true,
-      inventoryShowLabel2: true,
       useSubstitutedNames: true,
     };
 
@@ -474,9 +471,6 @@ export class OptionsPanelUI {
       this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', false);
       this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', true);
       this.settings.logLevel = await settingsManager.getSetting('logging.defaultLevel', 'WARN');
-      this.settings.inventoryShowName = await settingsManager.getSetting('moduleSettings.inventory.showName', true);
-      this.settings.inventoryShowLabel1 = await settingsManager.getSetting('moduleSettings.inventory.showLabel1', true);
-      this.settings.inventoryShowLabel2 = await settingsManager.getSetting('moduleSettings.inventory.showLabel2', true);
       this.settings.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
     } catch (error) {
       log('error', '[OptionsPanelUI] Error loading settings:', error);
@@ -711,9 +705,6 @@ export class OptionsPanelUI {
         { value: 'DEBUG', label: 'DEBUG' },
       ]
     ));
-    content.appendChild(this.createBooleanSetting('inventoryShowName', 'Inventory: Show Name', 'Show item names in the inventory panel'));
-    content.appendChild(this.createBooleanSetting('inventoryShowLabel1', 'Inventory: Show Label 1', 'Show the first label column in inventory'));
-    content.appendChild(this.createBooleanSetting('inventoryShowLabel2', 'Inventory: Show Label 2', 'Show the second label column in inventory'));
 
     section.appendChild(content);
     this.contentContainer.appendChild(section);
@@ -1414,9 +1405,6 @@ export class OptionsPanelUI {
       autoSaveMode: 'generalSettings.autoSaveMode',
       autoLoadMode: 'generalSettings.autoLoadMode',
       logLevel: 'logging.defaultLevel',
-      inventoryShowName: 'moduleSettings.inventory.showName',
-      inventoryShowLabel1: 'moduleSettings.inventory.showLabel1',
-      inventoryShowLabel2: 'moduleSettings.inventory.showLabel2',
       useSubstitutedNames: 'generalSettings.useSubstitutedNames',
     };
     return pathMap[settingKey];
