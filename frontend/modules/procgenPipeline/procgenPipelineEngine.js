@@ -25,6 +25,7 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
+import { extractItemRequirementFromRule } from './ruleRequirements.js';
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -1377,121 +1378,80 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             return {
                 exit_id: srcExit.name,
                 exitName: srcExit.name,
-                targetRegion: targetName ?? null,
+                target_region: targetName ?? null,
                 ...(resolvedSide ? { side: resolvedSide } : {}),
                 ...(tile ? { tile } : {}),
+                // Realised via placeFromRules / zone requirement. True_
+                // rules are skipped by the substrate — no gate appears on
+                // the tile, but the exit is still emitted in
+                // extracted_rules.
+                ...(srcExit.access_rule ? { access_rule: srcExit.access_rule } : {}),
             };
         });
 
-        // Rules to realise via placeFromRules. True_ rules are skipped
-        // by the substrate (§6) — no gate appears on the tile, but
-        // the exit/location is still emitted in extracted_rules.
-        const exit_rules = {};
-        for (const srcExit of sourceRegion.exits ?? []) {
-            if (srcExit.access_rule) exit_rules[srcExit.name] = srcExit.access_rule;
-        }
-        const location_rules = {};
-        const item_placements = [];
-        for (const srcLoc of sourceRegion.locations ?? []) {
+        const locationSpecs = (sourceRegion.locations ?? []).map((srcLoc) => {
             const locId = srcLoc.name ?? String(srcLoc.id ?? '');
-            if (!locId) continue;
-            if (srcLoc.access_rule) location_rules[locId] = srcLoc.access_rule;
-            const itemName = srcLoc.item?.name;
-            if (itemName) {
-                item_placements.push({ item_id: itemName, location_id: locId });
-            }
-        }
+            return {
+                id: locId,
+                item: srcLoc.item?.name ?? null,
+                ...(srcLoc.access_rule ? { access_rule: srcLoc.access_rule } : {}),
+            };
+        }).filter((l) => l.id);
 
         // Substrate dispatch: per-region resolution via pickSubstrate
         // (caller override > source tag > picker > mix > 'maze').
         const substrateId = pickSubstrate(name, sourceRegion, {
             substrateByRegion, substrateMix, substratePicker,
         }, rng);
-        const adapter = getAdapter(substrateId);
         // Biome resolution mirrors substrate dispatch: per-region from
         // input wins, otherwise inherit from rules.json source region
         // (which the top-down driver may stamp), otherwise null →
         // substrate default. v1 callers don't supply biome; that's a
         // future commit.
         const regionBiome = biomeByRegion?.[name] ?? sourceRegion?.biome ?? null;
-        const core = adapter.generateRegionCore({
+
+        // Unified region build (procedural or zone). The helper realises
+        // the exit/location access rules onto substrate geometry, sets
+        // global_name from the AP-canonical source ids, applies the
+        // hazard module (maze only), and returns the region descriptor.
+        const region = generateRegion({
+            substrate: substrateId,
             region_id: name,
             size,
             entrances,
             exits: exitSpecs,
-            item_lib: itemLib,
-            obstacle_lib: obstacleLib,
+            locations: locationSpecs,
+            itemLib,
+            obstacleLib,
             rng,
             params: regionParams,
             biome: regionBiome,
+            hazardOpts,
+            useSourceLocationName: true,
         });
-        const placement = adapter.placeFromRules(core.world, {
-            exit_rules,
-            location_rules,
-            item_placements,
-            rng,
-        });
-        const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: name });
 
-        // Top-down knows the source's location IDs and access rules
-        // directly. Override the BFS-derived names+rules from
-        // extractPathsAndObstacles with the source data — names so
-        // round-tripped locations match the source (e.g. "Slay Yorgle"
-        // not "Freeincarnate_pickup"), rules so cut-vertex pollution
-        // (a gate placed for one location showing up on another's BFS
-        // path) doesn't conflate access rules across locations.
-        const locationIdByPos = new Map();
-        for (const placed of placement.placed_locations ?? []) {
-            const k = `${placed.position.x},${placed.position.y}`;
-            locationIdByPos.set(k, placed.location_id);
-        }
-        for (const loc of extracted_rules.locations) {
-            const k = `${loc.position.x},${loc.position.y}`;
-            const sourceLocId = locationIdByPos.get(k);
-            if (sourceLocId) {
-                loc.id = sourceLocId;
-                // AP-canonical location names are unique within a
-                // player's rules.json, so use the source name verbatim
-                // as the round-tripped location's global name. Skips
-                // the Region__locId__x_y mangling makeLocationName
-                // applies to grid-growth's auto-derived ids.
-                loc.global_name = sourceLocId;
-                if (location_rules[sourceLocId]) {
-                    loc.access_rule = location_rules[sourceLocId];
-                }
-            }
-        }
-        for (const ex of extracted_rules.exits) {
-            if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
-        }
-
-        for (const placed of core.exits_placed) {
+        for (const placed of region.exits_placed) {
             exitSidesByExit.set(`${name}:${placed.exit_id}`, {
                 side: placed.side,
                 tile_position: placed.tile_position,
             });
         }
 
-        // Content-module pass: place hazards on the freshly-built
-        // world. No-op when hazardOpts is null/disabled or substrate
-        // isn't 'maze'.
-        if (substrateId === 'maze') applyHazardModule(core.world, hazardOpts, rng);
-
         // Mutate the stub in place — Grid doesn't have a replaceRegion
         // method and placeRegion would throw on the second call.
         const stub = grid.getRegion(cell);
         Object.assign(stub, {
-            substrate: substrateId,
-            playable_payload: core.world,
-            extracted_rules,
-            placed_items: placement.placed_items,
+            substrate: region.substrate,
+            playable_payload: region.playable_payload,
+            extracted_rules: region.extracted_rules,
+            placed_items: region.placed_items,
             placed_obstacles: [],
-            placed_logic_gates: placement.placed_logic_gates,
-            exits_placed: core.exits_placed,
-            render_hint: substrateId,
-            sidecar_filename: `${name}.json`,
-            biome: core.biome ?? null,
-            grow_telemetry: core.grow_telemetry ?? null,
+            placed_logic_gates: region.placed_logic_gates,
+            exits_placed: region.exits_placed,
+            render_hint: region.render_hint,
+            sidecar_filename: region.sidecar_filename,
+            biome: region.biome,
+            grow_telemetry: region.grow_telemetry,
         });
 
         stats.regionsBuilt += 1;
@@ -2108,6 +2068,264 @@ function assembleZoneRegion({
         biome: null,
         grow_telemetry: null,
     };
+}
+
+// --- Unified region-build contract (Phase 2a) ---
+//
+// generateRegion(spec) is the single region-build path shared by the
+// layout drivers (top-down now; sphere-growth next). It dissolves the
+// procedural(tile)/zone dichotomy: callers hand it a substrate-agnostic
+// `spec` (exits + locations carrying Rule Builder access_rules) and get
+// back a `descriptor` (the region object). The engine NEVER reaches into
+// a substrate's playable_payload — structural fields (exits_placed,
+// entrance) live on the descriptor / are stamped onto the payload here so
+// the seam accessors (getRegionExits/getRegionEntrance) keep working.
+//
+// spec = {
+//   substrate, region_id, size, rng, params, biome, itemLib, obstacleLib,
+//   hazardOpts,
+//   entrances: [{ side, tile }],                                  // 0 or 1
+//   exits:     [{ exit_id?, exitName?, side?, tile?, target_region?,
+//                 access_rule? }],
+//   locations: [{ id, item?, access_rule? }],
+//   useSourceLocationName,   // stamp loc.global_name = id (top-down)
+// }
+//
+// Two branches by substrate kind:
+//   PROCEDURAL (adapter.generateRegionCore): core → placeFromRules →
+//     extractPathsAndObstacles → override loc ids/rules → exit-rule
+//     override → hazard pass. Byte-identical to the prior top-down inline
+//     sequence (rng draws in the same order; exit/location rule maps built
+//     in spec order).
+//   ZONE (generateZoneForSpecs[Gen]): map each access_rule to a physics
+//     requirement (extractItemRequirementFromRule), run the zone
+//     generate-to-spec, then assemble the descriptor keyed by the SPEC's
+//     exit_id (not exit_<side>) and set playable_payload.entrance (the
+//     leak fix). Final access rules are the SOURCE rules (top-down
+//     realises-existing); the substrate only contributes winnable geometry.
+//
+// generateRegionGen is the generator form (forwards the zone adapter's
+// per-attempt progress events); generateRegion drains it synchronously.
+
+function generateRegionProcedural(spec) {
+    const adapter = getAdapter(spec.substrate);
+    const core = adapter.generateRegionCore({
+        region_id: spec.region_id,
+        size: spec.size,
+        entrances: spec.entrances ?? [],
+        exits: (spec.exits ?? []).map((e) => ({
+            ...(e.exit_id != null ? { exit_id: e.exit_id } : {}),
+            ...(e.exitName != null ? { exitName: e.exitName } : {}),
+            ...(e.side ? { side: e.side } : {}),
+            ...(e.tile ? { tile: e.tile } : {}),
+            ...(e.target_region != null ? { targetRegion: e.target_region } : {}),
+        })),
+        item_lib: spec.itemLib,
+        obstacle_lib: spec.obstacleLib,
+        rng: spec.rng,
+        params: spec.params,
+        biome: spec.biome ?? null,
+    });
+
+    // Build exit_rules / location_rules / item_placements from the spec,
+    // in spec order, so placeFromRules sees the same map contents and key
+    // order it did when the caller built these inline.
+    const exit_rules = {};
+    for (const e of spec.exits ?? []) {
+        if (!e.access_rule) continue;
+        let exitId = e.exit_id;
+        if (exitId == null && e.side != null) {
+            exitId = core.exits_placed.find((p) => p.side === e.side)?.exit_id;
+        }
+        if (exitId != null) exit_rules[exitId] = e.access_rule;
+    }
+    const location_rules = {};
+    const item_placements = [];
+    for (const loc of spec.locations ?? []) {
+        if (loc.access_rule) location_rules[loc.id] = loc.access_rule;
+        if (loc.item != null) {
+            item_placements.push({ item_id: loc.item, location_id: loc.id });
+        }
+    }
+
+    const placement = adapter.placeFromRules(core.world, {
+        exit_rules, location_rules, item_placements, rng: spec.rng,
+    });
+    const extracted_rules = adapter.extractPathsAndObstacles(
+        core.world, { regionId: spec.region_id });
+
+    // Override BFS-derived location ids/rules with the spec's authoritative
+    // ids + access rules (path-walk pollution must not leak into access
+    // rules; the spec rule IS the rule). global_name is stamped only when
+    // the caller asks (top-down preserves AP-canonical source names).
+    const locationIdByPos = new Map();
+    for (const placed of placement.placed_locations ?? []) {
+        locationIdByPos.set(`${placed.position.x},${placed.position.y}`, placed.location_id);
+    }
+    const specById = new Map((spec.locations ?? []).map((l) => [l.id, l]));
+    for (const loc of extracted_rules.locations) {
+        const specLocId = locationIdByPos.get(`${loc.position.x},${loc.position.y}`);
+        if (!specLocId) continue;
+        loc.id = specLocId;
+        if (spec.useSourceLocationName) loc.global_name = specLocId;
+        const sl = specById.get(specLocId);
+        if (sl?.access_rule) loc.access_rule = sl.access_rule;
+    }
+    for (const ex of extracted_rules.exits) {
+        if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
+    }
+
+    if (spec.substrate === 'maze') {
+        applyHazardModule(core.world, spec.hazardOpts ?? null, spec.rng);
+    }
+
+    return {
+        substrate: spec.substrate,
+        region_id: spec.region_id,
+        playable_payload: core.world,
+        extracted_rules,
+        placed_items: placement.placed_items,
+        placed_obstacles: [],
+        placed_logic_gates: placement.placed_logic_gates,
+        exits_placed: core.exits_placed,
+        render_hint: spec.substrate,
+        sidecar_filename: `${spec.region_id}.json`,
+        wall_stats: core.wall_stats ?? null,
+        biome: core.biome ?? null,
+        grow_telemetry: core.grow_telemetry ?? null,
+    };
+}
+
+function* generateRegionZoneGen(spec) {
+    const adapter = getAdapter(spec.substrate);
+    const regionSize = spec.size;
+    const specById = new Map((spec.locations ?? []).map((l) => [l.id, l]));
+
+    // Bounce-style zone substrates gate on a side; assign one to any exit
+    // the layout driver couldn't resolve geographically (clockwise over
+    // the still-free sides).
+    const usedSides = new Set((spec.exits ?? []).filter((e) => e.side).map((e) => e.side));
+    const freeSides = SIDES.filter((s) => !usedSides.has(s));
+    const exitsResolved = (spec.exits ?? []).map((e) => ({
+        ...e,
+        side: e.side ?? freeSides.shift(),
+    }));
+
+    const exitSpecs = exitsResolved.map((e) => {
+        const { requirement, counts } = extractItemRequirementFromRule(e.access_rule);
+        return { side: e.side, requirement, counts };
+    });
+    const locationSpecs = (spec.locations ?? []).map((loc) => {
+        const { requirement, counts } = extractItemRequirementFromRule(loc.access_rule);
+        return { id: loc.id, item: loc.item ?? null, requirement, counts };
+    });
+
+    const zoneSpecs = {
+        region_id: spec.region_id,
+        exitSpecs,
+        locationSpecs,
+        seed: (spec.rng.next() * 0x7fffffff) | 0,
+        ...(spec.params?.physicsProfile && spec.params.physicsProfile !== 'classic'
+            ? { physicsProfile: spec.params.physicsProfile } : {}),
+    };
+    const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
+        ? yield* adapter.generateZoneForSpecsGen(zoneSpecs)
+        : adapter.generateZoneForSpecs(zoneSpecs);
+
+    // Assemble the descriptor, keying exits by the SPEC's exit_id (top-down
+    // overrides/teleporters key on the source exit id) rather than
+    // synthesising exit_<side>.
+    const exitsMap = new Map();
+    const exitsPlaced = [];
+    const extractedExits = [];
+    for (const e of exitsResolved) {
+        const tile = e.tile ?? perimeterMidpoint(e.side, regionSize);
+        const exitId = e.exit_id ?? `exit_${e.side}`;
+        exitsMap.set(exitId, {
+            exit_id: exitId,
+            x: tile.x,
+            y: tile.y,
+            side: e.side,
+            exitName: e.exitName ?? exitId,
+            targetRegion: e.target_region ?? null,
+            targetExitId: null,
+            isBackExit: false,
+            isTeleporter: false,
+        });
+        exitsPlaced.push({ exit_id: exitId, side: e.side, tile_position: { x: tile.x, y: tile.y } });
+        // Top-down preserves the SOURCE rule verbatim; fall back to the
+        // zone's derived rule when the spec carried none.
+        const finalRule = e.access_rule ?? zoneRules?.exitRules?.[e.side];
+        extractedExits.push({
+            id: exitId,
+            position: { x: tile.x, y: tile.y },
+            target_region: e.target_region ?? null,
+            paths: [{ path_id: 'p1', obstacles: [] }],
+            ...(finalRule ? { access_rule: finalRule } : {}),
+        });
+    }
+    const extractedLocations = (zoneRules?.locations ?? []).map((loc) => {
+        const sl = specById.get(loc.id);
+        return {
+            id: loc.id,
+            item: loc.item ?? null,
+            position: loc.position ?? null,
+            access_rule: sl?.access_rule ?? loc.access_rule,
+            ...(spec.useSourceLocationName ? { global_name: loc.id } : {}),
+        };
+    });
+
+    // Entrance leak fix: zone regions previously omitted .entrance, so the
+    // top-down bidirectional back-exit pass threw on entranceTile.x. Stamp
+    // it from the parent-mirrored entrance the driver passed in.
+    const playable_payload = { ...(zoneRules?.payload ?? {}), exits: exitsMap };
+    if (spec.entrances?.length) {
+        const ent = spec.entrances[0];
+        playable_payload.entrance = ent.tile ?? perimeterMidpoint(ent.side, regionSize);
+        if (playable_payload.params && ent.side) {
+            playable_payload.params.backExitSide = ent.side;
+        }
+    }
+
+    return {
+        substrate: spec.substrate,
+        region_id: spec.region_id,
+        playable_payload,
+        extracted_rules: {
+            region_id: spec.region_id,
+            exits: extractedExits,
+            locations: extractedLocations,
+        },
+        placed_items: [],
+        placed_obstacles: [],
+        placed_logic_gates: [],
+        exits_placed: exitsPlaced,
+        render_hint: spec.substrate,
+        sidecar_filename: `${spec.region_id}.json`,
+        wall_stats: null,
+        biome: null,
+        grow_telemetry: null,
+    };
+}
+
+export function* generateRegionGen(spec) {
+    const adapter = getAdapter(spec.substrate);
+    if (typeof adapter.generateRegionCore === 'function') {
+        return generateRegionProcedural(spec);
+    }
+    if (typeof adapter.generateZoneForSpecs === 'function'
+            || typeof adapter.generateZoneForSpecsGen === 'function') {
+        return yield* generateRegionZoneGen(spec);
+    }
+    throw new Error(`generateRegion: substrate '${spec.substrate}' has neither `
+        + 'generateRegionCore nor generateZoneForSpecs');
+}
+
+export function generateRegion(spec) {
+    const gen = generateRegionGen(spec);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
 }
 
 export function arrangeShuffledSpiral(config) {
