@@ -287,6 +287,29 @@ export function findDisconnectedCell(grid, rng, minGap = 2) {
 // points to the region at cell `c + delta(s)`. If that neighbor cell
 // is unbuilt or outside the grid, target_region stays null.
 
+// --- Region structural accessors (substrate-agnostic seam) ---
+//
+// A built region's exit table (a Map of exit_id -> exit object) and its
+// entrance are STRUCTURAL bookkeeping the engine owns: stitching,
+// back-exits, reverse links, wall-off. They are distinct from the
+// substrate's opaque runtime payload. Today both still live on
+// playable_payload (maze threads them onto its world; assembleZoneRegion
+// injects the Map for zone substrates). These accessors are the single
+// seam through which all engine code touches them, so a later step can
+// relocate the structural data to an engine-owned region descriptor
+// without revisiting every call site. See
+// NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md
+// (Phase 2a).
+export function getRegionExits(region) {
+    return region?.playable_payload?.exits;
+}
+export function getRegionEntrance(region) {
+    return region?.playable_payload?.entrance;
+}
+export function setRegionEntrance(region, entrance) {
+    if (region?.playable_payload) region.playable_payload.entrance = entrance;
+}
+
 export function stitchGrid(grid) {
     for (const region of grid.allRegions()) {
         const exitsBySide = new Map();
@@ -313,7 +336,7 @@ export function stitchGrid(grid) {
             // Mirror onto world.exits so runtime transitions see the
             // resolved target — and the teleporter flag, so the panel
             // can render teleporter exits differently if it wants to.
-            const worldExit = region.playable_payload?.exits?.get(exit.id);
+            const worldExit = getRegionExits(region)?.get(exit.id);
             if (worldExit) {
                 worldExit.targetRegion = exit.target_region;
                 worldExit.isTeleporter = teleTarget !== null;
@@ -335,7 +358,7 @@ export function stitchGrid(grid) {
 function finalizeTopDownExits(grid, cellsByName) {
     for (const region of grid.allRegions()) {
         const myCell = region.cell;
-        const exits = region.playable_payload?.exits;
+        const exits = getRegionExits(region);
         const extracted = region.extracted_rules?.exits ?? [];
         const extractedById = new Map(extracted.map((e) => [e.id, e]));
         if (!exits) continue;
@@ -390,9 +413,10 @@ export function wallOffUnusedExits(grid) {
         const validIds = new Set(validExits.map((e) => e.id));
         region.extracted_rules.exits = validExits;
 
-        if (region.playable_payload?.exits) {
-            for (const id of [...region.playable_payload.exits.keys()]) {
-                if (!validIds.has(id)) region.playable_payload.exits.delete(id);
+        const worldExits = getRegionExits(region);
+        if (worldExits) {
+            for (const id of [...worldExits.keys()]) {
+                if (!validIds.has(id)) worldExits.delete(id);
             }
         }
         if (Array.isArray(region.exits_placed)) {
@@ -431,7 +455,7 @@ export function reconcileBidirectionalExits(grid, regionSize, mode = 'add') {
         byName.set(region.region_id, region);
     }
     for (const sourceRegion of grid.allRegions()) {
-        const exits = sourceRegion.playable_payload?.exits;
+        const exits = getRegionExits(sourceRegion);
         if (!exits) continue;
         // Snapshot — addReciprocalBackExit mutates the target's
         // exits, not the source's, so iteration of `exits` is safe;
@@ -441,7 +465,7 @@ export function reconcileBidirectionalExits(grid, regionSize, mode = 'add') {
             if (!sourceExit?.targetRegion) continue;
             const target = byName.get(sourceExit.targetRegion);
             if (!target) continue;
-            const targetExits = target.playable_payload?.exits;
+            const targetExits = getRegionExits(target);
             if (!targetExits) continue;
             let hasReciprocal = false;
             for (const [, te] of targetExits) {
@@ -473,8 +497,9 @@ function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetReg
     const backExitId = sourceRegion.region_id;
     // Don't collide with an existing exit of the same id. Should be
     // rare — region ids are unique — but a defensive guard.
-    if (targetRegion.playable_payload.exits.has(backExitId)) return;
-    targetRegion.playable_payload.exits.set(backExitId, {
+    const targetExits = getRegionExits(targetRegion);
+    if (targetExits.has(backExitId)) return;
+    targetExits.set(backExitId, {
         exit_id: backExitId,
         x: backTile.x,
         y: backTile.y,
@@ -940,7 +965,7 @@ export function growMaze(config) {
             // resolve which entrance tile to spawn the player at on
             // either direction of traversal.
             const backExitId = parentRegion.region_id;
-            region.playable_payload.exits.set(backExitId, {
+            getRegionExits(region).set(backExitId, {
                 exit_id: backExitId,
                 x: entranceTile.x,
                 y: entranceTile.y,
@@ -965,7 +990,7 @@ export function growMaze(config) {
             // Link parent's forward exit back to this child's
             // back-exit, so a forward traversal carries the right
             // arrivedFrom.exit_id.
-            const parentWorldExit = parentRegion.playable_payload?.exits?.get(parentExitPlaced.exit_id);
+            const parentWorldExit = getRegionExits(parentRegion)?.get(parentExitPlaced.exit_id);
             if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
         pool.markPlaced({
@@ -1498,16 +1523,17 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             const parentRegion = grid.getRegion(cellsByName.get(parent.name));
             const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
             if (!parentRegion || !parentExit) continue;
-            const entranceTile = region.playable_payload.entrance;
+            const entranceTile = getRegionEntrance(region);
             const entranceSide = OPPOSITE_SIDE[parentExit.side];
             const backExitId = parent.name;
             // Skip the synthetic back-exit when the source already
             // declared a reverse exit pointing at the parent (under
             // any name) — we'd just be duplicating an existing route.
-            const hasExplicitReverse = [...region.playable_payload.exits.values()]
+            const regionExits = getRegionExits(region);
+            const hasExplicitReverse = [...regionExits.values()]
                 .some((e) => e.targetRegion === parent.name);
-            if (region.playable_payload.exits.has(backExitId) || hasExplicitReverse) continue;
-            region.playable_payload.exits.set(backExitId, {
+            if (regionExits.has(backExitId) || hasExplicitReverse) continue;
+            regionExits.set(backExitId, {
                 exit_id: backExitId,
                 x: entranceTile.x,
                 y: entranceTile.y,
@@ -1524,7 +1550,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
                 target_region: parent.name,
                 paths: [{ path_id: 'p1', obstacles: [] }],
             });
-            const parentWorldExit = parentRegion.playable_payload?.exits?.get(parent.exit_id);
+            const parentWorldExit = getRegionExits(parentRegion)?.get(parent.exit_id);
             if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
     }
@@ -1562,11 +1588,11 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
     for (const { name, cell, parent } of placementOrder) {
         if (!parent) continue;
         const region = grid.getRegion(cell);
-        const exits = region?.playable_payload?.exits;
+        const exits = getRegionExits(region);
         if (!exits) continue;
         for (const e of exits.values()) {
             if (e.targetRegion === parent.name) {
-                region.playable_payload.entrance = { x: e.x, y: e.y };
+                setRegionEntrance(region, { x: e.x, y: e.y });
                 break;
             }
         }
@@ -1592,13 +1618,13 @@ function linkReverseExits(grid) {
     const regionByName = new Map();
     for (const r of grid.allRegions()) regionByName.set(r.region_id, r);
     for (const region of grid.allRegions()) {
-        const exits = region.playable_payload?.exits;
+        const exits = getRegionExits(region);
         if (!exits) continue;
         for (const exit of exits.values()) {
             if (exit.targetExitId) continue;
             if (!exit.targetRegion) continue;
             const target = regionByName.get(exit.targetRegion);
-            const targetExits = target?.playable_payload?.exits;
+            const targetExits = getRegionExits(target);
             if (!targetExits) continue;
             for (const reverse of targetExits.values()) {
                 if (reverse.targetRegion === region.region_id) {
@@ -2855,7 +2881,7 @@ export function* growSpheresGen(config) {
             // the forward gate's rule onto it.
             const parentRegion = grid.getRegion(parentNode.cell);
             const backExitId = parentRegion.region_id;
-            region.playable_payload.exits.set(backExitId, {
+            getRegionExits(region).set(backExitId, {
                 exit_id: backExitId,
                 x: entranceTile.x,
                 y: entranceTile.y,
@@ -2872,7 +2898,7 @@ export function* growSpheresGen(config) {
                 target_region: parentRegion.region_id,
                 paths: [{ path_id: 'p1', obstacles: [] }],
             });
-            const parentWorldExit = parentRegion.playable_payload?.exits
+            const parentWorldExit = getRegionExits(parentRegion)
                 ?.get(parentExitPlaced.exit_id);
             if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
@@ -3162,7 +3188,7 @@ export function buildRulesJson(grid, opts = {}) {
             const compiledRegion = scaffold.regions[playerId][region.region_id];
             if (!compiledRegion) continue;
             for (const exit of compiledRegion.exits) {
-                const worldExit = region.playable_payload?.exits?.get(exit.name);
+                const worldExit = getRegionExits(region)?.get(exit.name);
                 if (!worldExit?.isBackExit) continue;
                 const targetRegion = regionsByName[exit.connected_region];
                 const compiledTarget = scaffold.regions[playerId][exit.connected_region];

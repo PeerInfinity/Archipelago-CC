@@ -14,6 +14,7 @@ import {
     stringifyRulesJson,
     topDownFromRulesJson,
     computeSourceCounts,
+    getRegionExits,
     Grid,
 } from './procgenPipelineEngine.js';
 import {
@@ -1684,7 +1685,7 @@ export class ProcgenPipelineUI {
         ctx.fillStyle = COLORS.genericBg;
         ctx.fillRect(offX, offY, cellW, cellH);
 
-        const exits = region?.playable_payload?.exits ?? [];
+        const exits = getRegionExits(region) ?? [];
         const placedExits = resolveExitTilePositions(exits, regionSize);
         ctx.fillStyle = COLORS.exit;
         for (const { x, y } of placedExits) {
