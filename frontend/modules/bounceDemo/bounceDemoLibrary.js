@@ -29,6 +29,7 @@ import { generateLevelFromSpecsGen } from './generator.js';
 import {
     ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
     authoredTermsToRule, VICTORY_ITEM_NAME,
+    BOUNCE_OBSTACLE_ID_BY_ABILITY, emitObstaclePaths,
 } from './apRules.js';
 import { validateLevel } from './level.js';
 import { bounceStack } from './fixtures/bounceStack.js';
@@ -251,9 +252,10 @@ const BOUNCE_OBSTACLE_PRESENTATION = Object.freeze({
     brown: { name: 'Brown Platform Gap', color: '#a06a40' },
 });
 
-/** ability id -> obstacle id (the Phase 2 producer's lookup). */
-export const BOUNCE_OBSTACLE_ID_BY_ABILITY = Object.freeze(Object.fromEntries(
-    Object.keys(ABILITY_ITEM_NAMES).map((ability) => [ability, `bounce_gate_${ability}`])));
+/** ability id -> obstacle id. Defined in apRules.js (the rule-emission
+ *  home, so the emitter can reference it cycle-free); re-exported here for
+ *  the registry-facing consumers (and the Phase 1 vocabulary test). */
+export { BOUNCE_OBSTACLE_ID_BY_ABILITY };
 
 export const BOUNCE_LIBRARY_OBSTACLES = Object.freeze(Object.fromEntries(
     Object.entries(ABILITY_ITEM_NAMES).map(([ability, itemName]) => {

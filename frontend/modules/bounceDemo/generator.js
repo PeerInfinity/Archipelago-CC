@@ -40,7 +40,9 @@ import { createRng } from '../shared/rng.js';
 import { DEFAULTS, PROFILES, launchRise } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
-import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './apRules.js';
+import {
+    ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, BOUNCE_OBSTACLE_ID_BY_ABILITY,
+} from './apRules.js';
 
 // ── Profile geometry ─────────────────────────────────────────────────
 //
@@ -235,23 +237,60 @@ function sameSets(minimalSets, want) {
     return got.length === want.length && want.every((a) => got.includes(a));
 }
 
-/** Gate-segment steps for one ability (shared by both proposal paths). */
+// ── Obstacle primitives ─────────────────────────────────────────────
+//
+// One GEOMETRY TEMPLATE per ability gap (topdown-bounce-obstacle-refactor
+// .md Phase 3). Each primitive is keyed by its ability and carries the
+// shared obstacle id (BOUNCE_OBSTACLE_ID_BY_ABILITY) so the obstacle id is
+// the single through-line: this template's geometry is what the verifier
+// proves gates the ability, and what the emitter records as the path's
+// obstacle. `buildSteps(rng, G)` returns the climb steps the gate injects
+// — the exact geometry (and rng draw order) the old gateSteps switch
+// produced, so byte-identity holds.
+//
+//   springs  — a 380-440px gap above a spring (plain apex fails, spring
+//              clears; one rng draw for the gap height)
+//   jetpacks — a 1180-1240px gap above a jetpack (spring fails, jetpack
+//              clears; one rng draw)
+//   blue/brown — a colored stepping stone mid-gap (two plain steps, no
+//              rng: plain bounce can't skip it, the item splits it)
+//   left/right — a ±BRANCH_DX column shift (catch span < shift, so the
+//              matching arrow is required; no rng)
+export const OBSTACLE_PRIMITIVES = Object.freeze({
+    springs: {
+        obstacleId: BOUNCE_OBSTACLE_ID_BY_ABILITY.springs,
+        buildSteps: (rng, G) => [
+            { dy: G.SPRING_GAP.min + rng.next() * G.SPRING_GAP.span, spring: true }],
+    },
+    jetpacks: {
+        obstacleId: BOUNCE_OBSTACLE_ID_BY_ABILITY.jetpacks,
+        buildSteps: (rng, G) => [
+            { dy: G.JETPACK_GAP.min + rng.next() * G.JETPACK_GAP.span, jetpack: true }],
+    },
+    blue: {
+        obstacleId: BOUNCE_OBSTACLE_ID_BY_ABILITY.blue,
+        buildSteps: (rng, G) => [{ dy: G.PLAIN_DY, type: 'blue' }, { dy: G.PLAIN_DY }],
+    },
+    brown: {
+        obstacleId: BOUNCE_OBSTACLE_ID_BY_ABILITY.brown,
+        buildSteps: (rng, G) => [{ dy: G.PLAIN_DY, type: 'brown' }, { dy: G.PLAIN_DY }],
+    },
+    left: {
+        obstacleId: BOUNCE_OBSTACLE_ID_BY_ABILITY.left,
+        buildSteps: (rng, G) => [{ dy: G.PLAIN_DY, dx: -G.BRANCH_DX }],
+    },
+    right: {
+        obstacleId: BOUNCE_OBSTACLE_ID_BY_ABILITY.right,
+        buildSteps: (rng, G) => [{ dy: G.PLAIN_DY, dx: +G.BRANCH_DX }],
+    },
+});
+
+/** Gate-segment steps for one ability — the obstacle primitive's geometry
+ *  template instantiated (shared by both proposal paths). */
 function gateSteps(ability, rng, G) {
-    switch (ability) {
-        case 'springs':
-            return [{ dy: G.SPRING_GAP.min + rng.next() * G.SPRING_GAP.span, spring: true }];
-        case 'jetpacks':
-            return [{ dy: G.JETPACK_GAP.min + rng.next() * G.JETPACK_GAP.span, jetpack: true }];
-        case 'blue':
-        case 'brown':
-            return [{ dy: G.PLAIN_DY, type: ability }, { dy: G.PLAIN_DY }];
-        case 'left':
-            return [{ dy: G.PLAIN_DY, dx: -G.BRANCH_DX }];
-        case 'right':
-            return [{ dy: G.PLAIN_DY, dx: +G.BRANCH_DX }];
-        default:
-            throw new Error(`generateLevel: no gate builder for '${ability}'`);
-    }
+    const primitive = OBSTACLE_PRIMITIVES[ability];
+    if (!primitive) throw new Error(`generateLevel: no gate builder for '${ability}'`);
+    return primitive.buildSteps(rng, G);
 }
 
 /** One proposal. Returns a level (bottom margin/height computed last). */

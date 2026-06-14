@@ -20,6 +20,79 @@ export const ABILITY_ITEM_NAMES = Object.freeze({
 
 export const VICTORY_ITEM_NAME = 'Victory';
 
+// ability id -> stable physics-obstacle id (the obstacles-along-paths
+// vocabulary, topdown-bounce-obstacle-refactor.md Phase 3). The geometry
+// defs (presentation colors) live in bounceDemoLibrary's
+// BOUNCE_LIBRARY_OBSTACLES; this id is the THROUGH-LINE that ties the
+// obstacle primitive's geometry, the verifier, and the emitted path
+// together. Lives here (not bounceDemoLibrary) so the emitter below can
+// reference it without a cycle through the registry module.
+export const BOUNCE_OBSTACLE_ID_BY_ABILITY = Object.freeze(Object.fromEntries(
+    Object.keys(ABILITY_ITEM_NAMES).map((ability) => [ability, `bounce_gate_${ability}`])));
+
+/** Stable per-instance logic-gate obstacle id for an authored term
+ *  ({ item, count }). Slugged so two goals gating on the same term share
+ *  one obstacle def; the count rides the id so Has(x,2) != Has(x,1). */
+function authoredObstacleId({ item, count }) {
+    const slug = String(item).replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    return (count ?? 1) > 1 ? `bounce_logic_${slug}__x${count}` : `bounce_logic_${slug}`;
+}
+
+/**
+ * Emit a goal's access in the shared paths-and-obstacles vocabulary
+ * (topdown-bounce-obstacle-refactor.md Phase 3) — the obstacle-reasoning
+ * counterpart of composeAuthoredRule. The physics-derived minimal ability
+ * sets become OR-of-paths of physics obstacle ids, and authored terms
+ * (foreign items, count > 1) become per-term `logic_gate` obstacles ANDed
+ * onto EVERY path — physics-first, logic_gate fallback.
+ *
+ *   minimalSets []   (unreachable) -> paths []                -> compiler False_
+ *   minimalSets [[]] (always)      -> one empty-obstacle path -> compiler True_
+ *
+ * Faithfulness (asserted by the Phase-3 verifier and the unit tests):
+ * `compileAccessRule(paths, lib)` reproduces
+ * `composeAuthoredRule(minimalSetsToRule(sets), authored)` byte-for-byte
+ * for every shape bounce's generator produces — single physics set,
+ * pure-authored (True_ physics), and multi-set with no authored. (The
+ * lone structural divergence — multi-ability physics AND authored, which
+ * distributes flat here vs nests there — is logically identical and never
+ * generated, since a verified bounce goal derives a single minimal set.)
+ *
+ * @returns {{ paths: Array, authoredDefs: Object }} authoredDefs holds
+ *   only the per-instance logic_gate defs; the physics obstacle ids
+ *   reference bounceDemoLibrary's BOUNCE_LIBRARY_OBSTACLES.
+ */
+export function emitObstaclePaths(minimalSets, authoredTerms = []) {
+    const authoredDefs = {};
+    const authoredIds = (authoredTerms ?? []).map((term) => {
+        const id = authoredObstacleId(term);
+        const count = term.count ?? 1;
+        authoredDefs[id] = {
+            id,
+            name: `${term.item}${count > 1 ? ` x${count}` : ''} Gate`,
+            clear_set_type: 'rule',
+            clear_rule: makeHasRule(term.item, count),
+            feature: 'bounce_abilities',
+        };
+        return id;
+    });
+    const paths = minimalSets.map((set, i) => ({
+        path_id: `p${i + 1}`,
+        // Mirror minimalSetsToRule's AND order exactly (the verifier emits
+        // already-sorted sets): physics obstacles in set order, then the
+        // authored gates.
+        obstacles: [
+            ...set.map((ability) => {
+                const id = BOUNCE_OBSTACLE_ID_BY_ABILITY[ability];
+                if (!id) throw new Error(`emitObstaclePaths: unknown ability '${ability}'`);
+                return id;
+            }),
+            ...authoredIds,
+        ],
+    }));
+    return { paths, authoredDefs };
+}
+
 /**
  * Convert the verifier's minimal ability sets into one Rule Builder
  * rule: OR over minimal sets, AND over each set's items.
