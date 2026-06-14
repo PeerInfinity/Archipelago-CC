@@ -32,6 +32,7 @@ import {
     BOUNCE_OBSTACLE_ID_BY_ABILITY, emitObstaclePaths,
 } from './apRules.js';
 import { validateLevel } from './level.js';
+import { verifyObstacleGating } from './verifyObstacles.js';
 import { bounceStack } from './fixtures/bounceStack.js';
 import { easyTower } from './fixtures/easyTower.js';
 import { fillerClimb } from './fixtures/fillerClimb.js';
@@ -413,6 +414,7 @@ export function* generateZoneForSpecsGen({
     const exitRules = {};
     const exitPaths = {};
     const obstacleDefs = {};
+    const goals = []; // for the per-obstacle gating verifier
     const referencedPhysics = new Set();
     const recordPaths = (paths, authoredDefs) => {
         Object.assign(obstacleDefs, authoredDefs);
@@ -424,10 +426,12 @@ export function* generateZoneForSpecsGen({
     };
     for (const e of exits) {
         const sets = derived.exits[e.id].minimalSets;
-        exitRules[e.side] = composeAuthoredRule(minimalSetsToRule(sets), e.authored);
+        const rule = composeAuthoredRule(minimalSetsToRule(sets), e.authored);
+        exitRules[e.side] = rule;
         const { paths, authoredDefs } = emitObstaclePaths(sets, e.authored);
         exitPaths[e.side] = paths;
         recordPaths(paths, authoredDefs);
+        goals.push({ kind: 'exit', id: e.id, minimalSets: sets, paths, rule });
         if (e.authored.length > 0) {
             gateRules.portals[e.id] = authoredTermsToRule(e.authored);
         }
@@ -440,12 +444,14 @@ export function* generateZoneForSpecsGen({
         if (authored.length > 0) {
             gateRules.pickups[s.id] = authoredTermsToRule(authored);
         }
+        const rule = composeAuthoredRule(minimalSetsToRule(sets), authored);
         const { paths, authoredDefs } = emitObstaclePaths(sets, authored);
         recordPaths(paths, authoredDefs);
+        goals.push({ kind: 'pickup', id: s.id, minimalSets: sets, paths, rule });
         return {
             id: s.id,
             item: s.item ?? null,
-            access_rule: composeAuthoredRule(minimalSetsToRule(sets), authored),
+            access_rule: rule,
             paths,
             position: null, // level-local px would be misread as tile coords
         };
@@ -454,6 +460,11 @@ export function* generateZoneForSpecsGen({
     // were collected by recordPaths). Together these are the region's lib
     // additions, merged into the compile lib by the engine.
     for (const id of referencedPhysics) obstacleDefs[id] = BOUNCE_LIBRARY_OBSTACLES[id];
+    // Hard gate: the emitted obstacle paths must recompile to exactly the
+    // proven rule, and each physics obstacle must gate a necessary ability
+    // (verifyObstacles.js). A defect here means the obstacle encoding
+    // drifted from the verified geometry — fail loudly, never ship it.
+    verifyObstacleGating(goals, obstacleDefs);
     const payload = buildZonePayload(region_id, level, sidePortals, physicsProfile);
     if (Object.keys(gateRules.portals).length > 0
             || Object.keys(gateRules.pickups).length > 0) {
