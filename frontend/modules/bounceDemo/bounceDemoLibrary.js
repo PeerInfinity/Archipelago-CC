@@ -110,29 +110,63 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
                 + derived.defects.join('; '));
         }
 
+        // Emit each goal in BOTH the legacy rule form (exitRules /
+        // location.access_rule) and the shared paths-and-obstacles form
+        // (exitPaths / location.paths + obstacleDefs), mirroring
+        // generateZoneForSpecsGen — so the spiral path rides the obstacle
+        // emission too (Phase 4a). Fixtures carry no authored terms, so
+        // every path is physics-only.
+        const obstacleDefs = {};
+        const goals = [];
+        const referencedPhysics = new Set();
+        const recordPaths = (paths) => {
+            for (const p of paths) {
+                for (const o of p.obstacles) {
+                    if (BOUNCE_LIBRARY_OBSTACLES[o]) referencedPhysics.add(o);
+                }
+            }
+        };
+
         const locations = (level.pickups ?? []).map((pk) => {
             const item = zone.items[pk.id];
             if (!item) {
                 throw new Error(`bounce zone ${zoneIdx} (${level.id}): pickup '${pk.id}' `
                     + 'has no canonical item assignment');
             }
+            const sets = derived.pickups[pk.id].minimalSets;
+            const rule = minimalSetsToRule(sets);
+            const { paths } = emitObstaclePaths(sets, []);
+            recordPaths(paths);
+            goals.push({ kind: 'pickup', id: pk.id, minimalSets: sets, paths, rule });
             return {
                 id: pk.id,
                 item,
-                access_rule: minimalSetsToRule(derived.pickups[pk.id].minimalSets),
+                access_rule: rule,
+                paths,
                 position: null, // level-local px would be misread as tile coords
             };
         });
 
         const exitRules = {};
+        const exitPaths = {};
         for (const side of exitSides) {
             const portalId = sidePortals[side];
-            exitRules[side] = minimalSetsToRule(derived.exits[portalId].minimalSets);
+            const sets = derived.exits[portalId].minimalSets;
+            const rule = minimalSetsToRule(sets);
+            exitRules[side] = rule;
+            const { paths } = emitObstaclePaths(sets, []);
+            exitPaths[side] = paths;
+            recordPaths(paths);
+            goals.push({ kind: 'exit', id: portalId, minimalSets: sets, paths, rule });
         }
+        for (const id of referencedPhysics) obstacleDefs[id] = BOUNCE_LIBRARY_OBSTACLES[id];
+        verifyObstacleGating(goals, obstacleDefs);
 
         return {
             locations,
             exitRules,
+            exitPaths,
+            obstacleDefs,
             payload: buildZonePayload(region_id, level, sidePortals),
         };
     };

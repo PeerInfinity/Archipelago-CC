@@ -2043,22 +2043,26 @@ function assembleZoneRegion({
             isTeleporter: false,
         });
         exitsPlaced.push({ exit_id, side, tile_position: { x: tile.x, y: tile.y } });
+        // Phase 4a: prefer the substrate's obstacle paths (bounce); fall
+        // back to a verbatim access_rule for substrates not yet on the
+        // obstacle emission (jta), and to the always-open placeholder when
+        // neither is present.
+        const sidePaths = zoneRules?.exitPaths?.[side];
         const sideRule = zoneRules?.exitRules?.[side];
         extractedExits.push({
             id: exit_id,
             position: { x: tile.x, y: tile.y },
             target_region: null,
-            paths: [{ path_id: 'p1', obstacles: [] }],
-            // compileRegion's escape hatch: when present, used verbatim
-            // instead of the (always-open) path walk above.
-            ...(sideRule ? { access_rule: sideRule } : {}),
+            paths: sidePaths ?? [{ path_id: 'p1', obstacles: [] }],
+            ...(!sidePaths && sideRule ? { access_rule: sideRule } : {}),
         });
     }
     const extractedLocations = (zoneRules?.locations ?? []).map((loc) => ({
         id: loc.id,
         item: loc.item ?? null,
         position: loc.position ?? null,
-        access_rule: loc.access_rule,
+        paths: loc.paths ?? [{ path_id: 'p1', obstacles: [] }],
+        ...(!loc.paths && loc.access_rule ? { access_rule: loc.access_rule } : {}),
     }));
     return {
         substrate,
@@ -2069,6 +2073,10 @@ function assembleZoneRegion({
         // compileRegionGraph collapses every zone-based region onto
         // regions[undefined] and Menu's GameStart exit dangles.
         extracted_rules: { region_id, exits: extractedExits, locations: extractedLocations },
+        // Per-region obstacle lib additions (bounce's physics gaps). A
+        // region-level field — never reaches the serialized payload. {}
+        // for substrates that emit none.
+        obstacle_defs: zoneRules?.obstacleDefs ?? {},
         placed_items: [],
         placed_obstacles: [],
         exits_placed: exitsPlaced,
