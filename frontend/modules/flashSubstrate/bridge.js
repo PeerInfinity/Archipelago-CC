@@ -442,6 +442,14 @@ function _handleLoadRegion(payload) {
     // states for any rule-gated portals/pickups.
     _pollItemsIntoGame();
     _pushGateStates();
+    // STARTING items are applied to the worker at world load — BEFORE this
+    // iframe subscribed — so, unlike location-checked items, they fire no
+    // stateManager:snapshotUpdated this bridge can hear, and the cached
+    // snapshot the poll above read may predate them (the arrows would never
+    // unlock). Request a fresh, worker-pinged snapshot: its STATE_SNAPSHOT
+    // response fires snapshotUpdated, which re-polls items + gate states
+    // with the real inventory — the same proven path location checks use.
+    _client?.requestStateSnapshot?.();
     // A bot walkTo that outran this loadRegion resolves now.
     if (_pendingWalkTo && _applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
     log('debug', `loaded region ${regionId} (gameId=${world.gameId ?? '?'})`);
