@@ -2547,10 +2547,10 @@ export class ProcgenPipelineUI {
         };
         braidFields.appendChild(numberField('Braid width',
             'Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.',
-            'bounceBraidWidth', 240, { step: 10 }));
+            'bounceBraidWidth', 240));
         braidFields.appendChild(numberField('Max jitter',
             'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
-            'bounceJitter', 40, { step: 5 }));
+            'bounceJitter', 40));
         braidFields.appendChild(numberField('Colored chance',
             'Per-eligible-platform probability (0–1) of a colored platform: blue '
             + '(moving, 1-lane rows) or brown (breaking, terminal). 0 = all green. Capped '
