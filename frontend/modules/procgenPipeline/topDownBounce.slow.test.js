@@ -79,6 +79,149 @@ function mixedSource() {
     };
 }
 
+// A bounce Hub with FOUR trivial forward exits. A bounce region hosts at
+// most one arrowless ("column top") exit, so realising this without help
+// throws "at most one arrowless-gated exit". The fix: the caller marks the
+// substrate's drift arrows as FREE (granted as starting items), and the
+// zone realiser puts the surplus exits on those free arrow drifts.
+function fourExitBounceSource() {
+    const leaf = (name) => ({
+        name,
+        exits: [],
+        locations: [{ name: `${name} Loc`, item: { name: `${name} Item` }, access_rule: { rule: 'True_' } }],
+    });
+    return {
+        start_regions: { '1': { default: ['Menu'] } },
+        assume_bidirectional_exits: true,
+        regions: {
+            '1': {
+                Menu: {
+                    name: 'Menu',
+                    exits: [{ name: 'GameStart', connected_region: 'Hub', access_rule: { rule: 'True_' } }],
+                    locations: [],
+                },
+                Hub: {
+                    name: 'Hub',
+                    exits: [
+                        { name: 'toN', connected_region: 'RoomN', access_rule: { rule: 'True_' } },
+                        { name: 'toE', connected_region: 'RoomE', access_rule: { rule: 'True_' } },
+                        { name: 'toW', connected_region: 'RoomW', access_rule: { rule: 'True_' } },
+                        { name: 'toS', connected_region: 'RoomS', access_rule: { rule: 'True_' } },
+                    ],
+                    locations: [],
+                },
+                RoomN: leaf('RoomN'),
+                RoomE: leaf('RoomE'),
+                RoomW: leaf('RoomW'),
+                RoomS: leaf('RoomS'),
+            },
+        },
+    };
+}
+
+describe('top-down — bounce region with surplus arrowless exits (free-arrow drifts)', () => {
+    const OPTS = {
+        gridDims: { width: 6, height: 6 },
+        seed: 1,
+        substrateByRegion: {
+            Hub: 'bounce', RoomN: 'maze', RoomE: 'maze', RoomW: 'maze', RoomS: 'maze',
+        },
+    };
+
+    it('throws without free drift items (a bounce region hosts one arrowless exit)', () => {
+        expect(() => topDownFromRulesJson(fourExitBounceSource(), OPTS))
+            .toThrow(/at most one arrowless/);
+    });
+
+    it('realises four trivial bounce exits when the drift arrows are free', () => {
+        const source = fourExitBounceSource();
+        const { grid, startCell } = topDownFromRulesJson(source, {
+            ...OPTS,
+            freeItems: ['Left arrow', 'Right arrow'],
+        });
+        const out = buildRulesJson(grid, { startCell });
+
+        // The Hub realised as bounce with all four forward exits present.
+        const hub = out.regions['1'].Hub;
+        expect(out.preset_sidecars['1'].Hub.substrate).toBe('bounce');
+        for (const name of ['toN', 'toE', 'toW', 'toS']) {
+            expect(hub.exits.map((e) => e.name)).toContain(name);
+        }
+
+        // The free arrow rode only the physics geometry: every forward
+        // exit's emitted LOGIC stays the trivial source rule (compileRegion
+        // prefers the source access_rule over the synthesised drift paths).
+        for (const name of ['toN', 'toE', 'toW', 'toS']) {
+            const exit = hub.exits.find((e) => e.name === name);
+            expect(exit.access_rule).toEqual({ rule: 'True_' });
+        }
+
+        // Logic unchanged end-to-end: the realised world reproduces the
+        // source's item spheres (no arrow gate leaked into reachability).
+        expect(computeItemSpheres(out)).toEqual(computeItemSpheres(source));
+    });
+
+    it('drifts surplus exits whose gate is a non-substrate authored lock', () => {
+        // The Adventure shape: each Hub exit is gated on a plain item (a
+        // key, NOT a bounce ability, and NOT free). Its PHYSICS core is
+        // empty — the gate realises as an authored lock with no geometry —
+        // so the exit drifts freely on a free arrow even though the gate
+        // item itself isn't free. This is the case a naive "requirement
+        // covered by free items" rule would wrongly reject.
+        const dirs = ['N', 'E', 'W', 'S'];
+        const source = {
+            start_regions: { '1': { default: ['Menu'] } },
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: {
+                        name: 'Menu',
+                        exits: [{ name: 'GameStart', connected_region: 'Hub', access_rule: { rule: 'True_' } }],
+                        locations: [],
+                    },
+                    Hub: {
+                        name: 'Hub',
+                        exits: dirs.map((d) => ({
+                            name: `to${d}`,
+                            connected_region: `Room${d}`,
+                            access_rule: { rule: 'Has', args: { item_name: `Relic ${d}` } },
+                        })),
+                        // The gate items live in the Hub, so they're not free
+                        // starting items — yet the exits must still drift.
+                        locations: dirs.map((d) => ({
+                            name: `Relic ${d} Loc`, item: { name: `Relic ${d}` }, access_rule: { rule: 'True_' },
+                        })),
+                    },
+                    ...Object.fromEntries(dirs.map((d) => [`Room${d}`, {
+                        name: `Room${d}`,
+                        exits: [],
+                        locations: [{ name: `${d} Goal`, item: { name: `${d} Item` }, access_rule: { rule: 'True_' } }],
+                    }])),
+                },
+            },
+        };
+        const { grid, startCell } = topDownFromRulesJson(source, {
+            ...OPTS,
+            substrateByRegion: {
+                Hub: 'bounce', RoomN: 'maze', RoomE: 'maze', RoomW: 'maze', RoomS: 'maze',
+            },
+            freeItems: ['Left arrow', 'Right arrow'],
+        });
+        const out = buildRulesJson(grid, { startCell });
+
+        // Each forward exit keeps its authored key gate verbatim — the
+        // free arrow rode only the geometry, never the emitted logic.
+        const hub = out.regions['1'].Hub;
+        for (const d of dirs) {
+            const exit = hub.exits.find((e) => e.name === `to${d}`);
+            expect(exit.access_rule).toEqual({ rule: 'Has', args: { item_name: `Relic ${d}` } });
+        }
+        // The key→room gating still holds: each room item sits one sphere
+        // behind its key, exactly as in the source.
+        expect(computeItemSpheres(out)).toEqual(computeItemSpheres(source));
+    });
+});
+
 describe('top-down — mixed maze + bounce (unified generateRegion contract)', () => {
     const OPTS = {
         gridDims: { width: 5, height: 5 },

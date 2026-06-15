@@ -2151,20 +2151,62 @@ export class ProcgenPipelineUI {
     _runTopDown() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
         const mix = this._effectiveSubstrateMix();
+
+        // Top-down realises an EXISTING world, whose exits carry none of a
+        // zone substrate's ability items (bounce arrows etc.). A bounce
+        // region is only traversable beyond its forced column with an
+        // arrow, so when a substrate that declares libraryItems is in the
+        // mix, grant every one of its ability items the source doesn't
+        // already carry as a STARTING ITEM. The items being free keeps the
+        // source logic intact while letting the zone realiser put surplus
+        // exits on free arrow drifts (see generateRegionZoneGen). Victory
+        // items are never granted (they would auto-complete the seed).
+        const sourceStarting = this.topDownSource?.starting_items?.['1'] ?? [];
+        const sourceItemDefs = this.topDownSource?.items?.['1'] ?? {};
+        const grantedItems = [];
+        for (const [id, weight] of Object.entries(mix ?? {})) {
+            if (!(Number(weight) > 0)) continue;
+            const lib = substrateRegistry.get(id)?.libraryItems;
+            if (!lib) continue;
+            for (const [name, def] of Object.entries(lib)) {
+                if (def?.is_victory) continue;
+                if (sourceItemDefs[name] != null) continue;
+                if (sourceStarting.includes(name) || grantedItems.includes(name)) continue;
+                grantedItems.push(name);
+            }
+        }
+        const startingItems = [...sourceStarting, ...grantedItems];
+
         const { grid, stats, startCell } = topDownFromRulesJson(this.topDownSource, {
             gridDims: { width: gridWidth, height: gridHeight },
             regionSizeBase: { width: regionWidth, height: regionHeight },
             seed,
             ...(mix ? { substrateMix: mix } : {}),
             hazardOpts: this._effectiveHazardOpts(),
+            // The full starting inventory is free at generation time: the
+            // zone realiser may attach any of these items to a surplus
+            // exit's physics requirement without changing the logic.
+            freeItems: startingItems,
         });
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,
             regionXpEffect: this.params.regionXpEffect ?? 'cost',
             assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
-            startingItems: this.topDownSource?.starting_items?.['1'] ?? [],
-            sourceItems: this.topDownSource?.items?.['1'] ?? null,
+            startingItems,
+            // Source defs backfill the source's own starting items; the
+            // granted ability items aren't placed anywhere, so synthesise
+            // defs (ids 999↓ stay clear of the compiled pool's upward
+            // numbering from ITEM_ID_BASE).
+            sourceItems: {
+                ...sourceItemDefs,
+                ...Object.fromEntries(grantedItems.map((name, i) => [name, {
+                    name,
+                    id: 999 - i,
+                    classification: 'progression',
+                    groups: ['Everything'],
+                }])),
+            },
             procgenMetadata: {
                 driver: 'top-down',
                 source_game: this.topDownSource?.game_name ?? null,

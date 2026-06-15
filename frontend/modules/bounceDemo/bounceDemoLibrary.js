@@ -631,6 +631,12 @@ export function createBounceSubstrateEntry({
         generateZoneForSpecsGen,
         gateableItems: null,
         canHostExitGates,
+        // Items a layout driver may attach to a surplus arrowless exit as
+        // an off-column DRIFT so the level realiser can place it (a zone
+        // hosts at most one arrowless "column top" exit). The driver only
+        // does this when the item is free (granted as a starting item), so
+        // the realised logic is unchanged — see generateRegionZoneGen.
+        driftItems: [ABILITY_ITEM_NAMES.left, ABILITY_ITEM_NAMES.right],
         libraryItems: BOUNCE_LIBRARY_ITEMS,
         // Physics obstacle vocabulary (obstacles-along-paths refactor,
         // Phase 1). Merged with DEFAULT_OBSTACLES by the consumer, like

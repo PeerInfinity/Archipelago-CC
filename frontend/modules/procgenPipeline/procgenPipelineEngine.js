@@ -1204,6 +1204,12 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // Same shape as growMaze's hazardOpts; see applyHazardModule.
         // null disables.
         hazardOpts = null,
+        // Item names the player holds for free at game start (source
+        // starting_items plus any substrate ability items the UI granted —
+        // e.g. bounce arrows). A zone substrate may attach these to a
+        // surplus exit's physics requirement without changing the realised
+        // logic (see generateRegionZoneGen's drift handling).
+        freeItems = null,
     } = opts;
 
     const rng = createRng(seed);
@@ -1442,6 +1448,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             hazardOpts,
             useSourceLocationName: true,
             stampEntrance: true,
+            freeItems,
         });
 
         for (const placed of region.exits_placed) {
@@ -2266,6 +2273,56 @@ function* generateRegionZoneGen(spec) {
         : extractItemRequirementFromRule(g?.access_rule));
 
     const exitSpecs = exitsResolved.map((e) => ({ side: e.side, ...requirementOf(e) }));
+
+    // Free-item arrow drifts (top-down). A bounce-style zone hosts at most
+    // one arrowless ("column top") exit; the rest must drift off-column on
+    // a directional item the adapter declares (driftItems). Top-down
+    // realises an existing world whose exits carry no such items, so a
+    // multi-exit region hands the realiser several arrowless exits and
+    // throws. When the caller marks those drift items as FREE (granted as
+    // starting items — see the top-down UI), attach one to the PHYSICS
+    // requirement of each surplus exit that can take it.
+    //
+    // An exit only needs the forced column when its PHYSICS CORE is
+    // non-empty — i.e. it carries a non-arrow item the substrate realises
+    // as geometry (adapter.libraryItems, minus victory). A source gate on a
+    // non-substrate item (Adventure keys etc.) is an authored lock with NO
+    // geometry, so its physics core is empty and it drifts freely; the lock
+    // (and the gate it enforces) rides along untouched. The exit keeps its
+    // source access_rule, which compileRegion prefers over the synthesised
+    // obstacle paths, so the realised LOGIC is unchanged — only the geometry
+    // gains a drift the player can always pay. Scoped to exits carrying a
+    // source access_rule so it never perturbs sphere-growth (which composes
+    // its own gates and passes no freeItems).
+    const driftItems = adapter.driftItems ?? [];
+    const freeDrifts = driftItems.filter((d) => (spec.freeItems ?? []).includes(d));
+    if (freeDrifts.length > 0) {
+        const geometryItems = new Set(Object.entries(adapter.libraryItems ?? {})
+            .filter(([, def]) => !def?.is_victory).map(([name]) => name));
+        const isDrift = (it) => driftItems.includes(it);
+        const physicsCore = (req) => req.filter((it) => geometryItems.has(it) && !isDrift(it));
+        const arrowless = exitSpecs
+            .map((s, i) => ({ s, override: !!exitsResolved[i].access_rule }))
+            .filter(({ s }) => !s.requirement.some(isDrift));
+        if (arrowless.length > 1) {
+            // Driftable = empty physics core AND a source-rule override (so
+            // the free arrow rides only geometry, never the emitted logic).
+            const driftable = arrowless.filter(({ s, override }) =>
+                override && physicsCore(s.requirement).length === 0);
+            // Keep one arrowless exit as the column top. A non-driftable
+            // arrowless exit (a real physics gate) is the natural top, so
+            // drift ALL driftable exits; otherwise keep the first driftable
+            // one arrowless and drift the rest. (Two non-driftable arrowless
+            // exits = two distinct physics column tops, an irreducible
+            // geometry conflict the realiser still rejects.)
+            const hasNonDriftableTop = arrowless.length > driftable.length;
+            const toDrift = hasNonDriftableTop ? driftable : driftable.slice(1);
+            toDrift.forEach(({ s }, k) => {
+                s.requirement = [...s.requirement, freeDrifts[k % freeDrifts.length]];
+            });
+        }
+    }
+
     // The entrance side rides the generator (NOT the forward-exit
     // scaffolding) as the guaranteed back-portal, gated on the region's
     // entry gate — but only when the caller supplied one (sphere). For
