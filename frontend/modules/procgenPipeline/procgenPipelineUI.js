@@ -200,6 +200,9 @@ const DEFAULT_PARAMS = {
     bounceBraidWidth: 240,
     // Braid per-row jitter (px): horizontal meander applied to each row.
     bounceJitter: 40,
+    // Braid colored-platform chance (0–1): per-eligible-platform probability
+    // of a blue (moving, 1-lane) or brown (breaking, terminal) platform.
+    bounceColorChance: 0.3,
 };
 
 const BOUNCE_FALL_OPTIONS = [
@@ -2208,6 +2211,7 @@ export class ProcgenPipelineUI {
                     bounceMode: 'braid',
                     braidWidth: this.params.bounceBraidWidth ?? 240,
                     bounceJitter: this.params.bounceJitter ?? 40,
+                    bounceColorChance: this.params.bounceColorChance ?? 0,
                 } : {}),
             },
         });
@@ -2543,6 +2547,11 @@ export class ProcgenPipelineUI {
         braidFields.appendChild(numberField('Max jitter',
             'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
             'bounceJitter', 40));
+        braidFields.appendChild(numberField('Colored chance',
+            'Per-eligible-platform probability (0–1) of a colored platform: blue '
+            + '(moving, 1-lane rows) or brown (breaking, terminal). 0 = all green. Capped '
+            + 'per level so the reachability check stays fast.',
+            'bounceColorChance', 0.3));
         braidFields.style.display = (this.params.bounceLayout === 'braid') ? '' : 'none';
         layoutSelect.addEventListener('change', () => {
             this.params.bounceLayout = layoutSelect.value;

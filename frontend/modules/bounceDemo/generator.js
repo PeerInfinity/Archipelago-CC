@@ -39,6 +39,7 @@
 import { createRng } from '../shared/rng.js';
 import { DEFAULTS, PROFILES, launchRise, step } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
+import { buildPlatformGraph, reachablePlatforms } from './canJump.js';
 import { validateLevel } from './level.js';
 import {
     ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, BOUNCE_OBSTACLE_ID_BY_ABILITY,
@@ -978,7 +979,7 @@ function wrapMid(a, b, W) {
 // Build a 2-wide braid level. Goals are { id, req, direction }. `req` is
 // only consulted for the reachability budget (Regime 1 = {left,right});
 // placement ignores it. width defaults to the profile's fixed width.
-function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width }) {
+function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, colorChance = 0 }) {
     const PLAIN_DY = G.PLAIN_DY;
     const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
     const reach = oneHopReach(C, PLAIN_DY);
@@ -1000,6 +1001,27 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
         const p = { id: `b${nid++}`, x: wrap(x), y, type };
         platforms.push(p);
         return p;
+    };
+    // Colored-platform helpers (Regime 1: blue/brown abilities are free, so
+    // these change FEEL not logic; the verifier confirms the climb survives).
+    //  - BLUE: only on 1-lane rows — under dj it sweeps the FULL width, so it
+    //    can't share a row with a second lane. Rise clears a plain step.
+    //  - BROWN: only terminal — it breaks on landing and its weak bounce can't
+    //    clear a plain step, so it's used where you don't climb on from it: one
+    //    branch of an about-to-merge pair (the OTHER, green branch reaches the
+    //    merge), or a top-row branch (you bounce over the top → entrance loop).
+    // The reachability solver branches per colored platform (moving-blue phase
+    // enumeration, breaking-brown broken-state search), so cost is exponential
+    // in colored COUNT — cap each kind to keep even the single full-ability
+    // query fast.
+    let blueCount = 0, brownCount = 0;
+    const BLUE_CAP = 2, BROWN_CAP = 4;
+    const maybeBlue = (p) => {
+        if (blueCount < BLUE_CAP && rng.next() < colorChance) { p.type = 'blue'; blueCount += 1; }
+        return p;
+    };
+    const maybeBrown = (p) => {
+        if (brownCount < BROWN_CAP && rng.next() < colorChance) { p.type = 'brown'; brownCount += 1; }
     };
     const pendingExits = [...exits];
     const pendingPickups = [...pickups];
@@ -1043,7 +1065,7 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
             if (doFork) {
                 fork(lanes[0], pendingExits.length ? pendingExits.shift() : null);
             } else {
-                const np = place(lanes[0].x + jit(), y);
+                const np = maybeBlue(place(lanes[0].x + jit(), y)); // 1-lane → blue-eligible
                 lanes = [np];
                 placePickup(np);
             }
@@ -1053,7 +1075,10 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
             // next 1-lane fork.
             const doMerge = pendingExits.length ? true : rng.next() < 0.5;
             if (doMerge) {
-                const m = place(wrapMid(lanes[0].x, lanes[1].x, W), y);
+                // One about-to-merge branch may BREAK (brown): the merge is
+                // reached from the OTHER (green) branch, so traversal survives.
+                maybeBrown(lanes[Math.floor(rng.next() * 2)]);
+                const m = maybeBlue(place(wrapMid(lanes[0].x, lanes[1].x, W), y)); // merge is 1-lane → blue-eligible
                 lanes = [m];
                 placePickup(m);
             } else {
@@ -1072,27 +1097,57 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
     // portal-free. So even at the top there's always a branch with no portal;
     // bouncing over it loops the player to the entrance (gameCore's
     // over-the-top return, which needs no portal-lock check thanks to this).
-    if (lanes.length === 2) { y -= PLAIN_DY; lanes = [place(wrapMid(lanes[0].x, lanes[1].x, W), y)]; }
+    if (lanes.length === 2) {
+        y -= PLAIN_DY;
+        maybeBrown(lanes[Math.floor(rng.next() * 2)]);
+        lanes = [maybeBlue(place(wrapMid(lanes[0].x, lanes[1].x, W), y))];
+    }
     y -= PLAIN_DY;
     fork(lanes[0], capExit);
+    // Top-row branches are terminal (you bounce over the top → entrance loop),
+    // so either may BREAK (brown) — brown's weak bounce still clears the row.
+    for (const lane of lanes) maybeBrown(lane);
 
     let minY = 0;
     for (const p of platforms) minY = Math.min(minY, p.y);
     const shiftY = 60 - minY; // entrance to the bottom; x already absolute in [0,W)
     for (const arr of [platforms, portals, pickupEntities]) for (const e of arr) e.y += shiftY;
+    // Moving-blue sweeps run the full level width (dj). In level coords, so
+    // assigned after the y-shift; static-blue profiles (classic) leave them be.
+    if (C.PLATFORM_BEHAVIORS?.blue === 'moving') {
+        for (const p of platforms) {
+            if (p.type !== 'blue') continue;
+            p.sweep = { min: BLUE_SWEEP_EDGE_MARGIN, max: W - BLUE_SWEEP_EDGE_MARGIN };
+        }
+    }
     return {
         id, size: { width: W, height: shiftY + 100 },
         platforms, springs: [], jetpacks: [], pickups: pickupEntities, portals,
     };
 }
 
+// All bounce abilities, set true — the Regime-1 "free" inventory.
+const ALL_FREE_ABILITIES = Object.freeze({
+    left: true, right: true, springs: true, jetpacks: true, blue: true, brown: true,
+});
+
 // Generate-and-test wrapper for the braid (Regime 1). Light goal
 // normalization (ids + ability-validated reqs, none of the column's
-// arrowless/nesting structural checks), then verify by REACHABILITY: every
-// goal reachable using only free abilities. Mirrors generateLevelFromSpecsGen's
-// attempt loop + progress events.
+// arrowless/nesting structural checks), then verify by REACHABILITY.
+//
+// In Regime 1 every ability is a free starting item, so the only question is
+// "is each goal reachable when the player holds EVERYTHING?" — a SINGLE
+// reachability query, not the full per-subset minimal-set table that
+// deriveAccessRules computes. That table is ~2^|abilities| times more work,
+// and with colored platforms (moving-blue phase enumeration, breaking-brown
+// branching) the subset tax makes it explode (tens of seconds). The single
+// query keeps it tractable. The emitted rules are TRIVIAL ([[]] = free): for
+// top-down the engine overrides each exit/location rule with the SOURCE rule
+// anyway, and authored locks (keys) still ride gate_rules from e.authored —
+// so the trivial derived is sound and verifyObstacleGating passes (no physics
+// obstacles to check).
 function* generateBraidFromSpecsGen({
-    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, C, G,
+    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, colorChance = 0, C, G,
 }) {
     const seen = new Set();
     const norm = (s, what) => {
@@ -1104,26 +1159,28 @@ function* generateBraidFromSpecsGen({
     const exits = exitSpecs.map((s) => norm(s, 'exit'));
     if (!exits.length) throw new Error('braid: at least one exit spec required');
     const pickups = (pickupSpecs ?? []).map((s) => norm(s, 'pickup'));
-    const FREE = new Set(['left', 'right']); // Regime 1: arrows are free; reachability is the only gate
-    const reachableViaFree = (d) => Array.isArray(d?.minimalSets) && d.minimalSets.length > 0
-        && d.minimalSets.some((set) => set.every((a) => FREE.has(a)));
+    const trivial = (goals) => Object.fromEntries(goals.map((g) => [g.id, { minimalSets: [[]] }]));
 
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
         yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         let level;
-        try { level = proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter, width: braidWidth }); }
+        try { level = proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter, width: braidWidth, colorChance }); }
         catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
         const modelErrors = validateLevel(level);
         if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
-        const derived = deriveAccessRules(level, { constants: C });
-        if (derived.defects.length > 0) { rejected.push(`attempt ${attempt}: ${derived.defects[0]}`); continue; }
-        const bad = [];
-        for (const e of exits) if (!reachableViaFree(derived.exits[e.id])) bad.push(`exit '${e.id}' not free-reachable`);
-        for (const pk of pickups) if (!reachableViaFree(derived.pickups[pk.id])) bad.push(`pickup '${pk.id}' not free-reachable`);
-        if (bad.length === 0) return { level, derived };
-        rejected.push(`attempt ${attempt}: ${bad[0]}`);
+        // Single full-ability reachability: every portal/pickup host reachable
+        // from the entrance when the player holds all free abilities.
+        const reach = reachablePlatforms(buildPlatformGraph(level, ALL_FREE_ABILITIES, { constants: C }));
+        const bad = [
+            ...(level.portals ?? []).filter((pt) => !reach.has(pt.on)).map((pt) => `exit '${pt.id}'`),
+            ...(level.pickups ?? []).filter((pk) => !reach.has(pk.on)).map((pk) => `pickup '${pk.id}'`),
+        ];
+        if (bad.length === 0) {
+            return { level, derived: { exits: trivial(exits), pickups: trivial(pickups) } };
+        }
+        rejected.push(`attempt ${attempt}: ${bad[0]} unreachable`);
     }
     throw new Error(`braid('${id}'): no valid proposal in ${attempts} attempts: ${rejected.join('; ')}`);
 }
@@ -1169,14 +1226,16 @@ export function* generateLevelFromSpecsGen({
     physics = 'classic',
     // 'column' (default) = the fixed-column proposer. 'braid' = the 2-wide
     // braid for Regime-1 (free-arrow) top-down regions; braidWidth overrides
-    // the level width (defaults to the profile's fixed width).
+    // the level width (defaults to the profile's fixed width). colorChance is
+    // the per-eligible-platform probability of a colored (blue/brown) platform.
     mode = 'column',
     braidWidth,
+    colorChance = 0,
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
     if (mode === 'braid') {
         return yield* generateBraidFromSpecsGen({
-            id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, C, G,
+            id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, colorChance, C, G,
         });
     }
     const colorHost = colorHostMode(C);
