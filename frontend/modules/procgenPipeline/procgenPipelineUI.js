@@ -2521,7 +2521,7 @@ export class ProcgenPipelineUI {
 
         // Braid-only sub-fields: width + per-row jitter. Shown when braid.
         const braidFields = document.createElement('div');
-        const numberField = (labelText, title, key, def) => {
+        const numberField = (labelText, title, key, def, { step = 1, max = null } = {}) => {
             const r = document.createElement('div');
             r.className = 'procgen-pipeline-field';
             const l = document.createElement('label');
@@ -2530,11 +2530,15 @@ export class ProcgenPipelineUI {
             const input = document.createElement('input');
             input.type = 'number';
             input.min = '0';
+            input.step = String(step); // without this the browser rejects non-integers
+            if (max != null) input.max = String(max);
             input.value = String(this.params[key] ?? def);
             input.addEventListener('change', () => {
-                const v = Number(input.value);
-                this.params[key] = Number.isFinite(v) && v >= 0 ? v : def;
-                input.value = String(this.params[key]);
+                let v = Number(input.value);
+                if (!Number.isFinite(v) || v < 0) v = def;
+                if (max != null) v = Math.min(v, max);
+                this.params[key] = v;
+                input.value = String(v);
                 this._saveToLocalStorage();
             });
             r.appendChild(l);
@@ -2543,15 +2547,15 @@ export class ProcgenPipelineUI {
         };
         braidFields.appendChild(numberField('Braid width',
             'Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.',
-            'bounceBraidWidth', 240));
+            'bounceBraidWidth', 240, { step: 10 }));
         braidFields.appendChild(numberField('Max jitter',
             'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
-            'bounceJitter', 40));
+            'bounceJitter', 40, { step: 5 }));
         braidFields.appendChild(numberField('Colored chance',
             'Per-eligible-platform probability (0–1) of a colored platform: blue '
             + '(moving, 1-lane rows) or brown (breaking, terminal). 0 = all green. Capped '
             + 'per level so the reachability check stays fast.',
-            'bounceColorChance', 0.3));
+            'bounceColorChance', 0.3, { step: 0.05, max: 1 }));
         braidFields.style.display = (this.params.bounceLayout === 'braid') ? '' : 'none';
         layoutSelect.addEventListener('change', () => {
             this.params.bounceLayout = layoutSelect.value;
