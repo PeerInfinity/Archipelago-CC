@@ -37,7 +37,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { DEFAULTS, PROFILES, launchRise } from './physics.js';
+import { DEFAULTS, PROFILES, launchRise, step } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
 import {
@@ -913,6 +913,204 @@ function proposeLevelFromSpecs({
     };
 }
 
+// ── 2-wide braid generator (Regime 1: arrows free) ───────────────────
+//
+// An alternative to the fixed-column proposer for top-down regions where
+// the player holds both arrows for free. There is no no-arrows spine to
+// anchor and no single-arrow gate soundness to protect, so the geometry
+// only has to be TRAVERSABLE: every goal reachable with {left,right}. That
+// frees the level from the column's symmetric width-fit wall — the braid
+// lives directly on the [0,width) wrap ring, so it fits narrow widths
+// (≥ ~2·catchSpan) that the column model can't.
+//
+// Structure: a vertical state machine over 1–2 active lanes. A 1-lane row
+// either continues (meander) or forks into two distinct branches (pitch
+// ≥ catchSpan, both within one hop of the parent). A 2-lane row either
+// continues (rigid shift, preserving the pitch) or merges back to one. At
+// most two lanes are ever active (the width budget; see the packing math).
+// Portals ride fork branches or the single-lane capstone; pickups go
+// anywhere. (Colored-platform rules, for when this grows past green:
+// blue only on 1-lane rows — it sweeps the full width; brown only on
+// 2-lane rows about to merge or the top row — it breaks on landing.)
+
+// Cached one-hop horizontal reach: max px a held arrow drifts the player
+// while ascending one PLAIN_DY level (landing is descent-only, so this is
+// the travel at the descent-crossing of the level above). Measured with
+// the real step(), like launchRise.
+const _braidReachCache = new Map();
+function oneHopReach(C, PLAIN_DY) {
+    const byDy = _braidReachCache.get(C) ?? {};
+    if (byDy[PLAIN_DY] !== undefined) return byDy[PLAIN_DY];
+    const W = 1e9, Y0 = 1e6;
+    const level = {
+        id: '_reach', size: { width: W, height: Y0 + 1e6 },
+        platforms: [{ id: 'p', x: W / 2, y: Y0, type: 'green' }],
+        springs: [], jetpacks: [], pickups: [], portals: [],
+    };
+    const ab = { left: true, right: true };
+    let s = {
+        x: W / 2, y: Y0 - 2, vx: 0, vy: 1, fallen: false,
+        landedOn: null, launch: null, t: 0, broken: [], latched: null, jetpackTicks: 0,
+    };
+    let launchX = null, launchY = null, launched = false, roseAbove = false;
+    let reach = PLAIN_DY;
+    for (let i = 0; i < 5000; i++) {
+        s = step(s, { right: true }, level, ab, C);
+        if (!launched && s.landedOn === 'p') { launched = true; launchX = s.x; launchY = s.y; continue; }
+        if (launched) {
+            if (s.y < launchY - PLAIN_DY) roseAbove = true;
+            if (roseAbove && s.vy > 0 && s.y >= launchY - PLAIN_DY) { reach = Math.abs(s.x - launchX); break; }
+        }
+    }
+    byDy[PLAIN_DY] = reach;
+    _braidReachCache.set(C, byDy);
+    return reach;
+}
+
+// Short-arc midpoint of two x positions on a width-W wrap ring — within
+// reach of both when they're ≤ 2·reach apart on the short arc.
+function wrapMid(a, b, W) {
+    let d = (((b - a) % W) + W) % W;
+    if (d > W - d) d -= W;
+    return (((a + d / 2) % W) + W) % W;
+}
+
+// Build a 2-wide braid level. Goals are { id, req, direction }. `req` is
+// only consulted for the reachability budget (Regime 1 = {left,right});
+// placement ignores it. width defaults to the profile's fixed width.
+function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width }) {
+    const PLAIN_DY = G.PLAIN_DY;
+    const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
+    const reach = oneHopReach(C, PLAIN_DY);
+    const catchSpan = C.PLATFORM_WIDTH + 2 * C.PLAYER_HALF_WIDTH;
+    // Fork branches at parent ± forkHalf: pitch 2·forkHalf must exceed the
+    // catch span (distinct branches) and each branch stay within one hop.
+    const forkHalf = Math.min(reach * 0.85, catchSpan / 2 + 8);
+    if (2 * forkHalf <= catchSpan || forkHalf > reach) {
+        throw new Error(`braid: width ${W} cannot host two distinct branches `
+            + `(forkHalf ${Math.round(forkHalf)}, catchSpan ${catchSpan}, reach ${Math.round(reach)})`);
+    }
+    const maxStep = Math.min(jitter || 0, reach * 0.85);
+    const wrap = (x) => (((x % W) + W) % W);
+    const jit = () => (maxStep ? (rng.next() * 2 - 1) * maxStep : 0);
+
+    let nid = 0;
+    const platforms = [], portals = [], pickupEntities = [];
+    const place = (x, y, type = 'green') => {
+        const p = { id: `b${nid++}`, x: wrap(x), y, type };
+        platforms.push(p);
+        return p;
+    };
+    const pendingExits = [...exits];
+    const pendingPickups = [...pickups];
+    const capExit = pendingExits.pop(); // reserved for the single-lane capstone
+    const placePickup = (p) => {
+        if (!pendingPickups.length) return;
+        const pk = pendingPickups.shift();
+        pickupEntities.push({ id: pk.id, x: p.x, y: p.y - 20, on: p.id });
+    };
+    const placeExit = (p, e) => portals.push({
+        id: e.id, x: p.x, y: p.y - 20, on: p.id, target_region: null, direction: e.direction ?? 'up',
+    });
+    // A branch platform hosts a pending exit (portals live on forks) else a pickup.
+    const fillBranch = (p) => { if (pendingExits.length) placeExit(p, pendingExits.shift()); else placePickup(p); };
+
+    let y = 0;
+    let lanes = [place(W / 2, 0)]; // row 0 = entrance, single lane at spawn x
+    let guard = 0;
+    while ((pendingExits.length || pendingPickups.length) && guard++ < 300) {
+        y -= PLAIN_DY;
+        if (lanes.length === 1) {
+            const parent = lanes[0];
+            // continue-1 vs fork-1→2: ~even, but force a fork while exits await
+            // (portals must ride forks or the capstone).
+            const doFork = pendingExits.length ? true : rng.next() < 0.5;
+            if (doFork) {
+                const L = place(parent.x - forkHalf, y);
+                const R = place(parent.x + forkHalf, y);
+                lanes = [L, R];
+                fillBranch(L); fillBranch(R);
+            } else {
+                const np = place(parent.x + jit(), y);
+                lanes = [np];
+                placePickup(np);
+            }
+        } else {
+            // continue-2 vs merge-2→1: ~even, but stay forked while exits await.
+            const doMerge = pendingExits.length ? false : rng.next() < 0.5;
+            if (doMerge) {
+                const m = place(wrapMid(lanes[0].x, lanes[1].x, W), y);
+                lanes = [m];
+                placePickup(m);
+            } else {
+                const d = jit();
+                const L = place(lanes[0].x + d, y); // rigid shift keeps the pair ≥ catchSpan apart
+                const R = place(lanes[1].x + d, y);
+                lanes = [L, R];
+                fillBranch(L); fillBranch(R);
+            }
+        }
+    }
+    if (pendingExits.length || pendingPickups.length) {
+        throw new Error(`braid: ${pendingExits.length} exits + ${pendingPickups.length} pickups unplaced`);
+    }
+    // Capstone: merge to one lane if needed, then a top platform with the reserved exit.
+    if (lanes.length === 2) { y -= PLAIN_DY; lanes = [place(wrapMid(lanes[0].x, lanes[1].x, W), y)]; }
+    y -= PLAIN_DY;
+    placeExit(place(lanes[0].x, y), capExit);
+
+    let minY = 0;
+    for (const p of platforms) minY = Math.min(minY, p.y);
+    const shiftY = 60 - minY; // entrance to the bottom; x already absolute in [0,W)
+    for (const arr of [platforms, portals, pickupEntities]) for (const e of arr) e.y += shiftY;
+    return {
+        id, size: { width: W, height: shiftY + 100 },
+        platforms, springs: [], jetpacks: [], pickups: pickupEntities, portals,
+    };
+}
+
+// Generate-and-test wrapper for the braid (Regime 1). Light goal
+// normalization (ids + ability-validated reqs, none of the column's
+// arrowless/nesting structural checks), then verify by REACHABILITY: every
+// goal reachable using only free abilities. Mirrors generateLevelFromSpecsGen's
+// attempt loop + progress events.
+function* generateBraidFromSpecsGen({
+    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, C, G,
+}) {
+    const seen = new Set();
+    const norm = (s, what) => {
+        if (!s.id) throw new Error(`braid: ${what} without id`);
+        if (seen.has(s.id)) throw new Error(`braid: duplicate goal id '${s.id}'`);
+        seen.add(s.id);
+        return { id: s.id, req: normalizeRequirement(s.requirement, `${what} '${s.id}'`), direction: s.direction ?? null };
+    };
+    const exits = exitSpecs.map((s) => norm(s, 'exit'));
+    if (!exits.length) throw new Error('braid: at least one exit spec required');
+    const pickups = (pickupSpecs ?? []).map((s) => norm(s, 'pickup'));
+    const FREE = new Set(['left', 'right']); // Regime 1: arrows are free; reachability is the only gate
+    const reachableViaFree = (d) => Array.isArray(d?.minimalSets) && d.minimalSets.length > 0
+        && d.minimalSets.some((set) => set.every((a) => FREE.has(a)));
+
+    const rejected = [];
+    for (let attempt = 0; attempt < attempts; attempt++) {
+        yield { type: 'attempt', attempt: attempt + 1, attempts };
+        const rng = createRng((seed * 8191 + attempt * 127) | 0);
+        let level;
+        try { level = proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter, width: braidWidth }); }
+        catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
+        const modelErrors = validateLevel(level);
+        if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
+        const derived = deriveAccessRules(level, { constants: C });
+        if (derived.defects.length > 0) { rejected.push(`attempt ${attempt}: ${derived.defects[0]}`); continue; }
+        const bad = [];
+        for (const e of exits) if (!reachableViaFree(derived.exits[e.id])) bad.push(`exit '${e.id}' not free-reachable`);
+        for (const pk of pickups) if (!reachableViaFree(derived.pickups[pk.id])) bad.push(`pickup '${pk.id}' not free-reachable`);
+        if (bad.length === 0) return { level, derived };
+        rejected.push(`attempt ${attempt}: ${bad[0]}`);
+    }
+    throw new Error(`braid('${id}'): no valid proposal in ${attempts} attempts: ${rejected.join('; ')}`);
+}
+
 /**
  * Generate one level whose goals each require EXACTLY their spec's
  * ability set — the multi-target counterpart of generateLevel.
@@ -952,8 +1150,18 @@ export function* generateLevelFromSpecsGen({
     attempts = 8,
     jitter = 0,
     physics = 'classic',
+    // 'column' (default) = the fixed-column proposer. 'braid' = the 2-wide
+    // braid for Regime-1 (free-arrow) top-down regions; braidWidth overrides
+    // the level width (defaults to the profile's fixed width).
+    mode = 'column',
+    braidWidth,
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
+    if (mode === 'braid') {
+        return yield* generateBraidFromSpecsGen({
+            id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, C, G,
+        });
+    }
     const colorHost = colorHostMode(C);
     const { exits, pickups, arrowFree, ceiling } = normalizeSpecGoals(
         exitSpecs, pickupSpecs, colorHost);
