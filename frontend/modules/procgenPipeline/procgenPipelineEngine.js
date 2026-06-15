@@ -2410,6 +2410,21 @@ function* generateRegionZoneGen(spec) {
             playable_payload.params.fallBehavior = spec.params.fallBehavior;
         }
     }
+    // Location-name reconciliation (top-down). The substrate names its
+    // pickups by its own convention (bounce: `${region}__${id}`, matching
+    // makeLocationName), and the payload's ap_locations maps each in-game
+    // objective to that name — the bridge resolves an objective through it
+    // to fire user:locationCheck. But top-down overrides each location's
+    // compiled AP name with the SOURCE name (global_name = loc.id), so the
+    // unreconciled map points at a name the stateManager never registered
+    // (location_not_found on every bounce pickup). Rebuild ap_locations to
+    // the compiled global_name so the bridge reports the registered name.
+    if (spec.useSourceLocationName && playable_payload.ap_locations) {
+        const nameById = new Map(extractedLocations.map((l) => [l.id, l.global_name ?? l.id]));
+        playable_payload.ap_locations = Object.fromEntries(
+            Object.entries(playable_payload.ap_locations)
+                .map(([k, v]) => [k, nameById.get(k) ?? v]));
+    }
     // Entrance leak fix: zone regions previously omitted .entrance, so the
     // top-down bidirectional back-exit pass threw on entranceTile.x. Only
     // the engine-owned drivers that READ getRegionEntrance need it stamped

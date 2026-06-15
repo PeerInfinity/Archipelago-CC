@@ -216,6 +216,19 @@ describe('top-down — bounce region with surplus arrowless exits (free-arrow dr
             const exit = hub.exits.find((e) => e.name === `to${d}`);
             expect(exit.access_rule).toEqual({ rule: 'Has', args: { item_name: `Relic ${d}` } });
         }
+
+        // The bounce payload's ap_locations — which the bridge resolves an
+        // in-game objective through to fire user:locationCheck — must point
+        // at the names the stateManager registered. Top-down uses the source
+        // location name (not the substrate's `region__id`), so every
+        // ap_locations VALUE must be a real compiled location in the region
+        // (else: location_not_found on every bounce pickup).
+        const hubLocNames = new Set(hub.locations.map((l) => l.name));
+        const apLocations = out.preset_sidecars['1'].Hub.playable_payload.ap_locations ?? {};
+        expect(Object.keys(apLocations).length).toBeGreaterThan(0);
+        for (const apName of Object.values(apLocations)) {
+            expect(hubLocNames.has(apName)).toBe(true);
+        }
         // The key→room gating still holds: each room item sits one sphere
         // behind its key, exactly as in the source.
         expect(computeItemSpheres(out)).toEqual(computeItemSpheres(source));
