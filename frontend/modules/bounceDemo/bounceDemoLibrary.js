@@ -399,6 +399,10 @@ export function* generateZoneForSpecsGen({
     stepsBetween = 2,
     jitter = 0,
     physicsProfile = 'classic',
+    // 'column' (default) or 'braid' (Regime-1 2-wide braid, free arrows).
+    // braidWidth overrides the level width under braid mode.
+    mode = 'column',
+    braidWidth,
 } = {}) {
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
@@ -429,6 +433,8 @@ export function* generateZoneForSpecsGen({
         stepsBetween,
         jitter,
         physics: physicsProfile,
+        mode,
+        braidWidth,
     });
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;

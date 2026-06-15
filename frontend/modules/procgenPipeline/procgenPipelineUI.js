@@ -191,6 +191,15 @@ const DEFAULT_PARAMS = {
     // bounce payload and the world plays under the constants it was
     // generated with. 'classic' stamps nothing (frozen default).
     bouncePhysicsProfile: 'classic',
+    // Bounce level layout (top-down/free-arrow regions only). 'column' is
+    // the fixed-column proposer; 'braid' is the 2-wide branching-path
+    // generator that fits narrow widths and applies per-row jitter.
+    bounceLayout: 'column',
+    // Braid level width (px) — the wrap-ring width. 240 is DJ-authentic
+    // (fits two simultaneous branches; three need ≥318).
+    bounceBraidWidth: 240,
+    // Braid per-row jitter (px): horizontal meander applied to each row.
+    bounceJitter: 40,
 };
 
 const BOUNCE_FALL_OPTIONS = [
@@ -2187,6 +2196,20 @@ export class ProcgenPipelineUI {
             // zone realiser may attach any of these items to a surplus
             // exit's physics requirement without changing the logic.
             freeItems: startingItems,
+            // Bounce knobs ride regionParams (maze ignores unknown keys;
+            // maxIterations 0 keeps top-down maze rooms open). The braid
+            // layout (Regime-1 free-arrow geometry) + its width and per-row
+            // jitter are threaded through to the bounce zone generator.
+            regionParams: {
+                maxIterations: 0,
+                physicsProfile: this.params.bouncePhysicsProfile ?? 'classic',
+                fallBehavior: this.params.bounceFallBehavior ?? 'current',
+                ...(this.params.bounceLayout === 'braid' ? {
+                    bounceMode: 'braid',
+                    braidWidth: this.params.bounceBraidWidth ?? 240,
+                    bounceJitter: this.params.bounceJitter ?? 40,
+                } : {}),
+            },
         });
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
@@ -2469,6 +2492,64 @@ export class ProcgenPipelineUI {
         physRow.appendChild(physLabel);
         physRow.appendChild(physSelect);
         wrap.appendChild(physRow);
+
+        // Layout: column (fixed-column proposer) vs braid (2-wide branching
+        // path). Braid is Regime-1 (top-down/free-arrow) only; it fits
+        // narrow widths the column can't and carries the per-row jitter.
+        const layoutRow = document.createElement('div');
+        layoutRow.className = 'procgen-pipeline-field';
+        const layoutLabel = document.createElement('label');
+        layoutLabel.textContent = 'Layout';
+        layoutLabel.title = 'column = the fixed-column generator. braid = the 2-wide branching-path generator '
+            + '(top-down/free-arrow regions only): platforms weave into 1–2 lanes, portals ride forks or the '
+            + 'single-lane top, and it fits narrow widths (e.g. 240) the column model cannot.';
+        const layoutSelect = document.createElement('select');
+        for (const [value, text] of [['column', 'column'], ['braid', 'braid (2-wide)']]) {
+            const o = document.createElement('option');
+            o.value = value;
+            o.textContent = text;
+            layoutSelect.appendChild(o);
+        }
+        layoutSelect.value = this.params.bounceLayout ?? 'column';
+        layoutRow.appendChild(layoutLabel);
+        layoutRow.appendChild(layoutSelect);
+        wrap.appendChild(layoutRow);
+
+        // Braid-only sub-fields: width + per-row jitter. Shown when braid.
+        const braidFields = document.createElement('div');
+        const numberField = (labelText, title, key, def) => {
+            const r = document.createElement('div');
+            r.className = 'procgen-pipeline-field';
+            const l = document.createElement('label');
+            l.textContent = labelText;
+            l.title = title;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.value = String(this.params[key] ?? def);
+            input.addEventListener('change', () => {
+                const v = Number(input.value);
+                this.params[key] = Number.isFinite(v) && v >= 0 ? v : def;
+                input.value = String(this.params[key]);
+                this._saveToLocalStorage();
+            });
+            r.appendChild(l);
+            r.appendChild(input);
+            return r;
+        };
+        braidFields.appendChild(numberField('Braid width',
+            'Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.',
+            'bounceBraidWidth', 240));
+        braidFields.appendChild(numberField('Max jitter',
+            'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
+            'bounceJitter', 40));
+        braidFields.style.display = (this.params.bounceLayout === 'braid') ? '' : 'none';
+        layoutSelect.addEventListener('change', () => {
+            this.params.bounceLayout = layoutSelect.value;
+            braidFields.style.display = (layoutSelect.value === 'braid') ? '' : 'none';
+            this._saveToLocalStorage();
+        });
+        wrap.appendChild(braidFields);
         return wrap;
     }
 

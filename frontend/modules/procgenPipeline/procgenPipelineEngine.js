@@ -2343,6 +2343,14 @@ function* generateRegionZoneGen(spec) {
         seed: spec.seed ?? ((spec.rng.next() * 0x7fffffff) | 0),
         ...(spec.params?.physicsProfile && spec.params.physicsProfile !== 'classic'
             ? { physicsProfile: spec.params.physicsProfile } : {}),
+        // 2-wide braid layout (Regime-1 top-down): the driver passes the
+        // bounce layout mode + width + per-row jitter through regionParams.
+        ...(spec.params?.bounceMode === 'braid'
+            ? {
+                mode: 'braid',
+                ...(spec.params.braidWidth ? { braidWidth: spec.params.braidWidth } : {}),
+                ...(spec.params.bounceJitter ? { jitter: spec.params.bounceJitter } : {}),
+            } : {}),
     };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
         ? yield* adapter.generateZoneForSpecsGen(zoneSpecs)
