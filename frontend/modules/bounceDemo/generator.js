@@ -979,9 +979,14 @@ function wrapMid(a, b, W) {
 // Build a 2-wide braid level. Goals are { id, req, direction }. `req` is
 // only consulted for the reachability budget (Regime 1 = {left,right});
 // placement ignores it. width defaults to the profile's fixed width.
-function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, colorChance = 0 }) {
+function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, decorChance = {} }) {
     const PLAIN_DY = G.PLAIN_DY;
     const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
+    // Per-eligible-platform chances for each decoration (0 = never).
+    const {
+        blue: blueChance = 0, brown: brownChance = 0,
+        spring: springChance = 0, jetpack: jetpackChance = 0,
+    } = decorChance;
     const reach = oneHopReach(C, PLAIN_DY);
     const catchSpan = C.PLATFORM_WIDTH + 2 * C.PLAYER_HALF_WIDTH;
     // Fork branches at parent ± forkHalf: pitch 2·forkHalf must exceed the
@@ -996,32 +1001,50 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
     const jit = () => (maxStep ? (rng.next() * 2 - 1) * maxStep : 0);
 
     let nid = 0;
-    const platforms = [], portals = [], pickupEntities = [];
+    const platforms = [], portals = [], pickupEntities = [], springEntities = [], jetpackEntities = [];
     const place = (x, y, type = 'green') => {
         const p = { id: `b${nid++}`, x: wrap(x), y, type };
         platforms.push(p);
         return p;
     };
-    // Colored-platform helpers (Regime 1: blue/brown abilities are free, so
-    // these change FEEL not logic; the verifier confirms the climb survives).
-    //  - BLUE: only on 1-lane rows — under dj it sweeps the FULL width, so it
+    // Decoration helpers. Regime 1: all of blue/brown/springs/jetpacks are
+    // FREE abilities, so these change FEEL not logic; the verifier confirms the
+    // climb survives. Placement rules from the physics:
+    //  - BLUE: only 1-lane rows — under dj it sweeps the FULL width, so it
     //    can't share a row with a second lane. Rise clears a plain step.
     //  - BROWN: only terminal — it breaks on landing and its weak bounce can't
-    //    clear a plain step, so it's used where you don't climb on from it: one
+    //    clear a plain step, so it goes where you don't climb on from it: one
     //    branch of an about-to-merge pair (the OTHER, green branch reaches the
     //    merge), or a top-row branch (you bounce over the top → entrance loop).
-    // The reachability solver branches per colored platform (moving-blue phase
-    // enumeration, breaking-brown broken-state search), so cost is exponential
-    // in colored COUNT — cap each kind to keep even the single full-ability
-    // query fast.
+    //  - SPRING / JETPACK: only 1-lane rows — they launch HIGHER, so the gap
+    //    ABOVE them grows to SPRING_GAP / JETPACK_GAP, which a single row can
+    //    own only when there's one lane. (A 2-lane row would need both lanes to
+    //    share the bigger gap.) Mutually exclusive with blue and each other.
+    // Blue (phase enumeration) and brown (broken-state search) each branch the
+    // reachability solver, so cost is exponential in their COUNT — cap them.
+    // Springs/jetpacks are deterministic launches (no branching) — uncapped.
     let blueCount = 0, brownCount = 0;
     const BLUE_CAP = 2, BROWN_CAP = 4;
     const maybeBlue = (p) => {
-        if (blueCount < BLUE_CAP && rng.next() < colorChance) { p.type = 'blue'; blueCount += 1; }
+        if (blueCount < BLUE_CAP && rng.next() < blueChance) { p.type = 'blue'; blueCount += 1; }
         return p;
     };
     const maybeBrown = (p) => {
-        if (brownCount < BROWN_CAP && rng.next() < colorChance) { p.type = 'brown'; brownCount += 1; }
+        if (brownCount < BROWN_CAP && rng.next() < brownChance) { p.type = 'brown'; brownCount += 1; }
+    };
+    // Decorate a 1-lane platform and return the gap ABOVE it (the next row's
+    // climb distance). Jetpack > spring > blue, at most one.
+    const decorate1Lane = (p) => {
+        if (rng.next() < jetpackChance) {
+            jetpackEntities.push({ id: `jet_${p.id}`, x: p.x, y: p.y - 5, on: p.id });
+            return G.JETPACK_GAP.min + rng.next() * G.JETPACK_GAP.span;
+        }
+        if (rng.next() < springChance) {
+            springEntities.push({ id: `spr_${p.id}`, x: p.x, y: p.y - 5, on: p.id });
+            return G.SPRING_GAP.min + rng.next() * G.SPRING_GAP.span;
+        }
+        maybeBlue(p);
+        return PLAIN_DY;
     };
     const pendingExits = [...exits];
     const pendingPickups = [...pickups];
@@ -1054,10 +1077,12 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
     };
 
     let y = 0;
-    let lanes = [place(W / 2, 0)]; // row 0 = entrance, single lane at spawn x
+    let nextGap = PLAIN_DY; // climb distance to the next row (grows over a spring/jetpack)
+    let lanes = [place(W / 2, 0)]; // row 0 = entrance, single lane at spawn x (never decorated)
     let guard = 0;
     while ((pendingExits.length || pendingPickups.length) && guard++ < 300) {
-        y -= PLAIN_DY;
+        y -= nextGap;
+        nextGap = PLAIN_DY; // default; a 1-lane spring/jetpack below bumps it
         if (lanes.length === 1) {
             // continue-1 vs fork-1→2: ~even, but force a fork while exits await
             // (portals only ride forks, one per fork).
@@ -1065,8 +1090,9 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
             if (doFork) {
                 fork(lanes[0], pendingExits.length ? pendingExits.shift() : null);
             } else {
-                const np = maybeBlue(place(lanes[0].x + jit(), y)); // 1-lane → blue-eligible
+                const np = place(lanes[0].x + jit(), y);
                 lanes = [np];
+                nextGap = decorate1Lane(np); // 1-lane → blue/spring/jetpack-eligible
                 placePickup(np);
             }
         } else {
@@ -1078,8 +1104,9 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
                 // One about-to-merge branch may BREAK (brown): the merge is
                 // reached from the OTHER (green) branch, so traversal survives.
                 maybeBrown(lanes[Math.floor(rng.next() * 2)]);
-                const m = maybeBlue(place(wrapMid(lanes[0].x, lanes[1].x, W), y)); // merge is 1-lane → blue-eligible
+                const m = place(wrapMid(lanes[0].x, lanes[1].x, W), y);
                 lanes = [m];
+                nextGap = decorate1Lane(m); // merge is 1-lane → decoratable
                 placePickup(m);
             } else {
                 const d = jit();
@@ -1098,11 +1125,14 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
     // bouncing over it loops the player to the entrance (gameCore's
     // over-the-top return, which needs no portal-lock check thanks to this).
     if (lanes.length === 2) {
-        y -= PLAIN_DY;
+        y -= nextGap;
+        nextGap = PLAIN_DY;
         maybeBrown(lanes[Math.floor(rng.next() * 2)]);
-        lanes = [maybeBlue(place(wrapMid(lanes[0].x, lanes[1].x, W), y))];
+        const m = place(wrapMid(lanes[0].x, lanes[1].x, W), y);
+        lanes = [m];
+        nextGap = decorate1Lane(m);
     }
-    y -= PLAIN_DY;
+    y -= nextGap;
     fork(lanes[0], capExit);
     // Top-row branches are terminal (you bounce over the top → entrance loop),
     // so either may BREAK (brown) — brown's weak bounce still clears the row.
@@ -1111,7 +1141,9 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
     let minY = 0;
     for (const p of platforms) minY = Math.min(minY, p.y);
     const shiftY = 60 - minY; // entrance to the bottom; x already absolute in [0,W)
-    for (const arr of [platforms, portals, pickupEntities]) for (const e of arr) e.y += shiftY;
+    for (const arr of [platforms, portals, pickupEntities, springEntities, jetpackEntities]) {
+        for (const e of arr) e.y += shiftY;
+    }
     // Moving-blue sweeps run the full level width (dj). In level coords, so
     // assigned after the y-shift; static-blue profiles (classic) leave them be.
     if (C.PLATFORM_BEHAVIORS?.blue === 'moving') {
@@ -1122,7 +1154,7 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, c
     }
     return {
         id, size: { width: W, height: shiftY + 100 },
-        platforms, springs: [], jetpacks: [], pickups: pickupEntities, portals,
+        platforms, springs: springEntities, jetpacks: jetpackEntities, pickups: pickupEntities, portals,
     };
 }
 
@@ -1147,7 +1179,7 @@ const ALL_FREE_ABILITIES = Object.freeze({
 // so the trivial derived is sound and verifyObstacleGating passes (no physics
 // obstacles to check).
 function* generateBraidFromSpecsGen({
-    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, colorChance = 0, C, G,
+    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, decorChance = {}, C, G,
 }) {
     const seen = new Set();
     const norm = (s, what) => {
@@ -1166,7 +1198,7 @@ function* generateBraidFromSpecsGen({
         yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         let level;
-        try { level = proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter, width: braidWidth, colorChance }); }
+        try { level = proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter, width: braidWidth, decorChance }); }
         catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
         const modelErrors = validateLevel(level);
         if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
@@ -1226,16 +1258,16 @@ export function* generateLevelFromSpecsGen({
     physics = 'classic',
     // 'column' (default) = the fixed-column proposer. 'braid' = the 2-wide
     // braid for Regime-1 (free-arrow) top-down regions; braidWidth overrides
-    // the level width (defaults to the profile's fixed width). colorChance is
-    // the per-eligible-platform probability of a colored (blue/brown) platform.
+    // the level width (defaults to the profile's fixed width). decorChance is
+    // { blue, brown, spring, jetpack } per-eligible-platform probabilities.
     mode = 'column',
     braidWidth,
-    colorChance = 0,
+    decorChance = {},
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
     if (mode === 'braid') {
         return yield* generateBraidFromSpecsGen({
-            id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, colorChance, C, G,
+            id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, C, G,
         });
     }
     const colorHost = colorHostMode(C);

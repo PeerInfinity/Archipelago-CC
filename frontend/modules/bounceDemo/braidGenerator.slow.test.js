@@ -92,15 +92,16 @@ describe('braid generator (Regime 1, width 240)', () => {
         }
     });
 
-    it('colored platforms follow the rules and keep every goal reachable', () => {
+    it('decorations follow the rules and keep every goal reachable', () => {
         const ALL = { left: true, right: true, springs: true, jetpacks: true, blue: true, brown: true };
-        let blueTotal = 0, brownTotal = 0;
+        let blueTotal = 0, brownTotal = 0, springTotal = 0;
         for (let seed = 1; seed <= 8; seed++) {
             const level = generateLevelFromSpecs({
-                id: `R${seed}`, exitSpecs, pickupSpecs, seed, physics: 'dj',
-                mode: 'braid', braidWidth: WIDTH, jitter: 40, colorChance: 0.4,
+                id: `R${seed}`, exitSpecs, pickupSpecs, seed, physics: 'dj', mode: 'braid', braidWidth: WIDTH,
+                jitter: 40, decorChance: { blue: 0.4, brown: 0.4, spring: 0.4, jetpack: 0 },
             });
             const laneCountByY = new Map(rows(level).map((row) => [row[0].y, row.length]));
+            const laneOf = (id) => laneCountByY.get(level.platforms.find((p) => p.id === id).y);
             for (const p of level.platforms) {
                 // Blue (moving, full-width sweep) only on 1-lane rows; brown
                 // (breaking, terminal) only on 2-lane rows (a pre-merge branch
@@ -114,15 +115,21 @@ describe('braid generator (Regime 1, width 240)', () => {
                     expect(laneCountByY.get(p.y), `seed ${seed} brown lane count`).toBe(2);
                 }
             }
-            // Colored platforms must not strand any goal: every portal/pickup
-            // host stays reachable with the full free ability set.
+            // Springs ride 1-lane platforms (the gap above them grows).
+            for (const s of level.springs) {
+                springTotal++;
+                expect(laneOf(s.on), `seed ${seed} spring lane count`).toBe(1);
+            }
+            // No decoration may strand a goal: every portal/pickup host stays
+            // reachable with the full free ability set.
             const reach = reachablePlatforms(buildPlatformGraph(level, ALL, { constants: C }));
             for (const pt of level.portals) expect(reach.has(pt.on), `seed ${seed} portal ${pt.id}`).toBe(true);
             for (const pk of level.pickups) expect(reach.has(pk.on), `seed ${seed} pickup ${pk.id}`).toBe(true);
         }
-        // The feature actually produces colored platforms at this chance.
+        // Each decoration actually appears at this chance.
         expect(blueTotal, 'blue platforms appear').toBeGreaterThan(0);
         expect(brownTotal, 'brown platforms appear').toBeGreaterThan(0);
+        expect(springTotal, 'springs appear').toBeGreaterThan(0);
     });
 
     it('routes different portals to different steering choices (meaningful forks)', () => {

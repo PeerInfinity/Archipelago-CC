@@ -400,11 +400,11 @@ export function* generateZoneForSpecsGen({
     jitter = 0,
     physicsProfile = 'classic',
     // 'column' (default) or 'braid' (Regime-1 2-wide braid, free arrows).
-    // braidWidth overrides the level width under braid mode; colorChance is
-    // the per-eligible-platform chance of a colored (blue/brown) platform.
+    // braidWidth overrides the level width under braid mode; decorChance is
+    // { blue, brown, spring, jetpack } per-eligible-platform probabilities.
     mode = 'column',
     braidWidth,
-    colorChance = 0,
+    decorChance = {},
 } = {}) {
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
@@ -437,7 +437,7 @@ export function* generateZoneForSpecsGen({
         physics: physicsProfile,
         mode,
         braidWidth,
-        colorChance,
+        decorChance,
     });
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;

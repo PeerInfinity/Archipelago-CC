@@ -200,9 +200,13 @@ const DEFAULT_PARAMS = {
     bounceBraidWidth: 240,
     // Braid per-row jitter (px): horizontal meander applied to each row.
     bounceJitter: 40,
-    // Braid colored-platform chance (0–1): per-eligible-platform probability
-    // of a blue (moving, 1-lane) or brown (breaking, terminal) platform.
-    bounceColorChance: 0.3,
+    // Braid decoration chances (0–1), per eligible platform. Blue (moving,
+    // 1-lane), brown (breaking, terminal), spring + jetpack (1-lane, launch
+    // higher → bigger gap above). Jetpack defaults off — its dj gap is huge.
+    bounceBlueChance: 0.3,
+    bounceBrownChance: 0.3,
+    bounceSpringChance: 0.3,
+    bounceJetpackChance: 0,
 };
 
 const BOUNCE_FALL_OPTIONS = [
@@ -2211,7 +2215,12 @@ export class ProcgenPipelineUI {
                     bounceMode: 'braid',
                     braidWidth: this.params.bounceBraidWidth ?? 240,
                     bounceJitter: this.params.bounceJitter ?? 40,
-                    bounceColorChance: this.params.bounceColorChance ?? 0,
+                    bounceDecorChance: {
+                        blue: this.params.bounceBlueChance ?? 0,
+                        brown: this.params.bounceBrownChance ?? 0,
+                        spring: this.params.bounceSpringChance ?? 0,
+                        jetpack: this.params.bounceJetpackChance ?? 0,
+                    },
                 } : {}),
             },
         });
@@ -2551,11 +2560,22 @@ export class ProcgenPipelineUI {
         braidFields.appendChild(numberField('Max jitter',
             'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
             'bounceJitter', 40));
-        braidFields.appendChild(numberField('Colored chance',
-            'Per-eligible-platform probability (0–1) of a colored platform: blue '
-            + '(moving, 1-lane rows) or brown (breaking, terminal). 0 = all green. Capped '
-            + 'per level so the reachability check stays fast.',
-            'bounceColorChance', 0.3, { step: 0.05, max: 1 }));
+        braidFields.appendChild(numberField('Blue chance',
+            'Per-eligible-platform probability (0–1) of a blue platform (moving, full-width '
+            + 'sweep; 1-lane rows only). Capped per level so the reachability check stays fast.',
+            'bounceBlueChance', 0.3, { step: 0.01, max: 1 }));
+        braidFields.appendChild(numberField('Brown chance',
+            'Per-eligible-platform probability (0–1) of a brown platform (breaks on landing; '
+            + 'terminal only — a pre-merge branch or the top). Capped per level.',
+            'bounceBrownChance', 0.3, { step: 0.01, max: 1 }));
+        braidFields.appendChild(numberField('Spring chance',
+            'Per-eligible-platform probability (0–1) of a spring (1-lane rows; launches higher, '
+            + 'so the gap above grows to the spring window).',
+            'bounceSpringChance', 0.3, { step: 0.01, max: 1 }));
+        braidFields.appendChild(numberField('Jetpack chance',
+            'Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR '
+            + 'higher — under dj the gap is ~6200px, making very tall levels. Default 0.',
+            'bounceJetpackChance', 0, { step: 0.01, max: 1 }));
         braidFields.style.display = (this.params.bounceLayout === 'braid') ? '' : 'none';
         layoutSelect.addEventListener('change', () => {
             this.params.bounceLayout = layoutSelect.value;

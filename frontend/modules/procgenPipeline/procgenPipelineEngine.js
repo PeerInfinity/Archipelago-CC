@@ -2350,7 +2350,7 @@ function* generateRegionZoneGen(spec) {
                 mode: 'braid',
                 ...(spec.params.braidWidth ? { braidWidth: spec.params.braidWidth } : {}),
                 ...(spec.params.bounceJitter ? { jitter: spec.params.bounceJitter } : {}),
-                ...(spec.params.bounceColorChance ? { colorChance: spec.params.bounceColorChance } : {}),
+                ...(spec.params.bounceDecorChance ? { decorChance: spec.params.bounceDecorChance } : {}),
             } : {}),
     };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
