@@ -61,19 +61,15 @@ export function createGameSession(level, opts = {}) {
     const collected = new Set();
     const exitedPortals = new Set();
 
-    // The region's TOP portal = the one on the highest platform (smallest
-    // y). When it's locked, bouncing back up over its platform loops the
-    // player to the entrance (see tick's over-the-top return). Disabled
-    // when there are no portals.
+    // The region's TOP row = the platforms with the smallest y. Landing on a
+    // top-row platform WITHOUT exiting (the braid always leaves a portal-free
+    // branch up there, and a locked portal doesn't teleport) arms the
+    // over-the-top return: the next rise above the row loops the player to the
+    // entrance. No portal-lock check is needed — the guaranteed portal-free
+    // top branch is the over-the-top path.
     const platformById = new Map((level.platforms ?? []).map((p) => [p.id, p]));
-    let topPortal = null;
-    let topPortalY = Infinity;
-    for (const pt of level.portals ?? []) {
-        const host = platformById.get(pt.on);
-        if (host && host.y < topPortalY) { topPortalY = host.y; topPortal = pt; }
-    }
-    // Armed when the latest landing was on the locked top portal: the next
-    // rise above it triggers the over-the-top return.
+    let topY = Infinity;
+    for (const p of level.platforms ?? []) if (p.y < topY) topY = p.y;
     let overTopArmed = false;
 
     return {
@@ -123,13 +119,13 @@ export function createGameSession(level, opts = {}) {
                 overTopArmed = false;
                 return events;
             }
-            // Over-the-top return: once the player has bounced off a LOCKED
-            // top portal, rising back above its platform loops them to the
-            // entrance — the SAME 'fell' path as dropping off the bottom, so
-            // it honors fallBehavior. (Armed only after the capstone landing,
-            // so the climb UP to it — which passes above the line on the way
-            // to the apex — doesn't trigger.)
-            if (overTopArmed && state.y < topPortalY) {
+            // Over-the-top return: once the player has landed on the top row,
+            // rising back above it loops them to the entrance — the SAME 'fell'
+            // path as dropping off the bottom, so it honors fallBehavior.
+            // (Armed only AFTER a top-row landing, so the climb UP to it —
+            // which passes above the line on the way to the apex — doesn't
+            // trigger.)
+            if (overTopArmed && state.y < topY) {
                 events.push({ type: 'fell', overTop: true });
                 state = spawnState(level, C);
                 overTopArmed = false;
@@ -158,10 +154,12 @@ export function createGameSession(level, opts = {}) {
                         direction: pt.direction ?? null,
                     });
                 }
-                // Arm the over-the-top return iff this landing is on the
-                // locked top portal; any other landing disarms it.
-                overTopArmed = !!topPortal && state.landedOn === topPortal.on
-                    && !isOpen('portals', topPortal.id);
+                // Arm the over-the-top return iff this landing is on the top
+                // row AND didn't exit a portal (open top portal = leave the
+                // region, no loop); any other landing disarms it.
+                const landedY = platformById.get(state.landedOn)?.y;
+                const exitedThisLanding = events.some((e) => e.type === 'exit');
+                overTopArmed = landedY !== undefined && landedY <= topY && !exitedThisLanding;
             }
             return events;
         },

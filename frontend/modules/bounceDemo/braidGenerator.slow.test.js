@@ -61,26 +61,33 @@ describe('braid generator (Regime 1, width 240)', () => {
         }
     });
 
-    it('places every portal on a fork branch or the single-lane top capstone', () => {
+    it('always leaves a portal-free branch — never two portals on one row, top included', () => {
         for (let seed = 1; seed <= 8; seed++) {
             const level = braid(seed);
             const r = rows(level);
             const top = r[0]; // smallest y = top of the climb
-            const laneCountByY = new Map(r.map((row) => [row[0].y, row.length]));
             const platformY = new Map(level.platforms.map((p) => [p.id, p.y]));
-            const topIds = new Set(top.map((p) => p.id));
-
-            // The capstone row is a single lane and hosts a portal.
-            expect(top.length, `seed ${seed} capstone lane count`).toBe(1);
-            expect(level.portals.some((p) => topIds.has(p.on)), `seed ${seed} capstone portal`).toBe(true);
-
-            // Every portal is on a 2-lane (fork-branch) row OR the top capstone.
+            const portalsByY = new Map();
             for (const portal of level.portals) {
                 const y = platformY.get(portal.on);
-                const onFork = laneCountByY.get(y) === 2;
-                const onCapstone = topIds.has(portal.on);
-                expect(onFork || onCapstone, `seed ${seed} portal ${portal.id} placement`).toBe(true);
+                portalsByY.set(y, (portalsByY.get(y) ?? 0) + 1);
             }
+
+            // Every portal rides a 2-lane (fork) row, and NO row carries two
+            // portals — so each fork always has a portal-free branch to climb.
+            for (const row of r) {
+                const y = row[0].y;
+                if (portalsByY.has(y)) {
+                    expect(row.length, `seed ${seed} portal row lane count`).toBe(2);
+                    expect(portalsByY.get(y), `seed ${seed} portals on row y=${y}`).toBe(1);
+                }
+            }
+
+            // The TOP row is itself a fork with a portal-free branch: two
+            // platforms, exactly one portal.
+            expect(top.length, `seed ${seed} top is a fork`).toBe(2);
+            const topPortals = level.portals.filter((p) => top.some((pl) => pl.id === p.on));
+            expect(topPortals.length, `seed ${seed} top has one portal + one free branch`).toBe(1);
         }
     });
 

@@ -1012,8 +1012,24 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
     const placeExit = (p, e) => portals.push({
         id: e.id, x: p.x, y: p.y - 20, on: p.id, target_region: null, direction: e.direction ?? 'up',
     });
-    // A branch platform hosts a pending exit (portals live on forks) else a pickup.
-    const fillBranch = (p) => { if (pendingExits.length) placeExit(p, pendingExits.shift()); else placePickup(p); };
+    // Fork the single lane into two branches at the current y. A portal goes
+    // on AT MOST ONE branch (random side); the OTHER branch is always
+    // portal-free, so the climb can never be dead-ended by both branches
+    // exiting the region — there is always a way to keep going up (and the
+    // player can choose NOT to take the portal). The free branch gets a
+    // pickup if any remain. A null exit makes a decorative (portal-free) fork.
+    const fork = (parent, exit) => {
+        const L = place(parent.x - forkHalf, y);
+        const R = place(parent.x + forkHalf, y);
+        lanes = [L, R];
+        if (exit) {
+            const [portalSide, freeSide] = rng.next() < 0.5 ? [L, R] : [R, L];
+            placeExit(portalSide, exit);
+            placePickup(freeSide);
+        } else {
+            placePickup(L); placePickup(R);
+        }
+    };
 
     let y = 0;
     let lanes = [place(W / 2, 0)]; // row 0 = entrance, single lane at spawn x
@@ -1021,23 +1037,21 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
     while ((pendingExits.length || pendingPickups.length) && guard++ < 300) {
         y -= PLAIN_DY;
         if (lanes.length === 1) {
-            const parent = lanes[0];
             // continue-1 vs fork-1→2: ~even, but force a fork while exits await
-            // (portals must ride forks or the capstone).
+            // (portals only ride forks, one per fork).
             const doFork = pendingExits.length ? true : rng.next() < 0.5;
             if (doFork) {
-                const L = place(parent.x - forkHalf, y);
-                const R = place(parent.x + forkHalf, y);
-                lanes = [L, R];
-                fillBranch(L); fillBranch(R);
+                fork(lanes[0], pendingExits.length ? pendingExits.shift() : null);
             } else {
-                const np = place(parent.x + jit(), y);
+                const np = place(lanes[0].x + jit(), y);
                 lanes = [np];
                 placePickup(np);
             }
         } else {
-            // continue-2 vs merge-2→1: ~even, but stay forked while exits await.
-            const doMerge = pendingExits.length ? false : rng.next() < 0.5;
+            // 2-lane: continue (pickups only — NEVER a portal, so neither lane
+            // is ever blocked) or merge. Merge while exits await to free up the
+            // next 1-lane fork.
+            const doMerge = pendingExits.length ? true : rng.next() < 0.5;
             if (doMerge) {
                 const m = place(wrapMid(lanes[0].x, lanes[1].x, W), y);
                 lanes = [m];
@@ -1047,17 +1061,20 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width })
                 const L = place(lanes[0].x + d, y); // rigid shift keeps the pair ≥ catchSpan apart
                 const R = place(lanes[1].x + d, y);
                 lanes = [L, R];
-                fillBranch(L); fillBranch(R);
+                placePickup(L); placePickup(R);
             }
         }
     }
     if (pendingExits.length || pendingPickups.length) {
         throw new Error(`braid: ${pendingExits.length} exits + ${pendingPickups.length} pickups unplaced`);
     }
-    // Capstone: merge to one lane if needed, then a top platform with the reserved exit.
+    // Top row: a FORK — one branch hosts the reserved portal, the OTHER is
+    // portal-free. So even at the top there's always a branch with no portal;
+    // bouncing over it loops the player to the entrance (gameCore's
+    // over-the-top return, which needs no portal-lock check thanks to this).
     if (lanes.length === 2) { y -= PLAIN_DY; lanes = [place(wrapMid(lanes[0].x, lanes[1].x, W), y)]; }
     y -= PLAIN_DY;
-    placeExit(place(lanes[0].x, y), capExit);
+    fork(lanes[0], capExit);
 
     let minY = 0;
     for (const p of platforms) minY = Math.min(minY, p.y);
