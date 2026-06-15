@@ -61,6 +61,21 @@ export function createGameSession(level, opts = {}) {
     const collected = new Set();
     const exitedPortals = new Set();
 
+    // The region's TOP portal = the one on the highest platform (smallest
+    // y). When it's locked, bouncing back up over its platform loops the
+    // player to the entrance (see tick's over-the-top return). Disabled
+    // when there are no portals.
+    const platformById = new Map((level.platforms ?? []).map((p) => [p.id, p]));
+    let topPortal = null;
+    let topPortalY = Infinity;
+    for (const pt of level.portals ?? []) {
+        const host = platformById.get(pt.on);
+        if (host && host.y < topPortalY) { topPortalY = host.y; topPortal = pt; }
+    }
+    // Armed when the latest landing was on the locked top portal: the next
+    // rise above it triggers the over-the-top return.
+    let overTopArmed = false;
+
     return {
         level,
         get state() { return state; },
@@ -95,6 +110,7 @@ export function createGameSession(level, opts = {}) {
         reset() {
             state = spawnState(level, C);
             exitedPortals.clear();
+            overTopArmed = false;
         },
 
         /** Advance one frame; returns the frame's events. */
@@ -104,6 +120,19 @@ export function createGameSession(level, opts = {}) {
             if (state.fallen) {
                 events.push({ type: 'fell' });
                 state = spawnState(level, C);
+                overTopArmed = false;
+                return events;
+            }
+            // Over-the-top return: once the player has bounced off a LOCKED
+            // top portal, rising back above its platform loops them to the
+            // entrance — the SAME 'fell' path as dropping off the bottom, so
+            // it honors fallBehavior. (Armed only after the capstone landing,
+            // so the climb UP to it — which passes above the line on the way
+            // to the apex — doesn't trigger.)
+            if (overTopArmed && state.y < topPortalY) {
+                events.push({ type: 'fell', overTop: true });
+                state = spawnState(level, C);
+                overTopArmed = false;
                 return events;
             }
             if (state.landedOn) {
@@ -129,6 +158,10 @@ export function createGameSession(level, opts = {}) {
                         direction: pt.direction ?? null,
                     });
                 }
+                // Arm the over-the-top return iff this landing is on the
+                // locked top portal; any other landing disarms it.
+                overTopArmed = !!topPortal && state.landedOn === topPortal.on
+                    && !isOpen('portals', topPortal.id);
             }
             return events;
         },

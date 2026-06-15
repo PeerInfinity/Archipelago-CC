@@ -130,3 +130,49 @@ describe('createGameSession', () => {
         expect(events.filter((e) => e.type === 'exit')).toHaveLength(1); // re-armed
     });
 });
+
+describe('over-the-top return (locked top portal)', () => {
+    // Entrance at the bottom + a capstone one plain step above hosting the
+    // only portal, both stacked at the spawn column so a no-input player
+    // climbs straight to the top.
+    const stacked = () => makeLevel({
+        size: { width: 240, height: 280 },
+        platforms: [
+            { id: 'entrance', x: 120, y: 180, type: 'green' },
+            { id: 'cap', x: 120, y: 60, type: 'green' },
+        ],
+        portals: [{ id: 'topExit', x: 120, y: 40, on: 'cap', direction: 'up' }],
+    });
+
+    const playToTop = (session) => {
+        let locked = false, overTop = false, exited = false, overTopBeforeLock = false;
+        for (let i = 0; i < 600 && !overTop && !exited; i++) {
+            for (const ev of session.tick(null)) {
+                if (ev.type === 'lockedPortal') locked = true;
+                if (ev.type === 'exit') exited = true;
+                if (ev.type === 'fell' && ev.overTop) { overTop = true; if (!locked) overTopBeforeLock = true; }
+            }
+        }
+        return { locked, overTop, exited, overTopBeforeLock };
+    };
+
+    it('loops to the entrance when the top portal is locked', () => {
+        const session = createGameSession(stacked());
+        session.setGateStates({ portals: { topExit: false } }); // lock it
+        const r = playToTop(session);
+        expect(r.locked).toBe(true);                 // landed on the locked capstone
+        expect(r.overTop).toBe(true);                // then bounced over the top
+        expect(r.overTopBeforeLock).toBe(false);     // the climb UP didn't trigger early
+        expect(r.exited).toBe(false);                // a locked portal never teleports
+        // Respawned at the entrance (spawn column = width/2).
+        expect(session.state.x).toBeCloseTo(120, 0);
+        expect(session.state.fallen).toBe(false);
+    });
+
+    it('exits normally when the top portal is open (no over-the-top loop)', () => {
+        const session = createGameSession(stacked()); // portals default OPEN
+        const r = playToTop(session);
+        expect(r.exited).toBe(true);
+        expect(r.overTop).toBe(false);
+    });
+});

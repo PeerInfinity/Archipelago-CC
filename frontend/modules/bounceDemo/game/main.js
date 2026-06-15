@@ -199,12 +199,13 @@ function handleEvent(ev) {
         // 'previous' mode we additionally exit via the back side (one
         // shot per configure so a fall during the host round-trip
         // can't move twice).
+        const how = ev.overTop ? 'over the top' : 'fell';
         if (fallBehavior === 'previous' && backExitSide && !fellExitSent) {
             fellExitSent = true;
-            setMessage('fell! back to the previous level');
+            setMessage(`${how}! back to the previous level`);
             bridge.sendExit?.('__fall_back', backExitSide);
         } else {
-            setMessage('fell! back to the entrance');
+            setMessage(`${how}! back to the entrance`);
         }
     }
 }
