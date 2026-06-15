@@ -493,6 +493,235 @@ describe('stitchGrid (teleporters)', () => {
     });
 });
 
+describe('reconcileBidirectionalExits (direct unit)', () => {
+    it("'add' creates a reciprocal back-exit when only one direction exists", () => {
+        // Build two regions with an asymmetric pair by hand.
+        const grid = new Grid({ width: 2, height: 1 });
+        const sizeXY = { width: 6, height: 6 };
+        const A = {
+            region_id: 'A', cell: { gx: 0, gy: 0 },
+            exits: new Map([['a_to_b', {
+                exit_id: 'a_to_b',
+                x: 5, y: 3, side: 'E',
+                exitName: 'a_to_b',
+                targetRegion: 'B',
+                isBackExit: false,
+                isTeleporter: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'a_to_b',
+                position: { x: 5, y: 3 },
+                target_region: 'B',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        const B = {
+            region_id: 'B', cell: { gx: 1, gy: 0 },
+            exits: new Map(),
+            playable_payload: {},
+            extracted_rules: { exits: [] },
+            exits_placed: [],
+        };
+        grid.cells.set('0,0', A);
+        grid.cells.set('1,0', B);
+
+        reconcileBidirectionalExits(grid, sizeXY, 'add');
+
+        const back = B.exits.get('A');
+        expect(back).toBeTruthy();
+        expect(back.isBackExit).toBe(true);
+        expect(back.side).toBe('W');
+        expect(back.targetRegion).toBe('A');
+        expect(back.targetExitId).toBe('a_to_b');
+        // Round-trip link on the forward exit.
+        expect(A.exits.get('a_to_b').targetExitId).toBe('A');
+        // extracted_rules mirrored.
+        expect(B.extracted_rules.exits.find((e) => e.id === 'A')).toBeTruthy();
+    });
+
+    it("'remove' nulls the forward exit's target_region", () => {
+        const grid = new Grid({ width: 2, height: 1 });
+        const sizeXY = { width: 6, height: 6 };
+        const A = {
+            region_id: 'A', cell: { gx: 0, gy: 0 },
+            exits: new Map([['a_to_b', {
+                exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
+                targetRegion: 'B', isBackExit: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        const B = {
+            region_id: 'B', cell: { gx: 1, gy: 0 },
+            exits: new Map(),
+            playable_payload: {},
+            extracted_rules: { exits: [] },
+            exits_placed: [],
+        };
+        grid.cells.set('0,0', A);
+        grid.cells.set('1,0', B);
+
+        reconcileBidirectionalExits(grid, sizeXY, 'remove');
+
+        expect(A.exits.get('a_to_b').targetRegion).toBe(null);
+        expect(A.extracted_rules.exits[0].target_region).toBe(null);
+        expect(B.exits.size).toBe(0);
+    });
+
+    it('throws on unknown mode', () => {
+        const grid = new Grid({ width: 1, height: 1 });
+        expect(() => reconcileBidirectionalExits(grid, { width: 6, height: 6 }, 'flip'))
+            .toThrow(/unknown mode/);
+    });
+
+    it("'add' skips when the target already has a reciprocal exit", () => {
+        // B already points back at A via a differently-named exit, so
+        // reconcile must NOT mint a second back-exit. Exercises the
+        // hasReciprocal short-circuit — a branch the existing 'add'
+        // test (empty target) never hits.
+        const grid = new Grid({ width: 2, height: 1 });
+        const sizeXY = { width: 6, height: 6 };
+        const A = {
+            region_id: 'A', cell: { gx: 0, gy: 0 },
+            exits: new Map([['a_to_b', {
+                exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
+                targetRegion: 'B', isBackExit: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        const B = {
+            region_id: 'B', cell: { gx: 1, gy: 0 },
+            exits: new Map([['b_to_a', {
+                exit_id: 'b_to_a', x: 0, y: 3, side: 'W',
+                targetRegion: 'A', isBackExit: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'b_to_a', position: { x: 0, y: 3 }, target_region: 'A',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        grid.cells.set('0,0', A);
+        grid.cells.set('1,0', B);
+
+        reconcileBidirectionalExits(grid, sizeXY, 'add');
+
+        // Neither side gains a back-exit; existing exits untouched.
+        expect(B.exits.size).toBe(1);
+        expect(B.exits.has('A')).toBe(false);
+        expect(B.extracted_rules.exits).toHaveLength(1);
+        expect(A.exits.size).toBe(1);
+        expect(A.exits.has('B')).toBe(false);
+        // The 'add' round-trip link is only set when a back-exit is
+        // actually created — skipped here.
+        expect(A.exits.get('a_to_b').targetExitId).toBeUndefined();
+        expect(B.exits.get('b_to_a').targetExitId).toBeUndefined();
+    });
+
+    it("'add' does not overwrite a target exit whose id collides with the back-exit id", () => {
+        // B already has an exit keyed 'A' (the id addReciprocalBackExit
+        // would mint) but it targets some other region, so hasReciprocal
+        // is false and we reach the collision guard, which must leave the
+        // existing 'A' exit intact rather than clobber it into a back-exit.
+        const grid = new Grid({ width: 2, height: 1 });
+        const sizeXY = { width: 6, height: 6 };
+        const A = {
+            region_id: 'A', cell: { gx: 0, gy: 0 },
+            exits: new Map([['a_to_b', {
+                exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
+                targetRegion: 'B', isBackExit: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        const B = {
+            region_id: 'B', cell: { gx: 1, gy: 0 },
+            exits: new Map([['A', {
+                exit_id: 'A', x: 0, y: 1, side: 'W',
+                targetRegion: 'C', isBackExit: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'A', position: { x: 0, y: 1 }, target_region: 'C',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        grid.cells.set('0,0', A);
+        grid.cells.set('1,0', B);
+
+        reconcileBidirectionalExits(grid, sizeXY, 'add');
+
+        // The colliding exit is preserved, not rewritten into a back-exit.
+        const collided = B.exits.get('A');
+        expect(collided.targetRegion).toBe('C');
+        expect(collided.isBackExit).toBeFalsy();
+        expect(B.exits.size).toBe(1);
+        expect(B.extracted_rules.exits).toHaveLength(1);
+        // The guard returns before setting the forward round-trip link.
+        expect(A.exits.get('a_to_b').targetExitId).toBeUndefined();
+    });
+
+    it("'add' mirrors the back-exit across a N/S wall, not just E/W", () => {
+        // Source exit on the N wall → back-exit lands on the S wall at
+        // the mirrored tile. The existing 'add' test only covers an
+        // E→W back-exit, so this exercises mirrorTileAcrossSide for N.
+        const grid = new Grid({ width: 1, height: 2 });
+        const sizeXY = { width: 6, height: 6 };
+        const A = {
+            region_id: 'A', cell: { gx: 0, gy: 1 },
+            exits: new Map([['a_to_b', {
+                exit_id: 'a_to_b', x: 3, y: 0, side: 'N',
+                exitName: 'a_to_b',
+                targetRegion: 'B', isBackExit: false, isTeleporter: false,
+            }]]),
+            playable_payload: {},
+            extracted_rules: { exits: [{
+                id: 'a_to_b', position: { x: 3, y: 0 }, target_region: 'B',
+                paths: [{ path_id: 'p1', obstacles: [] }],
+            }] },
+            exits_placed: [],
+        };
+        const B = {
+            region_id: 'B', cell: { gx: 0, gy: 0 },
+            exits: new Map(),
+            playable_payload: {},
+            extracted_rules: { exits: [] },
+            exits_placed: [],
+        };
+        grid.cells.set('0,1', A);
+        grid.cells.set('0,0', B);
+
+        reconcileBidirectionalExits(grid, sizeXY, 'add');
+
+        const back = B.exits.get('A');
+        expect(back).toBeTruthy();
+        expect(back.side).toBe('S');
+        expect(back.x).toBe(3);
+        expect(back.y).toBe(5);
+        expect(back.targetRegion).toBe('A');
+        expect(back.isBackExit).toBe(true);
+        // Round-trip link set on the forward exit.
+        expect(A.exits.get('a_to_b').targetExitId).toBe('A');
+    });
+});
+
 describe('growMaze', () => {
     it('requires gridDims and regionSize', () => {
         expect(() => growMaze({})).toThrow(/gridDims/);
@@ -689,235 +918,6 @@ describe('growMaze', () => {
                     expect(e.isBackExit).toBeFalsy();
                 }
             }
-        });
-    });
-
-    describe('reconcileBidirectionalExits (direct unit)', () => {
-        it("'add' creates a reciprocal back-exit when only one direction exists", () => {
-            // Build two regions with an asymmetric pair by hand.
-            const grid = new Grid({ width: 2, height: 1 });
-            const sizeXY = { width: 6, height: 6 };
-            const A = {
-                region_id: 'A', cell: { gx: 0, gy: 0 },
-                exits: new Map([['a_to_b', {
-                    exit_id: 'a_to_b',
-                    x: 5, y: 3, side: 'E',
-                    exitName: 'a_to_b',
-                    targetRegion: 'B',
-                    isBackExit: false,
-                    isTeleporter: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'a_to_b',
-                    position: { x: 5, y: 3 },
-                    target_region: 'B',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            const B = {
-                region_id: 'B', cell: { gx: 1, gy: 0 },
-                exits: new Map(),
-                playable_payload: {},
-                extracted_rules: { exits: [] },
-                exits_placed: [],
-            };
-            grid.cells.set('0,0', A);
-            grid.cells.set('1,0', B);
-
-            reconcileBidirectionalExits(grid, sizeXY, 'add');
-
-            const back = B.exits.get('A');
-            expect(back).toBeTruthy();
-            expect(back.isBackExit).toBe(true);
-            expect(back.side).toBe('W');
-            expect(back.targetRegion).toBe('A');
-            expect(back.targetExitId).toBe('a_to_b');
-            // Round-trip link on the forward exit.
-            expect(A.exits.get('a_to_b').targetExitId).toBe('A');
-            // extracted_rules mirrored.
-            expect(B.extracted_rules.exits.find((e) => e.id === 'A')).toBeTruthy();
-        });
-
-        it("'remove' nulls the forward exit's target_region", () => {
-            const grid = new Grid({ width: 2, height: 1 });
-            const sizeXY = { width: 6, height: 6 };
-            const A = {
-                region_id: 'A', cell: { gx: 0, gy: 0 },
-                exits: new Map([['a_to_b', {
-                    exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
-                    targetRegion: 'B', isBackExit: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            const B = {
-                region_id: 'B', cell: { gx: 1, gy: 0 },
-                exits: new Map(),
-                playable_payload: {},
-                extracted_rules: { exits: [] },
-                exits_placed: [],
-            };
-            grid.cells.set('0,0', A);
-            grid.cells.set('1,0', B);
-
-            reconcileBidirectionalExits(grid, sizeXY, 'remove');
-
-            expect(A.exits.get('a_to_b').targetRegion).toBe(null);
-            expect(A.extracted_rules.exits[0].target_region).toBe(null);
-            expect(B.exits.size).toBe(0);
-        });
-
-        it('throws on unknown mode', () => {
-            const grid = new Grid({ width: 1, height: 1 });
-            expect(() => reconcileBidirectionalExits(grid, { width: 6, height: 6 }, 'flip'))
-                .toThrow(/unknown mode/);
-        });
-
-        it("'add' skips when the target already has a reciprocal exit", () => {
-            // B already points back at A via a differently-named exit, so
-            // reconcile must NOT mint a second back-exit. Exercises the
-            // hasReciprocal short-circuit — a branch the existing 'add'
-            // test (empty target) never hits.
-            const grid = new Grid({ width: 2, height: 1 });
-            const sizeXY = { width: 6, height: 6 };
-            const A = {
-                region_id: 'A', cell: { gx: 0, gy: 0 },
-                exits: new Map([['a_to_b', {
-                    exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
-                    targetRegion: 'B', isBackExit: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            const B = {
-                region_id: 'B', cell: { gx: 1, gy: 0 },
-                exits: new Map([['b_to_a', {
-                    exit_id: 'b_to_a', x: 0, y: 3, side: 'W',
-                    targetRegion: 'A', isBackExit: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'b_to_a', position: { x: 0, y: 3 }, target_region: 'A',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            grid.cells.set('0,0', A);
-            grid.cells.set('1,0', B);
-
-            reconcileBidirectionalExits(grid, sizeXY, 'add');
-
-            // Neither side gains a back-exit; existing exits untouched.
-            expect(B.exits.size).toBe(1);
-            expect(B.exits.has('A')).toBe(false);
-            expect(B.extracted_rules.exits).toHaveLength(1);
-            expect(A.exits.size).toBe(1);
-            expect(A.exits.has('B')).toBe(false);
-            // The 'add' round-trip link is only set when a back-exit is
-            // actually created — skipped here.
-            expect(A.exits.get('a_to_b').targetExitId).toBeUndefined();
-            expect(B.exits.get('b_to_a').targetExitId).toBeUndefined();
-        });
-
-        it("'add' does not overwrite a target exit whose id collides with the back-exit id", () => {
-            // B already has an exit keyed 'A' (the id addReciprocalBackExit
-            // would mint) but it targets some other region, so hasReciprocal
-            // is false and we reach the collision guard, which must leave the
-            // existing 'A' exit intact rather than clobber it into a back-exit.
-            const grid = new Grid({ width: 2, height: 1 });
-            const sizeXY = { width: 6, height: 6 };
-            const A = {
-                region_id: 'A', cell: { gx: 0, gy: 0 },
-                exits: new Map([['a_to_b', {
-                    exit_id: 'a_to_b', x: 5, y: 3, side: 'E',
-                    targetRegion: 'B', isBackExit: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'a_to_b', position: { x: 5, y: 3 }, target_region: 'B',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            const B = {
-                region_id: 'B', cell: { gx: 1, gy: 0 },
-                exits: new Map([['A', {
-                    exit_id: 'A', x: 0, y: 1, side: 'W',
-                    targetRegion: 'C', isBackExit: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'A', position: { x: 0, y: 1 }, target_region: 'C',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            grid.cells.set('0,0', A);
-            grid.cells.set('1,0', B);
-
-            reconcileBidirectionalExits(grid, sizeXY, 'add');
-
-            // The colliding exit is preserved, not rewritten into a back-exit.
-            const collided = B.exits.get('A');
-            expect(collided.targetRegion).toBe('C');
-            expect(collided.isBackExit).toBeFalsy();
-            expect(B.exits.size).toBe(1);
-            expect(B.extracted_rules.exits).toHaveLength(1);
-            // The guard returns before setting the forward round-trip link.
-            expect(A.exits.get('a_to_b').targetExitId).toBeUndefined();
-        });
-
-        it("'add' mirrors the back-exit across a N/S wall, not just E/W", () => {
-            // Source exit on the N wall → back-exit lands on the S wall at
-            // the mirrored tile. The existing 'add' test only covers an
-            // E→W back-exit, so this exercises mirrorTileAcrossSide for N.
-            const grid = new Grid({ width: 1, height: 2 });
-            const sizeXY = { width: 6, height: 6 };
-            const A = {
-                region_id: 'A', cell: { gx: 0, gy: 1 },
-                exits: new Map([['a_to_b', {
-                    exit_id: 'a_to_b', x: 3, y: 0, side: 'N',
-                    exitName: 'a_to_b',
-                    targetRegion: 'B', isBackExit: false, isTeleporter: false,
-                }]]),
-                playable_payload: {},
-                extracted_rules: { exits: [{
-                    id: 'a_to_b', position: { x: 3, y: 0 }, target_region: 'B',
-                    paths: [{ path_id: 'p1', obstacles: [] }],
-                }] },
-                exits_placed: [],
-            };
-            const B = {
-                region_id: 'B', cell: { gx: 0, gy: 0 },
-                exits: new Map(),
-                playable_payload: {},
-                extracted_rules: { exits: [] },
-                exits_placed: [],
-            };
-            grid.cells.set('0,1', A);
-            grid.cells.set('0,0', B);
-
-            reconcileBidirectionalExits(grid, sizeXY, 'add');
-
-            const back = B.exits.get('A');
-            expect(back).toBeTruthy();
-            expect(back.side).toBe('S');
-            expect(back.x).toBe(3);
-            expect(back.y).toBe(5);
-            expect(back.targetRegion).toBe('A');
-            expect(back.isBackExit).toBe(true);
-            // Round-trip link set on the forward exit.
-            expect(A.exits.get('a_to_b').targetExitId).toBe('A');
         });
     });
 
