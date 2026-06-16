@@ -38,7 +38,7 @@
 
 import { createRng } from '../shared/rng.js';
 import { DEFAULTS, PROFILES, launchRise, step } from './physics.js';
-import { deriveAccessRules } from './deriveRules.js';
+import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
 import { reachableBraidPlatforms } from './canJump.js';
 import { validateLevel } from './level.js';
 import {
@@ -1172,26 +1172,243 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
     };
 }
 
+// ── Regime 2: gated single-platform braid (sphere growth) ────────────
+//
+// When a braid region's goals carry real `requirement`s (sphere growth, where
+// abilities are GATED items — not the free starting inventory of Regime 1),
+// the geometry must actually gate: each goal's derived minimal sets must equal
+// its requirement. The Regime-1 fork braid CAN'T gate by arrow (its two
+// branches are ~half a hop apart on the ring, so one arrow reaches the other
+// via wrap — they LEAK), so Regime 2 abandons forks for a fork-free
+// single-climbable-platform-per-row CHAIN — exactly the geometry the row-aware
+// `deriveBraidAccessRules` is verdict-identical to the full solver on.
+//
+// Gating primitives (verified at dj width 240; see deriveBraidRules tests):
+//  - ARROW gate ROW: the single climbable platform is offset ±arrowOffset
+//    toward the gating arrow (one hop reach is HALF the ring, so an offset is
+//    `left`-only at −, `right`-only at +, free only at 0). A TELEPORT-to-start
+//    host sits at ∓arrowOffset — the spot the population MISSING the arrow
+//    drifts to (wrong-arrow player lands there → sent home, no soft-lock; the
+//    gate platform itself is wrong-arrow-unreachable). At most ONE distinct
+//    arrow per region (you never gate left AND right — the player holds an
+//    arrow from the start region; a fork can't gate, a chain gates only one).
+//  - BLUE gate: a blue stepping stone + a plain landing above it (a no-blue
+//    bounce can't use the stone, so the 2× gap can't be cleared).
+//  - Gates compose as a NESTED chain (each goal's requirement a prefix of the
+//    cumulative gate set below it). springs/jetpacks/brown physics gates are
+//    NOT supported here (springs/jetpacks have a narrow interception window the
+//    chain can't reliably hit; brown is terminal) — they DECLINE (throw), the
+//    documented "adapter declines" channel.
+//
+// Jitter is ARROW-DIRECTIONAL: a free rung never jitters (the arrow-free spine
+// stays straight at offset 0, so arrow-free goals derive exactly []); once the
+// player holds an arrow, rungs above the gate may drift TOWARD it (still
+// reachable with that arrow, and the gate below already demands it).
+
+const ARROW_NAMES = ['left', 'right'];
+// Physics abilities the gated braid can realise as geometry.
+const BRAID_GATE_ABILITIES = new Set(['left', 'right', 'blue']);
+
+/**
+ * Validate + plan a gated braid chain (spec-level checks: non-retryable, so
+ * the caller runs this ONCE before the generate-and-test loop and throws
+ * immediately — mirrors the column path's normalizeSpecGoals). Returns
+ * { goals, sortedReqs, goalsByKey } or throws. `goals` are tagged with
+ * kind:'exit'|'pickup'.
+ */
+function planBraidGatedChain(exits, pickups) {
+    const goals = [
+        ...exits.map((e) => ({ ...e, kind: 'exit' })),
+        ...pickups.map((p) => ({ ...p, kind: 'pickup' })),
+    ];
+    const usedArrows = new Set();
+    for (const g of goals) {
+        for (const a of g.req) {
+            if (!BRAID_GATE_ABILITIES.has(a)) {
+                throw new Error(`braid Regime 2: unsupported physics gate '${a}' `
+                    + `(goal '${g.id}') — springs/jetpacks/brown decline`);
+            }
+            if (ARROW_NAMES.includes(a)) usedArrows.add(a);
+        }
+    }
+    if (usedArrows.size > 1) {
+        throw new Error('braid Regime 2: cannot gate both arrows in one region '
+            + `(goals require ${[...usedArrows].join(' and ')})`);
+    }
+    // Requirements must form a single nested chain (one climbable column).
+    const sortedReqs = [...new Set(goals.map((g) => reqKey(g.req)))]
+        .map((k) => (k ? k.split('+') : []))
+        .sort((a, b) => a.length - b.length);
+    for (let i = 1; i < sortedReqs.length; i++) {
+        if (!isSubsetReq(sortedReqs[i - 1], sortedReqs[i])) {
+            throw new Error('braid Regime 2: requirements are not nested '
+                + `([${sortedReqs[i - 1].join(',')}] vs [${sortedReqs[i].join(',')}])`);
+        }
+    }
+    // Goals keyed by their requirement (the rung level they attach at).
+    const goalsByKey = new Map();
+    for (const g of goals) {
+        const k = reqKey(g.req);
+        if (!goalsByKey.has(k)) goalsByKey.set(k, []);
+        goalsByKey.get(k).push(g);
+    }
+    return { goals, sortedReqs, goalsByKey };
+}
+
+/**
+ * Build a fork-free gated braid chain whose goals each require EXACTLY their
+ * spec's ability set. `plan` comes from planBraidGatedChain (validated). Throws
+ * only on geometry dead-ends (retryable). Reachable + gated by construction;
+ * the caller verifies with deriveBraidAccessRules.
+ */
+function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
+    const PLAIN_DY = G.PLAIN_DY;
+    const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
+    const reach = oneHopReach(C, PLAIN_DY);
+    const wrap = (x) => (((x % W) + W) % W);
+    // Half the one-hop reach: comfortably inside ONE arrow's reach band and
+    // outside the other's (which would have to wrap) and the arrow-free point.
+    const arrowOffset = Math.round(reach / 2);
+    // Post-arrow jitter stays well within the held arrow's reach so the step
+    // is always reachable with it; capped by the requested jitter amplitude.
+    const maxJit = Math.min(jitter || 0, reach * 0.5);
+    const { sortedReqs, goalsByKey } = plan;
+
+    // ── Realise the chain bottom → top ───────────────────────────────
+    let nid = 0;
+    const platforms = [];
+    const portals = [];
+    const pickupEntities = [];
+    const teleportEntities = [];
+    const place = (x, y, type = 'green') => {
+        const p = { id: `b${nid++}`, x: wrap(x), y, type };
+        platforms.push(p);
+        return p;
+    };
+    const heldArrow = (current) => current.find((a) => ARROW_NAMES.includes(a)) ?? null;
+    const jitterDx = (current) => {
+        const a = heldArrow(current);
+        if (!a || maxJit <= 0) return 0;
+        const m = rng.next() * maxJit; // 0..maxJit toward the held arrow
+        return a === 'left' ? -m : m;
+    };
+    const attach = (g, platform) => {
+        if (g.kind === 'exit') {
+            portals.push({
+                id: g.id, x: platform.x, y: platform.y - 20, on: platform.id,
+                target_region: null, direction: g.direction ?? 'up',
+            });
+        } else {
+            pickupEntities.push({ id: g.id, x: platform.x, y: platform.y - 20, on: platform.id });
+        }
+    };
+
+    let y = 0;
+    let current = [];
+    let prev = place(W / 2, 0); // row 0 = entrance landing (never gated)
+
+    // Climb a single plain rung, honouring arrow-directional jitter.
+    const climbPlain = () => {
+        y -= PLAIN_DY;
+        prev = place(prev.x + jitterDx(current), y);
+        return prev;
+    };
+    // Gate row for the one arrow: gate platform toward the arrow, teleport host
+    // at the mirror offset (the wrong-arrow player drifts there → home).
+    const realiseArrowGate = (arrow) => {
+        y -= PLAIN_DY;
+        const dir = arrow === 'left' ? -1 : 1;
+        const gate = place(prev.x + dir * arrowOffset, y);
+        const teleHost = place(prev.x - dir * arrowOffset, y);
+        teleportEntities.push({
+            id: `tp_${teleHost.id}`, x: teleHost.x, y: teleHost.y - 20, on: teleHost.id,
+        });
+        prev = gate;
+        current = [...current, arrow].sort();
+    };
+    // Blue stepping stone + a plain landing above (gates `blue` vertically).
+    const realiseBlueGate = () => {
+        y -= PLAIN_DY;
+        place(prev.x, y, 'blue'); // the stone (its x rides the column; sweep added post-shift)
+        y -= PLAIN_DY;
+        prev = place(prev.x, y);
+        current = [...current, 'blue'].sort();
+    };
+
+    // Segments: the distinct requirement keys in nested order. Walk them,
+    // realising the gates each adds, then attaching that key's goals (each on
+    // its own dedicated rung so two portals never share a platform).
+    for (const segment of sortedReqs) {
+        const newGates = segment.filter((a) => !current.includes(a));
+        // Non-arrow gates first (deterministic vertical gates), then the arrow
+        // gate row — order is free between them (no goal sits in between).
+        for (const a of newGates.filter((g) => !ARROW_NAMES.includes(g))) {
+            if (a === 'blue') realiseBlueGate();
+        }
+        for (const a of newGates.filter((g) => ARROW_NAMES.includes(g))) {
+            realiseArrowGate(a);
+        }
+        for (const g of goalsByKey.get(reqKey(segment)) ?? []) {
+            climbPlain();
+            attach(g, prev);
+        }
+    }
+    // Top teleport row: a lone teleport-to-start host above the highest goal,
+    // so a player who climbs past the top (e.g. a locked top portal) returns
+    // home instead of stalling — the chain analogue of the Regime-1 top fork's
+    // teleport branch (and the over-the-top retirement).
+    {
+        y -= PLAIN_DY;
+        const top = place(prev.x + jitterDx(current), y);
+        teleportEntities.push({ id: `tp_${top.id}`, x: top.x, y: top.y - 20, on: top.id });
+    }
+
+    // Normalise vertically (entrance to the bottom); x is already on [0,W).
+    let minY = 0;
+    for (const p of platforms) minY = Math.min(minY, p.y);
+    const shiftY = 60 - minY;
+    for (const arr of [platforms, portals, pickupEntities, teleportEntities]) {
+        for (const e of arr) e.y += shiftY;
+    }
+    // Moving-blue sweeps run the full level width (dj), assigned post-shift.
+    if (C.PLATFORM_BEHAVIORS?.blue === 'moving') {
+        for (const p of platforms) {
+            if (p.type !== 'blue') continue;
+            p.sweep = { min: BLUE_SWEEP_EDGE_MARGIN, max: W - BLUE_SWEEP_EDGE_MARGIN };
+        }
+    }
+    return {
+        id, size: { width: W, height: shiftY + 100 },
+        platforms, springs: [], jetpacks: [],
+        pickups: pickupEntities, portals, teleports: teleportEntities,
+    };
+}
+
 // All bounce abilities, set true — the Regime-1 "free" inventory.
 const ALL_FREE_ABILITIES = Object.freeze({
     left: true, right: true, springs: true, jetpacks: true, blue: true, brown: true,
 });
 
-// Generate-and-test wrapper for the braid (Regime 1). Light goal
-// normalization (ids + ability-validated reqs, none of the column's
-// arrowless/nesting structural checks), then verify by REACHABILITY.
+// Generate-and-test wrapper for the braid. Light goal normalization (ids +
+// ability-validated reqs, none of the column's arrowless/nesting structural
+// checks), then verify.
 //
-// In Regime 1 every ability is a free starting item, so the only question is
-// "is each goal reachable when the player holds EVERYTHING?" — a SINGLE
-// reachability query, not the full per-subset minimal-set table that
-// deriveAccessRules computes. That table is ~2^|abilities| times more work,
-// and with colored platforms (moving-blue phase enumeration, breaking-brown
-// branching) the subset tax makes it explode (tens of seconds). The single
-// query keeps it tractable. The emitted rules are TRIVIAL ([[]] = free): for
-// top-down the engine overrides each exit/location rule with the SOURCE rule
-// anyway, and authored locks (keys) still ride gate_rules from e.authored —
-// so the trivial derived is sound and verifyObstacleGating passes (no physics
-// obstacles to check).
+// TWO regimes, chosen by whether any goal carries a real requirement:
+//
+//  - REGIME 1 (every req empty — top-down, arrows free): the only question is
+//    "is each goal reachable holding EVERYTHING?" — a SINGLE reachability query,
+//    not the full per-subset minimal-set table. That table is ~2^|abilities|
+//    more work and EXPLODES with colored platforms; the single query keeps it
+//    tractable. Emitted rules are TRIVIAL ([[]] = free): top-down overrides each
+//    rule with the SOURCE rule, and authored locks ride gate_rules — so trivial
+//    is sound. Uses the fork braid (proposeBraidLevel) with decorations.
+//
+//  - REGIME 2 (some req non-empty — sphere growth, arrows GATED): the geometry
+//    must gate, so build a fork-free gated chain (proposeBraidLevelGated) and
+//    verify with the row-aware per-subset table (deriveBraidAccessRules) that
+//    every goal's minimal sets EQUAL its requirement — the same matching the
+//    column path does with deriveAccessRules. The real derived rides out so the
+//    emitter (minimalSetsToRule / emitObstaclePaths) reproduces the gate.
 function* generateBraidFromSpecsGen({
     id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, decorChance = {}, C, G,
 }) {
@@ -1205,12 +1422,42 @@ function* generateBraidFromSpecsGen({
     const exits = exitSpecs.map((s) => norm(s, 'exit'));
     if (!exits.length) throw new Error('braid: at least one exit spec required');
     const pickups = (pickupSpecs ?? []).map((s) => norm(s, 'pickup'));
-    const trivial = (goals) => Object.fromEntries(goals.map((g) => [g.id, { minimalSets: [[]] }]));
+    const gated = [...exits, ...pickups].some((g) => g.req.length > 0);
+    // Regime-2 structural validation runs ONCE (spec-level, non-retryable) so a
+    // decline (unsupported gate, both arrows, non-nested) throws immediately.
+    const plan = gated ? planBraidGatedChain(exits, pickups) : null;
 
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
         yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
+        if (gated) {
+            // ── Regime 2: gated chain, verify minimal sets == requirement ──
+            let level;
+            try { level = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth }); }
+            catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
+            const modelErrors = validateLevel(level);
+            if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
+            const derived = deriveBraidAccessRules(level, { constants: C });
+            if (derived.defects.length > 0) { rejected.push(`attempt ${attempt}: ${derived.defects[0]}`); continue; }
+            const mismatches = [];
+            for (const g of exits) {
+                if (!sameSets(derived.exits[g.id].minimalSets, g.req)) {
+                    mismatches.push(`exit '${g.id}' derived `
+                        + `${JSON.stringify(derived.exits[g.id].minimalSets)} != [${g.req}]`);
+                }
+            }
+            for (const g of pickups) {
+                if (!sameSets(derived.pickups[g.id].minimalSets, g.req)) {
+                    mismatches.push(`pickup '${g.id}' derived `
+                        + `${JSON.stringify(derived.pickups[g.id].minimalSets)} != [${g.req}]`);
+                }
+            }
+            if (mismatches.length === 0) return { level, derived };
+            rejected.push(`attempt ${attempt}: ${mismatches[0]}`);
+            continue;
+        }
+        // ── Regime 1: fork braid, verify pure reachability ──────────────
         let level;
         try { level = proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter, width: braidWidth, decorChance }); }
         catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
@@ -1231,6 +1478,7 @@ function* generateBraidFromSpecsGen({
             ...(level.pickups ?? []).filter((pk) => !reach.has(pk.on)).map((pk) => `pickup '${pk.id}'`),
         ];
         if (bad.length === 0) {
+            const trivial = (gs) => Object.fromEntries(gs.map((g) => [g.id, { minimalSets: [[]] }]));
             return { level, derived: { exits: trivial(exits), pickups: trivial(pickups) } };
         }
         rejected.push(`attempt ${attempt}: ${bad[0]} unreachable`);
