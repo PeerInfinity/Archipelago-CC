@@ -7,6 +7,7 @@ import {
     buildPlatformGraph,
     findJumpPath,
     reachablePlatforms,
+    reachableBraidPlatforms,
     isTeleportHost,
 } from './canJump.js';
 import { noAbilities, allAbilities } from './suppression.js';
@@ -181,18 +182,29 @@ describe('teleport-to-start hosts (terminal + entrance edge)', () => {
         expect(isTeleportHost(makeLevel({ platforms: [{ id: 'g0', x: 200, y: 1100, type: 'green' }] }), 'g0')).toBe(false);
     });
 
-    it('is a terminal: landable (incoming edges) but no outgoing climb edges', () => {
+    it('is landable; terminal-ness is enforced by the graph, not raw canJump', () => {
         const level = tpLevel();
-        expect(canJump(level, 'g0', 't1', noAbilities())).toBe(true);  // can land on it
-        expect(canJump(level, 't1', 'g2', noAbilities())).toBe(false); // cannot climb off it
+        // canJump reports raw PHYSICS — you can land on the host (g0→t1) and
+        // a launch off it is physically possible (t1→g2). The terminal-ness
+        // (no climb edges) is applied by the reachability builders, not here —
+        // keeping the N²-per-graph canJump hot path free of a teleport probe.
+        expect(canJump(level, 'g0', 't1', noAbilities())).toBe(true);
+        expect(canJump(level, 't1', 'g2', noAbilities())).toBe(true);
     });
 
-    it('graph: teleport host edges only to ENTRANCE; the goal above is walled off', () => {
+    it('graph: teleport host edges ONLY to ENTRANCE; the goal above is walled off', () => {
         const level = tpLevel();
         const graph = buildPlatformGraph(level, noAbilities());
-        expect([...graph.edges.get('t1')]).toEqual([ENTRANCE]);
+        expect([...graph.edges.get('t1')]).toEqual([ENTRANCE]); // terminal: no climb edges
         // g2 sits only above the terminal teleport host → unreachable.
         expect(reachablePlatforms(graph)).toEqual(new Set(['g0', 't1']));
+    });
+
+    it('reachableBraidPlatforms also treats the host as a launch terminal', () => {
+        const level = tpLevel();
+        // g0 and t1 are reached (landable); g2 above the terminal host is not.
+        const reached = reachableBraidPlatforms(level, noAbilities());
+        expect(reached).toEqual(new Set(['g0', 't1']));
     });
 });
 

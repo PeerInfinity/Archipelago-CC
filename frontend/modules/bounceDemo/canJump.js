@@ -43,7 +43,10 @@ export const ENTRANCE = 'entrance';
  * unaffected). Tiny scan; `teleports` holds at most a few entries per level.
  */
 export function isTeleportHost(level, platformId) {
-    return (level.teleports ?? []).some((t) => t.on === platformId);
+    const teleports = level.teleports;
+    if (!teleports) return false; // hot path: most levels carry no teleports
+    for (const t of teleports) if (t.on === platformId) return true;
+    return false;
 }
 
 // ── Phase machinery (dj behaviors: moving blues, breaking browns) ────
@@ -358,10 +361,12 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
     } else {
         const from = platformById(level, fromId);
         if (!from || !isPlatformActive(from, abilities)) return fail;
-        // Teleport-to-start hosts are TERMINALS (like breaking browns): a
-        // landing sends the player home, so there are no outgoing climb
-        // edges. You can still land ON one (incoming edges are fine).
-        if (isTeleportHost(level, fromId)) return fail;
+        // NOTE: teleport-to-start hosts are terminals too (a landing sends the
+        // player home), but that's enforced once per `from` by the
+        // reachability builders (buildPlatformGraph / reachableBraidPlatforms),
+        // NOT here. canJumpDetailed is the N²-per-graph hot path; a
+        // per-(from,to) `level.teleports` probe measurably slowed the column
+        // derive (~30%), and it only depends on `from`. See isTeleportHost.
         // Breaking browns are goal hosts, never launch steps: the weak
         // bounce's strength depends on the route's arrival speed (see
         // the phase-machinery header).
@@ -544,7 +549,12 @@ export function buildPlatformGraph(level, abilities, opts = {}) {
     const platforms = activePlatforms(level, abilities);
     const nodes = [ENTRANCE, ...platforms.map((p) => p.id)];
     const edges = new Map(nodes.map((n) => [n, new Set()]));
+    // Teleport-to-start hosts are TERMINALS — a landing sends the player home,
+    // so they get no climb edges. Skipping them once per from-node (cheap)
+    // keeps the per-(from,to) canJump hot path clean (see canJumpDetailed).
+    const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
     for (const from of nodes) {
+        if (teleportHosts.has(from)) continue;
         for (const p of platforms) {
             if (p.id === from) continue;
             if (canJump(level, from, p.id, abilities, opts)) {
@@ -552,13 +562,12 @@ export function buildPlatformGraph(level, abilities, opts = {}) {
             }
         }
     }
-    // Teleport-to-start hosts route back to the ENTRANCE: the bot can
-    // deliberately path to one to return home (replacing the old "fall off
-    // the level" descend). `canJump` makes the host a terminal, so this is
-    // its ONLY outgoing edge. Guarded by activity (a suppressed host has no
+    // ...and a teleport host's ONLY outgoing edge is back to the ENTRANCE: the
+    // bot can deliberately path to one to return home (replacing the old "fall
+    // off the level" descend). Guarded by activity (a suppressed host has no
     // node).
-    for (const t of level.teleports ?? []) {
-        if (edges.has(t.on)) edges.get(t.on).add(ENTRANCE);
+    for (const host of teleportHosts) {
+        if (edges.has(host)) edges.get(host).add(ENTRANCE);
     }
     return { level, abilities, nodes, edges };
 }
@@ -642,17 +651,24 @@ export function reachableBraidPlatforms(level, abilities, opts = {}) {
     // own platform isn't a reachable landing (you pass through without landing).
     const moverIds = new Set(movingBlues(level, abilities, C).map((p) => p.id));
     const passThrough = rows.map((row) => row.some((p) => moverIds.has(p.id)));
+    // Teleport-to-start hosts are landable but TERMINAL: they can be reached
+    // (and be a goal), but never LAUNCH — a landing sends the player home. So
+    // they're excluded from the launcher set (the row-aware analog of the
+    // graph skipping their out-edges). Cheap once-per-host set.
+    const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
 
     const reached = new Set();
     const remaining = goalHosts ? new Set(goalHosts) : null;
     // Bottom → top single pass (skip edges only point upward, so every row's
     // launchers are already finalised below it). Launchers for row i: the
-    // reached platforms in row i-1, walking further down through any
-    // pass-through rows; the entrance seeds the bottom row.
+    // reached platforms in row i-1 (minus teleport hosts), walking further
+    // down through any pass-through rows; the entrance seeds the bottom row.
     for (let i = 0; i < rows.length; i++) {
         const launchers = i === 0 ? [ENTRANCE] : [];
         for (let j = i - 1; j >= 0; j--) {
-            for (const p of rows[j]) if (reached.has(p.id)) launchers.push(p.id);
+            for (const p of rows[j]) {
+                if (reached.has(p.id) && !teleportHosts.has(p.id)) launchers.push(p.id);
+            }
             if (!passThrough[j]) break; // opaque row stops the skip-through
         }
         for (const p of rows[i]) {
