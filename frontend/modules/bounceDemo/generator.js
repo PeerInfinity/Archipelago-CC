@@ -1001,7 +1001,7 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
     const jit = () => (maxStep ? (rng.next() * 2 - 1) * maxStep : 0);
 
     let nid = 0;
-    const platforms = [], portals = [], pickupEntities = [], springEntities = [], jetpackEntities = [];
+    const platforms = [], portals = [], pickupEntities = [], springEntities = [], jetpackEntities = [], teleportEntities = [];
     const place = (x, y, type = 'green') => {
         const p = { id: `b${nid++}`, x: wrap(x), y, type };
         platforms.push(p);
@@ -1015,7 +1015,7 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
     //  - BROWN: only terminal — it breaks on landing and its weak bounce can't
     //    clear a plain step, so it goes where you don't climb on from it: one
     //    branch of an about-to-merge pair (the OTHER, green branch reaches the
-    //    merge), or a top-row branch (you bounce over the top → entrance loop).
+    //    merge), or the top-row PORTAL branch (terminal — it exits the region).
     //  - SPRING / JETPACK: only 1-lane rows — they launch HIGHER, so the gap
     //    ABOVE them grows to SPRING_GAP / JETPACK_GAP, which a single row can
     //    own only when there's one lane. (A 2-lane row would need both lanes to
@@ -1056,6 +1056,12 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
     };
     const placeExit = (p, e) => portals.push({
         id: e.id, x: p.x, y: p.y - 20, on: p.id, target_region: null, direction: e.direction ?? 'up',
+    });
+    // A teleport-to-start host: landing returns the player to the entrance.
+    // Used on the top row's portal-free branch (replacing the over-the-top
+    // wraparound) — terminal, so it ends a branch without stranding the climber.
+    const placeTeleport = (p) => teleportEntities.push({
+        id: `tp_${p.id}`, x: p.x, y: p.y - 20, on: p.id,
     });
     // Fork the single lane into two branches at the current y. A portal goes
     // on AT MOST ONE branch (random side); the OTHER branch is always
@@ -1120,10 +1126,10 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
     if (pendingExits.length || pendingPickups.length) {
         throw new Error(`braid: ${pendingExits.length} exits + ${pendingPickups.length} pickups unplaced`);
     }
-    // Top row: a FORK — one branch hosts the reserved portal, the OTHER is
-    // portal-free. So even at the top there's always a branch with no portal;
-    // bouncing over it loops the player to the entrance (gameCore's
-    // over-the-top return, which needs no portal-lock check thanks to this).
+    // Top row: a FORK — one branch hosts the reserved portal, the OTHER hosts
+    // a teleport-to-start. So even at the top there's always a portal-free
+    // branch, and climbing it returns the player to the entrance (the teleport
+    // REPLACES the old over-the-top wraparound — one mechanic, not two).
     if (lanes.length === 2) {
         y -= nextGap;
         nextGap = PLAIN_DY;
@@ -1133,15 +1139,22 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
         nextGap = decorate1Lane(m);
     }
     y -= nextGap;
-    fork(lanes[0], capExit);
-    // Top-row branches are terminal (you bounce over the top → entrance loop),
-    // so either may BREAK (brown) — brown's weak bounce still clears the row.
-    for (const lane of lanes) maybeBrown(lane);
+    {
+        const L = place(lanes[0].x - forkHalf, y);
+        const R = place(lanes[0].x + forkHalf, y);
+        lanes = [L, R];
+        const [portalSide, teleSide] = rng.next() < 0.5 ? [L, R] : [R, L];
+        placeExit(portalSide, capExit);
+        placeTeleport(teleSide);
+        // The portal branch is terminal (it exits), so it may BREAK (brown);
+        // the teleport branch stays solid (a breaking teleport adds nothing).
+        maybeBrown(portalSide);
+    }
 
     let minY = 0;
     for (const p of platforms) minY = Math.min(minY, p.y);
     const shiftY = 60 - minY; // entrance to the bottom; x already absolute in [0,W)
-    for (const arr of [platforms, portals, pickupEntities, springEntities, jetpackEntities]) {
+    for (const arr of [platforms, portals, pickupEntities, springEntities, jetpackEntities, teleportEntities]) {
         for (const e of arr) e.y += shiftY;
     }
     // Moving-blue sweeps run the full level width (dj). In level coords, so
@@ -1154,7 +1167,8 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
     }
     return {
         id, size: { width: W, height: shiftY + 100 },
-        platforms, springs: springEntities, jetpacks: jetpackEntities, pickups: pickupEntities, portals,
+        platforms, springs: springEntities, jetpacks: jetpackEntities,
+        pickups: pickupEntities, portals, teleports: teleportEntities,
     };
 }
 

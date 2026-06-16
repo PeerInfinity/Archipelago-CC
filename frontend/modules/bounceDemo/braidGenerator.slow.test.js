@@ -89,6 +89,14 @@ describe('braid generator (Regime 1, width 240)', () => {
             expect(top.length, `seed ${seed} top is a fork`).toBe(2);
             const topPortals = level.portals.filter((p) => top.some((pl) => pl.id === p.on));
             expect(topPortals.length, `seed ${seed} top has one portal + one free branch`).toBe(1);
+
+            // The portal-free top branch hosts a teleport-to-start (replacing
+            // the over-the-top return): exactly one teleport, on the top row,
+            // on the non-portal branch.
+            expect(level.teleports?.length, `seed ${seed} one top teleport`).toBe(1);
+            const tp = level.teleports[0];
+            expect(top.some((pl) => pl.id === tp.on), `seed ${seed} teleport on the top row`).toBe(true);
+            expect(topPortals.some((p) => p.on === tp.on), `seed ${seed} teleport not on the portal branch`).toBe(false);
         }
     });
 

@@ -19,7 +19,10 @@
  *                portal per session; in the embedded game the host
  *                unloads the region on the first one anyway).
  *  - 'fell'    — fell out of the level; the session auto-respawns at
- *                the entrance.
+ *                the entrance. A landing on a teleport-to-start host emits
+ *                the same event tagged `teleport:true` (the braid's top-row
+ *                return + the Regime-2 escape hatch), so fallBehavior is
+ *                honored identically.
  *  - 'lockedPortal' / 'lockedPickup' — landed on a goal whose gate
  *                state is closed (rule-gated portals/pickups: the host
  *                bridge evaluates authored access rules and pushes
@@ -61,20 +64,10 @@ export function createGameSession(level, opts = {}) {
     const collected = new Set();
     const exitedPortals = new Set();
 
-    // The region's TOP row = the platforms with the smallest y. Landing on a
-    // top-row platform WITHOUT exiting (the braid always leaves a portal-free
-    // branch up there, and a locked portal doesn't teleport) arms the
-    // over-the-top return: the next rise above the row loops the player to the
-    // entrance. No portal-lock check is needed — the guaranteed portal-free
-    // top branch is the over-the-top path.
-    const platformById = new Map((level.platforms ?? []).map((p) => [p.id, p]));
-    let topY = Infinity;
-    for (const p of level.platforms ?? []) if (p.y < topY) topY = p.y;
-    let overTopArmed = false;
-
     // Teleport-to-start hosts: landing on one returns the player to the
-    // entrance (the Regime-2 escape hatch / top return). Same respawn path as
-    // a fall off the bottom, so it honors fallBehavior exactly.
+    // entrance (the Regime-2 escape hatch, and the braid's top-row return — it
+    // REPLACED the old over-the-top wraparound). Same respawn path as a fall
+    // off the bottom, so it honors fallBehavior exactly.
     const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
 
     return {
@@ -111,7 +104,6 @@ export function createGameSession(level, opts = {}) {
         reset() {
             state = spawnState(level, C);
             exitedPortals.clear();
-            overTopArmed = false;
         },
 
         /** Advance one frame; returns the frame's events. */
@@ -121,19 +113,6 @@ export function createGameSession(level, opts = {}) {
             if (state.fallen) {
                 events.push({ type: 'fell' });
                 state = spawnState(level, C);
-                overTopArmed = false;
-                return events;
-            }
-            // Over-the-top return: once the player has landed on the top row,
-            // rising back above it loops them to the entrance — the SAME 'fell'
-            // path as dropping off the bottom, so it honors fallBehavior.
-            // (Armed only AFTER a top-row landing, so the climb UP to it —
-            // which passes above the line on the way to the apex — doesn't
-            // trigger.)
-            if (overTopArmed && state.y < topY) {
-                events.push({ type: 'fell', overTop: true });
-                state = spawnState(level, C);
-                overTopArmed = false;
                 return events;
             }
             if (state.landedOn) {
@@ -144,7 +123,6 @@ export function createGameSession(level, opts = {}) {
                 if (teleportHosts.has(state.landedOn)) {
                     events.push({ type: 'fell', teleport: true });
                     state = spawnState(level, C);
-                    overTopArmed = false;
                     return events;
                 }
                 for (const pk of level.pickups ?? []) {
@@ -169,12 +147,6 @@ export function createGameSession(level, opts = {}) {
                         direction: pt.direction ?? null,
                     });
                 }
-                // Arm the over-the-top return iff this landing is on the top
-                // row AND didn't exit a portal (open top portal = leave the
-                // region, no loop); any other landing disarms it.
-                const landedY = platformById.get(state.landedOn)?.y;
-                const exitedThisLanding = events.some((e) => e.type === 'exit');
-                overTopArmed = landedY !== undefined && landedY <= topY && !exitedThisLanding;
             }
             return events;
         },
