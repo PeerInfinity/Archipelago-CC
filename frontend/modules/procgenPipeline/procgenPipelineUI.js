@@ -2084,10 +2084,20 @@ export class ProcgenPipelineUI {
             seed,
             hazardOpts: this._effectiveHazardOpts(),
             // Substrate-specific knobs ride regionParams (maze ignores
-            // unknown keys; bounce stamps fallBehavior into payloads).
+            // unknown keys; bounce stamps fallBehavior into payloads). The
+            // braid layout (Regime-2 gated chains) + its width and per-row
+            // jitter thread through to the bounce zone generator, which
+            // honours each goal's requirement (arrow gate rows + blue gates).
+            // No bounceDecorChance here: in sphere growth abilities are GATED,
+            // so decorative blue/spring/etc would block a player lacking them.
             regionParams: {
                 fallBehavior: this.params.bounceFallBehavior ?? 'current',
                 physicsProfile: this.params.bouncePhysicsProfile ?? 'classic',
+                ...(this.params.bounceLayout === 'braid' ? {
+                    bounceMode: 'braid',
+                    braidWidth: this.params.bounceBraidWidth ?? 240,
+                    bounceJitter: this.params.bounceJitter ?? 40,
+                } : {}),
             },
             growthParams: {
                 spherePlan: plan,
