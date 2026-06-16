@@ -603,6 +603,7 @@ export function reachablePlatforms(graph) {
  */
 export function reachableBraidPlatforms(level, abilities, opts = {}) {
     const { goalHosts, ...queryOpts } = opts;
+    const C = queryOpts.constants ?? DEFAULTS;
     const platforms = activePlatforms(level, abilities);
     const byY = new Map();
     for (const p of platforms) {
@@ -610,27 +611,38 @@ export function reachableBraidPlatforms(level, abilities, opts = {}) {
         if (row) row.push(p); else byY.set(p.y, [p]);
     }
     const ys = [...byY.keys()].sort((a, b) => b - a); // bottom (largest y) first
+    const rows = ys.map((y) => byY.get(y)); // index 0 = bottom row
+
+    // A row is "pass-through" if it holds a moving blue: a launch from BELOW
+    // it can bounce THROUGH to a platform ABOVE (canJump auto-passes-through
+    // movers — see the phase-machinery header), a skip-row edge the strict
+    // adjacent sweep would miss. Such a row stays transparent even when its
+    // own platform isn't a reachable landing (you pass through without landing).
+    const moverIds = new Set(movingBlues(level, abilities, C).map((p) => p.id));
+    const passThrough = rows.map((row) => row.some((p) => moverIds.has(p.id)));
 
     const reached = new Set();
     const remaining = goalHosts ? new Set(goalHosts) : null;
-    // Ids in the row immediately below the one being filled — the only
-    // platforms that can launch into it. Seeded with the entrance.
-    let below = [ENTRANCE];
-    for (const y of ys) {
-        const nowReached = [];
-        for (const p of byY.get(y)) {
-            for (const from of below) {
+    // Bottom → top single pass (skip edges only point upward, so every row's
+    // launchers are already finalised below it). Launchers for row i: the
+    // reached platforms in row i-1, walking further down through any
+    // pass-through rows; the entrance seeds the bottom row.
+    for (let i = 0; i < rows.length; i++) {
+        const launchers = i === 0 ? [ENTRANCE] : [];
+        for (let j = i - 1; j >= 0; j--) {
+            for (const p of rows[j]) if (reached.has(p.id)) launchers.push(p.id);
+            if (!passThrough[j]) break; // opaque row stops the skip-through
+        }
+        for (const p of rows[i]) {
+            for (const from of launchers) {
                 if (canJump(level, from, p.id, abilities, queryOpts)) {
                     reached.add(p.id);
-                    nowReached.push(p.id);
                     remaining?.delete(p.id);
                     break;
                 }
             }
         }
-        below = nowReached;
         if (remaining && remaining.size === 0) break; // every goal reached
-        if (nowReached.length === 0) break; // dead row → nothing above is reachable
     }
     return reached;
 }

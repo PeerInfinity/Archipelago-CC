@@ -26,7 +26,16 @@
  */
 
 import { activePlatforms } from './suppression.js';
-import { buildPlatformGraph, reachablePlatforms } from './canJump.js';
+import { buildPlatformGraph, reachablePlatforms, reachableBraidPlatforms } from './canJump.js';
+
+/**
+ * Default reachability: build the full N² edge graph and flood. Sound for
+ * any level under any ability set. `reachabilityTable` takes this as an
+ * injectable `opts.reach` so braids can swap in the cheaper row-aware flood.
+ */
+function fullGraphReach(level, abilities, opts) {
+    return reachablePlatforms(buildPlatformGraph(level, abilities, opts));
+}
 
 const ALL_ABILITIES = ['left', 'right', 'springs', 'jetpacks', 'blue', 'brown'];
 
@@ -63,6 +72,7 @@ const setKey = (names) => [...names].sort().join('+') || '(none)';
  */
 export function reachabilityTable(level, opts = {}) {
     const universe = opts.universe ?? abilityUniverse(level);
+    const reach = opts.reach ?? fullGraphReach;
     const table = new Map();
     const bySignature = new Map();
 
@@ -79,8 +89,7 @@ export function reachabilityTable(level, opts = {}) {
 
         let entry = bySignature.get(signature);
         if (!entry) {
-            const graph = buildPlatformGraph(level, abilities, opts);
-            const platforms = reachablePlatforms(graph);
+            const platforms = reach(level, abilities, opts);
             const pickups = new Set((level.pickups ?? [])
                 .filter((pk) => platforms.has(pk.on))
                 .map((pk) => pk.id));
@@ -155,6 +164,28 @@ export function deriveAccessRules(level, opts = {}) {
         }
     }
     return result;
+}
+
+/**
+ * Braid-specific derive: the per-subset minimal-set table over the cheap
+ * row-aware flood (`reachableBraidPlatforms`) instead of the full N² graph.
+ *
+ * CORRECTNESS PRECONDITION — fork-free braids. The row-aware flood walks
+ * adjacent rows upward, so it is verdict-identical to the full solver only
+ * when down/within-row edges are redundant for reaching every goal: i.e. a
+ * single climbable platform per row (Regime-2 geometry; terminal teleport
+ * hosts don't count). On Regime-1 FORK levels under PARTIAL abilities the
+ * full solver reaches extra platforms via fall/within-row-wrap edges, so the
+ * two intentionally diverge there — Regime 1 verifies under FULL abilities
+ * only (a single `reachableBraidPlatforms` query, see generator.js), where
+ * they agree.
+ *
+ * Where they do differ, the row-aware result can only OVER-state a goal's
+ * requirement (miss a fall route), which is the safe direction for AP rules
+ * (pessimistic; never claims reachable-when-not).
+ */
+export function deriveBraidAccessRules(level, opts = {}) {
+    return deriveAccessRules(level, { ...opts, reach: reachableBraidPlatforms });
 }
 
 /** Human-readable rule, e.g. "(springs) OR (blue AND left)". */
