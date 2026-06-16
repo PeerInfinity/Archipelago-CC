@@ -39,7 +39,7 @@
 import { createRng } from '../shared/rng.js';
 import { DEFAULTS, PROFILES, launchRise, step } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
-import { buildPlatformGraph, reachablePlatforms } from './canJump.js';
+import { reachableBraidPlatforms } from './canJump.js';
 import { validateLevel } from './level.js';
 import {
     ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, BOUNCE_OBSTACLE_ID_BY_ABILITY,
@@ -1203,8 +1203,15 @@ function* generateBraidFromSpecsGen({
         const modelErrors = validateLevel(level);
         if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
         // Single full-ability reachability: every portal/pickup host reachable
-        // from the entrance when the player holds all free abilities.
-        const reach = reachablePlatforms(buildPlatformGraph(level, ALL_FREE_ABILITIES, { constants: C }));
+        // from the entrance when the player holds all free abilities. The braid
+        // is layered by rows with adjacent-row-only edges, so the row-aware
+        // flood (early-exiting once every goal host is reached) is verdict-
+        // identical to the full N² graph at a fraction of the canJump calls.
+        const goalHosts = [
+            ...(level.portals ?? []).map((pt) => pt.on),
+            ...(level.pickups ?? []).map((pk) => pk.on),
+        ];
+        const reach = reachableBraidPlatforms(level, ALL_FREE_ABILITIES, { constants: C, goalHosts });
         const bad = [
             ...(level.portals ?? []).filter((pt) => !reach.has(pt.on)).map((pt) => `exit '${pt.id}'`),
             ...(level.pickups ?? []).filter((pk) => !reach.has(pk.on)).map((pk) => `pickup '${pk.id}'`),

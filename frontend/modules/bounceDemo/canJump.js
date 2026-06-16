@@ -575,3 +575,62 @@ export function reachablePlatforms(graph) {
     seen.delete(ENTRANCE);
     return seen;
 }
+
+/**
+ * Row-aware reachability for BRAID levels — a layered shortcut to
+ * `reachablePlatforms(buildPlatformGraph(...))` that exploits the braid's
+ * geometry instead of building the full N² edge graph.
+ *
+ * A braid is built strictly row by row (generator.proposeBraidLevel): every
+ * platform in one row shares a `y`, each row sits exactly one launch-gap above
+ * the previous, and the ONLY real edges go from a row to the row immediately
+ * above it (forks place both branches at the next y; gaps are sized so one
+ * launch clears exactly one gap). Edges within a row or down a row are
+ * physically possible in spots but REDUNDANT for entrance reachability — every
+ * platform is already reached climbing up (forks make both lanes reachable
+ * from their shared parent; merges reach the merged lane). So flooding only
+ * the adjacent-row edges yields the SAME reachable set as the full graph, at
+ * ~2N `canJump` calls instead of N².
+ *
+ * Layered sweep, bottom (max y) → top: the entrance launches into the bottom
+ * row; each reached row launches into the next. `goalHosts` (portal/pickup
+ * host ids) lets the sweep early-exit the moment every goal is reached.
+ *
+ * Ability-parametric (takes whatever `abilities` it's given) so the same
+ * primitive serves Regime 1 (full inventory) and Regime 2 (gated subsets).
+ * Mirrors `reachablePlatforms`' contract: returns the Set of reached platform
+ * ids (ENTRANCE excluded).
+ */
+export function reachableBraidPlatforms(level, abilities, opts = {}) {
+    const { goalHosts, ...queryOpts } = opts;
+    const platforms = activePlatforms(level, abilities);
+    const byY = new Map();
+    for (const p of platforms) {
+        const row = byY.get(p.y);
+        if (row) row.push(p); else byY.set(p.y, [p]);
+    }
+    const ys = [...byY.keys()].sort((a, b) => b - a); // bottom (largest y) first
+
+    const reached = new Set();
+    const remaining = goalHosts ? new Set(goalHosts) : null;
+    // Ids in the row immediately below the one being filled — the only
+    // platforms that can launch into it. Seeded with the entrance.
+    let below = [ENTRANCE];
+    for (const y of ys) {
+        const nowReached = [];
+        for (const p of byY.get(y)) {
+            for (const from of below) {
+                if (canJump(level, from, p.id, abilities, queryOpts)) {
+                    reached.add(p.id);
+                    nowReached.push(p.id);
+                    remaining?.delete(p.id);
+                    break;
+                }
+            }
+        }
+        below = nowReached;
+        if (remaining && remaining.size === 0) break; // every goal reached
+        if (nowReached.length === 0) break; // dead row → nothing above is reachable
+    }
+    return reached;
+}
