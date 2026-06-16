@@ -20,6 +20,10 @@
  *   is exactly host reachability. Their x/y is for rendering.
  * - `portals[].target_region` stays null in fixtures; the procgen
  *   pipeline fills it when stitching regions.
+ * - `teleports[].on` is LOAD-BEARING the same way: landing on the host
+ *   sends the player back to the entrance (the Regime-2 escape hatch and
+ *   the top-row return). A teleport host is a verifier TERMINAL (no
+ *   outgoing climb edges) and produces no AP goal — runtime-only.
  */
 
 const PLATFORM_TYPES = new Set(['green', 'blue', 'brown']);
@@ -83,6 +87,9 @@ export function validateLevel(level) {
     checkEntities(errors, level, 'jetpacks', { requireOn: true });
     // pickups and portals are landing-triggered, so hosts are semantic
     checkEntities(errors, level, 'pickups', { requireOn: true });
+    // teleport-to-start hosts are landing-triggered too (landing sends the
+    // player back to the entrance — the Regime-2 escape hatch / top return).
+    checkEntities(errors, level, 'teleports', { requireOn: true });
     const portalIds = checkEntities(errors, level, 'portals', { requireOn: true });
     for (const pt of level.portals ?? []) {
         if (pt.direction !== undefined

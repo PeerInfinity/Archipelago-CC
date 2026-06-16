@@ -72,6 +72,11 @@ export function createGameSession(level, opts = {}) {
     for (const p of level.platforms ?? []) if (p.y < topY) topY = p.y;
     let overTopArmed = false;
 
+    // Teleport-to-start hosts: landing on one returns the player to the
+    // entrance (the Regime-2 escape hatch / top return). Same respawn path as
+    // a fall off the bottom, so it honors fallBehavior exactly.
+    const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
+
     return {
         level,
         get state() { return state; },
@@ -132,6 +137,16 @@ export function createGameSession(level, opts = {}) {
                 return events;
             }
             if (state.landedOn) {
+                // Teleport-to-start: landing sends the player home. Emits the
+                // SAME 'fell' event as a bottom fall (main.js handles
+                // fallBehavior), tagged so the page can show a distinct
+                // message. No goals trigger on a teleport host.
+                if (teleportHosts.has(state.landedOn)) {
+                    events.push({ type: 'fell', teleport: true });
+                    state = spawnState(level, C);
+                    overTopArmed = false;
+                    return events;
+                }
                 for (const pk of level.pickups ?? []) {
                     if (pk.on !== state.landedOn || collected.has(pk.id)) continue;
                     if (!isOpen('pickups', pk.id)) {

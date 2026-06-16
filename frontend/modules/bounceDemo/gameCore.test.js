@@ -131,6 +131,32 @@ describe('createGameSession', () => {
     });
 });
 
+describe('teleport-to-start', () => {
+    // Entrance at the bottom + a teleport host one plain step above, both at
+    // the spawn column so a no-input player climbs straight onto the host.
+    const tpLevel = () => makeLevel({
+        size: { width: 240, height: 280 },
+        platforms: [
+            { id: 'entrance', x: 120, y: 180, type: 'green' },
+            { id: 'tp_host', x: 120, y: 60, type: 'green' },
+        ],
+        teleports: [{ id: 'tp', x: 120, y: 40, on: 'tp_host' }],
+    });
+
+    it('landing on a teleport host emits fell(teleport:true) and respawns', () => {
+        const session = createGameSession(tpLevel());
+        let teleported = false;
+        for (let i = 0; i < 300 && !teleported; i++) {
+            for (const ev of session.tick(null)) {
+                if (ev.type === 'fell' && ev.teleport) teleported = true;
+            }
+        }
+        expect(teleported).toBe(true);
+        expect(session.state.x).toBeCloseTo(120, 0); // back at the spawn column
+        expect(session.state.fallen).toBe(false);
+    });
+});
+
 describe('over-the-top return (locked top portal)', () => {
     // Entrance at the bottom + a capstone one plain step above hosting the
     // only portal, both stacked at the spawn column so a no-input player

@@ -7,6 +7,7 @@ import {
     buildPlatformGraph,
     findJumpPath,
     reachablePlatforms,
+    isTeleportHost,
 } from './canJump.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { PROFILES } from './physics.js';
@@ -159,6 +160,39 @@ describe('platform graph + simulatorCore integration', () => {
         });
         const graph = buildPlatformGraph(level, noAbilities());
         expect(graph.nodes).toEqual([ENTRANCE, 'g0']);
+    });
+});
+
+describe('teleport-to-start hosts (terminal + entrance edge)', () => {
+    // A column where the middle platform hosts a teleport-to-start.
+    const tpLevel = () => makeLevel({
+        platforms: [
+            { id: 'g0', x: 200, y: 1100, type: 'green' },
+            { id: 't1', x: 200, y: 980, type: 'green' }, // one step above g0
+            { id: 'g2', x: 200, y: 860, type: 'green' }, // one step above t1
+        ],
+        teleports: [{ id: 'tp', x: 200, y: 960, on: 't1' }],
+    });
+
+    it('isTeleportHost flags only the host platform', () => {
+        const level = tpLevel();
+        expect(isTeleportHost(level, 't1')).toBe(true);
+        expect(isTeleportHost(level, 'g0')).toBe(false);
+        expect(isTeleportHost(makeLevel({ platforms: [{ id: 'g0', x: 200, y: 1100, type: 'green' }] }), 'g0')).toBe(false);
+    });
+
+    it('is a terminal: landable (incoming edges) but no outgoing climb edges', () => {
+        const level = tpLevel();
+        expect(canJump(level, 'g0', 't1', noAbilities())).toBe(true);  // can land on it
+        expect(canJump(level, 't1', 'g2', noAbilities())).toBe(false); // cannot climb off it
+    });
+
+    it('graph: teleport host edges only to ENTRANCE; the goal above is walled off', () => {
+        const level = tpLevel();
+        const graph = buildPlatformGraph(level, noAbilities());
+        expect([...graph.edges.get('t1')]).toEqual([ENTRANCE]);
+        // g2 sits only above the terminal teleport host → unreachable.
+        expect(reachablePlatforms(graph)).toEqual(new Set(['g0', 't1']));
     });
 });
 

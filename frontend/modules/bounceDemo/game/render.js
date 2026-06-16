@@ -140,6 +140,27 @@ export function renderFrame(ctx, session, ui = {}) {
     }
     ctx.globalAlpha = 1;
 
+    // teleport-to-start hosts: a cyan ⟲ marker — landing here returns the
+    // player to the entrance (Regime-2 escape hatch / top-row return). Rides
+    // the host like the goals (ghosted/gone with a suppressed/broken host).
+    for (const tp of level.teleports ?? []) {
+        const alpha = hostAlpha(tp);
+        if (alpha === 0) continue;
+        ctx.globalAlpha = alpha;
+        const x = sx(goalX(tp));
+        const y = sy(tp.y);
+        ctx.strokeStyle = '#4ec9d8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 13, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = '#4ec9d8';
+        ctx.font = '14px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('⟲', x, y + 5);
+    }
+    ctx.globalAlpha = 1;
+
     // player
     const px = sx(state.x);
     const py = sy(state.y);

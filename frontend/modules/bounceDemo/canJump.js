@@ -36,6 +36,16 @@ import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 
 export const ENTRANCE = 'entrance';
 
+/**
+ * Is `platformId` the host of a teleport-to-start object? Such a host is a
+ * verifier terminal — landing on it returns the player to the entrance, so it
+ * has no outgoing climb edges (additive: levels without `teleports` are
+ * unaffected). Tiny scan; `teleports` holds at most a few entries per level.
+ */
+export function isTeleportHost(level, platformId) {
+    return (level.teleports ?? []).some((t) => t.on === platformId);
+}
+
 // ── Phase machinery (dj behaviors: moving blues, breaking browns) ────
 //
 // Moving platforms make edges PHASE-DEPENDENT. Phase is the session
@@ -348,6 +358,10 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
     } else {
         const from = platformById(level, fromId);
         if (!from || !isPlatformActive(from, abilities)) return fail;
+        // Teleport-to-start hosts are TERMINALS (like breaking browns): a
+        // landing sends the player home, so there are no outgoing climb
+        // edges. You can still land ON one (incoming edges are fine).
+        if (isTeleportHost(level, fromId)) return fail;
         // Breaking browns are goal hosts, never launch steps: the weak
         // bounce's strength depends on the route's arrival speed (see
         // the phase-machinery header).
@@ -537,6 +551,14 @@ export function buildPlatformGraph(level, abilities, opts = {}) {
                 edges.get(from).add(p.id);
             }
         }
+    }
+    // Teleport-to-start hosts route back to the ENTRANCE: the bot can
+    // deliberately path to one to return home (replacing the old "fall off
+    // the level" descend). `canJump` makes the host a terminal, so this is
+    // its ONLY outgoing edge. Guarded by activity (a suppressed host has no
+    // node).
+    for (const t of level.teleports ?? []) {
+        if (edges.has(t.on)) edges.get(t.on).add(ENTRANCE);
     }
     return { level, abilities, nodes, edges };
 }
