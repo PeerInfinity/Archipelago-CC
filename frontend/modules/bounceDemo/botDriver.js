@@ -25,14 +25,18 @@
  * Bounce physics cannot descend a column (every launch lands you back
  * on the same platform or higher), so a target BELOW the player can
  * be jump-unreachable from the current platform while perfectly
- * reachable from the entrance — branch tips attach to specific column
- * rungs, and the auto-climb routinely overshoots them. The driver's
- * answer is the DESCEND fallback: when no jump path exists from here
- * but one exists from the entrance, hold a drift direction to fall
- * off the level; the engine respawns at the entrance (real game
- * physics, fallBehavior 'current') and the next plan starts from the
- * verified low route. Any accidental landing on the way down just
- * re-plans — greedy re-plan makes the fall safe.
+ * reachable from the entrance — the auto-climb routinely overshoots
+ * branch tips. The driver recovers by returning to the entrance and
+ * re-planning from the verified low route. Two ways home:
+ *   - BRAIDS (and any teleport-equipped level): the platform graph gives
+ *     each teleport-to-start host an edge back to ENTRANCE, so a normal
+ *     shortest path threads `… → teleportHost → ENTRANCE → … → goal`. The
+ *     bot just climbs to the teleport host; landing there sends it home
+ *     (gameCore), and greedy re-plan takes the low route.
+ *   - LEGACY COLUMNS (no teleport host): the DESCEND fallback — hold a
+ *     drift direction to fall off the level; the engine respawns at the
+ *     entrance. Gated on the absence of a teleport route, and removable
+ *     once sphere growth emits braids instead of columns (Regime-2 step 6).
  */
 
 import { DEFAULTS, step as physicsStep } from './physics.js';
@@ -180,17 +184,28 @@ export function createBotDriver(opts = {}) {
                 .filter((pt) => pt.id !== target?.id && isPortalOpen(pt.id))
                 .map((pt) => pt.on));
         for (const id of state.broken ?? []) blocked.add(id);
+        // The graph routes a teleport-to-start host back to ENTRANCE (its
+        // only out-edge), so on a braid this path naturally threads
+        // lastPlatform → … → teleportHost → ENTRANCE → … → goalHost when the
+        // goal is only reachable from below: the bot climbs to the teleport
+        // host, lands (gameCore sends it home), and re-plans from the verified
+        // low route. No descend needed — that's how the braid recovers from
+        // an overshoot.
         const path = shortestPath(g, lastPlatform, goalHost, blocked)
             ?? shortestPath(g, lastPlatform, goalHost);
         if (!path || path.length < 2) {
-            // No jump route from here. If the entrance can reach the
-            // goal and we can steer, deliberately fall off the level —
-            // the respawn IS the route down (see header). Without
-            // arrows we can't leave the column, so park and wait
-            // (items may still arrive and change the graph).
+            // No jump route from here AND no teleport route home (a
+            // teleport-less LEGACY COLUMN level — braids always carry a top
+            // teleport, so they'd have found the route above). If the
+            // entrance can reach the goal and we can steer, deliberately fall
+            // off the level — the respawn IS the route down. Without arrows
+            // we can't leave the column, so park and wait (items may still
+            // arrive and change the graph). Removable once sphere growth
+            // emits braids instead of columns (Regime-2 step 6).
+            const hasTeleport = (level.teleports ?? []).length > 0;
             const fromEntrance = shortestPath(g, ENTRANCE, goalHost, blocked)
                 ?? shortestPath(g, ENTRANCE, goalHost);
-            if (fromEntrance && lastPlatform !== ENTRANCE
+            if (!hasTeleport && fromEntrance && lastPlatform !== ENTRANCE
                     && (abilities.left || abilities.right)) {
                 const dir = abilities.right ? { right: true } : { left: true };
                 policyFn = () => dir;
