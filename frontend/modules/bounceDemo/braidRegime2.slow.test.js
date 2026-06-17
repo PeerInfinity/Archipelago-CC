@@ -79,3 +79,47 @@ describe('braid Regime 2 — proposer fuzz (gated chains verify against the full
         }
     }
 });
+
+// Column-FALLBACK cases. The braid gates every item type, but only as a single
+// NESTED chain; what it still can't express — two arrows, or mutually-
+// incomparable non-brown reqs — must NOT abort: braid mode falls back to the
+// column proposer for that region (the bot handles both layouts; the grower
+// guarantees column-compatibility, so the column always builds). The fallback
+// is a column (width !== braid's 240) whose rules still match the requirement.
+// SLOW (lives here, not the fast file): the column proposer + the full
+// deriveAccessRules oracle run ~6s each and flake on the fast suite's
+// non-interruptible 10s timeout under parallel contention (vitest.config.js).
+describe('braid Regime 2 — falls back to a column when out of braid vocabulary', () => {
+    const ruleFor = (d, kind, id) => formatRule(d[kind][id].minimalSets);
+    const expectColumnFallback = (exits, pickups = []) => {
+        const level = gen(exits, pickups, 1, 'right');
+        expect(validateLevel(level), 'model errors').toEqual([]);
+        expect(level.size.width, 'should be a column, not a 240 braid').not.toBe(W);
+        const d = deriveAccessRules(level, { constants: C });
+        expect(d.defects, 'column defects').toEqual([]);
+        for (const s of exits) {
+            expect(ruleFor(d, 'exits', s.id), `exit ${s.id}`).toBe(wantRule(s.requirement));
+        }
+        for (const s of pickups) {
+            expect(ruleFor(d, 'pickups', s.id), `pickup ${s.id}`).toBe(wantRule(s.requirement));
+        }
+    };
+
+    it('both arrows in one region → column', () => {
+        expectColumnFallback([
+            { id: 'gl', requirement: ['left'], direction: 'up' },
+            { id: 'gr', requirement: ['right'], direction: 'right' },
+        ]);
+    });
+
+    it('mutually-incomparable requirements (left vs blue) → column', () => {
+        // Neither [left] nor [blue] is a subset of the other, so they can't both
+        // live in one nested braid chain. The column hosts it (blue column-top +
+        // left branch tip) — and unlike two arrowless gates, the grower's veto
+        // permits this (≤1 arrowless), so it's a real fallback, not an abort.
+        expectColumnFallback([
+            { id: 'gl', requirement: ['left'], direction: 'right' },
+            { id: 'gb', requirement: ['blue'], direction: 'up' },
+        ]);
+    });
+});

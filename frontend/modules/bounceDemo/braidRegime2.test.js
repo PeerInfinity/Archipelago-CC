@@ -183,46 +183,11 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
     });
 });
 
-describe('braid Regime 2 — falls back to a column when out of braid vocabulary', () => {
-    // The braid gates every item type now, but only as a single NESTED chain.
-    // What it still can't express — two arrows, mutually-incomparable reqs, or a
-    // non-ceiling brown — must NOT abort: braid mode falls back to the column
-    // proposer for that region (the bot handles both layouts; the grower only
-    // guarantees column-compatibility, so the column always builds). The
-    // fallback level is a column (width !== braid's 240) whose rules still match.
-    const expectColumnFallback = (exits, pickups = []) => {
-        const level = gen(exits, pickups);
-        expect(validateLevel(level), 'model errors').toEqual([]);
-        expect(level.size.width, 'should be a column, not a 240 braid').not.toBe(W);
-        const d = deriveAccessRules(level, { constants: C });
-        expect(d.defects, 'column defects').toEqual([]);
-        for (const s of exits) {
-            expect(ruleFor(d, 'exits', s.id), `exit ${s.id}`).toBe(wantRule(s.requirement));
-        }
-        for (const s of pickups) {
-            expect(ruleFor(d, 'pickups', s.id), `pickup ${s.id}`).toBe(wantRule(s.requirement));
-        }
-    };
-
-    it('both arrows in one region → column', () => {
-        expectColumnFallback([
-            { id: 'gl', requirement: ['left'], direction: 'up' },
-            { id: 'gr', requirement: ['right'], direction: 'right' },
-        ]);
-    });
-
-    it('mutually-incomparable requirements (left vs blue) → column', () => {
-        // Neither [left] nor [blue] is a subset of the other, so they can't both
-        // live in one nested braid chain. The column hosts it (blue column-top +
-        // left branch tip) — and unlike two arrowless gates, the grower's veto
-        // permits this (≤1 arrowless), so it's a real fallback, not an abort.
-        expectColumnFallback([
-            { id: 'gl', requirement: ['left'], direction: 'right' },
-            { id: 'gb', requirement: ['blue'], direction: 'up' },
-        ]);
-    });
-
-});
+// NOTE: the column-FALLBACK cases (two arrows, incomparable non-brown reqs)
+// live in braidRegime2.slow.test.js — they run the column proposer + the full
+// deriveAccessRules oracle (~6s each) and flake on the fast suite's
+// non-interruptible 10s timeout under parallel CPU contention (see
+// vitest.config.js). The fast cases below all build a 240 braid (cheap).
 
 describe('braid Regime 2 — brown coexists with a spine gate (brown rides a tip)', () => {
     it('a brown gate + a left gate share one braid ([brown] tip below, [left] above)', () => {
