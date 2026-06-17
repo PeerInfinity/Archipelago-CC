@@ -1193,12 +1193,19 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
 //    arrow per region (you never gate left AND right — the player holds an
 //    arrow from the start region; a fork can't gate, a chain gates only one).
 //  - BLUE gate: a blue stepping stone + a plain landing above it (a no-blue
-//    bounce can't use the stone, so the 2× gap can't be cleared).
+//    bounce can't use the stone — it's suppressed — so the 2× gap can't be cleared).
+//  - SPRING / JETPACK gate: a launchable host + a tall gap above it that a plain
+//    bounce can't clear but the booster launch can (the booster is inactive
+//    without the item, so the gap gates it). Jetpacks make ~6000px-tall levels.
+//  - BROWN gate: brown is suppressed without the item AND terminal with it (it
+//    breaks on landing, no climbing past), so it can only host a CEILING goal —
+//    the chain's topmost goal rides a brown platform (column `colorHost` rule).
+//    At most one brown goal per region, and its requirement must be the ceiling.
 //  - Gates compose as a NESTED chain (each goal's requirement a prefix of the
-//    cumulative gate set below it). springs/jetpacks/brown physics gates are
-//    NOT supported here (springs/jetpacks have a narrow interception window the
-//    chain can't reliably hit; brown is terminal) — they DECLINE (throw), the
-//    documented "adapter declines" channel.
+//    cumulative gate set below it). The arrow gate stacks IN the chain (shifting
+//    it); blue/spring/jetpack are vertical gates in the chain; brown rides the
+//    ceiling goal's host. Anything that can't nest (two arrows, incomparable
+//    reqs, a non-ceiling brown) DECLINES → the region falls back to a column.
 //
 // Jitter is ARROW-DIRECTIONAL: a free rung never jitters (the arrow-free spine
 // stays straight at offset 0, so arrow-free goals derive exactly []); once the
@@ -1206,8 +1213,9 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
 // reachable with that arrow, and the gate below already demands it).
 
 const ARROW_NAMES = ['left', 'right'];
-// Physics abilities the gated braid can realise as geometry.
-const BRAID_GATE_ABILITIES = new Set(['left', 'right', 'blue']);
+// Physics abilities the gated braid can realise as geometry: all six (arrows as
+// gate rows, blue/spring/jetpack as vertical chain gates, brown as a ceiling host).
+const BRAID_GATE_ABILITIES = new Set(['left', 'right', 'blue', 'springs', 'jetpacks', 'brown']);
 
 /**
  * Validate + plan a gated braid chain (spec-level checks: non-retryable, so
@@ -1245,6 +1253,21 @@ function planBraidGatedChain(exits, pickups) {
                 + `([${sortedReqs[i - 1].join(',')}] vs [${sortedReqs[i].join(',')}])`);
         }
     }
+    // Brown is TERMINAL (breaks on landing, no climbing past), so a brown goal
+    // can only be the chain CEILING: at most one, and its requirement must be
+    // the largest (everything else nests below it). A brown goal below the top
+    // would wall off the goals above it.
+    const brownGoals = goals.filter((g) => g.req.includes('brown'));
+    if (brownGoals.length > 1) {
+        throw new Error('braid Regime 2: at most one brown goal per region '
+            + `(got ${brownGoals.map((g) => `'${g.id}'`).join(', ')})`);
+    }
+    const ceilingKey = reqKey(sortedReqs[sortedReqs.length - 1] ?? []);
+    if (brownGoals.length === 1 && reqKey(brownGoals[0].req) !== ceilingKey) {
+        throw new Error(`braid Regime 2: brown goal '${brownGoals[0].id}' `
+            + `[${brownGoals[0].req.join(',')}] is not the ceiling [${ceilingKey}] — `
+            + 'brown is terminal, nothing can climb past it');
+    }
     // Goals keyed by their requirement (the rung level they attach at).
     const goalsByKey = new Map();
     for (const g of goals) {
@@ -1252,7 +1275,7 @@ function planBraidGatedChain(exits, pickups) {
         if (!goalsByKey.has(k)) goalsByKey.set(k, []);
         goalsByKey.get(k).push(g);
     }
-    return { goals, sortedReqs, goalsByKey };
+    return { goals, sortedReqs, goalsByKey, brownGoal: brownGoals[0] ?? null };
 }
 
 /**
@@ -1297,7 +1320,26 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
     // Post-arrow jitter stays well within the held arrow's reach so the step
     // is always reachable with it; capped by the requested jitter amplitude.
     const maxJit = Math.min(jitter || 0, reach * 0.5);
-    const { sortedReqs, goalsByKey } = plan;
+    const { goals, brownGoal } = plan;
+
+    // The chain realises every gate EXCEPT brown (brown rides the ceiling goal's
+    // host, not a chain rung). So the chain order keys on the requirement MINUS
+    // brown; brown only colours the topmost goal's platform.
+    const chainKey = (req) => reqKey(req.filter((a) => a !== 'brown'));
+    const chainSegs = [...new Set(goals.map((g) => chainKey(g.req)))]
+        .map((k) => (k ? k.split('+') : []))
+        .sort((a, b) => a.length - b.length);
+    const byChain = new Map();
+    for (const g of goals) {
+        const k = chainKey(g.req);
+        if (!byChain.has(k)) byChain.set(k, []);
+        byChain.get(k).push(g);
+    }
+    // Within a chain level, attach the brown (ceiling) goal LAST so it sits on
+    // top of any same-level green goals — nothing climbs past it.
+    for (const arr of byChain.values()) {
+        arr.sort((a, b) => (a === brownGoal ? 1 : 0) - (b === brownGoal ? 1 : 0));
+    }
 
     // ── Realise the chain bottom → top ───────────────────────────────
     let nid = 0;
@@ -1305,6 +1347,8 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
     const portals = [];
     const pickupEntities = [];
     const teleportEntities = [];
+    const springEntities = [];
+    const jetpackEntities = [];
     const place = (x, y, type = 'green') => {
         const p = { id: `b${nid++}`, x: wrap(x), y, type };
         platforms.push(p);
@@ -1359,30 +1403,52 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
         prev = place(prev.x, y);
         current = [...current, 'blue'].sort();
     };
+    // Spring / jetpack gate: a launchable host + a tall gap above it. The
+    // booster is inactive without the item, so a plain bounce can't clear the
+    // gap (gated); with the item the launch clears it. The gap uses the upper
+    // bound of the profile window (largest clearable gap = smallest overshoot,
+    // so the next rung is never intercepted). Booster launches straight up, so
+    // the landing sits directly above the host (no jitter).
+    const realiseBoostGate = (ability, entities, prefix, window) => {
+        y -= PLAIN_DY;
+        const host = place(prev.x + jitterDx(current), y); // green, always launchable
+        entities.push({ id: `${prefix}_${host.id}`, x: host.x, y: host.y - 5, on: host.id });
+        y -= window.min + window.span;
+        prev = place(host.x, y);
+        current = [...current, ability].sort();
+    };
 
-    // Segments: the distinct requirement keys in nested order. Walk them,
-    // realising the gates each adds, then attaching that key's goals (each on
-    // its own dedicated rung so two portals never share a platform).
-    for (const segment of sortedReqs) {
+    // Chain segments: distinct requirement keys (minus brown) in nested order.
+    // Walk them, realising the gates each adds, then attaching that level's
+    // goals (each on its own dedicated rung so two portals never share a
+    // platform). brown only colours its goal's host (the ceiling).
+    for (const segment of chainSegs) {
         const newGates = segment.filter((a) => !current.includes(a));
-        // Non-arrow gates first (deterministic vertical gates), then the arrow
-        // gate row — order is free between them (no goal sits in between).
+        // Vertical gates first (blue / spring / jetpack), then the arrow gate
+        // row — order is free between them (no goal sits in between).
         for (const a of newGates.filter((g) => !ARROW_NAMES.includes(g))) {
             if (a === 'blue') realiseBlueGate();
+            else if (a === 'springs') realiseBoostGate('springs', springEntities, 'spr', G.SPRING_GAP);
+            else if (a === 'jetpacks') realiseBoostGate('jetpacks', jetpackEntities, 'jet', G.JETPACK_GAP);
         }
         for (const a of newGates.filter((g) => ARROW_NAMES.includes(g))) {
             realiseArrowGate(a);
         }
-        for (const g of goalsByKey.get(reqKey(segment)) ?? []) {
+        for (const g of byChain.get(reqKey(segment)) ?? []) {
             climbPlain();
+            // The brown ceiling goal rides a brown host (suppressed without
+            // brown → unreachable; terminal with it → nothing climbs past).
+            if (g === brownGoal) prev.type = 'brown';
             attach(g, prev);
         }
     }
     // Top teleport row: a lone teleport-to-start host above the highest goal,
     // so a player who climbs past the top (e.g. a locked top portal) returns
     // home instead of stalling — the chain analogue of the Regime-1 top fork's
-    // teleport branch (and the over-the-top retirement).
-    {
+    // teleport branch (and the over-the-top retirement). SKIPPED when the
+    // ceiling is brown: nothing can climb past a brown host (it breaks on
+    // landing, which is its own respawn), so a teleport above it is unreachable.
+    if (!brownGoal) {
         y -= PLAIN_DY;
         const top = place(prev.x + jitterDx(current), y);
         teleportEntities.push({ id: `tp_${top.id}`, x: top.x, y: top.y - 20, on: top.id });
@@ -1392,7 +1458,8 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
     let minY = 0;
     for (const p of platforms) minY = Math.min(minY, p.y);
     const shiftY = 60 - minY;
-    for (const arr of [platforms, portals, pickupEntities, teleportEntities]) {
+    for (const arr of [platforms, portals, pickupEntities, teleportEntities,
+        springEntities, jetpackEntities]) {
         for (const e of arr) e.y += shiftY;
     }
     // Moving-blue sweeps run the full level width (dj), assigned post-shift.
@@ -1404,7 +1471,7 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
     }
     return {
         id, size: { width: W, height: shiftY + 100 },
-        platforms, springs: [], jetpacks: [],
+        platforms, springs: springEntities, jetpacks: jetpackEntities,
         pickups: pickupEntities, portals, teleports: teleportEntities,
     };
 }

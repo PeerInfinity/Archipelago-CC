@@ -88,6 +88,44 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
         expectGated(gen(exits, pickups), exits, pickups);
     });
 
+    it('a springs gate derives exactly [springs]', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
+        ];
+        expectGated(gen(exits), exits);
+    });
+
+    it('a jetpacks gate derives exactly [jetpacks]', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gj', requirement: ['jetpacks'], direction: 'right' },
+        ];
+        expectGated(gen(exits), exits);
+    });
+
+    it('a brown ceiling goal derives exactly [brown]', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['brown'], direction: 'right' },
+        ];
+        const level = gen(exits);
+        expectGated(level, exits);
+        // The brown goal rides a brown host (the ceiling).
+        const host = level.portals.find((pt) => pt.id === 'gb').on;
+        expect(level.platforms.find((p) => p.id === host).type).toBe('brown');
+    });
+
+    it('a graded chain mixing blue, springs and an arrow (all nested)', () => {
+        const exits = [
+            { id: 'f', requirement: [], direction: 'up' },
+            { id: 'b', requirement: ['blue'], direction: 'right' },
+            { id: 'bs', requirement: ['blue', 'springs'], direction: 'left' },
+            { id: 'bsl', requirement: ['blue', 'springs', 'left'], direction: 'down' },
+        ];
+        expectGated(gen(exits), exits);
+    });
+
     it('arrow-directional jitter still derives the same gate', () => {
         const exits = [
             { id: 'gl', requirement: ['left'], direction: 'up' },
@@ -118,12 +156,12 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
 });
 
 describe('braid Regime 2 — falls back to a column when out of braid vocabulary', () => {
-    // Gates the single-chain braid can't realise (springs/jetpacks/brown, both
-    // arrows, or mutually-incomparable reqs) must NOT abort: braid mode falls
-    // back to the column proposer for that region (the bot handles both layouts;
-    // the grower only guarantees column-compatibility, so the column always
-    // builds). The fallback level is a column (width !== braid's 240) whose rules
-    // still match the requested requirements.
+    // The braid gates every item type now, but only as a single NESTED chain.
+    // What it still can't express — two arrows, mutually-incomparable reqs, or a
+    // non-ceiling brown — must NOT abort: braid mode falls back to the column
+    // proposer for that region (the bot handles both layouts; the grower only
+    // guarantees column-compatibility, so the column always builds). The
+    // fallback level is a column (width !== braid's 240) whose rules still match.
     const expectColumnFallback = (exits, pickups = []) => {
         const level = gen(exits, pickups);
         expect(validateLevel(level), 'model errors').toEqual([]);
@@ -145,19 +183,23 @@ describe('braid Regime 2 — falls back to a column when out of braid vocabulary
         ]);
     });
 
-    it('an unsupported physics gate (springs) → column', () => {
-        // one arrowless exit (the column top) + an arrow branch tip = a shape the
-        // grower's canHostExitGates permits and the column realises.
-        expectColumnFallback([
-            { id: 'gs', requirement: ['springs'], direction: 'up' },
-            { id: 'gl', requirement: ['left'], direction: 'right' },
-        ]);
-    });
-
     it('mutually-incomparable requirements (left vs blue) → column', () => {
+        // Neither [left] nor [blue] is a subset of the other, so they can't both
+        // live in one nested braid chain. The column hosts it (blue column-top +
+        // left branch tip) — and unlike two arrowless gates, the grower's veto
+        // permits this (≤1 arrowless), so it's a real fallback, not an abort.
         expectColumnFallback([
             { id: 'gl', requirement: ['left'], direction: 'right' },
             { id: 'gb', requirement: ['blue'], direction: 'up' },
+        ]);
+    });
+
+    it('an incomparable brown gate (brown vs left) → column', () => {
+        // [brown] and [left] don't nest, so they can't share one braid chain;
+        // the column hosts the brown ceiling + the arrow branch tip.
+        expectColumnFallback([
+            { id: 'gb', requirement: ['brown'], direction: 'up' },
+            { id: 'gl', requirement: ['left'], direction: 'right' },
         ]);
     });
 });
