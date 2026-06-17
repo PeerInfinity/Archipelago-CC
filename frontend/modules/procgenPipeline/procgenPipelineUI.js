@@ -212,6 +212,10 @@ const DEFAULT_PARAMS = {
     bounceBrownChance: 0.3,
     bounceSpringChance: 0.3,
     bounceJetpackChance: 0,
+    // Decorative fork chance (0–1) per extra platformRows row (gated braid): a
+    // 2-wide companion lane beside the spine, then a merge. The terminal merge
+    // branch may break (brown chance). Overshoots the platform-rows target.
+    bounceForkChance: 0,
 };
 
 const BOUNCE_FALL_OPTIONS = [
@@ -2104,12 +2108,12 @@ export class ProcgenPipelineUI {
             // braid layout (Regime-2 gated chains) + its width and per-row
             // jitter thread through to the bounce zone generator, which
             // honours each goal's requirement (arrow gate rows + blue gates).
-            // SPRING/JETPACK/BLUE decor chances ride sphere growth, but the gated
-            // proposer spends them ONLY on extra platformRows in a block that
-            // already holds the ability (reusing that ability's gating geometry —
-            // grown gap for boosters, stepping-stone for blue) — so they never
-            // block a player lacking it. Brown is omitted: it's terminal (no
-            // climb-onward), unsafe on a gated spine.
+            // Decor chances ride sphere growth, all spent on EXTRA platformRows:
+            // spring/jetpack/blue become on-spine flavor rows ONLY in a block that
+            // already holds the ability (reusing that ability's gating geometry),
+            // so they never block a player lacking it; fork makes a decorative
+            // 2-wide companion lane (any block), and brown breaks its terminal
+            // merge branch (an off-spine ledge, safe regardless of held items).
             regionParams: {
                 fallBehavior: this.params.bounceFallBehavior ?? 'current',
                 physicsProfile: this.params.bouncePhysicsProfile ?? 'dj',
@@ -2122,6 +2126,8 @@ export class ProcgenPipelineUI {
                         spring: this.params.bounceSpringChance ?? 0,
                         jetpack: this.params.bounceJetpackChance ?? 0,
                         blue: this.params.bounceBlueChance ?? 0,
+                        fork: this.params.bounceForkChance ?? 0,
+                        brown: this.params.bounceBrownChance ?? 0,
                     },
                     ...(freeArrowAbility ? { bounceFreeArrow: freeArrowAbility } : {}),
                 } : {}),
@@ -2618,6 +2624,11 @@ export class ProcgenPipelineUI {
             'Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR '
             + 'higher — under dj the gap is ~6200px, making very tall levels. Default 0.',
             'bounceJetpackChance', 0, { step: 0.01, max: 1 }));
+        braidFields.appendChild(numberField('Fork chance',
+            'Per-extra-row probability (0–1) of a decorative 2-wide fork/merge beside the '
+            + 'gated spine (sphere growth). Adds companion platforms BEYOND the platform-rows '
+            + 'target; the terminal merge branch breaks at Brown chance. Default 0.',
+            'bounceForkChance', 0, { step: 0.01, max: 1 }));
         braidFields.style.display = (this.params.bounceLayout === 'braid') ? '' : 'none';
         layoutSelect.addEventListener('change', () => {
             this.params.bounceLayout = layoutSelect.value;
