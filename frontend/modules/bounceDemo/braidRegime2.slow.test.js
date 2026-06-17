@@ -21,10 +21,10 @@ import { PROFILES } from './physics.js';
 const C = PROFILES.dj.constants;
 const W = 240;
 
-function gen(exitSpecs, pickupSpecs, seed, jitter) {
+function gen(exitSpecs, pickupSpecs, seed, freeArrow) {
     return generateLevelFromSpecs({
         id: `R${seed}`, exitSpecs, pickupSpecs, seed, physics: 'dj',
-        mode: 'braid', braidWidth: W, jitter,
+        mode: 'braid', braidWidth: W, freeArrow,
     });
 }
 const wantRule = (req) => (req.length ? `(${[...req].sort().join(' AND ')})` : 'ALWAYS');
@@ -48,11 +48,12 @@ function shapes(arrow) {
     ];
 }
 
-function assertRegion(level, exits, pickups, crossFull) {
+function assertRegion(level, exits, pickups, crossFull, freeArrow) {
     expect(validateLevel(level)).toEqual([]);
-    const braid = deriveBraidAccessRules(level, { constants: C });
+    const opts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
+    const braid = deriveBraidAccessRules(level, opts);
     expect(braid.defects).toEqual([]);
-    const full = crossFull ? deriveAccessRules(level, { constants: C }) : null;
+    const full = crossFull ? deriveAccessRules(level, opts) : null;
     for (const s of [...exits, ...pickups]) {
         const got = (braid.exits[s.id] ?? braid.pickups[s.id]).minimalSets;
         expect(formatRule(got), `${s.id} rule`).toBe(wantRule(s.requirement));
@@ -68,11 +69,12 @@ describe('braid Regime 2 — proposer fuzz (gated chains verify against the full
     const SEEDS = 10;
     for (let seed = 1; seed <= SEEDS; seed++) {
         const arrow = seed % 2 ? 'left' : 'right';
-        const jitter = seed % 3 === 0 ? 30 : 0;
+        // The gated arrow is NOT the free one; the player holds the complement.
+        const freeArrow = arrow === 'left' ? 'right' : 'left';
         for (const sh of shapes(arrow)) {
-            it(`seed ${seed} (${arrow}, jit ${jitter}): ${sh.name}`, () => {
-                const level = gen(sh.exits, sh.pickups, seed, jitter);
-                assertRegion(level, sh.exits, sh.pickups, sh.crossFull);
+            it(`seed ${seed} (gate ${arrow}, free ${freeArrow}): ${sh.name}`, () => {
+                const level = gen(sh.exits, sh.pickups, seed, freeArrow);
+                assertRegion(level, sh.exits, sh.pickups, sh.crossFull, freeArrow);
             });
         }
     }

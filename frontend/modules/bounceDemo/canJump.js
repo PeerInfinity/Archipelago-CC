@@ -553,8 +553,14 @@ export function buildPlatformGraph(level, abilities, opts = {}) {
     // so they get no climb edges. Skipping them once per from-node (cheap)
     // keeps the per-(from,to) canJump hot path clean (see canJumpDetailed).
     const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
+    // terminalPortals (gated braid): a portal host is terminal too — you exit /
+    // bounce off, you never climb on. Off by default so the bot's normal graph
+    // (which DOES climb past a locked portal) is unchanged; the gated-braid
+    // verifier opts in so an offset portal tip can't leak a skip route.
+    const portalHosts = (opts.terminalPortals && level.portals)
+        ? new Set(level.portals.map((pt) => pt.on)) : null;
     for (const from of nodes) {
-        if (teleportHosts.has(from)) continue;
+        if (teleportHosts.has(from) || portalHosts?.has(from)) continue;
         for (const p of platforms) {
             if (p.id === from) continue;
             if (canJump(level, from, p.id, abilities, opts)) {
@@ -656,18 +662,26 @@ export function reachableBraidPlatforms(level, abilities, opts = {}) {
     // they're excluded from the launcher set (the row-aware analog of the
     // graph skipping their out-edges). Cheap once-per-host set.
     const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
+    // terminalPortals (gated braid only): a portal host is terminal too — you
+    // exit through an open portal, or bounce off a locked one; you never climb
+    // ON from it. Excluding it from launchers stops an OFFSET portal tip from
+    // leaking a skip route around a gate (the straight bypass carries the
+    // climb). Off by default, so Regime-1 / fork braids are unaffected.
+    const portalHosts = (opts.terminalPortals && level.portals)
+        ? new Set(level.portals.map((pt) => pt.on)) : null;
+    const isTerminal = (id) => teleportHosts.has(id) || (portalHosts?.has(id) ?? false);
 
     const reached = new Set();
     const remaining = goalHosts ? new Set(goalHosts) : null;
     // Bottom → top single pass (skip edges only point upward, so every row's
     // launchers are already finalised below it). Launchers for row i: the
-    // reached platforms in row i-1 (minus teleport hosts), walking further
+    // reached platforms in row i-1 (minus terminal hosts), walking further
     // down through any pass-through rows; the entrance seeds the bottom row.
     for (let i = 0; i < rows.length; i++) {
         const launchers = i === 0 ? [ENTRANCE] : [];
         for (let j = i - 1; j >= 0; j--) {
             for (const p of rows[j]) {
-                if (reached.has(p.id) && !teleportHosts.has(p.id)) launchers.push(p.id);
+                if (reached.has(p.id) && !isTerminal(p.id)) launchers.push(p.id);
             }
             if (!passThrough[j]) break; // opaque row stops the skip-through
         }

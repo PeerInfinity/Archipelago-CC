@@ -71,14 +71,21 @@ const setKey = (names) => [...names].sort().join('+') || '(none)';
  * same allowed arrows, same active boosters) share one evaluation.
  */
 export function reachabilityTable(level, opts = {}) {
-    const universe = opts.universe ?? abilityUniverse(level);
+    // freeAbilities are ALWAYS held (a starting / locked item the player is
+    // guaranteed to have — e.g. the braid's free starting arrow): excluded from
+    // the iterated universe and forced true in every subset, so they never
+    // appear in a derived requirement (a goal needing only a free ability
+    // derives []). The grower never gates on them, so this matches.
+    const freeAbilities = opts.freeAbilities ?? [];
+    const universe = (opts.universe ?? abilityUniverse(level))
+        .filter((a) => !freeAbilities.includes(a));
     const reach = opts.reach ?? fullGraphReach;
     const table = new Map();
     const bySignature = new Map();
 
     for (let mask = 0; mask < (1 << universe.length); mask++) {
         const names = universe.filter((_, i) => mask & (1 << i));
-        const abilities = abilitySetOf(names);
+        const abilities = abilitySetOf([...names, ...freeAbilities]);
         const signature = JSON.stringify({
             platforms: activePlatforms(level, abilities).map((p) => p.id),
             left: abilities.left,
@@ -185,7 +192,18 @@ export function deriveAccessRules(level, opts = {}) {
  * (pessimistic; never claims reachable-when-not).
  */
 export function deriveBraidAccessRules(level, opts = {}) {
-    return deriveAccessRules(level, { ...opts, reach: reachableBraidPlatforms });
+    // freeArrow (the held starting arrow): treated as always-available, so a
+    // portal on a tip offset TOWARD it still derives its gate set, not [arrow].
+    // terminalPortals: portal hosts never launch (you exit / bounce off, you
+    // don't climb on) — so an offset portal tip can't leak a skip route; the
+    // straight bypass carries the climb. Both default OFF, so callers that don't
+    // pass them (and the column path) are unaffected.
+    const freeAbilities = opts.freeArrow
+        ? [...new Set([...(opts.freeAbilities ?? []), opts.freeArrow])]
+        : (opts.freeAbilities ?? []);
+    return deriveAccessRules(level, {
+        ...opts, reach: reachableBraidPlatforms, freeAbilities,
+    });
 }
 
 /** Human-readable rule, e.g. "(springs) OR (blue AND left)". */

@@ -19,10 +19,14 @@ import { PROFILES } from './physics.js';
 const C = PROFILES.dj.constants;
 const W = 240;
 
-function gen(exitSpecs, pickupSpecs = [], seed = 1, jitter = 0) {
+// The free arrow the player always holds (gated-braid portals ride tips toward
+// it). 'right' matches the generator's default; tests pass the same to verify.
+const FREE_ARROW = 'right';
+
+function gen(exitSpecs, pickupSpecs = [], seed = 1, freeArrow = FREE_ARROW) {
     return generateLevelFromSpecs({
         id: `R${seed}`, exitSpecs, pickupSpecs, seed, physics: 'dj',
-        mode: 'braid', braidWidth: W, jitter,
+        mode: 'braid', braidWidth: W, freeArrow,
     });
 }
 
@@ -31,10 +35,14 @@ const wantRule = (req) => (req.length ? `(${[...req].sort().join(' AND ')})` : '
 
 // Assert: valid model, no defects, and braid-derived == full-derived == the
 // requested requirement for every goal (so the emitter reproduces the gate).
-function expectGated(level, exitSpecs, pickupSpecs = []) {
+// Both derives treat the free arrow as held and portal hosts as terminal — so
+// the offset portal tips derive their gate set (not [freeArrow]) and can't leak
+// a skip route; the full-graph derive is the apples-to-apples oracle.
+function expectGated(level, exitSpecs, pickupSpecs = [], freeArrow = FREE_ARROW) {
     expect(validateLevel(level), 'model errors').toEqual([]);
-    const braid = deriveBraidAccessRules(level, { constants: C });
-    const full = deriveAccessRules(level, { constants: C });
+    const opts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
+    const braid = deriveBraidAccessRules(level, opts);
+    const full = deriveAccessRules(level, opts);
     expect(braid.defects, 'braid defects').toEqual([]);
     expect(full.defects, 'full defects').toEqual([]);
     for (const s of exitSpecs) {
@@ -57,9 +65,11 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
         expect((level.teleports ?? []).length).toBeGreaterThanOrEqual(1);
     });
 
-    it('a single right-gated exit derives exactly [right]', () => {
+    it('a single right-gated exit derives exactly [right] (free arrow = left)', () => {
+        // The gated arrow is the one the player does NOT start with, so to gate
+        // [right] the free arrow must be left.
         const exits = [{ id: 'e1', requirement: ['right'], direction: 'up' }];
-        expectGated(gen(exits), exits);
+        expectGated(gen(exits, [], 1, 'left'), exits, [], 'left');
     });
 
     it('free + left-gated exits coexist (free is arrow-free, gated needs left)', () => {
@@ -126,31 +136,30 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
         expectGated(gen(exits), exits);
     });
 
-    it('arrow-directional jitter still derives the same gate', () => {
+    it('two exits at the same gate level each derive that gate', () => {
         const exits = [
             { id: 'gl', requirement: ['left'], direction: 'up' },
             { id: 'gl2', requirement: ['left'], direction: 'right' },
         ];
-        // jitter only kicks in once the arrow is held, shifting toward it.
-        expectGated(gen(exits, [], 1, 30), exits);
+        expectGated(gen(exits), exits);
     });
 
-    it('the arrow-free spine stays straight (zero jitter until an arrow is held)', () => {
+    it('every portal rides an OFFSET tip; the spine bypass stays portal-free', () => {
         const exits = [
             { id: 'f1', requirement: [], direction: 'up' },
             { id: 'f2', requirement: [], direction: 'down' },
             { id: 'gl', requirement: ['left'], direction: 'right' },
         ];
-        const level = gen(exits, [], 1, 40);
-        // The arrow-free spine never jitters: the entrance platform and every
-        // free (req []) goal host sit exactly on the spawn column. (The arrow
-        // gate platform and everything above it may drift toward the arrow.)
-        const entrance = level.platforms.reduce((a, b) => (b.y > a.y ? b : a));
-        expect(entrance.x, 'entrance off column').toBe(W / 2);
-        for (const id of ['f1', 'f2']) {
-            const host = level.portals.find((pt) => pt.id === id).on;
-            const p = level.platforms.find((q) => q.id === host);
-            expect(p.x, `free goal ${id} host off column`).toBe(W / 2);
+        const level = gen(exits);
+        expectGated(level, exits);
+        // No portal sits on a spine platform — i.e. for every portal host there
+        // is ANOTHER (bypass) platform at the same row (the two-platform rule).
+        const portalHostIds = new Set(level.portals.map((pt) => pt.on));
+        for (const pt of level.portals) {
+            const host = level.platforms.find((p) => p.id === pt.on);
+            const sameRow = level.platforms.filter(
+                (p) => p.y === host.y && p.id !== host.id && !portalHostIds.has(p.id));
+            expect(sameRow.length, `portal ${pt.id} has no bypass on its row`).toBeGreaterThan(0);
         }
     });
 });

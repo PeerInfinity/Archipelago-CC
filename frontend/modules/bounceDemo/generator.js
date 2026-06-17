@@ -1309,7 +1309,7 @@ function braidCanRealiseSpecs(exitSpecs, pickupSpecs) {
  * only on geometry dead-ends (retryable). Reachable + gated by construction;
  * the caller verifies with deriveBraidAccessRules.
  */
-function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
+function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeArrow = 'right' }) {
     const PLAIN_DY = G.PLAIN_DY;
     const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
     const reach = oneHopReach(C, PLAIN_DY);
@@ -1317,9 +1317,20 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
     // Half the one-hop reach: comfortably inside ONE arrow's reach band and
     // outside the other's (which would have to wrap) and the arrow-free point.
     const arrowOffset = Math.round(reach / 2);
-    // Post-arrow jitter stays well within the held arrow's reach so the step
-    // is always reachable with it; capped by the requested jitter amplitude.
-    const maxJit = Math.min(jitter || 0, reach * 0.5);
+    // A PORTAL tip sits beside the straight bypass on the SAME row, so it must
+    // be DISTINCT from it — more than a catch span apart, else the no-input
+    // climb could land on the portal instead of the bypass — yet still within
+    // ONE arrow's reach (and out of the other's, via wrap). catchSpan + a small
+    // margin is the only band that satisfies all three (dj: 110 ∈ [106, 116]).
+    const catchSpan = C.PLATFORM_WIDTH + 2 * C.PLAYER_HALF_WIDTH;
+    const tipOffset = catchSpan + 4;
+    // The SPINE is the straight climbable bypass: it never jitters, so the
+    // no-input climb always rides it (a player is never forced onto a portal).
+    // PORTALS hang off it on offset TIPS toward the FREE arrow (the held
+    // starting arrow), so reaching a portal needs that arrow — which the player
+    // always has — while the spine stays portal-free.
+    const maxJit = 0;
+    const freeDir = freeArrow === 'left' ? -1 : 1;
     const { goals, brownGoal } = plan;
 
     // The chain realises every gate EXCEPT brown (brown rides the ceiling goal's
@@ -1417,11 +1428,21 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
         prev = place(host.x, y);
         current = [...current, ability].sort();
     };
+    // A portal rides an OFFSET TIP toward the free arrow — NOT the spine. The
+    // spine rung (`prev`) stays portal-free, so the no-input climb is never
+    // forced onto a portal (the "portals only on two-platform rows" rule: the
+    // row holds the spine bypass AND the tip). Reaching the tip needs the free
+    // arrow, which the player always holds. (The locked-tip escape — a return
+    // home for a player who lands on a LOCKED tip and can't drift back — is a
+    // follow-up; the spine + top teleport already give a home route from the spine.)
+    const placePortalTip = (g) => {
+        const tip = place(prev.x + freeDir * tipOffset, prev.y);
+        attach(g, tip);
+    };
 
     // Chain segments: distinct requirement keys (minus brown) in nested order.
     // Walk them, realising the gates each adds, then attaching that level's
-    // goals (each on its own dedicated rung so two portals never share a
-    // platform). brown only colours its goal's host (the ceiling).
+    // goals. brown only colours its goal's host (the ceiling).
     for (const segment of chainSegs) {
         const newGates = segment.filter((a) => !current.includes(a));
         // Vertical gates first (blue / spring / jetpack), then the arrow gate
@@ -1434,12 +1455,20 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width }) {
         for (const a of newGates.filter((g) => ARROW_NAMES.includes(g))) {
             realiseArrowGate(a);
         }
-        for (const g of byChain.get(reqKey(segment)) ?? []) {
+        const here = byChain.get(reqKey(segment)) ?? [];
+        // PICKUPS ride the straight spine (collecting doesn't exit). Place them
+        // FIRST, so an in-region item granted here (the start arrow) is collected
+        // BELOW the portals that assume the player now holds it.
+        for (const g of here.filter((gg) => gg.kind === 'pickup')) {
             climbPlain();
-            // The brown ceiling goal rides a brown host (suppressed without
-            // brown → unreachable; terminal with it → nothing climbs past).
-            if (g === brownGoal) prev.type = 'brown';
             attach(g, prev);
+        }
+        // PORTALS ride offset tips above a fresh spine bypass rung — except the
+        // brown ceiling, which IS the spine top (landing breaks it → respawn, so
+        // it's never a softlock and needs no bypass/tip).
+        for (const g of here.filter((gg) => gg.kind === 'exit')) {
+            climbPlain();
+            if (g === brownGoal) { prev.type = 'brown'; attach(g, prev); } else placePortalTip(g);
         }
     }
     // Top teleport row: a lone teleport-to-start host above the highest goal,
@@ -1502,7 +1531,8 @@ const ALL_FREE_ABILITIES = Object.freeze({
 //    column path does with deriveAccessRules. The real derived rides out so the
 //    emitter (minimalSetsToRule / emitObstaclePaths) reproduces the gate.
 function* generateBraidFromSpecsGen({
-    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, decorChance = {}, C, G,
+    id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, decorChance = {},
+    freeArrow = 'right', C, G,
 }) {
     const seen = new Set();
     const norm = (s, what) => {
@@ -1526,11 +1556,15 @@ function* generateBraidFromSpecsGen({
         if (gated) {
             // ── Regime 2: gated chain, verify minimal sets == requirement ──
             let level;
-            try { level = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth }); }
+            try { level = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow }); }
             catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
             const modelErrors = validateLevel(level);
             if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
-            const derived = deriveBraidAccessRules(level, { constants: C });
+            // The free arrow is always-held (treated as free) and portal hosts
+            // are terminal — so an offset portal tip derives its gate set, not
+            // [freeArrow], and can't leak a skip route past a gate.
+            const derived = deriveBraidAccessRules(level,
+                { constants: C, freeArrow, terminalPortals: true });
             if (derived.defects.length > 0) { rejected.push(`attempt ${attempt}: ${derived.defects[0]}`); continue; }
             const mismatches = [];
             for (const g of exits) {
@@ -1624,6 +1658,11 @@ export function* generateLevelFromSpecsGen({
     mode = 'column',
     braidWidth,
     decorChance = {},
+    // The free starting arrow ('left'|'right') — the one the player always
+    // holds in a Regime-2 region. Gated-braid portals ride offset tips toward
+    // it, and the verifier treats it as free. Default 'right' for tests; the
+    // pipeline threads the world's actual pick.
+    freeArrow = 'right',
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
     if (mode === 'braid') {
@@ -1637,7 +1676,7 @@ export function* generateLevelFromSpecsGen({
         const can = braidCanRealiseSpecs(exitSpecs, pickupSpecs);
         if (can.ok) {
             return yield* generateBraidFromSpecsGen({
-                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, C, G,
+                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, freeArrow, C, G,
             });
         }
         console.warn(`bounce: region '${id}' has gates outside the braid vocabulary `
