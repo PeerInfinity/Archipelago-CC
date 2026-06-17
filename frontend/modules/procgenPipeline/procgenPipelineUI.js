@@ -2104,11 +2104,12 @@ export class ProcgenPipelineUI {
             // braid layout (Regime-2 gated chains) + its width and per-row
             // jitter thread through to the bounce zone generator, which
             // honours each goal's requirement (arrow gate rows + blue gates).
-            // Only SPRING/JETPACK decor chances ride sphere growth, and the gated
+            // SPRING/JETPACK/BLUE decor chances ride sphere growth, but the gated
             // proposer spends them ONLY on extra platformRows in a block that
-            // already holds the ability — so they never block a player lacking
-            // it. Blue/brown are omitted: moving-blue perturbs the gated climb and
-            // brown is terminal (both unsafe on a gated spine).
+            // already holds the ability (reusing that ability's gating geometry —
+            // grown gap for boosters, stepping-stone for blue) — so they never
+            // block a player lacking it. Brown is omitted: it's terminal (no
+            // climb-onward), unsafe on a gated spine.
             regionParams: {
                 fallBehavior: this.params.bounceFallBehavior ?? 'current',
                 physicsProfile: this.params.bouncePhysicsProfile ?? 'dj',
@@ -2120,6 +2121,7 @@ export class ProcgenPipelineUI {
                     bounceDecorChance: {
                         spring: this.params.bounceSpringChance ?? 0,
                         jetpack: this.params.bounceJetpackChance ?? 0,
+                        blue: this.params.bounceBlueChance ?? 0,
                     },
                     ...(freeArrowAbility ? { bounceFreeArrow: freeArrowAbility } : {}),
                 } : {}),
