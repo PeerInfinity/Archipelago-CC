@@ -1328,6 +1328,23 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // PORTALS hang off it on offset TIPS toward the FREE arrow (the held
     // starting arrow), so reaching a portal needs that arrow — which the player
     // always has — while the spine stays portal-free.
+    // NOTE: the Regime-1 fork braid's two enrichments — spine JITTER and feel
+    // DECORATIONS — were both tried here and neither ports. The gated spine is
+    // horizontally RIGID: a goal's portal rides an offset tip exactly tipOffset
+    // (catchSpan+4 = 110px on dj) from its bypass, and the single-arrow reach is
+    // only ~120px, so the free-arrow hop to a tip has ~10px of slack. Anything
+    // that perturbs a launch x past that edge flips the cheaper route to the
+    // OPPOSITE arrow (wrap-around) and poisons the derived gate:
+    //   - jitter shifts the rung itself → tip hop overshoots (verified: tips
+    //     derive [oppositeArrow] once jitter ≳ 10px);
+    //   - a moving-blue decoration on any climbed rung randomises the launch x
+    //     → the offset-tip hop misses in most sweep phases (verified: the first
+    //     blue goal goes 'unreachable'). dj pins blue:'moving', so no static
+    //     fallback. spring/jetpack additionally need the gap above grown (they
+    //     overshoot a PLAIN_DY gap); brown is suppressed AND terminal.
+    // These belong to the Regime-1 fork braid, whose forks aren't reach-band-
+    // pinned. Enabling them here needs horizontal slack the gating spends — i.e.
+    // a wider level or different physics — not a localized change.
     const maxJit = 0;
     const freeDir = freeArrow === 'left' ? -1 : 1;
     const { goals } = plan;
