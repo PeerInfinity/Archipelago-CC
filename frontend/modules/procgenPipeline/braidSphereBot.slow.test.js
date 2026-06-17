@@ -148,21 +148,24 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
         expect(widths.every((w) => w === 240), `all braid (got ${widths})`).toBe(true);
     });
 
-    it('a springs/blue pool generates a winnable MIXED braid+column world (no abort)', () => {
-        // The grower's veto only guarantees column-compatibility, so braid mode
-        // gets handed regions it can't realise (a springs gate aborted an early
-        // browser run). Those must FALL BACK to a column instead of aborting the
-        // whole world — the braid-incompatible regions render as columns, the
-        // rest stay braids, and the world is still winnable.
+    it('a FULL bounce pool (all six items) generates an all-braid winnable world', () => {
+        // The braid-aware grower veto (canHostExitGatesBraid) keeps each bounce
+        // region to ≤1 distinct forward gate, so the whole world is braid — no
+        // column fallback, no abort — even when every ability is a gate. One
+        // arrow is free (Right granted as a starting item), so only Left ever
+        // gates among arrows.
         const plan = planSpheres({
-            itemPool: { 'Left arrow': 1, 'Right arrow': 1, Springs: 1, 'Blue platforms': 1, Victory: 1 },
-            sphereCount: 4, victoryItem: 'Victory', gateableItems: GATEABLE_ITEMS, seed: 7,
+            itemPool: {
+                'Left arrow': 1, Springs: 1, Jetpacks: 1,
+                'Blue platforms': 1, 'Brown platforms': 1, Victory: 1,
+            },
+            sphereCount: 5, victoryItem: 'Victory', gateableItems: GATEABLE_ITEMS, seed: 3,
         });
         const { grid, startCell } = growSpheres({
-            regionSize: { width: 8, height: 6 }, seed: 7,
+            regionSize: { width: 8, height: 6 }, seed: 3,
             regionParams: {
                 fallBehavior: 'current', physicsProfile: 'dj',
-                bounceMode: 'braid', braidWidth: 240,
+                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40,
             },
             growthParams: {
                 spherePlan: plan, substrateQuotas: { bounce: 99 },
@@ -170,12 +173,13 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
             },
         });
         const rulesJson = buildRulesJson(grid, {
-            startCell, seed: 7, embedSphereLog: false, completionConditionItem: 'Victory',
+            startCell, seed: 3, embedSphereLog: false,
+            completionConditionItem: 'Victory', startingItems: ['Right arrow'],
         });
         expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
         const widths = bounceRegions(grid).map((r) => levelOf(r).size.width);
-        expect(widths.some((w) => w === 240), 'at least one braid region').toBe(true);
-        expect(widths.some((w) => w !== 240), 'at least one column fallback').toBe(true);
+        expect(widths.length).toBeGreaterThan(1);
+        expect(widths.every((w) => w === 240), `all braid (got ${widths})`).toBe(true);
     });
 
     it('a player missing the gating arrow parks gracefully (no error, no fall-off loop)', () => {

@@ -359,6 +359,28 @@ export function canHostExitGates(existingGates, newGate) {
 }
 
 /**
+ * Braid-mode structural veto (sphere grower). A braid region realises its gates
+ * as one fork-free NESTED chain. The grower hands each forward exit a SINGLE
+ * physics item, and single-item requirements nest only when they're identical —
+ * so a braid region can host at most ONE distinct forward physics gate item
+ * (plus any number of authored / ungated exits). The back portal is ungated in
+ * braid mode (generateRegionZoneGen), so it isn't in `existingGates` and imposes
+ * no constraint. Stricter than canHostExitGates (which is the column's veto):
+ * it rejects e.g. {[Brown], [Left]} on one region, which the column can host
+ * (brown ceiling + arrow tip) but the braid can't.
+ */
+export function canHostExitGatesBraid(existingGates, newGate) {
+    const items = new Set();
+    for (const gate of [...existingGates, newGate]) {
+        for (const term of gate) {
+            const { item, count } = typeof term === 'string' ? { item: term, count: 1 } : term;
+            if (ABILITY_BY_ITEM_NAME[item] && (count ?? 1) === 1) items.add(item);
+        }
+    }
+    return items.size <= 1;
+}
+
+/**
  * @param {object} specs
  * @param {string} specs.region_id
  * @param {Array<{side: string, requirement: string[],
@@ -640,6 +662,7 @@ export function createBounceSubstrateEntry({
         generateZoneForSpecsGen,
         gateableItems: null,
         canHostExitGates,
+        canHostExitGatesBraid,
         // Items a layout driver may attach to a surplus arrowless exit as
         // an off-column DRIFT so the level realiser can place it (a zone
         // hosts at most one arrowless "column top" exit). The driver only

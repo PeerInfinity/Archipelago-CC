@@ -2713,6 +2713,9 @@ export function buildSphereTree(plan, opts = {}, rng) {
         revisitRatio = 0.25,
         substrateQuotas = null,
         startSubstrate = null,
+        // Bounce braid regions ungate their back portal (see generateRegionZoneGen),
+        // so it imposes no gate-hosting constraint — the veto must not count it.
+        bounceBraid = false,
     } = opts;
     const spheres = plan.spheres;
     const waves = spheres.length;
@@ -2796,7 +2799,14 @@ export function buildSphereTree(plan, opts = {}, rng) {
             // so it can host no arrowless child gate. Inert for
             // substrates without the veto hook (maze walks back via
             // its entrance tile).
-            node.childGates.push(gateTerms);
+            //
+            // EXCEPT a braid bounce region: its back portal is UNGATED
+            // (generateRegionZoneGen), so it occupies no gate slot — counting it
+            // here would falsely consume the region's one arrowless slot and
+            // abort growth. (Column bounce keeps it: its back portal IS a gate.)
+            if (!(bounceBraid && substrate === 'bounce')) {
+                node.childGates.push(gateTerms);
+            }
         }
         nodes.push(node);
         return node;
@@ -2815,8 +2825,19 @@ export function buildSphereTree(plan, opts = {}, rng) {
         if (gateable && gateTerms.some(({ item }) => !gateable.includes(item))) {
             return false;
         }
-        if (typeof adapter.canHostExitGates === 'function'
-                && !adapter.canHostExitGates([...host.childGates], gateTerms)) {
+        // Braid bounce regions realise gates as a single NESTED chain, which
+        // single-item gates can only form when they share one distinct item —
+        // so the braid needs a STRICTER veto than the column's (≤1 distinct
+        // forward physics gate, not just ≤1 arrowless). Without it the grower
+        // composes incomparable regions the braid can't build, which then can't
+        // fall back to a column either (their ungated back portal + an arrowless
+        // forward = two arrowless tops). Use the braid veto when present.
+        const veto = (bounceBraid && host.substrate === 'bounce'
+            && typeof adapter.canHostExitGatesBraid === 'function')
+            ? adapter.canHostExitGatesBraid
+            : adapter.canHostExitGates;
+        if (typeof veto === 'function'
+                && !veto([...host.childGates], gateTerms)) {
             return false;
         }
         return true;
@@ -3069,6 +3090,7 @@ export function* growSpheresGen(config) {
     const rng = createRng(seed);
     const tree = buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
+        bounceBraid: regionParams.bounceMode === 'braid',
     }, rng);
     yield {
         type: 'plan',
