@@ -1344,15 +1344,20 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // yet within one free-arrow hop (< reach, so it's a reachable side ledge).
     const forkHalf = Math.min(reach * 0.85, catchSpan / 2 + 8);
     // JITTER (the "Max jitter" setting) applies ONLY to fork COMPANIONS — NOT the
-    // spine. The gated spine has only ~10px of ACCUMULATED horizontal slack (tips
-    // sit at tipOffset≈110 vs single-arrow reach≈120), so any spine wander that
-    // accumulates past that wraps on the ring and flips a tip's cheaper route to
-    // the OPPOSITE arrow, re-gating it (measured: bidirectional fails at 8px;
-    // monotonic toward-free wraps and adds the gated arrow). Spine jitter does
-    // NOT port. Companions are OFF-spine: they only need to stay a distinct catch
-    // target (> catchSpan/2 from the spine) and within the free-arrow hop
-    // (< reach), so the fork width can vary by ~(reach − forkHalf) toward the
-    // free arrow. The per-attempt re-derive is the backstop.
+    // spine. A portal's tip rides tipOffset≈110 from its bypass, and the tip is
+    // reachable only while its LAUNCHER sits within ~(reach − tipOffset) ≈ 10px
+    // of the bypass's column — otherwise the tip falls out of the launcher's
+    // free-arrow half (the gate is the wrap asymmetry: 110 one way, 130 the
+    // other, vs reach≈120). Jitter offsets launchers past that 10px tolerance —
+    // amplified by the moving-blue gate row being PASS-THROUGH (the flood walks
+    // through it to a lower, jittered launcher) — so a tip re-gates on the gated
+    // arrow (measured: bidirectional fails at 8px; toward-free still breaks via
+    // this launcher-offset). NB: it is NOT accumulated drift wrapping the ring —
+    // the tip's gate is relative to its own launch, so drift alone is harmless;
+    // the killer is the launcher↔bypass offset. Companions are OFF-spine and host
+    // no tip, so they have no such tolerance — just stay a distinct catch target
+    // (> catchSpan/2) within the free-arrow hop (< reach), varying the fork width
+    // by ~(reach − forkHalf) toward the free arrow. The re-derive is the backstop.
     const compJitMax = Math.min(jitter || 0, Math.max(0, reach - forkHalf - 8));
     const { goals } = plan;
     const isBrown = (g) => g.req.includes('brown');
