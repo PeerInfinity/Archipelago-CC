@@ -25,7 +25,7 @@ import {
 } from './procgenPipelineEngine.js';
 import { planSpheres, computeItemSpheres, compareSpheresToPlan } from './spherePlanner.js';
 import { createBotDriver } from '../bounceDemo/botDriver.js';
-import { step as physicsStep, spawnState } from '../bounceDemo/physics.js';
+import { step as physicsStep, spawnState, resolvePhysicsStamp } from '../bounceDemo/physics.js';
 import { noAbilities } from '../bounceDemo/suppression.js';
 
 const FULL = { left: true, right: true, springs: true, jetpacks: true, blue: true, brown: true };
@@ -58,25 +58,34 @@ function buildBraidWorld(seed) {
     return { grid, plan, rulesJson };
 }
 
-// Reach `goal` ({kind,id}) from the entrance with `abilities`. Returns
-// { reached, falls, teleports, frames } — mirrors the runDriver loop in
-// botDriver.test.js (and gameCore: a fall OR a teleport-host landing respawns).
-function driveTo(level, abilities, goal, maxFrames = 12000) {
-    const driver = createBotDriver();
+// Reach `goal` ({kind,id}) from the entrance with `abilities`, under the level's
+// own physics constants `C`. Returns { reached, falls, teleports, frames } —
+// mirrors the runDriver loop in botDriver.test.js (and gameCore: a fall OR a
+// teleport-host landing respawns). CRITICAL: `C` must be the level's resolved dj
+// constants and must be passed to BOTH createBotDriver (the planner — it builds
+// the platform graph + simulates steering policies under these constants) AND
+// step/spawnState (the simulation). The browser does exactly this
+// (game/main.js: createBotDriver({constants}) resolved from params.physics).
+// Defaulting either to classic on a dj-geometry level makes the bot plan/clear
+// under the wrong physics and spuriously miss spring/jetpack gates and offset
+// portal tips — the artifact that once looked like a "bot can't clear springs"
+// bug but was just a mis-configured harness.
+function driveTo(level, abilities, goal, C, maxFrames = 12000) {
+    const driver = createBotDriver({ constants: C });
     driver.setTarget(goal);
     const teleportHosts = new Set((level.teleports ?? []).map((t) => t.on));
-    let state = spawnState(level);
+    let state = spawnState(level, C);
     let falls = 0; let teleports = 0;
     const hostOf = goal.kind === 'portal'
         ? (level.portals ?? []).find((p) => p.id === goal.id)?.on
         : (level.pickups ?? []).find((p) => p.id === goal.id)?.on;
     for (let f = 0; f < maxFrames; f++) {
         const input = driver.nextInput(state, level, abilities, { isPortalOpen: () => true });
-        state = physicsStep(state, input, level, abilities);
-        if (state.fallen) { falls += 1; driver.notifyFell(); state = spawnState(level); continue; }
+        state = physicsStep(state, input, level, abilities, C);
+        if (state.fallen) { falls += 1; driver.notifyFell(); state = spawnState(level, C); continue; }
         if (state.landedOn) {
             if (teleportHosts.has(state.landedOn)) {
-                teleports += 1; driver.notifyFell(); state = spawnState(level); continue;
+                teleports += 1; driver.notifyFell(); state = spawnState(level, C); continue;
             }
             if (state.landedOn === hostOf) return { reached: true, falls, teleports, frames: f + 1 };
         }
@@ -86,6 +95,10 @@ function driveTo(level, abilities, goal, maxFrames = 12000) {
 
 const bounceRegions = (grid) => grid.allRegions().filter((r) => r.substrate === 'bounce');
 const levelOf = (region) => region.playable_payload?.params?.bounceLevel;
+// The level's runtime physics constants — resolved from the embedded stamp the
+// generator stamps onto the payload (params.physics), exactly as the browser
+// runtime resolves them. dj levels carry dj constants; absent stamp = classic.
+const constantsOf = (region) => resolvePhysicsStamp(region.playable_payload?.params?.physics);
 
 describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-locks)', () => {
     let world;
@@ -109,12 +122,13 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
     it('the bot reaches every goal in every region with full abilities', () => {
         for (const r of bounceRegions(world.grid)) {
             const level = levelOf(r);
+            const C = constantsOf(r);
             const goals = [
                 ...(level.portals ?? []).map((p) => ({ kind: 'portal', id: p.id })),
                 ...(level.pickups ?? []).map((p) => ({ kind: 'pickup', id: p.id })),
             ];
             for (const goal of goals) {
-                const res = driveTo(level, FULL, goal);
+                const res = driveTo(level, FULL, goal, C);
                 expect(res.reached, `${r.region_id} ${goal.kind} ${goal.id} (frames ${res.frames})`).toBe(true);
             }
         }
@@ -185,6 +199,53 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
         expect(widths.every((w) => w === 240), `all braid (got ${widths})`).toBe(true);
     });
 
+    it('the bot clears SPRING and JETPACK gates in a full-pool world (matched dj physics)', () => {
+        // Regression guard for the headless/browser parity bug: driveTo must run
+        // the bot under the level's OWN dj constants (planner + simulation), not
+        // classic defaults — otherwise spring/jetpack gates and offset portal
+        // tips spuriously miss (the "13/14" artifact). With matched constants the
+        // bot reaches every goal, INCLUDING ones behind a spring or jetpack gate.
+        // Full pool, seed 1 — produces both a spring gate and a jetpack gate.
+        const plan = planSpheres({
+            itemPool: {
+                'Left arrow': 1, Springs: 1, Jetpacks: 1,
+                'Blue platforms': 1, 'Brown platforms': 1, Victory: 1,
+            },
+            sphereCount: 5, victoryItem: 'Victory', gateableItems: GATEABLE_ITEMS, seed: 1,
+        });
+        const { grid } = growSpheres({
+            regionSize: { width: 8, height: 6 }, seed: 1,
+            regionParams: {
+                fallBehavior: 'current', physicsProfile: 'dj',
+                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40, bounceFreeArrow: 'right',
+            },
+            growthParams: {
+                spherePlan: plan, substrateQuotas: { bounce: 99 },
+                startSubstrate: 'bounce', maxItemsPerRegion: 2,
+            },
+        });
+        // The test is only meaningful if the world actually contains both gate
+        // types — assert that up front so a future generation change that drops
+        // them fails loudly instead of silently testing nothing.
+        const regions = bounceRegions(grid);
+        const totalSprings = regions.reduce((n, r) => n + (levelOf(r).springs ?? []).length, 0);
+        const totalJetpacks = regions.reduce((n, r) => n + (levelOf(r).jetpacks ?? []).length, 0);
+        expect(totalSprings, 'world has a spring gate').toBeGreaterThan(0);
+        expect(totalJetpacks, 'world has a jetpack gate').toBeGreaterThan(0);
+        for (const r of regions) {
+            const level = levelOf(r);
+            const C = constantsOf(r);
+            const goals = [
+                ...(level.portals ?? []).map((p) => ({ kind: 'portal', id: p.id })),
+                ...(level.pickups ?? []).map((p) => ({ kind: 'pickup', id: p.id })),
+            ];
+            for (const goal of goals) {
+                const res = driveTo(level, FULL, goal, C);
+                expect(res.reached, `${r.region_id} ${goal.kind} ${goal.id} (frames ${res.frames})`).toBe(true);
+            }
+        }
+    });
+
     it('a player missing the gating arrow parks gracefully (no error, no fall-off loop)', () => {
         // Find a region with an arrow-gated exit (its host is off the spawn
         // column, so it's wrong-arrow unreachable). Drive toward it with NO
@@ -195,11 +256,12 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
         let droveGated = false;
         for (const r of bounceRegions(world.grid)) {
             const level = levelOf(r);
+            const C = constantsOf(r);
             for (const pt of level.portals ?? []) {
                 const host = level.platforms.find((p) => p.id === pt.on);
                 if (!host || host.x === level.size.width / 2) continue;
                 droveGated = true;
-                const res = driveTo(level, noAbilities(), { kind: 'portal', id: pt.id }, 3000);
+                const res = driveTo(level, noAbilities(), { kind: 'portal', id: pt.id }, C, 3000);
                 expect(res.reached, `gated ${pt.id} reachable with no arrows`).toBe(false);
                 expect(res.falls, `gated ${pt.id} fall-off loop`).toBe(0);
             }
