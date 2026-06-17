@@ -55,6 +55,32 @@ describe('derived rules match fixture ground truth', () => {
     });
 });
 
+describe('includePlatforms: per-platform minimal sets (per-row requirements)', () => {
+    it('off by default — no platforms field', () => {
+        expect(deriveAccessRules(springGap).platforms).toBeUndefined();
+    });
+
+    it('covers every platform and exposes minimal sets + reachableUnderFull', () => {
+        const r = deriveAccessRules(springGap, { includePlatforms: true });
+        const ids = springGap.platforms.map((p) => p.id).sort();
+        expect(Object.keys(r.platforms).sort()).toEqual(ids);
+        for (const id of ids) {
+            expect(Array.isArray(r.platforms[id].minimalSets)).toBe(true);
+            expect(typeof r.platforms[id].reachableUnderFull).toBe('boolean');
+        }
+    });
+
+    it('the rung above the spring gap requires {springs}; the host does not', () => {
+        const r = deriveAccessRules(springGap, { includePlatforms: true });
+        const rules = Object.values(r.platforms).map((a) => formatRule(a.minimalSets));
+        expect(rules).toContain('ALWAYS');   // entrance / spring host
+        expect(rules).toContain('(springs)'); // the rung the spring launches to
+        // The spring's host stays reachable with no ability (it's a green rung).
+        const springHost = springGap.springs[0].on;
+        expect(formatRule(r.platforms[springHost].minimalSets)).toBe('ALWAYS');
+    });
+});
+
 describe('verifier defect detection', () => {
     it('unreachable decorative platforms are NOT defects (skipping is normal)', () => {
         const level = {

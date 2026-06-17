@@ -140,8 +140,16 @@ function goalAnalysis(table, kind, id) {
  *     universe,
  *     pickups: { [id]: { minimalSets, reachableUnderFull, violations } },
  *     exits:   { [id]: { ... } },
+ *     platforms: { [id]: { ... } },   // only when opts.includePlatforms
  *     defects: [strings],   // unreachable goals + monotonicity breaks
  *   }
+ *
+ * `opts.includePlatforms` adds the SAME minimal-set analysis for EVERY
+ * platform (not just goal hosts) — the per-row "items required to reach
+ * this rung" data the report/editor surfaces. It reuses the reachability
+ * table already built for the goals (goalAnalysis is generic over the
+ * row field), so it costs only one extra goalAnalysis per platform; it is
+ * OFF by default so the per-attempt verification path never pays for it.
  */
 export function deriveAccessRules(level, opts = {}) {
     const { universe, table } = reachabilityTable(level, opts);
@@ -157,6 +165,14 @@ export function deriveAccessRules(level, opts = {}) {
         const a = goalAnalysis(table, 'exits', pt.id);
         a.reachableUnderFull = fullRow.exits.has(pt.id);
         result.exits[pt.id] = a;
+    }
+    if (opts.includePlatforms) {
+        result.platforms = {};
+        for (const p of level.platforms ?? []) {
+            const a = goalAnalysis(table, 'platforms', p.id);
+            a.reachableUnderFull = fullRow.platforms.has(p.id);
+            result.platforms[p.id] = a;
+        }
     }
 
     for (const [kind, goals] of [['pickup', result.pickups], ['exit', result.exits]]) {
