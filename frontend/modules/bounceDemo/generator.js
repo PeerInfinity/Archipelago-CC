@@ -1234,7 +1234,7 @@ function planBraidGatedChain(exits, pickups) {
         for (const a of g.req) {
             if (!BRAID_GATE_ABILITIES.has(a)) {
                 throw new Error(`braid Regime 2: unsupported physics gate '${a}' `
-                    + `(goal '${g.id}') — springs/jetpacks/brown decline`);
+                    + `(goal '${g.id}') — not a known bounce ability`);
             }
             if (ARROW_NAMES.includes(a)) usedArrows.add(a);
         }
@@ -1243,30 +1243,22 @@ function planBraidGatedChain(exits, pickups) {
         throw new Error('braid Regime 2: cannot gate both arrows in one region '
             + `(goals require ${[...usedArrows].join(' and ')})`);
     }
-    // Requirements must form a single nested chain (one climbable column).
-    const sortedReqs = [...new Set(goals.map((g) => reqKey(g.req)))]
+    // Brown is TERMINAL (it breaks on landing, nothing climbs past it), so a
+    // brown goal can't be a chain SEGMENT — but it CAN ride its own offset TIP
+    // beside the green spine (the two-platform rule), gated by suppression (the
+    // brown host vanishes without the item). So brown is a per-goal HOST colour,
+    // not a rung: the climbable spine keys on each requirement MINUS brown, and
+    // those spine levels must form a single nested chain. Any number of brown
+    // goals, at any level — each gets a brown tip, the spine stays green.
+    const chainKeyOf = (req) => req.filter((a) => a !== 'brown').sort();
+    const sortedReqs = [...new Set(goals.map((g) => reqKey(chainKeyOf(g.req))))]
         .map((k) => (k ? k.split('+') : []))
         .sort((a, b) => a.length - b.length);
     for (let i = 1; i < sortedReqs.length; i++) {
         if (!isSubsetReq(sortedReqs[i - 1], sortedReqs[i])) {
-            throw new Error('braid Regime 2: requirements are not nested '
+            throw new Error('braid Regime 2: spine requirements are not nested '
                 + `([${sortedReqs[i - 1].join(',')}] vs [${sortedReqs[i].join(',')}])`);
         }
-    }
-    // Brown is TERMINAL (breaks on landing, no climbing past), so a brown goal
-    // can only be the chain CEILING: at most one, and its requirement must be
-    // the largest (everything else nests below it). A brown goal below the top
-    // would wall off the goals above it.
-    const brownGoals = goals.filter((g) => g.req.includes('brown'));
-    if (brownGoals.length > 1) {
-        throw new Error('braid Regime 2: at most one brown goal per region '
-            + `(got ${brownGoals.map((g) => `'${g.id}'`).join(', ')})`);
-    }
-    const ceilingKey = reqKey(sortedReqs[sortedReqs.length - 1] ?? []);
-    if (brownGoals.length === 1 && reqKey(brownGoals[0].req) !== ceilingKey) {
-        throw new Error(`braid Regime 2: brown goal '${brownGoals[0].id}' `
-            + `[${brownGoals[0].req.join(',')}] is not the ceiling [${ceilingKey}] — `
-            + 'brown is terminal, nothing can climb past it');
     }
     // Goals keyed by their requirement (the rung level they attach at).
     const goalsByKey = new Map();
@@ -1275,17 +1267,18 @@ function planBraidGatedChain(exits, pickups) {
         if (!goalsByKey.has(k)) goalsByKey.set(k, []);
         goalsByKey.get(k).push(g);
     }
-    return { goals, sortedReqs, goalsByKey, brownGoal: brownGoals[0] ?? null };
+    return { goals, sortedReqs, goalsByKey };
 }
 
 /**
  * Can the gated braid realise these specs, or must the region fall back to the
  * column proposer? Returns { ok } or { ok:false, reason }. All-free specs are
- * Regime 1 (always ok); gated specs run the structural plan check (≤1 arrow,
- * nested, only arrow/blue physics gates — springs/jetpacks/brown decline).
- * The grower composes COLUMN-compatible gates (canHostExitGates), so anything
- * the braid can't take is guaranteed buildable as a column — see the fallback
- * in generateLevelFromSpecsGen.
+ * Regime 1 (always ok); gated specs run the structural plan check (≤1 distinct
+ * arrow, spine requirements — req minus brown — nested; brown rides per-goal
+ * tips, any number). What still declines: two arrows, mutually-incomparable
+ * spine reqs. The grower composes COLUMN-compatible gates (canHostExitGates),
+ * so anything the braid can't take is guaranteed buildable as a column — see the
+ * fallback in generateLevelFromSpecsGen.
  */
 function braidCanRealiseSpecs(exitSpecs, pickupSpecs) {
     try {
@@ -1331,11 +1324,13 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // always has — while the spine stays portal-free.
     const maxJit = 0;
     const freeDir = freeArrow === 'left' ? -1 : 1;
-    const { goals, brownGoal } = plan;
+    const { goals } = plan;
+    const isBrown = (g) => g.req.includes('brown');
 
-    // The chain realises every gate EXCEPT brown (brown rides the ceiling goal's
-    // host, not a chain rung). So the chain order keys on the requirement MINUS
-    // brown; brown only colours the topmost goal's platform.
+    // The spine realises every gate EXCEPT brown (brown rides each brown goal's
+    // OWN offset tip beside the green spine, gated by suppression — not a chain
+    // rung). So the spine order keys on the requirement MINUS brown; brown only
+    // colours its goal's tip host.
     const chainKey = (req) => reqKey(req.filter((a) => a !== 'brown'));
     const chainSegs = [...new Set(goals.map((g) => chainKey(g.req)))]
         .map((k) => (k ? k.split('+') : []))
@@ -1345,11 +1340,6 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         const k = chainKey(g.req);
         if (!byChain.has(k)) byChain.set(k, []);
         byChain.get(k).push(g);
-    }
-    // Within a chain level, attach the brown (ceiling) goal LAST so it sits on
-    // top of any same-level green goals — nothing climbs past it.
-    for (const arr of byChain.values()) {
-        arr.sort((a, b) => (a === brownGoal ? 1 : 0) - (b === brownGoal ? 1 : 0));
     }
 
     // ── Realise the chain bottom → top ───────────────────────────────
@@ -1435,14 +1425,17 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // arrow, which the player always holds. (The locked-tip escape — a return
     // home for a player who lands on a LOCKED tip and can't drift back — is a
     // follow-up; the spine + top teleport already give a home route from the spine.)
-    const placePortalTip = (g) => {
-        const tip = place(prev.x + freeDir * tipOffset, prev.y);
+    // An offset tip beside the spine. A BROWN tip is suppressed without the
+    // brown item (so its goal is gated on brown), GREEN otherwise; either way
+    // the green spine rung carries the no-input climb past it (two-platform rule).
+    const placeOffsetTip = (g, type = 'green') => {
+        const tip = place(prev.x + freeDir * tipOffset, prev.y, type);
         attach(g, tip);
     };
 
     // Chain segments: distinct requirement keys (minus brown) in nested order.
     // Walk them, realising the gates each adds, then attaching that level's
-    // goals. brown only colours its goal's host (the ceiling).
+    // goals. brown only colours its goal's own tip host.
     for (const segment of chainSegs) {
         const newGates = segment.filter((a) => !current.includes(a));
         // Vertical gates first (blue / spring / jetpack), then the arrow gate
@@ -1456,28 +1449,29 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
             realiseArrowGate(a);
         }
         const here = byChain.get(reqKey(segment)) ?? [];
-        // PICKUPS ride the straight spine (collecting doesn't exit). Place them
-        // FIRST, so an in-region item granted here (the start arrow) is collected
-        // BELOW the portals that assume the player now holds it.
+        // PICKUPS (non-brown) ride the straight spine (collecting doesn't exit).
+        // Place them FIRST, so an in-region item granted here (the start arrow)
+        // is collected BELOW the portals that assume the player now holds it. A
+        // BROWN pickup can't sit on the spine (terminal → blocks the climb), so
+        // it rides a brown tip like a brown exit.
         for (const g of here.filter((gg) => gg.kind === 'pickup')) {
             climbPlain();
-            attach(g, prev);
+            if (isBrown(g)) placeOffsetTip(g, 'brown'); else attach(g, prev);
         }
-        // PORTALS ride offset tips above a fresh spine bypass rung — except the
-        // brown ceiling, which IS the spine top (landing breaks it → respawn, so
-        // it's never a softlock and needs no bypass/tip).
+        // PORTALS ride offset tips above a fresh spine bypass rung — green tips
+        // for the spine-gated goals, BROWN tips for brown-gated ones (suppression
+        // gates them, the green spine carries the climb past).
         for (const g of here.filter((gg) => gg.kind === 'exit')) {
             climbPlain();
-            if (g === brownGoal) { prev.type = 'brown'; attach(g, prev); } else placePortalTip(g);
+            placeOffsetTip(g, isBrown(g) ? 'brown' : 'green');
         }
     }
     // Top teleport row: a lone teleport-to-start host above the highest goal,
     // so a player who climbs past the top (e.g. a locked top portal) returns
     // home instead of stalling — the chain analogue of the Regime-1 top fork's
-    // teleport branch (and the over-the-top retirement). SKIPPED when the
-    // ceiling is brown: nothing can climb past a brown host (it breaks on
-    // landing, which is its own respawn), so a teleport above it is unreachable.
-    if (!brownGoal) {
+    // teleport branch (and the over-the-top retirement). The spine top is always
+    // green now (brown only ever rides a tip), so it's always reachable.
+    {
         y -= PLAIN_DY;
         const top = place(prev.x + jitterDx(current), y);
         teleportEntities.push({ id: `tp_${top.id}`, x: top.x, y: top.y - 20, on: top.id });

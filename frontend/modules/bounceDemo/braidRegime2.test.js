@@ -114,16 +114,35 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
         expectGated(gen(exits), exits);
     });
 
-    it('a brown ceiling goal derives exactly [brown]', () => {
+    it('a brown-gated goal rides a brown tip beside the green spine', () => {
         const exits = [
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gb', requirement: ['brown'], direction: 'right' },
         ];
         const level = gen(exits);
         expectGated(level, exits);
-        // The brown goal rides a brown host (the ceiling).
-        const host = level.portals.find((pt) => pt.id === 'gb').on;
-        expect(level.platforms.find((p) => p.id === host).type).toBe('brown');
+        // The brown goal rides a brown TIP host (suppression gates it on brown)...
+        const host = level.platforms.find((p) => p.id === level.portals.find((pt) => pt.id === 'gb').on);
+        expect(host.type).toBe('brown');
+        // ...and a green bypass shares its row, so the no-input climb survives
+        // (the two-platform rule — brown is terminal, the spine carries on past).
+        const bypass = level.platforms.filter(
+            (p) => p.y === host.y && p.id !== host.id && p.type !== 'brown');
+        expect(bypass.length, 'brown tip has no green bypass on its row').toBeGreaterThan(0);
+    });
+
+    it('two brown-gated exits each derive exactly [brown]', () => {
+        // Brown is a per-goal tip colour now, not a unique ceiling — so two
+        // arrowless brown goals are a braid, not a crash (the browser bug:
+        // side_exit_N + side_exit_E both [brown] aborted via column fallback).
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb1', requirement: ['brown'], direction: 'right' },
+            { id: 'gb2', requirement: ['brown'], direction: 'down' },
+        ];
+        const level = gen(exits);
+        expectGated(level, exits);
+        expect(level.size.width, 'should be a 240 braid, not a column fallback').toBe(W);
     });
 
     it('a graded chain mixing blue, springs and an arrow (all nested)', () => {
@@ -203,12 +222,30 @@ describe('braid Regime 2 — falls back to a column when out of braid vocabulary
         ]);
     });
 
-    it('an incomparable brown gate (brown vs left) → column', () => {
-        // [brown] and [left] don't nest, so they can't share one braid chain;
-        // the column hosts the brown ceiling + the arrow branch tip.
-        expectColumnFallback([
+});
+
+describe('braid Regime 2 — brown coexists with a spine gate (brown rides a tip)', () => {
+    it('a brown gate + a left gate share one braid ([brown] tip below, [left] above)', () => {
+        // The spine keys on the requirement MINUS brown, so [brown]→[] and
+        // [left]→[left] DO nest: the brown goal rides a brown tip at the bottom
+        // spine level, the left goal an arrow gate + tip above. One braid, no
+        // column fallback (this used to fall back as "incomparable").
+        const exits = [
             { id: 'gb', requirement: ['brown'], direction: 'up' },
             { id: 'gl', requirement: ['left'], direction: 'right' },
-        ]);
+        ];
+        const level = gen(exits);
+        expectGated(level, exits);
+        expect(level.size.width, 'should be a 240 braid, not a column fallback').toBe(W);
+    });
+
+    it('a left+brown gate nests above a left gate (brown is not a spine rung)', () => {
+        const exits = [
+            { id: 'gl', requirement: ['left'], direction: 'up' },
+            { id: 'glb', requirement: ['left', 'brown'], direction: 'right' },
+        ];
+        const level = gen(exits);
+        expectGated(level, exits);
+        expect(level.size.width).toBe(W);
     });
 });

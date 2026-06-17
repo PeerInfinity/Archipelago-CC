@@ -365,19 +365,27 @@ export function canHostExitGates(existingGates, newGate) {
  * so a braid region can host at most ONE distinct forward physics gate item
  * (plus any number of authored / ungated exits). The back portal is ungated in
  * braid mode (generateRegionZoneGen), so it isn't in `existingGates` and imposes
- * no constraint. Stricter than canHostExitGates (which is the column's veto):
- * it rejects e.g. {[Brown], [Left]} on one region, which the column can host
- * (brown ceiling + arrow tip) but the braid can't.
+ * no constraint.
+ *
+ * BROWN is exempt from the single-item limit: a brown goal rides its OWN offset
+ * TIP beside the green spine (suppression gates it on the brown item), so any
+ * number of brown goals coexist at any chain level — brown is a per-goal host
+ * colour, not a spine rung. The braid CAN therefore host e.g. {[Brown], [Left]}
+ * (brown tip at the bottom level, arrow gate + tip above) and two [Brown] gates.
+ * So the constraint is: at most ONE distinct NON-brown physics gate item (the
+ * grower composes single-item gates, and single-item non-brown reqs nest only
+ * when identical → one climbable spine). Still stricter than canHostExitGates.
  */
 export function canHostExitGatesBraid(existingGates, newGate) {
-    const items = new Set();
+    const nonBrown = new Set();
     for (const gate of [...existingGates, newGate]) {
         for (const term of gate) {
             const { item, count } = typeof term === 'string' ? { item: term, count: 1 } : term;
-            if (ABILITY_BY_ITEM_NAME[item] && (count ?? 1) === 1) items.add(item);
+            if (ABILITY_BY_ITEM_NAME[item] && (count ?? 1) === 1
+                && ABILITY_BY_ITEM_NAME[item] !== 'brown') nonBrown.add(item);
         }
     }
-    return items.size <= 1;
+    return nonBrown.size <= 1;
 }
 
 /**
