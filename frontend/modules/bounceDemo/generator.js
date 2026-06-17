@@ -1256,6 +1256,31 @@ function planBraidGatedChain(exits, pickups) {
 }
 
 /**
+ * Can the gated braid realise these specs, or must the region fall back to the
+ * column proposer? Returns { ok } or { ok:false, reason }. All-free specs are
+ * Regime 1 (always ok); gated specs run the structural plan check (≤1 arrow,
+ * nested, only arrow/blue physics gates — springs/jetpacks/brown decline).
+ * The grower composes COLUMN-compatible gates (canHostExitGates), so anything
+ * the braid can't take is guaranteed buildable as a column — see the fallback
+ * in generateLevelFromSpecsGen.
+ */
+function braidCanRealiseSpecs(exitSpecs, pickupSpecs) {
+    try {
+        const exits = (exitSpecs ?? []).map((s) => ({
+            id: s.id, req: normalizeRequirement(s.requirement, `exit '${s.id}'`),
+        }));
+        const pickups = (pickupSpecs ?? []).map((s) => ({
+            id: s.id, req: normalizeRequirement(s.requirement, `pickup '${s.id}'`),
+        }));
+        if (![...exits, ...pickups].some((g) => g.req.length > 0)) return { ok: true };
+        planBraidGatedChain(exits, pickups); // throws on a braid-incompatible gate set
+        return { ok: true };
+    } catch (err) {
+        return { ok: false, reason: err.message };
+    }
+}
+
+/**
  * Build a fork-free gated braid chain whose goals each require EXACTLY their
  * spec's ability set. `plan` comes from planBraidGatedChain (validated). Throws
  * only on geometry dead-ends (retryable). Reachable + gated by construction;
@@ -1535,9 +1560,21 @@ export function* generateLevelFromSpecsGen({
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
     if (mode === 'braid') {
-        return yield* generateBraidFromSpecsGen({
-            id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, C, G,
-        });
+        // The braid honours arrow + blue gates (Regime 2); springs/jetpacks/
+        // brown, gating both arrows, or mutually-incomparable requirements are
+        // outside its single-chain vocabulary. The grower's veto
+        // (canHostExitGates) only guarantees COLUMN-compatibility, so a region
+        // it allowed may still be braid-incompatible — fall back to the column
+        // proposer for THAT region instead of aborting the whole world (the bot
+        // handles both: teleport recovery on braids, descend on columns).
+        const can = braidCanRealiseSpecs(exitSpecs, pickupSpecs);
+        if (can.ok) {
+            return yield* generateBraidFromSpecsGen({
+                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, C, G,
+            });
+        }
+        console.warn(`bounce: region '${id}' has gates outside the braid vocabulary `
+            + `(${can.reason}) — generating it as a column instead`);
     }
     const colorHost = colorHostMode(C);
     const { exits, pickups, arrowFree, ceiling } = normalizeSpecGoals(

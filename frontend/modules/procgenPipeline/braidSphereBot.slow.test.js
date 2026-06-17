@@ -118,6 +118,36 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
         }
     });
 
+    it('a springs/blue pool generates a winnable MIXED braid+column world (no abort)', () => {
+        // The grower's veto only guarantees column-compatibility, so braid mode
+        // gets handed regions it can't realise (a springs gate aborted an early
+        // browser run). Those must FALL BACK to a column instead of aborting the
+        // whole world — the braid-incompatible regions render as columns, the
+        // rest stay braids, and the world is still winnable.
+        const plan = planSpheres({
+            itemPool: { 'Left arrow': 1, 'Right arrow': 1, Springs: 1, 'Blue platforms': 1, Victory: 1 },
+            sphereCount: 4, victoryItem: 'Victory', gateableItems: GATEABLE_ITEMS, seed: 7,
+        });
+        const { grid, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 }, seed: 7,
+            regionParams: {
+                fallBehavior: 'current', physicsProfile: 'dj',
+                bounceMode: 'braid', braidWidth: 240,
+            },
+            growthParams: {
+                spherePlan: plan, substrateQuotas: { bounce: 99 },
+                startSubstrate: 'bounce', maxItemsPerRegion: 2,
+            },
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 7, embedSphereLog: false, completionConditionItem: 'Victory',
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+        const widths = bounceRegions(grid).map((r) => levelOf(r).size.width);
+        expect(widths.some((w) => w === 240), 'at least one braid region').toBe(true);
+        expect(widths.some((w) => w !== 240), 'at least one column fallback').toBe(true);
+    });
+
     it('a player missing the gating arrow parks gracefully (no error, no fall-off loop)', () => {
         // Find a region with an arrow-gated exit (its host is off the spawn
         // column, so it's wrong-arrow unreachable). Drive toward it with NO

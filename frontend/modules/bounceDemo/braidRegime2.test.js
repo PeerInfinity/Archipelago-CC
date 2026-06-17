@@ -117,29 +117,47 @@ describe('braid Regime 2 — gated chains honour requirement (dj, width 240)', (
     });
 });
 
-describe('braid Regime 2 — declines (clear, immediate)', () => {
-    const willThrow = (exits, pickups = []) => () => gen(exits, pickups);
+describe('braid Regime 2 — falls back to a column when out of braid vocabulary', () => {
+    // Gates the single-chain braid can't realise (springs/jetpacks/brown, both
+    // arrows, or mutually-incomparable reqs) must NOT abort: braid mode falls
+    // back to the column proposer for that region (the bot handles both layouts;
+    // the grower only guarantees column-compatibility, so the column always
+    // builds). The fallback level is a column (width !== braid's 240) whose rules
+    // still match the requested requirements.
+    const expectColumnFallback = (exits, pickups = []) => {
+        const level = gen(exits, pickups);
+        expect(validateLevel(level), 'model errors').toEqual([]);
+        expect(level.size.width, 'should be a column, not a 240 braid').not.toBe(W);
+        const d = deriveAccessRules(level, { constants: C });
+        expect(d.defects, 'column defects').toEqual([]);
+        for (const s of exits) {
+            expect(ruleFor(d, 'exits', s.id), `exit ${s.id}`).toBe(wantRule(s.requirement));
+        }
+        for (const s of pickups) {
+            expect(ruleFor(d, 'pickups', s.id), `pickup ${s.id}`).toBe(wantRule(s.requirement));
+        }
+    };
 
-    it('declines gating both arrows in one region', () => {
-        expect(willThrow([
+    it('both arrows in one region → column', () => {
+        expectColumnFallback([
             { id: 'gl', requirement: ['left'], direction: 'up' },
             { id: 'gr', requirement: ['right'], direction: 'right' },
-        ])).toThrow(/cannot gate both arrows/);
+        ]);
     });
 
-    it('declines unsupported physics gates (springs/jetpacks/brown)', () => {
-        expect(willThrow([{ id: 'gs', requirement: ['springs'], direction: 'up' }]))
-            .toThrow(/unsupported physics gate 'springs'/);
-        expect(willThrow([{ id: 'gj', requirement: ['jetpacks'], direction: 'up' }]))
-            .toThrow(/unsupported physics gate 'jetpacks'/);
-        expect(willThrow([{ id: 'gbr', requirement: ['brown'], direction: 'up' }]))
-            .toThrow(/unsupported physics gate 'brown'/);
+    it('an unsupported physics gate (springs) → column', () => {
+        // one arrowless exit (the column top) + an arrow branch tip = a shape the
+        // grower's canHostExitGates permits and the column realises.
+        expectColumnFallback([
+            { id: 'gs', requirement: ['springs'], direction: 'up' },
+            { id: 'gl', requirement: ['left'], direction: 'right' },
+        ]);
     });
 
-    it('declines mutually-incomparable requirements', () => {
-        expect(willThrow([
-            { id: 'gl', requirement: ['left'], direction: 'up' },
-            { id: 'gb', requirement: ['blue'], direction: 'right' },
-        ])).toThrow(/not nested/);
+    it('mutually-incomparable requirements (left vs blue) → column', () => {
+        expectColumnFallback([
+            { id: 'gl', requirement: ['left'], direction: 'right' },
+            { id: 'gb', requirement: ['blue'], direction: 'up' },
+        ]);
     });
 });
