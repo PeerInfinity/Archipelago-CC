@@ -1347,6 +1347,10 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // a wider level or different physics — not a localized change.
     const maxJit = 0;
     const freeDir = freeArrow === 'left' ? -1 : 1;
+    // Decorative fork companion offset (R1's forkHalf): a DISTINCT catch target
+    // (> catchSpan/2, so it never captures the straight no-input spine climb)
+    // yet within one free-arrow hop (< reach, so it's a reachable side ledge).
+    const forkHalf = Math.min(reach * 0.85, catchSpan / 2 + 8);
     const { goals } = plan;
     const isBrown = (g) => g.req.includes('brown');
 
@@ -1379,11 +1383,15 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // the report/editor to show beside the VERIFIED derive. `req` defaults to
     // the pre-update `current`; gate realizers pass the post-gate set for the
     // platform their gate actually blocks. Pure intent — the verifier is truth.
+    // `authored:false` skips the stamp for DECORATIVE platforms (fork companions)
+    // — they carry no gating intent and their verified reachability is whatever
+    // the geometry yields (often more than the block's held set), so the
+    // authored-vs-verified view only covers the gating skeleton.
     const authoredReqs = {};
-    const place = (x, y, type = 'green', req = current) => {
+    const place = (x, y, type = 'green', req = current, { authored = true } = {}) => {
         const p = { id: `b${nid++}`, x: wrap(x), y, type };
         platforms.push(p);
-        authoredReqs[p.id] = [...req].sort();
+        if (authored) authoredReqs[p.id] = [...req].sort();
         return p;
     };
     const heldArrow = (current) => current.find((a) => ARROW_NAMES.includes(a)) ?? null;
@@ -1512,8 +1520,44 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // byte-identical without decorChance. Blue is CAPPED (its moving sweep makes
     // the verifier enumerate phases — exponential in blue count); boosters are
     // deterministic launches, uncapped. springs > jetpacks (jetpack gaps huge).
-    let blueDecor = 0;
-    const BLUE_DECOR_CAP = 2;
+    let blueDecor = 0, brownDecor = 0;
+    const BLUE_DECOR_CAP = 2, BROWN_DECOR_CAP = 4;
+    // A decorative 2-wide stretch: the SPINE stays the guaranteed straight
+    // no-input climb; a COMPANION lane bumps out forkHalf toward the free arrow
+    // (a reachable side ledge that never captures the no-input climb) for 1-2
+    // rows, then MERGES (the spine continues; the companion lane terminates).
+    // Companions carry no gating intent (authored:false) and add platforms BEYOND
+    // platformRows (forks overshoot the target, by design). The terminal
+    // companion may BREAK (brown) in a brown-held block — reached from the spine,
+    // so traversal survives (R1's about-to-merge-branch rule). Brown is CAPPED
+    // (its broken-state search branches the verifier). The per-attempt re-derive
+    // rejects any fork that perturbs a goal.
+    const emitForkMerge = () => {
+        const forkLen = rng.next() < 0.5 ? 1 : 2;
+        let companion = null;
+        for (let r = 0; r < forkLen; r++) {
+            climbPlain(); // spine rung (straight, guaranteed)
+            companion = place(prev.x + freeDir * forkHalf, prev.y, 'green', current, { authored: false });
+        }
+        // The terminal companion may BREAK (brown). Unlike the on-spine boosters,
+        // brown needs NO held-block check: it's an OFF-spine terminal ledge, so
+        // without brown it's just suppressed (absent) and the spine still climbs;
+        // with brown it's a breakable ledge. Neutral either way. (Brown is never
+        // in `current` anyway — the chain handles it via per-goal tip suppression.)
+        if (companion && brownDecor < BROWN_DECOR_CAP
+            && (decorChance.brown ?? 0) > 0 && rng.next() < decorChance.brown) {
+            companion.type = 'brown'; brownDecor += 1;
+        }
+        climbPlain(); // merge: spine continues, companion lane ends
+    };
+    // An extra row is normally a plain rung, but in a block that ALREADY holds
+    // springs/jetpacks/blue it may become a FLAVOR row reusing the matching
+    // GATING geometry (grown gap for boosters, stepping-stone+landing for blue)
+    // at the panel's existing chances — neutral because the block already
+    // requires the ability. It may instead become a decorative FORK/MERGE (any
+    // block). Each chance is only rolled when applicable AND > 0, so platformRows
+    // stays byte-identical without decorChance. Blue is CAPPED (its moving sweep
+    // makes the verifier enumerate phases); boosters are deterministic, uncapped.
     const maybeBoostRow = () => {
         if (current.includes('springs') && (decorChance.spring ?? 0) > 0
             && rng.next() < decorChance.spring) {
@@ -1526,6 +1570,9 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         if (current.includes('blue') && blueDecor < BLUE_DECOR_CAP
             && (decorChance.blue ?? 0) > 0 && rng.next() < decorChance.blue) {
             emitBlue(false); blueDecor += 1; return true;
+        }
+        if ((decorChance.fork ?? 0) > 0 && rng.next() < decorChance.fork) {
+            emitForkMerge(); return true;
         }
         return false;
     };

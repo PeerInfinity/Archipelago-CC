@@ -258,9 +258,12 @@ describe('braid Regime 2 — authored per-platform requirement matches verified'
                 terminalPortals: true, includePlatforms: true,
             });
             for (const p of level.platforms) {
+                // authoredReqs covers only the gating SKELETON; decorative
+                // fork companions carry no authored intent (absent from the map).
+                if (!(p.id in authoredReqs)) continue;
                 // The free arrow is held, so it never appears in a requirement;
                 // drop it from the authored set before comparing to verified.
-                const authored = (authoredReqs[p.id] ?? []).filter((a) => a !== FREE_ARROW).sort();
+                const authored = authoredReqs[p.id].filter((a) => a !== FREE_ARROW).sort();
                 const verified = unavoidable(d.platforms[p.id].minimalSets);
                 expect(verified, `platform ${p.id} (${formatRule(d.platforms[p.id].minimalSets)})`)
                     .toEqual(authored);
@@ -394,5 +397,45 @@ describe('braid Regime 2 — spring/jetpack flavor on extra rows (held block onl
             braidWidth: W, freeArrow: FREE_ARROW, platformRows: 0,
         });
         expect(JSON.stringify(noRows)).toBe(JSON.stringify(baseline));
+    });
+});
+
+// Decorative fork/merge/brown: a 2-wide companion lane beside the spine (any
+// block), terminating into a merge; the terminal companion may break (brown).
+// (The gating cross-check matrix lives in the slow suite — the full-graph derive
+// on wide+brown levels is the expensive part.) Forks are detected by the extra
+// platforms they add, NOT by row width — the gated SKELETON is already 2-wide on
+// gate rows (gate + teleport host) and tip rows (spine + offset tip).
+describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
+    const exits = [
+        { id: 'free', requirement: [], direction: 'up' },
+        { id: 'gb', requirement: ['blue'], direction: 'right' },
+        { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+    ];
+    const gen = (decorChance, seed = 1, platformRows = 6) => generateLevelFromSpecs({
+        id: `RF${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
+        braidWidth: W, freeArrow: FREE_ARROW, platformRows, decorChance,
+    });
+    const count = (lvl) => lvl.platforms.length;
+    const rows = (lvl) => new Set(lvl.platforms.map((p) => p.y)).size;
+
+    it('forks add companion platforms AND overshoot the row budget', () => {
+        const plain = gen({});
+        const forked = gen({ fork: 1 });
+        expect(count(forked)).toBeGreaterThan(count(plain)); // companions added
+        expect(rows(forked)).toBeGreaterThan(rows(plain));   // fork bundles overshoot
+    });
+
+    it('brown rides the terminal companion only when forking', () => {
+        expect(gen({ fork: 1, brown: 1 }).platforms.filter((p) => p.type === 'brown').length)
+            .toBeGreaterThan(0);
+        // brown chance with no fork chance → no fork branch → no brown
+        expect(gen({ brown: 1 }).platforms.filter((p) => p.type === 'brown').length).toBe(0);
+    });
+
+    it('no forks/brown without a platformRows budget', () => {
+        const baseline = gen({}, 1, 0);
+        const withChance = gen({ fork: 1, brown: 1 }, 1, 0);
+        expect(JSON.stringify(withChance)).toBe(JSON.stringify(baseline)); // byte-identical
     });
 });

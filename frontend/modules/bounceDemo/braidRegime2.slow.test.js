@@ -162,4 +162,29 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
             });
         }
     }
+
+    // Decorative fork/merge/brown must leave every gate untouched — the
+    // expensive case (forks widen the level; brown triggers broken-state search).
+    for (const decor of [{ fork: 0.8 }, { fork: 0.8, brown: 0.7 }, { blue: 1, fork: 0.8, brown: 0.7 }]) {
+        it(`decor ${JSON.stringify(decor)} preserves the blue→blue+left gates (seeds 1-4)`, () => {
+            const exits = shapes[0].exits; // blue → blue+left
+            for (let seed = 1; seed <= 4; seed++) {
+                const level = generateLevelFromSpecs({
+                    id: `RD${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
+                    braidWidth: W, freeArrow: 'right', platformRows: 6, decorChance: decor,
+                });
+                expect(validateLevel(level), 'model').toEqual([]);
+                const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
+                const braid = deriveBraidAccessRules(level, opts);
+                const full = deriveAccessRules(level, opts);
+                expect(braid.defects, `seed ${seed} braid defects`).toEqual([]);
+                expect(full.defects, `seed ${seed} full defects`).toEqual([]);
+                for (const s of exits) {
+                    expect(ruleFor(braid, 'exits', s.id), `${s.id} braid`).toBe(wantRule(s.requirement));
+                    expect(braid.exits[s.id].minimalSets, `${s.id} full==braid`)
+                        .toEqual(full.exits[s.id].minimalSets);
+                }
+            }
+        });
+    }
 });
