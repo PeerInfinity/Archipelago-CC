@@ -92,9 +92,11 @@ export const DEFAULTS = Object.freeze({
  * derived from `step` — so a world must be played under the profile it
  * was generated with:
  *
- * - 'classic' is the current model, FROZEN: all committed presets,
- *   fixtures, ground-truth tests and AP round-trip artifacts are
- *   generated under it, and an ABSENT payload stamp means classic.
+ * - 'experimental' is the FIRST model we built (before measuring real DJ
+ *   constants — the name 'classic' was misleading, so it was renamed). It is
+ *   FROZEN: all committed presets, fixtures, ground-truth tests and AP
+ *   round-trip artifacts are generated under it, and an ABSENT payload stamp
+ *   means experimental (the backward-compat baseline — see resolvePhysicsStamp).
  * - 'dj' matches real Doodle Jump per the SWFRecomp-CC measurements
  *   (2026-06-11; summary JSON + per-tick traces in
  *   NewDocs/plans/procedural-generation/dj-measurements/, spec in
@@ -111,9 +113,9 @@ export const DEFAULTS = Object.freeze({
  * changes physics under already-generated worlds.
  */
 export const PROFILES = Object.freeze({
-    classic: Object.freeze({
-        id: 'classic',
-        label: 'Classic',
+    experimental: Object.freeze({
+        id: 'experimental',
+        label: 'Experimental',
         constants: DEFAULTS,
     }),
     dj: Object.freeze({
@@ -146,12 +148,12 @@ export const PROFILES = Object.freeze({
 });
 
 /**
- * Build the payload stamp for a profile id. Classic returns null —
- * the stamp is OMITTED so classic worlds stay byte-identical to
- * pre-profile payloads (absent stamp = classic).
+ * Build the payload stamp for a profile id. Experimental returns null —
+ * the stamp is OMITTED so experimental worlds stay byte-identical to
+ * pre-profile payloads (absent stamp = experimental).
  */
 export function physicsStampFor(profileId) {
-    if (!profileId || profileId === 'classic') return null;
+    if (!profileId || profileId === 'experimental') return null;
     const profile = PROFILES[profileId];
     if (!profile) throw new Error(`physicsStampFor: unknown physics profile '${profileId}'`);
     return { profile: profile.id, constants: profile.constants };
@@ -160,8 +162,8 @@ export function physicsStampFor(profileId) {
 /**
  * Resolve a payload physics stamp to runtime constants. Embedded
  * constants win (merged over DEFAULTS so fields added after a world
- * was generated fall back to classic behavior); a bare profile id
- * resolves via the registry; absent stamp = classic DEFAULTS.
+ * was generated fall back to experimental behavior); a bare profile id
+ * resolves via the registry; absent stamp = experimental DEFAULTS.
  */
 export function resolvePhysicsStamp(stamp) {
     if (stamp?.constants) return Object.freeze({ ...DEFAULTS, ...stamp.constants });
@@ -169,7 +171,7 @@ export function resolvePhysicsStamp(stamp) {
         const id = typeof stamp === 'string' ? stamp : stamp.profile;
         const profile = PROFILES[id];
         if (profile) return profile.constants;
-        console.warn(`resolvePhysicsStamp: unknown profile '${id}', using classic`);
+        console.warn(`resolvePhysicsStamp: unknown profile '${id}', using experimental`);
     }
     return DEFAULTS;
 }

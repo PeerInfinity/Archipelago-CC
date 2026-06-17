@@ -189,8 +189,9 @@ const DEFAULT_PARAMS = {
     // PROFILES). LOGIC-AFFECTING: access rules derive from the
     // profile's step constants, so the profile is stamped into every
     // bounce payload and the world plays under the constants it was
-    // generated with. 'classic' stamps nothing (frozen default).
-    bouncePhysicsProfile: 'classic',
+    // generated with. New worlds default to 'dj' (real Doodle Jump
+    // constants); 'experimental' (the original model) stamps nothing.
+    bouncePhysicsProfile: 'dj',
     // Bounce level layout (top-down/free-arrow regions only). 'column' is
     // the fixed-column proposer; 'braid' is the 2-wide branching-path
     // generator that fits narrow widths and applies per-row jitter.
@@ -219,8 +220,8 @@ const BOUNCE_FALL_OPTIONS = [
 // subsections are a hardcoded v1, like the renderers map — a
 // registry-declared param schema is the eventual generic mechanism).
 const BOUNCE_PHYSICS_PROFILE_OPTIONS = [
-    { value: 'classic', label: 'Classic', disabled: false },
     { value: 'dj', label: 'Doodle Jump (measured, 20Hz)', disabled: false },
+    { value: 'experimental', label: 'Experimental (original model)', disabled: false },
 ];
 
 const REGION_XP_EFFECT_OPTIONS = [
@@ -2103,7 +2104,7 @@ export class ProcgenPipelineUI {
             // so decorative blue/spring/etc would block a player lacking them.
             regionParams: {
                 fallBehavior: this.params.bounceFallBehavior ?? 'current',
-                physicsProfile: this.params.bouncePhysicsProfile ?? 'classic',
+                physicsProfile: this.params.bouncePhysicsProfile ?? 'dj',
                 ...(this.params.bounceLayout === 'braid' ? {
                     bounceMode: 'braid',
                     braidWidth: this.params.bounceBraidWidth ?? 240,
@@ -2231,7 +2232,7 @@ export class ProcgenPipelineUI {
             // jitter are threaded through to the bounce zone generator.
             regionParams: {
                 maxIterations: 0,
-                physicsProfile: this.params.bouncePhysicsProfile ?? 'classic',
+                physicsProfile: this.params.bouncePhysicsProfile ?? 'dj',
                 fallBehavior: this.params.bounceFallBehavior ?? 'current',
                 ...(this.params.bounceLayout === 'braid' ? {
                     bounceMode: 'braid',
@@ -2519,7 +2520,7 @@ export class ProcgenPipelineUI {
             if (opt.disabled) o.disabled = true;
             physSelect.appendChild(o);
         }
-        physSelect.value = this.params.bouncePhysicsProfile ?? 'classic';
+        physSelect.value = this.params.bouncePhysicsProfile ?? 'dj';
         physSelect.addEventListener('change', () => {
             this.params.bouncePhysicsProfile = physSelect.value;
             this._saveToLocalStorage();

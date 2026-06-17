@@ -36,7 +36,7 @@
  *                            orchestration (exclusive sphere 1 /
  *                            starting item)
  *   --fall-behavior MODE     bounce fallBehavior regionParam (default 'current')
- *   --physics-profile ID     bounce physics profile (default 'classic';
+ *   --physics-profile ID     bounce physics profile (default 'experimental';
  *                            non-classic stamps params.physics into payloads)
  *   --enable-loop-mode       embed loop_costs in rules.json (mirrors the
  *                            procgen panel's "Enable loop mode" toggle —
@@ -100,7 +100,7 @@ function parseArgs(argv) {
         bidirectional: true,
         arrowEntry: true,
         fallBehavior: 'current',
-        physicsProfile: 'classic',
+        physicsProfile: 'experimental',
         enableLoopMode: false,
         regionXpEffect: 'cost',
         rulesOut: null,

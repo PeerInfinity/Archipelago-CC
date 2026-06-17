@@ -205,18 +205,19 @@ export const DJ_GEOMETRY = Object.freeze({
     ARROW_HALF_WIDTH_FLOOR: 300,
 });
 
-// Per-profile pinned geometry; profiles absent here derive from their
-// constants.
-const GEOMETRIES = Object.freeze({ classic: CLASSIC_GEOMETRY, dj: DJ_GEOMETRY });
+// Per-profile pinned geometry, keyed by profile id; profiles absent here derive
+// from their constants. CLASSIC_GEOMETRY is the 'experimental' profile's pinned
+// geometry (the constant keeps its name to avoid churn in its many test imports).
+const GEOMETRIES = Object.freeze({ experimental: CLASSIC_GEOMETRY, dj: DJ_GEOMETRY });
 
 /**
  * Resolve a generator `physics` option to { profileId, C, G }.
- * Accepts a profile id (default 'classic') or an explicit
+ * Accepts a profile id (default 'experimental') or an explicit
  * { constants, geometry } object (tests, future custom profiles).
  */
 export function resolveGenPhysics(physics) {
-    if (!physics || physics === 'classic') {
-        return { profileId: 'classic', C: DEFAULTS, G: CLASSIC_GEOMETRY };
+    if (!physics || physics === 'experimental') {
+        return { profileId: 'experimental', C: DEFAULTS, G: CLASSIC_GEOMETRY };
     }
     if (typeof physics === 'string') {
         const profile = PROFILES[physics];
@@ -379,7 +380,7 @@ export function generateLevel({
     seed = 1,
     attempts = 8,
     jitter = 0,
-    physics = 'classic',
+    physics = 'experimental',
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
     const want = [...requirement].sort();
@@ -1657,7 +1658,7 @@ export function* generateLevelFromSpecsGen({
     seed = 1,
     attempts = 8,
     jitter = 0,
-    physics = 'classic',
+    physics = 'experimental',
     // 'column' (default) = the fixed-column proposer. 'braid' = the 2-wide
     // braid for Regime-1 (free-arrow) top-down regions; braidWidth overrides
     // the level width (defaults to the profile's fixed width). decorChance is

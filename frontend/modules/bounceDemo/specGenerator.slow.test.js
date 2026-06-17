@@ -441,7 +441,7 @@ describe('generateZoneForSpecs — physics profile stamp', () => {
     it('classic stamps NOTHING — params.physics absent, explicit === default', () => {
         const zone = generateZoneForSpecs(SPECS);
         expect('physics' in zone.payload.params).toBe(false);
-        expect(generateZoneForSpecs({ ...SPECS, physicsProfile: 'classic' }))
+        expect(generateZoneForSpecs({ ...SPECS, physicsProfile: 'experimental' }))
             .toEqual(zone);
     });
 

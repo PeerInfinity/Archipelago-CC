@@ -248,14 +248,14 @@ describe('fixture ground truth: the no-input bounce stack', () => {
 });
 
 describe('physics profiles (PROFILES / stamp helpers)', () => {
-    it('classic profile IS the frozen DEFAULTS object', () => {
-        expect(PROFILES.classic.constants).toBe(DEFAULTS);
+    it('experimental profile IS the frozen DEFAULTS object', () => {
+        expect(PROFILES.experimental.constants).toBe(DEFAULTS);
         expect(Object.isFrozen(DEFAULTS)).toBe(true);
         expect(DEFAULTS.AIR_CONTROL).toBe('accel');
     });
 
-    it('physicsStampFor: classic (and absent) stamp to null — payloads stay unstamped', () => {
-        expect(physicsStampFor('classic')).toBeNull();
+    it('physicsStampFor: experimental (and absent) stamp to null — payloads stay unstamped', () => {
+        expect(physicsStampFor('experimental')).toBeNull();
         expect(physicsStampFor(null)).toBeNull();
         expect(physicsStampFor(undefined)).toBeNull();
     });
@@ -272,7 +272,7 @@ describe('physics profiles (PROFILES / stamp helpers)', () => {
         expect(() => physicsStampFor('moon')).toThrow(/moon/);
     });
 
-    it('resolvePhysicsStamp: absent stamp = classic DEFAULTS identity', () => {
+    it('resolvePhysicsStamp: absent stamp = experimental DEFAULTS identity', () => {
         expect(resolvePhysicsStamp(undefined)).toBe(DEFAULTS);
         expect(resolvePhysicsStamp(null)).toBe(DEFAULTS);
     });
@@ -280,7 +280,7 @@ describe('physics profiles (PROFILES / stamp helpers)', () => {
     it('resolvePhysicsStamp: embedded constants win and merge over DEFAULTS', () => {
         const C = resolvePhysicsStamp({ profile: 'dj', constants: { GRAVITY: 0.25 } });
         expect(C.GRAVITY).toBe(0.25);
-        // fields absent from an old stamp fall back to classic behavior
+        // fields absent from an old stamp fall back to experimental behavior
         expect(C.AIR_CONTROL).toBe('accel');
         expect(C.MAX_FALL).toBe(DEFAULTS.MAX_FALL);
     });
@@ -288,7 +288,7 @@ describe('physics profiles (PROFILES / stamp helpers)', () => {
     it('resolvePhysicsStamp: bare profile id resolves via the registry', () => {
         expect(resolvePhysicsStamp('dj')).toBe(PROFILES.dj.constants);
         expect(resolvePhysicsStamp({ profile: 'dj' })).toBe(PROFILES.dj.constants);
-        expect(resolvePhysicsStamp('moon')).toBe(DEFAULTS); // unknown -> classic
+        expect(resolvePhysicsStamp('moon')).toBe(DEFAULTS); // unknown -> experimental
     });
 });
 
@@ -319,7 +319,7 @@ describe('flat air control (AIR_CONTROL: "flat")', () => {
         expect(s.x).toBe(200);
     });
 
-    it('classic accel model is untouched (AIR_CONTROL absent or "accel")', () => {
+    it('experimental accel model is untouched (AIR_CONTROL absent or "accel")', () => {
         let s = airborne();
         s = step(s, { right: true }, level, all, DEFAULTS);
         expect(s.x).toBeCloseTo(200 + DEFAULTS.MOVE_ACCEL);
@@ -457,7 +457,7 @@ describe('dj profile calibration (measured 2026-06-11)', () => {
         expect(spawnState(level, DJ).broken).toEqual([]);
     });
 
-    it('brown under classic behaviors stays a static (no break)', () => {
+    it('brown under experimental behaviors stays a static (no break)', () => {
         const level = djLevel({
             platforms: [{ id: 'br', x: 120, y: 300, type: 'brown' }],
         });
@@ -544,7 +544,7 @@ describe('dj profile calibration (measured 2026-06-11)', () => {
         expect(platformXAt(p, 54, DJ)).toBe(105);
         expect(platformXAt(p, 72, DJ)).toBe(15);        // full period
         expect(platformXAt(p, 73, DJ)).toBe(20);        // moving right again
-        // static under classic behaviors (and for sweep-less platforms)
+        // static under experimental behaviors (and for sweep-less platforms)
         expect(platformXAt(p, 36, DEFAULTS)).toBe(105);
         expect(platformXAt({ ...p, sweep: undefined }, 36, DJ)).toBe(105);
     });
@@ -569,7 +569,7 @@ describe('dj profile calibration (measured 2026-06-11)', () => {
         expect(rFar.trajectory.some((s) => s.landedOn === 'bl')).toBe(false);
     });
 
-    it('classic states still carry and advance the session fields', () => {
+    it('experimental states still carry and advance the session fields', () => {
         const s0 = spawnState(makeLevel());
         expect(s0.t).toBe(0);
         expect(s0.broken).toEqual([]);

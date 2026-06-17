@@ -59,9 +59,9 @@ export const ZONES = Object.freeze([
  * arbitrary payload fields). ap_locations maps the game's pickup ids to
  * AP location names (compileRegionGraph's `<region>__<id>` convention).
  */
-function buildZonePayload(region_id, level, sidePortals, physicsProfile = 'classic') {
-    // Physics profile stamp: { profile, constants } for non-classic
-    // profiles, OMITTED for classic (physicsStampFor returns null) so
+function buildZonePayload(region_id, level, sidePortals, physicsProfile = 'experimental') {
+    // Physics profile stamp: { profile, constants } for non-experimental
+    // profiles, OMITTED for experimental (physicsStampFor returns null) so
     // existing payloads stay byte-identical. Constants are embedded
     // because they're logic-affecting: the world must replay under the
     // C its rules were derived with, even if the profile is retuned.
@@ -402,7 +402,7 @@ export function canHostExitGatesBraid(existingGates, newGate) {
  * @param {number} [specs.stepsBetween]
  * @param {number} [specs.jitter]
  * @param {string} [specs.physicsProfile] — physics.js PROFILES id
- *   (default 'classic'); generation, verification and the emitted
+ *   (default 'experimental'); generation, verification and the emitted
  *   payload stamp all ride the same profile.
  * @returns {{locations: Array, exitRules: Object, payload: Object}}
  */
@@ -428,7 +428,7 @@ export function* generateZoneForSpecsGen({
     seed = 1,
     stepsBetween = 2,
     jitter = 0,
-    physicsProfile = 'classic',
+    physicsProfile = 'experimental',
     // 'column' (default) or 'braid' (Regime-1 2-wide braid, free arrows).
     // braidWidth overrides the level width under braid mode; decorChance is
     // { blue, brown, spring, jetpack } per-eligible-platform probabilities.

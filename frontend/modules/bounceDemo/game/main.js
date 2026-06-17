@@ -39,7 +39,7 @@ let backExitSide = null; // the entrance side (the region's back exit)
 // Routing never depends on this: every non-start region carries a
 // real back portal in its geometry.
 let fallBehavior = 'current';
-let physicsProfileId = 'classic'; // from params.physics?.profile (debug surface)
+let physicsProfileId = 'experimental'; // from params.physics?.profile (debug surface)
 let fellExitSent = false; // one fall exit per configure (no double moves)
 let lastItems = [];
 let message = '';
@@ -98,7 +98,7 @@ const gameSide = {
         // graph, and the renderer all read the SAME resolved C — a
         // world plays under the constants its rules were derived with.
         const constants = resolvePhysicsStamp(params.physics);
-        physicsProfileId = params.physics?.profile ?? 'classic';
+        physicsProfileId = params.physics?.profile ?? 'experimental';
         frameMs = 1000 / (constants.TICK_HZ || 60);
         // Goal ids are region-local: a target from the previous region
         // is meaningless here. The host bridge re-sends botWalkTo for

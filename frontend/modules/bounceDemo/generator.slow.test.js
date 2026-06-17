@@ -191,10 +191,10 @@ describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysic
         expect(validateGeometry(G, DEFAULTS).join(' ')).toMatch(/overshoot/);
     });
 
-    it('resolveGenPhysics: classic default; dj derives geometry; unknown throws', () => {
-        const classic = resolveGenPhysics(undefined);
-        expect(classic.C).toBe(DEFAULTS);
-        expect(classic.G).toBe(CLASSIC_GEOMETRY);
+    it('resolveGenPhysics: experimental default; dj derives geometry; unknown throws', () => {
+        const experimental = resolveGenPhysics(undefined);
+        expect(experimental.C).toBe(DEFAULTS);
+        expect(experimental.G).toBe(CLASSIC_GEOMETRY);
         const dj = resolveGenPhysics('dj');
         expect(dj.C).toBe(PROFILES.dj.constants);
         expect(validateGeometry(dj.G, dj.C)).toEqual([]);
@@ -210,7 +210,7 @@ describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysic
 
     it('classic generation is byte-identical with and without the physics opt', () => {
         const a = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5 });
-        const b = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5, physics: 'classic' });
+        const b = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5, physics: 'experimental' });
         expect(b).toEqual(a);
     });
 });
