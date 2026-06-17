@@ -2033,7 +2033,14 @@ export class ProcgenPipelineUI {
         // - any other start: the arrow becomes a STARTING ITEM
         //   (removed from the pool), so bounce regions are fully
         //   traversable on first encounter.
-        // NOTE (verify-sphere-growth-ui.mjs mirrors this block):
+        // BRAID exception: the gated-braid model treats the free arrow as
+        // ALWAYS held, so it can NEVER be a gate — the braid verifier would
+        // derive the OTHER arrow and mismatch the grower's gate. So in braid
+        // mode the free arrow is always a STARTING ITEM removed from the pool
+        // (even the bounce-start case), keeping it disjoint from gateable
+        // arrows. Column mode keeps the sphere-1 start-stack intro untouched.
+        // NOTE (verify-sphere-growth-ui.mjs mirrors this block, column mode):
+        const braid = this.params.bounceLayout === 'braid';
         const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
         const quotaIds = Object.keys(quotas ?? {});
         const bounceSelected = (quotas?.bounce ?? 0) > 0 || startSub === 'bounce';
@@ -2054,7 +2061,7 @@ export class ProcgenPipelineUI {
                 const pick = arrows[Math.floor(
                     createRng((seed * 31 + 17) | 0).next() * arrows.length)];
                 freeArrowAbility = pick === 'Left arrow' ? 'left' : 'right';
-                if (bounceStarts) {
+                if (bounceStarts && !braid) {
                     exclusiveSpheres[1] = [pick];
                     // Lock the canonical placement so even multiworld
                     // fill keeps the start-stack pickup an arrow (solo
