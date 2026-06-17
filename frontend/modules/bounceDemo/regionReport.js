@@ -137,7 +137,7 @@ export function formatRegionReport(input = {}) {
     for (const row of rows) {
         for (const p of row.platforms) {
             const type = p.type === 'green' ? 'green' : p.type.toUpperCase();
-            const left = `  ${String(row.rowIdx).padStart(3)}  ${String(p.y).padStart(5)}  `
+            const left = `  ${String(row.rowIdx).padStart(3)}  ${String(Math.round(p.y)).padStart(5)}  `
                 + `${p.id} ${type}@${Math.round(p.x)}`.padEnd(24);
             const verified = reqText(p.minimalSets).padEnd(22);
             let line = `${left}  ${verified}`;
@@ -160,7 +160,7 @@ export function formatRegionReport(input = {}) {
         for (const item of universe) {
             const r = fn[item];
             const where = r == null ? 'never strictly necessary'
-                : `row ${r} (y=${rows[r].y})`;
+                : `row ${r} (y=${Math.round(rows[r].y)})`;
             out.push(`  ${item.padEnd(10)} → ${where}`);
         }
     }
