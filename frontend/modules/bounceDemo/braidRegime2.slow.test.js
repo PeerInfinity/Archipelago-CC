@@ -193,4 +193,35 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
             }
         });
     }
+
+    // SPINE jitter (the coherent toward-free wander) is enabled for non-moving-
+    // blue levels. Cross-check arrow + spring gates under jitter — every gate must
+    // survive the wander.
+    for (const shape of [
+        { name: 'left', exits: [{ id: 'g', requirement: ['left'], direction: 'up' }] },
+        { name: 'left → left+springs', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gl', requirement: ['left'], direction: 'right' },
+            { id: 'gls', requirement: ['left', 'springs'], direction: 'left' },
+        ] },
+    ]) {
+        it(`spine jitter preserves ${shape.name} gates (seeds 1-4, jitter 60)`, () => {
+            for (let seed = 1; seed <= 4; seed++) {
+                const level = generateLevelFromSpecs({
+                    id: `RJ${seed}`, exitSpecs: shape.exits, seed, physics: 'dj', mode: 'braid',
+                    braidWidth: W, freeArrow: 'right', platformRows: 8, jitter: 60,
+                });
+                expect(validateLevel(level), 'model').toEqual([]);
+                const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
+                const braid = deriveBraidAccessRules(level, opts);
+                const full = deriveAccessRules(level, opts);
+                expect(braid.defects, `seed ${seed}`).toEqual([]);
+                expect(full.defects, `seed ${seed}`).toEqual([]);
+                for (const s of shape.exits) {
+                    expect(ruleFor(braid, 'exits', s.id)).toBe(wantRule(s.requirement));
+                    expect(braid.exits[s.id].minimalSets).toEqual(full.exits[s.id].minimalSets);
+                }
+            }
+        });
+    }
 });

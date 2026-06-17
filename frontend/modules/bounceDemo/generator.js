@@ -1343,21 +1343,25 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // (> catchSpan/2, so it never captures the straight no-input spine climb)
     // yet within one free-arrow hop (< reach, so it's a reachable side ledge).
     const forkHalf = Math.min(reach * 0.85, catchSpan / 2 + 8);
-    // JITTER (the "Max jitter" setting) applies ONLY to fork COMPANIONS — NOT the
-    // spine. A portal's tip rides tipOffset≈110 from its bypass, and the tip is
-    // reachable only while its LAUNCHER sits within ~(reach − tipOffset) ≈ 10px
-    // of the bypass's column — otherwise the tip falls out of the launcher's
-    // free-arrow half (the gate is the wrap asymmetry: 110 one way, 130 the
-    // other, vs reach≈120). Jitter offsets launchers past that 10px tolerance —
-    // amplified by the moving-blue gate row being PASS-THROUGH (the flood walks
-    // through it to a lower, jittered launcher) — so a tip re-gates on the gated
-    // arrow (measured: bidirectional fails at 8px; toward-free still breaks via
-    // this launcher-offset). NB: it is NOT accumulated drift wrapping the ring —
-    // the tip's gate is relative to its own launch, so drift alone is harmless;
-    // the killer is the launcher↔bypass offset. Companions are OFF-spine and host
-    // no tip, so they have no such tolerance — just stay a distinct catch target
-    // (> catchSpan/2) within the free-arrow hop (< reach), varying the fork width
-    // by ~(reach − forkHalf) toward the free arrow. The re-derive is the backstop.
+    // JITTER (the "Max jitter" setting). The SPINE wanders by a MONOTONIC toward-
+    // free shift — COHERENT: each rung builds from the shifted prev, so the whole
+    // structure above moves together and every relative offset (gates, tips) is
+    // preserved. The free arrow is always held, so a free-ward step is reachable
+    // with it → rules-neutral at any magnitude < reach. This is DISABLED when the
+    // level has a MOVING blue: its gate row is PASS-THROUGH, so a tip's launcher
+    // can come from BELOW the shift and fall outside the ~(reach−tipOffset)≈10px
+    // launcher tolerance, re-gating the tip on the gated arrow (measured: arrow &
+    // spring/jetpack gates jitter 8/8 across seeds; moving-blue 0/8 — so gate it
+    // out). It is NOT accumulated drift wrapping the ring (the tip's gate is
+    // relative to its own launch); the killer is specifically the moving-blue
+    // launcher offset. COMPANIONS jitter regardless (off-spine, host no tip → no
+    // launcher tolerance), varying the fork width by ~(reach−forkHalf). Backstop:
+    // the per-attempt re-derive (it can't recover the blue case — fails all
+    // attempts — hence the structural gate, not retry).
+    const movingBlue = (C.PLATFORM_BEHAVIORS?.blue === 'moving')
+        && (plan.goals.some((g) => g.req.includes('blue')) || (decorChance.blue ?? 0) > 0);
+    const spineJitMax = movingBlue ? 0 : Math.min(jitter || 0, Math.round(reach * 0.5));
+    const spineJit = () => (spineJitMax > 0 ? freeDir * rng.next() * spineJitMax : 0);
     const compJitMax = Math.min(jitter || 0, Math.max(0, reach - forkHalf - 8));
     const { goals } = plan;
     const isBrown = (g) => g.req.includes('brown');
@@ -1428,6 +1432,13 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     const climbPlain = () => {
         y -= PLAIN_DY;
         prev = place(prev.x + jitterDx(current), y);
+        return prev;
+    };
+    // A padding rung that WANDERS the spine (coherent toward-free shift). Off for
+    // moving-blue levels (spineJitMax = 0 → straight); see the JITTER note above.
+    const climbPad = () => {
+        y -= PLAIN_DY;
+        prev = place(prev.x + spineJit(), y);
         return prev;
     };
     // Gate row for the one arrow: gate platform toward the arrow, teleport host
@@ -1588,7 +1599,7 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         }
         return false;
     };
-    const addRows = (n) => { for (let k = 0; k < n; k++) { if (!maybeBoostRow()) climbPlain(); } };
+    const addRows = (n) => { for (let k = 0; k < n; k++) { if (!maybeBoostRow()) climbPad(); } };
 
     // Chain segments: distinct requirement keys (minus brown) in nested order.
     // Walk them, realising the gates each adds, then attaching that level's

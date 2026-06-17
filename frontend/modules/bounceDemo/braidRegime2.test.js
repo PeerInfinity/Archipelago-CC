@@ -463,10 +463,27 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
         expect(forkWidths(jittered).size).toBeGreaterThan(forkWidths(straight).size);
     });
 
-    it('jitter does NOT move the spine (no jitter ⇒ identical without forks)', () => {
-        // Jitter only touches companions; with no forks the level is unchanged.
+    it('spine jitter is AUTO-DISABLED for a moving-blue level (identical without forks)', () => {
+        // These exits have a blue gate → moving blue → the blue stone row is
+        // pass-through, which conflicts with spine jitter, so it's gated off.
+        // With no forks the level is then byte-identical regardless of jitter.
         const a = gen({}, 2, 6, 0);
         const b = gen({}, 2, 6, 40);
         expect(JSON.stringify(b)).toBe(JSON.stringify(a));
+    });
+
+    it('spine WANDERS for an arrow-gated level (no moving blue), gates intact', () => {
+        const arrowExits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gl', requirement: ['left'], direction: 'right' },
+        ];
+        const g = (jit) => generateLevelFromSpecs({
+            id: 'RJA', exitSpecs: arrowExits, seed: 1, physics: 'dj', mode: 'braid',
+            braidWidth: W, freeArrow: FREE_ARROW, platformRows: 8, jitter: jit,
+        });
+        const cols = (l) => new Set(l.platforms.map((p) => Math.round(p.x))).size;
+        // The coherent toward-free shift spreads the spine across more columns.
+        expect(cols(g(40))).toBeGreaterThan(cols(g(0)));
+        expectGated(g(40), arrowExits); // [left] still derived exactly
     });
 });
