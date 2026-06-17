@@ -2328,9 +2328,23 @@ function* generateRegionZoneGen(spec) {
     // entry gate — but only when the caller supplied one (sphere). For
     // top-down the entrance is geometry-only (the entry gate lives on the
     // parent's exit), so it is not passed to the generator.
+    //
+    // BRAID: the back portal is UNGATED. Its entry gate is the item you came
+    // in with, which differs from the region's FORWARD gates (next-sphere
+    // items) — so a gated back portal makes nearly every region's requirements
+    // mutually incomparable, which a single braid chain can't realise. The
+    // back portal never needs gating: you can only BE here if you already used
+    // the entry item, so a free way back grants no reachability you didn't have
+    // (monotone — less restrictive is always sound). Ungating it lets the braid
+    // realise the region as one nested chain of its forward gates. The column
+    // keeps the gated back portal (it has the width for a back-portal branch
+    // tip), so column output stays byte-identical.
     const ent = spec.entrances?.[0];
     if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
-        exitSpecs.push({ side: ent.side, ...requirementOf(ent) });
+        const braid = spec.params?.bounceMode === 'braid';
+        exitSpecs.push(braid
+            ? { side: ent.side, requirement: [], counts: {} }
+            : { side: ent.side, ...requirementOf(ent) });
     }
     const locationSpecs = (spec.locations ?? []).map((loc) => ({
         id: loc.id, item: loc.item ?? null, ...requirementOf(loc),

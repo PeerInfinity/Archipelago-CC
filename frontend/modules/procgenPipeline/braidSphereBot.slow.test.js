@@ -118,6 +118,36 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
         }
     });
 
+    it('back portal is ungated → an arrow+blue world is ALL braid (no incomparable fallback)', () => {
+        // Every non-root region's back portal used to be gated on the item you
+        // ENTERED with, which differs from its forward gates → incomparable →
+        // column fallback on nearly every region. With the back portal ungated
+        // (braid mode) the region is a single nested chain of its forward gates,
+        // so an arrow+blue world comes out fully braid.
+        const plan = planSpheres({
+            itemPool: { 'Left arrow': 1, 'Blue platforms': 1, Victory: 1 },
+            sphereCount: 3, victoryItem: 'Victory', gateableItems: GATEABLE_ITEMS, seed: 1,
+        });
+        const { grid, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 }, seed: 1,
+            regionParams: {
+                fallBehavior: 'current', physicsProfile: 'dj',
+                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40,
+            },
+            growthParams: {
+                spherePlan: plan, substrateQuotas: { bounce: 99 },
+                startSubstrate: 'bounce', maxItemsPerRegion: 2,
+            },
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 1, embedSphereLog: false, completionConditionItem: 'Victory',
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+        const widths = bounceRegions(grid).map((r) => levelOf(r).size.width);
+        expect(widths.length).toBeGreaterThan(1);
+        expect(widths.every((w) => w === 240), `all braid (got ${widths})`).toBe(true);
+    });
+
     it('a springs/blue pool generates a winnable MIXED braid+column world (no abort)', () => {
         // The grower's veto only guarantees column-compatibility, so braid mode
         // gets handed regions it can't realise (a springs gate aborted an early
