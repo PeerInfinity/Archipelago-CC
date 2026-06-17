@@ -1328,29 +1328,32 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // PORTALS hang off it on offset TIPS toward the FREE arrow (the held
     // starting arrow), so reaching a portal needs that arrow — which the player
     // always has — while the spine stays portal-free.
-    // NOTE: the Regime-1 fork braid's two enrichments — spine JITTER and feel
-    // DECORATIONS — were both tried here and neither ports. The gated spine is
-    // horizontally RIGID: a goal's portal rides an offset tip exactly tipOffset
-    // (catchSpan+4 = 110px on dj) from its bypass, and the single-arrow reach is
-    // only ~120px, so the free-arrow hop to a tip has ~10px of slack. Anything
-    // that perturbs a launch x past that edge flips the cheaper route to the
-    // OPPOSITE arrow (wrap-around) and poisons the derived gate:
-    //   - jitter shifts the rung itself → tip hop overshoots (verified: tips
-    //     derive [oppositeArrow] once jitter ≳ 10px);
-    //   - a moving-blue decoration on any climbed rung randomises the launch x
-    //     → the offset-tip hop misses in most sweep phases (verified: the first
-    //     blue goal goes 'unreachable'). dj pins blue:'moving', so no static
-    //     fallback. spring/jetpack additionally need the gap above grown (they
-    //     overshoot a PLAIN_DY gap); brown is suppressed AND terminal.
-    // These belong to the Regime-1 fork braid, whose forks aren't reach-band-
-    // pinned. Enabling them here needs horizontal slack the gating spends — i.e.
-    // a wider level or different physics — not a localized change.
+    // NOTE: the spine is horizontally RIGID and stays so. A portal's tip rides
+    // exactly tipOffset (catchSpan+4 = 110px on dj) from its bypass vs a single-
+    // arrow reach of ~120px — only ~10px of ACCUMULATED slack — so any spine
+    // wander wraps the ring and flips a tip's cheaper route to the opposite arrow
+    // (measured: jitter ≳ 8px re-gates). Hence `maxJit = 0`; jitter lands on the
+    // OFF-spine fork companions instead (see the JITTER note below). What DOES
+    // enrich the spine reuses an ability's own GATING geometry in a block that
+    // already holds it (grown gap = spring/jetpack flavor; stepping-stone = blue
+    // flavor) — never a retyped plain rung or a mover under a tip.
     const maxJit = 0;
     const freeDir = freeArrow === 'left' ? -1 : 1;
     // Decorative fork companion offset (R1's forkHalf): a DISTINCT catch target
     // (> catchSpan/2, so it never captures the straight no-input spine climb)
     // yet within one free-arrow hop (< reach, so it's a reachable side ledge).
     const forkHalf = Math.min(reach * 0.85, catchSpan / 2 + 8);
+    // JITTER (the "Max jitter" setting) applies ONLY to fork COMPANIONS — NOT the
+    // spine. The gated spine has only ~10px of ACCUMULATED horizontal slack (tips
+    // sit at tipOffset≈110 vs single-arrow reach≈120), so any spine wander that
+    // accumulates past that wraps on the ring and flips a tip's cheaper route to
+    // the OPPOSITE arrow, re-gating it (measured: bidirectional fails at 8px;
+    // monotonic toward-free wraps and adds the gated arrow). Spine jitter does
+    // NOT port. Companions are OFF-spine: they only need to stay a distinct catch
+    // target (> catchSpan/2 from the spine) and within the free-arrow hop
+    // (< reach), so the fork width can vary by ~(reach − forkHalf) toward the
+    // free arrow. The per-attempt re-derive is the backstop.
+    const compJitMax = Math.min(jitter || 0, Math.max(0, reach - forkHalf - 8));
     const { goals } = plan;
     const isBrown = (g) => g.req.includes('brown');
 
@@ -1532,12 +1535,16 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // so traversal survives (R1's about-to-merge-branch rule). Brown is CAPPED
     // (its broken-state search branches the verifier). The per-attempt re-derive
     // rejects any fork that perturbs a goal.
+    // The companion may jitter, but only FURTHER from the spine (toward the free
+    // arrow): outward keeps it a distinct catch target (never captures no-input)
+    // and within the free-arrow hop (compJitMax bounds forkHalf+jit < reach).
     const emitForkMerge = () => {
         const forkLen = rng.next() < 0.5 ? 1 : 2;
         let companion = null;
         for (let r = 0; r < forkLen; r++) {
             climbPlain(); // spine rung (straight, guaranteed)
-            companion = place(prev.x + freeDir * forkHalf, prev.y, 'green', current, { authored: false });
+            const off = forkHalf + (compJitMax > 0 ? rng.next() * compJitMax : 0);
+            companion = place(prev.x + freeDir * off, prev.y, 'green', current, { authored: false });
         }
         // The terminal companion may BREAK (brown). Unlike the on-spine boosters,
         // brown needs NO held-block check: it's an OFF-spine terminal ledge, so

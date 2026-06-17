@@ -163,15 +163,21 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
         }
     }
 
-    // Decorative fork/merge/brown must leave every gate untouched — the
-    // expensive case (forks widen the level; brown triggers broken-state search).
-    for (const decor of [{ fork: 0.8 }, { fork: 0.8, brown: 0.7 }, { blue: 1, fork: 0.8, brown: 0.7 }]) {
+    // Decorative fork/merge/brown (+ companion jitter) must leave every gate
+    // untouched — the expensive case (forks widen the level; brown triggers
+    // broken-state search; jitter varies the fork width). `jitter` rides the
+    // config but is passed as the generator's jitter arg, not in decorChance.
+    for (const decor of [
+        { fork: 0.8 }, { fork: 0.8, brown: 0.7 }, { fork: 0.8, jitter: 40 },
+        { blue: 1, fork: 0.8, brown: 0.7, jitter: 40 },
+    ]) {
         it(`decor ${JSON.stringify(decor)} preserves the blue→blue+left gates (seeds 1-4)`, () => {
+            const { jitter = 0, ...decorChance } = decor;
             const exits = shapes[0].exits; // blue → blue+left
             for (let seed = 1; seed <= 4; seed++) {
                 const level = generateLevelFromSpecs({
                     id: `RD${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
-                    braidWidth: W, freeArrow: 'right', platformRows: 6, decorChance: decor,
+                    braidWidth: W, freeArrow: 'right', platformRows: 6, decorChance, jitter,
                 });
                 expect(validateLevel(level), 'model').toEqual([]);
                 const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };

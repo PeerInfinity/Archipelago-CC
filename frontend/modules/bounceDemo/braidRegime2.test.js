@@ -412,12 +412,27 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
         { id: 'gb', requirement: ['blue'], direction: 'right' },
         { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
     ];
-    const gen = (decorChance, seed = 1, platformRows = 6) => generateLevelFromSpecs({
+    const gen = (decorChance, seed = 1, platformRows = 6, jitter = 0) => generateLevelFromSpecs({
         id: `RF${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
-        braidWidth: W, freeArrow: FREE_ARROW, platformRows, decorChance,
+        braidWidth: W, freeArrow: FREE_ARROW, platformRows, decorChance, jitter,
     });
     const count = (lvl) => lvl.platforms.length;
     const rows = (lvl) => new Set(lvl.platforms.map((p) => p.y)).size;
+    // Companion fork widths: the gap on a 2-platform row that's a companion lane
+    // (between catchSpan/2≈53 and tipOffset 110 — excludes tip rows at 110 and
+    // arrow-gate rows at 120).
+    const forkWidths = (lvl) => {
+        const byY = new Map();
+        for (const p of lvl.platforms) byY.set(p.y, [...(byY.get(p.y) ?? []), p.x]);
+        const gaps = new Set();
+        for (const xs of byY.values()) {
+            if (xs.length === 2) {
+                const g = Math.round(Math.abs(xs[0] - xs[1]));
+                if (g > 55 && g < 105) gaps.add(g);
+            }
+        }
+        return gaps;
+    };
 
     it('forks add companion platforms AND overshoot the row budget', () => {
         const plain = gen({});
@@ -437,5 +452,21 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
         const baseline = gen({}, 1, 0);
         const withChance = gen({ fork: 1, brown: 1 }, 1, 0);
         expect(JSON.stringify(withChance)).toBe(JSON.stringify(baseline)); // byte-identical
+    });
+
+    it('jitter (Max jitter) varies the fork width; 0 keeps it fixed at forkHalf', () => {
+        const straight = gen({ fork: 1 }, 3, 6, 0);
+        const jittered = gen({ fork: 1 }, 3, 6, 40);
+        // Without jitter every companion sits at forkHalf → a single width.
+        expect(forkWidths(straight).size).toBeLessThanOrEqual(1);
+        // Jitter spreads companions outward toward the free arrow → more widths.
+        expect(forkWidths(jittered).size).toBeGreaterThan(forkWidths(straight).size);
+    });
+
+    it('jitter does NOT move the spine (no jitter ⇒ identical without forks)', () => {
+        // Jitter only touches companions; with no forks the level is unchanged.
+        const a = gen({}, 2, 6, 0);
+        const b = gen({}, 2, 6, 40);
+        expect(JSON.stringify(b)).toBe(JSON.stringify(a));
     });
 });
