@@ -201,6 +201,10 @@ const DEFAULT_PARAMS = {
     bounceBraidWidth: 240,
     // Braid per-row jitter (px): horizontal meander applied to each row.
     bounceJitter: 40,
+    // Extra PLAIN climb rows added per region after the gating content (gated
+    // braid only) — distributed across the requirement segments to make levels
+    // taller and lift the hardest exit to the summit. 0 = minimal gated chain.
+    bouncePlatformRows: 0,
     // Braid decoration chances (0–1), per eligible platform. Blue (moving,
     // 1-lane), brown (breaking, terminal), spring + jetpack (1-lane, launch
     // higher → bigger gap above). Jetpack defaults off — its dj gap is huge.
@@ -2109,6 +2113,7 @@ export class ProcgenPipelineUI {
                     bounceMode: 'braid',
                     braidWidth: this.params.bounceBraidWidth ?? 240,
                     bounceJitter: this.params.bounceJitter ?? 40,
+                    platformRows: this.params.bouncePlatformRows ?? 0,
                     ...(freeArrowAbility ? { bounceFreeArrow: freeArrowAbility } : {}),
                 } : {}),
             },
@@ -2583,6 +2588,11 @@ export class ProcgenPipelineUI {
         braidFields.appendChild(numberField('Max jitter',
             'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
             'bounceJitter', 40));
+        braidFields.appendChild(numberField('Platform rows',
+            'Extra plain climb rows added per region AFTER the logic-gating content '
+            + '(sphere-growth / gated braid only). Spread across the gate segments to make '
+            + 'levels taller and lift the hardest exit to the summit. 0 = minimal gated chain.',
+            'bouncePlatformRows', 0));
         braidFields.appendChild(numberField('Blue chance',
             'Per-eligible-platform probability (0–1) of a blue platform (moving, full-width '
             + 'sweep; 1-lane rows only). Capped per level so the reachability check stays fast.',

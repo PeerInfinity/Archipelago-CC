@@ -2364,6 +2364,7 @@ function* generateRegionZoneGen(spec) {
                 mode: 'braid',
                 ...(spec.params.braidWidth ? { braidWidth: spec.params.braidWidth } : {}),
                 ...(spec.params.bounceJitter ? { jitter: spec.params.bounceJitter } : {}),
+                ...(spec.params.platformRows ? { platformRows: spec.params.platformRows } : {}),
                 ...(spec.params.bounceDecorChance ? { decorChance: spec.params.bounceDecorChance } : {}),
                 // The world's held free arrow ('left'|'right'): gated-braid
                 // portals ride tips toward it, and the verifier treats it as free.
