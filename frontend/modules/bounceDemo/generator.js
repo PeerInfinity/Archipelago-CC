@@ -1308,7 +1308,7 @@ function braidCanRealiseSpecs(exitSpecs, pickupSpecs) {
  * only on geometry dead-ends (retryable). Reachable + gated by construction;
  * the caller verifies with deriveBraidAccessRules.
  */
-function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeArrow = 'right', platformRows = 0 }) {
+function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeArrow = 'right', platformRows = 0, decorChance = {} }) {
     const PLAIN_DY = G.PLAIN_DY;
     const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
     const reach = oneHopReach(C, PLAIN_DY);
@@ -1450,15 +1450,24 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // keeps a safe buffer; the gate still holds (the gap stays far above a plain
     // bounce's reach) and validateGeometry's overshoot < PLAIN_DY invariant is
     // preserved. Booster launches straight up → landing directly above the host.
-    const realiseBoostGate = (ability, entities, prefix, window) => {
+    // Shared boost geometry: a green launch host + a tall (item-clearable) gap +
+    // a landing. `gate=true` GATES the climb on the ability (adds it to `current`,
+    // the landing's authored req gains it). `gate=false` is FLAVOR — only valid
+    // in a block that ALREADY holds the ability (caller enforces), so it adds a
+    // bouncy spring/jetpack without changing any requirement (`current` is left
+    // untouched; without the item the player can't be in this block anyway, so
+    // the unclearable gap re-gates nothing the block didn't already require).
+    const emitBoost = (ability, entities, prefix, window, gate) => {
         y -= PLAIN_DY;
         const host = place(prev.x + jitterDx(current), y); // green host: reachable WITHOUT the booster
         entities.push({ id: `${prefix}_${host.id}`, x: host.x, y: host.y - 5, on: host.id });
         y -= window.min + window.span - BOOST_GATE_GAP_MARGIN;
-        const boostReq = [...current, ability]; // the rung past the tall gap needs the booster
-        prev = place(host.x, y, 'green', boostReq);
-        current = boostReq.slice().sort();
+        const req = gate ? [...current, ability] : [...current]; // landing needs the booster
+        prev = place(host.x, y, 'green', req);
+        if (gate) current = req.slice().sort();
     };
+    const realiseBoostGate = (ability, entities, prefix, window) =>
+        emitBoost(ability, entities, prefix, window, true);
     // A portal rides an OFFSET TIP toward the free arrow — NOT the spine. The
     // spine rung (`prev`) stays portal-free, so the no-input climb is never
     // forced onto a portal (the "portals only on two-platform rows" rule: the
@@ -1487,7 +1496,25 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     const nSeg = chainSegs.length;
     const extraBySeg = chainSegs.map((_, i) =>
         Math.floor(platformRows / nSeg) + (i < (platformRows % nSeg) ? 1 : 0));
-    const addRows = (n) => { for (let k = 0; k < n; k++) climbPlain(); };
+    // An extra row is normally a plain rung, but in a block that ALREADY holds
+    // springs/jetpacks it may become a FLAVOR boost row (same grown-gap geometry
+    // as the gating boosters) at the panel's existing spring/jetpack chance —
+    // neutral because the block already requires the ability. Blue/brown are NOT
+    // used here (moving-blue perturbs the climb; brown is terminal). The chance
+    // is only rolled when held AND > 0, so platformRows stays byte-identical
+    // without decorChance. springs preferred over jetpacks (jetpack gaps are huge).
+    const maybeBoostRow = () => {
+        if (current.includes('springs') && (decorChance.spring ?? 0) > 0
+            && rng.next() < decorChance.spring) {
+            emitBoost('springs', springEntities, 'spr', G.SPRING_GAP, false); return true;
+        }
+        if (current.includes('jetpacks') && (decorChance.jetpack ?? 0) > 0
+            && rng.next() < decorChance.jetpack) {
+            emitBoost('jetpacks', jetpackEntities, 'jet', G.JETPACK_GAP, false); return true;
+        }
+        return false;
+    };
+    const addRows = (n) => { for (let k = 0; k < n; k++) { if (!maybeBoostRow()) climbPlain(); } };
 
     // Chain segments: distinct requirement keys (minus brown) in nested order.
     // Walk them, realising the gates each adds, then attaching that level's
@@ -1615,7 +1642,7 @@ function* generateBraidFromSpecsGen({
         if (gated) {
             // ── Regime 2: gated chain, verify minimal sets == requirement ──
             let level, authoredReqs;
-            try { ({ level, authoredReqs } = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow, platformRows })); }
+            try { ({ level, authoredReqs } = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow, platformRows, decorChance })); }
             catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
             const modelErrors = validateLevel(level);
             if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }

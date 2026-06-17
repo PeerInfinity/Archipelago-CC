@@ -330,3 +330,54 @@ describe('braid Regime 2 — platformRows adds distributed plain rows safely', (
         expect(withZero).toBe(JSON.stringify(r.value.level));
     });
 });
+
+// Flavor springs/jetpacks: extra platformRows in a block that ALREADY holds the
+// ability may become a grown-gap boost row (the panel's existing spring/jetpack
+// chance). Neutral because the block already requires the ability.
+describe('braid Regime 2 — spring/jetpack flavor on extra rows (held block only)', () => {
+    const springExits = [
+        { id: 'free', requirement: [], direction: 'up' },
+        { id: 'gs', requirement: ['springs'], direction: 'right' },
+    ];
+    const blueExits = [
+        { id: 'free', requirement: [], direction: 'up' },
+        { id: 'gb', requirement: ['blue'], direction: 'right' },
+    ];
+    const gen = (exits, decorChance) => generateLevelFromSpecs({
+        id: 'R', exitSpecs: exits, seed: 1, physics: 'dj', mode: 'braid',
+        braidWidth: W, freeArrow: FREE_ARROW, platformRows: 6, decorChance,
+    });
+
+    it('spends extra rows on flavor springs in a springs-held block, gating intact', () => {
+        const plain = gen(springExits, {});
+        const sprung = gen(springExits, { spring: 1 });
+        // gate spring only vs gate + flavor springs in the held top block
+        expect((sprung.springs ?? []).length).toBeGreaterThan((plain.springs ?? []).length);
+        expectGated(sprung, springExits); // gs still derives exactly [springs]
+    });
+
+    it('adds no flavor springs where springs is never held', () => {
+        const lvl = gen(blueExits, { spring: 1 });
+        expect((lvl.springs ?? []).length).toBe(0);
+    });
+
+    it('blue/brown decor chances are ignored on the gated spine', () => {
+        const lvl = gen(blueExits, { blue: 1, brown: 1 });
+        // the only blue is the gate stone; no decorative blue/brown rungs added
+        expect(lvl.platforms.filter((p) => p.type === 'brown').length).toBe(0);
+        expect(lvl.platforms.filter((p) => p.type === 'blue').length).toBe(1);
+        expectGated(lvl, blueExits);
+    });
+
+    it('decorChance without padding (platformRows 0) adds nothing', () => {
+        const noRows = generateLevelFromSpecs({
+            id: 'R', exitSpecs: springExits, seed: 1, physics: 'dj', mode: 'braid',
+            braidWidth: W, freeArrow: FREE_ARROW, platformRows: 0, decorChance: { spring: 1 },
+        });
+        const baseline = generateLevelFromSpecs({
+            id: 'R', exitSpecs: springExits, seed: 1, physics: 'dj', mode: 'braid',
+            braidWidth: W, freeArrow: FREE_ARROW, platformRows: 0,
+        });
+        expect(JSON.stringify(noRows)).toBe(JSON.stringify(baseline));
+    });
+});
