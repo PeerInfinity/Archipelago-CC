@@ -1575,6 +1575,12 @@ export function* generateLevelFromSpecsGen({
         }
         console.warn(`bounce: region '${id}' has gates outside the braid vocabulary `
             + `(${can.reason}) — generating it as a column instead`);
+        // The braid's jitter is ARROW-DIRECTIONAL (only shifts toward a held
+        // arrow); the column's is not — its plain steps jitter both ways, which
+        // only verifies when a goal needs BOTH arrows (a free/single-arrow goal
+        // jittered off-column derives the wrong rule). So the column fallback
+        // runs with NO jitter, matching plain column sphere growth.
+        jitter = 0;
     }
     const colorHost = colorHostMode(C);
     const { exits, pickups, arrowFree, ceiling } = normalizeSpecGoals(
