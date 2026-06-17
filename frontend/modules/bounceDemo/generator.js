@@ -60,13 +60,13 @@ import {
 //    recalibrate with a wrapAsymmetry-style sweep when a profile's
 //    constants land.
 //
-// CLASSIC_GEOMETRY is PINNED to the legacy literals (not derived) so
+// EXPERIMENTAL_GEOMETRY is PINNED to the legacy literals (not derived) so
 // committed presets reproduce byte-identically; validateGeometry
 // asserts the structural constraints both pinned and derived values
 // must satisfy, and the generate-verify loop remains the gatekeeper
 // either way.
 
-export const CLASSIC_GEOMETRY = Object.freeze({
+export const EXPERIMENTAL_GEOMETRY = Object.freeze({
     WIDTH: 400,          // single-target (legacy zone-set) level width
     // Multi-target levels are a FIXED width (user decision 2026-06-11,
     // applied to classic after the dj fix): the wrap point and the
@@ -101,7 +101,7 @@ const hoverMax = (C) => (C.LANDING === 'latched' ? C.MAX_FALL : 0);
  * classic plain is 162.5, not 169; dj-latched plain is 114.4).
  * `base` supplies the sweep-calibrated values.
  */
-export function deriveGeometry(C, base = CLASSIC_GEOMETRY) {
+export function deriveGeometry(C, base = EXPERIMENTAL_GEOMETRY) {
     const floor10 = (v) => Math.floor(v / 10) * 10;
     const round10 = (v) => Math.round(v / 10) * 10;
     const plainRise = launchRise('bounce', C);
@@ -206,9 +206,8 @@ export const DJ_GEOMETRY = Object.freeze({
 });
 
 // Per-profile pinned geometry, keyed by profile id; profiles absent here derive
-// from their constants. CLASSIC_GEOMETRY is the 'experimental' profile's pinned
-// geometry (the constant keeps its name to avoid churn in its many test imports).
-const GEOMETRIES = Object.freeze({ experimental: CLASSIC_GEOMETRY, dj: DJ_GEOMETRY });
+// from their constants.
+const GEOMETRIES = Object.freeze({ experimental: EXPERIMENTAL_GEOMETRY, dj: DJ_GEOMETRY });
 
 /**
  * Resolve a generator `physics` option to { profileId, C, G }.
@@ -217,7 +216,7 @@ const GEOMETRIES = Object.freeze({ experimental: CLASSIC_GEOMETRY, dj: DJ_GEOMET
  */
 export function resolveGenPhysics(physics) {
     if (!physics || physics === 'experimental') {
-        return { profileId: 'experimental', C: DEFAULTS, G: CLASSIC_GEOMETRY };
+        return { profileId: 'experimental', C: DEFAULTS, G: EXPERIMENTAL_GEOMETRY };
     }
     if (typeof physics === 'string') {
         const profile = PROFILES[physics];

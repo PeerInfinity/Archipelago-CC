@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     generateLevel, generateZoneSet,
-    CLASSIC_GEOMETRY, deriveGeometry, validateGeometry, resolveGenPhysics,
+    EXPERIMENTAL_GEOMETRY, deriveGeometry, validateGeometry, resolveGenPhysics,
 } from './generator.js';
 import { DEFAULTS, PROFILES } from './physics.js';
 import { deriveAccessRules } from './deriveRules.js';
@@ -162,19 +162,19 @@ describe('generated zone set through the spiral (e2e)', () => {
     }, 60000);
 });
 
-describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysics)', () => {
-    it('pinned classic geometry satisfies its own structural constraints', () => {
-        expect(validateGeometry(CLASSIC_GEOMETRY, DEFAULTS)).toEqual([]);
+describe('profile geometry (EXPERIMENTAL_GEOMETRY / deriveGeometry / resolveGenPhysics)', () => {
+    it('pinned experimental geometry satisfies its own structural constraints', () => {
+        expect(validateGeometry(EXPERIMENTAL_GEOMETRY, DEFAULTS)).toEqual([]);
     });
 
-    it('deriveGeometry(classic constants) reproduces the apex-derived classic values', () => {
+    it('deriveGeometry(experimental constants) reproduces the apex-derived experimental values', () => {
         const G = deriveGeometry(DEFAULTS);
-        expect(G.PLAIN_DY).toBe(CLASSIC_GEOMETRY.PLAIN_DY); // 120 = round10(0.7 * 169)
-        expect(G.SPRING_GAP.min).toBe(CLASSIC_GEOMETRY.SPRING_GAP.min); // 380
+        expect(G.PLAIN_DY).toBe(EXPERIMENTAL_GEOMETRY.PLAIN_DY); // 120 = round10(0.7 * 169)
+        expect(G.SPRING_GAP.min).toBe(EXPERIMENTAL_GEOMETRY.SPRING_GAP.min); // 380
         expect(validateGeometry(G, DEFAULTS)).toEqual([]);
         // sweep-calibrated values are copied, not derived
-        expect(G.BRANCH_DX).toBe(CLASSIC_GEOMETRY.BRANCH_DX);
-        expect(G.ARROW_HALF_WIDTH_FLOOR).toBe(CLASSIC_GEOMETRY.ARROW_HALF_WIDTH_FLOOR);
+        expect(G.BRANCH_DX).toBe(EXPERIMENTAL_GEOMETRY.BRANCH_DX);
+        expect(G.ARROW_HALF_WIDTH_FLOOR).toBe(EXPERIMENTAL_GEOMETRY.ARROW_HALF_WIDTH_FLOOR);
     });
 
     it('derived geometry stays valid when launch impulses are retuned', () => {
@@ -185,7 +185,7 @@ describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysic
 
     it('validateGeometry flags an interceptable gate window', () => {
         const G = {
-            ...CLASSIC_GEOMETRY,
+            ...EXPERIMENTAL_GEOMETRY,
             SPRING_GAP: { min: 300, span: 60 }, // overshoot 184 >= PLAIN_DY
         };
         expect(validateGeometry(G, DEFAULTS).join(' ')).toMatch(/overshoot/);
@@ -194,7 +194,7 @@ describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysic
     it('resolveGenPhysics: experimental default; dj derives geometry; unknown throws', () => {
         const experimental = resolveGenPhysics(undefined);
         expect(experimental.C).toBe(DEFAULTS);
-        expect(experimental.G).toBe(CLASSIC_GEOMETRY);
+        expect(experimental.G).toBe(EXPERIMENTAL_GEOMETRY);
         const dj = resolveGenPhysics('dj');
         expect(dj.C).toBe(PROFILES.dj.constants);
         expect(validateGeometry(dj.G, dj.C)).toEqual([]);
@@ -208,7 +208,7 @@ describe('profile geometry (CLASSIC_GEOMETRY / deriveGeometry / resolveGenPhysic
         expect(derived.exits.exit_up.minimalSets).toEqual([[]]);
     });
 
-    it('classic generation is byte-identical with and without the physics opt', () => {
+    it('experimental generation is byte-identical with and without the physics opt', () => {
         const a = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5 });
         const b = generateLevel({ id: 'pin', requirement: ['springs'], seed: 5, physics: 'experimental' });
         expect(b).toEqual(a);

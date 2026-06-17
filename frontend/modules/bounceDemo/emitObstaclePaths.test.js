@@ -8,7 +8,7 @@ import { OBSTACLE_PRIMITIVES } from './generator.js';
 import { compileAccessRule } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { createRng } from '../shared/rng.js';
-import { CLASSIC_GEOMETRY } from './generator.js';
+import { EXPERIMENTAL_GEOMETRY } from './generator.js';
 
 // Phase 3 of the obstacles-along-paths refactor
 // (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md):
@@ -133,7 +133,7 @@ describe('obstacle primitives — geometry templates keyed by the obstacle id', 
     it('buildSteps reproduces the legacy gate geometry (no drift)', () => {
         // Deterministic rng: the primitive must draw the same gap height
         // the old gateSteps switch did. Spot-check the rng-using gates.
-        const G = CLASSIC_GEOMETRY;
+        const G = EXPERIMENTAL_GEOMETRY;
         const springRng = createRng(42);
         const expectGap = G.SPRING_GAP.min + createRng(42).next() * G.SPRING_GAP.span;
         const steps = OBSTACLE_PRIMITIVES.springs.buildSteps(springRng, G);
