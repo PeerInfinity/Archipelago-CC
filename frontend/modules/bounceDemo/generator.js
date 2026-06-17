@@ -1428,15 +1428,22 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         prev = gate;
         current = gateReq.slice().sort();
     };
-    // Blue stepping stone + a plain landing above (gates `blue` vertically).
-    const realiseBlueGate = () => {
-        const blueReq = [...current, 'blue']; // stone + landing both need blue (stone is suppressed)
+    // Blue stepping stone + a plain landing above. `gate=true` GATES on blue
+    // vertically (the 2·PLAIN_DY gap is unbridgeable without the suppressed
+    // stone; adds blue to `current`). `gate=false` is FLAVOR — same geometry in
+    // a block that ALREADY holds blue, so it's neutral (`current` untouched):
+    // without blue the player can't be in this block anyway. Identical to the
+    // spring/jetpack flavor pattern; the moving stone rides the straight spine
+    // (NOT under an offset tip), so it never perturbs a portal hop.
+    const emitBlue = (gate) => {
+        const req = gate ? [...current, 'blue'] : [...current]; // stone + landing
         y -= PLAIN_DY;
-        place(prev.x, y, 'blue', blueReq); // the stone (its x rides the column; sweep added post-shift)
+        place(prev.x, y, 'blue', req); // the stone (its x rides the column; sweep added post-shift)
         y -= PLAIN_DY;
-        prev = place(prev.x, y, 'green', blueReq);
-        current = blueReq.slice().sort();
+        prev = place(prev.x, y, 'green', req);
+        if (gate) current = [...current, 'blue'].sort();
     };
+    const realiseBlueGate = () => emitBlue(true);
     // Spring / jetpack gate: a launchable host + a tall gap above it. The
     // booster is inactive without the item, so a plain bounce can't clear the
     // gap (gated); with the item the launch clears it. The gap is the upper
@@ -1497,12 +1504,16 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     const extraBySeg = chainSegs.map((_, i) =>
         Math.floor(platformRows / nSeg) + (i < (platformRows % nSeg) ? 1 : 0));
     // An extra row is normally a plain rung, but in a block that ALREADY holds
-    // springs/jetpacks it may become a FLAVOR boost row (same grown-gap geometry
-    // as the gating boosters) at the panel's existing spring/jetpack chance —
-    // neutral because the block already requires the ability. Blue/brown are NOT
-    // used here (moving-blue perturbs the climb; brown is terminal). The chance
-    // is only rolled when held AND > 0, so platformRows stays byte-identical
-    // without decorChance. springs preferred over jetpacks (jetpack gaps are huge).
+    // springs/jetpacks/blue it may become a FLAVOR row reusing the matching
+    // GATING geometry (grown gap for boosters, stepping-stone+landing for blue)
+    // at the panel's existing chances — neutral because the block already
+    // requires the ability. Brown is NOT used here (terminal, no climb-onward).
+    // Each chance is only rolled when held AND > 0, so platformRows stays
+    // byte-identical without decorChance. Blue is CAPPED (its moving sweep makes
+    // the verifier enumerate phases — exponential in blue count); boosters are
+    // deterministic launches, uncapped. springs > jetpacks (jetpack gaps huge).
+    let blueDecor = 0;
+    const BLUE_DECOR_CAP = 2;
     const maybeBoostRow = () => {
         if (current.includes('springs') && (decorChance.spring ?? 0) > 0
             && rng.next() < decorChance.spring) {
@@ -1511,6 +1522,10 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         if (current.includes('jetpacks') && (decorChance.jetpack ?? 0) > 0
             && rng.next() < decorChance.jetpack) {
             emitBoost('jetpacks', jetpackEntities, 'jet', G.JETPACK_GAP, false); return true;
+        }
+        if (current.includes('blue') && blueDecor < BLUE_DECOR_CAP
+            && (decorChance.blue ?? 0) > 0 && rng.next() < decorChance.blue) {
+            emitBlue(false); blueDecor += 1; return true;
         }
         return false;
     };

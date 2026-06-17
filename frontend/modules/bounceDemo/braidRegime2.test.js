@@ -361,12 +361,27 @@ describe('braid Regime 2 — spring/jetpack flavor on extra rows (held block onl
         expect((lvl.springs ?? []).length).toBe(0);
     });
 
-    it('blue/brown decor chances are ignored on the gated spine', () => {
+    it('brown is never added on the gated spine, but blue IS honored in a blue-held block', () => {
         const lvl = gen(blueExits, { blue: 1, brown: 1 });
-        // the only blue is the gate stone; no decorative blue/brown rungs added
+        // brown is terminal (no climb-onward) → never used as a flavor row.
         expect(lvl.platforms.filter((p) => p.type === 'brown').length).toBe(0);
-        expect(lvl.platforms.filter((p) => p.type === 'blue').length).toBe(1);
+        // blue rides the gating stepping-stone construction: the gate stone PLUS
+        // flavor stones in the blue-held block (capped). Gating intact.
+        expect(lvl.platforms.filter((p) => p.type === 'blue').length).toBeGreaterThan(1);
         expectGated(lvl, blueExits);
+    });
+
+    it('adds flavor blue stepping-stones in a blue-held block, gating intact', () => {
+        const plain = gen(blueExits, {});
+        const blued = gen(blueExits, { blue: 1 });
+        expect((blued.platforms.filter((p) => p.type === 'blue')).length)
+            .toBeGreaterThan(plain.platforms.filter((p) => p.type === 'blue').length);
+        expectGated(blued, blueExits); // gb still derives exactly [blue]
+    });
+
+    it('adds no flavor blue where blue is never held', () => {
+        const lvl = gen(springExits, { blue: 1 }); // springs region, no blue gate
+        expect(lvl.platforms.filter((p) => p.type === 'blue').length).toBe(0);
     });
 
     it('decorChance without padding (platformRows 0) adds nothing', () => {
