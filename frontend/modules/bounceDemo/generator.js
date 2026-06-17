@@ -1217,6 +1217,12 @@ const ARROW_NAMES = ['left', 'right'];
 // gate rows, blue/spring/jetpack as vertical chain gates, brown as a ceiling host).
 const BRAID_GATE_ABILITIES = new Set(['left', 'right', 'blue', 'springs', 'jetpacks', 'brown']);
 
+// Pixels shaved off a spring/jetpack gate's gap (below the window's upper bound)
+// so a launch from the player's arrival state clears it with real headroom
+// rather than the ~4px the bare upper bound leaves. The row-aware braid verifier
+// rejects reductions ≥32px, so 20 keeps a safe buffer. See realiseBoostGate.
+const BOOST_GATE_GAP_MARGIN = 20;
+
 /**
  * Validate + plan a gated braid chain (spec-level checks: non-retryable, so
  * the caller runs this ONCE before the generate-and-test loop and throws
@@ -1406,15 +1412,22 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     };
     // Spring / jetpack gate: a launchable host + a tall gap above it. The
     // booster is inactive without the item, so a plain bounce can't clear the
-    // gap (gated); with the item the launch clears it. The gap uses the upper
-    // bound of the profile window (largest clearable gap = smallest overshoot,
-    // so the next rung is never intercepted). Booster launches straight up, so
-    // the landing sits directly above the host (no jitter).
+    // gap (gated); with the item the launch clears it. The gap is the upper
+    // bound of the profile window (largest clearable gap) MINUS a small safety
+    // margin. The bare upper bound sits ~4px under the booster's max rise, so a
+    // launch from the player's ARRIVAL state (bot or human) — which rises a hair
+    // less than the theoretical max — only "barely lands" and a marginal arrival
+    // misses. Shaving BOOST_GATE_GAP_MARGIN px lifts that clearance to ~24px so
+    // ordinary arrivals clear comfortably. The gated braid's row-aware verifier
+    // rejects reductions ≥32px (the overshoot perturbs the layered flood), so 20
+    // keeps a safe buffer; the gate still holds (the gap stays far above a plain
+    // bounce's reach) and validateGeometry's overshoot < PLAIN_DY invariant is
+    // preserved. Booster launches straight up → landing directly above the host.
     const realiseBoostGate = (ability, entities, prefix, window) => {
         y -= PLAIN_DY;
         const host = place(prev.x + jitterDx(current), y); // green, always launchable
         entities.push({ id: `${prefix}_${host.id}`, x: host.x, y: host.y - 5, on: host.id });
-        y -= window.min + window.span;
+        y -= window.min + window.span - BOOST_GATE_GAP_MARGIN;
         prev = place(host.x, y);
         current = [...current, ability].sort();
     };
