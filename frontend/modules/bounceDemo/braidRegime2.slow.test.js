@@ -123,3 +123,43 @@ describe('braid Regime 2 — falls back to a column when out of braid vocabulary
         ]);
     });
 });
+
+// platformRows safety, the FULL-solver cross-check matrix (slow: the full-graph
+// derive on the taller padded levels is the expensive part). The headline claim
+// — extra plain rows never change gating — proven across values × seeds × shapes.
+describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)', () => {
+    const ruleFor = (d, kind, id) => formatRule(d[kind][id].minimalSets);
+    const shapes = [
+        { name: 'blue → blue+left', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+        ] },
+        { name: 'single arrow', exits: [
+            { id: 'g', requirement: ['left'], direction: 'up' },
+        ] },
+    ];
+    for (const shape of shapes) {
+        for (const rows of [3, 7, 12]) {
+            it(`${shape.name} @ platformRows=${rows} keeps every gate (seeds 1-3)`, () => {
+                for (let seed = 1; seed <= 3; seed++) {
+                    const level = generateLevelFromSpecs({
+                        id: `RR${seed}`, exitSpecs: shape.exits, seed, physics: 'dj',
+                        mode: 'braid', braidWidth: W, freeArrow: 'right', platformRows: rows,
+                    });
+                    expect(validateLevel(level), 'model').toEqual([]);
+                    const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
+                    const braid = deriveBraidAccessRules(level, opts);
+                    const full = deriveAccessRules(level, opts);
+                    expect(braid.defects).toEqual([]);
+                    expect(full.defects).toEqual([]);
+                    for (const s of shape.exits) {
+                        expect(ruleFor(braid, 'exits', s.id), `${s.id} braid`).toBe(wantRule(s.requirement));
+                        expect(braid.exits[s.id].minimalSets, `${s.id} full==braid`)
+                            .toEqual(full.exits[s.id].minimalSets);
+                    }
+                }
+            });
+        }
+    }
+});

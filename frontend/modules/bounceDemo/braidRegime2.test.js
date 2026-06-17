@@ -274,3 +274,59 @@ describe('braid Regime 2 — authored per-platform requirement matches verified'
         expect(authoredReqs).toBeNull();
     });
 });
+
+// platformRows: extra PLAIN climb rungs distributed across the chain segments
+// (taller levels, hardest exit at the summit). They sit inside constant-
+// requirement blocks so gating is unchanged — the load-bearing claim.
+describe('braid Regime 2 — platformRows adds distributed plain rows safely', () => {
+    const exits = [
+        { id: 'free', requirement: [], direction: 'up' },
+        { id: 'gb', requirement: ['blue'], direction: 'right' },
+        { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+    ];
+    function genRows(rows, seed = 1) {
+        const g = generateLevelFromSpecsGen({
+            id: `RR${seed}`, exitSpecs: exits, seed, physics: 'dj',
+            mode: 'braid', braidWidth: W, freeArrow: FREE_ARROW, platformRows: rows,
+        });
+        let r = g.next();
+        while (!r.done) r = g.next();
+        return r.value.level;
+    }
+    const rowCount = (lvl) => new Set(lvl.platforms.map((p) => p.y)).size;
+    const hostY = (lvl, id) => lvl.platforms.find(
+        (p) => p.id === lvl.portals.find((pt) => pt.id === id).on).y;
+
+    it('adds exactly the requested number of rows', () => {
+        const base = rowCount(genRows(0));
+        for (const n of [3, 6, 10]) {
+            expect(rowCount(genRows(n)), `+${n} rows`).toBe(base + n);
+        }
+    });
+
+    it('preserves gating with padding (full-solver cross-check; matrix in slow)', () => {
+        expectGated(genRows(6), exits);
+    });
+
+    it('keeps the hardest exit at the summit with more climb beneath it', () => {
+        const padded = genRows(8);
+        const plain = genRows(0);
+        // gbl (blue AND left) is the highest-requirement exit → topmost (min y).
+        const ys = padded.portals.map((pt) => hostY(padded, pt.id));
+        expect(hostY(padded, 'gbl')).toBe(Math.min(...ys));
+        // Padding lands BELOW the summit exit (it stays pinned under the top
+        // teleport after normalization), so the climb beneath it grows.
+        const below = (lvl) => lvl.platforms.filter((p) => p.y > hostY(lvl, 'gbl')).length;
+        expect(below(padded)).toBeGreaterThan(below(plain));
+    });
+
+    it('default 0 is byte-identical to omitting the param', () => {
+        const withZero = JSON.stringify(genRows(0));
+        const g = generateLevelFromSpecsGen({
+            id: 'RR1', exitSpecs: exits, seed: 1, physics: 'dj',
+            mode: 'braid', braidWidth: W, freeArrow: FREE_ARROW,
+        });
+        let r = g.next(); while (!r.done) r = g.next();
+        expect(withZero).toBe(JSON.stringify(r.value.level));
+    });
+});

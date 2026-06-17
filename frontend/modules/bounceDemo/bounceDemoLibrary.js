@@ -438,6 +438,8 @@ export function* generateZoneForSpecsGen({
     // The free starting arrow ('left'|'right') the player always holds — gated
     // braid portals ride tips toward it, and the verifier treats it as free.
     freeArrow = 'right',
+    // Extra plain climb rungs per region after the gating content (gated braid).
+    platformRows = 0,
 } = {}) {
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
@@ -472,6 +474,7 @@ export function* generateZoneForSpecsGen({
         braidWidth,
         decorChance,
         freeArrow,
+        platformRows,
     });
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;

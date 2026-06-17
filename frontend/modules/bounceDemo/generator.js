@@ -1308,7 +1308,7 @@ function braidCanRealiseSpecs(exitSpecs, pickupSpecs) {
  * only on geometry dead-ends (retryable). Reachable + gated by construction;
  * the caller verifies with deriveBraidAccessRules.
  */
-function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeArrow = 'right' }) {
+function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeArrow = 'right', platformRows = 0 }) {
     const PLAIN_DY = G.PLAIN_DY;
     const W = width ?? G.FIXED_WIDTH ?? G.WIDTH;
     const reach = oneHopReach(C, PLAIN_DY);
@@ -1477,10 +1477,24 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         attach(g, tip);
     };
 
+    // Extra PLAIN climb rungs (the "Platform rows" setting) distributed across
+    // the chain's segments. The held set is CONSTANT within a segment, so these
+    // never change a goal's derived requirement (the verifier confirms each
+    // attempt). LOWER segments take their share ABOVE the goals — spacing each
+    // gate from the next; the TOP segment takes its share BELOW the goals, which
+    // lifts the highest-requirement exit to the summit ("relocate top exit up").
+    // 0 ⇒ identical to the minimal gated chain.
+    const nSeg = chainSegs.length;
+    const extraBySeg = chainSegs.map((_, i) =>
+        Math.floor(platformRows / nSeg) + (i < (platformRows % nSeg) ? 1 : 0));
+    const addRows = (n) => { for (let k = 0; k < n; k++) climbPlain(); };
+
     // Chain segments: distinct requirement keys (minus brown) in nested order.
     // Walk them, realising the gates each adds, then attaching that level's
     // goals. brown only colours its goal's own tip host.
-    for (const segment of chainSegs) {
+    for (let si = 0; si < nSeg; si++) {
+        const segment = chainSegs[si];
+        const isTop = si === nSeg - 1;
         const newGates = segment.filter((a) => !current.includes(a));
         // Vertical gates first (blue / spring / jetpack), then the arrow gate
         // row — order is free between them (no goal sits in between).
@@ -1492,6 +1506,9 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         for (const a of newGates.filter((g) => ARROW_NAMES.includes(g))) {
             realiseArrowGate(a);
         }
+        // TOP segment: extra rows go BELOW the goals so the highest exit ends up
+        // at the summit (just under the top teleport).
+        if (isTop) addRows(extraBySeg[si]);
         const here = byChain.get(reqKey(segment)) ?? [];
         // PICKUPS (non-brown) ride the straight spine (collecting doesn't exit).
         // Place them FIRST, so an in-region item granted here (the start arrow)
@@ -1509,6 +1526,9 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
             climbPlain();
             placeOffsetTip(g, isBrown(g) ? 'brown' : 'green');
         }
+        // LOWER segments: extra rows go ABOVE the goals, climbing toward the
+        // next gate (so consecutive gates are spaced out by the padding).
+        if (!isTop) addRows(extraBySeg[si]);
     }
     // Top teleport row: a lone teleport-to-start host above the highest goal,
     // so a player who climbs past the top (e.g. a locked top portal) returns
@@ -1571,7 +1591,7 @@ const ALL_FREE_ABILITIES = Object.freeze({
 //    emitter (minimalSetsToRule / emitObstaclePaths) reproduces the gate.
 function* generateBraidFromSpecsGen({
     id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, decorChance = {},
-    freeArrow = 'right', C, G,
+    freeArrow = 'right', platformRows = 0, C, G,
 }) {
     const seen = new Set();
     const norm = (s, what) => {
@@ -1595,7 +1615,7 @@ function* generateBraidFromSpecsGen({
         if (gated) {
             // ── Regime 2: gated chain, verify minimal sets == requirement ──
             let level, authoredReqs;
-            try { ({ level, authoredReqs } = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow })); }
+            try { ({ level, authoredReqs } = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow, platformRows })); }
             catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
             const modelErrors = validateLevel(level);
             if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
@@ -1704,6 +1724,10 @@ export function* generateLevelFromSpecsGen({
     // it, and the verifier treats it as free. Default 'right' for tests; the
     // pipeline threads the world's actual pick.
     freeArrow = 'right',
+    // Extra PLAIN climb rungs added per region AFTER the gating content
+    // (gated braid only) — distributed across the requirement segments to make
+    // levels taller and push the hardest exit to the summit. 0 = no change.
+    platformRows = 0,
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
     if (mode === 'braid') {
@@ -1717,7 +1741,7 @@ export function* generateLevelFromSpecsGen({
         const can = braidCanRealiseSpecs(exitSpecs, pickupSpecs);
         if (can.ok) {
             return yield* generateBraidFromSpecsGen({
-                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, freeArrow, C, G,
+                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, freeArrow, platformRows, C, G,
             });
         }
         console.warn(`bounce: region '${id}' has gates outside the braid vocabulary `
