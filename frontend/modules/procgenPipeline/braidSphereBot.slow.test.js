@@ -40,9 +40,11 @@ function buildBraidWorld(seed) {
     });
     const { grid, startCell } = growSpheres({
         regionSize: { width: 8, height: 6 }, seed,
+        // The player holds Right free (the gated arrow is Left), so portals ride
+        // tips toward Right; bounceFreeArrow tells the generator + verifier.
         regionParams: {
             fallBehavior: 'current', physicsProfile: 'dj',
-            bounceMode: 'braid', braidWidth: 240,
+            bounceMode: 'braid', braidWidth: 240, bounceFreeArrow: 'right',
         },
         growthParams: {
             spherePlan: plan, substrateQuotas: { bounce: 99 },
@@ -50,7 +52,7 @@ function buildBraidWorld(seed) {
         },
     });
     const rulesJson = buildRulesJson(grid, {
-        startCell, seed, embedSphereLog: false,
+        startCell, seed, embedSphereLog: false, startingItems: ['Right arrow'],
         completionConditionItem: 'Victory', lockedCanonicalItems: ['Left arrow'],
     });
     return { grid, plan, rulesJson };
@@ -132,7 +134,7 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
             regionSize: { width: 8, height: 6 }, seed: 1,
             regionParams: {
                 fallBehavior: 'current', physicsProfile: 'dj',
-                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40,
+                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40, bounceFreeArrow: 'right',
             },
             growthParams: {
                 spherePlan: plan, substrateQuotas: { bounce: 99 },
@@ -140,7 +142,8 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
             },
         });
         const rulesJson = buildRulesJson(grid, {
-            startCell, seed: 1, embedSphereLog: false, completionConditionItem: 'Victory',
+            startCell, seed: 1, embedSphereLog: false,
+            completionConditionItem: 'Victory', startingItems: ['Right arrow'],
         });
         expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
         const widths = bounceRegions(grid).map((r) => levelOf(r).size.width);
@@ -165,7 +168,7 @@ describe('braid Regime 2 — sphere growth round-trip + bot finishes (no soft-lo
             regionSize: { width: 8, height: 6 }, seed: 3,
             regionParams: {
                 fallBehavior: 'current', physicsProfile: 'dj',
-                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40,
+                bounceMode: 'braid', braidWidth: 240, bounceJitter: 40, bounceFreeArrow: 'right',
             },
             growthParams: {
                 spherePlan: plan, substrateQuotas: { bounce: 99 },

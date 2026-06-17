@@ -2044,12 +2044,16 @@ export class ProcgenPipelineUI {
         const startingItems = [];
         const lockedCanonicalItems = [];
         let arrowNote = '';
+        // The free arrow the player always holds (ability id) — gated-braid
+        // portals ride tips toward it, so the generator needs to know which one.
+        let freeArrowAbility = null;
         if (bounceSelected) {
             const arrows = ['Left arrow', 'Right arrow']
                 .filter((a) => (itemPool[a] ?? 0) > 0);
             if (arrows.length > 0) {
                 const pick = arrows[Math.floor(
                     createRng((seed * 31 + 17) | 0).next() * arrows.length)];
+                freeArrowAbility = pick === 'Left arrow' ? 'left' : 'right';
                 if (bounceStarts) {
                     exclusiveSpheres[1] = [pick];
                     // Lock the canonical placement so even multiworld
@@ -2097,6 +2101,7 @@ export class ProcgenPipelineUI {
                     bounceMode: 'braid',
                     braidWidth: this.params.bounceBraidWidth ?? 240,
                     bounceJitter: this.params.bounceJitter ?? 40,
+                    ...(freeArrowAbility ? { bounceFreeArrow: freeArrowAbility } : {}),
                 } : {}),
             },
             growthParams: {

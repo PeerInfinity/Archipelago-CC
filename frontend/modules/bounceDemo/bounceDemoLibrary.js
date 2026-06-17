@@ -427,6 +427,9 @@ export function* generateZoneForSpecsGen({
     mode = 'column',
     braidWidth,
     decorChance = {},
+    // The free starting arrow ('left'|'right') the player always holds — gated
+    // braid portals ride tips toward it, and the verifier treats it as free.
+    freeArrow = 'right',
 } = {}) {
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
@@ -460,6 +463,7 @@ export function* generateZoneForSpecsGen({
         mode,
         braidWidth,
         decorChance,
+        freeArrow,
     });
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;

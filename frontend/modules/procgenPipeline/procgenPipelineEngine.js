@@ -2365,6 +2365,9 @@ function* generateRegionZoneGen(spec) {
                 ...(spec.params.braidWidth ? { braidWidth: spec.params.braidWidth } : {}),
                 ...(spec.params.bounceJitter ? { jitter: spec.params.bounceJitter } : {}),
                 ...(spec.params.bounceDecorChance ? { decorChance: spec.params.bounceDecorChance } : {}),
+                // The world's held free arrow ('left'|'right'): gated-braid
+                // portals ride tips toward it, and the verifier treats it as free.
+                ...(spec.params.bounceFreeArrow ? { freeArrow: spec.params.bounceFreeArrow } : {}),
             } : {}),
     };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
