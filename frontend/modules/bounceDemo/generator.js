@@ -1373,9 +1373,17 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     const teleportEntities = [];
     const springEntities = [];
     const jetpackEntities = [];
-    const place = (x, y, type = 'green') => {
+    // AUTHORED per-platform requirement: the ability set the BUILDER intends a
+    // climber to hold to reach this platform. Recorded separately (never on the
+    // platform object — the level model forbids storing rules in geometry), for
+    // the report/editor to show beside the VERIFIED derive. `req` defaults to
+    // the pre-update `current`; gate realizers pass the post-gate set for the
+    // platform their gate actually blocks. Pure intent — the verifier is truth.
+    const authoredReqs = {};
+    const place = (x, y, type = 'green', req = current) => {
         const p = { id: `b${nid++}`, x: wrap(x), y, type };
         platforms.push(p);
+        authoredReqs[p.id] = [...req].sort();
         return p;
     };
     const heldArrow = (current) => current.find((a) => ARROW_NAMES.includes(a)) ?? null;
@@ -1411,21 +1419,23 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     const realiseArrowGate = (arrow) => {
         y -= PLAIN_DY;
         const dir = arrow === 'left' ? -1 : 1;
-        const gate = place(prev.x + dir * arrowOffset, y);
-        const teleHost = place(prev.x - dir * arrowOffset, y);
+        const gateReq = [...current, arrow]; // the gate is reachable ONLY with the new arrow
+        const gate = place(prev.x + dir * arrowOffset, y, 'green', gateReq);
+        const teleHost = place(prev.x - dir * arrowOffset, y); // reachable WITHOUT it (drift → home)
         teleportEntities.push({
             id: `tp_${teleHost.id}`, x: teleHost.x, y: teleHost.y - 20, on: teleHost.id,
         });
         prev = gate;
-        current = [...current, arrow].sort();
+        current = gateReq.slice().sort();
     };
     // Blue stepping stone + a plain landing above (gates `blue` vertically).
     const realiseBlueGate = () => {
+        const blueReq = [...current, 'blue']; // stone + landing both need blue (stone is suppressed)
         y -= PLAIN_DY;
-        place(prev.x, y, 'blue'); // the stone (its x rides the column; sweep added post-shift)
+        place(prev.x, y, 'blue', blueReq); // the stone (its x rides the column; sweep added post-shift)
         y -= PLAIN_DY;
-        prev = place(prev.x, y);
-        current = [...current, 'blue'].sort();
+        prev = place(prev.x, y, 'green', blueReq);
+        current = blueReq.slice().sort();
     };
     // Spring / jetpack gate: a launchable host + a tall gap above it. The
     // booster is inactive without the item, so a plain bounce can't clear the
@@ -1442,11 +1452,12 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // preserved. Booster launches straight up → landing directly above the host.
     const realiseBoostGate = (ability, entities, prefix, window) => {
         y -= PLAIN_DY;
-        const host = place(prev.x + jitterDx(current), y); // green, always launchable
+        const host = place(prev.x + jitterDx(current), y); // green host: reachable WITHOUT the booster
         entities.push({ id: `${prefix}_${host.id}`, x: host.x, y: host.y - 5, on: host.id });
         y -= window.min + window.span - BOOST_GATE_GAP_MARGIN;
-        prev = place(host.x, y);
-        current = [...current, ability].sort();
+        const boostReq = [...current, ability]; // the rung past the tall gap needs the booster
+        prev = place(host.x, y, 'green', boostReq);
+        current = boostReq.slice().sort();
     };
     // A portal rides an OFFSET TIP toward the free arrow — NOT the spine. The
     // spine rung (`prev`) stays portal-free, so the no-input climb is never
@@ -1459,7 +1470,10 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // brown item (so its goal is gated on brown), GREEN otherwise; either way
     // the green spine rung carries the no-input climb past it (two-platform rule).
     const placeOffsetTip = (g, type = 'green') => {
-        const tip = place(prev.x + freeDir * tipOffset, prev.y, type);
+        // A brown tip is suppressed without brown → its authored req adds brown;
+        // a green tip is reached with the (always-held) free arrow → just current.
+        const req = type === 'brown' ? [...current, 'brown'] : current;
+        const tip = place(prev.x + freeDir * tipOffset, prev.y, type, req);
         attach(g, tip);
     };
 
@@ -1522,11 +1536,12 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
             p.sweep = { min: BLUE_SWEEP_EDGE_MARGIN, max: W - BLUE_SWEEP_EDGE_MARGIN };
         }
     }
-    return {
+    const level = {
         id, size: { width: W, height: shiftY + 100 },
         platforms, springs: springEntities, jetpacks: jetpackEntities,
         pickups: pickupEntities, portals, teleports: teleportEntities,
     };
+    return { level, authoredReqs };
 }
 
 // All bounce abilities, set true — the Regime-1 "free" inventory.
@@ -1579,8 +1594,8 @@ function* generateBraidFromSpecsGen({
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         if (gated) {
             // ── Regime 2: gated chain, verify minimal sets == requirement ──
-            let level;
-            try { level = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow }); }
+            let level, authoredReqs;
+            try { ({ level, authoredReqs } = proposeBraidLevelGated({ id, plan, rng, C, G, jitter, width: braidWidth, freeArrow })); }
             catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
             const modelErrors = validateLevel(level);
             if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
@@ -1603,7 +1618,7 @@ function* generateBraidFromSpecsGen({
                         + `${JSON.stringify(derived.pickups[g.id].minimalSets)} != [${g.req}]`);
                 }
             }
-            if (mismatches.length === 0) return { level, derived };
+            if (mismatches.length === 0) return { level, derived, authoredReqs };
             rejected.push(`attempt ${attempt}: ${mismatches[0]}`);
             continue;
         }
@@ -1629,7 +1644,9 @@ function* generateBraidFromSpecsGen({
         ];
         if (bad.length === 0) {
             const trivial = (gs) => Object.fromEntries(gs.map((g) => [g.id, { minimalSets: [[]] }]));
-            return { level, derived: { exits: trivial(exits), pickups: trivial(pickups) } };
+            // Regime 1 is all-free: authored requirement is [] everywhere, so no
+            // authoredReqs map (the report shows verified-only for fork braids).
+            return { level, derived: { exits: trivial(exits), pickups: trivial(pickups) }, authoredReqs: null };
         }
         rejected.push(`attempt ${attempt}: ${bad[0]} unreachable`);
     }
@@ -1751,7 +1768,7 @@ export function* generateLevelFromSpecsGen({
                     + `${JSON.stringify(derived.exits[e.id].minimalSets)} != [${e.req}]`);
             }
         }
-        if (mismatches.length === 0) return { level, derived };
+        if (mismatches.length === 0) return { level, derived, authoredReqs: null };
         rejected.push(`attempt ${attempt}: ${mismatches[0]}`);
     }
     throw new Error(`generateLevelFromSpecs('${id}'): no valid proposal in ${attempts} `

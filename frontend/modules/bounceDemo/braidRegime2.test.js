@@ -11,7 +11,7 @@
  * deriveAccessRules so the emitted rules can't drift from real geometry.
  */
 import { describe, it, expect } from 'vitest';
-import { generateLevelFromSpecs } from './generator.js';
+import { generateLevelFromSpecs, generateLevelFromSpecsGen } from './generator.js';
 import { deriveAccessRules, deriveBraidAccessRules, formatRule } from './deriveRules.js';
 import { validateLevel } from './level.js';
 import { PROFILES } from './physics.js';
@@ -212,5 +212,65 @@ describe('braid Regime 2 — brown coexists with a spine gate (brown rides a tip
         const level = gen(exits);
         expectGated(level, exits);
         expect(level.size.width).toBe(W);
+    });
+});
+
+// Authored per-platform requirement (build intent) — captured separately from
+// the geometry (never on platform objects) for the region report. It must AGREE
+// with the verified per-platform derive on every platform: the builder's intent
+// and the solver's truth are the same, or there's a generator bug.
+function genWithAuthored(exitSpecs, pickupSpecs = [], seed = 1, freeArrow = FREE_ARROW) {
+    const g = generateLevelFromSpecsGen({
+        id: `RA${seed}`, exitSpecs, pickupSpecs, seed, physics: 'dj',
+        mode: 'braid', braidWidth: W, freeArrow,
+    });
+    let r = g.next();
+    while (!r.done) r = g.next();
+    return r.value; // { level, derived, authoredReqs }
+}
+const unavoidable = (sets) => (!sets || !sets.length ? []
+    : sets.reduce((acc, s) => acc.filter((a) => s.includes(a)), [...sets[0]]).sort());
+
+describe('braid Regime 2 — authored per-platform requirement matches verified', () => {
+    const cases = [
+        ['arrow gate', [{ id: 'e1', requirement: ['left'], direction: 'up' }], []],
+        ['blue then blue+left + pickup', [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+        ], [{ id: 'pk', requirement: ['blue'] }]],
+        ['springs gate', [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
+        ], []],
+        ['brown tip + left gate', [
+            { id: 'gb', requirement: ['brown'], direction: 'up' },
+            { id: 'gl', requirement: ['left'], direction: 'right' },
+        ], []],
+    ];
+
+    for (const [name, exits, pickups] of cases) {
+        it(`authored == verified for every platform (${name})`, () => {
+            const { level, authoredReqs } = genWithAuthored(exits, pickups);
+            expect(authoredReqs, 'gated braid should produce authoredReqs').toBeTruthy();
+            const d = deriveBraidAccessRules(level, {
+                constants: C, freeArrow: FREE_ARROW, freeAbilities: [FREE_ARROW],
+                terminalPortals: true, includePlatforms: true,
+            });
+            for (const p of level.platforms) {
+                // The free arrow is held, so it never appears in a requirement;
+                // drop it from the authored set before comparing to verified.
+                const authored = (authoredReqs[p.id] ?? []).filter((a) => a !== FREE_ARROW).sort();
+                const verified = unavoidable(d.platforms[p.id].minimalSets);
+                expect(verified, `platform ${p.id} (${formatRule(d.platforms[p.id].minimalSets)})`)
+                    .toEqual(authored);
+            }
+        });
+    }
+
+    it('the all-free fork braid (Regime 1) produces no authoredReqs', () => {
+        const { authoredReqs } = genWithAuthored(
+            [{ id: 'e1', requirement: [], direction: 'up' }], []);
+        expect(authoredReqs).toBeNull();
     });
 });

@@ -460,7 +460,7 @@ export function* generateZoneForSpecsGen({
     // The winning attempt's derivation is reused for rule emission —
     // re-deriving here would re-run the verifier (the most expensive
     // step for dj mover levels) on the identical level and constants.
-    const { level, derived } = yield* generateLevelFromSpecsGen({
+    const { level, derived, authoredReqs } = yield* generateLevelFromSpecsGen({
         id: region_id,
         exitSpecs: exits,
         pickupSpecs: pickups,
@@ -547,7 +547,11 @@ export function* generateZoneForSpecsGen({
             || Object.keys(gateRules.pickups).length > 0) {
         payload.gate_rules = gateRules;
     }
-    return { locations, exitRules, exitPaths, obstacleDefs, payload };
+    // authoredReqs (gated-braid per-platform build intent) rides ALONGSIDE the
+    // payload, never inside it — the pipeline merges only `.payload` into the
+    // serialized playable_payload, so this stays out of generated worlds. It
+    // exists purely for the region report / editor (verified-vs-authored view).
+    return { locations, exitRules, exitPaths, obstacleDefs, payload, authoredReqs };
 }
 
 // Shared across every bounce entry — same Shape-1 reasoning as flash's

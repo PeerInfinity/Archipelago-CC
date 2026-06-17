@@ -44,7 +44,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { generateZoneForSpecsGen } from '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import { deriveAccessRules, deriveBraidAccessRules } from
+import { deriveAccessRules, deriveBraidAccessRules, abilityUniverse } from
     '../../frontend/modules/bounceDemo/deriveRules.js';
 import { resolvePhysicsStamp } from '../../frontend/modules/bounceDemo/physics.js';
 import { formatRegionReport } from '../../frontend/modules/bounceDemo/regionReport.js';
@@ -79,8 +79,6 @@ function parseArgs(argv) {
     return out;
 }
 
-const isGated = (specs) => specs.some((s) => (s.requirement ?? []).length > 0);
-
 // FRESH: drain the zone generator, then re-derive WITH includePlatforms using
 // the same opts the generator used (so per-row data matches the emitted rules).
 function fromSpec(specPath) {
@@ -95,14 +93,33 @@ function fromSpec(specPath) {
     const C = resolvePhysicsStamp(spec.physicsProfile ?? 'experimental');
     const mode = spec.mode ?? 'column';
     const freeArrow = spec.freeArrow ?? 'right';
-    const gated = isGated([...(spec.exitSpecs ?? []), ...(spec.locationSpecs ?? [])]);
-    const derived = mode === 'braid'
-        ? deriveBraidAccessRules(level, { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: gated, includePlatforms: true })
-        : deriveAccessRules(level, { constants: C, includePlatforms: true });
+    // Pick the derive that MATCHES how the generator built this region — the
+    // authoredReqs map is the gated-braid (Regime 2) signal (proposeBraidLevel
+    // returns null for the all-free fork braid). Splitting the spec's requirement
+    // into physics-vs-authored happens inside generateZoneForSpecsGen, so the
+    // raw spec requirement can't be trusted to tell the regime; authoredReqs can.
+    let derived;
+    if (zone.authoredReqs) {
+        // Regime 2: row-aware flood, free arrow held, portal hosts terminal.
+        derived = deriveBraidAccessRules(level, {
+            constants: C, freeArrow, freeAbilities: [freeArrow],
+            terminalPortals: true, includePlatforms: true,
+        });
+    } else if (mode === 'braid') {
+        // Regime 1 fork braid: every ability is free, so every reachable
+        // platform derives []. Full-graph solver with the whole universe free.
+        derived = deriveAccessRules(level, {
+            constants: C, freeAbilities: abilityUniverse(level), includePlatforms: true,
+        });
+    } else {
+        // Column sphere growth: gates everything; no free abilities.
+        derived = deriveAccessRules(level, { constants: C, includePlatforms: true });
+    }
 
     return {
         meta: { regionId: spec.region_id, seed: spec.seed, physics: spec.physicsProfile ?? 'experimental', mode, freeArrow },
         level, derived,
+        authoredReqs: zone.authoredReqs, // gated-braid build intent (verified-vs-authored view)
         zone: {
             exitRules: zone.exitRules, exitPaths: zone.exitPaths,
             obstacleDefs: zone.obstacleDefs, gateRules: zone.payload?.gate_rules,
