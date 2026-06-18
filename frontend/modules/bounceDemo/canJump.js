@@ -105,8 +105,21 @@ function passThroughIds(level, abilities, C) {
  * everything below for free), and touching one mover lifts the bound
  * by another plain bounce (cascade to fixpoint).
  */
-function touchableMovers(level, fromY, fromLaunch, C, movers) {
+function touchableMovers(level, fromY, fromLaunch, C, movers, upwardOnly = false) {
     if (movers.length === 0) return [];
+    // Row-aware UPWARD flood only: every queried edge climbs to a HIGHER
+    // platform, and one bounce clears at most one gap, so a mover BELOW the
+    // launcher (reachable only by FALLING past the target) can never carry an
+    // upward edge — the climb lands on the target before the fall could touch
+    // it. Such a mover never changes the upward verdict, so dropping it from the
+    // touchable set (hence from the sweep-phase lcm) is verdict-preserving for
+    // the flood and removes the spurious phase enumeration a low blue otherwise
+    // forces on every edge above it. Opt-in: the full N² graph keeps fall edges
+    // and must NOT pass this flag.
+    if (upwardOnly) {
+        movers = movers.filter((p) => p.y <= fromY);
+        if (movers.length === 0) return [];
+    }
     const hover = C.MAX_FALL; // latched landings rest up to here above the line
     let apex = fromLaunch === null
         ? fromY // ENTRANCE: the spawn drop gains no height
@@ -517,7 +530,8 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
     // movers this run can TOUCH matter — an edge that can't reach any
     // mover band is identical at every phase (one phase suffices).
     const relevant = fromMoving ? movers : touchableMovers(
-        level, from.y, launchTypeFor(level, fromId, abilities), C, movers);
+        level, from.y, launchTypeFor(level, fromId, abilities), C, movers,
+        opts.upwardMoversOnly);
     const L = phaseLcm(relevant, C);
 
     // Phase sets to satisfy: from a moving platform EVERY phase must
@@ -694,7 +708,13 @@ export function reachablePlatforms(graph) {
  * ids (ENTRANCE excluded).
  */
 export function reachableBraidPlatforms(level, abilities, opts = {}) {
-    const { goalHosts, ...queryOpts } = opts;
+    // upwardMoversOnly: this flood only ever queries upward edges (a row launches
+    // into the row above), so a mover below the launcher is never on a real
+    // route — restrict the sweep-phase enumeration to at-or-above movers. Sound
+    // ONLY because the flood is strictly upward (see touchableMovers); never set
+    // it for the full N² graph.
+    const { goalHosts, ...rest } = opts;
+    const queryOpts = { ...rest, upwardMoversOnly: true };
     const C = queryOpts.constants ?? DEFAULTS;
     const platforms = activePlatforms(level, abilities);
     const byY = new Map();
