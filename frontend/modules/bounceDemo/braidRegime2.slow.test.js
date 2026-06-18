@@ -194,15 +194,33 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
         });
     }
 
-    // SPINE jitter (the coherent toward-free wander) is enabled for non-moving-
-    // blue levels. Cross-check arrow + spring gates under jitter — every gate must
-    // survive the wander.
+    // SPINE jitter (the coherent toward-free wander) is enabled for EVERY gate
+    // type now — including MOVING BLUE, springs and jetpacks, which used to be
+    // disabled/fragile. The wander walks each portal bypass into the tip window
+    // (advanceToTipWindow) so it never re-gates at the wrap seam. Cross-check the
+    // full solver: every gate must survive the wander at a large magnitude.
     for (const shape of [
         { name: 'left', exits: [{ id: 'g', requirement: ['left'], direction: 'up' }] },
         { name: 'left → left+springs', exits: [
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gl', requirement: ['left'], direction: 'right' },
             { id: 'gls', requirement: ['left', 'springs'], direction: 'left' },
+        ] },
+        // Moving blue under jitter — the case this whole fix is about.
+        { name: 'free → blue', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+        ] },
+        { name: 'free → blue → blue+left', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+        ] },
+        // A bare springs portal — used to THROW (no valid proposal) at small
+        // jitter; now wanders cleanly at any magnitude.
+        { name: 'free → springs', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
         ] },
     ]) {
         it(`spine jitter preserves ${shape.name} gates (seeds 1-4, jitter 60)`, () => {

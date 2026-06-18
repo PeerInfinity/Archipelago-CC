@@ -463,13 +463,24 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
         expect(forkWidths(jittered).size).toBeGreaterThan(forkWidths(straight).size);
     });
 
-    it('spine jitter is AUTO-DISABLED for a moving-blue level (identical without forks)', () => {
-        // These exits have a blue gate → moving blue → the blue stone row is
-        // pass-through, which conflicts with spine jitter, so it's gated off.
-        // With no forks the level is then byte-identical regardless of jitter.
+    it('spine WANDERS for a moving-blue level (advanced into the tip window), gates intact', () => {
+        // These exits have a blue gate → moving blue. Spine jitter used to be
+        // gated OFF here on a wrong "blue pass-through" theory; the real hazard is
+        // the wrap seam (a portal tip drifting past W−tipOffset re-gates on the
+        // gated arrow), and it hit springs/jetpacks identically. The fix walks the
+        // coherent drift into the tip window before each tip, so the spine now
+        // wanders for moving blue too (at any magnitude), gates preserved.
+        const cols = (l) => new Set(l.platforms.map((p) => Math.round(p.x))).size;
         const a = gen({}, 2, 6, 0);
         const b = gen({}, 2, 6, 40);
-        expect(JSON.stringify(b)).toBe(JSON.stringify(a));
+        expect(JSON.stringify(b)).not.toBe(JSON.stringify(a)); // no longer disabled
+        expect(cols(b)).toBeGreaterThan(cols(a));              // genuinely spread
+        // gb still derives exactly [blue] despite the wander.
+        expectGated(b, [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+        ]);
     });
 
     it('spine WANDERS for an arrow-gated level (no moving blue), gates intact', () => {

@@ -1328,15 +1328,17 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // PORTALS hang off it on offset TIPS toward the FREE arrow (the held
     // starting arrow), so reaching a portal needs that arrow — which the player
     // always has — while the spine stays portal-free.
-    // NOTE: the spine is horizontally RIGID and stays so. A portal's tip rides
-    // exactly tipOffset (catchSpan+4 = 110px on dj) from its bypass vs a single-
-    // arrow reach of ~120px — only ~10px of ACCUMULATED slack — so any spine
-    // wander wraps the ring and flips a tip's cheaper route to the opposite arrow
-    // (measured: jitter ≳ 8px re-gates). Hence `maxJit = 0`; jitter lands on the
-    // OFF-spine fork companions instead (see the JITTER note below). What DOES
-    // enrich the spine reuses an ability's own GATING geometry in a block that
-    // already holds it (grown gap = spring/jetpack flavor; stepping-stone = blue
-    // flavor) — never a retyped plain rung or a mover under a tip.
+    // NOTE: a portal's tip rides exactly tipOffset (catchSpan+4 = 110px on dj)
+    // from its bypass vs a single-arrow reach of ~120px — only ~10px of slack —
+    // so BIDIRECTIONAL spine wander re-gates a tip (it can wrap a tip's cheaper
+    // route onto the opposite arrow; measured: ≳8px re-gates). Hence the legacy
+    // bidirectional `maxJit = 0`. The spine DOES wander, by the COHERENT toward-
+    // free shift below (`spineJit`), which preserves every relative offset; the
+    // wrap-seam caveat (and how portal tips are kept safe under it) is the JITTER
+    // note below. What else enriches the spine reuses an ability's own GATING
+    // geometry in a block that already holds it (grown gap = spring/jetpack
+    // flavor; stepping-stone = blue flavor) — never a retyped plain rung or a
+    // mover under a tip.
     const maxJit = 0;
     const freeDir = freeArrow === 'left' ? -1 : 1;
     // Decorative fork companion offset (R1's forkHalf): a DISTINCT catch target
@@ -1347,21 +1349,43 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // free shift — COHERENT: each rung builds from the shifted prev, so the whole
     // structure above moves together and every relative offset (gates, tips) is
     // preserved. The free arrow is always held, so a free-ward step is reachable
-    // with it → rules-neutral at any magnitude < reach. This is DISABLED when the
-    // level has a MOVING blue: its gate row is PASS-THROUGH, so a tip's launcher
-    // can come from BELOW the shift and fall outside the ~(reach−tipOffset)≈10px
-    // launcher tolerance, re-gating the tip on the gated arrow (measured: arrow &
-    // spring/jetpack gates jitter 8/8 across seeds; moving-blue 0/8 — so gate it
-    // out). It is NOT accumulated drift wrapping the ring (the tip's gate is
-    // relative to its own launch); the killer is specifically the moving-blue
-    // launcher offset. COMPANIONS jitter regardless (off-spine, host no tip → no
-    // launcher tolerance), varying the fork width by ~(reach−forkHalf). Backstop:
-    // the per-attempt re-derive (it can't recover the blue case — fails all
-    // attempts — hence the structural gate, not retry).
-    const movingBlue = (C.PLATFORM_BEHAVIORS?.blue === 'moving')
-        && (plan.goals.some((g) => g.req.includes('blue')) || (decorChance.blue ?? 0) > 0);
-    const spineJitMax = movingBlue ? 0 : Math.min(jitter || 0, Math.round(reach * 0.5));
+    // with it → rules-neutral.
+    //
+    // THE WRAP-SEAM CAVEAT (the real one; the earlier "moving-blue pass-through"
+    // story was wrong — see the controlled springs/jetpack test in the plan doc
+    // §10). dj carries horizontal velocity, so a SAME-COLUMN (zero-shift) hop
+    // within ~30px of the free-ward wrap edge can only be landed by steering
+    // INWARD, which needs the GATED arrow. Worse, a PORTAL tip rides tipOffset
+    // toward the free edge: once the bypass column drifts past (W − tipOffset),
+    // the tip wraps ACROSS the seam and its gate collapses — so a portal bypass
+    // is only safe in the TIP WINDOW [the free-near (W − tipOffset) px of the
+    // ring]. This hit EVERY non-gated-arrow portal gate identically (blue,
+    // springs, jetpacks all 0/N at small jitter, ~full at large — the big steps
+    // happened to wrap the spine all the way back into the window); arrow gates
+    // were immune only because their high-drift segment HOLDS the gated arrow,
+    // making near-seam steering available. Fix: `advanceToTipWindow` walks the
+    // coherent drift forward (wrapping the ring) into the tip window before each
+    // offset tip, in any block lacking the gated arrow — so the spine wanders at
+    // ANY magnitude without re-gating. COMPANIONS jitter regardless (off-spine,
+    // host no tip), varying the fork width by ~(reach−forkHalf). Backstop: the
+    // per-attempt re-derive.
+    const spineJitMax = Math.min(jitter || 0, Math.round(reach * 0.5));
     const spineJit = () => (spineJitMax > 0 ? freeDir * rng.next() * spineJitMax : 0);
+    // The arrow a tip would re-gate on if the spine drifts to the free-ward seam
+    // (free=right ⇒ the right edge needs left). A block already holding it can
+    // steer inward near the seam, so it needs no tip-window correction.
+    const gatedArrow = freeArrow === 'left' ? 'right' : 'left';
+    // Forward coordinate: distance along the ring in the free direction, so both
+    // free arrows share one set of thresholds (forward = toward the free seam).
+    const fwd = (x) => (freeDir > 0 ? wrap(x) : wrap(W - x));
+    const xOfFwd = (f) => wrap(freeDir > 0 ? f : W - f);
+    // Tip window: a portal bypass at forward-coord ≤ TIP_WIN keeps its tip
+    // (tipOffset further toward free) clear of the seam (W − tipOffset, minus a
+    // 6px margin). A same-column hop also needs the bypass out of the last ~30px
+    // before the seam, which TIP_WIN (≈124 ≪ 210) easily satisfies.
+    const TIP_WIN = W - tipOffset - 6;
+    const FWD_HOP = 80;       // longest reliable forward (toward-free) landing hop
+    const SEAM_KEEP = 32;     // keep landings this far short of the free seam
     const compJitMax = Math.min(jitter || 0, Math.max(0, reach - forkHalf - 8));
     const { goals } = plan;
     const isBrown = (g) => g.req.includes('brown');
@@ -1434,12 +1458,34 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         prev = place(prev.x + jitterDx(current), y);
         return prev;
     };
-    // A padding rung that WANDERS the spine (coherent toward-free shift). Off for
-    // moving-blue levels (spineJitMax = 0 → straight); see the JITTER note above.
+    // A padding rung that WANDERS the spine (coherent toward-free shift); see the
+    // JITTER note above. Goal/gate rungs use climbPlain (zero shift), so the wander
+    // lives entirely here.
     const climbPad = () => {
         y -= PLAIN_DY;
         prev = place(prev.x + spineJit(), y);
         return prev;
+    };
+    // Walk the coherent drift FORWARD (toward free, wrapping the ring) until the
+    // spine column sits inside the tip window, so the next offset tip clears the
+    // seam (see the JITTER note). Only meaningful when the spine actually wanders
+    // (spineJitMax > 0) and the block can't steer inward at the seam (gated arrow
+    // absent) — otherwise a no-op, keeping jitter=0 byte-identical and leaving
+    // arrow blocks' free wander untouched. Each step is a plain extra rung whose
+    // forward hop stays a reachable free-arrow landing (≤ FWD_HOP) and never lands
+    // in the last SEAM_KEEP px before the seam (where it would strand). Bounded by
+    // a guard (one ring's worth); a stubborn case just fails the re-derive → retry.
+    const advanceToTipWindow = () => {
+        if (spineJitMax <= 0 || current.includes(gatedArrow)) return;
+        let guard = 0;
+        while (fwd(prev.x) > TIP_WIN && guard++ < 16) {
+            const fp = fwd(prev.x);
+            // Close enough to wrap straight into the window in one hop? Land just
+            // inside it (forward-coord 6). Else step forward, short of the seam.
+            const target = (W + 6 - fp) <= FWD_HOP ? (W + 6) : Math.min(fp + FWD_HOP, W - SEAM_KEEP);
+            y -= PLAIN_DY;
+            prev = place(xOfFwd(target), y);
+        }
     };
     // Gate row for the one arrow: gate platform toward the arrow, teleport host
     // at the mirror offset (the wrong-arrow player drifts there → home).
@@ -1628,13 +1674,16 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         // BROWN pickup can't sit on the spine (terminal → blocks the climb), so
         // it rides a brown tip like a brown exit.
         for (const g of here.filter((gg) => gg.kind === 'pickup')) {
+            advanceToTipWindow();
             climbPlain();
             if (isBrown(g)) placeOffsetTip(g, 'brown'); else attach(g, prev);
         }
         // PORTALS ride offset tips above a fresh spine bypass rung — green tips
         // for the spine-gated goals, BROWN tips for brown-gated ones (suppression
-        // gates them, the green spine carries the climb past).
+        // gates them, the green spine carries the climb past). The bypass is
+        // walked into the tip window first so the offset tip clears the wrap seam.
         for (const g of here.filter((gg) => gg.kind === 'exit')) {
+            advanceToTipWindow();
             climbPlain();
             placeOffsetTip(g, isBrown(g) ? 'brown' : 'green');
         }
