@@ -217,8 +217,15 @@ export function deriveBraidAccessRules(level, opts = {}) {
     const freeAbilities = opts.freeArrow
         ? [...new Set([...(opts.freeAbilities ?? []), opts.freeArrow])]
         : (opts.freeAbilities ?? []);
+    // suppressBlues: this gated per-subset derive is the cost center the blue
+    // sweep blows up (phases × 2^abilities). Every blue here is a green→blue→green
+    // stepping stone (enforced by braidBlueInvariantErrors at generation), so
+    // canJump may treat blues as pure stones — recognizer for the stone edge,
+    // invisible elsewhere — and skip sweep-phase enumeration entirely. Default
+    // ON; exhaustivePhases (the test oracle) overrides it back to the ferry-aware
+    // ∀-phase model. Caller can pass suppressBlues:false to force ferry-aware.
     return deriveAccessRules(level, {
-        ...opts, reach: reachableBraidPlatforms, freeAbilities,
+        suppressBlues: true, ...opts, reach: reachableBraidPlatforms, freeAbilities,
     });
 }
 

@@ -30,13 +30,23 @@ function randomChain(rng) {
     const pickups = [];
     let x = W / 2;
     let y = 0;
+    // Blues are emitted ONLY as the generator does — a green→blue→green column
+    // stepping stone (same x): the row after a blue is forced to its green top,
+    // and a blue is placed only when a green can sit above it (i < n). This
+    // matches braidBlueInvariantErrors, so the suppressing verifier (which treats
+    // a blue as invisible except that stone) is exercised on realistic geometry.
+    let forceStoneTop = false;
     for (let i = 1; i <= n; i++) {
         y -= PLAIN_DY;
-        const roll = rng.next();
         let type = 'green';
         let dx = 0;
-        if (roll < 0.5) dx = [-40, 0, 40][Math.floor(rng.next() * 3)]; // arrow gate / straight
-        else if (roll < 0.65) type = 'blue';                            // pass-through blue (dx 0)
+        if (forceStoneTop) {
+            forceStoneTop = false; // green directly above the blue, same column (dx 0)
+        } else {
+            const roll = rng.next();
+            if (roll < 0.5) dx = [-40, 0, 40][Math.floor(rng.next() * 3)]; // arrow gate / straight
+            else if (roll < 0.65 && i < n) { type = 'blue'; forceStoneTop = true; } // blue stone (needs a green above)
+        }
         x = (((x + dx) % W) + W) % W;
         plats.push({ id: `b${i}`, x, y, type });
         if (rng.next() < 0.4) pickups.push({ id: `pk${i}`, x, y: y - 20, on: `b${i}` });
@@ -59,13 +69,18 @@ describe('deriveBraidAccessRules — fork-free fuzz vs full solver (all subsets)
         let goalsChecked = 0;
         for (let t = 0; t < 24; t++) {
             const level = randomChain(rng);
-            const full = deriveAccessRules(level, { constants: C });
+            // Oracle = the full-graph solver under exhaustivePhases: the ∀-phase,
+            // FERRY-AWARE model (no blue suppression). The default braid derive
+            // SUPPRESSES blues (treats them as pure stepping stones), so it must
+            // reproduce the ferry-aware oracle on this realistic geometry — i.e.
+            // the suppressed shortcut never over- nor under-claims a requirement.
+            const oracle = deriveAccessRules(level, { constants: C, exhaustivePhases: true });
             const braid = deriveBraidAccessRules(level, { constants: C });
-            expect(braid.defects, `chain ${t} defects`).toEqual(full.defects);
+            expect(braid.defects, `chain ${t} defects`).toEqual(oracle.defects);
             for (const kind of ['exits', 'pickups']) {
-                for (const id of Object.keys(full[kind])) {
+                for (const id of Object.keys(oracle[kind])) {
                     expect(braid[kind][id].minimalSets, `chain ${t} ${kind} ${id}`)
-                        .toEqual(full[kind][id].minimalSets);
+                        .toEqual(oracle[kind][id].minimalSets);
                     goalsChecked++;
                 }
             }

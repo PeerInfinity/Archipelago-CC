@@ -354,18 +354,18 @@ describe('braid Regime 2 — moving-blue fast-phase path ≡ exhaustive (derive 
                 expect(fast.defects).toEqual(exhaustive.defects);
                 expect(normSets(fast)).toEqual(normSets(exhaustive));
 
-                // Braid-vs-FULL cross-check on blue. The fast≡exhaustive assert
-                // above CANNOT catch a touchableMovers regression — both phase
-                // paths share touchableMovers, so they shift together. The full
-                // N² graph derive never uses the row-aware flood (nor its
-                // upwardMoversOnly prune), so it is an INDEPENDENT oracle for
-                // every goal's minimal sets. Bounded: the full solver enumerates
-                // the blue's sweep phases and is slow, so only the cheapest
-                // shapes and first seed cross-check full.
+                // Braid-vs-FULL cross-check on blue, against the full N² graph
+                // under exhaustivePhases — the ∀-phase, FERRY-AWARE ground truth
+                // (no blue suppression). This is the INDEPENDENT oracle the
+                // suppressing default braid derive must reproduce: it confirms
+                // suppression never over- nor under-claims a requirement on real
+                // generated geometry. Bounded: the ferry-aware full solver
+                // enumerates the blue's sweep phases and is slow, so only the
+                // cheapest shapes and first seed cross-check it.
                 const fullSeedCap = sh.name === 'blue+arrow+springs' ? 1 : 2;
                 if (seed <= fullSeedCap) {
                     const { includePlatforms, ...fullBase } = base;
-                    const full = deriveAccessRules(level, fullBase);
+                    const full = deriveAccessRules(level, { ...fullBase, exhaustivePhases: true });
                     expect(full.defects, 'full defects').toEqual([]);
                     for (const g of [...sh.exits, ...sh.pickups]) {
                         const b = (fast.exits[g.id] ?? fast.pickups[g.id]).minimalSets;

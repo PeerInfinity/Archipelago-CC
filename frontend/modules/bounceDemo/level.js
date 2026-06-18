@@ -55,6 +55,36 @@ function checkEntities(errors, level, key, { requireOn } = {}) {
  * means valid. Geometry *quality* (reachability, spacing) is the
  * solver's and the generator's business, not the validator's.
  */
+/**
+ * Braid-blue placement invariant: every blue is a green→blue→green column
+ * stepping stone — a green platform directly below AND directly above it, both
+ * sharing its column (within COL px). The derive verifier RELIES on this:
+ * `canJump` suppresses moving blues for every edge except that recognized
+ * stepping stone (avoiding sweep-phase enumeration), which is sound ONLY when no
+ * blue is ever a ceiling blue, an adjacent-blue stack, or sits directly under an
+ * offset platform — any of which would let a suppressed blue mis-derive (the
+ * suppressed edge can OVER-claim reachability). Braid-only: the column path's
+ * legitimate ceiling blues are not checked here. Returns [] when clean.
+ */
+export function braidBlueInvariantErrors(level, COL = 2) {
+    const errors = [];
+    for (const b of level.platforms ?? []) {
+        if (b.type !== 'blue') continue;
+        const col = level.platforms.filter((p) => p.id !== b.id && Math.abs(p.x - b.x) <= COL);
+        const below = col.filter((p) => p.y > b.y).sort((a, c) => a.y - c.y)[0];
+        const above = col.filter((p) => p.y < b.y).sort((a, c) => c.y - a.y)[0];
+        if (!below || below.type !== 'green') {
+            errors.push(`blue '${b.id}': not a stepping stone — directly below in column is `
+                + `${below ? `'${below.id}' (${below.type})` : 'absent'}, expected green`);
+        }
+        if (!above || above.type !== 'green') {
+            errors.push(`blue '${b.id}': not a stepping stone — directly above in column is `
+                + `${above ? `'${above.id}' (${above.type})` : 'absent (ceiling blue)'}, expected green`);
+        }
+    }
+    return errors;
+}
+
 export function validateLevel(level) {
     const errors = [];
     if (!level || typeof level !== 'object') return ['level must be an object'];

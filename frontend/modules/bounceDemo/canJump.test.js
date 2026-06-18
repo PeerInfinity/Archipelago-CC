@@ -384,3 +384,54 @@ describe('dj aligned-stride fast path ≡ exhaustive phase enumeration', () => {
         }
     }, 300000);
 });
+
+describe('suppressBlues: a blue is a pure stepping stone (gated Regime-2 derive)', () => {
+    const DJ = PROFILES.dj.constants;
+    const sup = { constants: DJ, suppressBlues: true };
+    const fa = { constants: DJ }; // ferry-aware default
+    // g0 → blue → g1 column stone, plus an offset tip one gap above g1 (needs an
+    // arrow). Under suppressBlues the blue is invisible except the stone.
+    const level = {
+        id: 'dj_suppress', size: { width: 600, height: 700 },
+        platforms: [
+            { id: 'g0', x: 300, y: 500, type: 'green' },
+            { id: 'bl', x: 300, y: 410, type: 'blue', sweep: { min: 15, max: 585 } },
+            { id: 'g1', x: 300, y: 320, type: 'green' },
+            { id: 'tip', x: 415, y: 230, type: 'green' },
+        ],
+        springs: [], jetpacks: [], pickups: [], portals: [],
+    };
+
+    it('the stone still climbs (g0→g1 composite) but the blue never launches', () => {
+        expect(canJump(level, 'g0', 'g1', { blue: true }, sup)).toBe(true);   // recognizer
+        expect(canJump(level, 'g0', 'bl', { blue: true }, sup)).toBe(true);   // catch
+        expect(canJump(level, 'bl', 'g1', { blue: true }, sup)).toBe(false);  // blue never launches
+        expect(canJump(level, 'bl', 'g1', { blue: true, left: true, right: true }, sup)).toBe(false);
+    });
+
+    it('an offset target above the stone needs its arrow — the ferry is not modelled', () => {
+        // g1→tip is +115 right: under suppression the blue can not ferry the
+        // player rightward, so the arrow is required (a conservative gate; a
+        // skilled player MIGHT ferry-bypass, which we accept).
+        expect(canJump(level, 'g1', 'tip', { blue: true }, sup)).toBe(false);
+        expect(canJump(level, 'g1', 'tip', { blue: true, right: true }, sup)).toBe(true);
+    });
+
+    it('suppression is OFF by default — a narrow blue IS a launch platform without the flag', () => {
+        // Narrow sweep (±60 of the column): arrows can correct from every phase,
+        // so ferry-aware bl→g1 launches — but suppressed still treats the blue as
+        // a non-launcher. A clean opt-in divergence (the rest of this file
+        // exercises the unchanged default path).
+        const narrow = {
+            ...level,
+            platforms: [
+                { id: 'g0', x: 300, y: 500, type: 'green' },
+                { id: 'bl', x: 300, y: 410, type: 'blue', sweep: { min: 240, max: 360 } },
+                { id: 'g1', x: 300, y: 320, type: 'green' },
+            ],
+        };
+        const ab = { blue: true, left: true, right: true };
+        expect(canJump(narrow, 'bl', 'g1', ab, fa)).toBe(true);   // ferry-aware: launches
+        expect(canJump(narrow, 'bl', 'g1', ab, sup)).toBe(false); // suppressed: never launches
+    });
+});

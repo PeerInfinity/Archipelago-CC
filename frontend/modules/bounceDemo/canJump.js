@@ -493,6 +493,25 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
             && columnSteppingStoneReachable(level, from, to, abilities, C)) {
         return { ok: true, witnesses: [{ x0: 0, hover: 0, t0: 0, policy: 'column-stone' }] };
     }
+    // SUPPRESS moving blues for every edge that ISN'T that stepping stone (opt-in
+    // via suppressBlues — the gated Regime-2 derive sets it; see
+    // deriveBraidAccessRules). Sound ONLY when every blue is a green→blue→green
+    // column stone (generator invariant braidBlueInvariantErrors, enforced for
+    // Regime 2), so the recognizer above is the sole edge that may use a blue.
+    // Everywhere else the blue is then invisible: it never launches, and the
+    // player's "ferry" — fall off a wide blue and re-bounce at a phase-chosen x
+    // to bypass an arrow gate — is DELIBERATELY not modelled (it only ever works
+    // at some sweep phases, never surviving the ∀-phase quantification on stone
+    // geometry, so dropping it keeps the rule conservative: a skilled player may
+    // sequence-break but the rule never over-claims). With no mover left the edge
+    // is phase-free (L=1) — this replaces phase tracking in Regime 2. The flag is
+    // OFF for Regime 1 (whose decorative blues are NOT stones and ARE load-
+    // bearing) and the full-graph oracle, which keep the ferry-aware model.
+    if (opts.suppressBlues && !opts.exhaustivePhases
+            && movingBlues(level, abilities, C).length > 0) {
+        if (from && from.type === 'blue' && from.sweep) return fail; // a stone, never a launcher
+        abilities = { ...abilities, blue: false }; // blues invisible for this edge
+    }
     const maxFrames = opts.maxFrames ?? 600;
     const targetX = to.sweep ? (to.sweep.min + to.sweep.max) / 2 : to.x;
     const policies = policiesFor(targetX, abilities, C);

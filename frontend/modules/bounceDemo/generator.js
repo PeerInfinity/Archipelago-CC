@@ -40,7 +40,7 @@ import { createRng } from '../shared/rng.js';
 import { DEFAULTS, PROFILES, launchRise, step } from './physics.js';
 import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
 import { reachableBraidPlatforms } from './canJump.js';
-import { validateLevel } from './level.js';
+import { validateLevel, braidBlueInvariantErrors } from './level.js';
 import {
     ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, BOUNCE_OBSTACLE_ID_BY_ABILITY,
 } from './apRules.js';
@@ -1785,6 +1785,12 @@ function* generateBraidFromSpecsGen({
             catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
             const modelErrors = validateLevel(level);
             if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
+            // Hard invariant: every blue must be a green→blue→green stepping
+            // stone. The derive verifier suppresses blues everywhere else, which
+            // is sound ONLY under this invariant — so a violation is a generator
+            // bug that would silently emit an over-permissive rule. Fail loudly.
+            const blueErrors = braidBlueInvariantErrors(level);
+            if (blueErrors.length > 0) throw new Error(`braid('${id}'): blue-placement invariant violated (suppression unsound): ${blueErrors[0]}`);
             // The free arrow is always-held (treated as free) and portal hosts
             // are terminal — so an offset portal tip derives its gate set, not
             // [freeArrow], and can't leak a skip route past a gate.
@@ -1814,6 +1820,11 @@ function* generateBraidFromSpecsGen({
         catch (err) { rejected.push(`attempt ${attempt}: ${err.message}`); continue; }
         const modelErrors = validateLevel(level);
         if (modelErrors.length > 0) { rejected.push(`attempt ${attempt}: ${modelErrors[0]}`); continue; }
+        // NB: no blue-stepping-stone invariant here. Regime 1 (top-down, arrows
+        // free) verifies with a single full-ability ferry-AWARE flood (blues NOT
+        // suppressed), so its decorative non-stone blues are handled correctly and
+        // need not conform. The invariant is required only where the gated derive
+        // suppresses blues (Regime 2, below).
         // Single full-ability reachability: every portal/pickup host reachable
         // from the entrance when the player holds all free abilities. The braid
         // is layered by rows with adjacent-row-only edges, so the row-aware
