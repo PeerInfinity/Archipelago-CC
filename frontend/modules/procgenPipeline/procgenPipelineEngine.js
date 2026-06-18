@@ -22,6 +22,7 @@ import {
     SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
     OPPOSITE_SIDE, SIDE_DELTAS,
     mirrorTileAcrossSide,
+    REGION_GROW_STEP,
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
@@ -2189,38 +2190,32 @@ function assembleZoneRegion({
 // generateRegionGen is the generator form (forwards the zone adapter's
 // per-attempt progress events); generateRegion drains it synchronously.
 
+// Retry-then-grow budget for fitting every location into a procedural
+// (maze) region. Re-roll the wall layout this many times at the requested
+// size first (a fresh layout usually frees enough reachable floor)...
+const LOCATION_FIT_RETRIES_BEFORE_GROW = 4;
+// ...then grow the region on each subsequent attempt, up to this many
+// attempts total before failing loudly. A location drop is rare (~1% of
+// regions) but must never silently happen, so the budget is generous.
+const LOCATION_FIT_MAX_ATTEMPTS = 10;
+
 function generateRegionProcedural(spec) {
     const adapter = getAdapter(spec.substrate);
-    const core = adapter.generateRegionCore({
-        region_id: spec.region_id,
-        size: spec.size,
-        entrances: spec.entrances ?? [],
-        exits: (spec.exits ?? []).map((e) => ({
-            ...(e.exit_id != null ? { exit_id: e.exit_id } : {}),
-            ...(e.exitName != null ? { exitName: e.exitName } : {}),
-            ...(e.side ? { side: e.side } : {}),
-            ...(e.tile ? { tile: e.tile } : {}),
-            ...(e.target_region != null ? { targetRegion: e.target_region } : {}),
-        })),
-        item_lib: spec.itemLib,
-        obstacle_lib: spec.obstacleLib,
-        rng: spec.rng,
-        params: spec.params,
-        biome: spec.biome ?? null,
-    });
 
-    // Build exit_rules / location_rules / item_placements from the spec,
-    // in spec order, so placeFromRules sees the same map contents and key
-    // order it did when the caller built these inline.
-    const exit_rules = {};
-    for (const e of spec.exits ?? []) {
-        if (!e.access_rule) continue;
-        let exitId = e.exit_id;
-        if (exitId == null && e.side != null) {
-            exitId = core.exits_placed.find((p) => p.side === e.side)?.exit_id;
-        }
-        if (exitId != null) exit_rules[exitId] = e.access_rule;
-    }
+    // Core exit specs — size-independent, so reused across retry-grow
+    // attempts below.
+    const coreExits = (spec.exits ?? []).map((e) => ({
+        ...(e.exit_id != null ? { exit_id: e.exit_id } : {}),
+        ...(e.exitName != null ? { exitName: e.exitName } : {}),
+        ...(e.side ? { side: e.side } : {}),
+        ...(e.tile ? { tile: e.tile } : {}),
+        ...(e.target_region != null ? { targetRegion: e.target_region } : {}),
+    }));
+
+    // Build location_rules / item_placements from the spec, in spec order,
+    // so placeFromRules sees the same map contents and key order it did
+    // when the caller built these inline. (exit_rules depends on the core's
+    // resolved exit_ids, so it's rebuilt per attempt inside the loop.)
     const location_rules = {};
     const item_placements = [];
     for (const loc of spec.locations ?? []) {
@@ -2229,10 +2224,69 @@ function generateRegionProcedural(spec) {
             item_placements.push({ item_id: loc.item, location_id: loc.id });
         }
     }
+    // Every location id placeFromRules is responsible for realising.
+    const requestedLocIds = new Set([
+        ...Object.keys(location_rules),
+        ...item_placements.map((p) => p.location_id),
+    ]);
 
-    const placement = adapter.placeFromRules(core.world, {
-        exit_rules, location_rules, item_placements, rng: spec.rng,
-    });
+    // Retry-then-grow so a location is NEVER silently dropped. A maze's
+    // wall layout can leave too little entrance-reachable floor to host
+    // every location, in which case placeFromRules skips the overflow
+    // (pickReachableFloorTile returns null). Re-running generateRegionCore
+    // advances the rng → a fresh wall layout that usually frees floor;
+    // after a few same-size re-rolls, grow the region. Throw loudly if even
+    // the grown region can't fit them. For the common case (everything
+    // fits on attempt 0) the loop runs exactly once, leaving rng draws and
+    // geometry identical to the pre-retry behaviour.
+    let size = { width: spec.size.width, height: spec.size.height };
+    let core = null;
+    let placement = null;
+    let exit_rules = null;
+    for (let attempt = 0; attempt <= LOCATION_FIT_MAX_ATTEMPTS; attempt++) {
+        core = adapter.generateRegionCore({
+            region_id: spec.region_id,
+            size,
+            entrances: spec.entrances ?? [],
+            exits: coreExits,
+            item_lib: spec.itemLib,
+            obstacle_lib: spec.obstacleLib,
+            rng: spec.rng,
+            params: spec.params,
+            biome: spec.biome ?? null,
+        });
+        // exit_rules maps the core's resolved exit_id (by side) to the
+        // spec's access rule — rebuilt per attempt since exits_placed is
+        // re-resolved each time generateRegionCore runs.
+        exit_rules = {};
+        for (const e of spec.exits ?? []) {
+            if (!e.access_rule) continue;
+            let exitId = e.exit_id;
+            if (exitId == null && e.side != null) {
+                exitId = core.exits_placed.find((p) => p.side === e.side)?.exit_id;
+            }
+            if (exitId != null) exit_rules[exitId] = e.access_rule;
+        }
+        placement = adapter.placeFromRules(core.world, {
+            exit_rules, location_rules, item_placements, rng: spec.rng,
+        });
+        const placedIds = new Set(
+            (placement.placed_locations ?? []).map((p) => p.location_id));
+        if ([...requestedLocIds].every((id) => placedIds.has(id))) break;
+        if (attempt === LOCATION_FIT_MAX_ATTEMPTS) {
+            throw new Error(
+                `generateRegionProcedural: could not place all `
+                + `${requestedLocIds.size} location(s) in '${spec.region_id}' `
+                + `after ${LOCATION_FIT_MAX_ATTEMPTS} retries `
+                + `(final ${size.width}x${size.height})`);
+        }
+        if (attempt >= LOCATION_FIT_RETRIES_BEFORE_GROW) {
+            size = {
+                width: size.width + REGION_GROW_STEP,
+                height: size.height + REGION_GROW_STEP,
+            };
+        }
+    }
     const extracted_rules = adapter.extractPathsAndObstacles(
         core.world, { regionId: spec.region_id });
 
