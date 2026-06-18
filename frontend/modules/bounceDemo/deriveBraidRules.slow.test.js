@@ -1,16 +1,20 @@
 /**
  * Step 1 of braid Regime 2 (NewDocs/plans/procedural-generation/braid-regime2.md),
  * the thorough regression guard: across many RANDOMISED fork-free chains and
- * EVERY ability subset, the row-aware deriveBraidAccessRules must produce the
- * SAME per-goal minimal sets (and defects) as the full-graph deriveAccessRules.
+ * EVERY ability subset, the default (blue-SUPPRESSING) deriveBraidAccessRules
+ * must produce the SAME per-goal minimal sets (and defects) as the FERRY-AWARE
+ * ground truth — the full-graph deriveAccessRules under `exhaustivePhases`. This
+ * is the primary soundness gate for the suppression model: it must never over-
+ * nor under-claim a requirement vs the full ∀-phase model.
  *
  * Fork-free = one climbable platform per row (Regime-2 geometry), so down /
  * within-row-wrap edges are redundant and the adjacent-row flood is
  * verdict-identical to the full solver under partial abilities too. Chains mix
- * arrow gates (dx ±40), straights (dx 0) and pass-through moving blues — the
- * case that needs the flood's transparent-blue-row skip handling.
+ * arrow gates (dx ±40), straights (dx 0) and green→blue→green column stepping
+ * stones (matching braidBlueInvariantErrors — the geometry suppression assumes).
  *
- * Slow because each chain runs both derivers over 2^|universe| subsets.
+ * Slow because the exhaustivePhases oracle enumerates the blue's sweep phases
+ * across 2^|universe| subsets (the default braid side is cheap/suppressed).
  */
 import { describe, it, expect } from 'vitest';
 import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
