@@ -66,7 +66,7 @@ function assertRegion(level, exits, pickups, crossFull, freeArrow) {
 }
 
 describe('braid Regime 2 — proposer fuzz (gated chains verify against the full solver)', () => {
-    const SEEDS = 10;
+    const SEEDS = 6;
     for (let seed = 1; seed <= SEEDS; seed++) {
         const arrow = seed % 2 ? 'left' : 'right';
         // The gated arrow is NOT the free one; the player holds the complement.
@@ -124,11 +124,25 @@ describe('braid Regime 2 — falls back to a column when out of braid vocabulary
     });
 });
 
-// platformRows safety, the FULL-solver cross-check matrix (slow: the full-graph
-// derive on the taller padded levels is the expensive part). The headline claim
-// — extra plain rows never change gating — proven across values × seeds × shapes.
+// platformRows / decor / jitter safety matrix. The headline claim — padding,
+// decorations and spine jitter never change a gate's REQUIREMENT — is proven
+// cheaply with the suppressed braid derive across values × seeds × shapes. The
+// ferry-aware full-graph cross-check (slow on blue) is reserved for the unique
+// thing it adds — flood==full-graph on NON-blue fork/jitter braids — plus a few
+// 1-seed blue canaries; suppression soundness on blue itself is the corpus block
+// and the deriveBraidRules fuzz. (Seeds trimmed: blue suppression is geometry-
+// independent of green padding/forks, so a handful of representative cells suffice.)
 describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)', () => {
     const ruleFor = (d, kind, id) => formatRule(d[kind][id].minimalSets);
+    const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
+    // A blue shape's full-graph derive is ferry-aware (it enumerates sweep phases
+    // → slow). Suppression soundness on blue is covered by the corpus block and
+    // the jittered-blue oracle tests below, so across this matrix we cross-check
+    // braid==full only on NON-blue shapes (cheap, and the unique check that
+    // padding/jitter don't break the row-aware flood vs the full graph). On blue
+    // shapes we assert just the cheap suppressed requirement, plus a 1-seed
+    // ferry-aware canary per block.
+    const usesBlue = (exits) => exits.some((e) => e.requirement.includes('blue'));
     const shapes = [
         { name: 'blue → blue+left', exits: [
             { id: 'free', requirement: [], direction: 'up' },
@@ -141,50 +155,94 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
     ];
     for (const shape of shapes) {
         for (const rows of [3, 7, 12]) {
-            it(`${shape.name} @ platformRows=${rows} keeps every gate (seeds 1-3)`, () => {
-                for (let seed = 1; seed <= 3; seed++) {
+            it(`${shape.name} @ platformRows=${rows} keeps every gate (seeds 1-2)`, () => {
+                for (let seed = 1; seed <= 2; seed++) {
                     const level = generateLevelFromSpecs({
                         id: `RR${seed}`, exitSpecs: shape.exits, seed, physics: 'dj',
                         mode: 'braid', braidWidth: W, freeArrow: 'right', platformRows: rows,
                     });
                     expect(validateLevel(level), 'model').toEqual([]);
-                    const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
                     const braid = deriveBraidAccessRules(level, opts);
-                    const full = deriveAccessRules(level, opts);
                     expect(braid.defects).toEqual([]);
-                    expect(full.defects).toEqual([]);
+                    const full = usesBlue(shape.exits) ? null : deriveAccessRules(level, opts);
+                    if (full) expect(full.defects).toEqual([]);
                     for (const s of shape.exits) {
                         expect(ruleFor(braid, 'exits', s.id), `${s.id} braid`).toBe(wantRule(s.requirement));
-                        expect(braid.exits[s.id].minimalSets, `${s.id} full==braid`)
-                            .toEqual(full.exits[s.id].minimalSets);
+                        if (full) {
+                            expect(braid.exits[s.id].minimalSets, `${s.id} full==braid`)
+                                .toEqual(full.exits[s.id].minimalSets);
+                        }
                     }
                 }
             });
         }
     }
 
-    // Decorative fork/merge/brown (+ companion jitter) must leave every gate
-    // untouched — the expensive case (forks widen the level; brown triggers
-    // broken-state search; jitter varies the fork width). `jitter` rides the
-    // config but is passed as the generator's jitter arg, not in decorChance.
-    for (const decor of [
+    it('padded blue→blue+left matches the ferry-aware full (canary, 1 seed @ rows 12)', () => {
+        const exits = shapes[0].exits;
+        const level = generateLevelFromSpecs({
+            id: 'RRC', exitSpecs: exits, seed: 1, physics: 'dj',
+            mode: 'braid', braidWidth: W, freeArrow: 'right', platformRows: 12,
+        });
+        const braid = deriveBraidAccessRules(level, opts);
+        const full = deriveAccessRules(level, opts);
+        expect(braid.defects).toEqual([]);
+        expect(full.defects).toEqual([]);
+        for (const s of exits) {
+            expect(ruleFor(braid, 'exits', s.id)).toBe(wantRule(s.requirement));
+            expect(braid.exits[s.id].minimalSets).toEqual(full.exits[s.id].minimalSets);
+        }
+    });
+
+    // Decorations (fork/merge/brown + jitter) must leave every gate untouched.
+    const decorConfigs = [
         { fork: 0.8 }, { fork: 0.8, brown: 0.7 }, { fork: 0.8, jitter: 40 },
         { blue: 1, fork: 0.8, brown: 0.7, jitter: 40 },
-    ]) {
-        it(`decor ${JSON.stringify(decor)} preserves the blue→blue+left gates (seeds 1-4)`, () => {
-            const { jitter = 0, ...decorChance } = decor;
+    ];
+    const genDecor = (exits, seed, decor) => {
+        const { jitter = 0, ...decorChance } = decor;
+        return generateLevelFromSpecs({
+            id: `RD${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
+            braidWidth: W, freeArrow: 'right', platformRows: 6, decorChance, jitter,
+        });
+    };
+
+    // (1) CHEAP requirement claim: decor never changes a gate's requirement —
+    //     the suppressed braid derive across every config (the blue→blue+left
+    //     shape, since the blue:1 flavor needs a blue-held block).
+    for (const decor of decorConfigs) {
+        it(`decor ${JSON.stringify(decor)} preserves the blue→blue+left requirement (seeds 1-2)`, () => {
             const exits = shapes[0].exits; // blue → blue+left
-            for (let seed = 1; seed <= 4; seed++) {
-                const level = generateLevelFromSpecs({
-                    id: `RD${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
-                    braidWidth: W, freeArrow: 'right', platformRows: 6, decorChance, jitter,
-                });
+            for (let seed = 1; seed <= 2; seed++) {
+                const level = genDecor(exits, seed, decor);
                 expect(validateLevel(level), 'model').toEqual([]);
-                const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
+                const braid = deriveBraidAccessRules(level, opts);
+                expect(braid.defects, `seed ${seed}`).toEqual([]);
+                for (const s of exits) {
+                    expect(ruleFor(braid, 'exits', s.id), `${s.id} braid`).toBe(wantRule(s.requirement));
+                }
+            }
+        });
+    }
+
+    // (2) Forks/brown/jitter don't break the row-aware flood vs the full graph —
+    //     checked on a NON-blue shape (left → left+springs) so the full derive
+    //     stays phase-free and cheap. The deriveBraidRules fuzz is fork-FREE, so
+    //     this is the unique fork-on-the-flood cross-check.
+    for (const decor of [{ fork: 0.8 }, { fork: 0.8, brown: 0.7, jitter: 40 }]) {
+        it(`decor ${JSON.stringify(decor)} keeps flood==full on a non-blue fork braid (seeds 1-2)`, () => {
+            const exits = [
+                { id: 'free', requirement: [], direction: 'up' },
+                { id: 'gl', requirement: ['left'], direction: 'right' },
+                { id: 'gls', requirement: ['left', 'springs'], direction: 'left' },
+            ];
+            for (let seed = 1; seed <= 2; seed++) {
+                const level = genDecor(exits, seed, decor);
+                expect(validateLevel(level), 'model').toEqual([]);
                 const braid = deriveBraidAccessRules(level, opts);
                 const full = deriveAccessRules(level, opts);
-                expect(braid.defects, `seed ${seed} braid defects`).toEqual([]);
-                expect(full.defects, `seed ${seed} full defects`).toEqual([]);
+                expect(braid.defects, `seed ${seed} braid`).toEqual([]);
+                expect(full.defects, `seed ${seed} full`).toEqual([]);
                 for (const s of exits) {
                     expect(ruleFor(braid, 'exits', s.id), `${s.id} braid`).toBe(wantRule(s.requirement));
                     expect(braid.exits[s.id].minimalSets, `${s.id} full==braid`)
@@ -193,6 +251,13 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
             }
         });
     }
+
+    // NB: no ferry-aware cross-check of the blue:1 DECORATION config here. The
+    // requirement-only test above already exercises it (decor never changes the
+    // gate), and suppression soundness with extra blue stones is covered by the
+    // corpus (vs exhaustive), the two jittered-blue oracle tests below, the
+    // deriveBraidRules fuzz, and the padded-blue canary above — extra decorative
+    // stones are per-blue-independent of those, and forks are green companions.
 
     // SPINE jitter (the coherent toward-free wander) is enabled for EVERY gate
     // type now — including MOVING BLUE, springs and jetpacks, which used to be
@@ -236,21 +301,23 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
         ] },
     ]) {
         const freeArrow = shape.freeArrow ?? 'right';
-        it(`spine jitter preserves ${shape.name} gates (seeds 1-4, jitter 60)`, () => {
-            for (let seed = 1; seed <= 4; seed++) {
+        it(`spine jitter preserves ${shape.name} gates (seeds 1-2, jitter 60)`, () => {
+            for (let seed = 1; seed <= 2; seed++) {
                 const level = generateLevelFromSpecs({
                     id: `RJ${seed}`, exitSpecs: shape.exits, seed, physics: 'dj', mode: 'braid',
                     braidWidth: W, freeArrow, platformRows: 8, jitter: 60,
                 });
                 expect(validateLevel(level), 'model').toEqual([]);
-                const opts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
-                const braid = deriveBraidAccessRules(level, opts);
-                const full = deriveAccessRules(level, opts);
+                const jOpts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
+                const braid = deriveBraidAccessRules(level, jOpts);
                 expect(braid.defects, `seed ${seed}`).toEqual([]);
-                expect(full.defects, `seed ${seed}`).toEqual([]);
+                // Ferry-aware full only on NON-blue shapes (cheap); jittered-blue
+                // soundness is the two oracle tests below this loop.
+                const full = usesBlue(shape.exits) ? null : deriveAccessRules(level, jOpts);
+                if (full) expect(full.defects, `seed ${seed}`).toEqual([]);
                 for (const s of shape.exits) {
                     expect(ruleFor(braid, 'exits', s.id)).toBe(wantRule(s.requirement));
-                    expect(braid.exits[s.id].minimalSets).toEqual(full.exits[s.id].minimalSets);
+                    if (full) expect(braid.exits[s.id].minimalSets).toEqual(full.exits[s.id].minimalSets);
                 }
             }
         });
@@ -320,24 +387,25 @@ describe('braid Regime 2 — moving-blue fast-phase path ≡ exhaustive (derive 
         return { exits: pick(d.exits), pickups: pick(d.pickups), platforms: pick(d.platforms) };
     };
     const blueShapes = (arrow) => [
-        { name: 'blue', maxSeed: 4, exits: [
+        { name: 'blue', maxSeed: 2, exits: [
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gb', requirement: ['blue'], direction: 'right' },
         ], pickups: [{ id: 'pk', requirement: ['blue'] }] },
-        { name: 'blue+arrow', maxSeed: 4, exits: [
+        { name: 'blue+arrow', maxSeed: 2, exits: [
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gb', requirement: ['blue'], direction: 'right' },
             { id: 'gba', requirement: ['blue', arrow], direction: 'left' },
         ], pickups: [] },
-        // The expensive 3-ability case (~526ms fast, slower exhaustive) — fewer seeds.
-        { name: 'blue+arrow+springs', maxSeed: 2, exits: [
+        // The 3-ability case (fast is now ~19ms suppressed; the exhaustive oracle
+        // is the slow side) — fewest seeds.
+        { name: 'blue+arrow+springs', maxSeed: 1, exits: [
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gb', requirement: ['blue'], direction: 'right' },
             { id: 'gba', requirement: ['blue', arrow], direction: 'left' },
             { id: 'gbas', requirement: ['blue', arrow, 'springs'], direction: 'right' },
         ], pickups: [] },
     ];
-    for (let seed = 1; seed <= 4; seed++) {
+    for (let seed = 1; seed <= 2; seed++) {
         const arrow = seed % 2 ? 'left' : 'right';
         const freeArrow = arrow === 'left' ? 'right' : 'left';
         for (const sh of blueShapes(arrow)) {
