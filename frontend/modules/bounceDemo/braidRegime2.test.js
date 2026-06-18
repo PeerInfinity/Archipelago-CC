@@ -38,20 +38,25 @@ const wantRule = (req) => (req.length ? `(${[...req].sort().join(' AND ')})` : '
 // Both derives treat the free arrow as held and portal hosts as terminal — so
 // the offset portal tips derive their gate set (not [freeArrow]) and can't leak
 // a skip route; the full-graph derive is the apples-to-apples oracle.
-function expectGated(level, exitSpecs, pickupSpecs = [], freeArrow = FREE_ARROW) {
+// `crossFull` runs the full-graph deriveAccessRules oracle too (the
+// apples-to-apples cross-check). It is SLOW on tall/jittered levels (the full
+// N² graph, no row-aware shortcut), so callers that pad with platformRows or
+// jitter pass crossFull:false to stay within the fast suite's 10s budget — the
+// full cross-check for those shapes lives in braidRegime2.slow.test.js.
+function expectGated(level, exitSpecs, pickupSpecs = [], freeArrow = FREE_ARROW, crossFull = true) {
     expect(validateLevel(level), 'model errors').toEqual([]);
     const opts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
     const braid = deriveBraidAccessRules(level, opts);
-    const full = deriveAccessRules(level, opts);
+    const full = crossFull ? deriveAccessRules(level, opts) : null;
     expect(braid.defects, 'braid defects').toEqual([]);
-    expect(full.defects, 'full defects').toEqual([]);
+    if (full) expect(full.defects, 'full defects').toEqual([]);
     for (const s of exitSpecs) {
         expect(ruleFor(braid, 'exits', s.id)).toBe(wantRule(s.requirement));
-        expect(braid.exits[s.id].minimalSets).toEqual(full.exits[s.id].minimalSets);
+        if (full) expect(braid.exits[s.id].minimalSets).toEqual(full.exits[s.id].minimalSets);
     }
     for (const s of pickupSpecs) {
         expect(ruleFor(braid, 'pickups', s.id)).toBe(wantRule(s.requirement));
-        expect(braid.pickups[s.id].minimalSets).toEqual(full.pickups[s.id].minimalSets);
+        if (full) expect(braid.pickups[s.id].minimalSets).toEqual(full.pickups[s.id].minimalSets);
     }
 }
 
@@ -475,12 +480,14 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
         const b = gen({}, 2, 6, 40);
         expect(JSON.stringify(b)).not.toBe(JSON.stringify(a)); // no longer disabled
         expect(cols(b)).toBeGreaterThan(cols(a));              // genuinely spread
-        // gb still derives exactly [blue] despite the wander.
+        // gb still derives exactly [blue] despite the wander. Braid-only here
+        // (tall jittered blue level → full-graph oracle is slow); the full
+        // cross-check rides braidRegime2.slow.test.js (spine-jitter block).
         expectGated(b, [
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gb', requirement: ['blue'], direction: 'right' },
             { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
-        ]);
+        ], [], FREE_ARROW, false);
     });
 
     it('spine WANDERS for an arrow-gated level (no moving blue), gates intact', () => {
@@ -502,8 +509,9 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
     // the gated arrow is 'right'. A same-column spine hop has near-zero catch
     // tolerance, so jittered FLOAT columns mis-land (~17%) and re-gate; snapping
     // the wander to integer px fixes it. (The browser hit this as
-    // side_exit_N [springs] deriving [right, springs].) springs keeps this fast;
-    // the blue freeArrow=left case rides the slow full-graph matrix.
+    // side_exit_N [springs] deriving [right, springs].) The braid derive is what
+    // the generator emits, so it alone catches a re-gate; the full-graph oracle
+    // (slow on these 9 padded levels) rides braidRegime2.slow.test.js.
     it('jitter is robust with freeArrow=left (springs), gates intact', () => {
         const exits = [
             { id: 'free', requirement: [], direction: 'up' },
@@ -515,7 +523,7 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
                     id: `RL${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
                     braidWidth: W, freeArrow: 'left', platformRows: 8, jitter,
                 });
-                expectGated(level, exits, [], 'left');
+                expectGated(level, exits, [], 'left', false);
             }
         }
     });

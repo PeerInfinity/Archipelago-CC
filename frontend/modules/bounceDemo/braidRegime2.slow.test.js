@@ -255,6 +255,53 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
             }
         });
     }
+
+    // Full-graph oracle for the exact padded/jittered configs that braidRegime2's
+    // fast suite verifies braid-ONLY (those run a full-graph deriveAccessRules too
+    // slowly for the fast 10s budget — see expectGated's crossFull:false there).
+    // Keeping the full cross-check here loses no oracle coverage.
+    const fullCross = (level, exits, freeArrow, label) => {
+        expect(validateLevel(level), `${label} model`).toEqual([]);
+        const opts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
+        const braid = deriveBraidAccessRules(level, opts);
+        const full = deriveAccessRules(level, opts);
+        expect(braid.defects, `${label} braid`).toEqual([]);
+        expect(full.defects, `${label} full`).toEqual([]);
+        for (const s of exits) {
+            expect(ruleFor(braid, 'exits', s.id), `${label} ${s.id}`).toBe(wantRule(s.requirement));
+            expect(braid.exits[s.id].minimalSets, `${label} ${s.id} full==braid`)
+                .toEqual(full.exits[s.id].minimalSets);
+        }
+    };
+
+    it('moving-blue spine wander (seed 2, jitter 40): full == braid', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gbl', requirement: ['blue', 'left'], direction: 'left' },
+        ];
+        const level = generateLevelFromSpecs({
+            id: 'RF2', exitSpecs: exits, seed: 2, physics: 'dj', mode: 'braid',
+            braidWidth: W, freeArrow: 'right', platformRows: 6, jitter: 40,
+        });
+        fullCross(level, exits, 'right', 'blue wander');
+    });
+
+    it('springs freeArrow=left, small jitter (integer-snap regression): full == braid', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
+        ];
+        for (const seed of [1, 10, 13]) {
+            for (const jitter of [10, 20, 40]) {
+                const level = generateLevelFromSpecs({
+                    id: `RL${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
+                    braidWidth: W, freeArrow: 'left', platformRows: 8, jitter,
+                });
+                fullCross(level, exits, 'left', `springs seed ${seed} jitter ${jitter}`);
+            }
+        }
+    });
 });
 
 // CORPUS EQUIVALENCE GATE for the moving-blue phase fast path. The fast phase
