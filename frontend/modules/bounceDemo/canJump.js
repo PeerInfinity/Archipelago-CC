@@ -760,6 +760,16 @@ export function reachableBraidPlatforms(level, abilities, opts = {}) {
             }
             if (!passThrough[j]) break; // opaque row stops the skip-through
         }
+        // Try STATIC launchers before moving ones. A mover (blue) launcher forces
+        // the expensive from-moving ∀-phase canJump, but a blue is only ever a
+        // green→blue→green column stepping-stone: the green ABOVE it is already
+        // reached from the green BELOW via the O(1) composite recognizer
+        // (columnSteppingStoneReachable), so the blue-as-launcher edge is
+        // redundant and need never be evaluated when a static launcher succeeds
+        // first. The reachable set is the union over launchers (order-independent),
+        // so this only saves work — it never changes a verdict. Stable sort keeps
+        // the closest-row-first order within each group.
+        launchers.sort((a, b) => (moverIds.has(a) ? 1 : 0) - (moverIds.has(b) ? 1 : 0));
         for (const p of rows[i]) {
             for (const from of launchers) {
                 if (canJump(level, from, p.id, abilities, queryOpts)) {
