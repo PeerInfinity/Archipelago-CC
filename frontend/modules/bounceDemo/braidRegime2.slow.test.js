@@ -306,6 +306,26 @@ describe('braid Regime 2 — moving-blue fast-phase path ≡ exhaustive (derive 
                 const exhaustive = deriveBraidAccessRules(level, { ...base, exhaustivePhases: true });
                 expect(fast.defects).toEqual(exhaustive.defects);
                 expect(normSets(fast)).toEqual(normSets(exhaustive));
+
+                // Braid-vs-FULL cross-check on blue. The fast≡exhaustive assert
+                // above CANNOT catch a touchableMovers regression — both phase
+                // paths share touchableMovers, so they shift together. The full
+                // N² graph derive never uses the row-aware flood (nor its
+                // upwardMoversOnly prune), so it is an INDEPENDENT oracle for
+                // every goal's minimal sets. Bounded: the full solver enumerates
+                // the blue's sweep phases and is slow, so only the cheapest
+                // shapes and first seed cross-check full.
+                const fullSeedCap = sh.name === 'blue+arrow+springs' ? 1 : 2;
+                if (seed <= fullSeedCap) {
+                    const { includePlatforms, ...fullBase } = base;
+                    const full = deriveAccessRules(level, fullBase);
+                    expect(full.defects, 'full defects').toEqual([]);
+                    for (const g of [...sh.exits, ...sh.pickups]) {
+                        const b = (fast.exits[g.id] ?? fast.pickups[g.id]).minimalSets;
+                        const f = (full.exits[g.id] ?? full.pickups[g.id]).minimalSets;
+                        expect(f, `${g.id} braid==full`).toEqual(b);
+                    }
+                }
             });
         }
     }
