@@ -278,6 +278,39 @@ export function findDisconnectedCell(grid, rng, minGap = 2) {
     return candidates[Math.floor(rng.next() * candidates.length)];
 }
 
+/**
+ * Set-based twin of findDisconnectedCell, for callers that track
+ * occupancy in a Set of `${gx},${gy}` keys rather than a populated
+ * Grid (the sphere-growth placement pre-pass decides every cell
+ * before any region is built, so grid.allRegions() is still empty).
+ * Same semantics: an unbuilt cell at least `minGap` Manhattan-distance
+ * from every occupied cell, chosen uniformly via rng, or null when the
+ * grid is too crowded.
+ */
+function findDisconnectedCellFromOccupied(occupiedKeys, dims, rng, minGap = 2) {
+    const built = [...occupiedKeys].map((k) => {
+        const [gx, gy] = k.split(',').map(Number);
+        return { gx, gy };
+    });
+    if (built.length === 0) {
+        return { gx: Math.floor(dims.width / 2), gy: Math.floor(dims.height / 2) };
+    }
+    const candidates = [];
+    for (let gx = 0; gx < dims.width; gx++) {
+        for (let gy = 0; gy < dims.height; gy++) {
+            if (occupiedKeys.has(`${gx},${gy}`)) continue;
+            let minDist = Infinity;
+            for (const r of built) {
+                const d = Math.abs(gx - r.gx) + Math.abs(gy - r.gy);
+                if (d < minDist) minDist = d;
+            }
+            if (minDist >= minGap) candidates.push({ gx, gy });
+        }
+    }
+    if (candidates.length === 0) return null;
+    return candidates[Math.floor(rng.next() * candidates.length)];
+}
+
 // --- Incremental re-stitcher ---
 //
 // Resolves each built region's exit target_region values by consulting
@@ -3126,6 +3159,100 @@ export function* growSpheresGen(config) {
         if (!childrenByParent.has(node.parent)) childrenByParent.set(node.parent, []);
         childrenByParent.get(node.parent).push(node);
     }
+
+    // --- Placement pre-pass ---
+    //
+    // Assign every node its final cell + attachment side BEFORE any
+    // region is built. The parent's exit side is committed when the
+    // PARENT is built (from its children's node.side), and the child's
+    // entrance is mirrored across that same side — so the side and the
+    // child's actual cell must agree, which means the side has to be
+    // settled before the parent's build iteration. buildSphereTree
+    // picks each child's side blind to occupancy (no cells exist yet);
+    // here we have the grid, so we PREFER a free side whose neighbor
+    // cell is in-bounds and unoccupied, and fall back to a remote
+    // (teleporter) cell only when EVERY open side is blocked — a region
+    // can be fully surrounded by earlier-placed branches. This subsumes
+    // the old per-region "try node.side, else go remote" decision: it
+    // no longer commits to one occupancy-blind side and teleports away
+    // when a free adjacent slot was still available.
+    //
+    // Draw placement choices from a SEPARATE rng STREAM (a distinct rng
+    // object — seeding it identically to the main rng is fine, it's
+    // independent) so the main rng, which feeds each region's geometry in
+    // the build loop below, stays where the old per-region decision left
+    // it: the old loop drew the main rng for placement only when a node
+    // teleported, so absent teleporters the geometry stream is unchanged.
+    // Drawing placement from the main rng instead would shift every
+    // region's maze layout, and maze location placement is fragile enough
+    // (placeFromRules silently drops a location when no reachable floor
+    // tile is free) that the shift can break the sphere oracle.
+    //
+    // TEMPORARY: this is a patch, not the real fix. It keeps geometry
+    // stable but does NOT stop the placement change from exploring side
+    // configs that trip the same silent drop. See
+    // note_sphere_placement_separate_rng — the root fix is to harden maze
+    // location placement so it never silently drops a location.
+    const placeRng = createRng(seed);
+    const occupiedKeys = new Set();
+    const reservedSides = new Map(); // node.index -> Set of sides spoken for
+    for (const node of tree.nodes) {
+        const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
+        if (!parentNode) {
+            node.cell = startCell;
+            node.side = null;
+            node.isTeleporter = false;
+            occupiedKeys.add(cellKey(startCell));
+            continue;
+        }
+        if (!reservedSides.has(parentNode.index)) {
+            reservedSides.set(parentNode.index, new Set());
+        }
+        const hostReserved = reservedSides.get(parentNode.index);
+        // The host's entrance side (toward its OWN parent) hosts no
+        // child — that's where the host's back portal / parent sit.
+        const entranceOnHost = parentNode.side != null
+            ? OPPOSITE_SIDE[parentNode.side] : null;
+        const freeSides = SIDES.filter(
+            (s) => s !== entranceOnHost && !hostReserved.has(s));
+        if (freeSides.length === 0) {
+            // buildSphereTree caps children per host at the side budget
+            // (canHost: usedSides.size < 4), so this is unreachable; guard
+            // loudly rather than assign an undefined side.
+            throw new Error(`growSpheres: host '${parentNode.index}' has no free `
+                + 'side for a child — buildSphereTree side budget violated');
+        }
+        const openSides = freeSides.filter((s) => {
+            const neighbor = grid.neighborCell(parentNode.cell, s);
+            return neighbor && !occupiedKeys.has(cellKey(neighbor));
+        });
+        let side;
+        let cell;
+        let isTeleporter;
+        if (openSides.length > 0) {
+            side = openSides[Math.floor(placeRng.next() * openSides.length)];
+            cell = grid.neighborCell(parentNode.cell, side);
+            isTeleporter = false;
+        } else {
+            // Every open adjacent side is occupied/out-of-bounds: go
+            // remote. Still consume a free side so the parent has an
+            // exit to host the teleporter.
+            side = freeSides[Math.floor(placeRng.next() * freeSides.length)];
+            cell = findDisconnectedCellFromOccupied(
+                occupiedKeys, dims, placeRng, teleporterMinGap);
+            if (!cell) {
+                throw new Error('growSpheres: no free cell for region — '
+                    + 'pass larger growthParams.gridDims');
+            }
+            isTeleporter = true;
+        }
+        hostReserved.add(side);
+        node.cell = cell;
+        node.side = side;
+        node.isTeleporter = isTeleporter;
+        occupiedKeys.add(cellKey(cell));
+    }
+
     // Count gates: a multi-instance gate item demands its cumulative
     // count through the gate's sphere (makeHasRule emits args.count
     // only when > 1, so single-instance gates stay plain Has).
@@ -3136,26 +3263,10 @@ export function* growSpheresGen(config) {
     for (const node of tree.nodes) {
         const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
 
-        // Cell: geographic neighbor of the parent on the assigned side
-        // when free, teleporter to a disconnected cell otherwise.
-        let cell;
-        let isTeleporter = false;
-        if (!parentNode) {
-            cell = startCell;
-        } else {
-            const geo = grid.neighborCell(parentNode.cell, node.side);
-            if (geo && !grid.hasRegion(geo)) {
-                cell = geo;
-            } else {
-                cell = findDisconnectedCell(grid, rng, teleporterMinGap);
-                if (!cell) {
-                    throw new Error('growSpheres: no free cell for region — '
-                        + 'pass larger growthParams.gridDims');
-                }
-                isTeleporter = true;
-            }
-        }
-        node.cell = cell;
+        // Cell + side were resolved by the placement pre-pass above
+        // (occupancy-aware adjacency, remote only when fully surrounded).
+        const cell = node.cell;
+        const isTeleporter = node.isTeleporter;
         const region_id = regionIdForCell(cell);
         node.region_id = region_id;
 
