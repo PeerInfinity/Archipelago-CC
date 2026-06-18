@@ -222,15 +222,28 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
             { id: 'free', requirement: [], direction: 'up' },
             { id: 'gs', requirement: ['springs'], direction: 'right' },
         ] },
+        // freeArrow='left' — the spine drifts toward the LEFT edge, gated arrow is
+        // 'right'. This is the configuration the browser failed on (side_exit_N
+        // [springs] derived [right, springs]); covers the integer-snap fix in the
+        // mirrored direction. Blue exercises the slow moving-blue path too.
+        { name: 'free → springs (freeArrow=left)', freeArrow: 'left', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
+        ] },
+        { name: 'free → blue (freeArrow=left)', freeArrow: 'left', exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+        ] },
     ]) {
+        const freeArrow = shape.freeArrow ?? 'right';
         it(`spine jitter preserves ${shape.name} gates (seeds 1-4, jitter 60)`, () => {
             for (let seed = 1; seed <= 4; seed++) {
                 const level = generateLevelFromSpecs({
                     id: `RJ${seed}`, exitSpecs: shape.exits, seed, physics: 'dj', mode: 'braid',
-                    braidWidth: W, freeArrow: 'right', platformRows: 8, jitter: 60,
+                    braidWidth: W, freeArrow, platformRows: 8, jitter: 60,
                 });
                 expect(validateLevel(level), 'model').toEqual([]);
-                const opts = { constants: C, freeArrow: 'right', freeAbilities: ['right'], terminalPortals: true };
+                const opts = { constants: C, freeArrow, freeAbilities: [freeArrow], terminalPortals: true };
                 const braid = deriveBraidAccessRules(level, opts);
                 const full = deriveAccessRules(level, opts);
                 expect(braid.defects, `seed ${seed}`).toEqual([]);

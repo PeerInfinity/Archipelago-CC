@@ -497,4 +497,44 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
         expect(cols(g(40))).toBeGreaterThan(cols(g(0)));
         expectGated(g(40), arrowExits); // [left] still derived exactly
     });
+
+    // Regression: with freeArrow='left' the spine drifts toward the LEFT edge and
+    // the gated arrow is 'right'. A same-column spine hop has near-zero catch
+    // tolerance, so jittered FLOAT columns mis-land (~17%) and re-gate; snapping
+    // the wander to integer px fixes it. (The browser hit this as
+    // side_exit_N [springs] deriving [right, springs].) springs keeps this fast;
+    // the blue freeArrow=left case rides the slow full-graph matrix.
+    it('jitter is robust with freeArrow=left (springs), gates intact', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
+        ];
+        for (const seed of [1, 10, 13]) {
+            for (const jitter of [10, 20, 40]) {
+                const level = generateLevelFromSpecs({
+                    id: `RL${seed}`, exitSpecs: exits, seed, physics: 'dj', mode: 'braid',
+                    braidWidth: W, freeArrow: 'left', platformRows: 8, jitter,
+                });
+                expectGated(level, exits, [], 'left');
+            }
+        }
+    });
+
+    // The jittered spine columns are snapped to integer px (sub-pixel catch
+    // fragility). Assert that holds, so a future float regression is caught cheaply.
+    it('jittered spine columns are integer-valued', () => {
+        const exits = [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gs', requirement: ['springs'], direction: 'right' },
+        ];
+        const level = generateLevelFromSpecs({
+            id: 'RInt', exitSpecs: exits, seed: 3, physics: 'dj', mode: 'braid',
+            braidWidth: W, freeArrow: FREE_ARROW, platformRows: 10, jitter: 40,
+        });
+        const cols = new Set(level.platforms.map((p) => Math.round(p.x))).size;
+        expect(cols, 'should actually wander across columns').toBeGreaterThan(2);
+        for (const p of level.platforms) {
+            expect(Number.isInteger(p.x), `platform ${p.id} x=${p.x} not integer`).toBe(true);
+        }
+    });
 });

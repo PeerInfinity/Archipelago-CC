@@ -1460,10 +1460,15 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     };
     // A padding rung that WANDERS the spine (coherent toward-free shift); see the
     // JITTER note above. Goal/gate rungs use climbPlain (zero shift), so the wander
-    // lives entirely here.
+    // lives entirely here. Columns are SNAPPED TO INTEGER px: a same-column hop has
+    // near-zero catch tolerance (dj catch span is non-wrapping — physics §6), so
+    // ~17% of arbitrary float columns mis-land a zero-shift hop and re-gate, but
+    // integer columns are robust across every row (measured 0/thousands). W/2 and
+    // every offset are integers, so rounding the wander keeps the whole structure
+    // on the safe grid; jitter=0 is unaffected (no shift to round).
     const climbPad = () => {
         y -= PLAIN_DY;
-        prev = place(prev.x + spineJit(), y);
+        prev = place(Math.round(prev.x + spineJit()), y);
         return prev;
     };
     // Walk the coherent drift FORWARD (toward free, wrapping the ring) until the
@@ -1484,7 +1489,7 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
             // inside it (forward-coord 6). Else step forward, short of the seam.
             const target = (W + 6 - fp) <= FWD_HOP ? (W + 6) : Math.min(fp + FWD_HOP, W - SEAM_KEEP);
             y -= PLAIN_DY;
-            prev = place(xOfFwd(target), y);
+            prev = place(Math.round(xOfFwd(target)), y); // integer grid (see climbPad)
         }
     };
     // Gate row for the one arrow: gate platform toward the arrow, teleport host
