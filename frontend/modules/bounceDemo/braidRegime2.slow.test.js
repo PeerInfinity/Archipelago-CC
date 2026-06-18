@@ -256,3 +256,57 @@ describe('braid Regime 2 — platformRows preserves gating (full-solver matrix)'
         });
     }
 });
+
+// CORPUS EQUIVALENCE GATE for the moving-blue phase fast path. The fast phase
+// machinery in canJump (tolerance-theorem aligned-stride today; a column
+// stepping-stone short-circuit next) must be VERDICT-IDENTICAL to the exhaustive
+// ∀-phase path. `exhaustivePhases:true` threads through reachableBraidPlatforms →
+// canJump, so deriving a level both ways and comparing EVERY platform + goal
+// minimal set (includePlatforms) is the strongest cheap gate: it forbids the
+// fast path from ever inventing or dropping a verdict on real generated geometry.
+// Braid-focused (column mode may be deprecated); blue is the only thing that
+// makes the two paths diverge in cost, so every shape here carries a blue gate.
+describe('braid Regime 2 — moving-blue fast-phase path ≡ exhaustive (derive corpus)', () => {
+    const normSets = (d) => {
+        const pick = (m) => Object.fromEntries(
+            Object.entries(m).map(([k, v]) => [k, v.minimalSets]));
+        return { exits: pick(d.exits), pickups: pick(d.pickups), platforms: pick(d.platforms) };
+    };
+    const blueShapes = (arrow) => [
+        { name: 'blue', maxSeed: 4, exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+        ], pickups: [{ id: 'pk', requirement: ['blue'] }] },
+        { name: 'blue+arrow', maxSeed: 4, exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gba', requirement: ['blue', arrow], direction: 'left' },
+        ], pickups: [] },
+        // The expensive 3-ability case (~526ms fast, slower exhaustive) — fewer seeds.
+        { name: 'blue+arrow+springs', maxSeed: 2, exits: [
+            { id: 'free', requirement: [], direction: 'up' },
+            { id: 'gb', requirement: ['blue'], direction: 'right' },
+            { id: 'gba', requirement: ['blue', arrow], direction: 'left' },
+            { id: 'gbas', requirement: ['blue', arrow, 'springs'], direction: 'right' },
+        ], pickups: [] },
+    ];
+    for (let seed = 1; seed <= 4; seed++) {
+        const arrow = seed % 2 ? 'left' : 'right';
+        const freeArrow = arrow === 'left' ? 'right' : 'left';
+        for (const sh of blueShapes(arrow)) {
+            if (seed > sh.maxSeed) continue;
+            it(`seed ${seed} ${sh.name} (gate ${arrow}, free ${freeArrow})`, () => {
+                const level = gen(sh.exits, sh.pickups, seed, freeArrow);
+                expect(validateLevel(level)).toEqual([]);
+                const base = {
+                    constants: C, freeArrow, freeAbilities: [freeArrow],
+                    terminalPortals: true, includePlatforms: true,
+                };
+                const fast = deriveBraidAccessRules(level, base);
+                const exhaustive = deriveBraidAccessRules(level, { ...base, exhaustivePhases: true });
+                expect(fast.defects).toEqual(exhaustive.defects);
+                expect(normSets(fast)).toEqual(normSets(exhaustive));
+            });
+        }
+    }
+});
