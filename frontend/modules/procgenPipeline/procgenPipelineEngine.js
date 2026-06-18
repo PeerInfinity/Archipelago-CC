@@ -3230,24 +3230,6 @@ export function* growSpheresGen(config) {
     // the old per-region "try node.side, else go remote" decision: it
     // no longer commits to one occupancy-blind side and teleports away
     // when a free adjacent slot was still available.
-    //
-    // Draw placement choices from a SEPARATE rng STREAM (a distinct rng
-    // object — seeding it identically to the main rng is fine, it's
-    // independent) so the main rng, which feeds each region's geometry in
-    // the build loop below, stays where the old per-region decision left
-    // it: the old loop drew the main rng for placement only when a node
-    // teleported, so absent teleporters the geometry stream is unchanged.
-    // Drawing placement from the main rng instead would shift every
-    // region's maze layout, and maze location placement is fragile enough
-    // (placeFromRules silently drops a location when no reachable floor
-    // tile is free) that the shift can break the sphere oracle.
-    //
-    // TEMPORARY: this is a patch, not the real fix. It keeps geometry
-    // stable but does NOT stop the placement change from exploring side
-    // configs that trip the same silent drop. See
-    // note_sphere_placement_separate_rng — the root fix is to harden maze
-    // location placement so it never silently drops a location.
-    const placeRng = createRng(seed);
     const occupiedKeys = new Set();
     const reservedSides = new Map(); // node.index -> Set of sides spoken for
     for (const node of tree.nodes) {
@@ -3284,16 +3266,16 @@ export function* growSpheresGen(config) {
         let cell;
         let isTeleporter;
         if (openSides.length > 0) {
-            side = openSides[Math.floor(placeRng.next() * openSides.length)];
+            side = openSides[Math.floor(rng.next() * openSides.length)];
             cell = grid.neighborCell(parentNode.cell, side);
             isTeleporter = false;
         } else {
             // Every open adjacent side is occupied/out-of-bounds: go
             // remote. Still consume a free side so the parent has an
             // exit to host the teleporter.
-            side = freeSides[Math.floor(placeRng.next() * freeSides.length)];
+            side = freeSides[Math.floor(rng.next() * freeSides.length)];
             cell = findDisconnectedCellFromOccupied(
-                occupiedKeys, dims, placeRng, teleporterMinGap);
+                occupiedKeys, dims, rng, teleporterMinGap);
             if (!cell) {
                 throw new Error('growSpheres: no free cell for region — '
                     + 'pass larger growthParams.gridDims');
