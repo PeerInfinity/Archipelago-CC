@@ -435,9 +435,64 @@ export function canJumpDetailed(level, fromId, toId, abilities, opts = {}) {
  * header) sweep phase — and existentially over policies and choosable
  * phases. Fails closed on every axis.
  */
+/**
+ * Column stepping-stone recognizer (dj moving blue). The generator only ever
+ * places a blue as a same-x green → blue → green stack: a plain bounce can't
+ * clear the doubled gap, but WITH blue the player waits on the lower green for
+ * the full-width blue to sweep over the column, lands on it, and bounces
+ * straight up — needing NO arrows, at any cycle. (User's tolerance theorem: the
+ * blue is wide/slow enough that every column landing is reachable by waiting, so
+ * phase is the player's to choose, not an adversarial ∀.) So a STATIC launch
+ * from `from` to either the blue itself (CATCH) or the green one gap above it
+ * (COMPOSITE) is reachable given blue, with no phase enumeration.
+ *
+ * Returns true ONLY for that recognized column pattern; every other edge falls
+ * through to the exhaustive sim. The fast≡exhaustive corpus test
+ * (braidRegime2.slow) forbids a false positive — this can only AGREE with the
+ * sim, never invent a verdict.
+ */
+function columnSteppingStoneReachable(level, from, to, abilities, C) {
+    if (C.PLATFORM_BEHAVIORS?.blue !== 'moving' || !from || !abilities.blue) return false;
+    // `from` must be a STATIC platform — the tolerance theorem needs the player
+    // to WAIT for the blue's phase, which you can't do on a mover. Generator
+    // stacks greens here, so this always holds for real stepping stones.
+    if (from.type === 'blue' && from.sweep) return false;
+    const COL = 2; // px; the column is stacked at one exact x (coherent jitter keeps it aligned)
+    const bounce = launchRise('bounce', C); // a plain bounce clears exactly one gap
+    const sameCol = (a, b) => Math.abs(a - b) <= COL;
+    const oneGapAbove = (lowY, hi) => (lowY - hi.y) > 0 && (lowY - hi.y) <= bounce + 1; // y grows down
+    const fullWidthOver = (blue, x) => blue.sweep
+        && blue.sweep.min <= x + COL && blue.sweep.max >= x - COL;
+    const isMovingBlue = (p) => p.type === 'blue' && p.sweep && isPlatformActive(p, abilities);
+
+    // (1) CATCH: `to` is the column-aligned full-width blue, one gap above `from`.
+    if (isMovingBlue(to) && sameCol(to.x, from.x)
+            && oneGapAbove(from.y, to) && fullWidthOver(to, from.x)) {
+        return true;
+    }
+    // (2) COMPOSITE: a column-aligned blue sits one gap above `from`, and `to`
+    //     (a landable platform at the column) sits one gap above that blue.
+    if (sameCol(to.x, from.x) && to.y < from.y) {
+        for (const blue of level.platforms) {
+            if (!isMovingBlue(blue) || !sameCol(blue.x, from.x)) continue;
+            if (oneGapAbove(from.y, blue) && oneGapAbove(blue.y, to)
+                    && fullWidthOver(blue, from.x)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function latchedCanJump(level, fromId, to, abilities, C, opts) {
     const fail = { ok: false, witnesses: [] };
     const from = platformById(level, fromId);
+    // Column stepping-stone fast path (verdict-preserving; see the recognizer).
+    // Skipped under exhaustivePhases so that path stays the equivalence oracle.
+    if (!opts.exhaustivePhases
+            && columnSteppingStoneReachable(level, from, to, abilities, C)) {
+        return { ok: true, witnesses: [{ x0: 0, hover: 0, t0: 0, policy: 'column-stone' }] };
+    }
     const maxFrames = opts.maxFrames ?? 600;
     const targetX = to.sweep ? (to.sweep.min + to.sweep.max) / 2 : to.x;
     const policies = policiesFor(targetX, abilities, C);
