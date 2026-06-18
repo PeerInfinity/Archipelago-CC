@@ -13,6 +13,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateLevelFromSpecs, generateLevelFromSpecsGen } from './generator.js';
 import { deriveAccessRules, deriveBraidAccessRules, formatRule } from './deriveRules.js';
+import { buildPlatformGraph, reachablePlatforms } from './canJump.js';
 import { validateLevel } from './level.js';
 import { PROFILES } from './physics.js';
 
@@ -545,4 +546,37 @@ describe('braid Regime 2 — decorative fork/merge/brown geometry', () => {
             expect(Number.isInteger(p.x), `platform ${p.id} x=${p.x} not integer`).toBe(true);
         }
     });
+});
+
+// Softlock escape: each VERTICAL gate (blue / spring / jetpack) carries a
+// return-to-start teleport fork beside the last no-item-reachable platform, so a
+// climber who reaches the gate WITHOUT the gating item can still get home (the
+// only other teleport is at the chain's top, ABOVE the gate — unreachable). The
+// arrow gate already had its mirror teleHost; this guards the vertical gates'
+// equivalent, which regressed silently once before.
+describe('braid Regime 2 — vertical gates have a return-to-start escape', () => {
+    // Platforms reachable holding ONLY the free arrow (NOT the gating item).
+    const reachedWithoutItem = (level) => {
+        const graph = buildPlatformGraph(level, { [FREE_ARROW]: true },
+            { constants: C, terminalPortals: true });
+        return reachablePlatforms(graph);
+    };
+    for (const [name, requirement] of [
+        ['blue', ['blue']], ['springs', ['springs']], ['jetpacks', ['jetpacks']],
+    ]) {
+        it(`a ${name} gate is escapable without ${name} (teleport reachable, exit not)`, () => {
+            const level = generateLevelFromSpecs({
+                id: `Resc_${name}`, exitSpecs: [{ id: 'gated', requirement, direction: 'up' }],
+                seed: 1, physics: 'dj', mode: 'braid', braidWidth: W, freeArrow: FREE_ARROW,
+            });
+            expect(validateLevel(level)).toEqual([]);
+            const reached = reachedWithoutItem(level);
+            // The gate holds: the gated exit's host is NOT reachable without the item.
+            const exitHost = level.portals.find((p) => p.id === 'gated').on;
+            expect(reached.has(exitHost), 'gate should hold without the item').toBe(false);
+            // ...yet a teleport host IS reachable, so the climber is never stranded.
+            const escapable = level.teleports.some((t) => reached.has(t.on));
+            expect(escapable, 'an escape teleport must be reachable without the item').toBe(true);
+        });
+    }
 });

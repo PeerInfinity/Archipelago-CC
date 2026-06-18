@@ -1506,6 +1506,25 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         prev = gate;
         current = gateReq.slice().sort();
     };
+    // Softlock escape for a VERTICAL gate (blue / spring / jetpack): a terminal
+    // teleport ledge beside the gate, reached with the always-held free arrow
+    // from the gate's last no-item-reachable platform. A player who climbs the
+    // spine to such a gate WITHOUT the gating item lands under an unbridgeable
+    // gap (the top teleport sits ABOVE the gate, no help) — this ledge sends
+    // them home instead of stalling, the vertical-gate analogue of the arrow
+    // gate's mirror teleHost. Placed in an EXISTING row (`rowY`, beside column
+    // `fromX`): a FRESH opaque row between a boost host and its far landing would
+    // sever the row-adjacency the launch relies on (the sweep's launcher walk
+    // stops at the first opaque row). Terminal (teleport) ⇒ no climb edge, so it
+    // can sit inside the gap without leaking a bypass (canJump / the braid sweep
+    // skip teleport hosts as launchers) and never shifts a goal's derived
+    // requirement. Offset forkHalf toward the free arrow — a distinct catch
+    // target that never captures the straight no-input spine climb. authored:false
+    // (decorative, like the fork companions; carries no gating intent).
+    const addGateEscape = (fromX, rowY) => {
+        const ledge = place(fromX + freeDir * forkHalf, rowY, 'green', current, { authored: false });
+        teleportEntities.push({ id: `tp_${ledge.id}`, x: ledge.x, y: ledge.y - 20, on: ledge.id });
+    };
     // Blue stepping stone + a plain landing above. `gate=true` GATES on blue
     // vertically (the 2·PLAIN_DY gap is unbridgeable without the suppressed
     // stone; adds blue to `current`). `gate=false` is FLAVOR — same geometry in
@@ -1515,6 +1534,13 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
     // (NOT under an offset tip), so it never perturbs a portal hop.
     const emitBlue = (gate) => {
         const req = gate ? [...current, 'blue'] : [...current]; // stone + landing
+        // Escape on the rung BELOW the stone (a plain, non-moving row), NOT the
+        // moving stone's own row: a fork sharing the mover's row perturbs the
+        // ferry-aware phase analysis (the exhaustive derive then reads the whole
+        // spine above as also gated on the arrow, diverging from the suppressing
+        // path). The rung below is where a blue-less climber gets stuck anyway,
+        // so the escape belongs there.
+        if (gate) addGateEscape(prev.x, prev.y);
         y -= PLAIN_DY;
         place(prev.x, y, 'blue', req); // the stone (its x rides the column; sweep added post-shift)
         y -= PLAIN_DY;
@@ -1546,6 +1572,7 @@ function proposeBraidLevelGated({ id, plan, rng, C, G, jitter = 0, width, freeAr
         y -= PLAIN_DY;
         const host = place(prev.x + jitterDx(current), y); // green host: reachable WITHOUT the booster
         entities.push({ id: `${prefix}_${host.id}`, x: host.x, y: host.y - 5, on: host.id });
+        if (gate) addGateEscape(host.x, host.y); // escape on the host's row, beside the (reachable) host
         y -= window.min + window.span - BOOST_GATE_GAP_MARGIN;
         const req = gate ? [...current, ability] : [...current]; // landing needs the booster
         prev = place(host.x, y, 'green', req);
