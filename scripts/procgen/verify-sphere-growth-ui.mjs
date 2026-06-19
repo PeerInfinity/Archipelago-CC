@@ -8,9 +8,10 @@
  *      verifies the sphere oracle inline; assert its success message.
  *   3. Click "Load into frontend" — assert the bounce iframe gets
  *      configured with the start region.
- *   4. Let REAL physics auto-collect the start region's column pickups
- *      (wave-0 items), assert they reach checkedLocations + the
- *      in-game ability state.
+ *   4. Let REAL physics auto-collect the braid start region's wave-0
+ *      pickups, assert they reach checkedLocations + the in-game
+ *      ability state. (Braid-only since column was deprecated: the free
+ *      arrow is a STARTING item, so it's already held at load.)
  *   5. Drive one forward region move via the __swfBridge contract,
  *      then exercise the FALL-BACK exit (sendExit '__fall_back' with
  *      the configured backExitSide) and assert we return to start.
@@ -41,27 +42,39 @@ const PANEL_PARAMS = {
     sphereCount: 3, fillerCount: 0, revisitPercent: 25,
 };
 
-// Mirror the panel's _runSphereGrowth via the SAME pre-plan hook the
-// driver uses (no duplicated free-arrow logic): bounce-only quotas →
-// bounce START (column) → sphere 1 is exactly one seeded-random arrow,
-// the start-stack intro (exclusiveSpheres).
-import { prepareBounceSphereGrowth } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
+// Mirror the panel's _runSphereGrowth via the SAME hooks the driver
+// uses (no duplicated logic). Braid-only (column deprecated 2026-06-19):
+// the free arrow is a seeded-random STARTING ITEM (removed from the
+// pool), and braid regionParams carry its direction. The Node-side
+// regionParams must match the panel's — which uses the bounce param
+// DEFAULTS, since the pre-seeded PANEL_PARAMS overrides none of them.
+import {
+    prepareBounceSphereGrowth, buildBounceRegionParams,
+    DEFAULT_BOUNCE_PROCGEN_PARAMS,
+} from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 const itemPool = { ...ITEM_POOL };
 const prep = prepareBounceSphereGrowth({
     itemPool, quotas: { bounce: 99 }, startSubstrate: null,
-    seed: SEED, params: {}, substrateId: 'bounce',
+    seed: SEED, substrateId: 'bounce',
 });
-const startArrow = prep.exclusiveSpheres?.[1]?.[0] ?? prep.startingItems?.[0];
+// The driver applies the pre-plan pool delta before planning.
+for (const [k, d] of Object.entries(prep.itemPoolDelta ?? {})) {
+    itemPool[k] = (itemPool[k] ?? 0) + d;
+    if (itemPool[k] <= 0) delete itemPool[k];
+}
+const startArrow = prep.startingItems[0];
 const plan = planSpheres({
-    itemPool, sphereCount: 3,
-    exclusiveSpheres: prep.exclusiveSpheres ?? {},
-    victoryItem: 'Victory', seed: SEED,
+    itemPool, sphereCount: 3, victoryItem: 'Victory', seed: SEED,
 });
-console.log('START ARROW (seeded):', startArrow);
+console.log('FREE ARROW (starting item):', startArrow);
 const { tree } = growSpheres({
     regionSize: { width: 8, height: 6 },
     itemLib: { ...DEFAULT_ITEMS, ...BOUNCE_LIBRARY_ITEMS },
     seed: SEED,
+    regionParams: {
+        ...buildBounceRegionParams({ params: DEFAULT_BOUNCE_PROCGEN_PARAMS, mode: 'sphere' }),
+        ...prep.regionParams,
+    },
     growthParams: {
         spherePlan: plan,
         maxItemsPerRegion: 2,
@@ -186,8 +199,9 @@ async function waitFor(desc, fn, timeoutMs = 30000) {
 // arrowless frontier by itself. Assert outcomes, not intermediate
 // regions (those race the auto-play).
 
-// 1. All sphere-1 items reach the inventory via real physics (wave-0
-//    regions are fully on-column).
+// 1. All sphere-1 items reach the inventory via real physics (the
+//    braid start region is wave-0/ungated and the free arrow is held
+//    from the start, so the no-input climb collects its pickups).
 const sphere1 = plan.spheres[0].items;
 await waitFor(`sphere-1 items in inventory [${sphere1.join(', ')}]`, async () => {
     const s = await snapshot();
@@ -196,10 +210,10 @@ await waitFor(`sphere-1 items in inventory [${sphere1.join(', ')}]`, async () =>
 const s1 = await snapshot();
 console.log('SPHERE-1 COLLECTED:', JSON.stringify(s1.inventory));
 
-// 2. Wave-1 exits off the start are arrow-gated BRANCH TIPS — an
-//    idle player can't take them (the intro works: you must steer).
-//    Drive the first hop via the bridge contract (the same call a
-//    portal landing makes), gate now satisfied by the collected arrow.
+// 2. Wave-1 exits off the start are gated BRANCH TIPS (on a sphere-1
+//    item) — an idle player can't take them. Drive the first hop via
+//    the bridge contract (the same call a portal landing makes), the
+//    gate now satisfied by the sphere-1 items collected above.
 const firstChild = tree.nodes.find((n) => n.parent === startNode.index);
 if (!firstChild) throw new Error('start region has no children');
 await bounceFrame().evaluate(

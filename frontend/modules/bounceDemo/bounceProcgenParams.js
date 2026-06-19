@@ -35,10 +35,11 @@ export const DEFAULT_BOUNCE_PROCGEN_PARAMS = Object.freeze({
     // under the constants it was generated with. New worlds default to
     // 'dj' (real Doodle Jump constants); 'experimental' stamps nothing.
     bouncePhysicsProfile: 'dj',
-    // Level layout (top-down/free-arrow regions only). 'column' is the
-    // fixed-column proposer; 'braid' is the 2-wide branching-path
-    // generator that fits narrow widths and applies per-row jitter.
-    bounceLayout: 'column',
+    // Layout is always the 2-wide branching-path "braid" generator.
+    // Column mode (the fixed-column proposer) was deprecated 2026-06-19:
+    // braid is the only reachable layout. The column code in the engine
+    // / bounce generator remains physically present but DORMANT (nothing
+    // sets bounceMode to anything but 'braid'), pending later removal.
     // Braid level width (px) — the wrap-ring width. 240 is DJ-authentic
     // (fits two simultaneous branches; three need ≥318).
     bounceBraidWidth: 240,
@@ -80,35 +81,25 @@ const BOUNCE_PHYSICS_PROFILE_OPTIONS = [
 /**
  * A bounce region is only traversable beyond its forced column with an
  * arrow, so when bounce is in the world one arrow (seeded-random) is
- * made available up front:
- *  - bounce START (column): the classic intro — sphere 1 is EXACTLY
- *    that arrow, collected in the start stack (exclusiveSpheres +
- *    lockedCanonicalItems so multiworld fill keeps the intro pickup an
- *    arrow).
- *  - any other start: the arrow becomes a STARTING ITEM (removed from
- *    the pool via itemPoolDelta), so bounce regions are fully
- *    traversable on first encounter.
- *  - BRAID: the gated-braid model treats the free arrow as ALWAYS held,
- *    so it can NEVER be a gate — it's always a STARTING ITEM (even the
- *    bounce-start case), keeping it disjoint from gateable arrows, and
- *    the picked direction rides regionParams.bounceFreeArrow so the
- *    braid verifier knows which arrow is free.
+ * made available up front. The braid model treats the free arrow as
+ * ALWAYS held — it can never be a gate — so the arrow is a STARTING
+ * ITEM (removed from the pool via itemPoolDelta) in every bounce world,
+ * and its direction rides regionParams.bounceFreeArrow so the braid
+ * realiser/verifier knows which arrow is free.
+ *
+ * (Column mode's sphere-1 "start-stack" intro — collect your first
+ * arrow in-region — is retired with column mode. A simplified braid
+ * intro could be revisited later; it isn't a priority.)
  *
  * Returns a contributions object the driver merges:
- *   { startingItems?, exclusiveSpheres?, lockedCanonicalItems?,
- *     itemPoolDelta?, regionParams?, note? }
+ *   { startingItems?, itemPoolDelta?, regionParams?, note? }
  */
 export function prepareBounceSphereGrowth({
-    itemPool, quotas, startSubstrate, seed, params, substrateId = 'bounce',
+    itemPool, quotas, startSubstrate, seed, substrateId = 'bounce',
 } = {}) {
-    const braid = params?.bounceLayout === 'braid';
     const startSub = startSubstrate ?? null;
-    const quotaIds = Object.keys(quotas ?? {});
     const selected = (quotas?.[substrateId] ?? 0) > 0 || startSub === substrateId;
     if (!selected) return {};
-    const starts = startSub === substrateId
-        || (startSub == null
-            && quotaIds.length > 0 && quotaIds.every((id) => id === substrateId));
 
     const left = ABILITY_ITEM_NAMES.left;
     const arrows = [left, ABILITY_ITEM_NAMES.right]
@@ -117,33 +108,21 @@ export function prepareBounceSphereGrowth({
     const pick = arrows[Math.floor(createRng((seed * 31 + 17) | 0).next() * arrows.length)];
     const freeArrowAbility = pick === left ? 'left' : 'right';
 
-    if (starts && !braid) {
-        // Column bounce-start: the arrow is sphere 1 (the start stack),
-        // collected in-region — not a starting item, and not in
-        // regionParams (column doesn't read bounceFreeArrow).
-        return {
-            exclusiveSpheres: { 1: [pick] },
-            lockedCanonicalItems: [pick],
-            note: `${pick} = sphere 1 (the start stack)`,
-        };
-    }
     return {
         startingItems: [pick],
         itemPoolDelta: { [pick]: -1 },
         note: `${pick} granted as a starting item`,
-        // bounceFreeArrow only matters to the braid realiser/verifier;
-        // the column path never reads it (matches the pre-refactor
-        // behaviour where it sat inside the braid-only regionParams).
-        ...(braid ? { regionParams: { bounceFreeArrow: freeArrowAbility } } : {}),
+        regionParams: { bounceFreeArrow: freeArrowAbility },
     };
 }
 
 // ── regionParams assembly ───────────────────────────────────────────
 /**
  * The bounce-specific regionParams keys (maze ignores unknown keys).
- * `mode` is 'sphere' | 'topDown' — top-down omits platformRows + the
- * fork decoration (sphere-growth / gated-braid concepts). bounceFreeArrow
- * is NOT assembled here; it rides prepareSphereGrowth's regionParams and
+ * Layout is always braid (column deprecated 2026-06-19). `mode` is
+ * 'sphere' | 'topDown' — top-down omits platformRows + the fork
+ * decoration (sphere-growth / gated-braid concepts). bounceFreeArrow is
+ * NOT assembled here; it rides prepareSphereGrowth's regionParams and
  * the driver merges the two.
  */
 export function buildBounceRegionParams({ params, mode = 'sphere' } = {}) {
@@ -151,28 +130,26 @@ export function buildBounceRegionParams({ params, mode = 'sphere' } = {}) {
     const out = {
         physicsProfile: p.bouncePhysicsProfile ?? 'dj',
         fallBehavior: p.bounceFallBehavior ?? 'current',
+        bounceMode: 'braid',
+        braidWidth: p.bounceBraidWidth ?? 240,
+        bounceJitter: p.bounceJitter ?? 40,
     };
-    if (p.bounceLayout === 'braid') {
-        out.bounceMode = 'braid';
-        out.braidWidth = p.bounceBraidWidth ?? 240;
-        out.bounceJitter = p.bounceJitter ?? 40;
-        if (mode === 'topDown') {
-            out.bounceDecorChance = {
-                blue: p.bounceBlueChance ?? 0,
-                brown: p.bounceBrownChance ?? 0,
-                spring: p.bounceSpringChance ?? 0,
-                jetpack: p.bounceJetpackChance ?? 0,
-            };
-        } else {
-            out.platformRows = p.bouncePlatformRows ?? 0;
-            out.bounceDecorChance = {
-                spring: p.bounceSpringChance ?? 0,
-                jetpack: p.bounceJetpackChance ?? 0,
-                blue: p.bounceBlueChance ?? 0,
-                fork: p.bounceForkChance ?? 0,
-                brown: p.bounceBrownChance ?? 0,
-            };
-        }
+    if (mode === 'topDown') {
+        out.bounceDecorChance = {
+            blue: p.bounceBlueChance ?? 0,
+            brown: p.bounceBrownChance ?? 0,
+            spring: p.bounceSpringChance ?? 0,
+            jetpack: p.bounceJetpackChance ?? 0,
+        };
+    } else {
+        out.platformRows = p.bouncePlatformRows ?? 0;
+        out.bounceDecorChance = {
+            spring: p.bounceSpringChance ?? 0,
+            jetpack: p.bounceJetpackChance ?? 0,
+            blue: p.bounceBlueChance ?? 0,
+            fork: p.bounceForkChance ?? 0,
+            brown: p.bounceBrownChance ?? 0,
+        };
     }
     return out;
 }
@@ -232,30 +209,10 @@ export function renderBounceProcgenParams({ params, onChange = () => {} } = {}) 
     physRow.appendChild(physSelect);
     wrap.appendChild(physRow);
 
-    // Layout: column (fixed-column proposer) vs braid (2-wide branching
-    // path). Braid fits narrow widths the column can't and carries the
-    // per-row jitter.
-    const layoutRow = document.createElement('div');
-    layoutRow.className = 'procgen-pipeline-field';
-    const layoutLabel = document.createElement('label');
-    layoutLabel.textContent = 'Layout';
-    layoutLabel.title = 'column = the fixed-column generator. braid = the 2-wide branching-path generator '
-        + '(top-down/free-arrow regions only): platforms weave into 1–2 lanes, portals ride forks or the '
-        + 'single-lane top, and it fits narrow widths (e.g. 240) the column model cannot.';
-    const layoutSelect = document.createElement('select');
-    for (const [value, text] of [['column', 'column'], ['braid', 'braid (2-wide)']]) {
-        const o = document.createElement('option');
-        o.value = value;
-        o.textContent = text;
-        layoutSelect.appendChild(o);
-    }
-    layoutSelect.value = params.bounceLayout ?? 'column';
-    layoutRow.appendChild(layoutLabel);
-    layoutRow.appendChild(layoutSelect);
-    wrap.appendChild(layoutRow);
-
-    // Braid-only sub-fields: width + per-row jitter + decoration. Shown
-    // when braid.
+    // Layout is always braid (the 2-wide branching-path generator);
+    // column mode was deprecated 2026-06-19, so there is no layout
+    // selector. The braid sub-fields (width + per-row jitter +
+    // decoration) are always shown.
     const braidFields = document.createElement('div');
     const numberField = (labelText, title, key, def, { step = 1, max = null } = {}) => {
         const r = document.createElement('div');
@@ -313,12 +270,6 @@ export function renderBounceProcgenParams({ params, onChange = () => {} } = {}) 
         + 'gated spine (sphere growth). Adds companion platforms BEYOND the platform-rows '
         + 'target; the terminal merge branch breaks at Brown chance. Default 0.',
         'bounceForkChance', 0, { step: 0.01, max: 1 }));
-    braidFields.style.display = (params.bounceLayout === 'braid') ? '' : 'none';
-    layoutSelect.addEventListener('change', () => {
-        params.bounceLayout = layoutSelect.value;
-        braidFields.style.display = (layoutSelect.value === 'braid') ? '' : 'none';
-        onChange();
-    });
     wrap.appendChild(braidFields);
     return wrap;
 }
