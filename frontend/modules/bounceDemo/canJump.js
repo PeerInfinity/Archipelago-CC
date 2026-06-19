@@ -494,10 +494,12 @@ function latchedCanJump(level, fromId, to, abilities, C, opts) {
         return { ok: true, witnesses: [{ x0: 0, hover: 0, t0: 0, policy: 'column-stone' }] };
     }
     // SUPPRESS moving blues for every edge that ISN'T that stepping stone (opt-in
-    // via suppressBlues — the gated Regime-2 derive sets it; see
-    // deriveBraidAccessRules). Sound ONLY when every blue is a green→blue→green
-    // column stone (generator invariant braidBlueInvariantErrors, enforced for
-    // Regime 2), so the recognizer above is the sole edge that may use a blue.
+    // via suppressBlues — the gated Regime-2 derive sets it, and the playback
+    // bot's graph build sets it too whenever the level passes the invariant; see
+    // deriveBraidAccessRules and botDriver.ensureGraph). Sound ONLY when every
+    // blue is a green→blue→green column stone (generator invariant
+    // braidBlueInvariantErrors, enforced for Regime 2), so the recognizer above
+    // is the sole edge that may use a blue.
     // Everywhere else the blue is then invisible: it never launches, and the
     // player's "ferry" — fall off a wide blue and re-bounce at a phase-chosen x
     // to bypass an arrow gate — is DELIBERATELY not modelled (it only ever works

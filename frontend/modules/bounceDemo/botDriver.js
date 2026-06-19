@@ -41,6 +41,7 @@
 
 import { DEFAULTS, step as physicsStep } from './physics.js';
 import { ENTRANCE, buildPlatformGraph, policiesFor } from './canJump.js';
+import { braidBlueInvariantErrors } from './level.js';
 
 const SIM_MAX_FRAMES = 600;
 
@@ -148,7 +149,21 @@ export function createBotDriver(opts = {}) {
     function ensureGraph(level, abilities) {
         const key = `${level.id}|${abilitiesKey(abilities)}`;
         if (graphKey !== key) {
-            graph = buildPlatformGraph(level, abilities, { constants: C });
+            // Moving-blue stepping stones: suppress sweep-phase enumeration in the
+            // graph build (the same fast path the gated derive uses — 137→7ms/region;
+            // it's the cost of entering a moving-blue region). Sound ONLY when every
+            // blue is a green→blue→green column stone, so it's gated on that exact
+            // invariant: when it holds, a blue is just a stepping stone and the
+            // suppressed edges are a SUBSET of the ferry-aware ones (the bot never
+            // plans an impossible jump), and placement already proved every goal
+            // reachable under this same suppressed model (so the route still exists).
+            // When the invariant fails — Regime-1 decorative blues that ARE load-
+            // bearing, legacy ceiling blues — we keep the ferry-aware model unchanged.
+            // Per-frame playback is identical either way: simulatePolicy forward-sims
+            // from the LIVE state (real phase), waiting in place until the blue sweeps
+            // over the column, then bouncing through it up to the next platform.
+            const suppressBlues = braidBlueInvariantErrors(level).length === 0;
+            graph = buildPlatformGraph(level, abilities, { constants: C, suppressBlues });
             graphKey = key;
         }
         return graph;
