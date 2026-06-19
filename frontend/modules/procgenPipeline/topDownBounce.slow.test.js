@@ -21,7 +21,7 @@
  * See NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 // Side-effect: register the maze + bounce substrates.
 import '../mazeRoom/mazeRoomLibrary.js';
@@ -232,6 +232,43 @@ describe('top-down — bounce region with surplus arrowless exits (free-arrow dr
         // The key→room gating still holds: each room item sits one sphere
         // behind its key, exactly as in the source.
         expect(computeItemSpheres(out)).toEqual(computeItemSpheres(source));
+    });
+
+    it('realises a multi-exit region as a BRAID (no spurious "both arrows" fallback)', () => {
+        // Top-down + braid layout on a 4-way Hub. The free-arrow drift is a
+        // COLUMN device; in braid mode it used to inject left+right into the exit
+        // requirements, tripping planBraidGatedChain's "cannot gate both arrows"
+        // and silently falling back to a column. The fork braid hosts every exit
+        // natively on free arrows, so it must realise AS a braid — no warning,
+        // source logic intact.
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        try {
+            const source = fourExitBounceSource();
+            const { grid, startCell } = topDownFromRulesJson(source, {
+                ...OPTS,
+                freeItems: ['Left arrow', 'Right arrow'],
+                regionParams: { maxIterations: 0, bounceMode: 'braid', braidWidth: 240 },
+            });
+            const out = buildRulesJson(grid, { startCell });
+
+            // The braid-vocabulary fallback never fired.
+            const warnings = warn.mock.calls.map((c) => String(c[0]));
+            expect(warnings.some((w) => /braid vocabulary|cannot gate both arrows/.test(w)))
+                .toBe(false);
+
+            // Realised AS a braid: a braid carries teleport-to-start hosts; the
+            // column proposer emits none. All four forward exits present.
+            const payload = out.preset_sidecars['1'].Hub.playable_payload;
+            expect(payload.params.bounceLevel.teleports.length).toBeGreaterThan(0);
+            const hub = out.regions['1'].Hub;
+            for (const name of ['toN', 'toE', 'toW', 'toS']) {
+                expect(hub.exits.map((e) => e.name)).toContain(name);
+            }
+            // Logic unchanged: source item spheres reproduced (no arrow gate leaked).
+            expect(computeItemSpheres(out)).toEqual(computeItemSpheres(source));
+        } finally {
+            warn.mockRestore();
+        }
     });
 });
 

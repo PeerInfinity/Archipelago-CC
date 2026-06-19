@@ -2381,9 +2381,20 @@ function* generateRegionZoneGen(spec) {
     // gains a drift the player can always pay. Scoped to exits carrying a
     // source access_rule so it never perturbs sphere-growth (which composes
     // its own gates and passes no freeItems).
+    // The free-arrow exit drift is a COLUMN geometry device: a column hosts one
+    // arrowless "top", so surplus exits are pushed off-column on a free Left/Right
+    // arrow. The BRAID hosts surplus exits NATIVELY — proposeBraidLevel forks the
+    // spine and puts one portal per fork branch (no cap), all on free arrows — so
+    // it needs no drift. Worse, a drift would inject `left`/`right` into the exit
+    // requirements, and the braid's gate analysis (planBraidGatedChain) reads any
+    // arrow in a requirement as a GATE — so a region with surplus exits in both
+    // directions trips "cannot gate both arrows" and wrongly falls back to a
+    // column. Skip the drift in braid mode: the arrows stay free, the requirements
+    // stay empty (Regime-1 all-free), and the fork braid realises every exit.
+    const braid = spec.params?.bounceMode === 'braid';
     const driftItems = adapter.driftItems ?? [];
     const freeDrifts = driftItems.filter((d) => (spec.freeItems ?? []).includes(d));
-    if (freeDrifts.length > 0) {
+    if (!braid && freeDrifts.length > 0) {
         const geometryItems = new Set(Object.entries(adapter.libraryItems ?? {})
             .filter(([, def]) => !def?.is_victory).map(([name]) => name));
         const isDrift = (it) => driftItems.includes(it);
@@ -2428,7 +2439,6 @@ function* generateRegionZoneGen(spec) {
     // tip), so column output stays byte-identical.
     const ent = spec.entrances?.[0];
     if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
-        const braid = spec.params?.bounceMode === 'braid';
         exitSpecs.push(braid
             ? { side: ent.side, requirement: [], counts: {} }
             : { side: ent.side, ...requirementOf(ent) });
