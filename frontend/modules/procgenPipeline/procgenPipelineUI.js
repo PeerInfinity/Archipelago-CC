@@ -10,6 +10,7 @@ import {
     growMaze,
     arrangeShuffledSpiral,
     growSpheresAsync,
+    buildSphereGrowthTree,
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
@@ -404,6 +405,9 @@ export class ProcgenPipelineUI {
         this.loadedRulesJson = null;
         this.loadedRulesJsonLabel = '';
         this.result = null;
+        // Sphere-growth stepped-pipeline state (null until step ① runs).
+        // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
+        this._stepState = null;
         this.isGenerating = false;
         // Live generation progress (sphere mode): event-stream state +
         // the indicator element below the Generate button.
@@ -479,6 +483,11 @@ export class ProcgenPipelineUI {
             'parameters', 'Parameters', this._renderParams(),
         ));
         this.rootElement.appendChild(this._renderActions());
+        if (this.mode === 'sphereGrowth' && this._stepState) {
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'sphere-pipeline', 'Sphere pipeline', this._renderSphereSteps(),
+            ));
+        }
         this.rootElement.appendChild(this._renderCollapsibleSection(
             'stats', 'Stats', this._renderStats(),
         ));
@@ -1387,12 +1396,39 @@ export class ProcgenPipelineUI {
     _renderActions() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-actions';
+        const sphere = this.mode === 'sphereGrowth';
+        const completed = this._stepState?.completed ?? -1;
+
+        // Step indicator (sphere mode): ① Plan → ② Tree → ③ Regions → ④ Compile.
+        if (sphere) section.appendChild(this._renderStepIndicator());
+
+        // Primary button: "Generate" in single-shot modes; "Run all"
+        // (run the sphere pipeline to completion from wherever it is) in
+        // sphere mode.
         const gen = document.createElement('button');
         gen.className = 'procgen-pipeline-btn procgen-pipeline-btn-primary';
-        gen.textContent = this.isGenerating ? 'Generating…' : 'Generate';
+        gen.textContent = this.isGenerating
+            ? 'Working…'
+            : (sphere ? (completed >= 0 && completed < 3 ? 'Run all (finish)' : 'Run all') : 'Generate');
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
         section.appendChild(gen);
+
+        // Sphere mode: "Run next step" + "Reset".
+        if (sphere) {
+            const stepLabels = ['Run ① Plan', 'Run ② Build tree',
+                'Run ③ Build regions', 'Run ④ Compile'];
+            const nextIdx = completed + 1;
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'procgen-pipeline-btn';
+            nextBtn.textContent = nextIdx <= 3 ? stepLabels[nextIdx] : 'Pipeline complete';
+            nextBtn.disabled = this.isGenerating || nextIdx > 3;
+            nextBtn.addEventListener('click', () => this._runSphereStepNext());
+            section.appendChild(nextBtn);
+            if (this._stepState) {
+                section.appendChild(this._btn('Reset', () => this._resetSphereSteps()));
+            }
+        }
 
         // Live progress indicator (sphere mode): full-width row below
         // the button, rewritten per progress event by direct DOM
@@ -1446,6 +1482,221 @@ export class ProcgenPipelineUI {
             section.appendChild(warn);
         }
         return section;
+    }
+
+    // The ① → ② → ③ → ④ chips above the sphere-mode buttons. Inline
+    // styles so it renders without depending on panel CSS.
+    _renderStepIndicator() {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px;font-size:12px;';
+        const labels = ['① Plan', '② Build tree', '③ Build regions', '④ Compile'];
+        const completed = this._stepState?.completed ?? -1;
+        labels.forEach((label, i) => {
+            const chip = document.createElement('span');
+            const done = i <= completed;
+            const next = i === completed + 1;
+            chip.textContent = label;
+            chip.style.cssText = 'padding:2px 8px;border-radius:10px;'
+                + (done ? 'background:#2a5a35;color:#cfe9d6;'
+                    : next ? 'background:#3a3a1a;color:#e8e0b0;border:1px solid #888;'
+                        : 'background:#2a2a2a;color:#888;');
+            wrap.appendChild(chip);
+            if (i < labels.length - 1) {
+                const arrow = document.createElement('span');
+                arrow.textContent = '→';
+                arrow.style.cssText = 'color:#666;';
+                wrap.appendChild(arrow);
+            }
+        });
+        return wrap;
+    }
+
+    // Content of the "Sphere pipeline" section: the editable plan, then
+    // read-only feedback for each completed step.
+    _renderSphereSteps() {
+        const wrap = document.createElement('div');
+        const st = this._stepState;
+        if (!st) return wrap;
+        wrap.appendChild(this._renderStepBlock('① Plan — edit, then run the next step',
+            this._renderPlanEditor()));
+        if (st.completed >= 1 && st.tree) {
+            wrap.appendChild(this._renderStepBlock('② Build tree',
+                this._renderTreeFeedback(st.tree)));
+        }
+        if (st.completed >= 2 && st.grow) {
+            wrap.appendChild(this._renderStepBlock('③ Build regions',
+                this._renderRegionsFeedback(st.grow.stats, st.seconds)));
+        }
+        if (st.completed >= 3 && st.compile) {
+            wrap.appendChild(this._renderStepBlock('④ Compile',
+                this._renderCompileFeedback(st.compile)));
+        }
+        return wrap;
+    }
+
+    _renderStepBlock(title, contentEl) {
+        const block = document.createElement('div');
+        block.style.cssText = 'margin-bottom:10px;';
+        const h = document.createElement('div');
+        h.className = 'procgen-pipeline-scenario-subheader';
+        h.textContent = title;
+        block.appendChild(h);
+        block.appendChild(contentEl);
+        return block;
+    }
+
+    // The plan editor: a vertical list grouped by sphere (sphere 0 =
+    // starting items), each item with ▲/▼ to move it one sphere. No
+    // drag-and-drop. Warn-but-allow: flag empty spheres, Victory not
+    // last, and a normally-starting item being gated.
+    _renderPlanEditor() {
+        const wrap = document.createElement('div');
+        const st = this._stepState;
+        const { draft } = st;
+        const n = draft.spheres.length;
+        const lastIdx = n - 1;
+        const victoryId = st.cfg.victoryItemId;
+
+        const warnings = [];
+        for (let i = 1; i < n; i++) {
+            if (draft.spheres[i].length === 0) {
+                warnings.push(`Sphere ${i} is empty — growth will reject it.`);
+            }
+        }
+        if (victoryId && !draft.spheres[lastIdx].includes(victoryId)) {
+            warnings.push(`Victory (${victoryId}) is not in the last sphere.`);
+        }
+        for (const it of st.prep.startingItems) {
+            const loc = draft.spheres.findIndex((s) => s.includes(it));
+            if (loc > 0) {
+                warnings.push(`"${it}" is normally a starting item; gating it may fail to grow.`);
+            }
+        }
+
+        draft.spheres.forEach((items, sphereIdx) => {
+            const group = document.createElement('div');
+            group.style.cssText = 'margin-bottom:6px;';
+            const header = document.createElement('div');
+            header.className = 'procgen-pipeline-scenario-subheader';
+            header.textContent = sphereIdx === 0
+                ? 'Starting items (sphere 0)'
+                : `Sphere ${sphereIdx}${sphereIdx === lastIdx ? ' (last)' : ''}`;
+            group.appendChild(header);
+            if (items.length === 0) {
+                const empty = document.createElement('div');
+                empty.style.cssText = 'opacity:0.6;font-style:italic;padding:2px 6px;';
+                empty.textContent = sphereIdx === 0 ? '(none)' : '(empty)';
+                group.appendChild(empty);
+            }
+            items.forEach((item, itemIdx) => {
+                group.appendChild(
+                    this._renderPlanItemRow(sphereIdx, itemIdx, item, lastIdx, victoryId));
+            });
+            wrap.appendChild(group);
+        });
+
+        const ctrl = document.createElement('div');
+        ctrl.style.cssText = 'margin:6px 0;display:flex;gap:6px;';
+        ctrl.appendChild(this._btn('+ sphere', () => {
+            st.draft.spheres.push([]);
+            this._onSpherePlanEdited();
+        }));
+        const minusBtn = this._btn('− sphere', () => {
+            if (st.draft.spheres.length <= 2) return;
+            const removed = st.draft.spheres.pop();
+            st.draft.spheres[st.draft.spheres.length - 1].push(...removed);
+            this._onSpherePlanEdited();
+        });
+        minusBtn.disabled = draft.spheres.length <= 2;
+        ctrl.appendChild(minusBtn);
+        wrap.appendChild(ctrl);
+
+        if (warnings.length) {
+            const w = document.createElement('div');
+            w.className = 'procgen-pipeline-warning';
+            w.textContent = warnings.join(' ');
+            wrap.appendChild(w);
+        }
+        return wrap;
+    }
+
+    _renderPlanItemRow(sphereIdx, itemIdx, item, lastIdx, victoryId) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;';
+        const name = document.createElement('span');
+        name.style.cssText = 'flex:1;';
+        name.textContent = item + (item === victoryId ? ' ★' : '');
+        row.appendChild(name);
+        const up = this._btn('▲', () => this._movePlanItem(sphereIdx, itemIdx, -1));
+        up.title = 'Move up one sphere';
+        up.disabled = sphereIdx === 0;
+        row.appendChild(up);
+        const down = this._btn('▼', () => this._movePlanItem(sphereIdx, itemIdx, +1));
+        down.title = 'Move down one sphere';
+        down.disabled = sphereIdx === lastIdx;
+        row.appendChild(down);
+        return row;
+    }
+
+    _movePlanItem(sphereIdx, itemIdx, dir) {
+        const st = this._stepState;
+        const target = sphereIdx + dir;
+        if (target < 0 || target >= st.draft.spheres.length) return;
+        const [item] = st.draft.spheres[sphereIdx].splice(itemIdx, 1);
+        st.draft.spheres[target].push(item);
+        this._onSpherePlanEdited();
+    }
+
+    _renderTreeFeedback(tree) {
+        const wrap = document.createElement('div');
+        const nodes = tree.nodes ?? [];
+        const subs = {};
+        for (const nd of nodes) subs[nd.substrate] = (subs[nd.substrate] ?? 0) + 1;
+        const fillers = nodes.filter((nd) => nd.isFiller).length;
+        const summary = document.createElement('div');
+        summary.textContent = `${nodes.length} regions (${fillers} filler) · `
+            + Object.entries(subs).map(([s, c]) => `${s}×${c}`).join(', ');
+        wrap.appendChild(summary);
+        const list = document.createElement('div');
+        list.style.cssText = 'font-family:monospace;font-size:11px;white-space:pre;'
+            + 'overflow-x:auto;margin-top:4px;max-height:160px;overflow-y:auto;';
+        list.textContent = nodes.map((nd) => {
+            const gate = (nd.gate ?? []).length ? `[${nd.gate.join(',')}]` : '—';
+            const parent = nd.parent == null ? 'root' : `#${nd.parent}/${nd.side}`;
+            return `#${nd.index} w${nd.wave} ${nd.substrate} gate ${gate} <- ${parent}`;
+        }).join('\n');
+        wrap.appendChild(list);
+        return wrap;
+    }
+
+    _renderRegionsFeedback(stats, seconds) {
+        const wrap = document.createElement('div');
+        const parts = [`regions built ${stats.regionsBuilt}`];
+        if (stats.teleportersPlaced != null) parts.push(`teleporters ${stats.teleportersPlaced}`);
+        if (stats.quotaFallbacks) parts.push(`quota fallbacks ${stats.quotaFallbacks}`);
+        if (stats.stopReason) parts.push(`stop: ${stats.stopReason}`);
+        if (seconds) parts.push(`${seconds.toFixed(1)}s`);
+        wrap.textContent = `${parts.join(' · ')} (full grid below)`;
+        return wrap;
+    }
+
+    _renderCompileFeedback(compile) {
+        const wrap = document.createElement('div');
+        const { rulesJson, oracleErrors } = compile;
+        const ok = oracleErrors.length === 0;
+        const oracle = document.createElement('div');
+        oracle.textContent = ok
+            ? '✓ oracle: plan realised exactly'
+            : `✗ oracle mismatch: ${oracleErrors[0]}`;
+        oracle.style.cssText = ok ? 'color:#3aa85a;' : 'color:#d04040;';
+        wrap.appendChild(oracle);
+        const regionCount = Object.keys(rulesJson.regions ?? {}).length;
+        const hasLog = Array.isArray(rulesJson.sphere_log) && rulesJson.sphere_log.length > 0;
+        const counts = document.createElement('div');
+        counts.textContent = `${regionCount} regions · sphere_log ${hasLog ? 'embedded' : 'absent'}`
+            + ' · full rules.json in Compiled output below';
+        wrap.appendChild(counts);
+        return wrap;
     }
 
     _renderStats() {
@@ -1865,7 +2116,10 @@ export class ProcgenPipelineUI {
         this.isGenerating = true;
         this.message = '';
         this.warning = '';
-        this.result = null;
+        // In sphere mode the step runners own this.result (a "Run all"
+        // that just finishes an in-progress pipeline must not wipe it);
+        // other modes clear it up front.
+        if (this.mode !== 'sphereGrowth' || !this._stepState) this.result = null;
         this.render();
 
         try {
@@ -2049,139 +2303,255 @@ export class ProcgenPipelineUI {
         };
     }
 
-    async _runSphereGrowth() {
+    // ── Sphere growth as a 4-step pipeline ──────────────────────────
+    // Plan ① → Build tree ② → Build regions ③ → Compile ④. Each step
+    // can run on its own ("Run next step") or the lot can run at once
+    // ("Run all" = _runSphereGrowth). Step ① yields an EDITABLE plan
+    // (sphere 0 = starting items); editing it marks ②–④ stale. State
+    // lives on this._stepState (null until ① runs); see _renderSphereSteps.
+
+    // The shared, frozen-at-① config every step reads (so a later param
+    // tweak doesn't silently change a pipeline mid-run — Reset/re-Plan
+    // to pick up new params).
+    _buildSphereConfig() {
         const { seed, regionWidth, regionHeight, maxItemsPerRegion,
             sphereCount, fillerCount, revisitPercent, startSubstrate } = this.params;
-        this._progressState = {
-            startedAt: performance.now(),
-            totalRegions: 0,
-            totalSpheres: 0,
-            doneRegions: 0,
-            region: null,
-            attempt: null,
-            phase: null,
-            timings: [],
-            lastEvent: null,
-            lastAt: 0,
-        };
-        this._updateProgressEl();
-        const itemLib = this._mergedItemLib();
-        const itemPool = { ...this.scenario.items };
-        const victoryItemId = this._resolveVictoryItemId();
-        const quotas = this._effectiveSubstrateQuotas();
-
-        // Substrate pre-plan contributions: each active substrate may,
-        // via its optional `prepareSphereGrowth` hook, grant starting
-        // items, reserve sphere-1 pickups (exclusiveSpheres), lock
-        // canonical placements, remove items from the pool, or add
-        // regionParams — BEFORE planning. Bounce's free-arrow entry
-        // lives there now (bounceProcgenParams.js); the driver stays
-        // substrate-agnostic.
         const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
-        const activeIds = this._activeSubstrateIds(quotas, startSub);
-        const prep = this._collectSphereGrowthPrep({
-            activeIds, itemPool, quotas, startSubstrate: startSub, seed,
-        });
-        const { startingItems, lockedCanonicalItems, exclusiveSpheres } = prep;
-        const arrowNote = prep.note;
-
-        // Phase 1: the sphere plan — item→sphere assignment, Victory
-        // pinned to the final sphere when the pool carries it.
-        const plan = planSpheres({
-            itemPool,
+        const quotas = this._effectiveSubstrateQuotas();
+        return {
+            seed,
+            regionWidth, regionHeight,
+            maxItemsPerRegion,
             sphereCount: sphereCount ?? 3,
-            exclusiveSpheres,
-            ...(victoryItemId && (itemPool[victoryItemId] ?? 0) > 0
-                ? { victoryItem: victoryItemId } : {}),
-            seed,
-        });
-
-        // Phase 2: wave growth.
-        const { grid, stats, startCell } = await growSpheresAsync({
-            regionSize: { width: regionWidth, height: regionHeight },
-            itemLib,
-            seed,
-            hazardOpts: this._effectiveHazardOpts(),
-            // Substrate-specific knobs ride regionParams (maze ignores
-            // unknown keys). Each active substrate's `buildRegionParams`
-            // hook assembles its own keys (bounce: fallBehavior, physics
-            // profile, the braid layout + width/jitter/platformRows/decor
-            // chances). The pre-plan hook's regionParams (bounce's
-            // braid-only `bounceFreeArrow`) merges last.
-            regionParams: this._assembleRegionParams(activeIds, 'sphere', prep.regionParams),
-            growthParams: {
-                spherePlan: plan,
-                maxItemsPerRegion,
-                fillerCount: fillerCount ?? 0,
-                revisitRatio: (revisitPercent ?? 25) / 100,
-                ...(quotas ? { substrateQuotas: quotas } : {}),
-                ...(startSubstrate && startSubstrate !== 'auto'
-                    ? { startSubstrate } : {}),
-            },
-        }, (ev) => this._onGenerationProgress(ev));
-        if (this._progressState) {
-            // light timing stats — non-priority, console-only
-            const total = ((performance.now() - this._progressState.startedAt) / 1000);
-            console.log('[procgenPipeline] generation timings '
-                + `(${total.toFixed(1)}s total)`, this._progressState.timings);
-            this._progressState.totalSeconds = total;
-        }
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed,
-            itemLib,
-            startingItems,
-            lockedCanonicalItems,
-            // A starting arrow is placed at no location, so the
-            // compiled items pool doesn't carry it — backfill its
-            // definition (ids 999↓ stay clear of the compiled pool's
-            // ITEM_ID_BASE upward numbering).
-            ...(startingItems.length > 0 ? {
-                sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
-                    name,
-                    id: 999 - i,
-                    classification: 'progression',
-                    groups: ['Everything'],
-                }])),
-            } : {}),
+            fillerCount: fillerCount ?? 0,
+            revisitPercent: revisitPercent ?? 25,
+            startSub,
+            quotas,
+            activeIds: this._activeSubstrateIds(quotas, startSub),
+            itemLib: this._mergedItemLib(),
+            itemPool: { ...this.scenario.items },
+            victoryItemId: this._resolveVictoryItemId(),
             enableLoopMode: !!this.params.enableLoopMode,
             regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            completionConditionItem: victoryItemId,
+            hazardOpts: this._effectiveHazardOpts(),
+        };
+    }
+
+    // The edited draft (sphere 0 = starting items, spheres 1..N = the
+    // sphere plan) → the explicit spherePlan + startingItems the engine
+    // consumes. The draft IS the plan now — no re-run of planSpheres.
+    _planFromDraft(draft, seed) {
+        return {
+            startingItems: [...draft.spheres[0]],
+            plan: {
+                seed,
+                spheres: draft.spheres.slice(1)
+                    .map((items, i) => ({ sphere: i + 1, items: [...items] })),
+            },
+        };
+    }
+
+    // Step ① — pre-plan contributions + planSpheres → editable draft.
+    _stepPlan() {
+        const cfg = this._buildSphereConfig();
+        const itemPool = { ...cfg.itemPool };
+        // Each active substrate may grant starting items, reserve
+        // sphere-1 pickups, lock placements, remove pool items, or add
+        // regionParams BEFORE planning (bounce's free arrow — the hook
+        // mutates itemPool via its delta). The driver stays agnostic.
+        const prep = this._collectSphereGrowthPrep({
+            activeIds: cfg.activeIds, itemPool, quotas: cfg.quotas,
+            startSubstrate: cfg.startSub, seed: cfg.seed,
+        });
+        const plan = planSpheres({
+            itemPool,
+            sphereCount: cfg.sphereCount,
+            exclusiveSpheres: prep.exclusiveSpheres,
+            ...(cfg.victoryItemId && (itemPool[cfg.victoryItemId] ?? 0) > 0
+                ? { victoryItem: cfg.victoryItemId } : {}),
+            seed: cfg.seed,
+        });
+        // Editable draft: sphere 0 = starting items, spheres 1..N = plan.
+        const draft = {
+            spheres: [
+                [...prep.startingItems],
+                ...plan.spheres.map((s) => [...s.items]),
+            ],
+        };
+        this._stepState = {
+            completed: 0, cfg, prep, draft, poolSize: Object.keys(itemPool).length,
+            plan: null, startingItems: null, growConfig: null,
+            tree: null, rng: null, grow: null, compile: null, seconds: 0,
+        };
+        this.result = null;
+        this.message = '';
+        this.warning = '';
+    }
+
+    // Step ② — build the region tree (on a fresh rng kept live for ③).
+    _stepTree() {
+        const st = this._stepState;
+        const cfg = st.cfg;
+        const { plan, startingItems } = this._planFromDraft(st.draft, cfg.seed);
+        const growConfig = {
+            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
+            itemLib: cfg.itemLib,
+            seed: cfg.seed,
+            hazardOpts: cfg.hazardOpts,
+            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', st.prep.regionParams),
+            growthParams: {
+                spherePlan: plan,
+                maxItemsPerRegion: cfg.maxItemsPerRegion,
+                fillerCount: cfg.fillerCount,
+                revisitRatio: cfg.revisitPercent / 100,
+                ...(cfg.quotas ? { substrateQuotas: cfg.quotas } : {}),
+                ...(cfg.startSub ? { startSubstrate: cfg.startSub } : {}),
+            },
+        };
+        const { tree, rng } = buildSphereGrowthTree(growConfig);
+        st.plan = plan;
+        st.startingItems = startingItems;
+        st.growConfig = growConfig;
+        st.tree = tree;
+        st.rng = rng;
+        st.completed = 1;
+    }
+
+    // Step ③ — grow the regions from the pre-built tree (+ live rng, so
+    // the random stream stays continuous — byte-identical to all-in-one).
+    async _stepRegions() {
+        const st = this._stepState;
+        this._progressState = {
+            startedAt: performance.now(), totalRegions: 0, totalSpheres: 0,
+            doneRegions: 0, region: null, attempt: null, phase: null,
+            timings: [], lastEvent: null, lastAt: 0,
+        };
+        this._updateProgressEl();
+        const { grid, stats, startCell } = await growSpheresAsync({
+            ...st.growConfig,
+            growthParams: { ...st.growConfig.growthParams, prebuiltTree: st.tree, rng: st.rng },
+        }, (ev) => this._onGenerationProgress(ev));
+        if (this._progressState) {
+            st.seconds = (performance.now() - this._progressState.startedAt) / 1000;
+        }
+        st.grow = { grid, stats, startCell };
+        st.completed = 2;
+    }
+
+    // Step ④ — compile rules.json (+ embedded sphere log) and run the
+    // oracle (the emitted world must compute back to the edited plan).
+    _stepCompile() {
+        const st = this._stepState;
+        const cfg = st.cfg;
+        const { grid, stats, startCell } = st.grow;
+        const startingItems = st.startingItems;
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: cfg.seed,
+            itemLib: cfg.itemLib,
+            startingItems,
+            lockedCanonicalItems: st.prep.lockedCanonicalItems,
+            // A starting item is placed at no location, so the compiled
+            // pool doesn't carry it — backfill its definition (ids 999↓
+            // stay clear of the compiled pool's upward numbering).
+            ...(startingItems.length > 0 ? {
+                sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
+                    name, id: 999 - i, classification: 'progression', groups: ['Everything'],
+                }])),
+            } : {}),
+            enableLoopMode: cfg.enableLoopMode,
+            regionXpEffect: cfg.regionXpEffect,
+            completionConditionItem: cfg.victoryItemId,
             procgenMetadata: {
                 driver: 'sphere-growth',
                 stop_reason: stats.stopReason,
-                sphere_plan: plan,
+                sphere_plan: st.plan,
             },
         });
+        const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), st.plan);
+        st.compile = { rulesJson, oracleErrors };
+        st.completed = 3;
 
-        // Phase 3: the oracle — the emitted world must compute back to
-        // the plan exactly. Surface a mismatch loudly; it means a
-        // driver bug, not a bad seed.
-        const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), plan);
-        const elapsedNote = this._progressState?.totalSeconds
-            ? ` (${this._progressState.totalSeconds.toFixed(1)}s)` : '';
+        const elapsedNote = st.seconds ? ` (${st.seconds.toFixed(1)}s)` : '';
         this.message = oracleErrors.length > 0
             ? `SPHERE ORACLE MISMATCH: ${oracleErrors[0]}`
-            : `Sphere plan realised${elapsedNote}: ${plan.spheres
+            : `Sphere plan realised${elapsedNote}: ${st.plan.spheres
                 .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`
-                + (arrowNote ? ` — ${arrowNote}` : '');
-
-        // The plan needed more regions than the quotas allow — the
-        // extras silently became maze regions, which reads as a bug in
-        // a single-substrate world. Warn prominently.
+                + (st.prep.note ? ` — ${st.prep.note}` : '');
         if (stats.quotaFallbacks > 0) {
             this.warning = `WARNING: substrate quotas exhausted — ${stats.quotaFallbacks} `
                 + `region(s) fell back to 'maze' (the plan needs ${stats.regionsBuilt} `
                 + 'regions). Raise the quotas for a pure-substrate world.';
         }
-
         this.result = {
             grid,
-            regionSize: { width: regionWidth, height: regionHeight },
+            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
             stats,
             poolRemaining: null,
             rulesJson,
-            spherePlan: plan,
+            spherePlan: st.plan,
         };
+    }
+
+    // Advance one step (button: Run next step). Starts the pipeline (①)
+    // when none is running.
+    _advanceSphereStep() {
+        if (!this._stepState) { this._stepPlan(); return; }
+        const c = this._stepState.completed;
+        if (c === 0) this._stepTree();
+        else if (c === 1) return this._stepRegions(); // async
+        else if (c === 2) this._stepCompile();
+        return undefined;
+    }
+
+    // "Run all" — run from the current point to completion (steps ②③④
+    // are skipped if already done). Called by _runGeneration in sphere
+    // mode, so it inherits the isGenerating guard + error handling.
+    async _runSphereGrowth() {
+        if (!this._stepState) this._stepPlan();
+        while (this._stepState.completed < 3) {
+            // eslint-disable-next-line no-await-in-loop
+            await this._advanceSphereStep();
+        }
+    }
+
+    // "Run next step" button — its own guard + render (the Generate path
+    // in _runGeneration wraps "Run all").
+    async _runSphereStepNext() {
+        if (this.isGenerating) return;
+        this.isGenerating = true;
+        this.render();
+        try {
+            await this._advanceSphereStep();
+        } catch (e) {
+            this.message = `ERROR: ${e.message}`;
+        }
+        this.isGenerating = false;
+        this._progressState = null;
+        this.render();
+    }
+
+    // "Reset" button — drop the pipeline so ① re-plans from current params.
+    _resetSphereSteps() {
+        this._stepState = null;
+        this.result = null;
+        this.message = '';
+        this.warning = '';
+        this._progressState = null;
+        this.render();
+    }
+
+    // An edit to the plan draft invalidates everything downstream of ①.
+    _onSpherePlanEdited() {
+        const st = this._stepState;
+        if (st && st.completed > 0) {
+            st.completed = 0;
+            st.plan = st.startingItems = st.growConfig = null;
+            st.tree = st.rng = st.grow = st.compile = null;
+            this.result = null;
+            this.message = '';
+            this.warning = '';
+        }
+        this.render();
     }
 
     _runTopDown() {

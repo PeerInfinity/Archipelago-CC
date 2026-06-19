@@ -3192,8 +3192,14 @@ export function* growSpheresGen(config) {
         }
     }
 
-    const rng = createRng(seed);
-    const tree = buildSphereTree(spherePlan, {
+    // The tree-build and region-build can run as SEPARATE pipeline steps:
+    // when a pre-built tree (and its live rng — see buildSphereGrowthTree)
+    // is injected, reuse them so the random stream stays continuous. The
+    // all-in-one path (no prebuiltTree) builds the tree here on a fresh
+    // rng exactly as before, so its output is byte-identical.
+    const prebuilt = growthParams.prebuiltTree ?? null;
+    const rng = prebuilt ? (growthParams.rng ?? createRng(seed)) : createRng(seed);
+    const tree = prebuilt ?? buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
         regionParams,
     }, rng);
@@ -3471,6 +3477,39 @@ export async function growSpheresAsync(config, onProgress = null) {
         r = gen.next();
     }
     return r.value;
+}
+
+/**
+ * Build ONLY the region tree (step ② of stepped sphere growth) on a
+ * fresh rng, returning the tree AND the live rng. Feed both back into
+ * growSpheresGen via growthParams.{prebuiltTree, rng} for the region
+ * build (step ③) so the random stream continues unbroken — the stepped
+ * path is then byte-identical to the all-in-one growSpheres. Takes the
+ * same config shape as growSpheresGen.
+ */
+export function buildSphereGrowthTree(config) {
+    const { seed = 1, regionParams = {}, growthParams = {} } = config;
+    const {
+        spherePlan,
+        maxItemsPerRegion = 2,
+        fillerCount = 0,
+        revisitRatio = 0.25,
+        substrateQuotas = null,
+        startSubstrate = null,
+    } = growthParams;
+    if (!spherePlan) {
+        throw new Error('buildSphereGrowthTree: growthParams.spherePlan required');
+    }
+    const planErrors = validateSpherePlan(spherePlan);
+    if (planErrors.length > 0) {
+        throw new Error(`buildSphereGrowthTree: invalid sphere plan — ${planErrors[0]}`);
+    }
+    const rng = createRng(seed);
+    const tree = buildSphereTree(spherePlan, {
+        maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
+        regionParams,
+    }, rng);
+    return { tree, rng };
 }
 
 export function buildPresetSidecars(grid, {

@@ -148,8 +148,9 @@ const sphereRadio = panel.locator('input[name="procgen-pipeline-mode"][value="sp
 if (!await sphereRadio.isChecked()) throw new Error('panel did not boot in sphereGrowth mode');
 console.log('PANEL: sphereGrowth mode active');
 
-// Generate and assert the inline oracle message.
-await panel.locator('button:has-text("Generate")').first().click();
+// Generate and assert the inline oracle message. Sphere mode's primary
+// button is "Run all" (the stepped pipeline run to completion).
+await panel.locator('button:has-text("Run all")').first().click();
 await page.waitForTimeout(3000);
 const message = await panel.locator('.procgen-pipeline-message').textContent();
 console.log('PANEL MESSAGE:', message);
