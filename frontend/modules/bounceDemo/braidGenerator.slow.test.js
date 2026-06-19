@@ -110,6 +110,12 @@ describe('braid generator (Regime 1, width 240)', () => {
             });
             const laneCountByY = new Map(rows(level).map((row) => [row[0].y, row.length]));
             const laneOf = (id) => laneCountByY.get(level.platforms.find((p) => p.id === id).y);
+            // Hosts of a terminal (exit portal or return-to-start teleporter).
+            const terminalHosts = new Set([
+                ...level.portals.map((pt) => pt.on),
+                ...(level.teleports ?? []).map((tp) => tp.on),
+            ]);
+            const yById = new Map(level.platforms.map((p) => [p.id, p.y]));
             for (const p of level.platforms) {
                 // Blue (moving, full-width sweep) only on 1-lane rows; brown
                 // (breaking, terminal) only on 2-lane rows (a pre-merge branch
@@ -121,6 +127,12 @@ describe('braid generator (Regime 1, width 240)', () => {
                 if (p.type === 'brown') {
                     brownTotal++;
                     expect(laneCountByY.get(p.y), `seed ${seed} brown lane count`).toBe(2);
+                    // A brown never shares a row with ANOTHER terminal host — that
+                    // [brown, terminal] row has no solid platform to climb on from
+                    // and strands the climb. (A terminal ON the brown is fine.)
+                    const sibTerminal = [...terminalHosts]
+                        .some((id) => id !== p.id && yById.get(id) === p.y);
+                    expect(sibTerminal, `seed ${seed} brown ${p.id} beside a terminal`).toBe(false);
                 }
             }
             // Springs ride 1-lane platforms (the gap above them grows).

@@ -1029,7 +1029,20 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
         if (blueCount < BLUE_CAP && rng.next() < blueChance) { p.type = 'blue'; blueCount += 1; }
         return p;
     };
+    // A brown platform must not share a ROW with ANOTHER platform that hosts a
+    // terminal — an exit PORTAL or a return-to-start TELEPORTER. Both are dead
+    // ends (a portal exits the region; a teleporter sends you home, and a brown
+    // breaks on landing), so a [brown, terminal] row leaves no solid platform to
+    // launch from and the climb is stranded. A terminal ON the brown itself is
+    // fine (the landing fires before the break) — only the SIBLING is forbidden.
+    // Same-row platforms share an exact y (placed off the same `y`), so the scan
+    // is exact; terminals are already placed by every maybeBrown call site (fork
+    // portals in a prior row, the capstone portal+teleport just above).
+    const yOfHost = (hostId) => platforms.find((q) => q.id === hostId)?.y;
+    const rowHasOtherTerminal = (p) => [...portals, ...teleportEntities]
+        .some((e) => e.on !== p.id && yOfHost(e.on) === p.y);
     const maybeBrown = (p) => {
+        if (rowHasOtherTerminal(p)) return;
         if (brownCount < BROWN_CAP && rng.next() < brownChance) { p.type = 'brown'; brownCount += 1; }
     };
     // Decorate a 1-lane platform and return the gap ABOVE it (the next row's
@@ -1146,8 +1159,10 @@ function proposeBraidLevel({ id, exits, pickups, rng, C, G, jitter = 0, width, d
         const [portalSide, teleSide] = rng.next() < 0.5 ? [L, R] : [R, L];
         placeExit(portalSide, capExit);
         placeTeleport(teleSide);
-        // The portal branch is terminal (it exits), so it may BREAK (brown);
-        // the teleport branch stays solid (a breaking teleport adds nothing).
+        // maybeBrown is a no-op here: the portal branch shares this row with the
+        // teleport branch, and a brown beside a terminal would strand the climb
+        // (rowHasOtherTerminal). Kept for the (rare) future where the capstone is
+        // single-lane; today it always declines.
         maybeBrown(portalSide);
     }
 
