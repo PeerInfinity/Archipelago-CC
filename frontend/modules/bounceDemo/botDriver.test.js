@@ -369,4 +369,55 @@ describe('dj movers: composite legs pass through blue platforms', () => {
         expect([...r.pickupsTouched]).toContain('loc_a');
         expect(r.falls).toBe(0);
     });
+
+    // Regression (Adventure 'BlackCastle', 2026-06-18): a Regime-1 fork braid
+    // can place a FULL-WIDTH moving blue between two 2-LANE rows (not a
+    // green→blue→green stepping stone). Bouncing straight through the blue from
+    // the lower-LEFT green lands on the upper-LEFT platform; the upper-RIGHT one
+    // (b4) is only reachable by HOLDING AN ARROW off the blue — and its
+    // same-column feeder (b2) hosts an open portal the bot must avoid, so the bot
+    // is FORCED through the blue and must steer. The bot used to set its leg
+    // target to the blue itself and then keep its straight-up entry policy,
+    // overshooting past b4 forever; now it advances the leg past the mover and
+    // aims at b4, steering off the blue.
+    const blackCastle = {
+        id: 'BlackCastle',
+        size: { width: 240, height: 1031.09 },
+        platforms: [
+            { id: 'b0', x: 120, y: 931.09, type: 'green' },
+            { id: 'b1', x: 59, y: 841.09, type: 'green' },
+            { id: 'b2', x: 181, y: 841.09, type: 'green' },
+            { id: 'b3', x: 0, y: 751.09, type: 'blue', sweep: { min: 15, max: 225 } },
+            { id: 'b4', x: 179, y: 661.09, type: 'brown' },
+            { id: 'b5', x: 61, y: 661.09, type: 'green' },
+            { id: 'b6', x: 120, y: 571.09, type: 'green' },
+            { id: 'b7', x: 59, y: 60, type: 'green' },
+            { id: 'b8', x: 181, y: 60, type: 'green' },
+        ],
+        springs: [{ id: 'spr_b6', x: 120, y: 566.09, on: 'b6' }],
+        jetpacks: [],
+        pickups: [
+            { id: 'Dungeon1', x: 0, y: 731.09, on: 'b3' },
+            { id: 'Black Castle Foyer', x: 179, y: 641.09, on: 'b4' },
+            { id: 'Slay Rhindle', x: 61, y: 641.09, on: 'b5' },
+        ],
+        portals: [
+            { id: 'side_exit_N', x: 181, y: 821.09, on: 'b2', direction: 'up' },
+            { id: 'side_exit_E', x: 59, y: 40, on: 'b7', direction: 'right' },
+        ],
+        teleports: [{ id: 'tp_b8', x: 181, y: 40, on: 'b8' }],
+    };
+    const FULL = abilitiesWith('left', 'right', 'springs', 'jetpacks', 'blue', 'brown');
+
+    it('steers OFF a full-width blue to the far platform of a 2-lane row above it', () => {
+        const driver = createBotDriver({ constants: DJ });
+        driver.setTarget({ kind: 'pickup', id: 'Black Castle Foyer' }); // on b4 (upper-right)
+        const r = runDriver(blackCastle, FULL, driver, {
+            constants: DJ,
+            maxFrames: 6000,
+            isPortalOpen: () => true, // b2's portal open → bot must take the steer route
+            until: ({ pickupsTouched }) => pickupsTouched.has('Black Castle Foyer'),
+        });
+        expect([...r.pickupsTouched]).toContain('Black Castle Foyer');
+    });
 });

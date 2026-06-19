@@ -267,13 +267,25 @@ export function createBotDriver(opts = {}) {
             stuck = true;                   // retry at the next landing
             return;
         }
-        const legTo = path[1];
+        // The next hop may LAND on a mover (a moving blue). The bot can't stop
+        // there as a leg end — it bounces THROUGH, holding an arrow toward the
+        // solid platform BEYOND it. So advance the leg target past any leading
+        // movers in the path: they go into `through`, and the policy is aimed at
+        // the first solid platform after them (policiesFor(legPlatform.x)), which
+        // is what makes the bot steer OFF the blue toward that platform rather
+        // than drifting straight up onto whatever shares its column. A mover that
+        // is itself the goal host stays the target — the walk stops at path's end,
+        // so the bot still lands on it (e.g. a pickup riding the blue).
+        const movers = moverIds(level, abilities, C);
+        let legIdx = 1;
+        while (movers && legIdx < path.length - 1 && movers.has(path[legIdx])) legIdx += 1;
+        const legTo = path[legIdx];
         const legPlatform = platformById(level, legTo);
         if (!legPlatform) { stuck = true; return; }
 
         // validation passes THROUGH movers (other than the leg target
         // itself) — the composite wait-land-bounce-off is one jump
-        let through = moverIds(level, abilities, C);
+        let through = movers;
         if (through?.has(legTo)) {
             through = new Set(through);
             through.delete(legTo);
