@@ -2391,10 +2391,11 @@ function* generateRegionZoneGen(spec) {
     // directions trips "cannot gate both arrows" and wrongly falls back to a
     // column. Skip the drift in braid mode: the arrows stay free, the requirements
     // stay empty (Regime-1 all-free), and the fork braid realises every exit.
-    const braid = spec.params?.bounceMode === 'braid';
+    // The substrate declares whether it hosts surplus exits natively
+    // (braid does → skip the drift); default not-native → drift.
     const driftItems = adapter.driftItems ?? [];
     const freeDrifts = driftItems.filter((d) => (spec.freeItems ?? []).includes(d));
-    if (!braid && freeDrifts.length > 0) {
+    if (!adapter.hostsSurplusExitsNatively?.(spec.params) && freeDrifts.length > 0) {
         const geometryItems = new Set(Object.entries(adapter.libraryItems ?? {})
             .filter(([, def]) => !def?.is_victory).map(([name]) => name));
         const isDrift = (it) => driftItems.includes(it);
@@ -2439,35 +2440,31 @@ function* generateRegionZoneGen(spec) {
     // tip), so column output stays byte-identical.
     const ent = spec.entrances?.[0];
     if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
-        exitSpecs.push(braid
-            ? { side: ent.side, requirement: [], counts: {} }
-            : { side: ent.side, ...requirementOf(ent) });
+        // Gated back portal (column) vs ungated (braid) — the substrate
+        // decides from its regionParams; default gated.
+        const backGated = adapter.backPortalGated?.(spec.params) ?? true;
+        exitSpecs.push(backGated
+            ? { side: ent.side, ...requirementOf(ent) }
+            : { side: ent.side, requirement: [], counts: {} });
     }
     const locationSpecs = (spec.locations ?? []).map((loc) => ({
         id: loc.id, item: loc.item ?? null, ...requirementOf(loc),
     }));
 
-    const zoneSpecs = {
+    // Base zoneSpecs; the substrate enriches them with its own layout
+    // vocabulary (bounce: physicsProfile + the braid mode/width/jitter/
+    // platformRows/decoration/freeArrow — see buildZoneSpecs), so the
+    // engine names no substrate-specific params. `seed` is computed here
+    // (consuming the region rng) before the adapter enriches.
+    const baseZoneSpecs = {
         region_id: spec.region_id,
         exitSpecs,
         locationSpecs,
         seed: spec.seed ?? ((spec.rng.next() * 0x7fffffff) | 0),
-        ...(spec.params?.physicsProfile && spec.params.physicsProfile !== 'experimental'
-            ? { physicsProfile: spec.params.physicsProfile } : {}),
-        // 2-wide braid layout (Regime-1 top-down): the driver passes the
-        // bounce layout mode + width + per-row jitter through regionParams.
-        ...(spec.params?.bounceMode === 'braid'
-            ? {
-                mode: 'braid',
-                ...(spec.params.braidWidth ? { braidWidth: spec.params.braidWidth } : {}),
-                ...(spec.params.bounceJitter ? { jitter: spec.params.bounceJitter } : {}),
-                ...(spec.params.platformRows ? { platformRows: spec.params.platformRows } : {}),
-                ...(spec.params.bounceDecorChance ? { decorChance: spec.params.bounceDecorChance } : {}),
-                // The world's held free arrow ('left'|'right'): gated-braid
-                // portals ride tips toward it, and the verifier treats it as free.
-                ...(spec.params.bounceFreeArrow ? { freeArrow: spec.params.bounceFreeArrow } : {}),
-            } : {}),
     };
+    const zoneSpecs = typeof adapter.buildZoneSpecs === 'function'
+        ? adapter.buildZoneSpecs(baseZoneSpecs, spec.params ?? {})
+        : baseZoneSpecs;
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
         ? yield* adapter.generateZoneForSpecsGen(zoneSpecs)
         : adapter.generateZoneForSpecs(zoneSpecs);
@@ -2814,9 +2811,11 @@ export function buildSphereTree(plan, opts = {}, rng) {
         revisitRatio = 0.25,
         substrateQuotas = null,
         startSubstrate = null,
-        // Bounce braid regions ungate their back portal (see generateRegionZoneGen),
-        // so it imposes no gate-hosting constraint — the veto must not count it.
-        bounceBraid = false,
+        // World-level regionParams — passed to each host substrate's
+        // structural hooks (backPortalGated / exitGateVeto / gateHostingHint)
+        // so the grower's gate accounting matches what the substrate
+        // realises, without the engine naming any substrate.
+        regionParams = {},
     } = opts;
     const spheres = plan.spheres;
     const waves = spheres.length;
@@ -2901,11 +2900,15 @@ export function buildSphereTree(plan, opts = {}, rng) {
             // substrates without the veto hook (maze walks back via
             // its entrance tile).
             //
-            // EXCEPT a braid bounce region: its back portal is UNGATED
-            // (generateRegionZoneGen), so it occupies no gate slot — counting it
-            // here would falsely consume the region's one arrowless slot and
-            // abort growth. (Column bounce keeps it: its back portal IS a gate.)
-            if (!(bounceBraid && substrate === 'bounce')) {
+            // EXCEPT when the substrate UNGATES its back portal (braid
+            // bounce — see backPortalGated / generateRegionZoneGen): it
+            // then occupies no gate slot, and counting it here would
+            // falsely consume the region's one arrowless slot and abort
+            // growth. Default (maze, column bounce): the back portal is a
+            // gate, so seed it.
+            const backGated = substrateRegistry.get(substrate)
+                ?.backPortalGated?.(regionParams) ?? true;
+            if (backGated) {
                 node.childGates.push(gateTerms);
             }
         }
@@ -2926,17 +2929,12 @@ export function buildSphereTree(plan, opts = {}, rng) {
         if (gateable && gateTerms.some(({ item }) => !gateable.includes(item))) {
             return false;
         }
-        // Braid bounce regions realise gates as a single NESTED chain, which
-        // single-item gates can only form when they share one distinct item —
-        // so the braid needs a STRICTER veto than the column's (≤1 distinct
-        // forward physics gate, not just ≤1 arrowless). Without it the grower
-        // composes incomparable regions the braid can't build, which then can't
-        // fall back to a column either (their ungated back portal + an arrowless
-        // forward = two arrowless tops). Use the braid veto when present.
-        const veto = (bounceBraid && host.substrate === 'bounce'
-            && typeof adapter.canHostExitGatesBraid === 'function')
-            ? adapter.canHostExitGatesBraid
-            : adapter.canHostExitGates;
+        // The substrate picks its structural gate-hosting veto from the
+        // regionParams (bounce: a STRICTER nested-chain veto for braid,
+        // the arrowless-top veto for column). Without the right veto the
+        // grower composes regions the layout can't realise. Falls back to
+        // a plain canHostExitGates when the substrate declares no selector.
+        const veto = adapter.exitGateVeto?.(regionParams) ?? adapter.canHostExitGates;
         if (typeof veto === 'function'
                 && !veto([...host.childGates], gateTerms)) {
             return false;
@@ -2987,13 +2985,19 @@ export function buildSphereTree(plan, opts = {}, rng) {
                 }
             }
         }
-        throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate. `
-            + 'For bounce-only worlds note that each level supports ONE '
-            + 'physics-arrowless portal (key/count gates included — an unlocked '
-            + 'on-column portal swallows every climb past it), and guaranteed '
-            + 'back portals consume it on every non-start region — so sphere 1 '
-            + 'must fit in at most 2 regions (raise "Max items/region", lower '
-            + 'the sphere count, or pin fewer items to sphere 1).');
+        // Append each active substrate's gate-hosting guidance (the
+        // realisable-gate constraints are the substrate's, not the
+        // engine's).
+        const hintIds = new Set([
+            ...nodes.map((n) => n.substrate),
+            ...(startSubstrate ? [startSubstrate] : []),
+            ...Object.keys(substrateQuotas ?? {}),
+        ]);
+        const hints = [...new Set([...hintIds]
+            .map((id) => substrateRegistry.get(id)?.gateHostingHint?.(regionParams))
+            .filter(Boolean))];
+        throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate.`
+            + (hints.length ? ` ${hints.join(' ')}` : ''));
     };
 
     // Filler waves chosen up front so each wave knows its region count.
@@ -3191,7 +3195,7 @@ export function* growSpheresGen(config) {
     const rng = createRng(seed);
     const tree = buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        bounceBraid: regionParams.bounceMode === 'braid',
+        regionParams,
     }, rng);
     yield {
         type: 'plan',

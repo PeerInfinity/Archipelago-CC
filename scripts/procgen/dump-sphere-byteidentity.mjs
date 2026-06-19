@@ -7,6 +7,10 @@
 import { writeFileSync } from 'node:fs';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import { GATEABLE_ITEMS } from '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import {
+    prepareBounceSphereGrowth, buildBounceRegionParams,
+    DEFAULT_BOUNCE_PROCGEN_PARAMS,
+} from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import { growSpheres, buildRulesJson, getRegionExits, getRegionEntrance } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 
@@ -79,7 +83,46 @@ function mixed() {
     return { grid: dumpGrid(grid), rulesJson, stats };
 }
 
-const result = { bounceOnly: bounceOnly(), mixed: mixed() };
+// Braid bounce-only — the LIVE path since column was deprecated. Mirrors
+// the panel/driver exactly: the free arrow is a STARTING item (pre-plan
+// hook), braid regionParams from the bounce defaults.
+function braid() {
+    const itemPool = { ...BOUNCE_POOL };
+    const prep = prepareBounceSphereGrowth({
+        itemPool, quotas: { bounce: 99 }, startSubstrate: null,
+        seed: 1, substrateId: 'bounce',
+    });
+    for (const [k, d] of Object.entries(prep.itemPoolDelta ?? {})) {
+        itemPool[k] = (itemPool[k] ?? 0) + d;
+        if (itemPool[k] <= 0) delete itemPool[k];
+    }
+    const plan = planSpheres({
+        itemPool, sphereCount: 3,
+        victoryItem: 'Victory', gateableItems: GATEABLE_ITEMS, seed: 1,
+    });
+    const { grid, startCell, stats } = growSpheres({
+        regionSize: { width: 8, height: 6 }, seed: 1,
+        regionParams: {
+            ...buildBounceRegionParams({ params: DEFAULT_BOUNCE_PROCGEN_PARAMS, mode: 'sphere' }),
+            ...prep.regionParams,
+        },
+        growthParams: {
+            spherePlan: plan, substrateQuotas: { bounce: 99 },
+            startSubstrate: 'bounce', maxItemsPerRegion: 2,
+        },
+    });
+    const rulesJson = buildRulesJson(grid, {
+        startCell, seed: 1, embedSphereLog: false,
+        completionConditionItem: 'Victory',
+        startingItems: prep.startingItems,
+        sourceItems: Object.fromEntries(prep.startingItems.map((name, i) => [name, {
+            name, id: 999 - i, classification: 'progression', groups: ['Everything'],
+        }])),
+    });
+    return { grid: dumpGrid(grid), rulesJson, stats };
+}
+
+const result = { bounceOnly: bounceOnly(), mixed: mixed(), braid: braid() };
 const outPath = process.argv[2] ?? '/tmp/sphere-dump.json';
 writeFileSync(outPath, JSON.stringify(result, null, 1));
 process.stderr.write(`wrote ${outPath}\n`);

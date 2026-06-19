@@ -392,6 +392,91 @@ export function canHostExitGatesBraid(existingGates, newGate) {
     return nonBrown.size <= 1;
 }
 
+// ── Engine-facing structural hooks (sphere growth) ──────────────────
+// The generic sphere-growth engine (procgenPipelineEngine.js) asks
+// these instead of naming bounce / 'braid' directly. All read the
+// world-level regionParams (what buildBounceRegionParams produced).
+// Column layout is deprecated (braid is the only reachable mode), but
+// these stay regionParams-aware so the DORMANT column path — still
+// exercised by the oracle suite + dump-sphere-byteidentity — behaves
+// exactly as before.
+
+/**
+ * Is a region's guaranteed back portal gated on its entry item?
+ * Column: yes (the back portal IS a gate, on a branch tip). Braid: no —
+ * it ungates the back portal (you can only BE in the region having used
+ * the entry item, so a free way back is monotone-sound), which lets the
+ * braid realise the region as one nested chain of its FORWARD gates.
+ * Drives BOTH the engine's back-portal requirement AND the grower's
+ * gate-slot accounting — they must agree, so they read one predicate.
+ */
+export function backPortalGated(regionParams) {
+    return regionParams?.bounceMode !== 'braid';
+}
+
+/**
+ * Does the layout host surplus (multi) exits natively? Braid forks the
+ * spine and puts one portal per branch (no cap), so the top-down
+ * free-arrow DRIFT device isn't needed (and would corrupt the braid's
+ * gate analysis). Column hosts a single arrowless "top", so surplus
+ * exits must drift off-column on a free arrow.
+ */
+export function hostsSurplusExitsNatively(regionParams) {
+    return regionParams?.bounceMode === 'braid';
+}
+
+/**
+ * The structural gate-hosting veto for the grower, selected by layout:
+ * braid uses the stricter nested-chain veto; column the arrowless-top
+ * veto. Returns a veto fn (existingGates, newGate) -> bool.
+ */
+export function exitGateVeto(regionParams) {
+    return regionParams?.bounceMode === 'braid'
+        ? canHostExitGatesBraid : canHostExitGates;
+}
+
+/**
+ * Guidance appended to the grower's "no host can realise a wave gate"
+ * error — the realisable-gate constraints differ by layout.
+ */
+export function gateHostingHint(regionParams) {
+    if (regionParams?.bounceMode === 'braid') {
+        return 'For bounce braid worlds, each region realises its forward '
+            + 'gates as ONE nested chain (at most one distinct non-brown '
+            + 'physics gate item per region), so a wave needing incomparable '
+            + 'gates needs more regions — raise "Max items/region" or lower '
+            + 'the sphere count.';
+    }
+    return 'For bounce-only worlds note that each level supports ONE '
+        + 'physics-arrowless portal (key/count gates included — an unlocked '
+        + 'on-column portal swallows every climb past it), and guaranteed '
+        + 'back portals consume it on every non-start region — so sphere 1 '
+        + 'must fit in at most 2 regions (raise "Max items/region", lower '
+        + 'the sphere count, or pin fewer items to sphere 1).';
+}
+
+/**
+ * Enrich the engine's base zoneSpecs ({region_id, exitSpecs,
+ * locationSpecs, seed}) with bounce's layout-specific keys — moves the
+ * bounceMode/braidWidth/jitter/platformRows/decorChance/freeArrow +
+ * physicsProfile translation OUT of the generic engine. `regionParams`
+ * is the world-level regionParams (engine's spec.params).
+ */
+export function buildZoneSpecs(base, regionParams = {}) {
+    const out = { ...base };
+    const pp = regionParams.physicsProfile;
+    if (pp && pp !== 'experimental') out.physicsProfile = pp;
+    if (regionParams.bounceMode === 'braid') {
+        out.mode = 'braid';
+        if (regionParams.braidWidth) out.braidWidth = regionParams.braidWidth;
+        if (regionParams.bounceJitter) out.jitter = regionParams.bounceJitter;
+        if (regionParams.platformRows) out.platformRows = regionParams.platformRows;
+        if (regionParams.bounceDecorChance) out.decorChance = regionParams.bounceDecorChance;
+        if (regionParams.bounceFreeArrow) out.freeArrow = regionParams.bounceFreeArrow;
+    }
+    return out;
+}
+
 /**
  * @param {object} specs
  * @param {string} specs.region_id
@@ -686,6 +771,13 @@ export function createBounceSubstrateEntry({
         gateableItems: null,
         canHostExitGates,
         canHostExitGatesBraid,
+        // Engine-facing structural hooks — the generic sphere-growth
+        // engine asks these instead of naming bounce/'braid' directly.
+        backPortalGated,
+        hostsSurplusExitsNatively,
+        exitGateVeto,
+        gateHostingHint,
+        buildZoneSpecs,
         // Items a layout driver may attach to a surplus arrowless exit as
         // an off-column DRIFT so the level realiser can place it (a zone
         // hosts at most one arrowless "column top" exit). The driver only
