@@ -20,7 +20,6 @@ import {
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
 } from './spherePlanner.js';
-import { createRng } from '../shared/rng.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
@@ -180,57 +179,11 @@ const DEFAULT_PARAMS = {
     sphereCount: 3,
     fillerCount: 0,
     revisitPercent: 25,
-    // Bounce-specific: what falling off the level bottom does.
-    // 'current' respawns at the entrance; 'previous' exits to the
-    // previous region; 'start' is reserved. Routing never depends on
-    // it — every non-start region carries a real back portal.
-    bounceFallBehavior: 'current',
-    // Bounce-specific physics profile (bounceDemo/physics.js
-    // PROFILES). LOGIC-AFFECTING: access rules derive from the
-    // profile's step constants, so the profile is stamped into every
-    // bounce payload and the world plays under the constants it was
-    // generated with. New worlds default to 'dj' (real Doodle Jump
-    // constants); 'experimental' (the original model) stamps nothing.
-    bouncePhysicsProfile: 'dj',
-    // Bounce level layout (top-down/free-arrow regions only). 'column' is
-    // the fixed-column proposer; 'braid' is the 2-wide branching-path
-    // generator that fits narrow widths and applies per-row jitter.
-    bounceLayout: 'column',
-    // Braid level width (px) — the wrap-ring width. 240 is DJ-authentic
-    // (fits two simultaneous branches; three need ≥318).
-    bounceBraidWidth: 240,
-    // Braid per-row jitter (px): horizontal meander applied to each row.
-    bounceJitter: 40,
-    // Extra PLAIN climb rows added per region after the gating content (gated
-    // braid only) — distributed across the requirement segments to make levels
-    // taller and lift the hardest exit to the summit. 0 = minimal gated chain.
-    bouncePlatformRows: 0,
-    // Braid decoration chances (0–1), per eligible platform. Blue (moving,
-    // 1-lane), brown (breaking, terminal), spring + jetpack (1-lane, launch
-    // higher → bigger gap above). Jetpack defaults off — its dj gap is huge.
-    bounceBlueChance: 0.3,
-    bounceBrownChance: 0.3,
-    bounceSpringChance: 0.3,
-    bounceJetpackChance: 0,
-    // Decorative fork chance (0–1) per extra platformRows row (gated braid): a
-    // 2-wide companion lane beside the spine, then a merge. The terminal merge
-    // branch may break (brown chance). Overshoots the platform-rows target.
-    bounceForkChance: 0,
+    // Substrate-specific params (e.g. bounce's fall behavior / physics
+    // profile / braid layout) are NOT here — each substrate declares its
+    // own defaults via the registry `defaultProcgenParams` hook, merged
+    // in by _defaultParams(). See bounceProcgenParams.js.
 };
-
-const BOUNCE_FALL_OPTIONS = [
-    { value: 'current', label: 'Restart current region', disabled: false },
-    { value: 'previous', label: 'Return to previous region', disabled: false },
-    { value: 'start', label: 'Return to starting region (v2)', disabled: true },
-];
-
-// Mirrors bounceDemo/physics.js PROFILES (the per-substrate parameter
-// subsections are a hardcoded v1, like the renderers map — a
-// registry-declared param schema is the eventual generic mechanism).
-const BOUNCE_PHYSICS_PROFILE_OPTIONS = [
-    { value: 'dj', label: 'Doodle Jump (measured, 20Hz)', disabled: false },
-    { value: 'experimental', label: 'Experimental (original model)', disabled: false },
-];
 
 const REGION_XP_EFFECT_OPTIONS = [
     { value: 'cost', label: 'Cost', disabled: false },
@@ -401,7 +354,7 @@ export class ProcgenPipelineUI {
 
     constructor(container, componentState) {
         this.container = container;
-        this.params = { ...DEFAULT_PARAMS };
+        this.params = this._defaultParams();
         this.scenario = {
             items: { ...DEFAULT_SCENARIO.items },
             obstacles: { ...DEFAULT_SCENARIO.obstacles },
@@ -945,6 +898,90 @@ export class ProcgenPipelineUI {
         return merged;
     }
 
+    /**
+     * The base default params merged with every registered substrate's
+     * declared `defaultProcgenParams` (e.g. bounce's fall behavior /
+     * physics profile / braid layout). Substrates own their own param
+     * defaults via the registry so the panel stays substrate-agnostic.
+     */
+    _defaultParams() {
+        const merged = { ...DEFAULT_PARAMS };
+        for (const entry of substrateRegistry.getAll()) {
+            if (entry?.defaultProcgenParams) Object.assign(merged, entry.defaultProcgenParams);
+        }
+        return merged;
+    }
+
+    /**
+     * Substrate ids participating in a sphere-growth run: every
+     * substrate with a positive quota, plus an explicit start
+     * substrate. Drives the per-substrate pre-plan + regionParams hooks.
+     */
+    _activeSubstrateIds(quotas, startSub) {
+        const ids = new Set();
+        for (const [id, n] of Object.entries(quotas ?? {})) {
+            if (Number(n) > 0) ids.add(id);
+        }
+        if (startSub) ids.add(startSub);
+        return [...ids];
+    }
+
+    /**
+     * Gather each active substrate's pre-plan contributions via its
+     * optional `prepareSphereGrowth` hook: starting items, sphere-1
+     * reservations (exclusiveSpheres), canonical-placement locks, item
+     * pool removals (itemPoolDelta, applied in place to `itemPool`),
+     * regionParams additions, and a UI note. Substrates without the
+     * hook contribute nothing.
+     */
+    _collectSphereGrowthPrep({ activeIds, itemPool, quotas, startSubstrate, seed }) {
+        const startingItems = [];
+        const lockedCanonicalItems = [];
+        const exclusiveSpheres = {};
+        const regionParams = {};
+        const notes = [];
+        for (const id of activeIds) {
+            const hook = substrateRegistry.get(id)?.prepareSphereGrowth;
+            if (typeof hook !== 'function') continue;
+            const c = hook({
+                itemPool, quotas, startSubstrate, seed,
+                params: this.params, substrateId: id,
+            }) || {};
+            if (c.startingItems) startingItems.push(...c.startingItems);
+            if (c.lockedCanonicalItems) lockedCanonicalItems.push(...c.lockedCanonicalItems);
+            for (const [k, v] of Object.entries(c.exclusiveSpheres ?? {})) {
+                exclusiveSpheres[k] = [...(exclusiveSpheres[k] ?? []), ...v];
+            }
+            for (const [k, d] of Object.entries(c.itemPoolDelta ?? {})) {
+                itemPool[k] = (itemPool[k] ?? 0) + d;
+                if (itemPool[k] <= 0) delete itemPool[k];
+            }
+            Object.assign(regionParams, c.regionParams ?? {});
+            if (c.note) notes.push(c.note);
+        }
+        return {
+            startingItems, lockedCanonicalItems, exclusiveSpheres,
+            regionParams, note: notes.join(' — '),
+        };
+    }
+
+    /**
+     * Merge each active substrate's `buildRegionParams` hook output into
+     * one regionParams object. `mode` is 'sphere' | 'topDown'. `extra`
+     * (e.g. the pre-plan hook's regionParams contribution) wins last.
+     */
+    _assembleRegionParams(activeIds, mode, extra = {}) {
+        const out = {};
+        for (const id of activeIds) {
+            const fn = substrateRegistry.get(id)?.buildRegionParams;
+            if (typeof fn === 'function') {
+                Object.assign(out, fn({ params: this.params, mode }));
+            }
+        }
+        Object.assign(out, extra);
+        return out;
+    }
+
     _renderSubstrateLibraryRow(entry) {
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-library-row procgen-pipeline-library-row-substrate';
@@ -1330,7 +1367,7 @@ export class ProcgenPipelineUI {
         const saveBtn = this._btn('Save Params', () => this._saveToLocalStorage({ showFeedback: true }));
         const loadBtn = this._btn('Load Params', () => { this._loadFromLocalStorage(); this.render(); });
         const resetBtn = this._btn('Reset Defaults', () => {
-            this.params = { ...DEFAULT_PARAMS };
+            this.params = this._defaultParams();
             this.scenario = {
                 items: { ...DEFAULT_SCENARIO.items },
                 obstacles: { ...DEFAULT_SCENARIO.obstacles },
@@ -2033,58 +2070,20 @@ export class ProcgenPipelineUI {
         const victoryItemId = this._resolveVictoryItemId();
         const quotas = this._effectiveSubstrateQuotas();
 
-        // Bounce arrow entry (user design 2026-06-10). A bounce region
-        // is only traversable beyond its forced column with an arrow,
-        // so when bounce is in the world one arrow (randomized) is
-        // made available up front:
-        // - bounce START: the classic intro — sphere 1 is EXACTLY that
-        //   arrow, collected in the start stack.
-        // - any other start: the arrow becomes a STARTING ITEM
-        //   (removed from the pool), so bounce regions are fully
-        //   traversable on first encounter.
-        // BRAID exception: the gated-braid model treats the free arrow as
-        // ALWAYS held, so it can NEVER be a gate — the braid verifier would
-        // derive the OTHER arrow and mismatch the grower's gate. So in braid
-        // mode the free arrow is always a STARTING ITEM removed from the pool
-        // (even the bounce-start case), keeping it disjoint from gateable
-        // arrows. Column mode keeps the sphere-1 start-stack intro untouched.
-        // NOTE (verify-sphere-growth-ui.mjs mirrors this block, column mode):
-        const braid = this.params.bounceLayout === 'braid';
+        // Substrate pre-plan contributions: each active substrate may,
+        // via its optional `prepareSphereGrowth` hook, grant starting
+        // items, reserve sphere-1 pickups (exclusiveSpheres), lock
+        // canonical placements, remove items from the pool, or add
+        // regionParams — BEFORE planning. Bounce's free-arrow entry
+        // lives there now (bounceProcgenParams.js); the driver stays
+        // substrate-agnostic.
         const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
-        const quotaIds = Object.keys(quotas ?? {});
-        const bounceSelected = (quotas?.bounce ?? 0) > 0 || startSub === 'bounce';
-        const bounceStarts = startSub === 'bounce'
-            || (startSub == null && bounceSelected
-                && quotaIds.length > 0 && quotaIds.every((id) => id === 'bounce'));
-        const exclusiveSpheres = {};
-        const startingItems = [];
-        const lockedCanonicalItems = [];
-        let arrowNote = '';
-        // The free arrow the player always holds (ability id) — gated-braid
-        // portals ride tips toward it, so the generator needs to know which one.
-        let freeArrowAbility = null;
-        if (bounceSelected) {
-            const arrows = ['Left arrow', 'Right arrow']
-                .filter((a) => (itemPool[a] ?? 0) > 0);
-            if (arrows.length > 0) {
-                const pick = arrows[Math.floor(
-                    createRng((seed * 31 + 17) | 0).next() * arrows.length)];
-                freeArrowAbility = pick === 'Left arrow' ? 'left' : 'right';
-                if (bounceStarts && !braid) {
-                    exclusiveSpheres[1] = [pick];
-                    // Lock the canonical placement so even multiworld
-                    // fill keeps the start-stack pickup an arrow (solo
-                    // seeds are already logic-forced).
-                    lockedCanonicalItems.push(pick);
-                    arrowNote = `${pick} = sphere 1 (the start stack)`;
-                } else {
-                    startingItems.push(pick);
-                    itemPool[pick] -= 1;
-                    if (itemPool[pick] <= 0) delete itemPool[pick];
-                    arrowNote = `${pick} granted as a starting item`;
-                }
-            }
-        }
+        const activeIds = this._activeSubstrateIds(quotas, startSub);
+        const prep = this._collectSphereGrowthPrep({
+            activeIds, itemPool, quotas, startSubstrate: startSub, seed,
+        });
+        const { startingItems, lockedCanonicalItems, exclusiveSpheres } = prep;
+        const arrowNote = prep.note;
 
         // Phase 1: the sphere plan — item→sphere assignment, Victory
         // pinned to the final sphere when the pool carries it.
@@ -2104,34 +2103,12 @@ export class ProcgenPipelineUI {
             seed,
             hazardOpts: this._effectiveHazardOpts(),
             // Substrate-specific knobs ride regionParams (maze ignores
-            // unknown keys; bounce stamps fallBehavior into payloads). The
-            // braid layout (Regime-2 gated chains) + its width and per-row
-            // jitter thread through to the bounce zone generator, which
-            // honours each goal's requirement (arrow gate rows + blue gates).
-            // Decor chances ride sphere growth, all spent on EXTRA platformRows:
-            // spring/jetpack/blue become on-spine flavor rows ONLY in a block that
-            // already holds the ability (reusing that ability's gating geometry),
-            // so they never block a player lacking it; fork makes a decorative
-            // 2-wide companion lane (any block), and brown breaks its terminal
-            // merge branch (an off-spine ledge, safe regardless of held items).
-            regionParams: {
-                fallBehavior: this.params.bounceFallBehavior ?? 'current',
-                physicsProfile: this.params.bouncePhysicsProfile ?? 'dj',
-                ...(this.params.bounceLayout === 'braid' ? {
-                    bounceMode: 'braid',
-                    braidWidth: this.params.bounceBraidWidth ?? 240,
-                    bounceJitter: this.params.bounceJitter ?? 40,
-                    platformRows: this.params.bouncePlatformRows ?? 0,
-                    bounceDecorChance: {
-                        spring: this.params.bounceSpringChance ?? 0,
-                        jetpack: this.params.bounceJetpackChance ?? 0,
-                        blue: this.params.bounceBlueChance ?? 0,
-                        fork: this.params.bounceForkChance ?? 0,
-                        brown: this.params.bounceBrownChance ?? 0,
-                    },
-                    ...(freeArrowAbility ? { bounceFreeArrow: freeArrowAbility } : {}),
-                } : {}),
-            },
+            // unknown keys). Each active substrate's `buildRegionParams`
+            // hook assembles its own keys (bounce: fallBehavior, physics
+            // profile, the braid layout + width/jitter/platformRows/decor
+            // chances). The pre-plan hook's regionParams (bounce's
+            // braid-only `bounceFreeArrow`) merges last.
+            regionParams: this._assembleRegionParams(activeIds, 'sphere', prep.regionParams),
             growthParams: {
                 spherePlan: plan,
                 maxItemsPerRegion,
@@ -2246,25 +2223,17 @@ export class ProcgenPipelineUI {
             // zone realiser may attach any of these items to a surplus
             // exit's physics requirement without changing the logic.
             freeItems: startingItems,
-            // Bounce knobs ride regionParams (maze ignores unknown keys;
-            // maxIterations 0 keeps top-down maze rooms open). The braid
-            // layout (Regime-1 free-arrow geometry) + its width and per-row
-            // jitter are threaded through to the bounce zone generator.
+            // Substrate knobs ride regionParams (maze ignores unknown
+            // keys; the generic maxIterations 0 keeps top-down maze rooms
+            // open). Each substrate in the mix assembles its own keys via
+            // `buildRegionParams` (mode 'topDown' omits the sphere-only
+            // platformRows + fork decoration).
             regionParams: {
                 maxIterations: 0,
-                physicsProfile: this.params.bouncePhysicsProfile ?? 'dj',
-                fallBehavior: this.params.bounceFallBehavior ?? 'current',
-                ...(this.params.bounceLayout === 'braid' ? {
-                    bounceMode: 'braid',
-                    braidWidth: this.params.bounceBraidWidth ?? 240,
-                    bounceJitter: this.params.bounceJitter ?? 40,
-                    bounceDecorChance: {
-                        blue: this.params.bounceBlueChance ?? 0,
-                        brown: this.params.bounceBrownChance ?? 0,
-                        spring: this.params.bounceSpringChance ?? 0,
-                        jetpack: this.params.bounceJetpackChance ?? 0,
-                    },
-                } : {}),
+                ...this._assembleRegionParams(
+                    Object.entries(mix ?? {})
+                        .filter(([, w]) => Number(w) > 0).map(([id]) => id),
+                    'topDown'),
             },
         });
         const rulesJson = buildRulesJson(grid, {
@@ -2445,29 +2414,35 @@ export class ProcgenPipelineUI {
     }
 
     /**
-     * Per-substrate parameter subsections inside Parameters. v1 is a
-     * hardcoded map (a registry-declared param schema is the eventual
-     * generic mechanism); substrates without parameters render
-     * nothing. Empty selection falls back to maze — matching the
-     * engine's substrate default.
+     * Per-substrate parameter subsections inside Parameters. Each
+     * substrate renders its own controls via the registry
+     * `renderProcgenParams` hook (bounce — bounceProcgenParams.js);
+     * maze's panel-owned params stay local for now. Substrates without
+     * either render nothing. Empty selection falls back to maze —
+     * matching the engine's substrate default.
      */
     _renderSubstrateParamSections() {
         const wrap = document.createElement('div');
-        const renderers = {
+        const localRenderers = {
             maze: () => this._renderMazeParams(),
-            bounce: () => this._renderBounceParams(),
         };
         const dict = this._activeSubstrateDict();
         let ids = Object.keys(dict).filter((id) => Number(dict[id]) > 0).sort();
         if (ids.length === 0) ids = ['maze'];
         for (const id of ids) {
-            const renderer = renderers[id];
-            if (!renderer) continue;
+            const hook = substrateRegistry.get(id)?.renderProcgenParams;
+            let node = null;
+            if (typeof hook === 'function') {
+                node = hook({ params: this.params, onChange: () => this._saveToLocalStorage() });
+            } else if (localRenderers[id]) {
+                node = localRenderers[id]();
+            }
+            if (!node) continue;
             const header = document.createElement('div');
             header.className = 'procgen-pipeline-scenario-subheader';
             header.textContent = `${id} parameters`;
             wrap.appendChild(header);
-            wrap.appendChild(renderer());
+            wrap.appendChild(node);
         }
         return wrap;
     }
@@ -2498,144 +2473,6 @@ export class ProcgenPipelineUI {
         if (this.params.enableHazards) {
             wrap.appendChild(this._renderHazardSubFields());
         }
-        return wrap;
-    }
-
-    _renderBounceParams() {
-        const wrap = document.createElement('div');
-        const row = document.createElement('div');
-        row.className = 'procgen-pipeline-field';
-        const label = document.createElement('label');
-        label.textContent = 'Fall behavior';
-        label.title = 'What falling off the level bottom does. Routing never depends on it — every non-start region has a real back portal.';
-        const select = document.createElement('select');
-        for (const opt of BOUNCE_FALL_OPTIONS) {
-            const o = document.createElement('option');
-            o.value = opt.value;
-            o.textContent = opt.label;
-            if (opt.disabled) o.disabled = true;
-            select.appendChild(o);
-        }
-        select.value = this.params.bounceFallBehavior ?? 'current';
-        select.addEventListener('change', () => {
-            this.params.bounceFallBehavior = select.value;
-            this._saveToLocalStorage();
-        });
-        row.appendChild(label);
-        row.appendChild(select);
-        wrap.appendChild(row);
-
-        const physRow = document.createElement('div');
-        physRow.className = 'procgen-pipeline-field';
-        const physLabel = document.createElement('label');
-        physLabel.textContent = 'Physics profile';
-        physLabel.title = 'Logic-affecting: access rules derive from the profile\'s physics, '
-            + 'and the profile is stamped into every bounce payload so the world plays under '
-            + 'the constants it was generated with. dj is provisional until probe calibration.';
-        const physSelect = document.createElement('select');
-        for (const opt of BOUNCE_PHYSICS_PROFILE_OPTIONS) {
-            const o = document.createElement('option');
-            o.value = opt.value;
-            o.textContent = opt.label;
-            if (opt.disabled) o.disabled = true;
-            physSelect.appendChild(o);
-        }
-        physSelect.value = this.params.bouncePhysicsProfile ?? 'dj';
-        physSelect.addEventListener('change', () => {
-            this.params.bouncePhysicsProfile = physSelect.value;
-            this._saveToLocalStorage();
-        });
-        physRow.appendChild(physLabel);
-        physRow.appendChild(physSelect);
-        wrap.appendChild(physRow);
-
-        // Layout: column (fixed-column proposer) vs braid (2-wide branching
-        // path). Braid is Regime-1 (top-down/free-arrow) only; it fits
-        // narrow widths the column can't and carries the per-row jitter.
-        const layoutRow = document.createElement('div');
-        layoutRow.className = 'procgen-pipeline-field';
-        const layoutLabel = document.createElement('label');
-        layoutLabel.textContent = 'Layout';
-        layoutLabel.title = 'column = the fixed-column generator. braid = the 2-wide branching-path generator '
-            + '(top-down/free-arrow regions only): platforms weave into 1–2 lanes, portals ride forks or the '
-            + 'single-lane top, and it fits narrow widths (e.g. 240) the column model cannot.';
-        const layoutSelect = document.createElement('select');
-        for (const [value, text] of [['column', 'column'], ['braid', 'braid (2-wide)']]) {
-            const o = document.createElement('option');
-            o.value = value;
-            o.textContent = text;
-            layoutSelect.appendChild(o);
-        }
-        layoutSelect.value = this.params.bounceLayout ?? 'column';
-        layoutRow.appendChild(layoutLabel);
-        layoutRow.appendChild(layoutSelect);
-        wrap.appendChild(layoutRow);
-
-        // Braid-only sub-fields: width + per-row jitter. Shown when braid.
-        const braidFields = document.createElement('div');
-        const numberField = (labelText, title, key, def, { step = 1, max = null } = {}) => {
-            const r = document.createElement('div');
-            r.className = 'procgen-pipeline-field';
-            const l = document.createElement('label');
-            l.textContent = labelText;
-            l.title = title;
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.min = '0';
-            input.step = String(step); // without this the browser rejects non-integers
-            if (max != null) input.max = String(max);
-            input.value = String(this.params[key] ?? def);
-            input.addEventListener('change', () => {
-                let v = Number(input.value);
-                if (!Number.isFinite(v) || v < 0) v = def;
-                if (max != null) v = Math.min(v, max);
-                this.params[key] = v;
-                input.value = String(v);
-                this._saveToLocalStorage();
-            });
-            r.appendChild(l);
-            r.appendChild(input);
-            return r;
-        };
-        braidFields.appendChild(numberField('Braid width',
-            'Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.',
-            'bounceBraidWidth', 240));
-        braidFields.appendChild(numberField('Max jitter',
-            'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
-            'bounceJitter', 40));
-        braidFields.appendChild(numberField('Platform rows',
-            'Extra plain climb rows added per region AFTER the logic-gating content '
-            + '(sphere-growth / gated braid only). Spread across the gate segments to make '
-            + 'levels taller and lift the hardest exit to the summit. 0 = minimal gated chain.',
-            'bouncePlatformRows', 0));
-        braidFields.appendChild(numberField('Blue chance',
-            'Per-eligible-platform probability (0–1) of a blue platform (moving, full-width '
-            + 'sweep; 1-lane rows only). Capped per level so the reachability check stays fast.',
-            'bounceBlueChance', 0.3, { step: 0.01, max: 1 }));
-        braidFields.appendChild(numberField('Brown chance',
-            'Per-eligible-platform probability (0–1) of a brown platform (breaks on landing; '
-            + 'terminal only — a pre-merge branch or the top). Capped per level.',
-            'bounceBrownChance', 0.3, { step: 0.01, max: 1 }));
-        braidFields.appendChild(numberField('Spring chance',
-            'Per-eligible-platform probability (0–1) of a spring (1-lane rows; launches higher, '
-            + 'so the gap above grows to the spring window).',
-            'bounceSpringChance', 0.3, { step: 0.01, max: 1 }));
-        braidFields.appendChild(numberField('Jetpack chance',
-            'Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR '
-            + 'higher — under dj the gap is ~6200px, making very tall levels. Default 0.',
-            'bounceJetpackChance', 0, { step: 0.01, max: 1 }));
-        braidFields.appendChild(numberField('Fork chance',
-            'Per-extra-row probability (0–1) of a decorative 2-wide fork/merge beside the '
-            + 'gated spine (sphere growth). Adds companion platforms BEYOND the platform-rows '
-            + 'target; the terminal merge branch breaks at Brown chance. Default 0.',
-            'bounceForkChance', 0, { step: 0.01, max: 1 }));
-        braidFields.style.display = (this.params.bounceLayout === 'braid') ? '' : 'none';
-        layoutSelect.addEventListener('change', () => {
-            this.params.bounceLayout = layoutSelect.value;
-            braidFields.style.display = (layoutSelect.value === 'braid') ? '' : 'none';
-            this._saveToLocalStorage();
-        });
-        wrap.appendChild(braidFields);
         return wrap;
     }
 
@@ -2671,7 +2508,7 @@ export class ProcgenPipelineUI {
             const s = localStorage.getItem(LS_KEY);
             if (!s) return;
             const parsed = JSON.parse(s);
-            if (parsed.params) this.params = { ...DEFAULT_PARAMS, ...parsed.params };
+            if (parsed.params) this.params = { ...this._defaultParams(), ...parsed.params };
             if (parsed.scenario) {
                 this.scenario = {
                     items: { ...(parsed.scenario.items ?? {}) },

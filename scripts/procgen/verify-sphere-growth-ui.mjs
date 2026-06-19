@@ -41,15 +41,20 @@ const PANEL_PARAMS = {
     sphereCount: 3, fillerCount: 0, revisitPercent: 25,
 };
 
-// Mirror the panel's _runSphereGrowth exactly (victory from the merged
-// lib's is_victory entry; bounce-only quotas → bounce START → sphere 1
-// is exactly one seeded-random arrow, the start-stack intro).
-import { createRng } from '../../frontend/modules/shared/rng.js';
-const arrows = ['Left arrow', 'Right arrow'].filter((a) => (ITEM_POOL[a] ?? 0) > 0);
-const startArrow = arrows[Math.floor(createRng((SEED * 31 + 17) | 0).next() * arrows.length)];
+// Mirror the panel's _runSphereGrowth via the SAME pre-plan hook the
+// driver uses (no duplicated free-arrow logic): bounce-only quotas →
+// bounce START (column) → sphere 1 is exactly one seeded-random arrow,
+// the start-stack intro (exclusiveSpheres).
+import { prepareBounceSphereGrowth } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
+const itemPool = { ...ITEM_POOL };
+const prep = prepareBounceSphereGrowth({
+    itemPool, quotas: { bounce: 99 }, startSubstrate: null,
+    seed: SEED, params: {}, substrateId: 'bounce',
+});
+const startArrow = prep.exclusiveSpheres?.[1]?.[0] ?? prep.startingItems?.[0];
 const plan = planSpheres({
-    itemPool: ITEM_POOL, sphereCount: 3,
-    exclusiveSpheres: { 1: [startArrow] },
+    itemPool, sphereCount: 3,
+    exclusiveSpheres: prep.exclusiveSpheres ?? {},
     victoryItem: 'Victory', seed: SEED,
 });
 console.log('START ARROW (seeded):', startArrow);

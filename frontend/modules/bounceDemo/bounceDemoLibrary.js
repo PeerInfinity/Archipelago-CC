@@ -38,6 +38,10 @@ import { easyTower } from './fixtures/easyTower.js';
 import { fillerClimb } from './fixtures/fillerClimb.js';
 import { springGap } from './fixtures/springGap.js';
 import { fork } from './fixtures/fork.js';
+import {
+    DEFAULT_BOUNCE_PROCGEN_PARAMS, prepareBounceSphereGrowth,
+    buildBounceRegionParams, renderBounceProcgenParams,
+} from './bounceProcgenParams.js';
 
 // Canonical assignment constraints (checked by the e2e winnability
 // test): the spiral chain hops E,S,W,W with derived side rules, so
@@ -694,6 +698,16 @@ export function createBounceSubstrateEntry({
         // libraryItems. The producer + engine merge land in Phase 2.
         libraryObstacles: BOUNCE_LIBRARY_OBSTACLES,
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'bounce_abilities']),
+
+        // Procgen Pipeline integration (bounceProcgenParams.js): the
+        // panel defaults, the pre-plan free-arrow contribution, the
+        // regionParams assembly, and the per-substrate param controls —
+        // the bounce-specific pieces the generic driver used to
+        // hard-code. All optional adapter hooks; maze etc. omit them.
+        defaultProcgenParams: DEFAULT_BOUNCE_PROCGEN_PARAMS,
+        prepareSphereGrowth: prepareBounceSphereGrowth,
+        buildRegionParams: buildBounceRegionParams,
+        renderProcgenParams: renderBounceProcgenParams,
     });
 }
 
