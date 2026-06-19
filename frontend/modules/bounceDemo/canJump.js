@@ -635,10 +635,24 @@ export function buildPlatformGraph(level, abilities, opts = {}) {
     // verifier opts in so an offset portal tip can't leak a skip route.
     const portalHosts = (opts.terminalPortals && level.portals)
         ? new Set(level.portals.map((pt) => pt.on)) : null;
+    // climbOnly: skip targets at or BELOW the source (y grows downward, so
+    // "above" = smaller y). It is the all-N² cost driver that this prunes — a
+    // down/same-row target has no height pre-filter (canJumpDetailed only cheaply
+    // rejects targets too HIGH), so each runs a full sim to failure. Sound ONLY
+    // where down/within-row edges are redundant for reaching every goal (a
+    // climbing braid: the player climbs, and the bot recovers from an overshoot
+    // via the teleport→ENTRANCE edge, never a planned descent). NOT sound for a
+    // Regime-1 fork under partial abilities (a lane can be reachable only via a
+    // within-row wrap). The bot keeps it safe by building this graph first and
+    // falling back to the full one when it fails to route (see botDriver). Off by
+    // default, so every other caller is byte-identical.
+    const yById = new Map(platforms.map((p) => [p.id, p.y]));
     for (const from of nodes) {
         if (teleportHosts.has(from) || portalHosts?.has(from)) continue;
+        const fromY = from === ENTRANCE ? Infinity : yById.get(from);
         for (const p of platforms) {
             if (p.id === from) continue;
+            if (opts.climbOnly && p.y >= fromY) continue;
             if (canJump(level, from, p.id, abilities, opts)) {
                 edges.get(from).add(p.id);
             }

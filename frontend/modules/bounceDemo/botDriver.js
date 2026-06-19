@@ -143,30 +143,58 @@ export function createBotDriver(opts = {}) {
     let policyName = null;
     let nextPlatform = null;    // the leg's destination (status surface)
     let stuck = false;          // no path / no witness at last re-plan
-    let graph = null;           // cached canJump graph
-    let graphKey = null;        // level.id + abilities signature
+    // Two cached canJump graphs per (level, abilities): a cheap climbOnly graph
+    // tried first, and the full N² graph as the authoritative fallback when
+    // climbOnly fails to route (see replan). Both are keyed on graphBase so a new
+    // region or a freshly-granted item rebuilds them.
+    let graphBase = null;
+    let climbGraph = null;
+    let fullGraph = null;
 
-    function ensureGraph(level, abilities) {
-        const key = `${level.id}|${abilitiesKey(abilities)}`;
-        if (graphKey !== key) {
-            // Moving-blue stepping stones: suppress sweep-phase enumeration in the
-            // graph build (the same fast path the gated derive uses — 137→7ms/region;
-            // it's the cost of entering a moving-blue region). Sound ONLY when every
-            // blue is a green→blue→green column stone, so it's gated on that exact
-            // invariant: when it holds, a blue is just a stepping stone and the
-            // suppressed edges are a SUBSET of the ferry-aware ones (the bot never
-            // plans an impossible jump), and placement already proved every goal
-            // reachable under this same suppressed model (so the route still exists).
-            // When the invariant fails — Regime-1 decorative blues that ARE load-
-            // bearing, legacy ceiling blues — we keep the ferry-aware model unchanged.
-            // Per-frame playback is identical either way: simulatePolicy forward-sims
-            // from the LIVE state (real phase), waiting in place until the blue sweeps
-            // over the column, then bouncing through it up to the next platform.
-            const suppressBlues = braidBlueInvariantErrors(level).length === 0;
-            graph = buildPlatformGraph(level, abilities, { constants: C, suppressBlues });
-            graphKey = key;
-        }
-        return graph;
+    // Moving-blue stepping stones: suppress sweep-phase enumeration in the graph
+    // build (the same fast path the gated derive uses — 137→7ms/region; it's the
+    // cost of entering a moving-blue region). Sound ONLY when every blue is a
+    // green→blue→green column stone, so it's gated on that exact invariant: when
+    // it holds, a blue is just a stepping stone and the suppressed edges are a
+    // SUBSET of the ferry-aware ones (the bot never plans an impossible jump), and
+    // placement already proved every goal reachable under this same suppressed
+    // model (so the route still exists). When the invariant fails — Regime-1
+    // decorative blues that ARE load-bearing, legacy ceiling blues — we keep the
+    // ferry-aware model. Per-frame playback is identical either way: simulatePolicy
+    // forward-sims from the LIVE state (real phase), waiting in place until the
+    // blue sweeps over the column, then bouncing through it to the next platform.
+    function buildGraph(level, abilities, climbOnly) {
+        const suppressBlues = braidBlueInvariantErrors(level).length === 0;
+        return buildPlatformGraph(level, abilities, { constants: C, suppressBlues, climbOnly });
+    }
+
+    function resetGraphsIfStale(level, abilities) {
+        const base = `${level.id}|${abilitiesKey(abilities)}`;
+        if (graphBase !== base) { graphBase = base; climbGraph = null; fullGraph = null; }
+    }
+
+    /**
+     * The cheap climbOnly graph (upward edges only — see buildPlatformGraph). The
+     * bot only climbs or recovers via the teleport→ENTRANCE edge, so this routes
+     * every goal in a climbing braid at a fraction of the all-N² cost.
+     */
+    function ensureClimbGraph(level, abilities) {
+        resetGraphsIfStale(level, abilities);
+        if (!climbGraph) climbGraph = buildGraph(level, abilities, true);
+        return climbGraph;
+    }
+
+    /**
+     * The authoritative full N² graph — built only when the climbOnly graph fails
+     * to route (a non-climbing-braid level, or a genuinely unreachable goal). It
+     * is a SUPERSET of the climbOnly graph, so it can only ever find MORE routes:
+     * climbOnly never yields a wrong answer, only an incomplete one, and this is
+     * the safety net. Cached so a stuck goal rebuilds it at most once per base.
+     */
+    function ensureFullGraph(level, abilities) {
+        resetGraphsIfStale(level, abilities);
+        if (!fullGraph) fullGraph = buildGraph(level, abilities, false);
+        return fullGraph;
     }
 
     /**
@@ -188,7 +216,6 @@ export function createBotDriver(opts = {}) {
         if (!goalHost) return;              // not this region's goal — wait
         if (lastPlatform === goalHost) return; // arrived: bounce in place
 
-        const g = ensureGraph(level, abilities);
         const isPortalOpen = helpers?.isPortalOpen ?? (() => true);
         // Avoid hosts of OPEN non-target portals (landing exits the
         // region mid-route) and platforms broken THIS attempt (dj
@@ -206,8 +233,18 @@ export function createBotDriver(opts = {}) {
         // host, lands (gameCore sends it home), and re-plans from the verified
         // low route. No descend needed — that's how the braid recovers from
         // an overshoot.
-        const path = shortestPath(g, lastPlatform, goalHost, blocked)
-            ?? shortestPath(g, lastPlatform, goalHost);
+        // Try the cheap climbOnly graph first; if it can't route to the goal,
+        // fall back to the authoritative full N² graph (a superset) before
+        // concluding there's no route. `g` carries whichever graph answered, so
+        // the entrance-fallback / leg-validation below all use it.
+        const routeOver = (gr) => shortestPath(gr, lastPlatform, goalHost, blocked)
+            ?? shortestPath(gr, lastPlatform, goalHost);
+        let g = ensureClimbGraph(level, abilities);
+        let path = routeOver(g);
+        if (!path || path.length < 2) {
+            g = ensureFullGraph(level, abilities);
+            path = routeOver(g);
+        }
         if (!path || path.length < 2) {
             // No jump route from here AND no teleport route home (a
             // teleport-less LEGACY COLUMN level — braids always carry a top
