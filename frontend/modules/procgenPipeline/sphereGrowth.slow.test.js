@@ -13,7 +13,8 @@ import { GATEABLE_ITEMS, BOUNCE_LIBRARY_ITEMS } from '../bounceDemo/bounceDemoLi
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { validateLevel } from '../bounceDemo/level.js';
 import {
-    buildSphereTree, growSpheres, growSpheresAsync, buildRulesJson,
+    buildSphereTree, allocateSphereTree, wireSphereTree, placeSphereTreeItems,
+    growSpheres, growSpheresAsync, buildRulesJson,
 } from './procgenPipelineEngine.js';
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
@@ -348,6 +349,39 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
         const wave1 = tree.nodes.find((n) => n.wave === 1 && !n.isFiller);
         expect(wave1.gate).toEqual(['key_red']);
         expect(wave1.gateCounts).toEqual({ key_red: 1 });
+    });
+
+    it('stepped 3-phase build (②a→②b→②c) equals all-in-one buildSphereTree', () => {
+        // The Procgen Pipeline panel runs the tree build as three editable
+        // sub-steps on one threaded rng. UNEDITED, that must be byte-identical
+        // to the single-pass buildSphereTree (the same composition). A
+        // mixed-quota + filler config exercises every rng-consuming branch
+        // (pickSub quota draws, pickHostAndGate, side picks, filler draws).
+        const plan = makePlan(3, 4);
+        const opts = {
+            maxItemsPerRegion: 1, fillerCount: 2, revisitRatio: 0.3,
+            substrateQuotas: { maze: 99 }, startSubstrate: 'maze',
+        };
+        // usedSides is a Set — normalise to a sorted array for deep-equal.
+        const norm = (t) => JSON.parse(JSON.stringify(t,
+            (k, v) => (v instanceof Set ? [...v].sort() : v)));
+
+        const allInOne = buildSphereTree(plan, opts, createRng(7));
+
+        const rng = createRng(7);
+        const { allocation } = allocateSphereTree(plan, opts, rng);
+        const wired = wireSphereTree(plan, allocation, opts, rng);
+        placeSphereTreeItems(plan, wired.nodes);
+        const stepped = {
+            nodes: wired.nodes,
+            substrateCounts: wired.substrateCounts,
+            quotaFallbacks: wired.quotaFallbacks,
+        };
+
+        expect(norm(stepped)).toEqual(norm(allInOne));
+        // Sanity: the config actually produced fillers + items to place.
+        expect(allocation.fillerWaves.length).toBe(2);
+        expect(stepped.nodes.some((n) => n.items.length > 0)).toBe(true);
     });
 
     it('bounce realises a count gate as an authored lock (rule-gated portals)', () => {

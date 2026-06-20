@@ -2799,15 +2799,57 @@ export function arrangeShuffledSpiral(config) {
 // geometry (rule-gated portals/pickups), so any item can gate any
 // substrate's exits.
 
+// The tree build is split into three composable phases so the Procgen
+// Pipeline panel can surface + edit it at the right altitude (②a/②b/②c).
+// The split is byte-identity-preserving because of how the seeded rng is
+// consumed: the fillerWaves draws happen UP FRONT (②a), the per-region
+// substrate+wiring loop is rng-interleaved and incremental so it must stay
+// fused (②b), and item round-robin consumes NO rng (②c — a pure final
+// pass). buildSphereTree below re-composes them on one threaded rng, so the
+// unedited pipeline reproduces the original single-pass output exactly.
+
 /**
- * Decide the abstract region tree for a sphere plan. Pure given rng.
- * Returns { nodes, substrateCounts }; nodes are in realisation order
- * (parents always precede children).
+ * ②a — Allocate. Draw the up-front fillerWaves (the ONLY rng this phase
+ * consumes) and compute the deterministic region count per wave. Leaves
+ * rng advanced past the draws so ②b continues the same stream.
+ * Returns { allocation: { regionsPerWave, fillersPerWave, fillerWaves }, rng }.
+ * `fillerWaves` (raw draw order) is what ②b consumes; `fillersPerWave`
+ * (per-wave aggregate) is the editor-facing view.
  */
-export function buildSphereTree(plan, opts = {}, rng) {
+export function allocateSphereTree(plan, opts = {}, rng) {
+    const { maxItemsPerRegion = 2, fillerCount = 0 } = opts;
+    const spheres = plan.spheres;
+    const waves = spheres.length;
+    // Region count per wave is deterministic: ceil(items / maxItemsPerRegion),
+    // at least one (a wave must have somewhere to hang its items / children).
+    const regionsPerWave = spheres.map(
+        (s) => Math.max(1, Math.ceil(s.items.length / maxItemsPerRegion)));
+    // Filler waves chosen up front so each wave knows its region count —
+    // these draws must precede ②b's loop to keep the rng stream identical
+    // to the original single-pass buildSphereTree.
+    const fillerWaves = [];
+    for (let i = 0; i < fillerCount; i++) {
+        fillerWaves.push(Math.floor(rng.next() * waves));
+    }
+    // Per-wave aggregate (length = waves) for the allocation editor; ②b
+    // still consumes fillerWaves (draw order) to preserve byte-identity.
+    const fillersPerWave = regionsPerWave.map(() => 0);
+    for (const fw of fillerWaves) fillersPerWave[fw] += 1;
+    return { allocation: { regionsPerWave, fillersPerWave, fillerWaves }, rng };
+}
+
+/**
+ * ②b — Topology. The interleaved per-region loop: substrate pick + host/gate
+ * wiring + side assignment, consuming rng. Builds nodes WITHOUT items (those
+ * come in ②c). Region N's host pick depends on regions 1..N-1's consumed
+ * sides / childGates, so substrate and wiring CANNOT be separated without
+ * reordering the shared rng stream — they stay fused here (substrate is still
+ * editable in-place on the result). Returns
+ * { nodes, substrateCounts, quotaFallbacks, rng }; nodes are in realisation
+ * order (parents always precede children).
+ */
+export function wireSphereTree(plan, allocation, opts = {}, rng) {
     const {
-        maxItemsPerRegion = 2,
-        fillerCount = 0,
         revisitRatio = 0.25,
         substrateQuotas = null,
         startSubstrate = null,
@@ -2819,6 +2861,7 @@ export function buildSphereTree(plan, opts = {}, rng) {
     } = opts;
     const spheres = plan.spheres;
     const waves = spheres.length;
+    const { regionsPerWave, fillerWaves } = allocation;
 
     // Cumulative instance counts per sphere: cumCounts[k] maps item →
     // number of instances in spheres 1..k+1. A wave-w gate on item X
@@ -3000,33 +3043,20 @@ export function buildSphereTree(plan, opts = {}, rng) {
             + (hints.length ? ` ${hints.join(' ')}` : ''));
     };
 
-    // Filler waves chosen up front so each wave knows its region count.
-    const fillerWaves = [];
-    for (let i = 0; i < fillerCount; i++) {
-        fillerWaves.push(Math.floor(rng.next() * waves));
-    }
-
     for (let w = 0; w < waves; w++) {
-        const items = spheres[w].items; // sphere w+1 items hosted by wave w
-        const hostingRegions = Math.max(1, Math.ceil(items.length / maxItemsPerRegion));
-        const waveNodes = [];
+        const hostingRegions = regionsPerWave[w];
         for (let i = 0; i < hostingRegions; i++) {
             if (w === 0 && i === 0) {
-                waveNodes.push(addNode({
+                addNode({
                     wave: 0, gate: [], parent: null,
                     substrate: pickSub(startSubstrate),
-                }));
+                });
                 continue;
             }
             const substrate = pickSub();
             const { host, gate, gateCounts } = pickHostAndGate(w);
-            waveNodes.push(addNode({ wave: w, gate, gateCounts, parent: host.index, substrate }));
+            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate });
         }
-        // Round-robin the wave's items across its hosting regions.
-        items.forEach((item, idx) => {
-            const node = waveNodes[idx % waveNodes.length];
-            node.items.push({ id: `loc_${node.items.length}`, item });
-        });
         // Fillers assigned to this wave attach like regular wave
         // regions but carry no items — so their gates are free to use
         // sphere-1 items even at wave 0 (no stratification impact).
@@ -3040,7 +3070,46 @@ export function buildSphereTree(plan, opts = {}, rng) {
         }
     }
 
-    return { nodes, substrateCounts, quotaFallbacks };
+    return { nodes, substrateCounts, quotaFallbacks, rng };
+}
+
+/**
+ * ②c — Item placement. Round-robin each sphere's items across that sphere's
+ * hosting (non-filler) regions, in realisation order. Consumes NO rng, so
+ * moving all item assignment to this final pass is byte-identical to the
+ * original interleaved placement. Mutates `nodes[i].items` and returns nodes.
+ */
+export function placeSphereTreeItems(plan, nodes) {
+    const spheres = plan.spheres;
+    for (let w = 0; w < spheres.length; w++) {
+        // The wave's hosting regions are its non-filler nodes, in insertion
+        // order (== the original per-wave `waveNodes`). Fillers carry no items.
+        const waveNodes = nodes.filter((n) => n.wave === w && !n.isFiller);
+        if (waveNodes.length === 0) continue; // edited allocation: nowhere to host
+        spheres[w].items.forEach((item, idx) => {
+            const node = waveNodes[idx % waveNodes.length];
+            node.items.push({ id: `loc_${node.items.length}`, item });
+        });
+    }
+    return nodes;
+}
+
+/**
+ * Decide the abstract region tree for a sphere plan. Pure given rng.
+ * Returns { nodes, substrateCounts, quotaFallbacks }; nodes are in
+ * realisation order (parents always precede children). Re-expressed as the
+ * composition of the three editable phases on ONE threaded rng — the stepped
+ * pipeline (②a→②b→②c, unedited) reproduces this exactly.
+ */
+export function buildSphereTree(plan, opts = {}, rng) {
+    const { allocation } = allocateSphereTree(plan, opts, rng);
+    const wired = wireSphereTree(plan, allocation, opts, rng);
+    placeSphereTreeItems(plan, wired.nodes);
+    return {
+        nodes: wired.nodes,
+        substrateCounts: wired.substrateCounts,
+        quotaFallbacks: wired.quotaFallbacks,
+    };
 }
 
 // Realise one tree node as a maze-style (procedural) region via the
