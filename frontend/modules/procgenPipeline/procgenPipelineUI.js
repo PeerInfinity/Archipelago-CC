@@ -2193,10 +2193,11 @@ export class ProcgenPipelineUI {
                 regionParams: st.growConfig.regionParams,
                 assumeBidirectional: st.growConfig.growthParams?.assumeBidirectional ?? true,
             });
+            // _invalidateFrom clears this.message, so set it AFTER and re-render.
+            this._invalidateFrom(4);
             this.message = `Re-rolled "${nd.region_id}" (seed ${seed}). `
                 + 'Re-run ④ Compile to recheck the oracle.';
-            this.warning = '';
-            this._invalidateFrom(4);
+            this.render();
         } catch (err) {
             this.message = `Re-roll failed: ${err.message}`;
             this.warning = '';
@@ -2220,10 +2221,11 @@ export class ProcgenPipelineUI {
         const cell = node?.cell ?? this._nodeForRegion(origRegion)?.cell;
         if (!cell) return;
         grid.replaceRegion(cell, editedRegion);
+        // _invalidateFrom clears this.message, so set it AFTER and re-render.
+        this._invalidateFrom(4);
         this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
             + 'Re-run ④ Compile to recheck the oracle.';
-        this.warning = '';
-        this._invalidateFrom(4);
+        this.render();
     }
 
     // Hit-test a click on the composite grid canvas → the region at that cell

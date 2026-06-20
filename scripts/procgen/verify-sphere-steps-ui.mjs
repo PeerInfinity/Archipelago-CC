@@ -332,6 +332,89 @@ const terminalE = msg.includes('Sphere plan realised')
 if (!terminalE) throw new Error(`②b edit Run all produced no terminal result: ${msg}`);
 console.log('PHASE E OK: ②b topology edit flowed through to a terminal result');
 
+// ── helpers for the ③ editing phases ────────────────────────────────
+function goTab(title) {
+    return page.evaluate((t) => {
+        const x = [...document.querySelectorAll('.lm_tab')].find((e) => e.title === t);
+        if (!x) return false;
+        x.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+        x.click();
+        return true;
+    }, title);
+}
+async function stepToCompiled() {
+    await clickBtn('Reset');
+    await page.waitForTimeout(300);
+    for (const s of ['Run ① Plan', 'Run ②a Allocate', 'Run ②b Topology',
+        'Run ②c Items', 'Run ③ Build regions', 'Run ④ Compile']) {
+        await clickBtn(s);
+        await page.waitForTimeout(s.includes('③') ? 3000 : 600);
+    }
+}
+
+// ── Phase F: ③ Re-roll a region (geometry re-rolls; oracle still holds) ─
+await stepToCompiled();
+let baseMsg = await message();
+if (!baseMsg.includes('Sphere plan realised')) throw new Error(`F: baseline not realised: ${baseMsg}`);
+const rerolled = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .find((e) => e.textContent.trim() === 'Re-roll 🎲' && !e.disabled);
+    if (!b) return false;
+    b.click();
+    return true;
+});
+if (!rerolled) throw new Error('F: no Re-roll 🎲 button found');
+await page.waitForTimeout(400);
+if (!(await message()).includes('Re-rolled')) throw new Error('F: re-roll message did not appear');
+console.log('PHASE F: re-rolled a region');
+await clickBtn('Run ④ Compile');
+await page.waitForTimeout(2000);
+let fMsg = await message();
+if (!fMsg.includes('Sphere plan realised')) {
+    throw new Error(`F: oracle failed after re-roll + ④: ${fMsg}`);
+}
+console.log('PHASE F OK: re-roll kept the oracle (exits/plan preserved)');
+
+// ── Phase G: ③ Edit ▸ → pipeline editor → Save → re-run ④ (oracle holds) ─
+const openedEditor = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .find((e) => e.textContent.trim() === 'Edit ▸');
+    if (!b) return false;
+    b.click();
+    return true;
+});
+if (!openedEditor) throw new Error('G: no Edit ▸ button found');
+await page.waitForTimeout(1200);
+const editorTitle = await page.evaluate(() =>
+    document.querySelector('.bounce-region-editor-panel .bre-title')?.textContent ?? '');
+if (!/\[pipeline\]/.test(editorTitle)) {
+    throw new Error(`G: editor did not open in pipeline mode: "${editorTitle}"`);
+}
+console.log('PHASE G: editor opened in pipeline mode —', editorTitle);
+const savedG = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+        .find((e) => e.textContent.trim() === 'Save');
+    if (!b) return false;
+    b.click();
+    return true;
+});
+if (!savedG) throw new Error('G: no Save button in the editor');
+await page.waitForTimeout(700);
+const saveMsg = await page.evaluate(() =>
+    document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
+if (!saveMsg.includes('back to the pipeline')) {
+    throw new Error(`G: editor save did not write back: "${saveMsg}"`);
+}
+await goTab('Procgen Pipeline');
+await page.waitForTimeout(800);
+await clickBtn('Run ④ Compile');
+await page.waitForTimeout(2000);
+const gMsg = await message();
+if (!gMsg.includes('Sphere plan realised')) {
+    throw new Error(`G: oracle failed after editor save + ④: ${gMsg}`);
+}
+console.log('PHASE G OK: Edit ▸ → pipeline save → ④ kept the oracle');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
