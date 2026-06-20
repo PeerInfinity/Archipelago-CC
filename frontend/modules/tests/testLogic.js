@@ -47,10 +47,16 @@ async function initializeTestDiscovery() {
   log('info', '[TestLogic] Initializing test discovery...');
   
   try {
-    // Add timeout to test discovery to prevent infinite waiting
+    // Add timeout to test discovery to prevent infinite waiting.
+    // 30s (not 10s): in unbundled local-dev mode the ~19 test files are imported
+    // sequentially over HTTP while the rest of the app is still loading, which can
+    // exceed 10s purely from startup contention. A retry wouldn't help — discovery
+    // isn't failing transiently, it's just slow, and discoverTests() shares one
+    // in-flight promise — so we give it more headroom instead. Bundled mode skips
+    // dynamic import entirely and returns near-instantly.
     const discoveryPromise = discoverTests();
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Test discovery timeout after 10 seconds')), 10000);
+      setTimeout(() => reject(new Error('Test discovery timeout after 30 seconds')), 30000);
     });
     
     await Promise.race([discoveryPromise, timeoutPromise]);
