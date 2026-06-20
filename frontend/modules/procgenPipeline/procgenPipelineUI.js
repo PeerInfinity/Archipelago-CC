@@ -21,6 +21,8 @@ import {
     getRegionExits,
     reRollSphereRegion,
     buildBounceRegionContract,
+    moveSphereRegion,
+    swapSphereRegions,
     Grid,
 } from './procgenPipelineEngine.js';
 import {
@@ -430,6 +432,12 @@ export class ProcgenPipelineUI {
         // ②b Topology view mode: 'tree' (indented directory tree) or 'flat'
         // (numerical index order). Session-only view preference.
         this._topologyView = 'tree';
+        // Composite-map interaction mode: 'edit' (click opens the region
+        // editor), 'moveRegion' (click region → click cell to move/swap),
+        // 'moveExit' (click a green square → click a side to move/swap). The
+        // pending first-click selection lives in _mapSel. Session-only.
+        this._mapMode = 'edit';
+        this._mapSel = null;
         this.isGenerating = false;
         // Live generation progress (sphere mode): event-stream state +
         // the indicator element below the Generate button.
@@ -2319,24 +2327,137 @@ export class ProcgenPipelineUI {
             section.appendChild(hint);
             return section;
         }
+        // Interactive map editing is only wired in sphere mode (the stepped
+        // pipeline owns the grid + node map).
+        const interactive = this.mode === 'sphereGrowth' && this._stepState?.tree;
+        if (interactive) section.appendChild(this._renderMapModeRadio());
+
         const canvas = document.createElement('canvas');
         canvas.className = 'procgen-pipeline-canvas';
         canvas.width = grid.width * regionSize.width * TILE_PX;
         canvas.height = grid.height * regionSize.height * TILE_PX;
         this._drawGrid(canvas, grid, regionSize);
-        // Click-to-select: open the per-region editor for the clicked region.
-        // Only meaningful in sphere mode (the stepped pipeline owns the node
-        // map); other modes have no per-region editor wiring.
-        if (this.mode === 'sphereGrowth' && this._stepState?.tree) {
+        if (interactive) {
             canvas.style.cursor = 'pointer';
-            canvas.title = 'Click a region to edit it';
-            canvas.addEventListener('click', (e) => {
-                const region = this._gridRegionAt(canvas, grid, regionSize, e);
-                if (region) this._editRegion(region);
-            });
+            canvas.title = {
+                edit: 'Click a region to edit it',
+                moveRegion: 'Click a region, then a cell to move it there (or another region to swap)',
+                moveExit: 'Click an exit/entrance square, then a side to move it there (or another to swap)',
+            }[this._mapMode];
+            canvas.addEventListener('click', (e) => this._onMapClick(canvas, grid, regionSize, e));
         }
         section.appendChild(canvas);
         return section;
+    }
+
+    // Radio above the composite map selecting what a click does.
+    _renderMapModeRadio() {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-map-modes';
+        row.style.cssText = 'display:flex;gap:12px;margin:4px 0;font-size:12px;';
+        const modes = [
+            ['edit', 'Edit Region'],
+            ['moveRegion', 'Move Region'],
+            ['moveExit', 'Move Exits'],
+        ];
+        for (const [value, label] of modes) {
+            const lab = document.createElement('label');
+            lab.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;';
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'procgen-pipeline-map-mode';
+            radio.value = value;
+            radio.checked = this._mapMode === value;
+            radio.addEventListener('change', () => {
+                this._mapMode = value;
+                this._mapSel = null; // a mode switch cancels any pending selection
+                this.message = '';
+                this.render();
+            });
+            lab.appendChild(radio);
+            lab.appendChild(document.createTextNode(label));
+            row.appendChild(lab);
+        }
+        return row;
+    }
+
+    // Grid cell {gx,gy} under a canvas click (or null outside the grid).
+    _cellCoordsAt(canvas, grid, regionSize, evt) {
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        const cx = (evt.clientX - rect.left) * (canvas.width / rect.width);
+        const cy = (evt.clientY - rect.top) * (canvas.height / rect.height);
+        const gx = Math.floor(cx / (regionSize.width * TILE_PX));
+        const gy = Math.floor(cy / (regionSize.height * TILE_PX));
+        if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
+        return { gx, gy };
+    }
+
+    _onMapClick(canvas, grid, regionSize, evt) {
+        if (this._mapMode === 'edit') {
+            const region = this._gridRegionAt(canvas, grid, regionSize, evt);
+            if (region) this._editRegion(region);
+            return;
+        }
+        const cell = this._cellCoordsAt(canvas, grid, regionSize, evt);
+        if (!cell) return;
+        if (this._mapMode === 'moveRegion') this._mapClickMoveRegion(grid, cell);
+        else if (this._mapMode === 'moveExit') this._mapClickMoveExit(canvas, grid, regionSize, evt, cell);
+    }
+
+    // Move Region: first click selects a region; second click moves it to an
+    // empty cell, or swaps it with the region already there.
+    _mapClickMoveRegion(grid, cell) {
+        const here = grid.getRegion(cell);
+        if (!this._mapSel) {
+            if (!here) { this.message = 'Move Region: click a region first.'; this.render(); return; }
+            this._mapSel = { cell };
+            this.message = `Move Region: selected ${here.region_id} — click a destination `
+                + 'cell (or another region to swap).';
+            this.render();
+            return;
+        }
+        const from = this._mapSel.cell;
+        this._mapSel = null;
+        if (from.gx === cell.gx && from.gy === cell.gy) {
+            this.message = 'Move Region: cancelled.';
+            this.render();
+            return;
+        }
+        this._applyGridEdit(
+            (g) => (here ? swapSphereRegions(g, from, cell) : moveSphereRegion(g, from, cell)),
+            here ? 'Swapped the two regions.' : 'Moved the region.',
+        );
+    }
+
+    // Move Exits: lands in the next step.
+    _mapClickMoveExit(/* canvas, grid, regionSize, evt, cell */) {
+        this.message = 'Move Exits: lands in the next step.';
+        this.render();
+    }
+
+    // Run a grid-layout edit, then keep st.grow.startCell pointing at the start
+    // region (a move/swap may relocate it — the oracle reads from startCell),
+    // invalidate ④, and re-render. _invalidateFrom clears this.message, so the
+    // confirmation is set AFTER it.
+    _applyGridEdit(fn, okMsg) {
+        const st = this._stepState;
+        const grid = st?.grow?.grid;
+        if (!grid) return;
+        const startId = grid.getRegion(st.grow.startCell)?.region_id;
+        try {
+            fn(grid);
+            if (startId) {
+                const sr = grid.allRegions().find((r) => r.region_id === startId);
+                if (sr) st.grow.startCell = sr.cell;
+            }
+            this._invalidateFrom(4);
+            this.message = `${okMsg} Re-run ④ Compile to recheck the oracle.`;
+            this.render();
+        } catch (err) {
+            this.message = `Edit failed: ${err.message}`;
+            this.render();
+        }
     }
 
     _drawGrid(canvas, grid, regionSize) {
@@ -2377,6 +2498,16 @@ export class ProcgenPipelineUI {
         }
 
         this._drawConnections(ctx, grid, regionSize);
+
+        // Highlight the pending Move-Region selection.
+        if (this._mapSel && this._mapMode === 'moveRegion') {
+            const { gx, gy } = this._mapSel.cell;
+            const cw = regionSize.width * TILE_PX;
+            const ch = regionSize.height * TILE_PX;
+            ctx.strokeStyle = '#ffd24a';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(gx * cw + 1.5, gy * ch + 1.5, cw - 3, ch - 3);
+        }
     }
 
     // Thin yellow lines linking each exit's green square to its paired

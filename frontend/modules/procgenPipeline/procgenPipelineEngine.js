@@ -220,6 +220,19 @@ export class Grid {
         this.cells.set(cellKey(cell), { ...region, cell: { gx: cell.gx, gy: cell.gy } });
     }
 
+    // Remove and return the region at `cell` (layout editing: move/swap).
+    removeRegion(cell) {
+        const region = this.cells.get(cellKey(cell));
+        this.cells.delete(cellKey(cell));
+        return region ?? null;
+    }
+
+    // Drop all teleporter mappings (layout editing rebuilds them from the
+    // logical links after a move/swap — see relayoutSphereGrid).
+    clearTeleporters() {
+        this.teleporters.clear();
+    }
+
     neighborCell(cell, side) {
         const d = SIDE_DELTAS[side];
         if (!d) throw new Error(`Grid.neighborCell: unknown side '${side}'`);
@@ -3452,6 +3465,86 @@ export function reRollSphereRegion(grid, node, tree, {
     stitchGrid(grid);
     wallOffUnusedExits(grid);
     return grid.getRegion(specs.cell);
+}
+
+// Capture the grid's STITCHED forward links as position-independent triples
+// {fromId, side, toId} (region_id + side + target region_id). Back-exits are
+// skipped — they store their target directly and aren't re-stitched. Used to
+// rebuild teleporters after a layout move/swap.
+function captureForwardLinks(grid) {
+    const links = [];
+    for (const region of grid.allRegions()) {
+        const exits = getRegionExits(region);
+        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+        for (const e of list) {
+            if (e.isBackExit || !e.targetRegion || !e.side) continue;
+            links.push({ fromId: region.region_id, side: e.side, toId: e.targetRegion });
+        }
+    }
+    return links;
+}
+
+/**
+ * Re-derive the grid's connections after a layout edit (move/swap). The logical
+ * links (which region connects to which, on which side) are position-independent
+ * (region_id + side), so we: capture them, drop all teleporters, then for each
+ * link set a teleporter when the endpoints AREN'T geographically adjacent on
+ * that side (adjacency resolves itself), and finally stitchGrid re-derives every
+ * forward exit's target_region (teleporters take precedence over adjacency, so a
+ * moved region's exit resolves to its intended target even if some other region
+ * now sits next to it). Back-exits keep their stored targets untouched.
+ */
+export function relayoutSphereGrid(grid) {
+    const links = captureForwardLinks(grid);
+    grid.clearTeleporters();
+    const cellOf = new Map(grid.allRegions().map((r) => [r.region_id, r.cell]));
+    for (const { fromId, side, toId } of links) {
+        const from = cellOf.get(fromId);
+        const to = cellOf.get(toId);
+        if (!from || !to) continue;
+        const nb = grid.neighborCell(from, side);
+        if (nb && nb.gx === to.gx && nb.gy === to.gy) continue; // adjacency resolves it
+        grid.setTeleporter(from, side, to);
+    }
+    stitchGrid(grid);
+    return grid;
+}
+
+/**
+ * Move the region at `fromCell` to an EMPTY `toCell`, preserving all its
+ * connections (rewired via relayoutSphereGrid). Geometry is untouched (sides
+ * unchanged) — only the grid placement changes. Throws if fromCell is empty or
+ * toCell is occupied.
+ */
+export function moveSphereRegion(grid, fromCell, toCell) {
+    if (!grid.hasRegion(fromCell)) {
+        throw new Error(`moveSphereRegion: no region at (${fromCell.gx},${fromCell.gy})`);
+    }
+    if (grid.hasRegion(toCell)) {
+        throw new Error(`moveSphereRegion: target (${toCell.gx},${toCell.gy}) is occupied`);
+    }
+    if (!grid.isInBounds(toCell)) {
+        throw new Error(`moveSphereRegion: target (${toCell.gx},${toCell.gy}) out of bounds`);
+    }
+    const region = grid.removeRegion(fromCell);
+    grid.placeRegion(toCell, region);
+    return relayoutSphereGrid(grid);
+}
+
+/**
+ * Swap the two regions at `cellA` and `cellB`, preserving every connection
+ * (rewired via relayoutSphereGrid). Geometry untouched. Throws if either cell
+ * is empty.
+ */
+export function swapSphereRegions(grid, cellA, cellB) {
+    if (!grid.hasRegion(cellA) || !grid.hasRegion(cellB)) {
+        throw new Error('swapSphereRegions: both cells must hold a region');
+    }
+    const a = grid.removeRegion(cellA);
+    const b = grid.removeRegion(cellB);
+    grid.placeRegion(cellA, b);
+    grid.placeRegion(cellB, a);
+    return relayoutSphereGrid(grid);
 }
 
 /**

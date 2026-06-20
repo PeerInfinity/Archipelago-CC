@@ -473,6 +473,26 @@ if (!hMsg.includes('Sphere plan realised')) {
 }
 console.log('PHASE H OK: editor Regenerate (keep) → save → ④ kept the oracle');
 
+// ── Phase I: composite-map mode radio renders + switches without error ──
+// (The two-click canvas gestures can't be driven headless — the GL panel
+// isn't laid out, so getBoundingClientRect is 0 — so the move/swap LOGIC is
+// covered by verify-region-step-editing's engine cases G/H; here we just
+// confirm the radio is present and mode-switching is wired.)
+const mapModes = await page.evaluate(() =>
+    [...document.querySelectorAll('input[name="procgen-pipeline-map-mode"]')].map((r) => r.value));
+if (!['edit', 'moveRegion', 'moveExit'].every((m) => mapModes.includes(m))) {
+    throw new Error(`I: map-mode radio missing options, got: ${mapModes.join(',')}`);
+}
+const switched = await page.evaluate(() => {
+    const r = [...document.querySelectorAll('input[name="procgen-pipeline-map-mode"]')]
+        .find((x) => x.value === 'moveRegion');
+    if (!r) return false;
+    r.click();
+    return document.querySelector('input[name="procgen-pipeline-map-mode"]:checked')?.value === 'moveRegion';
+});
+if (!switched) throw new Error('I: could not switch map mode to moveRegion');
+console.log('PHASE I OK: composite-map mode radio (Edit/Move Region/Move Exits) renders + switches');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));

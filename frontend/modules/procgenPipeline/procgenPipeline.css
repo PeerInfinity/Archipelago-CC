@@ -320,6 +320,7 @@
 .procgen-pipeline-canvas-wrap {
     padding: 8px;
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
 }
 

@@ -23,7 +23,7 @@ import {
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import {
     growSpheres, reRollSphereRegion, buildRulesJson, buildBounceRegionContract,
-    getRegionExits,
+    getRegionExits, moveSphereRegion, swapSphereRegions,
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
@@ -224,6 +224,43 @@ function withPickupItems(level, contract) {
     const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
     if (errs.length) fail(`F: oracle after regenerate: ${errs[0]}`);
     console.log('F. Regenerate (keep) varied geometry + kept oracle — OK');
+}
+
+// ── G/H. Composite-map layout edits: move a region to an empty cell, and swap
+// two regions (incl. the start region) — connections rewired, oracle holds.
+// Mirrors the panel's _applyGridEdit: keep startCell pointing at the start
+// region after the edit (a move/swap may relocate it).
+{
+    const { grid, startCell, stats, plan, prep, startingItems } = buildWorld();
+    const startId = grid.getRegion(startCell).region_id;
+    const cellOf = (id) => grid.allRegions().find((r) => r.region_id === id)?.cell;
+
+    // G. move a non-start region to an empty cell.
+    let empty = null;
+    for (let gx = 0; gx < grid.width && !empty; gx++) {
+        for (let gy = 0; gy < grid.height && !empty; gy++) {
+            if (!grid.hasRegion({ gx, gy })) empty = { gx, gy };
+        }
+    }
+    const mover = grid.allRegions().find((r) => r.region_id !== startId)
+        ?? fail('G: no non-start region');
+    moveSphereRegion(grid, mover.cell, empty);
+    {
+        const errs = oracle(grid, cellOf(startId), stats, plan, prep, startingItems);
+        if (errs.length) fail(`G: oracle after move: ${errs[0]}`);
+        console.log('G. move region → empty cell keeps oracle — OK');
+    }
+
+    // H. swap two regions, one of which is the START (exercises the startCell
+    // recompute — without it the oracle reads the wrong start and fails).
+    const startCellNow = cellOf(startId);
+    const other = grid.allRegions().find((r) => r.region_id !== startId);
+    swapSphereRegions(grid, startCellNow, other.cell);
+    {
+        const errs = oracle(grid, cellOf(startId), stats, plan, prep, startingItems);
+        if (errs.length) fail(`H: oracle after swap (incl. start): ${errs[0]}`);
+        console.log('H. swap regions (incl. start) keeps oracle — OK');
+    }
 }
 
 console.log('VERIFY REGION-STEP EDITING: ALL OK');
