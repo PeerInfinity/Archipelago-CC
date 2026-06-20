@@ -1762,6 +1762,7 @@ export class ProcgenPipelineUI {
         const st = this._stepState;
         const subOpts = Object.keys(this._activeSubstrateDict());
         const planItems = [...new Set((st.plan?.spheres ?? []).flatMap((s) => s.items))];
+        const sphereTag = this._itemSphereTag();
 
         const subs = {};
         for (const nd of nodes) subs[nd.substrate] = (subs[nd.substrate] ?? 0) + 1;
@@ -1784,12 +1785,12 @@ export class ProcgenPipelineUI {
             else if (nodes[nd.parent]) children[nd.parent].push(nd.index);
         });
         if (this._topologyView === 'tree' && root != null) {
-            const ctx = { nodes, children, subOpts, planItems, container: wrap };
+            const ctx = { nodes, children, subOpts, planItems, sphereTag, container: wrap };
             this._renderTopoTreeNode(root, '', true, true, ctx);
         } else {
             // Flat: numerical index order (also the no-root fallback).
             nodes.forEach((nd) => wrap.appendChild(
-                this._renderTopologyRow(nd, nodes, subOpts, planItems, '')));
+                this._renderTopologyRow(nd, nodes, subOpts, planItems, sphereTag, '')));
         }
 
         const warns = st.topologyWarnings ?? [];
@@ -1834,10 +1835,10 @@ export class ProcgenPipelineUI {
     // node renders as one control row prefixed by its tree connector; updates
     // live because the whole editor re-renders on every edit.
     _renderTopoTreeNode(idx, ancestorPrefix, isLast, isRoot, ctx) {
-        const { nodes, children, subOpts, planItems, container } = ctx;
+        const { nodes, children, subOpts, planItems, sphereTag, container } = ctx;
         const connector = isRoot ? '' : (isLast ? '└─ ' : '├─ ');
         container.appendChild(
-            this._renderTopologyRow(nodes[idx], nodes, subOpts, planItems,
+            this._renderTopologyRow(nodes[idx], nodes, subOpts, planItems, sphereTag,
                 ancestorPrefix + connector));
         const childPrefix = ancestorPrefix + (isRoot ? '' : (isLast ? '   ' : '│  '));
         const kids = children[idx];
@@ -1846,7 +1847,7 @@ export class ProcgenPipelineUI {
         });
     }
 
-    _renderTopologyRow(node, nodes, subOpts, planItems, treePrefix = '') {
+    _renderTopologyRow(node, nodes, subOpts, planItems, sphereTag = () => '', treePrefix = '') {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:4px;padding:1px 6px;'
             + 'font-size:11px;flex-wrap:nowrap;';
@@ -1912,7 +1913,7 @@ export class ProcgenPipelineUI {
         const items = cur && !planItems.includes(cur) ? [...planItems, cur] : planItems;
         for (const it of items) {
             const opt = document.createElement('option');
-            opt.value = it; opt.textContent = `gate ${it}`;
+            opt.value = it; opt.textContent = `gate ${it}${sphereTag(it)}`;
             if (it === cur) opt.selected = true;
             gateSel.appendChild(opt);
         }
@@ -1936,6 +1937,22 @@ export class ProcgenPipelineUI {
         this._invalidateFrom(2);
     }
 
+    // item → " (S2)" / " (S2,S3)" sphere label from the current plan, for the
+    // ②b gate dropdown and ②c item rows. An item can span spheres (count gates).
+    _itemSphereTag() {
+        const itemSpheres = new Map();
+        (this._stepState?.plan?.spheres ?? []).forEach((s) => {
+            for (const it of s.items) {
+                if (!itemSpheres.has(it)) itemSpheres.set(it, new Set());
+                itemSpheres.get(it).add(s.sphere);
+            }
+        });
+        return (item) => {
+            const set = itemSpheres.get(item);
+            return set ? ` (${[...set].sort((a, b) => a - b).map((n) => `S${n}`).join(',')})` : '';
+        };
+    }
+
     // ②c Item placement editor — which items live in which region, with a
     // per-item dropdown to move it to another region (free; warn-but-allow).
     _renderItemsEditor(tree) {
@@ -1950,6 +1967,7 @@ export class ProcgenPipelineUI {
         (st.plan?.spheres ?? []).forEach((s, w) => {
             for (const it of s.items) if (!homeWave.has(it)) homeWave.set(it, w);
         });
+        const sphereTag = this._itemSphereTag();
 
         const placed = nodes.reduce((a, nd) => a + (nd.items?.length ?? 0), 0);
         const summary = document.createElement('div');
@@ -1977,7 +1995,7 @@ export class ProcgenPipelineUI {
                         + `wave ${homeWave.get(it.item)} — the oracle will mismatch.`);
                 }
                 group.appendChild(
-                    this._renderItemMoveRow(nd, itemIdx, nodes, wrongWave));
+                    this._renderItemMoveRow(nd, itemIdx, nodes, wrongWave, sphereTag));
             });
             wrap.appendChild(group);
         });
@@ -1991,13 +2009,13 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    _renderItemMoveRow(node, itemIdx, nodes, wrongWave) {
+    _renderItemMoveRow(node, itemIdx, nodes, wrongWave, sphereTag = () => '') {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;';
         const it = node.items[itemIdx];
         const name = document.createElement('span');
         name.style.cssText = 'flex:1;' + (wrongWave ? 'color:#d8a000;' : '');
-        name.textContent = it.item + (wrongWave ? ' ⚠' : '');
+        name.textContent = it.item + sphereTag(it.item) + (wrongWave ? ' ⚠' : '');
         row.appendChild(name);
         const sel = document.createElement('select');
         sel.title = 'Move this item to another region';

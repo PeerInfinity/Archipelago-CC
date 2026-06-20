@@ -122,13 +122,21 @@ if (!(await panelText()).match(/[└├]─/)) {
     throw new Error('②b tree view did not restore glyphs');
 }
 console.log('STEP ②b: tree/flat view toggle works');
+if (!(await panelText()).match(/gate .+\(S\d/)) {
+    throw new Error('②b gate dropdown is missing sphere labels (S#)');
+}
+console.log('STEP ②b: gate dropdown shows sphere labels');
 
 await clickBtn('Run ②c Items');
 await page.waitForTimeout(600);
-if (!(await panelText()).includes('②c Item placement')) {
+txt = await panelText();
+if (!txt.includes('②c Item placement')) {
     throw new Error('item-placement feedback did not appear');
 }
-console.log('STEP ②c: item-placement feedback shown');
+if (!txt.match(/\(S\d/)) {
+    throw new Error('②c item rows are missing sphere labels (S#)');
+}
+console.log('STEP ②c: item-placement editor shown with sphere labels');
 
 await clickBtn('Run ③ Build regions');
 await page.waitForTimeout(3000);
