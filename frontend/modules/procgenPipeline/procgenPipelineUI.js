@@ -32,6 +32,7 @@ import {
     isObstacleCleared, getItemRenderHints,
 } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { getRegionEditor } from './regionEditors.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
@@ -1552,8 +1553,8 @@ export class ProcgenPipelineUI {
                 this._renderItemsEditor(st.tree)));
         }
         if (st.completed >= 4 && st.grow) {
-            wrap.appendChild(this._renderStepBlock('③ Build regions',
-                this._renderRegionsFeedback(st.grow.stats, st.seconds)));
+            wrap.appendChild(this._renderStepBlock('③ Build regions — edit / re-roll a region',
+                this._renderRegionsEditor(st.grow)));
         }
         if (st.completed >= 5 && st.compile) {
             wrap.appendChild(this._renderStepBlock('④ Compile',
@@ -2061,6 +2062,133 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
+    // ③ Build regions editor — launcher: the stats line, then one row per
+    // realised region (`#i wN <substrate>`) with [Edit ▸] (opens the
+    // substrate-appropriate per-region editor) and [Re-roll 🎲] (regenerates
+    // that one region's interior on a bumped seed, keeping its exits/
+    // locations/rules fixed). Both write back into st.grow.grid and invalidate
+    // ④ only (geometry changes don't touch the logical tree). The composite
+    // grid (rendered below after ④) is also click-to-select; see _renderGrid.
+    _renderRegionsEditor(grow) {
+        const wrap = document.createElement('div');
+        wrap.appendChild(this._renderRegionsFeedback(grow.stats, this._stepState?.seconds));
+
+        const nodes = this._stepState?.tree?.nodes ?? [];
+        const grid = grow.grid;
+        nodes.forEach((nd) => {
+            const region = grid?.getRegion?.(nd.cell);
+            if (!region) return;
+            wrap.appendChild(this._renderRegionEditRow(nd, region));
+        });
+        if (nodes.length === 0) {
+            const hint = document.createElement('div');
+            hint.className = 'procgen-pipeline-hint';
+            hint.textContent = '(no tree nodes — re-run from ② to populate the region list)';
+            wrap.appendChild(hint);
+        }
+        return wrap;
+    }
+
+    _renderRegionEditRow(node, region) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;';
+        const label = document.createElement('span');
+        label.style.cssText = 'flex:1;';
+        const itemCount = node.items?.length ?? 0;
+        label.textContent = `#${node.index} w${node.wave} ${region.substrate}`
+            + `${node.isFiller ? ' (filler)' : ''}`
+            + `${itemCount ? ` — ${itemCount} item(s)` : ''}`;
+        row.appendChild(label);
+
+        const edit = this._btn('Edit ▸', () => this._editRegion(region, node));
+        edit.title = 'Open the per-region geometry editor';
+        row.appendChild(edit);
+
+        const reroll = this._btn('Re-roll 🎲', () => this._reRollRegion(region, node));
+        reroll.title = "Regenerate this region's interior on a new seed (keeps exits/locations)";
+        row.appendChild(reroll);
+        return row;
+    }
+
+    // Look up the tree node backing a grid region (by region_id), so a launch
+    // from the composite grid (which only has the region) can recover the node
+    // needed to rebuild the editor contract / re-roll specs.
+    _nodeForRegion(region) {
+        const nodes = this._stepState?.tree?.nodes ?? [];
+        return nodes.find((nd) => nd.region_id === region?.region_id) ?? null;
+    }
+
+    // Edit ▸ — route by region.substrate via the regionEditors registry, with a
+    // graceful fallback when no editor exists for that substrate yet.
+    _editRegion(region, node = null) {
+        const open = getRegionEditor(region?.substrate);
+        if (!open) {
+            this.message = `No region editor for "${region?.substrate}" yet.`;
+            this.warning = '';
+            this.render();
+            return;
+        }
+        const nd = node ?? this._nodeForRegion(region);
+        const contract = this._buildRegionContract(region, nd);
+        open({
+            region,
+            contract,
+            onSave: (editedRegion) => this._onRegionEdited(region, editedRegion, nd),
+        });
+    }
+
+    // Reconstruct the realiser contract for a region from its node + payload.
+    // Chunk 1: best-effort from the live payload; the exit/location specs are
+    // filled in once the per-node spec build is factored out of growSpheresGen
+    // (chunk 2/5). The bounce editor consumes this to preserve the contract.
+    _buildRegionContract(region, node) {
+        const payload = region?.playable_payload ?? {};
+        const params = payload.params ?? {};
+        return {
+            sidePortals: params.sidePortals ?? {},
+            physicsProfile: params.physics?.profile ?? 'experimental',
+            node: node ?? null,
+        };
+    }
+
+    // Re-roll 🎲 — placeholder until the engine helper lands (chunk 2).
+    _reRollRegion(region/* , node */) {
+        this.message = `Re-roll for "${region?.region_id}" lands in the next step.`;
+        this.warning = '';
+        this.render();
+    }
+
+    // Write-back from an editor save (pipeline mode): splice the edited region
+    // into the live grid and invalidate ④ only (the user re-runs Compile; the
+    // oracle is the backstop). Leaves the logical tree untouched.
+    _onRegionEdited(origRegion, editedRegion, node) {
+        const st = this._stepState;
+        const grid = st?.grow?.grid;
+        if (!grid || !editedRegion) return;
+        const cell = node?.cell ?? this._nodeForRegion(origRegion)?.cell;
+        if (!cell) return;
+        grid.placeRegion(cell, editedRegion);
+        this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
+            + 'Re-run ④ Compile to recheck the oracle.';
+        this.warning = '';
+        this._invalidateFrom(4);
+    }
+
+    // Hit-test a click on the composite grid canvas → the region at that cell
+    // (or null outside the grid). Maps client px → canvas px (CSS may scale the
+    // canvas), then to grid cell using the same TILE_PX × regionSize layout
+    // _drawGrid paints with.
+    _gridRegionAt(canvas, grid, regionSize, evt) {
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        const cx = (evt.clientX - rect.left) * (canvas.width / rect.width);
+        const cy = (evt.clientY - rect.top) * (canvas.height / rect.height);
+        const gx = Math.floor(cx / (regionSize.width * TILE_PX));
+        const gy = Math.floor(cy / (regionSize.height * TILE_PX));
+        if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
+        return grid.getRegion({ gx, gy });
+    }
+
     _renderCompileFeedback(compile) {
         const wrap = document.createElement('div');
         const { rulesJson, oracleErrors } = compile;
@@ -2127,6 +2255,17 @@ export class ProcgenPipelineUI {
         canvas.width = grid.width * regionSize.width * TILE_PX;
         canvas.height = grid.height * regionSize.height * TILE_PX;
         this._drawGrid(canvas, grid, regionSize);
+        // Click-to-select: open the per-region editor for the clicked region.
+        // Only meaningful in sphere mode (the stepped pipeline owns the node
+        // map); other modes have no per-region editor wiring.
+        if (this.mode === 'sphereGrowth' && this._stepState?.tree) {
+            canvas.style.cursor = 'pointer';
+            canvas.title = 'Click a region to edit it';
+            canvas.addEventListener('click', (e) => {
+                const region = this._gridRegionAt(canvas, grid, regionSize, e);
+                if (region) this._editRegion(region);
+            });
+        }
         section.appendChild(canvas);
         return section;
     }
