@@ -123,6 +123,10 @@ import * as mazeRoomModule from './modules/mazeRoom/index.js';
 import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
+import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
+import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
+import * as bounceDemoModule from './modules/bounceDemo/index.js';
+import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js';
 import * as playbackBotModule from './modules/playbackBot/index.js';
 
 // ============================================================================
@@ -145,6 +149,9 @@ import './modules/tests/testCases/window-baseTests.js';
 import './modules/tests/testCases/timerTests.js';
 import './modules/tests/testCases/multiclientTests.js';
 import './modules/tests/testCases/spoilerTestPanelTests.js';
+import './modules/tests/testCases/playbackBotTests.js';
+import './modules/tests/testCases/textAdventureWrapperTests.js';
+import './modules/tests/testCases/flashSubstrateTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;
@@ -213,6 +220,10 @@ const BUNDLED_MODULES = {
   procgenPipeline: procgenPipelineModule,
   procgenPlayer: procgenPlayerModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
+  jtaSubstrateWrapper: jtaSubstrateWrapperModule,
+  flashSubstrate: flashSubstrateModule,
+  bounceDemo: bounceDemoModule,
+  bounceRegionEditor: bounceRegionEditorModule,
   playbackBot: playbackBotModule,
 };
 
