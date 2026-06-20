@@ -3455,6 +3455,40 @@ export function reRollSphereRegion(grid, node, tree, {
 }
 
 /**
+ * Reconstruct the realiser contract a zone (bounce) region was built with —
+ * the same exit/location specs generateRegionZoneGen fed the substrate — so a
+ * per-region editor can re-emit rules from a hand-edited level and stay
+ * consistent with the logical tree. Mirrors generateRegionZoneGen's spec build:
+ * forward exits carry each child's gate; the entrance side rides as the back
+ * portal (ungated in braid, gated on the entry gate otherwise); locations carry
+ * the node's items. Returns { exitSpecs, locationSpecs, physicsProfile, mode,
+ * freeArrow, entranceSide } for assembleBounceRegionFromLevel.
+ */
+export function buildBounceRegionContract(node, tree, grid, regionSize, regionParams = {}) {
+    const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize);
+    const braid = (regionParams.bounceMode ?? 'column') === 'braid';
+    const exitSpecs = specs.exitPlans.map((e) => ({
+        side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
+    }));
+    if (specs.entranceSide) {
+        exitSpecs.push(braid
+            ? { side: specs.entranceSide, requirement: [], counts: {} }
+            : { side: specs.entranceSide, requirement: node.gate, counts: node.gateCounts ?? {} });
+    }
+    const locationSpecs = (node.items ?? []).map((it) => ({
+        id: it.id, item: it.item, requirement: [], counts: {},
+    }));
+    return {
+        exitSpecs,
+        locationSpecs,
+        physicsProfile: regionParams.physicsProfile ?? 'experimental',
+        mode: braid ? 'braid' : 'column',
+        freeArrow: regionParams.bounceFreeArrow ?? 'right',
+        entranceSide: specs.entranceSide,
+    };
+}
+
+/**
  * Sphere-driven growth: realise a sphere plan as a region graph.
  * Output shape matches growMaze ({ grid, stats, startCell }) so the
  * existing compile/emit tail consumes it unchanged; `tree` rides along

@@ -22,8 +22,8 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
-import { physicsStampFor } from './physics.js';
-import { deriveAccessRules } from './deriveRules.js';
+import { physicsStampFor, resolvePhysicsStamp } from './physics.js';
+import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
 import { attachSideExits } from './sideExits.js';
 import { generateLevelFromSpecsGen } from './generator.js';
 import {
@@ -63,7 +63,7 @@ export const ZONES = Object.freeze([
  * arbitrary payload fields). ap_locations maps the game's pickup ids to
  * AP location names (compileRegionGraph's `<region>__<id>` convention).
  */
-function buildZonePayload(region_id, level, sidePortals, physicsProfile = 'experimental') {
+export function buildZonePayload(region_id, level, sidePortals, physicsProfile = 'experimental') {
     // Physics profile stamp: { profile, constants } for non-experimental
     // profiles, OMITTED for experimental (physicsStampFor returns null) so
     // existing payloads stay byte-identical. Constants are embedded
@@ -565,6 +565,63 @@ export function* generateZoneForSpecsGen({
         freeArrow,
         platformRows,
     });
+    return assembleBounceRegionFromLevel(level, {
+        region_id, exitSpecs, locationSpecs, physicsProfile, mode, freeArrow,
+        derived, authoredReqs,
+    });
+}
+
+/**
+ * The rule-emission tail of generateZoneForSpecsGen, factored so a level can be
+ * turned into a bounce region WITHOUT regenerating geometry — the region editor
+ * supplies hand-authored geometry and wants the same rules a generated level
+ * would yield. Given a level + the exit/location specs the realiser used, derive
+ * (or reuse `derived`) the access rules, emit obstacle paths + defs, verify the
+ * gating, and build the zone payload. Returns the same shape
+ * generateZoneForSpecsGen returns: { locations, exitRules, exitPaths,
+ * obstacleDefs, payload, authoredReqs }.
+ *
+ * Pass `derived` (the generator's cached derivation) to stay byte-identical and
+ * skip the expensive re-verify; omit it (the editor) to re-derive from the
+ * level under the contract's mode/freeArrow/physicsProfile — the SAME derive the
+ * generator uses (braid: deriveBraidAccessRules with terminalPortals; column:
+ * deriveAccessRules), so an unedited save reproduces the original rules.
+ */
+export function assembleBounceRegionFromLevel(level, {
+    region_id,
+    exitSpecs = [],
+    locationSpecs = [],
+    physicsProfile = 'experimental',
+    mode = 'column',
+    freeArrow = 'right',
+    derived = null,
+    authoredReqs = null,
+} = {}) {
+    const exits = exitSpecs.map((s) => {
+        if (!SIDE_DIRECTIONS[s.side]) {
+            throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
+        }
+        const { physics, authored } = splitRequirement(s.requirement, s.counts);
+        return {
+            id: `side_exit_${s.side}`,
+            side: s.side,
+            direction: SIDE_DIRECTIONS[s.side],
+            requirement: physics,
+            authored,
+        };
+    });
+    const pickups = locationSpecs.map((s) => {
+        const { physics, authored } = splitRequirement(s.requirement, s.counts);
+        return { id: s.id, requirement: physics, authored };
+    });
+
+    if (!derived) {
+        const C = resolvePhysicsStamp(physicsProfile);
+        derived = mode === 'braid'
+            ? deriveBraidAccessRules(level, { constants: C, freeArrow, terminalPortals: true })
+            : deriveAccessRules(level, { constants: C });
+    }
+
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;
     // Emit each goal's access in TWO faithful forms (Phase 3):
@@ -594,7 +651,11 @@ export function* generateZoneForSpecsGen({
         }
     };
     for (const e of exits) {
-        const sets = derived.exits[e.id].minimalSets;
+        // A missing derivation entry means the contract's exit portal is not in
+        // the (hand-edited) level — treat it as unreachable (empty sets) so the
+        // region still assembles and ④'s oracle surfaces the broken contract
+        // (warn-but-allow), rather than crashing the save.
+        const sets = derived.exits[e.id]?.minimalSets ?? [];
         const rule = composeAuthoredRule(minimalSetsToRule(sets), e.authored);
         exitRules[e.side] = rule;
         const { paths, authoredDefs } = emitObstaclePaths(sets, e.authored);
@@ -609,7 +670,7 @@ export function* generateZoneForSpecsGen({
         pickups.map((p) => [p.id, p.authored]));
     const locations = locationSpecs.map((s) => {
         const authored = authoredByLocation[s.id];
-        const sets = derived.pickups[s.id].minimalSets;
+        const sets = derived.pickups[s.id]?.minimalSets ?? [];
         if (authored.length > 0) {
             gateRules.pickups[s.id] = authoredTermsToRule(authored);
         }

@@ -20,6 +20,7 @@ import {
     computeSourceCounts,
     getRegionExits,
     reRollSphereRegion,
+    buildBounceRegionContract,
     Grid,
 } from './procgenPipelineEngine.js';
 import {
@@ -2138,18 +2139,31 @@ export class ProcgenPipelineUI {
         });
     }
 
-    // Reconstruct the realiser contract for a region from its node + payload.
-    // Chunk 1: best-effort from the live payload; the exit/location specs are
-    // filled in once the per-node spec build is factored out of growSpheresGen
-    // (chunk 2/5). The bounce editor consumes this to preserve the contract.
+    // Reconstruct the realiser contract for a region from its node + the tree:
+    // the exit/location specs the realiser used, so the editor can re-emit rules
+    // from a hand-edited level and stay consistent with the logical tree. Bounce
+    // regions get the full contract via buildBounceRegionContract; other
+    // substrates fall back to the payload-only shape.
     _buildRegionContract(region, node) {
         const payload = region?.playable_payload ?? {};
         const params = payload.params ?? {};
-        return {
+        const base = {
             sidePortals: params.sidePortals ?? {},
             physicsProfile: params.physics?.profile ?? 'experimental',
             node: node ?? null,
         };
+        const st = this._stepState;
+        if (region?.substrate === 'bounce' && node && st?.tree && st?.grow?.grid) {
+            try {
+                Object.assign(base, buildBounceRegionContract(
+                    node, st.tree, st.grow.grid, st.growConfig.regionSize,
+                    st.growConfig.regionParams ?? {},
+                ));
+            } catch (err) {
+                base.contractError = err.message;
+            }
+        }
+        return base;
     }
 
     // Re-roll 🎲 — regenerate ONE region's interior on a bumped seed, keeping

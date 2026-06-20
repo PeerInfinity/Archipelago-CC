@@ -12,7 +12,9 @@
  * differs. v1 is click/button driven (NO drag — consistent with the rest of
  * the procgen panel). Access rules are DERIVED for display, never stored.
  */
+import rawEventBus from '../../app/core/eventBus.js';
 import { renderLevel } from './levelRenderer.js';
+import { assembleBounceRegionFromLevel } from '../bounceDemo/bounceDemoLibrary.js';
 import { validateLevel, braidBlueInvariantErrors } from '../bounceDemo/level.js';
 import {
     deriveAccessRules, deriveBraidAccessRules, formatRule,
@@ -62,15 +64,15 @@ export class BounceRegionEditorUI {
         else this._loadFixture('bounceStack');
 
         // Re-render when a (later) Edit ▸ launch publishes a new session.
+        // Subscribe through the raw eventBus singleton (NOT this.apis, which can
+        // be null at layout-build time before the module's initialize() runs —
+        // same workaround procgenPipelineUI uses for rawJsonDataLoaded).
         const onLoad = () => {
             const next = consumePendingSession();
             if (next) { this._loadSession(next); this.render(); }
         };
-        const bus = this.apis.eventBus;
-        if (bus) {
-            bus.subscribe(LOAD_EVENT, onLoad, 'bounceRegionEditor');
-            this._unsub = () => bus.unsubscribe(LOAD_EVENT, onLoad, 'bounceRegionEditor');
-        }
+        rawEventBus.subscribe(LOAD_EVENT, onLoad, 'bounceRegionEditor');
+        this._unsub = () => rawEventBus.unsubscribe(LOAD_EVENT, onLoad, 'bounceRegionEditor');
         this.render();
     }
 
@@ -88,6 +90,7 @@ export class BounceRegionEditorUI {
     _loadSession({ region, contract, onSave }) {
         const level = deepClone(region?.playable_payload?.params?.bounceLevel ?? {});
         this._session = {
+            region: region ?? null, // the live region (write-back base in _buildEditedRegion)
             level,
             contract: contract ?? {},
             onSave: onSave ?? null,
@@ -311,15 +314,61 @@ export class BounceRegionEditorUI {
         this.render();
     }
 
-    // Save: pipeline write-back is wired in chunk 5 (assembleBounceRegionFromLevel
-    // + onSave). For now standalone export; pipeline mode notes the pending wiring.
+    // Save. Pipeline mode: re-assemble the region from the edited level (same
+    // rule-emission the generator runs) and hand it back via onSave, which
+    // splices it into the grid + invalidates ④ (the oracle is the backstop).
+    // Standalone: export the level JSON.
     _save() {
-        if (this._session.mode === 'pipeline' && this._session.onSave) {
-            this._message = 'Pipeline save wiring lands in the next step.';
+        const sess = this._session;
+        if (sess.mode === 'pipeline' && sess.onSave) {
+            try {
+                const edited = this._buildEditedRegion();
+                sess.onSave(edited);
+                this._message = `Saved ${sess.label} back to the pipeline. Re-run ④ to recheck.`;
+            } catch (err) {
+                this._message = `Save failed (contract): ${err.message}`;
+            }
             this.render();
             return;
         }
         this._exportLevel();
+    }
+
+    // Merge re-emitted rules from the edited level into a clone of the original
+    // region, preserving the grid-level wiring (exit ids/sides/targets,
+    // exits_placed, the back-exit, placed_items). Access rules live only in
+    // extracted_rules, so the structural exits Map is left untouched. Forward
+    // exits map to sides via exits_placed; the driver back-exit (not placed) is
+    // left alone.
+    _buildEditedRegion() {
+        const { region, contract, level } = this._session;
+        const built = assembleBounceRegionFromLevel(level, {
+            region_id: region.region_id,
+            exitSpecs: contract.exitSpecs ?? [],
+            locationSpecs: contract.locationSpecs ?? [],
+            physicsProfile: contract.physicsProfile ?? 'experimental',
+            mode: contract.mode ?? 'column',
+            freeArrow: contract.freeArrow ?? 'right',
+        });
+        const next = deepClone(region);
+        next.playable_payload = built.payload;
+        next.obstacle_defs = built.obstacleDefs;
+
+        const sideByExitId = new Map(
+            (region.exits_placed ?? []).map((p) => [p.exit_id, p.side]));
+        for (const ex of next.extracted_rules?.exits ?? []) {
+            const side = sideByExitId.get(ex.id);
+            if (side && built.exitPaths[side]) {
+                ex.paths = built.exitPaths[side];
+                ex.access_rule = built.exitRules[side];
+            }
+        }
+        const builtLocById = new Map(built.locations.map((l) => [l.id, l]));
+        for (const loc of next.extracted_rules?.locations ?? []) {
+            const b = builtLocById.get(loc.id);
+            if (b) { loc.paths = b.paths; loc.access_rule = b.access_rule; }
+        }
+        return next;
     }
 
     _download(filename, text) {

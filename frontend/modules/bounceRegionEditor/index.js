@@ -13,6 +13,7 @@
  * routes bounce regions here (chunk 5 wires the write-back save path).
  */
 import { BounceRegionEditorUI } from './bounceRegionEditorUI.js';
+import { registerRegionEditor } from '../procgenPipeline/regionEditors.js';
 
 export const LOAD_EVENT = 'bounceRegionEditor:load';
 export const BOUNCE_EDITOR_COMPONENT_TYPE = 'bounceRegionEditorPanel';
@@ -49,6 +50,9 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     eventBus = initializationApi.getEventBus();
     dispatcher = initializationApi.getDispatcher?.() ?? null;
     BounceRegionEditorUI.setModuleApis({ eventBus, dispatcher });
+
+    // Route the procgen panel's ③ Edit ▸ for bounce regions here.
+    registerRegionEditor('bounce', openBounceRegionEditor);
 
     return () => {
         panelInstance = null;
