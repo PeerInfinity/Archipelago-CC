@@ -77,3 +77,37 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.bounce-region-editor-panel .bre-edit-block {
+    border-top: 1px solid #333;
+    margin-top: 8px;
+    padding-top: 6px;
+}
+.bounce-region-editor-panel .bre-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+}
+.bounce-region-editor-panel .bre-field span { flex: 0 0 64px; color: #9aa; }
+.bounce-region-editor-panel .bre-field input,
+.bounce-region-editor-panel .bre-field select {
+    flex: 1;
+    background: #2a2f36;
+    color: #d8d8d8;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font: inherit;
+}
+.bounce-region-editor-panel .bre-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 6px 0;
+}
+.bounce-region-editor-panel .bre-toggles .bre-btn { font-size: 11px; padding: 1px 6px; }
+.bounce-region-editor-panel .bre-btn.bre-on {
+    background: #2d4a2d;
+    border-color: #5cb85c;
+    color: #bfe6bf;
+}

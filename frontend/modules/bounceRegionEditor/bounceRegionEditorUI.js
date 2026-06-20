@@ -218,8 +218,35 @@ export class BounceRegionEditorUI {
         renderLevel(canvas.getContext('2d'), level, {
             constants, scale, selectedId: this._selectedId,
         });
+        // Click-to-select the nearest platform (no drag — selection + the
+        // sidebar's numeric/button controls do the editing).
+        canvas.style.cursor = 'pointer';
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const lx = (e.clientX - rect.left) * (canvas.width / rect.width) / scale;
+            const ly = (e.clientY - rect.top) * (canvas.height / rect.height) / scale;
+            const hit = this._hitTestPlatform(level, lx, ly, constants);
+            this._selectedId = hit ? hit.id : null;
+            this.render();
+        });
         wrap.appendChild(canvas);
         return wrap;
+    }
+
+    // Nearest platform whose bar the click lands on (or closest within a
+    // tolerance). Platforms are horizontal bars centred on (x, y).
+    _hitTestPlatform(level, lx, ly, constants) {
+        const halfW = (constants?.PLATFORM_WIDTH ?? 60) / 2 + 6;
+        let best = null;
+        let bestD = Infinity;
+        for (const p of level.platforms ?? []) {
+            const dx = Math.abs(p.x - lx);
+            const dy = Math.abs(p.y - ly);
+            if (dx > halfW || dy > 14) continue;
+            const d = dx + dy;
+            if (d < bestD) { bestD = d; best = p; }
+        }
+        return best;
     }
 
     _renderSidebar(sess) {
@@ -250,6 +277,9 @@ export class BounceRegionEditorUI {
             + `${(l.springs ?? []).length}S/${(l.jetpacks ?? []).length}J/`
             + `${(l.teleports ?? []).length}⟲ · ${l.size.width}×${l.size.height}`;
         side.appendChild(counts);
+
+        side.appendChild(this._renderGlobalEdit(sess.level));
+        side.appendChild(this._renderPlatformEdit(sess.level));
 
         const rules = document.createElement('div');
         rules.className = 'bre-rules';
@@ -307,5 +337,188 @@ export class BounceRegionEditorUI {
         b.textContent = label;
         b.addEventListener('click', onClick);
         return b;
+    }
+
+    _numField(label, value, onChange, { step = 10, min = 0 } = {}) {
+        const row = document.createElement('label');
+        row.className = 'bre-field';
+        const span = document.createElement('span');
+        span.textContent = label;
+        row.appendChild(span);
+        const inp = document.createElement('input');
+        inp.type = 'number';
+        inp.value = String(value);
+        inp.step = String(step);
+        inp.min = String(min);
+        inp.addEventListener('change', () => {
+            const v = Number(inp.value);
+            if (Number.isFinite(v)) onChange(v);
+        });
+        row.appendChild(inp);
+        return row;
+    }
+
+    // ── Edit controls ───────────────────────────────────────────────────
+    _renderGlobalEdit(level) {
+        const block = document.createElement('div');
+        block.className = 'bre-edit-block';
+        const h = document.createElement('div');
+        h.className = 'bre-subhead';
+        h.textContent = 'Level';
+        block.appendChild(h);
+        block.appendChild(this._numField('width', level.size.width,
+            (v) => this._resizeLevel('width', v), { step: 10, min: 1 }));
+        block.appendChild(this._numField('height', level.size.height,
+            (v) => this._resizeLevel('height', v), { step: 10, min: 1 }));
+        block.appendChild(this._btn('+ platform', () => this._addPlatform()));
+        return block;
+    }
+
+    _renderPlatformEdit(level) {
+        const block = document.createElement('div');
+        block.className = 'bre-edit-block';
+        const h = document.createElement('div');
+        h.className = 'bre-subhead';
+        h.textContent = 'Platform';
+        block.appendChild(h);
+
+        const p = (level.platforms ?? []).find((x) => x.id === this._selectedId);
+        if (!p) {
+            const hint = document.createElement('div');
+            hint.className = 'bre-counts';
+            hint.textContent = 'Click a platform to edit it.';
+            block.appendChild(hint);
+            return block;
+        }
+
+        const idline = document.createElement('div');
+        idline.className = 'bre-counts';
+        idline.textContent = `selected: ${p.id}`;
+        block.appendChild(idline);
+
+        block.appendChild(this._numField('x', p.x, (v) => this._setPlatform(p.id, { x: v })));
+        block.appendChild(this._numField('y', p.y, (v) => this._setPlatform(p.id, { y: v })));
+
+        // type
+        const typeRow = document.createElement('label');
+        typeRow.className = 'bre-field';
+        const ts = document.createElement('span'); ts.textContent = 'type';
+        typeRow.appendChild(ts);
+        const typeSel = document.createElement('select');
+        for (const t of ['green', 'blue', 'brown']) {
+            const o = document.createElement('option');
+            o.value = t; o.textContent = t;
+            if (p.type === t) o.selected = true;
+            typeSel.appendChild(o);
+        }
+        typeSel.addEventListener('change', () => this._setPlatform(p.id, { type: typeSel.value }));
+        typeRow.appendChild(typeSel);
+        block.appendChild(typeRow);
+
+        // entity toggles (host = this platform)
+        const toggles = document.createElement('div');
+        toggles.className = 'bre-toggles';
+        for (const kind of ['springs', 'jetpacks', 'pickups', 'portals', 'teleports']) {
+            const on = (level[kind] ?? []).some((e) => e.on === p.id);
+            const b = this._btn(`${on ? '✓ ' : '+ '}${kind.replace(/s$/, '')}`,
+                () => this._toggleEntity(p.id, kind));
+            if (on) b.classList.add('bre-on');
+            toggles.appendChild(b);
+        }
+        block.appendChild(toggles);
+
+        // portal direction (when this platform hosts a portal)
+        const portal = (level.portals ?? []).find((e) => e.on === p.id);
+        if (portal) {
+            const dRow = document.createElement('label');
+            dRow.className = 'bre-field';
+            const ds = document.createElement('span'); ds.textContent = 'portal dir';
+            dRow.appendChild(ds);
+            const dSel = document.createElement('select');
+            for (const d of ['up', 'down', 'left', 'right']) {
+                const o = document.createElement('option');
+                o.value = d; o.textContent = d;
+                if ((portal.direction ?? 'up') === d) o.selected = true;
+                dSel.appendChild(o);
+            }
+            dSel.addEventListener('change', () => {
+                portal.direction = dSel.value;
+                this.render();
+            });
+            dRow.appendChild(dSel);
+            block.appendChild(dRow);
+        }
+
+        block.appendChild(this._btn('Delete platform', () => this._deletePlatform(p.id)));
+        return block;
+    }
+
+    // ── Edit operations (mutate this._session.level, then re-render — live
+    // validation re-runs in _renderSidebar) ────────────────────────────
+    _resizeLevel(dim, value) {
+        this._session.level.size[dim] = Math.max(1, Math.round(value));
+        this.render();
+    }
+
+    _addPlatform() {
+        const level = this._session.level;
+        level.platforms = level.platforms ?? [];
+        const id = this._nextId('p', level.platforms);
+        level.platforms.push({
+            id, type: 'green',
+            x: Math.round(level.size.width / 2),
+            y: Math.round(level.size.height / 2),
+        });
+        this._selectedId = id;
+        this.render();
+    }
+
+    _setPlatform(id, patch) {
+        const p = (this._session.level.platforms ?? []).find((x) => x.id === id);
+        if (!p) return;
+        Object.assign(p, patch);
+        this.render();
+    }
+
+    _deletePlatform(id) {
+        const level = this._session.level;
+        level.platforms = (level.platforms ?? []).filter((p) => p.id !== id);
+        // Drop entities orphaned by the deletion (their host is gone).
+        for (const kind of ['springs', 'jetpacks', 'pickups', 'portals', 'teleports']) {
+            if (Array.isArray(level[kind])) {
+                level[kind] = level[kind].filter((e) => e.on !== id);
+            }
+        }
+        if (this._selectedId === id) this._selectedId = null;
+        this.render();
+    }
+
+    // Add/remove an entity of `kind` hosted on platform `hostId`.
+    _toggleEntity(hostId, kind) {
+        const level = this._session.level;
+        const host = (level.platforms ?? []).find((p) => p.id === hostId);
+        if (!host) return;
+        level[kind] = level[kind] ?? [];
+        const existing = level[kind].findIndex((e) => e.on === hostId);
+        if (existing >= 0) {
+            level[kind].splice(existing, 1);
+        } else {
+            const prefix = kind === 'pickups' ? 'loc' : kind.replace(/s$/, '');
+            const entity = {
+                id: this._nextId(prefix, level[kind]),
+                x: host.x, y: host.y, on: hostId,
+            };
+            if (kind === 'portals') entity.direction = 'up';
+            level[kind].push(entity);
+        }
+        this.render();
+    }
+
+    // First free `${prefix}N` id not already used in `list`.
+    _nextId(prefix, list) {
+        const used = new Set((list ?? []).map((e) => e.id));
+        let n = 0;
+        while (used.has(`${prefix}${n}`) || used.has(`${prefix}_${n}`)) n++;
+        return prefix === 'loc' ? `loc_${n}` : `${prefix}${n}`;
     }
 }
