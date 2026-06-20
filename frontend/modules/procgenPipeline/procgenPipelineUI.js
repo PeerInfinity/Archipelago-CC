@@ -1768,9 +1768,23 @@ export class ProcgenPipelineUI {
             + Object.entries(subs).map(([s, c]) => `${s}×${c}`).join(', ');
         wrap.appendChild(summary);
 
+        // Build the parent→children map and render as an indented directory
+        // tree (each node carries its inline controls). parent < index always
+        // holds, so the graph is a single tree rooted at the parent==null node.
+        const children = nodes.map(() => []);
+        let root = null;
         nodes.forEach((nd) => {
-            wrap.appendChild(this._renderTopologyRow(nd, nodes, subOpts, planItems));
+            if (nd.parent == null) { if (root == null) root = nd.index; }
+            else if (nodes[nd.parent]) children[nd.parent].push(nd.index);
         });
+        const ctx = { nodes, children, subOpts, planItems, container: wrap };
+        if (root != null) {
+            this._renderTopoTreeNode(root, '', true, true, ctx);
+        } else {
+            // Defensive fallback (no root): render flat.
+            nodes.forEach((nd) => wrap.appendChild(
+                this._renderTopologyRow(nd, nodes, subOpts, planItems, '')));
+        }
 
         const warns = st.topologyWarnings ?? [];
         if (warns.length) {
@@ -1782,13 +1796,30 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    _renderTopologyRow(node, nodes, subOpts, planItems) {
+    // Recurse the topology tree, drawing directory-style branch glyphs. Each
+    // node renders as one control row prefixed by its tree connector; updates
+    // live because the whole editor re-renders on every edit.
+    _renderTopoTreeNode(idx, ancestorPrefix, isLast, isRoot, ctx) {
+        const { nodes, children, subOpts, planItems, container } = ctx;
+        const connector = isRoot ? '' : (isLast ? '└─ ' : '├─ ');
+        container.appendChild(
+            this._renderTopologyRow(nodes[idx], nodes, subOpts, planItems,
+                ancestorPrefix + connector));
+        const childPrefix = ancestorPrefix + (isRoot ? '' : (isLast ? '   ' : '│  '));
+        const kids = children[idx];
+        kids.forEach((childIdx, i) => {
+            this._renderTopoTreeNode(childIdx, childPrefix, i === kids.length - 1, false, ctx);
+        });
+    }
+
+    _renderTopologyRow(node, nodes, subOpts, planItems, treePrefix = '') {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:4px;padding:1px 6px;'
-            + 'font-size:11px;flex-wrap:wrap;';
+            + 'font-size:11px;flex-wrap:nowrap;';
         const label = document.createElement('span');
-        label.style.cssText = 'min-width:64px;font-family:monospace;';
-        label.textContent = `#${node.index} w${node.wave}${node.isFiller ? 'f' : ''}`
+        // Monospace + pre so the tree glyphs and indentation align.
+        label.style.cssText = 'font-family:monospace;white-space:pre;';
+        label.textContent = `${treePrefix}#${node.index} w${node.wave}${node.isFiller ? 'f' : ''}`
             + `${node.parent == null ? '' : `/${node.side ?? '?'}`}`;
         row.appendChild(label);
 

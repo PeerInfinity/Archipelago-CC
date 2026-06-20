@@ -91,10 +91,14 @@ console.log('STEP ②a: allocation feedback shown');
 
 await clickBtn('Run ②b Topology');
 await page.waitForTimeout(600);
-if (!(await panelText()).includes('②b Topology')) {
+txt = await panelText();
+if (!txt.includes('②b Topology')) {
     throw new Error('topology feedback did not appear');
 }
-console.log('STEP ②b: topology feedback shown');
+if (!txt.includes('└─') && !txt.includes('├─')) {
+    throw new Error('②b topology tree glyphs (└─/├─) did not render');
+}
+console.log('STEP ②b: topology tree (with branch glyphs) shown');
 
 await clickBtn('Run ②c Items');
 await page.waitForTimeout(600);
