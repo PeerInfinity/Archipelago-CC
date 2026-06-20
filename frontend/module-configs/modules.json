@@ -260,6 +260,10 @@
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
     },
+    "bounceRegionEditor": {
+      "path": "./modules/bounceRegionEditor/index.js",
+      "enabled": true
+    },
     "procgenPlayer": {
       "path": "./modules/procgenPlayer/index.js",
       "enabled": true
@@ -335,6 +339,7 @@
     "flashSubstrate",
     "bounceDemo",
     "procgenPipeline",
+    "bounceRegionEditor",
     "procgenPlayer",
     "playbackBot"
   ]
