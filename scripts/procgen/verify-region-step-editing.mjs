@@ -15,7 +15,9 @@
  */
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import { assembleBounceRegionFromLevel } from '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import {
+    assembleBounceRegionFromLevel, generateZoneForSpecs,
+} from '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import {
     prepareBounceSphereGrowth, buildBounceRegionParams, DEFAULT_BOUNCE_PROCGEN_PARAMS,
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
@@ -190,6 +192,38 @@ function withPickupItems(level, contract) {
         if (!errs.length) fail('contract-break did NOT surface as an oracle mismatch');
         console.log(`D. contract-break surfaces (oracle: ${errs[0]}) — OK`);
     }
+}
+
+// ── F. Editor Regenerate (keep mode): rebuild geometry from settings on a new
+// seed, preserving the exit/location contract → oracle holds; geometry varies.
+{
+    const { grid, tree, startCell, stats, plan, prep, regionParams, startingItems } = buildWorld();
+    const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce'
+        && (n.items?.length || 0) > 0) ?? fail('F: no non-root bounce region with items');
+    const contract = buildBounceRegionContract(node, tree, grid, regionSize, regionParams);
+    const region = grid.getRegion(node.cell);
+    const sig0 = platSig(region);
+    // Mirror _regenerate (keep): generateZoneForSpecs with the contract specs +
+    // settings (bump seed + add platformRows so geometry must change), then the
+    // same save merge.
+    const built = generateZoneForSpecs({
+        region_id: region.region_id,
+        exitSpecs: contract.exitSpecs,
+        locationSpecs: (contract.locationSpecs ?? []).map((l) => ({ ...l })),
+        seed: 13579, mode: contract.mode, braidWidth: regionParams.braidWidth,
+        jitter: regionParams.bounceJitter, decorChance: regionParams.bounceDecorChance,
+        freeArrow: contract.freeArrow, platformRows: 2,
+        physicsProfile: contract.physicsProfile,
+    });
+    const regen = built.payload.params.bounceLevel;
+    const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
+    for (const pk of regen.pickups ?? []) if (itemById.has(pk.id)) pk.item = itemById.get(pk.id);
+    grid.replaceRegion(node.cell, buildEdited(region, contract, regen));
+    const after = grid.getRegion(node.cell);
+    if (platSig(after) === sig0) fail('F: regenerate did not change geometry');
+    const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
+    if (errs.length) fail(`F: oracle after regenerate: ${errs[0]}`);
+    console.log('F. Regenerate (keep) varied geometry + kept oracle — OK');
 }
 
 console.log('VERIFY REGION-STEP EDITING: ALL OK');

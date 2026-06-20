@@ -415,6 +415,64 @@ if (!gMsg.includes('Sphere plan realised')) {
 }
 console.log('PHASE G OK: Edit ▸ → pipeline save → ④ kept the oracle');
 
+// ── Phase H: ③ Edit ▸ → editor Regenerate (keep) → Save → ④ (oracle holds) ─
+const openedH = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .find((e) => e.textContent.trim() === 'Edit ▸');
+    if (!b) return false;
+    b.click();
+    return true;
+});
+if (!openedH) throw new Error('H: no Edit ▸ button found');
+await page.waitForTimeout(1000);
+// Expand the "Region generation" section, bump the seed, Regenerate.
+const expanded = await page.evaluate(() => {
+    const h = [...document.querySelectorAll('.bounce-region-editor-panel .bre-collapsible')]
+        .find((e) => e.textContent.includes('Region generation'));
+    if (!h) return false;
+    h.click();
+    return true;
+});
+if (!expanded) throw new Error('H: "Region generation" section header not found');
+await page.waitForTimeout(300);
+const seedSet = await page.evaluate(() => {
+    const row = [...document.querySelectorAll('.bounce-region-editor-panel .bre-field')]
+        .find((r) => r.querySelector('span')?.textContent === 'seed');
+    const inp = row?.querySelector('input');
+    if (!inp) return false;
+    inp.value = '24680';
+    inp.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+});
+if (!seedSet) throw new Error('H: seed field not found in settings');
+const regen = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+        .find((e) => e.textContent.trim().startsWith('Regenerate'));
+    if (!b) return false;
+    b.click();
+    return true;
+});
+if (!regen) throw new Error('H: no Regenerate button');
+await page.waitForTimeout(800);
+const regenMsg = await page.evaluate(() =>
+    document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
+if (!regenMsg.includes('Regenerated')) throw new Error(`H: regenerate did not run: "${regenMsg}"`);
+console.log('PHASE H: regenerated geometry in the editor —', regenMsg);
+await page.evaluate(() => {
+    [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+        .find((e) => e.textContent.trim() === 'Save')?.click();
+});
+await page.waitForTimeout(700);
+await goTab('Procgen Pipeline');
+await page.waitForTimeout(800);
+await clickBtn('Run ④ Compile');
+await page.waitForTimeout(2000);
+const hMsg = await message();
+if (!hMsg.includes('Sphere plan realised')) {
+    throw new Error(`H: oracle failed after regenerate + save + ④: ${hMsg}`);
+}
+console.log('PHASE H OK: editor Regenerate (keep) → save → ④ kept the oracle');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));

@@ -54,6 +54,7 @@ export class BounceRegionEditorUI {
         this._session = null;
         this._selectedId = null;
         this._message = '';
+        this._settingsOpen = false; // "Region generation" section collapsed by default
 
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'bounce-region-editor-panel';
@@ -169,9 +170,13 @@ export class BounceRegionEditorUI {
         ];
         let ruleLines = [];
         try {
-            const braid = !!(contract?.freeArrow || contract?.mode === 'braid');
+            // Derive under the editor's effective settings (seeded from the
+            // contract, so initial display matches the generator).
+            const s = this._session?.settings ?? {};
+            const freeArrow = s.freeArrow ?? contract.freeArrow;
+            const braid = (s.mode === 'braid') || !!(contract?.mode === 'braid') || !!freeArrow;
             const derived = braid
-                ? deriveBraidAccessRules(level, { freeArrow: contract.freeArrow })
+                ? deriveBraidAccessRules(level, { freeArrow })
                 : deriveAccessRules(level);
             for (const [id, a] of Object.entries(derived.exits ?? {})) {
                 ruleLines.push(`exit ${id}: ${formatRule(a.minimalSets)}`);
@@ -327,6 +332,7 @@ export class BounceRegionEditorUI {
 
         side.appendChild(this._renderGlobalEdit(sess.level));
         side.appendChild(this._renderPlatformEdit(sess.level));
+        side.appendChild(this._renderGenSettings(sess));
 
         const rules = document.createElement('div');
         rules.className = 'bre-rules';
@@ -391,13 +397,14 @@ export class BounceRegionEditorUI {
         const locationSpecs = (level.pickups ?? []).map((pk) => ({
             id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
         }));
+        const s = this._session.settings ?? {};
         const built = assembleBounceRegionFromLevel(level, {
             region_id: region.region_id,
             exitSpecs: contract.exitSpecs ?? [],
             locationSpecs,
-            physicsProfile: contract.physicsProfile ?? 'experimental',
-            mode: contract.mode ?? 'column',
-            freeArrow: contract.freeArrow ?? 'right',
+            physicsProfile: s.physicsProfile ?? contract.physicsProfile ?? 'experimental',
+            mode: s.mode ?? contract.mode ?? 'column',
+            freeArrow: s.freeArrow ?? contract.freeArrow ?? 'right',
         });
         const next = deepClone(region);
         next.playable_payload = built.payload;
@@ -453,6 +460,135 @@ export class BounceRegionEditorUI {
         });
         row.appendChild(inp);
         return row;
+    }
+
+    _selectField(label, value, options, onChange) {
+        const row = document.createElement('label');
+        row.className = 'bre-field';
+        const span = document.createElement('span');
+        span.textContent = label;
+        row.appendChild(span);
+        const sel = document.createElement('select');
+        for (const opt of options) {
+            const o = document.createElement('option');
+            o.value = opt; o.textContent = opt;
+            if (opt === value) o.selected = true;
+            sel.appendChild(o);
+        }
+        sel.addEventListener('change', () => onChange(sel.value));
+        row.appendChild(sel);
+        return row;
+    }
+
+    // ── Region generation settings + Regenerate ─────────────────────────
+    // A collapsible section: the bounce generation params (seeded from the
+    // region's actual params) + a Regenerate button. Field edits stage into
+    // sess.settings WITHOUT re-rendering (so editing several fields keeps
+    // focus); Regenerate applies them. Regen mode toggles whether the region's
+    // exit/location contract is preserved (keep — pipeline default, oracle-safe)
+    // or rebuilt from the current level (free — standalone default).
+    _renderGenSettings(sess) {
+        const block = document.createElement('div');
+        block.className = 'bre-edit-block';
+        const h = document.createElement('div');
+        h.className = 'bre-subhead bre-collapsible';
+        h.textContent = `${this._settingsOpen ? '▾' : '▸'} Region generation`;
+        h.addEventListener('click', () => { this._settingsOpen = !this._settingsOpen; this.render(); });
+        block.appendChild(h);
+        if (!this._settingsOpen) return block;
+
+        const s = sess.settings;
+        block.appendChild(this._numField('seed', s.seed, (v) => { s.seed = Math.round(v); }, { step: 1 }));
+        block.appendChild(this._selectField('physics', s.physicsProfile,
+            ['dj', 'experimental'], (v) => { s.physicsProfile = v; }));
+        block.appendChild(this._selectField('free arrow', s.freeArrow,
+            ['right', 'left'], (v) => { s.freeArrow = v; }));
+        block.appendChild(this._selectField('mode', s.mode,
+            ['braid', 'column'], (v) => { s.mode = v; }));
+        block.appendChild(this._numField('braid width', s.braidWidth,
+            (v) => { s.braidWidth = Math.max(1, Math.round(v)); }, { step: 10, min: 1 }));
+        block.appendChild(this._numField('jitter', s.jitter,
+            (v) => { s.jitter = Math.max(0, Math.round(v)); }, { step: 5 }));
+        block.appendChild(this._numField('platform rows', s.platformRows,
+            (v) => { s.platformRows = Math.max(0, Math.round(v)); }, { step: 1 }));
+        for (const k of ['blue', 'brown', 'spring', 'jetpack', 'fork']) {
+            block.appendChild(this._numField(`decor ${k}`, s.decor[k],
+                (v) => { s.decor[k] = Math.max(0, Math.min(1, v)); }, { step: 0.1, min: 0 }));
+        }
+
+        const hasContract = !!(sess.contract.exitSpecs && sess.contract.exitSpecs.length);
+        block.appendChild(this._selectField('regen mode', sess.regenMode,
+            hasContract ? ['keep', 'free'] : ['free'], (v) => { sess.regenMode = v; }));
+        block.appendChild(this._btn('Regenerate 🎲', () => this._regenerate()));
+        return block;
+    }
+
+    // Rebuild the level geometry from the staged settings. keep → reuse the
+    // region's exit/location contract (oracle-safe); free → derive specs from
+    // the current level's portals + pickups (exploratory; may change structure).
+    _regenerate() {
+        const sess = this._session;
+        const s = sess.settings;
+        const keep = sess.regenMode === 'keep' && sess.contract.exitSpecs?.length;
+        let exitSpecs;
+        let locationSpecs;
+        if (keep) {
+            exitSpecs = sess.contract.exitSpecs;
+            locationSpecs = (sess.contract.locationSpecs ?? []).map((l) => ({ ...l }));
+        } else {
+            exitSpecs = this._specsFromLevelPortals(sess.level);
+            locationSpecs = (sess.level.pickups ?? []).map((pk) => ({
+                id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
+            }));
+        }
+        try {
+            const built = generateZoneForSpecs({
+                region_id: sess.label,
+                exitSpecs,
+                locationSpecs,
+                seed: s.seed,
+                mode: s.mode,
+                braidWidth: s.braidWidth,
+                jitter: s.jitter,
+                decorChance: s.decor,
+                freeArrow: s.freeArrow,
+                platformRows: s.platformRows,
+                physicsProfile: s.physicsProfile,
+            });
+            const level = built.payload.params.bounceLevel;
+            // The generated level's pickups carry no item — backfill from specs.
+            const itemById = new Map(locationSpecs.map((l) => [l.id, l.item]));
+            for (const pk of level.pickups ?? []) {
+                if (itemById.has(pk.id)) pk.item = itemById.get(pk.id);
+            }
+            sess.level = level;
+            this._selectedId = null;
+            this._message = `Regenerated (seed ${s.seed}, ${keep ? 'kept contract' : 'free'}).`;
+        } catch (err) {
+            this._message = `Regenerate failed: ${err.message}`;
+        }
+        this.render();
+    }
+
+    // Derive exit specs from a level's portals for free-mode regenerate: the
+    // side comes from a `side_exit_<side>` id, else from the portal direction,
+    // else the first free side. Deduped to the 4 grid sides.
+    _specsFromLevelPortals(level) {
+        const DIR_TO_SIDE = { up: 'N', down: 'S', right: 'E', left: 'W' };
+        const ALL = ['N', 'S', 'E', 'W'];
+        const used = new Set();
+        const specs = [];
+        for (const p of level.portals ?? []) {
+            let side = null;
+            const m = /^side_exit_([NSEW])$/.exec(p.id || '');
+            if (m) side = m[1];
+            else if (p.direction && DIR_TO_SIDE[p.direction]) side = DIR_TO_SIDE[p.direction];
+            if (!side || used.has(side)) side = ALL.find((x) => !used.has(x)) ?? null;
+            if (!side) continue;
+            used.add(side);
+            specs.push({ side, requirement: [], counts: {} });
+        }
+        return specs;
     }
 
     // ── Edit controls ───────────────────────────────────────────────────

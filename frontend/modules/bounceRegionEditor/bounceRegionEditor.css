@@ -111,3 +111,8 @@
     border-color: #5cb85c;
     color: #bfe6bf;
 }
+.bounce-region-editor-panel .bre-collapsible {
+    cursor: pointer;
+    user-select: none;
+}
+.bounce-region-editor-panel .bre-collapsible:hover { color: #fff; }
