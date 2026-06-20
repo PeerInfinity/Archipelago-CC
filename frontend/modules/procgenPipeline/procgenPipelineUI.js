@@ -2159,6 +2159,10 @@ export class ProcgenPipelineUI {
                     node, st.tree, st.grow.grid, st.growConfig.regionSize,
                     st.growConfig.regionParams ?? {},
                 ));
+                // The raw bounce params seed the editor's generation-settings
+                // section; the world item pool feeds its per-pickup item picker.
+                base.regionParams = st.growConfig.regionParams ?? {};
+                base.itemPool = Object.keys(this.scenario?.items ?? {});
             } catch (err) {
                 base.contractError = err.message;
             }

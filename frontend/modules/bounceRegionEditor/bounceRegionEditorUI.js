@@ -14,7 +14,9 @@
  */
 import rawEventBus from '../../app/core/eventBus.js';
 import { renderLevel } from './levelRenderer.js';
-import { assembleBounceRegionFromLevel } from '../bounceDemo/bounceDemoLibrary.js';
+import {
+    assembleBounceRegionFromLevel, generateZoneForSpecs, BOUNCE_LIBRARY_ITEMS,
+} from '../bounceDemo/bounceDemoLibrary.js';
 import { validateLevel, braidBlueInvariantErrors } from '../bounceDemo/level.js';
 import {
     deriveAccessRules, deriveBraidAccessRules, formatRule,
@@ -89,14 +91,16 @@ export class BounceRegionEditorUI {
     // ── Session loading ─────────────────────────────────────────────────
     _loadSession({ region, contract, onSave }) {
         const level = deepClone(region?.playable_payload?.params?.bounceLevel ?? {});
+        const c = contract ?? {};
         this._session = {
             region: region ?? null, // the live region (write-back base in _buildEditedRegion)
             level,
-            contract: contract ?? {},
+            contract: c,
             onSave: onSave ?? null,
             mode: onSave ? 'pipeline' : 'standalone',
             label: region?.region_id ?? 'region',
         };
+        this._initSessionExtras(c);
         this._selectedId = null;
         this._message = this._session.mode === 'pipeline'
             ? `Editing ${this._session.label} (pipeline — Save writes back to ③).`
@@ -106,15 +110,55 @@ export class BounceRegionEditorUI {
     _loadFixture(name) {
         const fixture = FIXTURES[name];
         if (!fixture) return;
+        const contract = { physicsProfile: 'experimental' };
         this._session = {
             level: deepClone(fixture),
-            contract: { physicsProfile: 'experimental' },
+            contract,
             onSave: null,
             mode: 'standalone',
             label: name,
         };
+        this._initSessionExtras(contract);
         this._selectedId = null;
         this._message = `Loaded fixture "${name}" (standalone).`;
+    }
+
+    // Derive the editor-only session extras from the contract: the world item
+    // pool (per-pickup item picker), the generation-settings (seeded from the
+    // region's actual params), and the default Regenerate mode (keep the
+    // exit/location contract in pipeline; free in standalone). Also backfill
+    // each level pickup's `item` from the contract's locationSpecs (the level
+    // model itself doesn't store the item — it lives in extracted_rules).
+    _initSessionExtras(contract) {
+        const sess = this._session;
+        sess.itemPool = (contract.itemPool && contract.itemPool.length)
+            ? [...contract.itemPool]
+            : [...Object.keys(BOUNCE_LIBRARY_ITEMS), 'Victory'];
+        sess.settings = this._settingsFromParams(contract.regionParams ?? {}, contract);
+        sess.regenMode = (contract.exitSpecs && contract.exitSpecs.length) ? 'keep' : 'free';
+        const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
+        for (const pk of sess.level.pickups ?? []) {
+            if (pk.item == null && itemById.has(pk.id)) pk.item = itemById.get(pk.id);
+        }
+    }
+
+    // Map the bounce regionParams (panel vocabulary) into the editor's
+    // generation-settings (generateZoneForSpecs vocabulary). See buildZoneSpecs.
+    _settingsFromParams(rp = {}, contract = {}) {
+        const decor = rp.bounceDecorChance ?? {};
+        return {
+            seed: 1,
+            physicsProfile: rp.physicsProfile ?? contract.physicsProfile ?? 'experimental',
+            freeArrow: rp.bounceFreeArrow ?? contract.freeArrow ?? 'right',
+            mode: (rp.bounceMode ?? contract.mode ?? 'braid') === 'braid' ? 'braid' : 'column',
+            braidWidth: rp.braidWidth ?? 240,
+            jitter: rp.bounceJitter ?? 0,
+            platformRows: rp.platformRows ?? 0,
+            decor: {
+                blue: decor.blue ?? 0, brown: decor.brown ?? 0,
+                spring: decor.spring ?? 0, jetpack: decor.jetpack ?? 0, fork: decor.fork ?? 0,
+            },
+        };
     }
 
     // ── Validation + rule derivation (for display) ──────────────────────
@@ -339,13 +383,18 @@ export class BounceRegionEditorUI {
     // exits_placed, the back-exit, placed_items). Access rules live only in
     // extracted_rules, so the structural exits Map is left untouched. Forward
     // exits map to sides via exits_placed; the driver back-exit (not placed) is
-    // left alone.
+    // left alone. The EXITS keep the contract (their gates aren't editable
+    // here); the LOCATIONS come from the edited level's pickups so item picks +
+    // add/remove flow through (an off-plan item is the oracle's to flag).
     _buildEditedRegion() {
         const { region, contract, level } = this._session;
+        const locationSpecs = (level.pickups ?? []).map((pk) => ({
+            id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
+        }));
         const built = assembleBounceRegionFromLevel(level, {
             region_id: region.region_id,
             exitSpecs: contract.exitSpecs ?? [],
-            locationSpecs: contract.locationSpecs ?? [],
+            locationSpecs,
             physicsProfile: contract.physicsProfile ?? 'experimental',
             mode: contract.mode ?? 'column',
             freeArrow: contract.freeArrow ?? 'right',
@@ -363,11 +412,10 @@ export class BounceRegionEditorUI {
                 ex.access_rule = built.exitRules[side];
             }
         }
-        const builtLocById = new Map(built.locations.map((l) => [l.id, l]));
-        for (const loc of next.extracted_rules?.locations ?? []) {
-            const b = builtLocById.get(loc.id);
-            if (b) { loc.paths = b.paths; loc.access_rule = b.access_rule; }
-        }
+        // built.locations is one-per-edited-pickup (id + chosen item + paths +
+        // access_rule) — replace the region's locations wholesale so item edits,
+        // additions and removals all take effect.
+        if (next.extracted_rules) next.extracted_rules.locations = built.locations;
         return next;
     }
 
@@ -476,6 +524,34 @@ export class BounceRegionEditorUI {
         }
         block.appendChild(toggles);
 
+        // pickup item (when this platform hosts a pickup): choose which item
+        // the location grants, from the world item pool.
+        const pickup = (level.pickups ?? []).find((e) => e.on === p.id);
+        if (pickup) {
+            const iRow = document.createElement('label');
+            iRow.className = 'bre-field';
+            const is = document.createElement('span'); is.textContent = 'pickup item';
+            iRow.appendChild(is);
+            const iSel = document.createElement('select');
+            const pool = this._session.itemPool ?? [];
+            const opts = [...pool];
+            // Keep the current item selectable even if it's not in the pool.
+            if (pickup.item && !opts.includes(pickup.item)) opts.unshift(pickup.item);
+            if (!opts.length) opts.push('(none)');
+            for (const item of opts) {
+                const o = document.createElement('option');
+                o.value = item; o.textContent = item;
+                if (pickup.item === item) o.selected = true;
+                iSel.appendChild(o);
+            }
+            iSel.addEventListener('change', () => {
+                pickup.item = iSel.value === '(none)' ? null : iSel.value;
+                this.render();
+            });
+            iRow.appendChild(iSel);
+            block.appendChild(iRow);
+        }
+
         // portal direction (when this platform hosts a portal)
         const portal = (level.portals ?? []).find((e) => e.on === p.id);
         if (portal) {
@@ -558,6 +634,9 @@ export class BounceRegionEditorUI {
                 x: host.x, y: host.y, on: hostId,
             };
             if (kind === 'portals') entity.direction = 'up';
+            // A pickup grants an item: default to the first world-pool item so
+            // the location is meaningful (the user picks the exact item below).
+            if (kind === 'pickups') entity.item = (this._session.itemPool ?? [])[0] ?? null;
             level[kind].push(entity);
         }
         this.render();

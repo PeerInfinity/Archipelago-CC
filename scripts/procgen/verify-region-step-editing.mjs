@@ -76,12 +76,17 @@ const platSig = (r) => JSON.stringify(
     (r.playable_payload.params.bounceLevel.platforms ?? []).map((p) => [p.x, p.y, p.type]));
 const exitKeys = (r) => [...getRegionExits(r).keys()].sort().join(',');
 
-// Editor save merge (mirrors bounceRegionEditorUI._buildEditedRegion).
+// Editor save merge (mirrors bounceRegionEditorUI._buildEditedRegion): exits
+// keep the contract; locations come from the edited level's pickups (item picks
+// + add/remove flow through).
 function buildEdited(region, contract, level) {
+    const locationSpecs = (level.pickups ?? []).map((pk) => ({
+        id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
+    }));
     const built = assembleBounceRegionFromLevel(level, {
         region_id: region.region_id,
         exitSpecs: contract.exitSpecs ?? [],
-        locationSpecs: contract.locationSpecs ?? [],
+        locationSpecs,
         physicsProfile: contract.physicsProfile ?? 'experimental',
         mode: contract.mode ?? 'column',
         freeArrow: contract.freeArrow ?? 'right',
@@ -97,12 +102,17 @@ function buildEdited(region, contract, level) {
             ex.access_rule = built.exitRules[side];
         }
     }
-    const byId = new Map(built.locations.map((l) => [l.id, l]));
-    for (const loc of next.extracted_rules?.locations ?? []) {
-        const b = byId.get(loc.id);
-        if (b) { loc.paths = b.paths; loc.access_rule = b.access_rule; }
-    }
+    if (next.extracted_rules) next.extracted_rules.locations = built.locations;
     return next;
+}
+
+// Backfill pickup.item from the contract (the level model doesn't store it).
+function withPickupItems(level, contract) {
+    const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
+    for (const pk of level.pickups ?? []) {
+        if (pk.item == null && itemById.has(pk.id)) pk.item = itemById.get(pk.id);
+    }
+    return level;
 }
 
 // ── A. Re-roll: geometry varies, exits fixed, oracle holds ─────────────
@@ -126,18 +136,19 @@ function buildEdited(region, contract, level) {
     console.log('A. re-roll: geometry varied, exits fixed, oracle holds — OK');
 }
 
-// ── B/C/D. Editor save: unchanged / nudge / contract-break ─────────────
+// ── B/C/D/E. Editor save: unchanged / nudge / contract-break / item pick ─
 {
     const { grid, tree, startCell, stats, plan, prep, regionParams, startingItems } = buildWorld();
-    const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce')
-        ?? fail('no non-root bounce region');
+    const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce'
+        && (n.items?.length || 0) > 0) ?? fail('no non-root bounce region with items');
     const contract = buildBounceRegionContract(node, tree, grid, regionSize, regionParams);
+    const cloneLevel = () => withPickupItems(
+        structuredClone(grid.getRegion(node.cell).playable_payload.params.bounceLevel), contract);
 
     // B. unchanged
     {
         const region = grid.getRegion(node.cell);
-        const level = structuredClone(region.playable_payload.params.bounceLevel);
-        grid.replaceRegion(node.cell, buildEdited(region, contract, level));
+        grid.replaceRegion(node.cell, buildEdited(region, contract, cloneLevel()));
         const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
         if (errs.length) fail(`unchanged-save oracle: ${errs[0]}`);
         console.log('B. unchanged editor save keeps oracle — OK');
@@ -145,7 +156,7 @@ function buildEdited(region, contract, level) {
     // C. nudge a platform
     {
         const region = grid.getRegion(node.cell);
-        const level = structuredClone(region.playable_payload.params.bounceLevel);
+        const level = cloneLevel();
         if (level.platforms[0]) {
             level.platforms[0].x = Math.min(level.size.width - 1, level.platforms[0].x + 1);
         }
@@ -154,10 +165,24 @@ function buildEdited(region, contract, level) {
         if (errs.length) fail(`nudge-edit oracle: ${errs[0]}`);
         console.log('C. contract-preserving nudge keeps oracle — OK');
     }
+    // E. change a pickup's item (world-pool pick) → the saved location's item
+    // reflects it (oracle flags an off-plan pick — warn-but-allow; here we just
+    // prove the pick flows through the save).
+    {
+        const region = grid.getRegion(node.cell);
+        const level = cloneLevel();
+        const pk = (level.pickups ?? [])[0] ?? fail('E: region has no pickup');
+        const newItem = pk.item === 'Victory' ? 'Springs' : 'Victory';
+        pk.item = newItem;
+        const edited = buildEdited(region, contract, level);
+        const loc = edited.extracted_rules.locations.find((l) => l.id === pk.id);
+        if (loc?.item !== newItem) fail(`E: pickup item did not flow through (got ${loc?.item})`);
+        console.log(`E. pickup item pick flows through save (${pk.id} → ${newItem}) — OK`);
+    }
     // D. delete a forward portal (contract break) → oracle must FAIL
     {
         const region = grid.getRegion(node.cell);
-        const level = structuredClone(region.playable_payload.params.bounceLevel);
+        const level = cloneLevel();
         const fwdSide = contract.exitSpecs[0]?.side;
         level.portals = (level.portals ?? []).filter((p) => p.id !== `side_exit_${fwdSide}`);
         grid.replaceRegion(node.cell, buildEdited(region, contract, level));
