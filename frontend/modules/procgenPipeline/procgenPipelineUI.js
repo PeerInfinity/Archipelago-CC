@@ -2300,14 +2300,25 @@ export class ProcgenPipelineUI {
     _renderGrid() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-canvas-wrap';
-        if (!this.result) {
+        // Prefer the live stepped grid (st.grow.grid) in sphere mode: it exists
+        // from ③ onward and SURVIVES the _invalidateFrom(4) that layout edits
+        // trigger, so the map stays put while editing. Fall back to this.result
+        // (other modes / loaded presets / post-④ compiled view).
+        const st = this._stepState;
+        let grid; let regionSize;
+        if (this.mode === 'sphereGrowth' && st?.grow?.grid) {
+            grid = st.grow.grid;
+            regionSize = st.growConfig?.regionSize ?? this.result?.regionSize;
+        } else if (this.result) {
+            ({ grid, regionSize } = this.result);
+        }
+        if (!grid || !regionSize) {
             const hint = document.createElement('div');
             hint.className = 'procgen-pipeline-hint';
             hint.textContent = 'Click Generate to run the pipeline.';
             section.appendChild(hint);
             return section;
         }
-        const { grid, regionSize } = this.result;
         const canvas = document.createElement('canvas');
         canvas.className = 'procgen-pipeline-canvas';
         canvas.width = grid.width * regionSize.width * TILE_PX;
@@ -2363,6 +2374,54 @@ export class ProcgenPipelineUI {
             ctx.moveTo(0, gy * regionSize.height * TILE_PX + 0.5);
             ctx.lineTo(canvas.width, gy * regionSize.height * TILE_PX + 0.5);
             ctx.stroke();
+        }
+
+        this._drawConnections(ctx, grid, regionSize);
+    }
+
+    // Thin yellow lines linking each exit's green square to its paired
+    // entrance's green square (the reciprocal exit in the target region, found
+    // via targetExitId). Usually the two sit adjacent so the line is tiny, but
+    // for teleporter links (regions placed apart) it shows the connection. Drawn
+    // last so the lines sit on top of the cells.
+    _drawConnections(ctx, grid, regionSize) {
+        const cellW = regionSize.width * TILE_PX;
+        const cellH = regionSize.height * TILE_PX;
+        // Global green-square center for every (region_id, exit_id).
+        const centers = new Map();
+        for (const region of grid.allRegions()) {
+            const cell = region.cell;
+            if (!cell) continue;
+            const placed = resolveExitTilePositions(getRegionExits(region) ?? [], regionSize);
+            for (const p of placed) {
+                if (!p?.exit?.exit_id) continue;
+                centers.set(`${region.region_id} ${p.exit.exit_id}`, {
+                    px: cell.gx * cellW + (p.x + 0.5) * TILE_PX,
+                    py: cell.gy * cellH + (p.y + 0.5) * TILE_PX,
+                });
+            }
+        }
+        ctx.strokeStyle = '#e6c84a';
+        ctx.lineWidth = 3;
+        const drawn = new Set();
+        for (const region of grid.allRegions()) {
+            const exits = getRegionExits(region);
+            const list = Array.isArray(exits) ? exits : [...(exits?.values?.() ?? [])];
+            for (const exit of list) {
+                if (!exit?.targetRegion || !exit?.targetExitId) continue;
+                const fromKey = `${region.region_id} ${exit.exit_id}`;
+                const toKey = `${exit.targetRegion} ${exit.targetExitId}`;
+                const pairKey = fromKey < toKey ? `${fromKey}|${toKey}` : `${toKey}|${fromKey}`;
+                if (drawn.has(pairKey)) continue;
+                drawn.add(pairKey);
+                const a = centers.get(fromKey);
+                const b = centers.get(toKey);
+                if (!a || !b) continue;
+                ctx.beginPath();
+                ctx.moveTo(a.px, a.py);
+                ctx.lineTo(b.px, b.py);
+                ctx.stroke();
+            }
         }
     }
 
