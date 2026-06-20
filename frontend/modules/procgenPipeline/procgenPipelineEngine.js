@@ -3112,6 +3112,101 @@ export function buildSphereTree(plan, opts = {}, rng) {
     };
 }
 
+/**
+ * Recompute a tree's DERIVED bookkeeping after a ②b topology edit (reparent
+ * / substrate / gate). Given nodes whose parent/gate/substrate may have been
+ * hand-edited, this re-derives each node's gateCounts, side, usedSides, and
+ * childGates so the tree stays coherent for ③ — and collects advisory veto
+ * warnings (the substrate's own gate-hosting rules + gate vocabulary).
+ *
+ * This is the EDITED path only: it assigns sides deterministically (first
+ * free, no rng), unlike wireSphereTree's rng pick. The unedited stepped run
+ * never calls this (it uses wireSphereTree → byte-identical). Assumes nodes
+ * stay in realisation order (parent index < node index); the editor enforces
+ * that by only offering earlier-index parents. Mutates and returns nodes.
+ */
+export function rebuildSphereTopology(plan, nodes, opts = {}) {
+    const { regionParams = {} } = opts;
+    // cumCounts[k] = item → cumulative instances through sphere k+1 (for the
+    // count gate), same as wireSphereTree.
+    const cumCounts = [];
+    {
+        const running = new Map();
+        for (const s of plan.spheres) {
+            for (const item of s.items) running.set(item, (running.get(item) ?? 0) + 1);
+            cumCounts.push(new Map(running));
+        }
+    }
+    // A node's gate lives in its own sphere (gateWave = node.wave); a wave-0
+    // filler gates on sphere 1 (matching wireSphereTree's gateWave override).
+    const gateWaveOf = (nd) => (nd.wave > 0 ? nd.wave : (nd.isFiller ? 1 : 0));
+    const countFor = (item, gateWave) => (gateWave > 0
+        ? (cumCounts[gateWave - 1]?.get(item) ?? 1) : 1);
+
+    const substrateCounts = {};
+    const warnings = [];
+    for (const nd of nodes) {
+        nd.usedSides = new Set();
+        nd.childGates = [];
+        if (nd.parent == null) nd.side = null;
+        // Recompute gateCounts from the (possibly edited) gate + gateWave.
+        const gw = gateWaveOf(nd);
+        nd.gateCounts = Object.fromEntries((nd.gate ?? []).map((it) => [it, countFor(it, gw)]));
+        substrateCounts[nd.substrate] = (substrateCounts[nd.substrate] || 0) + 1;
+    }
+    for (const nd of nodes) {
+        if (nd.parent == null) continue;
+        const host = nodes[nd.parent];
+        if (!host) { warnings.push(`#${nd.index}: parent #${nd.parent} not found.`); continue; }
+        const gateTerms = (nd.gate ?? []).map((item) => ({
+            item, count: nd.gateCounts[item] ?? 1,
+        }));
+        // Advisory checks (NOT enforced) — mirror canHost in buildSphereTree.
+        const adapter = substrateRegistry.get(host.substrate);
+        const gateable = adapter?.gateableItems ?? null;
+        if (gateable && gateTerms.some(({ item }) => !gateable.includes(item))) {
+            warnings.push(`#${nd.index}: gate [${nd.gate.join(',')}] outside `
+                + `#${host.index}'s (${host.substrate}) gate vocabulary.`);
+        }
+        const veto = adapter?.exitGateVeto?.(regionParams) ?? adapter?.canHostExitGates;
+        if (typeof veto === 'function' && !veto([...host.childGates], gateTerms)) {
+            warnings.push(`#${nd.index}: ${host.substrate} #${host.index} can't host `
+                + `gate [${nd.gate.join(',') || '—'}] (substrate veto).`);
+        }
+        if (host.wave > nd.wave) {
+            warnings.push(`#${nd.index} (wave ${nd.wave}) attaches to later wave `
+                + `#${host.index} (wave ${host.wave}) — stratification broken.`);
+        }
+        // The entry gate should contain an item INTRODUCED at the gate's
+        // sphere (the stratification rule that makes the plan a sphere-log
+        // oracle). Flag a gate item that isn't a sphere-gateWave item.
+        const gw = gateWaveOf(nd);
+        if (gw > 0 && (nd.gate ?? []).length) {
+            const sphereSet = new Set(plan.spheres[gw - 1]?.items ?? []);
+            for (const it of nd.gate) {
+                if (!sphereSet.has(it)) {
+                    warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
+                        + 'item — the oracle will mismatch.');
+                }
+            }
+        }
+        // Assign a side (first free; null = over the 4-side budget).
+        const free = SIDES.filter((s) => !host.usedSides.has(s));
+        if (free.length === 0) {
+            nd.side = null;
+            warnings.push(`#${host.index} has more than 4 children — #${nd.index} has no free side.`);
+        } else {
+            nd.side = free[0];
+            host.usedSides.add(nd.side);
+            nd.usedSides.add(OPPOSITE_SIDE[nd.side]);
+        }
+        host.childGates.push(gateTerms);
+        const backGated = substrateRegistry.get(nd.substrate)?.backPortalGated?.(regionParams) ?? true;
+        if (backGated) nd.childGates.push(gateTerms);
+    }
+    return { nodes, substrateCounts, warnings };
+}
+
 // Realise one tree node as a maze-style (procedural) region via the
 // shared generateRegion contract. The composed per-exit gate rides as
 // the exit's access_rule; locations default to True_ (the composed gate

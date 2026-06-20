@@ -248,6 +248,55 @@ const terminalD = msg.includes('Sphere plan realised')
 if (!terminalD) throw new Error(`②a edit Run all produced no terminal result: ${msg}`);
 console.log('PHASE D OK: ②a allocation edit flowed through to a terminal result');
 
+// ── Phase E: edit ②b topology (re-gate a region off-wave) ───────────
+await clickBtn('Reset');
+await page.waitForTimeout(300);
+await clickBtn('Run ① Plan');
+await page.waitForTimeout(400);
+await clickBtn('Run ②a Allocate');
+await page.waitForTimeout(300);
+await clickBtn('Run ②b Topology');
+await page.waitForTimeout(400);
+
+const topoEdited = await page.evaluate(() => {
+    const headers = [...document.querySelectorAll(
+        '.procgen-pipeline-panel .procgen-pipeline-scenario-subheader')];
+    const h = headers.find((el) => el.textContent.includes('②b Topology'));
+    if (!h) return null;
+    const block = h.parentElement;
+    const gateSels = [...block.querySelectorAll('select')]
+        .filter((s) => s.title === 'Entry gate item');
+    // Re-gate the first gated, non-Victory region to Victory (a sphere-3
+    // item) — off-wave for any earlier-wave region → stratification warning.
+    for (const sel of gateSels) {
+        const opt = [...sel.options].find((o) => o.value === 'Victory');
+        if (opt && sel.value && sel.value !== 'Victory') {
+            sel.value = 'Victory';
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+    }
+    return null;
+});
+if (!topoEdited) throw new Error('②b editor: no re-gateable region found');
+await page.waitForTimeout(400);
+const afterTopo = await panelText();
+if (afterTopo.includes("isn't a sphere")) {
+    console.log('PHASE E: stratification warning rendered after off-wave re-gate');
+} else {
+    console.log('PHASE E: re-gate applied (no off-wave warning — on-wave target)');
+}
+
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(4000);
+msg = await message();
+console.log('PHASE E MESSAGE (re-gated):', msg);
+const terminalE = msg.includes('Sphere plan realised')
+    || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
+    || msg.startsWith('ERROR');
+if (!terminalE) throw new Error(`②b edit Run all produced no terminal result: ${msg}`);
+console.log('PHASE E OK: ②b topology edit flowed through to a terminal result');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));

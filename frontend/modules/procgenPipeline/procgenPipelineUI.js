@@ -13,6 +13,7 @@ import {
     buildSphereAllocation,
     wireSphereTree,
     placeSphereTreeItems,
+    rebuildSphereTopology,
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
@@ -1540,8 +1541,8 @@ export class ProcgenPipelineUI {
                 this._renderAllocateEditor(st.allocation)));
         }
         if (st.completed >= 2 && st.nodes) {
-            wrap.appendChild(this._renderStepBlock('②b Topology',
-                this._renderTopologyFeedback(st.nodes)));
+            wrap.appendChild(this._renderStepBlock('②b Topology — substrate / parent / gate per region',
+                this._renderTopologyEditor(st.nodes)));
         }
         if (st.completed >= 3 && st.tree) {
             wrap.appendChild(this._renderStepBlock('②c Item placement — move items between regions',
@@ -1748,9 +1749,17 @@ export class ProcgenPipelineUI {
         this._invalidateFrom(1);
     }
 
-    // ②b Topology — per region: substrate, entry gate, parent/side.
-    _renderTopologyFeedback(nodes) {
+    // ②b Topology editor — per region: substrate / parent / gate dropdowns
+    // (free; warn-but-allow). Reparent targets are earlier-index nodes only
+    // (preserving realisation order so ③ doesn't crash); cross-wave parents,
+    // off-vocabulary gates, etc. are allowed but flagged. Edits recompute the
+    // derived bookkeeping via rebuildSphereTopology and surface its warnings.
+    _renderTopologyEditor(nodes) {
         const wrap = document.createElement('div');
+        const st = this._stepState;
+        const subOpts = Object.keys(this._activeSubstrateDict());
+        const planItems = [...new Set((st.plan?.spheres ?? []).flatMap((s) => s.items))];
+
         const subs = {};
         for (const nd of nodes) subs[nd.substrate] = (subs[nd.substrate] ?? 0) + 1;
         const fillers = nodes.filter((nd) => nd.isFiller).length;
@@ -1758,16 +1767,108 @@ export class ProcgenPipelineUI {
         summary.textContent = `${nodes.length} regions (${fillers} filler) · `
             + Object.entries(subs).map(([s, c]) => `${s}×${c}`).join(', ');
         wrap.appendChild(summary);
-        const list = document.createElement('div');
-        list.style.cssText = 'font-family:monospace;font-size:11px;white-space:pre;'
-            + 'overflow-x:auto;margin-top:4px;max-height:160px;overflow-y:auto;';
-        list.textContent = nodes.map((nd) => {
-            const gate = (nd.gate ?? []).length ? `[${nd.gate.join(',')}]` : '—';
-            const parent = nd.parent == null ? 'root' : `#${nd.parent}/${nd.side}`;
-            return `#${nd.index} w${nd.wave} ${nd.substrate} gate ${gate} <- ${parent}`;
-        }).join('\n');
-        wrap.appendChild(list);
+
+        nodes.forEach((nd) => {
+            wrap.appendChild(this._renderTopologyRow(nd, nodes, subOpts, planItems));
+        });
+
+        const warns = st.topologyWarnings ?? [];
+        if (warns.length) {
+            const w = document.createElement('div');
+            w.className = 'procgen-pipeline-warning';
+            w.textContent = warns.join(' ');
+            wrap.appendChild(w);
+        }
         return wrap;
+    }
+
+    _renderTopologyRow(node, nodes, subOpts, planItems) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:4px;padding:1px 6px;'
+            + 'font-size:11px;flex-wrap:wrap;';
+        const label = document.createElement('span');
+        label.style.cssText = 'min-width:64px;font-family:monospace;';
+        label.textContent = `#${node.index} w${node.wave}${node.isFiller ? 'f' : ''}`
+            + `${node.parent == null ? '' : `/${node.side ?? '?'}`}`;
+        row.appendChild(label);
+
+        // Substrate dropdown.
+        const subSel = document.createElement('select');
+        subSel.title = 'Substrate for this region';
+        for (const id of subOpts) {
+            const opt = document.createElement('option');
+            opt.value = id; opt.textContent = id;
+            if (id === node.substrate) opt.selected = true;
+            subSel.appendChild(opt);
+        }
+        // A substrate not in the active dict (shouldn't happen) still shows.
+        if (!subOpts.includes(node.substrate)) {
+            const opt = document.createElement('option');
+            opt.value = node.substrate; opt.textContent = node.substrate; opt.selected = true;
+            subSel.appendChild(opt);
+        }
+        subSel.addEventListener('change', () => {
+            node.substrate = subSel.value;
+            this._applyTopologyEdit();
+        });
+        row.appendChild(subSel);
+
+        // Parent dropdown (root is fixed; others pick an earlier-index node).
+        if (node.parent == null) {
+            const rootTag = document.createElement('span');
+            rootTag.textContent = 'root';
+            rootTag.style.cssText = 'opacity:0.7;';
+            row.appendChild(rootTag);
+        } else {
+            const parSel = document.createElement('select');
+            parSel.title = 'Parent region (earlier regions only)';
+            for (let i = 0; i < node.index; i++) {
+                const opt = document.createElement('option');
+                opt.value = String(i);
+                opt.textContent = `↰ #${i} w${nodes[i].wave}`;
+                if (i === node.parent) opt.selected = true;
+                parSel.appendChild(opt);
+            }
+            parSel.addEventListener('change', () => {
+                node.parent = Number(parSel.value);
+                this._applyTopologyEdit();
+            });
+            row.appendChild(parSel);
+        }
+
+        // Gate dropdown (— = ungated; or any plan item — warn if off-wave).
+        const gateSel = document.createElement('select');
+        gateSel.title = 'Entry gate item';
+        const cur = (node.gate ?? [])[0] ?? '';
+        const noneOpt = document.createElement('option');
+        noneOpt.value = ''; noneOpt.textContent = 'gate —';
+        if (!cur) noneOpt.selected = true;
+        gateSel.appendChild(noneOpt);
+        const items = cur && !planItems.includes(cur) ? [...planItems, cur] : planItems;
+        for (const it of items) {
+            const opt = document.createElement('option');
+            opt.value = it; opt.textContent = `gate ${it}`;
+            if (it === cur) opt.selected = true;
+            gateSel.appendChild(opt);
+        }
+        gateSel.addEventListener('change', () => {
+            node.gate = gateSel.value ? [gateSel.value] : [];
+            this._applyTopologyEdit();
+        });
+        row.appendChild(gateSel);
+        return row;
+    }
+
+    // Apply a ②b structural edit: recompute the tree's derived bookkeeping
+    // (sides / childGates / gateCounts) deterministically, stash the advisory
+    // warnings, and invalidate ②c..④ (the edited nodes re-flow through them).
+    _applyTopologyEdit() {
+        const st = this._stepState;
+        const { warnings } = rebuildSphereTopology(st.plan, st.nodes, {
+            regionParams: st.growConfig?.regionParams ?? {},
+        });
+        st.topologyWarnings = warnings;
+        this._invalidateFrom(2);
     }
 
     // ②c Item placement editor — which items live in which region, with a
@@ -2582,6 +2683,7 @@ export class ProcgenPipelineUI {
             allocation: null, rng: null,
             // ②b Topology outputs
             nodes: null, substrateCounts: null, quotaFallbacks: null,
+            topologyWarnings: [],
             // ②c Items output (the full tree fed to ③)
             tree: null,
             // ③/④ outputs
@@ -2636,6 +2738,9 @@ export class ProcgenPipelineUI {
         st.substrateCounts = wired.substrateCounts;
         st.quotaFallbacks = wired.quotaFallbacks;
         st.rng = wired.rng; // threaded into ③ (item placement consumes none)
+        // Unedited wireSphereTree output is coherent by construction; only
+        // ②b edits can introduce warnings (see _applyTopologyEdit).
+        st.topologyWarnings = [];
         st.completed = 2;
     }
 
@@ -2797,7 +2902,10 @@ export class ProcgenPipelineUI {
                 st.plan = st.startingItems = st.growConfig = st.opts = null;
                 st.allocation = st.rng = null;
             }
-            if (stepIdx < 2) st.nodes = st.substrateCounts = st.quotaFallbacks = null;
+            if (stepIdx < 2) {
+                st.nodes = st.substrateCounts = st.quotaFallbacks = null;
+                st.topologyWarnings = [];
+            }
             if (stepIdx < 3) st.tree = null;
             if (stepIdx < 4) { st.grow = null; st.seconds = 0; }
             if (stepIdx < 5) st.compile = null;
