@@ -1536,8 +1536,8 @@ export class ProcgenPipelineUI {
         wrap.appendChild(this._renderStepBlock('① Plan — edit, then run the next step',
             this._renderPlanEditor()));
         if (st.completed >= 1 && st.allocation) {
-            wrap.appendChild(this._renderStepBlock('②a Allocate',
-                this._renderAllocateFeedback(st.allocation)));
+            wrap.appendChild(this._renderStepBlock('②a Allocate — region & filler counts per wave',
+                this._renderAllocateEditor(st.allocation)));
         }
         if (st.completed >= 2 && st.nodes) {
             wrap.appendChild(this._renderStepBlock('②b Topology',
@@ -1671,23 +1671,81 @@ export class ProcgenPipelineUI {
         this._onSpherePlanEdited();
     }
 
-    // ②a Allocate — region count per sphere (wave) + filler count/placement.
-    _renderAllocateFeedback(allocation) {
+    // ②a Allocate editor — region count + filler count per wave, each with
+    // +/− controls (free; warn-but-allow). Editing rebuilds fillerWaves from
+    // the aggregate so ②b consumes the edited counts.
+    _renderAllocateEditor(allocation) {
         const wrap = document.createElement('div');
+        const st = this._stepState;
         const { regionsPerWave = [], fillersPerWave = [], fillerWaves = [] } = allocation;
-        const summary = document.createElement('div');
+        const spheres = st.plan?.spheres ?? [];
+        const maxPer = st.cfg?.maxItemsPerRegion ?? 1;
+
         const totalRegions = regionsPerWave.reduce((a, b) => a + b, 0);
+        const summary = document.createElement('div');
         summary.textContent = `${totalRegions} hosting region(s) + ${fillerWaves.length} filler(s)`;
         wrap.appendChild(summary);
-        const list = document.createElement('div');
-        list.style.cssText = 'font-family:monospace;font-size:11px;white-space:pre;'
-            + 'overflow-x:auto;margin-top:4px;max-height:160px;overflow-y:auto;';
-        list.textContent = regionsPerWave.map((rc, w) => {
+
+        const warnings = [];
+        regionsPerWave.forEach((rc, w) => {
+            const itemCount = spheres[w]?.items.length ?? 0;
             const fc = fillersPerWave[w] ?? 0;
-            return `wave ${w}: ${rc} region(s)${fc ? ` + ${fc} filler(s)` : ''}`;
-        }).join('\n');
-        wrap.appendChild(list);
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;';
+            const label = document.createElement('span');
+            label.style.cssText = 'flex:1;';
+            label.textContent = `wave ${w} (${itemCount} item${itemCount === 1 ? '' : 's'}): `
+                + `${rc} region(s), ${fc} filler(s)`;
+            row.appendChild(label);
+            const minusR = this._btn('−rgn', () => this._adjustAllocRegions(w, -1));
+            minusR.disabled = rc <= 0;
+            row.appendChild(minusR);
+            row.appendChild(this._btn('+rgn', () => this._adjustAllocRegions(w, +1)));
+            const minusF = this._btn('−fill', () => this._adjustAllocFillers(w, -1));
+            minusF.disabled = fc <= 0;
+            row.appendChild(minusF);
+            row.appendChild(this._btn('+fill', () => this._adjustAllocFillers(w, +1)));
+            wrap.appendChild(row);
+
+            if (itemCount > 0 && rc === 0) {
+                warnings.push(`Wave ${w} has ${itemCount} item(s) but 0 regions — can't host them.`);
+            } else if (rc * maxPer < itemCount) {
+                warnings.push(`Wave ${w}: ${itemCount} items but only ${rc}×${maxPer} `
+                    + 'region capacity — regions will overflow.');
+            }
+        });
+        if (fillerWaves.length > totalRegions) {
+            warnings.push(`${fillerWaves.length} fillers for ${totalRegions} hosting `
+                + 'region(s) — unusually many.');
+        }
+
+        if (warnings.length) {
+            const w = document.createElement('div');
+            w.className = 'procgen-pipeline-warning';
+            w.textContent = warnings.join(' ');
+            wrap.appendChild(w);
+        }
         return wrap;
+    }
+
+    _adjustAllocRegions(wave, dir) {
+        const a = this._stepState?.allocation;
+        if (!a) return;
+        a.regionsPerWave[wave] = Math.max(0, (a.regionsPerWave[wave] ?? 0) + dir);
+        this._invalidateFrom(1);
+    }
+
+    _adjustAllocFillers(wave, dir) {
+        const a = this._stepState?.allocation;
+        if (!a) return;
+        a.fillersPerWave[wave] = Math.max(0, (a.fillersPerWave[wave] ?? 0) + dir);
+        // Rebuild fillerWaves (draw order) from the edited aggregate, in wave
+        // order — ②b consumes fillerWaves, so the edited counts take effect.
+        a.fillerWaves = [];
+        a.fillersPerWave.forEach((c, w) => {
+            for (let i = 0; i < c; i++) a.fillerWaves.push(w);
+        });
+        this._invalidateFrom(1);
     }
 
     // ②b Topology — per region: substrate, entry gate, parent/side.

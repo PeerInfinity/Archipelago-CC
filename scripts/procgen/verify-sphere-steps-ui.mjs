@@ -210,6 +210,44 @@ const terminalC = msg.includes('Sphere plan realised')
 if (!terminalC) throw new Error(`②c edit Run all produced no terminal result: ${msg}`);
 console.log('PHASE C OK: ②c item move flowed through to a terminal result');
 
+// ── Phase D: edit ②a allocation (add a filler region) ───────────────
+await clickBtn('Reset');
+await page.waitForTimeout(300);
+await clickBtn('Run ① Plan');
+await page.waitForTimeout(400);
+await clickBtn('Run ②a Allocate');
+await page.waitForTimeout(400);
+
+const allocEdited = await page.evaluate(() => {
+    const headers = [...document.querySelectorAll(
+        '.procgen-pipeline-panel .procgen-pipeline-scenario-subheader')];
+    const h = headers.find((el) => el.textContent.includes('②a Allocate'));
+    if (!h) return false;
+    const block = h.parentElement;
+    const addFill = [...block.querySelectorAll('button')]
+        .find((b) => b.textContent === '+fill' && !b.disabled);
+    if (!addFill) return false;
+    addFill.click();
+    return true;
+});
+if (!allocEdited) throw new Error('②a editor: no +fill button found');
+await page.waitForTimeout(400);
+// The allocation feedback should now report at least one filler.
+if (!(await panelText()).match(/\d+ filler\(s\)/)) {
+    throw new Error('②a editor: filler count did not render after edit');
+}
+console.log('PHASE D: added a filler via ②a editor');
+
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(4000);
+msg = await message();
+console.log('PHASE D MESSAGE (added filler):', msg);
+const terminalD = msg.includes('Sphere plan realised')
+    || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
+    || msg.startsWith('ERROR');
+if (!terminalD) throw new Error(`②a edit Run all produced no terminal result: ${msg}`);
+console.log('PHASE D OK: ②a allocation edit flowed through to a terminal result');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
