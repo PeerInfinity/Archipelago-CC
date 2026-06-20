@@ -210,6 +210,16 @@ export class Grid {
         this.cells.set(cellKey(cell), { ...region, cell: { gx: cell.gx, gy: cell.gy } });
     }
 
+    // Replace the region already at `cell` (re-roll / editor write-back).
+    // placeRegion throws on an occupied cell by design; this is the explicit
+    // in-place swap for re-realising one region while keeping its coordinates.
+    replaceRegion(cell, region) {
+        if (!this.hasRegion(cell)) {
+            throw new Error(`Grid.replaceRegion: cell (${cell.gx},${cell.gy}) is empty`);
+        }
+        this.cells.set(cellKey(cell), { ...region, cell: { gx: cell.gx, gy: cell.gy } });
+    }
+
     neighborCell(cell, side) {
         const d = SIDE_DELTAS[side];
         if (!d) throw new Error(`Grid.neighborCell: unknown side '${side}'`);
@@ -3284,6 +3294,166 @@ function* buildSphereZoneRegion({
     });
 }
 
+// Count gates: a multi-instance gate item demands its cumulative count
+// through the gate's sphere (makeHasRule emits args.count only when > 1, so
+// single-instance gates stay plain Has).
+function sphereGateRule(gate, gateCounts = {}) {
+    return gate.length === 0
+        ? null
+        : makeAndRule(gate.map((item) => makeHasRule(item, gateCounts[item] ?? 1)));
+}
+
+/**
+ * Build the realiser specs for ONE tree node — the per-child exit plans
+ * (side + gate + composed rule), the entrance mirrored from the parent's
+ * placed exit, and the location specs from the node's items. Pure (consumes
+ * NO rng): exactly the computation growSpheresGen's realisation loop does per
+ * node, factored out so a single region can be re-realised (re-roll / editor
+ * save) without re-running the whole grow. Requires the node's cell/side to be
+ * resolved (placement pre-pass) and the parent region already in the grid.
+ *
+ * Pass {childrenByParent, gateRule} from a caller that already has them (the
+ * grow loop) to avoid rebuilding the children index per node; omit them for a
+ * one-off single-node call (re-roll).
+ */
+function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
+    let { childrenByParent, gateRule } = deps;
+    if (!childrenByParent) {
+        childrenByParent = new Map();
+        for (const n of tree.nodes) {
+            if (n.parent == null) continue;
+            if (!childrenByParent.has(n.parent)) childrenByParent.set(n.parent, []);
+            childrenByParent.get(n.parent).push(n);
+        }
+    }
+    if (!gateRule) gateRule = sphereGateRule;
+
+    const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
+    const cell = node.cell;
+    const region_id = regionIdForCell(cell);
+
+    const exitPlans = (childrenByParent.get(node.index) ?? []).map((child) => ({
+        side: child.side,
+        gate: child.gate,
+        gateCounts: child.gateCounts,
+        rule: gateRule(child.gate, child.gateCounts),
+    }));
+
+    let entrances = [];
+    let parentExitPlaced = null;
+    let entranceSide = null;
+    let entranceTile = null;
+    if (parentNode) {
+        const parentRegion = grid.getRegion(parentNode.cell);
+        parentExitPlaced = parentRegion.exits_placed.find((e) => e.side === node.side);
+        if (!parentExitPlaced) {
+            throw new Error(`growSpheres: parent '${parentRegion.region_id}' has no `
+                + `exit on side ${node.side} for '${region_id}'`);
+        }
+        entranceSide = OPPOSITE_SIDE[node.side];
+        entranceTile = mirrorTileAcrossSide(
+            parentExitPlaced.tile_position, node.side, regionSize);
+        entrances = [{ side: entranceSide, tile: entranceTile }];
+    }
+
+    const locations = node.items.map((it) => ({ id: it.id, item: it.item, rule: null }));
+
+    return {
+        region_id, cell, parentNode, parentExitPlaced,
+        exitPlans, entrances, entranceSide, entranceTile, locations,
+    };
+}
+
+/**
+ * Apply the parent back-exit that growSpheresGen adds after placeRegion (a
+ * reciprocal exit on the entrance tile; buildRulesJson's post-pass copies the
+ * forward gate's rule onto it). A re-realised region is fresh, so it must get
+ * the same back-exit wired to the same parent exit. No-op for the root or when
+ * bidirectional exits are disabled. Mutates `region` (and the parent's stored
+ * world exit) in place.
+ */
+function applySphereBackExit(grid, node, specs, region, { assumeBidirectional = true } = {}) {
+    if (!assumeBidirectional || !specs.parentNode) return;
+    const parentRegion = grid.getRegion(specs.parentNode.cell);
+    const backExitId = parentRegion.region_id;
+    getRegionExits(region).set(backExitId, {
+        exit_id: backExitId,
+        x: specs.entranceTile.x,
+        y: specs.entranceTile.y,
+        side: specs.entranceSide,
+        exitName: backExitId,
+        targetRegion: parentRegion.region_id,
+        targetExitId: specs.parentExitPlaced.exit_id,
+        isBackExit: true,
+        isTeleporter: node.isTeleporter,
+    });
+    region.extracted_rules.exits.push({
+        id: backExitId,
+        position: { x: specs.entranceTile.x, y: specs.entranceTile.y },
+        target_region: parentRegion.region_id,
+        paths: [{ path_id: 'p1', obstacles: [] }],
+    });
+    const parentWorldExit = getRegionExits(parentRegion)?.get(specs.parentExitPlaced.exit_id);
+    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
+}
+
+/**
+ * Re-roll ONE region's interior on a new seed, keeping its entrances, exits,
+ * locations and access rules fixed (so neighbours don't desync). Zone
+ * substrates only (bounce): exits are portals on sides, not positional, so the
+ * re-roll is fully local. Procedural/maze re-roll is rejected — the exit tile
+ * position feeds adjacency stitching, so a naive re-roll could move an exit off
+ * the shared edge and break the link (use the editor instead). Replaces the
+ * region in the grid in place and returns it.
+ */
+export function reRollSphereRegion(grid, node, tree, {
+    seed, regionSize, regionParams = {}, assumeBidirectional = true,
+} = {}) {
+    if (!regionSize || !regionSize.width || !regionSize.height) {
+        throw new Error('reRollSphereRegion: regionSize.{width,height} required');
+    }
+    const adapter = getAdapter(node.substrate);
+    if (typeof adapter.generateRegionCore === 'function') {
+        throw new Error(`reRollSphereRegion: substrate '${node.substrate}' is procedural `
+            + '(maze) — re-roll is not supported yet (its exit tile positions feed '
+            + 'adjacency stitching). Edit the region instead.');
+    }
+    if (typeof adapter.generateZoneForSpecs !== 'function'
+            && typeof adapter.generateZoneForSpecsGen !== 'function') {
+        throw new Error(`reRollSphereRegion: substrate '${node.substrate}' has no zone realiser`);
+    }
+    const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize);
+    const gen = buildSphereZoneRegion({
+        substrate: node.substrate,
+        region_id: specs.region_id,
+        regionSize,
+        exitPlans: specs.exitPlans,
+        locations: specs.locations,
+        entranceSide: specs.entranceSide,
+        entryGate: node.gate,
+        entryGateCounts: node.gateCounts,
+        regionParams,
+        seed,
+        adapter,
+    });
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    const region = r.value;
+    applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
+    grid.replaceRegion(specs.cell, region);
+    // The re-realised region has FRESH exits with no grid-level wiring yet
+    // (target_region is resolved by stitchGrid, not the realiser). Re-run the
+    // same stitch + walls tail growSpheresGen runs so the new forward exits
+    // resolve to their neighbours by side-adjacency — without it the region's
+    // children go unreachable and the oracle breaks. stitchGrid leaves the
+    // driver-managed back-exits (not in exits_placed) alone, and is idempotent
+    // for the untouched regions (target_region is stable across a re-roll, as
+    // exit sides are preserved).
+    stitchGrid(grid);
+    wallOffUnusedExits(grid);
+    return grid.getRegion(specs.cell);
+}
+
 /**
  * Sphere-driven growth: realise a sphere plan as a region graph.
  * Output shape matches growMaze ({ grid, stats, startCell }) so the
@@ -3473,49 +3643,17 @@ export function* growSpheresGen(config) {
         occupiedKeys.add(cellKey(cell));
     }
 
-    // Count gates: a multi-instance gate item demands its cumulative
-    // count through the gate's sphere (makeHasRule emits args.count
-    // only when > 1, so single-instance gates stay plain Has).
-    const gateRule = (gate, gateCounts = {}) => (gate.length === 0
-        ? null
-        : makeAndRule(gate.map((item) => makeHasRule(item, gateCounts[item] ?? 1))));
-
     for (const node of tree.nodes) {
-        const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
-
         // Cell + side were resolved by the placement pre-pass above
         // (occupancy-aware adjacency, remote only when fully surrounded).
-        const cell = node.cell;
+        // The per-node realiser specs (exit plans, entrance, locations) are
+        // factored out so a single region can be re-realised (reRollSphereRegion).
         const isTeleporter = node.isTeleporter;
-        const region_id = regionIdForCell(cell);
+        const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
+        const {
+            region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
+        } = specs;
         node.region_id = region_id;
-
-        const exitPlans = (childrenByParent.get(node.index) ?? [])
-            .map((child) => ({
-                side: child.side,
-                gate: child.gate,
-                gateCounts: child.gateCounts,
-                rule: gateRule(child.gate, child.gateCounts),
-            }));
-
-        let entrances = [];
-        let parentExitPlaced = null;
-        let entranceSide = null;
-        let entranceTile = null;
-        if (parentNode) {
-            const parentRegion = grid.getRegion(parentNode.cell);
-            parentExitPlaced = parentRegion.exits_placed.find((e) => e.side === node.side);
-            if (!parentExitPlaced) {
-                throw new Error(`growSpheres: parent '${parentRegion.region_id}' has no `
-                    + `exit on side ${node.side} for '${region_id}'`);
-            }
-            entranceSide = OPPOSITE_SIDE[node.side];
-            entranceTile = mirrorTileAcrossSide(
-                parentExitPlaced.tile_position, node.side, regionSize);
-            entrances = [{ side: entranceSide, tile: entranceTile }];
-        }
-
-        const locations = node.items.map((it) => ({ id: it.id, item: it.item, rule: null }));
 
         yield {
             type: 'region',
@@ -3565,33 +3703,11 @@ export function* growSpheresGen(config) {
             stats.teleportersPlaced += 1;
         }
 
-        if (assumeBidirectional && parentNode) {
-            // Back-exit to the parent on the entrance tile — same
-            // pattern as growMaze; buildRulesJson's post-pass copies
-            // the forward gate's rule onto it.
-            const parentRegion = grid.getRegion(parentNode.cell);
-            const backExitId = parentRegion.region_id;
-            getRegionExits(region).set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
-                targetRegion: parentRegion.region_id,
-                targetExitId: parentExitPlaced.exit_id,
-                isBackExit: true,
-                isTeleporter,
-            });
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parentRegion.region_id,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            const parentWorldExit = getRegionExits(parentRegion)
-                ?.get(parentExitPlaced.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
-        }
+        // Back-exit to the parent on the entrance tile — same pattern as
+        // growMaze; buildRulesJson's post-pass copies the forward gate's rule
+        // onto it. (placeRegion stored a shallow copy that shares the nested
+        // exits/rules, so mutating `region` here still reaches the stored one.)
+        applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
         stats.regionsBuilt += 1;
         yield {
             type: 'regionDone',

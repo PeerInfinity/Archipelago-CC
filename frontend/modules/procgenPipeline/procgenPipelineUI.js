@@ -19,6 +19,7 @@ import {
     topDownFromRulesJson,
     computeSourceCounts,
     getRegionExits,
+    reRollSphereRegion,
     Grid,
 } from './procgenPipelineEngine.js';
 import {
@@ -2151,11 +2152,48 @@ export class ProcgenPipelineUI {
         };
     }
 
-    // Re-roll 🎲 — placeholder until the engine helper lands (chunk 2).
-    _reRollRegion(region/* , node */) {
-        this.message = `Re-roll for "${region?.region_id}" lands in the next step.`;
-        this.warning = '';
-        this.render();
+    // Re-roll 🎲 — regenerate ONE region's interior on a bumped seed, keeping
+    // its entrances/exits/locations/rules fixed (so neighbours + the oracle
+    // don't desync). Bounce (zone) only; the engine helper rejects maze with a
+    // clear message. Invalidates ④ (the user re-runs Compile; the oracle is the
+    // backstop).
+    _reRollRegion(region, node = null) {
+        const st = this._stepState;
+        const grid = st?.grow?.grid;
+        const tree = st?.tree;
+        const nd = node ?? this._nodeForRegion(region);
+        if (!grid || !tree || !nd) {
+            this.message = 'Re-roll unavailable — re-run from ③ first.';
+            this.warning = '';
+            this.render();
+            return;
+        }
+        const count = (this._rerollCounts ??= new Map());
+        const n = (count.get(nd.region_id) ?? 0) + 1;
+        count.set(nd.region_id, n);
+        const seed = ((st.cfg.seed * 7919) ^ this._hashStr(nd.region_id)) + n * 104729 | 0;
+        try {
+            reRollSphereRegion(grid, nd, tree, {
+                seed,
+                regionSize: st.growConfig.regionSize,
+                regionParams: st.growConfig.regionParams,
+                assumeBidirectional: st.growConfig.growthParams?.assumeBidirectional ?? true,
+            });
+            this.message = `Re-rolled "${nd.region_id}" (seed ${seed}). `
+                + 'Re-run ④ Compile to recheck the oracle.';
+            this.warning = '';
+            this._invalidateFrom(4);
+        } catch (err) {
+            this.message = `Re-roll failed: ${err.message}`;
+            this.warning = '';
+            this.render();
+        }
+    }
+
+    _hashStr(s) {
+        let h = 0;
+        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+        return h;
     }
 
     // Write-back from an editor save (pipeline mode): splice the edited region
@@ -2167,7 +2205,7 @@ export class ProcgenPipelineUI {
         if (!grid || !editedRegion) return;
         const cell = node?.cell ?? this._nodeForRegion(origRegion)?.cell;
         if (!cell) return;
-        grid.placeRegion(cell, editedRegion);
+        grid.replaceRegion(cell, editedRegion);
         this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
             + 'Re-run ④ Compile to recheck the oracle.';
         this.warning = '';
