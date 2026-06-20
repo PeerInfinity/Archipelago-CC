@@ -10,7 +10,9 @@ import {
     growMaze,
     arrangeShuffledSpiral,
     growSpheresAsync,
-    buildSphereGrowthTree,
+    buildSphereAllocation,
+    wireSphereTree,
+    placeSphereTreeItems,
     buildRulesJson,
     stringifyRulesJson,
     topDownFromRulesJson,
@@ -348,6 +350,19 @@ export function reconstructResultFromSidecars(rulesJson) {
         fromLoadedPreset: true,
     };
 }
+
+// Sphere-growth runs as a stepped pipeline. The tree build (② Build tree)
+// is subdivided into three editable sub-steps, so the pipeline has 6 steps.
+// `completed` is the index of the last finished step (0..5; -1 = not started).
+// Everything keys off these tables so adding/relabelling a step is one edit.
+const SPHERE_STEP_LABELS = [
+    '① Plan', '②a Allocate', '②b Topology', '②c Items', '③ Build regions', '④ Compile',
+];
+const SPHERE_STEP_RUN_LABELS = [
+    'Run ① Plan', 'Run ②a Allocate', 'Run ②b Topology', 'Run ②c Items',
+    'Run ③ Build regions', 'Run ④ Compile',
+];
+const SPHERE_LAST_STEP = SPHERE_STEP_LABELS.length - 1; // 5
 
 export class ProcgenPipelineUI {
     static moduleApis = null;
@@ -1409,20 +1424,21 @@ export class ProcgenPipelineUI {
         gen.className = 'procgen-pipeline-btn procgen-pipeline-btn-primary';
         gen.textContent = this.isGenerating
             ? 'Working…'
-            : (sphere ? (completed >= 0 && completed < 3 ? 'Run all (finish)' : 'Run all') : 'Generate');
+            : (sphere
+                ? (completed >= 0 && completed < SPHERE_LAST_STEP ? 'Run all (finish)' : 'Run all')
+                : 'Generate');
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
         section.appendChild(gen);
 
         // Sphere mode: "Run next step" + "Reset".
         if (sphere) {
-            const stepLabels = ['Run ① Plan', 'Run ② Build tree',
-                'Run ③ Build regions', 'Run ④ Compile'];
             const nextIdx = completed + 1;
             const nextBtn = document.createElement('button');
             nextBtn.className = 'procgen-pipeline-btn';
-            nextBtn.textContent = nextIdx <= 3 ? stepLabels[nextIdx] : 'Pipeline complete';
-            nextBtn.disabled = this.isGenerating || nextIdx > 3;
+            nextBtn.textContent = nextIdx <= SPHERE_LAST_STEP
+                ? SPHERE_STEP_RUN_LABELS[nextIdx] : 'Pipeline complete';
+            nextBtn.disabled = this.isGenerating || nextIdx > SPHERE_LAST_STEP;
             nextBtn.addEventListener('click', () => this._runSphereStepNext());
             section.appendChild(nextBtn);
             if (this._stepState) {
@@ -1484,12 +1500,12 @@ export class ProcgenPipelineUI {
         return section;
     }
 
-    // The ① → ② → ③ → ④ chips above the sphere-mode buttons. Inline
-    // styles so it renders without depending on panel CSS.
+    // The ① → ②a → ②b → ②c → ③ → ④ chips above the sphere-mode buttons.
+    // Inline styles so it renders without depending on panel CSS.
     _renderStepIndicator() {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px;font-size:12px;';
-        const labels = ['① Plan', '② Build tree', '③ Build regions', '④ Compile'];
+        const labels = SPHERE_STEP_LABELS;
         const completed = this._stepState?.completed ?? -1;
         labels.forEach((label, i) => {
             const chip = document.createElement('span');
@@ -1519,15 +1535,23 @@ export class ProcgenPipelineUI {
         if (!st) return wrap;
         wrap.appendChild(this._renderStepBlock('① Plan — edit, then run the next step',
             this._renderPlanEditor()));
-        if (st.completed >= 1 && st.tree) {
-            wrap.appendChild(this._renderStepBlock('② Build tree',
-                this._renderTreeFeedback(st.tree)));
+        if (st.completed >= 1 && st.allocation) {
+            wrap.appendChild(this._renderStepBlock('②a Allocate',
+                this._renderAllocateFeedback(st.allocation)));
         }
-        if (st.completed >= 2 && st.grow) {
+        if (st.completed >= 2 && st.nodes) {
+            wrap.appendChild(this._renderStepBlock('②b Topology',
+                this._renderTopologyFeedback(st.nodes)));
+        }
+        if (st.completed >= 3 && st.tree) {
+            wrap.appendChild(this._renderStepBlock('②c Item placement',
+                this._renderItemsFeedback(st.tree)));
+        }
+        if (st.completed >= 4 && st.grow) {
             wrap.appendChild(this._renderStepBlock('③ Build regions',
                 this._renderRegionsFeedback(st.grow.stats, st.seconds)));
         }
-        if (st.completed >= 3 && st.compile) {
+        if (st.completed >= 5 && st.compile) {
             wrap.appendChild(this._renderStepBlock('④ Compile',
                 this._renderCompileFeedback(st.compile)));
         }
@@ -1647,9 +1671,28 @@ export class ProcgenPipelineUI {
         this._onSpherePlanEdited();
     }
 
-    _renderTreeFeedback(tree) {
+    // ②a Allocate — region count per sphere (wave) + filler count/placement.
+    _renderAllocateFeedback(allocation) {
         const wrap = document.createElement('div');
-        const nodes = tree.nodes ?? [];
+        const { regionsPerWave = [], fillersPerWave = [], fillerWaves = [] } = allocation;
+        const summary = document.createElement('div');
+        const totalRegions = regionsPerWave.reduce((a, b) => a + b, 0);
+        summary.textContent = `${totalRegions} hosting region(s) + ${fillerWaves.length} filler(s)`;
+        wrap.appendChild(summary);
+        const list = document.createElement('div');
+        list.style.cssText = 'font-family:monospace;font-size:11px;white-space:pre;'
+            + 'overflow-x:auto;margin-top:4px;max-height:160px;overflow-y:auto;';
+        list.textContent = regionsPerWave.map((rc, w) => {
+            const fc = fillersPerWave[w] ?? 0;
+            return `wave ${w}: ${rc} region(s)${fc ? ` + ${fc} filler(s)` : ''}`;
+        }).join('\n');
+        wrap.appendChild(list);
+        return wrap;
+    }
+
+    // ②b Topology — per region: substrate, entry gate, parent/side.
+    _renderTopologyFeedback(nodes) {
+        const wrap = document.createElement('div');
         const subs = {};
         for (const nd of nodes) subs[nd.substrate] = (subs[nd.substrate] ?? 0) + 1;
         const fillers = nodes.filter((nd) => nd.isFiller).length;
@@ -1665,6 +1708,26 @@ export class ProcgenPipelineUI {
             const parent = nd.parent == null ? 'root' : `#${nd.parent}/${nd.side}`;
             return `#${nd.index} w${nd.wave} ${nd.substrate} gate ${gate} <- ${parent}`;
         }).join('\n');
+        wrap.appendChild(list);
+        return wrap;
+    }
+
+    // ②c Item placement — which items live in which region (per wave).
+    _renderItemsFeedback(tree) {
+        const wrap = document.createElement('div');
+        const nodes = tree.nodes ?? [];
+        const placed = nodes.reduce((a, nd) => a + (nd.items?.length ?? 0), 0);
+        const summary = document.createElement('div');
+        summary.textContent = `${placed} item(s) placed across ${nodes.length} region(s)`;
+        wrap.appendChild(summary);
+        const list = document.createElement('div');
+        list.style.cssText = 'font-family:monospace;font-size:11px;white-space:pre;'
+            + 'overflow-x:auto;margin-top:4px;max-height:160px;overflow-y:auto;';
+        list.textContent = nodes
+            .filter((nd) => (nd.items?.length ?? 0) > 0)
+            .map((nd) => `#${nd.index} w${nd.wave} ${nd.substrate}: `
+                + nd.items.map((it) => it.item).join(', '))
+            .join('\n') || '(no items placed)';
         wrap.appendChild(list);
         return wrap;
     }
@@ -2380,16 +2443,24 @@ export class ProcgenPipelineUI {
         };
         this._stepState = {
             completed: 0, cfg, prep, draft, poolSize: Object.keys(itemPool).length,
-            plan: null, startingItems: null, growConfig: null,
-            tree: null, rng: null, grow: null, compile: null, seconds: 0,
+            // ②a Allocate outputs
+            plan: null, startingItems: null, growConfig: null, opts: null,
+            allocation: null, rng: null,
+            // ②b Topology outputs
+            nodes: null, substrateCounts: null, quotaFallbacks: null,
+            // ②c Items output (the full tree fed to ③)
+            tree: null,
+            // ③/④ outputs
+            grow: null, compile: null, seconds: 0,
         };
         this.result = null;
         this.message = '';
         this.warning = '';
     }
 
-    // Step ② — build the region tree (on a fresh rng kept live for ③).
-    _stepTree() {
+    // Step ②a — Allocate: assemble the grow config from the (edited) plan
+    // and run the allocation phase (region count per wave + filler draws).
+    _stepAllocate() {
         const st = this._stepState;
         const cfg = st.cfg;
         const { plan, startingItems } = this._planFromDraft(st.draft, cfg.seed);
@@ -2408,13 +2479,46 @@ export class ProcgenPipelineUI {
                 ...(cfg.startSub ? { startSubstrate: cfg.startSub } : {}),
             },
         };
-        const { tree, rng } = buildSphereGrowthTree(growConfig);
+        const { opts, allocation, rng } = buildSphereAllocation(growConfig);
         st.plan = plan;
         st.startingItems = startingItems;
         st.growConfig = growConfig;
-        st.tree = tree;
+        st.opts = opts;
+        st.allocation = allocation;
         st.rng = rng;
         st.completed = 1;
+    }
+
+    // Step ②b — Topology: wire the per-region tree (substrate + host/gate)
+    // from the (possibly edited) allocation. The rng is re-derived from seed
+    // at the post-②a position (buildSphereAllocation replays allocate's fixed
+    // filler draws), so editing the allocation and re-running ②b is correct
+    // and the unedited run stays byte-identical. nodes carry no items yet.
+    _stepTopology() {
+        const st = this._stepState;
+        const { rng } = buildSphereAllocation(st.growConfig);
+        const wired = wireSphereTree(st.plan, st.allocation, st.opts, rng);
+        st.nodes = wired.nodes;
+        st.substrateCounts = wired.substrateCounts;
+        st.quotaFallbacks = wired.quotaFallbacks;
+        st.rng = wired.rng; // threaded into ③ (item placement consumes none)
+        st.completed = 2;
+    }
+
+    // Step ②c — Item placement: round-robin each sphere's items into its
+    // hosting regions, yielding the full tree fed to ③. Clears items first so
+    // re-running after a topology edit is idempotent (placeSphereTreeItems
+    // appends, assuming empty — matching the all-in-one path).
+    _stepItems() {
+        const st = this._stepState;
+        for (const nd of st.nodes) nd.items = [];
+        placeSphereTreeItems(st.plan, st.nodes);
+        st.tree = {
+            nodes: st.nodes,
+            substrateCounts: st.substrateCounts,
+            quotaFallbacks: st.quotaFallbacks,
+        };
+        st.completed = 3;
     }
 
     // Step ③ — grow the regions from the pre-built tree (+ live rng, so
@@ -2435,7 +2539,7 @@ export class ProcgenPipelineUI {
             st.seconds = (performance.now() - this._progressState.startedAt) / 1000;
         }
         st.grow = { grid, stats, startCell };
-        st.completed = 2;
+        st.completed = 4;
     }
 
     // Step ④ — compile rules.json (+ embedded sphere log) and run the
@@ -2469,7 +2573,7 @@ export class ProcgenPipelineUI {
         });
         const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), st.plan);
         st.compile = { rulesJson, oracleErrors };
-        st.completed = 3;
+        st.completed = 5;
 
         const elapsedNote = st.seconds ? ` (${st.seconds.toFixed(1)}s)` : '';
         this.message = oracleErrors.length > 0
@@ -2495,12 +2599,17 @@ export class ProcgenPipelineUI {
     // Advance one step (button: Run next step). Starts the pipeline (①)
     // when none is running.
     _advanceSphereStep() {
-        if (!this._stepState) { this._stepPlan(); return; }
-        const c = this._stepState.completed;
-        if (c === 0) this._stepTree();
-        else if (c === 1) return this._stepRegions(); // async
-        else if (c === 2) this._stepCompile();
-        return undefined;
+        if (!this._stepState) { this._stepPlan(); return undefined; }
+        // Runner for the step that produces `completed + 1`. _stepRegions is
+        // async (returns a promise the run-all loop / button await).
+        const runners = [
+            () => this._stepAllocate(), // → 1
+            () => this._stepTopology(), // → 2
+            () => this._stepItems(),    // → 3
+            () => this._stepRegions(),  // → 4 (async)
+            () => this._stepCompile(),  // → 5
+        ];
+        return runners[this._stepState.completed]?.();
     }
 
     // "Run all" — run from the current point to completion (steps ②③④
@@ -2508,7 +2617,7 @@ export class ProcgenPipelineUI {
     // mode, so it inherits the isGenerating guard + error handling.
     async _runSphereGrowth() {
         if (!this._stepState) this._stepPlan();
-        while (this._stepState.completed < 3) {
+        while (this._stepState.completed < SPHERE_LAST_STEP) {
             // eslint-disable-next-line no-await-in-loop
             await this._advanceSphereStep();
         }
@@ -2540,18 +2649,34 @@ export class ProcgenPipelineUI {
         this.render();
     }
 
-    // An edit to the plan draft invalidates everything downstream of ①.
-    _onSpherePlanEdited() {
+    // Editing the OUTPUT of step `stepIdx` invalidates every later step:
+    // roll `completed` back to stepIdx and drop the outputs each later step
+    // produced (keeping stepIdx's own — the user edited it). Field groups are
+    // keyed by the step that produces them; rng is re-derived by ②b so its
+    // staleness here is harmless. The plan editor calls _onSpherePlanEdited
+    // (= _invalidateFrom(0)); the ②a/②b/②c editors call with 1/2/3.
+    _invalidateFrom(stepIdx) {
         const st = this._stepState;
-        if (st && st.completed > 0) {
-            st.completed = 0;
-            st.plan = st.startingItems = st.growConfig = null;
-            st.tree = st.rng = st.grow = st.compile = null;
+        if (st && st.completed > stepIdx) {
+            st.completed = stepIdx;
+            if (stepIdx < 1) {
+                st.plan = st.startingItems = st.growConfig = st.opts = null;
+                st.allocation = st.rng = null;
+            }
+            if (stepIdx < 2) st.nodes = st.substrateCounts = st.quotaFallbacks = null;
+            if (stepIdx < 3) st.tree = null;
+            if (stepIdx < 4) { st.grow = null; st.seconds = 0; }
+            if (stepIdx < 5) st.compile = null;
             this.result = null;
             this.message = '';
             this.warning = '';
         }
         this.render();
+    }
+
+    // An edit to the plan draft invalidates everything downstream of ①.
+    _onSpherePlanEdited() {
+        this._invalidateFrom(0);
     }
 
     _runTopDown() {

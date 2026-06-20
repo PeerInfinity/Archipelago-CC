@@ -2,9 +2,9 @@
  * In-app smoke test for the STEPPED sphere-growth pipeline + plan editor.
  * Drives the real panel in a browser:
  *
- *   Phase A — pure stepping: Run ① Plan (editor appears) → ② Build tree
- *     → ③ Build regions → ④ Compile, asserting the oracle success
- *     message at the end and the step indicator advancing.
+ *   Phase A — pure stepping: Run ① Plan (editor appears) → ②a Allocate
+ *     → ②b Topology → ②c Items → ③ Build regions → ④ Compile, asserting
+ *     each sub-step's feedback and the oracle success message at the end.
  *   Phase B — editing: Reset → Run ① Plan → move a Sphere-1 item down a
  *     sphere (▼), assert the editor reflects the move and the pipeline
  *     reset to step ①, then Run all and assert a terminal result.
@@ -82,12 +82,26 @@ if (!txt.includes('Starting items (sphere 0)') || !txt.includes('Sphere 1')) {
 }
 console.log('STEP ①: editor appeared with sphere groups');
 
-await clickBtn('Run ② Build tree');
-await page.waitForTimeout(800);
-if (!(await panelText()).includes('② Build tree')) {
-    throw new Error('tree feedback did not appear');
+await clickBtn('Run ②a Allocate');
+await page.waitForTimeout(600);
+if (!(await panelText()).includes('②a Allocate')) {
+    throw new Error('allocate feedback did not appear');
 }
-console.log('STEP ②: tree feedback shown');
+console.log('STEP ②a: allocation feedback shown');
+
+await clickBtn('Run ②b Topology');
+await page.waitForTimeout(600);
+if (!(await panelText()).includes('②b Topology')) {
+    throw new Error('topology feedback did not appear');
+}
+console.log('STEP ②b: topology feedback shown');
+
+await clickBtn('Run ②c Items');
+await page.waitForTimeout(600);
+if (!(await panelText()).includes('②c Item placement')) {
+    throw new Error('item-placement feedback did not appear');
+}
+console.log('STEP ②c: item-placement feedback shown');
 
 await clickBtn('Run ③ Build regions');
 await page.waitForTimeout(3000);
@@ -103,7 +117,7 @@ console.log('STEP ④ MESSAGE:', msg);
 if (!msg.includes('Sphere plan realised')) {
     throw new Error(`expected oracle success after step ④, got: ${msg}`);
 }
-console.log('PHASE A OK: stepped ①→②→③→④ to a realised plan');
+console.log('PHASE A OK: stepped ①→②a→②b→②c→③→④ to a realised plan');
 
 // ── Phase B: edit a Sphere-1 item, then run all ─────────────────────
 await clickBtn('Reset');

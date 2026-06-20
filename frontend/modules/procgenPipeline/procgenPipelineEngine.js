@@ -3548,16 +3548,11 @@ export async function growSpheresAsync(config, onProgress = null) {
     return r.value;
 }
 
-/**
- * Build ONLY the region tree (step ② of stepped sphere growth) on a
- * fresh rng, returning the tree AND the live rng. Feed both back into
- * growSpheresGen via growthParams.{prebuiltTree, rng} for the region
- * build (step ③) so the random stream continues unbroken — the stepped
- * path is then byte-identical to the all-in-one growSpheres. Takes the
- * same config shape as growSpheresGen.
- */
-export function buildSphereGrowthTree(config) {
-    const { seed = 1, regionParams = {}, growthParams = {} } = config;
+// Extract the validated sphere plan + buildSphereTree opts from a
+// growSpheres-shaped config, so the all-in-one tree build and the three
+// stepped sub-phases set up identically (same defaults, same validation).
+function sphereTreeSetup(config, label) {
+    const { regionParams = {}, growthParams = {} } = config;
     const {
         spherePlan,
         maxItemsPerRegion = 2,
@@ -3567,18 +3562,47 @@ export function buildSphereGrowthTree(config) {
         startSubstrate = null,
     } = growthParams;
     if (!spherePlan) {
-        throw new Error('buildSphereGrowthTree: growthParams.spherePlan required');
+        throw new Error(`${label}: growthParams.spherePlan required`);
     }
     const planErrors = validateSpherePlan(spherePlan);
     if (planErrors.length > 0) {
-        throw new Error(`buildSphereGrowthTree: invalid sphere plan — ${planErrors[0]}`);
+        throw new Error(`${label}: invalid sphere plan — ${planErrors[0]}`);
     }
-    const rng = createRng(seed);
-    const tree = buildSphereTree(spherePlan, {
+    const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
         regionParams,
-    }, rng);
+    };
+    return { plan: spherePlan, opts };
+}
+
+/**
+ * Build ONLY the region tree (step ② of stepped sphere growth) on a
+ * fresh rng, returning the tree AND the live rng. Feed both back into
+ * growSpheresGen via growthParams.{prebuiltTree, rng} for the region
+ * build (step ③) so the random stream continues unbroken — the stepped
+ * path is then byte-identical to the all-in-one growSpheres. Takes the
+ * same config shape as growSpheresGen.
+ */
+export function buildSphereGrowthTree(config) {
+    const { plan, opts } = sphereTreeSetup(config, 'buildSphereGrowthTree');
+    const rng = createRng(config.seed ?? 1);
+    const tree = buildSphereTree(plan, opts, rng);
     return { tree, rng };
+}
+
+/**
+ * ②a stepped entry — validate the plan, create a fresh rng, and run the
+ * Allocate phase. Returns { plan, opts, allocation, rng }; the panel stashes
+ * plan/opts and feeds the (possibly edited) allocation into wireSphereTree
+ * for ②b. Re-running this re-derives the rng from seed at the post-allocate
+ * position (allocate's fillerWaves draws are a fixed count), so a downstream
+ * sub-step can restart on the correct rng without snapshotting its state.
+ */
+export function buildSphereAllocation(config) {
+    const { plan, opts } = sphereTreeSetup(config, 'buildSphereAllocation');
+    const rng = createRng(config.seed ?? 1);
+    const { allocation } = allocateSphereTree(plan, opts, rng);
+    return { plan, opts, allocation, rng };
 }
 
 export function buildPresetSidecars(grid, {
