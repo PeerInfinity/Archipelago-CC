@@ -24,6 +24,7 @@ import {
 import {
     growSpheres, reRollSphereRegion, buildRulesJson, buildBounceRegionContract,
     getRegionExits, moveSphereRegion, swapSphereRegions,
+    moveSphereExitSide, swapSphereExitSides,
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
@@ -260,6 +261,50 @@ function withPickupItems(level, contract) {
         const errs = oracle(grid, cellOf(startId), stats, plan, prep, startingItems);
         if (errs.length) fail(`H: oracle after swap (incl. start): ${errs[0]}`);
         console.log('H. swap regions (incl. start) keeps oracle — OK');
+    }
+}
+
+// ── I/J. Move Exits: relabel one exit to an empty side, and swap two exits'
+// sides within a region — connections + sidePortals rewired, oracle holds.
+{
+    const { grid, startCell, stats, plan, prep, startingItems } = buildWorld();
+    const node = grid.allRegions().find((r) => {
+        const l = [...getRegionExits(r).values()];
+        return l.some((e) => e.isBackExit) && l.some((e) => !e.isBackExit);
+    }) ?? fail('I: no region with both a forward exit and a back-exit');
+    const exitList = () => [...getRegionExits(grid.getRegion(node.cell)).values()];
+
+    // I. move the forward exit to an empty side.
+    {
+        const fwd = exitList().find((e) => !e.isBackExit);
+        const used = new Set(exitList().map((e) => e.side));
+        const empty = ['N', 'S', 'E', 'W'].find((s) => !used.has(s)) ?? fail('I: no empty side');
+        moveSphereExitSide(grid, node.cell, fwd.exit_id, empty, regionSize);
+        const moved = exitList().find((e) => e.exit_id === fwd.exit_id);
+        if (moved.side !== empty) fail(`I: exit did not move to ${empty}`);
+        const params = grid.getRegion(node.cell).playable_payload.params;
+        if (params.sidePortals[empty] === undefined) fail('I: sidePortals not re-keyed to the new side');
+        // The level portal arrow direction must follow the new side.
+        const DIR = { N: 'up', S: 'down', E: 'right', W: 'left' };
+        const portal = params.bounceLevel.portals.find((p) => p.id === params.sidePortals[empty]);
+        if (portal && portal.direction !== DIR[empty]) {
+            fail(`I: portal direction ${portal.direction} != ${DIR[empty]} for side ${empty}`);
+        }
+        const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
+        if (errs.length) fail(`I: oracle after move-exit-side: ${errs[0]}`);
+        console.log('I. move exit → empty side keeps oracle (sidePortals + arrow re-keyed) — OK');
+    }
+    // J. swap the two exits' sides.
+    {
+        const [a, b] = exitList();
+        const [sa, sb] = [a.side, b.side];
+        swapSphereExitSides(grid, node.cell, a.exit_id, b.exit_id, regionSize);
+        const a2 = exitList().find((e) => e.exit_id === a.exit_id);
+        const b2 = exitList().find((e) => e.exit_id === b.exit_id);
+        if (a2.side !== sb || b2.side !== sa) fail('J: exit sides did not swap');
+        const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
+        if (errs.length) fail(`J: oracle after swap-exit-sides: ${errs[0]}`);
+        console.log('J. swap exit sides keeps oracle — OK');
     }
 }
 

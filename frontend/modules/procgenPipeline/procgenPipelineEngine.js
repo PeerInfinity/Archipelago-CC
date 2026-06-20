@@ -3547,6 +3547,110 @@ export function swapSphereRegions(grid, cellA, cellB) {
     return relayoutSphereGrid(grid);
 }
 
+// Midpoint tile of a region side (where a single exit on that side draws/sits),
+// matching resolveExitTilePositions' even distribution for one exit.
+function sideMidpointTile(side, regionSize) {
+    const lastX = regionSize.width - 1;
+    const lastY = regionSize.height - 1;
+    const along = (span) => Math.max(0, Math.min(span - 1, Math.round(0.5 * (span - 1))));
+    if (side === 'N') return { x: along(regionSize.width), y: 0 };
+    if (side === 'S') return { x: along(regionSize.width), y: lastY };
+    if (side === 'W') return { x: 0, y: along(regionSize.height) };
+    return { x: lastX, y: along(regionSize.height) }; // E
+}
+
+// Relabel ONE exit to a new side: update its world-exit side + tile coords, its
+// exits_placed entry (forward exits only), and its extracted_rules position so
+// stitchGrid still matches it. Returns the exit's previous side. Does NOT touch
+// sidePortals (the caller re-keys those) or re-stitch.
+function relabelExitSide(region, exitId, newSide, regionSize) {
+    const tile = sideMidpointTile(newSide, regionSize);
+    const exits = getRegionExits(region);
+    const we = exits instanceof Map ? exits.get(exitId)
+        : (exits ?? []).find((e) => e.exit_id === exitId);
+    const oldSide = we?.side ?? null;
+    if (we) { we.side = newSide; we.x = tile.x; we.y = tile.y; }
+    const placed = (region.exits_placed ?? []).find((p) => p.exit_id === exitId);
+    if (placed) { placed.side = newSide; placed.tile_position = { x: tile.x, y: tile.y }; }
+    const ex = (region.extracted_rules?.exits ?? []).find((e) => e.id === exitId);
+    if (ex) ex.position = { x: tile.x, y: tile.y };
+    return oldSide;
+}
+
+function regionSidePortals(region) {
+    const sp = region?.playable_payload?.params?.sidePortals;
+    if (!sp) {
+        throw new Error('exit-side editing is only supported for zone substrates '
+            + '(the region has no playable_payload.params.sidePortals)');
+    }
+    return sp;
+}
+
+// Grid side → on-screen portal arrow direction (mirrors bounceDemo's
+// SIDE_DIRECTIONS). The arrow is cosmetic, but it should follow the side a
+// portal now serves after an exit-side move/swap.
+const SIDE_TO_DIRECTION = { N: 'up', S: 'down', E: 'right', W: 'left' };
+
+// Point the bounce level portal now serving `side` in the matching direction.
+// No-op for zone substrates without a bounceLevel/portals (e.g. JtA).
+function applyPortalDirection(region, side) {
+    const params = region?.playable_payload?.params;
+    const portalId = params?.sidePortals?.[side];
+    const portals = params?.bounceLevel?.portals;
+    if (!portalId || !Array.isArray(portals)) return;
+    const portal = portals.find((p) => p.id === portalId);
+    if (portal) portal.direction = SIDE_TO_DIRECTION[side];
+}
+
+/**
+ * Move one of a region's exits/entrances to an EMPTY side. For zone (bounce)
+ * regions the exit's side is just the linking key (sidePortals[side] → the level
+ * portal; the portal's geometry is independent), so this is a relabel: move the
+ * exit + re-key sidePortals, then relayout (rebuild teleporters + re-stitch).
+ * Geometry is untouched. Throws if the target side already has an exit.
+ */
+export function moveSphereExitSide(grid, regionCell, exitId, newSide, regionSize) {
+    const region = grid.getRegion(regionCell);
+    if (!region) throw new Error('moveSphereExitSide: no region at cell');
+    const sidePortals = regionSidePortals(region);
+    const exits = getRegionExits(region);
+    const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+    if (list.some((e) => e.exit_id !== exitId && e.side === newSide)) {
+        throw new Error(`moveSphereExitSide: side ${newSide} already has an exit`);
+    }
+    const oldSide = relabelExitSide(region, exitId, newSide, regionSize);
+    if (oldSide && sidePortals[oldSide] !== undefined) {
+        sidePortals[newSide] = sidePortals[oldSide];
+        delete sidePortals[oldSide];
+    }
+    applyPortalDirection(region, newSide);
+    return relayoutSphereGrid(grid);
+}
+
+/**
+ * Swap the sides of two exits/entrances within one region (relabel both +
+ * swap their sidePortals), then relayout. Geometry untouched.
+ */
+export function swapSphereExitSides(grid, regionCell, exitIdA, exitIdB, regionSize) {
+    const region = grid.getRegion(regionCell);
+    if (!region) throw new Error('swapSphereExitSides: no region at cell');
+    const sidePortals = regionSidePortals(region);
+    const exits = getRegionExits(region);
+    const get = (id) => (exits instanceof Map ? exits.get(id)
+        : (exits ?? []).find((e) => e.exit_id === id));
+    const sideA = get(exitIdA)?.side;
+    const sideB = get(exitIdB)?.side;
+    if (!sideA || !sideB) throw new Error('swapSphereExitSides: exit not found');
+    relabelExitSide(region, exitIdA, sideB, regionSize);
+    relabelExitSide(region, exitIdB, sideA, regionSize);
+    const t = sidePortals[sideA];
+    sidePortals[sideA] = sidePortals[sideB];
+    sidePortals[sideB] = t;
+    applyPortalDirection(region, sideA);
+    applyPortalDirection(region, sideB);
+    return relayoutSphereGrid(grid);
+}
+
 /**
  * Reconstruct the realiser contract a zone (bounce) region was built with —
  * the same exit/location specs generateRegionZoneGen fed the substrate — so a

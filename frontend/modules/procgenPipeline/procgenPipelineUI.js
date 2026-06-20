@@ -23,6 +23,8 @@ import {
     buildBounceRegionContract,
     moveSphereRegion,
     swapSphereRegions,
+    moveSphereExitSide,
+    swapSphereExitSides,
     Grid,
 } from './procgenPipelineEngine.js';
 import {
@@ -2430,10 +2432,92 @@ export class ProcgenPipelineUI {
         );
     }
 
-    // Move Exits: lands in the next step.
-    _mapClickMoveExit(/* canvas, grid, regionSize, evt, cell */) {
-        this.message = 'Move Exits: lands in the next step.';
-        this.render();
+    // Canvas-backing pixel under a click (null if the canvas isn't laid out).
+    _canvasPx(canvas, evt) {
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        return {
+            cx: (evt.clientX - rect.left) * (canvas.width / rect.width),
+            cy: (evt.clientY - rect.top) * (canvas.height / rect.height),
+        };
+    }
+
+    // The exit whose green square contains the within-cell pixel (wx, wy), or null.
+    _exitAtPx(region, regionSize, wx, wy) {
+        const placed = resolveExitTilePositions(getRegionExits(region) ?? [], regionSize);
+        const tx = Math.floor(wx / TILE_PX);
+        const ty = Math.floor(wy / TILE_PX);
+        for (const p of placed) {
+            if (p?.exit && p.x === tx && p.y === ty) return p.exit;
+        }
+        return null;
+    }
+
+    // Nearest region side (N/S/E/W) to a within-cell pixel.
+    _nearestSide(wx, wy, regionSize) {
+        const cellW = regionSize.width * TILE_PX;
+        const cellH = regionSize.height * TILE_PX;
+        const d = { W: wx, E: cellW - wx, N: wy, S: cellH - wy };
+        return Object.keys(d).reduce((a, b) => (d[b] < d[a] ? b : a));
+    }
+
+    // Move Exits: first click selects an exit/entrance green square; second
+    // click (a side of the same region) moves it to that side, or swaps it with
+    // the exit already there. Zone (bounce) regions only.
+    _mapClickMoveExit(canvas, grid, regionSize, evt, cell) {
+        const px = this._canvasPx(canvas, evt);
+        if (!px) return;
+        const cellW = regionSize.width * TILE_PX;
+        const cellH = regionSize.height * TILE_PX;
+        const wx = px.cx - cell.gx * cellW;
+        const wy = px.cy - cell.gy * cellH;
+
+        if (!this._mapSel || this._mapSel.kind !== 'exit') {
+            const region = grid.getRegion(cell);
+            if (!region) return;
+            if (!region.playable_payload?.params?.sidePortals) {
+                this.message = 'Move Exits: bounce/zone regions only (this region has no side portals).';
+                this.render();
+                return;
+            }
+            const exit = this._exitAtPx(region, regionSize, wx, wy);
+            if (!exit) {
+                this.message = 'Move Exits: click an exit/entrance square first.';
+                this.render();
+                return;
+            }
+            this._mapSel = { kind: 'exit', cell, exitId: exit.exit_id, side: exit.side };
+            this.message = `Move Exits: selected ${exit.exit_id} (side ${exit.side}) — `
+                + 'click a side of this region (or another exit to swap).';
+            this.render();
+            return;
+        }
+
+        const sel = this._mapSel;
+        this._mapSel = null;
+        if (cell.gx !== sel.cell.gx || cell.gy !== sel.cell.gy) {
+            this.message = 'Move Exits: second click must be on the same region — cancelled.';
+            this.render();
+            return;
+        }
+        const newSide = this._nearestSide(wx, wy, regionSize);
+        if (newSide === sel.side) {
+            this.message = 'Move Exits: same side — cancelled.';
+            this.render();
+            return;
+        }
+        const region = grid.getRegion(cell);
+        const exits = getRegionExits(region);
+        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+        const occupant = list.find((e) => e.exit_id !== sel.exitId && e.side === newSide);
+        this._applyGridEdit(
+            (g) => (occupant
+                ? swapSphereExitSides(g, cell, sel.exitId, occupant.exit_id, regionSize)
+                : moveSphereExitSide(g, cell, sel.exitId, newSide, regionSize)),
+            occupant
+                ? `Swapped exits ${sel.exitId} ↔ ${occupant.exit_id}.`
+                : `Moved exit ${sel.exitId} to side ${newSide}.`,
+        );
     }
 
     // Run a grid-layout edit, then keep st.grow.startCell pointing at the start
@@ -2499,11 +2583,28 @@ export class ProcgenPipelineUI {
 
         this._drawConnections(ctx, grid, regionSize);
 
-        // Highlight the pending Move-Region selection.
-        if (this._mapSel && this._mapMode === 'moveRegion') {
-            const { gx, gy } = this._mapSel.cell;
-            const cw = regionSize.width * TILE_PX;
-            const ch = regionSize.height * TILE_PX;
+        // Highlight the pending selection: the whole cell (Move Region) or the
+        // selected exit's green square (Move Exits).
+        const sel = this._mapSel;
+        const cw = regionSize.width * TILE_PX;
+        const ch = regionSize.height * TILE_PX;
+        if (sel?.kind === 'exit') {
+            const region = grid.getRegion(sel.cell);
+            const placed = region
+                ? resolveExitTilePositions(getRegionExits(region) ?? [], regionSize)
+                : [];
+            const hit = placed.find((p) => p?.exit?.exit_id === sel.exitId);
+            if (hit) {
+                ctx.strokeStyle = '#ffd24a';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(
+                    sel.cell.gx * cw + hit.x * TILE_PX - 1.5,
+                    sel.cell.gy * ch + hit.y * TILE_PX - 1.5,
+                    TILE_PX + 3, TILE_PX + 3,
+                );
+            }
+        } else if (sel && this._mapMode === 'moveRegion') {
+            const { gx, gy } = sel.cell;
             ctx.strokeStyle = '#ffd24a';
             ctx.lineWidth = 3;
             ctx.strokeRect(gx * cw + 1.5, gy * ch + 1.5, cw - 3, ch - 3);
