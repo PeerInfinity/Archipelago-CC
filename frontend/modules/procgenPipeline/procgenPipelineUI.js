@@ -1544,8 +1544,8 @@ export class ProcgenPipelineUI {
                 this._renderTopologyFeedback(st.nodes)));
         }
         if (st.completed >= 3 && st.tree) {
-            wrap.appendChild(this._renderStepBlock('②c Item placement',
-                this._renderItemsFeedback(st.tree)));
+            wrap.appendChild(this._renderStepBlock('②c Item placement — move items between regions',
+                this._renderItemsEditor(st.tree)));
         }
         if (st.completed >= 4 && st.grow) {
             wrap.appendChild(this._renderStepBlock('③ Build regions',
@@ -1712,24 +1712,100 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    // ②c Item placement — which items live in which region (per wave).
-    _renderItemsFeedback(tree) {
+    // ②c Item placement editor — which items live in which region, with a
+    // per-item dropdown to move it to another region (free; warn-but-allow).
+    _renderItemsEditor(tree) {
         const wrap = document.createElement('div');
+        const st = this._stepState;
         const nodes = tree.nodes ?? [];
+        const maxPer = st.cfg?.maxItemsPerRegion ?? Infinity;
+        // Home wave per item name (from the plan) for cross-wave warnings: a
+        // wave-w node hosts plan.spheres[w] items. Duplicate names (count
+        // gates) map to their first sphere — advisory only.
+        const homeWave = new Map();
+        (st.plan?.spheres ?? []).forEach((s, w) => {
+            for (const it of s.items) if (!homeWave.has(it)) homeWave.set(it, w);
+        });
+
         const placed = nodes.reduce((a, nd) => a + (nd.items?.length ?? 0), 0);
         const summary = document.createElement('div');
         summary.textContent = `${placed} item(s) placed across ${nodes.length} region(s)`;
         wrap.appendChild(summary);
-        const list = document.createElement('div');
-        list.style.cssText = 'font-family:monospace;font-size:11px;white-space:pre;'
-            + 'overflow-x:auto;margin-top:4px;max-height:160px;overflow-y:auto;';
-        list.textContent = nodes
-            .filter((nd) => (nd.items?.length ?? 0) > 0)
-            .map((nd) => `#${nd.index} w${nd.wave} ${nd.substrate}: `
-                + nd.items.map((it) => it.item).join(', '))
-            .join('\n') || '(no items placed)';
-        wrap.appendChild(list);
+
+        const warnings = [];
+        nodes.forEach((nd) => {
+            if ((nd.items?.length ?? 0) === 0) return; // only regions holding items
+            if (nd.items.length > maxPer) {
+                warnings.push(`#${nd.index} holds ${nd.items.length} > ${maxPer} `
+                    + 'items/region (geometry may fail to realise).');
+            }
+            const group = document.createElement('div');
+            group.style.cssText = 'margin-bottom:4px;';
+            const header = document.createElement('div');
+            header.className = 'procgen-pipeline-scenario-subheader';
+            header.textContent = `#${nd.index} w${nd.wave} ${nd.substrate}`
+                + `${nd.isFiller ? ' (filler)' : ''} — ${nd.items.length} item(s)`;
+            group.appendChild(header);
+            nd.items.forEach((it, itemIdx) => {
+                const wrongWave = homeWave.has(it.item) && homeWave.get(it.item) !== nd.wave;
+                if (wrongWave) {
+                    warnings.push(`"${it.item}" sits in wave ${nd.wave} but belongs to `
+                        + `wave ${homeWave.get(it.item)} — the oracle will mismatch.`);
+                }
+                group.appendChild(
+                    this._renderItemMoveRow(nd, itemIdx, nodes, wrongWave));
+            });
+            wrap.appendChild(group);
+        });
+
+        if (warnings.length) {
+            const w = document.createElement('div');
+            w.className = 'procgen-pipeline-warning';
+            w.textContent = warnings.join(' ');
+            wrap.appendChild(w);
+        }
         return wrap;
+    }
+
+    _renderItemMoveRow(node, itemIdx, nodes, wrongWave) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;';
+        const it = node.items[itemIdx];
+        const name = document.createElement('span');
+        name.style.cssText = 'flex:1;' + (wrongWave ? 'color:#d8a000;' : '');
+        name.textContent = it.item + (wrongWave ? ' ⚠' : '');
+        row.appendChild(name);
+        const sel = document.createElement('select');
+        sel.title = 'Move this item to another region';
+        nodes.forEach((target) => {
+            const opt = document.createElement('option');
+            opt.value = String(target.index);
+            opt.textContent = `→ #${target.index} w${target.wave}`;
+            if (target.index === node.index) opt.selected = true;
+            sel.appendChild(opt);
+        });
+        sel.addEventListener('change', () => {
+            this._moveTreeItem(node.index, itemIdx, Number(sel.value));
+        });
+        row.appendChild(sel);
+        return row;
+    }
+
+    // Move a placed item from one region to another, then re-id every
+    // region's items by position (loc_N) so ids stay canonical (matching
+    // placeSphereTreeItems). Invalidates ③/④ (the edited tree feeds ③).
+    _moveTreeItem(fromNodeIdx, itemIdx, toNodeIdx) {
+        const st = this._stepState;
+        if (fromNodeIdx === toNodeIdx) { this.render(); return; }
+        const nodes = st.tree?.nodes ?? st.nodes ?? [];
+        const from = nodes[fromNodeIdx];
+        const to = nodes[toNodeIdx];
+        if (!from || !to) return;
+        const [it] = from.items.splice(itemIdx, 1);
+        if (!it) return;
+        to.items.push({ id: it.id, item: it.item });
+        for (const nd of nodes) nd.items.forEach((x, i) => { x.id = `loc_${i}`; });
+        this._invalidateFrom(3);
     }
 
     _renderRegionsFeedback(stats, seconds) {

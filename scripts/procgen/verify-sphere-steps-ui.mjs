@@ -168,6 +168,48 @@ if (msg.includes('Sphere plan realised')) {
     console.log('PHASE B OK: edited plan produced a terminal warn/error (warn-but-allow):', msg);
 }
 
+// ── Phase C: edit ②c item placement (move an item to another region) ─
+await clickBtn('Reset');
+await page.waitForTimeout(300);
+await clickBtn('Run ① Plan');
+await page.waitForTimeout(400);
+await clickBtn('Run ②a Allocate');
+await page.waitForTimeout(300);
+await clickBtn('Run ②b Topology');
+await page.waitForTimeout(300);
+await clickBtn('Run ②c Items');
+await page.waitForTimeout(400);
+
+const moved2c = await page.evaluate(() => {
+    const headers = [...document.querySelectorAll(
+        '.procgen-pipeline-panel .procgen-pipeline-scenario-subheader')];
+    const h = headers.find((el) => el.textContent.includes('②c Item placement'));
+    if (!h) return null;
+    const block = h.parentElement;
+    const sel = block.querySelector('select');
+    if (!sel) return null;
+    const cur = sel.value;
+    const other = [...sel.options].find((o) => o.value !== cur);
+    if (!other) return null;
+    const name = sel.parentElement.querySelector('span')?.textContent ?? '';
+    sel.value = other.value;
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    return { name, from: cur, to: other.value };
+});
+if (!moved2c) throw new Error('②c editor: no item move dropdown found');
+console.log(`PHASE C: moved "${moved2c.name}" from region #${moved2c.from} to #${moved2c.to}`);
+await page.waitForTimeout(400);
+
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(4000);
+msg = await message();
+console.log('PHASE C MESSAGE (moved item):', msg);
+const terminalC = msg.includes('Sphere plan realised')
+    || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
+    || msg.startsWith('ERROR');
+if (!terminalC) throw new Error(`②c edit Run all produced no terminal result: ${msg}`);
+console.log('PHASE C OK: ②c item move flowed through to a terminal result');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
