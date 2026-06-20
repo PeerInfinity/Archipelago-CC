@@ -100,6 +100,29 @@ if (!txt.includes('└─') && !txt.includes('├─')) {
 }
 console.log('STEP ②b: topology tree (with branch glyphs) shown');
 
+// Toggle to flat view → glyphs gone; back to tree → glyphs return.
+const toggled = await page.evaluate((v) => {
+    const r = [...document.querySelectorAll(
+        'input[name="procgen-pipeline-topology-view"]')].find((el) => el.value === v);
+    if (!r) return false;
+    r.click();
+    return true;
+}, 'flat');
+if (!toggled) throw new Error('②b view toggle: flat radio not found');
+await page.waitForTimeout(300);
+if ((await panelText()).match(/[└├]─/)) {
+    throw new Error('②b flat view still shows tree glyphs');
+}
+await page.evaluate((v) => {
+    [...document.querySelectorAll('input[name="procgen-pipeline-topology-view"]')]
+        .find((el) => el.value === v)?.click();
+}, 'tree');
+await page.waitForTimeout(300);
+if (!(await panelText()).match(/[└├]─/)) {
+    throw new Error('②b tree view did not restore glyphs');
+}
+console.log('STEP ②b: tree/flat view toggle works');
+
 await clickBtn('Run ②c Items');
 await page.waitForTimeout(600);
 if (!(await panelText()).includes('②c Item placement')) {

@@ -424,6 +424,9 @@ export class ProcgenPipelineUI {
         // Sphere-growth stepped-pipeline state (null until step ① runs).
         // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
         this._stepState = null;
+        // ②b Topology view mode: 'tree' (indented directory tree) or 'flat'
+        // (numerical index order). Session-only view preference.
+        this._topologyView = 'tree';
         this.isGenerating = false;
         // Live generation progress (sphere mode): event-stream state +
         // the indicator element below the Generate button.
@@ -1768,20 +1771,23 @@ export class ProcgenPipelineUI {
             + Object.entries(subs).map(([s, c]) => `${s}×${c}`).join(', ');
         wrap.appendChild(summary);
 
-        // Build the parent→children map and render as an indented directory
-        // tree (each node carries its inline controls). parent < index always
-        // holds, so the graph is a single tree rooted at the parent==null node.
+        // View toggle: tree (indented directory tree) vs flat (index order).
+        wrap.appendChild(this._renderTopologyViewToggle());
+
+        // Build the parent→children map. parent < index always holds, so the
+        // graph is a single tree rooted at the parent==null node. Each node
+        // carries its inline controls either way.
         const children = nodes.map(() => []);
         let root = null;
         nodes.forEach((nd) => {
             if (nd.parent == null) { if (root == null) root = nd.index; }
             else if (nodes[nd.parent]) children[nd.parent].push(nd.index);
         });
-        const ctx = { nodes, children, subOpts, planItems, container: wrap };
-        if (root != null) {
+        if (this._topologyView === 'tree' && root != null) {
+            const ctx = { nodes, children, subOpts, planItems, container: wrap };
             this._renderTopoTreeNode(root, '', true, true, ctx);
         } else {
-            // Defensive fallback (no root): render flat.
+            // Flat: numerical index order (also the no-root fallback).
             nodes.forEach((nd) => wrap.appendChild(
                 this._renderTopologyRow(nd, nodes, subOpts, planItems, '')));
         }
@@ -1794,6 +1800,34 @@ export class ProcgenPipelineUI {
             wrap.appendChild(w);
         }
         return wrap;
+    }
+
+    // Tree / flat view radio toggle for the ②b topology editor.
+    _renderTopologyViewToggle() {
+        const row = document.createElement('div');
+        row.style.cssText = 'margin:2px 6px 4px;font-size:11px;';
+        for (const opt of [
+            { value: 'tree', text: 'Tree view' },
+            { value: 'flat', text: 'Flat (index order)' },
+        ]) {
+            const wrap = document.createElement('label');
+            wrap.style.marginRight = '10px';
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'procgen-pipeline-topology-view';
+            radio.value = opt.value;
+            radio.checked = this._topologyView === opt.value;
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    this._topologyView = opt.value;
+                    this.render();
+                }
+            });
+            wrap.appendChild(radio);
+            wrap.appendChild(document.createTextNode(` ${opt.text}`));
+            row.appendChild(wrap);
+        }
+        return row;
     }
 
     // Recurse the topology tree, drawing directory-style branch glyphs. Each
