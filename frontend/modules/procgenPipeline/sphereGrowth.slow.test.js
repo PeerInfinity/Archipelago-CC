@@ -13,8 +13,8 @@ import { GATEABLE_ITEMS, BOUNCE_LIBRARY_ITEMS } from '../bounceDemo/bounceDemoLi
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { validateLevel } from '../bounceDemo/level.js';
 import {
-    buildSphereTree, allocateSphereTree, wireSphereTree, placeSphereTreeItems,
-    growSpheres, growSpheresAsync, buildRulesJson,
+    buildSphereTree, allocateSphereTree, wireSphereTree, wireSphereWaves,
+    placeSphereTreeItems, growSpheres, growSpheresAsync, buildRulesJson,
 } from './procgenPipelineEngine.js';
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
@@ -382,6 +382,37 @@ describe('growSpheres — count gates (duplicate-instance pools)', () => {
         // Sanity: the config actually produced fillers + items to place.
         expect(allocation.fillerWaves.length).toBe(2);
         expect(stepped.nodes.some((n) => n.items.length > 0)).toBe(true);
+    });
+
+    it('batched wireSphereWaves (resume) equals all-at-once wireSphereTree', () => {
+        // The batch-aware step runner wires one batch of waves at a time on a
+        // RESUMABLE context (carrying nodes + tallies, threading one rng). With
+        // no realisation between batches the rng order is unchanged, so wiring
+        // [0,2) then [2,4) must reproduce wireSphereTree's whole-tree output.
+        const plan = makePlan(5, 4);
+        const opts = {
+            maxItemsPerRegion: 1, fillerCount: 2, revisitRatio: 0.3,
+            substrateQuotas: { maze: 99 }, startSubstrate: 'maze',
+        };
+        const norm = (t) => JSON.parse(JSON.stringify(t,
+            (k, v) => (v instanceof Set ? [...v].sort() : v)));
+
+        const rngFull = createRng(7);
+        const { allocation: allocFull } = allocateSphereTree(plan, opts, rngFull);
+        const full = wireSphereTree(plan, allocFull, opts, rngFull);
+
+        const rng = createRng(7);
+        const { allocation } = allocateSphereTree(plan, opts, rng);
+        const b0 = wireSphereWaves(plan, allocation, opts, rng, { waveStart: 0, waveEnd: 2 });
+        const b1 = wireSphereWaves(plan, allocation, opts, rng, {
+            waveStart: 2, waveEnd: 4, resume: b0,
+        });
+
+        expect(norm(b1.nodes)).toEqual(norm(full.nodes));
+        expect(b1.substrateCounts).toEqual(full.substrateCounts);
+        expect(b1.quotaFallbacks).toEqual(full.quotaFallbacks);
+        // The resumed batch appended onto batch 0's nodes (same array).
+        expect(b1.nodes).toBe(b0.nodes);
     });
 
     it('bounce realises a count gate as an authored lock (rule-gated portals)', () => {

@@ -2928,6 +2928,26 @@ export function wireSphereTree(plan, allocation, opts = {}, rng) {
 }
 
 /**
+ * Wire ONE batch of waves [waveStart, waveEnd) onto carried state, returning the
+ * accumulated { nodes, substrateCounts, quotaFallbacks }. The batch-aware step
+ * runner calls this per batch: `resume` is the prior batch's accumulated state,
+ * and the caller restores `rng` to its post-previous-step position so the random
+ * stream stays continuous across step + batch boundaries. waveStart=0 with no
+ * resume over the full range reproduces wireSphereTree exactly.
+ */
+export function wireSphereWaves(plan, allocation, opts = {}, rng, {
+    waveStart = 0, waveEnd = plan.spheres.length, resume = null,
+} = {}) {
+    const ctx = createSphereWiringContext(plan, allocation, opts, rng, resume);
+    for (let w = waveStart; w < waveEnd; w++) ctx.wireWave(w);
+    return {
+        nodes: ctx.nodes,
+        substrateCounts: ctx.substrateCounts,
+        quotaFallbacks: ctx.quotaFallbacks(),
+    };
+}
+
+/**
  * Stateful wiring context for ②b. Holds the growing node set, substrate
  * tallies and the cumulative-count table, and exposes `wireWave(w)` to attach
  * sphere w's regions (plus the fillers assigned to wave w) onto the nodes
@@ -2936,7 +2956,7 @@ export function wireSphereTree(plan, allocation, opts = {}, rng) {
  * quotaFallbacks accumulate, and the rng is the single shared stream the
  * realiser also draws from.
  */
-function createSphereWiringContext(plan, allocation, opts = {}, rng) {
+function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = null) {
     const {
         revisitRatio = 0.25,
         substrateQuotas = null,
@@ -2968,12 +2988,17 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng) {
         }
     }
 
-    const substrateCounts = {};
+    // Resume state lets a batched, sphere-major driver wire one batch of waves
+    // at a time across step boundaries: the accumulated nodes (with their
+    // usedSides / childGates) + substrate tallies are passed back in, and the
+    // rng is restored to its post-previous-batch position by the caller. Absent
+    // (fresh) → the all-waves build, byte-identical.
+    const substrateCounts = resume?.substrateCounts ?? {};
     // Regions that defaulted to 'maze' because every quota was already
     // filled — the plan needs more regions than the quotas allow.
     // Surfaced so the UI can warn loudly (a silent maze region in a
     // bounce-only world reads as a bug).
-    let quotaFallbacks = 0;
+    let quotaFallbacks = resume?.quotaFallbacks ?? 0;
     const pickSub = (preferred = null) => {
         let sub = null;
         if (preferred && preferred !== 'auto') {
@@ -2991,7 +3016,7 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng) {
         return sub;
     };
 
-    const nodes = [];
+    const nodes = resume?.nodes ?? [];
     const addNode = ({ wave, gate, gateCounts = {}, parent, substrate, isFiller = false }) => {
         const node = {
             index: nodes.length,
