@@ -22,7 +22,7 @@ import {
     prepareBounceSphereGrowth, buildBounceRegionParams, DEFAULT_BOUNCE_PROCGEN_PARAMS,
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import {
-    growSpheres, reRollSphereRegion, buildRulesJson, buildBounceRegionContract,
+    growSpheres, reRollSphereRegion, buildRulesJson, buildRegionContract,
     getRegionExits, moveSphereRegion, swapSphereRegions,
     moveSphereExitSide, swapSphereExitSides,
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -144,7 +144,7 @@ function withPickupItems(level, contract) {
     const { grid, tree, startCell, stats, plan, prep, regionParams, startingItems } = buildWorld();
     const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce'
         && (n.items?.length || 0) > 0) ?? fail('no non-root bounce region with items');
-    const contract = buildBounceRegionContract(node, tree, grid, regionSize, regionParams);
+    const contract = buildRegionContract(node.substrate, node, tree, grid, regionSize, regionParams);
     const cloneLevel = () => withPickupItems(
         structuredClone(grid.getRegion(node.cell).playable_payload.params.bounceLevel), contract);
 
@@ -201,7 +201,7 @@ function withPickupItems(level, contract) {
     const { grid, tree, startCell, stats, plan, prep, regionParams, startingItems } = buildWorld();
     const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce'
         && (n.items?.length || 0) > 0) ?? fail('F: no non-root bounce region with items');
-    const contract = buildBounceRegionContract(node, tree, grid, regionSize, regionParams);
+    const contract = buildRegionContract(node.substrate, node, tree, grid, regionSize, regionParams);
     const region = grid.getRegion(node.cell);
     const sig0 = platSig(region);
     // Mirror _regenerate (keep): generateZoneForSpecs with the contract specs +

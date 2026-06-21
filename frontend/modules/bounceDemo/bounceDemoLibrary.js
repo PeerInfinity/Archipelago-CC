@@ -478,6 +478,43 @@ export function buildZoneSpecs(base, regionParams = {}) {
 }
 
 /**
+ * Region-contract hook (engine's `buildRegionContract` dispatcher calls this).
+ * Maps the engine's GENERIC per-node realiser specs (`buildNodeRealiserSpecs`
+ * output, passed in as `specs`) onto the bounce editor contract — the
+ * exit/location-spec shaping + mode/freeArrow/physicsProfile + the
+ * braid-vs-column back-portal rule (the existing `backPortalGated` concept).
+ * No engine import: `specs` is supplied by the caller.
+ *
+ * @param {object} args
+ * @param {object} args.specs — buildNodeRealiserSpecs output ({exitPlans,
+ *   entranceSide, …}).
+ * @param {object} args.node — the sphere-tree node (gate, gateCounts, items).
+ * @param {object} [args.regionParams] — world-level regionParams.
+ */
+export function buildBounceRegionContract({ specs, node, regionParams = {} }) {
+    const braid = (regionParams.bounceMode ?? 'column') === 'braid';
+    const exitSpecs = specs.exitPlans.map((e) => ({
+        side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
+    }));
+    if (specs.entranceSide) {
+        exitSpecs.push(braid
+            ? { side: specs.entranceSide, requirement: [], counts: {} }
+            : { side: specs.entranceSide, requirement: node.gate, counts: node.gateCounts ?? {} });
+    }
+    const locationSpecs = (node.items ?? []).map((it) => ({
+        id: it.id, item: it.item, requirement: [], counts: {},
+    }));
+    return {
+        exitSpecs,
+        locationSpecs,
+        physicsProfile: regionParams.physicsProfile ?? 'experimental',
+        mode: braid ? 'braid' : 'column',
+        freeArrow: regionParams.bounceFreeArrow ?? 'right',
+        entranceSide: specs.entranceSide,
+    };
+}
+
+/**
  * @param {object} specs
  * @param {string} specs.region_id
  * @param {Array<{side: string, requirement: string[],
@@ -839,6 +876,10 @@ export function createBounceSubstrateEntry({
         exitGateVeto,
         gateHostingHint,
         buildZoneSpecs,
+        // Region-contract builder (engine's generic buildRegionContract
+        // dispatcher calls this with the engine-computed realiser specs;
+        // the panel's Edit ▸ and the verify scripts consume the result).
+        buildRegionContract: buildBounceRegionContract,
         // Items a layout driver may attach to a surplus arrowless exit as
         // an off-column DRIFT so the level realiser can place it (a zone
         // hosts at most one arrowless "column top" exit). The driver only

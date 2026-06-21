@@ -12,6 +12,13 @@
  *   - buildRegionParams     — assembles the substrate's regionParams.
  *   - renderProcgenParams   — the panel's per-substrate param controls.
  *
+ * A fifth region-step hook lives in bounceDemoLibrary.js (it needs no
+ * params/DOM):
+ *
+ *   - buildRegionContract   — maps the engine's generic per-node realiser
+ *     specs onto the bounce editor contract (exit/location specs, mode,
+ *     free arrow); the engine's buildRegionContract dispatcher calls it.
+ *
  * Pure logic + call-time DOM only (no top-level document/window access,
  * no eventBus/panel imports) so headless CLI drivers can import the
  * bounce library without pulling in panel code.

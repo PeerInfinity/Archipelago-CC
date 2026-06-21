@@ -3759,28 +3759,21 @@ export function swapSphereExitSides(grid, regionCell, exitIdA, exitIdB, regionSi
  * the node's items. Returns { exitSpecs, locationSpecs, physicsProfile, mode,
  * freeArrow, entranceSide } for assembleBounceRegionFromLevel.
  */
-export function buildBounceRegionContract(node, tree, grid, regionSize, regionParams = {}) {
-    const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize);
-    const braid = (regionParams.bounceMode ?? 'column') === 'braid';
-    const exitSpecs = specs.exitPlans.map((e) => ({
-        side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
-    }));
-    if (specs.entranceSide) {
-        exitSpecs.push(braid
-            ? { side: specs.entranceSide, requirement: [], counts: {} }
-            : { side: specs.entranceSide, requirement: node.gate, counts: node.gateCounts ?? {} });
+/**
+ * Generic region-contract dispatcher: compute the engine's per-node realiser
+ * specs (`buildNodeRealiserSpecs`, kept engine-internal) and hand them to the
+ * substrate's `buildRegionContract` hook, which does the substrate-specific
+ * shaping (exit/location specs, mode, free arrow, …). The engine never names a
+ * substrate; the hook receives the specs so the substrate needs no engine
+ * import. Used by the panel's Edit ▸ and the region-step verify scripts.
+ */
+export function buildRegionContract(substrateId, node, tree, grid, regionSize, regionParams = {}) {
+    const adapter = substrateRegistry.get(substrateId);
+    if (typeof adapter?.buildRegionContract !== 'function') {
+        throw new Error(`buildRegionContract: substrate '${substrateId}' has no region-contract builder`);
     }
-    const locationSpecs = (node.items ?? []).map((it) => ({
-        id: it.id, item: it.item, requirement: [], counts: {},
-    }));
-    return {
-        exitSpecs,
-        locationSpecs,
-        physicsProfile: regionParams.physicsProfile ?? 'experimental',
-        mode: braid ? 'braid' : 'column',
-        freeArrow: regionParams.bounceFreeArrow ?? 'right',
-        entranceSide: specs.entranceSide,
-    };
+    const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize);
+    return adapter.buildRegionContract({ specs, node, regionParams });
 }
 
 /**

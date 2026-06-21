@@ -16,7 +16,7 @@ import {
     computeSourceCounts,
     getRegionExits,
     reRollSphereRegion,
-    buildBounceRegionContract,
+    buildRegionContract,
     moveSphereRegion,
     swapSphereRegions,
     moveSphereExitSide,
@@ -2166,9 +2166,11 @@ export class ProcgenPipelineUI {
 
     // Reconstruct the realiser contract for a region from its node + the tree:
     // the exit/location specs the realiser used, so the editor can re-emit rules
-    // from a hand-edited level and stay consistent with the logical tree. Bounce
-    // regions get the full contract via buildBounceRegionContract; other
-    // substrates fall back to the payload-only shape.
+    // from a hand-edited level and stay consistent with the logical tree.
+    // Substrates with a region editor get the full contract via the engine's
+    // generic buildRegionContract dispatcher (which calls the substrate's
+    // buildRegionContract hook); other substrates fall back to the payload-only
+    // shape.
     _buildRegionContract(region, node) {
         const payload = region?.playable_payload ?? {};
         const params = payload.params ?? {};
@@ -2178,11 +2180,11 @@ export class ProcgenPipelineUI {
             node: node ?? null,
         };
         const st = this._stepState;
-        if (region?.substrate === 'bounce' && node && st?.tree && st?.grow?.grid) {
+        if (getRegionEditor(region?.substrate) && node && st?.tree && st?.grow?.grid) {
             try {
-                Object.assign(base, buildBounceRegionContract(
-                    node, st.tree, st.grow.grid, st.growConfig.regionSize,
-                    st.growConfig.regionParams ?? {},
+                Object.assign(base, buildRegionContract(
+                    region.substrate, node, st.tree, st.grow.grid,
+                    st.growConfig.regionSize, st.growConfig.regionParams ?? {},
                 ));
                 // The raw bounce params seed the editor's generation-settings
                 // section; the world item pool feeds its per-pickup item picker.
