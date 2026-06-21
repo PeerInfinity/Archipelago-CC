@@ -1157,7 +1157,7 @@ export class StateManagerProxy {
     // Grace period for timed-out queries before cleanup (60 seconds)
     const timedOutQueryGracePeriod = 60000;
 
-    setInterval(() => {
+    const cleanupTimer = setInterval(() => {
       const now = Date.now();
 
       // Clean up old buffered responses
@@ -1186,6 +1186,14 @@ export class StateManagerProxy {
         }
       }
     }, 10000); // Cleanup every 10 seconds
+
+    // This is background housekeeping — in Node (headless tests / CLI scripts
+    // that import a substrate library, which transitively constructs the proxy
+    // singleton) it must not pin the event loop open, or the process hangs after
+    // its work is done. unref() detaches it from the loop's keep-alive set; the
+    // interval still fires while other work runs. In the browser setInterval
+    // returns a number with no unref(), so the guard makes this a no-op.
+    if (typeof cleanupTimer?.unref === 'function') cleanupTimer.unref();
   }
 
   /**
