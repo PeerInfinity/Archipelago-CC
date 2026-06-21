@@ -21,6 +21,16 @@
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/sphere-step.js run -i partial.json -o rules.json
  *
+ * Sphere-major batches (--spheres-per-batch < sphere count): the pipeline LOOPS
+ * the middle four phases per batch — plan → { allocate → topology → items →
+ * regions } × batches → compile. `run` drives the whole loop in one process.
+ * Stepping by hand, after `regions` the next subcommand is `allocate` again for
+ * the next sphere (a no-op that just advances the cursor), then topology/items/
+ * regions, until all spheres are built — only THEN run `compile`. Each step
+ * prints a `next:` hint with the batch progress so you know whether to loop back
+ * or compile. --spheres-per-batch unset / ≥ sphere count = one batch (all
+ * spheres), the byte-identical default.
+ *
  * Step subcommands:
  *   plan accepts the same world flags as dump-sphere-growth.js (--seed,
  *   --items, --spheres, --victory, --quota, --start, --region, --fillers,
@@ -57,6 +67,7 @@ import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
 import {
     SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted,
+    nextSphereStep, resolveSpheresPerBatch,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
@@ -290,6 +301,24 @@ async function main() {
 
     const outPath = writeOut(args.out, serializeEnvelope(env), sub);
     process.stderr.write(`[sphere-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+
+    // Sphere-major hint: when batch < all the pipeline LOOPS the middle four
+    // phases per batch, so after ③ the next per-step invocation is ②a again
+    // (not ④). Surface nextSphereStep + the batch progress so a hand-stepping
+    // user knows to loop back rather than jump to compile. (`run` already loops
+    // internally, so only the single-step subcommands need the nudge.)
+    if (isStep && sub !== 'compile') {
+        const next = nextSphereStep(env);
+        const total = env.plan?.spheres?.length ?? 0;
+        const batch = total ? resolveSpheresPerBatch(env.config?.spheresPerBatch, total) : total;
+        if (next && batch < total) {
+            const built = env.grow?.grid ? (env.batchStart ?? 0) : 0;
+            process.stderr.write(`[sphere-step] next: ${next} `
+                + `(sphere-major batch ${batch}: ${built}/${total} spheres built)\n`);
+        } else if (next) {
+            process.stderr.write(`[sphere-step] next: ${next}\n`);
+        }
+    }
 
     // Compile / run-to-compile: surface the oracle + optional bare rules.json.
     if (env.compile) {
