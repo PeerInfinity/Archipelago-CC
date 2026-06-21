@@ -191,6 +191,27 @@ export class Grid {
             && cell.gy >= 0 && cell.gy < this.height;
     }
 
+    // Grow-only resize (sphere-append: a new wave may need cells beyond the
+    // original bounds). Cells and teleporters are keyed by "gx,gy" and bounded
+    // only by width/height via isInBounds, so bumping the dimensions keeping the
+    // origin is lossless — every existing region / teleporter stays at the same
+    // coordinate, no re-keying or re-realisation. Shrinking is rejected (it
+    // could orphan cells); a symmetric "add margin on all sides" would need to
+    // translate every cell and isn't required for append (growth extends from
+    // the existing origin and the placement pre-pass finds the new cells).
+    resize({ width, height }) {
+        if (!Number.isInteger(width) || !Number.isInteger(height)) {
+            throw new Error(`Grid.resize: invalid dimensions ${width}x${height}`);
+        }
+        if (width < this.width || height < this.height) {
+            throw new Error(`Grid.resize is grow-only: ${width}x${height} < `
+                + `${this.width}x${this.height}`);
+        }
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
     hasRegion(cell) {
         return this.cells.has(cellKey(cell));
     }
@@ -3239,9 +3260,11 @@ export function buildSphereTree(plan, opts = {}, rng) {
  *
  * Field names match the live node fields (usedSides as an array, gateCounts /
  * childGates / isFiller) so the append path can rehydrate nodes with no
- * key-renaming. The node's `side` is the realised GRID side (placement
- * overwrote the wiring side) — kept for completeness; re-wiring reads a host's
- * free `usedSides`, not its `side`.
+ * key-renaming. `cell` is the realised grid coordinate — kept (it's the
+ * node↔region link: region_id = regionIdForCell(cell) ties a tree node to its
+ * rules.json region, and placement of a NEW child reads its parent's cell). The
+ * node's `side` is the realised GRID side (placement overwrote the wiring side)
+ * — kept for completeness; re-wiring reads a host's free `usedSides`, not `side`.
  */
 export function compactSphereTree(tree) {
     return {
@@ -3250,6 +3273,8 @@ export function compactSphereTree(tree) {
             wave: n.wave,
             parent: n.parent,
             side: n.side,
+            cell: n.cell ? { gx: n.cell.gx, gy: n.cell.gy } : null,
+            isTeleporter: !!n.isTeleporter,
             substrate: n.substrate,
             gate: n.gate,
             gateCounts: n.gateCounts,

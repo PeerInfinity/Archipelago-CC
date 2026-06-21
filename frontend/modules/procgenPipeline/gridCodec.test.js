@@ -89,3 +89,41 @@ describe('serializeGrid / deserializeGrid', () => {
         expect(() => serializeGrid({ width: 1, height: 1 })).toThrow(/Grid instance/);
     });
 });
+
+describe('Grid.resize (grow-only, for sphere-append)', () => {
+    it('grows the bounds losslessly — cells, regions, teleporters survive', () => {
+        const { grid } = growGrid({ maze: 4 }, 'maze', 3, 2);
+        const before = grid.allRegions().map((r) => ({ ...r.cell, id: r.region_id }));
+        const tele = new Map(grid.teleporters);
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'N', { gx: 2, gy: 2 });
+        const w0 = grid.width;
+        const h0 = grid.height;
+
+        grid.resize({ width: w0 + 4, height: h0 + 2 });
+
+        expect(grid.width).toBe(w0 + 4);
+        expect(grid.height).toBe(h0 + 2);
+        // Every prior region is still at its exact coordinate.
+        for (const r of before) {
+            expect(grid.hasRegion({ gx: r.gx, gy: r.gy })).toBe(true);
+            expect(grid.getRegion({ gx: r.gx, gy: r.gy }).region_id).toBe(r.id);
+        }
+        // Prior + new teleporters intact; a cell beyond the OLD bounds is now placeable.
+        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'N')).toEqual({ gx: 2, gy: 2 });
+        for (const [k, v] of tele) expect(grid.teleporters.get(k)).toBe(v);
+        expect(grid.isInBounds({ gx: w0, gy: 0 })).toBe(true);
+    });
+
+    it('rejects shrinking (grow-only)', () => {
+        const grid = new Grid({ width: 5, height: 5 });
+        expect(() => grid.resize({ width: 4, height: 5 })).toThrow(/grow-only/);
+        expect(() => grid.resize({ width: 5, height: 3 })).toThrow(/grow-only/);
+        // Same size is allowed (no-op).
+        expect(() => grid.resize({ width: 5, height: 5 })).not.toThrow();
+    });
+
+    it('rejects non-integer dimensions', () => {
+        const grid = new Grid({ width: 5, height: 5 });
+        expect(() => grid.resize({ width: 6.5, height: 5 })).toThrow(/invalid dimensions/);
+    });
+});

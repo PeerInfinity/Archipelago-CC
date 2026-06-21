@@ -180,9 +180,13 @@ describe('sphereSteps runner', () => {
             expect(Array.isArray(n.childGates)).toBe(true);
             expect('parent' in n).toBe(true);
             expect(typeof n.substrate).toBe('string');
-            // …and NOT the grid-derived fields (rebuilt from rules.json regions).
-            expect('cell' in n).toBe(false);
+            // …the node↔region link (region_id = regionIdForCell(cell))…
+            expect(n.cell).toMatchObject({ gx: expect.any(Number), gy: expect.any(Number) });
+            expect(typeof n.isTeleporter).toBe('boolean');
+            // …but NOT the bulky region payload (rebuilt from rules.json regions).
             expect('region_id' in n).toBe(false);
+            expect('items' in n).toBe(false);
+            expect('playable_payload' in n).toBe(false);
         }
     });
 
