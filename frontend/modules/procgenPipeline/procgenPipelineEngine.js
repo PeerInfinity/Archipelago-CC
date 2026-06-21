@@ -25,7 +25,6 @@ import {
     REGION_GROW_STEP,
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 
 function getAdapter(substrateId) {
@@ -800,10 +799,10 @@ function buildSubstrateRegion({
         params,
     });
     const extracted_rules = adapter.extractPathsAndObstacles(core.world, { regionId: region_id });
-    // Content module pass: stamp hazards onto the world after the
-    // base maze + obstacle layout is done. No-op when no hazards are
-    // requested or when the substrate isn't 'maze'.
-    if (substrate === 'maze') applyHazardModule(core.world, hazardOpts, rng);
+    // Content-module pass: stamp substrate-specific content (maze hazards)
+    // onto the world after the base layout. No-op for substrates that don't
+    // declare the hook — the engine names no substrate here.
+    adapter.applyContentModules?.(core.world, { hazardOpts }, rng);
     return {
         substrate,
         region_id,
@@ -826,61 +825,6 @@ function buildSubstrateRegion({
         biome: core.biome ?? null,
         grow_telemetry: core.grow_telemetry ?? null,
     };
-}
-
-/**
- * Run the hazard content module's `generate` pass on a freshly-built
- * world. Mutates world.hazards in place when hazards land; no-op
- * otherwise. Gated on hazardOpts.enabled to keep existing presets
- * cost-free unless the caller opts in.
- *
- * @param {object} world - target world (must have width/height/tiles)
- * @param {object|null} hazardOpts
- * @param {boolean} hazardOpts.enabled
- * @param {number} [hazardOpts.count] - target hazard count per region (0)
- * @param {number} [hazardOpts.maxConsecutiveFails]
- * @param {boolean} [hazardOpts.wallOverlapAllowed]
- * @param {{next:()=>number}} rng
- */
-function applyHazardModule(world, hazardOpts, rng) {
-    if (!hazardOpts || !hazardOpts.enabled) return;
-    const count = Math.max(0, Math.floor(hazardOpts.count ?? 0));
-    if (count === 0) return;
-    // Keep hazards off entrance / exit / location tiles. Hazards
-    // don't statically block tiles (the player walks through them
-    // when the cycle phase allows), but a hazard whose path
-    // includes one of these "anchor" tiles would obscure them
-    // visually and create UX confusion — entrance is where the
-    // player spawns, exits route between regions, and locations
-    // hold the item sprite.
-    const reservedTiles = new Set();
-    if (world.entrance) {
-        reservedTiles.add(`${world.entrance.x},${world.entrance.y}`);
-    }
-    if (world.exits) {
-        for (const exit of world.exits.values()) {
-            if (typeof exit?.x === 'number' && typeof exit?.y === 'number') {
-                reservedTiles.add(`${exit.x},${exit.y}`);
-            }
-        }
-    }
-    // world.items is a Map<posKey, itemId>; each entry is a
-    // location tile. Reserve them all so hazards stay clear of
-    // pickups.
-    if (world.items) {
-        for (const key of world.items.keys()) {
-            reservedTiles.add(key);
-        }
-    }
-    const result = generateHazards(world, {
-        count,
-        maxConsecutiveFails: hazardOpts.maxConsecutiveFails ?? 10,
-        wallOverlapAllowed: !!hazardOpts.wallOverlapAllowed,
-        initialReservedTiles: reservedTiles,
-    }, rng);
-    if (result.hazards.length > 0) {
-        world.hazards = result.hazards.map((h) => ({ ...h, phase: 0 }));
-    }
 }
 
 // --- Growth loop ---
@@ -908,7 +852,7 @@ export function growMaze(config) {
         regionParams = {},
         growthParams = {},
         // Content-module options. Passed through to buildSubstrateRegion
-        // — null disables. See applyHazardModule for the option shape.
+        // — null disables. See mazeRoomLibrary's applyMazeContentModules for the option shape.
         hazardOpts = null,
     } = config;
 
@@ -1356,7 +1300,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // default. v1 callers don't pass this; future commits will.
         biomeByRegion,
         // Content-module options (maze content modules Phase 2e).
-        // Same shape as growMaze's hazardOpts; see applyHazardModule.
+        // Same shape as growMaze's hazardOpts; see mazeRoomLibrary's applyMazeContentModules.
         // null disables.
         hazardOpts = null,
         // Item names the player holds for free at game start (source
@@ -2433,9 +2377,7 @@ function generateRegionProcedural(spec) {
         if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
     }
 
-    if (spec.substrate === 'maze') {
-        applyHazardModule(core.world, spec.hazardOpts ?? null, spec.rng);
-    }
+    adapter.applyContentModules?.(core.world, { hazardOpts: spec.hazardOpts ?? null }, spec.rng);
 
     return {
         substrate: spec.substrate,

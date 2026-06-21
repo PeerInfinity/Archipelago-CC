@@ -28,7 +28,65 @@ import {
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
 import { getPanelInstance } from './index.js';
+
+/**
+ * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
+ * content onto a freshly-built maze world after the base maze + obstacle layout
+ * is done. Currently just hazards (a maze content module). Mutates `world`;
+ * no-op when no hazards are requested. The generic engine calls this
+ * unconditionally at both region-build sites — substrates without the hook
+ * (bounce etc.) simply don't declare it, so the engine names no substrate.
+ *
+ * Gated on hazardOpts.enabled to keep existing presets cost-free unless the
+ * caller opts in. Draws from `rng` at the same point the engine used to call
+ * applyHazardModule, so hazard RNG ordering is preserved (byte-identical).
+ *
+ * @param {object} world - target world (must have width/height/tiles)
+ * @param {object} opts
+ * @param {object|null} opts.hazardOpts - { enabled, count?,
+ *   maxConsecutiveFails?, wallOverlapAllowed? }; null/disabled = no-op
+ * @param {{next:()=>number}} rng
+ */
+export function applyMazeContentModules(world, { hazardOpts = null } = {}, rng) {
+    if (!hazardOpts || !hazardOpts.enabled) return;
+    const count = Math.max(0, Math.floor(hazardOpts.count ?? 0));
+    if (count === 0) return;
+    // Keep hazards off entrance / exit / location tiles. Hazards don't
+    // statically block tiles (the player walks through them when the cycle
+    // phase allows), but a hazard whose path includes one of these "anchor"
+    // tiles would obscure them visually and create UX confusion — entrance is
+    // where the player spawns, exits route between regions, and locations hold
+    // the item sprite.
+    const reservedTiles = new Set();
+    if (world.entrance) {
+        reservedTiles.add(`${world.entrance.x},${world.entrance.y}`);
+    }
+    if (world.exits) {
+        for (const exit of world.exits.values()) {
+            if (typeof exit?.x === 'number' && typeof exit?.y === 'number') {
+                reservedTiles.add(`${exit.x},${exit.y}`);
+            }
+        }
+    }
+    // world.items is a Map<posKey, itemId>; each entry is a location tile.
+    // Reserve them all so hazards stay clear of pickups.
+    if (world.items) {
+        for (const key of world.items.keys()) {
+            reservedTiles.add(key);
+        }
+    }
+    const result = generateHazards(world, {
+        count,
+        maxConsecutiveFails: hazardOpts.maxConsecutiveFails ?? 10,
+        wallOverlapAllowed: !!hazardOpts.wallOverlapAllowed,
+        initialReservedTiles: reservedTiles,
+    }, rng);
+    if (result.hazards.length > 0) {
+        world.hazards = result.hazards.map((h) => ({ ...h, phase: 0 }));
+    }
+}
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -65,6 +123,11 @@ export const substrateRegistryEntry = Object.freeze({
     placeFromRules: ruleGatePlacer,
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
+
+    // Content-module pass (hazards). The generic engine calls this after the
+    // base region build at both build sites; substrates that don't declare it
+    // skip the pass, so the engine no longer names 'maze' there.
+    applyContentModules: applyMazeContentModules,
 });
 
 // Side-effect on import: register the maze substrate so any caller
