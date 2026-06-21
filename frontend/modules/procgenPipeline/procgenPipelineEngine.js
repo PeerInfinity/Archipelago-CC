@@ -4135,7 +4135,7 @@ function resolveBatchSize(spheresPerBatch, waves) {
  * two produce identical worlds for a given batch size — one realise-batch
  * implementation, no drift.
  */
-function* realiseSphereBatchGen(grid, nodes, tree, rng, {
+export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     prevCount, placed, startCell, teleporterMinGap, dims,
     total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
     assumeBidirectional, stats,

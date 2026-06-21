@@ -4,12 +4,12 @@ import { describe, it, expect } from 'vitest';
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import {
-    growSpheres, buildRulesJson,
+    growSpheres, growSpheresBatchedGen, buildRulesJson,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import {
-    SPHERE_STEPS, runStep, runToStep,
+    SPHERE_STEPS, runStep, runToStep, nextSphereStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
     detectCompleted, resumeEnvelope, resolveSpheresPerBatch,
 } from './sphereSteps.js';
@@ -76,6 +76,51 @@ function monolithic(config) {
     });
 }
 
+// The standalone batched (sphere-major) reference: same as monolithic but the
+// region build interleaves topology + realisation a `spheresPerBatch` batch at
+// a time (growSpheresBatchedGen). The step runner unifies on the SAME per-batch
+// realiser, so for a given batch size their rules.json must match exactly —
+// that's the unify invariant 2.7b enforces.
+function monolithicBatched(config, spheresPerBatch) {
+    const plan = planSpheres({
+        itemPool: config.itemPool,
+        sphereCount: config.sphereCount,
+        exclusiveSpheres: config.exclusiveSpheres ?? {},
+        ...(config.victoryItem && (config.itemPool[config.victoryItem] ?? 0) > 0
+            ? { victoryItem: config.victoryItem } : {}),
+        seed: config.seed,
+    });
+    const gen = growSpheresBatchedGen({
+        regionSize: config.regionSize,
+        itemLib: config.itemLib,
+        seed: config.seed,
+        hazardOpts: config.hazardOpts,
+        regionParams: config.regionParams ?? {},
+        growthParams: {
+            spherePlan: plan,
+            maxItemsPerRegion: config.maxItemsPerRegion,
+            fillerCount: config.fillerCount,
+            revisitRatio: config.revisitRatio,
+            spheresPerBatch,
+            ...(config.substrateQuotas ? { substrateQuotas: config.substrateQuotas } : {}),
+            ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
+        },
+    });
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    const { grid, stats, startCell } = r.value;
+    return buildRulesJson(grid, {
+        startCell, seed: config.seed, itemLib: config.itemLib,
+        startingItems: [], lockedCanonicalItems: [],
+        enableLoopMode: config.enableLoopMode,
+        regionXpEffect: config.regionXpEffect,
+        completionConditionItem: config.victoryItem,
+        procgenMetadata: {
+            driver: 'sphere-growth', stop_reason: stats.stopReason, sphere_plan: plan,
+        },
+    });
+}
+
 describe('sphereSteps runner', () => {
     it('SPHERE_STEPS lists the six steps in order', () => {
         expect(SPHERE_STEPS).toEqual(
@@ -114,6 +159,47 @@ describe('sphereSteps runner', () => {
         // The batched tree is surfaced on the envelope (final cells/region_ids).
         expect(env.grow.stats.stopReason).toBe('plan_complete');
         expect(env.grow.stats.regionsBuilt).toBeGreaterThanOrEqual(4);
+    });
+
+    it('batched step runner == growSpheresBatchedGen (unify invariant)', async () => {
+        // The crux of 2.7b: the step runner and the standalone batched driver
+        // share ONE per-batch realiser, so for a given batch size they must
+        // produce the same rules.json byte-for-byte (not just the same oracle).
+        const pool = {
+            key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1,
+            key_purple: 1, victory: 1,
+        };
+        for (const [sphereCount, spheresPerBatch] of [[4, 1], [4, 2], [5, 1], [5, 2]]) {
+            const config = makeConfig({
+                sphereCount, spheresPerBatch, itemPool: pool, substrateQuotas: { maze: 12 },
+            });
+            // eslint-disable-next-line no-await-in-loop
+            const env = await runToStep(newEnvelope(config));
+            expect(env.completed).toBe(5);
+            expect(env.compile.oracleErrors).toEqual([]);
+            expect(env.compile.rulesJson).toEqual(monolithicBatched(config, spheresPerBatch));
+        }
+    });
+
+    it('batched JSON round-trip between EVERY step == in-process batched run', async () => {
+        // The cross-process (CLI) path under batch < all: serialise + restore
+        // the envelope between every step (incl. the per-batch loop-backs), and
+        // the final rules.json must still match the batched driver.
+        const config = makeConfig({ sphereCount: 4, spheresPerBatch: 1 });
+        let env = newEnvelope(config);
+        // Drive the loop manually so we round-trip after each step, including
+        // the ②a/②b/②c/③ repeats per batch.
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            const step = nextSphereStep(env);
+            if (!step) break;
+            // eslint-disable-next-line no-await-in-loop
+            await runStep(step, env);
+            env = deserializeEnvelope(JSON.parse(JSON.stringify(serializeEnvelope(env))));
+        }
+        expect(env.completed).toBe(5);
+        expect(env.compile.oracleErrors).toEqual([]);
+        expect(env.compile.rulesJson).toEqual(monolithicBatched(config, 1));
     });
 
     it('carrying spheresPerBatch on the config is byte-identical (default = all)', async () => {

@@ -9,26 +9,50 @@
 // a process boundary losslessly so the CLI can run each step in its own
 // invocation and hand-edit the JSON between them.
 //
-// Byte-identity: running all 6 steps (in-process OR across serialised
-// boundaries) reproduces the monolithic growSpheres + buildRulesJson output
-// exactly. See sphereSteps.test.js. The contract that makes this hold:
-//   - rng is re-derived from seed at the post-Allocate position by ②b
-//     (buildSphereAllocation replays Allocate's fixed filler draws), and the
-//     ONLY live rng that must cross a boundary is the post-②b snapshot fed
-//     to ③. mulberry32 getState/setState captures that exactly.
+// Batch-aware (per-sphere) orchestration. One global `config.spheresPerBatch`
+// knob drives the whole pipeline: ① Plan once → loop per batch
+// [②a Allocate → ②b Topology → ②c Items → ③ Regions] → ④ Compile once. The
+// loop-back after ③ lives in nextSphereStep(env) (used by runToStep /
+// resumeEnvelope, and the panel / CLI). batch = all (the default) is ONE batch
+// covering every wave → today's step-major path → BYTE-IDENTICAL to monolithic
+// growSpheres; a batch < all grows sphere-major (output diverges by design).
+//
+// Cross-batch state on the envelope: the accumulated `nodes` (with usedSides /
+// childGates), substrateCounts / quotaFallbacks, the grown grid (env.grow),
+// `placed` (node indices on the grid), `batchStart` (advances by batch after
+// ③), `prevCount` (node count before the current batch's wiring), and a
+// CONTINUOUS rng snapshot threaded after EVERY rng-consuming step (incl. ③).
+//
+// Byte-identity contract (running all steps in-process OR across serialised
+// boundaries reproduces the monolithic output exactly — see sphereSteps.test.js):
+//   - The rng is a single continuous stream consumed in the monolithic order:
+//     Allocate's fixed filler draws → Topology wiring → ③ realisation. ②b for
+//     the FIRST batch re-derives the rng to the post-Allocate position from
+//     seed (deterministic — Allocate draws a fixed fillerCount), so an
+//     allocation edit + re-run stays correct without depending on a snapshot a
+//     later step may have advanced; later batches restore the threaded
+//     snapshot (their start position depends on prior batches' consumption and
+//     is only known from the snapshot). mulberry32 getState/setState captures
+//     each boundary exactly.
 //   - ②c consumes no rng; the plan is derived from the editable draft at ②a.
+//   - ③ reuses realiseSphereBatchGen (shared with growSpheresBatchedGen), so
+//     the step runner and the standalone batched driver produce identical
+//     worlds for a given batch size — one realise-batch implementation.
 
 import { createRng } from '../shared/rng.js';
 import {
     buildSphereAllocation,
-    wireSphereTree,
+    wireSphereWaves,
     placeSphereTreeItems,
-    growSpheresAsync,
-    growSpheresBatchedAsync,
+    realiseSphereBatchGen,
     buildRulesJson,
     serializeGrid,
     deserializeGrid,
+    Grid,
+    stitchGrid,
+    wallOffUnusedExits,
 } from './procgenPipelineEngine.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     planSpheres,
     computeItemSpheres,
@@ -84,8 +108,9 @@ export function growConfigFrom(config, plan) {
             revisitRatio: config.revisitRatio,
             ...(config.substrateQuotas ? { substrateQuotas: config.substrateQuotas } : {}),
             ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
-            // Carried for the batched driver (growSpheresBatchedAsync); the
-            // step-major path (growSpheresGen) ignores it. null/all → no-op.
+            // Carried for any standalone batched driver consumer; the step
+            // runner reads env.config.spheresPerBatch directly to drive its
+            // loop. null / all → one batch = byte-identical default.
             ...(config.spheresPerBatch != null ? { spheresPerBatch: config.spheresPerBatch } : {}),
         },
     };
@@ -136,11 +161,44 @@ function stepPlan(env) {
     env.tree = null;
     env.grow = null;
     env.compile = null;
+    // Cross-batch loop state (see stepAllocate / stepRegions).
+    env.placed = null;
+    env.prevCount = 0;
+    env.batchStart = 0;
+    env.totalNodes = null;
+    env.dims = null;
+    env.startCell = null;
     env.completed = 0;
     return env;
 }
 
+// Auto-size the grid from a sphere allocation: total region count =
+// Σ regionsPerWave + fillerCount, side = ceil(sqrt(total)) * 2 + 1 (≥ 5),
+// start cell centred. Deterministic — matches growSpheresGen's sizing — so it
+// can be recomputed in ③ when an envelope resumed straight to the regions step
+// doesn't carry ②a's sizing (e.g. a panel export that omits it).
+function gridSizeFor(allocation, fillerCount = 0) {
+    const totalNodes = allocation.regionsPerWave.reduce((a, b) => a + b, 0) + (fillerCount ?? 0);
+    const side = Math.max(5, Math.ceil(Math.sqrt(totalNodes)) * 2 + 1);
+    return {
+        totalNodes,
+        dims: { width: side, height: side },
+        startCell: { gx: Math.floor(side / 2), gy: Math.floor(side / 2) },
+    };
+}
+
+// ②a — Allocate. On the FIRST batch only (batchStart 0): re-derive the full
+// allocation (fillers drawn up front), reset the cross-batch accumulators, and
+// size the grid from the now-known total region count. Later batches loop back
+// here as a NO-OP (the allocation + accumulators already exist) — the unit of
+// re-running per batch is ②b/②c/③, not ②a. Snapshots the rng at the
+// post-Allocate position so ②b can continue the same stream.
 function stepAllocate(env) {
+    if ((env.batchStart ?? 0) > 0) {
+        // Loop-back batch: allocation, accumulators, grid sizing all stand.
+        env.completed = 1;
+        return env;
+    }
     const { startingItems, plan } = planFromDraft(env.draft, env.config.seed);
     const growConfig = growConfigFrom(env.config, plan);
     const { opts, allocation, rng } = buildSphereAllocation(growConfig);
@@ -149,28 +207,82 @@ function stepAllocate(env) {
     env.opts = opts;
     env.allocation = allocation;
     env.rng = { s: rng.getState() };
+    // Reset the cross-batch accumulators for a fresh run (a clean slate
+    // regardless of any prior pipeline state left on the envelope).
+    env.nodes = null;
+    env.substrateCounts = null;
+    env.quotaFallbacks = null;
+    env.tree = null;
+    env.grow = null;
+    env.placed = null;
+    env.prevCount = 0;
+    env.batchStart = 0;
+    // Size the grid from the FINAL region count (the full plan is known up
+    // front), matching growSpheresGen's auto-size — so a sphere-major run uses
+    // the same grid as the all-at-once build.
+    const sizing = gridSizeFor(allocation, env.config.fillerCount);
+    env.totalNodes = sizing.totalNodes;
+    env.dims = sizing.dims;
+    env.startCell = sizing.startCell;
     env.completed = 1;
     return env;
 }
 
+// ②b — Topology. Wire the current batch's waves [batchStart, batchEnd) onto the
+// accumulated nodes via the resumable wiring context (wireSphereWaves). The
+// FIRST batch re-derives the rng to the post-Allocate position from seed
+// (deterministic — a fixed fillerCount draw), so an allocation edit + re-run
+// stays correct without leaning on a snapshot a later step may have advanced;
+// later batches restore the continuous threaded snapshot (their start position
+// depends on how much rng prior batches consumed).
 function stepTopology(env) {
-    // Re-derive rng at the post-Allocate position (deterministic), exactly
-    // as the panel does, so an allocation edit + re-run stays correct.
-    const growConfig = growConfigFrom(env.config, env.plan);
-    const { rng } = buildSphereAllocation(growConfig);
-    const wired = wireSphereTree(env.plan, env.allocation, env.opts, rng);
+    const batchStart = env.batchStart ?? 0;
+    const total = env.plan.spheres.length;
+    const batch = resolveSpheresPerBatch(env.config.spheresPerBatch, total);
+    const waveEnd = Math.min(batchStart + batch, total);
+
+    let rng;
+    let resume;
+    let prevCount;
+    if (batchStart === 0) {
+        rng = buildSphereAllocation(growConfigFrom(env.config, env.plan)).rng;
+        resume = null;
+        prevCount = 0;
+    } else {
+        rng = createRng(0);
+        rng.setState(env.rng.s);
+        resume = {
+            nodes: env.nodes,
+            substrateCounts: env.substrateCounts,
+            quotaFallbacks: env.quotaFallbacks,
+        };
+        prevCount = env.nodes.length;
+    }
+    const wired = wireSphereWaves(env.plan, env.allocation, env.opts, rng, {
+        waveStart: batchStart, waveEnd, resume,
+    });
     env.nodes = wired.nodes;
     env.substrateCounts = wired.substrateCounts;
     env.quotaFallbacks = wired.quotaFallbacks;
-    env.rng = { s: wired.rng.getState() }; // threaded into ③
+    env.prevCount = prevCount; // node count BEFORE this batch's wiring (for ③)
+    // Two rng snapshots cross to ③:
+    //   - regionsRng = the position at the START of ③ (post-②b). ③ restores
+    //     THIS and never clobbers it, so re-running ③ (a resume that dropped the
+    //     grow output) replays from the correct point even after a prior ③
+    //     advanced the continuous stream.
+    //   - rng stays the continuous stream the next batch's ②b restores; ③
+    //     advances it to post-③.
+    env.regionsRng = { s: rng.getState() };
+    env.rng = { s: rng.getState() };
     env.topologyWarnings = [];
     env.completed = 2;
     return env;
 }
 
+// ②c — Items. Clear + place ALL items every batch (no rng): idempotent for
+// already-realised waves; the new batch's items land on their nodes. Matches
+// the per-batch clear+place in growSpheresBatchedGen.
 function stepItems(env) {
-    // Clear first so re-running after a topology edit is idempotent
-    // (placeSphereTreeItems appends assuming empty — matches all-in-one).
     for (const nd of env.nodes) nd.items = [];
     placeSphereTreeItems(env.plan, env.nodes);
     env.tree = {
@@ -182,39 +294,104 @@ function stepItems(env) {
     return env;
 }
 
+// ③ — Regions. Drain the shared per-batch realiser onto the carried grid (place
+// the new nodes' cells, realise them, and re-realise any earlier-batch host
+// that gained a child this batch), then advance batchStart by the batch size.
+// The whole-grid stitch / wall-off post-passes run ONCE, after the LAST batch.
+// batch = all is a single batch covering every wave → byte-identical to
+// growSpheresGen; a smaller batch threads the same rng a batch at a time and is
+// byte-identical to growSpheresBatchedGen (the unify invariant).
 async function stepRegions(env, { onProgress = null } = {}) {
     const growConfig = growConfigFrom(env.config, env.plan);
     const total = env.plan.spheres.length;
     const batch = resolveSpheresPerBatch(env.config.spheresPerBatch, total);
-    if (batch < total) {
-        // Batched, sphere-major growth: the driver interleaves topology +
-        // realisation a batch of spheres at a time, so it rebuilds the tree
-        // itself (from the plan) on a fresh seed-derived rng — the prebuilt
-        // tree from ②a–②c does NOT apply here. Diverges from the step-major
-        // path by design; ②a–②c output stays informational in this mode.
-        const { grid, stats, startCell, tree } = await growSpheresBatchedAsync(
-            growConfig, onProgress);
-        env.grow = { grid, stats, startCell };
-        // Keep the envelope self-consistent: surface the batched tree as the
-        // realised topology (its nodes carry the final cells / region_ids).
-        env.nodes = tree.nodes;
-        env.tree = {
-            nodes: tree.nodes,
-            substrateCounts: tree.substrateCounts,
-            quotaFallbacks: tree.quotaFallbacks,
-        };
-        env.completed = 4;
-        return env;
-    }
-    // batch = all (default): the step-major path, byte-identical. Reuse the
-    // prebuilt tree + post-②b rng so the random stream stays continuous.
+    // The grown grid IS the realisation state: a carried grid + batchStart > 0
+    // is a legit mid-loop continuation, but if the grid is gone (a resume that
+    // dropped the grow output, or an edit that invalidated it) the cursor is
+    // stale — restart at batch 0 rather than take the carry-forward path with
+    // no grid to carry.
+    const batchStart = env.grow?.grid ? (env.batchStart ?? 0) : 0;
+    const {
+        regionSize, itemLib = DEFAULT_ITEMS, obstacleLib = DEFAULT_OBSTACLES,
+        regionParams = {}, hazardOpts = null,
+    } = growConfig;
+    const { teleporterMinGap = 2, assumeBidirectional = true } = growConfig.growthParams;
+
     const rng = createRng(0);
-    rng.setState(env.rng.s);
-    const { grid, stats, startCell } = await growSpheresAsync({
-        ...growConfig,
-        growthParams: { ...growConfig.growthParams, prebuiltTree: env.tree, rng },
-    }, onProgress);
+    rng.setState((env.regionsRng ?? env.rng).s); // post-②b position
+
+    // ②a sizes the grid, but an envelope resumed straight to ③ (e.g. a panel
+    // export that omits the cross-batch sizing) may not carry it — recompute
+    // deterministically from the allocation when absent.
+    const sizing = env.dims
+        ? { dims: env.dims, startCell: env.startCell, totalNodes: env.totalNodes }
+        : gridSizeFor(env.allocation, env.config.fillerCount);
+
+    let grid;
+    let startCell;
+    let stats;
+    if (batchStart === 0) {
+        grid = new Grid(sizing.dims);
+        startCell = sizing.startCell;
+        stats = {
+            regionsBuilt: 0,
+            regionsSkipped: 0,
+            teleportersPlaced: 0,
+            stopReason: null,
+            substrateCounts: env.substrateCounts,
+            quotaFallbacks: env.quotaFallbacks,
+        };
+        env.placed = new Set();
+    } else {
+        grid = env.grow.grid;
+        startCell = env.grow.startCell;
+        stats = env.grow.stats;
+    }
+    const placed = env.placed instanceof Set ? env.placed : new Set(env.placed ?? []);
+    // A batch-0 (re)start realises every node from index 0; only a genuine
+    // mid-loop continuation carries a non-zero prevCount.
+    const prevCount = batchStart === 0 ? 0 : (env.prevCount ?? 0);
+
+    const gen = realiseSphereBatchGen(grid, env.nodes, env.tree, rng, {
+        prevCount,
+        placed,
+        startCell,
+        teleporterMinGap,
+        dims: sizing.dims,
+        total: sizing.totalNodes ?? env.nodes.length,
+        regionSize,
+        itemLib,
+        obstacleLib,
+        regionParams,
+        hazardOpts,
+        assumeBidirectional,
+        stats,
+    });
+    let r = gen.next();
+    while (!r.done) {
+        onProgress?.(r.value);
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        r = gen.next();
+    }
+
+    // Keep the realised tallies fresh from the accumulated wiring context.
+    stats.substrateCounts = env.substrateCounts;
+    stats.quotaFallbacks = env.quotaFallbacks;
+
+    env.rng = { s: rng.getState() }; // threaded into the next batch's ②b
+    env.placed = placed;
+    env.batchStart = batchStart + batch;
     env.grow = { grid, stats, startCell };
+
+    if (env.batchStart >= total) {
+        // Last batch: every exit was allocated to a child or teleporter, so
+        // stitching is purely confirmatory — run the whole-grid post-passes
+        // once. (Idempotent, but cheap to keep to the final batch.)
+        stitchGrid(grid);
+        wallOffUnusedExits(grid);
+        stats.stopReason = 'plan_complete';
+    }
     env.completed = 4;
     return env;
 }
@@ -273,29 +450,57 @@ export async function runStep(stepName, env, opts = {}) {
     return runner(env, opts);
 }
 
+// The plan's wave count, read from env.plan (post-①) or the draft (post-plan,
+// pre-allocate). 0 before ① has run.
+function totalWaves(env) {
+    if (env.plan) return env.plan.spheres.length;
+    if (env.draft) return env.draft.spheres.length - 1;
+    return 0;
+}
+
 /**
- * Run every step from the current `completed` point through `toStep`
- * (default: the last step), in order. Returns the final env.
+ * The next step to run given the envelope's `completed` index and batch state.
+ * The pipeline is `① Plan → loop[②a → ②b → ②c → ③] per batch → ④ Compile`:
+ * after ③ (completed 4) it loops back to ②a while `batchStart < waves`,
+ * otherwise falls through to ④. Returns null when ④ is done (completed 5).
+ * batch = all keeps batchStart at the wave count after the single ③, so the
+ * sequence collapses to the linear six steps.
+ */
+export function nextSphereStep(env) {
+    const completed = env.completed ?? -1;
+    if (completed < 4) return SPHERE_STEPS[completed + 1];
+    if (completed === 4) {
+        const waves = totalWaves(env);
+        return (env.batchStart ?? waves) < waves ? 'allocate' : 'compile';
+    }
+    return null;
+}
+
+/**
+ * Run steps via nextSphereStep — which loops the middle four phases per batch
+ * (sphere-major) and falls through to ④ after the last batch — stopping once
+ * `toStep` has just run. For the looping phases (②a–③) that's the FIRST time
+ * they run; resume the returned env to continue the loop. Returns the env.
  */
 export async function runToStep(env, toStep = 'compile', opts = {}) {
-    const target = SPHERE_STEPS.indexOf(toStep);
-    if (target < 0) throw new Error(`runToStep: unknown step '${toStep}'`);
-    // `completed` is the index of the last finished step (-1 / undefined =
-    // nothing run yet, so the next step to run is `plan` at index 0).
-    let next = (env.completed ?? -1) + 1;
-    for (; next <= target; next++) {
+    if (SPHERE_STEPS.indexOf(toStep) < 0) throw new Error(`runToStep: unknown step '${toStep}'`);
+    let step = nextSphereStep(env);
+    while (step) {
         // eslint-disable-next-line no-await-in-loop
-        await runStep(SPHERE_STEPS[next], env, opts);
+        await runStep(step, env, opts);
+        if (step === toStep) break;
+        step = nextSphereStep(env);
     }
     return env;
 }
 
 // --- envelope (de)serialisation ---------------------------------------
 //
-// Only three things in a live envelope aren't plain JSON: the rng (already
-// stored as { s }), each topology node's `usedSides` Set, and the grown
-// Grid. The codec converts just those; everything else (config, plan,
-// allocation, draft, stats) is plain.
+// Four things in a live envelope aren't plain JSON: the rng (already stored as
+// { s }), each topology node's `usedSides` Set, the grown Grid, and the
+// cross-batch `placed` Set (node indices on the grid). The codec converts just
+// those; everything else (config, plan, allocation, draft, stats, batchStart,
+// prevCount, dims, startCell, totalNodes) is plain.
 
 function serializeNode(nd) {
     return { ...nd, usedSides: [...(nd.usedSides ?? [])] };
@@ -320,6 +525,9 @@ export function serializeEnvelope(env) {
     if (env.grow?.grid) {
         out.grow = { ...env.grow, grid: serializeGrid(env.grow.grid) };
     }
+    if (env.placed) {
+        out.placed = env.placed instanceof Set ? [...env.placed] : env.placed;
+    }
     return out;
 }
 
@@ -337,6 +545,7 @@ export function deserializeEnvelope(obj) {
     if (obj.grow?.grid) {
         env.grow = { ...obj.grow, grid: deserializeGrid(obj.grow.grid) };
     }
+    if (obj.placed) env.placed = new Set(obj.placed);
     return env;
 }
 

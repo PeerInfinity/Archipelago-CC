@@ -3394,9 +3394,11 @@ export class ProcgenPipelineUI {
     // Editing the OUTPUT of step `stepIdx` invalidates every later step:
     // roll `completed` back to stepIdx and drop the outputs each later step
     // produced (keeping stepIdx's own — the user edited it). Field groups are
-    // keyed by the step that produces them; rng is re-derived by ②b so its
-    // staleness here is harmless. The plan editor calls _onSpherePlanEdited
-    // (= _invalidateFrom(0)); the ②a/②b/②c editors call with 1/2/3.
+    // keyed by the step that produces them. ②b's rng (regionsRng) is its own
+    // output, so it's dropped with the topology group; ②b re-derives the FIRST
+    // batch's rng from seed, so an allocation-only edit re-runs correctly. The
+    // plan editor calls _onSpherePlanEdited (= _invalidateFrom(0)); the ②a/②b/②c
+    // editors call with 1/2/3.
     _invalidateFrom(stepIdx) {
         const st = this._stepState;
         if (st && st.completed > stepIdx) {
@@ -3408,9 +3410,18 @@ export class ProcgenPipelineUI {
             if (stepIdx < 2) {
                 st.nodes = st.substrateCounts = st.quotaFallbacks = null;
                 st.topologyWarnings = [];
+                st.regionsRng = null;
             }
             if (stepIdx < 3) st.tree = null;
-            if (stepIdx < 4) { st.grow = null; st.seconds = 0; }
+            if (stepIdx < 4) {
+                // Regions re-runs from batch 0: drop the grown grid AND reset
+                // the sphere-major loop cursor (else a re-run takes the
+                // batch > 0 path expecting a carried grid that's now gone).
+                st.grow = null;
+                st.seconds = 0;
+                st.batchStart = 0;
+                st.placed = null;
+            }
             if (stepIdx < 5) st.compile = null;
             this.result = null;
             this.message = '';
@@ -3449,12 +3460,20 @@ export class ProcgenPipelineUI {
             opts: st.opts ?? null,
             allocation: st.allocation ?? null,
             rng: st.rng ?? null, // already { s } (set by the runner)
+            regionsRng: st.regionsRng ?? null, // post-②b rng for ③ re-runs
             nodes: st.nodes ?? null,
             substrateCounts: st.substrateCounts ?? null,
             quotaFallbacks: st.quotaFallbacks ?? null,
             tree: st.tree ?? null,
             grow: st.grow ?? null,
             compile: st.compile ?? null,
+            // Cross-batch (sphere-major) loop state — see sphereSteps.js.
+            placed: st.placed ?? null,
+            prevCount: st.prevCount ?? 0,
+            batchStart: st.batchStart ?? 0,
+            totalNodes: st.totalNodes ?? null,
+            dims: st.dims ?? null,
+            startCell: st.startCell ?? null,
         };
         return serializeEnvelope(env);
     }
@@ -3532,6 +3551,7 @@ export class ProcgenPipelineUI {
             opts: env.opts ?? null,
             allocation: env.allocation ?? null,
             rng: env.rng ?? null, // already { s } (deserialised verbatim)
+            regionsRng: env.regionsRng ?? null,
             nodes: env.nodes ?? null,
             substrateCounts: env.substrateCounts ?? null,
             quotaFallbacks: env.quotaFallbacks ?? null,
@@ -3539,6 +3559,13 @@ export class ProcgenPipelineUI {
             tree: env.tree ?? null,
             grow: env.grow ?? null,
             compile: env.compile ?? null,
+            // Cross-batch loop state (deserialised verbatim; placed is a Set).
+            placed: env.placed ?? null,
+            prevCount: env.prevCount ?? 0,
+            batchStart: env.batchStart ?? 0,
+            totalNodes: env.totalNodes ?? null,
+            dims: env.dims ?? null,
+            startCell: env.startCell ?? null,
             seconds: 0,
         };
         // A complete envelope lights up the post-gen export buttons + views.
