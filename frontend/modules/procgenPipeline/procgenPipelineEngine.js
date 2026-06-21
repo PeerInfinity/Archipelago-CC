@@ -3724,6 +3724,184 @@ export function buildRegionContract(substrateId, node, tree, grid, regionSize, r
  * existing compile/emit tail consumes it unchanged; `tree` rides along
  * for tests and debugging.
  */
+
+/**
+ * Placement pre-pass — assign each node in `nodes[fromIndex..]` its final
+ * cell + attachment side + isTeleporter flag BEFORE any region is built. The
+ * parent's exit side is committed when the PARENT is built (from its
+ * children's node.side), and the child's entrance is mirrored across that same
+ * side — so the side must be settled before the parent's build iteration.
+ * buildSphereTree picks each child's side blind to occupancy (no cells exist
+ * yet); here we have the grid, so we PREFER a free side whose neighbor cell is
+ * in-bounds and unoccupied, and fall back to a remote (teleporter) cell only
+ * when EVERY open side is blocked (a region can be fully surrounded by
+ * earlier-placed branches).
+ *
+ * The occupancy + reserved-side state of the already-placed prefix
+ * `nodes[0..fromIndex)` is rebuilt from their committed cells/sides, so the
+ * pass runs INCREMENTALLY per batch. With fromIndex=0 over an empty prefix it
+ * reproduces the original single-pass loop exactly (same rng draw order) —
+ * this is the seam batched growth reuses without drift.
+ */
+function placeSphereTreeCells(grid, nodes, rng, {
+    startCell, teleporterMinGap, dims, fromIndex = 0,
+}) {
+    const occupiedKeys = new Set();
+    const reservedSides = new Map(); // parent index -> Set of sides spoken for
+    for (let i = 0; i < fromIndex; i++) {
+        const nd = nodes[i];
+        if (nd.cell) occupiedKeys.add(cellKey(nd.cell));
+        if (nd.parent != null && nd.side != null) {
+            if (!reservedSides.has(nd.parent)) reservedSides.set(nd.parent, new Set());
+            reservedSides.get(nd.parent).add(nd.side);
+        }
+    }
+    for (let i = fromIndex; i < nodes.length; i++) {
+        const node = nodes[i];
+        const parentNode = node.parent != null ? nodes[node.parent] : null;
+        if (!parentNode) {
+            node.cell = startCell;
+            node.side = null;
+            node.isTeleporter = false;
+            occupiedKeys.add(cellKey(startCell));
+            continue;
+        }
+        if (!reservedSides.has(parentNode.index)) {
+            reservedSides.set(parentNode.index, new Set());
+        }
+        const hostReserved = reservedSides.get(parentNode.index);
+        // The host's entrance side (toward its OWN parent) hosts no
+        // child — that's where the host's back portal / parent sit.
+        const entranceOnHost = parentNode.side != null
+            ? OPPOSITE_SIDE[parentNode.side] : null;
+        const freeSides = SIDES.filter(
+            (s) => s !== entranceOnHost && !hostReserved.has(s));
+        if (freeSides.length === 0) {
+            // buildSphereTree caps children per host at the side budget
+            // (canHost: usedSides.size < 4), so this is unreachable; guard
+            // loudly rather than assign an undefined side.
+            throw new Error(`growSpheres: host '${parentNode.index}' has no free `
+                + 'side for a child — buildSphereTree side budget violated');
+        }
+        const openSides = freeSides.filter((s) => {
+            const neighbor = grid.neighborCell(parentNode.cell, s);
+            return neighbor && !occupiedKeys.has(cellKey(neighbor));
+        });
+        let side;
+        let cell;
+        let isTeleporter;
+        if (openSides.length > 0) {
+            side = openSides[Math.floor(rng.next() * openSides.length)];
+            cell = grid.neighborCell(parentNode.cell, side);
+            isTeleporter = false;
+        } else {
+            // Every open adjacent side is occupied/out-of-bounds: go
+            // remote. Still consume a free side so the parent has an
+            // exit to host the teleporter.
+            side = freeSides[Math.floor(rng.next() * freeSides.length)];
+            cell = findDisconnectedCellFromOccupied(
+                occupiedKeys, dims, rng, teleporterMinGap);
+            if (!cell) {
+                throw new Error('growSpheres: no free cell for region — '
+                    + 'pass larger growthParams.gridDims');
+            }
+            isTeleporter = true;
+        }
+        hostReserved.add(side);
+        node.cell = cell;
+        node.side = side;
+        node.isTeleporter = isTeleporter;
+        occupiedKeys.add(cellKey(cell));
+    }
+}
+
+/**
+ * Realiser loop — build + place the region for each node in
+ * `nodes[fromIndex..]`, yielding region/regionDone progress events. The
+ * per-node realiser specs (exit plans, entrance, locations) come from
+ * buildNodeRealiserSpecs (the same factoring reRollSphereRegion uses), so a
+ * node range can be realised onto an already-grown grid. fromIndex=0 over the
+ * full node set reproduces growSpheresGen's original inline loop exactly.
+ * `total` defaults to the current node count (the batched driver passes the
+ * known FINAL total so progress reads sensibly across batches).
+ */
+function* realiseSphereNodes(grid, nodes, tree, rng, {
+    fromIndex = 0, total = nodes.length,
+    regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    assumeBidirectional, childrenByParent, stats,
+}) {
+    for (let i = fromIndex; i < nodes.length; i++) {
+        const node = nodes[i];
+        // Cell + side were resolved by the placement pre-pass
+        // (occupancy-aware adjacency, remote only when fully surrounded).
+        const isTeleporter = node.isTeleporter;
+        const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
+        const {
+            region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
+        } = specs;
+        node.region_id = region_id;
+
+        yield {
+            type: 'region',
+            index: node.index,
+            total,
+            region_id,
+            substrate: node.substrate,
+            sphere: node.wave,
+            placements: locations.length,
+        };
+
+        const adapter = getAdapter(node.substrate);
+        let region;
+        if (typeof adapter.generateRegionCore === 'function') {
+            region = buildSphereProceduralRegion({
+                substrate: node.substrate,
+                region_id,
+                size: regionSize,
+                entrances,
+                exitPlans,
+                locations,
+                itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+            });
+        } else if (typeof adapter.generateZoneForSpecs === 'function'
+                || typeof adapter.generateZoneForSpecsGen === 'function') {
+            region = yield* buildSphereZoneRegion({
+                substrate: node.substrate,
+                region_id,
+                regionSize,
+                exitPlans,
+                locations,
+                entranceSide,
+                entryGate: node.gate,
+                entryGateCounts: node.gateCounts,
+                regionParams,
+                seed: (rng.next() * 0x7fffffff) | 0,
+                adapter,
+            });
+        } else {
+            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs');
+        }
+
+        grid.placeRegion(cell, region);
+        if (isTeleporter) {
+            grid.setTeleporter(parentNode.cell, node.side, cell);
+            stats.teleportersPlaced += 1;
+        }
+
+        // Back-exit to the parent on the entrance tile — buildRulesJson's
+        // post-pass copies the forward gate's rule onto it.
+        applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
+        stats.regionsBuilt += 1;
+        yield {
+            type: 'regionDone',
+            index: node.index,
+            total,
+            region_id,
+        };
+    }
+}
+
 /**
  * Generator core of growSpheres: yields PROGRESS EVENTS between the
  * expensive steps and returns the result. Yields never touch the rng,
@@ -3832,154 +4010,17 @@ export function* growSpheresGen(config) {
         childrenByParent.get(node.parent).push(node);
     }
 
-    // --- Placement pre-pass ---
+    // --- Placement pre-pass + realiser ---
     //
-    // Assign every node its final cell + attachment side BEFORE any
-    // region is built. The parent's exit side is committed when the
-    // PARENT is built (from its children's node.side), and the child's
-    // entrance is mirrored across that same side — so the side and the
-    // child's actual cell must agree, which means the side has to be
-    // settled before the parent's build iteration. buildSphereTree
-    // picks each child's side blind to occupancy (no cells exist yet);
-    // here we have the grid, so we PREFER a free side whose neighbor
-    // cell is in-bounds and unoccupied, and fall back to a remote
-    // (teleporter) cell only when EVERY open side is blocked — a region
-    // can be fully surrounded by earlier-placed branches. This subsumes
-    // the old per-region "try node.side, else go remote" decision: it
-    // no longer commits to one occupancy-blind side and teleports away
-    // when a free adjacent slot was still available.
-    const occupiedKeys = new Set();
-    const reservedSides = new Map(); // node.index -> Set of sides spoken for
-    for (const node of tree.nodes) {
-        const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
-        if (!parentNode) {
-            node.cell = startCell;
-            node.side = null;
-            node.isTeleporter = false;
-            occupiedKeys.add(cellKey(startCell));
-            continue;
-        }
-        if (!reservedSides.has(parentNode.index)) {
-            reservedSides.set(parentNode.index, new Set());
-        }
-        const hostReserved = reservedSides.get(parentNode.index);
-        // The host's entrance side (toward its OWN parent) hosts no
-        // child — that's where the host's back portal / parent sit.
-        const entranceOnHost = parentNode.side != null
-            ? OPPOSITE_SIDE[parentNode.side] : null;
-        const freeSides = SIDES.filter(
-            (s) => s !== entranceOnHost && !hostReserved.has(s));
-        if (freeSides.length === 0) {
-            // buildSphereTree caps children per host at the side budget
-            // (canHost: usedSides.size < 4), so this is unreachable; guard
-            // loudly rather than assign an undefined side.
-            throw new Error(`growSpheres: host '${parentNode.index}' has no free `
-                + 'side for a child — buildSphereTree side budget violated');
-        }
-        const openSides = freeSides.filter((s) => {
-            const neighbor = grid.neighborCell(parentNode.cell, s);
-            return neighbor && !occupiedKeys.has(cellKey(neighbor));
-        });
-        let side;
-        let cell;
-        let isTeleporter;
-        if (openSides.length > 0) {
-            side = openSides[Math.floor(rng.next() * openSides.length)];
-            cell = grid.neighborCell(parentNode.cell, side);
-            isTeleporter = false;
-        } else {
-            // Every open adjacent side is occupied/out-of-bounds: go
-            // remote. Still consume a free side so the parent has an
-            // exit to host the teleporter.
-            side = freeSides[Math.floor(rng.next() * freeSides.length)];
-            cell = findDisconnectedCellFromOccupied(
-                occupiedKeys, dims, rng, teleporterMinGap);
-            if (!cell) {
-                throw new Error('growSpheres: no free cell for region — '
-                    + 'pass larger growthParams.gridDims');
-            }
-            isTeleporter = true;
-        }
-        hostReserved.add(side);
-        node.cell = cell;
-        node.side = side;
-        node.isTeleporter = isTeleporter;
-        occupiedKeys.add(cellKey(cell));
-    }
-
-    for (const node of tree.nodes) {
-        // Cell + side were resolved by the placement pre-pass above
-        // (occupancy-aware adjacency, remote only when fully surrounded).
-        // The per-node realiser specs (exit plans, entrance, locations) are
-        // factored out so a single region can be re-realised (reRollSphereRegion).
-        const isTeleporter = node.isTeleporter;
-        const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
-        const {
-            region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
-        } = specs;
-        node.region_id = region_id;
-
-        yield {
-            type: 'region',
-            index: node.index,
-            total: tree.nodes.length,
-            region_id,
-            substrate: node.substrate,
-            sphere: node.wave,
-            placements: locations.length,
-        };
-
-        const adapter = getAdapter(node.substrate);
-        let region;
-        if (typeof adapter.generateRegionCore === 'function') {
-            region = buildSphereProceduralRegion({
-                substrate: node.substrate,
-                region_id,
-                size: regionSize,
-                entrances,
-                exitPlans,
-                locations,
-                itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
-            });
-        } else if (typeof adapter.generateZoneForSpecs === 'function'
-                || typeof adapter.generateZoneForSpecsGen === 'function') {
-            region = yield* buildSphereZoneRegion({
-                substrate: node.substrate,
-                region_id,
-                regionSize,
-                exitPlans,
-                locations,
-                entranceSide,
-                entryGate: node.gate,
-                entryGateCounts: node.gateCounts,
-                regionParams,
-                seed: (rng.next() * 0x7fffffff) | 0,
-                adapter,
-            });
-        } else {
-            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
-                + 'generateRegionCore nor generateZoneForSpecs');
-        }
-
-        grid.placeRegion(cell, region);
-        if (isTeleporter) {
-            grid.setTeleporter(parentNode.cell, node.side, cell);
-            stats.teleportersPlaced += 1;
-        }
-
-        // Back-exit to the parent on the entrance tile — same pattern as
-        // growMaze; buildRulesJson's post-pass copies the forward gate's rule
-        // onto it. (placeRegion stored a shallow copy that shares the nested
-        // exits/rules, so mutating `region` here still reaches the stored one.)
-        applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
-        stats.regionsBuilt += 1;
-        yield {
-            type: 'regionDone',
-            index: node.index,
-            total: tree.nodes.length,
-            region_id,
-        };
-    }
+    // Both phases are extracted (placeSphereTreeCells / realiseSphereNodes)
+    // so batched growth can reuse the SAME code over a node range; here the
+    // full node set is placed then realised in one pass — byte-identical to
+    // the prior inline loops.
+    placeSphereTreeCells(grid, tree.nodes, rng, { startCell, teleporterMinGap, dims });
+    yield* realiseSphereNodes(grid, tree.nodes, tree, rng, {
+        regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+        assumeBidirectional, childrenByParent, stats,
+    });
 
     // Every exit was allocated to a specific child (or teleporter), so
     // stitching is purely confirmatory and nothing needs the
