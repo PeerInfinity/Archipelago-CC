@@ -11,6 +11,7 @@ import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import {
     SPHERE_STEPS, runStep, runToStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
+    detectCompleted, resumeEnvelope,
 } from './sphereSteps.js';
 
 function makeConfig(overrides = {}) {
@@ -137,5 +138,46 @@ describe('sphereSteps runner', () => {
         await runToStep(env, 'compile');
         expect(env.completed).toBe(5);
         expect(env.compile.rulesJson).toEqual(monolithic(config));
+    });
+
+    it('detectCompleted derives the resume point from data presence', async () => {
+        const config = makeConfig();
+        const fresh = newEnvelope(config);
+        expect(detectCompleted(fresh)).toBe(-1); // nothing run → resume at plan
+
+        // Run one step at a time, round-tripping through JSON, and confirm
+        // detection tracks the highest contiguous completed step.
+        let env = newEnvelope(config);
+        for (let i = 0; i < SPHERE_STEPS.length; i++) {
+            // eslint-disable-next-line no-await-in-loop
+            await runStep(SPHERE_STEPS[i], env);
+            env = deserializeEnvelope(JSON.parse(JSON.stringify(serializeEnvelope(env))));
+            expect(detectCompleted(env)).toBe(i);
+        }
+    });
+
+    it('a gap stops detection (stale downstream data is ignored)', async () => {
+        const config = makeConfig();
+        const env = await runToStep(newEnvelope(config), 'compile');
+        // Hand-edit: drop the topology output but leave items/regions/compile.
+        // The first MISSING output (topology) is the resume point; later data
+        // is stale.
+        const broken = deserializeEnvelope(JSON.parse(JSON.stringify(serializeEnvelope(env))));
+        broken.nodes = null;
+        broken.substrateCounts = null;
+        expect(detectCompleted(broken)).toBe(1); // allocate done, topology missing
+    });
+
+    it('resumeEnvelope picks up from the first missing step', async () => {
+        const config = makeConfig();
+        // Produce an envelope completed only through `items`, simulating a
+        // partial CLI run / hand-edited file (no explicit completed needed).
+        const partial = await runToStep(newEnvelope(config), 'items');
+        const round = deserializeEnvelope(JSON.parse(JSON.stringify(serializeEnvelope(partial))));
+        delete round.completed; // resume must not depend on the field
+        await resumeEnvelope(round);
+        expect(round.completed).toBe(5);
+        expect(round.compile.oracleErrors).toEqual([]);
+        expect(round.compile.rulesJson).toEqual(monolithic(config));
     });
 });

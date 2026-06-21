@@ -290,3 +290,43 @@ export function deserializeEnvelope(obj) {
 export function newEnvelope(config) {
     return { config, completed: -1 };
 }
+
+// Whether each step's OUTPUT is present in an envelope. Used to derive the
+// resume point from data presence rather than a trusted `completed` field —
+// so a hand-edited / partial envelope resumes from the first step whose
+// output is missing. Mental model: presence = keep, absence = recompute
+// (delete everything from a step's output onward to force a re-run there).
+const STEP_OUTPUT_PRESENT = {
+    plan: (e) => !!e.draft,
+    allocate: (e) => !!(e.plan && e.allocation && e.opts && e.rng),
+    topology: (e) => !!(e.nodes && e.substrateCounts),
+    items: (e) => !!e.tree,
+    regions: (e) => !!e.grow?.grid,
+    compile: (e) => !!e.compile?.rulesJson,
+};
+
+/**
+ * Derive the `completed` index (last CONTIGUOUSLY-finished step) from which
+ * step outputs are present in `env`. Returns -1 when nothing is present (so
+ * the resume point is detectCompleted(env) + 1 = the first step to run).
+ * A gap stops the walk: data after the first missing step is treated as
+ * stale and will be overwritten when the pipeline runs forward.
+ */
+export function detectCompleted(env) {
+    let n = 0;
+    for (const step of SPHERE_STEPS) {
+        if (STEP_OUTPUT_PRESENT[step](env)) n += 1;
+        else break;
+    }
+    return n - 1;
+}
+
+/**
+ * Resume an envelope to completion (or `toStep`), starting from the first
+ * step whose output is missing — no manual step selection. Normalises
+ * `env.completed` from data presence first.
+ */
+export async function resumeEnvelope(env, toStep = 'compile', opts = {}) {
+    env.completed = detectCompleted(env);
+    return runToStep(env, toStep, opts);
+}
