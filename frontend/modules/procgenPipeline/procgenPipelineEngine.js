@@ -268,6 +268,104 @@ export class Grid {
     }
 }
 
+// --- Grid transport codec (stepped-pipeline CLI) -----------------------
+//
+// A live Grid nests non-JSON-safe values inside each region's
+// playable_payload — substrate internals like the maze's `tiles`
+// (Int8Array) and `exits`/`obstacles`/`items` (Map). To carry a grown
+// grid across a process boundary (pipeline step ③ → step ④) the codec
+// LOSSLESSLY tags those types so deserializeGrid reconstructs the EXACT
+// in-memory object; buildRulesJson(deserializeGrid(serializeGrid(g))) is
+// then byte-identical to buildRulesJson(g) because the structure is
+// reproduced verbatim — no substrate-semantic round-trip is involved.
+//
+// This is transport, NOT a hand-editing surface (the tagged form is
+// deliberately structural). Edit a grown region via the in-app region
+// editor / reRollSphereRegion, or edit the pipeline at steps ①–②c.
+const _TYPED_ARRAYS = {
+    Int8Array, Uint8Array, Uint8ClampedArray, Int16Array, Uint16Array,
+    Int32Array, Uint32Array, Float32Array, Float64Array,
+};
+
+function _encodeGridValue(v) {
+    if (v === null || typeof v !== 'object') return v;
+    if (v instanceof Map) {
+        return { __k: 'Map', __v: [...v.entries()].map(
+            ([k, val]) => [_encodeGridValue(k), _encodeGridValue(val)]) };
+    }
+    if (v instanceof Set) {
+        return { __k: 'Set', __v: [...v].map(_encodeGridValue) };
+    }
+    if (ArrayBuffer.isView(v) && !(v instanceof DataView)) {
+        return { __k: v.constructor.name, __v: Array.from(v) };
+    }
+    if (Array.isArray(v)) return v.map(_encodeGridValue);
+    const out = {};
+    for (const [k, val] of Object.entries(v)) out[k] = _encodeGridValue(val);
+    return out;
+}
+
+function _isTagged(v) {
+    return v !== null && typeof v === 'object' && !Array.isArray(v)
+        && typeof v.__k === 'string' && '__v' in v && Object.keys(v).length === 2;
+}
+
+function _decodeGridValue(v) {
+    if (v === null || typeof v !== 'object') return v;
+    if (Array.isArray(v)) return v.map(_decodeGridValue);
+    if (_isTagged(v)) {
+        if (v.__k === 'Map') {
+            return new Map(v.__v.map(
+                ([k, val]) => [_decodeGridValue(k), _decodeGridValue(val)]));
+        }
+        if (v.__k === 'Set') return new Set(v.__v.map(_decodeGridValue));
+        const TA = _TYPED_ARRAYS[v.__k];
+        if (TA) return TA.from(v.__v);
+        throw new Error(`deserializeGrid: unknown tagged type '${v.__k}'`);
+    }
+    const out = {};
+    for (const [k, val] of Object.entries(v)) out[k] = _decodeGridValue(val);
+    return out;
+}
+
+/**
+ * Serialize a live Grid to a plain JSON-safe object (see codec note above).
+ * Region payloads keep their structure verbatim via tagged Map/typed-array
+ * encoding; teleporter values are already plain cellKey strings.
+ */
+export function serializeGrid(grid) {
+    if (!grid || !(grid instanceof Grid)) {
+        throw new Error('serializeGrid: expected a Grid instance');
+    }
+    return {
+        width: grid.width,
+        height: grid.height,
+        teleporters: [...grid.teleporters.entries()],
+        cells: [...grid.cells.entries()].map(
+            ([key, region]) => [key, _encodeGridValue(region)]),
+    };
+}
+
+/**
+ * Reconstruct a live Grid from serializeGrid's output. Sets cells directly
+ * (not via placeRegion) so the stored region objects — including their
+ * `cell` coordinate — are reproduced exactly, with no re-validation or
+ * re-wrapping that would perturb byte-identity.
+ */
+export function deserializeGrid(obj) {
+    if (!obj || typeof obj !== 'object') {
+        throw new Error('deserializeGrid: expected an object');
+    }
+    const grid = new Grid({ width: obj.width, height: obj.height });
+    for (const [key, region] of obj.cells ?? []) {
+        grid.cells.set(key, _decodeGridValue(region));
+    }
+    for (const [key, val] of obj.teleporters ?? []) {
+        grid.teleporters.set(key, val);
+    }
+    return grid;
+}
+
 /**
  * Find an unbuilt grid cell at least `minGap` Manhattan-distance away
  * from every built region. Used by the teleporter fallback when an
