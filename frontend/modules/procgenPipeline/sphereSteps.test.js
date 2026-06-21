@@ -104,6 +104,18 @@ describe('sphereSteps runner', () => {
         });
     });
 
+    it('batched run (spheresPerBatch < total) runs end-to-end and the oracle holds', async () => {
+        // sphereCount 4, batch 1 → the regions step takes the batched,
+        // sphere-major driver; the compiled world must still realise the plan.
+        const config = makeConfig({ sphereCount: 4, spheresPerBatch: 1 });
+        const env = await runToStep(newEnvelope(config));
+        expect(env.completed).toBe(5);
+        expect(env.compile.oracleErrors).toEqual([]);
+        // The batched tree is surfaced on the envelope (final cells/region_ids).
+        expect(env.grow.stats.stopReason).toBe('plan_complete');
+        expect(env.grow.stats.regionsBuilt).toBeGreaterThanOrEqual(4);
+    });
+
     it('carrying spheresPerBatch on the config is byte-identical (default = all)', async () => {
         // Phase 1: the field is present on env.config but inert — output must
         // match the monolithic reference whether it's absent, null, or = all.

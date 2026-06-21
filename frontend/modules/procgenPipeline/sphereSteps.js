@@ -24,6 +24,7 @@ import {
     wireSphereTree,
     placeSphereTreeItems,
     growSpheresAsync,
+    growSpheresBatchedAsync,
     buildRulesJson,
     serializeGrid,
     deserializeGrid,
@@ -83,6 +84,9 @@ export function growConfigFrom(config, plan) {
             revisitRatio: config.revisitRatio,
             ...(config.substrateQuotas ? { substrateQuotas: config.substrateQuotas } : {}),
             ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
+            // Carried for the batched driver (growSpheresBatchedAsync); the
+            // step-major path (growSpheresGen) ignores it. null/all → no-op.
+            ...(config.spheresPerBatch != null ? { spheresPerBatch: config.spheresPerBatch } : {}),
         },
     };
 }
@@ -180,6 +184,30 @@ function stepItems(env) {
 
 async function stepRegions(env, { onProgress = null } = {}) {
     const growConfig = growConfigFrom(env.config, env.plan);
+    const total = env.plan.spheres.length;
+    const batch = resolveSpheresPerBatch(env.config.spheresPerBatch, total);
+    if (batch < total) {
+        // Batched, sphere-major growth: the driver interleaves topology +
+        // realisation a batch of spheres at a time, so it rebuilds the tree
+        // itself (from the plan) on a fresh seed-derived rng — the prebuilt
+        // tree from ②a–②c does NOT apply here. Diverges from the step-major
+        // path by design; ②a–②c output stays informational in this mode.
+        const { grid, stats, startCell, tree } = await growSpheresBatchedAsync(
+            growConfig, onProgress);
+        env.grow = { grid, stats, startCell };
+        // Keep the envelope self-consistent: surface the batched tree as the
+        // realised topology (its nodes carry the final cells / region_ids).
+        env.nodes = tree.nodes;
+        env.tree = {
+            nodes: tree.nodes,
+            substrateCounts: tree.substrateCounts,
+            quotaFallbacks: tree.quotaFallbacks,
+        };
+        env.completed = 4;
+        return env;
+    }
+    // batch = all (default): the step-major path, byte-identical. Reuse the
+    // prebuilt tree + post-②b rng so the random stream stays continuous.
     const rng = createRng(0);
     rng.setState(env.rng.s);
     const { grid, stats, startCell } = await growSpheresAsync({
