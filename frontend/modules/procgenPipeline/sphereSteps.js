@@ -42,8 +42,10 @@ export const SPHERE_STEPS = Object.freeze([
 // Rebuild the growSpheres-shaped config from the (serialisable) resolved
 // config block + a sphere plan. Mirrors the panel's _stepAllocate growConfig
 // assembly; the caller (panel / CLI) is responsible for having pre-assembled
-// config.regionParams (substrate hooks etc.) into a plain object.
-function growConfigFrom(config, plan) {
+// config.regionParams (substrate hooks etc.) into a plain object. Exported so
+// the panel can populate the `growConfig` its ③-editing features read off one
+// shared assembly (instead of duplicating it).
+export function growConfigFrom(config, plan) {
     return {
         regionSize: config.regionSize,
         itemLib: config.itemLib,

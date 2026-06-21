@@ -9,10 +9,6 @@ import eventBus from '../../app/core/eventBus.js';
 import {
     growMaze,
     arrangeShuffledSpiral,
-    growSpheresAsync,
-    buildSphereAllocation,
-    wireSphereTree,
-    placeSphereTreeItems,
     rebuildSphereTopology,
     buildRulesJson,
     stringifyRulesJson,
@@ -27,13 +23,12 @@ import {
     swapSphereExitSides,
     Grid,
 } from './procgenPipelineEngine.js';
+// The sphere-growth pipeline steps + envelope serde live in the shared
+// runner now; the panel delegates each step to it (no drift with the CLI).
 import {
-    planSpheres, computeItemSpheres, compareSpheresToPlan,
-} from './spherePlanner.js';
-import {
-    SPHERE_STEPS, serializeEnvelope, deserializeEnvelope, detectCompleted,
+    SPHERE_STEPS, runStep, growConfigFrom,
+    serializeEnvelope, deserializeEnvelope, detectCompleted,
 } from './sphereSteps.js';
-import { createRng } from '../shared/rng.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
@@ -3226,22 +3221,12 @@ export class ProcgenPipelineUI {
         };
     }
 
-    // The edited draft (sphere 0 = starting items, spheres 1..N = the
-    // sphere plan) → the explicit spherePlan + startingItems the engine
-    // consumes. The draft IS the plan now — no re-run of planSpheres.
-    _planFromDraft(draft, seed) {
-        return {
-            startingItems: [...draft.spheres[0]],
-            plan: {
-                seed,
-                spheres: draft.spheres.slice(1)
-                    .map((items, i) => ({ sphere: i + 1, items: [...items] })),
-            },
-        };
-    }
-
-    // Step ① — pre-plan contributions + planSpheres → editable draft.
-    _stepPlan() {
+    // Step ① — pre-plan contributions, then delegate the planSpheres + draft
+    // build to the shared runner (runStep). The cfg / prep collection stays
+    // here (substrate hooks are bound to this panel); everything from the
+    // resolved `config` onward is the runner's, so the panel and the headless
+    // CLI share ONE implementation of the pipeline wiring.
+    async _stepPlan() {
         const cfg = this._buildSphereConfig();
         const itemPool = { ...cfg.itemPool };
         // Each active substrate may grant starting items, reserve
@@ -3252,107 +3237,78 @@ export class ProcgenPipelineUI {
             activeIds: cfg.activeIds, itemPool, quotas: cfg.quotas,
             startSubstrate: cfg.startSub, seed: cfg.seed,
         });
-        const plan = planSpheres({
-            itemPool,
-            sphereCount: cfg.sphereCount,
-            exclusiveSpheres: prep.exclusiveSpheres,
-            ...(cfg.victoryItemId && (itemPool[cfg.victoryItemId] ?? 0) > 0
-                ? { victoryItem: cfg.victoryItemId } : {}),
-            seed: cfg.seed,
-        });
-        // Editable draft: sphere 0 = starting items, spheres 1..N = plan.
-        const draft = {
-            spheres: [
-                [...prep.startingItems],
-                ...plan.spheres.map((s) => [...s.items]),
-            ],
-        };
         this._stepState = {
-            completed: 0, cfg, prep, draft, poolSize: Object.keys(itemPool).length,
-            // ②a Allocate outputs
-            plan: null, startingItems: null, growConfig: null, opts: null,
-            allocation: null, rng: null,
-            // ②b Topology outputs
+            completed: -1, cfg, prep,
+            // The resolved, flat config the runner consumes (built from cfg +
+            // prep; itemPool is POST-prep). regionParams is assembled now so
+            // it's stable across edits.
+            config: this._configFromCfgPrep(cfg, prep, itemPool),
+            poolSize: Object.keys(itemPool).length,
+            // Pipeline outputs (filled by the runner step-by-step). growConfig
+            // is panel-only — derived from config+plan for the ③-editing
+            // features (re-roll / region editor / composite map).
+            draft: null, plan: null, startingItems: null, growConfig: null,
+            opts: null, allocation: null, rng: null,
             nodes: null, substrateCounts: null, quotaFallbacks: null,
             topologyWarnings: [],
-            // ②c Items output (the full tree fed to ③)
-            tree: null,
-            // ③/④ outputs
-            grow: null, compile: null, seconds: 0,
+            tree: null, grow: null, compile: null, seconds: 0,
         };
         this.result = null;
         this.message = '';
         this.warning = '';
+        await runStep('plan', this._stepState); // builds draft, completed = 0
     }
 
-    // Step ②a — Allocate: assemble the grow config from the (edited) plan
-    // and run the allocation phase (region count per wave + filler draws).
-    _stepAllocate() {
-        const st = this._stepState;
-        const cfg = st.cfg;
-        const { plan, startingItems } = this._planFromDraft(st.draft, cfg.seed);
-        const growConfig = {
+    // cfg + prep → the runner's flat resolved config. `itemPool` is the
+    // POST-prep pool the plan is built from (prep may have removed items).
+    _configFromCfgPrep(cfg, prep, itemPool) {
+        return {
+            seed: cfg.seed,
             regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
             itemLib: cfg.itemLib,
-            seed: cfg.seed,
+            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', prep.regionParams),
             hazardOpts: cfg.hazardOpts,
-            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', st.prep.regionParams),
-            growthParams: {
-                spherePlan: plan,
-                maxItemsPerRegion: cfg.maxItemsPerRegion,
-                fillerCount: cfg.fillerCount,
-                revisitRatio: cfg.revisitPercent / 100,
-                ...(cfg.quotas ? { substrateQuotas: cfg.quotas } : {}),
-                ...(cfg.startSub ? { startSubstrate: cfg.startSub } : {}),
-            },
+            maxItemsPerRegion: cfg.maxItemsPerRegion,
+            fillerCount: cfg.fillerCount,
+            revisitRatio: cfg.revisitPercent / 100,
+            substrateQuotas: cfg.quotas ?? null,
+            startSubstrate: cfg.startSub ?? null,
+            sphereCount: cfg.sphereCount,
+            victoryItem: cfg.victoryItemId ?? null,
+            exclusiveSpheres: prep.exclusiveSpheres ?? {},
+            startingItems: prep.startingItems ?? [],
+            lockedCanonicalItems: prep.lockedCanonicalItems ?? [],
+            enableLoopMode: cfg.enableLoopMode,
+            regionXpEffect: cfg.regionXpEffect ?? 'cost',
+            itemPool,
         };
-        const { opts, allocation, rng } = buildSphereAllocation(growConfig);
-        st.plan = plan;
-        st.startingItems = startingItems;
-        st.growConfig = growConfig;
-        st.opts = opts;
-        st.allocation = allocation;
-        st.rng = rng;
-        st.completed = 1;
     }
 
-    // Step ②b — Topology: wire the per-region tree (substrate + host/gate)
-    // from the (possibly edited) allocation. The rng is re-derived from seed
-    // at the post-②a position (buildSphereAllocation replays allocate's fixed
-    // filler draws), so editing the allocation and re-running ②b is correct
-    // and the unedited run stays byte-identical. nodes carry no items yet.
-    _stepTopology() {
+    // Step ②a — Allocate (delegated). Also populates the panel-only
+    // growConfig the ③-editing features read, off the same shared assembly.
+    async _stepAllocate() {
         const st = this._stepState;
-        const { rng } = buildSphereAllocation(st.growConfig);
-        const wired = wireSphereTree(st.plan, st.allocation, st.opts, rng);
-        st.nodes = wired.nodes;
-        st.substrateCounts = wired.substrateCounts;
-        st.quotaFallbacks = wired.quotaFallbacks;
-        st.rng = wired.rng; // threaded into ③ (item placement consumes none)
+        await runStep('allocate', st);
+        st.growConfig = growConfigFrom(st.config, st.plan);
+    }
+
+    // Step ②b — Topology (delegated).
+    async _stepTopology() {
+        const st = this._stepState;
+        await runStep('topology', st);
         // Unedited wireSphereTree output is coherent by construction; only
-        // ②b edits can introduce warnings (see _applyTopologyEdit).
+        // ②b edits introduce warnings (see _applyTopologyEdit).
         st.topologyWarnings = [];
-        st.completed = 2;
     }
 
-    // Step ②c — Item placement: round-robin each sphere's items into its
-    // hosting regions, yielding the full tree fed to ③. Clears items first so
-    // re-running after a topology edit is idempotent (placeSphereTreeItems
-    // appends, assuming empty — matching the all-in-one path).
-    _stepItems() {
-        const st = this._stepState;
-        for (const nd of st.nodes) nd.items = [];
-        placeSphereTreeItems(st.plan, st.nodes);
-        st.tree = {
-            nodes: st.nodes,
-            substrateCounts: st.substrateCounts,
-            quotaFallbacks: st.quotaFallbacks,
-        };
-        st.completed = 3;
+    // Step ②c — Item placement (delegated).
+    async _stepItems() {
+        await runStep('items', this._stepState);
     }
 
-    // Step ③ — grow the regions from the pre-built tree (+ post-②b rng, so
-    // the random stream stays continuous — byte-identical to all-in-one).
+    // Step ③ — Build regions (delegated). The panel owns the progress UI +
+    // elapsed timing; the runner owns the grow (it clones the post-②b rng so
+    // st.rng stays at the post-topology position — see sphereSteps.js).
     async _stepRegions() {
         const st = this._stepState;
         this._progressState = {
@@ -3361,55 +3317,20 @@ export class ProcgenPipelineUI {
             timings: [], lastEvent: null, lastAt: 0,
         };
         this._updateProgressEl();
-        // Grow off a CLONE of the post-②b rng (same state → byte-identical
-        // geometry) so st.rng stays at the post-topology position. growSpheres
-        // mutates the rng it's given; keeping st.rng unadvanced lets an
-        // exported envelope re-run ③ from the correct stream (envelope resume).
-        const growRng = createRng(0);
-        growRng.setState(st.rng.getState());
-        const { grid, stats, startCell } = await growSpheresAsync({
-            ...st.growConfig,
-            growthParams: { ...st.growConfig.growthParams, prebuiltTree: st.tree, rng: growRng },
-        }, (ev) => this._onGenerationProgress(ev));
+        await runStep('regions', st, { onProgress: (ev) => this._onGenerationProgress(ev) });
         if (this._progressState) {
             st.seconds = (performance.now() - this._progressState.startedAt) / 1000;
         }
-        st.grow = { grid, stats, startCell };
-        st.completed = 4;
     }
 
-    // Step ④ — compile rules.json (+ embedded sphere log) and run the
-    // oracle (the emitted world must compute back to the edited plan).
-    _stepCompile() {
+    // Step ④ — Compile (delegated). The panel owns the result message /
+    // warning / this.result it shows; the runner owns buildRulesJson + oracle.
+    async _stepCompile() {
         const st = this._stepState;
         const cfg = st.cfg;
-        const { grid, stats, startCell } = st.grow;
-        const startingItems = st.startingItems;
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed: cfg.seed,
-            itemLib: cfg.itemLib,
-            startingItems,
-            lockedCanonicalItems: st.prep.lockedCanonicalItems,
-            // A starting item is placed at no location, so the compiled
-            // pool doesn't carry it — backfill its definition (ids 999↓
-            // stay clear of the compiled pool's upward numbering).
-            ...(startingItems.length > 0 ? {
-                sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
-                    name, id: 999 - i, classification: 'progression', groups: ['Everything'],
-                }])),
-            } : {}),
-            enableLoopMode: cfg.enableLoopMode,
-            regionXpEffect: cfg.regionXpEffect,
-            completionConditionItem: cfg.victoryItemId,
-            procgenMetadata: {
-                driver: 'sphere-growth',
-                stop_reason: stats.stopReason,
-                sphere_plan: st.plan,
-            },
-        });
-        const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), st.plan);
-        st.compile = { rulesJson, oracleErrors };
-        st.completed = 5;
+        await runStep('compile', st);
+        const { grid, stats } = st.grow;
+        const { rulesJson, oracleErrors } = st.compile;
 
         const elapsedNote = st.seconds ? ` (${st.seconds.toFixed(1)}s)` : '';
         this.message = oracleErrors.length > 0
@@ -3435,9 +3356,10 @@ export class ProcgenPipelineUI {
     // Advance one step (button: Run next step). Starts the pipeline (①)
     // when none is running.
     _advanceSphereStep() {
-        if (!this._stepState) { this._stepPlan(); return undefined; }
-        // Runner for the step that produces `completed + 1`. _stepRegions is
-        // async (returns a promise the run-all loop / button await).
+        if (!this._stepState) { return this._stepPlan(); }
+        // Runner for the step that produces `completed + 1`. Every runner is
+        // async now (they await the shared runStep); the run-all loop / button
+        // await the returned promise.
         const runners = [
             () => this._stepAllocate(), // → 1
             () => this._stepTopology(), // → 2
@@ -3452,7 +3374,7 @@ export class ProcgenPipelineUI {
     // are skipped if already done). Called by _runGeneration in sphere
     // mode, so it inherits the isGenerating guard + error handling.
     async _runSphereGrowth() {
-        if (!this._stepState) this._stepPlan();
+        if (!this._stepState) await this._stepPlan();
         while (this._stepState.completed < SPHERE_LAST_STEP) {
             // eslint-disable-next-line no-await-in-loop
             await this._advanceSphereStep();
@@ -3528,45 +3450,21 @@ export class ProcgenPipelineUI {
     // / rng / node-Sets cross the boundary via the runner's (de)serialisers.
 
     // _stepState → runner envelope (plain JSON, ready to download / hand to
-    // the CLI). Returns null when no pipeline has been started.
+    // the CLI). Returns null when no pipeline has been started. _stepState IS
+    // the envelope now (it carries `config`; rng is already a {s} snapshot) —
+    // pick the canonical envelope fields and serialise (grid / node-Sets).
     _envelopeFromStepState() {
         const st = this._stepState;
-        if (!st) return null;
-        const cfg = st.cfg;
-        const prep = st.prep ?? {};
-        const config = {
-            seed: cfg.seed,
-            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
-            itemLib: cfg.itemLib,
-            // growConfig.regionParams (assembled at ②a) is canonical once the
-            // pipeline has run; before that, assemble from the prep hooks.
-            regionParams: st.growConfig?.regionParams
-                ?? this._assembleRegionParams(cfg.activeIds, 'sphere', prep.regionParams ?? {}),
-            hazardOpts: cfg.hazardOpts ?? undefined,
-            maxItemsPerRegion: cfg.maxItemsPerRegion,
-            fillerCount: cfg.fillerCount,
-            revisitRatio: (cfg.revisitPercent ?? 25) / 100,
-            substrateQuotas: cfg.quotas ?? null,
-            startSubstrate: cfg.startSub ?? null,
-            sphereCount: cfg.sphereCount,
-            victoryItem: cfg.victoryItemId ?? null,
-            exclusiveSpheres: prep.exclusiveSpheres ?? {},
-            startingItems: prep.startingItems ?? [],
-            lockedCanonicalItems: prep.lockedCanonicalItems ?? [],
-            enableLoopMode: cfg.enableLoopMode,
-            regionXpEffect: cfg.regionXpEffect ?? 'cost',
-            itemPool: cfg.itemPool,
-        };
+        if (!st || !st.config) return null;
         const env = {
-            config,
+            config: st.config,
             completed: st.completed,
             draft: st.draft ?? null,
             plan: st.plan ?? null,
             startingItems: st.startingItems ?? null,
             opts: st.opts ?? null,
             allocation: st.allocation ?? null,
-            // Live rng → snapshot. st.rng is the mulberry rng threaded by ②a/②b.
-            rng: st.rng ? { s: st.rng.getState() } : null,
+            rng: st.rng ?? null, // already { s } (set by the runner)
             nodes: st.nodes ?? null,
             substrateCounts: st.substrateCounts ?? null,
             quotaFallbacks: st.quotaFallbacks ?? null,
@@ -3635,33 +3533,13 @@ export class ProcgenPipelineUI {
             regionParams: config.regionParams ?? {},
             note: '',
         };
-        // Rebuild growConfig (mirrors _stepAllocate; regionParams already
-        // assembled in config) so ②b/③ can resume off the loaded plan.
-        const growConfig = env.plan ? {
-            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
-            itemLib: cfg.itemLib,
-            seed: cfg.seed,
-            hazardOpts: cfg.hazardOpts,
-            regionParams: config.regionParams ?? {},
-            growthParams: {
-                spherePlan: env.plan,
-                maxItemsPerRegion: cfg.maxItemsPerRegion,
-                fillerCount: cfg.fillerCount,
-                revisitRatio: config.revisitRatio ?? 0.25,
-                ...(cfg.quotas ? { substrateQuotas: cfg.quotas } : {}),
-                ...(cfg.startSub ? { startSubstrate: cfg.startSub } : {}),
-            },
-        } : null;
-        // Snapshot rng → live (the panel threads a live rng object).
-        let rng = null;
-        if (env.rng && typeof env.rng.s === 'number') {
-            rng = createRng(0);
-            rng.setState(env.rng.s);
-        }
+        // The panel-only growConfig the ③-editing features read — derived
+        // from the shared assembly so it can't drift from the runner's.
+        const growConfig = env.plan ? growConfigFrom(config, env.plan) : null;
 
         this._stepState = {
             completed,
-            cfg, prep,
+            cfg, prep, config,
             draft: env.draft ?? { spheres: [[]] },
             poolSize: Object.keys(config.itemPool ?? {}).length,
             plan: env.plan ?? null,
@@ -3669,7 +3547,7 @@ export class ProcgenPipelineUI {
             growConfig,
             opts: env.opts ?? null,
             allocation: env.allocation ?? null,
-            rng,
+            rng: env.rng ?? null, // already { s } (deserialised verbatim)
             nodes: env.nodes ?? null,
             substrateCounts: env.substrateCounts ?? null,
             quotaFallbacks: env.quotaFallbacks ?? null,
