@@ -39,6 +39,30 @@ export const SPHERE_STEPS = Object.freeze([
     'plan', 'allocate', 'topology', 'items', 'regions', 'compile',
 ]);
 
+/**
+ * Resolve the effective number of spheres to grow per batch from the
+ * (optional) `config.spheresPerBatch` knob and the plan's total sphere count.
+ *
+ * The pipeline is step-major across ALL spheres by default — one batch, which
+ * keeps the single continuous rng stream consumed in the monolithic order and
+ * is therefore BYTE-IDENTICAL to growSpheres. A smaller batch makes the middle
+ * phases (②a–③) run sphere-major in groups of `spheresPerBatch`; that consumes
+ * rng in a different order and is EXPECTED to diverge — it's an explicit
+ * setting, not a regression.
+ *
+ * null / undefined / 0 / negative / ≥ totalSpheres all normalise to
+ * `totalSpheres` ("one batch = all spheres", the byte-identical default). A
+ * value in [1, totalSpheres) is that batch size.
+ *
+ * Phase 1 only threads + normalises the knob; the batch loop that consumes it
+ * lands in Phase 2 (see NewDocs/plans/procedural-generation/per-sphere-batching.md).
+ */
+export function resolveSpheresPerBatch(spheresPerBatch, totalSpheres) {
+    const n = Number(spheresPerBatch);
+    if (!Number.isInteger(n) || n <= 0 || n >= totalSpheres) return totalSpheres;
+    return n;
+}
+
 // Rebuild the growSpheres-shaped config from the (serialisable) resolved
 // config block + a sphere plan. Mirrors the panel's _stepAllocate growConfig
 // assembly; the caller (panel / CLI) is responsible for having pre-assembled

@@ -11,7 +11,7 @@ import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import {
     SPHERE_STEPS, runStep, runToStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
-    detectCompleted, resumeEnvelope,
+    detectCompleted, resumeEnvelope, resolveSpheresPerBatch,
 } from './sphereSteps.js';
 
 function makeConfig(overrides = {}) {
@@ -87,6 +87,33 @@ describe('sphereSteps runner', () => {
         const env = await runToStep(newEnvelope(config));
         expect(env.compile.oracleErrors).toEqual([]);
         expect(env.compile.rulesJson).toEqual(monolithic(config));
+    });
+
+    // Phase 1: the spheresPerBatch knob is threaded + normalised but not yet
+    // consumed by a batch loop. The "all spheres" cases must stay the
+    // byte-identical default; the batch loop (Phase 2) builds on this seam.
+    describe('resolveSpheresPerBatch', () => {
+        it('normalises the "all spheres" sentinels to the total', () => {
+            for (const v of [null, undefined, 0, -1, 3, 4, 99, 'x', NaN, 2.5]) {
+                expect(resolveSpheresPerBatch(v, 3)).toBe(3);
+            }
+        });
+        it('passes through an in-range positive integer', () => {
+            expect(resolveSpheresPerBatch(1, 3)).toBe(1);
+            expect(resolveSpheresPerBatch(2, 3)).toBe(2);
+        });
+    });
+
+    it('carrying spheresPerBatch on the config is byte-identical (default = all)', async () => {
+        // Phase 1: the field is present on env.config but inert — output must
+        // match the monolithic reference whether it's absent, null, or = all.
+        for (const spheresPerBatch of [undefined, null, 3]) {
+            const config = makeConfig({ sphereCount: 3, spheresPerBatch });
+            // eslint-disable-next-line no-await-in-loop
+            const env = await runToStep(newEnvelope(config));
+            expect(env.compile.oracleErrors).toEqual([]);
+            expect(env.compile.rulesJson).toEqual(monolithic(config));
+        }
     });
 
     it('a JSON round-trip between EVERY step is byte-identical to in-process', async () => {

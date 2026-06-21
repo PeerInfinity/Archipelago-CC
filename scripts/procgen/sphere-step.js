@@ -24,7 +24,8 @@
  * Step subcommands:
  *   plan accepts the same world flags as dump-sphere-growth.js (--seed,
  *   --items, --spheres, --victory, --quota, --start, --region, --fillers,
- *   --revisit, --max-items-per-region, --physics-profile, --fall-behavior,
+ *   --revisit, --spheres-per-batch, --max-items-per-region, --physics-profile,
+ *   --fall-behavior,
  *   --param key=value, --enable-loop-mode, --region-xp-effect,
  *   --no-arrow-entry). Those flags build the resolved config (via the shared
  *   substrate hooks, like the panel) carried in the envelope; later steps read
@@ -81,6 +82,10 @@ function parseArgs(argv) {
         maxItemsPerRegion: 2,
         fillers: 0,
         revisit: 0.25,
+        // null = "all spheres in one batch" (byte-identical default). A
+        // positive integer < sphere count grows sphere-major in batches —
+        // Phase 2; Phase 1 only carries the knob.
+        spheresPerBatch: null,
         arrowEntry: true,
         // null = "not provided" → the substrate's defaultProcgenParams value
         // wins (bounce: physics 'dj', fall 'current'). A flag value overrides.
@@ -127,6 +132,7 @@ function parseArgs(argv) {
             case '--max-items-per-region': out.maxItemsPerRegion = parseInt(next(), 10); break;
             case '--fillers': out.fillers = parseInt(next(), 10); break;
             case '--revisit': out.revisit = parseFloat(next()); break;
+            case '--spheres-per-batch': out.spheresPerBatch = parseInt(next(), 10); break;
             case '--no-arrow-entry': out.arrowEntry = false; break;
             case '--fall-behavior': out.fallBehavior = next(); break;
             case '--physics-profile': out.physicsProfile = next(); break;
@@ -213,6 +219,7 @@ function buildConfig(args) {
         lockedCanonicalItems: prep.lockedCanonicalItems,
         enableLoopMode: args.enableLoopMode,
         regionXpEffect: args.regionXpEffect,
+        spheresPerBatch: args.spheresPerBatch,
         itemPool,
     };
 }

@@ -193,6 +193,10 @@ const DEFAULT_PARAMS = {
     sphereCount: 3,
     fillerCount: 0,
     revisitPercent: 25,
+    // null = "all spheres in one batch" (byte-identical default). A positive
+    // integer < sphereCount grows the middle phases sphere-major in batches
+    // (Phase 2). Phase 1 only carries the knob; no visible control yet.
+    spheresPerBatch: null,
     // Substrate-specific params (e.g. bounce's fall behavior / physics
     // profile / braid layout) are NOT here — each substrate declares its
     // own defaults via the registry `defaultProcgenParams` hook, merged
@@ -3163,7 +3167,8 @@ export class ProcgenPipelineUI {
     // to pick up new params).
     _buildSphereConfig() {
         const { seed, regionWidth, regionHeight, maxItemsPerRegion,
-            sphereCount, fillerCount, revisitPercent, startSubstrate } = this.params;
+            sphereCount, fillerCount, revisitPercent, spheresPerBatch,
+            startSubstrate } = this.params;
         const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
         const quotas = this._effectiveSubstrateQuotas();
         return {
@@ -3173,6 +3178,7 @@ export class ProcgenPipelineUI {
             sphereCount: sphereCount ?? 3,
             fillerCount: fillerCount ?? 0,
             revisitPercent: revisitPercent ?? 25,
+            spheresPerBatch: spheresPerBatch ?? null,
             startSub,
             quotas,
             activeIds: this._activeSubstrateIds(quotas, startSub),
@@ -3238,6 +3244,7 @@ export class ProcgenPipelineUI {
             substrateQuotas: cfg.quotas ?? null,
             startSubstrate: cfg.startSub ?? null,
             sphereCount: cfg.sphereCount,
+            spheresPerBatch: cfg.spheresPerBatch ?? null,
             victoryItem: cfg.victoryItemId ?? null,
             exclusiveSpheres: prep.exclusiveSpheres ?? {},
             startingItems: prep.startingItems ?? [],
