@@ -31,6 +31,10 @@ import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
 } from './spherePlanner.js';
 import {
+    SPHERE_STEPS, serializeEnvelope, deserializeEnvelope, detectCompleted,
+} from './sphereSteps.js';
+import { createRng } from '../shared/rng.js';
+import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
 import {
@@ -1460,7 +1464,23 @@ export class ProcgenPipelineUI {
             section.appendChild(nextBtn);
             if (this._stepState) {
                 section.appendChild(this._btn('Reset', () => this._resetSphereSteps()));
+                section.appendChild(this._btn('Export envelope', () => this._exportEnvelope()));
             }
+            // Load a saved / CLI-produced envelope and auto-resume from the
+            // first step whose output is missing (no manual step selection).
+            const envInput = document.createElement('input');
+            envInput.type = 'file';
+            envInput.accept = '.json,application/json';
+            envInput.className = 'procgen-pipeline-envelope-input';
+            envInput.style.display = 'none';
+            envInput.addEventListener('change', async () => {
+                const file = envInput.files?.[0];
+                if (!file) return;
+                const text = await file.text();
+                this._loadEnvelopeFile(text, file.name);
+            });
+            section.appendChild(this._btn('Load envelope', () => envInput.click()));
+            section.appendChild(envInput);
         }
 
         // Live progress indicator (sphere mode): full-width row below
@@ -3331,7 +3351,7 @@ export class ProcgenPipelineUI {
         st.completed = 3;
     }
 
-    // Step ③ — grow the regions from the pre-built tree (+ live rng, so
+    // Step ③ — grow the regions from the pre-built tree (+ post-②b rng, so
     // the random stream stays continuous — byte-identical to all-in-one).
     async _stepRegions() {
         const st = this._stepState;
@@ -3341,9 +3361,15 @@ export class ProcgenPipelineUI {
             timings: [], lastEvent: null, lastAt: 0,
         };
         this._updateProgressEl();
+        // Grow off a CLONE of the post-②b rng (same state → byte-identical
+        // geometry) so st.rng stays at the post-topology position. growSpheres
+        // mutates the rng it's given; keeping st.rng unadvanced lets an
+        // exported envelope re-run ③ from the correct stream (envelope resume).
+        const growRng = createRng(0);
+        growRng.setState(st.rng.getState());
         const { grid, stats, startCell } = await growSpheresAsync({
             ...st.growConfig,
-            growthParams: { ...st.growConfig.growthParams, prebuiltTree: st.tree, rng: st.rng },
+            growthParams: { ...st.growConfig.growthParams, prebuiltTree: st.tree, rng: growRng },
         }, (ev) => this._onGenerationProgress(ev));
         if (this._progressState) {
             st.seconds = (performance.now() - this._progressState.startedAt) / 1000;
@@ -3490,6 +3516,207 @@ export class ProcgenPipelineUI {
     // An edit to the plan draft invalidates everything downstream of ①.
     _onSpherePlanEdited() {
         this._invalidateFrom(0);
+    }
+
+    // --- Envelope interop (export / load & resume) ---
+    //
+    // The panel's _stepState and the sphereSteps runner envelope are the same
+    // pipeline state in two shapes: _stepState splits config into UI-flavored
+    // cfg + substrate-hook prep; the runner uses one flat resolved `config`.
+    // These two adapters bridge them so the panel can export the envelope the
+    // headless `sphere-step` CLI reads, and load one back to resume. The grid
+    // / rng / node-Sets cross the boundary via the runner's (de)serialisers.
+
+    // _stepState → runner envelope (plain JSON, ready to download / hand to
+    // the CLI). Returns null when no pipeline has been started.
+    _envelopeFromStepState() {
+        const st = this._stepState;
+        if (!st) return null;
+        const cfg = st.cfg;
+        const prep = st.prep ?? {};
+        const config = {
+            seed: cfg.seed,
+            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
+            itemLib: cfg.itemLib,
+            // growConfig.regionParams (assembled at ②a) is canonical once the
+            // pipeline has run; before that, assemble from the prep hooks.
+            regionParams: st.growConfig?.regionParams
+                ?? this._assembleRegionParams(cfg.activeIds, 'sphere', prep.regionParams ?? {}),
+            hazardOpts: cfg.hazardOpts ?? undefined,
+            maxItemsPerRegion: cfg.maxItemsPerRegion,
+            fillerCount: cfg.fillerCount,
+            revisitRatio: (cfg.revisitPercent ?? 25) / 100,
+            substrateQuotas: cfg.quotas ?? null,
+            startSubstrate: cfg.startSub ?? null,
+            sphereCount: cfg.sphereCount,
+            victoryItem: cfg.victoryItemId ?? null,
+            exclusiveSpheres: prep.exclusiveSpheres ?? {},
+            startingItems: prep.startingItems ?? [],
+            lockedCanonicalItems: prep.lockedCanonicalItems ?? [],
+            enableLoopMode: cfg.enableLoopMode,
+            regionXpEffect: cfg.regionXpEffect ?? 'cost',
+            itemPool: cfg.itemPool,
+        };
+        const env = {
+            config,
+            completed: st.completed,
+            draft: st.draft ?? null,
+            plan: st.plan ?? null,
+            startingItems: st.startingItems ?? null,
+            opts: st.opts ?? null,
+            allocation: st.allocation ?? null,
+            // Live rng → snapshot. st.rng is the mulberry rng threaded by ②a/②b.
+            rng: st.rng ? { s: st.rng.getState() } : null,
+            nodes: st.nodes ?? null,
+            substrateCounts: st.substrateCounts ?? null,
+            quotaFallbacks: st.quotaFallbacks ?? null,
+            tree: st.tree ?? null,
+            grow: st.grow ?? null,
+            compile: st.compile ?? null,
+        };
+        return serializeEnvelope(env);
+    }
+
+    // Sync the visible param / scenario controls to a loaded envelope's
+    // config so the panel stays self-consistent with what's loaded. The
+    // scenario pool is best-effort (the envelope carries the post-prep pool;
+    // a substrate that removed an item at plan time — e.g. a bounce arrow —
+    // won't reappear in the pool, but it shows in the loaded draft).
+    _syncParamsFromConfig(config) {
+        this.mode = 'sphereGrowth';
+        this.params.seed = config.seed;
+        this.params.regionWidth = config.regionSize.width;
+        this.params.regionHeight = config.regionSize.height;
+        this.params.maxItemsPerRegion = config.maxItemsPerRegion;
+        this.params.sphereCount = config.sphereCount;
+        this.params.fillerCount = config.fillerCount;
+        this.params.revisitPercent = Math.round((config.revisitRatio ?? 0.25) * 100);
+        this.params.startSubstrate = config.startSubstrate ?? 'auto';
+        this.params.enableLoopMode = !!config.enableLoopMode;
+        this.params.regionXpEffect = config.regionXpEffect ?? 'cost';
+        if (config.substrateQuotas) this.substrateQuotas = { ...config.substrateQuotas };
+        if (config.itemPool) this.scenario.items = { ...config.itemPool };
+        this._saveToLocalStorage();
+    }
+
+    // Loaded envelope (deserialised: live Grid, {s} rng, Set node usedSides)
+    // → _stepState, auto-detecting the resume point from data presence.
+    _applyImportedEnvelope(rawJson) {
+        const env = deserializeEnvelope(rawJson);
+        const config = env.config;
+        if (!config || !config.regionSize) {
+            throw new Error('not a sphere-growth envelope (no config block)');
+        }
+        const completed = detectCompleted(env);
+        this._syncParamsFromConfig(config);
+
+        const cfg = {
+            seed: config.seed,
+            regionWidth: config.regionSize.width,
+            regionHeight: config.regionSize.height,
+            maxItemsPerRegion: config.maxItemsPerRegion,
+            sphereCount: config.sphereCount,
+            fillerCount: config.fillerCount,
+            revisitPercent: Math.round((config.revisitRatio ?? 0.25) * 100),
+            startSub: config.startSubstrate ?? null,
+            quotas: config.substrateQuotas ?? null,
+            activeIds: this._activeSubstrateIds(config.substrateQuotas, config.startSubstrate),
+            itemLib: config.itemLib,
+            itemPool: config.itemPool,
+            victoryItemId: config.victoryItem ?? null,
+            enableLoopMode: !!config.enableLoopMode,
+            regionXpEffect: config.regionXpEffect ?? 'cost',
+            hazardOpts: config.hazardOpts ?? null,
+        };
+        const prep = {
+            startingItems: config.startingItems ?? [],
+            lockedCanonicalItems: config.lockedCanonicalItems ?? [],
+            exclusiveSpheres: config.exclusiveSpheres ?? {},
+            regionParams: config.regionParams ?? {},
+            note: '',
+        };
+        // Rebuild growConfig (mirrors _stepAllocate; regionParams already
+        // assembled in config) so ②b/③ can resume off the loaded plan.
+        const growConfig = env.plan ? {
+            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
+            itemLib: cfg.itemLib,
+            seed: cfg.seed,
+            hazardOpts: cfg.hazardOpts,
+            regionParams: config.regionParams ?? {},
+            growthParams: {
+                spherePlan: env.plan,
+                maxItemsPerRegion: cfg.maxItemsPerRegion,
+                fillerCount: cfg.fillerCount,
+                revisitRatio: config.revisitRatio ?? 0.25,
+                ...(cfg.quotas ? { substrateQuotas: cfg.quotas } : {}),
+                ...(cfg.startSub ? { startSubstrate: cfg.startSub } : {}),
+            },
+        } : null;
+        // Snapshot rng → live (the panel threads a live rng object).
+        let rng = null;
+        if (env.rng && typeof env.rng.s === 'number') {
+            rng = createRng(0);
+            rng.setState(env.rng.s);
+        }
+
+        this._stepState = {
+            completed,
+            cfg, prep,
+            draft: env.draft ?? { spheres: [[]] },
+            poolSize: Object.keys(config.itemPool ?? {}).length,
+            plan: env.plan ?? null,
+            startingItems: env.startingItems ?? prep.startingItems,
+            growConfig,
+            opts: env.opts ?? null,
+            allocation: env.allocation ?? null,
+            rng,
+            nodes: env.nodes ?? null,
+            substrateCounts: env.substrateCounts ?? null,
+            quotaFallbacks: env.quotaFallbacks ?? null,
+            topologyWarnings: [],
+            tree: env.tree ?? null,
+            grow: env.grow ?? null,
+            compile: env.compile ?? null,
+            seconds: 0,
+        };
+        // A complete envelope lights up the post-gen export buttons + views.
+        this.result = (env.grow?.grid && env.compile?.rulesJson) ? {
+            grid: env.grow.grid,
+            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
+            stats: env.grow.stats,
+            poolRemaining: null,
+            rulesJson: env.compile.rulesJson,
+            spherePlan: env.plan,
+        } : null;
+
+        const next = completed + 1;
+        this.message = next >= SPHERE_STEPS.length
+            ? `Loaded envelope — all 6 steps present (pipeline complete).`
+            : `Loaded envelope — ${completed + 1}/6 steps present; resume from `
+                + `${SPHERE_STEPS[next]} (next step).`;
+        this.warning = '';
+        this.render();
+    }
+
+    _exportEnvelope() {
+        const env = this._envelopeFromStepState();
+        if (!env) {
+            this.message = 'Nothing to export yet — run step ① (Plan) first.';
+            this.render();
+            return;
+        }
+        const step = (this._stepState.completed ?? -1) + 1;
+        this._downloadText(JSON.stringify(env, null, 2),
+            `sphere-envelope-seed${this.params.seed}-step${step}.json`);
+    }
+
+    _loadEnvelopeFile(text, name) {
+        try {
+            this._applyImportedEnvelope(JSON.parse(text));
+        } catch (e) {
+            this.message = `ERROR loading envelope${name ? ` ${name}` : ''}: ${e.message}`;
+            this.render();
+        }
     }
 
     _runTopDown() {
