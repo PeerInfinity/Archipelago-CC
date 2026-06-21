@@ -1235,7 +1235,7 @@ export class ProcgenPipelineUI {
                 { key: 'fillerCount',   label: 'Filler regions',   min: 0, max: 50 },
                 { key: 'revisitPercent', label: 'Revisit %',       min: 0, max: 100 },
                 {
-                    key: 'spheresPerBatch', label: 'Spheres/batch', min: 1, max: 20,
+                    key: 'spheresPerBatch', label: 'Spheres/batch', min: 0, max: 20,
                     nullable: true, placeholder: 'all',
                     title: 'How many spheres to grow per batch. "all" (default) is '
                         + 'the byte-identical step-major build; a smaller value grows '
@@ -1258,8 +1258,12 @@ export class ProcgenPipelineUI {
             if (f.placeholder) input.placeholder = f.placeholder;
             if (f.title) { input.title = f.title; label.title = f.title; }
             input.addEventListener('change', () => {
-                if (input.value === '' && f.nullable) {
+                // Nullable fields collapse to null (shown as the placeholder)
+                // both on an empty box AND when the spinner steps down to 0 —
+                // so "Spheres/batch" toggles 1 ⇄ all from the up/down arrows.
+                if (f.nullable && (input.value === '' || parseInt(input.value, 10) <= 0)) {
                     this.params[f.key] = null;
+                    input.value = '';
                 } else {
                     const v = parseInt(input.value, 10);
                     if (Number.isFinite(v)) this.params[f.key] = v;
