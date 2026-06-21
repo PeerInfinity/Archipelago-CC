@@ -3232,6 +3232,159 @@ export function placeSphereTreeItems(plan, nodes) {
 }
 
 /**
+ * Rebuild a live step-runner envelope from a FINISHED sphere-growth rules.json —
+ * the foundation for appending a sphere to a world you only have as compiled
+ * rules.json (no saved envelope). Reconstructs the grid by deserialising each
+ * region's playable_payload and re-deriving its extracted_rules
+ * (adapter.deserializeWorld + extractPathsAndObstacles, so existing geometry is
+ * PRESERVED), rehydrates the node tree from procgen_metadata.sphere_tree (cells
+ * included), and recovers the config (seed, completion item, item pool, region
+ * size) from the rules.json. The returned envelope is marked complete, so
+ * appendSphere can grow straight onto it.
+ *
+ * Only PROCEDURAL substrates round-trip this way; a ZONE substrate (e.g. bounce)
+ * has no extractPathsAndObstacles, so its geometry can't be recovered from the
+ * compiled form — those worlds throw here and must be appended from a saved
+ * envelope. `opts` overrides recovered/defaulted config (regionSize,
+ * regionParams, substrateQuotas, maxItemsPerRegion, …).
+ */
+export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
+    const playerId = opts.playerId ?? '1';
+    const meta = rulesJson?.procgen_metadata;
+    if (meta?.driver !== 'sphere-growth') {
+        throw new Error('rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json');
+    }
+    if (!meta.sphere_tree || !meta.sphere_plan) {
+        throw new Error('rebuildEnvelopeFromRulesJson: rules.json lacks procgen_metadata.'
+            + 'sphere_tree / sphere_plan — regenerate it with a current build, or append '
+            + 'from a saved envelope');
+    }
+    const plan = meta.sphere_plan;
+    const treeMeta = meta.sphere_tree;
+    const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
+    const itemLib = opts.itemLib ?? DEFAULT_ITEMS;
+    const obstacleLib = opts.obstacleLib ?? DEFAULT_OBSTACLES;
+
+    // Rehydrate nodes (usedSides Set; cell carried in the compact tree).
+    const nodes = treeMeta.nodes.map((n) => ({ ...n, usedSides: new Set(n.usedSides ?? []) }));
+
+    // Size the grid from grid_dims (or the node cells), then rebuild each region.
+    let width = meta.grid_dims?.width ?? 0;
+    let height = meta.grid_dims?.height ?? 0;
+    for (const n of nodes) {
+        if (n.cell) { width = Math.max(width, n.cell.gx + 1); height = Math.max(height, n.cell.gy + 1); }
+    }
+    const grid = new Grid({ width: Math.max(5, width), height: Math.max(5, height) });
+    let regionSize = opts.regionSize ?? null;
+    for (const node of nodes) {
+        if (!node.cell) continue;
+        const region_id = regionIdForCell(node.cell);
+        const sc = sidecars[region_id];
+        if (!sc) throw new Error(`rebuildEnvelopeFromRulesJson: region ${region_id} missing from preset_sidecars`);
+        const adapter = getAdapter(node.substrate);
+        if (typeof adapter.deserializeWorld !== 'function'
+                || typeof adapter.extractPathsAndObstacles !== 'function') {
+            throw new Error(`rebuildEnvelopeFromRulesJson: substrate '${node.substrate}' can't be `
+                + 'reconstructed from compiled rules.json (zone substrate — no path extractor). '
+                + 'Append from the saved envelope instead.');
+        }
+        const world = adapter.deserializeWorld(sc.playable_payload, {
+            baseItemLib: itemLib, baseObstacleLib: obstacleLib,
+        });
+        const extracted_rules = adapter.extractPathsAndObstacles(world, { regionId: region_id });
+        if (!regionSize) regionSize = { width: world.width, height: world.height };
+        grid.placeRegion(node.cell, {
+            region_id, substrate: node.substrate, cell: { gx: node.cell.gx, gy: node.cell.gy },
+            playable_payload: world, extracted_rules,
+            exits: world.exits, entrance: world.entrance,
+            ...(sc.render_hint ? { render_hint: sc.render_hint } : {}),
+            ...(sc.biome ? { biome: sc.biome } : {}),
+        });
+    }
+    for (const node of nodes) {
+        if (node.isTeleporter && node.parent != null && node.cell) {
+            const parent = nodes[node.parent];
+            if (parent?.cell) grid.setTeleporter(parent.cell, node.side, node.cell);
+        }
+    }
+    const root = nodes.find((n) => n.parent == null);
+    const startCell = root?.cell
+        ?? { gx: Math.floor(grid.width / 2), gy: Math.floor(grid.height / 2) };
+
+    // Recover the config from the rules.json (overridable via opts).
+    const victoryItem = rulesJson.game_info?.[playerId]?.completion_condition?.item ?? null;
+    const seed = opts.seed ?? rulesJson.generation_seed ?? 1;
+    const substrateCounts = treeMeta.substrateCounts ?? {};
+    const substrateQuotas = opts.substrateQuotas
+        ?? Object.fromEntries(Object.keys(substrateCounts).map((s) => [s, 999]));
+    const startingItems = opts.startingItems ?? rulesJson.starting_items?.[playerId] ?? [];
+    const itemPool = {};
+    for (const s of plan.spheres) for (const it of s.items) itemPool[it] = (itemPool[it] ?? 0) + 1;
+    const maxItemsPerRegion = opts.maxItemsPerRegion ?? 2;
+    const config = {
+        seed,
+        regionSize: regionSize ?? { width: 8, height: 6 },
+        itemLib,
+        regionParams: opts.regionParams ?? {},
+        hazardOpts: opts.hazardOpts ?? undefined,
+        maxItemsPerRegion,
+        fillerCount: opts.fillerCount ?? 0,
+        revisitRatio: opts.revisitRatio ?? 0.25,
+        substrateQuotas,
+        startSubstrate: root?.substrate ?? null,
+        sphereCount: plan.spheres.length,
+        victoryItem,
+        exclusiveSpheres: {},
+        startingItems,
+        lockedCanonicalItems: [],
+        enableLoopMode: !!rulesJson.loop_costs,
+        regionXpEffect: opts.regionXpEffect ?? 'cost',
+        itemPool,
+    };
+
+    const regionsPerWave = plan.spheres.map(
+        (s) => Math.max(1, Math.ceil(s.items.length / maxItemsPerRegion)));
+    const allocation = {
+        regionsPerWave,
+        fillersPerWave: regionsPerWave.map(() => 0),
+        fillerWaves: [],
+    };
+    const tree = {
+        nodes,
+        substrateCounts: treeMeta.substrateCounts,
+        quotaFallbacks: treeMeta.quotaFallbacks,
+    };
+    const stats = {
+        regionsBuilt: nodes.length, regionsSkipped: 0, teleportersPlaced: 0,
+        stopReason: 'plan_complete',
+        substrateCounts: treeMeta.substrateCounts, quotaFallbacks: treeMeta.quotaFallbacks,
+    };
+    return {
+        config,
+        completed: 5,
+        draft: { spheres: [[...startingItems], ...plan.spheres.map((s) => [...s.items])] },
+        plan,
+        startingItems,
+        opts: {
+            maxItemsPerRegion, fillerCount: config.fillerCount, revisitRatio: config.revisitRatio,
+            substrateQuotas, startSubstrate: config.startSubstrate, regionParams: config.regionParams,
+        },
+        allocation,
+        rng: { s: createRng(seed).getState() },
+        nodes,
+        substrateCounts: treeMeta.substrateCounts,
+        quotaFallbacks: treeMeta.quotaFallbacks,
+        tree,
+        grow: { grid, startCell, stats },
+        placed: new Set(nodes.map((n) => n.index)),
+        batchStart: plan.spheres.length,
+        totalNodes: nodes.length,
+        dims: { width: grid.width, height: grid.height },
+        startCell,
+    };
+}
+
+/**
  * Decide the abstract region tree for a sphere plan. Pure given rng.
  * Returns { nodes, substrateCounts, quotaFallbacks }; nodes are in
  * realisation order (parents always precede children). Re-expressed as the

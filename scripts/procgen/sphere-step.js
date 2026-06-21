@@ -82,6 +82,7 @@ import {
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
+import { rebuildEnvelopeFromRulesJson } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
@@ -282,9 +283,20 @@ async function main() {
         throw new Error(`unknown subcommand '${sub}'`);
     }
 
-    // Load or create the envelope.
+    // Load or create the envelope. `append` accepts EITHER a saved envelope or a
+    // bare finished rules.json (reconstructed via its embedded sphere_tree —
+    // procedural substrates only; zone substrates must use a saved envelope).
     let env;
-    if (args.input) {
+    if (sub === 'append') {
+        if (!args.input) throw new Error('append requires -i <rules.json | envelope.json>');
+        const raw = readJson(args.input);
+        env = raw.procgen_metadata
+            ? rebuildEnvelopeFromRulesJson(raw, {
+                ...(Object.keys(args.quotas).length ? { substrateQuotas: args.quotas } : {}),
+                maxItemsPerRegion: args.maxItemsPerRegion,
+            })
+            : deserializeEnvelope(raw);
+    } else if (args.input) {
         env = deserializeEnvelope(readJson(args.input));
     } else if (sub === 'plan' || sub === 'run') {
         env = newEnvelope(buildConfig(args));

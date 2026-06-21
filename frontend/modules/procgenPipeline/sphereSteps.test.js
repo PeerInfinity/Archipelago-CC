@@ -5,6 +5,7 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import {
     growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
+    rebuildEnvelopeFromRulesJson,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
@@ -487,6 +488,40 @@ describe('appendSphere (envelope path)', () => {
         env.config = { ...env.config, victoryItem: null };
         await expect(appendSphere(env, { items: ['key_red'] }))
             .rejects.toThrow(/no victory\/completion item/);
+    });
+
+    it('rebuilds an envelope from a bare rules.json and recompiles cleanly (maze)', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const rulesJson = src.compile.rulesJson;
+        // Reconstruct purely from the compiled rules.json (no saved envelope).
+        const env = rebuildEnvelopeFromRulesJson(rulesJson);
+        expect(env.completed).toBe(5);
+        expect(env.config.victoryItem).toBe('victory');
+        expect(env.nodes.length).toBe(src.nodes.length);
+        expect(env.config.regionSize).toEqual(makeConfig().regionSize);
+        // Recompiling the reconstructed grid preserves the plan (geometry kept
+        // via deserializeWorld + extractPathsAndObstacles).
+        await runStep('compile', env);
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
+    it('appends a sphere from a bare rules.json (maze)', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const env = rebuildEnvelopeFromRulesJson(src.compile.rulesJson);
+        await appendSphere(env, { items: ['key_red'] });
+        expect(env.compile.oracleErrors).toEqual([]);
+        expect(env.plan.spheres[env.plan.spheres.length - 1].items).toContain('victory');
+    });
+
+    it('rebuild throws for a zone substrate (bounce) — needs the saved envelope', async () => {
+        const src = await runToStep(newEnvelope(makeConfig({
+            substrateQuotas: { bounce: 99 }, startSubstrate: 'bounce',
+            sphereCount: 2, maxItemsPerRegion: 4, victoryItem: 'Victory',
+            exclusiveSpheres: { 2: ['Springs', 'Victory'] },
+            itemPool: { 'Right arrow': 1, Springs: 1, Jetpacks: 1, Victory: 1 },
+        })));
+        expect(() => rebuildEnvelopeFromRulesJson(src.compile.rulesJson))
+            .toThrow(/zone substrate|can't be reconstructed/);
     });
 
     it('truncateSphereWorld drops the later-wave node suffix + their regions', async () => {
