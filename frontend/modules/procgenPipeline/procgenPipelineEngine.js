@@ -2910,8 +2910,33 @@ export function allocateSphereTree(plan, opts = {}, rng) {
  * editable in-place on the result). Returns
  * { nodes, substrateCounts, quotaFallbacks, rng }; nodes are in realisation
  * order (parents always precede children).
+ *
+ * Drives the wiring context over EVERY wave in order — byte-identical to the
+ * prior single-function loop. The batched sphere-major driver instead drives
+ * the context a batch of waves at a time (interleaving realisation), which is
+ * why the per-wave step + state live in createSphereWiringContext.
  */
 export function wireSphereTree(plan, allocation, opts = {}, rng) {
+    const ctx = createSphereWiringContext(plan, allocation, opts, rng);
+    for (let w = 0; w < plan.spheres.length; w++) ctx.wireWave(w);
+    return {
+        nodes: ctx.nodes,
+        substrateCounts: ctx.substrateCounts,
+        quotaFallbacks: ctx.quotaFallbacks(),
+        rng,
+    };
+}
+
+/**
+ * Stateful wiring context for ②b. Holds the growing node set, substrate
+ * tallies and the cumulative-count table, and exposes `wireWave(w)` to attach
+ * sphere w's regions (plus the fillers assigned to wave w) onto the nodes
+ * built so far. Region N's host pick depends on regions 1..N-1's consumed
+ * sides, so the context persists across batches — nodes / substrateCounts /
+ * quotaFallbacks accumulate, and the rng is the single shared stream the
+ * realiser also draws from.
+ */
+function createSphereWiringContext(plan, allocation, opts = {}, rng) {
     const {
         revisitRatio = 0.25,
         substrateQuotas = null,
@@ -3106,7 +3131,10 @@ export function wireSphereTree(plan, allocation, opts = {}, rng) {
             + (hints.length ? ` ${hints.join(' ')}` : ''));
     };
 
-    for (let w = 0; w < waves; w++) {
+    // Attach sphere w's regions (then the fillers assigned to wave w) onto the
+    // nodes built so far. Called per wave in order by wireSphereTree, or a
+    // batch at a time by the batched driver — same body, same rng order.
+    const wireWave = (w) => {
         const hostingRegions = regionsPerWave[w];
         for (let i = 0; i < hostingRegions; i++) {
             if (w === 0 && i === 0) {
@@ -3131,9 +3159,9 @@ export function wireSphereTree(plan, allocation, opts = {}, rng) {
             });
             addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
         }
-    }
+    };
 
-    return { nodes, substrateCounts, quotaFallbacks, rng };
+    return { nodes, substrateCounts, wireWave, quotaFallbacks: () => quotaFallbacks };
 }
 
 /**
