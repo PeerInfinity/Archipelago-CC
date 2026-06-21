@@ -348,6 +348,14 @@ async function stepRegions(env, { onProgress = null } = {}) {
         grid = env.grow.grid;
         startCell = env.grow.startCell;
         stats = env.grow.stats;
+        // Expand-on-demand: if the allocation grew since the grid was sized
+        // (sphere-append adds a wave → gridSizeFor returns larger dims), grow the
+        // carried grid so the new wave's regions have room. Grid.resize is
+        // grow-only + lossless, so this no-ops in the normal batch loop (sized
+        // up front from the full allocation) and only fires for append.
+        if (sizing.dims.width > grid.width || sizing.dims.height > grid.height) {
+            grid.resize(sizing.dims);
+        }
     }
     const placed = env.placed instanceof Set ? env.placed : new Set(env.placed ?? []);
     // A batch-0 (re)start realises every node from index 0; only a genuine
@@ -605,4 +613,140 @@ export function detectCompleted(env) {
 export async function resumeEnvelope(env, toStep = 'compile', opts = {}) {
     env.completed = detectCompleted(env);
     return runToStep(env, toStep, opts);
+}
+
+// --- sphere append ----------------------------------------------------
+//
+// Extend a FINISHED world with one more sphere: relocate the goal item into a
+// new final sphere (alongside any new content), grow ONLY that wave onto the
+// existing tree + grid, and recompile. This is the per-sphere batch loop with a
+// pre-seeded starting state — it reuses the SAME step machinery (wireSphereWaves
+// resume + realiseSphereBatchGen + expand-on-demand Grid.resize), so there's no
+// separate append grower to drift.
+
+/**
+ * Truncate a grown world to its first `keepWaves` waves: drop every node in a
+ * later wave (and its region + teleporter) so the pipeline can re-grow from
+ * there. Nodes are stored in wave order, so the dropped set is a contiguous
+ * SUFFIX — slicing it preserves every surviving node's index (and thus parent
+ * references). Surviving parents keep their `usedSides` / `childGates` as-is
+ * (CONSERVATIVE: a dropped child's side stays "spoken for", so a re-grow may
+ * pick a different host — never an invalid one; realisation reads the live
+ * childrenByParent, and any exit left pointing at a removed region is walled off
+ * by wallOffUnusedExits). Mutates + returns env. No-op when nothing is later.
+ */
+export function truncateSphereWorld(env, keepWaves) {
+    const nodes = env.nodes ?? [];
+    const cut = nodes.findIndex((n) => n.wave >= keepWaves);
+    if (cut < 0) return env; // every node is within the kept waves
+    const grid = env.grow?.grid;
+    for (let i = cut; i < nodes.length; i++) {
+        const nd = nodes[i];
+        if (grid && nd.cell && grid.hasRegion(nd.cell)) grid.removeRegion(nd.cell);
+        if (grid && nd.isTeleporter && nd.parent != null) {
+            const parent = nodes[nd.parent];
+            if (parent?.cell) {
+                grid.teleporters.delete(`${parent.cell.gx},${parent.cell.gy}:${nd.side}`);
+            }
+        }
+    }
+    env.nodes = nodes.slice(0, cut);
+    if (env.tree) env.tree = { ...env.tree, nodes: env.nodes };
+    env.placed = new Set(env.nodes.map((n) => n.index));
+    return env;
+}
+
+/**
+ * Append a new final sphere to a COMPLETED envelope (one with a grown grid +
+ * tree): relocate the goal item into a new final sphere alongside `opts.items`,
+ * grow ONLY that wave onto the existing tree + grid (expand-on-demand), and
+ * recompile. Reuses the per-sphere batch machinery — no separate append grower.
+ *
+ * Goal placement is mechanically constrained: a wave gates on the immediately-
+ * prior sphere's items, so the kept final sphere must retain a non-goal item.
+ *   - Default: if the source's final sphere is GOAL-ONLY (the common shape),
+ *     the whole sphere is REVERTED (dropped, region and all) and the new sphere
+ *     takes its place — the goal ends up alongside the new content gated on the
+ *     real prior sphere.
+ *   - Otherwise the goal is simply moved out of the (multi-item) final sphere
+ *     into the appended one (depth + 1).
+ *   - `opts.truncateToWave` overrides the kept-wave count explicitly — throw
+ *     away spheres at/after it and continue from there ("rewind and regrow").
+ *
+ * Diverges from a fresh generation by design (a fresh rng grows just the new
+ * wave); the oracle still holds. Throws if the kept final sphere has no gating
+ * item left. `runOpts` is forwarded to the step runner (e.g. onProgress).
+ */
+export async function appendSphere(env, { items = [], truncateToWave = null, seed = null } = {}, runOpts = {}) {
+    if (!env?.plan?.spheres || !env.grow?.grid || !env.nodes || !env.tree) {
+        throw new Error('appendSphere: env must be a completed sphere-growth run '
+            + '(plan + grown grid + tree)');
+    }
+    const victory = env.config?.victoryItem;
+    if (!victory) {
+        throw new Error('appendSphere: source world has no victory/completion item to relocate');
+    }
+
+    // 1. Decide how many leading waves to KEEP (K). Explicit override wins;
+    //    otherwise auto: revert a goal-only final sphere (drop it), else keep all.
+    const N = env.plan.spheres.length;
+    const lastItems = env.plan.spheres[N - 1].items;
+    const goalOnly = lastItems.length === 1 && lastItems[0] === victory;
+    let keep;
+    if (truncateToWave != null) keep = Math.max(1, Math.min(truncateToWave, N));
+    else keep = goalOnly ? N - 1 : N;
+
+    // 2. Truncate the grown world to the kept waves (drops later regions).
+    if (keep < N) truncateSphereWorld(env, keep);
+
+    // 3. Build the new plan: kept spheres (goal removed wherever it survived) +
+    //    a new final sphere = [...new items, goal]. The kept final sphere must
+    //    keep a gating item for the appended wave.
+    const keptSpheres = env.plan.spheres.slice(0, keep).map((s) => ({
+        sphere: s.sphere, items: s.items.filter((it) => it !== victory),
+    }));
+    const pred = keptSpheres[keptSpheres.length - 1];
+    if (!pred || pred.items.length === 0) {
+        throw new Error('appendSphere: the kept final sphere has no non-goal item to gate the '
+            + 'appended sphere. Provide new items, or keep fewer waves (truncateToWave) so the '
+            + 'predecessor has progression items.');
+    }
+    const newWave = keptSpheres.length; // 0-based wave index of the appended sphere
+    const newSphere = { sphere: newWave + 1, items: [...items, victory] };
+    const newPlan = { seed: env.plan.seed, spheres: [...keptSpheres, newSphere] };
+
+    // 4. Sync the canonical draft + config to the new plan.
+    env.plan = newPlan;
+    env.startingItems = env.startingItems ?? [];
+    env.draft = {
+        spheres: [[...env.startingItems], ...newPlan.spheres.map((s) => [...s.items])],
+    };
+    const addedPool = {};
+    for (const it of items) addedPool[it] = (env.config.itemPool?.[it] ?? 0) + 1;
+    env.config = {
+        ...env.config,
+        sphereCount: newPlan.spheres.length,
+        itemPool: { ...(env.config.itemPool ?? {}), ...addedPool },
+    };
+
+    // 5. Rebuild the allocation for the kept waves + the appended wave (no new
+    //    fillers; drop any filler draws that targeted dropped waves).
+    const maxItems = env.config.maxItemsPerRegion ?? 2;
+    const newRegions = Math.max(1, Math.ceil(newSphere.items.length / maxItems));
+    env.allocation = {
+        regionsPerWave: [...env.allocation.regionsPerWave.slice(0, keep), newRegions],
+        fillersPerWave: [...env.allocation.fillersPerWave.slice(0, keep), 0],
+        fillerWaves: (env.allocation.fillerWaves ?? []).filter((w) => w < keep),
+    };
+
+    // 6. Point the batch cursor at the appended wave on a fresh rng (append
+    //    diverges), mark every surviving node as already placed, re-enter at ②b.
+    env.batchStart = newWave;
+    env.placed = new Set(env.nodes.map((n) => n.index));
+    env.rng = { s: createRng(seed ?? env.config.seed ?? 1).getState() };
+    env.completed = 1; // allocate is "done" (we set the allocation); run ②b→④
+
+    // 7. Grow the appended wave + recompile. The cursor reaches `total` after
+    //    the single wave, so it stops at ④.
+    return runToStep(env, 'compile', runOpts);
 }

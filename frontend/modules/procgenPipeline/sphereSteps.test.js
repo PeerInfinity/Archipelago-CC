@@ -12,6 +12,7 @@ import {
     SPHERE_STEPS, runStep, runToStep, nextSphereStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
     detectCompleted, resumeEnvelope, resolveSpheresPerBatch,
+    appendSphere, truncateSphereWorld,
 } from './sphereSteps.js';
 
 function makeConfig(overrides = {}) {
@@ -387,5 +388,119 @@ describe('sphereSteps runner', () => {
         expect(round.completed).toBe(5);
         expect(round.compile.oracleErrors).toEqual([]);
         expect(round.compile.rulesJson).toEqual(monolithic(config));
+    });
+});
+
+// Phase 4 — appendSphere / truncateSphereWorld (envelope path). Grows a finished
+// world one sphere further (or rewinds + regrows) by reusing the per-sphere
+// batch machinery. Diverges from a fresh run by design; the oracle must hold.
+describe('appendSphere (envelope path)', () => {
+    const lastItems = (env) => env.plan.spheres[env.plan.spheres.length - 1].items;
+
+    it('reverts a goal-only final sphere and appends new content + goal', async () => {
+        // Default 3-sphere world → final sphere is [victory] only.
+        const env = await runToStep(newEnvelope(makeConfig()));
+        expect(lastItems(env)).toEqual(['victory']);
+        const depth = env.plan.spheres.length;
+
+        await appendSphere(env, { items: ['key_red'] }); // any pooled item works as content
+        expect(env.completed).toBe(5);
+        expect(env.compile.oracleErrors).toEqual([]);
+        // The goal-only sphere was reverted, replaced by [content, victory].
+        expect(env.plan.spheres.length).toBe(depth); // reverted → same depth
+        expect(lastItems(env)).toContain('victory');
+        expect(lastItems(env).length).toBeGreaterThan(1);
+    });
+
+    it('relocates the goal out of a multi-item final sphere (depth + 1)', async () => {
+        const env = await runToStep(newEnvelope(makeConfig({
+            exclusiveSpheres: { 3: ['key_green', 'victory'] },
+        })));
+        expect(lastItems(env)).toEqual(expect.arrayContaining(['key_green', 'victory']));
+        const depth = env.plan.spheres.length;
+
+        await appendSphere(env, { items: ['key_blue'] });
+        expect(env.compile.oracleErrors).toEqual([]);
+        expect(env.plan.spheres.length).toBe(depth + 1); // genuine new tier
+        // The old final keeps its non-goal item; the goal moved to the new final.
+        expect(env.plan.spheres[depth - 1].items).toEqual(['key_green']);
+        expect(lastItems(env)).toEqual(['key_blue', 'victory']);
+    });
+
+    it('truncateToWave rewinds to an earlier sphere, then regrows', async () => {
+        const env = await runToStep(newEnvelope(makeConfig({
+            sphereCount: 4, itemPool: { a: 1, b: 1, c: 1, victory: 1 },
+        })));
+        const before = env.plan.spheres.length; // 4
+        await appendSphere(env, { items: ['d'], truncateToWave: 2 });
+        expect(env.compile.oracleErrors).toEqual([]);
+        // Kept 2 waves + the appended one → 3 spheres; goal in the new final.
+        expect(env.plan.spheres.length).toBe(3);
+        expect(before).toBe(4);
+        expect(lastItems(env)).toEqual(['d', 'victory']);
+    });
+
+    it('expands the grid on demand when the appended wave overflows', async () => {
+        const env = await runToStep(newEnvelope(makeConfig({
+            sphereCount: 4, maxItemsPerRegion: 1, revisitRatio: 0,
+            exclusiveSpheres: { 4: ['kx', 'victory'] },
+            itemPool: { a: 1, b: 1, c: 1, d: 1, kx: 1, victory: 1 },
+        })));
+        const dims0 = { w: env.grow.grid.width, h: env.grow.grid.height };
+        await appendSphere(env, { items: ['n1', 'n2', 'n3', 'n4'] }); // several new regions
+        expect(env.compile.oracleErrors).toEqual([]);
+        // Grid grew (grow-only resize) to fit the new regions.
+        expect(env.grow.grid.width).toBeGreaterThanOrEqual(dims0.w);
+        expect(env.grow.grid.height).toBeGreaterThanOrEqual(dims0.h);
+        expect(env.grow.grid.width * env.grow.grid.height)
+            .toBeGreaterThan(dims0.w * dims0.h);
+    });
+
+    it('chains: a second append onto an appended world grows depth', async () => {
+        const env = await runToStep(newEnvelope(makeConfig()));
+        await appendSphere(env, { items: ['key_red'] });
+        const d1 = env.plan.spheres.length;
+        await appendSphere(env, { items: ['key_blue'] });
+        expect(env.compile.oracleErrors).toEqual([]);
+        expect(env.plan.spheres.length).toBe(d1 + 1); // prior final now multi-item → relocate
+        expect(lastItems(env)).toEqual(['key_blue', 'victory']);
+    });
+
+    it('bounce (zone substrate) appends with the oracle clean', async () => {
+        // Bounce gates must respect its one-arrowless-portal-per-level rule, so
+        // use boost/arrow items as the gating vocabulary (as a real bounce world
+        // would). The appended wave gates on the kept final's Springs.
+        const env = await runToStep(newEnvelope(makeConfig({
+            substrateQuotas: { bounce: 99 }, startSubstrate: 'bounce',
+            sphereCount: 2, maxItemsPerRegion: 4,
+            victoryItem: 'Victory',
+            exclusiveSpheres: { 2: ['Springs', 'Victory'] },
+            itemPool: { 'Right arrow': 1, Springs: 1, Jetpacks: 1, Victory: 1 },
+        })));
+        await appendSphere(env, { items: ['Jetpacks'] });
+        expect(env.compile.oracleErrors).toEqual([]);
+        expect(lastItems(env)).toContain('Victory');
+    });
+
+    it('throws when the source has no completion item', async () => {
+        const env = await runToStep(newEnvelope(makeConfig()));
+        env.config = { ...env.config, victoryItem: null };
+        await expect(appendSphere(env, { items: ['key_red'] }))
+            .rejects.toThrow(/no victory\/completion item/);
+    });
+
+    it('truncateSphereWorld drops the later-wave node suffix + their regions', async () => {
+        const env = await runToStep(newEnvelope(makeConfig({ sphereCount: 4,
+            itemPool: { a: 1, b: 1, c: 1, victory: 1 } })));
+        const before = env.nodes.length;
+        const keptRegions = env.nodes.filter((n) => n.wave < 2).length;
+        truncateSphereWorld(env, 2);
+        expect(env.nodes.length).toBe(keptRegions);
+        expect(env.nodes.length).toBeLessThan(before);
+        // Every surviving node is within the kept waves and its region remains.
+        for (const n of env.nodes) {
+            expect(n.wave).toBeLessThan(2);
+            if (n.cell) expect(env.grow.grid.hasRegion(n.cell)).toBe(true);
+        }
     });
 });

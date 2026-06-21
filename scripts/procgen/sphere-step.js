@@ -21,6 +21,17 @@
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/sphere-step.js run -i partial.json -o rules.json
  *
+ *   # append a sphere to a FINISHED envelope (grow one wave further + recompile):
+ *   #   --items id=N → the new sphere's content; the goal is relocated into it.
+ *   #   --truncate-to-wave K → rewind to K leading waves before regrowing.
+ *   node scripts/procgen/sphere-step.js append -i done.json --items gem=1 \
+ *        -o appended.json --rules-out rules.json
+ *
+ * Append semantics: a wave gates on the prior sphere, so the goal can only move
+ * one tier later when the kept final sphere has a non-goal item. Default: a
+ * GOAL-ONLY final sphere is reverted (dropped) and the new sphere takes its
+ * place; a multi-item final relocates the goal forward (depth + 1).
+ *
  * Sphere-major batches (--spheres-per-batch < sphere count): the pipeline LOOPS
  * the middle four phases per batch — plan → { allocate → topology → items →
  * regions } × batches → compile. `run` drives the whole loop in one process.
@@ -67,7 +78,7 @@ import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
 import {
     SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted,
-    nextSphereStep, resolveSpheresPerBatch,
+    nextSphereStep, resolveSpheresPerBatch, appendSphere,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
@@ -97,6 +108,9 @@ function parseArgs(argv) {
         // positive integer < sphere count grows sphere-major in batches —
         // Phase 2; Phase 1 only carries the knob.
         spheresPerBatch: null,
+        // `append` only: keep this many leading waves before regrowing
+        // (null = auto — revert a goal-only final sphere, else keep all).
+        truncateToWave: null,
         arrowEntry: true,
         // null = "not provided" → the substrate's defaultProcgenParams value
         // wins (bounce: physics 'dj', fall 'current'). A flag value overrides.
@@ -144,6 +158,7 @@ function parseArgs(argv) {
             case '--fillers': out.fillers = parseInt(next(), 10); break;
             case '--revisit': out.revisit = parseFloat(next()); break;
             case '--spheres-per-batch': out.spheresPerBatch = parseInt(next(), 10); break;
+            case '--truncate-to-wave': out.truncateToWave = parseInt(next(), 10); break;
             case '--no-arrow-entry': out.arrowEntry = false; break;
             case '--fall-behavior': out.fallBehavior = next(); break;
             case '--physics-profile': out.physicsProfile = next(); break;
@@ -167,7 +182,10 @@ function parseArgs(argv) {
             default: throw new Error(`unknown flag: ${a}`);
         }
     }
-    if (Object.keys(out.items).length === 0) {
+    // Default item pool for world-building subcommands. `append` reads --items
+    // as the NEW sphere's content, so an empty list there means "just relocate
+    // the goal" — don't inject a default pool.
+    if (out.subcommand !== 'append' && Object.keys(out.items).length === 0) {
         out.items = { key_red: 1, key_green: 1, key_blue: 1, key_yellow: 1, victory: 1 };
     }
     return out;
@@ -257,10 +275,12 @@ async function main() {
     const args = parseArgs(process.argv.slice(2));
     const sub = args.subcommand;
     if (!sub) throw new Error('missing subcommand (one of: '
-        + `${SPHERE_STEPS.join(', ')}, run)`);
+        + `${SPHERE_STEPS.join(', ')}, run, append)`);
 
     const isStep = SPHERE_STEPS.includes(sub);
-    if (!isStep && sub !== 'run') throw new Error(`unknown subcommand '${sub}'`);
+    if (!isStep && sub !== 'run' && sub !== 'append') {
+        throw new Error(`unknown subcommand '${sub}'`);
+    }
 
     // Load or create the envelope.
     let env;
@@ -278,7 +298,20 @@ async function main() {
         if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
     };
 
-    if (sub === 'run') {
+    if (sub === 'append') {
+        // Grow a FINISHED world one sphere further. --items id=N → the new
+        // sphere's content (id repeated N times); the goal is relocated into it.
+        // --truncate-to-wave rewinds to an earlier sphere before regrowing.
+        const newItems = [];
+        for (const [id, n] of Object.entries(args.items)) {
+            for (let i = 0; i < n; i++) newItems.push(id);
+        }
+        await appendSphere(env, {
+            items: newItems,
+            truncateToWave: args.truncateToWave,
+            seed: args.seed,
+        }, { onProgress });
+    } else if (sub === 'run') {
         const to = args.to ?? 'compile';
         if (args.from) {
             // Explicit override: resume from the named step.
