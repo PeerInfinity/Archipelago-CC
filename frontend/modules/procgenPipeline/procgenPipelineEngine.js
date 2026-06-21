@@ -3859,75 +3859,96 @@ function* realiseSphereNodes(grid, nodes, tree, rng, {
     assumeBidirectional, childrenByParent, stats,
 }) {
     for (let i = fromIndex; i < nodes.length; i++) {
-        const node = nodes[i];
-        // Cell + side were resolved by the placement pre-pass
-        // (occupancy-aware adjacency, remote only when fully surrounded).
-        const isTeleporter = node.isTeleporter;
-        const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
-        const {
-            region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
-        } = specs;
-        node.region_id = region_id;
-
-        yield {
-            type: 'region',
-            index: node.index,
-            total,
-            region_id,
-            substrate: node.substrate,
-            sphere: node.wave,
-            placements: locations.length,
-        };
-
-        const adapter = getAdapter(node.substrate);
-        let region;
-        if (typeof adapter.generateRegionCore === 'function') {
-            region = buildSphereProceduralRegion({
-                substrate: node.substrate,
-                region_id,
-                size: regionSize,
-                entrances,
-                exitPlans,
-                locations,
-                itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
-            });
-        } else if (typeof adapter.generateZoneForSpecs === 'function'
-                || typeof adapter.generateZoneForSpecsGen === 'function') {
-            region = yield* buildSphereZoneRegion({
-                substrate: node.substrate,
-                region_id,
-                regionSize,
-                exitPlans,
-                locations,
-                entranceSide,
-                entryGate: node.gate,
-                entryGateCounts: node.gateCounts,
-                regionParams,
-                seed: (rng.next() * 0x7fffffff) | 0,
-                adapter,
-            });
-        } else {
-            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
-                + 'generateRegionCore nor generateZoneForSpecs');
-        }
-
-        grid.placeRegion(cell, region);
-        if (isTeleporter) {
-            grid.setTeleporter(parentNode.cell, node.side, cell);
-            stats.teleportersPlaced += 1;
-        }
-
-        // Back-exit to the parent on the entrance tile — buildRulesJson's
-        // post-pass copies the forward gate's rule onto it.
-        applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
-        stats.regionsBuilt += 1;
-        yield {
-            type: 'regionDone',
-            index: node.index,
-            total,
-            region_id,
-        };
+        yield* realiseOneSphereNode(grid, nodes[i], tree, rng, {
+            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+            assumeBidirectional, childrenByParent, stats,
+        });
     }
+}
+
+/**
+ * Realise (build + place) ONE node's region. Factored out of realiseSphereNodes
+ * so a host that gains a child in a LATER batch can be re-realised through the
+ * SAME path: `replace: true` swaps the region in place (grid.replaceRegion)
+ * instead of placing into a fresh cell, and skips the regionsBuilt /
+ * teleportersPlaced tallies (already counted on the first build). Re-realising
+ * recomputes the host's exit plans from the now-larger childrenByParent, so it
+ * gains the doorway/portal toward the new child while its entrance + existing
+ * child sides (fixed in the placement pre-pass) are preserved. With
+ * replace=false this is byte-identical to the prior inline loop body.
+ */
+function* realiseOneSphereNode(grid, node, tree, rng, {
+    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    assumeBidirectional, childrenByParent, stats, replace = false,
+}) {
+    // Cell + side were resolved by the placement pre-pass
+    // (occupancy-aware adjacency, remote only when fully surrounded).
+    const isTeleporter = node.isTeleporter;
+    const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
+    const {
+        region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
+    } = specs;
+    node.region_id = region_id;
+
+    yield {
+        type: 'region',
+        index: node.index,
+        total,
+        region_id,
+        substrate: node.substrate,
+        sphere: node.wave,
+        placements: locations.length,
+    };
+
+    const adapter = getAdapter(node.substrate);
+    let region;
+    if (typeof adapter.generateRegionCore === 'function') {
+        region = buildSphereProceduralRegion({
+            substrate: node.substrate,
+            region_id,
+            size: regionSize,
+            entrances,
+            exitPlans,
+            locations,
+            itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+        });
+    } else if (typeof adapter.generateZoneForSpecs === 'function'
+            || typeof adapter.generateZoneForSpecsGen === 'function') {
+        region = yield* buildSphereZoneRegion({
+            substrate: node.substrate,
+            region_id,
+            regionSize,
+            exitPlans,
+            locations,
+            entranceSide,
+            entryGate: node.gate,
+            entryGateCounts: node.gateCounts,
+            regionParams,
+            seed: (rng.next() * 0x7fffffff) | 0,
+            adapter,
+        });
+    } else {
+        throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
+            + 'generateRegionCore nor generateZoneForSpecs');
+    }
+
+    if (replace) grid.replaceRegion(cell, region);
+    else grid.placeRegion(cell, region);
+    if (isTeleporter) {
+        grid.setTeleporter(parentNode.cell, node.side, cell);
+        if (!replace) stats.teleportersPlaced += 1;
+    }
+
+    // Back-exit to the parent on the entrance tile — buildRulesJson's
+    // post-pass copies the forward gate's rule onto it.
+    applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
+    if (!replace) stats.regionsBuilt += 1;
+    yield {
+        type: 'regionDone',
+        index: node.index,
+        total,
+        region_id,
+    };
 }
 
 /**
@@ -4061,6 +4082,217 @@ export function* growSpheresGen(config) {
     stats.stopReason = 'plan_complete';
 
     return { grid, stats, startCell, tree };
+}
+
+/**
+ * Resolve the effective spheres-per-batch from growthParams + the wave count.
+ * null / 0 / negative / ≥ waves all mean "one batch = all spheres" (the
+ * byte-identical default, which delegates to growSpheresGen). Mirrors
+ * sphereSteps.resolveSpheresPerBatch — kept here so the engine has no import
+ * cycle with the orchestration module.
+ */
+function resolveBatchSize(spheresPerBatch, waves) {
+    const n = Number(spheresPerBatch);
+    if (!Number.isInteger(n) || n <= 0 || n >= waves) return waves;
+    return n;
+}
+
+/**
+ * Batched, sphere-major sphere growth. Instead of building the WHOLE tree and
+ * then realising it (growSpheresGen), this interleaves topology + realisation a
+ * BATCH of spheres at a time: wire batch b's waves onto the nodes built so far,
+ * place + realise their regions onto the carried grid, then RE-REALISE any
+ * earlier-batch host that gained a child this batch (so it grows the doorway /
+ * portal toward the new region — the "re-realise the host" attach strategy).
+ *
+ * The single rng stream is shared across wiring + realisation, so the draw
+ * ORDER differs from the step-major path — batch < all is EXPECTED to diverge
+ * (an explicit setting, not a regression). batch = all (the default) takes the
+ * early return into growSpheresGen and stays byte-identical.
+ *
+ * Same config shape + event stream as growSpheresGen; the grid is auto-sized
+ * up front from the allocation's total region count (Phase 2 keeps the full
+ * plan known up front — growable grids are Phase 4 / append).
+ */
+export function* growSpheresBatchedGen(config) {
+    const {
+        regionSize,
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        seed = 1,
+        regionParams = {},
+        growthParams = {},
+        hazardOpts = null,
+    } = config;
+    if (!regionSize || !regionSize.width || !regionSize.height) {
+        throw new Error('growSpheres: regionSize.{width,height} required');
+    }
+    const {
+        spherePlan,
+        maxItemsPerRegion = 2,
+        fillerCount = 0,
+        revisitRatio = 0.25,
+        substrateQuotas = null,
+        startSubstrate = null,
+        gridDims = null,
+        teleporterMinGap = 2,
+        assumeBidirectional = true,
+        spheresPerBatch = null,
+    } = growthParams;
+    if (!spherePlan) {
+        throw new Error('growSpheres: growthParams.spherePlan required');
+    }
+    const waves = spherePlan.spheres.length;
+    // batch = all (default): the step-major path, byte-identical. Delegate so
+    // there is ONE implementation of the monolithic build.
+    if (resolveBatchSize(spheresPerBatch, waves) >= waves) {
+        return yield* growSpheresGen(config);
+    }
+    const batch = resolveBatchSize(spheresPerBatch, waves);
+
+    const planErrors = validateSpherePlan(spherePlan);
+    if (planErrors.length > 0) {
+        throw new Error(`growSpheres: invalid sphere plan — ${planErrors[0]}`);
+    }
+    for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0) continue;
+        const adapter = substrateRegistry.get(sub);
+        if (!adapter) {
+            throw new Error(`growSpheres: substrate '${sub}' is not registered`);
+        }
+        if (typeof adapter.generateRegionCore !== 'function'
+                && typeof adapter.generateZoneForSpecs !== 'function') {
+            throw new Error(`growSpheres: substrate '${sub}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs — it cannot '
+                + 'realise requirement-targeted regions');
+        }
+    }
+
+    const opts = {
+        maxItemsPerRegion, fillerCount, revisitRatio,
+        substrateQuotas, startSubstrate, regionParams,
+    };
+    const rng = createRng(seed);
+    // ②a — allocation draws ALL fillers up front (a fixed-count draw), exactly
+    // as the step-major path, so the filler→wave assignment is independent of
+    // the batch size.
+    const { allocation } = allocateSphereTree(spherePlan, opts, rng);
+    const totalNodes = allocation.regionsPerWave.reduce((a, b) => a + b, 0) + fillerCount;
+
+    // Auto-size the grid from the FINAL region count (the full plan is known
+    // up front in Phase 2), matching growSpheresGen's sizing.
+    const side = Math.max(5, Math.ceil(Math.sqrt(totalNodes)) * 2 + 1);
+    const dims = gridDims ?? { width: side, height: side };
+    const grid = new Grid(dims);
+    const startCell = {
+        gx: Math.floor(dims.width / 2),
+        gy: Math.floor(dims.height / 2),
+    };
+
+    const ctx = createSphereWiringContext(spherePlan, allocation, opts, rng);
+    const nodes = ctx.nodes; // live accumulator
+    const tree = { nodes, substrateCounts: ctx.substrateCounts, quotaFallbacks: 0 };
+    const childrenByParent = new Map();
+    const stats = {
+        regionsBuilt: 0,
+        regionsSkipped: 0,
+        teleportersPlaced: 0,
+        stopReason: null,
+        substrateCounts: ctx.substrateCounts,
+        quotaFallbacks: 0,
+    };
+
+    yield { type: 'plan', regions: totalNodes, spheres: waves };
+
+    const realiseOpts = {
+        total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
+        hazardOpts, assumeBidirectional, childrenByParent, stats,
+    };
+    // Indices whose region is on the grid: drives replace-vs-place AND lets us
+    // DEFER a childless root (a parent-less, child-less region — zone
+    // substrates reject it). The root is always given children by a later wave,
+    // and is placed then.
+    const placed = new Set();
+
+    for (let wStart = 0; wStart < waves; wStart += batch) {
+        const wEnd = Math.min(wStart + batch, waves);
+        const prevCount = nodes.length;
+
+        // ②b — wire this batch's waves onto the existing nodes.
+        for (let w = wStart; w < wEnd; w++) ctx.wireWave(w);
+
+        // Index children + note which EARLIER-batch hosts gained a child now
+        // (they must be re-realised to grow the connecting exit). Same-batch
+        // parents need no re-realise: childrenByParent is complete for them
+        // before their region is realised below.
+        const touchedPriorHosts = new Set();
+        for (let i = prevCount; i < nodes.length; i++) {
+            const node = nodes[i];
+            if (node.parent == null) continue;
+            if (!childrenByParent.has(node.parent)) childrenByParent.set(node.parent, []);
+            childrenByParent.get(node.parent).push(node);
+            if (node.parent < prevCount) touchedPriorHosts.add(node.parent);
+        }
+
+        // ②c — item placement (no rng): clear + re-place all, matching the
+        // step-major stepItems. Every wave in this batch is fully wired, so its
+        // items land on existing nodes.
+        for (const nd of nodes) nd.items = [];
+        placeSphereTreeItems(spherePlan, nodes);
+
+        // ③ — assign the new nodes' cells, then realise in index order from the
+        // LOWEST touched host to the end. A parent must be realised (with the
+        // child's exit placed) before its child; and re-realising a host moves
+        // its exit tiles (positional, for maze), which desyncs every
+        // descendant's entrance — so the whole tail rebuilds consistently
+        // top-down. Prior nodes in the range are RE-realised in place
+        // (replace); the new nodes are placed for the first time.
+        placeSphereTreeCells(grid, nodes, rng, {
+            startCell, teleporterMinGap, dims, fromIndex: prevCount,
+        });
+        let realiseStart = prevCount;
+        for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
+        for (let i = realiseStart; i < nodes.length; i++) {
+            const node = nodes[i];
+            const hasChildren = (childrenByParent.get(i)?.length ?? 0) > 0;
+            // Defer the childless root until it gains a child (zone substrates
+            // reject a parent-less, child-less region). All other nodes have a
+            // parent, so a childless leaf is fine.
+            if (node.parent == null && !hasChildren) continue;
+            yield* realiseOneSphereNode(grid, node, tree, rng, {
+                ...realiseOpts, replace: placed.has(i),
+            });
+            placed.add(i);
+        }
+    }
+
+    stats.substrateCounts = ctx.substrateCounts;
+    stats.quotaFallbacks = ctx.quotaFallbacks();
+    tree.quotaFallbacks = ctx.quotaFallbacks();
+
+    yield { type: 'phase', name: 'stitch + walls' };
+    stitchGrid(grid);
+    wallOffUnusedExits(grid);
+    stats.stopReason = 'plan_complete';
+
+    return { grid, stats, startCell, tree };
+}
+
+/**
+ * Batched sphere growth, asynchronous (drains growSpheresBatchedGen, forwarding
+ * progress + yielding to the event loop). batch = all is byte-identical to
+ * growSpheresAsync (delegates to growSpheresGen).
+ */
+export async function growSpheresBatchedAsync(config, onProgress = null) {
+    const gen = growSpheresBatchedGen(config);
+    let r = gen.next();
+    while (!r.done) {
+        onProgress?.(r.value);
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        r = gen.next();
+    }
+    return r.value;
 }
 
 /**
