@@ -26,8 +26,9 @@ import {
 // The sphere-growth pipeline steps + envelope serde live in the shared
 // runner now; the panel delegates each step to it (no drift with the CLI).
 import {
-    SPHERE_STEPS, runStep, growConfigFrom,
+    SPHERE_STEPS, runStep, nextSphereStep, growConfigFrom,
     serializeEnvelope, deserializeEnvelope, detectCompleted,
+    resolveSpheresPerBatch,
 } from './sphereSteps.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -1426,14 +1427,17 @@ export class ProcgenPipelineUI {
         gen.addEventListener('click', () => this._runGeneration());
         section.appendChild(gen);
 
-        // Sphere mode: "Run next step" + "Reset".
+        // Sphere mode: "Run next step" + "Reset". The next step follows
+        // nextSphereStep (it loops ②a→③ per batch in sphere-major mode), so the
+        // label can revisit ②a Allocate for the next sphere before ④ Compile.
         if (sphere) {
-            const nextIdx = completed + 1;
+            const nextStep = this._stepState ? nextSphereStep(this._stepState) : 'plan';
+            const nextIdx = nextStep ? SPHERE_STEPS.indexOf(nextStep) : -1;
             const nextBtn = document.createElement('button');
             nextBtn.className = 'procgen-pipeline-btn';
-            nextBtn.textContent = nextIdx <= SPHERE_LAST_STEP
+            nextBtn.textContent = nextIdx >= 0
                 ? SPHERE_STEP_RUN_LABELS[nextIdx] : 'Pipeline complete';
-            nextBtn.disabled = this.isGenerating || nextIdx > SPHERE_LAST_STEP;
+            nextBtn.disabled = this.isGenerating || nextIdx < 0;
             nextBtn.addEventListener('click', () => this._runSphereStepNext());
             section.appendChild(nextBtn);
             if (this._stepState) {
@@ -1535,6 +1539,25 @@ export class ProcgenPipelineUI {
                 wrap.appendChild(arrow);
             }
         });
+
+        // Sphere-major batch progress: in batch < all mode the ②a→③ chips
+        // loop per batch, so surface which sphere(s) the loop is on. batchStart
+        // counts the spheres whose regions are already on the grid.
+        const st = this._stepState;
+        if (st?.plan) {
+            const total = st.plan.spheres.length;
+            const batch = resolveSpheresPerBatch(st.config?.spheresPerBatch, total);
+            if (batch < total) {
+                const built = st.grow?.grid ? (st.batchStart ?? 0) : 0;
+                const tag = document.createElement('span');
+                tag.style.cssText = 'padding:2px 8px;border-radius:10px;'
+                    + 'background:#1d3a4a;color:#bfe2f0;margin-left:8px;';
+                tag.textContent = built >= total
+                    ? `sphere-major (batch ${batch}): all ${total} spheres built`
+                    : `sphere-major (batch ${batch}): ${built}/${total} spheres built`;
+                wrap.appendChild(tag);
+            }
+        }
         return wrap;
     }
 
@@ -3338,28 +3361,29 @@ export class ProcgenPipelineUI {
     }
 
     // Advance one step (button: Run next step). Starts the pipeline (①)
-    // when none is running.
+    // when none is running, then follows nextSphereStep — which loops the
+    // middle four phases per batch (sphere-major) and falls through to ④ after
+    // the last batch. batch = all collapses to the linear six steps.
     _advanceSphereStep() {
         if (!this._stepState) { return this._stepPlan(); }
-        // Runner for the step that produces `completed + 1`. Every runner is
-        // async now (they await the shared runStep); the run-all loop / button
-        // await the returned promise.
-        const runners = [
-            () => this._stepAllocate(), // → 1
-            () => this._stepTopology(), // → 2
-            () => this._stepItems(),    // → 3
-            () => this._stepRegions(),  // → 4 (async)
-            () => this._stepCompile(),  // → 5
-        ];
-        return runners[this._stepState.completed]?.();
+        const byName = {
+            plan: () => this._stepPlan(),
+            allocate: () => this._stepAllocate(),
+            topology: () => this._stepTopology(),
+            items: () => this._stepItems(),
+            regions: () => this._stepRegions(),
+            compile: () => this._stepCompile(),
+        };
+        const step = nextSphereStep(this._stepState);
+        return step ? byName[step]?.() : undefined;
     }
 
-    // "Run all" — run from the current point to completion (steps ②③④
-    // are skipped if already done). Called by _runGeneration in sphere
-    // mode, so it inherits the isGenerating guard + error handling.
+    // "Run all" — run from the current point to completion. nextSphereStep
+    // returns null only once ④ is done, so the loop drives every batch (the
+    // per-batch loop-back advances batchStart monotonically → it terminates).
     async _runSphereGrowth() {
         if (!this._stepState) await this._stepPlan();
-        while (this._stepState.completed < SPHERE_LAST_STEP) {
+        while (nextSphereStep(this._stepState)) {
             // eslint-disable-next-line no-await-in-loop
             await this._advanceSphereStep();
         }
