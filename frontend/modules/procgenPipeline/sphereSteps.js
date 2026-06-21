@@ -304,7 +304,6 @@ function stepItems(env) {
 async function stepRegions(env, { onProgress = null } = {}) {
     const growConfig = growConfigFrom(env.config, env.plan);
     const total = env.plan.spheres.length;
-    const batch = resolveSpheresPerBatch(env.config.spheresPerBatch, total);
     // The grown grid IS the realisation state: a carried grid + batchStart > 0
     // is a legit mid-loop continuation, but if the grid is gone (a resume that
     // dropped the grow output, or an edit that invalidated it) the cursor is
@@ -320,12 +319,14 @@ async function stepRegions(env, { onProgress = null } = {}) {
     const rng = createRng(0);
     rng.setState((env.regionsRng ?? env.rng).s); // post-②b position
 
-    // ②a sizes the grid, but an envelope resumed straight to ③ (e.g. a panel
-    // export that omits the cross-batch sizing) may not carry it — recompute
-    // deterministically from the allocation when absent.
-    const sizing = env.dims
-        ? { dims: env.dims, startCell: env.startCell, totalNodes: env.totalNodes }
-        : gridSizeFor(env.allocation, env.config.fillerCount);
+    // Size the grid from the CURRENT allocation (deterministic — matches
+    // growSpheresGen's auto-size for the unedited tree). Recomputing here rather
+    // than trusting ②a's stashed env.dims keeps the grid correctly sized when
+    // the allocation was edited after ②a ran (more / fewer regions). Falls back
+    // to the stashed dims only if the allocation is somehow absent.
+    const sizing = env.allocation
+        ? gridSizeFor(env.allocation, env.config.fillerCount)
+        : { dims: env.dims, startCell: env.startCell, totalNodes: env.totalNodes };
 
     let grid;
     let startCell;
@@ -381,7 +382,15 @@ async function stepRegions(env, { onProgress = null } = {}) {
 
     env.rng = { s: rng.getState() }; // threaded into the next batch's ②b
     env.placed = placed;
-    env.batchStart = batchStart + batch;
+    // Advance the cursor by the waves WIRED so far (highest wave in the node
+    // set + 1), not a blind += batch. For the forward loop this equals the
+    // batch's waveEnd (every wave has ≥ 1 node) AND counts a deferred (childless)
+    // root's wave so the loop doesn't stall on it. For an EDIT re-run — where the
+    // kept node set already spans every wave — it jumps straight to `total`, so
+    // ③ realises the whole (edited) tree once and the loop falls through to ④
+    // instead of re-wiring waves that already exist.
+    const maxWave = env.nodes.reduce((m, n) => Math.max(m, n.wave), -1);
+    env.batchStart = Math.min(maxWave + 1, total);
     env.grow = { grid, stats, startCell };
 
     if (env.batchStart >= total) {

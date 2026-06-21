@@ -181,6 +181,60 @@ describe('sphereSteps runner', () => {
         }
     });
 
+    // 2.10 — per-sphere edit interactions. Editing a step's output in batch < all
+    // mode keeps the (now complete) accumulated node set and re-runs forward; the
+    // loop must NOT re-wire waves that already exist (the double-wire bug). This
+    // mirrors the panel's _invalidateFrom(2)/(3): roll completed back, drop the
+    // downstream outputs, reset the batch cursor + grid, keep the edited nodes.
+    function invalidateFrom(env, stepIdx) {
+        env.completed = stepIdx;
+        if (stepIdx < 3) env.tree = null;
+        if (stepIdx < 4) { env.grow = null; env.placed = null; env.batchStart = 0; }
+        if (stepIdx < 5) env.compile = null;
+        return env;
+    }
+
+    it('editing topology (batch < all) re-runs forward without double-wiring', async () => {
+        const config = makeConfig({ sphereCount: 4, spheresPerBatch: 1 });
+        const env = await runToStep(newEnvelope(config));
+        expect(env.compile.oracleErrors).toEqual([]);
+        const nodeCount = env.nodes.length;
+
+        // Simulate a ②b edit: keep the full (edited) node set, invalidate from
+        // topology, re-run. A naive loop would re-enter ②b per batch and append
+        // the already-present waves' nodes again.
+        invalidateFrom(env, 2);
+        await runToStep(env);
+        expect(env.completed).toBe(5);
+        expect(env.nodes.length).toBe(nodeCount); // no double-wire
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
+    it('editing items (batch < all) re-runs forward and the oracle holds', async () => {
+        const config = makeConfig({ sphereCount: 4, spheresPerBatch: 1 });
+        const env = await runToStep(newEnvelope(config));
+        const nodeCount = env.nodes.length;
+        invalidateFrom(env, 3);
+        await runToStep(env);
+        expect(env.completed).toBe(5);
+        expect(env.nodes.length).toBe(nodeCount);
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
+    it('editing a region (batch < all) keeps the grid and recompiles', async () => {
+        const config = makeConfig({ sphereCount: 4, spheresPerBatch: 1 });
+        const env = await runToStep(newEnvelope(config));
+        const grid = env.grow.grid;
+        // A ③ edit (invalidate from compile only): the grown grid is KEPT, the
+        // cursor stays at total, so re-running goes straight to ④.
+        invalidateFrom(env, 4);
+        expect(env.grow.grid).toBe(grid); // grid preserved (region edit lives on it)
+        await runToStep(env);
+        expect(env.completed).toBe(5);
+        expect(env.grow.grid).toBe(grid); // ④ didn't rebuild the grid
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
     it('batched JSON round-trip between EVERY step == in-process batched run', async () => {
         // The cross-process (CLI) path under batch < all: serialise + restore
         // the envelope between every step (incl. the per-batch loop-backs), and

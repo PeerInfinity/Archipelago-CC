@@ -136,6 +136,32 @@ if (!msgB.includes('Sphere plan realised')) {
 }
 console.log('PHASE B OK: "Run all" finishes the batch<all pipeline —', msgB);
 
+// ── Phase C: edit the plan, then re-run in batch<all (no double-wire) ─
+// Move a Sphere-1 item down (▼) → _onSpherePlanEdited invalidates from ①.
+// Re-running must regenerate the whole sphere-major pipeline cleanly (a stale
+// batch cursor would otherwise re-wire already-present waves).
+const movedC = await page.evaluate(() => {
+    const groups = [...document.querySelectorAll('.procgen-pipeline-panel [data-sphere]')];
+    const s1 = groups.find((g) => g.getAttribute('data-sphere') === '1') || document;
+    const btn = [...s1.querySelectorAll('button')].find((b) => b.textContent === '▼' && !b.disabled);
+    if (!btn) return null;
+    const label = btn.closest('[data-item], li, div')?.textContent?.trim() ?? '?';
+    btn.click();
+    return label;
+});
+if (movedC) {
+    await page.waitForTimeout(400);
+    await clickBtn('Run all (finish)');
+    await page.waitForTimeout(6000);
+    const msgC = await message();
+    if (!msgC.includes('Sphere plan realised')) {
+        throw new Error(`batch<all re-run after a plan edit failed: ${msgC}`);
+    }
+    console.log('PHASE C OK: plan edit + re-run regenerates the batch<all world —', msgC);
+} else {
+    console.log('PHASE C SKIP: no movable Sphere-1 item found (plan shape)');
+}
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:\n' + errors.join('\n'));
