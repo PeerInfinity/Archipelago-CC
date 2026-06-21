@@ -32,12 +32,17 @@
  *   --fillers N              filler regions, no items (default 0)
  *   --revisit P              revisit ratio for attachments (default 0.25)
  *   --no-bidirectional       disable back-exits
- *   --no-arrow-entry         skip the panel's bounce arrow-entry
- *                            orchestration (exclusive sphere 1 /
- *                            starting item)
- *   --fall-behavior MODE     bounce fallBehavior regionParam (default 'current')
- *   --physics-profile ID     bounce physics profile (default 'experimental';
- *                            non-classic stamps params.physics into payloads)
+ *   --no-arrow-entry         skip bounce's prepareSphereGrowth prep (the free
+ *                            arrow → starting item); regionParams still carry
+ *                            the braid layout (minus the free arrow)
+ *   --fall-behavior MODE     override bounce bounceFallBehavior (default: the
+ *                            substrate default, 'current')
+ *   --physics-profile ID     override bounce bouncePhysicsProfile (default: the
+ *                            substrate default, 'dj'; non-'experimental' stamps
+ *                            params.physics into payloads)
+ *   --param key=value        override any substrate procgen param (e.g.
+ *                            --param bounceBraidWidth=318 --param bounceJitter=0);
+ *                            numeric values are coerced. Repeat per param.
  *   --enable-loop-mode       embed loop_costs in rules.json (mirrors the
  *                            procgen panel's "Enable loop mode" toggle —
  *                            the runtime loops module auto-enters loop
@@ -76,9 +81,11 @@ import { planSpheres, computeItemSpheres, compareSpheresToPlan } from
     '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from
     '../../frontend/modules/shared/procgen/library.js';
-import { substrateRegistry } from
-    '../../frontend/modules/shared/procgen/substrateRegistry.js';
-import { createRng } from '../../frontend/modules/shared/rng.js';
+import {
+    defaultProcgenParams, activeSubstrateIds,
+    collectSphereGrowthPrep, assembleRegionParams,
+    mergeSubstrateItemLib, resolveVictoryItem,
+} from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 
 // --- CLI parser ---
 
@@ -99,8 +106,11 @@ function parseArgs(argv) {
         revisit: 0.25,
         bidirectional: true,
         arrowEntry: true,
-        fallBehavior: 'current',
-        physicsProfile: 'experimental',
+        // null = "not provided" → the substrate's defaultProcgenParams value
+        // wins (bounce: physics 'dj', fall 'current'). A flag value overrides.
+        fallBehavior: null,
+        physicsProfile: null,
+        params: {},
         enableLoopMode: false,
         regionXpEffect: 'cost',
         rulesOut: null,
@@ -117,6 +127,11 @@ function parseArgs(argv) {
         const i = s.indexOf('=');
         if (i < 0) throw new Error(`expected id=N, got '${s}'`);
         return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
+    };
+    const parseStrKv = (s) => {
+        const i = s.indexOf('=');
+        if (i < 0) throw new Error(`expected key=value, got '${s}'`);
+        return [s.slice(0, i), s.slice(i + 1)];
     };
     for (let i = 0; i < argv.length; i++) {
         const a = argv[i];
@@ -156,6 +171,14 @@ function parseArgs(argv) {
             case '--no-arrow-entry': out.arrowEntry = false; break;
             case '--fall-behavior': out.fallBehavior = next(); break;
             case '--physics-profile': out.physicsProfile = next(); break;
+            case '--param': {
+                // Generic substrate-param override (e.g.
+                // --param bounceBraidWidth=318 --param bounceJitter=0). Numeric
+                // values are coerced; everything else stays a string.
+                const [k, v] = parseStrKv(next());
+                out.params[k] = /^-?\d+(\.\d+)?$/.test(v) ? Number(v) : v;
+                break;
+            }
             case '--enable-loop-mode': out.enableLoopMode = true; break;
             case '--region-xp-effect': out.regionXpEffect = next(); break;
             case '--rules-out': out.rulesOut = next(); break;
@@ -210,64 +233,45 @@ function shapeRegions(grid) {
 async function main() {
     const config = parseArgs(process.argv.slice(2));
 
-    // Merged item library, mirroring the panel's _mergedItemLib():
-    // DEFAULT_ITEMS plus any libraryItems declared by selected
-    // substrates (quotas + start substrate).
+    // Merged item library + victory resolution via the shared substrate-hook
+    // assembly (same path the panel + sphere-step CLI use).
     const selectedSubs = new Set(Object.keys(config.quotas));
     if (config.start) selectedSubs.add(config.start);
-    const itemLib = { ...DEFAULT_ITEMS };
-    for (const id of selectedSubs) {
-        const extra = substrateRegistry.get(id)?.libraryItems;
-        if (extra) Object.assign(itemLib, extra);
-    }
+    const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs);
+    const victory = resolveVictoryItem({
+        explicit: config.victory, itemPool: config.items, itemLib, selectedIds: selectedSubs,
+    });
 
-    // Victory resolution, mirroring _resolveVictoryItemId(): explicit
-    // flag, else an is_victory item in the pool (merged lib), else a
-    // selected substrate's registry victoryItem.
-    let victory = config.victory;
-    if (!victory) {
-        victory = Object.keys(config.items)
-            .find((id) => itemLib[id]?.is_victory) ?? null;
-    }
-    if (!victory) {
-        for (const id of selectedSubs) {
-            const vi = substrateRegistry.get(id)?.victoryItem;
-            if (vi) { victory = vi; break; }
-        }
-    }
-
-    // Bounce arrow entry, mirroring the panel's _runSphereGrowth():
-    // bounce START → sphere 1 is EXACTLY one seeded-random arrow (the
-    // start-stack intro); any other start → the arrow leaves the pool
-    // and becomes a starting item.
+    // Substrate params: merged defaultProcgenParams overlaid with explicit CLI
+    // flags. The bounce hooks read the bounce*-prefixed keys; --param sets the
+    // rest. The shared prep runs each active substrate's prepareSphereGrowth
+    // (bounce's free arrow → a starting item + pool delta + bounceFreeArrow
+    // regionParam); buildRegionParams produces the full braid layout. This
+    // replaces the old inline arrow block + minimal {fallBehavior,
+    // physicsProfile} regionParams. --no-arrow-entry skips ONLY the prep
+    // (regionParams still carry the braid layout, minus the free arrow).
+    const params = defaultProcgenParams({});
+    if (config.physicsProfile != null) params.bouncePhysicsProfile = config.physicsProfile;
+    if (config.fallBehavior != null) params.bounceFallBehavior = config.fallBehavior;
+    Object.assign(params, config.params);
+    const activeIds = activeSubstrateIds(config.quotas, config.start);
     const itemPool = { ...config.items };
-    const quotaIds = Object.keys(config.quotas);
-    const bounceSelected = (config.quotas.bounce ?? 0) > 0 || config.start === 'bounce';
-    const bounceStarts = config.start === 'bounce'
-        || (config.start == null && bounceSelected
-            && quotaIds.length > 0 && quotaIds.every((id) => id === 'bounce'));
-    const exclusiveSpheres = {};
-    const startingItems = [];
-    const lockedCanonicalItems = [];
-    let arrowNote = '';
-    if (config.arrowEntry && bounceSelected) {
-        const arrows = ['Left arrow', 'Right arrow']
-            .filter((a) => (itemPool[a] ?? 0) > 0);
-        if (arrows.length > 0) {
-            const pick = arrows[Math.floor(
-                createRng((config.seed * 31 + 17) | 0).next() * arrows.length)];
-            if (bounceStarts) {
-                exclusiveSpheres[1] = [pick];
-                lockedCanonicalItems.push(pick);
-                arrowNote = `${pick} = sphere 1 (the start stack)`;
-            } else {
-                startingItems.push(pick);
-                itemPool[pick] -= 1;
-                if (itemPool[pick] <= 0) delete itemPool[pick];
-                arrowNote = `${pick} granted as a starting item`;
-            }
-        }
-    }
+    const prep = config.arrowEntry
+        ? collectSphereGrowthPrep({
+            activeIds, itemPool, quotas: config.quotas,
+            startSubstrate: config.start, seed: config.seed, params,
+        })
+        : {
+            startingItems: [], lockedCanonicalItems: [],
+            exclusiveSpheres: {}, regionParams: {}, note: '',
+        };
+    const regionParams = assembleRegionParams({
+        activeIds, mode: 'sphere', params, extra: prep.regionParams,
+    });
+    const startingItems = prep.startingItems;
+    const lockedCanonicalItems = prep.lockedCanonicalItems;
+    const exclusiveSpheres = prep.exclusiveSpheres;
+    const arrowNote = prep.note;
 
     const plan = planSpheres({
         itemPool,
@@ -285,10 +289,7 @@ async function main() {
         regionSize: config.region,
         itemLib,
         seed: config.seed,
-        regionParams: {
-            fallBehavior: config.fallBehavior,
-            physicsProfile: config.physicsProfile,
-        },
+        regionParams,
         growthParams: {
             spherePlan: plan,
             maxItemsPerRegion: config.maxItemsPerRegion,

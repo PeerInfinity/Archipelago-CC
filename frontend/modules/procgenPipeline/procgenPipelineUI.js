@@ -37,6 +37,10 @@ import {
     isObstacleCleared, getItemRenderHints,
 } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+    defaultProcgenParams, activeSubstrateIds,
+    collectSphereGrowthPrep, assembleRegionParams,
+} from './sphereConfigHooks.js';
 import { getRegionEditor } from './regionEditors.js';
 
 const LS_KEY = 'procgenPipeline_params';
@@ -945,11 +949,7 @@ export class ProcgenPipelineUI {
      * defaults via the registry so the panel stays substrate-agnostic.
      */
     _defaultParams() {
-        const merged = { ...DEFAULT_PARAMS };
-        for (const entry of substrateRegistry.getAll()) {
-            if (entry?.defaultProcgenParams) Object.assign(merged, entry.defaultProcgenParams);
-        }
-        return merged;
+        return defaultProcgenParams(DEFAULT_PARAMS);
     }
 
     /**
@@ -958,12 +958,7 @@ export class ProcgenPipelineUI {
      * substrate. Drives the per-substrate pre-plan + regionParams hooks.
      */
     _activeSubstrateIds(quotas, startSub) {
-        const ids = new Set();
-        for (const [id, n] of Object.entries(quotas ?? {})) {
-            if (Number(n) > 0) ids.add(id);
-        }
-        if (startSub) ids.add(startSub);
-        return [...ids];
+        return activeSubstrateIds(quotas, startSub);
     }
 
     /**
@@ -975,34 +970,9 @@ export class ProcgenPipelineUI {
      * hook contribute nothing.
      */
     _collectSphereGrowthPrep({ activeIds, itemPool, quotas, startSubstrate, seed }) {
-        const startingItems = [];
-        const lockedCanonicalItems = [];
-        const exclusiveSpheres = {};
-        const regionParams = {};
-        const notes = [];
-        for (const id of activeIds) {
-            const hook = substrateRegistry.get(id)?.prepareSphereGrowth;
-            if (typeof hook !== 'function') continue;
-            const c = hook({
-                itemPool, quotas, startSubstrate, seed,
-                params: this.params, substrateId: id,
-            }) || {};
-            if (c.startingItems) startingItems.push(...c.startingItems);
-            if (c.lockedCanonicalItems) lockedCanonicalItems.push(...c.lockedCanonicalItems);
-            for (const [k, v] of Object.entries(c.exclusiveSpheres ?? {})) {
-                exclusiveSpheres[k] = [...(exclusiveSpheres[k] ?? []), ...v];
-            }
-            for (const [k, d] of Object.entries(c.itemPoolDelta ?? {})) {
-                itemPool[k] = (itemPool[k] ?? 0) + d;
-                if (itemPool[k] <= 0) delete itemPool[k];
-            }
-            Object.assign(regionParams, c.regionParams ?? {});
-            if (c.note) notes.push(c.note);
-        }
-        return {
-            startingItems, lockedCanonicalItems, exclusiveSpheres,
-            regionParams, note: notes.join(' — '),
-        };
+        return collectSphereGrowthPrep({
+            activeIds, itemPool, quotas, startSubstrate, seed, params: this.params,
+        });
     }
 
     /**
@@ -1011,15 +981,7 @@ export class ProcgenPipelineUI {
      * (e.g. the pre-plan hook's regionParams contribution) wins last.
      */
     _assembleRegionParams(activeIds, mode, extra = {}) {
-        const out = {};
-        for (const id of activeIds) {
-            const fn = substrateRegistry.get(id)?.buildRegionParams;
-            if (typeof fn === 'function') {
-                Object.assign(out, fn({ params: this.params, mode }));
-            }
-        }
-        Object.assign(out, extra);
-        return out;
+        return assembleRegionParams({ activeIds, mode, params: this.params, extra });
     }
 
     _renderSubstrateLibraryRow(entry) {
