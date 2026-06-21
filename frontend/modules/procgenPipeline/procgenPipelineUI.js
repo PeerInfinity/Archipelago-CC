@@ -1234,6 +1234,14 @@ export class ProcgenPipelineUI {
                 { key: 'sphereCount',   label: 'Spheres',          min: 1, max: 20 },
                 { key: 'fillerCount',   label: 'Filler regions',   min: 0, max: 50 },
                 { key: 'revisitPercent', label: 'Revisit %',       min: 0, max: 100 },
+                {
+                    key: 'spheresPerBatch', label: 'Spheres/batch', min: 1, max: 20,
+                    nullable: true, placeholder: 'all',
+                    title: 'How many spheres to grow per batch. "all" (default) is '
+                        + 'the byte-identical step-major build; a smaller value grows '
+                        + 'sphere-major (interleaving topology + regions per batch) and '
+                        + 'intentionally produces a different world.',
+                },
             ] : []),
         ];
 
@@ -1248,6 +1256,7 @@ export class ProcgenPipelineUI {
             if (f.min !== undefined) input.min = f.min;
             if (f.max !== undefined) input.max = f.max;
             if (f.placeholder) input.placeholder = f.placeholder;
+            if (f.title) { input.title = f.title; label.title = f.title; }
             input.addEventListener('change', () => {
                 if (input.value === '' && f.nullable) {
                     this.params[f.key] = null;
