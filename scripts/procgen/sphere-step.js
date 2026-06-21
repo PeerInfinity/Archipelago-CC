@@ -17,6 +17,10 @@
  *   # run a contiguous range in one process:
  *   node scripts/procgen/sphere-step.js run --from plan --to compile ...args -o rules.json
  *
+ *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
+ *   # FIRST step whose output is missing (presence = keep, absence = recompute):
+ *   node scripts/procgen/sphere-step.js run -i partial.json -o rules.json
+ *
  * Step subcommands:
  *   plan accepts the same world flags as dump-sphere-growth.js (--seed,
  *   --items, --spheres, --victory, --quota, --start, --region, --fillers,
@@ -50,7 +54,7 @@ import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibr
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
 import {
-    SPHERE_STEPS, runStep, runToStep,
+    SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
@@ -247,8 +251,22 @@ async function main() {
     };
 
     if (sub === 'run') {
-        if (args.from) env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
-        await runToStep(env, args.to ?? 'compile', { onProgress });
+        const to = args.to ?? 'compile';
+        if (args.from) {
+            // Explicit override: resume from the named step.
+            env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
+            await runToStep(env, to, { onProgress });
+        } else {
+            // Auto-detect the resume point from which step outputs are
+            // present (parity with the panel's Load-envelope behavior) —
+            // a partial / hand-edited envelope resumes from the first step
+            // whose output is missing. presence = keep, absence = recompute.
+            const at = detectCompleted(env) + 1;
+            if (at < SPHERE_STEPS.length) {
+                process.stderr.write(`[sphere-step] auto-resume from ${SPHERE_STEPS[at]}\n`);
+            }
+            await resumeEnvelope(env, to, { onProgress });
+        }
     } else {
         await runStep(sub, env, { onProgress });
     }
