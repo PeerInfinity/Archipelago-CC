@@ -4123,6 +4123,57 @@ function resolveBatchSize(spheresPerBatch, waves) {
 }
 
 /**
+ * Realise ONE batch's regions onto the carried grid: place the new nodes'
+ * cells, then realise in index order from the LOWEST host that gained a child
+ * this batch to the end. New nodes (>= prevCount) are placed; earlier nodes in
+ * the range are RE-realised in place (a re-realised host moves its positional
+ * maze exit tiles, desyncing descendants — so the tail rebuilds top-down). The
+ * childless root is deferred until it gains a child. `placed` (a Set of node
+ * indices on the grid) is carried across batches and drives replace-vs-place.
+ *
+ * Shared by growSpheresBatchedGen AND the batch-aware step runner (③), so the
+ * two produce identical worlds for a given batch size — one realise-batch
+ * implementation, no drift.
+ */
+function* realiseSphereBatchGen(grid, nodes, tree, rng, {
+    prevCount, placed, startCell, teleporterMinGap, dims,
+    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    assumeBidirectional, stats,
+}) {
+    // childrenByParent over ALL nodes, in index order (== stable exit-plan
+    // order); touchedPriorHosts = earlier-batch hosts that gained a child now.
+    const childrenByParent = new Map();
+    const touchedPriorHosts = new Set();
+    for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        if (node.parent == null) continue;
+        if (!childrenByParent.has(node.parent)) childrenByParent.set(node.parent, []);
+        childrenByParent.get(node.parent).push(node);
+        if (i >= prevCount && node.parent < prevCount) touchedPriorHosts.add(node.parent);
+    }
+    placeSphereTreeCells(grid, nodes, rng, {
+        startCell, teleporterMinGap, dims, fromIndex: prevCount,
+    });
+    let realiseStart = prevCount;
+    for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
+    const realiseOpts = {
+        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+        assumeBidirectional, childrenByParent, stats,
+    };
+    for (let i = realiseStart; i < nodes.length; i++) {
+        const node = nodes[i];
+        const hasChildren = (childrenByParent.get(i)?.length ?? 0) > 0;
+        // Defer the childless root (zone substrates reject a parent-less,
+        // child-less region); all other nodes have a parent → a leaf is fine.
+        if (node.parent == null && !hasChildren) continue;
+        yield* realiseOneSphereNode(grid, node, tree, rng, {
+            ...realiseOpts, replace: placed.has(i),
+        });
+        placed.add(i);
+    }
+}
+
+/**
  * Batched, sphere-major sphere growth. Instead of building the WHOLE tree and
  * then realising it (growSpheresGen), this interleaves topology + realisation a
  * BATCH of spheres at a time: wire batch b's waves onto the nodes built so far,
@@ -4217,7 +4268,6 @@ export function* growSpheresBatchedGen(config) {
     const ctx = createSphereWiringContext(spherePlan, allocation, opts, rng);
     const nodes = ctx.nodes; // live accumulator
     const tree = { nodes, substrateCounts: ctx.substrateCounts, quotaFallbacks: 0 };
-    const childrenByParent = new Map();
     const stats = {
         regionsBuilt: 0,
         regionsSkipped: 0,
@@ -4229,14 +4279,8 @@ export function* growSpheresBatchedGen(config) {
 
     yield { type: 'plan', regions: totalNodes, spheres: waves };
 
-    const realiseOpts = {
-        total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
-        hazardOpts, assumeBidirectional, childrenByParent, stats,
-    };
-    // Indices whose region is on the grid: drives replace-vs-place AND lets us
-    // DEFER a childless root (a parent-less, child-less region — zone
-    // substrates reject it). The root is always given children by a later wave,
-    // and is placed then.
+    // Node indices whose region is on the grid — carried across batches; drives
+    // replace-vs-place in realiseSphereBatchGen.
     const placed = new Set();
 
     for (let wStart = 0; wStart < waves; wStart += batch) {
@@ -4246,49 +4290,17 @@ export function* growSpheresBatchedGen(config) {
         // ②b — wire this batch's waves onto the existing nodes.
         for (let w = wStart; w < wEnd; w++) ctx.wireWave(w);
 
-        // Index children + note which EARLIER-batch hosts gained a child now
-        // (they must be re-realised to grow the connecting exit). Same-batch
-        // parents need no re-realise: childrenByParent is complete for them
-        // before their region is realised below.
-        const touchedPriorHosts = new Set();
-        for (let i = prevCount; i < nodes.length; i++) {
-            const node = nodes[i];
-            if (node.parent == null) continue;
-            if (!childrenByParent.has(node.parent)) childrenByParent.set(node.parent, []);
-            childrenByParent.get(node.parent).push(node);
-            if (node.parent < prevCount) touchedPriorHosts.add(node.parent);
-        }
-
-        // ②c — item placement (no rng): clear + re-place all, matching the
-        // step-major stepItems. Every wave in this batch is fully wired, so its
-        // items land on existing nodes.
+        // ②c — item placement (no rng): clear + re-place all (idempotent for
+        // already-realised waves; the new waves' items land on their nodes).
         for (const nd of nodes) nd.items = [];
         placeSphereTreeItems(spherePlan, nodes);
 
-        // ③ — assign the new nodes' cells, then realise in index order from the
-        // LOWEST touched host to the end. A parent must be realised (with the
-        // child's exit placed) before its child; and re-realising a host moves
-        // its exit tiles (positional, for maze), which desyncs every
-        // descendant's entrance — so the whole tail rebuilds consistently
-        // top-down. Prior nodes in the range are RE-realised in place
-        // (replace); the new nodes are placed for the first time.
-        placeSphereTreeCells(grid, nodes, rng, {
-            startCell, teleporterMinGap, dims, fromIndex: prevCount,
+        // ③ — place + realise this batch (and re-realise the affected tail).
+        yield* realiseSphereBatchGen(grid, nodes, tree, rng, {
+            prevCount, placed, startCell, teleporterMinGap, dims,
+            total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
+            hazardOpts, assumeBidirectional, stats,
         });
-        let realiseStart = prevCount;
-        for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
-        for (let i = realiseStart; i < nodes.length; i++) {
-            const node = nodes[i];
-            const hasChildren = (childrenByParent.get(i)?.length ?? 0) > 0;
-            // Defer the childless root until it gains a child (zone substrates
-            // reject a parent-less, child-less region). All other nodes have a
-            // parent, so a childless leaf is fine.
-            if (node.parent == null && !hasChildren) continue;
-            yield* realiseOneSphereNode(grid, node, tree, rng, {
-                ...realiseOpts, replace: placed.has(i),
-            });
-            placed.add(i);
-        }
     }
 
     stats.substrateCounts = ctx.substrateCounts;
