@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import {
-    growSpheres, growSpheresBatchedGen, buildRulesJson,
+    growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
@@ -49,7 +49,7 @@ function monolithic(config) {
             ? { victoryItem: config.victoryItem } : {}),
         seed: config.seed,
     });
-    const { grid, stats, startCell } = growSpheres({
+    const { grid, stats, startCell, tree } = growSpheres({
         regionSize: config.regionSize,
         itemLib: config.itemLib,
         seed: config.seed,
@@ -72,6 +72,7 @@ function monolithic(config) {
         completionConditionItem: config.victoryItem,
         procgenMetadata: {
             driver: 'sphere-growth', stop_reason: stats.stopReason, sphere_plan: plan,
+            sphere_tree: compactSphereTree(tree),
         },
     });
 }
@@ -108,7 +109,7 @@ function monolithicBatched(config, spheresPerBatch) {
     });
     let r = gen.next();
     while (!r.done) r = gen.next();
-    const { grid, stats, startCell } = r.value;
+    const { grid, stats, startCell, tree } = r.value;
     return buildRulesJson(grid, {
         startCell, seed: config.seed, itemLib: config.itemLib,
         startingItems: [], lockedCanonicalItems: [],
@@ -117,6 +118,7 @@ function monolithicBatched(config, spheresPerBatch) {
         completionConditionItem: config.victoryItem,
         procgenMetadata: {
             driver: 'sphere-growth', stop_reason: stats.stopReason, sphere_plan: plan,
+            sphere_tree: compactSphereTree(tree),
         },
     });
 }
@@ -159,6 +161,29 @@ describe('sphereSteps runner', () => {
         // The batched tree is surfaced on the envelope (final cells/region_ids).
         expect(env.grow.stats.stopReason).toBe('plan_complete');
         expect(env.grow.stats.regionsBuilt).toBeGreaterThanOrEqual(4);
+    });
+
+    it('embeds a compact sphere_tree (no grid) sufficient to resume wiring', async () => {
+        const config = makeConfig();
+        const env = await runToStep(newEnvelope(config));
+        const meta = env.compile.rulesJson.procgen_metadata;
+        const tree = meta.sphere_tree;
+        expect(tree).toBeTruthy();
+        expect(tree.nodes.length).toBe(env.nodes.length);
+        expect(typeof tree.quotaFallbacks).toBe('number');
+        expect(tree.substrateCounts).toBeTruthy();
+        for (const n of tree.nodes) {
+            // Topology fields the resumable wiring context needs…
+            expect(typeof n.index).toBe('number');
+            expect(typeof n.wave).toBe('number');
+            expect(Array.isArray(n.usedSides)).toBe(true); // Set serialised as array
+            expect(Array.isArray(n.childGates)).toBe(true);
+            expect('parent' in n).toBe(true);
+            expect(typeof n.substrate).toBe('string');
+            // …and NOT the grid-derived fields (rebuilt from rules.json regions).
+            expect('cell' in n).toBe(false);
+            expect('region_id' in n).toBe(false);
+        }
     });
 
     it('batched step runner == growSpheresBatchedGen (unify invariant)', async () => {

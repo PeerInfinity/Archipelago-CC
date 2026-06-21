@@ -3229,6 +3229,40 @@ export function buildSphereTree(plan, opts = {}, rng) {
 }
 
 /**
+ * Serialise the sphere tree into the COMPACT form embedded in rules.json's
+ * procgen_metadata.sphere_tree — the abstract topology WITHOUT the grid
+ * (~310–350 B/region). It carries exactly the per-node state a resumable wiring
+ * context needs (createSphereWiringContext `resume`) so a NEW wave can be wired
+ * onto a finished world straight from a bare rules.json — the foundation for
+ * appending a sphere (the grid itself is rebuilt from the regions' grid_cell
+ * coords, so cell / region_id / isTeleporter / items are intentionally omitted).
+ *
+ * Field names match the live node fields (usedSides as an array, gateCounts /
+ * childGates / isFiller) so the append path can rehydrate nodes with no
+ * key-renaming. The node's `side` is the realised GRID side (placement
+ * overwrote the wiring side) — kept for completeness; re-wiring reads a host's
+ * free `usedSides`, not its `side`.
+ */
+export function compactSphereTree(tree) {
+    return {
+        nodes: tree.nodes.map((n) => ({
+            index: n.index,
+            wave: n.wave,
+            parent: n.parent,
+            side: n.side,
+            substrate: n.substrate,
+            gate: n.gate,
+            gateCounts: n.gateCounts,
+            usedSides: [...(n.usedSides ?? [])],
+            childGates: n.childGates,
+            isFiller: n.isFiller,
+        })),
+        substrateCounts: tree.substrateCounts,
+        quotaFallbacks: tree.quotaFallbacks,
+    };
+}
+
+/**
  * Recompute a tree's DERIVED bookkeeping after a ②b topology edit (reparent
  * / substrate / gate). Given nodes whose parent/gate/substrate may have been
  * hand-edited, this re-derives each node's gateCounts, side, usedSides, and

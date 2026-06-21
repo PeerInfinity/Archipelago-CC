@@ -75,7 +75,7 @@ import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 
-import { growSpheres, buildRulesJson, getRegionExits } from
+import { growSpheres, buildRulesJson, getRegionExits, compactSphereTree } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { planSpheres, computeItemSpheres, compareSpheresToPlan } from
     '../../frontend/modules/procgenPipeline/spherePlanner.js';
@@ -328,6 +328,9 @@ async function main() {
             driver: 'sphere-growth',
             stop_reason: stats.stopReason,
             sphere_plan: plan,
+            // Compact abstract tree (no grid) for sphere-append from a bare
+            // rules.json — kept in parity with the panel/CLI stepCompile path.
+            sphere_tree: compactSphereTree(tree),
         },
     });
 

@@ -45,6 +45,7 @@ import {
     wireSphereWaves,
     placeSphereTreeItems,
     realiseSphereBatchGen,
+    compactSphereTree,
     buildRulesJson,
     serializeGrid,
     deserializeGrid,
@@ -430,6 +431,9 @@ function stepCompile(env) {
             driver: 'sphere-growth',
             stop_reason: stats.stopReason,
             sphere_plan: env.plan,
+            // Compact abstract tree (no grid) so a new sphere can be wired onto
+            // this finished world straight from rules.json (Phase 4 append).
+            ...(env.tree ? { sphere_tree: compactSphereTree(env.tree) } : {}),
         },
     });
     const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), env.plan);
