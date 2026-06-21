@@ -44,6 +44,39 @@ output shape. If any quota'd substrate declares a `victoryItem` on its
 registry entry (e.g. `bounce`), it's passed to `buildRulesJson` as the
 completion-condition item, mirroring the pipeline UI.
 
+## sphere-step.js
+
+Per-step driver for the stepped sphere-growth pipeline. Runs ONE step
+(or a contiguous range) of `plan → allocate → topology → items →
+regions → compile`, reading the prior step's "envelope" JSON and writing
+the next. Hand-edit the envelope between invocations to author each step.
+Shares the step wiring with the Procgen Pipeline panel via
+`frontend/modules/procgenPipeline/sphereSteps.js`, so the CLI and the
+panel can't drift.
+
+```
+# six steps, each its own process:
+node scripts/procgen/sphere-step.js plan     --seed 1 --quota maze=6 --start maze \
+    --items key_red=1 --items victory=1 --spheres 2 --victory victory -o s1.json
+node scripts/procgen/sphere-step.js allocate -i s1.json  -o s2a.json
+node scripts/procgen/sphere-step.js topology -i s2a.json -o s2b.json
+node scripts/procgen/sphere-step.js items    -i s2b.json -o s2c.json
+node scripts/procgen/sphere-step.js regions  -i s2c.json -o s3.json
+node scripts/procgen/sphere-step.js compile  -i s3.json  -o env.json --rules-out rules.json
+
+# or a range in one process:
+node scripts/procgen/sphere-step.js run --from plan --to compile <world flags> --rules-out rules.json
+```
+
+`plan`/`run` take the same world flags as `dump-sphere-growth.js`; the
+envelope carries the resolved config so later steps need only `-i`.
+`--params FILE` merges a JSON object over the carried config (override
+knobs mid-pipeline). The unedited chain is byte-identical to
+`dump-sphere-growth.js` for the same flags; `compile` exits non-zero on a
+sphere-oracle mismatch. The grown grid crosses the boundary in a
+structural (tagged) form — edit the pipeline at `plan`/`allocate`/
+`topology`/`items`, not the grown grid by hand.
+
 ## verify-bounce-embed.mjs
 
 Playwright driver for the Bounce Demo in-app round-trip (plan step 8b).
