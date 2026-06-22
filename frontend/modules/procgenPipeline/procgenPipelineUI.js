@@ -28,7 +28,7 @@ import {
 import {
     SPHERE_STEPS, runStep, nextSphereStep, growConfigFrom,
     serializeEnvelope, deserializeEnvelope, detectCompleted,
-    resolveSpheresPerBatch, truncateSphereWorld,
+    resolveSpheresPerBatch, truncateSphereWorld, appendSphere,
 } from './sphereSteps.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -1441,12 +1441,15 @@ export class ProcgenPipelineUI {
             btnRow.className = 'procgen-pipeline-btn-row';
             btnRow.style.flexBasis = '100%';
 
-            const builtSpheres = this._stepState?.batchStart ?? 0;
+            // Enabled only once at least one sphere has actually been BUILT (its
+            // regions are on the grid) — there's a previous sphere to return to.
+            const hasBuiltSphere = (this._stepState?.batchStart ?? 0) >= 1
+                && !!this._stepState?.grow?.grid;
             const prevBtn = this._btn('◀ Previous sphere', () => this._stepBackSphere());
-            prevBtn.disabled = this.isGenerating || builtSpheres < 1;
-            prevBtn.title = builtSpheres < 1
-                ? 'No completed sphere to step back to yet'
-                : 'Drop the most recently built sphere so you can re-grow or edit it';
+            prevBtn.disabled = this.isGenerating || !hasBuiltSphere;
+            prevBtn.title = hasBuiltSphere
+                ? 'Drop the most recently built sphere so you can re-grow or edit it'
+                : 'No completed sphere to step back to yet';
             btnRow.appendChild(prevBtn);
 
             btnRow.appendChild(gen);
@@ -1481,6 +1484,32 @@ export class ProcgenPipelineUI {
             btnRow.appendChild(this._btn('Load envelope', () => envInput.click()));
             btnRow.appendChild(envInput);
             section.appendChild(btnRow);
+
+            // Append-sphere affordance — only on a COMPLETE pipeline. Grows one
+            // more sphere: the goal is relocated into a new final sphere with the
+            // entered items (a goal-only final sphere is reverted; see
+            // appendSphere). Same engine path as `sphere-step append`.
+            if (this._stepState?.completed === SPHERE_LAST_STEP && this._stepState?.compile) {
+                const appendRow = document.createElement('div');
+                appendRow.className = 'procgen-pipeline-btn-row';
+                appendRow.style.flexBasis = '100%';
+                const lbl = document.createElement('span');
+                lbl.textContent = 'Append sphere — new items:';
+                lbl.style.cssText = 'font-size:12px;color:#aaa;align-self:center;';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'procgen-pipeline-append-items';
+                input.placeholder = 'gem, orb  (comma-separated; optional)';
+                input.value = this._appendItemsDraft ?? '';
+                input.style.cssText = 'flex:1;min-width:140px;background:#1e1e1e;'
+                    + 'border:1px solid #555;border-radius:3px;color:#ccc;font-size:12px;padding:3px 6px;';
+                input.addEventListener('input', (e) => { this._appendItemsDraft = e.target.value; });
+                input.addEventListener('keydown', (e) => { if (e.key === 'Enter') this._appendSphere(); });
+                const appendBtn = this._btn('Append sphere', () => this._appendSphere());
+                appendBtn.disabled = this.isGenerating;
+                appendRow.append(lbl, input, appendBtn);
+                section.appendChild(appendRow);
+            }
         } else {
             section.appendChild(gen);
         }
@@ -3459,6 +3488,51 @@ export class ProcgenPipelineUI {
         this.warning = '';
         this.message = `Stepped back: dropped sphere ${target + 1} — re-run the steps `
             + 'to rebuild it (or edit the plan first).';
+        this.render();
+    }
+
+    // "Append sphere" button (complete pipeline only) — grow one more sphere onto
+    // the finished world via the shared appendSphere: relocate the goal into a new
+    // final sphere with the entered items, grow that wave, recompile. Mirrors the
+    // `sphere-step append` CLI; diverges from a fresh run by design (oracle holds).
+    async _appendSphere() {
+        if (this.isGenerating || !this._stepState?.compile) return;
+        const raw = (this._appendItemsDraft ?? '').trim();
+        const items = raw ? raw.split(',').map((s) => s.trim()).filter(Boolean) : [];
+        this.isGenerating = true;
+        this._progressState = {
+            startedAt: performance.now(), totalRegions: 0, totalSpheres: 0,
+            doneRegions: 0, region: null, attempt: null, phase: null,
+            timings: [], lastEvent: null, lastAt: 0,
+        };
+        this.message = '';
+        this.warning = '';
+        this.render();
+        try {
+            const st = this._stepState;
+            await appendSphere(st, { items }, {
+                onProgress: (ev) => this._onGenerationProgress(ev),
+            });
+            const { grid, stats } = st.grow;
+            const { rulesJson, oracleErrors } = st.compile;
+            this.message = oracleErrors.length > 0
+                ? `SPHERE ORACLE MISMATCH: ${oracleErrors[0]}`
+                : `Appended sphere: ${st.plan.spheres
+                    .map((s) => `S${s.sphere}=[${s.items.join(', ')}]`).join('  ')}`;
+            this.result = {
+                grid,
+                regionSize: { width: st.cfg.regionWidth, height: st.cfg.regionHeight },
+                stats,
+                poolRemaining: null,
+                rulesJson,
+                spherePlan: st.plan,
+            };
+            this._appendItemsDraft = '';
+        } catch (e) {
+            this.message = `ERROR: ${e.message}`;
+        }
+        this.isGenerating = false;
+        this._progressState = null;
         this.render();
     }
 

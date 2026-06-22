@@ -220,6 +220,50 @@ if (!msgD3.includes('Sphere plan realised')) {
 }
 console.log('PHASE D3 OK: rebuilt to completion after stepping back —', msgD3);
 
+// ── Phase E: "Previous sphere" disabled with no sphere + Append sphere ──
+// E1: after Reset (nothing built), "◀ Previous sphere" must be DISABLED.
+await clickBtn('Reset');
+await page.waitForTimeout(300);
+const prevDisabledAtReset = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.procgen-pipeline-actions button')]
+        .find((el) => el.textContent.includes('Previous sphere'));
+    return b ? b.disabled : null;
+});
+if (prevDisabledAtReset !== true) {
+    throw new Error(`"Previous sphere" should be disabled with no built sphere (got ${prevDisabledAtReset})`);
+}
+console.log('PHASE E1 OK: "Previous sphere" disabled when no sphere is built');
+
+// Build a full world, then Append a sphere via the UI.
+await clickBtn('Run all');
+await page.waitForTimeout(6000);
+
+const appended = await page.evaluate(() => {
+    const input = document.querySelector('.procgen-pipeline-append-items');
+    if (!input) return { ok: false, why: 'no append-items input (is the pipeline complete?)' };
+    input.value = 'extra_gem';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    const btn = [...document.querySelectorAll('.procgen-pipeline-actions button')]
+        .find((el) => el.textContent.trim() === 'Append sphere' && !el.disabled);
+    if (!btn) return { ok: false, why: 'no enabled "Append sphere" button' };
+    btn.click();
+    return { ok: true };
+});
+if (!appended.ok) throw new Error(`append affordance missing: ${appended.why}`);
+await page.waitForTimeout(6000);
+const msgE = await message();
+if (!/Appended sphere/.test(msgE)) {
+    throw new Error(`UI append did not report success: ${msgE}`);
+}
+// The new item must land in the final sphere alongside the goal. (A goal-only
+// final sphere is reverted, so depth may stay the same — the item placement,
+// not the depth, is what proves the append.)
+const finalSphere = msgE.match(/S(\d+)=\[([^\]]*)\][^S]*$/);
+if (!/extra_gem/.test(msgE) || !finalSphere || !finalSphere[2].includes('victory')) {
+    throw new Error(`append didn't place the item in the final sphere: ${msgE}`);
+}
+console.log(`PHASE E2 OK: UI Append sphere placed the item in the goal sphere — ${msgE}`);
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:\n' + errors.join('\n'));
