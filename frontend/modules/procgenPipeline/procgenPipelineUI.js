@@ -28,7 +28,7 @@ import {
 import {
     SPHERE_STEPS, runStep, nextSphereStep, growConfigFrom,
     serializeEnvelope, deserializeEnvelope, detectCompleted,
-    resolveSpheresPerBatch,
+    resolveSpheresPerBatch, truncateSphereWorld,
 } from './sphereSteps.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -1411,7 +1411,12 @@ export class ProcgenPipelineUI {
         const completed = this._stepState?.completed ?? -1;
 
         // Step indicator (sphere mode): ① Plan → ② Tree → ③ Regions → ④ Compile.
-        if (sphere) section.appendChild(this._renderStepIndicator());
+        // It takes the full first row; the Run buttons sit on their own row below.
+        if (sphere) {
+            const ind = this._renderStepIndicator();
+            ind.style.flexBasis = '100%';
+            section.appendChild(ind);
+        }
 
         // Primary button: "Generate" in single-shot modes; "Run all"
         // (run the sphere pipeline to completion from wherever it is) in
@@ -1425,12 +1430,27 @@ export class ProcgenPipelineUI {
                 : 'Generate');
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
-        section.appendChild(gen);
 
-        // Sphere mode: "Run next step" + "Reset". The next step follows
-        // nextSphereStep (it loops ②a→③ per batch in sphere-major mode), so the
-        // label can revisit ②a Allocate for the next sphere before ④ Compile.
         if (sphere) {
+            // Sphere mode: a dedicated button row below the indicators. The next
+            // step follows nextSphereStep (it loops ②a→③ per batch in sphere-
+            // major mode), so the label can revisit ②a Allocate for the next
+            // sphere before ④ Compile. "◀ Previous sphere" drops the most recent
+            // sphere so it can be re-grown / edited.
+            const btnRow = document.createElement('div');
+            btnRow.className = 'procgen-pipeline-btn-row';
+            btnRow.style.flexBasis = '100%';
+
+            const builtSpheres = this._stepState?.batchStart ?? 0;
+            const prevBtn = this._btn('◀ Previous sphere', () => this._stepBackSphere());
+            prevBtn.disabled = this.isGenerating || builtSpheres < 1;
+            prevBtn.title = builtSpheres < 1
+                ? 'No completed sphere to step back to yet'
+                : 'Drop the most recently built sphere so you can re-grow or edit it';
+            btnRow.appendChild(prevBtn);
+
+            btnRow.appendChild(gen);
+
             const nextStep = this._stepState ? nextSphereStep(this._stepState) : 'plan';
             const nextIdx = nextStep ? SPHERE_STEPS.indexOf(nextStep) : -1;
             const nextBtn = document.createElement('button');
@@ -1439,10 +1459,11 @@ export class ProcgenPipelineUI {
                 ? SPHERE_STEP_RUN_LABELS[nextIdx] : 'Pipeline complete';
             nextBtn.disabled = this.isGenerating || nextIdx < 0;
             nextBtn.addEventListener('click', () => this._runSphereStepNext());
-            section.appendChild(nextBtn);
+            btnRow.appendChild(nextBtn);
+
             if (this._stepState) {
-                section.appendChild(this._btn('Reset', () => this._resetSphereSteps()));
-                section.appendChild(this._btn('Export envelope', () => this._exportEnvelope()));
+                btnRow.appendChild(this._btn('Reset', () => this._resetSphereSteps()));
+                btnRow.appendChild(this._btn('Export envelope', () => this._exportEnvelope()));
             }
             // Load a saved / CLI-produced envelope and auto-resume from the
             // first step whose output is missing (no manual step selection).
@@ -1457,8 +1478,11 @@ export class ProcgenPipelineUI {
                 const text = await file.text();
                 this._loadEnvelopeFile(text, file.name);
             });
-            section.appendChild(this._btn('Load envelope', () => envInput.click()));
-            section.appendChild(envInput);
+            btnRow.appendChild(this._btn('Load envelope', () => envInput.click()));
+            btnRow.appendChild(envInput);
+            section.appendChild(btnRow);
+        } else {
+            section.appendChild(gen);
         }
 
         // Live progress indicator (sphere mode): full-width row below
@@ -3412,6 +3436,29 @@ export class ProcgenPipelineUI {
         this.message = '';
         this.warning = '';
         this._progressState = null;
+        this.render();
+    }
+
+    // "◀ Previous sphere" button — drop the MOST RECENTLY built sphere (its
+    // regions + nodes) and rewind the cursor so the step buttons re-offer it.
+    // Uses the shared truncateSphereWorld (nodes are wave-ordered, so the dropped
+    // set is a contiguous suffix). Re-running forward regrows that sphere — a
+    // fresh variation, since the rng has advanced (sphere-major / append diverge
+    // by design); or edit the plan/topology first, then re-run.
+    _stepBackSphere() {
+        const st = this._stepState;
+        const built = st?.batchStart ?? 0;
+        if (!st || built < 1 || !st.grow?.grid) return;
+        const target = built - 1; // keep waves [0, target); drop wave `target`+
+        truncateSphereWorld(st, target);
+        st.batchStart = target;
+        st.completed = 1; // allocate done → next step rebuilds ②b for `target`
+        st.compile = null;
+        st.seconds = 0;
+        this.result = null;
+        this.warning = '';
+        this.message = `Stepped back: dropped sphere ${target + 1} — re-run the steps `
+            + 'to rebuild it (or edit the plan first).';
         this.render();
     }
 

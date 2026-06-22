@@ -162,6 +162,64 @@ if (movedC) {
     console.log('PHASE C SKIP: no movable Sphere-1 item found (plan shape)');
 }
 
+// ── Phase D: layout + "◀ Previous sphere" ───────────────────────────
+// Re-run to completion, then check (1) the Run buttons live in a dedicated row
+// below the step indicators, and (2) "◀ Previous sphere" drops the last sphere
+// and a subsequent "Run all" rebuilds it.
+await clickBtn('Reset');
+await page.waitForTimeout(300);
+await clickBtn('Run all');
+await page.waitForTimeout(6000);
+
+const layout = await page.evaluate(() => {
+    const actions = document.querySelector('.procgen-pipeline-actions');
+    const row = actions?.querySelector('.procgen-pipeline-btn-row');
+    if (!row) return { ok: false, why: 'no .procgen-pipeline-btn-row' };
+    const labels = [...row.querySelectorAll('button')].map((b) => b.textContent.trim());
+    const indicator = actions.firstElementChild; // step-indicator chips row
+    const rowIsAfterIndicator = indicator && indicator !== row
+        && (indicator.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING);
+    return {
+        ok: !!rowIsAfterIndicator,
+        hasRunAll: labels.some((l) => l.startsWith('Run all')),
+        hasPrev: labels.some((l) => l.includes('Previous sphere')),
+        labels,
+    };
+});
+if (!layout.ok || !layout.hasRunAll || !layout.hasPrev) {
+    throw new Error(`button-row layout wrong: ${JSON.stringify(layout)}`);
+}
+console.log('PHASE D1 OK: Run buttons are a row after the indicators —', layout.labels.join(' | '));
+
+// Note the built-spheres count from the batch tag, step back, confirm it dropped.
+const builtBefore = await page.evaluate(() => {
+    const m = document.querySelector('.procgen-pipeline-panel')?.textContent?.match(/(\d+)\/(\d+) spheres built/);
+    return m ? Number(m[1]) : null;
+});
+await clickBtn('◀ Previous sphere');
+await page.waitForTimeout(400);
+const msgD = await message();
+if (!/dropped sphere/i.test(msgD)) {
+    throw new Error(`"Previous sphere" gave no drop message: ${msgD}`);
+}
+const builtAfter = await page.evaluate(() => {
+    const m = document.querySelector('.procgen-pipeline-panel')?.textContent?.match(/(\d+)\/(\d+) spheres built/);
+    return m ? Number(m[1]) : null;
+});
+if (builtBefore != null && builtAfter != null && !(builtAfter < builtBefore)) {
+    throw new Error(`Previous sphere did not reduce built count: ${builtBefore} → ${builtAfter}`);
+}
+console.log(`PHASE D2 OK: Previous sphere dropped one (${builtBefore} → ${builtAfter}) — ${msgD}`);
+
+// Rebuild + finish.
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(6000);
+const msgD3 = await message();
+if (!msgD3.includes('Sphere plan realised')) {
+    throw new Error(`rebuild after Previous sphere failed: ${msgD3}`);
+}
+console.log('PHASE D3 OK: rebuilt to completion after stepping back —', msgD3);
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:\n' + errors.join('\n'));
