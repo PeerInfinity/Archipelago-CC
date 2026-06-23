@@ -3435,7 +3435,11 @@ export function placeSphereTreeItems(plan, nodes) {
 export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const playerId = opts.playerId ?? '1';
     const meta = rulesJson?.procgen_metadata;
-    if (meta?.driver !== 'sphere-growth') {
+    // 'top-down-sphere' is a top-down realisation enriched with sphere
+    // metadata from an authoritative sphere log (§3) — it carries the same
+    // sphere_tree + sphere_plan + procedural (maze) substrates this path
+    // needs, so accept it alongside born sphere-growth.
+    if (meta?.driver !== 'sphere-growth' && meta?.driver !== 'top-down-sphere') {
         throw new Error('rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json');
     }
     if (!meta.sphere_tree || !meta.sphere_plan) {
@@ -3462,7 +3466,9 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     let regionSize = opts.regionSize ?? null;
     for (const node of nodes) {
         if (!node.cell) continue;
-        const region_id = regionIdForCell(node.cell);
+        // Prefer the node's stored region_id (top-down-sphere keeps source
+        // region names); fall back to the cell id (born sphere-growth).
+        const region_id = node.region_id ?? regionIdForCell(node.cell);
         const sc = sidecars[region_id];
         if (!sc) throw new Error(`rebuildEnvelopeFromRulesJson: region ${region_id} missing from preset_sidecars`);
         const adapter = getAdapter(node.substrate);
@@ -3611,6 +3617,14 @@ export function compactSphereTree(tree) {
             parent: n.parent,
             side: n.side,
             cell: n.cell ? { gx: n.cell.gx, gy: n.cell.gy } : null,
+            // region_id is normally derivable as regionIdForCell(cell), so
+            // born sphere-growth omits it. Top-down-sphere keeps SOURCE
+            // region names (≠ regionIdForCell), so carry it ONLY when it
+            // diverges — rebuildEnvelopeFromRulesJson prefers it over the
+            // cell id, and omitting the derivable case keeps born output
+            // byte-identical.
+            ...(n.region_id && (!n.cell || n.region_id !== regionIdForCell(n.cell))
+                ? { region_id: n.region_id } : {}),
             isTeleporter: !!n.isTeleporter,
             substrate: n.substrate,
             gate: n.gate,
@@ -4934,6 +4948,14 @@ export function buildRulesJson(grid, opts = {}) {
         // entries. Default true; callers (tests, debug harnesses) can
         // disable. See debugging-tools.md Phase 4.
         embedSphereLog = true,
+        // An authoritative sphere log (array of JSONL entries) to embed
+        // VERBATIM as `sphere_log` instead of the JS forward simulator's
+        // re-derivation. Top-down-sphere passes the real
+        // `_sphere_log.jsonl` here so the embedded log (and loop_costs
+        // derived from it) reflect the source world's true AP logic rather
+        // than the unverified JS sweep. null → embed generateSphereLog's
+        // output as before. Only used when embedSphereLog is true.
+        sphereLog = null,
         // Embed loop-mode cost data (per-region moveCost, per-location
         // cost) at the top level of the output rules.json. Requires
         // embedSphereLog. The runtime loops module auto-loads this when
@@ -5119,7 +5141,12 @@ export function buildRulesJson(grid, opts = {}) {
     // and embeds the result as a top-level array. The loader
     // (sphereState/index.js) falls back to this field when no
     // separate _sphere_log.jsonl is present.
-    if (embedSphereLog) {
+    if (embedSphereLog && Array.isArray(sphereLog) && sphereLog.length > 0) {
+        // Authoritative log supplied (top-down-sphere): embed it verbatim.
+        // Top-down keeps source region names as region_id, so the log's
+        // region references resolve directly against the emitted regions.
+        scaffold.sphere_log = sphereLog;
+    } else if (embedSphereLog) {
         try {
             scaffold.sphere_log = generateSphereLog(scaffold, {
                 playerId,
