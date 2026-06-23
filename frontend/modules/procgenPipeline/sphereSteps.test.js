@@ -5,7 +5,7 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import {
     growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
-    rebuildEnvelopeFromRulesJson,
+    rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
@@ -543,6 +543,43 @@ describe('appendSphere (envelope path)', () => {
         })));
         expect(() => rebuildEnvelopeFromRulesJson(src.compile.rulesJson))
             .toThrow(/zone substrate|can't be reconstructed/);
+    });
+
+    // §3: a non-procgen world enriched via top-down + a sphere log loads in
+    // sphere-growth mode. Driver 'top-down-sphere' keeps SOURCE region names,
+    // so rebuild joins sidecars by node.region_id (not regionIdForCell).
+    it('importSphereEnvelope loads a top-down-sphere rules.json (region_id join)', () => {
+        // A grid-growth world stands in for a real exported world: it has a
+        // rules.json + an embedded sphere_log keyed by its own region names.
+        const { grid: ggGrid, startCell: ggStart } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 7,
+            growthParams: { branchProbability: 0.5, assumeBidirectional: true },
+        });
+        const source = buildRulesJson(ggGrid, { startCell: ggStart });
+        const sphereLog = source.sphere_log;
+
+        const { grid, startCell, sphereTree, spherePlan } = topDownFromRulesJson(source, {
+            gridDims: { width: 6, height: 6 }, seed: 1, sphereLog,
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, sphereLog,
+            procgenMetadata: {
+                driver: 'top-down-sphere',
+                sphere_tree: sphereTree,
+                sphere_plan: spherePlan,
+            },
+        });
+
+        const { env, fromRulesJson } = importSphereEnvelope(rulesJson);
+        expect(fromRulesJson).toBe(true);
+        expect(env.completed).toBe(5);
+        expect(env.nodes.length).toBe(sphereTree.nodes.length);
+        // Region names (not cell ids) survived the round-trip.
+        expect(env.nodes[0].region_id).toBe(sphereTree.nodes[0].region_id);
     });
 
     it('truncateSphereWorld drops the later-wave node suffix + their regions', async () => {

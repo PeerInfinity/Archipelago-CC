@@ -14,7 +14,7 @@ import {
     wallOffUnusedExits, growMaze, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
     findDisconnectedCell,
-    topDownFromRulesJson,
+    topDownFromRulesJson, sphereLogToWavesAndPlan,
     pickSubstrate, rollSubstrateMix,
     pickSubstrateWithQuota, totalRemainingQuota,
     reconcileBidirectionalExits,
@@ -1905,6 +1905,124 @@ describe('computeSourceCounts', () => {
         const counts = computeSourceCounts(rulesJson, '1');
         expect(counts.regions).toBe(1);
         expect(counts.locations).toBe(1);
+    });
+});
+
+describe('sphereLogToWavesAndPlan', () => {
+    // A synthetic authoritative log: Menu+A reachable at the sphere-0
+    // baseline; collecting key1 (sphere 0.1) opens B; key2 (sphere 1.1)
+    // opens C. Integer sphere "1" repeats B's delta — wave must agree.
+    const log = [
+        { type: 'metadata', seed: 1 },
+        { type: 'state_update', sphere_index: '0', player_data: { 1: {
+            new_accessible_regions: ['Menu', 'A'],
+            new_inventory_details: { base_items: {} } } } },
+        { type: 'state_update', sphere_index: '0.1', player_data: { 1: {
+            new_accessible_regions: ['B'],
+            new_inventory_details: { base_items: { key1: 1 } } } } },
+        { type: 'state_update', sphere_index: '1', player_data: { 1: {
+            new_accessible_regions: ['B'],
+            new_inventory_details: { base_items: {} } } } },
+        { type: 'state_update', sphere_index: '1.1', player_data: { 1: {
+            new_accessible_regions: ['C'],
+            new_inventory_details: { base_items: { key2: 1 } } } } },
+    ];
+
+    it('maps the integer-0 baseline to wave 0 and fractional N.M to wave N+1', () => {
+        const { regionWave } = sphereLogToWavesAndPlan(log);
+        expect(regionWave.get('Menu')).toBe(0);
+        expect(regionWave.get('A')).toBe(0);
+        expect(regionWave.get('B')).toBe(1);
+        expect(regionWave.get('C')).toBe(2);
+    });
+
+    it('buckets base_items from fractional lines into sphere N+1', () => {
+        const { spherePlan } = sphereLogToWavesAndPlan(log);
+        expect(spherePlan.spheres).toEqual([
+            { sphere: 1, items: ['key1'] },
+            { sphere: 2, items: ['key2'] },
+        ]);
+    });
+
+    it('expands multi-count items and honors playerId', () => {
+        const l2 = [{ type: 'state_update', sphere_index: '0.1', player_data: { 2: {
+            new_inventory_details: { base_items: { gem: 3 } } } } }];
+        const { spherePlan } = sphereLogToWavesAndPlan(l2, { playerId: '2' });
+        expect(spherePlan.spheres).toEqual([{ sphere: 1, items: ['gem', 'gem', 'gem'] }]);
+    });
+});
+
+describe('topDownFromRulesJson — sphere-log attribution', () => {
+    function makeGridGrowthRulesJson() {
+        const { grid, startCell } = growMaze({
+            gridDims: { width: 3, height: 3 },
+            regionSize: { width: 6, height: 6 },
+            itemPool: { key_red: 2 },
+            obstaclePool: { door_red: 2 },
+            seed: 7,
+            growthParams: { branchProbability: 0.5, assumeBidirectional: true },
+        });
+        return buildRulesJson(grid, { startCell });
+    }
+
+    it('returns no sphere metadata when no log is available (plain top-down)', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        delete rulesJson.sphere_log; // no embedded log and no opt → plain top-down
+        const res = topDownFromRulesJson(rulesJson, { gridDims: { width: 5, height: 5 }, seed: 1 });
+        expect(res.sphereTree).toBeNull();
+        expect(res.spherePlan).toBeNull();
+        expect(res.attributionWarnings).toEqual([]);
+    });
+
+    it('attributes a wave + compact node to every placed region from the log', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        const sphereLog = rulesJson.sphere_log; // grid-growth embeds its own log
+        expect(sphereLog.some((e) => e.type === 'state_update')).toBe(true);
+        const res = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1, sphereLog,
+        });
+        const startName = rulesJson.regions['1'].Menu.exits[0].connected_region;
+        const root = res.sphereTree.nodes.find((n) => n.parent == null);
+        expect(root.region_id).toBe(startName);
+        expect(root.wave).toBe(0);
+        // The join is by SOURCE region name (top-down keeps them); gates
+        // are empty (accessibility rides access_rule); no missing regions.
+        const names = new Set(Object.keys(rulesJson.regions['1']));
+        for (const n of res.sphereTree.nodes) {
+            expect(names.has(n.region_id)).toBe(true);
+            expect(n.gate).toEqual([]);
+            expect(n.gateCounts).toEqual({});
+            expect(n.wave).toBeGreaterThanOrEqual(0);
+        }
+        expect(res.attributionWarnings).toEqual([]);
+    });
+
+    it('also reads a log embedded on the source rules.json', () => {
+        const rulesJson = makeGridGrowthRulesJson(); // already carries sphere_log
+        const res = topDownFromRulesJson(rulesJson, { gridDims: { width: 5, height: 5 }, seed: 1 });
+        // No explicit sphereLog opt, but the source embeds one → attributed.
+        expect(res.sphereTree).toBeTruthy();
+        expect(res.spherePlan).toBeTruthy();
+    });
+
+    it('embeds the supplied log verbatim and tags top-down-sphere', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        const sphereLog = rulesJson.sphere_log;
+        const { grid, startCell, sphereTree, spherePlan } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1, sphereLog,
+        });
+        const out = buildRulesJson(grid, {
+            startCell, sphereLog,
+            procgenMetadata: {
+                driver: 'top-down-sphere',
+                sphere_tree: sphereTree,
+                sphere_plan: spherePlan,
+            },
+        });
+        expect(out.procgen_metadata.driver).toBe('top-down-sphere');
+        // The embedded log is the authoritative one, NOT a JS re-derivation.
+        expect(out.sphere_log).toEqual(sphereLog);
+        expect(out.procgen_metadata.sphere_tree.nodes[0].region_id).toBeDefined();
     });
 });
 
