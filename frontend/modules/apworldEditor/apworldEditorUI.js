@@ -18,6 +18,7 @@ import {
   renameItemInRules,
   renameRegionInRules,
   renameLocationInRules,
+  cloneFullRulesDoc,
 } from './rulesUtils.js';
 
 const RAW_JSON_LOADED = 'stateManager:rawJsonDataLoaded';
@@ -46,10 +47,6 @@ function log(level, message, ...data) {
     const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[apworldEditorUI] ${message}`, ...data);
   }
-}
-
-function deepClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
 }
 
 function defaultAccessRule() {
@@ -111,7 +108,9 @@ class ApworldEditorUI {
         log('info', 'Ignoring our own apply round-trip.');
         return;
       }
-      this.rulesDoc = deepClone(eventData.rawJsonData);
+      // Full-doc clone preserves non-standard top-level keys (procgen_metadata
+      // etc.) the editor doesn't edit — see cloneFullRulesDoc's contract.
+      this.rulesDoc = cloneFullRulesDoc(eventData.rawJsonData);
       this._render();
     });
 
@@ -120,7 +119,7 @@ class ApworldEditorUI {
     if (!this.rulesDoc) {
       const current = this._getCurrentAppRules();
       if (current) {
-        this.rulesDoc = deepClone(current);
+        this.rulesDoc = cloneFullRulesDoc(current);
         this._render();
       }
     }
@@ -526,7 +525,7 @@ class ApworldEditorUI {
       return;
     }
     if (!confirm('Discard your edits and reload the rules data the rest of the app currently has loaded?')) return;
-    this.rulesDoc = deepClone(current);
+    this.rulesDoc = cloneFullRulesDoc(current);
     this._render();
     log('info', 'Reloaded rules from window.G_combinedModeData.rulesConfig.');
   }
@@ -568,8 +567,10 @@ class ApworldEditorUI {
     }
     try {
       this.pendingApply = true;
+      // Emit a full-doc clone so preserved keys (procgen_metadata etc.) survive
+      // the apply round-trip alongside the edited regions/items/rules.
       this.eventBus.publish('files:jsonLoaded', {
-        jsonData: deepClone(this.rulesDoc),
+        jsonData: cloneFullRulesDoc(this.rulesDoc),
         selectedPlayerId: PLAYER_ID,
         sourceName: APPLY_SOURCE,
       });

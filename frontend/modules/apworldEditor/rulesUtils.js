@@ -8,6 +8,26 @@
  */
 
 /**
+ * Deep-clone a full rules.json document, PRESERVING EVERY TOP-LEVEL KEY —
+ * including non-standard ones the editor never reads or edits, such as
+ * `procgen_metadata` (which carries `sphere_tree` / `sphere_plan`),
+ * `loop_costs`, and `preset_sidecars`.
+ *
+ * This is the APWorld Editor's load⇄apply preservation seam. The editor edits
+ * only regions/items/access-rules in place, so a procgen-generated world must
+ * round-trip its `procgen_metadata` untouched to stay re-growable/appendable in
+ * sphere-growth mode (see
+ * NewDocs/plans/procedural-generation/sphere-growth-apworld-integration.md §2.1).
+ *
+ * Do NOT replace this with a rebuild-from-known-fields serializer: that would
+ * silently drop those keys and sever the round-trip. The regression test in
+ * rulesUtils.test.js guards exactly that.
+ */
+export function cloneFullRulesDoc(rulesDoc) {
+  return JSON.parse(JSON.stringify(rulesDoc));
+}
+
+/**
  * Walk every access/item rule tree in the doc for one player, plus their
  * sub-trees (And/Or children, Compare left/right).
  *
