@@ -137,8 +137,12 @@ export class BounceRegionEditorUI {
             : [...Object.keys(BOUNCE_LIBRARY_ITEMS), 'Victory'];
         // Items the player is expected to already hold on entering this region
         // (from spheres before this region's wave). Authoring context only —
-        // distinct from itemPool, which is what a pickup here can GRANT.
-        sess.expectedItems = [...(contract.expectedItems ?? [])];
+        // distinct from itemPool, which is what a pickup here can GRANT. An
+        // empty array (e.g. a wave-0 start region) is meaningfully different
+        // from null (no sphere context at all, e.g. standalone), so preserve it.
+        sess.expectedItems = Array.isArray(contract.expectedItems)
+            ? [...contract.expectedItems]
+            : null;
         sess.settings = this._settingsFromParams(contract.regionParams ?? {}, contract);
         sess.regenMode = (contract.exitSpecs && contract.exitSpecs.length) ? 'keep' : 'free';
         const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
@@ -337,11 +341,13 @@ export class BounceRegionEditorUI {
         // Authoring context: items the player is expected to already hold on
         // entering this region (from earlier spheres). Read-only; informs
         // difficulty/traversal design. Deduped for display (count gates repeat).
-        const expected = [...new Set(sess.expectedItems ?? [])];
-        if (expected.length) {
+        // Shown whenever sphere context exists — including '(none)' for a wave-0
+        // start region — but hidden entirely when there's no context (null).
+        if (sess.expectedItems != null) {
+            const expected = [...new Set(sess.expectedItems)];
             const exp = document.createElement('div');
             exp.className = 'bre-expected';
-            exp.textContent = `Expected on entry: ${expected.join(', ')}`;
+            exp.textContent = `Expected on entry: ${expected.length ? expected.join(', ') : '(none)'}`;
             exp.title = 'Items the player is expected to hold when this region '
                 + 'first becomes accessible (placed in earlier spheres).';
             side.appendChild(exp);
@@ -700,14 +706,22 @@ export class BounceRegionEditorUI {
             };
             // Split the pool into items the player is expected to already hold
             // (granting them again here is redundant) vs. the rest, so the
-            // author sees that distinction. Flat list when no expected context.
-            const heldOpts = opts.filter((it) => held.has(it));
-            if (heldOpts.length) {
-                const g1 = document.createElement('optgroup'); g1.label = 'already held';
-                heldOpts.forEach((it) => addOption(g1, it));
-                const g2 = document.createElement('optgroup'); g2.label = 'grantable';
-                opts.filter((it) => !held.has(it)).forEach((it) => addOption(g2, it));
-                iSel.appendChild(g1); iSel.appendChild(g2);
+            // author sees that distinction. Group whenever sphere context exists
+            // — including a wave-0 region, where everything is 'grantable' and
+            // only that one category shows. Flat list when there's no context.
+            if (Array.isArray(this._session.expectedItems)) {
+                const heldOpts = opts.filter((it) => held.has(it));
+                const freeOpts = opts.filter((it) => !held.has(it));
+                if (heldOpts.length) {
+                    const g1 = document.createElement('optgroup'); g1.label = 'already held';
+                    heldOpts.forEach((it) => addOption(g1, it));
+                    iSel.appendChild(g1);
+                }
+                if (freeOpts.length) {
+                    const g2 = document.createElement('optgroup'); g2.label = 'grantable';
+                    freeOpts.forEach((it) => addOption(g2, it));
+                    iSel.appendChild(g2);
+                }
             } else {
                 opts.forEach((it) => addOption(iSel, it));
             }
