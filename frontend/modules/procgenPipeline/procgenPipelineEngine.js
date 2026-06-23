@@ -1330,6 +1330,13 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // surplus exit's physics requirement without changing the realised
         // logic (see generateRegionZoneGen's drift handling).
         freeItems = null,
+        // Authoritative sphere log (array of JSONL entries from
+        // exporter/sphere_logger.py). When supplied — or when the source
+        // rules.json embeds one as `sphere_log` — top-down attributes a
+        // wave to each placed region and returns a compact sphere_tree +
+        // sphere_plan (driver 'top-down-sphere'). null → plain 'top-down'
+        // output, unchanged. See sphere-growth-apworld-integration.md §3.
+        sphereLog = null,
     } = opts;
 
     const rng = createRng(seed);
@@ -1712,7 +1719,184 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
             : 'partial_layout';
     }
 
-    return { grid, startCell, stats };
+    // ----- Phase 6 (optional): sphere-growth metadata from a sphere log -----
+    // When the caller supplies an authoritative sphere log (or the source
+    // rules.json embeds one), attribute a wave to every placed region and
+    // emit a compact sphere_tree + sphere_plan so the enriched output loads
+    // in sphere-growth mode / the APWorld Editor. The log is the primary
+    // source of truth — NOT the JS forward simulator, whose fidelity on
+    // arbitrary non-procgen worlds is unverified (it under-reaches event-
+    // heavy worlds badly). See sphere-growth-apworld-integration.md §3.
+    let sphereTree = null;
+    let spherePlan = null;
+    let attributionWarnings = [];
+    const logEntries = Array.isArray(sphereLog) ? sphereLog
+        : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
+    if (logEntries && logEntries.length > 0) {
+        const attributed = buildTopDownSphereMetadata({
+            placementOrder, cellsByName, teleporterEdges, grid,
+            entries: logEntries, playerId,
+        });
+        sphereTree = attributed.sphereTree;
+        spherePlan = { seed, ...attributed.spherePlan };
+        attributionWarnings = attributed.warnings;
+    }
+
+    return { grid, startCell, stats, sphereTree, spherePlan, attributionWarnings };
+}
+
+/**
+ * Read an authoritative sphere log (the array of JSONL entries written by
+ * exporter/sphere_logger.py) into a region→wave map and a sphere_plan.
+ *
+ * Convention (matches computeItemSpheres): a fractional sphere_index "N.M"
+ * buckets items into plan sphere N+1; a region first listed in
+ * new_accessible_regions at "N.M" gets wave N+1; the integer "0" baseline
+ * (regions reachable with only the starting items) is wave 0. The integer
+ * and fractional indexing agree on wave (integer line "N" → wave N, which
+ * equals the fractional "(N-1).M" → wave N for the same batch boundary),
+ * so a region's wave is the same whichever line first reveals it. Items
+ * are bucketed from the fractional lines only (per-item granularity).
+ *
+ * Returns { regionWave: Map<name, wave>, spherePlan: { spheres:
+ * [{ sphere, items }] } }.
+ */
+export function sphereLogToWavesAndPlan(entries, { playerId = '1' } = {}) {
+    const regionWave = new Map();
+    const itemBuckets = new Map(); // sphere number → [item, ...]
+    for (const e of entries ?? []) {
+        if (e?.type !== 'state_update') continue;
+        const si = String(e.sphere_index);
+        const fractional = si.includes('.');
+        const wave = fractional ? parseInt(si.split('.')[0], 10) + 1 : parseInt(si, 10);
+        if (Number.isNaN(wave)) continue;
+        const pd = e.player_data?.[playerId];
+        if (!pd) continue;
+        for (const r of pd.new_accessible_regions ?? []) {
+            if (!regionWave.has(r)) regionWave.set(r, wave);
+        }
+        if (fractional) {
+            const base = pd.new_inventory_details?.base_items ?? {};
+            if (!itemBuckets.has(wave)) itemBuckets.set(wave, []);
+            for (const [name, count] of Object.entries(base)) {
+                for (let i = 0; i < count; i++) itemBuckets.get(wave).push(name);
+            }
+        }
+    }
+    const spheres = [...itemBuckets.keys()].sort((a, b) => a - b)
+        .map((sphere) => ({ sphere, items: itemBuckets.get(sphere) }));
+    return { regionWave, spherePlan: { spheres } };
+}
+
+/**
+ * Attribute a wave + topology onto the regions top-down already placed,
+ * from an authoritative sphere log, and emit a compact sphere_tree +
+ * sphere_plan (the shape compactSphereTree / rebuildEnvelopeFromRulesJson
+ * consume). Best-effort: a placed region missing from the log gets an
+ * inferred wave (parent.wave + 1) + a warning; a log region top-down never
+ * placed is reported too.
+ *
+ * Gates are intentionally EMPTY. The accurate accessibility logic rides
+ * each exit's access_rule (top-down lowers the source rule verbatim); a
+ * single-item gate would be lossy (wave and the edge rule diverge on real
+ * worlds — e.g. a region reachable a sphere late through an earlier-gated
+ * edge), and `gate` is consumed ONLY by sphere-growth's append-a-sphere
+ * step (§6), which v1 view/inspect does not run. usedSides IS derived (so
+ * a future append finds free sides); `region_id` is carried (top-down
+ * keeps source region names, so it is NOT regionIdForCell(cell)).
+ */
+function buildTopDownSphereMetadata({
+    placementOrder, cellsByName, teleporterEdges, grid, entries, playerId = '1',
+}) {
+    const warnings = [];
+    const { regionWave, spherePlan } = sphereLogToWavesAndPlan(entries, { playerId });
+
+    const nameToIndex = new Map();
+    placementOrder.forEach((p, i) => nameToIndex.set(p.name, i));
+    const teleSet = new Set(teleporterEdges.map((t) => `${t.from_name}|${t.exit_id}`));
+
+    // Realised side on the parent toward this child (the exit's grid side);
+    // falls back to the cardinal of the cell delta for teleporters / cases
+    // where the parent exit didn't resolve a side.
+    const sideToChild = (parentName, childName) => {
+        const pcell = cellsByName.get(parentName);
+        const pregion = pcell ? grid.getRegion(pcell) : null;
+        const pexits = pregion ? getRegionExits(pregion) : null;
+        if (pexits) {
+            for (const e of pexits.values()) {
+                if (e.targetRegion === childName && e.side) return e.side;
+            }
+        }
+        const ccell = cellsByName.get(childName);
+        if (pcell && ccell) {
+            const dx = ccell.gx - pcell.gx;
+            const dy = ccell.gy - pcell.gy;
+            if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? SIDE_E : SIDE_W;
+            return dy >= 0 ? SIDE_S : SIDE_N;
+        }
+        return null;
+    };
+
+    const nodes = [];
+    const substrateCounts = {};
+    for (let i = 0; i < placementOrder.length; i++) {
+        const p = placementOrder[i];
+        const region = grid.getRegion(p.cell);
+        const substrate = region?.substrate ?? 'maze';
+        substrateCounts[substrate] = (substrateCounts[substrate] || 0) + 1;
+        const parent = p.parent ? (nameToIndex.get(p.parent.name) ?? null) : null;
+        const isTeleporter = !!(p.parent
+            && teleSet.has(`${p.parent.name}|${p.parent.exit_id}`));
+        const side = (p.parent && parent != null) ? sideToChild(p.parent.name, p.name) : null;
+
+        let wave = regionWave.get(p.name);
+        if (wave == null) {
+            const inferred = parent != null ? (nodes[parent]?.wave ?? 0) + 1 : 0;
+            warnings.push(`region "${p.name}" absent from sphere log — wave inferred as ${inferred}`);
+            wave = inferred;
+        }
+        nodes.push({
+            index: i,
+            wave,
+            parent,
+            side,
+            cell: p.cell ? { gx: p.cell.gx, gy: p.cell.gy } : null,
+            region_id: p.name,
+            isTeleporter,
+            substrate,
+            gate: [],
+            gateCounts: {},
+            usedSides: [],
+            childGates: [],
+            isFiller: false,
+        });
+    }
+
+    // Coherent usedSides: a host consumes the side toward each child; the
+    // child consumes the opposite side (its back-toward-parent).
+    const used = nodes.map(() => new Set());
+    for (const n of nodes) {
+        if (n.parent == null || !n.side) continue;
+        used[n.parent].add(n.side);
+        used[n.index].add(OPPOSITE_SIDE[n.side]);
+    }
+    nodes.forEach((n, i) => { n.usedSides = [...used[i]]; });
+
+    // Completeness: log regions top-down never placed (Menu is the virtual
+    // start wrapper — stripped by top-down, re-emitted by buildRulesJson).
+    const placedNames = new Set(placementOrder.map((p) => p.name));
+    for (const name of regionWave.keys()) {
+        if (name === 'Menu') continue;
+        if (!placedNames.has(name)) {
+            warnings.push(`sphere log region "${name}" was not placed by top-down`);
+        }
+    }
+
+    return {
+        sphereTree: { nodes, substrateCounts, quotaFallbacks: 0 },
+        spherePlan,
+        warnings,
+    };
 }
 
 // Walk every exit in every region and set targetExitId to the
