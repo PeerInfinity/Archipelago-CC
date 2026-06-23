@@ -135,6 +135,10 @@ export class BounceRegionEditorUI {
         sess.itemPool = (contract.itemPool && contract.itemPool.length)
             ? [...contract.itemPool]
             : [...Object.keys(BOUNCE_LIBRARY_ITEMS), 'Victory'];
+        // Items the player is expected to already hold on entering this region
+        // (from spheres before this region's wave). Authoring context only —
+        // distinct from itemPool, which is what a pickup here can GRANT.
+        sess.expectedItems = [...(contract.expectedItems ?? [])];
         sess.settings = this._settingsFromParams(contract.regionParams ?? {}, contract);
         sess.regenMode = (contract.exitSpecs && contract.exitSpecs.length) ? 'keep' : 'free';
         const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
@@ -329,6 +333,19 @@ export class BounceRegionEditorUI {
             + `${(l.springs ?? []).length}S/${(l.jetpacks ?? []).length}J/`
             + `${(l.teleports ?? []).length}⟲ · ${l.size.width}×${l.size.height}`;
         side.appendChild(counts);
+
+        // Authoring context: items the player is expected to already hold on
+        // entering this region (from earlier spheres). Read-only; informs
+        // difficulty/traversal design. Deduped for display (count gates repeat).
+        const expected = [...new Set(sess.expectedItems ?? [])];
+        if (expected.length) {
+            const exp = document.createElement('div');
+            exp.className = 'bre-expected';
+            exp.textContent = `Expected on entry: ${expected.join(', ')}`;
+            exp.title = 'Items the player is expected to hold when this region '
+                + 'first becomes accessible (placed in earlier spheres).';
+            side.appendChild(exp);
+        }
 
         side.appendChild(this._renderGlobalEdit(sess.level));
         side.appendChild(this._renderPlatformEdit(sess.level));
@@ -670,15 +687,29 @@ export class BounceRegionEditorUI {
             iRow.appendChild(is);
             const iSel = document.createElement('select');
             const pool = this._session.itemPool ?? [];
+            const held = new Set(this._session.expectedItems ?? []);
             const opts = [...pool];
             // Keep the current item selectable even if it's not in the pool.
             if (pickup.item && !opts.includes(pickup.item)) opts.unshift(pickup.item);
             if (!opts.length) opts.push('(none)');
-            for (const item of opts) {
+            const addOption = (parent, item) => {
                 const o = document.createElement('option');
                 o.value = item; o.textContent = item;
                 if (pickup.item === item) o.selected = true;
-                iSel.appendChild(o);
+                parent.appendChild(o);
+            };
+            // Split the pool into items the player is expected to already hold
+            // (granting them again here is redundant) vs. the rest, so the
+            // author sees that distinction. Flat list when no expected context.
+            const heldOpts = opts.filter((it) => held.has(it));
+            if (heldOpts.length) {
+                const g1 = document.createElement('optgroup'); g1.label = 'already held';
+                heldOpts.forEach((it) => addOption(g1, it));
+                const g2 = document.createElement('optgroup'); g2.label = 'grantable';
+                opts.filter((it) => !held.has(it)).forEach((it) => addOption(g2, it));
+                iSel.appendChild(g1); iSel.appendChild(g2);
+            } else {
+                opts.forEach((it) => addOption(iSel, it));
             }
             iSel.addEventListener('change', () => {
                 pickup.item = iSel.value === '(none)' ? null : iSel.value;

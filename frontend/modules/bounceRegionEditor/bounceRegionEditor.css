@@ -64,6 +64,11 @@
     font-size: 11px;
     margin-bottom: 8px;
 }
+.bounce-region-editor-panel .bre-expected {
+    color: #8ab;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
 .bounce-region-editor-panel .bre-subhead {
     font-weight: 600;
     margin: 4px 0;
