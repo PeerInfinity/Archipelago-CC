@@ -430,6 +430,13 @@ export class ProcgenPipelineUI {
         // or copies in the currently-loaded rules.json.
         this.topDownSource = null;
         this.topDownSourceLabel = '';
+        // Optional authoritative sphere log for top-down (§3). An array of
+        // JSONL entries from a picked _sphere_log.jsonl; when set (or when
+        // the source rules.json embeds a `sphere_log`), top-down attributes
+        // wave + sphere_plan from it and emits driver 'top-down-sphere'.
+        // null = plain 'top-down'. Like topDownSource, not persisted.
+        this.topDownSphereLog = null;
+        this.topDownSphereLogLabel = '';
         // Cache of the latest rules.json the frontend has loaded —
         // populated via stateManager:rawJsonDataLoaded. Lets the user
         // re-feed whatever's currently active without a file picker.
@@ -689,6 +696,8 @@ export class ProcgenPipelineUI {
             const clearBtn = this._btn('Clear', () => {
                 this.topDownSource = null;
                 this.topDownSourceLabel = '';
+                this.topDownSphereLog = null;
+                this.topDownSphereLogLabel = '';
                 this.result = null;
                 this.message = '';
                 this.render();
@@ -697,7 +706,73 @@ export class ProcgenPipelineUI {
         }
 
         section.appendChild(row);
+
+        // Sphere-log row: an authoritative _sphere_log.jsonl to attribute
+        // wave + sphere_plan from (driver 'top-down-sphere'). The source's
+        // embedded `sphere_log` is used automatically when present, so this
+        // picker is only needed for a separate log file.
+        const logRow = document.createElement('div');
+        logRow.className = 'procgen-pipeline-source-row';
+
+        const logInput = document.createElement('input');
+        logInput.type = 'file';
+        logInput.accept = '.jsonl,.json,application/json';
+        logInput.className = 'procgen-pipeline-source-input';
+        logInput.addEventListener('change', async () => {
+            const file = logInput.files?.[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                const entries = text.split('\n').map((l) => l.trim())
+                    .filter(Boolean).map((l) => JSON.parse(l));
+                this.topDownSphereLog = entries;
+                this.topDownSphereLogLabel = file.name;
+                this.message = `Loaded sphere log: ${file.name} (${entries.length} entries)`;
+            } catch (e) {
+                this.topDownSphereLog = null;
+                this.topDownSphereLogLabel = '';
+                this.message = `ERROR parsing ${file.name}: ${e.message}`;
+            }
+            this.render();
+        });
+        logRow.appendChild(logInput);
+
+        const { entries: resolvedLog, label: logLabel } = this._resolveTopDownSphereLog();
+        const logStatus = document.createElement('span');
+        logStatus.className = 'procgen-pipeline-source-status';
+        logStatus.textContent = resolvedLog
+            ? `Sphere log: ${logLabel} → driver 'top-down-sphere'`
+            : '(no sphere log — plain top-down)';
+        logRow.appendChild(logStatus);
+
+        if (this.topDownSphereLog) {
+            logRow.appendChild(this._btn('Clear log', () => {
+                this.topDownSphereLog = null;
+                this.topDownSphereLogLabel = '';
+                this.message = '';
+                this.render();
+            }));
+        }
+
+        section.appendChild(logRow);
         return section;
+    }
+
+    /**
+     * Resolve the sphere log to attribute from, mirroring the CLI's
+     * precedence: an explicitly picked log wins; otherwise the source
+     * rules.json's embedded `sphere_log`; otherwise none.
+     * Returns { entries: array|null, label }.
+     */
+    _resolveTopDownSphereLog() {
+        if (Array.isArray(this.topDownSphereLog) && this.topDownSphereLog.length > 0) {
+            return { entries: this.topDownSphereLog, label: this.topDownSphereLogLabel };
+        }
+        const embedded = this.topDownSource?.sphere_log;
+        if (Array.isArray(embedded) && embedded.length > 0) {
+            return { entries: embedded, label: 'embedded in source' };
+        }
+        return { entries: null, label: '' };
     }
 
     // --- Scenario pool picker ---
@@ -3846,11 +3921,19 @@ export class ProcgenPipelineUI {
         }
         const startingItems = [...sourceStarting, ...grantedItems];
 
-        const { grid, stats, startCell } = topDownFromRulesJson(this.topDownSource, {
+        // §3: when a sphere log is available (picked, or embedded on the
+        // source), top-down attributes wave + sphere_plan from it and emits
+        // driver 'top-down-sphere'; otherwise plain 'top-down'.
+        const { entries: sphereLog } = this._resolveTopDownSphereLog();
+
+        const {
+            grid, stats, startCell, sphereTree, spherePlan, attributionWarnings,
+        } = topDownFromRulesJson(this.topDownSource, {
             gridDims: { width: gridWidth, height: gridHeight },
             regionSizeBase: { width: regionWidth, height: regionHeight },
             seed,
             ...(mix ? { substrateMix: mix } : {}),
+            ...(sphereLog ? { sphereLog } : {}),
             hazardOpts: this._effectiveHazardOpts(),
             // The full starting inventory is free at generation time: the
             // zone realiser may attach any of these items to a surplus
@@ -3869,12 +3952,16 @@ export class ProcgenPipelineUI {
                     'topDown'),
             },
         });
+        const enriched = !!(sphereLog && sphereTree && spherePlan);
         const rulesJson = buildRulesJson(grid, {
             startCell, seed,
             enableLoopMode: !!this.params.enableLoopMode,
             regionXpEffect: this.params.regionXpEffect ?? 'cost',
             assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
             startingItems,
+            // Embed the AUTHORITATIVE log verbatim (not the JS re-derivation)
+            // so the embedded sphere_log + loop_costs reflect real AP logic.
+            ...(enriched ? { sphereLog } : {}),
             // Source defs backfill the source's own starting items; the
             // granted ability items aren't placed anywhere, so synthesise
             // defs (ids 999↓ stay clear of the compiled pool's upward
@@ -3889,12 +3976,19 @@ export class ProcgenPipelineUI {
                 }])),
             },
             procgenMetadata: {
-                driver: 'top-down',
+                driver: enriched ? 'top-down-sphere' : 'top-down',
                 source_game: this.topDownSource?.game_name ?? null,
                 source_counts: computeSourceCounts(this.topDownSource, '1'),
                 stop_reason: stats.stopReason,
+                ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
             },
         });
+        if (enriched && attributionWarnings?.length) {
+            this.message = `${this.message ? `${this.message} · ` : ''}`
+                + `sphere-log attribution: ${attributionWarnings.length} warning(s) — `
+                + `${attributionWarnings.slice(0, 3).join('; ')}`
+                + `${attributionWarnings.length > 3 ? ' …' : ''}`;
+        }
         this.result = {
             grid,
             regionSize: { width: regionWidth, height: regionHeight },
