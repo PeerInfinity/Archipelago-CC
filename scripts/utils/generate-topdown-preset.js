@@ -39,6 +39,11 @@ const DEFAULTS = {
     sourceRules: null,
     out: null,
     substrateMix: null,    // null = maze only (engine default)
+    // Authoritative sphere log. null = auto-discover the sibling
+    // <base>_sphere_log.jsonl beside --source-rules (or the source's
+    // embedded `sphere_log`); a path forces a specific file; 'off'
+    // disables enrichment (plain driver 'top-down' output).
+    sphereLog: null,
 };
 
 // Substrate id → loader path. Loading the module side-effect-registers
@@ -94,6 +99,7 @@ function parseArgs(argv) {
         '--grow-step': 'growStep',
         '--out': 'out',
         '--substrate-mix': 'substrateMix',
+        '--sphere-log': 'sphereLog',
     };
     for (let i = 0; i < argv.length; i++) {
         const flag = argv[i];
@@ -141,8 +147,43 @@ Options:
   --substrate-mix <spec>   Comma-separated id=weight (e.g.
                            "maze=1,text_adventure=1"). Default: maze only.
                            Substrates: ${Object.keys(SUBSTRATE_LOADERS).join(', ')}
+  --sphere-log <path|off>  Authoritative _sphere_log.jsonl to attribute
+                           wave + sphere_plan from (driver 'top-down-sphere').
+                           Default: auto-discover the sibling beside
+                           --source-rules (or the source's embedded log).
+                           'off' forces plain 'top-down' output.
   -h, --help               Show this message and exit
 `);
+}
+
+// Resolve the authoritative sphere log to embed/attribute from. Precedence:
+//   --sphere-log <path>  → that file (error if missing)
+//   --sphere-log off     → none (plain 'top-down')
+//   (default)            → the sibling <base>_sphere_log.jsonl beside the
+//                          source rules.json, else the source's embedded
+//                          `sphere_log`, else none.
+// Returns { entries: array|null, label }.
+function resolveSphereLog(args, sourceAbs, source) {
+    const parse = (abs) => fs.readFileSync(abs, 'utf-8')
+        .split('\n').map((l) => l.trim()).filter(Boolean).map((l) => JSON.parse(l));
+
+    if (args.sphereLog && args.sphereLog.toLowerCase() === 'off') {
+        return { entries: null, label: 'off (plain top-down)' };
+    }
+    if (args.sphereLog) {
+        const abs = path.resolve(args.sphereLog);
+        if (!fs.existsSync(abs)) throw new Error(`--sphere-log file not found: ${abs}`);
+        return { entries: parse(abs), label: abs };
+    }
+    // Auto-discover the sibling: ..._rules.json → ..._sphere_log.jsonl.
+    const sibling = sourceAbs.replace(/_rules\.json$/, '_sphere_log.jsonl');
+    if (sibling !== sourceAbs && fs.existsSync(sibling)) {
+        return { entries: parse(sibling), label: `${sibling} (auto)` };
+    }
+    if (Array.isArray(source.sphere_log) && source.sphere_log.length > 0) {
+        return { entries: source.sphere_log, label: 'embedded source sphere_log' };
+    }
+    return { entries: null, label: 'none found (plain top-down)' };
 }
 
 // Mirrors procgenPipelineUI's _applyGridDimsFromSource.
@@ -162,6 +203,7 @@ async function main() {
         throw new Error(`source rules.json not found: ${sourceAbs}`);
     }
     const source = JSON.parse(fs.readFileSync(sourceAbs, 'utf-8'));
+    const { entries: sphereLog, label: sphereLogLabel } = resolveSphereLog(args, sourceAbs, source);
 
     // Side-effect imports — each substrate library registers itself
     // in substrateRegistry on import. Maze is always loaded so the
@@ -202,6 +244,7 @@ async function main() {
     console.log(`  regionSizeBase   = ${regionSizeBase.width}x${regionSizeBase.height}`);
     console.log(`  substrate-mix    = ${mixDesc}`);
     console.log(`  max-retries      = ${args.maxRetries}, grow-step=${args.growStep}`);
+    console.log(`  sphere-log       = ${sphereLogLabel}`);
     console.log(`  out              = ${args.out}`);
 
     // Grow-and-retry on partial_layout. BFS-greedy placement can
@@ -211,7 +254,7 @@ async function main() {
     // every source region is placed, the placement count plateaus
     // (the rest are unreachable from the source's start, not a
     // sizing issue), or we hit the retry cap.
-    let grid, stats, startCell;
+    let grid, stats, startCell, sphereTree, spherePlan, attributionWarnings;
     let attempt = 0;
     let prevPlaced = -1;
     while (true) {
@@ -220,10 +263,14 @@ async function main() {
             regionSizeBase,
             seed: args.seed,
             ...(args.substrateMix ? { substrateMix: args.substrateMix } : {}),
+            ...(sphereLog ? { sphereLog } : {}),
         });
         grid = result.grid;
         stats = result.stats;
         startCell = result.startCell;
+        sphereTree = result.sphereTree;
+        spherePlan = result.spherePlan;
+        attributionWarnings = result.attributionWarnings ?? [];
         const placed = stats.regionsBuilt;
         const total = stats.regionsTotal;
         console.log(
@@ -252,17 +299,23 @@ async function main() {
         };
     }
 
+    // When a sphere log produced an attribution, tag the enriched driver
+    // and carry the sphere_tree + sphere_plan; embed the AUTHORITATIVE log
+    // (not the JS re-derivation). Otherwise emit plain 'top-down', unchanged.
+    const enriched = !!(sphereLog && sphereTree && spherePlan);
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: args.seed,
         assumeBidirectional: source.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
+        ...(enriched ? { sphereLog } : {}),
         procgenMetadata: {
-            driver: 'top-down',
+            driver: enriched ? 'top-down-sphere' : 'top-down',
             source_game: source.game_name ?? null,
             source_counts: computeSourceCounts(source, '1'),
             stop_reason: stats.stopReason,
+            ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
         },
     });
     const text = stringifyRulesJson(rulesJson);
@@ -274,6 +327,13 @@ async function main() {
         `\nTop-down: regions=${stats.regionsBuilt} skipped=${stats.regionsSkipped} ` +
         `teleporters=${stats.teleportersPlaced} stopReason=${stats.stopReason}`,
     );
+    if (enriched) {
+        console.log(
+            `Sphere-enriched: driver=top-down-sphere, ${spherePlan.spheres.length} spheres, ` +
+            `${sphereTree.nodes.length} tree nodes`,
+        );
+        for (const w of attributionWarnings) console.log(`  warn: ${w}`);
+    }
     console.log(`Wrote ${args.out}`);
 }
 
