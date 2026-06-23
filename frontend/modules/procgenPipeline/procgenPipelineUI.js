@@ -2235,6 +2235,17 @@ export class ProcgenPipelineUI {
             node: node ?? null,
         };
         const st = this._stepState;
+        // Items the player is expected to hold when this region first becomes
+        // accessible: everything placed in EARLIER spheres (strict `w < node.wave`
+        // — items at this region's own wave are gated behind reaching it, so
+        // they're not yet held). Computed independently of the substrate contract
+        // below so it survives even if buildRegionContract throws. See §5 of
+        // NewDocs/plans/procedural-generation/sphere-growth-apworld-integration.md.
+        if (node && st?.plan) {
+            base.expectedItems = (st.plan.spheres ?? [])
+                .slice(0, node.wave ?? 0)
+                .flatMap((s) => s.items ?? []);
+        }
         if (getRegionEditor(region?.substrate) && node && st?.tree && st?.grow?.grid) {
             try {
                 Object.assign(base, buildRegionContract(
@@ -2245,14 +2256,6 @@ export class ProcgenPipelineUI {
                 // section; the world item pool feeds its per-pickup item picker.
                 base.regionParams = st.growConfig.regionParams ?? {};
                 base.itemPool = Object.keys(this.scenario?.items ?? {});
-                // Items the player is expected to hold when this region first
-                // becomes accessible: everything placed in EARLIER spheres
-                // (strict `w < node.wave` — items at this region's own wave are
-                // gated behind reaching it, so they're not yet held). See §5 of
-                // NewDocs/plans/procedural-generation/sphere-growth-apworld-integration.md.
-                base.expectedItems = (st.plan?.spheres ?? [])
-                    .slice(0, node.wave ?? 0)
-                    .flatMap((s) => s.items ?? []);
             } catch (err) {
                 base.contractError = err.message;
             }
