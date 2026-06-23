@@ -1540,6 +1540,11 @@ export class ProcgenPipelineUI {
                 e.preventDefault();
                 this._loadIntoFrontend(this.result.rulesJson, loadBtn);
             });
+            const editBtn = this._btn('Edit in APWorld Editor', (e) => {
+                e.preventDefault();
+                this._editInApworldEditor(this.result.rulesJson, editBtn);
+            });
+            editBtn.title = 'Load this world into the APWorld Editor and open that panel';
             const downloadBtn = this._btn('Download rules.json', (e) => {
                 e.preventDefault();
                 this._downloadText(json, filename);
@@ -1549,6 +1554,7 @@ export class ProcgenPipelineUI {
                 this._copyToClipboard(json, copyBtn);
             });
             section.appendChild(loadBtn);
+            section.appendChild(editBtn);
             section.appendChild(downloadBtn);
             section.appendChild(copyBtn);
         }
@@ -3019,21 +3025,45 @@ export class ProcgenPipelineUI {
         setTimeout(() => URL.revokeObjectURL(url), 0);
     }
 
-    _loadIntoFrontend(rulesJson, button) {
-        const restore = () => { button.textContent = 'Load into frontend'; };
+    // Publish the generated rules.json into the app — the editor's Apply flow
+    // (same event name + payload shape). Returns false if no eventBus. The full
+    // rulesJson is published as-is, so procgen_metadata (sphere_tree/sphere_plan)
+    // rides along and the editor preserves it (see §2.1).
+    _publishRulesToFrontend(rulesJson) {
         const eventBus = this.apis?.eventBus;
-        if (!eventBus || typeof eventBus.publish !== 'function') {
-            button.textContent = 'No eventBus';
-            setTimeout(restore, 1500);
-            return;
-        }
-        // Matches the editor's Apply flow — same event name, same payload shape.
+        if (!eventBus || typeof eventBus.publish !== 'function') return false;
         eventBus.publish('files:jsonLoaded', {
             jsonData: rulesJson,
             selectedPlayerId: '1',
             sourceName: 'procgenPipeline',
         });
+        return true;
+    }
+
+    _loadIntoFrontend(rulesJson, button) {
+        const restore = () => { button.textContent = 'Load into frontend'; };
+        if (!this._publishRulesToFrontend(rulesJson)) {
+            button.textContent = 'No eventBus';
+            setTimeout(restore, 1500);
+            return;
+        }
         button.textContent = 'Loaded';
+        setTimeout(restore, 1200);
+    }
+
+    // §2.2 handoff: hand the generated world to the APWorld Editor and bring it
+    // forward. Publish the rules first (so the editor adopts them via
+    // stateManager:rawJsonDataLoaded, or its on-mount cache read if it's not
+    // open yet), then activate the panel.
+    _editInApworldEditor(rulesJson, button) {
+        const restore = () => { button.textContent = 'Edit in APWorld Editor'; };
+        if (!this._publishRulesToFrontend(rulesJson)) {
+            button.textContent = 'No eventBus';
+            setTimeout(restore, 1500);
+            return;
+        }
+        this.apis.eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
+        button.textContent = 'Opened editor';
         setTimeout(restore, 1200);
     }
 
