@@ -10,7 +10,7 @@
  * tree editor lands).
  */
 
-import { getModuleEventBus } from './index.js';
+import { getModuleEventBus, APWORLD_EDITOR_LOAD_RULES, consumePendingEditorRules } from './index.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import RuleTreeEditor from './ruleTreeEditor.js';
 import {
@@ -62,6 +62,7 @@ class ApworldEditorUI {
     this.rulesDoc = null;
     this.isInitialized = false;
     this.rawJsonUnsubscribe = null;
+    this.loadRulesUnsubscribe = null;
     this.pendingApply = false;
     this.activeTab = 'regions';
 
@@ -114,9 +115,21 @@ class ApworldEditorUI {
       this._render();
     });
 
-    // If rules were loaded before the panel opened, pick them up now from the
-    // app-wide cache rather than waiting for another event.
-    if (!this.rulesDoc) {
+    // Direct hand-off channel (§2.2): procgen's "Edit in APWorld Editor" routes
+    // a world here without a global files:jsonLoaded, so the substrate panels
+    // don't auto-activate and steal focus. Adopt immediately when we're already
+    // open; the consume() also clears any stash so it can't go stale.
+    this.loadRulesUnsubscribe = this.eventBus.subscribe(APWORLD_EDITOR_LOAD_RULES, (ev) => {
+      if (ev && ev.jsonData) this._adoptHandoffRules(ev.jsonData);
+      consumePendingEditorRules();
+    });
+
+    // If rules were loaded before the panel opened, pick them up now: first a
+    // hand-off stashed by the load-rules channel, else the app-wide cache.
+    const pending = consumePendingEditorRules();
+    if (pending) {
+      this._adoptHandoffRules(pending);
+    } else if (!this.rulesDoc) {
       const current = this._getCurrentAppRules();
       if (current) {
         this.rulesDoc = cloneFullRulesDoc(current);
@@ -128,10 +141,21 @@ class ApworldEditorUI {
     log('info', 'ApworldEditorUI initialized.');
   }
 
+  // Adopt a world handed directly to the editor (load-rules channel). Same
+  // full-doc clone the global load path uses, so procgen_metadata is preserved.
+  _adoptHandoffRules(jsonData) {
+    this.rulesDoc = cloneFullRulesDoc(jsonData);
+    this._render();
+  }
+
   onPanelDestroy() {
     if (this.rawJsonUnsubscribe) {
       try { this.rawJsonUnsubscribe(); } catch (_) { /* noop */ }
       this.rawJsonUnsubscribe = null;
+    }
+    if (this.loadRulesUnsubscribe) {
+      try { this.loadRulesUnsubscribe(); } catch (_) { /* noop */ }
+      this.loadRulesUnsubscribe = null;
     }
   }
 

@@ -3051,18 +3051,23 @@ export class ProcgenPipelineUI {
         setTimeout(restore, 1200);
     }
 
-    // §2.2 handoff: hand the generated world to the APWorld Editor and bring it
-    // forward. Publish the rules first (so the editor adopts them via
-    // stateManager:rawJsonDataLoaded, or its on-mount cache read if it's not
-    // open yet), then activate the panel.
+    // §2.2 handoff: hand the generated world straight to the APWorld Editor and
+    // bring it forward. We deliberately do NOT use the global files:jsonLoaded
+    // here: a full app load triggers the substrate panels to self-activate (on
+    // their loadRegion) and steal focus from the editor. The dedicated
+    // apworldEditor:loadRules channel routes the world to the editor only — it
+    // adopts it immediately if open, or drains the stash on mount — so nothing
+    // else moves. procgen_metadata rides along untouched (editor preserves it, §2.1).
     _editInApworldEditor(rulesJson, button) {
         const restore = () => { button.textContent = 'Edit in APWorld Editor'; };
-        if (!this._publishRulesToFrontend(rulesJson)) {
+        const eventBus = this.apis?.eventBus;
+        if (!eventBus || typeof eventBus.publish !== 'function') {
             button.textContent = 'No eventBus';
             setTimeout(restore, 1500);
             return;
         }
-        this.apis.eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
+        eventBus.publish('apworldEditor:loadRules', { jsonData: rulesJson });
+        eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
         button.textContent = 'Opened editor';
         setTimeout(restore, 1200);
     }

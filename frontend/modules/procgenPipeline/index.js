@@ -39,6 +39,9 @@ export function register(registrationApi) {
     // Published by "Edit in APWorld Editor" to bring that panel forward after
     // handing it the generated rules.json.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // Dedicated channel that routes a generated world straight to the APWorld
+    // Editor (no global files:jsonLoaded → no substrate-panel auto-activation).
+    registrationApi.registerEventBusPublisher('apworldEditor:loadRules');
 }
 
 export async function initialize(moduleId, priorityIndex, initializationApi) {
