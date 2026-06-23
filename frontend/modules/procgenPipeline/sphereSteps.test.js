@@ -13,7 +13,7 @@ import {
     SPHERE_STEPS, runStep, runToStep, nextSphereStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
     detectCompleted, resumeEnvelope, resolveSpheresPerBatch,
-    appendSphere, truncateSphereWorld,
+    appendSphere, truncateSphereWorld, importSphereEnvelope,
 } from './sphereSteps.js';
 
 function makeConfig(overrides = {}) {
@@ -511,6 +511,27 @@ describe('appendSphere (envelope path)', () => {
         await appendSphere(env, { items: ['key_red'] });
         expect(env.compile.oracleErrors).toEqual([]);
         expect(env.plan.spheres[env.plan.spheres.length - 1].items).toContain('victory');
+    });
+
+    // The panel's "Load envelope / rules.json" seam (§2.3): one entry point that
+    // accepts either a serialized envelope or a finalized rules.json.
+    it('importSphereEnvelope reconstructs from a rules.json and tags the source', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const { env, fromRulesJson } = importSphereEnvelope(src.compile.rulesJson);
+        expect(fromRulesJson).toBe(true);
+        expect(env.config.regionSize).toEqual(makeConfig().regionSize);
+        expect(env.nodes.length).toBe(src.nodes.length);
+        // Reconstructed env is append-ready.
+        await appendSphere(env, { items: ['key_red'] });
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
+    it('importSphereEnvelope deserializes a serialized envelope unchanged', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const { env, fromRulesJson } = importSphereEnvelope(serializeEnvelope(src));
+        expect(fromRulesJson).toBe(false);
+        expect(env.config.regionSize).toEqual(makeConfig().regionSize);
+        expect(detectCompleted(env)).toBe(5);
     });
 
     it('rebuild throws for a zone substrate (bounce) — needs the saved envelope', async () => {

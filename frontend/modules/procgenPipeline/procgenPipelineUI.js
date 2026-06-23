@@ -27,7 +27,7 @@ import {
 // runner now; the panel delegates each step to it (no drift with the CLI).
 import {
     SPHERE_STEPS, runStep, nextSphereStep, growConfigFrom,
-    serializeEnvelope, deserializeEnvelope, detectCompleted,
+    serializeEnvelope, importSphereEnvelope, detectCompleted,
     resolveSpheresPerBatch, truncateSphereWorld, appendSphere,
 } from './sphereSteps.js';
 import {
@@ -1468,8 +1468,10 @@ export class ProcgenPipelineUI {
                 btnRow.appendChild(this._btn('Reset', () => this._resetSphereSteps()));
                 btnRow.appendChild(this._btn('Export envelope', () => this._exportEnvelope()));
             }
-            // Load a saved / CLI-produced envelope and auto-resume from the
-            // first step whose output is missing (no manual step selection).
+            // Load a saved / CLI-produced envelope OR a finalized sphere-growth
+            // rules.json (e.g. from the APWorld Editor — reconstructed into an
+            // append-ready envelope), and auto-resume from the first step whose
+            // output is missing (no manual step selection).
             const envInput = document.createElement('input');
             envInput.type = 'file';
             envInput.accept = '.json,application/json';
@@ -1481,7 +1483,10 @@ export class ProcgenPipelineUI {
                 const text = await file.text();
                 this._loadEnvelopeFile(text, file.name);
             });
-            btnRow.appendChild(this._btn('Load envelope', () => envInput.click()));
+            const loadBtn = this._btn('Load envelope / rules.json', () => envInput.click());
+            loadBtn.title = 'Load a saved envelope, or a finalized sphere-growth '
+                + 'rules.json to reconstruct and grow further (procedural substrates only)';
+            btnRow.appendChild(loadBtn);
             btnRow.appendChild(envInput);
             section.appendChild(btnRow);
 
@@ -3693,11 +3698,23 @@ export class ProcgenPipelineUI {
 
     // Loaded envelope (deserialised: live Grid, {s} rng, Set node usedSides)
     // → _stepState, auto-detecting the resume point from data presence.
+    //
+    // Accepts two shapes (§2.3):
+    //   • a serialized envelope (has a `config` block) — deserialised verbatim;
+    //   • a finalized sphere-growth rules.json (has `procgen_metadata`, no
+    //     `config`) — reconstructed into an append-ready envelope via
+    //     rebuildEnvelopeFromRulesJson. This is what the APWorld Editor emits,
+    //     so an edited world can be grown further without a saved envelope.
+    //     Procedural substrates only; a zone substrate (bounce) throws with a
+    //     clear message (no path extractor — append from a saved envelope).
     _applyImportedEnvelope(rawJson) {
-        const env = deserializeEnvelope(rawJson);
+        const { env, fromRulesJson: isRulesJson } = importSphereEnvelope(
+            rawJson, { itemLib: DEFAULT_ITEMS, obstacleLib: DEFAULT_OBSTACLES });
         const config = env.config;
         if (!config || !config.regionSize) {
-            throw new Error('not a sphere-growth envelope (no config block)');
+            throw new Error(isRulesJson
+                ? 'could not reconstruct an envelope from this rules.json'
+                : 'not a sphere-growth envelope (no config block)');
         }
         const completed = detectCompleted(env);
         this._syncParamsFromConfig(config);
@@ -3770,9 +3787,10 @@ export class ProcgenPipelineUI {
         } : null;
 
         const next = completed + 1;
+        const srcLabel = isRulesJson ? 'Reconstructed from rules.json' : 'Loaded envelope';
         this.message = next >= SPHERE_STEPS.length
-            ? `Loaded envelope — all 6 steps present (pipeline complete).`
-            : `Loaded envelope — ${completed + 1}/6 steps present; resume from `
+            ? `${srcLabel} — all 6 steps present (pipeline complete).`
+            : `${srcLabel} — ${completed + 1}/6 steps present; resume from `
                 + `${SPHERE_STEPS[next]} (next step).`;
         this.warning = '';
         this.render();
@@ -3794,7 +3812,7 @@ export class ProcgenPipelineUI {
         try {
             this._applyImportedEnvelope(JSON.parse(text));
         } catch (e) {
-            this.message = `ERROR loading envelope${name ? ` ${name}` : ''}: ${e.message}`;
+            this.message = `ERROR loading ${name || 'file'}: ${e.message}`;
             this.render();
         }
     }

@@ -52,6 +52,7 @@ import {
     Grid,
     stitchGrid,
     wallOffUnusedExits,
+    rebuildEnvelopeFromRulesJson,
 } from './procgenPipelineEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
@@ -568,6 +569,27 @@ export function deserializeEnvelope(obj) {
     }
     if (obj.placed) env.placed = new Set(obj.placed);
     return env;
+}
+
+/**
+ * Produce a live, resumable envelope from EITHER shape a user can load (§2.3):
+ *   • a serialized envelope (has a `config` block) → deserializeEnvelope;
+ *   • a finalized sphere-growth rules.json (has `procgen_metadata`, no
+ *     `config`) → rebuildEnvelopeFromRulesJson, which reconstructs an
+ *     append-ready envelope from sphere_tree/sphere_plan + preset_sidecars.
+ *     This is what the APWorld Editor emits, so an edited world can be grown
+ *     further without a saved envelope. Procedural substrates only — a zone
+ *     substrate (bounce) throws (no path extractor; append from a saved
+ *     envelope instead).
+ *
+ * Returns { env, fromRulesJson } so callers can label the source.
+ */
+export function importSphereEnvelope(rawJson, opts = {}) {
+    const fromRulesJson = !rawJson?.config && !!rawJson?.procgen_metadata;
+    const env = fromRulesJson
+        ? rebuildEnvelopeFromRulesJson(rawJson, opts)
+        : deserializeEnvelope(rawJson);
+    return { env, fromRulesJson };
 }
 
 /** A fresh, empty envelope for the given resolved config block. */
