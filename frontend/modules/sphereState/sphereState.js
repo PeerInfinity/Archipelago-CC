@@ -64,6 +64,7 @@ export class SphereState {
     this.focusedMode = false; // True if this is a focused regression test log
     this.focusLocations = []; // Locations to focus on (only check these in focused mode)
     this.logHeader = null; // Header metadata from log_header event
+    this.logMetadata = null; // The {type:'metadata'} entry (seed, event_*)
   }
 
   /**
@@ -79,6 +80,7 @@ export class SphereState {
     this.focusedMode = false;
     this.focusLocations = [];
     this.logHeader = null;
+    this.logMetadata = null;
     // Don't reset currentPlayerId as it comes from static data
 
     if (this.eventBus) {
@@ -189,6 +191,7 @@ export class SphereState {
     this.focusedMode = false;
     this.focusLocations = [];
     this.logHeader = null;
+    this.logMetadata = null;
 
     // Parse all entries first
     const entries = [];
@@ -213,8 +216,13 @@ export class SphereState {
           continue; // Don't add header to entries
         }
 
-        // Skip metadata entries (contains seed info, event locations/items, etc.)
+        // Retain the metadata entry (seed, seed_name, event locations/items)
+        // separately — kept out of `entries`/rawData so the per-sphere
+        // loops don't treat it as a sphere, but preserved so callers that
+        // round-trip the log (e.g. the procgen panel embedding it into a
+        // rules.json) don't lose the canonical header.
         if (entry.type === 'metadata') {
+          this.logMetadata = entry;
           continue;
         }
 
@@ -712,6 +720,27 @@ export class SphereState {
    */
   getLogHeader() {
     return this.logHeader;
+  }
+
+  /**
+   * Get the sphere-log metadata entry (the {type:'metadata'} header line:
+   * seed, seed_name, event_locations, event_items), or null if the loaded
+   * log had none.
+   * @returns {Object|null}
+   */
+  getLogMetadata() {
+    return this.logMetadata;
+  }
+
+  /**
+   * Reassemble the loaded log in canonical _sphere_log.jsonl order: the
+   * metadata header (when present) followed by the state_update entries.
+   * Lets callers round-trip the log without re-reading the file.
+   * @returns {Array<Object>} entries (empty when no log is loaded)
+   */
+  getRawLogWithMetadata() {
+    if (!Array.isArray(this.rawData) || this.rawData.length === 0) return [];
+    return this.logMetadata ? [this.logMetadata, ...this.rawData] : [...this.rawData];
   }
 }
 

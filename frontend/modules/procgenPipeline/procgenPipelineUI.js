@@ -740,15 +740,19 @@ export class ProcgenPipelineUI {
 
         // Quick path: use the sphere log the frontend currently has loaded
         // (a preset's _sphere_log.jsonl pulled into sphereState by the
-        // loops / playback / spoiler features). Disabled until one is loaded.
-        const loadedLog = getSphereStateSingleton()?.rawData;
+        // loops / playback / spoiler features). getRawLogWithMetadata
+        // restores the canonical metadata header sphereState parses out, so
+        // the embedded log keeps the source's real event metadata. Disabled
+        // until one is loaded.
+        const loadedLog = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
         const hasLoadedLog = Array.isArray(loadedLog) && loadedLog.length > 0;
         const useLoadedLogBtn = this._btn('Use currently-loaded sphere log', () => {
-            const entries = getSphereStateSingleton()?.rawData;
+            const entries = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
             if (!Array.isArray(entries) || entries.length === 0) return;
+            const n = entries.filter((e) => e.type === 'state_update').length;
             this.topDownSphereLog = entries;
-            this.topDownSphereLogLabel = `currently loaded (${entries.length} entries)`;
-            this.message = `Using currently-loaded sphere log (${entries.length} entries)`;
+            this.topDownSphereLogLabel = `currently loaded (${n} entries)`;
+            this.message = `Using currently-loaded sphere log (${n} entries)`;
             this.render();
         });
         if (!hasLoadedLog) {
