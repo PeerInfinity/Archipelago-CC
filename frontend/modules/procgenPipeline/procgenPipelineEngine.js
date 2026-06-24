@@ -711,8 +711,24 @@ function removeAsymmetricExit(sourceRegion, sourceExit, sourceExitId) {
 
 // --- Growth loop helpers ---
 
+// region_id NAMING POLICY for sphere/grid-growth: a procedural region has
+// no inherent name, so it is keyed by its grid cell. This is a GENERATOR —
+// called once when a region is born (growMaze / growSpheres / synthesize).
+// It is NOT a downstream assumption: code that needs an existing node's
+// region_id must read it via nodeRegionId(), because top-down keeps the
+// SOURCE region name (≠ regionIdForCell) as identity.
 function regionIdForCell(cell) {
     return `region_${cell.gx}_${cell.gy}`;
+}
+
+// The single resolver for "what is this tree node's region_id". Identity is
+// STORED (each driver stamps node.region_id at realisation: sphere-growth
+// via regionIdForCell, top-down via the source name); the cell-derived form
+// is only a fallback for nodes/old data that never stamped one. Decouples
+// identity (region_id) from geometry (cell) so both drivers flow through one
+// path — see sphere-growth-apworld-integration.md (region-naming).
+function nodeRegionId(node) {
+    return node.region_id ?? regionIdForCell(node.cell);
 }
 
 // mirrorTileAcrossSide now lives in shared/procgen/spatialPrimitives.js;
@@ -3466,9 +3482,9 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     let regionSize = opts.regionSize ?? null;
     for (const node of nodes) {
         if (!node.cell) continue;
-        // Prefer the node's stored region_id (top-down-sphere keeps source
-        // region names); fall back to the cell id (born sphere-growth).
-        const region_id = node.region_id ?? regionIdForCell(node.cell);
+        // Resolve identity via the one helper (top-down-sphere keeps source
+        // region names; born sphere-growth falls back to the cell id).
+        const region_id = nodeRegionId(node);
         const sc = sidecars[region_id];
         if (!sc) throw new Error(`rebuildEnvelopeFromRulesJson: region ${region_id} missing from preset_sidecars`);
         const adapter = getAdapter(node.substrate);
@@ -3846,7 +3862,11 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
 
     const parentNode = node.parent != null ? tree.nodes[node.parent] : null;
     const cell = node.cell;
-    const region_id = regionIdForCell(cell);
+    // Respect a node's stamped identity (an appended child on a top-down-
+    // sphere world may carry a source name); fall back to the cell id for a
+    // fresh procedural node. Byte-identical for born sphere-growth (those
+    // nodes have no region_id until this realiser stamps it just below).
+    const region_id = nodeRegionId(node);
 
     const exitPlans = (childrenByParent.get(node.index) ?? []).map((child) => ({
         side: child.side,
