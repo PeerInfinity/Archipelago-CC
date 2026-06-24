@@ -5,6 +5,8 @@ Simple script to update host.yaml settings for testing
 import yaml
 import argparse
 import os
+import sys
+import subprocess
 
 # Settings that stay under general_options
 GENERAL_OPTIONS_BOOLEAN_SETTINGS = [
@@ -176,6 +178,33 @@ PRESETS = {
 }
 
 
+def _generate_default_host_yaml(project_root, host_yaml_path):
+    """Create a default host.yaml when one doesn't exist yet.
+
+    Runs the Launcher's ``--update_settings`` action (settings.get_settings().save()),
+    which writes a host.yaml populated with Archipelago's default values, so callers
+    can then layer preset/flag changes on top.
+    """
+    print(f"{host_yaml_path} not found; generating defaults via "
+          f"'Launcher.py --update_settings'...")
+    try:
+        result = subprocess.run(
+            [sys.executable, "Launcher.py", "--update_settings"],
+            cwd=project_root,
+        )
+    except OSError as e:
+        print(f"Error: could not run Launcher.py --update_settings: {e}")
+        return False
+
+    if result.returncode != 0 or not os.path.exists(host_yaml_path):
+        print(f"Error: failed to generate {host_yaml_path}. "
+              f"Try running 'python Launcher.py --update_settings' manually from the project root.")
+        return False
+
+    print(f"Generated default {host_yaml_path}")
+    return True
+
+
 def update_host_yaml(settings=None):
     """Update specific settings in host.yaml.
 
@@ -190,8 +219,8 @@ def update_host_yaml(settings=None):
     host_yaml_path = os.path.join(project_root, "host.yaml")
 
     if not os.path.exists(host_yaml_path):
-        print(f"Error: {host_yaml_path} not found. Run 'python Launcher.py --update_settings' first from the project root.")
-        return False
+        if not _generate_default_host_yaml(project_root, host_yaml_path):
+            return False
 
     # Read current settings
     with open(host_yaml_path, 'r') as f:
