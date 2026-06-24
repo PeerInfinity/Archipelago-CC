@@ -31,7 +31,7 @@ import {
 // The top-down pipeline steps live in their own shared runner (same pattern as
 // sphereSteps): layout → realise (streamed) → finalize → compile.
 import {
-    TOPDOWN_STEPS, runTopDownStep, nextTopDownStep, newTopDownEnvelope,
+    TOPDOWN_STEPS, runTopDownStep, nextTopDownStep, buildTopDownEnvelope,
 } from './topDownSteps.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
@@ -4012,66 +4012,27 @@ export class ProcgenPipelineUI {
     }
 
     // Build a fresh top-down envelope from the panel's current source + params.
-    // Computes the same preamble the old monolithic top-down path did (granted
-    // ability items, free starting inventory, resolved sphere log) and packs the
-    // engine opts + compile inputs the shared runner (topDownSteps) consumes.
+    // The shared buildTopDownEnvelope (topDownSteps.js) owns the preamble (grant
+    // each in-mix substrate's ability items as free starting items, pack the
+    // engine opts + compile inputs); the panel just resolves the UI-state inputs
+    // (mix, regionParams via the substrate hooks, hazardOpts, sphere log).
     _buildTDEnvelope() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
         const mix = this._effectiveSubstrateMix();
-
-        // Top-down realises an EXISTING world, whose exits carry none of a
-        // zone substrate's ability items (bounce arrows etc.). When a substrate
-        // that declares libraryItems is in the mix, grant every one of its
-        // ability items the source doesn't already carry as a STARTING ITEM —
-        // free, so the source logic is intact while the zone realiser can put
-        // surplus exits on free-arrow drifts. Victory items are never granted.
-        const sourceStarting = this.topDownSource?.starting_items?.['1'] ?? [];
-        const sourceItemDefs = this.topDownSource?.items?.['1'] ?? {};
-        const grantedItems = [];
-        for (const [id, weight] of Object.entries(mix ?? {})) {
-            if (!(Number(weight) > 0)) continue;
-            const lib = substrateRegistry.get(id)?.libraryItems;
-            if (!lib) continue;
-            for (const [name, def] of Object.entries(lib)) {
-                if (def?.is_victory) continue;
-                if (sourceItemDefs[name] != null) continue;
-                if (sourceStarting.includes(name) || grantedItems.includes(name)) continue;
-                grantedItems.push(name);
-            }
-        }
-        const startingItems = [...sourceStarting, ...grantedItems];
         const { entries: sphereLog } = this._resolveTopDownSphereLog();
-
-        return newTopDownEnvelope({
+        const activeIds = Object.entries(mix ?? {})
+            .filter(([, w]) => Number(w) > 0).map(([id]) => id);
+        return buildTopDownEnvelope({
             source: this.topDownSource,
-            regionSize: { width: regionWidth, height: regionHeight },
-            opts: {
-                gridDims: { width: gridWidth, height: gridHeight },
-                regionSizeBase: { width: regionWidth, height: regionHeight },
-                seed,
-                ...(mix ? { substrateMix: mix } : {}),
-                ...(sphereLog ? { sphereLog } : {}),
-                hazardOpts: this._effectiveHazardOpts(),
-                freeItems: startingItems,
-                regionParams: {
-                    maxIterations: 0,
-                    ...this._assembleRegionParams(
-                        Object.entries(mix ?? {})
-                            .filter(([, w]) => Number(w) > 0).map(([id]) => id),
-                        'topDown'),
-                },
-            },
-            compileIn: {
-                seed,
-                enableLoopMode: !!this.params.enableLoopMode,
-                regionXpEffect: this.params.regionXpEffect ?? 'cost',
-                assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
-                startingItems,
-                grantedItems,
-                sourceItemDefs,
-                sourceGameName: this.topDownSource?.game_name ?? null,
-                sphereLog: sphereLog ?? null,
-            },
+            seed,
+            gridDims: { width: gridWidth, height: gridHeight },
+            regionSizeBase: { width: regionWidth, height: regionHeight },
+            substrateMix: mix,
+            regionParams: this._assembleRegionParams(activeIds, 'topDown'),
+            hazardOpts: this._effectiveHazardOpts(),
+            sphereLog,
+            enableLoopMode: !!this.params.enableLoopMode,
+            regionXpEffect: this.params.regionXpEffect ?? 'cost',
         });
     }
 

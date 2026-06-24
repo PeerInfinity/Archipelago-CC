@@ -27,23 +27,30 @@
 // verify-topdown-steps.mjs.
 
 import { createRng } from '../shared/rng.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     layoutTopDown,
     realiseTopDownGen,
     finalizeTopDown,
     buildRulesJson,
     computeSourceCounts,
+    serializeGrid,
+    deserializeGrid,
 } from './procgenPipelineEngine.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const TOPDOWN_STEPS = Object.freeze(['layout', 'realise', 'finalize', 'compile']);
 
 // ① — BFS placement. Creates the rng from the seed and leaves it live on the
-// envelope at its post-layout position for ② to consume.
+// envelope at its post-layout position for ② to consume. The post-layout state
+// is ALSO snapshotted (layoutRngState) so ② can always restart from it — needed
+// when ② is re-run after a hand-edit (e.g. CLI `run --from realise`) rather than
+// reading whatever state a prior ② left the live rng in.
 function stepLayout(env) {
     const rng = createRng(env.opts.seed ?? 1);
     env.layout = layoutTopDown(env.source, env.opts, rng);
     env.rng = rng;
+    env.layoutRngState = rng.getState();
     env.completed = 0;
     return env;
 }
@@ -52,6 +59,13 @@ function stepLayout(env) {
 // progress event and yielding to the event loop so the UI can repaint. The grid
 // is mutated in place (it IS env.layout.grid).
 async function stepRealise(env, { onProgress = null } = {}) {
+    // Restart the rng from the post-layout snapshot so a re-run is deterministic
+    // regardless of where a prior ② left the live rng (no-op in the normal
+    // forward flow, where the live rng IS already at that position).
+    if (env.layoutRngState != null) {
+        env.rng = createRng(0);
+        env.rng.setState(env.layoutRngState);
+    }
     // A 'plan'-shaped lead event lets the indicator show the region total up
     // front (spheres is 0 — top-down has no sphere plan unless a log enriches it).
     onProgress?.({ type: 'plan', regions: env.layout.stats.regionsTotal, spheres: 0 });
@@ -165,4 +179,138 @@ export function newTopDownEnvelope({ source, opts, compileIn, regionSize }) {
     return {
         completed: -1, source, opts, compileIn, regionSize,
     };
+}
+
+/**
+ * Build a top-down envelope from a source rules.json + already-assembled inputs
+ * (substrate mix, regionParams, hazardOpts, sphereLog). Shared by the panel
+ * (_buildTDEnvelope) and the CLI so the preamble — granting each in-mix
+ * substrate's ability items as FREE starting items, and packing the engine opts
+ * + compile inputs — lives in ONE place. `regionParams` is wrapped with the
+ * top-down default `{ maxIterations: 0 }` (open maze rooms).
+ */
+export function buildTopDownEnvelope({
+    source, seed = 1, gridDims, regionSizeBase,
+    substrateMix = null, regionParams = null, hazardOpts = null,
+    sphereLog = null, enableLoopMode = false, regionXpEffect = 'cost',
+}) {
+    const sourceStarting = source?.starting_items?.['1'] ?? [];
+    const sourceItemDefs = source?.items?.['1'] ?? {};
+    const grantedItems = [];
+    for (const [id, weight] of Object.entries(substrateMix ?? {})) {
+        if (!(Number(weight) > 0)) continue;
+        const lib = substrateRegistry.get(id)?.libraryItems;
+        if (!lib) continue;
+        for (const [name, def] of Object.entries(lib)) {
+            if (def?.is_victory) continue;
+            if (sourceItemDefs[name] != null) continue;
+            if (sourceStarting.includes(name) || grantedItems.includes(name)) continue;
+            grantedItems.push(name);
+        }
+    }
+    const startingItems = [...sourceStarting, ...grantedItems];
+    const resolvedLog = sphereLog
+        ?? (Array.isArray(source?.sphere_log) ? source.sphere_log : null);
+    return newTopDownEnvelope({
+        source,
+        regionSize: regionSizeBase,
+        opts: {
+            gridDims,
+            regionSizeBase,
+            seed,
+            ...(substrateMix ? { substrateMix } : {}),
+            ...(resolvedLog ? { sphereLog: resolvedLog } : {}),
+            hazardOpts,
+            freeItems: startingItems,
+            regionParams: { maxIterations: 0, ...(regionParams ?? {}) },
+        },
+        compileIn: {
+            seed,
+            enableLoopMode,
+            regionXpEffect,
+            assumeBidirectional: source?.assume_bidirectional_exits !== false,
+            startingItems,
+            grantedItems,
+            sourceItemDefs,
+            sourceGameName: source?.game_name ?? null,
+            sphereLog: resolvedLog,
+        },
+    });
+}
+
+// --- envelope (de)serialisation (for the headless CLI) -----------------
+//
+// Most of the envelope is plain JSON (config, opts, compileIn, stats, plans,
+// the compiled rules.json). The non-JSON members are: the live rng, the Grid,
+// and two Maps on the layout (cellsByName, exitSidesByExit). realise/finalize
+// alias the SAME grid object as layout — encode it once (on layout) and rebuild
+// the aliases on decode. sourceRegions aliases source.regions[playerId] — drop +
+// rebuild it too (no need to duplicate the source).
+
+/** Live envelope → JSON-safe plain object. */
+export function serializeTDEnvelope(env) {
+    const out = { ...env };
+    if (env.rng && typeof env.rng.getState === 'function') {
+        out.rng = { s: env.rng.getState() };
+    }
+    if (env.layout) {
+        const L = { ...env.layout };
+        if (L.grid) L.grid = serializeGrid(L.grid);
+        if (L.cellsByName instanceof Map) L.cellsByName = [...L.cellsByName];
+        if (L.exitSidesByExit instanceof Map) L.exitSidesByExit = [...L.exitSidesByExit];
+        L.sourceRegions = undefined; // rebuilt from source on decode
+        out.layout = L;
+    }
+    // Drop the grid alias on realise/finalize (rebuilt from layout on decode).
+    if (env.realise) out.realise = { ...env.realise, grid: undefined };
+    if (env.finalize) out.finalize = { ...env.finalize, grid: undefined };
+    return out;
+}
+
+/** JSON-safe plain object (from serializeTDEnvelope) → live envelope. */
+export function deserializeTDEnvelope(obj) {
+    const env = { ...obj };
+    if (obj.rng && obj.rng.s !== undefined) {
+        const rng = createRng(0);
+        rng.setState(obj.rng.s);
+        env.rng = rng;
+    }
+    if (obj.layout) {
+        const L = { ...obj.layout };
+        if (L.grid) L.grid = deserializeGrid(L.grid);
+        if (Array.isArray(L.cellsByName)) L.cellsByName = new Map(L.cellsByName);
+        if (Array.isArray(L.exitSidesByExit)) L.exitSidesByExit = new Map(L.exitSidesByExit);
+        L.sourceRegions = obj.source?.regions?.[L.playerId ?? '1'] ?? {};
+        env.layout = L;
+    }
+    // Rebuild the grid aliases (realise/finalize share layout.grid).
+    if (env.realise && env.layout?.grid) env.realise.grid = env.layout.grid;
+    if (env.finalize && env.layout?.grid) env.finalize.grid = env.layout.grid;
+    return env;
+}
+
+// Whether each step's OUTPUT is present in an envelope — used to derive the
+// resume point from data presence (a hand-edited/partial envelope resumes from
+// the first step whose output is missing). presence = keep, absence = recompute.
+const TD_STEP_OUTPUT_PRESENT = {
+    layout: (e) => !!e.layout,
+    realise: (e) => !!e.realise,
+    finalize: (e) => !!e.finalize,
+    compile: (e) => !!e.compile,
+};
+
+/** The `completed` index (last contiguously-finished step) from data presence. */
+export function detectTDCompleted(env) {
+    let n = 0;
+    for (const step of TOPDOWN_STEPS) {
+        if (TD_STEP_OUTPUT_PRESENT[step](env)) n += 1;
+        else break;
+    }
+    return n - 1;
+}
+
+/** Resume to `toStep` from the first step whose output is missing. */
+export async function resumeTDEnvelope(env, toStep = 'compile', opts = {}) {
+    env.completed = detectTDCompleted(env);
+    return runTopDownToStep(env, toStep, opts);
 }

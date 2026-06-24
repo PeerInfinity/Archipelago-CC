@@ -10,7 +10,8 @@ import {
     topDownFromRulesJson, getRegionExits, getRegionEntrance,
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import {
-    newTopDownEnvelope, runTopDownToStep,
+    newTopDownEnvelope, runTopDownToStep, runTopDownStep, TOPDOWN_STEPS,
+    serializeTDEnvelope, deserializeTDEnvelope,
 } from '../../frontend/modules/procgenPipeline/topDownSteps.js';
 
 function dumpGrid(grid) {
@@ -93,9 +94,47 @@ function check(label, source, opts) {
     });
 }
 
+// Codec round-trip: stepping with a serialize→deserialize between EVERY step
+// (the CLI's cross-process path) must reproduce a straight-through run exactly.
+function envFor(source, opts) {
+    return newTopDownEnvelope({
+        source,
+        opts,
+        regionSize: { width: opts.regionSizeBase.width, height: opts.regionSizeBase.height },
+        compileIn: {
+            seed: opts.seed,
+            enableLoopMode: false,
+            regionXpEffect: 'cost',
+            assumeBidirectional: source.assume_bidirectional_exits !== false,
+            startingItems: opts.freeItems ?? [],
+            grantedItems: [],
+            sourceItemDefs: source.items?.['1'] ?? {},
+            sourceGameName: source.game_name ?? null,
+            sphereLog: opts.sphereLog ?? null,
+        },
+    });
+}
+
+async function checkCodec(label, source, opts) {
+    // straight-through
+    const straight = envFor(source, opts);
+    await runTopDownToStep(straight, 'compile');
+    // stepped with a serde round-trip between each step
+    let env = envFor(source, opts);
+    for (const step of TOPDOWN_STEPS) {
+        await runTopDownStep(step, env);
+        env = deserializeTDEnvelope(JSON.parse(JSON.stringify(serializeTDEnvelope(env))));
+    }
+    const same = JSON.stringify(straight.compile.rulesJson) === JSON.stringify(env.compile.rulesJson);
+    console.log(`${same ? '✅' : '❌'} ${label}: cross-process (serde each step) == straight-through`);
+    return same;
+}
+
 const results = [];
 results.push(await check('maze s1', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 1, substrateMix: { maze: 1 } }));
 results.push(await check('maze s7', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 7, substrateMix: { maze: 1 } }));
+results.push(await checkCodec('maze s1 codec', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 1, substrateMix: { maze: 1 } }));
+results.push(await checkCodec('maze s3 codec', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 3, substrateMix: { maze: 1 } }));
 
 const allOk = results.every(Boolean);
 console.log(allOk ? '\nALL PASS — stepped runner == monolith' : '\nFAILURES');
