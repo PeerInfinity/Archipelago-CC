@@ -1325,7 +1325,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
 // region size, and resolve the source's bidirectional/sphere-log flags. Consumes
 // rng (fallback-cell placement). Returns the stub grid + placement bookkeeping;
 // ② mutates each stub into a realised region, ③ runs the rng-free post-passes.
-function layoutTopDown(rulesJson, opts, rng) {
+export function layoutTopDown(rulesJson, opts, rng) {
     const {
         playerId = '1',
         gridDims = { width: 12, height: 12 },
@@ -1488,7 +1488,7 @@ function layoutTopDown(rulesJson, opts, rng) {
 // yield so the UI repaints), then realises that region's substrate geometry and
 // mutates its grid stub in place. Consumes rng (substrate pick + generateRegion),
 // in BFS-placement order, so a parent always realises before its child.
-function* realiseTopDownGen(layout, opts, rng) {
+export function* realiseTopDownGen(layout, opts, rng) {
     const {
         itemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
@@ -1670,7 +1670,7 @@ function* realiseTopDownGen(layout, opts, rng) {
 // ----- ③ Finalize: stitch teleporters, add synthetic back-exits, finalize +
 // wall off exits, resolve entrances, and (if a sphere log was supplied) attribute
 // waves into a compact sphere_tree + sphere_plan. All rng-free.
-function finalizeTopDown(layout) {
+export function finalizeTopDown(layout) {
     const {
         grid, startCell, placementOrder, cellsByName, teleporterEdges,
         sourceRegions, stats, exitSidesByExit, assumeBidirectional,

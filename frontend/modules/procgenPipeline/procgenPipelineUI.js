@@ -12,8 +12,6 @@ import {
     rebuildSphereTopology,
     buildRulesJson,
     stringifyRulesJson,
-    topDownFromRulesJson,
-    computeSourceCounts,
     getRegionExits,
     reRollSphereRegion,
     buildRegionContract,
@@ -30,6 +28,11 @@ import {
     serializeEnvelope, importSphereEnvelope, detectCompleted,
     resolveSpheresPerBatch, truncateSphereWorld, appendSphere,
 } from './sphereSteps.js';
+// The top-down pipeline steps live in their own shared runner (same pattern as
+// sphereSteps): layout → realise (streamed) → finalize → compile.
+import {
+    TOPDOWN_STEPS, runTopDownStep, nextTopDownStep, newTopDownEnvelope,
+} from './topDownSteps.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
@@ -381,6 +384,17 @@ const SPHERE_STEP_RUN_LABELS = [
 ];
 const SPHERE_LAST_STEP = SPHERE_STEP_LABELS.length - 1; // 5
 
+// Top-down's four steps (the source rules.json is read-only, so there is no
+// editable "plan" step). Same `completed` index convention (0..3; -1 = not
+// started); the step indicator + actions key off these tables.
+const TOPDOWN_STEP_LABELS = [
+    '① Layout', '② Realise', '③ Finalize', '④ Compile',
+];
+const TOPDOWN_STEP_RUN_LABELS = [
+    'Run ① Layout', 'Run ② Realise', 'Run ③ Finalize', 'Run ④ Compile',
+];
+const TOPDOWN_LAST_STEP = TOPDOWN_STEP_LABELS.length - 1; // 3
+
 export class ProcgenPipelineUI {
     static moduleApis = null;
     static setModuleApis(apis) { ProcgenPipelineUI.moduleApis = apis; }
@@ -447,6 +461,9 @@ export class ProcgenPipelineUI {
         // Sphere-growth stepped-pipeline state (null until step ① runs).
         // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
         this._stepState = null;
+        // Top-down stepped-pipeline state (null until step ① Layout runs).
+        // See _stepTDLayout / _renderTopDownSteps. Session-only.
+        this._tdState = null;
         // ②b Topology view mode: 'tree' (indented directory tree) or 'flat'
         // (numerical index order). Session-only view preference.
         this._topologyView = 'tree';
@@ -534,6 +551,11 @@ export class ProcgenPipelineUI {
         if (this.mode === 'sphereGrowth' && this._stepState) {
             this.rootElement.appendChild(this._renderCollapsibleSection(
                 'sphere-pipeline', 'Sphere pipeline', this._renderSphereSteps(),
+            ));
+        }
+        if (this.mode === 'topDown' && this._tdState) {
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'topdown-pipeline', 'Top-down pipeline', this._renderTopDownSteps(),
             ));
         }
         this.rootElement.appendChild(this._renderCollapsibleSection(
@@ -1508,11 +1530,13 @@ export class ProcgenPipelineUI {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-actions';
         const sphere = this.mode === 'sphereGrowth';
+        const topDown = this.mode === 'topDown';
         const completed = this._stepState?.completed ?? -1;
+        const tdCompleted = this._tdState?.completed ?? -1;
 
-        // Step indicator (sphere mode): ① Plan → ② Tree → ③ Regions → ④ Compile.
-        // It takes the full first row; the Run buttons sit on their own row below.
-        if (sphere) {
+        // Step indicator (stepped modes): the step chips take the full first
+        // row; the Run buttons sit on their own row below.
+        if (sphere || topDown) {
             const ind = this._renderStepIndicator();
             ind.style.flexBasis = '100%';
             section.appendChild(ind);
@@ -1527,7 +1551,8 @@ export class ProcgenPipelineUI {
             ? 'Working…'
             : (sphere
                 ? (completed >= 0 && completed < SPHERE_LAST_STEP ? 'Run all (finish)' : 'Run all')
-                : 'Generate');
+                : (topDown && tdCompleted >= 0 && tdCompleted < TOPDOWN_LAST_STEP
+                    ? 'Run all (finish)' : 'Generate'));
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
 
@@ -1615,11 +1640,33 @@ export class ProcgenPipelineUI {
                 appendRow.append(lbl, input, appendBtn);
                 section.appendChild(appendRow);
             }
+        } else if (topDown) {
+            // Top-down mode: a Run-next button row beside the primary (Generate /
+            // Run all), mirroring sphere mode over the four top-down steps.
+            const btnRow = document.createElement('div');
+            btnRow.className = 'procgen-pipeline-btn-row';
+            btnRow.style.flexBasis = '100%';
+            btnRow.appendChild(gen);
+
+            const nextStep = this._tdState ? nextTopDownStep(this._tdState) : 'layout';
+            const nextIdx = nextStep ? TOPDOWN_STEPS.indexOf(nextStep) : -1;
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'procgen-pipeline-btn';
+            nextBtn.textContent = nextIdx >= 0
+                ? TOPDOWN_STEP_RUN_LABELS[nextIdx] : 'Pipeline complete';
+            nextBtn.disabled = this.isGenerating || nextIdx < 0;
+            nextBtn.addEventListener('click', () => this._runTopDownStepNext());
+            btnRow.appendChild(nextBtn);
+
+            if (this._tdState) {
+                btnRow.appendChild(this._btn('Reset', () => this._resetTDSteps()));
+            }
+            section.appendChild(btnRow);
         } else {
             section.appendChild(gen);
         }
 
-        // Live progress indicator (sphere mode): full-width row below
+        // Live progress indicator (stepped modes): full-width row below
         // the button, rewritten per progress event by direct DOM
         // mutation while the async generation drain yields between
         // regions and generate-and-test attempts.
@@ -1679,13 +1726,15 @@ export class ProcgenPipelineUI {
         return section;
     }
 
-    // The ① → ②a → ②b → ②c → ③ → ④ chips above the sphere-mode buttons.
-    // Inline styles so it renders without depending on panel CSS.
+    // The step chips above the stepped-mode buttons (sphere: ① → ②a → … → ④;
+    // top-down: ① Layout → ② Realise → ③ Finalize → ④ Compile). Inline styles
+    // so it renders without depending on panel CSS.
     _renderStepIndicator() {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px;font-size:12px;';
-        const labels = SPHERE_STEP_LABELS;
-        const completed = this._stepState?.completed ?? -1;
+        const topDown = this.mode === 'topDown';
+        const labels = topDown ? TOPDOWN_STEP_LABELS : SPHERE_STEP_LABELS;
+        const completed = (topDown ? this._tdState?.completed : this._stepState?.completed) ?? -1;
         labels.forEach((label, i) => {
             const chip = document.createElement('span');
             const done = i <= completed;
@@ -2509,10 +2558,16 @@ export class ProcgenPipelineUI {
         // trigger, so the map stays put while editing. Fall back to this.result
         // (other modes / loaded presets / post-④ compiled view).
         const st = this._stepState;
+        const td = this._tdState;
         let grid; let regionSize;
         if (this.mode === 'sphereGrowth' && st?.grow?.grid) {
             grid = st.grow.grid;
             regionSize = st.growConfig?.regionSize ?? this.result?.regionSize;
+        } else if (this.mode === 'topDown' && td?.layout?.grid) {
+            // Live stepped grid: visible from ① Layout onward (stubs fill in as ②
+            // realises), before ④ Compile sets this.result.
+            grid = td.layout.grid;
+            regionSize = td.regionSize ?? this.result?.regionSize;
         } else if (this.result) {
             ({ grid, regionSize } = this.result);
         }
@@ -2854,6 +2909,13 @@ export class ProcgenPipelineUI {
     _drawRegion(ctx, region, offX, offY, regionSize) {
         const hint = region?.render_hint ?? region?.substrate ?? 'maze';
         const payload = region?.playable_payload;
+        // Stub region: placed in ① Layout (top-down) but not yet realised in ②,
+        // so it has no playable_payload. Draw a labelled placeholder instead of
+        // dispatching to a substrate drawer (which assumes a payload).
+        if (!payload) {
+            this._drawStubRegion(ctx, region, offX, offY, regionSize);
+            return;
+        }
         if (hint === 'text_adventure') {
             this._drawTextAdventureRegion(ctx, region, offX, offY, regionSize);
         } else if (hint === 'maze') {
@@ -2861,6 +2923,23 @@ export class ProcgenPipelineUI {
         } else {
             this._drawGenericRegion(ctx, region, offX, offY, regionSize);
         }
+    }
+
+    // A region placed but not yet realised (top-down ① Layout → ② Realise).
+    // Muted fill + the region_id so the live grid is viewable mid-pipeline.
+    _drawStubRegion(ctx, region, offX, offY, regionSize) {
+        const w = regionSize.width * TILE_PX;
+        const h = regionSize.height * TILE_PX;
+        ctx.fillStyle = COLORS.emptyCell;
+        ctx.fillRect(offX, offY, w, h);
+        ctx.strokeStyle = COLORS.cellBorder;
+        ctx.setLineDash([4, 3]);
+        ctx.lineWidth = 1;
+        ctx.strokeRect(offX + 1.5, offY + 1.5, w - 3, h - 3);
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#888';
+        ctx.font = '10px monospace';
+        ctx.fillText(String(region?.region_id ?? '?').slice(0, 12), offX + 4, offY + 14);
     }
 
     _drawMazeRegion(ctx, world, offX, offY) {
@@ -3208,15 +3287,21 @@ export class ProcgenPipelineUI {
         this.isGenerating = true;
         this.message = '';
         this.warning = '';
-        // In sphere mode the step runners own this.result (a "Run all"
+        // In the stepped modes the step runners own this.result (a "Run all"
         // that just finishes an in-progress pipeline must not wipe it);
         // other modes clear it up front.
-        if (this.mode !== 'sphereGrowth' || !this._stepState) this.result = null;
+        const midSphere = this.mode === 'sphereGrowth' && this._stepState;
+        // Mid-pipeline = an incomplete top-down run we're finishing; a COMPLETE
+        // (or absent) one means Generate re-generates, so clear its result.
+        const midTopDown = this.mode === 'topDown' && this._tdState
+            && nextTopDownStep(this._tdState) !== null;
+        if (!midSphere && !midTopDown) this.result = null;
         this.render();
 
         try {
             if (this.mode === 'topDown') {
-                this._runTopDown();
+                // async: yields per region so the progress indicator repaints
+                await this._runTopDownAll();
             } else if (this.mode === 'shuffledSpiral') {
                 this._runShuffledSpiral();
             } else if (this.mode === 'sphereGrowth') {
@@ -3286,19 +3371,28 @@ export class ProcgenPipelineUI {
             const r = s.region;
             const attempt = s.attempt
                 ? ` · attempt ${s.attempt.attempt}/${s.attempt.attempts}` : '';
+            // sphere is sphere-mode-only; top-down regions carry no wave.
+            const sphereBit = r.sphere != null ? `, sphere ${r.sphere}` : '';
             lines.push(`Building region ${r.index + 1}/${s.totalRegions} — `
-                + `${r.region_id} (${r.substrate}, sphere ${r.sphere}, `
+                + `${r.region_id} (${r.substrate}${sphereBit}, `
                 + `${r.placements} placement${r.placements === 1 ? '' : 's'})${attempt}`);
-            const spheresLeft = Math.max(0, s.totalSpheres - r.sphere);
-            lines.push(`Remaining: ${spheresLeft} sphere${spheresLeft === 1 ? '' : 's'} · `
-                + `${s.totalRegions - r.index} region${s.totalRegions - r.index === 1 ? '' : 's'} · `
+            let spheresBit = '';
+            if (r.sphere != null && s.totalSpheres) {
+                const spheresLeft = Math.max(0, s.totalSpheres - r.sphere);
+                spheresBit = `${spheresLeft} sphere${spheresLeft === 1 ? '' : 's'} · `;
+            }
+            const regionsLeft = s.totalRegions - r.index;
+            lines.push(`Remaining: ${spheresBit}`
+                + `${regionsLeft} region${regionsLeft === 1 ? '' : 's'} · `
                 + `${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
         } else if (s.phase) {
             lines.push(`Finalizing: ${s.phase} · ${s.doneRegions}/${s.totalRegions} regions built`);
         } else if (s.totalRegions) {
-            lines.push(`Planned: ${s.totalSpheres} spheres, ${s.totalRegions} regions`);
+            lines.push(s.totalSpheres
+                ? `Planned: ${s.totalSpheres} spheres, ${s.totalRegions} regions`
+                : `Planned: ${s.totalRegions} regions`);
         } else {
-            lines.push('Planning spheres…');
+            lines.push('Planning…');
         }
         lines.push(`Elapsed: ${((performance.now() - s.startedAt) / 1000).toFixed(1)}s`);
         this._progressEl.textContent = lines.join('\n');
@@ -3917,19 +4011,20 @@ export class ProcgenPipelineUI {
         }
     }
 
-    _runTopDown() {
+    // Build a fresh top-down envelope from the panel's current source + params.
+    // Computes the same preamble the old monolithic top-down path did (granted
+    // ability items, free starting inventory, resolved sphere log) and packs the
+    // engine opts + compile inputs the shared runner (topDownSteps) consumes.
+    _buildTDEnvelope() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
         const mix = this._effectiveSubstrateMix();
 
         // Top-down realises an EXISTING world, whose exits carry none of a
-        // zone substrate's ability items (bounce arrows etc.). A bounce
-        // region is only traversable beyond its forced column with an
-        // arrow, so when a substrate that declares libraryItems is in the
-        // mix, grant every one of its ability items the source doesn't
-        // already carry as a STARTING ITEM. The items being free keeps the
-        // source logic intact while letting the zone realiser put surplus
-        // exits on free arrow drifts (see generateRegionZoneGen). Victory
-        // items are never granted (they would auto-complete the seed).
+        // zone substrate's ability items (bounce arrows etc.). When a substrate
+        // that declares libraryItems is in the mix, grant every one of its
+        // ability items the source doesn't already carry as a STARTING ITEM —
+        // free, so the source logic is intact while the zone realiser can put
+        // surplus exits on free-arrow drifts. Victory items are never granted.
         const sourceStarting = this.topDownSource?.starting_items?.['1'] ?? [];
         const sourceItemDefs = this.topDownSource?.items?.['1'] ?? {};
         const grantedItems = [];
@@ -3945,69 +4040,77 @@ export class ProcgenPipelineUI {
             }
         }
         const startingItems = [...sourceStarting, ...grantedItems];
-
-        // §3: when a sphere log is available (picked, or embedded on the
-        // source), top-down attributes wave + sphere_plan from it and emits
-        // driver 'top-down-sphere'; otherwise plain 'top-down'.
         const { entries: sphereLog } = this._resolveTopDownSphereLog();
 
-        const {
-            grid, stats, startCell, sphereTree, spherePlan, attributionWarnings,
-        } = topDownFromRulesJson(this.topDownSource, {
-            gridDims: { width: gridWidth, height: gridHeight },
-            regionSizeBase: { width: regionWidth, height: regionHeight },
-            seed,
-            ...(mix ? { substrateMix: mix } : {}),
-            ...(sphereLog ? { sphereLog } : {}),
-            hazardOpts: this._effectiveHazardOpts(),
-            // The full starting inventory is free at generation time: the
-            // zone realiser may attach any of these items to a surplus
-            // exit's physics requirement without changing the logic.
-            freeItems: startingItems,
-            // Substrate knobs ride regionParams (maze ignores unknown
-            // keys; the generic maxIterations 0 keeps top-down maze rooms
-            // open). Each substrate in the mix assembles its own keys via
-            // `buildRegionParams` (mode 'topDown' omits the sphere-only
-            // platformRows + fork decoration).
-            regionParams: {
-                maxIterations: 0,
-                ...this._assembleRegionParams(
-                    Object.entries(mix ?? {})
-                        .filter(([, w]) => Number(w) > 0).map(([id]) => id),
-                    'topDown'),
+        return newTopDownEnvelope({
+            source: this.topDownSource,
+            regionSize: { width: regionWidth, height: regionHeight },
+            opts: {
+                gridDims: { width: gridWidth, height: gridHeight },
+                regionSizeBase: { width: regionWidth, height: regionHeight },
+                seed,
+                ...(mix ? { substrateMix: mix } : {}),
+                ...(sphereLog ? { sphereLog } : {}),
+                hazardOpts: this._effectiveHazardOpts(),
+                freeItems: startingItems,
+                regionParams: {
+                    maxIterations: 0,
+                    ...this._assembleRegionParams(
+                        Object.entries(mix ?? {})
+                            .filter(([, w]) => Number(w) > 0).map(([id]) => id),
+                        'topDown'),
+                },
+            },
+            compileIn: {
+                seed,
+                enableLoopMode: !!this.params.enableLoopMode,
+                regionXpEffect: this.params.regionXpEffect ?? 'cost',
+                assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
+                startingItems,
+                grantedItems,
+                sourceItemDefs,
+                sourceGameName: this.topDownSource?.game_name ?? null,
+                sphereLog: sphereLog ?? null,
             },
         });
-        const enriched = !!(sphereLog && sphereTree && spherePlan);
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            assumeBidirectional: this.topDownSource.assume_bidirectional_exits !== false,
-            startingItems,
-            // Embed the AUTHORITATIVE log verbatim (not the JS re-derivation)
-            // so the embedded sphere_log + loop_costs reflect real AP logic.
-            ...(enriched ? { sphereLog } : {}),
-            // Source defs backfill the source's own starting items; the
-            // granted ability items aren't placed anywhere, so synthesise
-            // defs (ids 999↓ stay clear of the compiled pool's upward
-            // numbering from ITEM_ID_BASE).
-            sourceItems: {
-                ...sourceItemDefs,
-                ...Object.fromEntries(grantedItems.map((name, i) => [name, {
-                    name,
-                    id: 999 - i,
-                    classification: 'progression',
-                    groups: ['Everything'],
-                }])),
-            },
-            procgenMetadata: {
-                driver: enriched ? 'top-down-sphere' : 'top-down',
-                source_game: this.topDownSource?.game_name ?? null,
-                source_counts: computeSourceCounts(this.topDownSource, '1'),
-                stop_reason: stats.stopReason,
-                ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
-            },
-        });
+    }
+
+    // --- top-down step runners (delegate to topDownSteps) ---
+
+    // ① Layout (delegated). No progress (BFS is instant).
+    async _stepTDLayout() {
+        await runTopDownStep('layout', this._tdState);
+    }
+
+    // ② Realise (delegated). The panel owns the progress indicator + elapsed
+    // timing; the runner owns the per-region realisation + setTimeout(0) yield.
+    async _stepTDRealise() {
+        const st = this._tdState;
+        this._progressState = {
+            startedAt: performance.now(), totalRegions: 0, totalSpheres: 0,
+            doneRegions: 0, region: null, attempt: null, phase: null,
+            timings: [], lastEvent: null, lastAt: 0,
+        };
+        this._updateProgressEl();
+        await runTopDownStep('realise', st, { onProgress: (ev) => this._onGenerationProgress(ev) });
+        if (this._progressState) {
+            st.seconds = (performance.now() - this._progressState.startedAt) / 1000;
+        }
+    }
+
+    // ③ Finalize (delegated).
+    async _stepTDFinalize() {
+        await runTopDownStep('finalize', this._tdState,
+            { onProgress: (ev) => this._onGenerationProgress(ev) });
+    }
+
+    // ④ Compile (delegated). The panel owns the result message / this.result it
+    // shows; the runner owns buildRulesJson + the sphere-log attribution.
+    async _stepTDCompile() {
+        const st = this._tdState;
+        await runTopDownStep('compile', st,
+            { onProgress: (ev) => this._onGenerationProgress(ev) });
+        const { rulesJson, enriched, attributionWarnings } = st.compile;
         if (enriched && attributionWarnings?.length) {
             this.message = `${this.message ? `${this.message} · ` : ''}`
                 + `sphere-log attribution: ${attributionWarnings.length} warning(s) — `
@@ -4015,14 +4118,143 @@ export class ProcgenPipelineUI {
                 + `${attributionWarnings.length > 3 ? ' …' : ''}`;
         }
         this.result = {
-            grid,
-            regionSize: { width: regionWidth, height: regionHeight },
-            stats,
-            // No pool in top-down mode — keep the field present so the
-            // stats renderer can branch cleanly.
+            grid: st.finalize.grid,
+            regionSize: st.regionSize,
+            stats: st.finalize.stats,
+            // No pool in top-down mode — keep the field present so the stats
+            // renderer can branch cleanly.
             poolRemaining: null,
             rulesJson,
         };
+    }
+
+    // Advance one top-down step (button: Run next step). Starts the pipeline
+    // (① Layout) when none is running, then follows nextTopDownStep.
+    _advanceTDStep() {
+        if (!this._tdState) { this._tdState = this._buildTDEnvelope(); }
+        const byName = {
+            layout: () => this._stepTDLayout(),
+            realise: () => this._stepTDRealise(),
+            finalize: () => this._stepTDFinalize(),
+            compile: () => this._stepTDCompile(),
+        };
+        const step = nextTopDownStep(this._tdState);
+        return step ? byName[step]?.() : undefined;
+    }
+
+    // "Run all" — run from the current point to completion (driven by
+    // _runGeneration, which owns isGenerating + the surrounding render).
+    async _runTopDownAll() {
+        // Fresh run when there's no pipeline OR the previous one is complete
+        // (Generate re-generates); otherwise continue the in-progress one.
+        if (!this._tdState || nextTopDownStep(this._tdState) === null) {
+            this._tdState = this._buildTDEnvelope();
+        }
+        while (nextTopDownStep(this._tdState)) {
+            // eslint-disable-next-line no-await-in-loop
+            await this._advanceTDStep();
+        }
+    }
+
+    // "Run next step" button — its own guard + render (the Generate path in
+    // _runGeneration wraps "Run all").
+    async _runTopDownStepNext() {
+        if (this.isGenerating) return;
+        if (!this.topDownSource) {
+            this.message = 'Pick a source rules.json first.';
+            this.render();
+            return;
+        }
+        this.isGenerating = true;
+        this.render();
+        try {
+            await this._advanceTDStep();
+        } catch (e) {
+            this.message = `ERROR: ${e.message}`;
+        }
+        this.isGenerating = false;
+        this._progressState = null;
+        this.render();
+    }
+
+    // "Reset" button — drop the top-down pipeline so ① re-runs from current params.
+    _resetTDSteps() {
+        this._tdState = null;
+        this.result = null;
+        this.message = '';
+        this.warning = '';
+        this._progressState = null;
+        this.render();
+    }
+
+    // Content of the "Top-down pipeline" section: read-only feedback per
+    // completed step (Phase 2 — editing surfaces land in later phases).
+    _renderTopDownSteps() {
+        const wrap = document.createElement('div');
+        const st = this._tdState;
+        if (!st) return wrap;
+        if (st.completed >= 0 && st.layout) {
+            wrap.appendChild(this._renderStepBlock('① Layout — region placement',
+                this._renderTDLayoutFeedback(st.layout)));
+        }
+        if (st.completed >= 1 && st.realise) {
+            wrap.appendChild(this._renderStepBlock('② Realise — substrate geometry per region',
+                this._renderTDRealiseFeedback(st)));
+        }
+        if (st.completed >= 2 && st.finalize) {
+            wrap.appendChild(this._renderStepBlock('③ Finalize — teleporters, back-exits, entrances',
+                this._renderTDFinalizeFeedback(st.finalize)));
+        }
+        if (st.completed >= 3 && st.compile) {
+            wrap.appendChild(this._renderStepBlock('④ Compile',
+                this._renderTDCompileFeedback(st.compile)));
+        }
+        return wrap;
+    }
+
+    _renderTDLayoutFeedback(layout) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const placed = layout.placementOrder?.length ?? 0;
+        const teleEdges = layout.teleporterEdges?.length ?? 0;
+        wrap.textContent = `Placed ${placed} region${placed === 1 ? '' : 's'} from `
+            + `${layout.actualStartName} · ${teleEdges} teleporter edge${teleEdges === 1 ? '' : 's'} `
+            + `· grid cell ${layout.uniformSize.width}×${layout.uniformSize.height}`;
+        return wrap;
+    }
+
+    _renderTDRealiseFeedback(st) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const counts = {};
+        for (const r of st.realise.grid.allRegions()) {
+            counts[r.substrate] = (counts[r.substrate] ?? 0) + 1;
+        }
+        const bySub = Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(', ') || 'none';
+        const secs = st.seconds ? ` · ${st.seconds.toFixed(1)}s` : '';
+        wrap.textContent = `Realised ${st.layout.stats.regionsBuilt} region(s): ${bySub}${secs}`;
+        return wrap;
+    }
+
+    _renderTDFinalizeFeedback(finalize) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const tele = finalize.stats.teleportersPlaced ?? 0;
+        const sphered = finalize.sphereTree ? ' · sphere metadata attributed' : '';
+        wrap.textContent = `${tele} teleporter${tele === 1 ? '' : 's'} placed · `
+            + `stop: ${finalize.stats.stopReason}${sphered}`;
+        return wrap;
+    }
+
+    _renderTDCompileFeedback(compile) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const rj = compile.rulesJson;
+        const regionCount = Object.keys(rj.regions?.['1'] ?? {}).length;
+        const hasLog = Array.isArray(rj.sphere_log) && rj.sphere_log.length > 0;
+        wrap.textContent = `driver ${rj.procgen_metadata?.driver} · ${regionCount} regions · `
+            + `sphere_log ${hasLog ? 'embedded' : 'absent'} · full rules.json in Compiled output below`;
+        return wrap;
     }
 
     // Auto-size the grid to fit the source rules.json's region count.
