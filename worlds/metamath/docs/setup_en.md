@@ -71,7 +71,7 @@ MetaMath requires the `metamath-py` Python package. How it gets installed depend
   your Archipelago source folder:
 
   ```bash
-  python -m pip install metamath-py numpy
+  python -m pip install metamath-py
   ```
 
 > **The compiled `.exe` / `AppImage` releases cannot install `metamath-py` at all.**
@@ -187,11 +187,11 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
   - **Using the compiled `.exe` / `AppImage`?** It cannot install `metamath-py`. Switch
     to running Archipelago from source (see [Prerequisites](#prerequisites)).
   - **Running from source?** Install the dependency with
-    `python -m pip install metamath-py numpy`, or place the `metamath` folder in
+    `python -m pip install metamath-py`, or place the `metamath` folder in
     `worlds/` so it installs automatically. Then restart the Launcher.
 
 **`ModuleNotFoundError: No module named 'metamathpy'`**
-- The `metamath-py` package is not installed. Run: `python -m pip install metamath-py numpy`
+- The `metamath-py` package is not installed. Run: `python -m pip install metamath-py`
 - Note this only works when running Archipelago from source; the `.exe` / `AppImage` cannot install it.
 
 **"Could not find set.mm database"**
