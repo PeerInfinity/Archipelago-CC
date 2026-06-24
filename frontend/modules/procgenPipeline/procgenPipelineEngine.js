@@ -1306,25 +1306,42 @@ export function computeSourceCounts(rulesJson, playerId = '1') {
 }
 
 export function topDownFromRulesJson(rulesJson, opts = {}) {
-    // Composed of three phases (stepped-pipeline refactor 1a — a mechanical,
-    // byte-identical split of one monolithic function): ① layoutTopDown (BFS
-    // placement, consumes rng) → ② realiseTopDownGen (per-region realise; a
-    // generator that yields per region so the stepped panel can show progress,
-    // consumes rng) → ③ finalizeTopDown (rng-free post-passes). The stepped
-    // panel / CLI drive these one at a time; here they run inline.
+    // Composed of three phases: ① layoutTopDown (BFS placement + per-region
+    // substrate/sub-seed assignment, consumes rng) → ② realiseTopDownGen
+    // (per-region realise from fresh per-region rngs; a generator that yields per
+    // region so the stepped panel can show progress) → ③ finalizeTopDown (rng-free
+    // post-passes). The stepped panel / CLI drive these one at a time; here inline.
     const { seed = 1 } = opts;
     const rng = createRng(seed);
     const layout = layoutTopDown(rulesJson, opts, rng);
-    const gen = realiseTopDownGen(layout, opts, rng);
+    const gen = realiseTopDownGen(layout, opts);
     let r = gen.next();
     while (!r.done) r = gen.next();
     return finalizeTopDown(layout);
 }
 
+// Deterministic per-region realisation seed from the world seed + region id.
+// ② realises each region from a fresh createRng(thisSeed), so a region's geometry
+// is a pure function of (world seed, region id) — independent of every other
+// region. That decoupling is what lets a single region be re-rolled or edited
+// without perturbing the others (the editing roadmap). FNV-1a-ish over the id.
+function deriveRegionSeed(seed, regionId) {
+    let h = ((seed | 0) ^ 0x9e3779b9) >>> 0;
+    const s = String(regionId);
+    for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return (h || 1) >>> 0; // never 0
+}
+
 // ----- ① Layout: BFS-place each source region in a grid cell, pick the uniform
-// region size, and resolve the source's bidirectional/sphere-log flags. Consumes
-// rng (fallback-cell placement). Returns the stub grid + placement bookkeeping;
-// ② mutates each stub into a realised region, ③ runs the rng-free post-passes.
+// region size, ASSIGN each region's substrate + realisation sub-seed, and resolve
+// the source's bidirectional/sphere-log flags. Consumes rng (fallback-cell
+// placement + the per-region substrate picks). Returns the stub grid + placement
+// bookkeeping + the editable substrateByRegion / subSeedByRegion maps; ② realises
+// each stub from its recorded substrate + a fresh per-region rng, ③ runs the
+// rng-free post-passes.
 export function layoutTopDown(rulesJson, opts, rng) {
     const {
         playerId = '1',
@@ -1336,6 +1353,14 @@ export function layoutTopDown(rulesJson, opts, rng) {
         // BFS-tree-edge gets a back-exit on the child for round-
         // tripping back through the entrance.
         assumeBidirectional = rulesJson?.assume_bidirectional_exits !== false,
+        // Substrate assignment inputs (resolution order in pickSubstrate:
+        // per-region override > source tag > picker > weighted mix > 'maze').
+        // ① resolves each region's substrate ONCE and records it; ② reads the
+        // record (no re-pick), so editing the recorded map + re-running ② is the
+        // substrate-assignment edit path.
+        substrateByRegion,
+        substrateMix,
+        substratePicker,
         // Authoritative sphere log (opt or embedded on the source). When present,
         // ③ attributes a wave to each placed region → compact sphere_tree +
         // sphere_plan (driver 'top-down-sphere'). null → plain 'top-down'.
@@ -1474,36 +1499,53 @@ export function layoutTopDown(rulesJson, opts, rng) {
         if (s.height > uniformSize.height) uniformSize.height = s.height;
     }
 
+    // Resolve each region's substrate ONCE (consuming rng for any non-overridden
+    // weighted-mix pick, in BFS-placement order) and record it into the editable
+    // resolvedSubstrates map; derive each region's realisation sub-seed from
+    // (seed, region id) — independent of rng position, so editing one region's
+    // substrate never shifts another region's geometry. ② reads both.
+    const resolvedSubstrates = {};
+    const subSeedByRegion = {};
+    for (const { name } of placementOrder) {
+        const sourceRegion = sourceRegions[name];
+        if (!sourceRegion) continue;
+        resolvedSubstrates[name] = pickSubstrate(name, sourceRegion, {
+            substrateByRegion, substrateMix, substratePicker,
+        }, rng);
+        subSeedByRegion[name] = deriveRegionSeed(seed, name);
+    }
+
     const logEntries = Array.isArray(sphereLog) ? sphereLog
         : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
     return {
         grid, startCell, placementOrder, cellsByName, teleporterEdges,
         sourceRegions, stats, uniformSize, menuName, actualStartName,
         assumeBidirectional, playerId, seed, logEntries,
+        substrateByRegion: resolvedSubstrates, subSeedByRegion,
     };
 }
 
 // ----- ② Realise each region. A generator: it yields a { type:'region', … }
 // progress event per region (the stepped panel drains it with a setTimeout(0)
-// yield so the UI repaints), then realises that region's substrate geometry and
-// mutates its grid stub in place. Consumes rng (substrate pick + generateRegion),
-// in BFS-placement order, so a parent always realises before its child.
-export function* realiseTopDownGen(layout, opts, rng) {
+// yield so the UI repaints), then realises that region's recorded substrate from
+// a FRESH per-region rng (createRng(subSeed)) and mutates its grid stub in place.
+// Each region is rng-independent of the others (the substrate + sub-seed were
+// resolved per region in ①), so a single region can be re-rolled / edited in
+// isolation; ② itself consumes no shared stream.
+export function* realiseTopDownGen(layout, opts) {
     const {
         itemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
         // maxIterations: 0 keeps top-down maze rooms open (max floor for the
         // source's locations/exits/entrance). Callers can override.
         regionParams = { maxIterations: 0 },
-        substrateByRegion,
-        substrateMix,
-        substratePicker,
         biomeByRegion,
         hazardOpts = null,
         freeItems = null,
     } = opts;
     const {
         grid, placementOrder, cellsByName, sourceRegions, uniformSize, stats,
+        substrateByRegion = {}, subSeedByRegion = {}, seed: layoutSeed = 1,
     } = layout;
     const total = stats.regionsTotal;
 
@@ -1581,11 +1623,11 @@ export function* realiseTopDownGen(layout, opts, rng) {
             };
         }).filter((l) => l.id);
 
-        // Substrate dispatch: per-region resolution via pickSubstrate
-        // (caller override > source tag > picker > mix > 'maze').
-        const substrateId = pickSubstrate(name, sourceRegion, {
-            substrateByRegion, substrateMix, substratePicker,
-        }, rng);
+        // Substrate + sub-seed were resolved per region in ①; ② just reads them
+        // (editing layout.substrateByRegion + re-running ② is the substrate-edit
+        // path). A fresh rng per region keeps regions geometrically independent.
+        const substrateId = substrateByRegion[name] ?? 'maze';
+        const regionRng = createRng(subSeedByRegion[name] ?? deriveRegionSeed(layoutSeed, name));
         // Biome resolution mirrors substrate dispatch: per-region from
         // input wins, otherwise inherit from rules.json source region
         // (which the top-down driver may stamp), otherwise null →
@@ -1619,7 +1661,7 @@ export function* realiseTopDownGen(layout, opts, rng) {
             locations: locationSpecs,
             itemLib,
             obstacleLib,
-            rng,
+            rng: regionRng,
             params: regionParams,
             biome: regionBiome,
             hazardOpts,

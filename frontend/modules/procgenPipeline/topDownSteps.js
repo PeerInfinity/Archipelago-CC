@@ -41,35 +41,27 @@ import {
 /** Step names in run order; index === the `completed` value the step yields. */
 export const TOPDOWN_STEPS = Object.freeze(['layout', 'realise', 'finalize', 'compile']);
 
-// ① — BFS placement. Creates the rng from the seed and leaves it live on the
-// envelope at its post-layout position for ② to consume. The post-layout state
-// is ALSO snapshotted (layoutRngState) so ② can always restart from it — needed
-// when ② is re-run after a hand-edit (e.g. CLI `run --from realise`) rather than
-// reading whatever state a prior ② left the live rng in.
+// ① — BFS placement + per-region substrate/sub-seed assignment. The rng (BFS
+// fallback draws + substrate picks) is recorded on the envelope for completeness;
+// ② does NOT consume it (each region realises from its own sub-seed), so re-running
+// ② after a hand-edit is deterministic without any rng restore.
 function stepLayout(env) {
     const rng = createRng(env.opts.seed ?? 1);
     env.layout = layoutTopDown(env.source, env.opts, rng);
     env.rng = rng;
-    env.layoutRngState = rng.getState();
     env.completed = 0;
     return env;
 }
 
 // ② — per-region realisation. Drains the generator, forwarding each region
 // progress event and yielding to the event loop so the UI can repaint. The grid
-// is mutated in place (it IS env.layout.grid).
+// is mutated in place (it IS env.layout.grid). Consumes no shared rng — each
+// region uses a fresh rng seeded from layout.subSeedByRegion[name].
 async function stepRealise(env, { onProgress = null } = {}) {
-    // Restart the rng from the post-layout snapshot so a re-run is deterministic
-    // regardless of where a prior ② left the live rng (no-op in the normal
-    // forward flow, where the live rng IS already at that position).
-    if (env.layoutRngState != null) {
-        env.rng = createRng(0);
-        env.rng.setState(env.layoutRngState);
-    }
     // A 'plan'-shaped lead event lets the indicator show the region total up
     // front (spheres is 0 — top-down has no sphere plan unless a log enriches it).
     onProgress?.({ type: 'plan', regions: env.layout.stats.regionsTotal, spheres: 0 });
-    const gen = realiseTopDownGen(env.layout, env.opts, env.rng);
+    const gen = realiseTopDownGen(env.layout, env.opts);
     let r = gen.next();
     while (!r.done) {
         onProgress?.(r.value);

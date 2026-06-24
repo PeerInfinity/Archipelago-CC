@@ -130,11 +130,42 @@ async function checkCodec(label, source, opts) {
     return same;
 }
 
+// Decoupling (the point of 1b): bumping ONE region's realisation sub-seed
+// re-rolls that region and AT MOST its BFS descendants (a child's entrance is
+// positioned to match its parent's exit tile — a structural dependency), never
+// its siblings / ancestors / other-branch regions. Pre-1b a single change shifted
+// the shared rng and perturbed EVERY later region; `expected` is the precise
+// allowed change set.
+async function checkDecoupling(label, source, opts, target, expected) {
+    const a = envFor(source, opts);
+    const b = envFor(source, opts);
+    await runTopDownStep('layout', a);
+    await runTopDownStep('layout', b);
+    b.layout.subSeedByRegion[target] = (b.layout.subSeedByRegion[target] ^ 0x55555555) >>> 0;
+    await runTopDownStep('realise', a);
+    await runTopDownStep('realise', b);
+    const ga = dumpGrid(a.realise.grid);
+    const gb = dumpGrid(b.realise.grid);
+    const changed = [];
+    for (const name of new Set([...Object.keys(ga), ...Object.keys(gb)])) {
+        if (JSON.stringify(ga[name]) !== JSON.stringify(gb[name])) changed.push(name);
+    }
+    const exp = [...expected].sort().join(',');
+    const got = [...changed].sort().join(',');
+    const ok = exp === got;
+    console.log(`${ok ? '✅' : '❌'} ${label}: re-roll '${target}' changed [${got}] (expected [${exp}])`);
+    return ok;
+}
+
 const results = [];
 results.push(await check('maze s1', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 1, substrateMix: { maze: 1 } }));
 results.push(await check('maze s7', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 7, substrateMix: { maze: 1 } }));
 results.push(await checkCodec('maze s1 codec', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 1, substrateMix: { maze: 1 } }));
 results.push(await checkCodec('maze s3 codec', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 3, substrateMix: { maze: 1 } }));
+// East is a leaf → only East changes. North is Deep's BFS parent → North + Deep
+// (Deep re-aligns its entrance to North's moved exit). Siblings/ancestors untouched.
+results.push(await checkDecoupling('maze s1 leaf', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 1, substrateMix: { maze: 1 } }, 'East', ['East']));
+results.push(await checkDecoupling('maze s1 parent', mazeSource(), { gridDims: { width: 4, height: 4 }, regionSizeBase: { width: 6, height: 6 }, seed: 1, substrateMix: { maze: 1 } }, 'North', ['North', 'Deep']));
 
 const allOk = results.every(Boolean);
 console.log(allOk ? '\nALL PASS — stepped runner == monolith' : '\nFAILURES');

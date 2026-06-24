@@ -3,8 +3,9 @@
  * Headless per-step driver for the stepped TOP-DOWN pipeline. Runs ONE step (or
  * a range) of layout → realise → finalize → compile, reading the prior step's
  * "envelope" JSON and writing the next. Edit the envelope JSON between
- * invocations to author each step by hand (e.g. set opts.substrateByRegion to
- * pin a region's substrate, then re-run from `realise`). Shares the step wiring
+ * invocations to author each step by hand (e.g. after `layout`, edit
+ * layout.substrateByRegion["<region>"] to pin that region's substrate, then
+ * re-run from `realise` — ② re-realises only that region). Shares the step wiring
  * with the Procgen Pipeline panel via topDownSteps.js.
  *
  * Usage:
@@ -226,8 +227,15 @@ async function main() {
         await runTopDownStep(sub, env, { onProgress });
     }
 
-    const outPath = writeOut(args.out, serializeTDEnvelope(env), sub);
-    process.stderr.write(`[topdown-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+    // For `run`, the rules.json (--rules-out) is the primary output; only write
+    // the envelope when -o is given (avoids dropping a default file in the cwd).
+    // Single-step subcommands always write the envelope (it IS their output).
+    if (sub !== 'run' || args.out) {
+        const outPath = writeOut(args.out, serializeTDEnvelope(env), sub);
+        process.stderr.write(`[topdown-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+    } else {
+        process.stderr.write(`[topdown-step] ${sub} → completed=${env.completed}\n`);
+    }
     if (isStep && sub !== 'compile') {
         const n = nextTopDownStep(env);
         if (n) process.stderr.write(`[topdown-step] next: ${n}\n`);
