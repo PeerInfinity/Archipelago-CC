@@ -381,9 +381,22 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")
+        # JSON-Tools exporter artifacts (rules JSON, sphere log, multiworld pickle) are
+        # copied to frontend/presets/ for local play and must NOT be bundled into the
+        # hostable .zip. A stock Archipelago WebHost (e.g. archipelago.gg) rejects the
+        # whole upload when it sees them: WebHostLib/upload.py parses every archive member
+        # that isn't the multidata/spoiler/container as a per-player slot file via
+        # int(slot_id[1:]), so "AP_<seed>_rules.json" -> int("ules") -> ValueError
+        # ("Could not load multidata. File may be corrupted or incompatible.").
+        non_hostable_suffixes = (
+            "_rules.json", "_rules-ast.json", "_sphere_log.jsonl",
+            ".pkl.gz", "_pickle_meta.json",
+        )
         with zipfile.ZipFile(zipfilename, mode="w", compression=zipfile.ZIP_DEFLATED,
                              compresslevel=9) as zf:
             for file in os.scandir(temp_dir):
+                if file.name.endswith(non_hostable_suffixes):
+                    continue
                 zf.write(file.path, arcname=file.name)
 
     logger.info('Done. Enjoy. Total Time: %s', time.perf_counter() - start)
