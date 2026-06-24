@@ -2021,8 +2021,27 @@ describe('topDownFromRulesJson — sphere-log attribution', () => {
         });
         expect(out.procgen_metadata.driver).toBe('top-down-sphere');
         // The embedded log is the authoritative one, NOT a JS re-derivation.
+        // (The grid-growth log already leads with a metadata header.)
+        expect(sphereLog[0].type).toBe('metadata');
         expect(out.sphere_log).toEqual(sphereLog);
         expect(out.procgen_metadata.sphere_tree.nodes[0].region_id).toBeDefined();
+    });
+
+    it('synthesizes the metadata header when the supplied log lacks one', () => {
+        const rulesJson = makeGridGrowthRulesJson();
+        // A log pulled from sphereState has its metadata entry stripped.
+        const bareLog = rulesJson.sphere_log.filter((e) => e.type === 'state_update');
+        expect(bareLog[0].type).toBe('state_update');
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
+            gridDims: { width: 5, height: 5 }, seed: 1, sphereLog: bareLog,
+        });
+        const out = buildRulesJson(grid, { startCell, seed: 1, seedName: 'sn', sphereLog: bareLog });
+        // Embedded log leads with a metadata header (canonical format), then
+        // the supplied state_update entries verbatim.
+        expect(out.sphere_log[0]).toEqual({
+            type: 'metadata', seed: 1, seed_name: 'sn', event_locations: {}, event_items: {},
+        });
+        expect(out.sphere_log.slice(1)).toEqual(bareLog);
     });
 });
 

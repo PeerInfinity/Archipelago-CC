@@ -5145,7 +5145,23 @@ export function buildRulesJson(grid, opts = {}) {
         // Authoritative log supplied (top-down-sphere): embed it verbatim.
         // Top-down keeps source region names as region_id, so the log's
         // region references resolve directly against the emitted regions.
-        scaffold.sphere_log = sphereLog;
+        // Ensure the metadata header that every _sphere_log.jsonl (and
+        // generateSphereLog) leads with is present — some sources (e.g. a
+        // log pulled from sphereState, which strips metadata on parse) hand
+        // a bare state_update array. Synthesize one when absent so the
+        // embedded log matches the canonical format.
+        scaffold.sphere_log = sphereLog[0]?.type === 'metadata'
+            ? sphereLog
+            : [
+                {
+                    type: 'metadata',
+                    seed,
+                    seed_name: seedName,
+                    event_locations: {},
+                    event_items: {},
+                },
+                ...sphereLog,
+            ];
     } else if (embedSphereLog) {
         try {
             scaffold.sphere_log = generateSphereLog(scaffold, {
