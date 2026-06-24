@@ -1306,56 +1306,42 @@ export function computeSourceCounts(rulesJson, playerId = '1') {
 }
 
 export function topDownFromRulesJson(rulesJson, opts = {}) {
+    // Composed of three phases (stepped-pipeline refactor 1a — a mechanical,
+    // byte-identical split of one monolithic function): ① layoutTopDown (BFS
+    // placement, consumes rng) → ② realiseTopDownGen (per-region realise; a
+    // generator that yields per region so the stepped panel can show progress,
+    // consumes rng) → ③ finalizeTopDown (rng-free post-passes). The stepped
+    // panel / CLI drive these one at a time; here they run inline.
+    const { seed = 1 } = opts;
+    const rng = createRng(seed);
+    const layout = layoutTopDown(rulesJson, opts, rng);
+    const gen = realiseTopDownGen(layout, opts, rng);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return finalizeTopDown(layout);
+}
+
+// ----- ① Layout: BFS-place each source region in a grid cell, pick the uniform
+// region size, and resolve the source's bidirectional/sphere-log flags. Consumes
+// rng (fallback-cell placement). Returns the stub grid + placement bookkeeping;
+// ② mutates each stub into a realised region, ③ runs the rng-free post-passes.
+function layoutTopDown(rulesJson, opts, rng) {
     const {
         playerId = '1',
         gridDims = { width: 12, height: 12 },
         regionSizeBase = { width: 6, height: 6 },
         seed = 1,
-        itemLib = DEFAULT_ITEMS,
-        obstacleLib = DEFAULT_OBSTACLES,
-        // maxIterations: 0 disables wall-add iterations in mazegen.
-        // Top-down regions exist to host the source's logic gates, not
-        // to be walking puzzles — leaving them as open rooms maximises
-        // floor space for locations + exits + entrance, which is what
-        // a dense source region (e.g. Adventure's Overworld with 11
-        // locations) needs to round-trip cleanly. Callers can override
-        // by passing their own regionParams.
-        regionParams = { maxIterations: 0 },
         teleporterMinGap = 2,
         // Honor the source's flag, default true. When set, every
         // BFS-tree-edge gets a back-exit on the child for round-
         // tripping back through the entrance.
         assumeBidirectional = rulesJson?.assume_bidirectional_exits !== false,
-        // Substrate selection. See pickSubstrate above for resolution
-        // order. v1 default: every region uses the maze substrate.
-        substrateByRegion,
-        substrateMix,
-        substratePicker,
-        // Per-region biome override. Shape: { [region_name]: { id,
-        // paramsOverride? } }. Falls through to source-region's biome
-        // (if rules.json carries one), otherwise to the substrate
-        // default. v1 callers don't pass this; future commits will.
-        biomeByRegion,
-        // Content-module options (maze content modules Phase 2e).
-        // Same shape as growMaze's hazardOpts; see mazeRoomLibrary's applyMazeContentModules.
-        // null disables.
-        hazardOpts = null,
-        // Item names the player holds for free at game start (source
-        // starting_items plus any substrate ability items the UI granted —
-        // e.g. bounce arrows). A zone substrate may attach these to a
-        // surplus exit's physics requirement without changing the realised
-        // logic (see generateRegionZoneGen's drift handling).
-        freeItems = null,
-        // Authoritative sphere log (array of JSONL entries from
-        // exporter/sphere_logger.py). When supplied — or when the source
-        // rules.json embeds one as `sphere_log` — top-down attributes a
-        // wave to each placed region and returns a compact sphere_tree +
-        // sphere_plan (driver 'top-down-sphere'). null → plain 'top-down'
-        // output, unchanged. See sphere-growth-apworld-integration.md §3.
+        // Authoritative sphere log (opt or embedded on the source). When present,
+        // ③ attributes a wave to each placed region → compact sphere_tree +
+        // sphere_plan (driver 'top-down-sphere'). null → plain 'top-down'.
         sphereLog = null,
     } = opts;
 
-    const rng = createRng(seed);
     const grid = new Grid(gridDims);
 
     if (!rulesJson || typeof rulesJson !== 'object') {
@@ -1467,15 +1453,14 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         }
     }
 
-    // ----- Phase 2: realise each region -----
-    // Pick one uniform region size that fits every region's exit and
-    // location budget (per-axis max of each region's individual sizing).
-    // Equal-sized regions make entrance/exit tile coordinates line up
-    // across shared walls without coord wrapping, and keep the visual
-    // grid consistent — the alternative (per-region auto-grow) produced
-    // mismatched walls where a wide parent's exit had no in-bounds
-    // counterpart on a smaller child. A future pass could let one source
-    // region span multiple Grid cells; for now everyone is one cell.
+    // ----- Phase 2 sizing (rng-free, so it lives in ①): pick one uniform region
+    // size that fits every region's exit and location budget (per-axis max of
+    // each region's individual sizing). Equal-sized regions make entrance/exit
+    // tile coordinates line up across shared walls without coord wrapping, and
+    // keep the visual grid consistent — the alternative (per-region auto-grow)
+    // produced mismatched walls where a wide parent's exit had no in-bounds
+    // counterpart on a smaller child. A future pass could let one source region
+    // span multiple Grid cells; for now everyone is one cell.
     let uniformSize = { width: regionSizeBase.width, height: regionSizeBase.height };
     for (const { name } of placementOrder) {
         const r = sourceRegions[name];
@@ -1489,10 +1474,46 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         if (s.height > uniformSize.height) uniformSize.height = s.height;
     }
 
+    const logEntries = Array.isArray(sphereLog) ? sphereLog
+        : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
+    return {
+        grid, startCell, placementOrder, cellsByName, teleporterEdges,
+        sourceRegions, stats, uniformSize, menuName, actualStartName,
+        assumeBidirectional, playerId, seed, logEntries,
+    };
+}
+
+// ----- ② Realise each region. A generator: it yields a { type:'region', … }
+// progress event per region (the stepped panel drains it with a setTimeout(0)
+// yield so the UI repaints), then realises that region's substrate geometry and
+// mutates its grid stub in place. Consumes rng (substrate pick + generateRegion),
+// in BFS-placement order, so a parent always realises before its child.
+function* realiseTopDownGen(layout, opts, rng) {
+    const {
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        // maxIterations: 0 keeps top-down maze rooms open (max floor for the
+        // source's locations/exits/entrance). Callers can override.
+        regionParams = { maxIterations: 0 },
+        substrateByRegion,
+        substrateMix,
+        substratePicker,
+        biomeByRegion,
+        hazardOpts = null,
+        freeItems = null,
+    } = opts;
+    const {
+        grid, placementOrder, cellsByName, sourceRegions, uniformSize, stats,
+    } = layout;
+    const total = stats.regionsTotal;
+
     // exitSidesByExit lets a child resolve its entrance tile from its
     // parent's exit position — populated as we go through phase 2 in
     // BFS-placement order, so parents always realise before children.
+    // Carried onto the layout at the end so ③ (teleporters + back-exits) reads it.
     const exitSidesByExit = new Map(); // "name:exit_id" -> {side, tile_position}
+
+    let index = 0;
 
     for (const { name, cell, parent } of placementOrder) {
         const sourceRegion = sourceRegions[name];
@@ -1572,6 +1593,19 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
         // future commit.
         const regionBiome = biomeByRegion?.[name] ?? sourceRegion?.biome ?? null;
 
+        // Progress event (mirrors realiseOneSphereNode): emit BEFORE the heavy
+        // generateRegion so the indicator names the region being built. Consumes
+        // no rng, so byte-identity is preserved.
+        yield {
+            type: 'region',
+            index,
+            total,
+            region_id: name,
+            substrate: substrateId,
+            placements: locationSpecs.length,
+        };
+        index += 1;
+
         // Unified region build (procedural or zone). The helper realises
         // the exit/location access rules onto substrate geometry, sets
         // global_name from the AP-canonical source ids, applies the
@@ -1627,6 +1661,21 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
 
         stats.regionsBuilt += 1;
     }
+
+    // Carry the per-exit side/tile map onto the layout so ③ (teleporters +
+    // back-exits + entrance resolution) can read it.
+    layout.exitSidesByExit = exitSidesByExit;
+}
+
+// ----- ③ Finalize: stitch teleporters, add synthetic back-exits, finalize +
+// wall off exits, resolve entrances, and (if a sphere log was supplied) attribute
+// waves into a compact sphere_tree + sphere_plan. All rng-free.
+function finalizeTopDown(layout) {
+    const {
+        grid, startCell, placementOrder, cellsByName, teleporterEdges,
+        sourceRegions, stats, exitSidesByExit, assumeBidirectional,
+        playerId, seed, logEntries,
+    } = layout;
 
     // ----- Phase 3: teleporters and back-exits -----
     // Setting teleporter mappings was waiting on the substrate-assigned
@@ -1746,8 +1795,7 @@ export function topDownFromRulesJson(rulesJson, opts = {}) {
     let sphereTree = null;
     let spherePlan = null;
     let attributionWarnings = [];
-    const logEntries = Array.isArray(sphereLog) ? sphereLog
-        : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
+    // logEntries resolved in ① (opt or embedded on the source rules.json).
     if (logEntries && logEntries.length > 0) {
         const attributed = buildTopDownSphereMetadata({
             placementOrder, cellsByName, teleporterEdges, grid,
