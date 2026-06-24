@@ -4,6 +4,11 @@
 
 Turns mathematical proofs from the [Metamath](http://metamath.org/) formal proof database into playable Archipelago worlds. Each theorem is a location, each proven statement is an item, and logical dependencies become access rules.
 
+> **Note:** MetaMath requires running Archipelago **from source** (Python 3.11.9–3.13).
+> It does not work with the compiled `.exe` / `AppImage` release, which cannot install
+> MetaMath's `metamath-py` dependency. See the
+> [Setup guide](../../../../worlds/metamath/docs/setup_en.md#prerequisites).
+
 ## How to Play
 
 1. Start with some axioms and definitions (configurable)

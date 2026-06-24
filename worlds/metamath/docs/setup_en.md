@@ -2,11 +2,20 @@
 
 ## Prerequisites
 
+> **⚠️ MetaMath requires running Archipelago from source (Python).** As currently
+> packaged it **cannot** be used with the compiled `.exe` / `AppImage` releases,
+> because MetaMath depends on the `metamath-py` Python package and those releases
+> cannot install extra Python packages. The easiest way to get a working source
+> setup is the [Archipelago-CC](https://github.com/PeerInfinity/Archipelago-CC)
+> repository, which already includes MetaMath and the JSON Tools frontend — see
+> [Running From Source](../../../docs/running%20from%20source.md).
+
 ### Required Software
-- **Archipelago** 0.6.4 or later
-- **Python** 3.8 or later
+- **Archipelago from source** — the compiled `.exe` / `AppImage` release will not work (see note above)
+- **Python** 3.11.9 or newer, but less than 3.14 — not the Windows Store version
+- **git** — required by Archipelago's module installer to fetch some dependencies
 - **JSON Export Tools** — MetaMath is played entirely through the JSON Tools web client, which requires a `rules.json` file produced during seed generation. Install the tools using the [JSON Tools Installer apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld) (recommended) or by [cloning the repository](../../../docs/json/user/overview.md). See the [JSON Tools Installer README](../../json_tools_installer/README.md) for full setup instructions.
-- **metamath-py** library (automatically installed)
+- **metamath-py** library — installed automatically **only** when the `metamath` folder is placed in your source checkout's `worlds/` directory; otherwise install it manually (see [Install Dependencies](#3-install-dependencies))
 
 ### Optional Downloads
 - **Metamath Database** (`set.mm`, ~50MB) - Can be auto-downloaded or manually placed
@@ -33,7 +42,7 @@ If you installed via the JSON Tools Installer with Demo Worlds enabled, MetaMath
 
 Otherwise, download the [MetaMath apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/metamath.apworld) and place it in your Archipelago `custom_worlds/` directory, then restart the Launcher.
 
-You can also place the `metamath` folder directly in your Archipelago `worlds` directory:
+You can also place the `metamath` folder directly in your Archipelago `worlds` directory. **This is the recommended option for source users**, because Archipelago's module installer will then install the `metamath-py` dependency automatically (an apworld in `custom_worlds/` does not — see [Install Dependencies](#3-install-dependencies)):
 
 ```
 Archipelago/
@@ -51,11 +60,24 @@ Archipelago/
 
 ### 3. Install Dependencies
 
-The required Python libraries will be installed automatically when you first generate a game. If you want to install them manually:
+MetaMath requires the `metamath-py` Python package. How it gets installed depends on where you put the world:
 
-```bash
-pip install metamath-py numpy
-```
+- **`metamath` folder in `worlds/`** (recommended for source users): Archipelago's
+  module installer picks up `worlds/metamath/requirements.txt` automatically the next
+  time you run `ModuleUpdate.py`, the Launcher, or `Generate.py` — press Enter when it
+  prompts to install missing modules.
+- **apworld in `custom_worlds/`**: the automatic installer does **not** scan apworlds,
+  so the dependency is **never** installed for you. You must install it manually from
+  your Archipelago source folder:
+
+  ```bash
+  python -m pip install metamath-py numpy
+  ```
+
+> **The compiled `.exe` / `AppImage` releases cannot install `metamath-py` at all.**
+> If MetaMath is missing from the Launcher's "Generate Template Options" output, the
+> Options Creator, or the `Players/Templates` folder, a missing `metamath-py` — or
+> trying to use the `.exe` — is almost always the cause. See [Troubleshooting](#troubleshooting).
 
 ### 4. Metamath Database Setup
 
@@ -157,8 +179,20 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
 
 ### Common Issues
 
-**"No module named 'metamath-py'"**
-- Run: `pip install metamath-py`
+**MetaMath is missing from "Generate Template Options", the Options Creator, or the `Players/Templates` folder**
+- This means the MetaMath world failed to load. World load failures are **silent** —
+  Archipelago logs the error and skips the world — so every *other* game gets a
+  template and MetaMath simply doesn't appear.
+- The usual cause is a missing `metamath-py` dependency:
+  - **Using the compiled `.exe` / `AppImage`?** It cannot install `metamath-py`. Switch
+    to running Archipelago from source (see [Prerequisites](#prerequisites)).
+  - **Running from source?** Install the dependency with
+    `python -m pip install metamath-py numpy`, or place the `metamath` folder in
+    `worlds/` so it installs automatically. Then restart the Launcher.
+
+**`ModuleNotFoundError: No module named 'metamathpy'`**
+- The `metamath-py` package is not installed. Run: `python -m pip install metamath-py numpy`
+- Note this only works when running Archipelago from source; the `.exe` / `AppImage` cannot install it.
 
 **"Could not find set.mm database"**
 - Enable `auto_download_database: true` in your YAML

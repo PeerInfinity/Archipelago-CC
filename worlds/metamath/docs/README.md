@@ -24,6 +24,11 @@ Metamath is a unique Archipelago world that transforms mathematical proofs into 
 
 ## Quick Start
 
+> **⚠️ MetaMath requires running Archipelago from source** (Python 3.11.9–3.13). It
+> does **not** work with the compiled `.exe` / `AppImage` release, which cannot install
+> MetaMath's `metamath-py` dependency. See the [Setup Guide](setup_en.md#prerequisites)
+> for details.
+
 1. **Install JSON Export Tools**: MetaMath is played through the JSON Tools web client, which requires the JSON Export Tools suite. Install them using the [JSON Tools Installer apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld) (see the [JSON Tools overview](../../../docs/json/user/overview.md) for details). MetaMath is included in the installer's **Demo Worlds** component, so both steps can be done at once.
 2. **Install MetaMath** (if not using the installer): Download the [MetaMath apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/metamath.apworld) and place it in your Archipelago `custom_worlds/` directory
 3. **Generate**: Use a YAML configuration file to specify your theorem — generation will produce a `rules.json` file automatically
