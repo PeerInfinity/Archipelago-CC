@@ -43,6 +43,7 @@ import {
     collectSphereGrowthPrep, assembleRegionParams,
 } from './sphereConfigHooks.js';
 import { getRegionEditor } from './regionEditors.js';
+import { getSphereStateSingleton } from '../sphereState/singleton.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
@@ -736,6 +737,26 @@ export class ProcgenPipelineUI {
             this.render();
         });
         logRow.appendChild(logInput);
+
+        // Quick path: use the sphere log the frontend currently has loaded
+        // (a preset's _sphere_log.jsonl pulled into sphereState by the
+        // loops / playback / spoiler features). Disabled until one is loaded.
+        const loadedLog = getSphereStateSingleton()?.rawData;
+        const hasLoadedLog = Array.isArray(loadedLog) && loadedLog.length > 0;
+        const useLoadedLogBtn = this._btn('Use currently-loaded sphere log', () => {
+            const entries = getSphereStateSingleton()?.rawData;
+            if (!Array.isArray(entries) || entries.length === 0) return;
+            this.topDownSphereLog = entries;
+            this.topDownSphereLogLabel = `currently loaded (${entries.length} entries)`;
+            this.message = `Using currently-loaded sphere log (${entries.length} entries)`;
+            this.render();
+        });
+        if (!hasLoadedLog) {
+            useLoadedLogBtn.disabled = true;
+            useLoadedLogBtn.title = 'Load a preset that ships a _sphere_log.jsonl '
+                + '(e.g. open it in the Presets / playback / loops view) first.';
+        }
+        logRow.appendChild(useLoadedLogBtn);
 
         const { entries: resolvedLog, label: logLabel } = this._resolveTopDownSphereLog();
         const logStatus = document.createElement('span');
