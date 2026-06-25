@@ -155,6 +155,20 @@ starting_statements: 0  # Start with nothing unlocked
 
 With JSON Export Tools installed, seed generation automatically produces a `rules.json` file alongside the normal `.archipelago` output. This is what the JSON Tools web client uses to track your game.
 
+### Where your files are saved
+
+The `rules.json` is copied into a `frontend/presets/` subfolder — **but which subfolder depends on how you generated the seed.** This trips people up, so check the right place:
+
+| Your seed | `rules.json` is saved to |
+|---|---|
+| Single game, randomized placement | `frontend/presets/metamath/AP_<seed>/` |
+| Single game, **vanilla item placement** | `frontend/presets/metamath_vanilla/AP_<seed>/` |
+| **Multiworld** (MetaMath + other games) | `frontend/presets/multiworld/AP_<seed>/` |
+
+In the **multiworld** folder you'll find a combined `AP_<seed>_rules.json` plus one per player (`AP_<seed>_P<n>_rules.json`). Use the file for your MetaMath player — open it and check the `game_name` field near the top — or just load the combined file.
+
+> Note: the `rules.json` is **not** included inside the generated `.zip` archive (so the archive can still be hosted on archipelago.gg). It lives only in `frontend/presets/`.
+
 ### Using the Archipelago Launcher
 
 1. Open the Archipelago Launcher
@@ -171,9 +185,10 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
 
 ### Playing Your Game
 
-1. Start the Archipelago server with the generated `.archipelago` file
-2. Open the JSON Tools web client (see the [Quick Start Guide](../../../docs/json/user/quick-start.md))
-3. Load the generated preset — the Proof Queue and Proof Graph panels appear automatically
+1. Open the JSON Tools web client (see the [Quick Start Guide](../../../docs/json/user/quick-start.md))
+2. Load your preset — in the **Presets** panel click **Load File** and choose the `rules.json` from the folder above (or, when hosting the frontend locally, pick it directly from the Presets panel). It should report success and show **Metamath** near the top.
+3. The Proof Queue and Proof Graph panels populate with your chosen theorem.
+4. **To connect to a server** (required for a multiworld, or any time you want a text client): open the **Console** tab, select the server address, and click **Connect** — and **leave the Console tab open**; closing it disconnects you. A single-player, non-multiworld game does **not** need a server.
 
 ## Troubleshooting
 
@@ -193,6 +208,17 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
 **`ModuleNotFoundError: No module named 'metamathpy'`**
 - The `metamath-py` package is not installed. Run: `python -m pip install metamath-py`
 - Note this only works when running Archipelago from source; the `.exe` / `AppImage` cannot install it.
+
+**"I generated a seed but `rules.json` isn't in `frontend/presets/metamath/`"**
+- It was generated — it's just in a different subfolder. **Vanilla item placement** saves to
+  `frontend/presets/metamath_vanilla/`, and a **multiworld** (2+ games) saves to
+  `frontend/presets/multiworld/`. See [Where your files are saved](#where-your-files-are-saved).
+- It is intentionally **not** placed inside the output `.zip` archive.
+
+**"Could not load multidata. File may be corrupted or incompatible." when hosting on archipelago.gg**
+- This was caused by older generations bundling `rules.json` / sphere-log files inside the
+  `.zip`, which the stock server can't parse. It is fixed in current Archipelago-CC — re-download
+  and regenerate if you still hit it.
 
 **"Could not find set.mm database"**
 - Enable `auto_download_database: true` in your YAML
