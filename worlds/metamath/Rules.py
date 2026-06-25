@@ -287,13 +287,20 @@ def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[s
     rule = db.rules[theorem_name]
 
     def is_real(step):
-        # Skip syntax-building steps (class 'c...' / wff 'w...' constructors);
-        # only theorem applications become statements.
-        r = getattr(step, 'rule', None)
-        if not (r and hasattr(r, 'consequent')):
-            return False
-        lab = r.consequent.label
-        return not lab.startswith('c') and not lab.startswith('w')
+        # A step is a logical statement iff its assertion's typecode is the
+        # turnstile '|-' ("it is provable that ..."). This keeps proven theorems
+        # ($p), logical axioms/definitions ($a |-), and the proof's own
+        # hypotheses ($e |-, treated as dependency-free base statements), while
+        # dropping syntax constructors (typecode 'wff'/'class') and variable
+        # declarations ($f, typecode 'setvar'/'class').
+        #
+        # This replaces an earlier label-prefix heuristic (skip labels starting
+        # 'c'/'w') that was wrong in both directions: it KEPT variable
+        # declarations like 'vv'/'vf' as fake statements and DROPPED real lemmas
+        # whose labels happen to start with c/w (e.g. graph-theory 'wlk...'),
+        # silently mismodeling proofs such as conngrv2edg.
+        concl = getattr(step, 'conclusion', None)
+        return bool(concl) and concl[0] == '|-'
 
     try:
         # Verify the proof and get the proof tree.

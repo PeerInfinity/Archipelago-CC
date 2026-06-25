@@ -83,6 +83,38 @@ class TestProofParsing(unittest.TestCase):
         self.assertEqual(len(ps.dependency_graph), 2)
         self.assertEqual(sorted(ps.dependency_graph[2]), [1])
 
+    def test_every_statement_is_logical(self):
+        # Statements are filtered by typecode '|-' (provable), so every parsed
+        # statement's instantiated expression must be a logical assertion — never
+        # a syntax/variable-declaration step (which a prior label heuristic let
+        # through, e.g. 'vv'/'vf' setvar declarations in conngrv2edg).
+        ps = self._parse("conngrv2edg")
+        for i, stmt in ps.statements.items():
+            inst = stmt.instantiated_expression
+            if inst:
+                self.assertTrue(
+                    inst.startswith("|-"),
+                    f"Statement {i} ({stmt.label}) is not a logical step: {inst!r}",
+                )
+
+    def test_real_lemmas_with_cw_labels_are_kept(self):
+        # The label heuristic dropped real theorems whose labels start with
+        # 'c'/'w' (e.g. graph-theory 'wlk...'). The typecode filter keeps them.
+        ps = self._parse("conngrv2edg")
+        labels = {stmt.label for stmt in ps.statements.values()}
+        self.assertTrue(
+            any(lab and lab.startswith("wlk") for lab in labels),
+            "expected real 'wlk...' graph-theory lemmas to be present",
+        )
+
+    def test_hypotheses_are_base_statements(self):
+        # Option A: a theorem's own $e hypotheses are kept as dependency-free
+        # base statements (con3i has hypothesis con3i.a).
+        ps = self._parse("con3i")
+        by_label = {stmt.label: i for i, stmt in ps.statements.items()}
+        self.assertIn("con3i.a", by_label, "hypothesis con3i.a should be a statement")
+        self.assertEqual(ps.dependency_graph[by_label["con3i.a"]], set())
+
 
 if __name__ == "__main__":
     unittest.main()
