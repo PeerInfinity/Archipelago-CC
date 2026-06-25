@@ -2,12 +2,12 @@
  * In-app smoke test for the STEPPED sphere-growth pipeline + plan editor.
  * Drives the real panel in a browser:
  *
- *   Phase A — pure stepping: Run ① Plan (editor appears) → ②a Allocate
- *     → ②b Topology → ②c Items → ③ Build regions → ④ Compile, asserting
+ *   Phase A — pure stepping: Run 1 Plan (editor appears) → 2a Allocate
+ *     → 2b Topology → 2c Items → 3 Build regions → 4 Compile, asserting
  *     each sub-step's feedback and the oracle success message at the end.
- *   Phase B — editing: Reset → Run ① Plan → move a Sphere-1 item down a
+ *   Phase B — editing: Reset → Run 1 Plan → move a Sphere-1 item down a
  *     sphere (▼), assert the editor reflects the move and the pipeline
- *     reset to step ①, then Run all and assert a terminal result.
+ *     reset to step 1, then Run all and assert a terminal result.
  *
  * Prereq: dev server on :8000. Run: node scripts/procgen/verify-sphere-steps-ui.mjs
  */
@@ -74,31 +74,31 @@ async function message() {
 }
 
 // ── Phase A: pure stepping ──────────────────────────────────────────
-await clickBtn('Run ① Plan');
+await clickBtn('Run 1 Plan');
 await page.waitForTimeout(800);
 let txt = await panelText();
 if (!txt.includes('Starting items (sphere 0)') || !txt.includes('Sphere 1')) {
-    throw new Error('plan editor did not appear after Run ① Plan');
+    throw new Error('plan editor did not appear after Run 1 Plan');
 }
-console.log('STEP ①: editor appeared with sphere groups');
+console.log('STEP 1: editor appeared with sphere groups');
 
-await clickBtn('Run ②a Allocate');
+await clickBtn('Run 2a Allocate');
 await page.waitForTimeout(600);
-if (!(await panelText()).includes('②a Allocate')) {
+if (!(await panelText()).includes('2a Allocate')) {
     throw new Error('allocate feedback did not appear');
 }
-console.log('STEP ②a: allocation feedback shown');
+console.log('STEP 2a: allocation feedback shown');
 
-await clickBtn('Run ②b Topology');
+await clickBtn('Run 2b Topology');
 await page.waitForTimeout(600);
 txt = await panelText();
-if (!txt.includes('②b Topology')) {
+if (!txt.includes('2b Topology')) {
     throw new Error('topology feedback did not appear');
 }
 if (!txt.includes('└─') && !txt.includes('├─')) {
-    throw new Error('②b topology tree glyphs (└─/├─) did not render');
+    throw new Error('2b topology tree glyphs (└─/├─) did not render');
 }
-console.log('STEP ②b: topology tree (with branch glyphs) shown');
+console.log('STEP 2b: topology tree (with branch glyphs) shown');
 
 // Toggle to flat view → glyphs gone; back to tree → glyphs return.
 const toggled = await page.evaluate((v) => {
@@ -108,10 +108,10 @@ const toggled = await page.evaluate((v) => {
     r.click();
     return true;
 }, 'flat');
-if (!toggled) throw new Error('②b view toggle: flat radio not found');
+if (!toggled) throw new Error('2b view toggle: flat radio not found');
 await page.waitForTimeout(300);
 if ((await panelText()).match(/[└├]─/)) {
-    throw new Error('②b flat view still shows tree glyphs');
+    throw new Error('2b flat view still shows tree glyphs');
 }
 await page.evaluate((v) => {
     [...document.querySelectorAll('input[name="procgen-pipeline-topology-view"]')]
@@ -119,45 +119,45 @@ await page.evaluate((v) => {
 }, 'tree');
 await page.waitForTimeout(300);
 if (!(await panelText()).match(/[└├]─/)) {
-    throw new Error('②b tree view did not restore glyphs');
+    throw new Error('2b tree view did not restore glyphs');
 }
-console.log('STEP ②b: tree/flat view toggle works');
+console.log('STEP 2b: tree/flat view toggle works');
 if (!(await panelText()).match(/gate .+\(S\d/)) {
-    throw new Error('②b gate dropdown is missing sphere labels (S#)');
+    throw new Error('2b gate dropdown is missing sphere labels (S#)');
 }
-console.log('STEP ②b: gate dropdown shows sphere labels');
+console.log('STEP 2b: gate dropdown shows sphere labels');
 
-await clickBtn('Run ②c Items');
+await clickBtn('Run 2c Items');
 await page.waitForTimeout(600);
 txt = await panelText();
-if (!txt.includes('②c Item placement')) {
+if (!txt.includes('2c Item placement')) {
     throw new Error('item-placement feedback did not appear');
 }
 if (!txt.match(/\(S\d/)) {
-    throw new Error('②c item rows are missing sphere labels (S#)');
+    throw new Error('2c item rows are missing sphere labels (S#)');
 }
-console.log('STEP ②c: item-placement editor shown with sphere labels');
+console.log('STEP 2c: item-placement editor shown with sphere labels');
 
-await clickBtn('Run ③ Build regions');
+await clickBtn('Run 3 Build regions');
 await page.waitForTimeout(3000);
-if (!(await panelText()).includes('③ Build regions')) {
+if (!(await panelText()).includes('3 Build regions')) {
     throw new Error('regions feedback did not appear');
 }
-console.log('STEP ③: regions feedback shown');
+console.log('STEP 3: regions feedback shown');
 
-await clickBtn('Run ④ Compile');
+await clickBtn('Run 4 Compile');
 await page.waitForTimeout(1500);
 let msg = await message();
-console.log('STEP ④ MESSAGE:', msg);
+console.log('STEP 4 MESSAGE:', msg);
 if (!msg.includes('Sphere plan realised')) {
-    throw new Error(`expected oracle success after step ④, got: ${msg}`);
+    throw new Error(`expected oracle success after step 4, got: ${msg}`);
 }
-console.log('PHASE A OK: stepped ①→②a→②b→②c→③→④ to a realised plan');
+console.log('PHASE A OK: stepped 1→2a→2b→2c→3→4 to a realised plan');
 
 // ── Phase B: edit a Sphere-1 item, then run all ─────────────────────
 await clickBtn('Reset');
 await page.waitForTimeout(300);
-await clickBtn('Run ① Plan');
+await clickBtn('Run 1 Plan');
 await page.waitForTimeout(600);
 
 // Move the first Sphere-1 item down one sphere (▼).
@@ -177,11 +177,11 @@ if (!moved) throw new Error('no movable Sphere-1 item found');
 console.log('PHASE B: moved Sphere-1 item down:', moved);
 await page.waitForTimeout(400);
 
-// The edit should have reset the pipeline to step ① (downstream stale).
+// The edit should have reset the pipeline to step 1 (downstream stale).
 const afterEdit = await panelText();
-if (!afterEdit.includes('① Plan')) throw new Error('step indicator missing after edit');
+if (!afterEdit.includes('1 Plan')) throw new Error('step indicator missing after edit');
 
-// After an edit the pipeline is back at step ① (downstream stale), so
+// After an edit the pipeline is back at step 1 (downstream stale), so
 // the primary button reads "Run all (finish)".
 await clickBtn('Run all (finish)');
 await page.waitForTimeout(4000);
@@ -203,22 +203,22 @@ if (msg.includes('Sphere plan realised')) {
     console.log('PHASE B OK: edited plan produced a terminal warn/error (warn-but-allow):', msg);
 }
 
-// ── Phase C: edit ②c item placement (move an item to another region) ─
+// ── Phase C: edit 2c item placement (move an item to another region) ─
 await clickBtn('Reset');
 await page.waitForTimeout(300);
-await clickBtn('Run ① Plan');
+await clickBtn('Run 1 Plan');
 await page.waitForTimeout(400);
-await clickBtn('Run ②a Allocate');
+await clickBtn('Run 2a Allocate');
 await page.waitForTimeout(300);
-await clickBtn('Run ②b Topology');
+await clickBtn('Run 2b Topology');
 await page.waitForTimeout(300);
-await clickBtn('Run ②c Items');
+await clickBtn('Run 2c Items');
 await page.waitForTimeout(400);
 
 const moved2c = await page.evaluate(() => {
     const headers = [...document.querySelectorAll(
         '.procgen-pipeline-panel .procgen-pipeline-scenario-subheader')];
-    const h = headers.find((el) => el.textContent.includes('②c Item placement'));
+    const h = headers.find((el) => el.textContent.includes('2c Item placement'));
     if (!h) return null;
     const block = h.parentElement;
     const sel = block.querySelector('select');
@@ -231,7 +231,7 @@ const moved2c = await page.evaluate(() => {
     sel.dispatchEvent(new Event('change', { bubbles: true }));
     return { name, from: cur, to: other.value };
 });
-if (!moved2c) throw new Error('②c editor: no item move dropdown found');
+if (!moved2c) throw new Error('2c editor: no item move dropdown found');
 console.log(`PHASE C: moved "${moved2c.name}" from region #${moved2c.from} to #${moved2c.to}`);
 await page.waitForTimeout(400);
 
@@ -242,21 +242,21 @@ console.log('PHASE C MESSAGE (moved item):', msg);
 const terminalC = msg.includes('Sphere plan realised')
     || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
     || msg.startsWith('ERROR');
-if (!terminalC) throw new Error(`②c edit Run all produced no terminal result: ${msg}`);
-console.log('PHASE C OK: ②c item move flowed through to a terminal result');
+if (!terminalC) throw new Error(`2c edit Run all produced no terminal result: ${msg}`);
+console.log('PHASE C OK: 2c item move flowed through to a terminal result');
 
-// ── Phase D: edit ②a allocation (add a filler region) ───────────────
+// ── Phase D: edit 2a allocation (add a filler region) ───────────────
 await clickBtn('Reset');
 await page.waitForTimeout(300);
-await clickBtn('Run ① Plan');
+await clickBtn('Run 1 Plan');
 await page.waitForTimeout(400);
-await clickBtn('Run ②a Allocate');
+await clickBtn('Run 2a Allocate');
 await page.waitForTimeout(400);
 
 const allocEdited = await page.evaluate(() => {
     const headers = [...document.querySelectorAll(
         '.procgen-pipeline-panel .procgen-pipeline-scenario-subheader')];
-    const h = headers.find((el) => el.textContent.includes('②a Allocate'));
+    const h = headers.find((el) => el.textContent.includes('2a Allocate'));
     if (!h) return false;
     const block = h.parentElement;
     const addFill = [...block.querySelectorAll('button')]
@@ -265,13 +265,13 @@ const allocEdited = await page.evaluate(() => {
     addFill.click();
     return true;
 });
-if (!allocEdited) throw new Error('②a editor: no +fill button found');
+if (!allocEdited) throw new Error('2a editor: no +fill button found');
 await page.waitForTimeout(400);
 // The allocation feedback should now report at least one filler.
 if (!(await panelText()).match(/\d+ filler\(s\)/)) {
-    throw new Error('②a editor: filler count did not render after edit');
+    throw new Error('2a editor: filler count did not render after edit');
 }
-console.log('PHASE D: added a filler via ②a editor');
+console.log('PHASE D: added a filler via 2a editor');
 
 await clickBtn('Run all (finish)');
 await page.waitForTimeout(4000);
@@ -280,23 +280,23 @@ console.log('PHASE D MESSAGE (added filler):', msg);
 const terminalD = msg.includes('Sphere plan realised')
     || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
     || msg.startsWith('ERROR');
-if (!terminalD) throw new Error(`②a edit Run all produced no terminal result: ${msg}`);
-console.log('PHASE D OK: ②a allocation edit flowed through to a terminal result');
+if (!terminalD) throw new Error(`2a edit Run all produced no terminal result: ${msg}`);
+console.log('PHASE D OK: 2a allocation edit flowed through to a terminal result');
 
-// ── Phase E: edit ②b topology (re-gate a region off-wave) ───────────
+// ── Phase E: edit 2b topology (re-gate a region off-wave) ───────────
 await clickBtn('Reset');
 await page.waitForTimeout(300);
-await clickBtn('Run ① Plan');
+await clickBtn('Run 1 Plan');
 await page.waitForTimeout(400);
-await clickBtn('Run ②a Allocate');
+await clickBtn('Run 2a Allocate');
 await page.waitForTimeout(300);
-await clickBtn('Run ②b Topology');
+await clickBtn('Run 2b Topology');
 await page.waitForTimeout(400);
 
 const topoEdited = await page.evaluate(() => {
     const headers = [...document.querySelectorAll(
         '.procgen-pipeline-panel .procgen-pipeline-scenario-subheader')];
-    const h = headers.find((el) => el.textContent.includes('②b Topology'));
+    const h = headers.find((el) => el.textContent.includes('2b Topology'));
     if (!h) return null;
     const block = h.parentElement;
     const gateSels = [...block.querySelectorAll('select')]
@@ -313,7 +313,7 @@ const topoEdited = await page.evaluate(() => {
     }
     return null;
 });
-if (!topoEdited) throw new Error('②b editor: no re-gateable region found');
+if (!topoEdited) throw new Error('2b editor: no re-gateable region found');
 await page.waitForTimeout(400);
 const afterTopo = await panelText();
 if (afterTopo.includes("isn't a sphere")) {
@@ -329,10 +329,10 @@ console.log('PHASE E MESSAGE (re-gated):', msg);
 const terminalE = msg.includes('Sphere plan realised')
     || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
     || msg.startsWith('ERROR');
-if (!terminalE) throw new Error(`②b edit Run all produced no terminal result: ${msg}`);
-console.log('PHASE E OK: ②b topology edit flowed through to a terminal result');
+if (!terminalE) throw new Error(`2b edit Run all produced no terminal result: ${msg}`);
+console.log('PHASE E OK: 2b topology edit flowed through to a terminal result');
 
-// ── helpers for the ③ editing phases ────────────────────────────────
+// ── helpers for the 3 editing phases ────────────────────────────────
 function goTab(title) {
     return page.evaluate((t) => {
         const x = [...document.querySelectorAll('.lm_tab')].find((e) => e.title === t);
@@ -345,14 +345,14 @@ function goTab(title) {
 async function stepToCompiled() {
     await clickBtn('Reset');
     await page.waitForTimeout(300);
-    for (const s of ['Run ① Plan', 'Run ②a Allocate', 'Run ②b Topology',
-        'Run ②c Items', 'Run ③ Build regions', 'Run ④ Compile']) {
+    for (const s of ['Run 1 Plan', 'Run 2a Allocate', 'Run 2b Topology',
+        'Run 2c Items', 'Run 3 Build regions', 'Run 4 Compile']) {
         await clickBtn(s);
-        await page.waitForTimeout(s.includes('③') ? 3000 : 600);
+        await page.waitForTimeout(s.includes('3') ? 3000 : 600);
     }
 }
 
-// ── Phase F: ③ Re-roll a region (geometry re-rolls; oracle still holds) ─
+// ── Phase F: 3 Re-roll a region (geometry re-rolls; oracle still holds) ─
 await stepToCompiled();
 let baseMsg = await message();
 if (!baseMsg.includes('Sphere plan realised')) throw new Error(`F: baseline not realised: ${baseMsg}`);
@@ -367,15 +367,15 @@ if (!rerolled) throw new Error('F: no Re-roll 🎲 button found');
 await page.waitForTimeout(400);
 if (!(await message()).includes('Re-rolled')) throw new Error('F: re-roll message did not appear');
 console.log('PHASE F: re-rolled a region');
-await clickBtn('Run ④ Compile');
+await clickBtn('Run 4 Compile');
 await page.waitForTimeout(2000);
 let fMsg = await message();
 if (!fMsg.includes('Sphere plan realised')) {
-    throw new Error(`F: oracle failed after re-roll + ④: ${fMsg}`);
+    throw new Error(`F: oracle failed after re-roll + 4: ${fMsg}`);
 }
 console.log('PHASE F OK: re-roll kept the oracle (exits/plan preserved)');
 
-// ── Phase G: ③ Edit ▸ → pipeline editor → Save → re-run ④ (oracle holds) ─
+// ── Phase G: 3 Edit ▸ → pipeline editor → Save → re-run 4 (oracle holds) ─
 const openedEditor = await page.evaluate(() => {
     const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
         .find((e) => e.textContent.trim() === 'Edit ▸');
@@ -407,15 +407,15 @@ if (!saveMsg.includes('back to the pipeline')) {
 }
 await goTab('Procgen Pipeline');
 await page.waitForTimeout(800);
-await clickBtn('Run ④ Compile');
+await clickBtn('Run 4 Compile');
 await page.waitForTimeout(2000);
 const gMsg = await message();
 if (!gMsg.includes('Sphere plan realised')) {
-    throw new Error(`G: oracle failed after editor save + ④: ${gMsg}`);
+    throw new Error(`G: oracle failed after editor save + 4: ${gMsg}`);
 }
-console.log('PHASE G OK: Edit ▸ → pipeline save → ④ kept the oracle');
+console.log('PHASE G OK: Edit ▸ → pipeline save → 4 kept the oracle');
 
-// ── Phase H: ③ Edit ▸ → editor Regenerate (keep) → Save → ④ (oracle holds) ─
+// ── Phase H: 3 Edit ▸ → editor Regenerate (keep) → Save → 4 (oracle holds) ─
 const openedH = await page.evaluate(() => {
     const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
         .find((e) => e.textContent.trim() === 'Edit ▸');
@@ -465,13 +465,13 @@ await page.evaluate(() => {
 await page.waitForTimeout(700);
 await goTab('Procgen Pipeline');
 await page.waitForTimeout(800);
-await clickBtn('Run ④ Compile');
+await clickBtn('Run 4 Compile');
 await page.waitForTimeout(2000);
 const hMsg = await message();
 if (!hMsg.includes('Sphere plan realised')) {
-    throw new Error(`H: oracle failed after regenerate + save + ④: ${hMsg}`);
+    throw new Error(`H: oracle failed after regenerate + save + 4: ${hMsg}`);
 }
-console.log('PHASE H OK: editor Regenerate (keep) → save → ④ kept the oracle');
+console.log('PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle');
 
 // ── Phase I: composite-map mode radio renders + switches without error ──
 // (The two-click canvas gestures can't be driven headless — the GL panel
@@ -493,8 +493,8 @@ const switched = await page.evaluate(() => {
 if (!switched) throw new Error('I: could not switch map mode to moveRegion');
 console.log('PHASE I OK: composite-map mode radio (Edit/Move Region/Move Exits) renders + switches');
 
-// ── Phase J: ③ per-region substrate override (not limited by the quota mix) ──
-// Quotas are bounce-only (substrateQuotas { bounce: 99 }), so the ③ override
+// ── Phase J: 3 per-region substrate override (not limited by the quota mix) ──
+// Quotas are bounce-only (substrateQuotas { bounce: 99 }), so the 3 override
 // dropdown must still offer 'maze' (a sphere-capable substrate not in the mix).
 await stepToCompiled();
 const subDropdowns = await page.evaluate(() => {
@@ -504,11 +504,11 @@ const subDropdowns = await page.evaluate(() => {
         firstOpts: sels[0] ? [...sels[0].options].map((o) => o.value) : [],
     };
 });
-if (subDropdowns.count === 0) throw new Error('J: no ③ region substrate dropdown found');
+if (subDropdowns.count === 0) throw new Error('J: no 3 region substrate dropdown found');
 if (!subDropdowns.firstOpts.includes('maze')) {
     throw new Error(`J: dropdown is quota-limited — missing 'maze' (got ${subDropdowns.firstOpts.join(',')})`);
 }
-console.log(`PHASE J: ③ substrate dropdowns present (${subDropdowns.count}); `
+console.log(`PHASE J: 3 substrate dropdowns present (${subDropdowns.count}); `
     + `offer non-quota substrates [${subDropdowns.firstOpts.join(',')}]`);
 
 // Override a region to maze (not in the quota mix), re-run, confirm oracle holds.

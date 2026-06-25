@@ -2,15 +2,15 @@
  * In-app smoke test for the STEPPED top-down pipeline (Phase 2). Drives the real
  * panel in a browser:
  *
- *   Phase A — pure stepping: load a source rules.json, then Run ① Layout →
- *     ② Realise → ③ Finalize → ④ Compile, asserting the step indicator advances,
+ *   Phase A — pure stepping: load a source rules.json, then Run 1 Layout →
+ *     2 Realise → 3 Finalize → 4 Compile, asserting the step indicator advances,
  *     each step's feedback block appears, and the compiled output shows.
  *   Phase B — Run all + Reset: Reset, then Generate (run all) and assert a
  *     terminal compiled result + the composite grid canvas.
  *   Phase C — substrate-assignment editor (Phase 4): after a full Generate,
- *     change a region's substrate dropdown at ① Layout, assert the pipeline
- *     invalidated (④ feedback gone), re-run, and assert the realised substrate
- *     mix reflects the edit + ④ recompiles.
+ *     change a region's substrate dropdown at 1 Layout, assert the pipeline
+ *     invalidated (4 feedback gone), re-run, and assert the realised substrate
+ *     mix reflects the edit + 4 recompiles.
  *
  * Prereq: dev server on :8000. Run: node scripts/procgen/verify-topdown-steps-ui.mjs
  */
@@ -113,15 +113,15 @@ assert((await panelText()).includes('Loaded source'), 'source loaded');
 const checksAfter = await useLoadedState();
 assert(checksAfter[0] === false, 'browsing a rules file unchecked "Use currently-loaded rules.json"');
 
-// Phase A — step through ①→④.
-const steps = ['Run ① Layout', 'Run ② Realise', 'Run ③ Finalize', 'Run ④ Compile'];
+// Phase A — step through 1→4.
+const steps = ['Run 1 Layout', 'Run 2 Realise', 'Run 3 Finalize', 'Run 4 Compile'];
 for (const label of steps) {
     const clicked = await clickByText(label);
     assert(clicked, `clicked "${label}"`);
     await page.waitForTimeout(2500);
 }
 const afterSteps = await panelText();
-assert(afterSteps.includes('① Layout') && afterSteps.includes('④ Compile'), 'step indicator shows all four steps');
+assert(afterSteps.includes('1 Layout') && afterSteps.includes('4 Compile'), 'step indicator shows all four steps');
 assert(/driver top-down/.test(afterSteps), 'compile feedback shows driver top-down');
 assert(/\d+ regions/.test(afterSteps), 'compile feedback shows region count');
 
@@ -138,8 +138,8 @@ const hasCanvas = await page.evaluate(() => !!document.querySelector('.procgen-p
 assert(hasCanvas, 'composite grid canvas rendered');
 
 // Phase C — substrate-assignment editor (Phase 4). Phase B left a full Generate
-// (completed=3). Parse the ② realise substrate counts, flip a LEAF region's
-// substrate dropdown at ①, assert ④ invalidated, re-run ②→④, and assert the
+// (completed=3). Parse the 2 realise substrate counts, flip a LEAF region's
+// substrate dropdown at 1, assert 4 invalidated, re-run 2→4, and assert the
 // realised mix shifted by one toward the edited substrate.
 const realiseCounts = async () => page.evaluate(() => {
     const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
@@ -174,15 +174,15 @@ const flip = await page.evaluate(() => {
 assert(flip.ok, `Phase C: flipped a region's substrate (${flip.region}: ${flip.from}→${flip.to})`);
 await page.waitForTimeout(400);
 
-// The edit invalidated ②..④ → the compile feedback is gone (completed rolled to 0).
-assert(!/driver top-down/.test(await panelText()), 'Phase C: substrate edit invalidated ④');
+// The edit invalidated 2..4 → the compile feedback is gone (completed rolled to 0).
+assert(!/driver top-down/.test(await panelText()), 'Phase C: substrate edit invalidated 4');
 
-// Re-run ②→④ (the per-step buttons; nextStep is now "② Realise").
-for (const label of ['Run ② Realise', 'Run ③ Finalize', 'Run ④ Compile']) {
+// Re-run 2→4 (the per-step buttons; nextStep is now "2 Realise").
+for (const label of ['Run 2 Realise', 'Run 3 Finalize', 'Run 4 Compile']) {
     assert(await clickByText(label), `Phase C: clicked "${label}"`);
     await page.waitForTimeout(2500);
 }
-assert(/driver top-down/.test(await panelText()), 'Phase C: ④ recompiled after re-run');
+assert(/driver top-down/.test(await panelText()), 'Phase C: 4 recompiled after re-run');
 
 // The dropdown still shows the edited value (the override persisted through re-run).
 const persisted = await page.evaluate((region) => {
@@ -198,10 +198,10 @@ const shifted = after && (after[flip.to] ?? 0) === ((before?.[flip.to] ?? 0) + 1
 assert(shifted, `Phase C: realised mix honored the edit `
     + `(${flip.to}: ${before?.[flip.to] ?? 0}→${after?.[flip.to] ?? 0})`);
 
-// Phase D — layout editor reuse (Phase 5). After Phase C re-ran ④, the grid is
+// Phase D — layout editor reuse (Phase 5). After Phase C re-ran 4, the grid is
 // finalized+compiled, so the interactive map editor is live. Assert the radio
 // offers only the two Move modes (no per-region Edit in top-down), then perform a
-// Move Region edit via canvas clicks and confirm it invalidates ④ and recompiles.
+// Move Region edit via canvas clicks and confirm it invalidates 4 and recompiles.
 const mapModes = await page.evaluate(() => {
     const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
     return [...root.querySelectorAll('.procgen-pipeline-map-modes input[type=radio]')].map((r) => r.value);
@@ -271,12 +271,12 @@ assert(/Move Region: selected/.test(await panelText()), 'Phase D: first click se
 await clickCell(dst.gx, dst.gy);
 await page.waitForTimeout(400);
 assert(/Moved the region|Swapped/.test(await panelText()), 'Phase D: second click moved the region');
-assert(!/driver top-down/.test(await panelText()), 'Phase D: layout edit invalidated ④');
+assert(!/driver top-down/.test(await panelText()), 'Phase D: layout edit invalidated 4');
 
-assert(await clickByText('Run ④ Compile'), 'Phase D: clicked "Run ④ Compile"');
+assert(await clickByText('Run 4 Compile'), 'Phase D: clicked "Run 4 Compile"');
 await page.waitForTimeout(2500);
 const afterMove = await panelText();
-assert(/driver top-down/.test(afterMove), 'Phase D: ④ recompiled after the move');
+assert(/driver top-down/.test(afterMove), 'Phase D: 4 recompiled after the move');
 assert(/\d+ regions/.test(afterMove), 'Phase D: compiled rules.json still reports a region count');
 
 // Phases E/F run on a FRESH pipeline (Phase D left cellsByName intentionally
@@ -300,15 +300,15 @@ assert(/driver top-down/.test(await panelText()), 'Phases E/F: fresh pipeline co
 assert(await findBtn('Re-roll 🎲'), 'Phase E: clicked a Re-roll 🎲 button');
 await page.waitForTimeout(400);
 assert(/Re-rolled/.test(await panelText()), 'Phase E: re-roll message appeared');
-assert(!/driver top-down/.test(await panelText()), 'Phase E: re-roll invalidated ④');
+assert(!/driver top-down/.test(await panelText()), 'Phase E: re-roll invalidated 4');
 assert(await clickPrimary(), 'Phase E: ran to completion after re-roll');
 await page.waitForTimeout(6000);
 const afterReroll = await panelText();
-assert(/driver top-down/.test(afterReroll), 'Phase E: ④ recompiled after re-roll');
+assert(/driver top-down/.test(afterReroll), 'Phase E: 4 recompiled after re-roll');
 assert(/\d+ regions/.test(afterReroll), 'Phase E: compiled rules.json still reports a region count');
 
 // Phase F — per-region Edit ▸ (Phase 6b). Needs a bounce region (only bounce has
-// a region editor). If none was assigned, force one via the ① substrate dropdown.
+// a region editor). If none was assigned, force one via the 1 substrate dropdown.
 let hasBounceEdit = await page.evaluate(() => {
     const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
     return [...root.querySelectorAll('button')].some((b) => b.textContent.trim() === 'Edit ▸' && !b.disabled);
@@ -323,7 +323,7 @@ if (!hasBounceEdit) {
         sel.dispatchEvent(new Event('change', { bubbles: true }));
         return true;
     });
-    assert(forced, 'Phase F: forced a region to bounce via the ① dropdown');
+    assert(forced, 'Phase F: forced a region to bounce via the 1 dropdown');
     await page.waitForTimeout(400);
     assert(await clickPrimary(), 'Phase F: regenerated with the forced bounce region');
     await page.waitForTimeout(6000);
@@ -346,10 +346,10 @@ const savedF = await page.evaluate(() => {
 assert(savedF, 'Phase F: clicked Save in the editor');
 await page.waitForTimeout(600);
 assert(/Saved edits/.test(await panelText()), 'Phase F: editor save wrote back to the pipeline');
-assert(await clickPrimary(), 'Phase F: re-run ③④ after the edit');
+assert(await clickPrimary(), 'Phase F: re-run 34 after the edit');
 await page.waitForTimeout(6000);
 const afterEdit = await panelText();
-assert(/driver top-down/.test(afterEdit), 'Phase F: ④ recompiled after the region edit');
+assert(/driver top-down/.test(afterEdit), 'Phase F: 4 recompiled after the region edit');
 
 const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
 assert(pageErrors.length === 0, `no page errors (${pageErrors.length})`);

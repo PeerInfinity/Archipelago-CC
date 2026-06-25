@@ -2,7 +2,7 @@
  * In-app verification of the sphere-growth ENVELOPE interop (export / load
  * & auto-resume) in the Procgen Pipeline panel. Drives the real panel:
  *
- *   Phase 1 — full round-trip: run the whole pipeline ①→④, Export envelope,
+ *   Phase 1 — full round-trip: run the whole pipeline 1→4, Export envelope,
  *     Reset, Load envelope. Assert it reports all 6 steps present and that a
  *     re-export's compiled rules.json is byte-identical to the original
  *     (the UI cfg/prep ↔ config adapters are lossless).
@@ -72,9 +72,9 @@ async function message() {
         document.querySelector('.procgen-pipeline-message')?.textContent ?? '');
 }
 async function runFullPipeline() {
-    for (const [s, wait] of [['Run ① Plan', 600], ['Run ②a Allocate', 400],
-        ['Run ②b Topology', 400], ['Run ②c Items', 400],
-        ['Run ③ Build regions', 3000], ['Run ④ Compile', 1500]]) {
+    for (const [s, wait] of [['Run 1 Plan', 600], ['Run 2a Allocate', 400],
+        ['Run 2b Topology', 400], ['Run 2c Items', 400],
+        ['Run 3 Build regions', 3000], ['Run 4 Compile', 1500]]) {
         await clickBtn(s);
         await page.waitForTimeout(wait);
     }

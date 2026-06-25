@@ -1,12 +1,12 @@
 /**
  * In-app smoke test for SPHERE-MAJOR (batch < all) stepping in the Procgen
  * Pipeline panel (Phase 2.8). With spheresPerBatch = 1 the "Run next step"
- * button must loop the middle four phases per sphere — ②a → ②b → ②c → ③ →
- * (back to) ②a … → ④ — and the batch-progress tag must count spheres built.
+ * button must loop the middle four phases per sphere — 2a → 2b → 2c → 3 →
+ * (back to) 2a … → 4 — and the batch-progress tag must count spheres built.
  *
- *   Phase A — manual stepping loops back: Run ① Plan, then Run next step
- *     repeatedly. Assert the button label revisits "Run ②a Allocate" after a
- *     "Run ③ Build regions" (not jumping straight to ④), and that the
+ *   Phase A — manual stepping loops back: Run 1 Plan, then Run next step
+ *     repeatedly. Assert the button label revisits "Run 2a Allocate" after a
+ *     "Run 3 Build regions" (not jumping straight to 4), and that the
  *     batch-progress tag advances ("k/N spheres built"), finishing with the
  *     oracle success message.
  *   Phase B — "Run all" finishes a batch<all world with the oracle clean.
@@ -60,7 +60,7 @@ async function panelText() {
 async function nextStepLabel() {
     return page.evaluate(() => {
         const b = [...document.querySelectorAll('.procgen-pipeline-actions button')]
-            .find((el) => /^Run (①|②|③|④)/.test(el.textContent.trim())
+            .find((el) => /^Run (1|2|3|4)/.test(el.textContent.trim())
                 || el.textContent.trim() === 'Pipeline complete');
         return b ? b.textContent.trim() : null;
     });
@@ -68,7 +68,7 @@ async function nextStepLabel() {
 async function clickNext() {
     const ok = await page.evaluate(() => {
         const b = [...document.querySelectorAll('.procgen-pipeline-actions button')]
-            .find((el) => (/^Run (①|②|③|④)/.test(el.textContent.trim())) && !el.disabled);
+            .find((el) => (/^Run (1|2|3|4)/.test(el.textContent.trim())) && !el.disabled);
         if (!b) return false;
         b.click();
         return true;
@@ -91,11 +91,11 @@ async function message() {
 }
 
 // ── Phase A: manual stepping loops back per sphere ──────────────────
-// Start with ① Plan.
+// Start with 1 Plan.
 await clickNext();
 await page.waitForTimeout(500);
 let lbl = await nextStepLabel();
-if (lbl !== 'Run ②a Allocate') throw new Error(`after Plan, expected Allocate, got ${lbl}`);
+if (lbl !== 'Run 2a Allocate') throw new Error(`after Plan, expected Allocate, got ${lbl}`);
 
 const labelSeq = [];
 let sawLoopBack = false;
@@ -106,13 +106,13 @@ for (let i = 0; i < 40; i++) {
     await page.waitForTimeout(400);
     lbl = await nextStepLabel();
     labelSeq.push(lbl);
-    // A loop-back is a "Run ②a Allocate" appearing AFTER a "Run ③ Build regions".
-    if (prev === 'Run ③ Build regions' && lbl === 'Run ②a Allocate') sawLoopBack = true;
+    // A loop-back is a "Run 2a Allocate" appearing AFTER a "Run 3 Build regions".
+    if (prev === 'Run 3 Build regions' && lbl === 'Run 2a Allocate') sawLoopBack = true;
     prev = lbl;
     if (lbl === 'Pipeline complete') break;
 }
 if (!sawLoopBack) {
-    throw new Error(`never looped ③ → ②a (batch<all). Label sequence: ${labelSeq.join(' | ')}`);
+    throw new Error(`never looped 3 → 2a (batch<all). Label sequence: ${labelSeq.join(' | ')}`);
 }
 const txtA = await panelText();
 if (!/spheres built/.test(txtA)) {
@@ -122,7 +122,7 @@ const msgA = await message();
 if (!msgA.includes('Sphere plan realised')) {
     throw new Error(`stepped batch<all did not realise the plan: ${msgA}`);
 }
-console.log('PHASE A OK: stepping loops ③ → ②a per sphere; tag counts; oracle holds');
+console.log('PHASE A OK: stepping loops 3 → 2a per sphere; tag counts; oracle holds');
 console.log('  label sequence:', labelSeq.join(' | '));
 
 // ── Phase B: "Run all" finishes a batch<all world ───────────────────
@@ -137,7 +137,7 @@ if (!msgB.includes('Sphere plan realised')) {
 console.log('PHASE B OK: "Run all" finishes the batch<all pipeline —', msgB);
 
 // ── Phase C: edit the plan, then re-run in batch<all (no double-wire) ─
-// Move a Sphere-1 item down (▼) → _onSpherePlanEdited invalidates from ①.
+// Move a Sphere-1 item down (▼) → _onSpherePlanEdited invalidates from 1.
 // Re-running must regenerate the whole sphere-major pipeline cleanly (a stale
 // batch cursor would otherwise re-wire already-present waves).
 const movedC = await page.evaluate(() => {

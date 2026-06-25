@@ -372,16 +372,16 @@ export function reconstructResultFromSidecars(rulesJson) {
     };
 }
 
-// Sphere-growth runs as a stepped pipeline. The tree build (② Build tree)
+// Sphere-growth runs as a stepped pipeline. The tree build (2 Build tree)
 // is subdivided into three editable sub-steps, so the pipeline has 6 steps.
 // `completed` is the index of the last finished step (0..5; -1 = not started).
 // Everything keys off these tables so adding/relabelling a step is one edit.
 const SPHERE_STEP_LABELS = [
-    '① Plan', '②a Allocate', '②b Topology', '②c Items', '③ Build regions', '④ Compile',
+    '1 Plan', '2a Allocate', '2b Topology', '2c Items', '3 Build regions', '4 Compile',
 ];
 const SPHERE_STEP_RUN_LABELS = [
-    'Run ① Plan', 'Run ②a Allocate', 'Run ②b Topology', 'Run ②c Items',
-    'Run ③ Build regions', 'Run ④ Compile',
+    'Run 1 Plan', 'Run 2a Allocate', 'Run 2b Topology', 'Run 2c Items',
+    'Run 3 Build regions', 'Run 4 Compile',
 ];
 const SPHERE_LAST_STEP = SPHERE_STEP_LABELS.length - 1; // 5
 
@@ -389,10 +389,10 @@ const SPHERE_LAST_STEP = SPHERE_STEP_LABELS.length - 1; // 5
 // editable "plan" step). Same `completed` index convention (0..3; -1 = not
 // started); the step indicator + actions key off these tables.
 const TOPDOWN_STEP_LABELS = [
-    '① Layout', '② Realise', '③ Finalize', '④ Compile',
+    '1 Layout', '2 Realise', '3 Finalize', '4 Compile',
 ];
 const TOPDOWN_STEP_RUN_LABELS = [
-    'Run ① Layout', 'Run ② Realise', 'Run ③ Finalize', 'Run ④ Compile',
+    'Run 1 Layout', 'Run 2 Realise', 'Run 3 Finalize', 'Run 4 Compile',
 ];
 const TOPDOWN_LAST_STEP = TOPDOWN_STEP_LABELS.length - 1; // 3
 
@@ -465,13 +465,13 @@ export class ProcgenPipelineUI {
         this.useLoadedRules = true;
         this.useLoadedSphereLog = true;
         this.result = null;
-        // Sphere-growth stepped-pipeline state (null until step ① runs).
+        // Sphere-growth stepped-pipeline state (null until step 1 runs).
         // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
         this._stepState = null;
-        // Top-down stepped-pipeline state (null until step ① Layout runs).
+        // Top-down stepped-pipeline state (null until step 1 Layout runs).
         // See _stepTDLayout / _renderTopDownSteps. Session-only.
         this._tdState = null;
-        // ②b Topology view mode: 'tree' (indented directory tree) or 'flat'
+        // 2b Topology view mode: 'tree' (indented directory tree) or 'flat'
         // (numerical index order). Session-only view preference.
         this._topologyView = 'tree';
         // Composite-map interaction mode: 'edit' (click opens the region
@@ -1627,9 +1627,9 @@ export class ProcgenPipelineUI {
 
         if (sphere) {
             // Sphere mode: a dedicated button row below the indicators. The next
-            // step follows nextSphereStep (it loops ②a→③ per batch in sphere-
-            // major mode), so the label can revisit ②a Allocate for the next
-            // sphere before ④ Compile. "◀ Previous sphere" drops the most recent
+            // step follows nextSphereStep (it loops 2a→3 per batch in sphere-
+            // major mode), so the label can revisit 2a Allocate for the next
+            // sphere before 4 Compile. "◀ Previous sphere" drops the most recent
             // sphere so it can be re-grown / edited.
             const btnRow = document.createElement('div');
             btnRow.className = 'procgen-pipeline-btn-row';
@@ -1795,8 +1795,8 @@ export class ProcgenPipelineUI {
         return section;
     }
 
-    // The step chips above the stepped-mode buttons (sphere: ① → ②a → … → ④;
-    // top-down: ① Layout → ② Realise → ③ Finalize → ④ Compile). Inline styles
+    // The step chips above the stepped-mode buttons (sphere: 1 → 2a → … → 4;
+    // top-down: 1 Layout → 2 Realise → 3 Finalize → 4 Compile). Inline styles
     // so it renders without depending on panel CSS.
     _renderStepIndicator() {
         const wrap = document.createElement('div');
@@ -1822,7 +1822,7 @@ export class ProcgenPipelineUI {
             }
         });
 
-        // Sphere-major batch progress: in batch < all mode the ②a→③ chips
+        // Sphere-major batch progress: in batch < all mode the 2a→3 chips
         // loop per batch, so surface which sphere(s) the loop is on. batchStart
         // counts the spheres whose regions are already on the grid.
         const st = this._stepState;
@@ -1849,26 +1849,26 @@ export class ProcgenPipelineUI {
         const wrap = document.createElement('div');
         const st = this._stepState;
         if (!st) return wrap;
-        wrap.appendChild(this._renderStepBlock('① Plan — edit, then run the next step',
+        wrap.appendChild(this._renderStepBlock('1 Plan — edit, then run the next step',
             this._renderPlanEditor()));
         if (st.completed >= 1 && st.allocation) {
-            wrap.appendChild(this._renderStepBlock('②a Allocate — region & filler counts per wave',
+            wrap.appendChild(this._renderStepBlock('2a Allocate — region & filler counts per wave',
                 this._renderAllocateEditor(st.allocation)));
         }
         if (st.completed >= 2 && st.nodes) {
-            wrap.appendChild(this._renderStepBlock('②b Topology — substrate / parent / gate per region',
+            wrap.appendChild(this._renderStepBlock('2b Topology — substrate / parent / gate per region',
                 this._renderTopologyEditor(st.nodes)));
         }
         if (st.completed >= 3 && st.tree) {
-            wrap.appendChild(this._renderStepBlock('②c Item placement — move items between regions',
+            wrap.appendChild(this._renderStepBlock('2c Item placement — move items between regions',
                 this._renderItemsEditor(st.tree)));
         }
         if (st.completed >= 4 && st.grow) {
-            wrap.appendChild(this._renderStepBlock('③ Build regions — edit / re-roll a region',
+            wrap.appendChild(this._renderStepBlock('3 Build regions — edit / re-roll a region',
                 this._renderRegionsEditor(st.grow)));
         }
         if (st.completed >= 5 && st.compile) {
-            wrap.appendChild(this._renderStepBlock('④ Compile',
+            wrap.appendChild(this._renderStepBlock('4 Compile',
                 this._renderCompileFeedback(st.compile)));
         }
         return wrap;
@@ -1987,9 +1987,9 @@ export class ProcgenPipelineUI {
         this._onSpherePlanEdited();
     }
 
-    // ②a Allocate editor — region count + filler count per wave, each with
+    // 2a Allocate editor — region count + filler count per wave, each with
     // +/− controls (free; warn-but-allow). Editing rebuilds fillerWaves from
-    // the aggregate so ②b consumes the edited counts.
+    // the aggregate so 2b consumes the edited counts.
     _renderAllocateEditor(allocation) {
         const wrap = document.createElement('div');
         const st = this._stepState;
@@ -2056,7 +2056,7 @@ export class ProcgenPipelineUI {
         if (!a) return;
         a.fillersPerWave[wave] = Math.max(0, (a.fillersPerWave[wave] ?? 0) + dir);
         // Rebuild fillerWaves (draw order) from the edited aggregate, in wave
-        // order — ②b consumes fillerWaves, so the edited counts take effect.
+        // order — 2b consumes fillerWaves, so the edited counts take effect.
         a.fillerWaves = [];
         a.fillersPerWave.forEach((c, w) => {
             for (let i = 0; i < c; i++) a.fillerWaves.push(w);
@@ -2064,9 +2064,9 @@ export class ProcgenPipelineUI {
         this._invalidateFrom(1);
     }
 
-    // ②b Topology editor — per region: substrate / parent / gate dropdowns
+    // 2b Topology editor — per region: substrate / parent / gate dropdowns
     // (free; warn-but-allow). Reparent targets are earlier-index nodes only
-    // (preserving realisation order so ③ doesn't crash); cross-wave parents,
+    // (preserving realisation order so 3 doesn't crash); cross-wave parents,
     // off-vocabulary gates, etc. are allowed but flagged. Edits recompute the
     // derived bookkeeping via rebuildSphereTopology and surface its warnings.
     _renderTopologyEditor(nodes) {
@@ -2115,7 +2115,7 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    // Tree / flat view radio toggle for the ②b topology editor.
+    // Tree / flat view radio toggle for the 2b topology editor.
     _renderTopologyViewToggle() {
         const row = document.createElement('div');
         row.style.cssText = 'margin:2px 6px 4px;font-size:11px;';
@@ -2237,9 +2237,9 @@ export class ProcgenPipelineUI {
         return row;
     }
 
-    // Apply a ②b structural edit: recompute the tree's derived bookkeeping
+    // Apply a 2b structural edit: recompute the tree's derived bookkeeping
     // (sides / childGates / gateCounts) deterministically, stash the advisory
-    // warnings, and invalidate ②c..④ (the edited nodes re-flow through them).
+    // warnings, and invalidate 2c..4 (the edited nodes re-flow through them).
     _applyTopologyEdit() {
         const st = this._stepState;
         const { warnings } = rebuildSphereTopology(st.plan, st.nodes, {
@@ -2250,7 +2250,7 @@ export class ProcgenPipelineUI {
     }
 
     // item → " (S2)" / " (S2,S3)" sphere label from the current plan, for the
-    // ②b gate dropdown and ②c item rows. An item can span spheres (count gates).
+    // 2b gate dropdown and 2c item rows. An item can span spheres (count gates).
     _itemSphereTag() {
         const itemSpheres = new Map();
         (this._stepState?.plan?.spheres ?? []).forEach((s) => {
@@ -2265,7 +2265,7 @@ export class ProcgenPipelineUI {
         };
     }
 
-    // ②c Item placement editor — which items live in which region, with a
+    // 2c Item placement editor — which items live in which region, with a
     // per-item dropdown to move it to another region (free; warn-but-allow).
     _renderItemsEditor(tree) {
         const wrap = document.createElement('div');
@@ -2347,7 +2347,7 @@ export class ProcgenPipelineUI {
 
     // Move a placed item from one region to another, then re-id every
     // region's items by position (loc_N) so ids stay canonical (matching
-    // placeSphereTreeItems). Invalidates ③/④ (the edited tree feeds ③).
+    // placeSphereTreeItems). Invalidates 3/4 (the edited tree feeds 3).
     _moveTreeItem(fromNodeIdx, itemIdx, toNodeIdx) {
         const st = this._stepState;
         if (fromNodeIdx === toNodeIdx) { this.render(); return; }
@@ -2373,15 +2373,15 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    // ③ Build regions editor — launcher: the stats line, then one row per
+    // 3 Build regions editor — launcher: the stats line, then one row per
     // realised region (`#i wN`) with a substrate dropdown (manual per-region
-    // override, any sphere-capable substrate — re-runs ③), [Edit ▸] (opens the
+    // override, any sphere-capable substrate — re-runs 3), [Edit ▸] (opens the
     // substrate-appropriate per-region editor) and [Re-roll 🎲] (regenerates
     // that one region's interior on a bumped seed, keeping its exits/
     // locations/rules fixed). Edit/Re-roll write back into st.grow.grid and
-    // invalidate ④ only (geometry changes don't touch the logical tree); the
-    // substrate override invalidates ③ (a full re-realise). The composite grid
-    // (rendered below after ④) is also click-to-select; see _renderGrid.
+    // invalidate 4 only (geometry changes don't touch the logical tree); the
+    // substrate override invalidates 3 (a full re-realise). The composite grid
+    // (rendered below after 4) is also click-to-select; see _renderGrid.
     _renderRegionsEditor(grow) {
         const wrap = document.createElement('div');
         wrap.appendChild(this._renderRegionsFeedback(grow.stats, this._stepState?.seconds));
@@ -2396,7 +2396,7 @@ export class ProcgenPipelineUI {
         if (nodes.length === 0) {
             const hint = document.createElement('div');
             hint.className = 'procgen-pipeline-hint';
-            hint.textContent = '(no tree nodes — re-run from ② to populate the region list)';
+            hint.textContent = '(no tree nodes — re-run from 2 to populate the region list)';
             wrap.appendChild(hint);
         }
         return wrap;
@@ -2413,9 +2413,9 @@ export class ProcgenPipelineUI {
             + `${itemCount ? ` — ${itemCount} item(s)` : ''}`;
         row.appendChild(label);
 
-        // Per-region substrate override. Unlike the ②b topology dropdown (scoped
+        // Per-region substrate override. Unlike the 2b topology dropdown (scoped
         // to the quota mix), this offers ANY sphere-capable substrate so a single
-        // region can use one that isn't in the quotas. Changing it re-runs ③.
+        // region can use one that isn't in the quotas. Changing it re-runs 3.
         const subSel = document.createElement('select');
         subSel.className = 'procgen-pipeline-region-substrate';
         subSel.dataset.index = String(node.index);
@@ -2454,10 +2454,10 @@ export class ProcgenPipelineUI {
             .map((s) => s.id);
     }
 
-    // ③ per-region substrate override. The substrate lives on the tree node
+    // 3 per-region substrate override. The substrate lives on the tree node
     // (st.tree.nodes === st.nodes) and doesn't affect topology/items, so re-run
-    // ③ Build (+ ④) only — keeping the tree + rng snapshot (_invalidateFrom(3)).
-    // A FULL ③ re-run (not an in-place swap) is what a substrate change needs: it
+    // 3 Build (+ 4) only — keeping the tree + rng snapshot (_invalidateFrom(3)).
+    // A FULL 3 re-run (not an in-place swap) is what a substrate change needs: it
     // re-realises every region and re-runs the whole-grid stitch/wall pass once at
     // the end, so a to/from-maze change — whose exit tile positions feed adjacency
     // stitching — stays consistent (the reason maze isn't safe to re-roll alone).
@@ -2467,7 +2467,7 @@ export class ProcgenPipelineUI {
         // _invalidateFrom clears this.message, so set it AFTER and re-render.
         this._invalidateFrom(3);
         this.message = `Region #${node.index} substrate → ${value}. `
-            + 'Re-run ③ Build regions to apply.';
+            + 'Re-run 3 Build regions to apply.';
         this.render();
     }
 
@@ -2545,7 +2545,7 @@ export class ProcgenPipelineUI {
     // Re-roll 🎲 — regenerate ONE region's interior on a bumped seed, keeping
     // its entrances/exits/locations/rules fixed (so neighbours + the oracle
     // don't desync). Bounce (zone) only; the engine helper rejects maze with a
-    // clear message. Invalidates ④ (the user re-runs Compile; the oracle is the
+    // clear message. Invalidates 4 (the user re-runs Compile; the oracle is the
     // backstop).
     _reRollRegion(region, node = null) {
         const st = this._stepState;
@@ -2553,7 +2553,7 @@ export class ProcgenPipelineUI {
         const tree = st?.tree;
         const nd = node ?? this._nodeForRegion(region);
         if (!grid || !tree || !nd) {
-            this.message = 'Re-roll unavailable — re-run from ③ first.';
+            this.message = 'Re-roll unavailable — re-run from 3 first.';
             this.warning = '';
             this.render();
             return;
@@ -2572,7 +2572,7 @@ export class ProcgenPipelineUI {
             // _invalidateFrom clears this.message, so set it AFTER and re-render.
             this._invalidateFrom(4);
             this.message = `Re-rolled "${nd.region_id}" (seed ${seed}). `
-                + 'Re-run ④ Compile to recheck the oracle.';
+                + 'Re-run 4 Compile to recheck the oracle.';
             this.render();
         } catch (err) {
             this.message = `Re-roll failed: ${err.message}`;
@@ -2588,7 +2588,7 @@ export class ProcgenPipelineUI {
     }
 
     // Write-back from an editor save (pipeline mode): splice the edited region
-    // into the live grid and invalidate ④ only (the user re-runs Compile; the
+    // into the live grid and invalidate 4 only (the user re-runs Compile; the
     // oracle is the backstop). Leaves the logical tree untouched.
     _onRegionEdited(origRegion, editedRegion, node) {
         const st = this._stepState;
@@ -2600,7 +2600,7 @@ export class ProcgenPipelineUI {
         // _invalidateFrom clears this.message, so set it AFTER and re-render.
         this._invalidateFrom(4);
         this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
-            + 'Re-run ④ Compile to recheck the oracle.';
+            + 'Re-run 4 Compile to recheck the oracle.';
         this.render();
     }
 
@@ -2673,9 +2673,9 @@ export class ProcgenPipelineUI {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-canvas-wrap';
         // Prefer the live stepped grid (st.grow.grid) in sphere mode: it exists
-        // from ③ onward and SURVIVES the _invalidateFrom(4) that layout edits
+        // from 3 onward and SURVIVES the _invalidateFrom(4) that layout edits
         // trigger, so the map stays put while editing. Fall back to this.result
-        // (other modes / loaded presets / post-④ compiled view).
+        // (other modes / loaded presets / post-4 compiled view).
         const st = this._stepState;
         const td = this._tdState;
         let grid; let regionSize;
@@ -2683,8 +2683,8 @@ export class ProcgenPipelineUI {
             grid = st.grow.grid;
             regionSize = st.growConfig?.regionSize ?? this.result?.regionSize;
         } else if (this.mode === 'topDown' && td?.layout?.grid) {
-            // Live stepped grid: visible from ① Layout onward (stubs fill in as ②
-            // realises), before ④ Compile sets this.result.
+            // Live stepped grid: visible from 1 Layout onward (stubs fill in as 2
+            // realises), before 4 Compile sets this.result.
             grid = td.layout.grid;
             regionSize = td.regionSize ?? this.result?.regionSize;
         } else if (this.result) {
@@ -2699,9 +2699,9 @@ export class ProcgenPipelineUI {
         }
         // Interactive map editing: sphere mode (full editor) and top-down once
         // the grid is FINALIZED (completed≥2). Editing the finalized grid lets a
-        // Move re-stitch via relayoutSphereGrid and re-run ④ only — the grid is
-        // already self-consistent, and ④ Compile reads only the grid (never the
-        // now-stale cellsByName), so no ③ re-run is needed. Top-down offers only
+        // Move re-stitch via relayoutSphereGrid and re-run 4 only — the grid is
+        // already self-consistent, and 4 Compile reads only the grid (never the
+        // now-stale cellsByName), so no 3 re-run is needed. Top-down offers only
         // the layout modes (Move Region / Move Exits); per-region Edit is phase 6.
         const interactive = (this.mode === 'sphereGrowth' && this._stepState?.tree)
             || (this.mode === 'topDown' && (this._tdState?.completed ?? -1) >= 2);
@@ -2911,7 +2911,7 @@ export class ProcgenPipelineUI {
 
     // Run a grid-layout edit, then keep st.grow.startCell pointing at the start
     // region (a move/swap may relocate it — the oracle reads from startCell),
-    // invalidate ④, and re-render. _invalidateFrom clears this.message, so the
+    // invalidate 4, and re-render. _invalidateFrom clears this.message, so the
     // confirmation is set AFTER it.
     _applyGridEdit(fn, okMsg) {
         if (this.mode === 'topDown') { this._applyGridEditTD(fn, okMsg); return; }
@@ -2926,7 +2926,7 @@ export class ProcgenPipelineUI {
                 if (sr) st.grow.startCell = sr.cell;
             }
             this._invalidateFrom(4);
-            this.message = `${okMsg} Re-run ④ Compile to recheck the oracle.`;
+            this.message = `${okMsg} Re-run 4 Compile to recheck the oracle.`;
             this.render();
         } catch (err) {
             this.message = `Edit failed: ${err.message}`;
@@ -2936,10 +2936,10 @@ export class ProcgenPipelineUI {
 
     // Top-down layout edit. Operates on the FINALIZED grid (st.finalize.grid ===
     // st.layout.grid), which the move helper re-stitches via relayoutSphereGrid
-    // (rebuilding teleporters + re-deriving forward targets), then invalidates ④
+    // (rebuilding teleporters + re-deriving forward targets), then invalidates 4
     // ONLY (_invalidateFromTD(2) → completed=2, compile dropped, finalize kept).
-    // We deliberately do NOT re-run ③: finalizeTopDown reads the now-stale
-    // cellsByName and would double-apply back-exits, whereas ④ Compile reads only
+    // We deliberately do NOT re-run 3: finalizeTopDown reads the now-stale
+    // cellsByName and would double-apply back-exits, whereas 4 Compile reads only
     // the grid. The start region may relocate on a move/swap, so re-point
     // finalize.startCell at it (buildRulesJson reads from startCell).
     _applyGridEditTD(fn, okMsg) {
@@ -2955,7 +2955,7 @@ export class ProcgenPipelineUI {
                 if (sr) st.finalize.startCell = sr.cell;
             }
             this._invalidateFromTD(2);
-            this.message = `${okMsg} Re-run ④ Compile to recompile.`;
+            this.message = `${okMsg} Re-run 4 Compile to recompile.`;
             this.render();
         } catch (err) {
             this.message = `Edit failed: ${err.message}`;
@@ -3079,7 +3079,7 @@ export class ProcgenPipelineUI {
     _drawRegion(ctx, region, offX, offY, regionSize) {
         const hint = region?.render_hint ?? region?.substrate ?? 'maze';
         const payload = region?.playable_payload;
-        // Stub region: placed in ① Layout (top-down) but not yet realised in ②,
+        // Stub region: placed in 1 Layout (top-down) but not yet realised in 2,
         // so it has no playable_payload. Draw a labelled placeholder instead of
         // dispatching to a substrate drawer (which assumes a payload).
         if (!payload) {
@@ -3095,7 +3095,7 @@ export class ProcgenPipelineUI {
         }
     }
 
-    // A region placed but not yet realised (top-down ① Layout → ② Realise).
+    // A region placed but not yet realised (top-down 1 Layout → 2 Realise).
     // Muted fill + the region_id so the live grid is viewable mid-pipeline.
     _drawStubRegion(ctx, region, offX, offY, regionSize) {
         const w = regionSize.width * TILE_PX;
@@ -3660,13 +3660,13 @@ export class ProcgenPipelineUI {
     }
 
     // ── Sphere growth as a 4-step pipeline ──────────────────────────
-    // Plan ① → Build tree ② → Build regions ③ → Compile ④. Each step
+    // Plan 1 → Build tree 2 → Build regions 3 → Compile 4. Each step
     // can run on its own ("Run next step") or the lot can run at once
-    // ("Run all" = _runSphereGrowth). Step ① yields an EDITABLE plan
-    // (sphere 0 = starting items); editing it marks ②–④ stale. State
-    // lives on this._stepState (null until ① runs); see _renderSphereSteps.
+    // ("Run all" = _runSphereGrowth). Step 1 yields an EDITABLE plan
+    // (sphere 0 = starting items); editing it marks 2–4 stale. State
+    // lives on this._stepState (null until 1 runs); see _renderSphereSteps.
 
-    // The shared, frozen-at-① config every step reads (so a later param
+    // The shared, frozen-at-1 config every step reads (so a later param
     // tweak doesn't silently change a pipeline mid-run — Reset/re-Plan
     // to pick up new params).
     _buildSphereConfig() {
@@ -3695,7 +3695,7 @@ export class ProcgenPipelineUI {
         };
     }
 
-    // Step ① — pre-plan contributions, then delegate the planSpheres + draft
+    // Step 1 — pre-plan contributions, then delegate the planSpheres + draft
     // build to the shared runner (runStep). The cfg / prep collection stays
     // here (substrate hooks are bound to this panel); everything from the
     // resolved `config` onward is the runner's, so the panel and the headless
@@ -3719,7 +3719,7 @@ export class ProcgenPipelineUI {
             config: this._configFromCfgPrep(cfg, prep, itemPool),
             poolSize: Object.keys(itemPool).length,
             // Pipeline outputs (filled by the runner step-by-step). growConfig
-            // is panel-only — derived from config+plan for the ③-editing
+            // is panel-only — derived from config+plan for the 3-editing
             // features (re-roll / region editor / composite map).
             draft: null, plan: null, startingItems: null, growConfig: null,
             opts: null, allocation: null, rng: null,
@@ -3759,30 +3759,30 @@ export class ProcgenPipelineUI {
         };
     }
 
-    // Step ②a — Allocate (delegated). Also populates the panel-only
-    // growConfig the ③-editing features read, off the same shared assembly.
+    // Step 2a — Allocate (delegated). Also populates the panel-only
+    // growConfig the 3-editing features read, off the same shared assembly.
     async _stepAllocate() {
         const st = this._stepState;
         await runStep('allocate', st);
         st.growConfig = growConfigFrom(st.config, st.plan);
     }
 
-    // Step ②b — Topology (delegated).
+    // Step 2b — Topology (delegated).
     async _stepTopology() {
         const st = this._stepState;
         await runStep('topology', st);
         // Unedited wireSphereTree output is coherent by construction; only
-        // ②b edits introduce warnings (see _applyTopologyEdit).
+        // 2b edits introduce warnings (see _applyTopologyEdit).
         st.topologyWarnings = [];
     }
 
-    // Step ②c — Item placement (delegated).
+    // Step 2c — Item placement (delegated).
     async _stepItems() {
         await runStep('items', this._stepState);
     }
 
-    // Step ③ — Build regions (delegated). The panel owns the progress UI +
-    // elapsed timing; the runner owns the grow (it clones the post-②b rng so
+    // Step 3 — Build regions (delegated). The panel owns the progress UI +
+    // elapsed timing; the runner owns the grow (it clones the post-2b rng so
     // st.rng stays at the post-topology position — see sphereSteps.js).
     async _stepRegions() {
         const st = this._stepState;
@@ -3798,7 +3798,7 @@ export class ProcgenPipelineUI {
         }
     }
 
-    // Step ④ — Compile (delegated). The panel owns the result message /
+    // Step 4 — Compile (delegated). The panel owns the result message /
     // warning / this.result it shows; the runner owns buildRulesJson + oracle.
     async _stepCompile() {
         const st = this._stepState;
@@ -3828,9 +3828,9 @@ export class ProcgenPipelineUI {
         };
     }
 
-    // Advance one step (button: Run next step). Starts the pipeline (①)
+    // Advance one step (button: Run next step). Starts the pipeline (1)
     // when none is running, then follows nextSphereStep — which loops the
-    // middle four phases per batch (sphere-major) and falls through to ④ after
+    // middle four phases per batch (sphere-major) and falls through to 4 after
     // the last batch. batch = all collapses to the linear six steps.
     _advanceSphereStep() {
         if (!this._stepState) { return this._stepPlan(); }
@@ -3847,7 +3847,7 @@ export class ProcgenPipelineUI {
     }
 
     // "Run all" — run from the current point to completion. nextSphereStep
-    // returns null only once ④ is done, so the loop drives every batch (the
+    // returns null only once 4 is done, so the loop drives every batch (the
     // per-batch loop-back advances batchStart monotonically → it terminates).
     async _runSphereGrowth() {
         if (!this._stepState) await this._stepPlan();
@@ -3873,7 +3873,7 @@ export class ProcgenPipelineUI {
         this.render();
     }
 
-    // "Reset" button — drop the pipeline so ① re-plans from current params.
+    // "Reset" button — drop the pipeline so 1 re-plans from current params.
     _resetSphereSteps() {
         this._stepState = null;
         this.result = null;
@@ -3896,7 +3896,7 @@ export class ProcgenPipelineUI {
         const target = built - 1; // keep waves [0, target); drop wave `target`+
         truncateSphereWorld(st, target);
         st.batchStart = target;
-        st.completed = 1; // allocate done → next step rebuilds ②b for `target`
+        st.completed = 1; // allocate done → next step rebuilds 2b for `target`
         st.compile = null;
         st.seconds = 0;
         this.result = null;
@@ -3954,10 +3954,10 @@ export class ProcgenPipelineUI {
     // Editing the OUTPUT of step `stepIdx` invalidates every later step:
     // roll `completed` back to stepIdx and drop the outputs each later step
     // produced (keeping stepIdx's own — the user edited it). Field groups are
-    // keyed by the step that produces them. ②b's rng (regionsRng) is its own
-    // output, so it's dropped with the topology group; ②b re-derives the FIRST
+    // keyed by the step that produces them. 2b's rng (regionsRng) is its own
+    // output, so it's dropped with the topology group; 2b re-derives the FIRST
     // batch's rng from seed, so an allocation-only edit re-runs correctly. The
-    // plan editor calls _onSpherePlanEdited (= _invalidateFrom(0)); the ②a/②b/②c
+    // plan editor calls _onSpherePlanEdited (= _invalidateFrom(0)); the 2a/2b/2c
     // editors call with 1/2/3.
     _invalidateFrom(stepIdx) {
         const st = this._stepState;
@@ -3990,7 +3990,7 @@ export class ProcgenPipelineUI {
         this.render();
     }
 
-    // An edit to the plan draft invalidates everything downstream of ①.
+    // An edit to the plan draft invalidates everything downstream of 1.
     _onSpherePlanEdited() {
         this._invalidateFrom(0);
     }
@@ -3998,10 +3998,10 @@ export class ProcgenPipelineUI {
     // Top-down analog of _invalidateFrom: roll the TD pipeline back to stepIdx,
     // dropping the outputs each LATER step produced (keeping stepIdx's own — the
     // user edited it). Fields are keyed by the step that produces them:
-    // ① layout/rng, ② realise (+seconds), ③ finalize, ④ compile. A substrate
-    // edit at ① calls _invalidateFromTD(0): layout is kept, ②..④ are dropped, the
+    // 1 layout/rng, 2 realise (+seconds), 3 finalize, 4 compile. A substrate
+    // edit at 1 calls _invalidateFromTD(0): layout is kept, 2..4 are dropped, the
     // user re-runs. Each region is sub-seed-decoupled (layout.subSeedByRegion), so
-    // re-running ② reproduces every UNedited region and only the edited one changes.
+    // re-running 2 reproduces every UNedited region and only the edited one changes.
     _invalidateFromTD(stepIdx) {
         const st = this._tdState;
         if (st && st.completed > stepIdx) {
@@ -4042,7 +4042,7 @@ export class ProcgenPipelineUI {
             opts: st.opts ?? null,
             allocation: st.allocation ?? null,
             rng: st.rng ?? null, // already { s } (set by the runner)
-            regionsRng: st.regionsRng ?? null, // post-②b rng for ③ re-runs
+            regionsRng: st.regionsRng ?? null, // post-2b rng for 3 re-runs
             nodes: st.nodes ?? null,
             substrateCounts: st.substrateCounts ?? null,
             quotaFallbacks: st.quotaFallbacks ?? null,
@@ -4130,7 +4130,7 @@ export class ProcgenPipelineUI {
             regionParams: config.regionParams ?? {},
             note: '',
         };
-        // The panel-only growConfig the ③-editing features read — derived
+        // The panel-only growConfig the 3-editing features read — derived
         // from the shared assembly so it can't drift from the runner's.
         const growConfig = env.plan ? growConfigFrom(config, env.plan) : null;
 
@@ -4185,7 +4185,7 @@ export class ProcgenPipelineUI {
     _exportEnvelope() {
         const env = this._envelopeFromStepState();
         if (!env) {
-            this.message = 'Nothing to export yet — run step ① (Plan) first.';
+            this.message = 'Nothing to export yet — run step 1 (Plan) first.';
             this.render();
             return;
         }
@@ -4230,12 +4230,12 @@ export class ProcgenPipelineUI {
 
     // --- top-down step runners (delegate to topDownSteps) ---
 
-    // ① Layout (delegated). No progress (BFS is instant).
+    // 1 Layout (delegated). No progress (BFS is instant).
     async _stepTDLayout() {
         await runTopDownStep('layout', this._tdState);
     }
 
-    // ② Realise (delegated). The panel owns the progress indicator + elapsed
+    // 2 Realise (delegated). The panel owns the progress indicator + elapsed
     // timing; the runner owns the per-region realisation + setTimeout(0) yield.
     async _stepTDRealise() {
         const st = this._tdState;
@@ -4251,13 +4251,13 @@ export class ProcgenPipelineUI {
         }
     }
 
-    // ③ Finalize (delegated).
+    // 3 Finalize (delegated).
     async _stepTDFinalize() {
         await runTopDownStep('finalize', this._tdState,
             { onProgress: (ev) => this._onGenerationProgress(ev) });
     }
 
-    // ④ Compile (delegated). The panel owns the result message / this.result it
+    // 4 Compile (delegated). The panel owns the result message / this.result it
     // shows; the runner owns buildRulesJson + the sphere-log attribution.
     async _stepTDCompile() {
         const st = this._tdState;
@@ -4282,7 +4282,7 @@ export class ProcgenPipelineUI {
     }
 
     // Advance one top-down step (button: Run next step). Starts the pipeline
-    // (① Layout) when none is running, then follows nextTopDownStep.
+    // (1 Layout) when none is running, then follows nextTopDownStep.
     _advanceTDStep() {
         if (!this._tdState) { this._tdState = this._buildTDEnvelope(); }
         const byName = {
@@ -4330,7 +4330,7 @@ export class ProcgenPipelineUI {
         this.render();
     }
 
-    // "Reset" button — drop the top-down pipeline so ① re-runs from current params.
+    // "Reset" button — drop the top-down pipeline so 1 re-runs from current params.
     _resetTDSteps() {
         this._tdState = null;
         this.result = null;
@@ -4347,28 +4347,28 @@ export class ProcgenPipelineUI {
         const st = this._tdState;
         if (!st) return wrap;
         if (st.completed >= 0 && st.layout) {
-            wrap.appendChild(this._renderStepBlock('① Layout — region placement & substrate',
+            wrap.appendChild(this._renderStepBlock('1 Layout — region placement & substrate',
                 this._renderTDLayoutEditor(st.layout)));
         }
         if (st.completed >= 1 && st.realise) {
-            wrap.appendChild(this._renderStepBlock('② Realise — substrate geometry per region',
+            wrap.appendChild(this._renderStepBlock('2 Realise — substrate geometry per region',
                 this._renderTDRealiseEditor(st)));
         }
         if (st.completed >= 2 && st.finalize) {
-            wrap.appendChild(this._renderStepBlock('③ Finalize — teleporters, back-exits, entrances',
+            wrap.appendChild(this._renderStepBlock('3 Finalize — teleporters, back-exits, entrances',
                 this._renderTDFinalizeFeedback(st.finalize)));
         }
         if (st.completed >= 3 && st.compile) {
-            wrap.appendChild(this._renderStepBlock('④ Compile',
+            wrap.appendChild(this._renderStepBlock('4 Compile',
                 this._renderTDCompileFeedback(st.compile)));
         }
         return wrap;
     }
 
-    // ① Layout block: the placement summary plus a per-region substrate editor.
+    // 1 Layout block: the placement summary plus a per-region substrate editor.
     // Editing a region's substrate writes layout.substrateByRegion[name] and
-    // invalidates ②..④ (the user re-runs to re-realise — only that region changes,
-    // since regions are sub-seed-decoupled). Mirrors the sphere ②b substrate
+    // invalidates 2..4 (the user re-runs to re-realise — only that region changes,
+    // since regions are sub-seed-decoupled). Mirrors the sphere 2b substrate
     // dropdown idiom (_renderTopologyRow).
     _renderTDLayoutEditor(layout) {
         const wrap = document.createElement('div');
@@ -4383,10 +4383,10 @@ export class ProcgenPipelineUI {
         const subOpts = Object.keys(this._activeSubstrateDict());
         const heading = document.createElement('div');
         heading.style.cssText = 'font-size:11px;color:#999;margin:0 6px 3px;';
-        heading.textContent = 'Substrate per region (an edit invalidates ②..④ — re-run to apply):';
+        heading.textContent = 'Substrate per region (an edit invalidates 2..4 — re-run to apply):';
         wrap.appendChild(heading);
         for (const { name } of layout.placementOrder ?? []) {
-            // Menu / source-less regions are skipped in ① (no substrate resolved),
+            // Menu / source-less regions are skipped in 1 (no substrate resolved),
             // so only show rows for regions that actually realise.
             if (!(name in (layout.substrateByRegion ?? {}))) continue;
             wrap.appendChild(this._renderTDSubstrateRow(layout, name, subOpts));
@@ -4436,7 +4436,7 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
-    // ② Realise block: the substrate-mix summary plus a per-region row carrying
+    // 2 Realise block: the substrate-mix summary plus a per-region row carrying
     // [Edit ▸] (per-region geometry editor; bounce only) and [Re-roll 🎲]
     // (re-realise on a bumped sub-seed). The composite grid below is also
     // click-to-select in Edit Region mode (see _renderGrid / _onMapClick).
@@ -4479,16 +4479,16 @@ export class ProcgenPipelineUI {
     }
 
     // Re-roll 🎲 (top-down) — bump this region's realisation sub-seed and re-run
-    // from ② Realise. The 1b decoupling means only this region (and its BFS
+    // from 2 Realise. The 1b decoupling means only this region (and its BFS
     // descendants, whose entrances re-align to its moved exit tiles) changes;
     // siblings / ancestors / other branches stay byte-identical. Works for maze
-    // AND bounce: ② re-realises the whole grid and ③ re-stitches, so the
+    // AND bounce: 2 re-realises the whole grid and 3 re-stitches, so the
     // exit-tile-adjacency concern that makes sphere's re-roll bounce-only doesn't
     // apply here.
     _reRollRegionTD(name) {
         const layout = this._tdState?.layout;
         if (!layout?.subSeedByRegion || !(name in layout.subSeedByRegion)) {
-            this.message = 'Re-roll unavailable — run ① Layout first.';
+            this.message = 'Re-roll unavailable — run 1 Layout first.';
             this.warning = '';
             this.render();
             return;
@@ -4501,15 +4501,15 @@ export class ProcgenPipelineUI {
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(0);
         this.message = `Re-rolled "${name}" (sub-seed bump #${n}). `
-            + 'Re-run from ② Realise to apply — only this region + its descendants change.';
+            + 'Re-run from 2 Realise to apply — only this region + its descendants change.';
         this.render();
     }
 
     // Edit ▸ (top-down) — open the per-region geometry editor for a bounce/zone
     // region. The contract is built from the read-only source via the engine's
     // buildTopDownRegionContract (the sphere _editRegion is node/tree-shaped).
-    // onSave splices the edited region into the grid and re-runs ③..④ (the
-    // back-exit/stitch/entrance passes read the realised exits; ③ is idempotent).
+    // onSave splices the edited region into the grid and re-runs 3..4 (the
+    // back-exit/stitch/entrance passes read the realised exits; 3 is idempotent).
     _editRegionTD(region, name = null) {
         const open = getRegionEditor(region?.substrate);
         if (!open) {
@@ -4522,7 +4522,7 @@ export class ProcgenPipelineUI {
         const layout = st?.layout;
         const regionId = name ?? region?.region_id;
         if (!layout || !regionId) {
-            this.message = 'Edit unavailable — run ② Realise first.';
+            this.message = 'Edit unavailable — run 2 Realise first.';
             this.warning = '';
             this.render();
             return;
@@ -4553,8 +4553,8 @@ export class ProcgenPipelineUI {
     }
 
     // Write-back from a top-down region editor save: splice the edited region into
-    // the live grid and re-run ③..④ (_invalidateFromTD(1) → keep ②, drop ③④). The
-    // edited region carries fresh forward exits with no back-exit; ③ re-adds the
+    // the live grid and re-run 3..4 (_invalidateFromTD(1) → keep 2, drop 34). The
+    // edited region carries fresh forward exits with no back-exit; 3 re-adds the
     // back-exit (guarded against duplication) and re-stitches.
     _onRegionEditedTD(regionId, editedRegion) {
         const layout = this._tdState?.layout;
@@ -4564,7 +4564,7 @@ export class ProcgenPipelineUI {
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(1);
-        this.message = `Saved edits to "${regionId}". Re-run from ③ Finalize to apply.`;
+        this.message = `Saved edits to "${regionId}". Re-run from 3 Finalize to apply.`;
         this.render();
     }
 

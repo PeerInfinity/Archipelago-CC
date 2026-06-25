@@ -2,7 +2,7 @@
  * Bounce region editor — Golden Layout panel.
  *
  * Edits ONE bounce region's geometry (its level.js level) in two modes:
- *   - pipeline: opened by the procgen panel's ③ Edit ▸ with a live region +
+ *   - pipeline: opened by the procgen panel's 3 Edit ▸ with a live region +
  *     a write-back hook (onSave). Saving re-assembles the region and splices
  *     it back into the grid (chunk 5).
  *   - standalone: opened directly (no onSave). Loads a fixture / file / blank
@@ -104,7 +104,7 @@ export class BounceRegionEditorUI {
         this._initSessionExtras(c);
         this._selectedId = null;
         this._message = this._session.mode === 'pipeline'
-            ? `Editing ${this._session.label} (pipeline — Save writes back to ③).`
+            ? `Editing ${this._session.label} (pipeline — Save writes back to 3).`
             : `Viewing ${this._session.label} (standalone).`;
     }
 
@@ -259,7 +259,7 @@ export class BounceRegionEditorUI {
         // Save: pipeline write-back (chunk 5) or download in standalone.
         const save = this._btn('Save', () => this._save());
         save.title = sess.mode === 'pipeline'
-            ? 'Write the edited region back into the pipeline (③)'
+            ? 'Write the edited region back into the pipeline (3)'
             : 'Export the level JSON (standalone)';
         bar.appendChild(save);
         return bar;
@@ -389,7 +389,7 @@ export class BounceRegionEditorUI {
 
     // Save. Pipeline mode: re-assemble the region from the edited level (same
     // rule-emission the generator runs) and hand it back via onSave, which
-    // splices it into the grid + invalidates ④ (the oracle is the backstop).
+    // splices it into the grid + invalidates 4 (the oracle is the backstop).
     // Standalone: export the level JSON.
     _save() {
         const sess = this._session;
@@ -397,7 +397,7 @@ export class BounceRegionEditorUI {
             try {
                 const edited = this._buildEditedRegion();
                 sess.onSave(edited);
-                this._message = `Saved ${sess.label} back to the pipeline. Re-run ④ to recheck.`;
+                this._message = `Saved ${sess.label} back to the pipeline. Re-run 4 to recheck.`;
             } catch (err) {
                 this._message = `Save failed (contract): ${err.message}`;
             }

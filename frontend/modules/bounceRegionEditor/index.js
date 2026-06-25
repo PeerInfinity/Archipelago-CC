@@ -3,7 +3,7 @@
  * geometry. See NewDocs/plans/procedural-generation/region-step-editing.md §5.
  *
  * Launched two ways:
- *   - pipeline: the procgen panel's ③ Edit ▸ calls openBounceRegionEditor({
+ *   - pipeline: the procgen panel's 3 Edit ▸ calls openBounceRegionEditor({
  *     region, contract, onSave }); we stash the session, publish a load event,
  *     and bring the panel forward.
  *   - standalone: the panel boots itself with a fixture when no session is
@@ -51,7 +51,7 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     dispatcher = initializationApi.getDispatcher?.() ?? null;
     BounceRegionEditorUI.setModuleApis({ eventBus, dispatcher });
 
-    // Route the procgen panel's ③ Edit ▸ for bounce regions here.
+    // Route the procgen panel's 3 Edit ▸ for bounce regions here.
     registerRegionEditor('bounce', openBounceRegionEditor);
 
     return () => {
