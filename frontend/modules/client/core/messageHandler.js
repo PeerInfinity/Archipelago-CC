@@ -45,6 +45,11 @@ export class MessageHandler {
     this.stateManager = stateManagerProxySingleton;
     this.eventBus = null; // Add property for injected eventBus
     this.dispatcher = null; // Added dispatcher property
+
+    // Whether we've already reported the goal/victory to the server this
+    // connection. Guards against re-sending CLIENT_GOAL on every subsequent
+    // location check or re-render. Reset on (re)connect in _handleConnected.
+    this._goalReported = false;
   }
 
   // Add method to inject eventBus
@@ -242,6 +247,11 @@ export class MessageHandler {
 
   async _handleConnected(data) {
     log('info', '[MessageHandler] _handleConnected called with data:', data);
+
+    // Re-arm goal reporting for this connection. If the proof/game is already
+    // complete (reconnecting after finishing), the downstream snapshot sync
+    // will re-trigger reportGoal() so the slot still registers as goaled.
+    this._goalReported = false;
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -906,6 +916,25 @@ Location was force-checked to maintain server sync.`;
         status: status,
       },
     ]);
+  }
+
+  /**
+   * Report that the local player has reached their goal (victory).
+   *
+   * Sends a single CLIENT_GOAL status update to the server. Idempotent per
+   * connection: a `_goalReported` guard prevents re-sending on every
+   * subsequent location check or re-render. The guard is reset on (re)connect
+   * so a previously-finished game re-reports its goal after reconnecting.
+   *
+   * @returns {boolean} Whether the goal status was sent on this call.
+   */
+  reportGoal() {
+    if (this._goalReported) return false;
+    if (!connection.isConnected()) return false;
+
+    this._goalReported = true;
+    log('info', '[MessageHandler] Reporting goal completion to server (CLIENT_GOAL).');
+    return this.sendStatusUpdate(Config.CLIENT_STATUS.CLIENT_GOAL);
   }
 
   async serverSync() {

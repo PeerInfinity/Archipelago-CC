@@ -15,6 +15,7 @@ import {
   syncStateFromSnapshot,
   createLogger,
   initializeProofState,
+  reportGoalIfComplete,
 } from '../proofShared/proofModuleHelpers.js';
 
 // ─── Module Info ────────────────────────────────────────────
@@ -54,6 +55,8 @@ export function register(registrationApi) {
 
   // Dispatcher: we send location checks
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+  // Dispatcher: we send goal completion (forwarded to the AP server by the client)
+  registrationApi.registerDispatcherSender('user:goalReached', 'bottom', 'first');
 
   // Events we subscribe to
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
@@ -101,6 +104,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   const staticData = stateManager.getStaticData();
   if (hasStructureData(getPlayerWorld(staticData)?.slot_data)) {
     initializeProofState(proofGraphState, staticData, log, _wireEventBusPublishing);
+    reportGoalIfComplete(proofGraphState, _dispatcher, log);
   }
 
   log('info', 'Initialization complete.');
@@ -120,16 +124,19 @@ function handleRulesLoaded() {
   log('info', 'Received stateManager:rulesLoaded');
   const staticData = stateManager.getStaticData();
   if (staticData) initializeProofState(proofGraphState, staticData, log, _wireEventBusPublishing);
+  reportGoalIfComplete(proofGraphState, _dispatcher, log);
 }
 
 function handleSnapshotUpdated(snapshotData) {
   if (!proofGraphState?.isLoaded) return;
   syncStateFromSnapshot(proofGraphState, snapshotData);
+  reportGoalIfComplete(proofGraphState, _dispatcher, log);
 }
 
 function handleInventoryChanged() {
   if (!proofGraphState?.isLoaded) return;
   syncStateFromSnapshot(proofGraphState);
+  reportGoalIfComplete(proofGraphState, _dispatcher, log);
 }
 
 // ─── Internal ───────────────────────────────────────────────

@@ -41,6 +41,32 @@ export function syncStateFromSnapshot(state, snapshotData) {
 }
 
 /**
+ * Report the local player's goal if the proof is complete.
+ *
+ * Publishes `user:goalReached` via the module dispatcher, which the client
+ * module forwards to the AP server as a single CLIENT_GOAL status update.
+ * Safe to call after every sync: the client-side guard (messageHandler
+ * `_goalReported`) ensures the goal is only sent once per connection, and
+ * re-arms on reconnect so a previously-finished game re-reports its goal.
+ *
+ * Only the local player's proof state is consulted, so this never fires off
+ * another player's progress in a multiworld.
+ *
+ * @param {Object} state - A proof state instance (must have isProofComplete)
+ * @param {Object} dispatcher - The module dispatcher
+ * @param {Function} [log] - Logger function
+ */
+export function reportGoalIfComplete(state, dispatcher, log) {
+  if (!state?.isLoaded || !dispatcher) return;
+  if (typeof state.isProofComplete !== 'function' || !state.isProofComplete()) return;
+
+  log?.('info', 'Proof complete — reporting goal to server (user:goalReached)');
+  dispatcher.publish('user:goalReached', { originator: 'proof' }, {
+    initialTarget: 'bottom',
+  });
+}
+
+/**
  * Create a logger function for a proof module.
  *
  * @param {string} moduleName - e.g. 'proofQueue'

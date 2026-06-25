@@ -178,6 +178,23 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 
+  // Register dispatcher receiver for user:goalReached. Any module that can
+  // detect local-player victory (e.g. proofQueue/proofGraph when a MetaMath
+  // proof completes) publishes this; the client forwards it to the AP server
+  // as a single CLIENT_GOAL status update. The guard lives in messageHandler.
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name,
+    'user:goalReached',
+    () => {
+      if (coreMessageHandler) {
+        coreMessageHandler.reportGoal();
+      } else {
+        log('error', '[Client Module] Cannot report goal: Message handler not initialized.');
+      }
+    },
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
+  );
+
   // Register EventBus publisher intentions
   registrationApi.registerEventBusPublisher('error:client');
   registrationApi.registerEventBusPublisher('connection:open');
