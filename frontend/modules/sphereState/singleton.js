@@ -30,6 +30,16 @@ export function getSphereStateSingleton() {
 }
 
 /**
+ * Get the sphereState singleton WITHOUT warning when it isn't created yet.
+ * For optional/early reads (e.g. a panel's render before sphereState init) where
+ * "not ready" is an expected state, not a bug.
+ * @returns {SphereState|null}
+ */
+export function peekSphereStateSingleton() {
+  return sphereStateInstance;
+}
+
+/**
  * Destroy the singleton (for testing/cleanup)
  */
 export function destroySphereStateSingleton() {

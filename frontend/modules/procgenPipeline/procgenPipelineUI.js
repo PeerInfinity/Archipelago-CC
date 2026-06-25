@@ -47,7 +47,7 @@ import {
     collectSphereGrowthPrep, assembleRegionParams,
 } from './sphereConfigHooks.js';
 import { getRegionEditor } from './regionEditors.js';
-import { getSphereStateSingleton } from '../sphereState/singleton.js';
+import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
@@ -521,6 +521,17 @@ export class ProcgenPipelineUI {
         this._unsubRawJsonLoaded = () => eventBus.unsubscribe(
             'stateManager:rawJsonDataLoaded', handler, 'procgenPipeline',
         );
+        // The sphere log loads asynchronously into sphereState (after the panel's
+        // first render), so re-render when it lands/clears — otherwise the
+        // top-down source picker shows "(no sphere log)" until an unrelated
+        // re-render corrects it. _resolveTopDownSphereLog reads the live log.
+        const sphereLogHandler = () => this.render();
+        eventBus.subscribe('sphereState:dataLoaded', sphereLogHandler, 'procgenPipeline');
+        eventBus.subscribe('sphereState:dataCleared', sphereLogHandler, 'procgenPipeline');
+        this._unsubSphereLog = () => {
+            eventBus.unsubscribe('sphereState:dataLoaded', sphereLogHandler, 'procgenPipeline');
+            eventBus.unsubscribe('sphereState:dataCleared', sphereLogHandler, 'procgenPipeline');
+        };
         this.render();
     }
 
@@ -529,6 +540,7 @@ export class ProcgenPipelineUI {
     getRootElement() { return this.rootElement; }
     destroy() {
         if (this._unsubRawJsonLoaded) { this._unsubRawJsonLoaded(); this._unsubRawJsonLoaded = null; }
+        if (this._unsubSphereLog) { this._unsubSphereLog(); this._unsubSphereLog = null; }
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); }
@@ -814,7 +826,7 @@ export class ProcgenPipelineUI {
         // restores the canonical metadata header sphereState parses out, so
         // the embedded log keeps the source's real event metadata. Disabled
         // until one is loaded.
-        const loadedLog = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
+        const loadedLog = peekSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
         const hasLoadedLog = Array.isArray(loadedLog) && loadedLog.length > 0;
         // Checked by default; browsing a log file unchecks it. The resolution
         // (_resolveTopDownSphereLog) reads this flag, so no imperative apply is
@@ -863,7 +875,7 @@ export class ProcgenPipelineUI {
      */
     _resolveTopDownSphereLog() {
         if (this.useLoadedSphereLog) {
-            const entries = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
+            const entries = peekSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
             if (Array.isArray(entries) && entries.length > 0) {
                 const n = entries.filter((e) => e.type === 'state_update').length;
                 return { entries, label: `currently loaded (${n} entries)` };

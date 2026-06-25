@@ -355,6 +355,11 @@ const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
 assert(pageErrors.length === 0, `no page errors (${pageErrors.length})`);
 if (pageErrors.length) console.log(pageErrors.join('\n'));
 
+// The panel loads in top-down mode (renders the source picker), which must not
+// poke the sphereState singleton before it exists (peekSphereStateSingleton).
+const sphereWarn = logs.filter((l) => l.includes('Singleton not yet created'));
+assert(sphereWarn.length === 0, `no "[sphereState] Singleton not yet created" warning (${sphereWarn.length})`);
+
 await browser.close();
 console.log(failures.length ? `\n❌ ${failures.length} FAILURE(S)` : '\n✅ ALL PASS');
 process.exit(failures.length ? 1 : 0);
