@@ -619,17 +619,21 @@ export class ProofGraphUI {
       const result = proofGraphState.tryDrawEdge(sourceIdx, targetIdx);
 
       if (result.success) {
+        // Same-name routing may connect a different instance than the one the
+        // player dragged from, so draw the edge from the routed source.
+        const drawnSource = result.source;
+
         // Cytoscape edges are immutable in source/target, so replace with
         // a new edge that targets the port node directly.
         addedEdge.remove();
 
         const portId = `port-${targetIdx}-${result.slot}`;
-        const edgeKey = `${sourceIdx}->${targetIdx}:${result.slot}`;
+        const edgeKey = `${drawnSource}->${targetIdx}:${result.slot}`;
         this.cy.add({
           group: 'edges',
           data: {
             id: `edge-${edgeKey}`,
-            source: String(sourceIdx),
+            source: String(drawnSource),
             target: portId,
           },
           classes: 'drawn-edge',
@@ -642,7 +646,8 @@ export class ProofGraphUI {
         // Move target node to the row below its source nodes
         this._updateRowAfterEdge(targetIdx);
         this._layoutFromRows(true);
-        log('info', `Edge drawn: ${sourceIdx} -> ${targetIdx} (slot ${result.slot})`);
+        const routedNote = drawnSource !== sourceIdx ? ` (routed from ${sourceIdx})` : '';
+        log('info', `Edge drawn: ${drawnSource} -> ${targetIdx} (slot ${result.slot})${routedNote}`);
       } else {
         // Remove the edge that edgehandles added
         addedEdge.remove();

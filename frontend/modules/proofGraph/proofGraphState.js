@@ -94,22 +94,38 @@ export class ProofGraphState extends ProofBaseState {
       return { success: false, reason: 'invalid-step' };
     }
 
-    // Find the first unfilled slot matching this source→target pair
+    // Same-name routing: nodes that share a label are the same theorem applied
+    // to different instantiations (e.g. two `breqd` steps). They look identical
+    // but are NOT interchangeable in the proof, so the player can't tell which
+    // one a given edge belongs to. Instead of forcing a guess, treat the drag as
+    // "connect *a* breqd here" and fill the first unfilled correct edge into the
+    // target whose source shares the dragged node's label — i.e. route to the
+    // instance for which the connection is actually valid, which may differ from
+    // the node the player dragged from.
+    //
+    // Candidates are limited to currently-visible sources so the chosen instance
+    // is on-screen and drawable. The dragged source is always visible (the player
+    // grabbed it); other same-label instances must have their own deps satisfied.
+    const sourceLabel = this.steps.get(sourceIndex).label;
+    const visible = this.getVisibleSteps();
     let matchedKey = null;
     let matchedEdge = null;
     for (const [key, edge] of this.correctEdges) {
-      if (edge.source === sourceIndex && edge.target === targetIndex && !this.drawnEdges.has(key)) {
-        matchedKey = key;
-        matchedEdge = edge;
-        break;
-      }
+      if (edge.target !== targetIndex || this.drawnEdges.has(key)) continue;
+      const candidate = this.steps.get(edge.source);
+      if (!candidate || candidate.label !== sourceLabel) continue;
+      if (edge.source !== sourceIndex && !visible.has(edge.source)) continue;
+      matchedKey = key;
+      matchedEdge = edge;
+      break;
     }
 
     if (matchedKey) {
       this.drawnEdges.add(matchedKey);
 
+      // Report the instance actually connected (may differ from sourceIndex).
       if (this.onEdgeDrawn) {
-        this.onEdgeDrawn(sourceIndex, targetIndex, matchedEdge.slot);
+        this.onEdgeDrawn(matchedEdge.source, targetIndex, matchedEdge.slot);
       }
 
       // Check if target step is now fully connected
@@ -120,12 +136,19 @@ export class ProofGraphState extends ProofBaseState {
       }
 
       if (this.onStateChanged) this.onStateChanged();
-      return { success: true, slot: matchedEdge.slot };
+      return { success: true, source: matchedEdge.source, slot: matchedEdge.slot };
     }
 
-    // No unfilled slot — either all drawn or not a valid dependency
-    if (this.hasUnfilledSlot(sourceIndex, targetIndex) === false &&
-        this._hasAnySlot(sourceIndex, targetIndex)) {
+    // No matchable edge. If same-label edges into the target exist but are all
+    // already drawn, this was a redundant connection, not a wrong one.
+    const sameNameKeys = [];
+    for (const [key, edge] of this.correctEdges) {
+      if (edge.target === targetIndex &&
+          this.steps.get(edge.source)?.label === sourceLabel) {
+        sameNameKeys.push(key);
+      }
+    }
+    if (sameNameKeys.length > 0 && sameNameKeys.every((k) => this.drawnEdges.has(k))) {
       return { success: false, reason: 'already-drawn' };
     }
 
