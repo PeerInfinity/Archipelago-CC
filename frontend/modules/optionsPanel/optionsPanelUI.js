@@ -2,6 +2,7 @@
 
 import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { formatBuildInfo } from '../../app/buildInfo.js';
 import { DiscoveryPanelUI } from '../discoveryPanel/discoveryPanelUI.js';
 import {
   humanizeKey,
@@ -408,6 +409,19 @@ export class OptionsPanelUI {
           font-style: italic;
           padding: 0.5rem;
         }
+        .options-panel-footer {
+          flex: 0 0 auto;
+          padding: 4px 8px;
+          border-top: 1px solid #3c3c3c;
+          background-color: #252526;
+          color: #888;
+          font-size: 11px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          user-select: text;
+        }
       `;
       this.rootElement.appendChild(style);
 
@@ -435,6 +449,15 @@ export class OptionsPanelUI {
       this.contentContainer = document.createElement('div');
       this.contentContainer.className = 'options-panel-content';
       this.rootElement.appendChild(this.contentContainer);
+
+      // Build stamp — a cache/staleness indicator visible in every mode that
+      // shows this panel. Reads from app/buildInfo.js (bundled build time +
+      // commit, or "unbundled dev — loaded HH:MM:SS" in raw-source dev).
+      this.buildFooter = document.createElement('div');
+      this.buildFooter.className = 'options-panel-footer';
+      this.buildFooter.textContent = formatBuildInfo();
+      this.buildFooter.title = 'Frontend build stamp — confirms whether the page loaded fresh code or is cached';
+      this.rootElement.appendChild(this.buildFooter);
     }
     return this.rootElement;
   }

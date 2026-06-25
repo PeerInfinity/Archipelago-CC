@@ -18,6 +18,7 @@ import * as esbuild from 'esbuild';
 import * as path from 'path';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,20 @@ const minify = args.includes('--minify') || (!args.includes('--no-minify') && !w
 // Ensure dist directory exists
 if (!fs.existsSync(distDir)) {
   fs.mkdirSync(distDir, { recursive: true });
+}
+
+// Build stamp, injected as compile-time globals (see `define` below). These are
+// only defined in the BUNDLED build; in unbundled local dev the identifiers are
+// undefined, which the runtime treats as "unbundled dev" (see app/buildInfo.js).
+const buildTime = new Date().toISOString();
+let buildCommit = 'unknown';
+try {
+  buildCommit = execSync('git rev-parse --short HEAD', {
+    cwd: projectRoot,
+    stdio: ['ignore', 'pipe', 'ignore'],
+  }).toString().trim() || 'unknown';
+} catch {
+  // Not a git checkout (e.g. a source tarball) — leave as 'unknown'.
 }
 
 // Build configuration
@@ -56,11 +71,15 @@ const buildOptions = {
   // Define any globals if needed
   define: {
     'process.env.NODE_ENV': watch ? '"development"' : '"production"',
+    // Build stamp surfaced at runtime (Options panel footer). Only present in
+    // the bundled build; unbundled dev leaves these identifiers undefined.
+    __BUILD_TIME__: JSON.stringify(buildTime),
+    __BUILD_COMMIT__: JSON.stringify(buildCommit),
   },
 
   // Banner to identify the bundle
   banner: {
-    js: `/* Archipelago JSON Frontend - Bundled ${new Date().toISOString()} */`,
+    js: `/* Archipelago JSON Frontend - Bundled ${buildTime} (${buildCommit}) */`,
   },
 };
 
