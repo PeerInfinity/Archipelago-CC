@@ -458,6 +458,12 @@ export class ProcgenPipelineUI {
         // re-feed whatever's currently active without a file picker.
         this.loadedRulesJson = null;
         this.loadedRulesJsonLabel = '';
+        // "Use currently-loaded rules.json / sphere log" checkboxes (top-down
+        // source picker), checked by default: until the user browses a file, the
+        // source/log is whatever the frontend currently has loaded. Browsing a
+        // file unchecks the corresponding box. Session-only.
+        this.useLoadedRules = true;
+        this.useLoadedSphereLog = true;
         this.result = null;
         // Sphere-growth stepped-pipeline state (null until step ① runs).
         // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
@@ -498,6 +504,9 @@ export class ProcgenPipelineUI {
             if (!data?.rawJsonData) return;
             this.loadedRulesJson = data.rawJsonData;
             this.loadedRulesJsonLabel = data.source || data.selectedPlayerInfo?.playerName || 'currently loaded';
+            // "Use currently-loaded rules.json" checked (default) → adopt it as the
+            // top-down source as soon as it's available.
+            if (this.useLoadedRules) this._applyLoadedRules();
             // If the loaded rules.json carries preset_sidecars,
             // reconstruct a Grid so the composite-view canvas paints
             // all regions side-by-side. A subsequent local Generate
@@ -660,6 +669,31 @@ export class ProcgenPipelineUI {
 
     // --- Top-down source picker ---
 
+    // Adopt the frontend's currently-loaded rules.json as the top-down source
+    // (the "Use currently-loaded rules.json" checkbox / the rawJsonDataLoaded
+    // event when that box is checked). No-op when nothing is loaded yet.
+    _applyLoadedRules() {
+        if (!this.loadedRulesJson) return;
+        this.topDownSource = this.loadedRulesJson;
+        this.topDownSourceLabel = `loaded (${this.loadedRulesJsonLabel})`;
+        this._applyGridDimsFromSource(this.loadedRulesJson);
+    }
+
+    // A small inline checkbox + label (used by the source picker's two
+    // "Use currently-loaded …" toggles). onChange receives the new checked state.
+    _renderInlineCheckbox(label, checked, onChange, { title = '' } = {}) {
+        const wrap = document.createElement('label');
+        wrap.className = 'procgen-pipeline-use-loaded';
+        if (title) wrap.title = title;
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = checked;
+        cb.addEventListener('change', () => onChange(cb.checked));
+        wrap.appendChild(cb);
+        wrap.appendChild(document.createTextNode(` ${label}`));
+        return wrap;
+    }
+
     _renderTopDownSourcePicker() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-source';
@@ -675,6 +709,8 @@ export class ProcgenPipelineUI {
         fileInput.addEventListener('change', async () => {
             const file = fileInput.files?.[0];
             if (!file) return;
+            // Browsing a file overrides the currently-loaded rules.json.
+            this.useLoadedRules = false;
             try {
                 const text = await file.text();
                 const parsed = JSON.parse(text);
@@ -691,23 +727,28 @@ export class ProcgenPipelineUI {
         });
         row.appendChild(fileInput);
 
-        // Quick path: use whatever rules.json the frontend currently
-        // has loaded (via Presets panel or ?game= URL). Disabled
-        // until a stateManager:rawJsonDataLoaded event has populated
-        // our cache.
-        const useLoadedBtn = this._btn('Use currently-loaded rules.json', () => {
-            if (!this.loadedRulesJson) return;
-            this.topDownSource = this.loadedRulesJson;
-            this.topDownSourceLabel = `loaded (${this.loadedRulesJsonLabel})`;
-            this._applyGridDimsFromSource(this.loadedRulesJson);
-            this.message = `Using currently-loaded rules.json`;
-            this.render();
-        });
-        if (!this.loadedRulesJson) {
-            useLoadedBtn.disabled = true;
-            useLoadedBtn.title = 'Load any preset (Presets panel) or open a ?game= URL first.';
-        }
-        row.appendChild(useLoadedBtn);
+        // Quick path: use whatever rules.json the frontend currently has loaded
+        // (via Presets panel or ?game= URL). Checked by default; browsing a file
+        // unchecks it. Unchecking drops the loaded source so the user can browse.
+        row.appendChild(this._renderInlineCheckbox(
+            'Use currently-loaded rules.json',
+            this.useLoadedRules,
+            (checked) => {
+                this.useLoadedRules = checked;
+                if (checked) {
+                    this._applyLoadedRules();
+                    this.message = this.loadedRulesJson ? 'Using currently-loaded rules.json' : '';
+                } else if (this.topDownSource === this.loadedRulesJson) {
+                    this.topDownSource = null;
+                    this.topDownSourceLabel = '';
+                }
+                this.render();
+            },
+            {
+                title: this.loadedRulesJson ? ''
+                    : 'Load any preset (Presets panel) or open a ?game= URL first.',
+            },
+        ));
 
         const status = document.createElement('span');
         status.className = 'procgen-pipeline-source-status';
@@ -722,6 +763,10 @@ export class ProcgenPipelineUI {
                 this.topDownSourceLabel = '';
                 this.topDownSphereLog = null;
                 this.topDownSphereLogLabel = '';
+                // Clearing is explicit — don't immediately re-adopt the loaded
+                // rules.json/log (uncheck both "use currently-loaded" boxes).
+                this.useLoadedRules = false;
+                this.useLoadedSphereLog = false;
                 this.result = null;
                 this.message = '';
                 this.render();
@@ -745,6 +790,8 @@ export class ProcgenPipelineUI {
         logInput.addEventListener('change', async () => {
             const file = logInput.files?.[0];
             if (!file) return;
+            // Browsing a file overrides the currently-loaded sphere log.
+            this.useLoadedSphereLog = false;
             try {
                 const text = await file.text();
                 const entries = text.split('\n').map((l) => l.trim())
@@ -769,21 +816,23 @@ export class ProcgenPipelineUI {
         // until one is loaded.
         const loadedLog = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
         const hasLoadedLog = Array.isArray(loadedLog) && loadedLog.length > 0;
-        const useLoadedLogBtn = this._btn('Use currently-loaded sphere log', () => {
-            const entries = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
-            if (!Array.isArray(entries) || entries.length === 0) return;
-            const n = entries.filter((e) => e.type === 'state_update').length;
-            this.topDownSphereLog = entries;
-            this.topDownSphereLogLabel = `currently loaded (${n} entries)`;
-            this.message = `Using currently-loaded sphere log (${n} entries)`;
-            this.render();
-        });
-        if (!hasLoadedLog) {
-            useLoadedLogBtn.disabled = true;
-            useLoadedLogBtn.title = 'Load a preset that ships a _sphere_log.jsonl '
-                + '(e.g. open it in the Presets / playback / loops view) first.';
-        }
-        logRow.appendChild(useLoadedLogBtn);
+        // Checked by default; browsing a log file unchecks it. The resolution
+        // (_resolveTopDownSphereLog) reads this flag, so no imperative apply is
+        // needed — checked means "prefer the loaded log".
+        logRow.appendChild(this._renderInlineCheckbox(
+            'Use currently-loaded sphere log',
+            this.useLoadedSphereLog,
+            (checked) => {
+                this.useLoadedSphereLog = checked;
+                this.message = checked && hasLoadedLog ? 'Using currently-loaded sphere log' : '';
+                this.render();
+            },
+            {
+                title: hasLoadedLog ? ''
+                    : 'Load a preset that ships a _sphere_log.jsonl '
+                        + '(e.g. open it in the Presets / playback / loops view) first.',
+            },
+        ));
 
         const { entries: resolvedLog, label: logLabel } = this._resolveTopDownSphereLog();
         const logStatus = document.createElement('span');
@@ -807,12 +856,19 @@ export class ProcgenPipelineUI {
     }
 
     /**
-     * Resolve the sphere log to attribute from, mirroring the CLI's
-     * precedence: an explicitly picked log wins; otherwise the source
-     * rules.json's embedded `sphere_log`; otherwise none.
-     * Returns { entries: array|null, label }.
+     * Resolve the sphere log to attribute from. Precedence: the
+     * currently-loaded log when "Use currently-loaded sphere log" is checked;
+     * otherwise an explicitly picked log file; otherwise the source rules.json's
+     * embedded `sphere_log`; otherwise none. Returns { entries: array|null, label }.
      */
     _resolveTopDownSphereLog() {
+        if (this.useLoadedSphereLog) {
+            const entries = getSphereStateSingleton()?.getRawLogWithMetadata?.() ?? [];
+            if (Array.isArray(entries) && entries.length > 0) {
+                const n = entries.filter((e) => e.type === 'state_update').length;
+                return { entries, label: `currently loaded (${n} entries)` };
+            }
+        }
         if (Array.isArray(this.topDownSphereLog) && this.topDownSphereLog.length > 0) {
             return { entries: this.topDownSphereLog, label: this.topDownSphereLogLabel };
         }

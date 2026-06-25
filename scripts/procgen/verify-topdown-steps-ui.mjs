@@ -95,10 +95,23 @@ const clickPrimary = () => page.evaluate(() => {
 const failures = [];
 const assert = (cond, msg) => { if (!cond) failures.push(msg); console.log(`${cond ? '✅' : '❌'} ${msg}`); };
 
-// Load the source via the file input.
+// "Use currently-loaded …" checkboxes: present + checked by default.
+const useLoadedState = () => page.evaluate(() => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    return [...root.querySelectorAll('.procgen-pipeline-use-loaded input[type=checkbox]')]
+        .map((c) => c.checked);
+});
+const checksBefore = await useLoadedState();
+assert(checksBefore.length === 2 && checksBefore.every(Boolean),
+    `use-loaded checkboxes present + checked by default (got [${checksBefore}])`);
+
+// Load the source via the file input — this should uncheck "Use currently-loaded
+// rules.json".
 await page.setInputFiles('.procgen-pipeline-source-input', SRC_PATH);
 await page.waitForTimeout(800);
 assert((await panelText()).includes('Loaded source'), 'source loaded');
+const checksAfter = await useLoadedState();
+assert(checksAfter[0] === false, 'browsing a rules file unchecked "Use currently-loaded rules.json"');
 
 // Phase A — step through ①→④.
 const steps = ['Run ① Layout', 'Run ② Realise', 'Run ③ Finalize', 'Run ④ Compile'];

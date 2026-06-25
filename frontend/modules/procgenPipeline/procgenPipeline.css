@@ -409,9 +409,35 @@
     color: #ccc;
 }
 
+/* Style the native file-picker ("Browse") button to match .procgen-pipeline-btn. */
+.procgen-pipeline-source-input::file-selector-button {
+    padding: 4px 10px;
+    margin-right: 8px;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.procgen-pipeline-source-input::file-selector-button:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
 .procgen-pipeline-source-status {
     font-size: 12px;
     color: #888;
+}
+
+.procgen-pipeline-use-loaded {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #ccc;
+    cursor: pointer;
 }
 
 .procgen-pipeline-progress {
