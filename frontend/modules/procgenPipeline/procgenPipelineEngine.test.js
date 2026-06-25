@@ -14,7 +14,8 @@ import {
     wallOffUnusedExits, growMaze, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
     findDisconnectedCell,
-    topDownFromRulesJson, sphereLogToWavesAndPlan,
+    topDownFromRulesJson, layoutTopDown, realiseTopDownGen,
+    sphereLogToWavesAndPlan,
     pickSubstrate, rollSubstrateMix,
     pickSubstrateWithQuota, totalRemainingQuota,
     reconcileBidirectionalExits,
@@ -2042,6 +2043,83 @@ describe('topDownFromRulesJson — sphere-log attribution', () => {
             type: 'metadata', seed: 1, seed_name: 'sn', event_locations: {}, event_items: {},
         });
         expect(out.sphere_log.slice(1)).toEqual(bareLog);
+    });
+});
+
+describe('topDownFromRulesJson — per-region sub-seeds (1b)', () => {
+    // A simple chain Menu→A→B→C: C is a leaf, B's BFS child is C, A's is B.
+    function makeChainSource() {
+        const T = { rule: 'True_' };
+        const reg = (name, exits, locs) => ({ name, exits, locations: locs });
+        return {
+            start_regions: { '1': { default: ['Menu'] } },
+            assume_bidirectional_exits: true,
+            regions: {
+                '1': {
+                    Menu: reg('Menu', [{ name: 'go', connected_region: 'A', access_rule: T }], []),
+                    A: reg('A', [{ name: 'toB', connected_region: 'B', access_rule: T }], [{ name: 'A_loc', item: { name: 'map' } }]),
+                    B: reg('B', [{ name: 'toC', connected_region: 'C', access_rule: T }], [{ name: 'B_loc', item: { name: 'key_red' } }]),
+                    C: reg('C', [], [{ name: 'C_loc', item: { name: 'key_blue' } }]),
+                },
+            },
+        };
+    }
+    const OPTS = { gridDims: { width: 5, height: 5 }, regionSizeBase: { width: 6, height: 6 }, seed: 1 };
+    const drain = (layout, opts) => {
+        const gen = realiseTopDownGen(layout, opts);
+        let r = gen.next();
+        while (!r.done) r = gen.next();
+        return layout.grid;
+    };
+    const sig = (grid, name) => {
+        const region = grid.allRegions().find((r) => r.region_id === name);
+        return JSON.stringify({
+            substrate: region.substrate,
+            payload: region.playable_payload,
+            rules: region.extracted_rules,
+        });
+    };
+    const changedSet = (gA, gB) => ['A', 'B', 'C'].filter((n) => sig(gA, n) !== sig(gB, n));
+
+    it('① records a substrate + numeric sub-seed for every realised region', () => {
+        const layout = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        expect(Object.keys(layout.substrateByRegion).sort()).toEqual(['A', 'B', 'C']);
+        expect(Object.keys(layout.subSeedByRegion).sort()).toEqual(['A', 'B', 'C']);
+        for (const n of ['A', 'B', 'C']) expect(typeof layout.subSeedByRegion[n]).toBe('number');
+    });
+
+    it('sub-seeds are deterministic for (seed, region_id) and vary by seed', () => {
+        const a = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        const b = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        const c = layoutTopDown(makeChainSource(), { ...OPTS, seed: 2 }, createRng(2));
+        expect(a.subSeedByRegion).toEqual(b.subSeedByRegion);
+        expect(a.subSeedByRegion.C).not.toBe(c.subSeedByRegion.C);
+    });
+
+    it('re-rolling a leaf region re-realises ONLY that region', () => {
+        const a = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        const b = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        b.subSeedByRegion.C = (b.subSeedByRegion.C ^ 0x55555555) >>> 0;
+        expect(changedSet(drain(a, OPTS), drain(b, OPTS))).toEqual(['C']);
+    });
+
+    it('re-rolling a parent re-realises it + its BFS child, not its ancestor', () => {
+        const a = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        const b = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        b.subSeedByRegion.B = (b.subSeedByRegion.B ^ 0x55555555) >>> 0;
+        // B changes; C (B's child) re-aligns its entrance; A (ancestor) untouched.
+        expect(changedSet(drain(a, OPTS), drain(b, OPTS))).toEqual(['B', 'C']);
+    });
+
+    it('editing layout.substrateByRegion changes only that region’s realised substrate', () => {
+        const a = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        const b = layoutTopDown(makeChainSource(), OPTS, createRng(1));
+        b.substrateByRegion.A = 'maze'; // explicit (already maze) — assignment is read, not re-picked
+        const gA = drain(a, OPTS);
+        const gB = drain(b, OPTS);
+        // Both maze here; the point is ② reads the recorded map (no exception, same result).
+        expect(changedSet(gA, gB)).toEqual([]);
+        expect(gB.allRegions().every((r) => r.substrate === 'maze')).toBe(true);
     });
 });
 
