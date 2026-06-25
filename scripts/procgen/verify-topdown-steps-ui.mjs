@@ -175,6 +175,87 @@ const shifted = after && (after[flip.to] ?? 0) === ((before?.[flip.to] ?? 0) + 1
 assert(shifted, `Phase C: realised mix honored the edit `
     + `(${flip.to}: ${before?.[flip.to] ?? 0}→${after?.[flip.to] ?? 0})`);
 
+// Phase D — layout editor reuse (Phase 5). After Phase C re-ran ④, the grid is
+// finalized+compiled, so the interactive map editor is live. Assert the radio
+// offers only the two Move modes (no per-region Edit in top-down), then perform a
+// Move Region edit via canvas clicks and confirm it invalidates ④ and recompiles.
+const mapModes = await page.evaluate(() => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    return [...root.querySelectorAll('.procgen-pipeline-map-modes input[type=radio]')].map((r) => r.value);
+});
+assert(mapModes.length === 2 && mapModes.includes('moveRegion') && mapModes.includes('moveExit')
+    && !mapModes.includes('edit'),
+`Phase D: map editor offers Move Region/Move Exits only (got [${mapModes}])`);
+
+// Select Move Region.
+const pickedMode = await page.evaluate(() => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    const r = [...root.querySelectorAll('.procgen-pipeline-map-modes input[type=radio]')]
+        .find((x) => x.value === 'moveRegion');
+    if (!r) return false;
+    r.click();
+    return true;
+});
+assert(pickedMode, 'Phase D: selected Move Region mode');
+await page.waitForTimeout(300);
+
+// Classify cells as occupied/empty by sampling each cell's centre pixel — in a
+// sparse grid the modal colour is the empty-cell background.
+const cells = await page.evaluate(() => {
+    const c = document.querySelector('.procgen-pipeline-canvas');
+    if (!c) return null;
+    const gw = +c.dataset.gridW; const gh = +c.dataset.gridH;
+    const cw = +c.dataset.cellW; const ch = +c.dataset.cellH;
+    const ctx = c.getContext('2d');
+    const colourAt = (gx, gy) => {
+        const px = ctx.getImageData(gx * cw + (cw >> 1), gy * ch + (ch >> 1), 1, 1).data;
+        return `${px[0]},${px[1]},${px[2]}`;
+    };
+    const grid = [];
+    const freq = {};
+    for (let gy = 0; gy < gh; gy++) {
+        for (let gx = 0; gx < gw; gx++) {
+            const col = colourAt(gx, gy);
+            grid.push({ gx, gy, col });
+            freq[col] = (freq[col] ?? 0) + 1;
+        }
+    }
+    const empty = Object.entries(freq).sort((a, b) => b[1] - a[1])[0][0];
+    return {
+        gw, gh, cw, ch,
+        occupied: grid.filter((g) => g.col !== empty).map(({ gx, gy }) => ({ gx, gy })),
+        empties: grid.filter((g) => g.col === empty).map(({ gx, gy }) => ({ gx, gy })),
+    };
+});
+assert(cells && cells.occupied.length >= 1 && cells.empties.length >= 1,
+    `Phase D: found occupied (${cells?.occupied.length}) + empty (${cells?.empties.length}) cells`);
+
+// Click an occupied cell, then an empty cell, to move the region there.
+const clickCell = (gx, gy) => page.evaluate(({ gx, gy }) => {
+    const c = document.querySelector('.procgen-pipeline-canvas');
+    const cw = +c.dataset.cellW; const ch = +c.dataset.cellH;
+    const rect = c.getBoundingClientRect();
+    const clientX = rect.left + (gx * cw + cw / 2) * (rect.width / c.width);
+    const clientY = rect.top + (gy * ch + ch / 2) * (rect.height / c.height);
+    c.dispatchEvent(new MouseEvent('click', { clientX, clientY, bubbles: true }));
+}, { gx, gy });
+
+const src = cells.occupied[0];
+const dst = cells.empties[0];
+await clickCell(src.gx, src.gy);
+await page.waitForTimeout(300);
+assert(/Move Region: selected/.test(await panelText()), 'Phase D: first click selected a region');
+await clickCell(dst.gx, dst.gy);
+await page.waitForTimeout(400);
+assert(/Moved the region|Swapped/.test(await panelText()), 'Phase D: second click moved the region');
+assert(!/driver top-down/.test(await panelText()), 'Phase D: layout edit invalidated ④');
+
+assert(await clickByText('Run ④ Compile'), 'Phase D: clicked "Run ④ Compile"');
+await page.waitForTimeout(2500);
+const afterMove = await panelText();
+assert(/driver top-down/.test(afterMove), 'Phase D: ④ recompiled after the move');
+assert(/\d+ regions/.test(afterMove), 'Phase D: compiled rules.json still reports a region count');
+
 const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
 assert(pageErrors.length === 0, `no page errors (${pageErrors.length})`);
 if (pageErrors.length) console.log(pageErrors.join('\n'));

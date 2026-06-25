@@ -2578,15 +2578,35 @@ export class ProcgenPipelineUI {
             section.appendChild(hint);
             return section;
         }
-        // Interactive map editing is only wired in sphere mode (the stepped
-        // pipeline owns the grid + node map).
-        const interactive = this.mode === 'sphereGrowth' && this._stepState?.tree;
-        if (interactive) section.appendChild(this._renderMapModeRadio());
+        // Interactive map editing: sphere mode (full editor) and top-down once
+        // the grid is FINALIZED (completed≥2). Editing the finalized grid lets a
+        // Move re-stitch via relayoutSphereGrid and re-run ④ only — the grid is
+        // already self-consistent, and ④ Compile reads only the grid (never the
+        // now-stale cellsByName), so no ③ re-run is needed. Top-down offers only
+        // the layout modes (Move Region / Move Exits); per-region Edit is phase 6.
+        const interactive = (this.mode === 'sphereGrowth' && this._stepState?.tree)
+            || (this.mode === 'topDown' && (this._tdState?.completed ?? -1) >= 2);
+        const tdLayoutEdit = this.mode === 'topDown';
+        const modes = tdLayoutEdit
+            ? [['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']]
+            : [['edit', 'Edit Region'], ['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']];
+        // A mode not offered in this view (e.g. the default 'edit' in top-down)
+        // falls back to the first offered mode.
+        if (interactive && !modes.some(([v]) => v === this._mapMode)) {
+            this._mapMode = modes[0][0];
+        }
+        if (interactive) section.appendChild(this._renderMapModeRadio(modes));
 
         const canvas = document.createElement('canvas');
         canvas.className = 'procgen-pipeline-canvas';
         canvas.width = grid.width * regionSize.width * TILE_PX;
         canvas.height = grid.height * regionSize.height * TILE_PX;
+        // Grid geometry as data-attrs so the in-app verify can map a cell index
+        // to a canvas click without re-deriving TILE_PX.
+        canvas.dataset.gridW = String(grid.width);
+        canvas.dataset.gridH = String(grid.height);
+        canvas.dataset.cellW = String(regionSize.width * TILE_PX);
+        canvas.dataset.cellH = String(regionSize.height * TILE_PX);
         this._drawGrid(canvas, grid, regionSize);
         if (interactive) {
             canvas.style.cursor = 'pointer';
@@ -2601,16 +2621,17 @@ export class ProcgenPipelineUI {
         return section;
     }
 
-    // Radio above the composite map selecting what a click does.
-    _renderMapModeRadio() {
+    // Radio above the composite map selecting what a click does. `modes` is a
+    // list of [value, label] pairs (sphere offers Edit/Move Region/Move Exits;
+    // top-down offers only the two Move modes — per-region Edit is phase 6).
+    _renderMapModeRadio(modes = [
+        ['edit', 'Edit Region'],
+        ['moveRegion', 'Move Region'],
+        ['moveExit', 'Move Exits'],
+    ]) {
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-map-modes';
         row.style.cssText = 'display:flex;gap:12px;margin:4px 0;font-size:12px;';
-        const modes = [
-            ['edit', 'Edit Region'],
-            ['moveRegion', 'Move Region'],
-            ['moveExit', 'Move Exits'],
-        ];
         for (const [value, label] of modes) {
             const lab = document.createElement('label');
             lab.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;';
@@ -2774,6 +2795,7 @@ export class ProcgenPipelineUI {
     // invalidate ④, and re-render. _invalidateFrom clears this.message, so the
     // confirmation is set AFTER it.
     _applyGridEdit(fn, okMsg) {
+        if (this.mode === 'topDown') { this._applyGridEditTD(fn, okMsg); return; }
         const st = this._stepState;
         const grid = st?.grow?.grid;
         if (!grid) return;
@@ -2786,6 +2808,35 @@ export class ProcgenPipelineUI {
             }
             this._invalidateFrom(4);
             this.message = `${okMsg} Re-run ④ Compile to recheck the oracle.`;
+            this.render();
+        } catch (err) {
+            this.message = `Edit failed: ${err.message}`;
+            this.render();
+        }
+    }
+
+    // Top-down layout edit. Operates on the FINALIZED grid (st.finalize.grid ===
+    // st.layout.grid), which the move helper re-stitches via relayoutSphereGrid
+    // (rebuilding teleporters + re-deriving forward targets), then invalidates ④
+    // ONLY (_invalidateFromTD(2) → completed=2, compile dropped, finalize kept).
+    // We deliberately do NOT re-run ③: finalizeTopDown reads the now-stale
+    // cellsByName and would double-apply back-exits, whereas ④ Compile reads only
+    // the grid. The start region may relocate on a move/swap, so re-point
+    // finalize.startCell at it (buildRulesJson reads from startCell).
+    _applyGridEditTD(fn, okMsg) {
+        const st = this._tdState;
+        const grid = st?.finalize?.grid ?? st?.layout?.grid;
+        if (!grid) return;
+        const startCell = st.finalize?.startCell ?? st.layout?.startCell;
+        const startId = startCell ? grid.getRegion(startCell)?.region_id : null;
+        try {
+            fn(grid);
+            if (startId && st.finalize) {
+                const sr = grid.allRegions().find((r) => r.region_id === startId);
+                if (sr) st.finalize.startCell = sr.cell;
+            }
+            this._invalidateFromTD(2);
+            this.message = `${okMsg} Re-run ④ Compile to recompile.`;
             this.render();
         } catch (err) {
             this.message = `Edit failed: ${err.message}`;
