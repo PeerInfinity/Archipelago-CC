@@ -3825,6 +3825,28 @@ export class ProcgenPipelineUI {
         this._invalidateFrom(0);
     }
 
+    // Top-down analog of _invalidateFrom: roll the TD pipeline back to stepIdx,
+    // dropping the outputs each LATER step produced (keeping stepIdx's own — the
+    // user edited it). Fields are keyed by the step that produces them:
+    // ① layout/rng, ② realise (+seconds), ③ finalize, ④ compile. A substrate
+    // edit at ① calls _invalidateFromTD(0): layout is kept, ②..④ are dropped, the
+    // user re-runs. Each region is sub-seed-decoupled (layout.subSeedByRegion), so
+    // re-running ② reproduces every UNedited region and only the edited one changes.
+    _invalidateFromTD(stepIdx) {
+        const st = this._tdState;
+        if (st && st.completed > stepIdx) {
+            st.completed = stepIdx;
+            if (stepIdx < 0) { st.layout = null; st.rng = null; }
+            if (stepIdx < 1) { st.realise = null; st.seconds = 0; }
+            if (stepIdx < 2) st.finalize = null;
+            if (stepIdx < 3) st.compile = null;
+            this.result = null;
+            this.message = '';
+            this.warning = '';
+        }
+        this.render();
+    }
+
     // --- Envelope interop (export / load & resume) ---
     //
     // The panel's _stepState and the sphereSteps runner envelope are the same
@@ -4155,8 +4177,8 @@ export class ProcgenPipelineUI {
         const st = this._tdState;
         if (!st) return wrap;
         if (st.completed >= 0 && st.layout) {
-            wrap.appendChild(this._renderStepBlock('① Layout — region placement',
-                this._renderTDLayoutFeedback(st.layout)));
+            wrap.appendChild(this._renderStepBlock('① Layout — region placement & substrate',
+                this._renderTDLayoutEditor(st.layout)));
         }
         if (st.completed >= 1 && st.realise) {
             wrap.appendChild(this._renderStepBlock('② Realise — substrate geometry per region',
@@ -4171,6 +4193,66 @@ export class ProcgenPipelineUI {
                 this._renderTDCompileFeedback(st.compile)));
         }
         return wrap;
+    }
+
+    // ① Layout block: the placement summary plus a per-region substrate editor.
+    // Editing a region's substrate writes layout.substrateByRegion[name] and
+    // invalidates ②..④ (the user re-runs to re-realise — only that region changes,
+    // since regions are sub-seed-decoupled). Mirrors the sphere ②b substrate
+    // dropdown idiom (_renderTopologyRow).
+    _renderTDLayoutEditor(layout) {
+        const wrap = document.createElement('div');
+        wrap.appendChild(this._renderTDLayoutFeedback(layout));
+        wrap.appendChild(this._renderTDSubstrateEditor(layout));
+        return wrap;
+    }
+
+    _renderTDSubstrateEditor(layout) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'margin-top:6px;';
+        const subOpts = Object.keys(this._activeSubstrateDict());
+        const heading = document.createElement('div');
+        heading.style.cssText = 'font-size:11px;color:#999;margin:0 6px 3px;';
+        heading.textContent = 'Substrate per region (an edit invalidates ②..④ — re-run to apply):';
+        wrap.appendChild(heading);
+        for (const { name } of layout.placementOrder ?? []) {
+            // Menu / source-less regions are skipped in ① (no substrate resolved),
+            // so only show rows for regions that actually realise.
+            if (!(name in (layout.substrateByRegion ?? {}))) continue;
+            wrap.appendChild(this._renderTDSubstrateRow(layout, name, subOpts));
+        }
+        return wrap;
+    }
+
+    _renderTDSubstrateRow(layout, name, subOpts) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;font-size:11px;';
+        const label = document.createElement('span');
+        label.style.cssText = 'font-family:monospace;flex:1;min-width:0;overflow:hidden;'
+            + 'text-overflow:ellipsis;white-space:nowrap;';
+        label.textContent = name;
+        label.title = name;
+        row.appendChild(label);
+
+        const cur = layout.substrateByRegion[name];
+        const sel = document.createElement('select');
+        sel.className = 'procgen-pipeline-td-substrate';
+        sel.dataset.region = name;
+        sel.title = `Substrate for ${name}`;
+        // A current substrate not in the active mix (shouldn't happen) still shows.
+        const opts = subOpts.includes(cur) ? subOpts : [...subOpts, cur];
+        for (const id of opts) {
+            const opt = document.createElement('option');
+            opt.value = id; opt.textContent = id;
+            if (id === cur) opt.selected = true;
+            sel.appendChild(opt);
+        }
+        sel.addEventListener('change', () => {
+            layout.substrateByRegion[name] = sel.value;
+            this._invalidateFromTD(0);
+        });
+        row.appendChild(sel);
+        return row;
     }
 
     _renderTDLayoutFeedback(layout) {
