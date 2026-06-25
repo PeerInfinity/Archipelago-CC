@@ -1525,6 +1525,84 @@ export function layoutTopDown(rulesJson, opts, rng) {
     };
 }
 
+// Build ②'s per-region realiser spec — the entrance (mirrored from the BFS
+// parent's realised exit), the forward exit specs (side hinted from grid
+// adjacency, the parent-reverse exit pinned to the entrance tile), and the
+// location specs — from the read-only source + the in-progress exit-side map.
+// Factored so the realise loop AND the Edit-▸ contract builder
+// (buildTopDownRegionContract) shape a region from the SAME specs.
+// `exitSidesByExit` is supplied by the caller: the realise loop passes its
+// in-progress map (the parent is realised earlier in BFS order, so its entry
+// exists by the time a child is built); the contract builder passes the
+// completed layout.exitSidesByExit.
+function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
+    const {
+        sourceRegions, cellsByName, grid, uniformSize, placementOrder,
+    } = layout;
+    const entry = placementOrder.find((p) => p.name === name);
+    const sourceRegion = sourceRegions[name];
+    const cell = entry?.cell;
+    const parent = entry?.parent ?? null;
+    const size = uniformSize;
+
+    let entrances = [];
+    if (parent) {
+        const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
+        if (parentExit) {
+            const entranceTile = mirrorTileAcrossSide(
+                parentExit.tile_position, parentExit.side, size,
+            );
+            entrances = [{ side: OPPOSITE_SIDE[parentExit.side], tile: entranceTile }];
+        }
+    }
+
+    // Forward exits from source. When the target region was placed at a
+    // geographic neighbor, hint the substrate to put the exit on that side so
+    // stitchGrid's geographic resolution matches. When the target is not
+    // adjacent (teleporter case), omit the side and the substrate clockwise-
+    // assigns. The exit pointing back to the BFS parent gets pinned to the
+    // entrance tile so the two regions' exit tiles line up across the shared wall.
+    const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
+        const targetName = srcExit.connected_region;
+        const targetCell = targetName ? cellsByName.get(targetName) : null;
+        let side = null;
+        if (targetCell) {
+            for (const s of SIDES) {
+                const neighbor = grid.neighborCell(cell, s);
+                if (neighbor && neighbor.gx === targetCell.gx && neighbor.gy === targetCell.gy) {
+                    side = s;
+                    break;
+                }
+            }
+        }
+        const isParentReverse = parent && targetName === parent.name && entrances.length > 0;
+        const tile = isParentReverse ? entrances[0].tile : null;
+        const resolvedSide = isParentReverse ? entrances[0].side : side;
+        return {
+            exit_id: srcExit.name,
+            exitName: srcExit.name,
+            target_region: targetName ?? null,
+            ...(resolvedSide ? { side: resolvedSide } : {}),
+            ...(tile ? { tile } : {}),
+            // Realised via placeFromRules / zone requirement. True_ rules are
+            // skipped by the substrate — no gate appears on the tile, but the
+            // exit is still emitted in extracted_rules.
+            ...(srcExit.access_rule ? { access_rule: srcExit.access_rule } : {}),
+        };
+    });
+
+    const locationSpecs = (sourceRegion.locations ?? []).map((srcLoc) => {
+        const locId = srcLoc.name ?? String(srcLoc.id ?? '');
+        return {
+            id: locId,
+            item: srcLoc.item?.name ?? null,
+            ...(srcLoc.access_rule ? { access_rule: srcLoc.access_rule } : {}),
+        };
+    }).filter((l) => l.id);
+
+    return { entrances, exitSpecs, locationSpecs };
+}
+
 // ----- ② Realise each region. A generator: it yields a { type:'region', … }
 // progress event per region (the stepped panel drains it with a setTimeout(0)
 // yield so the UI repaints), then realises that region's recorded substrate from
@@ -1548,6 +1626,10 @@ export function* realiseTopDownGen(layout, opts) {
         substrateByRegion = {}, subSeedByRegion = {}, seed: layoutSeed = 1,
     } = layout;
     const total = stats.regionsTotal;
+    // Re-runnable: a single-region re-roll (bump subSeedByRegion[name] +
+    // re-realise) re-runs ② over the same layout, so reset the per-run counter
+    // rather than accumulate across runs. No-op (0→0) on the first run.
+    stats.regionsBuilt = 0;
 
     // exitSidesByExit lets a child resolve its entrance tile from its
     // parent's exit position — populated as we go through phase 2 in
@@ -1562,66 +1644,12 @@ export function* realiseTopDownGen(layout, opts) {
         if (!sourceRegion) continue;
         const size = uniformSize;
 
-        let entrances = [];
-        if (parent) {
-            const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
-            if (parentExit) {
-                const entranceTile = mirrorTileAcrossSide(
-                    parentExit.tile_position, parentExit.side, size,
-                );
-                entrances = [{
-                    side: OPPOSITE_SIDE[parentExit.side],
-                    tile: entranceTile,
-                }];
-            }
-        }
-
-        // Forward exits from source. When the target region was
-        // placed at a geographic neighbor, hint the substrate to put
-        // the exit on that side so stitchGrid's geographic resolution
-        // matches. When the target is not adjacent (teleporter
-        // case), omit the side and the substrate clockwise-assigns.
-        // The exit pointing back to the BFS parent gets pinned to
-        // the entrance tile so the two regions' exit tiles line up
-        // across the shared wall.
-        const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
-            const targetName = srcExit.connected_region;
-            const targetCell = targetName ? cellsByName.get(targetName) : null;
-            let side = null;
-            if (targetCell) {
-                for (const s of SIDES) {
-                    const neighbor = grid.neighborCell(cell, s);
-                    if (neighbor && neighbor.gx === targetCell.gx && neighbor.gy === targetCell.gy) {
-                        side = s;
-                        break;
-                    }
-                }
-            }
-            const isParentReverse = parent && targetName === parent.name && entrances.length > 0;
-            const tile = isParentReverse ? entrances[0].tile : null;
-            const resolvedSide = isParentReverse ? entrances[0].side : side;
-            return {
-                exit_id: srcExit.name,
-                exitName: srcExit.name,
-                target_region: targetName ?? null,
-                ...(resolvedSide ? { side: resolvedSide } : {}),
-                ...(tile ? { tile } : {}),
-                // Realised via placeFromRules / zone requirement. True_
-                // rules are skipped by the substrate — no gate appears on
-                // the tile, but the exit is still emitted in
-                // extracted_rules.
-                ...(srcExit.access_rule ? { access_rule: srcExit.access_rule } : {}),
-            };
-        });
-
-        const locationSpecs = (sourceRegion.locations ?? []).map((srcLoc) => {
-            const locId = srcLoc.name ?? String(srcLoc.id ?? '');
-            return {
-                id: locId,
-                item: srcLoc.item?.name ?? null,
-                ...(srcLoc.access_rule ? { access_rule: srcLoc.access_rule } : {}),
-            };
-        }).filter((l) => l.id);
+        // Entrance + forward-exit + location specs (shared with the Edit-▸
+        // contract builder). exitSidesByExit is the in-progress BFS map — the
+        // parent's entry exists by now, so the child's entrance resolves.
+        const { entrances, exitSpecs, locationSpecs } = buildTopDownRegionSpec(
+            layout, name, exitSidesByExit,
+        );
 
         // Substrate + sub-seed were resolved per region in ①; ② just reads them
         // (editing layout.substrateByRegion + re-running ② is the substrate-edit
@@ -1721,7 +1749,11 @@ export function finalizeTopDown(layout) {
 
     // ----- Phase 3: teleporters and back-exits -----
     // Setting teleporter mappings was waiting on the substrate-assigned
-    // sides from phase 2; now we can stitch them in.
+    // sides from phase 2; now we can stitch them in. Reset the per-run counter
+    // so re-running ③ (after a re-roll / layout edit re-realises ②) re-derives
+    // it rather than accumulating; the back-exit add below is already guarded
+    // against duplication, and setTeleporter overwrites, so ③ is idempotent.
+    stats.teleportersPlaced = 0;
     for (const tele of teleporterEdges) {
         const fromCell = cellsByName.get(tele.from_name);
         const exitInfo = exitSidesByExit.get(`${tele.from_name}:${tele.exit_id}`);
@@ -4289,6 +4321,49 @@ export function buildRegionContract(substrateId, node, tree, grid, regionSize, r
     }
     const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize);
     return adapter.buildRegionContract({ specs, node, regionParams });
+}
+
+/**
+ * Build the per-region editor contract for a TOP-DOWN region (Edit ▸). The
+ * sphere path (buildRegionContract above) is node/tree-shaped; top-down specs come
+ * from the read-only source via buildTopDownRegionSpec. We map them to the editor
+ * contract with the SAME requirement extraction generateRegionZoneGen uses
+ * (extractItemRequirementFromRule), so the editor re-emits rules consistent with
+ * how ② realised the region. Bounce/zone substrates only (the editor is exit-side
+ * based). The entrance is geometry-only in top-down (the back-exit is added in ③),
+ * so — matching ② — it is NOT pushed as a forward exit spec; entranceSide rides
+ * along for the editor's back-portal geometry. Forward exits with no resolved side
+ * get a clockwise free-side assignment (mirrors generateRegionZoneGen).
+ */
+export function buildTopDownRegionContract(layout, regionId, { regionParams = {} } = {}) {
+    const region = layout.grid.getRegion(layout.cellsByName.get(regionId));
+    const substrateId = layout.substrateByRegion?.[regionId] ?? region?.substrate;
+    const adapter = substrateRegistry.get(substrateId);
+    if (!adapter) {
+        throw new Error(`buildTopDownRegionContract: unknown substrate '${substrateId}'`);
+    }
+    const { entrances, exitSpecs: rawExits, locationSpecs: rawLocs } = buildTopDownRegionSpec(
+        layout, regionId, layout.exitSidesByExit ?? new Map(),
+    );
+    const requirementOf = (g) => (g?.requirement !== undefined
+        ? { requirement: g.requirement, counts: g.counts ?? {} }
+        : extractItemRequirementFromRule(g?.access_rule));
+    const usedSides = new Set(rawExits.filter((e) => e.side).map((e) => e.side));
+    const freeSides = SIDES.filter((s) => !usedSides.has(s));
+    const exitSpecs = rawExits.map((e) => ({ side: e.side ?? freeSides.shift(), ...requirementOf(e) }));
+    const locationSpecs = rawLocs.map((loc) => ({
+        id: loc.id, item: loc.item ?? null, ...requirementOf(loc),
+    }));
+    const params = region?.playable_payload?.params ?? {};
+    const braid = (regionParams.bounceMode ?? params.bounceLevel?.mode ?? 'braid') === 'braid';
+    return {
+        exitSpecs,
+        locationSpecs,
+        physicsProfile: regionParams.physicsProfile ?? params.physics?.profile ?? 'experimental',
+        mode: braid ? 'braid' : 'column',
+        freeArrow: regionParams.bounceFreeArrow ?? params.freeArrow ?? 'right',
+        entranceSide: entrances[0]?.side ?? null,
+    };
 }
 
 /**

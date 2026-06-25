@@ -15,6 +15,7 @@ import {
     getRegionExits,
     reRollSphereRegion,
     buildRegionContract,
+    buildTopDownRegionContract,
     moveSphereRegion,
     swapSphereRegions,
     moveSphereExitSide,
@@ -2586,12 +2587,9 @@ export class ProcgenPipelineUI {
         // the layout modes (Move Region / Move Exits); per-region Edit is phase 6.
         const interactive = (this.mode === 'sphereGrowth' && this._stepState?.tree)
             || (this.mode === 'topDown' && (this._tdState?.completed ?? -1) >= 2);
-        const tdLayoutEdit = this.mode === 'topDown';
-        const modes = tdLayoutEdit
-            ? [['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']]
-            : [['edit', 'Edit Region'], ['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']];
-        // A mode not offered in this view (e.g. the default 'edit' in top-down)
-        // falls back to the first offered mode.
+        // Both modes now offer the full editor set (top-down Edit Region routes to
+        // _editRegionTD; Move Region / Move Exits to _applyGridEditTD).
+        const modes = [['edit', 'Edit Region'], ['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']];
         if (interactive && !modes.some(([v]) => v === this._mapMode)) {
             this._mapMode = modes[0][0];
         }
@@ -2668,7 +2666,10 @@ export class ProcgenPipelineUI {
     _onMapClick(canvas, grid, regionSize, evt) {
         if (this._mapMode === 'edit') {
             const region = this._gridRegionAt(canvas, grid, regionSize, evt);
-            if (region) this._editRegion(region);
+            if (region) {
+                if (this.mode === 'topDown') this._editRegionTD(region);
+                else this._editRegion(region);
+            }
             return;
         }
         const cell = this._cellCoordsAt(canvas, grid, regionSize, evt);
@@ -4233,7 +4234,7 @@ export class ProcgenPipelineUI {
         }
         if (st.completed >= 1 && st.realise) {
             wrap.appendChild(this._renderStepBlock('② Realise — substrate geometry per region',
-                this._renderTDRealiseFeedback(st)));
+                this._renderTDRealiseEditor(st)));
         }
         if (st.completed >= 2 && st.finalize) {
             wrap.appendChild(this._renderStepBlock('③ Finalize — teleporters, back-exits, entrances',
@@ -4315,6 +4316,138 @@ export class ProcgenPipelineUI {
             + `${layout.actualStartName} · ${teleEdges} teleporter edge${teleEdges === 1 ? '' : 's'} `
             + `· grid cell ${layout.uniformSize.width}×${layout.uniformSize.height}`;
         return wrap;
+    }
+
+    // ② Realise block: the substrate-mix summary plus a per-region row carrying
+    // [Edit ▸] (per-region geometry editor; bounce only) and [Re-roll 🎲]
+    // (re-realise on a bumped sub-seed). The composite grid below is also
+    // click-to-select in Edit Region mode (see _renderGrid / _onMapClick).
+    _renderTDRealiseEditor(st) {
+        const wrap = document.createElement('div');
+        wrap.appendChild(this._renderTDRealiseFeedback(st));
+        const grid = st.realise?.grid ?? st.layout?.grid;
+        const cellsByName = st.layout?.cellsByName;
+        for (const { name } of st.layout?.placementOrder ?? []) {
+            const cell = cellsByName?.get?.(name);
+            const region = cell ? grid?.getRegion?.(cell) : null;
+            if (!region) continue;
+            wrap.appendChild(this._renderTDRegionRow(name, region));
+        }
+        return wrap;
+    }
+
+    _renderTDRegionRow(name, region) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:6px;padding:1px 6px;font-size:11px;';
+        const label = document.createElement('span');
+        label.style.cssText = 'flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+        label.textContent = `${name} — ${region.substrate}`;
+        label.title = name;
+        row.appendChild(label);
+
+        const canEdit = !!getRegionEditor(region.substrate);
+        const edit = this._btn('Edit ▸', () => this._editRegionTD(region, name));
+        edit.title = canEdit
+            ? 'Open the per-region geometry editor'
+            : `No region editor for "${region.substrate}" yet`;
+        edit.disabled = !canEdit;
+        if (!canEdit) edit.style.opacity = '0.5';
+        row.appendChild(edit);
+
+        const reroll = this._btn('Re-roll 🎲', () => this._reRollRegionTD(name));
+        reroll.title = "Re-realise this region's geometry on a new sub-seed (keeps exits/locations)";
+        row.appendChild(reroll);
+        return row;
+    }
+
+    // Re-roll 🎲 (top-down) — bump this region's realisation sub-seed and re-run
+    // from ② Realise. The 1b decoupling means only this region (and its BFS
+    // descendants, whose entrances re-align to its moved exit tiles) changes;
+    // siblings / ancestors / other branches stay byte-identical. Works for maze
+    // AND bounce: ② re-realises the whole grid and ③ re-stitches, so the
+    // exit-tile-adjacency concern that makes sphere's re-roll bounce-only doesn't
+    // apply here.
+    _reRollRegionTD(name) {
+        const layout = this._tdState?.layout;
+        if (!layout?.subSeedByRegion || !(name in layout.subSeedByRegion)) {
+            this.message = 'Re-roll unavailable — run ① Layout first.';
+            this.warning = '';
+            this.render();
+            return;
+        }
+        const counts = (this._tdRerollCounts ??= new Map());
+        const n = (counts.get(name) ?? 0) + 1;
+        counts.set(name, n);
+        layout.subSeedByRegion[name] = (layout.subSeedByRegion[name]
+            ^ (0x9e3779b9 + n * 0x55555555)) >>> 0;
+        // _invalidateFromTD clears this.message, so set it AFTER it.
+        this._invalidateFromTD(0);
+        this.message = `Re-rolled "${name}" (sub-seed bump #${n}). `
+            + 'Re-run from ② Realise to apply — only this region + its descendants change.';
+        this.render();
+    }
+
+    // Edit ▸ (top-down) — open the per-region geometry editor for a bounce/zone
+    // region. The contract is built from the read-only source via the engine's
+    // buildTopDownRegionContract (the sphere _editRegion is node/tree-shaped).
+    // onSave splices the edited region into the grid and re-runs ③..④ (the
+    // back-exit/stitch/entrance passes read the realised exits; ③ is idempotent).
+    _editRegionTD(region, name = null) {
+        const open = getRegionEditor(region?.substrate);
+        if (!open) {
+            this.message = `No region editor for "${region?.substrate}" yet.`;
+            this.warning = '';
+            this.render();
+            return;
+        }
+        const st = this._tdState;
+        const layout = st?.layout;
+        const regionId = name ?? region?.region_id;
+        if (!layout || !regionId) {
+            this.message = 'Edit unavailable — run ② Realise first.';
+            this.warning = '';
+            this.render();
+            return;
+        }
+        const regionParams = st.opts?.regionParams ?? {};
+        let contract;
+        try {
+            contract = buildTopDownRegionContract(layout, regionId, { regionParams });
+        } catch (err) {
+            this.message = `Edit failed: ${err.message}`;
+            this.warning = '';
+            this.render();
+            return;
+        }
+        // The editor's generation-settings + item picker (sphere _buildRegionContract
+        // attaches these too): bounce params, the source's item pool, and the
+        // items the player is assumed to hold (top-down: the granted starting set).
+        contract.regionParams = regionParams;
+        contract.itemPool = Object.keys(
+            st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {},
+        );
+        contract.expectedItems = [...(st.compileIn?.startingItems ?? [])];
+        open({
+            region,
+            contract,
+            onSave: (editedRegion) => this._onRegionEditedTD(regionId, editedRegion),
+        });
+    }
+
+    // Write-back from a top-down region editor save: splice the edited region into
+    // the live grid and re-run ③..④ (_invalidateFromTD(1) → keep ②, drop ③④). The
+    // edited region carries fresh forward exits with no back-exit; ③ re-adds the
+    // back-exit (guarded against duplication) and re-stitches.
+    _onRegionEditedTD(regionId, editedRegion) {
+        const layout = this._tdState?.layout;
+        const grid = layout?.grid;
+        const cell = layout?.cellsByName?.get?.(regionId);
+        if (!grid || !cell || !editedRegion) return;
+        grid.replaceRegion(cell, editedRegion);
+        // _invalidateFromTD clears this.message, so set it AFTER it.
+        this._invalidateFromTD(1);
+        this.message = `Saved edits to "${regionId}". Re-run from ③ Finalize to apply.`;
+        this.render();
     }
 
     _renderTDRealiseFeedback(st) {

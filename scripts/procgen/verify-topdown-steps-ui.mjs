@@ -82,6 +82,16 @@ const clickByText = (txt) => page.evaluate((t) => {
     return false;
 }, txt);
 
+// Click the primary run button regardless of its label ("Generate" when idle /
+// complete, "Run all (finish)" mid-pipeline).
+const clickPrimary = () => page.evaluate(() => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    const b = root.querySelector('.procgen-pipeline-btn-primary');
+    if (!b || b.disabled) return false;
+    b.click();
+    return true;
+});
+
 const failures = [];
 const assert = (cond, msg) => { if (!cond) failures.push(msg); console.log(`${cond ? '✅' : '❌'} ${msg}`); };
 
@@ -183,9 +193,9 @@ const mapModes = await page.evaluate(() => {
     const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
     return [...root.querySelectorAll('.procgen-pipeline-map-modes input[type=radio]')].map((r) => r.value);
 });
-assert(mapModes.length === 2 && mapModes.includes('moveRegion') && mapModes.includes('moveExit')
-    && !mapModes.includes('edit'),
-`Phase D: map editor offers Move Region/Move Exits only (got [${mapModes}])`);
+assert(mapModes.length === 3 && mapModes.includes('moveRegion') && mapModes.includes('moveExit')
+    && mapModes.includes('edit'),
+`Phase D: map editor offers Edit/Move Region/Move Exits (got [${mapModes}])`);
 
 // Select Move Region.
 const pickedMode = await page.evaluate(() => {
@@ -255,6 +265,78 @@ await page.waitForTimeout(2500);
 const afterMove = await panelText();
 assert(/driver top-down/.test(afterMove), 'Phase D: ④ recompiled after the move');
 assert(/\d+ regions/.test(afterMove), 'Phase D: compiled rules.json still reports a region count');
+
+// Phases E/F run on a FRESH pipeline (Phase D left cellsByName intentionally
+// stale after a layout move — Phase 5's design), so reset + regenerate first.
+const findBtn = (txt, enabledOnly = false) => page.evaluate(({ txt, enabledOnly }) => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    const b = [...root.querySelectorAll('button')]
+        .find((x) => x.textContent.trim() === txt && (!enabledOnly || !x.disabled));
+    if (!b) return false;
+    b.click();
+    return true;
+}, { txt, enabledOnly });
+
+assert(await clickByText('Reset'), 'Phases E/F: reset to a clean pipeline');
+await page.waitForTimeout(400);
+assert(await clickPrimary(), 'Phases E/F: regenerated a fresh pipeline');
+await page.waitForTimeout(6000);
+assert(/driver top-down/.test(await panelText()), 'Phases E/F: fresh pipeline compiled');
+
+// Phase E — per-region Re-roll 🎲 (Phase 6a). Bump a region's sub-seed → re-run.
+assert(await findBtn('Re-roll 🎲'), 'Phase E: clicked a Re-roll 🎲 button');
+await page.waitForTimeout(400);
+assert(/Re-rolled/.test(await panelText()), 'Phase E: re-roll message appeared');
+assert(!/driver top-down/.test(await panelText()), 'Phase E: re-roll invalidated ④');
+assert(await clickPrimary(), 'Phase E: ran to completion after re-roll');
+await page.waitForTimeout(6000);
+const afterReroll = await panelText();
+assert(/driver top-down/.test(afterReroll), 'Phase E: ④ recompiled after re-roll');
+assert(/\d+ regions/.test(afterReroll), 'Phase E: compiled rules.json still reports a region count');
+
+// Phase F — per-region Edit ▸ (Phase 6b). Needs a bounce region (only bounce has
+// a region editor). If none was assigned, force one via the ① substrate dropdown.
+let hasBounceEdit = await page.evaluate(() => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    return [...root.querySelectorAll('button')].some((b) => b.textContent.trim() === 'Edit ▸' && !b.disabled);
+});
+if (!hasBounceEdit) {
+    const forced = await page.evaluate(() => {
+        const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+        const sel = [...root.querySelectorAll('select.procgen-pipeline-td-substrate')]
+            .find((s) => [...s.options].some((o) => o.value === 'bounce'));
+        if (!sel) return false;
+        sel.value = 'bounce';
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        return true;
+    });
+    assert(forced, 'Phase F: forced a region to bounce via the ① dropdown');
+    await page.waitForTimeout(400);
+    assert(await clickPrimary(), 'Phase F: regenerated with the forced bounce region');
+    await page.waitForTimeout(6000);
+    hasBounceEdit = true;
+}
+
+assert(await findBtn('Edit ▸', true), 'Phase F: clicked an enabled Edit ▸ (bounce region)');
+await page.waitForTimeout(800);
+const editorOpened = await page.evaluate(() =>
+    !!document.querySelector('.bounce-region-editor-panel'));
+assert(editorOpened, 'Phase F: bounce region editor opened (contract built OK)');
+
+const savedF = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+        .find((e) => e.textContent.trim() === 'Save');
+    if (!b) return false;
+    b.click();
+    return true;
+});
+assert(savedF, 'Phase F: clicked Save in the editor');
+await page.waitForTimeout(600);
+assert(/Saved edits/.test(await panelText()), 'Phase F: editor save wrote back to the pipeline');
+assert(await clickPrimary(), 'Phase F: re-run ③④ after the edit');
+await page.waitForTimeout(6000);
+const afterEdit = await panelText();
+assert(/driver top-down/.test(afterEdit), 'Phase F: ④ recompiled after the region edit');
 
 const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
 assert(pageErrors.length === 0, `no page errors (${pageErrors.length})`);
