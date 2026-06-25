@@ -252,69 +252,102 @@ def topological_sort_proof(ordered_steps: List[str], dependencies: Dict[str, Set
     # Return sorted order if successful, otherwise original order
     return result if len(result) == len(ordered_steps) else ordered_steps
 
-def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[str, List[str]], Dict[str, str]]:
+def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[str, List[str]], Dict[str, str], Dict[str, str]]:
     """
     Extract proof steps and dependencies using metamath-py's proof verification.
+
+    Each distinct *instantiated statement* (a proof-step conclusion) becomes its
+    own node — NOT each theorem label. A Metamath proof applies the same lemma
+    (e.g. ``expd``) at many tree positions with different instantiations;
+    collapsing them by label merges unrelated parent/child links and can
+    fabricate dependency cycles (e.g. ``expd`` <-> ``3impib`` in conngrv2edg),
+    which leaves regions unreachable and makes the world ungeneratable. Keying by
+    conclusion keeps the proof the DAG it actually is.
+
+    Node keys are the theorem label, disambiguated with a ``#N`` suffix only when
+    the same label proves more than one distinct statement. For the common case
+    (each label used once) the keys are exactly the labels, so statement
+    numbering is unchanged from the historical per-label behaviour.
 
     Args:
         db: Metamath database
         theorem_name: Name of the theorem to analyze
 
     Returns:
-        Tuple of (ordered list of proof steps, dependency dictionary, conclusions dictionary)
-        The conclusions dict maps label -> instantiated expression string from proof verification.
+        Tuple of (ordered node keys, deps dict, labels dict, conclusions dict):
+          - ordered node keys in proof-tree discovery order
+          - node key -> list of dependency node keys
+          - node key -> theorem label (for display; may repeat across keys)
+          - node key -> instantiated expression string
     """
     if theorem_name not in db.rules:
         print(f"Warning: Theorem {theorem_name} not found in database")
-        return [], {}, {}
+        return [], {}, {}, {}
 
     rule = db.rules[theorem_name]
 
+    def is_real(step):
+        # Skip syntax-building steps (class 'c...' / wff 'w...' constructors);
+        # only theorem applications become statements.
+        r = getattr(step, 'rule', None)
+        if not (r and hasattr(r, 'consequent')):
+            return False
+        lab = r.consequent.label
+        return not lab.startswith('c') and not lab.startswith('w')
+
     try:
-        # Verify the proof and get the proof tree
+        # Verify the proof and get the proof tree.
         root_step, proof_steps_dict = verify_proof(db, rule)
 
-        # Extract all unique steps from the proof tree
+        # all_steps() is already unique per conclusion.
         all_steps = root_step.all_steps()
 
-        # Build dependency graph
-        dependencies = {}
-        conclusions = {}
-        ordered_steps = []
-        seen = set()
+        # Pass 1: assign a unique string key to each distinct conclusion. The key
+        # is the theorem label, suffixed only when a label proves >1 statement.
+        concl_to_key = {}
+        label_counts = {}
+        ordered_keys = []
+        node_labels = {}
+        node_conclusions = {}
 
         for step in all_steps:
-            if step.rule and hasattr(step.rule, 'consequent'):
-                label = step.rule.consequent.label
+            if not is_real(step):
+                continue
+            concl = step.conclusion
+            if concl in concl_to_key:
+                continue
+            label = step.rule.consequent.label
+            n = label_counts.get(label, 0) + 1
+            label_counts[label] = n
+            key = label if n == 1 else f"{label}#{n}"
+            concl_to_key[concl] = key
+            ordered_keys.append(key)
+            node_labels[key] = label
+            if concl:
+                node_conclusions[key] = ' '.join(concl)
 
-                # Skip constants, hypotheses, and duplicate entries
-                if (not label.startswith('c') and
-                    not label.startswith('w') and
-                    label not in seen):
+        # Pass 2: dependencies are the keys of each step's real children. All keys
+        # are assigned in pass 1, so child lookups always resolve.
+        node_deps = {}
+        for step in all_steps:
+            if not is_real(step):
+                continue
+            key = concl_to_key[step.conclusion]
+            if key in node_deps:
+                continue
+            deps = []
+            for child in step.dependencies.values():
+                if is_real(child):
+                    child_key = concl_to_key.get(child.conclusion)
+                    if child_key is not None:
+                        deps.append(child_key)
+            node_deps[key] = deps
 
-                    seen.add(label)
-                    ordered_steps.append(label)
-
-                    # Extract dependencies for this step (preserving duplicates)
-                    deps = []
-                    for dep_label, dep_step in step.dependencies.items():
-                        if hasattr(dep_step.rule, 'consequent'):
-                            dep_name = dep_step.rule.consequent.label
-                            # Only include non-constant, non-hypothesis dependencies
-                            if not dep_name.startswith('c') and not dep_name.startswith('w'):
-                                deps.append(dep_name)
-
-                    dependencies[label] = deps
-
-                    # Capture instantiated expression from proof verification
-                    if hasattr(step, 'conclusion') and step.conclusion:
-                        conclusions[label] = ' '.join(step.conclusion)
-
-        return ordered_steps, dependencies, conclusions
+        return ordered_keys, node_deps, node_labels, node_conclusions
 
     except Exception as e:
         print(f"Error verifying proof for {theorem_name}: {e}")
-        return [], {}, {}
+        return [], {}, {}, {}
 
 def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str] = None) -> ProofStructure:
     """
@@ -323,10 +356,12 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
     """
     structure = ProofStructure()
 
-    # Extract dependencies using proof verification
-    ordered_steps, dependencies, conclusions = extract_proof_dependencies(db, theorem_name)
+    # Extract dependencies using proof verification. Nodes are keyed by
+    # conclusion (disambiguated label), not raw label — see
+    # extract_proof_dependencies for why.
+    ordered_keys, node_deps, node_labels, node_conclusions = extract_proof_dependencies(db, theorem_name)
 
-    if not ordered_steps:
+    if not ordered_keys:
         # Fallback: create a single-step proof if extraction failed
         if theorem_name in db.statements:
             stmt = db.statements[theorem_name]
@@ -345,25 +380,21 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
             ))
         return structure
 
-    # Apply topological sort for more logical ordering
-    ordered_steps = topological_sort_proof(ordered_steps, dependencies)
+    # Apply topological sort for more logical ordering. Keys are (disambiguated)
+    # label strings, so tie-breaking matches the historical per-label ordering
+    # for proofs without repeated lemmas.
+    ordered_keys = topological_sort_proof(
+        ordered_keys, {k: set(node_deps.get(k, [])) for k in ordered_keys}
+    )
 
-    # Convert to ProofStructure format
-    label_to_index = {}
-
-    for i, label in enumerate(ordered_steps, 1):
-        # Get the expression for this label
-        if label in db.statements:
-            stmt = db.statements[label]
-            expression = ' '.join(stmt.tokens)
-        else:
-            expression = label  # Fallback
-
-        label_to_index[label] = i
+    # Assign a 1-based index to each node.
+    key_to_index = {key: i for i, key in enumerate(ordered_keys, 1)}
 
     # Add statements with proper index-based dependencies
-    for i, label in enumerate(ordered_steps, 1):
-        # Get the expression
+    for i, key in enumerate(ordered_keys, 1):
+        label = node_labels.get(key, key)
+
+        # Get the expression for this statement's theorem label
         if label in db.statements:
             stmt = db.statements[label]
             expression = ' '.join(stmt.tokens)
@@ -378,12 +409,12 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
             # If no description, use label and expression
             full_text = f"{label}: {expression}"
 
-        # Convert label dependencies to index dependencies
-        label_deps = dependencies.get(label, [])
-        index_deps = [label_to_index[dep] for dep in label_deps if dep in label_to_index]
+        # Convert node-key dependencies to index dependencies
+        key_deps = node_deps.get(key, [])
+        index_deps = [key_to_index[dep] for dep in key_deps if dep in key_to_index]
 
         # Get instantiated expression from proof verification (if available)
-        inst_expr = conclusions.get(label)
+        inst_expr = node_conclusions.get(key)
 
         structure.add_statement(ProofStatement(
             index=i,

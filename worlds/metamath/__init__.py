@@ -46,8 +46,18 @@ class MetamathWorld(World):
 
     def _build_name_maps(self):
         """Build name mappings from proof structure."""
+        # Entrance names are built from these labels and must be unique. Since a
+        # single theorem label can now back multiple statements (the same lemma
+        # applied to different instantiations), disambiguate repeats by appending
+        # the statement index. Proofs with unique labels are unaffected.
+        label_counts: Dict[str, int] = {}
         for index, stmt in self.proof_structure.statements.items():
-            self._entrance_labels[index] = stmt.label if stmt.label else f"Statement {index}"
+            base = stmt.label if stmt.label else f"Statement {index}"
+            label_counts[base] = label_counts.get(base, 0) + 1
+            if label_counts[base] == 1:
+                self._entrance_labels[index] = base
+            else:
+                self._entrance_labels[index] = f"{base} ({index})"
         # Build reverse lookup from generic region names
         for i in range(1, self.num_statements + 1):
             self._region_name_to_index[f"Prove Statement {i}"] = i
