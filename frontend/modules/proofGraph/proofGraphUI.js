@@ -14,6 +14,7 @@ import {
   ensureStateLoaded,
   dispatchLocationCheck,
 } from '../proofShared/proofUIHelpers.js';
+import { renderMetamathExpression } from '../proofShared/metamathRender.js';
 import proofGraphState from './proofGraphStateSingleton.js';
 
 // Module-level references set by index.js
@@ -347,7 +348,7 @@ export class ProofGraphUI {
         data: {
           id: String(index),
           label: step.label,
-          expression: step.expression,
+          expression: renderMetamathExpression(step.expression),
           depCount: step.dependencies.length,
           fullText: step.fullText || '',
         },
@@ -747,7 +748,7 @@ export class ProofGraphUI {
         data: {
           id: String(index),
           label: step.label,
-          expression: step.expression,
+          expression: renderMetamathExpression(step.expression),
           depCount: step.dependencies.length,
           fullText: step.fullText || '',
         },

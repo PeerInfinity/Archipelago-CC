@@ -34,6 +34,7 @@ import {
   ensureStateLoaded,
   dispatchLocationCheck,
 } from '../proofShared/proofUIHelpers.js';
+import { renderMetamathExpression } from '../proofShared/metamathRender.js';
 import proofQueueState from './proofQueueStateSingleton.js';
 
 // Module-level references set by index.js
@@ -767,7 +768,7 @@ export class ProofQueueUI {
     const goalStep = proofQueueState.steps.get(proofQueueState.goalStepIndex);
     if (goalStep) {
       const name = proofQueueState.theoremName || goalStep.label;
-      const goalExpr = goalStep.instantiatedExpression || goalStep.expression;
+      const goalExpr = renderMetamathExpression(goalStep.instantiatedExpression || goalStep.expression);
       this._theoremHeaderEl.innerHTML = '';
       if (isGraph) {
         // Graph mode: plain title without "Theorem" prefix or link
@@ -852,14 +853,14 @@ export class ProofQueueUI {
       // Expression column (prefer instantiated expression for concrete values)
       const tdExpr = document.createElement('td');
       tdExpr.className = 'pq-col-expr';
-      tdExpr.textContent = step.instantiatedExpression || step.expression;
+      tdExpr.textContent = renderMetamathExpression(step.instantiatedExpression || step.expression);
       if (showDetails) {
         tdExpr.style.whiteSpace = 'normal';
         // Show non-instantiated expression when it differs from instantiated
         if (step.instantiatedExpression && step.expression !== step.instantiatedExpression) {
           const generic = document.createElement('div');
           generic.className = 'pq-generic-expr';
-          generic.textContent = step.expression;
+          generic.textContent = renderMetamathExpression(step.expression);
           tdExpr.appendChild(generic);
         }
         if (step.fullText) {
@@ -1017,7 +1018,7 @@ export class ProofQueueUI {
       // Expression column (generic in working area)
       const tdExpr = document.createElement('td');
       tdExpr.className = 'pq-col-expr';
-      tdExpr.textContent = step.expression;
+      tdExpr.textContent = renderMetamathExpression(step.expression);
       if (showDetails && step.fullText) {
         const detail = document.createElement('div');
         detail.className = 'pq-detail-text';
