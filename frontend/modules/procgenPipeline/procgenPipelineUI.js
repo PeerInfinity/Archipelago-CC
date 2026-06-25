@@ -2374,12 +2374,14 @@ export class ProcgenPipelineUI {
     }
 
     // ③ Build regions editor — launcher: the stats line, then one row per
-    // realised region (`#i wN <substrate>`) with [Edit ▸] (opens the
+    // realised region (`#i wN`) with a substrate dropdown (manual per-region
+    // override, any sphere-capable substrate — re-runs ③), [Edit ▸] (opens the
     // substrate-appropriate per-region editor) and [Re-roll 🎲] (regenerates
     // that one region's interior on a bumped seed, keeping its exits/
-    // locations/rules fixed). Both write back into st.grow.grid and invalidate
-    // ④ only (geometry changes don't touch the logical tree). The composite
-    // grid (rendered below after ④) is also click-to-select; see _renderGrid.
+    // locations/rules fixed). Edit/Re-roll write back into st.grow.grid and
+    // invalidate ④ only (geometry changes don't touch the logical tree); the
+    // substrate override invalidates ③ (a full re-realise). The composite grid
+    // (rendered below after ④) is also click-to-select; see _renderGrid.
     _renderRegionsEditor(grow) {
         const wrap = document.createElement('div');
         wrap.appendChild(this._renderRegionsFeedback(grow.stats, this._stepState?.seconds));
@@ -2406,10 +2408,28 @@ export class ProcgenPipelineUI {
         const label = document.createElement('span');
         label.style.cssText = 'flex:1;';
         const itemCount = node.items?.length ?? 0;
-        label.textContent = `#${node.index} w${node.wave} ${region.substrate}`
+        label.textContent = `#${node.index} w${node.wave}`
             + `${node.isFiller ? ' (filler)' : ''}`
             + `${itemCount ? ` — ${itemCount} item(s)` : ''}`;
         row.appendChild(label);
+
+        // Per-region substrate override. Unlike the ②b topology dropdown (scoped
+        // to the quota mix), this offers ANY sphere-capable substrate so a single
+        // region can use one that isn't in the quotas. Changing it re-runs ③.
+        const subSel = document.createElement('select');
+        subSel.className = 'procgen-pipeline-region-substrate';
+        subSel.dataset.index = String(node.index);
+        subSel.title = 'Substrate for this region (manual override — not limited by the quota mix)';
+        const subOpts = this._sphereCapableSubstrates();
+        const list = subOpts.includes(node.substrate) ? subOpts : [...subOpts, node.substrate];
+        for (const id of list) {
+            const opt = document.createElement('option');
+            opt.value = id; opt.textContent = id;
+            if (id === node.substrate) opt.selected = true;
+            subSel.appendChild(opt);
+        }
+        subSel.addEventListener('change', () => this._changeRegionSubstrate(node, subSel.value));
+        row.appendChild(subSel);
 
         const edit = this._btn('Edit ▸', () => this._editRegion(region, node));
         edit.title = 'Open the per-region geometry editor';
@@ -2419,6 +2439,36 @@ export class ProcgenPipelineUI {
         reroll.title = "Regenerate this region's interior on a new seed (keeps exits/locations)";
         row.appendChild(reroll);
         return row;
+    }
+
+    // Registered substrates sphere growth can realise: procedural
+    // (generateRegionCore) or spec-targeted zone (generateZoneForSpecs[Gen]). NOT
+    // limited to the quota mix, so a per-region override can pick any usable
+    // substrate. Excludes zone-count-only (jta) and opaque (flash) substrates,
+    // which the grow loop rejects.
+    _sphereCapableSubstrates() {
+        return substrateRegistry.getAll()
+            .filter((s) => typeof s.generateRegionCore === 'function'
+                || typeof s.generateZoneForSpecs === 'function'
+                || typeof s.generateZoneForSpecsGen === 'function')
+            .map((s) => s.id);
+    }
+
+    // ③ per-region substrate override. The substrate lives on the tree node
+    // (st.tree.nodes === st.nodes) and doesn't affect topology/items, so re-run
+    // ③ Build (+ ④) only — keeping the tree + rng snapshot (_invalidateFrom(3)).
+    // A FULL ③ re-run (not an in-place swap) is what a substrate change needs: it
+    // re-realises every region and re-runs the whole-grid stitch/wall pass once at
+    // the end, so a to/from-maze change — whose exit tile positions feed adjacency
+    // stitching — stays consistent (the reason maze isn't safe to re-roll alone).
+    _changeRegionSubstrate(node, value) {
+        if (!node || value === node.substrate) return;
+        node.substrate = value;
+        // _invalidateFrom clears this.message, so set it AFTER and re-render.
+        this._invalidateFrom(3);
+        this.message = `Region #${node.index} substrate → ${value}. `
+            + 'Re-run ③ Build regions to apply.';
+        this.render();
     }
 
     // Look up the tree node backing a grid region (by region_id), so a launch

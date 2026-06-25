@@ -493,6 +493,42 @@ const switched = await page.evaluate(() => {
 if (!switched) throw new Error('I: could not switch map mode to moveRegion');
 console.log('PHASE I OK: composite-map mode radio (Edit/Move Region/Move Exits) renders + switches');
 
+// ── Phase J: ③ per-region substrate override (not limited by the quota mix) ──
+// Quotas are bounce-only (substrateQuotas { bounce: 99 }), so the ③ override
+// dropdown must still offer 'maze' (a sphere-capable substrate not in the mix).
+await stepToCompiled();
+const subDropdowns = await page.evaluate(() => {
+    const sels = [...document.querySelectorAll('.procgen-pipeline-region-substrate')];
+    return {
+        count: sels.length,
+        firstOpts: sels[0] ? [...sels[0].options].map((o) => o.value) : [],
+    };
+});
+if (subDropdowns.count === 0) throw new Error('J: no ③ region substrate dropdown found');
+if (!subDropdowns.firstOpts.includes('maze')) {
+    throw new Error(`J: dropdown is quota-limited — missing 'maze' (got ${subDropdowns.firstOpts.join(',')})`);
+}
+console.log(`PHASE J: ③ substrate dropdowns present (${subDropdowns.count}); `
+    + `offer non-quota substrates [${subDropdowns.firstOpts.join(',')}]`);
+
+// Override a region to maze (not in the quota mix), re-run, confirm oracle holds.
+await page.evaluate(() => {
+    const sel = document.querySelector('.procgen-pipeline-region-substrate');
+    sel.value = 'maze';
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+});
+await page.waitForTimeout(400);
+if (!(await message()).includes('substrate → maze')) {
+    throw new Error(`J: substrate-change message did not appear: ${await message()}`);
+}
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(2500);
+const jMsg = await message();
+if (!jMsg.includes('Sphere plan realised')) {
+    throw new Error(`J: oracle failed after substrate override + re-run: ${jMsg}`);
+}
+console.log('PHASE J OK: per-region substrate override (bounce→maze) re-realised + kept the oracle');
+
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
