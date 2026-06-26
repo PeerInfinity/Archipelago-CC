@@ -76,7 +76,7 @@
     }
   },
   "canonical_placements": {
-    "1": []
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -193,12 +193,11 @@
     "defaultLocationCost": 10
   },
   "world": {
-    "1": {}
+    "1": {
+      "game": "JtA (mixed substrate test)"
+    }
   },
-  "exporter": {
-    "name": "hand-authored",
-    "version": "1.0.0"
-  },
+  "exporter": {},
   "game_info": {},
   "helpers": {}
 }
