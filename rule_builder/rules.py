@@ -621,7 +621,7 @@ class And(NestedRule[TWorld], game="Archipelago"):
                 children_to_process.extend(child.children)
                 continue
 
-            if isinstance(child, Has.Resolved):
+            if isinstance(child, Has.Resolved) and isinstance(child.count, int):
                 if child.item_name not in items or items[child.item_name] < child.count:
                     items[child.item_name] = child.count
             elif isinstance(child, HasAll.Resolved):
@@ -709,7 +709,7 @@ class Or(NestedRule[TWorld], game="Archipelago"):
                 children_to_process.extend(child.children)
                 continue
 
-            if isinstance(child, Has.Resolved):
+            if isinstance(child, Has.Resolved) and isinstance(child.count, int):
                 if child.item_name not in items or child.count < items[child.item_name]:
                     items[child.item_name] = child.count
             elif isinstance(child, HasAny.Resolved):
@@ -876,38 +876,67 @@ class Filtered(WrapperRule[TWorld], game="Archipelago"):
 
 @dataclasses.dataclass()
 class Has(Rule[TWorld], game="Archipelago"):
-    """A rule that checks if the player has at least `count` of a given item"""
+    """A rule that checks if the player has at least `count` of a given item.
+
+    `count` may be a static int, a FieldResolver (official dynamic value), or a
+    Rule that evaluates to a number at runtime (fork dynamic counts, e.g.
+    ``Has("x", count=CountItem("y"))``).
+    """
 
     item_name: str | FieldResolver
     """The item to check for"""
 
-    count: int | FieldResolver = 1
+    count: "int | FieldResolver | Rule[TWorld]" = 1
     """The count the player is required to have"""
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Fork: a Rule-valued count is resolved like any nested rule;
+        # ints/FieldResolvers go through the official resolve_field path.
+        if isinstance(self.count, Rule):
+            resolved_count: "int | Rule.Resolved" = self.count._instantiate(world)
+        else:
+            resolved_count = resolve_field(self.count, world, int)
         return self.Resolved(
             resolve_field(self.item_name, world, str),
-            count=resolve_field(self.count, world, int),
+            count=resolved_count,
             player=world.player,
             caching_enabled=getattr(world, "rule_caching_enabled", False),
         )
 
     @override
     def __str__(self) -> str:
-        count = f", count={self.count}" if isinstance(self.count, FieldResolver) or self.count > 1 else ""
+        if isinstance(self.count, (Rule, FieldResolver)) or self.count > 1:
+            count = f", count={self.count}"
+        else:
+            count = ""
         options = f", options={self.options}" if self.options else ""
         return f"{self.__class__.__name__}({self.item_name}{count}{options})"
 
+    @override
+    def to_dict(self) -> dict[str, Any]:
+        # Official format for int/FieldResolver counts; serialize a Rule count
+        # as a nested-rule dict (the fork's dynamic-count form).
+        result = super().to_dict()
+        if isinstance(self.count, Rule):
+            result["args"]["count"] = self.count.to_dict()
+        return result
+
     class Resolved(Rule.Resolved):
         item_name: str
-        count: int = 1
+        count: "int | Rule.Resolved" = 1
         skip_cache: ClassVar[bool] = True
+
+        def _get_count_value(self, state: CollectionState) -> int | float:
+            """Resolve the required count, evaluating it if it is a Rule.Resolved."""
+            if isinstance(self.count, Rule.Resolved):
+                return self.count.get_count(state)
+            return self.count
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
             # implementation based on state.has
-            return state.prog_items[self.player][self.item_name] >= self.count
+            return state.prog_items[self.player][self.item_name] >= self._get_count_value(state)
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
@@ -917,7 +946,12 @@ class Has(Rule[TWorld], game="Archipelago"):
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
             verb = "Missing " if state and not self(state) else "Has "
             messages: list[JSONMessagePart] = [{"type": "text", "text": verb}]
-            if self.count > 1:
+            if isinstance(self.count, Rule.Resolved):
+                count_val = self._get_count_value(state) if state else None
+                if count_val is not None and count_val > 1:
+                    messages.append({"type": "color", "color": "cyan", "text": str(count_val)})
+                    messages.append({"type": "text", "text": "x "})
+            elif self.count > 1:
                 messages.append({"type": "color", "color": "cyan", "text": str(self.count)})
                 messages.append({"type": "text", "text": "x "})
             if state:
@@ -932,13 +966,31 @@ class Has(Rule[TWorld], game="Archipelago"):
             if state is None:
                 return str(self)
             prefix = "Has" if self(state) else "Missing"
-            count = f"{self.count}x " if self.count > 1 else ""
+            if isinstance(self.count, Rule.Resolved):
+                count_val = self._get_count_value(state)
+                count = f"{count_val}x " if count_val > 1 else ""
+            else:
+                count = f"{self.count}x " if self.count > 1 else ""
             return f"{prefix} {count}{self.item_name}"
 
         @override
         def __str__(self) -> str:
-            count = f"{self.count}x " if self.count > 1 else ""
+            if isinstance(self.count, Rule.Resolved):
+                count = f"({self.count})x "
+            elif self.count > 1:
+                count = f"{self.count}x "
+            else:
+                count = ""
             return f"Has {count}{self.item_name}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            args: dict[str, Any] = {"item_name": self.item_name}
+            if isinstance(self.count, Rule.Resolved):
+                args["count"] = self.count.to_dict()
+            elif self.count != 1:
+                args["count"] = self.count
+            return args
 
 
 @dataclasses.dataclass(init=False)
