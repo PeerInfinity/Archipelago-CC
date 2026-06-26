@@ -9,7 +9,7 @@ from NetUtils import JSONMessagePart
 from Options import Choice, FreeText, Option, OptionSet, PerGameCommonOptions, Toggle
 from rule_builder.cached_world import CachedRuleBuilderWorld
 from rule_builder.options import Operator, OptionFilter
-from rule_builder.rules import (
+from rule_builder import (
     And,
     Arithmetic,
     ASTRule,
