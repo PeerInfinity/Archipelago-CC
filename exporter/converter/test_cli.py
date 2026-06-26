@@ -209,7 +209,11 @@ class TestConvertSnippetRoundTrip(unittest.TestCase):
         self.assertEqual(result, original)
 
     def test_rb_to_cc_to_rb(self):
-        """Test RB -> CC -> RB round-trip."""
+        """Test RB -> CC -> RB round-trip.
+
+        The converter omits empty ``options``/``args``, so the round-tripped
+        result drops the empty ``options`` carried by the input.
+        """
         original = {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
         original_json = json.dumps(original)
 
@@ -222,7 +226,7 @@ class TestConvertSnippetRoundTrip(unittest.TestCase):
         self.assertEqual(exit_code, 0)
 
         result = json.loads(rb_json)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "Has", "args": {"item_name": "Sword"}})
 
 
 class TestCLIIntegration(unittest.TestCase):

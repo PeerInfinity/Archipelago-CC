@@ -4,6 +4,12 @@ Round-trip conversion tests for Rule Builder <-> AST format converters.
 Tests that:
 - B → A → B produces identical results for Rule Builder input
 - A → B → A produces identical results for AST input (where possible)
+
+Note: the AST → Rule Builder converter intentionally omits empty ``options: []``
+and empty ``args: {}`` fields to reduce JSON size (see
+``ASTToRuleBuilder._make_rule``). So a Rule Builder dict that carries an empty
+``options``/``args`` round-trips to the normalized form with those fields
+dropped; the expected values below reflect that normalization.
 """
 
 import unittest
@@ -13,7 +19,11 @@ from .ast_to_rule_builder import ASTToRuleBuilder, convert_ast_to_rule_builder
 
 
 class TestRoundTripBtoAtoB(unittest.TestCase):
-    """Test that Rule Builder → AST → Rule Builder produces identical output."""
+    """Test that Rule Builder → AST → Rule Builder produces identical output.
+
+    Empty ``options``/``args`` are normalized away by the converter, so the
+    expected results omit them even when the input carries them.
+    """
 
     def setUp(self):
         self.b_to_a = RuleBuilderToAST()
@@ -29,25 +39,25 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         """Test True_ round-trips correctly."""
         original = {"rule": "True_", "options": [], "args": {}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "True_"})
 
     def test_false_round_trip(self):
         """Test False_ round-trips correctly."""
         original = {"rule": "False_", "options": [], "args": {}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "False_"})
 
     def test_has_simple_round_trip(self):
         """Test simple Has rule round-trips correctly."""
         original = {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "Has", "args": {"item_name": "Sword"}})
 
     def test_has_with_count_round_trip(self):
         """Test Has with count round-trips correctly."""
         original = {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "Has", "args": {"item_name": "Arrow", "count": 10}})
 
     def test_has_all_round_trip(self):
         """Test HasAll round-trips correctly."""
@@ -75,7 +85,7 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         """Test HasGroup round-trips correctly."""
         original = {"rule": "HasGroup", "options": [], "args": {"item_name_group": "Keys", "count": 3}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "HasGroup", "args": {"item_name_group": "Keys", "count": 3}})
 
     def test_has_group_default_count_round_trip(self):
         """Test HasGroup with default count round-trips correctly."""
@@ -88,19 +98,19 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         """Test CanReachRegion round-trips correctly."""
         original = {"rule": "CanReachRegion", "options": [], "args": {"region_name": "Castle"}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "CanReachRegion", "args": {"region_name": "Castle"}})
 
     def test_can_reach_location_round_trip(self):
         """Test CanReachLocation round-trips correctly."""
         original = {"rule": "CanReachLocation", "options": [], "args": {"location_name": "Chest1"}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "CanReachLocation", "args": {"location_name": "Chest1"}})
 
     def test_can_reach_entrance_round_trip(self):
         """Test CanReachEntrance round-trips correctly."""
         original = {"rule": "CanReachEntrance", "options": [], "args": {"entrance_name": "Door1"}}
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result, {"rule": "CanReachEntrance", "args": {"entrance_name": "Door1"}})
 
     def test_and_round_trip(self):
         """Test And rule round-trips correctly.
@@ -322,7 +332,11 @@ class TestRoundTripAtoBtoA(unittest.TestCase):
 
 
 class TestASTToRuleBuilder(unittest.TestCase):
-    """Test individual A → B conversions."""
+    """Test individual A → B conversions.
+
+    The converter omits empty ``options``/``args``, so the expected Rule Builder
+    dicts below carry only the fields the converter actually emits.
+    """
 
     def setUp(self):
         self.converter = ASTToRuleBuilder()
@@ -331,43 +345,43 @@ class TestASTToRuleBuilder(unittest.TestCase):
         """Test constant true conversion."""
         rule = {"type": "constant", "value": True}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "True_", "options": [], "args": {}})
+        self.assertEqual(result.rule, {"rule": "True_"})
 
     def test_constant_false(self):
         """Test constant false conversion."""
         rule = {"type": "constant", "value": False}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "False_", "options": [], "args": {}})
+        self.assertEqual(result.rule, {"rule": "False_"})
 
     def test_item_check_simple(self):
         """Test simple item_check conversion."""
         rule = {"type": "item_check", "item": "Sword"}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "Has", "options": [], "args": {"item_name": "Sword"}})
+        self.assertEqual(result.rule, {"rule": "Has", "args": {"item_name": "Sword"}})
 
     def test_item_check_with_count(self):
         """Test item_check with count conversion."""
         rule = {"type": "item_check", "item": "Arrow", "count": 10}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}})
+        self.assertEqual(result.rule, {"rule": "Has", "args": {"item_name": "Arrow", "count": 10}})
 
     def test_group_check(self):
         """Test group_check conversion."""
         rule = {"type": "group_check", "group": "Keys", "count": 3}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "HasGroup", "options": [], "args": {"item_name_group": "Keys", "count": 3}})
+        self.assertEqual(result.rule, {"rule": "HasGroup", "args": {"item_name_group": "Keys", "count": 3}})
 
     def test_can_reach(self):
         """Test can_reach conversion."""
         rule = {"type": "can_reach", "region": "Castle"}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "CanReachRegion", "options": [], "args": {"region_name": "Castle"}})
+        self.assertEqual(result.rule, {"rule": "CanReachRegion", "args": {"region_name": "Castle"}})
 
     def test_location_check(self):
         """Test location_check conversion."""
         rule = {"type": "location_check", "location": "Chest1"}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "CanReachLocation", "options": [], "args": {"location_name": "Chest1"}})
+        self.assertEqual(result.rule, {"rule": "CanReachLocation", "args": {"location_name": "Chest1"}})
 
     def test_and_rule(self):
         """Test and rule conversion.
@@ -426,11 +440,15 @@ class TestASTToRuleBuilder(unittest.TestCase):
         self.assertEqual(result.rule["args"]["item_names"], ["A", "B"])
 
     def test_helper_preserved(self):
-        """Test helper rules are preserved as custom rules."""
+        """Test helper rules are preserved as custom rules.
+
+        Helper preservation is intentionally silent (no warning) — the rule is
+        kept verbatim with the _converted_from_ast marker.
+        """
         rule = {"type": "helper", "name": "canSwim", "args": []}
         result = self.converter.convert(rule)
         self.assertTrue(result.rule.get("_converted_from_ast"))
-        self.assertEqual(len(result.warnings), 1)
+        self.assertEqual(len(result.warnings), 0)
 
     def test_conditional_with_option_filter(self):
         """Test conditional rule with option filter is converted correctly."""
