@@ -103,7 +103,10 @@ class Rule(Generic[TWorld]):
         """Resolve a rule with the given world"""
         for option_filter in self.options:
             if not option_filter.check(world.options):
-                return True_().resolve(world) if self.filtered_resolution else False_().resolve(world)
+                if self.filtered_resolution:
+                    return True_().resolve(world)
+                # Fork: reuse the world's pre-initialized false_rule when available (perf)
+                return getattr(world, "false_rule", None) or False_().resolve(world)
         return self._instantiate(world)
 
     def to_dict(self) -> dict[str, Any]:
@@ -181,6 +184,10 @@ class Rule(Generic[TWorld]):
     def __ror__(self, other: "Rule[Any] | Iterable[OptionFilter] | OptionFilter") -> "Rule[TWorld]":
         return self.__or__(other)
 
+    def __lshift__(self, other: "Iterable[OptionFilter]") -> "Rule[TWorld]":
+        """Fork convenience operator to filter an existing rule with an option filter"""
+        return Filtered(self, options=other)
+
     def __bool__(self) -> Never:
         """Safeguard to prevent devs from mistakenly doing `rule1 and rule2` and getting the wrong result"""
         raise TypeError("Use & or | to combine rules, or use `is not None` for boolean tests")
@@ -197,7 +204,9 @@ class Rule(Generic[TWorld]):
             if cls.__qualname__ in custom_rules:
                 raise TypeError(f"Rule {cls.__qualname__} has already been registered for game {game}")
             custom_rules[cls.__qualname__] = cls
-        elif cls.__module__ != "rule_builder.rules":
+        elif not cls.__module__.startswith("rule_builder"):
+            # Fork: allow base-game rules to be defined in any rule_builder.* submodule
+            # (e.g. rule_builder.extra_rules), not just rule_builder.rules
             raise TypeError("You cannot define custom rules for the base Archipelago world")
         cls.game_name = game
 
@@ -252,6 +261,16 @@ class Rule(Generic[TWorld]):
             """Calculate this rule's result with the given state"""
             ...
 
+        def get_value(self, state: CollectionState) -> int | float:
+            """Fork: numeric value of this rule for arithmetic/comparison contexts.
+            Override in subclasses that produce numeric values (e.g. CountItem, Arithmetic)."""
+            return 1 if self._evaluate(state) else 0
+
+        def get_count(self, state: CollectionState) -> int | float:
+            """Fork: count value of this rule for counting contexts.
+            Override in subclasses that produce count values (e.g. CountItem, CountFromList)."""
+            return 1 if self._evaluate(state) else 0
+
         def item_dependencies(self) -> dict[str, set[int]]:
             """Returns a mapping of item name to set of object ids, used for cache invalidation"""
             return {}
@@ -280,6 +299,30 @@ class Rule(Generic[TWorld]):
         @override
         def __str__(self) -> str:
             return self.rule_name
+
+        @property
+        def _rule_class_name(self) -> str:
+            """Fork: rule class name without the '.Resolved' suffix (e.g. 'Has.Resolved' -> 'Has')"""
+            qualname = self.__class__.__qualname__
+            if ".Resolved" in qualname:
+                return qualname.replace(".Resolved", "")
+            return qualname
+
+        def to_dict(self) -> dict[str, Any]:
+            """Fork: JSON-compatible dict for a *resolved* rule.
+
+            Lets the exporter serialize Rule Builder rules directly without AST
+            analysis. Empty 'args' are omitted to keep rules.json compact.
+            """
+            result: dict[str, Any] = {"rule": self._rule_class_name}
+            args = self._get_args_dict()
+            if args:
+                result["args"] = args
+            return result
+
+        def _get_args_dict(self) -> dict[str, Any]:
+            """Fork: override in subclasses to provide serializable args for to_dict()."""
+            return {}
 
 
 @dataclasses.dataclass()
