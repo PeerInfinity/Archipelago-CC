@@ -356,7 +356,7 @@ class TestParseUnknownType:
 
     def test_parse_unknown_type(self):
         """Test that unknown types are wrapped in ASTRule."""
-        from rule_builder.rules import ASTRule
+        from rule_builder import ASTRule
 
         data = {"type": "unknown_custom_type", "value": 42}
         rule = parse_ast_rule(data, MockWorldClass)

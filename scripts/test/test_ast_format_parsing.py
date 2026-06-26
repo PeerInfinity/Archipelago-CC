@@ -21,6 +21,15 @@ from rule_builder import (
 )
 
 
+class _TestWorld(RuleWorldMixin):
+    """Minimal world stub with a `game` attribute for direct from_dict tests.
+
+    `Rule.from_dict` reads `world_cls.game` (to resolve any FieldResolver args),
+    so a bare `RuleWorldMixin` (no `game`) can't be passed directly.
+    """
+    game = "Archipelago"
+
+
 def test_basic_ast_parsing():
     """Test basic AST format rule parsing."""
     print("Testing basic AST format parsing...")
@@ -172,7 +181,7 @@ def test_rule_from_dict_integration():
         "rule": "Has",
         "options": [],
         "args": {"item_name": "Sword", "count": 1}
-    }, RuleWorldMixin)
+    }, _TestWorld)
     assert isinstance(rb_rule, Has), f"Expected Has, got {type(rb_rule)}"
     print("  ✓ RB format works via Has.from_dict")
 

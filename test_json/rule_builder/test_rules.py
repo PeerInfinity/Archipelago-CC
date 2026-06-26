@@ -7,11 +7,21 @@ This module tests the Rule classes including Has, HasAll, HasAny, And, Or, etc.
 import pytest
 
 from rule_builder import (
+    RuleWorldMixin,
     True_, False_, Has, HasAll, HasAny, And, Or, Not,
     CanReachRegion, CanReachLocation, CanReachEntrance,
     HasGroup, HasAllCounts, HasAnyCount,
     Compare, Arithmetic, Conditional, CountItem, HelperCall,
 )
+
+
+class _StubWorld(RuleWorldMixin):
+    """Minimal world stub carrying a `game` attribute for from_dict tests.
+
+    `Rule.from_dict` reads `world_cls.game` (to resolve any FieldResolver args),
+    so `None` can no longer be passed as a stand-in world class.
+    """
+    game = "Archipelago"
 
 
 class TestBooleanConstants:
@@ -34,14 +44,14 @@ class TestBooleanConstants:
     def test_true_rule_from_dict(self):
         """Test deserializing True_ rule."""
         data = {"rule": "True_", "options": [], "args": {}}
-        rule = True_.from_dict(data, None)
+        rule = True_.from_dict(data, _StubWorld)
 
         assert isinstance(rule, True_)
 
     def test_false_rule_from_dict(self):
         """Test deserializing False_ rule."""
         data = {"rule": "False_", "options": [], "args": {}}
-        rule = False_.from_dict(data, None)
+        rule = False_.from_dict(data, _StubWorld)
 
         assert isinstance(rule, False_)
 
@@ -69,7 +79,7 @@ class TestHasRule:
     def test_has_from_dict(self):
         """Test deserializing Has rule."""
         data = {"rule": "Has", "options": [], "args": {"item_name": "Sword", "count": 1}}
-        rule = Has.from_dict(data, None)
+        rule = Has.from_dict(data, _StubWorld)
 
         assert isinstance(rule, Has)
         assert rule.item_name == "Sword"
@@ -108,7 +118,7 @@ class TestHasAllRule:
             "options": [],
             "args": {"item_names": ["A", "B", "C"]}
         }
-        rule = HasAll.from_dict(data, None)
+        rule = HasAll.from_dict(data, _StubWorld)
 
         assert isinstance(rule, HasAll)
 
@@ -130,7 +140,7 @@ class TestHasAnyRule:
             "options": [],
             "args": {"item_names": ["A", "B"]}
         }
-        rule = HasAny.from_dict(data, None)
+        rule = HasAny.from_dict(data, _StubWorld)
 
         assert isinstance(rule, HasAny)
 
@@ -289,7 +299,7 @@ class TestReachabilityRules:
             "options": [],
             "args": {"region_name": "Castle"}
         }
-        rule = CanReachRegion.from_dict(data, None)
+        rule = CanReachRegion.from_dict(data, _StubWorld)
 
         assert isinstance(rule, CanReachRegion)
         assert rule.region_name == "Castle"
