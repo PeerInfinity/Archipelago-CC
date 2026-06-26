@@ -18,13 +18,36 @@ else:
     TWorld = TypeVar("TWorld")
 
 
+def _make_hashable(value: Any) -> Any:
+    """Fork: convert a value to a hashable form, recursively handling dicts,
+    lists, tuples, sets and dataclasses. Needed so rules with unhashable args
+    (e.g. HelperCall body_data dicts/lists) can still be hashed for caching."""
+    if isinstance(value, dict):
+        d = cast(dict[Any, Any], value)
+        return tuple(sorted((_make_hashable(k), _make_hashable(v)) for k, v in d.items()))
+    elif isinstance(value, list):
+        items = cast(list[Any], value)
+        return tuple(_make_hashable(item) for item in items)
+    elif isinstance(value, tuple):
+        items = cast(tuple[Any, ...], value)
+        return tuple(_make_hashable(item) for item in items)
+    elif isinstance(value, set):
+        items = cast(set[Any], value)
+        return frozenset(_make_hashable(item) for item in items)
+    elif dataclasses.is_dataclass(value) and not isinstance(value, type):
+        # Include the class identity to distinguish rule types with identical field values
+        # (e.g. True_.Resolved vs False_.Resolved, which share only player/caching_enabled)
+        return (type(value).__qualname__, *(_make_hashable(getattr(value, f.name)) for f in dataclasses.fields(value)))
+    return value
+
+
 def _create_hash_fn(resolved_rule_cls: "CustomRuleRegister") -> Callable[..., int]:
     def hash_impl(self: "Rule.Resolved") -> int:
         return hash(
             (
                 self.__class__.__module__,
                 self.rule_name,
-                *[getattr(self, f.name) for f in dataclasses.fields(self)],
+                *[_make_hashable(getattr(self, f.name)) for f in dataclasses.fields(self)],
             )
         )
 
