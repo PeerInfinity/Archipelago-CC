@@ -313,6 +313,12 @@ fuzz_output/
 test_dumps/
 grid-growth-dump.json
 
+# Rule Builder reference snapshots (local-only): clean upstream vs the fork's
+# modified version, kept side-by-side for diffing while re-adding fork features
+# onto a clean upstream base. Not committed.
+rule_builder_original/
+rule_builder_modified/
+
 # Real-DJ renderer: no SWF is ever committed — the user supplies the
 # original Doodle Jump SWF (dropped in or fetched from this path), and the
 # SWFRecomp browser-WASM artifacts are built+copied from SWFRecomp-CC
