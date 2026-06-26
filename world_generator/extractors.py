@@ -1190,11 +1190,18 @@ def apply_name_substitutions(json_data: Dict[str, Any], player_id: str = '1') ->
         # Has / CountItem use "item_name"
         if 'item_name' in args and args['item_name'] in item_map:
             args['item_name'] = item_map[args['item_name']]
-        # HasAll / HasAny use "items" list
-        if 'items' in args and isinstance(args['items'], list):
-            _rename_list(args['items'], item_map)
-        # HasGroup / CountGroup use "group" — groups aren't renamed here
-        # CountFromList uses "items" list (already covered above)
+        # HasAll / HasAny / HasFromList use an item-name list: "item_names"
+        # upstream, "items" for the fork format + CountFromList.
+        for list_key in ('item_names', 'items'):
+            if isinstance(args.get(list_key), list):
+                _rename_list(args[list_key], item_map)
+        # HasAllCounts / HasAnyCount use an "item_counts" dict ({item_name: count}).
+        if isinstance(args.get('item_counts'), dict):
+            args['item_counts'] = {
+                item_map.get(name, name): count
+                for name, count in args['item_counts'].items()
+            }
+        # HasGroup / CountGroup use "group"/"item_name_group" — groups aren't renamed here
         # item field (used in some rules)
         if 'item' in args and isinstance(args['item'], str) and args['item'] in item_map:
             args['item'] = item_map[args['item']]
