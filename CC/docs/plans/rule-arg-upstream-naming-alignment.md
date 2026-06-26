@@ -1,6 +1,6 @@
 # Rule-Arg Upstream Naming Alignment
 
-**Status:** Pending (not started)
+**Status:** Phases 0–3 done & committed (`d0413b884`, `6b94bb96a`, `f3b198564`). Phase 4 (full preset regen) pending — to run via the Generate Presets pipeline. Phase 5 (drop fork-key fallback) deferred until presets are regenerated.
 **Owner:** —
 **Created:** 2026-06-26
 **Related:** `docs/json/developer/diffs/rule-builder/fork-vs-upstream-rule-builder.md`, commit `015705b33` (the `_get_args_dict` restoration that surfaced this divergence)
