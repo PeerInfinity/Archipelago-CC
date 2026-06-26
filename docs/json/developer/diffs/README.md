@@ -1,6 +1,6 @@
 # Diff Files from Upstream
 
-This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The diffs are generated against upstream commit `fb45a2f8` (March 20, 2026, Archipelago 0.6.7).
+This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The diffs are generated against upstream commit `e6e0bc30` (June 20, 2026, Archipelago 0.6.8).
 
 ## Available Diff Files
 
@@ -93,8 +93,8 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 
 ## Notes
 
-- These diffs are generated against upstream commit `fb45a2f8` (Archipelago 0.6.7)
-- Total lines changed across diff files: 1,644 lines (41 + 413 + 25 + 44 + 62 + 635 + 424)
+- These diffs are generated against upstream commit `e6e0bc30` (Archipelago 0.6.8)
+- Total lines changed across diff files: 1,655 lines (43 + 465 + 27 + 44 + 62 + 642 + 372)
 - Additionally, 2 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
@@ -183,7 +183,7 @@ The `.diff` files in `diff-files/` were created using:
 ```bash
 diff -u --label a/[file] --label b/[file] ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
 ```
-Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `fb45a2f8`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
+Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `e6e0bc30`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
 
 ### File Lists
 

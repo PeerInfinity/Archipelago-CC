@@ -1,5 +1,5 @@
 diff --git a/worlds/alttp/__init__.py b/worlds/alttp/__init__.py
-index 2b9916283..3b8434bb5 100644
+index 187ce6791..b2515d467 100644
 --- a/worlds/alttp/__init__.py
 +++ b/worlds/alttp/__init__.py
 @@ -5,6 +5,7 @@ import threading
@@ -10,7 +10,7 @@ index 2b9916283..3b8434bb5 100644
  from BaseClasses import Item, CollectionState, Tutorial, MultiWorld
  from worlds.AutoWorld import World, WebWorld, LogicMixin
  from .Client import ALTTPSNIClient
-@@ -312,10 +313,13 @@ class ALTTPWorld(World):
+@@ -304,8 +305,10 @@ class ALTTPWorld(World):
      @classmethod
      def stage_assert_generate(cls, multiworld: MultiWorld):
          rom_file = get_base_rom_path()
@@ -22,11 +22,8 @@ index 2b9916283..3b8434bb5 100644
 +
          if multiworld.is_race:
              import xxtea  # noqa
-+
-         for player in multiworld.get_game_players(cls.game):
-             if multiworld.worlds[player].use_enemizer:
-                 check_enemizer(multiworld.worlds[player].enemizer_path)
-@@ -577,6 +581,12 @@ class ALTTPWorld(World):
+ 
+@@ -561,6 +564,12 @@ class ALTTPWorld(World):
  
          self.pushed_shop_inventories.wait()
  
@@ -37,9 +34,9 @@ index 2b9916283..3b8434bb5 100644
 +            return
 +
          try:
-             use_enemizer = self.use_enemizer
+             rom = LocalRom(get_base_rom_path())
  
-@@ -683,8 +693,8 @@ class ALTTPWorld(World):
+@@ -662,8 +671,8 @@ class ALTTPWorld(World):
          # wait for self.rom_name to be available.
          self.rom_name_available_event.wait()
          rom_name = getattr(self, "rom_name", None)
@@ -50,64 +47,8 @@ index 2b9916283..3b8434bb5 100644
              new_name = base64.b64encode(bytes(self.rom_name)).decode()
              multidata["connect_names"][new_name] = multidata["connect_names"][self.multiworld.player_name[self.player]]
  
-diff --git a/worlds/dkc3/__init__.py b/worlds/dkc3/__init__.py
-index 1dabeb053..0ac3bad4f 100644
---- a/worlds/dkc3/__init__.py
-+++ b/worlds/dkc3/__init__.py
-@@ -16,6 +16,7 @@ from .Names import ItemName, LocationName
- from .Options import DKC3Options, dkc3_option_groups
- from .Regions import create_regions, connect_regions
- from .Rom import LocalRom, patch_rom, get_base_rom_path, DKC3DeltaPatch
-+from worlds.RomlessUtils import check_rom_available
- from .Rules import set_rules
- 
- 
-@@ -73,9 +74,7 @@ class DKC3World(World):
- 
-     @classmethod
-     def stage_assert_generate(cls, multiworld: MultiWorld):
--        rom_file = get_base_rom_path()
--        if not os.path.exists(rom_file):
--            raise FileNotFoundError(rom_file)
-+        check_rom_available(get_base_rom_path(), cls.game)
- 
-     def _get_slot_data(self):
-         return {
-@@ -156,6 +155,12 @@ class DKC3World(World):
-         self.multiworld.itempool += itempool
- 
-     def generate_output(self, output_directory: str):
-+        if not check_rom_available(get_base_rom_path(), self.game):
-+            self.rom_name = "DKC3_ROM_NOT_GENERATED"
-+            self.rom_name_available_event.set()
-+            return
-+        
-+        rompath = None
-         try:
-             rom = LocalRom(get_base_rom_path())
-             patch_rom(self, rom, self.active_level_list)
-@@ -173,7 +178,7 @@ class DKC3World(World):
-             raise
-         finally:
-             self.rom_name_available_event.set()  # make sure threading continues and errors are collected
--            if os.path.exists(rompath):
-+            if rompath and os.path.exists(rompath):
-                 os.unlink(rompath)
- 
-     def modify_multidata(self, multidata: dict):
-@@ -181,8 +186,8 @@ class DKC3World(World):
-         # wait for self.rom_name to be available.
-         self.rom_name_available_event.wait()
-         rom_name = getattr(self, "rom_name", None)
--        # we skip in case of error, so that the original error in the output thread is the one that gets raised
--        if rom_name:
-+        # we skip in case of error, or if ROM generation was skipped
-+        if rom_name and rom_name != "DKC3_ROM_NOT_GENERATED":
-             new_name = base64.b64encode(bytes(self.rom_name)).decode()
-             multidata["connect_names"][new_name] = multidata["connect_names"][self.multiworld.player_name[self.player]]
- 
 diff --git a/worlds/ff1/__init__.py b/worlds/ff1/__init__.py
-index 39df9020e..ed32afaaa 100644
+index c3d57016e..f9c9e5808 100644
 --- a/worlds/ff1/__init__.py
 +++ b/worlds/ff1/__init__.py
 @@ -60,9 +60,13 @@ class FF1World(World):
@@ -128,16 +69,16 @@ index 39df9020e..ed32afaaa 100644
      def create_regions(self):
          locations = self.options.locations.value
 diff --git a/worlds/lufia2ac/__init__.py b/worlds/lufia2ac/__init__.py
-index 96de24a4b..6f630d1e1 100644
+index ae8f86262..725b66f1d 100644
 --- a/worlds/lufia2ac/__init__.py
 +++ b/worlds/lufia2ac/__init__.py
 @@ -8,6 +8,7 @@ import settings
- from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
+ from BaseClasses import CollectionRule, Item, ItemClassification, Location, MultiWorld, Region, Tutorial
  from Options import PerGameCommonOptions
  from Utils import __version__
 +from worlds.RomlessUtils import check_rom_available
  from worlds.AutoWorld import WebWorld, World
- from worlds.generic.Rules import add_rule, CollectionRule, set_rule
+ from worlds.generic.Rules import add_rule, set_rule
  from .Client import L2ACSNIClient  # noqa: F401
 @@ -73,9 +74,7 @@ class L2ACWorld(World):
  
@@ -162,7 +103,7 @@ index 96de24a4b..6f630d1e1 100644
              rom_bytearray = bytearray(apply_basepatch(get_base_rom_bytes()))
              # start and stop indices are offsets in the ROM file, not LoROM mapped SNES addresses
 diff --git a/worlds/mmbn3/__init__.py b/worlds/mmbn3/__init__.py
-index 80716977d..53ba94ae2 100644
+index 8400b01ea..ef007365b 100644
 --- a/worlds/mmbn3/__init__.py
 +++ b/worlds/mmbn3/__init__.py
 @@ -8,6 +8,7 @@ from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification, Region,
@@ -182,7 +123,7 @@ index 80716977d..53ba94ae2 100644
 +            return
 +
          try:
-             world = self.multiworld
+             multiworld = self.multiworld
              player = self.player
 @@ -529,9 +534,7 @@ class MMBN3World(World):
  
@@ -385,7 +326,7 @@ index da347c752..36329791f 100644
              multidata["connect_names"][new_name] = multidata["connect_names"][self.multiworld.player_name[self.player]]
  
 diff --git a/worlds/yoshisisland/__init__.py b/worlds/yoshisisland/__init__.py
-index f1aba3018..30c43c76a 100644
+index 111642d82..7836d705d 100644
 --- a/worlds/yoshisisland/__init__.py
 +++ b/worlds/yoshisisland/__init__.py
 @@ -7,6 +7,7 @@ from typing import List, Set, TextIO, Dict
@@ -418,9 +359,9 @@ index f1aba3018..30c43c76a 100644
 +            return
 +            
          try:
-             world = self.multiworld
              player = self.player
-@@ -362,7 +367,7 @@ class YoshisIslandWorld(World):
+             rom = LocalRom(get_base_rom_path())
+@@ -361,7 +366,7 @@ class YoshisIslandWorld(World):
          # wait for self.rom_name to be available.
          self.rom_name_available_event.wait()
          rom_name = getattr(self, "rom_name", None)

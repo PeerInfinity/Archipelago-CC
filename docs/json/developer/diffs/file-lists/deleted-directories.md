@@ -1,6 +1,6 @@
 # Deleted Directories
 
-Directories that existed in upstream commit `fb45a2f8` but have been entirely removed.
+Directories that existed in upstream commit `e6e0bc30` but have been entirely removed.
 
 No upstream directories have been entirely removed.
 

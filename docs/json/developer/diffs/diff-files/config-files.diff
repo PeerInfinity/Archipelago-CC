@@ -9,10 +9,10 @@ index 5ab537933..0a0924067 100644
 +README.md merge=ours
 \ No newline at end of file
 diff --git a/.github/workflows/codeql-analysis.yml b/.github/workflows/codeql-analysis.yml
-index 3abbb5f64..dbde0d080 100644
+index 5751dce85..64a610b7e 100644
 --- a/.github/workflows/codeql-analysis.yml
 +++ b/.github/workflows/codeql-analysis.yml
-@@ -32,6 +32,10 @@ jobs:
+@@ -41,6 +41,10 @@ jobs:
    analyze:
      name: Analyze
      runs-on: ubuntu-latest
@@ -23,8 +23,28 @@ index 3abbb5f64..dbde0d080 100644
  
      strategy:
        fail-fast: false
+diff --git a/.github/workflows/unittests.yml b/.github/workflows/unittests.yml
+index cfffa6cc4..020da2e40 100644
+--- a/.github/workflows/unittests.yml
++++ b/.github/workflows/unittests.yml
+@@ -65,6 +65,15 @@ jobs:
+         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
+         python Launcher.py --update_settings  # make sure host.yaml exists for tests
+     - name: Unittests
++      env:
++        # Force UTF-8 stdio. Without this, Python 3.11 on Windows defaults
++        # sys.stdout to a cp1252 TextIOWrapper, and pytest-xdist's parent-
++        # worker stdout teardown trips a "ValueError: underlying buffer has
++        # been detached" inside _pytest.config.console_main's final
++        # sys.stdout.flush() — failing the job after every test passed.
++        # Python 3.13 uses UTF-8 by default and is unaffected.
++        PYTHONUTF8: "1"
++        PYTHONIOENCODING: "utf-8"
+       run: |
+         pytest -n auto
+ 
 diff --git a/.gitignore b/.gitignore
-index 8f9ed6df1..9d6fdb00e 100644
+index 8f9ed6df1..01d459735 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -54,7 +54,7 @@ _persistent_storage.yaml
@@ -36,7 +56,7 @@ index 8f9ed6df1..9d6fdb00e 100644
  Output Logs/
  /factorio/
  /WebHostLib/static/generated
-@@ -199,3 +199,110 @@ _speedups.html
+@@ -199,3 +199,130 @@ _speedups.html
  .LSOverride
  Thumbs.db
  [Dd]esktop.ini
@@ -81,12 +101,16 @@ index 8f9ed6df1..9d6fdb00e 100644
 +set.mm
 +*.pkl.gz
 +*_pickle_meta.json
++*.swf
++*_tilemap.json
++*_tiles.json
 +
 +!scripts/build/
 +!scripts/lib/
 +!scripts/test/lib/
 +!frontend/modules/spoilerTest/lib/
 +
++scripts/output/settings-audit/
 +scripts/output/spoiler-minimal/test-results-*
 +scripts/output/spoiler-minimal/test-results_*
 +scripts/output/spoiler-minimal-worldgen/test-results-*
@@ -147,22 +171,27 @@ index 8f9ed6df1..9d6fdb00e 100644
 +iframe_games/journey-to-ascension/build/
 +iframe_games/journey-to-ascension/node_modules/
 +fuzz_output/
-\ No newline at end of file
-diff --git a/pytest.ini b/pytest.ini
-index f050d58b7..9b9637514 100644
---- a/pytest.ini
-+++ b/pytest.ini
-@@ -4,4 +4,5 @@ python_classes = Test
- python_functions = test
- testpaths =
-     test
-+    test_json
-     worlds
++test_dumps/
++grid-growth-dump.json
++
++# Rule Builder reference snapshots (local-only): clean upstream vs the fork's
++# modified version, kept side-by-side for diffing while re-adding fork features
++# onto a clean upstream base. Not committed.
++rule_builder_original/
++rule_builder_modified/
++
++# Real-DJ renderer: no SWF is ever committed — the user supplies the
++# original Doodle Jump SWF (dropped in or fetched from this path), and the
++# SWFRecomp browser-WASM artifacts are built+copied from SWFRecomp-CC
++# (see frontend/modules/bounceDemo/djReal/runtime/README.md)
++frontend/modules/bounceDemo/djReal/*.swf
++frontend/modules/bounceDemo/djReal/runtime/Doodle_Jump_loader.*
++
 diff --git a/README.md b/README.md
-index 7a0c663db..fdb644fa6 100644
+index ffe965035..fdb644fa6 100644
 --- a/README.md
 +++ b/README.md
-@@ -1,149 +1,113 @@
+@@ -1,148 +1,113 @@
 -# [Archipelago](https://archipelago.gg) ![Discord Shield](https://discordapp.com/api/guilds/731205301247803413/widget.png?style=shield) | [Install](https://github.com/ArchipelagoMW/Archipelago/releases)
 -
 -Archipelago provides a generic framework for developing multiworld capability for game randomizers. In all cases,
@@ -189,7 +218,6 @@ index 7a0c663db..fdb644fa6 100644
 -* The Witness
 -* Sonic Adventure 2: Battle
 -* Starcraft 2
--* Donkey Kong Country 3
 -* Dark Souls 3
 -* Super Mario World
 -* Pokémon Red and Blue
@@ -425,3 +453,13 @@ index 7a0c663db..fdb644fa6 100644
 +- APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)
 +- APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth
 +- Iframe integration of [A-Mazing-Idle](https://imgreghenry.github.io/A-Mazing-Idle/) by ImGregHenry
+diff --git a/pytest.ini b/pytest.ini
+index f050d58b7..9b9637514 100644
+--- a/pytest.ini
++++ b/pytest.ini
+@@ -4,4 +4,5 @@ python_classes = Test
+ python_functions = test
+ testpaths =
+     test
++    test_json
+     worlds

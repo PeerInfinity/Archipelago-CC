@@ -1,11 +1,13 @@
 # New Files in Existing Directories
 
-Files added to directories that already existed in upstream commit `fb45a2f8`.
+Files added to directories that already existed in upstream commit `e6e0bc30`.
 
-## Root Directory (9 files)
+## Root Directory (12 files)
 
 ```
+.gitmodules
 CLAUDE.md
+conftest.py
 fuzz.py
 jsdoc.json
 json_tools_config.json
@@ -14,6 +16,7 @@ package-lock.json
 package.json
 playwright.config.js
 vitest.config.js
+vitest.slow.config.js
 ```
 
 ## `.github/workflows/` (13 files)
@@ -31,17 +34,25 @@ vitest.config.js
 .github/workflows/test-ut-fuzz.yml
 .github/workflows/test-world-generator-single.yml
 .github/workflows/test-world-generator.yml
-.github/workflows/unittests_json.yml
+.github/workflows/unittests_frontend.yml
 ```
 
-## `rule_builder/` (5 files)
+## `rule_builder/` (7 files)
 
 ```
 rule_builder/README.md
 rule_builder/_ast_utils.py
 rule_builder/ast_explain.py
 rule_builder/ast_format.py
+rule_builder/extra_rules.py
 rule_builder/pathfinding.py
+rule_builder/world_mixin.py
+```
+
+## `test/` (1 files)
+
+```
+test/test_loop_costs_export_roundtrip.py
 ```
 
 ## `test/general/` (1 files)
@@ -58,4 +69,4 @@ worlds/RomlessUtils.py
 
 ---
 
-**Total:** 29 new files in existing directories
+**Total:** 35 new files in existing directories

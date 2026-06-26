@@ -1,12 +1,20 @@
 # New Files in Existing Directories (Annotated)
 
-Files added to directories that already existed in upstream commit `fb45a2f8`.
+Files added to directories that already existed in upstream commit `e6e0bc30`.
 
-## Root Directory (9 files)
+## Root Directory (12 files)
+
+- `.gitmodules`
+
+  Submodule definitions for frontend/modules/shared and frontend/modules/textAdventureEngine.
 
 - `CLAUDE.md`
 
   Quick reference for Claude Code with common commands, key concepts, and project conventions.
+
+- `conftest.py`
+
+  Root pytest conftest that filters upstream Archipelago worlds out of collection and AutoWorldRegister so CI only exercises this fork's own code.
 
 - `fuzz.py`
 
@@ -41,6 +49,10 @@ Files added to directories that already existed in upstream commit `fb45a2f8`.
 - `vitest.config.js`
 
   Vitest unit test configuration for frontend JavaScript testing with coverage reporting.
+
+- `vitest.slow.config.js`
+
+  Vitest config for the slow/long-running JS test suite (e.g. full-solver braid cross-checks).
 
 ## `.github/workflows/` (13 files)
 
@@ -92,11 +104,11 @@ Files added to directories that already existed in upstream commit `fb45a2f8`.
 
   Tests world generator across all games.
 
-- `.github/workflows/unittests_json.yml`
+- `.github/workflows/unittests_frontend.yml`
 
-  Runs JSON-related unit tests via npm/Vitest.
+  Runs the frontend JavaScript unit tests (Vitest) in CI.
 
-## `rule_builder/` (5 files)
+## `rule_builder/` (7 files)
 
 - `rule_builder/README.md`
 
@@ -122,11 +134,25 @@ Files added to directories that already existed in upstream commit `fb45a2f8`.
 
   [Rule Builder Modifications](../rule-builder/rule-builder-modifications.md)
 
+- `rule_builder/extra_rules.py`
+
+  Fork overlay module: the 15 fork-specific rule types (registered into DEFAULT_RULES) layered on top of clean upstream rule_builder.
+
 - `rule_builder/pathfinding.py`
 
   Pathfinding tools for region accessibility analysis via entrance chains and hypothetical item checks.
 
   [Rule Builder Modifications](../rule-builder/rule-builder-modifications.md)
+
+- `rule_builder/world_mixin.py`
+
+  Fork overlay module: RuleWorldMixin / RuleBuilderLogicMixin world base (World bound to object at runtime, LogicMixin resolved lazily).
+
+## `test/` (1 files)
+
+- `test/test_loop_costs_export_roundtrip.py`
+
+  Verifies the loop_costs top-level rules.json key survives the world_generator -> export round-trip via the worldgen sidecar.
 
 ## `test/general/` (1 files)
 
@@ -146,4 +172,4 @@ Files added to directories that already existed in upstream commit `fb45a2f8`.
 
 ---
 
-**Total:** 29 new files in existing directories
+**Total:** 35 new files in existing directories

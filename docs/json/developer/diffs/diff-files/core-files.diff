@@ -1,6 +1,8 @@
+diff --git a/settings.py b/settings.py
+index a23e7aed9..e0d2d3bf6 100644
 --- a/settings.py
 +++ b/settings.py
-@@ -23,6 +23,7 @@
+@@ -23,6 +23,7 @@ __all__ = [
  ]
  
  no_gui = False
@@ -8,7 +10,7 @@
  skip_autosave = False
  _world_settings_name_cache: dict[str, str] = {}  # TODO: cache on disk and update when worlds change
  _world_settings_name_cache_updated = False
-@@ -89,6 +90,12 @@
+@@ -89,6 +90,12 @@ class Group:
              if attr.required and not attr.exists() and not super().__getattribute__("_has_attr"):
                  # if a file is required, and the one from settings does not exist, ask the user to provide it
                  # unless we are dumping the settings, because that would ask for each entry
@@ -21,7 +23,7 @@
                  with _lock:  # lock to avoid opening multiple
                      new = None if no_gui else attr.browse()
                      if new is None:
-@@ -823,6 +830,11 @@
+@@ -827,6 +834,11 @@ class Settings(Group):
                      raise ex
                  # TODO: detect if upgrade is required
                  # TODO: once we have a cache for _world_settings_name_cache, detect if any game section is missing
@@ -33,7 +35,7 @@
                  self.update(options or {})
              self._filename = location
  
-@@ -900,4 +912,5 @@
+@@ -904,4 +916,5 @@ def get_settings() -> Settings:
                  res = Settings(None)
                  res.save(user_path(filenames[1]))
              setattr(get_settings, "_cache", res)

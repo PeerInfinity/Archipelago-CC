@@ -1,13 +1,17 @@
 diff --git a/test/general/test_rule_builder.py b/test/general/test_rule_builder.py
-index 81003dcd8..cc18f7d14 100644
+index e78d62ad4..3c0ae95d5 100644
 --- a/test/general/test_rule_builder.py
 +++ b/test/general/test_rule_builder.py
-@@ -11,9 +11,16 @@ from rule_builder.cached_world import CachedRuleBuilderWorld
+@@ -10,12 +10,19 @@ from Options import Choice, FreeText, Option, OptionSet, PerGameCommonOptions, R
+ from rule_builder.cached_world import CachedRuleBuilderWorld
+ from rule_builder.field_resolvers import FieldResolver, FromOption, FromWorldAttr, resolve_field
  from rule_builder.options import Operator, OptionFilter
- from rule_builder.rules import (
+-from rule_builder.rules import (
++from rule_builder import (
      And,
 +    Arithmetic,
 +    ASTRule,
+     AtLeast,
      CanReachEntrance,
      CanReachLocation,
      CanReachRegion,
@@ -19,7 +23,7 @@ index 81003dcd8..cc18f7d14 100644
      False_,
      Filtered,
      Has,
-@@ -25,9 +32,14 @@ from rule_builder.rules import (
+@@ -27,9 +34,14 @@ from rule_builder.rules import (
      HasFromListUnique,
      HasGroup,
      HasGroupUnique,
@@ -34,12 +38,10 @@ index 81003dcd8..cc18f7d14 100644
  )
  from test.general import setup_solo_multiworld
  from test.param import classvar_matrix
-@@ -1342,3 +1354,598 @@ class TestExplain(RuleBuilderTestCase):
-             "& False)",
-         )
-         assert str(self.resolved_rule) == " ".join(expected)
-+
-+
+@@ -1482,6 +1494,601 @@ class TestExplain(RuleBuilderTestCase):
+         self.assertEqual(str(self.resolved_rule), " ".join(expected))
+ 
+ 
 +class TestCountItem(RuleBuilderTestCase):
 +    multiworld: MultiWorld  # pyright: ignore[reportUninitializedInstanceVariable]
 +    world: World  # pyright: ignore[reportUninitializedInstanceVariable]
@@ -633,3 +635,8 @@ index 81003dcd8..cc18f7d14 100644
 +        rule = ASTRule(rule_data={"type": "custom_check"})
 +        resolved = rule.resolve(self.world)
 +        self.assertEqual(str(resolved), "ASTRule(custom_check)")
++
++
+ @classvar_matrix(
+     rules=(
+         (

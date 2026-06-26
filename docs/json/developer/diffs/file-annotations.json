@@ -4,6 +4,10 @@
 
         "_section: New Directories - Core Project": "",
 
+        "fuzz_output/": {
+            "description": "Output directory for the Archipelago fuzzer (error logs, explain stats, and report.json)."
+        },
+
         "CC/": {
             "description": "Claude Code scripts, plans, and utilities for AI-assisted development.",
             "links": [
@@ -52,6 +56,16 @@
         },
 
         "_section: New Directories - Worlds": "",
+
+        "worlds/apcalc/": {
+            "description": "APCalc fork game world (calculator-themed), authored against the fork's Rule Builder (RuleWorldMixin)."
+        },
+        "worlds/seedling/": {
+            "description": "Seedling fork game world."
+        },
+        "worlds/ut_pickle/": {
+            "description": "Universal Tracker 'UT Pickle Mode' variant providing pickle-based deferred tracking."
+        },
 
         "worlds/apworld_manager/": {
             "description": "Third-party meta-world (hidden) for installing and managing APWorlds from repositories. Unmodified from upstream source.",
@@ -122,6 +136,10 @@
 
         "_section: Changed Files - Root": "",
 
+        "Main.py": {
+            "description": "Excludes JSON-Tools exporter artifacts (rules JSON, sphere log, pickle) from the hostable .zip so a stock WebHost upload doesn't reject the archive."
+        },
+
         ".gitattributes": {
             "description": "Added `merge=ours` strategy for `.gitignore` and `README.md` to preserve fork versions during upstream merges.",
             "links": [
@@ -152,6 +170,10 @@
         },
 
         "_section: Changed Files - GitHub Config": "",
+
+        ".github/workflows/unittests.yml": {
+            "description": "Adds PYTHONUTF8/PYTHONIOENCODING env to the Unittests step so pytest-xdist stdout teardown doesn't fail on Windows cp1252."
+        },
 
         ".github/workflows/codeql-analysis.yml": {
             "description": "Added explicit `security-events`, `actions`, and `contents` permissions for safer fork operation.",
@@ -232,12 +254,6 @@
                 {"title": "Skip Required Files Proposal", "path": "docs/json/developer/proposals/skip-required-files-proposal.md"}
             ]
         },
-        "worlds/dkc3/__init__.py": {
-            "description": "Added `check_rom_available()` to skip ROM generation when `skip_required_files` is enabled.",
-            "links": [
-                {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/world-init-files.diff"}
-            ]
-        },
         "worlds/ff1/__init__.py": {
             "description": "Added skip_required_files support to allow generation without key items.",
             "links": [
@@ -289,6 +305,16 @@
 
         "_section: New Files in Existing Dirs - Root": "",
 
+        ".gitmodules": {
+            "description": "Submodule definitions for frontend/modules/shared and frontend/modules/textAdventureEngine."
+        },
+        "conftest.py": {
+            "description": "Root pytest conftest that filters upstream Archipelago worlds out of collection and AutoWorldRegister so CI only exercises this fork's own code."
+        },
+        "vitest.slow.config.js": {
+            "description": "Vitest config for the slow/long-running JS test suite (e.g. full-solver braid cross-checks)."
+        },
+
         "CLAUDE.md": {
             "description": "Quick reference for Claude Code with common commands, key concepts, and project conventions."
         },
@@ -321,6 +347,13 @@
         },
 
         "_section: New Files in Existing Dirs - Rule Builder": "",
+
+        "rule_builder/extra_rules.py": {
+            "description": "Fork overlay module: the 15 fork-specific rule types (registered into DEFAULT_RULES) layered on top of clean upstream rule_builder."
+        },
+        "rule_builder/world_mixin.py": {
+            "description": "Fork overlay module: RuleWorldMixin / RuleBuilderLogicMixin world base (World bound to object at runtime, LogicMixin resolved lazily)."
+        },
 
         "rule_builder/README.md": {
             "description": "Documentation for the Rule Builder module: declarative rule definitions with JSON serialization support.",
@@ -355,6 +388,10 @@
 
         "_section: New Files in Existing Dirs - Tests and Utilities": "",
 
+        "test/test_loop_costs_export_roundtrip.py": {
+            "description": "Verifies the loop_costs top-level rules.json key survives the world_generator -> export round-trip via the worldgen sidecar."
+        },
+
         "worlds/RomlessUtils.py": {
             "description": "Helper module providing `check_rom_available()` for skip_required_files support.",
             "links": [
@@ -369,6 +406,10 @@
         },
 
         "_section: New Files in Existing Dirs - GitHub Workflows": "",
+
+        ".github/workflows/unittests_frontend.yml": {
+            "description": "Runs the frontend JavaScript unit tests (Vitest) in CI."
+        },
 
         ".github/workflows/README.md": {
             "description": "Documentation index for all CI/CD workflows in the fork."
@@ -405,9 +446,6 @@
         },
         ".github/workflows/test-world-generator.yml": {
             "description": "Tests world generator across all games."
-        },
-        ".github/workflows/unittests_json.yml": {
-            "description": "Runs JSON-related unit tests via npm/Vitest."
         }
     }
 }

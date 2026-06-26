@@ -1,8 +1,8 @@
 # Changed Files (Annotated)
 
-Files modified from their upstream versions (commit `fb45a2f8`).
+Files modified from their upstream versions (commit `e6e0bc30`).
 
-## Root Directory (5 files)
+## Root Directory (6 files)
 
 - `.gitattributes`
 
@@ -15,6 +15,10 @@ Files modified from their upstream versions (commit `fb45a2f8`).
   Added patterns for fork-specific files: JSDoc output, frontend presets, test results, node_modules, worldgen output, and disabled worlds.
 
   [Diff](../diff-files/config-files.diff)
+
+- `Main.py`
+
+  Excludes JSON-Tools exporter artifacts (rules JSON, sphere log, pickle) from the hostable .zip so a stock WebHost upload doesn't reject the archive.
 
 - `README.md`
 
@@ -32,13 +36,17 @@ Files modified from their upstream versions (commit `fb45a2f8`).
 
   [Diff](../diff-files/core-files.diff) | [Skip Required Files Proposal](../../proposals/skip-required-files-proposal.md)
 
-## `.github/workflows/` (1 files)
+## `.github/workflows/` (2 files)
 
 - `.github/workflows/codeql-analysis.yml`
 
   Added explicit `security-events`, `actions`, and `contents` permissions for safer fork operation.
 
   [Diff](../diff-files/config-files.diff)
+
+- `.github/workflows/unittests.yml`
+
+  Adds PYTHONUTF8/PYTHONIOENCODING env to the Unittests step so pytest-xdist stdout teardown doesn't fail on Windows cp1252.
 
 ## `rule_builder/` (2 files)
 
@@ -88,14 +96,6 @@ Files modified from their upstream versions (commit `fb45a2f8`).
 
   [Diff](../diff-files/world-init-files.diff) | [Skip Required Files Proposal](../../proposals/skip-required-files-proposal.md)
 
-## `worlds/dkc3/` (1 files)
-
-- `worlds/dkc3/__init__.py`
-
-  Added `check_rom_available()` to skip ROM generation when `skip_required_files` is enabled.
-
-  [Diff](../diff-files/world-init-files.diff)
-
 ## `worlds/ff1/` (1 files)
 
 - `worlds/ff1/__init__.py`
@@ -142,6 +142,14 @@ Files modified from their upstream versions (commit `fb45a2f8`).
 
   [Diff](../diff-files/world-init-files.diff)
 
+## `worlds/shapez/` (1 files)
+
+- `worlds/shapez/__init__.py`
+
+  Removed forced `early_balancer_tunnel_and_trash = 0` override during UT regeneration that made UT more permissive than the server.
+
+  [Diff](../diff-files/world-minor-fixes.diff)
+
 ## `worlds/smw/` (1 files)
 
 - `worlds/smw/__init__.py`
@@ -176,4 +184,4 @@ Files modified from their upstream versions (commit `fb45a2f8`).
 
 ---
 
-**Total:** 25 changed files
+**Total:** 27 changed files
