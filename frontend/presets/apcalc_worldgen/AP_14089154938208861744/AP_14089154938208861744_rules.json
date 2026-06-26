@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "APCalc WorldGen",
   "game_directory": "apcalc_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -10,11 +10,11 @@
   },
   "regions": {
     "1": {
-      "C": {
-        "name": "C",
+      "Menu": {
+        "name": "Menu",
         "exits": [
           {
-            "name": "C to Region 1",
+            "name": "Menu to Region 1",
             "connected_region": "Node 6",
             "access_rule": {
               "rule": "Has",
@@ -24,7 +24,7 @@
             }
           },
           {
-            "name": "C to Region 2",
+            "name": "Menu to Region 2",
             "connected_region": "Node 8",
             "access_rule": {
               "rule": "Has",
@@ -34,7 +34,7 @@
             }
           },
           {
-            "name": "C to Region 3",
+            "name": "Menu to Region 3",
             "connected_region": "Node 9",
             "access_rule": {
               "rule": "Has",
@@ -44,7 +44,7 @@
             }
           },
           {
-            "name": "C to Region 4",
+            "name": "Menu to Region 4",
             "connected_region": "Node 7",
             "access_rule": {
               "rule": "Has",
@@ -59,7 +59,91 @@
             "name": "Victory",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Checked 1",
+                  "Checked 10",
+                  "Checked 11",
+                  "Checked 12",
+                  "Checked 13",
+                  "Checked 14",
+                  "Checked 15",
+                  "Checked 16",
+                  "Checked 17",
+                  "Checked 18",
+                  "Checked 19",
+                  "Checked 2",
+                  "Checked 20",
+                  "Checked 21",
+                  "Checked 22",
+                  "Checked 23",
+                  "Checked 24",
+                  "Checked 25",
+                  "Checked 26",
+                  "Checked 27",
+                  "Checked 28",
+                  "Checked 29",
+                  "Checked 3",
+                  "Checked 30",
+                  "Checked 31",
+                  "Checked 32",
+                  "Checked 33",
+                  "Checked 34",
+                  "Checked 35",
+                  "Checked 36",
+                  "Checked 37",
+                  "Checked 38",
+                  "Checked 39",
+                  "Checked 4",
+                  "Checked 40",
+                  "Checked 41",
+                  "Checked 42",
+                  "Checked 43",
+                  "Checked 44",
+                  "Checked 45",
+                  "Checked 46",
+                  "Checked 47",
+                  "Checked 48",
+                  "Checked 49",
+                  "Checked 5",
+                  "Checked 50",
+                  "Checked 51",
+                  "Checked 52",
+                  "Checked 53",
+                  "Checked 54",
+                  "Checked 55",
+                  "Checked 56",
+                  "Checked 57",
+                  "Checked 58",
+                  "Checked 59",
+                  "Checked 6",
+                  "Checked 60",
+                  "Checked 61",
+                  "Checked 62",
+                  "Checked 63",
+                  "Checked 64",
+                  "Checked 65",
+                  "Checked 66",
+                  "Checked 67",
+                  "Checked 68",
+                  "Checked 69",
+                  "Checked 7",
+                  "Checked 70",
+                  "Checked 71",
+                  "Checked 72",
+                  "Checked 73",
+                  "Checked 74",
+                  "Checked 75",
+                  "Checked 76",
+                  "Checked 77",
+                  "Checked 78",
+                  "Checked 79",
+                  "Checked 8",
+                  "Checked 80",
+                  "Checked 9"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -79,35 +163,73 @@
             "name": "Region 1 to Region 10",
             "connected_region": "Node 7704 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 1 to Region 11",
             "connected_region": "Node -87 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: -",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 1 to Region 13",
             "connected_region": "Node 48 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: 6",
+                  "Button: 8"
+                ]
+              }
             }
           },
           {
             "name": "Region 1 to Region 16",
             "connected_region": "Node 18 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: 3",
+                  "Button: 6"
+                ]
+              }
             }
           },
           {
             "name": "Region 1 to Region 12",
             "connected_region": "Node 7 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 1",
+                  "Button: 6"
+                ]
+              }
             }
           }
         ],
@@ -119,7 +241,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 1",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -150,35 +272,78 @@
             "name": "Region 2 to Region 8",
             "connected_region": "Node 9375 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 2 to Region 5",
             "connected_region": "Node 145 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 1",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
             }
           },
           {
             "name": "Region 2 to Region 12",
             "connected_region": "Node 7 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: -",
+                  "Button: 1",
+                  "Button: 8"
+                ]
+              }
             }
           },
           {
             "name": "Region 2 to Region 10",
             "connected_region": "Node 7704 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 2 to Region 13",
             "connected_region": "Node 48 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 4",
+                  "Button: 8"
+                ]
+              }
             }
           }
         ],
@@ -190,7 +355,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -221,35 +386,74 @@
             "name": "Region 3 to Region 5",
             "connected_region": "Node 145 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 1",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 3 to Region 7",
             "connected_region": "Node 196 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 1",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 3 to Region 6",
             "connected_region": "Node 96 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 3 to Region 16",
             "connected_region": "Node 18 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 3 to Region 13",
             "connected_region": "Node 48 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: 3": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -261,7 +465,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: *",
+              "name": "Button: 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -292,35 +496,76 @@
             "name": "Region 4 to Region 6",
             "connected_region": "Node 96 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 4 to Region 5",
             "connected_region": "Node 145 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 1",
+                  "Button: 3",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
             }
           },
           {
             "name": "Region 4 to Region 8",
             "connected_region": "Node 9375 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 7",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 4 to Region 16",
             "connected_region": "Node 18 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: 1": 2,
+                  "Button: 7": 1
+                }
+              }
             }
           },
           {
             "name": "Region 4 to Region 12",
             "connected_region": "Node 7 L1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: 0",
+                  "Button: 7"
+                ]
+              }
             }
           }
         ],
@@ -332,7 +577,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: *",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -363,28 +608,77 @@
             "name": "Region 5 to Region 28",
             "connected_region": "Node 930755 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 5 to Region 14",
             "connected_region": "Node 9809 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 5 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1
+                }
+              }
             }
           },
           {
             "name": "Region 5 to Region 15",
             "connected_region": "Node -760293 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 2
+                }
+              }
             }
           }
         ],
@@ -427,35 +721,91 @@
             "name": "Region 6 to Region 9",
             "connected_region": "Node -3820 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 6 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: /": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 6 to Region 20",
             "connected_region": "Node -6010 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 6 to Region 15",
             "connected_region": "Node -760293 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 6 to Region 23",
             "connected_region": "Node 9513 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 1": 1,
+                  "Button: 4": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -467,7 +817,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: /",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -498,35 +848,91 @@
             "name": "Region 7 to Region 9",
             "connected_region": "Node -3820 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 7 to Region 18",
             "connected_region": "Node 9364 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 1": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 7 to Region 23",
             "connected_region": "Node 9513 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 7 to Region 15",
             "connected_region": "Node -760293 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 7 to Region 47",
             "connected_region": "Node 2 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -569,28 +975,74 @@
             "name": "Region 8 to Region 18",
             "connected_region": "Node 9364 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 8 to Region 23",
             "connected_region": "Node 9513 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 8 to Region 14",
             "connected_region": "Node 9809 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 8 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -602,7 +1054,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -668,21 +1120,53 @@
             "name": "Region 10 to Region 17",
             "connected_region": "Node 21 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 10 to Region 23",
             "connected_region": "Node 9513 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 10 to Region 75",
             "connected_region": "Node 14773 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 0": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -725,35 +1209,88 @@
             "name": "Region 11 to Region 15",
             "connected_region": "Node -760293 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: 3": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 11 to Region 17",
             "connected_region": "Node 21 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: +",
+                  "Button: -",
+                  "Button: 0",
+                  "Button: 1",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 8",
+                  "Button: 9"
+                ]
+              }
             }
           },
           {
             "name": "Region 11 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 11 to Region 14",
             "connected_region": "Node 9809 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 11 to Region 45",
             "connected_region": "Node -23 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -765,7 +1302,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 9",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -796,28 +1333,66 @@
             "name": "Region 12 to Region 20",
             "connected_region": "Node -6010 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1
+                }
+              }
             }
           },
           {
             "name": "Region 12 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: -",
+                  "Button: /",
+                  "Button: 1",
+                  "Button: 7",
+                  "Button: 8"
+                ]
+              }
             }
           },
           {
             "name": "Region 12 to Region 17",
             "connected_region": "Node 21 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 4": 1,
+                  "Button: 8": 1
+                }
+              }
             }
           },
           {
             "name": "Region 12 to Region 59",
             "connected_region": "Node -1167 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1
+                }
+              }
             }
           }
         ],
@@ -829,7 +1404,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 0",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -860,28 +1435,70 @@
             "name": "Region 13 to Region 14",
             "connected_region": "Node 9809 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: 1": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 13 to Region 15",
             "connected_region": "Node -760293 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1
+                }
+              }
             }
           },
           {
             "name": "Region 13 to Region 18",
             "connected_region": "Node 9364 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 6": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 13 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: /": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 2
+                }
+              }
             }
           }
         ],
@@ -893,7 +1510,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: +",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -924,14 +1541,39 @@
             "name": "Region 14 to Region 22",
             "connected_region": "Node 9790 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 14 to Region 26",
             "connected_region": "Node 112 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -943,7 +1585,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: /",
+              "name": "Button: 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1009,35 +1651,85 @@
             "name": "Region 16 to Region 17",
             "connected_region": "Node 21 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: 3": 2,
+                  "Button: 6": 1
+                }
+              }
             }
           },
           {
             "name": "Region 16 to Region 15",
             "connected_region": "Node -760293 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 16 to Region 33",
             "connected_region": "Node 1 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Button: *",
+                  "Button: -",
+                  "Button: 1",
+                  "Button: 3",
+                  "Button: 6",
+                  "Button: 7"
+                ]
+              }
             }
           },
           {
             "name": "Region 16 to Region 28",
             "connected_region": "Node 930755 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: 0": 1,
+                  "Button: 3": 2,
+                  "Button: 7": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 16 to Region 14",
             "connected_region": "Node 9809 L2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -1080,14 +1772,37 @@
             "name": "Region 17 to Region 26",
             "connected_region": "Node 112 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 6": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 17 to Region 22",
             "connected_region": "Node 9790 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -1130,7 +1845,21 @@
             "name": "Region 18 to Region 19",
             "connected_region": "Node 4335532 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -1208,7 +1937,19 @@
             "name": "Region 20 to Region 21",
             "connected_region": "Node -18030 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1
+                }
+              }
             }
           }
         ],
@@ -1251,7 +1992,19 @@
             "name": "Region 21 to Region 53",
             "connected_region": "Node -108180 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 1
+                }
+              }
             }
           }
         ],
@@ -1263,7 +2016,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: 6",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1294,14 +2047,42 @@
             "name": "Region 22 to Region 37",
             "connected_region": "Node 754728 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 22 to Region 46",
             "connected_region": "Node 38650920 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -1313,7 +2094,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: *",
+              "name": "Button: 7",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1344,21 +2125,63 @@
             "name": "Region 23 to Region 24",
             "connected_region": "Node 380520 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 23 to Region 26",
             "connected_region": "Node 112 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 23 to Region 70",
             "connected_region": "Node 3104 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -1401,7 +2224,22 @@
             "name": "Region 24 to Region 25",
             "connected_region": "Node 380504 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -1479,28 +2317,79 @@
             "name": "Region 26 to Region 27",
             "connected_region": "Node -297 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 26 to Region 31",
             "connected_region": "Node 1013376 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 26 to Region 58",
             "connected_region": "Node 968576 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 26 to Region 64",
             "connected_region": "Node 7840 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2
+                }
+              }
             }
           }
         ],
@@ -1578,7 +2467,21 @@
             "name": "Region 28 to Region 29",
             "connected_region": "Node 930835 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -1590,7 +2493,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 3",
+              "name": "Button: +",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1621,7 +2524,22 @@
             "name": "Region 29 to Region 30",
             "connected_region": "Node 929872 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -1633,7 +2551,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 4",
+              "name": "Button: -",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1664,7 +2582,22 @@
             "name": "Region 30 to Region 56",
             "connected_region": "Node 6509104 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -1707,7 +2640,21 @@
             "name": "Region 31 to Region 32",
             "connected_region": "Node 1013260 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -1719,7 +2666,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 9",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1750,7 +2697,22 @@
             "name": "Region 32 to Region 39",
             "connected_region": "Node 9977571220 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -1793,21 +2755,57 @@
             "name": "Region 33 to Region 34",
             "connected_region": "Node 6396 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 33 to Region 22",
             "connected_region": "Node 9790 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 33 to Region 26",
             "connected_region": "Node 112 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: /": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 1,
+                  "Button: 6": 1,
+                  "Button: 8": 2
+                }
+              }
             }
           }
         ],
@@ -1819,7 +2817,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: +",
+              "name": "Button: 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1850,21 +2848,63 @@
             "name": "Region 34 to Region 35",
             "connected_region": "Node 614016 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 34 to Region 37",
             "connected_region": "Node 754728 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           },
           {
             "name": "Region 34 to Region 25",
             "connected_region": "Node 380504 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -1907,21 +2947,64 @@
             "name": "Region 35 to Region 36",
             "connected_region": "Node 614724 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 35 to Region 40",
             "connected_region": "Node 623327 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 35 to Region 61",
             "connected_region": "Node 614025 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -1933,7 +3016,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 8",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1968,7 +3051,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 6",
+              "name": "Button: 1",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1999,14 +3082,44 @@
             "name": "Region 37 to Region 38",
             "connected_region": "Node 762631 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           },
           {
             "name": "Region 37 to Region 43",
             "connected_region": "Node 764122 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2088,7 +3201,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 0",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2119,7 +3232,23 @@
             "name": "Region 40 to Region 41",
             "connected_region": "Node 630411 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2131,7 +3260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: -",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2162,7 +3291,23 @@
             "name": "Region 41 to Region 42",
             "connected_region": "Node 2521644 L7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2174,7 +3319,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 1",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2240,7 +3385,23 @@
             "name": "Region 43 to Region 44",
             "connected_region": "Node 4641277028 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2287,7 +3448,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 7",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2318,7 +3479,21 @@
             "name": "Region 45 to Region 76",
             "connected_region": "Node -170430 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -2365,7 +3540,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 9",
+              "name": "Button: *",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2396,7 +3571,19 @@
             "name": "Region 47 to Region 48",
             "connected_region": "Node 4698 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2439,7 +3626,20 @@
             "name": "Region 48 to Region 49",
             "connected_region": "Node 4634 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2482,14 +3682,45 @@
             "name": "Region 49 to Region 50",
             "connected_region": "Node 15324638 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 49 to Region 68",
             "connected_region": "Node 509740 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2532,14 +3763,46 @@
             "name": "Region 50 to Region 51",
             "connected_region": "Node 15324638 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           },
           {
             "name": "Region 50 to Region 74",
             "connected_region": "Node 168571018 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2582,7 +3845,23 @@
             "name": "Region 51 to Region 52",
             "connected_region": "Node 15324638 L7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2660,7 +3939,21 @@
             "name": "Region 53 to Region 54",
             "connected_region": "Node -103396 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 1
+                }
+              }
             }
           }
         ],
@@ -2703,7 +3996,22 @@
             "name": "Region 54 to Region 55",
             "connected_region": "Node -10236204 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -2715,7 +4023,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: +",
+              "name": "Button: 9",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2781,7 +4089,22 @@
             "name": "Region 56 to Region 57",
             "connected_region": "Node 30534206864 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -2894,7 +4217,20 @@
             "name": "Region 59 to Region 60",
             "connected_region": "Node -10262598 L3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -2972,7 +4308,21 @@
             "name": "Region 61 to Region 62",
             "connected_region": "Node 1842075 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 1,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3015,7 +4365,22 @@
             "name": "Region 62 to Region 63",
             "connected_region": "Node 1842079 L7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 1": 1,
+                  "Button: 3": 2,
+                  "Button: 4": 1,
+                  "Button: 6": 3,
+                  "Button: 7": 1,
+                  "Button: 8": 1,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3027,7 +4392,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 6",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3093,7 +4458,21 @@
             "name": "Region 64 to Region 65",
             "connected_region": "Node 7792960 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -3136,7 +4515,21 @@
             "name": "Region 65 to Region 66",
             "connected_region": "Node 7792967 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 2,
+                  "Button: 6": 1,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -3179,7 +4572,22 @@
             "name": "Region 66 to Region 67",
             "connected_region": "Node 7792871 L7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3257,7 +4665,23 @@
             "name": "Region 68 to Region 69",
             "connected_region": "Node 171782380 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3335,7 +4759,22 @@
             "name": "Region 70 to Region 71",
             "connected_region": "Node 266944 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 1,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3378,7 +4817,22 @@
             "name": "Region 71 to Region 72",
             "connected_region": "Node 12279424 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 1,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3421,7 +4875,22 @@
             "name": "Region 72 to Region 73",
             "connected_region": "Node 380662144 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 3,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3433,7 +4902,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 1",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3538,7 +5007,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Junk",
+              "name": "Button: *",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3569,7 +5038,21 @@
             "name": "Region 76 to Region 77",
             "connected_region": "Node -170399 L4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 1,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 2,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 9": 1
+                }
+              }
             }
           }
         ],
@@ -3612,7 +5095,22 @@
             "name": "Region 77 to Region 78",
             "connected_region": "Node -1530353419 L5",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 2,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 2
+                }
+              }
             }
           }
         ],
@@ -3624,7 +5122,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: 1",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3655,7 +5153,22 @@
             "name": "Region 78 to Region 79",
             "connected_region": "Node -13773180771 L6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 1,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3698,7 +5211,23 @@
             "name": "Region 79 to Region 80",
             "connected_region": "Node -1967597253 L7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Button: *": 3,
+                  "Button: +": 2,
+                  "Button: -": 1,
+                  "Button: /": 1,
+                  "Button: 0": 1,
+                  "Button: 1": 3,
+                  "Button: 3": 2,
+                  "Button: 4": 2,
+                  "Button: 6": 2,
+                  "Button: 7": 2,
+                  "Button: 8": 2,
+                  "Button: 9": 3
+                }
+              }
             }
           }
         ],
@@ -3710,7 +5239,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Button: *",
+              "name": "Junk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3774,7 +5303,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "C"
+        "Menu"
       ],
       "available": []
     }
@@ -5023,7 +6552,6 @@
       "Button: 7"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "APCalc WorldGen",

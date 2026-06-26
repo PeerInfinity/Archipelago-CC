@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Risk of Rain 2 WorldGen",
   "game_directory": "ror2_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3404,14 +3404,26 @@
             "name": "OrderedStage_5 -> Hidden Realm: A Moment, Fractured",
             "connected_region": "Hidden Realm: A Moment, Fractured",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hidden Realm: A Moment, Fractured",
+                  "Stage 5"
+                ]
+              }
             }
           },
           {
             "name": "OrderedStage_5 -> Commencement",
             "connected_region": "Commencement",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Commencement",
+                  "Stage 5"
+                ]
+              }
             }
           }
         ],
@@ -3420,7 +3432,13 @@
             "name": "Stage 5",
             "id": null,
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Helminth Hatchery",
+                  "Sky Meadow"
+                ]
+              }
             },
             "item": {
               "name": "Stage 5",
@@ -3441,7 +3459,39 @@
             "name": "OrderedStage_1 -> Hidden Realm: Bazaar Between Time",
             "connected_region": "Hidden Realm: Bazaar Between Time",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 1
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hidden Realm: Bazaar Between Time"
+                  }
+                }
+              ]
             }
           },
           {
@@ -3455,14 +3505,78 @@
             "name": "OrderedStage_1 -> Abandoned Aqueduct",
             "connected_region": "Abandoned Aqueduct",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 1
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Abandoned Aqueduct"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_1 -> Wetland Aspect",
             "connected_region": "Wetland Aspect",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 1
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wetland Aspect"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3475,14 +3589,78 @@
             "name": "OrderedStage_2 -> Rallypoint Delta",
             "connected_region": "Rallypoint Delta",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 2
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Rallypoint Delta"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_2 -> Scorched Acres",
             "connected_region": "Scorched Acres",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 2
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Scorched Acres"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3495,21 +3673,117 @@
             "name": "OrderedStage_3 -> Abyssal Depths",
             "connected_region": "Abyssal Depths",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 3
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Abyssal Depths"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_3 -> Siren's Call",
             "connected_region": "Siren's Call",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 3
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Siren's Call"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_3 -> Sundered Grove",
             "connected_region": "Sundered Grove",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 3
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sundered Grove"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3522,7 +3796,39 @@
             "name": "OrderedStage_4 -> Sky Meadow",
             "connected_region": "Sky Meadow",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 4
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 4"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sky Meadow"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3535,7 +3841,13 @@
             "name": "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole",
             "connected_region": "Hidden Realm: A Moment, Whole",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Beads of Fealty",
+                  "Hidden Realm: A Moment, Whole"
+                ]
+              }
             }
           }
         ],
@@ -3607,7 +3919,13 @@
             "name": "Hidden Realm: Bazaar Between Time -> Void Fields",
             "connected_region": "Void Fields",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hidden Realm: Bazaar Between Time",
+                  "Void Fields"
+                ]
+              }
             }
           }
         ],
@@ -4553,7 +4871,6 @@
       "Distant Roost"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Risk of Rain 2 WorldGen",

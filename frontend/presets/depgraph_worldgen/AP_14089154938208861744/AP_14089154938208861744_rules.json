@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph WorldGen",
   "game_directory": "depgraph_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -58,14 +58,30 @@
             "name": "From command_line to package_managers",
             "connected_region": "Package Managers",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Command Line",
+                  "Event: Command Line"
+                ]
+              }
             }
           },
           {
             "name": "From command_line to static_website",
             "connected_region": "Static Website Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Command Line",
+                  "Event: CSS",
+                  "Event: Command Line",
+                  "Event: Git",
+                  "Event: JavaScript Basics",
+                  "Event: Server Basics"
+                ]
+              }
             }
           }
         ],
@@ -108,7 +124,17 @@
             "name": "From git to static_website",
             "connected_region": "Static Website Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: CSS",
+                  "Event: Command Line",
+                  "Event: Git",
+                  "Event: JavaScript Basics",
+                  "Event: Server Basics",
+                  "Git"
+                ]
+              }
             }
           }
         ],
@@ -151,7 +177,13 @@
             "name": "From html to css",
             "connected_region": "CSS",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: HTML",
+                  "HTML"
+                ]
+              }
             }
           }
         ],
@@ -194,14 +226,30 @@
             "name": "From css to design_systems",
             "connected_region": "Design Systems",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "CSS",
+                  "Event: CSS"
+                ]
+              }
             }
           },
           {
             "name": "From css to static_website",
             "connected_region": "Static Website Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "CSS",
+                  "Event: CSS",
+                  "Event: Command Line",
+                  "Event: Git",
+                  "Event: JavaScript Basics",
+                  "Event: Server Basics"
+                ]
+              }
             }
           }
         ],
@@ -244,7 +292,14 @@
             "name": "From design_systems to ui_ux",
             "connected_region": "UI/UX",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Design Systems",
+                  "Event: Design Systems",
+                  "Event: Static Website Complete"
+                ]
+              }
             }
           }
         ],
@@ -287,21 +342,43 @@
             "name": "From javascript to algorithms",
             "connected_region": "Algorithms",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: JavaScript Basics",
+                  "JavaScript Basics"
+                ]
+              }
             }
           },
           {
             "name": "From javascript to dom_manipulation",
             "connected_region": "DOM Manipulation",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: JavaScript Basics",
+                  "JavaScript Basics"
+                ]
+              }
             }
           },
           {
             "name": "From javascript to static_website",
             "connected_region": "Static Website Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: CSS",
+                  "Event: Command Line",
+                  "Event: Git",
+                  "Event: JavaScript Basics",
+                  "Event: Server Basics",
+                  "JavaScript Basics"
+                ]
+              }
             }
           }
         ],
@@ -344,7 +421,14 @@
             "name": "From algorithms to vanilla_js",
             "connected_region": "Vanilla JS Mastery",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Algorithms",
+                  "Event: Algorithms",
+                  "Event: Static Website Complete"
+                ]
+              }
             }
           }
         ],
@@ -387,7 +471,14 @@
             "name": "From dom_manipulation to react",
             "connected_region": "React",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "DOM Manipulation",
+                  "Event: DOM Manipulation",
+                  "Event: Static Website Complete"
+                ]
+              }
             }
           }
         ],
@@ -465,14 +556,30 @@
             "name": "From server_basics to http_basics",
             "connected_region": "HTTP Basics",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Server Basics",
+                  "Server Basics"
+                ]
+              }
             }
           },
           {
             "name": "From server_basics to static_website",
             "connected_region": "Static Website Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: CSS",
+                  "Event: Command Line",
+                  "Event: Git",
+                  "Event: JavaScript Basics",
+                  "Event: Server Basics",
+                  "Server Basics"
+                ]
+              }
             }
           }
         ],
@@ -515,7 +622,14 @@
             "name": "From http_basics to sessions",
             "connected_region": "Sessions",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: HTTP Basics",
+                  "Event: Interactive App Complete",
+                  "HTTP Basics"
+                ]
+              }
             }
           }
         ],
@@ -558,63 +672,120 @@
             "name": "From static_website to django",
             "connected_region": "Django",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to express",
             "connected_region": "Express",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to flask",
             "connected_region": "Flask",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to nosql",
             "connected_region": "NoSQL",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to react",
             "connected_region": "React",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: DOM Manipulation",
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to sql",
             "connected_region": "SQL",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to ui_ux",
             "connected_region": "UI/UX",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Design Systems",
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to vanilla_js",
             "connected_region": "Vanilla JS Mastery",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Algorithms",
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           },
           {
             "name": "From static_website to vue",
             "connected_region": "Vue",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Static Website Complete",
+                  "Static Website Complete"
+                ]
+              }
             }
           }
         ],
@@ -657,7 +828,13 @@
             "name": "From django to django_rest",
             "connected_region": "Django APIs",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Django",
+                  "Event: Django"
+                ]
+              }
             }
           }
         ],
@@ -700,7 +877,13 @@
             "name": "From django_rest to django_db",
             "connected_region": "Django ORM",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Django APIs",
+                  "Event: Django APIs"
+                ]
+              }
             }
           }
         ],
@@ -743,7 +926,21 @@
             "name": "From django_db to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Django ORM",
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex"
+                ]
+              }
             }
           }
         ],
@@ -786,7 +983,13 @@
             "name": "From express to express_apis",
             "connected_region": "Express APIs",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Express",
+                  "Express"
+                ]
+              }
             }
           }
         ],
@@ -829,7 +1032,13 @@
             "name": "From express_apis to express_db",
             "connected_region": "Express DB Integration",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Express APIs",
+                  "Express APIs"
+                ]
+              }
             }
           }
         ],
@@ -872,7 +1081,21 @@
             "name": "From express_db to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex",
+                  "Express DB Integration"
+                ]
+              }
             }
           }
         ],
@@ -915,7 +1138,13 @@
             "name": "From flask to flask_restful",
             "connected_region": "Flask APIs",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Flask",
+                  "Flask"
+                ]
+              }
             }
           }
         ],
@@ -958,7 +1187,13 @@
             "name": "From flask_restful to flask_db",
             "connected_region": "SQLAlchemy",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Flask APIs",
+                  "Flask APIs"
+                ]
+              }
             }
           }
         ],
@@ -1001,7 +1236,21 @@
             "name": "From flask_db to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex",
+                  "SQLAlchemy"
+                ]
+              }
             }
           }
         ],
@@ -1044,7 +1293,13 @@
             "name": "From nosql to mongodb_basics",
             "connected_region": "MongoDB Basics",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: NoSQL",
+                  "NoSQL"
+                ]
+              }
             }
           }
         ],
@@ -1087,7 +1342,13 @@
             "name": "From mongodb_basics to nosql_indexing",
             "connected_region": "NoSQL Indexing",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: MongoDB Basics",
+                  "MongoDB Basics"
+                ]
+              }
             }
           }
         ],
@@ -1130,7 +1391,21 @@
             "name": "From nosql_indexing to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex",
+                  "NoSQL Indexing"
+                ]
+              }
             }
           }
         ],
@@ -1173,7 +1448,13 @@
             "name": "From react to react_mastery",
             "connected_region": "React Mastery",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: React",
+                  "React"
+                ]
+              }
             }
           }
         ],
@@ -1216,7 +1497,13 @@
             "name": "From react_mastery to redux",
             "connected_region": "Redux",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: React Mastery",
+                  "React Mastery"
+                ]
+              }
             }
           }
         ],
@@ -1259,7 +1546,21 @@
             "name": "From redux to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex",
+                  "Redux"
+                ]
+              }
             }
           }
         ],
@@ -1302,7 +1603,13 @@
             "name": "From sql to postgresql",
             "connected_region": "PostgreSQL",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: SQL",
+                  "SQL"
+                ]
+              }
             }
           }
         ],
@@ -1345,7 +1652,13 @@
             "name": "From postgresql to sql_optimization",
             "connected_region": "SQL Optimization",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: PostgreSQL",
+                  "PostgreSQL"
+                ]
+              }
             }
           }
         ],
@@ -1388,7 +1701,21 @@
             "name": "From sql_optimization to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex",
+                  "SQL Optimization"
+                ]
+              }
             }
           }
         ],
@@ -1431,7 +1758,13 @@
             "name": "From ui_ux to responsive_design",
             "connected_region": "Responsive Design",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: UI/UX",
+                  "UI/UX"
+                ]
+              }
             }
           }
         ],
@@ -1474,7 +1807,13 @@
             "name": "From responsive_design to accessibility",
             "connected_region": "Accessibility",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Responsive Design",
+                  "Responsive Design"
+                ]
+              }
             }
           }
         ],
@@ -1517,7 +1856,21 @@
             "name": "From accessibility to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Accessibility",
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex"
+                ]
+              }
             }
           }
         ],
@@ -1560,7 +1913,13 @@
             "name": "From vanilla_js to custom_state",
             "connected_region": "Custom State System",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Vanilla JS Mastery",
+                  "Vanilla JS Mastery"
+                ]
+              }
             }
           }
         ],
@@ -1603,7 +1962,21 @@
             "name": "From custom_state to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Custom State System",
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex"
+                ]
+              }
             }
           }
         ],
@@ -1646,7 +2019,13 @@
             "name": "From vue to vue_mastery",
             "connected_region": "Vue Mastery",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Vue",
+                  "Vue"
+                ]
+              }
             }
           }
         ],
@@ -1689,7 +2068,13 @@
             "name": "From vue_mastery to vuex",
             "connected_region": "Vuex",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Vue Mastery",
+                  "Vue Mastery"
+                ]
+              }
             }
           }
         ],
@@ -1732,7 +2117,21 @@
             "name": "From vuex to interactive_app",
             "connected_region": "Interactive App Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Accessibility",
+                  "Event: Custom State System",
+                  "Event: Django ORM",
+                  "Event: Express DB Integration",
+                  "Event: NoSQL Indexing",
+                  "Event: Redux",
+                  "Event: SQL Optimization",
+                  "Event: SQLAlchemy",
+                  "Event: Vuex",
+                  "Vuex"
+                ]
+              }
             }
           }
         ],
@@ -1775,28 +2174,53 @@
             "name": "From interactive_app to caching",
             "connected_region": "Caching",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Interactive App Complete",
+                  "Interactive App Complete"
+                ]
+              }
             }
           },
           {
             "name": "From interactive_app to docker",
             "connected_region": "Docker",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Interactive App Complete",
+                  "Interactive App Complete"
+                ]
+              }
             }
           },
           {
             "name": "From interactive_app to sessions",
             "connected_region": "Sessions",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: HTTP Basics",
+                  "Event: Interactive App Complete",
+                  "Interactive App Complete"
+                ]
+              }
             }
           },
           {
             "name": "From interactive_app to unit_tests",
             "connected_region": "Unit Tests",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Interactive App Complete",
+                  "Interactive App Complete"
+                ]
+              }
             }
           }
         ],
@@ -1839,7 +2263,13 @@
             "name": "From caching to cdn",
             "connected_region": "CDN",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Caching",
+                  "Event: Caching"
+                ]
+              }
             }
           }
         ],
@@ -1882,7 +2312,13 @@
             "name": "From cdn to load_balancing",
             "connected_region": "Performance",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "CDN",
+                  "Event: CDN"
+                ]
+              }
             }
           }
         ],
@@ -1925,7 +2361,13 @@
             "name": "From docker to ci_cd",
             "connected_region": "CI/CD",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Docker",
+                  "Event: Docker"
+                ]
+              }
             }
           }
         ],
@@ -1968,7 +2410,13 @@
             "name": "From ci_cd to monitoring",
             "connected_region": "DevOps",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "CI/CD",
+                  "Event: CI/CD"
+                ]
+              }
             }
           }
         ],
@@ -2011,7 +2459,16 @@
             "name": "From load_balancing to fullstack",
             "connected_region": "Full-Stack Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Authentication",
+                  "Event: DevOps",
+                  "Event: Performance",
+                  "Event: Testing",
+                  "Performance"
+                ]
+              }
             }
           }
         ],
@@ -2054,7 +2511,16 @@
             "name": "From monitoring to fullstack",
             "connected_region": "Full-Stack Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "DevOps",
+                  "Event: Authentication",
+                  "Event: DevOps",
+                  "Event: Performance",
+                  "Event: Testing"
+                ]
+              }
             }
           }
         ],
@@ -2097,7 +2563,13 @@
             "name": "From sessions to jwt",
             "connected_region": "JWT",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Sessions",
+                  "Sessions"
+                ]
+              }
             }
           }
         ],
@@ -2140,7 +2612,13 @@
             "name": "From jwt to oauth",
             "connected_region": "Authentication",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: JWT",
+                  "JWT"
+                ]
+              }
             }
           }
         ],
@@ -2183,7 +2661,16 @@
             "name": "From oauth to fullstack",
             "connected_region": "Full-Stack Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Authentication",
+                  "Event: Authentication",
+                  "Event: DevOps",
+                  "Event: Performance",
+                  "Event: Testing"
+                ]
+              }
             }
           }
         ],
@@ -2226,7 +2713,13 @@
             "name": "From unit_tests to integration_tests",
             "connected_region": "Integration Tests",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Unit Tests",
+                  "Unit Tests"
+                ]
+              }
             }
           }
         ],
@@ -2269,7 +2762,13 @@
             "name": "From integration_tests to e2e_tests",
             "connected_region": "Testing",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Integration Tests",
+                  "Integration Tests"
+                ]
+              }
             }
           }
         ],
@@ -2312,7 +2811,16 @@
             "name": "From e2e_tests to fullstack",
             "connected_region": "Full-Stack Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Authentication",
+                  "Event: DevOps",
+                  "Event: Performance",
+                  "Event: Testing",
+                  "Testing"
+                ]
+              }
             }
           }
         ],
@@ -2355,21 +2863,39 @@
             "name": "From fullstack to cloud_provider",
             "connected_region": "Cloud Provider",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Full-Stack Complete",
+                  "Full-Stack Complete"
+                ]
+              }
             }
           },
           {
             "name": "From fullstack to horizontal_scaling",
             "connected_region": "Horizontal Scaling",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Full-Stack Complete",
+                  "Full-Stack Complete"
+                ]
+              }
             }
           },
           {
             "name": "From fullstack to https",
             "connected_region": "HTTPS",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Full-Stack Complete",
+                  "Full-Stack Complete"
+                ]
+              }
             }
           }
         ],
@@ -2412,7 +2938,13 @@
             "name": "From cloud_provider to domain_setup",
             "connected_region": "Domain",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cloud Provider",
+                  "Event: Cloud Provider"
+                ]
+              }
             }
           }
         ],
@@ -2455,7 +2987,14 @@
             "name": "From domain_setup to ssl_certificate",
             "connected_region": "Deployment Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Domain",
+                  "Event: Domain",
+                  "Event: HTTPS"
+                ]
+              }
             }
           }
         ],
@@ -2498,7 +3037,13 @@
             "name": "From horizontal_scaling to microservices",
             "connected_region": "Scaling Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Horizontal Scaling",
+                  "Horizontal Scaling"
+                ]
+              }
             }
           }
         ],
@@ -2541,14 +3086,27 @@
             "name": "From https to cors",
             "connected_region": "CORS",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: HTTPS",
+                  "HTTPS"
+                ]
+              }
             }
           },
           {
             "name": "From https to ssl_certificate",
             "connected_region": "Deployment Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Domain",
+                  "Event: HTTPS",
+                  "HTTPS"
+                ]
+              }
             }
           }
         ],
@@ -2591,7 +3149,13 @@
             "name": "From cors to input_validation",
             "connected_region": "Security Complete",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "CORS",
+                  "Event: CORS"
+                ]
+              }
             }
           }
         ],
@@ -2634,7 +3198,15 @@
             "name": "From input_validation to production",
             "connected_region": "Production Deployment",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Deployment Complete",
+                  "Event: Scaling Complete",
+                  "Event: Security Complete",
+                  "Security Complete"
+                ]
+              }
             }
           }
         ],
@@ -2677,7 +3249,15 @@
             "name": "From microservices to production",
             "connected_region": "Production Deployment",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Event: Deployment Complete",
+                  "Event: Scaling Complete",
+                  "Event: Security Complete",
+                  "Scaling Complete"
+                ]
+              }
             }
           }
         ],
@@ -2720,7 +3300,15 @@
             "name": "From ssl_certificate to production",
             "connected_region": "Production Deployment",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deployment Complete",
+                  "Event: Deployment Complete",
+                  "Event: Scaling Complete",
+                  "Event: Security Complete"
+                ]
+              }
             }
           }
         ],
@@ -14680,7 +15268,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph WorldGen",

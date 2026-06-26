@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Adventure WorldGen",
   "game_directory": "adventure_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -60,7 +60,13 @@
             "name": "CreditsWall",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Black Key",
+                  "Bridge"
+                ]
+              }
             }
           }
         ],
@@ -209,7 +215,13 @@
             "name": "Slay Yorgle",
             "id": 118000209,
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Freeincarnate",
@@ -252,7 +264,13 @@
             "name": "Chalice Home",
             "id": null,
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chalice",
+                  "Yellow Key"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -290,7 +308,13 @@
             "name": "WhiteCastlePeekPassage",
             "connected_region": "WhiteCastlePreVaultPeek",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
@@ -385,7 +409,13 @@
             "name": "Slay Grundle",
             "id": 118000210,
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Yellow Key",
@@ -412,7 +442,13 @@
             "name": "BlackCastleVaultEntrance",
             "connected_region": "BlackCastleVault",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
@@ -463,7 +499,13 @@
             "name": "Slay Rhindle",
             "id": 118000208,
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Slow Rhindle",
@@ -805,7 +847,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Adventure WorldGen",

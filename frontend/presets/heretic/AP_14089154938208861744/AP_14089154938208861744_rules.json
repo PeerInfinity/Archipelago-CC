@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Heretic",
   "game_directory": "heretic",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -12893,7 +12893,6 @@
       "The Storehouse (E3M1)"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Heretic",

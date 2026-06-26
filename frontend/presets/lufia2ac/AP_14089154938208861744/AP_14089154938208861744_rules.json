@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Lufia II Ancient Cave",
   "game_directory": "lufia2ac",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -5044,7 +5044,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Lufia II Ancient Cave",
@@ -5418,7 +5417,7 @@
           "display_name": "Shuffle party members"
         }
       },
-      "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Master\nJelly in the end. Can you beat it?",
+      "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?",
       "web": {
         "theme": "dirt",
         "tutorials": [

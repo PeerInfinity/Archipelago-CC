@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Meritous WorldGen",
   "game_directory": "meritous_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -17,7 +17,23 @@
             "name": "To Meridian",
             "connected_region": "Meridian",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Important Artifacts",
+                    "count": 1
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "PSI Keys",
+                    "count": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -381,7 +397,23 @@
             "name": "To Ataraxia",
             "connected_region": "Ataraxia",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Important Artifacts",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "PSI Keys",
+                    "count": 2
+                  }
+                }
+              ]
             }
           }
         ],
@@ -745,7 +777,23 @@
             "name": "To Merodach",
             "connected_region": "Merodach",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Important Artifacts",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "PSI Keys",
+                    "count": 3
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1119,7 +1167,13 @@
             "name": "Back to the entrance with the Knife",
             "connected_region": "True Final Boss",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Agate Knife",
+                  "Cursed Seal"
+                ]
+              }
             }
           }
         ],
@@ -2174,7 +2228,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Meritous WorldGen",

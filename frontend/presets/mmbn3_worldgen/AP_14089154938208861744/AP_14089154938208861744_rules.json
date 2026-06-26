@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "MegaMan Battle Network 3 WorldGen",
   "game_directory": "mmbn3_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -1130,7 +1130,34 @@
             "name": "Mayl's HP PMD",
             "id": 11735176,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "KingMan V3 K",
@@ -1149,21 +1176,74 @@
             "name": "ACDC Cyberworld -> SciLab Cyberworld",
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CSciPass"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "ACDC Cyberworld -> Yoka Cyberworld",
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "SciLab Overworld"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Press"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CYokaPas"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "ACDC Cyberworld -> Beach Cyberworld",
             "connected_region": "Beach Cyberworld",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CBeacPas"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1200,7 +1280,17 @@
             "name": "ACDC 1 PMD",
             "id": 11735172,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_unlock",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "has_www_id",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "BeastMan V3 B",
@@ -1275,7 +1365,21 @@
             "name": "SciLab Overworld -> SciLab Cyberworld",
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CSciPass"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1398,7 +1502,34 @@
             "name": "SciLab Dad's Computer PMD",
             "id": 11735177,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "GutImpct J",
@@ -1412,7 +1543,21 @@
             "name": "Job: Please deliver this",
             "id": 11735215,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Repair *",
@@ -1443,7 +1588,21 @@
             "name": "Job: Help me with my son!",
             "id": 11735217,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "10 BugFrags",
@@ -1457,7 +1616,10 @@
             "name": "Job: Transmission error",
             "id": 11735218,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Yoka Overworld"
+              }
             },
             "item": {
               "name": "1000z",
@@ -1471,7 +1633,21 @@
             "name": "Job: Chip Prices",
             "id": 11735219,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "StpCross S",
@@ -1485,7 +1661,21 @@
             "name": "Job: I'm broke?!",
             "id": 11735220,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Roll V2 R",
@@ -1499,7 +1689,10 @@
             "name": "Job: Rare chips for cheap!",
             "id": 11735221,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "ACDC Overworld"
+              }
             },
             "item": {
               "name": "Collect",
@@ -1513,7 +1706,10 @@
             "name": "Job: Be my boyfriend",
             "id": 11735222,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Beach Cyberworld"
+              }
             },
             "item": {
               "name": "HPMemory",
@@ -1527,7 +1723,27 @@
             "name": "Job: Will you deliver?",
             "id": 11735223,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Recov10 *",
@@ -1541,7 +1757,10 @@
             "name": "Job: Somebody, please help!",
             "id": 11735228,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "ACDC Overworld"
+              }
             },
             "item": {
               "name": "FlamMan F",
@@ -1555,7 +1774,27 @@
             "name": "Job: Looking for condor",
             "id": 11735229,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "GutImpact H",
@@ -1569,7 +1808,10 @@
             "name": "Job: Help with rehab",
             "id": 11735230,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Beach Overworld"
+              }
             },
             "item": {
               "name": "RegUP1",
@@ -1583,7 +1825,10 @@
             "name": "Job: Help with rehab bonus",
             "id": 11735310,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Beach Overworld"
+              }
             },
             "item": {
               "name": "PlantMan V3 P",
@@ -1597,7 +1842,21 @@
             "name": "Job: Old Master",
             "id": 11735231,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "SpinOrange",
@@ -1611,7 +1870,21 @@
             "name": "Job: Catching gang members",
             "id": 11735232,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Press"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "HPMemory",
@@ -1625,7 +1898,10 @@
             "name": "Job: Please adopt a virus!",
             "id": 11735233,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "SciLab Cyberworld"
+              }
             },
             "item": {
               "name": "HubBatc",
@@ -1639,7 +1915,36 @@
             "name": "Job: Legendary Tomes",
             "id": 11735234,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Deep Undernet"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Undernet"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Magnum1 A",
+                      "Press"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "SpinPurple",
@@ -1653,7 +1958,21 @@
             "name": "Job: Legendary Tomes - Treasure",
             "id": 11735235,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Job: Legendary Tomes"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "SpinPink",
@@ -1667,7 +1986,10 @@
             "name": "Job: Hide and seek! First Child",
             "id": 11735236,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Yoka Overworld"
+              }
             },
             "item": {
               "name": "SonicWav W",
@@ -1681,7 +2003,10 @@
             "name": "Job: Hide and seek! Second Child",
             "id": 11735237,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Yoka Overworld"
+              }
             },
             "item": {
               "name": "HoleMetr H",
@@ -1695,7 +2020,10 @@
             "name": "Job: Hide and seek! Third Child",
             "id": 11735238,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Yoka Overworld"
+              }
             },
             "item": {
               "name": "Press",
@@ -1709,7 +2037,10 @@
             "name": "Job: Hide and seek! Fourth Child",
             "id": 11735239,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Yoka Overworld"
+              }
             },
             "item": {
               "name": "Attack+1 (Pink)",
@@ -1723,7 +2054,10 @@
             "name": "Job: Hide and seek! Completion",
             "id": 11735240,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Yoka Overworld"
+              }
             },
             "item": {
               "name": "1200z",
@@ -1737,7 +2071,10 @@
             "name": "Job: Finding the blue Navi",
             "id": 11735241,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Undernet"
+              }
             },
             "item": {
               "name": "KingMan K",
@@ -1751,7 +2088,10 @@
             "name": "Job: Give your support",
             "id": 11735242,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Beach Overworld"
+              }
             },
             "item": {
               "name": "SideGun S",
@@ -1765,7 +2105,39 @@
             "name": "Job: Stamp collecting",
             "id": 11735243,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Prism Q",
@@ -1779,7 +2151,45 @@
             "name": "Job: Help with a will",
             "id": 11735244,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "ACDC Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Beach Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Undernet"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "RegUP2",
@@ -1805,14 +2215,53 @@
             "name": "SciLab Cyberworld -> Yoka Cyberworld",
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "SciLab Overworld"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Press"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CYokaPas"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "SciLab Cyberworld -> Beach Cyberworld",
             "connected_region": "Beach Cyberworld",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CBeacPas"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1892,7 +2341,32 @@
             "name": "Yoka Overworld -> Yoka Cyberworld",
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "SciLab Overworld"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Press"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CYokaPas"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1926,7 +2400,26 @@
             "name": "Yoka Overworld -> Secret Area",
             "connected_region": "Secret Area",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "explore_score",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    "op": ">",
+                    "right": 12
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hammer"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2008,7 +2501,34 @@
             "name": "Zoo Panda PMD",
             "id": 11735178,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "HPMemory",
@@ -2302,7 +2822,34 @@
             "name": "Tamako's HP PMD",
             "id": 11735181,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Shake1 S",
@@ -2793,14 +3340,42 @@
             "name": "Yoka Cyberworld -> SciLab Cyberworld",
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CSciPass"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Yoka Cyberworld -> Beach Cyberworld",
             "connected_region": "Beach Cyberworld",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CBeacPas"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2840,7 +3415,17 @@
             "name": "Yoka 1 PMD",
             "id": 11735173,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_unlock",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "has_press",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "DesertMan V3 D",
@@ -3522,7 +4107,34 @@
             "name": "Beach DNN Security Panel PMD",
             "id": 11735179,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "3000z",
@@ -3536,7 +4148,34 @@
             "name": "Beach DNN Main Console PMD",
             "id": 11735180,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "SubMem",
@@ -3576,21 +4215,79 @@
             "name": "Beach Cyberworld -> SciLab Cyberworld",
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CSciPass"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Beach Cyberworld -> Yoka Cyberworld",
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "SciLab Overworld"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Press"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CYokaPas"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Beach Cyberworld -> Undernet",
             "connected_region": "Undernet",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "explore_score",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    "op": ">",
+                    "right": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Press"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3613,7 +4310,34 @@
             "name": "Beach 1 PMD",
             "id": 11735174,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "GutStrgt Q",
@@ -3886,7 +4610,34 @@
             "name": "Undernet 7 PMD",
             "id": 11735175,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Hammer T",
@@ -7317,7 +8068,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "MegaMan Battle Network 3 WorldGen",

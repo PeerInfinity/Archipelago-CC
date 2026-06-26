@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Hat in Time WorldGen",
   "game_directory": "ahit_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -75,7 +75,39 @@
             "connected_region": "Time's End",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Time Piece",
+                    "count": 35
+                  }
+                }
+              ]
             }
           },
           {
@@ -83,7 +115,27 @@
             "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Time Piece",
+                    "count": 8
+                  }
+                }
+              ]
             }
           },
           {
@@ -91,7 +143,27 @@
             "connected_region": "Time Rift - Sewers",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Time Piece",
+                    "count": 17
+                  }
+                }
+              ]
             }
           }
         ],
@@ -248,7 +320,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -256,7 +332,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -264,7 +353,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -313,7 +415,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 2",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -321,7 +427,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -329,7 +448,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -378,7 +510,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 3",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -386,7 +522,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -394,7 +543,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -436,7 +598,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 4",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -444,7 +610,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -452,7 +631,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -460,7 +652,23 @@
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -570,7 +778,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -578,7 +799,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -636,7 +870,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 5",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -644,7 +882,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -652,7 +903,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -696,7 +960,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 6",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -704,7 +972,20 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Picture Perfect"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Picture Perfect)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -712,7 +993,20 @@
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (The Golden Vault)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -830,7 +1124,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -838,7 +1136,26 @@
             "connected_region": "The Illness has Spread",
             "access_rule": {
               "rule": "Or",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -847,7 +1164,27 @@
             "name": "Act Completion (Dead Bird Studio)",
             "id": 2000311383,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "100 Pons",
@@ -867,7 +1204,32 @@
             "connected_region": "Time Rift - Village",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Mail Delivery Service"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Mail Delivery Service)"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Train Rush)"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -996,7 +1358,26 @@
             "connected_region": "Time Rift - Curly Tail Trail",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Alpine Free Roam"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Heating Up Mafia Town"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Heating Up Mafia Town)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1004,7 +1385,26 @@
             "connected_region": "The Illness has Spread",
             "access_rule": {
               "rule": "Or",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1068,7 +1468,24 @@
             "connected_region": "Alpine Free Roam",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -1076,7 +1493,24 @@
             "connected_region": "Heating Up Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           }
         ],
@@ -1106,7 +1540,26 @@
             "connected_region": "Time Rift - Curly Tail Trail",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Alpine Free Roam"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Heating Up Mafia Town"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Heating Up Mafia Town)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1114,7 +1567,23 @@
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1177,7 +1646,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 2",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -1185,7 +1658,23 @@
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1596,7 +2085,27 @@
             "name": "Dead Bird Studio - DJ Grooves Sign Chest",
             "id": 2000303901,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Time Piece",
@@ -1624,7 +2133,27 @@
             "name": "Dead Bird Studio - Tepee Chest",
             "id": 2000303899,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Snatcher's Contract - Mail Delivery Service",
@@ -1638,7 +2167,27 @@
             "name": "Dead Bird Studio - Conductor Chest",
             "id": 2000303900,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "100 Pons",
@@ -1724,7 +2273,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -1732,7 +2285,20 @@
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Down with the Mafia!)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1740,7 +2306,20 @@
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio Basement"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Dead Bird Studio Basement)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1810,7 +2389,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 2",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -1818,7 +2401,20 @@
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Down with the Mafia!)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1826,7 +2422,20 @@
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio Basement"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Dead Bird Studio Basement)"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1919,7 +2528,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 3",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -1927,7 +2540,20 @@
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Down with the Mafia!)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1935,7 +2561,20 @@
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio Basement"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Dead Bird Studio Basement)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1943,7 +2582,31 @@
             "connected_region": "Train Rush",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_hit",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "has_paintings",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    },
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -1951,7 +2614,31 @@
             "connected_region": "Mail Delivery Service",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_hit",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "has_paintings",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    },
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -1960,7 +2647,32 @@
             "name": "Act Completion (Toilet of Doom)",
             "id": 2000311984,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_hit",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "has_paintings",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    },
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Relic (UFO)",
@@ -2002,7 +2714,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 4",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2010,7 +2726,20 @@
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Down with the Mafia!)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2018,7 +2747,20 @@
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio Basement"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Dead Bird Studio Basement)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2026,7 +2768,23 @@
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2117,7 +2875,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 5",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2125,7 +2887,20 @@
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Down with the Mafia!)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2133,7 +2908,20 @@
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio Basement"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Dead Bird Studio Basement)"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2141,7 +2929,24 @@
             "connected_region": "Alpine Free Roam",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -2149,7 +2954,24 @@
             "connected_region": "Heating Up Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           }
         ],
@@ -2201,7 +3023,23 @@
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2254,7 +3092,23 @@
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "can_hit",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -2309,7 +3163,24 @@
             "connected_region": "The Birdhouse",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -2333,7 +3204,24 @@
             "connected_region": "The Twilight Bell",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           }
         ],
@@ -2370,7 +3258,33 @@
             "name": "Alpine Skyline - Mystifying Time Mesa: Zipline",
             "id": 2000337058,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 4
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Time Piece",
@@ -2463,7 +3377,28 @@
             "name": "Alpine Skyline - Goat Refinery",
             "id": 2000333635,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_hit",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "True_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "AFR Access"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Random Cosmetic",
@@ -2492,7 +3427,25 @@
             "name": "Alpine Skyline - Yellow Band Hills",
             "id": 2000335756,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "Scooter Badge",
@@ -2940,7 +3893,11 @@
             "name": "Time Rift - Alpine Skyline Portal - Entrance 2",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "HasGroup"
+              "rule": "HasGroup",
+              "args": {
+                "group": "Crayon",
+                "count": 4
+              }
             }
           }
         ],
@@ -3149,7 +4106,39 @@
             "name": "Mafia Town - Old Man (Seaside Spaghetti)",
             "id": 2000303833,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barrel Battle"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cheating the Race"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Welcome to Mafia Town"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "25 Pons",
@@ -3163,7 +4152,39 @@
             "name": "Mafia Town - Old Man (Steel Beams)",
             "id": 2000303832,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barrel Battle"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cheating the Race"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Welcome to Mafia Town"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Random Cosmetic",
@@ -3433,7 +4454,45 @@
             "name": "Mafia Town - On Scaffolding",
             "id": 2000304457,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barrel Battle"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cheating the Race"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Heating Up Mafia Town"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "She Came from Outer Space"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Welcome to Mafia Town"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Random Cosmetic",
@@ -3605,7 +4664,27 @@
             "name": "Mafia Town - Secret Cave",
             "id": 2000305220,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "HUMT Access"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Yarn",
@@ -3633,7 +4712,19 @@
             "name": "Mafia Town - Above Boats",
             "id": 2000305218,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "HUMT Access"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Health Pon",
@@ -3705,7 +4796,45 @@
             "name": "Mafia Town - Mafia Geek Platform",
             "id": 2000304212,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barrel Battle"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cheating the Race"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Heating Up Mafia Town"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Welcome to Mafia Town"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Yarn",
@@ -3719,7 +4848,33 @@
             "name": "Mafia Town - Behind HQ Chest",
             "id": 2000303486,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Heating Up Mafia Town)"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cheating the Race"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "The Golden Vault"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "25 Pons",
@@ -4522,7 +5677,18 @@
             "connected_region": "Subcon Forest Boss Arena",
             "access_rule": {
               "rule": "And",
-              "children": []
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "TOD Access"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4758,7 +5924,39 @@
             "name": "Act Completion (Time Rift - Village)",
             "id": 2000313056,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Umbrella"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Yarn",
@@ -4867,7 +6065,25 @@
             "name": "Act Completion (The Finale)",
             "id": 2000311872,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "Yarn",
@@ -4881,7 +6097,25 @@
             "name": "Time Piece Cluster",
             "id": null,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hat",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "Time Piece Cluster",
@@ -5920,7 +7154,6 @@
       "Compass Badge"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "A Hat in Time WorldGen",

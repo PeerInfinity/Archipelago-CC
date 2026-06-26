@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Undertale WorldGen",
   "game_directory": "undertale_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -254,7 +254,10 @@
             "name": "Snowman",
             "id": 79100,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Nice Cream",
@@ -268,7 +271,10 @@
             "name": "Nicecream Snowdin",
             "id": 79001,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Legendary Hero",
@@ -296,7 +302,10 @@
             "name": "Bunny 1",
             "id": 79034,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Cloudy Glasses",
@@ -310,7 +319,10 @@
             "name": "Bunny 2",
             "id": 79035,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Waterfall Key",
@@ -324,7 +336,10 @@
             "name": "Bunny 3",
             "id": 79036,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Toy Knife",
@@ -338,7 +353,10 @@
             "name": "Bunny 4",
             "id": 79037,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Punch Card",
@@ -387,7 +405,10 @@
             "name": "Nicecream Waterfall",
             "id": 79002,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Snowman Piece",
@@ -401,7 +422,22 @@
             "name": "Nicecream Punch Card",
             "id": 79003,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Waterfall"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Punch Card",
+                    "count": 3
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Starfait",
@@ -416,7 +452,10 @@
             "name": "Quiche Bench",
             "id": 79004,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Tough Glove",
@@ -430,7 +469,10 @@
             "name": "Tutu Hidden",
             "id": 79005,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Hotland Key",
@@ -444,7 +486,10 @@
             "name": "Card Reward",
             "id": 79006,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Heart Locket",
@@ -458,7 +503,10 @@
             "name": "Grass Shoes",
             "id": 79007,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Starfait",
@@ -472,7 +520,10 @@
             "name": "Astro 1",
             "id": 79023,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Spider Donut",
@@ -486,7 +537,10 @@
             "name": "Astro 2",
             "id": 79024,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Mettaton Plush",
@@ -500,7 +554,10 @@
             "name": "Gerson 1",
             "id": 79038,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Butterscotch Pie",
@@ -514,7 +571,10 @@
             "name": "Gerson 2",
             "id": 79039,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Crab Apple",
@@ -528,7 +588,10 @@
             "name": "Gerson 3",
             "id": 79040,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Empty Gun",
@@ -542,7 +605,10 @@
             "name": "Gerson 4",
             "id": 79041,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Ballet Shoes",
@@ -556,7 +622,10 @@
             "name": "TemmieShop 1",
             "id": 79050,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Astronaut Food",
@@ -570,7 +639,10 @@
             "name": "TemmieShop 2",
             "id": 79051,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "500G",
@@ -584,7 +656,10 @@
             "name": "TemmieShop 3",
             "id": 79052,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Astronaut Food",
@@ -598,7 +673,22 @@
             "name": "TemmieShop 4",
             "id": 79053,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Waterfall"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1000G",
+                    "count": 2
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Glamburger",
@@ -654,7 +744,10 @@
             "name": "Noodles Fridge",
             "id": 79008,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Hotland"
+              }
             },
             "item": {
               "name": "500G",
@@ -668,7 +761,10 @@
             "name": "Pan Hidden",
             "id": 79009,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Hotland"
+              }
             },
             "item": {
               "name": "Faded Ribbon",
@@ -682,7 +778,10 @@
             "name": "Apron Hidden",
             "id": 79010,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Cooking Show"
+              }
             },
             "item": {
               "name": "Cinnamon Bun",
@@ -696,7 +795,10 @@
             "name": "Bratty Catty 1",
             "id": 79042,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Abandoned Quiche",
@@ -710,7 +812,10 @@
             "name": "Bratty Catty 2",
             "id": 79043,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Core Key",
@@ -724,7 +829,10 @@
             "name": "Bratty Catty 3",
             "id": 79044,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Sea Tea",
@@ -738,7 +846,10 @@
             "name": "Bratty Catty 4",
             "id": 79045,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Bisicle",
@@ -752,7 +863,10 @@
             "name": "Burgerpants 1",
             "id": 79046,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Worn Dagger",
@@ -766,7 +880,10 @@
             "name": "Burgerpants 2",
             "id": 79047,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Spider Donut",
@@ -780,7 +897,10 @@
             "name": "Burgerpants 3",
             "id": 79048,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Punch Card",
@@ -794,7 +914,10 @@
             "name": "Burgerpants 4",
             "id": 79049,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Right Home Key",
@@ -871,7 +994,10 @@
             "name": "Trash Burger",
             "id": 79011,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Core"
+              }
             },
             "item": {
               "name": "1000G",
@@ -885,7 +1011,10 @@
             "name": "Mettaton Plot",
             "id": 79062,
             "access_rule": {
-              "rule": "CanReachEntrance"
+              "rule": "CanReachEntrance",
+              "args": {
+                "entrance_name": "Core Exit"
+              }
             },
             "item": {
               "name": "1000G",
@@ -936,7 +1065,10 @@
             "name": "Present Knife",
             "id": 79012,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Cowboy Hat",
@@ -950,7 +1082,10 @@
             "name": "Present Locket",
             "id": 79013,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Left Home Key",
@@ -964,7 +1099,10 @@
             "name": "Left New Home Key",
             "id": 79064,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Face Steak",
@@ -978,7 +1116,10 @@
             "name": "Right New Home Key",
             "id": 79065,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Manly Bandanna",
@@ -2031,7 +2172,6 @@
       "Ruins Key"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Undertale WorldGen",

@@ -126,7 +126,7 @@ def _discover_handlers() -> Dict[str, Type[BaseGameExportHandler]]:
 
     For example:
     - exporter/games/official/alttp.py -> registered as 'alttp'
-    - exporter/games/unofficial/minit.py -> registered as 'minit'
+    - exporter/games/unofficial/toem_rule_builder.py -> registered as 'toem_rule_builder'
 
     If a handler exists in multiple directories, the first one found takes precedence
     (official before unofficial).

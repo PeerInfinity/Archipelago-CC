@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario World WorldGen",
   "game_directory": "smw_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -419,7 +419,38 @@
             "name": "Donut Plains 1 -> Donut Plains 1 - Secret Exit",
             "connected_region": "Donut Plains 1 - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Progressive Powerup": 3,
+                          "Run": 1
+                        }
+                      }
+                    },
+                    {
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Green Switch Palace",
+                          "Yoshi"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Carry"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -508,7 +539,36 @@
             "name": "Donut Plains 2 -> Donut Plains 2 - Secret Exit",
             "connected_region": "Donut Plains 2 - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Climb",
+                          "Progressive Powerup",
+                          "Spin Jump"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Yoshi"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Carry"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -708,7 +768,14 @@
             "name": "Donut Secret 1 -> Donut Secret 1 - Secret Exit",
             "connected_region": "Donut Secret 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "P-Switch",
+                  "Swim"
+                ]
+              }
             }
           }
         ],
@@ -844,14 +911,37 @@
             "name": "Donut Ghost House -> Donut Ghost House - Normal Exit",
             "connected_region": "Donut Ghost House - Normal Exit",
             "access_rule": {
-              "rule": "HasAllCounts"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Progressive Powerup": 3,
+                  "Run": 1
+                }
+              }
             }
           },
           {
             "name": "Donut Ghost House -> Donut Ghost House - Secret Exit",
             "connected_region": "Donut Ghost House - Secret Exit",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Run": 1
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Climb"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -943,7 +1033,38 @@
             "name": "Donut Secret House -> Donut Secret House - Secret Exit",
             "connected_region": "Donut Secret House - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Progressive Powerup": 3,
+                          "Run": 1
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Climb"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carry",
+                      "P-Switch"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1149,14 +1270,71 @@
             "name": "Vanilla Dome 1 -> Vanilla Dome 1 - Normal Exit",
             "connected_region": "Vanilla Dome 1 - Normal Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Powerup",
+                      "Super Star Activate"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Run"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Vanilla Dome 1 -> Vanilla Dome 1 - Secret Exit",
             "connected_region": "Vanilla Dome 1 - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Climb",
+                          "Red Switch Palace"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Climb",
+                          "Yoshi"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Red Switch Palace",
+                          "Yoshi"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Carry"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1238,14 +1416,52 @@
             "name": "Vanilla Dome 2 -> Vanilla Dome 2 - Normal Exit",
             "connected_region": "Vanilla Dome 2 - Normal Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Climb",
+                      "Yoshi"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Swim"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Vanilla Dome 2 -> Vanilla Dome 2 - Secret Exit",
             "connected_region": "Vanilla Dome 2 - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Climb",
+                      "Yoshi"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carry",
+                      "P-Switch",
+                      "Swim"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1445,7 +1661,14 @@
             "name": "Vanilla Secret 1 -> Vanilla Secret 1 - Secret Exit",
             "connected_region": "Vanilla Secret 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Switch Palace",
+                  "Carry",
+                  "Climb"
+                ]
+              }
             }
           }
         ],
@@ -1985,7 +2208,24 @@
             "name": "Cheese Bridge -> Cheese Bridge - Secret Exit",
             "connected_region": "Cheese Bridge - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAnyCount",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Yoshi": 1
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Run"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2178,7 +2418,13 @@
             "name": "#4 Ludwig's Castle -> #4 Ludwig's Castle - Normal Exit",
             "connected_region": "#4 Ludwig's Castle - Normal Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Climb",
+                  "Run"
+                ]
+              }
             }
           }
         ],
@@ -2257,7 +2503,13 @@
             "name": "Forest of Illusion 1 -> Forest of Illusion 1 - Secret Exit",
             "connected_region": "Forest of Illusion 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "P-Balloon"
+                ]
+              }
             }
           }
         ],
@@ -2349,7 +2601,13 @@
             "name": "Forest of Illusion 2 -> Forest of Illusion 2 - Secret Exit",
             "connected_region": "Forest of Illusion 2 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Swim"
+                ]
+              }
             }
           }
         ],
@@ -2431,14 +2689,27 @@
             "name": "Forest of Illusion 3 -> Forest of Illusion 3 - Normal Exit",
             "connected_region": "Forest of Illusion 3 - Normal Exit",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Yoshi"
+                ]
+              }
             }
           },
           {
             "name": "Forest of Illusion 3 -> Forest of Illusion 3 - Secret Exit",
             "connected_region": "Forest of Illusion 3 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Progressive Powerup",
+                  "Spin Jump"
+                ]
+              }
             }
           }
         ],
@@ -3083,14 +3354,37 @@
             "name": "Chocolate Island 3 -> Chocolate Island 3 - Normal Exit",
             "connected_region": "Chocolate Island 3 - Normal Exit",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Run": 1
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Climb"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Chocolate Island 3 -> Chocolate Island 3 - Secret Exit",
             "connected_region": "Chocolate Island 3 - Secret Exit",
             "access_rule": {
-              "rule": "HasAllCounts"
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Progressive Powerup": 3,
+                  "Run": 1
+                }
+              }
             }
           }
         ],
@@ -3801,7 +4095,14 @@
             "name": "Valley of Bowser 4 -> Valley of Bowser 4 - Secret Exit",
             "connected_region": "Valley of Bowser 4 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Climb",
+                  "Yoshi"
+                ]
+              }
             }
           }
         ],
@@ -3893,7 +4194,14 @@
             "name": "Valley Ghost House -> Valley Ghost House - Secret Exit",
             "connected_region": "Valley Ghost House - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "P-Switch",
+                  "Run"
+                ]
+              }
             }
           }
         ],
@@ -4428,14 +4736,27 @@
             "name": "Star Road 1 -> Star Road 1 - Normal Exit",
             "connected_region": "Star Road 1 - Normal Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Progressive Powerup",
+                  "Spin Jump"
+                ]
+              }
             }
           },
           {
             "name": "Star Road 1 -> Star Road 1 - Secret Exit",
             "connected_region": "Star Road 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Progressive Powerup",
+                  "Spin Jump"
+                ]
+              }
             }
           }
         ],
@@ -4519,7 +4840,13 @@
             "name": "Star Road 2 -> Star Road 2 - Secret Exit",
             "connected_region": "Star Road 2 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Swim"
+                ]
+              }
             }
           }
         ],
@@ -4684,7 +5011,35 @@
             "name": "Star Road 4 -> Star Road 4 - Secret Exit",
             "connected_region": "Star Road 4 - Secret Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Green Switch Palace",
+                          "Red Switch Palace"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Yoshi"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Carry"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4768,7 +5123,18 @@
             "name": "Star Road 5 -> Star Road 5 - Secret Exit",
             "connected_region": "Star Road 5 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Switch Palace",
+                  "Carry",
+                  "Climb",
+                  "Green Switch Palace",
+                  "P-Switch",
+                  "Red Switch Palace",
+                  "Yellow Switch Palace"
+                ]
+              }
             }
           }
         ],
@@ -4850,7 +5216,35 @@
             "name": "Gnarly -> Gnarly - Normal Exit",
             "connected_region": "Gnarly - Normal Exit",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Progressive Powerup": 3,
+                          "Run": 1
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "P-Switch"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Climb"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4961,7 +5355,13 @@
             "name": "Way Cool -> Way Cool - Normal Exit",
             "connected_region": "Way Cool - Normal Exit",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Climb",
+                  "Yoshi"
+                ]
+              }
             }
           }
         ],
@@ -5015,7 +5415,13 @@
             "name": "Awesome -> Awesome - Normal Exit",
             "connected_region": "Awesome - Normal Exit",
             "access_rule": {
-              "rule": "HasAnyCount"
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Progressive Powerup": 2,
+                  "Super Star Activate": 1
+                }
+              }
             }
           }
         ],
@@ -5240,7 +5646,28 @@
             "name": "Funky -> Funky - Normal Exit",
             "connected_region": "Funky - Normal Exit",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Progressive Powerup",
+                      "Spin Jump"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAnyCount",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Carry": 1,
+                      "Yoshi": 1
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -5736,7 +6163,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Super Mario World WorldGen",

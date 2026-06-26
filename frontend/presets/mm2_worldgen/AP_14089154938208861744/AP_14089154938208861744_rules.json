@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Mega Man 2 WorldGen",
   "game_directory": "mm2_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -17,7 +17,13 @@
             "name": "To Heat Man Stage",
             "connected_region": "Heat Man Stage",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Heat Man Access Codes",
+                  "Item 2 - Rocket"
+                ]
+              }
             }
           },
           {
@@ -54,7 +60,13 @@
             "name": "To Quick Man Stage",
             "connected_region": "Quick Man Stage",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Quick Man Access Codes",
+                  "Time Stopper"
+                ]
+              }
             }
           },
           {
@@ -91,7 +103,14 @@
             "name": "To Wily Stage 1",
             "connected_region": "Wily Stage 1",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Item 1 - Propeller",
+                  "Item 2 - Rocket",
+                  "Item 3 - Bouncy"
+                ]
+              }
             }
           }
         ],
@@ -311,7 +330,14 @@
             "name": "Quick Man Stage - 1-Up 1",
             "id": 8913410,
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Item 1 - Propeller",
+                  "Item 2 - Rocket",
+                  "Item 3 - Bouncy"
+                ]
+              }
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -415,7 +441,14 @@
             "name": "Flash Man Stage - 1-Up",
             "id": 8913419,
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Item 1 - Propeller",
+                  "Item 2 - Rocket",
+                  "Item 3 - Bouncy"
+                ]
+              }
             },
             "item": {
               "name": "Metal Blade",
@@ -491,7 +524,13 @@
             "name": "Metal Man Stage - 1-Up",
             "id": 8913425,
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Item 1 - Propeller",
+                  "Item 2 - Rocket"
+                ]
+              }
             },
             "item": {
               "name": "1-Up",
@@ -505,7 +544,13 @@
             "name": "Metal Man Stage - E-Tank 2",
             "id": 8913426,
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Item 1 - Propeller",
+                  "Item 2 - Rocket"
+                ]
+              }
             },
             "item": {
               "name": "Bubble Man Access Codes",
@@ -567,7 +612,14 @@
             "name": "Crash Man Stage - 1-Up",
             "id": 8913429,
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Item 1 - Propeller",
+                  "Item 2 - Rocket",
+                  "Item 3 - Bouncy"
+                ]
+              }
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -1456,7 +1508,6 @@
       "Air Man Access Codes"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Mega Man 2 WorldGen",

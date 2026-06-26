@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "EarthBound",
   "game_directory": "earthbound",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -8599,7 +8599,6 @@
       "Ness"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "EarthBound",

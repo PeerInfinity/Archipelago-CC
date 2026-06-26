@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Stardew Valley",
   "game_directory": "stardew_valley",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -61250,11 +61250,8 @@
         "name": "Sebastian Portrait",
         "id": 717669,
         "groups": [
-          "Endgame Location Items",
           "Everything",
-          "Filler Decoration",
-          "Maximum One",
-          "Requires Friendsanity Marriage"
+          "Filler Decoration"
         ],
         "classification": "filler",
         "type": null,
@@ -61264,11 +61261,8 @@
         "name": "Shane Portrait",
         "id": 717670,
         "groups": [
-          "Endgame Location Items",
           "Everything",
-          "Filler Decoration",
-          "Maximum One",
-          "Requires Friendsanity Marriage"
+          "Filler Decoration"
         ],
         "classification": "filler",
         "type": null,
@@ -67327,7 +67321,6 @@
       "Fall"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Stardew Valley",

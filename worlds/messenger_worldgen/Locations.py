@@ -106,7 +106,7 @@ location_table: Dict[str, LocationData] = {
     "Searing Crags Seal - Rhythm Rocks": LocationData("Searing Crags - Colossuses Shop", "Searing Crags Seal - Rhythm Rocks", 11391019, False),
     "Searing Crags - Power Thistle": LocationData("Searing Crags - Colossuses Shop", "Searing Crags - Power Thistle", 11390990, False),
     "Searing Crags - Astral Tea Leaves": LocationData("Searing Crags - Colossuses Shop", "Searing Crags - Astral Tea Leaves", 11390987, False),
-    "Searing Crags - Key of Strength": LocationData("Searing Crags - Key of Strength Room", "Searing Crags - Key of Strength", 11390980, False),
+    "Searing Crags - Key of Strength": LocationData("Searing Crags - Key of Strength Shop", "Searing Crags - Key of Strength", 11390980, False),
     "Searing Crags Seal - Triple Ball Spinner": LocationData("Searing Crags - Triple Ball Spinner Checkpoint", "Searing Crags Seal - Triple Ball Spinner", 11391017, False),
     "Searing Crags Seal - Raining Rocks": LocationData("Searing Crags - Raining Rocks Checkpoint", "Searing Crags Seal - Raining Rocks", 11391018, False),
     "Glacial Peak Portal": LocationData("Glacial Peak - Portal", "Glacial Peak Portal", None, True),

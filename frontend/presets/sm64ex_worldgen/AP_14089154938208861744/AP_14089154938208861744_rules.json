@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario 64 WorldGen",
   "game_directory": "sm64ex_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -100,14 +100,26 @@
             "name": "Menu -> Basement",
             "connected_region": "Basement",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Basement Key",
+                  "Progressive Key"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> Second Floor",
             "connected_region": "Second Floor",
             "access_rule": {
-              "rule": "HasAnyCount"
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Progressive Key": 2,
+                  "Second Floor Key": 1
+                }
+              }
             }
           }
         ],
@@ -116,7 +128,22 @@
             "name": "Toad (Basement)",
             "id": 3626168,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Basement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 12
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Metal Cap",
@@ -130,7 +157,22 @@
             "name": "Toad (Second Floor)",
             "id": 3626169,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Second Floor"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 25
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -144,7 +186,22 @@
             "name": "Toad (Third Floor)",
             "id": 3626170,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Third Floor"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 35
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -158,7 +215,22 @@
             "name": "MIPS 1",
             "id": 3626171,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Basement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 13
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -172,7 +244,22 @@
             "name": "MIPS 2",
             "id": 3626172,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Basement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 44
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -369,7 +456,10 @@
             "name": "WF: Fall onto the Caged Island",
             "id": 3626011,
             "access_rule": {
-              "rule": "CanReachRegion"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "WF: Tower"
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1056,7 +1146,22 @@
             "name": "Basement -> Bowser in the Fire Sea",
             "connected_region": "Bowser in the Fire Sea",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "DDD: Board Bowser's Sub"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 26
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1365,7 +1470,24 @@
             "name": "SSL: Free Flying for 8 Red Coins",
             "id": 3626053,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cannon Unlock SSL",
+                      "Wing Cap"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wing Cap"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -1455,7 +1577,24 @@
             "name": "SSL: Stand Tall on the Four Pillars",
             "id": 3626052,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cannon Unlock SSL",
+                      "Wing Cap"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wing Cap"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -1548,7 +1687,13 @@
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Metal Cap",
+                  "Vanish Cap"
+                ]
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1562,7 +1707,10 @@
             "name": "DDD: Pole-Jumping for Red Coins",
             "id": 3626058,
             "access_rule": {
-              "rule": "CanReachLocation"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Bowser in the Fire Sea Key"
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2927,7 +3075,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression_deprioritized_skip_balancing",
+        "classification": "progression_skip_balancing",
         "type": null,
         "max_count": 105
       },
@@ -3507,7 +3655,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Super Mario 64 WorldGen",

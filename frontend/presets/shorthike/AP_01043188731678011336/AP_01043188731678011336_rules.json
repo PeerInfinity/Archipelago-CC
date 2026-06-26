@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Short Hike",
   "game_directory": "shorthike",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -2637,7 +2637,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "A Short Hike",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "shapez WorldGen",
   "game_directory": "shapez_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -27,7 +27,13 @@
             "name": "Extracting shapes from patches",
             "connected_region": "Shape extraction",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Chaining Extractor",
+                  "Extractor"
+                ]
+              }
             }
           },
           {
@@ -44,7 +50,36 @@
             "name": "Placing any building",
             "connected_region": "Achievements with any placeable building",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Balancer",
+                  "Belt",
+                  "Belt Reader",
+                  "Chaining Extractor",
+                  "Color Mixer",
+                  "Compact Merger",
+                  "Compact Splitter",
+                  "Cutter",
+                  "Display",
+                  "Double Painter",
+                  "Extractor",
+                  "Item Filter",
+                  "Painter",
+                  "Quad Cutter",
+                  "Quad Painter",
+                  "Rotator",
+                  "Rotator (180\u00b0)",
+                  "Rotator (CCW)",
+                  "Stacker",
+                  "Storage",
+                  "Switch",
+                  "Trash",
+                  "Tunnel",
+                  "Tunnel Tier II",
+                  "Wires"
+                ]
+              }
             }
           }
         ],
@@ -120,7 +155,14 @@
             "name": "Transporting shapes over the canvas",
             "connected_region": "Main",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Belt",
+                  "Compact Merger",
+                  "Compact Splitter"
+                ]
+              }
             }
           },
           {
@@ -179,14 +221,45 @@
             "name": "Painting with (double) painter",
             "connected_region": "Achievements with (double) painter",
             "access_rule": {
-              "rule": "HasAny"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Double Painter",
+                  "Painter"
+                ]
+              }
             }
           },
           {
             "name": "Copying and placing blueprints",
             "connected_region": "Achievements with blueprints",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_mix_colors",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "can_paint",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blueprints"
+                  }
+                }
+              ]
             }
           },
           {
@@ -206,7 +279,26 @@
             "name": "Using all main buildings",
             "connected_region": "Achievements with all main buildings",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_mix_colors",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "can_paint",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -286,7 +378,28 @@
             "name": "Cutting in single piece",
             "connected_region": "Shapesanity Piece Uncolored",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_cut_half",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "can_rotate_90",
+                      "_original_ast_type": "rb_defined_helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Quad Cutter"
+                  }
+                }
+              ]
             }
           },
           {
@@ -322,28 +435,115 @@
             "name": "Painting with a quad painter or stitching",
             "connected_region": "Shapesanity Colorful Full Uncolored",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_quad_painter",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
             "name": "Why windmill, why?",
             "connected_region": "Shapesanity Colorful East Windmill Uncolored",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_east_windmill",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "rb_defined_helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Quad painting a half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Uncolored",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_half_half_shape",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "rb_defined_helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Quad painting a half shape",
             "connected_region": "Shapesanity Colorful Half Uncolored",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_half_shape",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "rb_defined_helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "rb_defined_helper",
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -4027,7 +4227,6 @@
       "Extractor"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "shapez WorldGen",

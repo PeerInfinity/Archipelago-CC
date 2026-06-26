@@ -47,20 +47,20 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Quest - Experience TOEM", player),
-        CanReachRegion('')
+        CanReachRegion('Mountain Top')
     )
 
     world.set_rule(
         multiworld.get_location("Quest - Ghost helper!", player),
-        CanReachRegion('')
+        CanReachRegion('Logcity')
     )
 
     world.set_rule(
         multiworld.get_location("Quest - Monster spotting", player),
-        CanReachRegion('')
+        CanReachRegion('Kiiruberg')
     )
 
     world.set_rule(
         multiworld.get_location("Quest - Ancient paintings", player),
-        CanReachRegion('')
+        CanReachRegion('Mountain Top')
     )

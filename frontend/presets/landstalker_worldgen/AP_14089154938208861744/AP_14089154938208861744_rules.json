@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Landstalker - The Treasures of King Nole WorldGen",
   "game_directory": "landstalker_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -32,7 +32,13 @@
             "name": "massan -> massan_cave",
             "connected_region": "Massan Cave",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Axe Magic",
+                  "Lantern"
+                ]
+              }
             }
           },
           {
@@ -194,7 +200,13 @@
             "name": "massan_cave -> massan",
             "connected_region": "Massan",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Axe Magic",
+                  "Lantern"
+                ]
+              }
             }
           }
         ],
@@ -747,7 +759,13 @@
             "name": "route_gumi_ryuma -> helga_hut",
             "connected_region": "Witch Helga's Hut",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Einstein Whistle",
+                  "event_visited_massan"
+                ]
+              }
             }
           },
           {
@@ -1541,7 +1559,13 @@
             "name": "helga_hut -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Einstein Whistle",
+                  "event_visited_massan"
+                ]
+              }
             }
           }
         ],
@@ -5271,7 +5295,16 @@
             "name": "king_nole_cave -> kazalt",
             "connected_region": "Kazalt",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Jewel",
+                  "Green Jewel",
+                  "Purple Jewel",
+                  "Red Jewel",
+                  "Yellow Jewel"
+                ]
+              }
             }
           }
         ],
@@ -5629,7 +5662,13 @@
             "name": "king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree",
             "connected_region": "King Nole's Labyrinth (sacred tree)",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Axe Magic",
+                  "event_visited_king_nole_labyrinth_raft_entrance"
+                ]
+              }
             }
           }
         ],
@@ -6241,7 +6280,14 @@
             "name": "king_nole_palace -> end",
             "connected_region": "The End",
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gola's Fang",
+                  "Gola's Horn",
+                  "Gola's Nail"
+                ]
+              }
             }
           }
         ],
@@ -7426,7 +7472,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Landstalker - The Treasures of King Nole WorldGen",

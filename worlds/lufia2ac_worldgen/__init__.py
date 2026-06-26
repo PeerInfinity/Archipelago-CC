@@ -87,7 +87,7 @@ class L2ACWorld(RuleWorldMixin, World):
     """
     The Ancient Cave is a roguelike dungeon crawling game built into
     the RGP Lufia II. Face 99 floors of ever harder to beat monsters,
-    random items and find new companions on the way to face the Master
+    random items and find new companions on the way to face the Royal
     Jelly in the end. Can you beat it?
     """
 
@@ -263,7 +263,7 @@ class L2ACWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'L2ACWorld'
-        self.world_description = 'The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Master\nJelly in the end. Can you beat it?'
+        self.world_description = 'The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?'
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1

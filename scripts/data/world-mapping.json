@@ -1143,6 +1143,17 @@
     "template_file": "Pokemon Red and Blue.yaml",
     "world_directory": "pokemon_rb"
   },
+  "Procgen Maze WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Procgen Maze WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Procgen Maze WorldGen.yaml",
+    "world_directory": "procgen_maze_worldgen"
+  },
   "Raft": {
     "exporter_path": "exporter/games/official/raft.py",
     "exporter_size": 6659,
@@ -1241,17 +1252,6 @@
     "has_custom_game_logic": false,
     "template_file": "Seedling.yaml",
     "world_directory": "seedling"
-  },
-  "Seedling WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Seedling WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Seedling WorldGen.yaml",
-    "world_directory": "seedling_worldgen"
   },
   "Shivers": {
     "exporter_path": null,
@@ -1604,17 +1604,6 @@
     "has_custom_game_logic": false,
     "template_file": "UT Pickle Mode.yaml",
     "world_directory": "ut_pickle"
-  },
-  "UT Pickle Mode WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "UT Pickle Mode WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "UT Pickle Mode WorldGen.yaml",
-    "world_directory": "ut_pickle_worldgen"
   },
   "Undertale": {
     "exporter_path": null,

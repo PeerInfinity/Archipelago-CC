@@ -550,3 +550,41 @@ class TestRuleOperatorComposition:
         rule = (Has("A") & Has("B")) | (Has("C") & Has("D"))
 
         assert isinstance(rule, Or)
+
+
+class TestResolvedToDictArgs:
+    """Regression guard: a resolved rule's to_dict() must preserve its args.
+
+    The exporter serializes *resolved* access rules via Resolved.to_dict()
+    (which delegates to each rule's _get_args_dict()) to produce rules.json,
+    which world_generator and the frontend then consume. If a rule omits its
+    _get_args_dict() override, the args silently vanish — e.g. CanReachRegion
+    serializes to `{"rule": "CanReachRegion"}` with no region_name, and the
+    round-trip through world_generator produces CanReachRegion('') -> KeyError.
+    See the rule_builder upstream re-base regression (worldgen2 failures).
+    """
+
+    @pytest.mark.parametrize("resolved, expected_args", [
+        (CanReachRegion.Resolved(region_name="Castle", player=1),
+         {"region_name": "Castle"}),
+        (CanReachLocation.Resolved(location_name="Loc", parent_region_name="R", player=1),
+         {"location_name": "Loc"}),
+        (CanReachEntrance.Resolved(entrance_name="E", parent_region_name="R", player=1),
+         {"entrance_name": "E"}),
+        (HasAll.Resolved(item_names=("A", "B"), player=1),
+         {"item_names": ["A", "B"]}),
+        (HasAny.Resolved(item_names=("A", "B"), player=1),
+         {"item_names": ["A", "B"]}),
+        (HasGroup.Resolved(item_name_group="G", item_names=("A",), count=2, player=1),
+         {"item_name_group": "G", "count": 2}),
+        (HasAllCounts.Resolved(item_counts=(("A", 2), ("B", 3)), player=1),
+         {"item_counts": {"A": 2, "B": 3}}),
+        (HasAnyCount.Resolved(item_counts=(("A", 2),), player=1),
+         {"item_counts": {"A": 2}}),
+    ])
+    def test_resolved_to_dict_preserves_args(self, resolved, expected_args):
+        result = resolved.to_dict()
+        assert result["args"] == expected_args, (
+            f"{type(resolved).__qualname__}.to_dict() dropped/altered args: "
+            f"{result.get('args')!r} != {expected_args!r}"
+        )

@@ -734,7 +734,7 @@ class ClosureFunctionAnalyzer:
                 # Convert has_sword to actual item checks using game handler's helper expansion
                 has_sword_rule = {
                     'rule': 'HasAny',
-                    'args': {'items': helper_expansion}
+                    'args': {'item_names': helper_expansion}
                 }
                 first_item = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
                 second_item = {'rule': 'Has', 'args': {'item_name': item_names[1]}}
@@ -847,7 +847,7 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found {name}(), converting to item checks")
                 return {
                     'rule': 'HasAny',
-                    'args': {'items': expansion}
+                    'args': {'item_names': expansion}
                 }
 
         return None
@@ -1088,7 +1088,8 @@ class ClosureFunctionAnalyzer:
         if rule.get('rule') == 'Has':
             return {rule.get('args', {}).get('item_name', '')}
         elif rule.get('rule') == 'HasAny':
-            return set(rule.get('args', {}).get('items', []))
+            args = rule.get('args', {})
+            return set(args.get('item_names', args.get('items', [])))
         elif rule.get('rule') in ('CanReachEntrance', 'CanReachRegion'):
             return None  # Has can_reach, not a pure item rule
         elif rule.get('rule') == 'And' and 'children' in rule:

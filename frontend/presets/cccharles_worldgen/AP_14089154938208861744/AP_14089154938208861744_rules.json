@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Choo-Choo Charles WorldGen",
   "game_directory": "cccharles_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -9879,7 +9879,15 @@
             "name": "Final Boss",
             "id": null,
             "access_rule": {
-              "rule": "HasAll"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Egg",
+                  "Green Egg",
+                  "Red Egg",
+                  "Temple Key"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -11847,7 +11855,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Choo-Choo Charles WorldGen",

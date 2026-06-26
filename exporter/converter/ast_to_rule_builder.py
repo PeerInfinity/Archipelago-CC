@@ -233,8 +233,8 @@ class ASTToRuleBuilder:
         # Include args if non-empty (handles both dict and list)
         if args:
             # Sort items in HasAll/HasAny for canonical, deterministic output
-            if rule_name in ('HasAll', 'HasAny') and isinstance(args.get('items'), list):
-                args = dict(args, items=sorted(args['items']))
+            if rule_name in ('HasAll', 'HasAny') and isinstance(args.get('item_names'), list):
+                args = dict(args, item_names=sorted(args['item_names']))
             result['args'] = args
         return result
 
@@ -458,12 +458,12 @@ class ASTToRuleBuilder:
         Convert group_check rule.
 
         AST: {"type": "group_check", "group": "Keys", "count": 3}
-        RB: {"rule": "HasGroup", "options": [], "args": {"group": "Keys", "count": 3}}
+        RB: {"rule": "HasGroup", "options": [], "args": {"item_name_group": "Keys", "count": 3}}
         """
         group = rule.get('group', '')
         count = rule.get('count', 1)
 
-        args = {'group': group}
+        args = {'item_name_group': group}
         if count != 1:
             args['count'] = count
 
@@ -504,7 +504,7 @@ class ASTToRuleBuilder:
                 if len(items) == 0:
                     # has_all([]) is vacuously true
                     return self._make_rule('True_', {})
-                return self._make_rule('HasAll', {'items': items})
+                return self._make_rule('HasAll', {'item_names': items})
 
         elif method == 'has_any':
             items = get_items_from_arg(get_arg_from_list(args, 0, []), [])
@@ -512,27 +512,27 @@ class ASTToRuleBuilder:
                 if len(items) == 0:
                     # has_any([]) is always false - can't have any of nothing
                     return self._make_rule('False_', {})
-                return self._make_rule('HasAny', {'items': items})
+                return self._make_rule('HasAny', {'item_names': items})
 
         elif method == 'has_all_counts':
             items = get_arg_from_list(args, 0, {})
             if isinstance(items, dict):
-                return self._make_rule('HasAllCounts', {'items': items})
+                return self._make_rule('HasAllCounts', {'item_counts': items})
 
         elif method == 'has_from_list':
             items = get_arg_from_list(args, 0, [])
             count = get_arg_from_list(args, 1, 1)
-            return self._make_rule('HasFromList', {'items': items, 'count': count})
+            return self._make_rule('HasFromList', {'item_names': items, 'count': count})
 
         elif method == 'has_from_list_unique':
             items = get_arg_from_list(args, 0, [])
             count = get_arg_from_list(args, 1, 1)
-            return self._make_rule('HasFromListUnique', {'items': items, 'count': count})
+            return self._make_rule('HasFromListUnique', {'item_names': items, 'count': count})
 
         elif method == 'has_group_unique':
             group = get_arg_from_list(args, 0, '')
             count = get_arg_from_list(args, 1, 1)
-            return self._make_rule('HasGroupUnique', {'group': group, 'count': count})
+            return self._make_rule('HasGroupUnique', {'item_name_group': group, 'count': count})
 
         elif method == 'has':
             # Simple has call
@@ -731,7 +731,7 @@ class ASTToRuleBuilder:
                 # Also collect items from existing HasAll/HasAny (matching target)
                 elif child.get('rule') == target_rule:
                     args = child.get('args', {})
-                    items = args.get('items', [])
+                    items = args.get('item_names', args.get('items', []))
                     if isinstance(items, list) and all(isinstance(i, str) for i in items):
                         existing_items.extend(items)
                         continue
@@ -744,7 +744,7 @@ class ASTToRuleBuilder:
         unique_items = list(dict.fromkeys(all_items))
 
         if len(unique_items) >= 2:
-            other_children.append(self._make_rule(target_rule, {'items': unique_items}))
+            other_children.append(self._make_rule(target_rule, {'item_names': unique_items}))
         elif len(unique_items) == 1:
             other_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
@@ -829,7 +829,7 @@ class ASTToRuleBuilder:
         # Add pre-conversion item checks as HasAll/Has
         unique_items = list(dict.fromkeys(simple_item_checks))
         if len(unique_items) >= 2:
-            converted_children.append(self._make_rule('HasAll', {'items': unique_items}))
+            converted_children.append(self._make_rule('HasAll', {'item_names': unique_items}))
         elif len(unique_items) == 1:
             converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
@@ -877,7 +877,7 @@ class ASTToRuleBuilder:
         # Add pre-conversion item checks as HasAny/Has
         unique_items = list(dict.fromkeys(simple_item_checks))
         if len(unique_items) >= 2:
-            converted_children.append(self._make_rule('HasAny', {'items': unique_items}))
+            converted_children.append(self._make_rule('HasAny', {'item_names': unique_items}))
         elif len(unique_items) == 1:
             converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 

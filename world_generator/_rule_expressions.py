@@ -235,7 +235,7 @@ class RuleExpressionMixin:
             return f'Compare(CountItem({repr(item_name)}), ">=", {count})'
 
         if rb_rule == 'HasAll':
-            items = args.get('items', [])
+            items = args.get('item_names', args.get('items', []))
             if not items:
                 return self._make_bool_constant(True)
             self.required_imports.add('HasAll')
@@ -244,7 +244,7 @@ class RuleExpressionMixin:
             return f'HasAll({items_str})'
 
         if rb_rule == 'HasAny':
-            items = args.get('items', [])
+            items = args.get('item_names', args.get('items', []))
             if not items:
                 return self._make_bool_constant(False)
             self.required_imports.add('HasAny')
@@ -253,7 +253,7 @@ class RuleExpressionMixin:
             return f'HasAny({items_str})'
 
         if rb_rule == 'HasAllCounts':
-            items = args.get('items', {})
+            items = args.get('item_counts', args.get('items', {}))
             if not items:
                 return self._make_bool_constant(True)
             self.required_imports.add('HasAllCounts')
@@ -261,7 +261,7 @@ class RuleExpressionMixin:
             return f'HasAllCounts({repr(items)})'
 
         if rb_rule == 'HasGroup':
-            group = args.get('group', '')
+            group = args.get('item_name_group', args.get('group', ''))
             count_raw = args.get('count', 1)
             count = self._extract_constant_value(count_raw, 1)
             self.required_imports.add('HasGroup')
@@ -271,7 +271,7 @@ class RuleExpressionMixin:
                 return f'HasGroup({repr(group)}, {count})'
 
         if rb_rule == 'HasGroupUnique':
-            group = args.get('group', '')
+            group = args.get('item_name_group', args.get('group', ''))
             count_raw = args.get('count', 1)
             count = self._extract_constant_value(count_raw, 1)
             self.required_imports.add('HasGroupUnique')
@@ -281,7 +281,7 @@ class RuleExpressionMixin:
                 return f'HasGroupUnique({repr(group)}, {count})'
 
         if rb_rule == 'HasFromList':
-            items_raw = args.get('items', [])
+            items_raw = args.get('item_names', args.get('items', []))
             count = args.get('count', 1)
             if not items_raw:
                 return self._make_bool_constant(True)
@@ -305,7 +305,7 @@ class RuleExpressionMixin:
             return f'HasFromList({items_str}, count={count})'
 
         if rb_rule == 'HasFromListUnique':
-            items_raw = args.get('items', [])
+            items_raw = args.get('item_names', args.get('items', []))
             count = args.get('count', 1)
             if not items_raw:
                 return self._make_bool_constant(True)

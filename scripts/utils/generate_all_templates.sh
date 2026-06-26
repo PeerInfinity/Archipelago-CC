@@ -407,9 +407,12 @@ WORLDGEN2_TEMPLATES=(
 # Dynamic template lists (from world-mapping.json + exclude lists)
 # ============================================================
 
-# All base game templates (permanent exclude_list already applied)
+# All base game templates (permanent exclude_list already applied;
+# generation_exclude_list drops games whose presets we deliberately don't generate)
 mapfile -t ALL_BASE_TEMPLATES < <(
-  python scripts/utils/list-template-files.py | sed 's/\.yaml$//'
+  python scripts/utils/list-template-files.py \
+    --exclude generation_exclude_list \
+  | sed 's/\.yaml$//'
 )
 
 # Single-seed templates = all base templates minus extra-seed templates
@@ -423,11 +426,12 @@ for t in "${ALL_BASE_TEMPLATES[@]}"; do
 done
 unset _EXTRA_SEED_SET
 
-# WorldGen-eligible templates (also excludes main_test + worldgen_test lists)
+# WorldGen-eligible templates (also excludes main_test + worldgen_test + generation lists)
 mapfile -t WORLDGEN_TEMPLATES < <(
   python scripts/utils/list-template-files.py \
     --exclude main_test_exclude_list \
     --exclude worldgen_test_exclude_list \
+    --exclude generation_exclude_list \
   | sed 's/\.yaml$//'
 )
 

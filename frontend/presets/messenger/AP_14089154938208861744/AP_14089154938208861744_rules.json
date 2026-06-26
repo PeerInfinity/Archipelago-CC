@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "The Messenger",
   "game_directory": "messenger",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3332,8 +3332,8 @@
             }
           },
           {
-            "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Room",
-            "connected_region": "Searing Crags - Key of Strength Room",
+            "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Shop",
+            "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
               "rule": "False_"
             }
@@ -3387,10 +3387,35 @@
             "name": "Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop",
             "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Power Thistle"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Strike of the Ninja",
+                          "Wingsuit"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Rope Dart"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Thistle"
+                  }
+                }
+              ]
             }
           },
           {
@@ -3464,38 +3489,7 @@
         "name": "Searing Crags - Key of Strength Shop",
         "exits": [
           {
-            "name": "Searing Crags - Key of Strength Shop -> Searing Crags - Key of Strength Room",
-            "connected_region": "Searing Crags - Key of Strength Room",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Strike of the Ninja",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [],
-        "parent": "Searing Crags"
-      },
-      "Searing Crags - Key of Strength Room": {
-        "name": "Searing Crags - Key of Strength Room",
-        "exits": [
-          {
-            "name": "Searing Crags - Key of Strength Room -> Searing Crags - Searing Mega Shard Shop",
+            "name": "Searing Crags - Key of Strength Shop -> Searing Crags - Searing Mega Shard Shop",
             "connected_region": "Searing Crags - Searing Mega Shard Shop",
             "access_rule": {
               "rule": "True_"
@@ -5102,8 +5096,7 @@
               "args": {
                 "items": [
                   "Candle",
-                  "Rope Dart",
-                  "Wingsuit"
+                  "Rope Dart"
                 ]
               }
             }
@@ -6965,7 +6958,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "The Messenger",

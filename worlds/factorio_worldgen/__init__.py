@@ -126,7 +126,7 @@ class FactorioWorldGenWeb(WebWorld):
             "English",
             "setup_en.md",
             "setup/en",
-            ["Berserker", "Farrak Kilhn"]
+            ["Berserker, Farrak Kilhn"]
         )
     ]
 

@@ -57,7 +57,7 @@ item_table: Dict[str, ItemData] = {
     "Trident": ItemData(698031, ItemClassification.filler, None),
     "Turtle Egg": ItemData(698032, ItemClassification.filler, None),
     "Jelly Egg": ItemData(698033, ItemClassification.filler, None),
-    "Urchin Costume": ItemData(698034, ItemClassification.progression, None),
+    "Urchin Costume": ItemData(698034, ItemClassification.filler, None),
     "Baby Walker": ItemData(698035, ItemClassification.filler, None),
     "Vedha's Cure-All": ItemData(698036, ItemClassification.useful, "Vedha's Cure All"),
     "Zuuna's Perogi": ItemData(698037, ItemClassification.useful, None),

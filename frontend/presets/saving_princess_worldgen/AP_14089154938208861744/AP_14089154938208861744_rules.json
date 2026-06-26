@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Saving Princess WorldGen",
   "game_directory": "saving_princess_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -127,7 +127,19 @@
             "name": "Volcanic: Hot coals",
             "id": 91630179862866,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_hover",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ice Spreadshot"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Flamethrower",
@@ -1003,7 +1015,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Saving Princess WorldGen",

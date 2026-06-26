@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Yu-Gi-Oh! 2006",
   "game_directory": "yugioh06",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -24366,7 +24366,6 @@
       "Banlist September 2005"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Yu-Gi-Oh! 2006",
@@ -24990,7 +24989,7 @@
           "additional_info": []
         }
       ],
-      "rom_name_text": "YGO06068_1_          1\u0000",
+      "rom_name_text": "YGO06067_1_          1\u0000",
       "world_description": "Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006 is the definitive Yu-Gi-Oh\nsimulator on the GBA. Featuring over 2000 cards and over 90 Challenges.",
       "slot_data": {
         "structure_deck": 0,
