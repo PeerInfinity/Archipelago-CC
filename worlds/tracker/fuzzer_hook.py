@@ -106,6 +106,9 @@ class Hook(BaseHook):
         self.ut_version = getattr(args, 'ut_version', None)
 
     def after_generate(self, mw:MultiWorld, output_path):
+        # Default to OptionError in case generation failed or is invalid, so
+        # that it gets marked as ignored as we're not testing for that
+        self.status = GenOutcome.OptionError
         if mw is None:
             return
         if len(mw.worlds)>1:
@@ -124,6 +127,8 @@ class Hook(BaseHook):
         temp = Context.decompress(data)
 
         slot_data = temp["slot_data"][1] #slot 0 is reserved
+        # slot_data is sent to clients as json, so pass the slot_data through json conversion to ensure slot_data uses the correct types.
+        slot_data = json.loads(json.dumps(slot_data))
 
         # Fix ALttP entrance shuffle regeneration by setting entrance_shuffle_seed
         # to the actual er_seed from the original generation. This ensures TrackerCore
