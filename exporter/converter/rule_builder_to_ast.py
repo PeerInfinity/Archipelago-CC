@@ -277,7 +277,7 @@ class RuleBuilderToAST:
         AST Format: {"type": "state_method", "method": "has_all", "args": [{"type": "constant", "value": ["Key1", "Key2"]}]}
         """
         args = rule.get('args', {})
-        items = args.get('items', [])
+        items = args.get('item_names', args.get('items', []))
 
         if not items:
             return {'type': 'constant', 'value': True}
@@ -300,7 +300,7 @@ class RuleBuilderToAST:
         AST Format: {"type": "state_method", "method": "has_any", "args": [{"type": "constant", "value": ["Sword", "Axe"]}]}
         """
         args = rule.get('args', {})
-        items = args.get('items', [])
+        items = args.get('item_names', args.get('items', []))
 
         if not items:
             return {'type': 'constant', 'value': False}
@@ -320,7 +320,7 @@ class RuleBuilderToAST:
         AST Format: {"type": "state_method", "method": "has_all_counts", "args": [{"type": "constant", "value": {...}}]}
         """
         args = rule.get('args', {})
-        items = args.get('items', {})
+        items = args.get('item_counts', args.get('items', {}))
 
         if not items:
             return {'type': 'constant', 'value': True}
@@ -342,7 +342,7 @@ class RuleBuilderToAST:
         AST Format: {"type": "or", "conditions": [{"type": "item_check", "item": "Sword", "count": 2}, ...]}
         """
         args = rule.get('args', {})
-        items = args.get('items', {})
+        items = args.get('item_counts', args.get('items', {}))
 
         if not items:
             return {'type': 'constant', 'value': False}
@@ -369,7 +369,7 @@ class RuleBuilderToAST:
         This checks if player has at least 'count' total items from the list.
         """
         args = rule.get('args', {})
-        items = args.get('items', [])
+        items = args.get('item_names', args.get('items', []))
         count = args.get('count', 1)
 
         if not items:
@@ -391,7 +391,7 @@ class RuleBuilderToAST:
         Similar to HasFromList but counts unique items only.
         """
         args = rule.get('args', {})
-        items = args.get('items', [])
+        items = args.get('item_names', args.get('items', []))
         count = args.get('count', 1)
 
         if not items:
@@ -414,7 +414,7 @@ class RuleBuilderToAST:
         AST Format: {"type": "group_check", "group": "Keys", "count": 3}
         """
         args = rule.get('args', {})
-        group = args.get('group', '')
+        group = args.get('item_name_group', args.get('group', ''))
         count = args.get('count', 1)
 
         result = {'type': 'group_check', 'group': group}
@@ -430,7 +430,7 @@ class RuleBuilderToAST:
         Similar to HasGroup but counts unique items only.
         """
         args = rule.get('args', {})
-        group = args.get('group', '')
+        group = args.get('item_name_group', args.get('group', ''))
         count = args.get('count', 1)
 
         return {

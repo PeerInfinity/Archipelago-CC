@@ -53,14 +53,14 @@ def _make_has_all(items: List[str]) -> Dict[str, Any]:
     """Create a HasAll rule."""
     if len(items) == 1:
         return _make_has(items[0])
-    return {"rule": "HasAll", "args": {"items": items}}
+    return {"rule": "HasAll", "args": {"item_names": items}}
 
 
 def _make_has_any(items: List[str]) -> Dict[str, Any]:
     """Create a HasAny rule."""
     if len(items) == 1:
         return _make_has(items[0])
-    return {"rule": "HasAny", "args": {"items": items}}
+    return {"rule": "HasAny", "args": {"item_names": items}}
 
 
 def _make_and(children: List[Dict[str, Any]]) -> Dict[str, Any]:

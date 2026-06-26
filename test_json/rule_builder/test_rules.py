@@ -572,15 +572,15 @@ class TestResolvedToDictArgs:
         (CanReachEntrance.Resolved(entrance_name="E", parent_region_name="R", player=1),
          {"entrance_name": "E"}),
         (HasAll.Resolved(item_names=("A", "B"), player=1),
-         {"items": ["A", "B"]}),
+         {"item_names": ["A", "B"]}),
         (HasAny.Resolved(item_names=("A", "B"), player=1),
-         {"items": ["A", "B"]}),
+         {"item_names": ["A", "B"]}),
         (HasGroup.Resolved(item_name_group="G", item_names=("A",), count=2, player=1),
-         {"group": "G", "count": 2}),
+         {"item_name_group": "G", "count": 2}),
         (HasAllCounts.Resolved(item_counts=(("A", 2), ("B", 3)), player=1),
-         {"items": {"A": 2, "B": 3}}),
+         {"item_counts": {"A": 2, "B": 3}}),
         (HasAnyCount.Resolved(item_counts=(("A", 2),), player=1),
-         {"items": {"A": 2}}),
+         {"item_counts": {"A": 2}}),
     ])
     def test_resolved_to_dict_preserves_args(self, resolved, expected_args):
         result = resolved.to_dict()

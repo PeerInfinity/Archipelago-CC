@@ -51,38 +51,38 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
 
     def test_has_all_round_trip(self):
         """Test HasAll round-trips correctly."""
-        original = {"rule": "HasAll", "options": [], "args": {"items": ["Key1", "Key2", "Key3"]}}
+        original = {"rule": "HasAll", "options": [], "args": {"item_names": ["Key1", "Key2", "Key3"]}}
         result = self._round_trip_b_a_b(original)
         self.assertEqual(result["rule"], "HasAll")
         # Items may be sorted
-        self.assertEqual(sorted(result["args"]["items"]), sorted(original["args"]["items"]))
+        self.assertEqual(sorted(result["args"]["item_names"]), sorted(original["args"]["item_names"]))
 
     def test_has_any_round_trip(self):
         """Test HasAny round-trips correctly."""
-        original = {"rule": "HasAny", "options": [], "args": {"items": ["Sword", "Axe"]}}
+        original = {"rule": "HasAny", "options": [], "args": {"item_names": ["Sword", "Axe"]}}
         result = self._round_trip_b_a_b(original)
         self.assertEqual(result["rule"], "HasAny")
-        self.assertEqual(sorted(result["args"]["items"]), sorted(original["args"]["items"]))
+        self.assertEqual(sorted(result["args"]["item_names"]), sorted(original["args"]["item_names"]))
 
     def test_has_all_counts_round_trip(self):
         """Test HasAllCounts round-trips correctly."""
-        original = {"rule": "HasAllCounts", "options": [], "args": {"items": {"Sword": 2, "Shield": 1}}}
+        original = {"rule": "HasAllCounts", "options": [], "args": {"item_counts": {"Sword": 2, "Shield": 1}}}
         result = self._round_trip_b_a_b(original)
         self.assertEqual(result["rule"], "HasAllCounts")
-        self.assertEqual(result["args"]["items"], original["args"]["items"])
+        self.assertEqual(result["args"]["item_counts"], original["args"]["item_counts"])
 
     def test_has_group_round_trip(self):
         """Test HasGroup round-trips correctly."""
-        original = {"rule": "HasGroup", "options": [], "args": {"group": "Keys", "count": 3}}
+        original = {"rule": "HasGroup", "options": [], "args": {"item_name_group": "Keys", "count": 3}}
         result = self._round_trip_b_a_b(original)
         self.assertEqual(result, original)
 
     def test_has_group_default_count_round_trip(self):
         """Test HasGroup with default count round-trips correctly."""
-        original = {"rule": "HasGroup", "options": [], "args": {"group": "Weapons"}}
+        original = {"rule": "HasGroup", "options": [], "args": {"item_name_group": "Weapons"}}
         result = self._round_trip_b_a_b(original)
         self.assertEqual(result["rule"], "HasGroup")
-        self.assertEqual(result["args"]["group"], "Weapons")
+        self.assertEqual(result["args"]["item_name_group"], "Weapons")
 
     def test_can_reach_region_round_trip(self):
         """Test CanReachRegion round-trips correctly."""
@@ -118,7 +118,7 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         result = self._round_trip_b_a_b(original)
         # Optimization: And([Has, Has]) -> HasAll
         self.assertEqual(result["rule"], "HasAll")
-        self.assertEqual(sorted(result["args"]["items"]), ["Shield", "Sword"])
+        self.assertEqual(sorted(result["args"]["item_names"]), ["Shield", "Sword"])
 
     def test_or_round_trip(self):
         """Test Or rule round-trips correctly.
@@ -136,7 +136,7 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         result = self._round_trip_b_a_b(original)
         # Optimization: Or([Has, Has]) -> HasAny
         self.assertEqual(result["rule"], "HasAny")
-        self.assertEqual(sorted(result["args"]["items"]), ["Axe", "Sword"])
+        self.assertEqual(sorted(result["args"]["item_names"]), ["Axe", "Sword"])
 
     def test_nested_composite_round_trip(self):
         """Test nested And/Or rules round-trip correctly.
@@ -355,7 +355,7 @@ class TestASTToRuleBuilder(unittest.TestCase):
         """Test group_check conversion."""
         rule = {"type": "group_check", "group": "Keys", "count": 3}
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule, {"rule": "HasGroup", "options": [], "args": {"group": "Keys", "count": 3}})
+        self.assertEqual(result.rule, {"rule": "HasGroup", "options": [], "args": {"item_name_group": "Keys", "count": 3}})
 
     def test_can_reach(self):
         """Test can_reach conversion."""
@@ -384,7 +384,7 @@ class TestASTToRuleBuilder(unittest.TestCase):
         result = self.converter.convert(rule)
         # Optimization: and([item_check, item_check]) -> HasAll
         self.assertEqual(result.rule["rule"], "HasAll")
-        self.assertEqual(sorted(result.rule["args"]["items"]), ["Shield", "Sword"])
+        self.assertEqual(sorted(result.rule["args"]["item_names"]), ["Shield", "Sword"])
 
     def test_or_rule(self):
         """Test or rule conversion.
@@ -401,7 +401,7 @@ class TestASTToRuleBuilder(unittest.TestCase):
         result = self.converter.convert(rule)
         # Optimization: or([item_check, item_check]) -> HasAny
         self.assertEqual(result.rule["rule"], "HasAny")
-        self.assertEqual(sorted(result.rule["args"]["items"]), ["Axe", "Sword"])
+        self.assertEqual(sorted(result.rule["args"]["item_names"]), ["Axe", "Sword"])
 
     def test_state_method_has_all(self):
         """Test state_method has_all conversion."""
@@ -412,7 +412,7 @@ class TestASTToRuleBuilder(unittest.TestCase):
         }
         result = self.converter.convert(rule)
         self.assertEqual(result.rule["rule"], "HasAll")
-        self.assertEqual(result.rule["args"]["items"], ["Key1", "Key2"])
+        self.assertEqual(result.rule["args"]["item_names"], ["Key1", "Key2"])
 
     def test_state_method_has_any(self):
         """Test state_method has_any conversion."""
@@ -423,7 +423,7 @@ class TestASTToRuleBuilder(unittest.TestCase):
         }
         result = self.converter.convert(rule)
         self.assertEqual(result.rule["rule"], "HasAny")
-        self.assertEqual(result.rule["args"]["items"], ["A", "B"])
+        self.assertEqual(result.rule["args"]["item_names"], ["A", "B"])
 
     def test_helper_preserved(self):
         """Test helper rules are preserved as custom rules."""

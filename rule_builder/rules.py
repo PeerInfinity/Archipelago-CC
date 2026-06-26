@@ -1135,7 +1135,7 @@ class HasAll(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"items": list(self.item_names)}
+            return {"item_names": list(self.item_names)}
 
 
 @dataclasses.dataclass(init=False)
@@ -1257,7 +1257,7 @@ class HasAny(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"items": list(self.item_names)}
+            return {"item_names": list(self.item_names)}
 
 
 @dataclasses.dataclass()
@@ -1384,7 +1384,7 @@ class HasAllCounts(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"items": dict(self.item_counts)}
+            return {"item_counts": dict(self.item_counts)}
 
 
 @dataclasses.dataclass()
@@ -1511,7 +1511,7 @@ class HasAnyCount(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"items": dict(self.item_counts)}
+            return {"item_counts": dict(self.item_counts)}
 
 
 @dataclasses.dataclass(init=False)
@@ -1651,7 +1651,7 @@ class HasFromList(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"items": list(self.item_names), "count": self.count}
+            return {"item_names": list(self.item_names), "count": self.count}
 
 
 @dataclasses.dataclass(init=False)
@@ -1787,7 +1787,7 @@ class HasFromListUnique(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"items": list(self.item_names), "count": self.count}
+            return {"item_names": list(self.item_names), "count": self.count}
 
 
 @dataclasses.dataclass()
@@ -1867,7 +1867,7 @@ class HasGroup(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"group": self.item_name_group, "count": self.count}
+            return {"item_name_group": self.item_name_group, "count": self.count}
 
 
 @dataclasses.dataclass()
@@ -1950,7 +1950,7 @@ class HasGroupUnique(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"group": self.item_name_group, "count": self.count}
+            return {"item_name_group": self.item_name_group, "count": self.count}
 
 
 @dataclasses.dataclass()

@@ -169,7 +169,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
                     group_name = weapon + 's'
                     items = self._item_groups.get(group_name, [])
                     if items:
-                        return {'rule': 'HasAny', 'args': {'items': items}}
+                        return {'rule': 'HasAny', 'args': {'item_names': items}}
                     else:
                         logger.warning(f"FFMQ: Unknown weapon group '{group_name}'")
                         return {'rule': 'True_'}  # Unknown weapon, assume accessible
@@ -191,7 +191,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
                         if not access_items:  # Empty list = always true
                             return {'rule': 'True_'}
                         else:
-                            return {'rule': 'HasAll', 'args': {'items': list(access_items)}}
+                            return {'rule': 'HasAll', 'args': {'item_names': list(access_items)}}
 
             # Check for has_all pattern in bytecode: state.has_all([items], player)
             # This handles nested functions like hard_boss_logic that don't match
@@ -283,7 +283,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
             for const in code.co_consts:
                 if isinstance(const, (list, tuple)) and const:
                     if all(isinstance(item, str) for item in const):
-                        return {'rule': 'HasAll', 'args': {'items': list(const)}}
+                        return {'rule': 'HasAll', 'args': {'item_names': list(const)}}
 
             # If no list constant, check for BUILD_LIST pattern
             # The bytecode pattern is: LOAD_CONST (item1), LOAD_CONST (item2), ..., BUILD_LIST n
@@ -318,7 +318,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
                             break
 
             if items:
-                return {'rule': 'HasAll', 'args': {'items': items}}
+                return {'rule': 'HasAll', 'args': {'item_names': items}}
 
         except Exception as e:
             logger.debug(f"FFMQ _analyze_has_all_bytecode failed: {e}")
@@ -333,6 +333,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
         if rule_type == 'True_':
             return True
         if rule_type == 'HasAll':
-            items = rule.get('args', {}).get('items', [])
+            args = rule.get('args', {})
+            items = args.get('item_names', args.get('items', []))
             return not items  # Empty items list = always true
         return False
