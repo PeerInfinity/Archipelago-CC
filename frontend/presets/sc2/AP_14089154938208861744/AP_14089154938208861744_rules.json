@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Starcraft 2",
   "game_directory": "sc2",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -9256,25 +9256,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
@@ -9337,33 +9318,18 @@
             "name": "Zero Hour (Terran): Third Group Rescued",
             "id": 1303,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Goliath",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Vulture",
+                  "Warhound"
+                ]
+              }
             },
             "item": {
               "name": "Defensive Matrix (Science Vessel)",
@@ -9466,33 +9432,18 @@
             "name": "Zero Hour (Terran): Hold Just a Little Longer",
             "id": 1309,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Goliath",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Vulture",
+                  "Warhound"
+                ]
+              }
             },
             "item": {
               "name": "Optimized Logistics (Hellion)",
@@ -9506,33 +9457,18 @@
             "name": "Zero Hour (Terran): Cavalry's on the Way",
             "id": 1310,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Goliath",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Vulture",
+                  "Warhound"
+                ]
+              }
             },
             "item": {
               "name": "Advanced Siege Tech (Siege Tank)",
@@ -9548,25 +9484,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
                 {
                   "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
@@ -35938,6 +35855,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Starcraft 2",
@@ -36186,12 +36104,10 @@
         "excluded_missions": [],
         "extra_locations": 0,
         "filler_items_distribution": {
-          "1 Kerrigan Level": 0,
           "Additional Maximum Supply": 1,
           "Additional Starting Minerals": 1,
           "Additional Starting Supply": 1,
           "Additional Starting Vespene": 1,
-          "Decreased Maximum Supply": 0,
           "Increased Building Construction Speed": 1,
           "Increased Shield Regeneration": 1,
           "Increased Upgrade Research Speed": 1,
@@ -37349,7 +37265,6 @@
         "Additional Starting Minerals": 1,
         "Additional Starting Supply": 1,
         "Additional Starting Vespene": 1,
-        "Decreased Maximum Supply": 0,
         "Increased Building Construction Speed": 1,
         "Increased Upgrade Research Speed": 1,
         "Reduced Upgrade Research Cost": 1

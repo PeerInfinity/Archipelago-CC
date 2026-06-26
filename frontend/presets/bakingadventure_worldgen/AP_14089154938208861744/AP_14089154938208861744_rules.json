@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Baking Adventure WorldGen",
   "game_directory": "bakingadventure_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -170,13 +170,7 @@
             "name": "ToCombining",
             "connected_region": "Combining",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Creamed Mixture",
-                  "Flour Mixture"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -185,14 +179,7 @@
             "name": "Cream Butter and Sugars",
             "id": 300000007,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Electric Mixer",
-                  "Mixing Bowls",
-                  "Softened Butter"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Basic Dough",
@@ -367,13 +354,7 @@
             "name": "Scoop Dough onto Sheets",
             "id": 300000014,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Cookie Dough",
-                  "Prepared Sheets"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Butter Sugar Base",
@@ -401,13 +382,7 @@
             "name": "Bake for 9-11 Minutes",
             "id": 300000015,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Preheated Oven",
-                  "Shaped Cookies"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Egg Mixture",
@@ -662,6 +637,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Baking Adventure WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DLCQuest WorldGen",
   "game_directory": "dlcquest_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -986,13 +986,7 @@
             "name": "Winning Basic",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Armor for your Horse Pack",
-                  "Finish the Fight Pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Victory Basic",
@@ -1791,6 +1785,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DLCQuest WorldGen",

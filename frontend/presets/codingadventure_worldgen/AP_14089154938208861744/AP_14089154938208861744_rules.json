@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Coding Adventure WorldGen",
   "game_directory": "codingadventure_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -58,28 +58,7 @@
             "name": "ToStaticWebsite",
             "connected_region": "StaticWebsiteHub",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Git",
-                      "JavaScript Basics",
-                      "Server Basics"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "CSS",
-                      "HTML"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -333,27 +312,7 @@
             "name": "ToInteractiveApp",
             "connected_region": "InteractiveAppHub",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Database Basics",
-                      "State Management"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Frontend Framework",
-                      "REST APIs"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           }
         ],
@@ -970,47 +929,7 @@
             "name": "ToFullStackHub",
             "connected_region": "FullStackHub",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "DevOps",
-                          "Performance"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "DevOps",
-                          "Testing"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Performance",
-                          "Testing"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Authentication"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -1096,13 +1015,7 @@
             "name": "Caching",
             "id": 400000044,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Database Basics",
-                  "REST APIs"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Flask",
@@ -1227,13 +1140,7 @@
             "name": "CI/CD",
             "id": 400000051,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Docker",
-                  "Git"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Query Optimization",
@@ -1290,14 +1197,7 @@
             "name": "ToProduction",
             "connected_region": "ProductionHub",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Deployment Complete",
-                  "Scaling Complete",
-                  "Security Complete"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -1454,13 +1354,7 @@
             "name": "SSL Certificate",
             "id": 400000061,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Domain",
-                  "HTTPS"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "REST APIs",
@@ -2161,6 +2055,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Coding Adventure WorldGen",

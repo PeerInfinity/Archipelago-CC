@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Metamath WorldGen",
   "game_directory": "metamath_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -58,14 +58,7 @@
             "name": "From 2cn to addassi",
             "connected_region": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "2cn: |- 2 e. CC",
-                  "Axiom ax-1cn: |- 1 e. CC",
-                  "Given 2cn: |- 2 e. CC"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -78,14 +71,7 @@
             "name": "From ax-1cn to addassi",
             "connected_region": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Axiom ax-1cn: |- 1 e. CC",
-                  "Given 2cn: |- 2 e. CC",
-                  "ax-1cn: |- 1 e. CC"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -128,15 +114,7 @@
             "name": "From addassi to 3eqtri",
             "connected_region": "Prove 3eqtri: |- A = D",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Definition df-4: |- 4 = ( 3 + 1 )",
-                  "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-                  "Proved oveq1i: |- ( A F C ) = ( B F C )",
-                  "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -179,13 +157,7 @@
             "name": "From df-2 to oveq2i",
             "connected_region": "Prove oveq2i: |- ( C F A ) = ( C F B )",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Definition df-2: |- 2 = ( 1 + 1 )",
-                  "df-2: |- 2 = ( 1 + 1 )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -228,13 +200,7 @@
             "name": "From df-3 to oveq1i",
             "connected_region": "Prove oveq1i: |- ( A F C ) = ( B F C )",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Definition df-3: |- 3 = ( 2 + 1 )",
-                  "df-3: |- 3 = ( 2 + 1 )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -277,15 +243,7 @@
             "name": "From df-4 to 3eqtri",
             "connected_region": "Prove 3eqtri: |- A = D",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Definition df-4: |- 4 = ( 3 + 1 )",
-                  "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-                  "Proved oveq1i: |- ( A F C ) = ( B F C )",
-                  "df-4: |- 4 = ( 3 + 1 )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -328,15 +286,7 @@
             "name": "From oveq1i to 3eqtri",
             "connected_region": "Prove 3eqtri: |- A = D",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Definition df-4: |- 4 = ( 3 + 1 )",
-                  "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-                  "Proved oveq1i: |- ( A F C ) = ( B F C )",
-                  "oveq1i: |- ( A F C ) = ( B F C )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -379,14 +329,7 @@
             "name": "From 3eqtri to eqtr4i",
             "connected_region": "Prove eqtr4i: |- A = C",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "3eqtri: |- A = D",
-                  "Proved 3eqtri: |- A = D",
-                  "Proved oveq2i: |- ( C F A ) = ( C F B )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -429,14 +372,7 @@
             "name": "From oveq2i to eqtr4i",
             "connected_region": "Prove eqtr4i: |- A = C",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved 3eqtri: |- A = D",
-                  "Proved oveq2i: |- ( C F A ) = ( C F B )",
-                  "oveq2i: |- ( C F A ) = ( C F B )"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -1800,6 +1736,7 @@
       "Given 2cn: |- 2 e. CC"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Metamath WorldGen",

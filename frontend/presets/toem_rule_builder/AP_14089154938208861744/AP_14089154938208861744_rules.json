@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "TOEM rule builder",
   "game_directory": "toem_rule_builder",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -155,10 +155,7 @@
             "name": "Quest - Experience TOEM",
             "id": 3,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Mountain Top"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Clogs",
@@ -624,10 +621,7 @@
             "name": "Quest - Ghost helper!",
             "id": 26,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Logcity"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Diving helmet",
@@ -697,10 +691,7 @@
             "name": "Quest - Monster spotting",
             "id": 15,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Kiiruberg"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Ant photo",
@@ -2112,10 +2103,7 @@
             "name": "Quest - Ancient paintings",
             "id": 161,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Mountain Top"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Logcity stamp",
@@ -4112,6 +4100,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "TOEM rule builder",

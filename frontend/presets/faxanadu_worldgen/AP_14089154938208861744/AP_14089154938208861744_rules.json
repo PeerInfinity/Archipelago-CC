@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Faxanadu WorldGen",
   "game_directory": "faxanadu_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -30,13 +30,7 @@
             "name": "Eolis -> Path to Apolune",
             "connected_region": "Path to Apolune",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Key Jack",
-                  "Progressive Sword"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -288,13 +282,7 @@
             "name": "Tower of Trunk Hidden Mattock",
             "id": 400113,
             "access_rule": {
-              "rule": "HasAnyCount",
-              "args": {
-                "items": {
-                  "Progressive Sword": 2,
-                  "Deluge": 1
-                }
-              }
+              "rule": "HasAnyCount"
             },
             "item": {
               "name": "Progressive Shield",
@@ -364,13 +352,7 @@
             "name": "Path to Forepaw Glove",
             "id": 400117,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Unlock Wingboots"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Poison",
@@ -521,17 +503,7 @@
             "name": "Trunk -> Path to Mascon",
             "connected_region": "Path to Mascon",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Progressive Sword": 2,
-                  "Joker Spring Flow": 1,
-                  "Key Queen": 1,
-                  "Ring of Ruby": 1,
-                  "Sky Spring Flow": 1,
-                  "Tower of Fortress Spring Flow": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -768,13 +740,7 @@
             "name": "Path to Mascon -> Tower of Red Potion",
             "connected_region": "Tower of Red Potion",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Red Potion": 4,
-                  "Key Queen": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
@@ -1029,13 +995,7 @@
             "name": "Tower of Suffer Hidden Wingboots",
             "id": 400149,
             "access_rule": {
-              "rule": "HasAnyCount",
-              "args": {
-                "items": {
-                  "Progressive Sword": 2,
-                  "Deluge": 1
-                }
-              }
+              "rule": "HasAnyCount"
             },
             "item": {
               "name": "Progressive Armor",
@@ -1169,13 +1129,7 @@
             "name": "Mist -> Useless Tower",
             "connected_region": "Useless Tower",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Key King",
-                  "Unlock Wingboots"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
@@ -2661,6 +2615,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Faxanadu WorldGen",

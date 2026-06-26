@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Subnautica WorldGen",
   "game_directory": "subnautica_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3574,42 +3574,7 @@
             "name": "Neptune Launch",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "get_max_depth",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">=",
-                    "right": 1444
-                  }
-                },
-                {
-                  "rule": "has_cyclops_shield",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_mobile_vehicle_bay",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Ion Battery",
-                      "Ion Power Cell",
-                      "Neptune Boosters",
-                      "Neptune Cockpit",
-                      "Neptune Fuel Reserve",
-                      "Neptune Gantry",
-                      "Neptune Launch Platform"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Victory",
@@ -3670,10 +3635,7 @@
             "name": "Repair Aurora Drive",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Aurora Drive Room - Upgrade Console"
-              }
+              "rule": "CanReachLocation"
             },
             "item": {
               "name": "Repair Aurora Drive",
@@ -5012,6 +4974,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Subnautica WorldGen",

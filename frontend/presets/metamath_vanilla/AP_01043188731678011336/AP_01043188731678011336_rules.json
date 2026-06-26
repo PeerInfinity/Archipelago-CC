@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Metamath",
   "game_directory": "metamath",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -14,57 +14,64 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To eleq2",
+            "name": "To canth.1",
             "connected_region": "Prove Statement 1",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To fofn",
+            "name": "To eleq2",
             "connected_region": "Prove Statement 2",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To forn",
+            "name": "To fofn",
             "connected_region": "Prove Statement 3",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To fveq2",
+            "name": "To forn",
             "connected_region": "Prove Statement 4",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To id",
+            "name": "To fvelrnb",
             "connected_region": "Prove Statement 5",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To nbbn",
+            "name": "To fveq2",
+            "connected_region": "Prove Statement 6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "To id",
             "connected_region": "Prove Statement 7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To vx",
+            "name": "To nbbn",
             "connected_region": "Prove Statement 9",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To vy",
-            "connected_region": "Prove Statement 17",
+            "name": "To ssrab2",
+            "connected_region": "Prove Statement 13",
             "access_rule": {
               "rule": "True_"
             }
@@ -76,14 +83,14 @@
         "name": "Prove Statement 1",
         "exits": [
           {
-            "name": "From eleq2 to nsyl",
-            "connected_region": "Prove Statement 16",
+            "name": "From canth.1 to elpwi2",
+            "connected_region": "Prove Statement 14",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 1",
-                  "Proved Statement 15",
+                  "Proved Statement 13",
                   "Statement 1"
                 ]
               }
@@ -96,13 +103,13 @@
         "name": "Prove Statement 2",
         "exits": [
           {
-            "name": "From fofn to syl",
-            "connected_region": "Prove Statement 20",
+            "name": "From eleq2 to nsyl",
+            "connected_region": "Prove Statement 18",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 18",
+                  "Proved Statement 17",
                   "Proved Statement 2",
                   "Statement 2"
                 ]
@@ -146,14 +153,14 @@
         "name": "Prove Statement 3",
         "exits": [
           {
-            "name": "From forn to eleqtrrid",
-            "connected_region": "Prove Statement 14",
+            "name": "From fofn to syl",
+            "connected_region": "Prove Statement 16",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 13",
                   "Proved Statement 3",
+                  "Proved Statement 5",
                   "Statement 3"
                 ]
               }
@@ -196,14 +203,14 @@
         "name": "Prove Statement 4",
         "exits": [
           {
-            "name": "From fveq2 to eleq12d",
-            "connected_region": "Prove Statement 6",
+            "name": "From forn to eleqtrrid",
+            "connected_region": "Prove Statement 15",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 14",
                   "Proved Statement 4",
-                  "Proved Statement 5",
                   "Statement 4"
                 ]
               }
@@ -246,13 +253,13 @@
         "name": "Prove Statement 5",
         "exits": [
           {
-            "name": "From id to eleq12d",
-            "connected_region": "Prove Statement 6",
+            "name": "From fvelrnb to syl",
+            "connected_region": "Prove Statement 16",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
+                  "Proved Statement 3",
                   "Proved Statement 5",
                   "Statement 5"
                 ]
@@ -296,13 +303,14 @@
         "name": "Prove Statement 6",
         "exits": [
           {
-            "name": "From eleq12d to notbid",
+            "name": "From fveq2 to eleq12d",
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 6",
+                  "Proved Statement 7",
                   "Statement 6"
                 ]
               }
@@ -345,13 +353,13 @@
         "name": "Prove Statement 7",
         "exits": [
           {
-            "name": "From nbbn to sylib",
-            "connected_region": "Prove Statement 15",
+            "name": "From id to eleq12d",
+            "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 11",
+                  "Proved Statement 6",
                   "Proved Statement 7",
                   "Statement 7"
                 ]
@@ -395,14 +403,13 @@
         "name": "Prove Statement 8",
         "exits": [
           {
-            "name": "From notbid to elrab",
+            "name": "From eleq12d to notbid",
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 8",
-                  "Proved Statement 9",
                   "Statement 8"
                 ]
               }
@@ -445,26 +452,13 @@
         "name": "Prove Statement 9",
         "exits": [
           {
-            "name": "From vx to elrab",
-            "connected_region": "Prove Statement 10",
+            "name": "From nbbn to sylib",
+            "connected_region": "Prove Statement 17",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 8",
-                  "Proved Statement 9",
-                  "Statement 9"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From vx to ssrab2",
-            "connected_region": "Prove Statement 12",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
+                  "Proved Statement 12",
                   "Proved Statement 9",
                   "Statement 9"
                 ]
@@ -508,7 +502,7 @@
         "name": "Prove Statement 10",
         "exits": [
           {
-            "name": "From elrab to baibr",
+            "name": "From notbid to elrab",
             "connected_region": "Prove Statement 11",
             "access_rule": {
               "rule": "HasAll",
@@ -557,14 +551,13 @@
         "name": "Prove Statement 11",
         "exits": [
           {
-            "name": "From baibr to sylib",
-            "connected_region": "Prove Statement 15",
+            "name": "From elrab to baibr",
+            "connected_region": "Prove Statement 12",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 11",
-                  "Proved Statement 7",
                   "Statement 11"
                 ]
               }
@@ -607,13 +600,14 @@
         "name": "Prove Statement 12",
         "exits": [
           {
-            "name": "From ssrab2 to elpwi2",
-            "connected_region": "Prove Statement 13",
+            "name": "From baibr to sylib",
+            "connected_region": "Prove Statement 17",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 12",
+                  "Proved Statement 9",
                   "Statement 12"
                 ]
               }
@@ -656,14 +650,14 @@
         "name": "Prove Statement 13",
         "exits": [
           {
-            "name": "From elpwi2 to eleqtrrid",
+            "name": "From ssrab2 to elpwi2",
             "connected_region": "Prove Statement 14",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 1",
                   "Proved Statement 13",
-                  "Proved Statement 3",
                   "Statement 13"
                 ]
               }
@@ -706,14 +700,14 @@
         "name": "Prove Statement 14",
         "exits": [
           {
-            "name": "From eleqtrrid to pm2.65i",
-            "connected_region": "Prove Statement 22",
+            "name": "From elpwi2 to eleqtrrid",
+            "connected_region": "Prove Statement 15",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 14",
-                  "Proved Statement 21",
+                  "Proved Statement 4",
                   "Statement 14"
                 ]
               }
@@ -756,14 +750,14 @@
         "name": "Prove Statement 15",
         "exits": [
           {
-            "name": "From sylib to nsyl",
-            "connected_region": "Prove Statement 16",
+            "name": "From eleqtrrid to pm2.65i",
+            "connected_region": "Prove Statement 21",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
                   "Proved Statement 15",
+                  "Proved Statement 20",
                   "Statement 15"
                 ]
               }
@@ -806,14 +800,14 @@
         "name": "Prove Statement 16",
         "exits": [
           {
-            "name": "From nsyl to nrex",
-            "connected_region": "Prove Statement 19",
+            "name": "From syl to mtbiri",
+            "connected_region": "Prove Statement 20",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 16",
-                  "Proved Statement 17",
+                  "Proved Statement 19",
                   "Statement 16"
                 ]
               }
@@ -856,27 +850,14 @@
         "name": "Prove Statement 17",
         "exits": [
           {
-            "name": "From vy to fvelrnb",
+            "name": "From sylib to nsyl",
             "connected_region": "Prove Statement 18",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 17",
-                  "Statement 17"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From vy to nrex",
-            "connected_region": "Prove Statement 19",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 16",
-                  "Proved Statement 17",
+                  "Proved Statement 2",
                   "Statement 17"
                 ]
               }
@@ -919,14 +900,13 @@
         "name": "Prove Statement 18",
         "exits": [
           {
-            "name": "From fvelrnb to syl",
-            "connected_region": "Prove Statement 20",
+            "name": "From nsyl to nrex",
+            "connected_region": "Prove Statement 19",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 18",
-                  "Proved Statement 2",
                   "Statement 18"
                 ]
               }
@@ -970,13 +950,13 @@
         "exits": [
           {
             "name": "From nrex to mtbiri",
-            "connected_region": "Prove Statement 21",
+            "connected_region": "Prove Statement 20",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 16",
                   "Proved Statement 19",
-                  "Proved Statement 20",
                   "Statement 19"
                 ]
               }
@@ -1019,13 +999,13 @@
         "name": "Prove Statement 20",
         "exits": [
           {
-            "name": "From syl to mtbiri",
+            "name": "From mtbiri to pm2.65i",
             "connected_region": "Prove Statement 21",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 19",
+                  "Proved Statement 15",
                   "Proved Statement 20",
                   "Statement 20"
                 ]
@@ -1067,22 +1047,7 @@
       },
       "Prove Statement 21": {
         "name": "Prove Statement 21",
-        "exits": [
-          {
-            "name": "From mtbiri to pm2.65i",
-            "connected_region": "Prove Statement 22",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 14",
-                  "Proved Statement 21",
-                  "Statement 21"
-                ]
-              }
-            }
-          }
-        ],
+        "exits": [],
         "locations": [
           {
             "name": "Prove Statement 21",
@@ -1106,41 +1071,6 @@
             },
             "item": {
               "name": "Proved Statement 21",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Prove Statement 22": {
-        "name": "Prove Statement 22",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Prove Statement 22",
-            "id": 234790022,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Statement 22",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Proved Statement 22",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Proved Statement 22",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1400,7 +1330,7 @@
           "Everything",
           "Statements"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -2482,17 +2412,6 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 22": {
-        "name": "Proved Statement 22",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Proved Statement 1": {
         "name": "Proved Statement 1",
         "id": null,
@@ -2526,7 +2445,6 @@
       "Proved Statement 2": 1,
       "Proved Statement 20": 1,
       "Proved Statement 21": 1,
-      "Proved Statement 22": 1,
       "Proved Statement 3": 1,
       "Proved Statement 4": 1,
       "Proved Statement 5": 1,
@@ -2548,7 +2466,6 @@
       "Statement 2": 1,
       "Statement 20": 1,
       "Statement 21": 1,
-      "Statement 22": 1,
       "Statement 3": 1,
       "Statement 4": 1,
       "Statement 5": 1,
@@ -2578,8 +2495,7 @@
       "Prove Statement 17": "Statement 17",
       "Prove Statement 18": "Statement 18",
       "Prove Statement 19": "Statement 19",
-      "Prove Statement 20": "Statement 20",
-      "Prove Statement 21": "Statement 21"
+      "Prove Statement 20": "Statement 20"
     }
   },
   "progression_mapping": {
@@ -2591,6 +2507,7 @@
       "Proved Statement 1"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Metamath",
@@ -2704,127 +2621,122 @@
       },
       "proof_structure": {
         "label_to_index": {
-          "eleq2": 1,
-          "fofn": 2,
-          "forn": 3,
-          "fveq2": 4,
-          "id": 5,
-          "eleq12d": 6,
-          "nbbn": 7,
-          "notbid": 8,
-          "vx": 9,
-          "elrab": 10,
-          "baibr": 11,
-          "ssrab2": 12,
-          "elpwi2": 13,
-          "eleqtrrid": 14,
-          "sylib": 15,
-          "nsyl": 16,
-          "vy": 17,
-          "fvelrnb": 18,
+          "canth.1": 1,
+          "eleq2": 2,
+          "fofn": 3,
+          "forn": 4,
+          "fvelrnb": 5,
+          "fveq2": 6,
+          "id": 7,
+          "eleq12d": 8,
+          "nbbn": 9,
+          "notbid": 10,
+          "elrab": 11,
+          "baibr": 12,
+          "ssrab2": 13,
+          "elpwi2": 14,
+          "eleqtrrid": 15,
+          "syl": 16,
+          "sylib": 17,
+          "nsyl": 18,
           "nrex": 19,
-          "syl": 20,
-          "mtbiri": 21,
-          "pm2.65i": 22
+          "mtbiri": 20,
+          "pm2.65i": 21
         }
       },
-      "num_statements": 22,
+      "num_statements": 21,
       "is_vanilla": true,
       "preset_label": "canth v",
       "name_substitutions": {
         "items": {
-          "Statement 1": "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Statement 2": "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Statement 3": "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Statement 4": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Statement 5": "id: |- ( ph -> ph )",
-          "Proved Statement 5": "Given id: |- ( ph -> ph )",
-          "Statement 6": "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Proved Statement 6": "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Statement 7": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Statement 8": "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8": "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Statement 9": "vx: setvar x",
-          "Proved Statement 9": "Given vx: setvar x",
-          "Statement 10": "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Proved Statement 10": "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Statement 11": "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11": "Proved baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Statement 12": "ssrab2: |- { x e. A | ph } C_ A",
-          "Proved Statement 12": "Proved ssrab2: |- { x e. A | ph } C_ A",
-          "Statement 13": "elpwi2: |- A e. ~P B",
-          "Proved Statement 13": "Proved elpwi2: |- A e. ~P B",
-          "Statement 14": "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14": "Proved eleqtrrid: |- ( ph -> A e. C )",
-          "Statement 15": "sylib: |- ( ph -> ch )",
-          "Proved Statement 15": "Proved sylib: |- ( ph -> ch )",
-          "Statement 16": "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16": "Proved nsyl: |- ( ph -> -. ch )",
-          "Statement 17": "vy: setvar y",
-          "Proved Statement 17": "Given vy: setvar y",
-          "Statement 18": "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18": "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+          "Statement 1": "canth.1: |- A e. _V",
+          "Proved Statement 1": "Given canth.1: |- A e. _V",
+          "Statement 2": "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+          "Proved Statement 2": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+          "Statement 3": "fofn: |- ( F : A -onto-> B -> F Fn A )",
+          "Proved Statement 3": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
+          "Statement 4": "forn: |- ( F : A -onto-> B -> ran F = B )",
+          "Proved Statement 4": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
+          "Statement 5": "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
+          "Proved Statement 5": "Given fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+          "Statement 6": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+          "Proved Statement 6": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+          "Statement 7": "id: |- ( ph -> ph )",
+          "Proved Statement 7": "Given id: |- ( ph -> ph )",
+          "Statement 8": "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
+          "Proved Statement 8": "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
+          "Statement 9": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+          "Proved Statement 9": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+          "Statement 10": "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
+          "Proved Statement 10": "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
+          "Statement 11": "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
+          "Proved Statement 11": "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
+          "Statement 12": "baibr: |- ( ps -> ( ch <-> ph ) )",
+          "Proved Statement 12": "Proved baibr: |- ( ps -> ( ch <-> ph ) )",
+          "Statement 13": "ssrab2: |- { x e. A | ph } C_ A",
+          "Proved Statement 13": "Given ssrab2: |- { x e. A | ph } C_ A",
+          "Statement 14": "elpwi2: |- A e. ~P B",
+          "Proved Statement 14": "Proved elpwi2: |- A e. ~P B",
+          "Statement 15": "eleqtrrid: |- ( ph -> A e. C )",
+          "Proved Statement 15": "Proved eleqtrrid: |- ( ph -> A e. C )",
+          "Statement 16": "syl: |- ( ph -> ch )",
+          "Proved Statement 16": "Proved syl: |- ( ph -> ch )",
+          "Statement 17": "sylib: |- ( ph -> ch )",
+          "Proved Statement 17": "Proved sylib: |- ( ph -> ch )",
+          "Statement 18": "nsyl: |- ( ph -> -. ch )",
+          "Proved Statement 18": "Proved nsyl: |- ( ph -> -. ch )",
           "Statement 19": "nrex: |- -. E. x e. A ps",
           "Proved Statement 19": "Proved nrex: |- -. E. x e. A ps",
-          "Statement 20": "syl: |- ( ph -> ch )",
-          "Proved Statement 20": "Proved syl: |- ( ph -> ch )",
-          "Statement 21": "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21": "Proved mtbiri: |- ( ph -> -. ps )",
-          "Statement 22": "pm2.65i: |- -. ph",
-          "Proved Statement 22": "Proved pm2.65i: |- -. ph"
+          "Statement 20": "mtbiri: |- ( ph -> -. ps )",
+          "Proved Statement 20": "Proved mtbiri: |- ( ph -> -. ps )",
+          "Statement 21": "pm2.65i: |- -. ph",
+          "Proved Statement 21": "Proved pm2.65i: |- -. ph"
         },
         "locations": {
-          "Prove Statement 1": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Prove Statement 2": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Prove Statement 3": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Prove Statement 4": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Prove Statement 5": "Given id: |- ( ph -> ph )",
-          "Prove Statement 6": "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Prove Statement 7": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Prove Statement 8": "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Prove Statement 9": "Given vx: setvar x",
-          "Prove Statement 10": "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Prove Statement 11": "Prove baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Prove Statement 12": "Prove ssrab2: |- { x e. A | ph } C_ A",
-          "Prove Statement 13": "Prove elpwi2: |- A e. ~P B",
-          "Prove Statement 14": "Prove eleqtrrid: |- ( ph -> A e. C )",
-          "Prove Statement 15": "Prove sylib: |- ( ph -> ch )",
-          "Prove Statement 16": "Prove nsyl: |- ( ph -> -. ch )",
-          "Prove Statement 17": "Given vy: setvar y",
-          "Prove Statement 18": "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+          "Prove Statement 1": "Given canth.1: |- A e. _V",
+          "Prove Statement 2": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+          "Prove Statement 3": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
+          "Prove Statement 4": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
+          "Prove Statement 5": "Given fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+          "Prove Statement 6": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+          "Prove Statement 7": "Given id: |- ( ph -> ph )",
+          "Prove Statement 8": "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
+          "Prove Statement 9": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+          "Prove Statement 10": "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
+          "Prove Statement 11": "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
+          "Prove Statement 12": "Prove baibr: |- ( ps -> ( ch <-> ph ) )",
+          "Prove Statement 13": "Given ssrab2: |- { x e. A | ph } C_ A",
+          "Prove Statement 14": "Prove elpwi2: |- A e. ~P B",
+          "Prove Statement 15": "Prove eleqtrrid: |- ( ph -> A e. C )",
+          "Prove Statement 16": "Prove syl: |- ( ph -> ch )",
+          "Prove Statement 17": "Prove sylib: |- ( ph -> ch )",
+          "Prove Statement 18": "Prove nsyl: |- ( ph -> -. ch )",
           "Prove Statement 19": "Prove nrex: |- -. E. x e. A ps",
-          "Prove Statement 20": "Prove syl: |- ( ph -> ch )",
-          "Prove Statement 21": "Prove mtbiri: |- ( ph -> -. ps )",
-          "Prove Statement 22": "Prove pm2.65i: |- -. ph"
+          "Prove Statement 20": "Prove mtbiri: |- ( ph -> -. ps )",
+          "Prove Statement 21": "Prove pm2.65i: |- -. ph"
         },
         "regions": {
-          "Prove Statement 1": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Prove Statement 2": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Prove Statement 3": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Prove Statement 4": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Prove Statement 5": "Given id: |- ( ph -> ph )",
-          "Prove Statement 6": "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Prove Statement 7": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Prove Statement 8": "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Prove Statement 9": "Given vx: setvar x",
-          "Prove Statement 10": "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Prove Statement 11": "Prove baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Prove Statement 12": "Prove ssrab2: |- { x e. A | ph } C_ A",
-          "Prove Statement 13": "Prove elpwi2: |- A e. ~P B",
-          "Prove Statement 14": "Prove eleqtrrid: |- ( ph -> A e. C )",
-          "Prove Statement 15": "Prove sylib: |- ( ph -> ch )",
-          "Prove Statement 16": "Prove nsyl: |- ( ph -> -. ch )",
-          "Prove Statement 17": "Given vy: setvar y",
-          "Prove Statement 18": "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+          "Prove Statement 1": "Given canth.1: |- A e. _V",
+          "Prove Statement 2": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+          "Prove Statement 3": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
+          "Prove Statement 4": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
+          "Prove Statement 5": "Given fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+          "Prove Statement 6": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+          "Prove Statement 7": "Given id: |- ( ph -> ph )",
+          "Prove Statement 8": "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
+          "Prove Statement 9": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+          "Prove Statement 10": "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
+          "Prove Statement 11": "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
+          "Prove Statement 12": "Prove baibr: |- ( ps -> ( ch <-> ph ) )",
+          "Prove Statement 13": "Given ssrab2: |- { x e. A | ph } C_ A",
+          "Prove Statement 14": "Prove elpwi2: |- A e. ~P B",
+          "Prove Statement 15": "Prove eleqtrrid: |- ( ph -> A e. C )",
+          "Prove Statement 16": "Prove syl: |- ( ph -> ch )",
+          "Prove Statement 17": "Prove sylib: |- ( ph -> ch )",
+          "Prove Statement 18": "Prove nsyl: |- ( ph -> -. ch )",
           "Prove Statement 19": "Prove nrex: |- -. E. x e. A ps",
-          "Prove Statement 20": "Prove syl: |- ( ph -> ch )",
-          "Prove Statement 21": "Prove mtbiri: |- ( ph -> -. ps )",
-          "Prove Statement 22": "Prove pm2.65i: |- -. ph"
+          "Prove Statement 20": "Prove mtbiri: |- ( ph -> -. ps )",
+          "Prove Statement 21": "Prove pm2.65i: |- -. ph"
         }
       },
       "canonical_placements": {
@@ -2846,41 +2758,28 @@
         "Prove Statement 17": "Statement 17",
         "Prove Statement 18": "Statement 18",
         "Prove Statement 19": "Statement 19",
-        "Prove Statement 20": "Statement 20",
-        "Prove Statement 21": "Statement 21"
+        "Prove Statement 20": "Statement 20"
       },
       "location_dependencies": {
-        "Prove Statement 6": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 5",
-          "Proved Statement 5"
-        ],
-        "Proved Statement 6": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 5",
-          "Proved Statement 5"
-        ],
         "Prove Statement 8": [
           "Statement 6",
-          "Proved Statement 6"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "Proved Statement 8": [
           "Statement 6",
-          "Proved Statement 6"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "Prove Statement 10": [
           "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "Proved Statement 8"
         ],
         "Proved Statement 10": [
           "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "Proved Statement 8"
         ],
         "Prove Statement 11": [
           "Statement 10",
@@ -2891,564 +2790,513 @@
           "Proved Statement 10"
         ],
         "Prove Statement 12": [
-          "Statement 9",
-          "Proved Statement 9"
+          "Statement 11",
+          "Proved Statement 11"
         ],
         "Proved Statement 12": [
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "Prove Statement 13": [
-          "Statement 12",
-          "Proved Statement 12"
-        ],
-        "Proved Statement 13": [
-          "Statement 12",
-          "Proved Statement 12"
+          "Statement 11",
+          "Proved Statement 11"
         ],
         "Prove Statement 14": [
-          "Statement 3",
-          "Proved Statement 3",
+          "Statement 1",
+          "Proved Statement 1",
           "Statement 13",
           "Proved Statement 13"
         ],
         "Proved Statement 14": [
-          "Statement 3",
-          "Proved Statement 3",
+          "Statement 1",
+          "Proved Statement 1",
           "Statement 13",
           "Proved Statement 13"
         ],
         "Prove Statement 15": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 11",
-          "Proved Statement 11"
+          "Statement 4",
+          "Proved Statement 4",
+          "Statement 14",
+          "Proved Statement 14"
         ],
         "Proved Statement 15": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 11",
-          "Proved Statement 11"
+          "Statement 4",
+          "Proved Statement 4",
+          "Statement 14",
+          "Proved Statement 14"
         ],
         "Prove Statement 16": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 15",
-          "Proved Statement 15"
+          "Statement 3",
+          "Proved Statement 3",
+          "Statement 5",
+          "Proved Statement 5"
         ],
         "Proved Statement 16": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 15",
-          "Proved Statement 15"
+          "Statement 3",
+          "Proved Statement 3",
+          "Statement 5",
+          "Proved Statement 5"
+        ],
+        "Prove Statement 17": [
+          "Statement 9",
+          "Proved Statement 9",
+          "Statement 12",
+          "Proved Statement 12"
+        ],
+        "Proved Statement 17": [
+          "Statement 9",
+          "Proved Statement 9",
+          "Statement 12",
+          "Proved Statement 12"
         ],
         "Prove Statement 18": [
+          "Statement 2",
+          "Proved Statement 2",
           "Statement 17",
           "Proved Statement 17"
         ],
         "Proved Statement 18": [
+          "Statement 2",
+          "Proved Statement 2",
           "Statement 17",
           "Proved Statement 17"
         ],
         "Prove Statement 19": [
-          "Statement 16",
-          "Proved Statement 16",
-          "Statement 17",
-          "Proved Statement 17"
+          "Statement 18",
+          "Proved Statement 18"
         ],
         "Proved Statement 19": [
-          "Statement 16",
-          "Proved Statement 16",
-          "Statement 17",
-          "Proved Statement 17"
+          "Statement 18",
+          "Proved Statement 18"
         ],
         "Prove Statement 20": [
-          "Statement 2",
-          "Proved Statement 2",
-          "Statement 18",
-          "Proved Statement 18"
+          "Statement 16",
+          "Proved Statement 16",
+          "Statement 19",
+          "Proved Statement 19"
         ],
         "Proved Statement 20": [
-          "Statement 2",
-          "Proved Statement 2",
-          "Statement 18",
-          "Proved Statement 18"
+          "Statement 16",
+          "Proved Statement 16",
+          "Statement 19",
+          "Proved Statement 19"
         ],
         "Prove Statement 21": [
-          "Statement 19",
-          "Proved Statement 19",
+          "Statement 15",
+          "Proved Statement 15",
           "Statement 20",
           "Proved Statement 20"
         ],
         "Proved Statement 21": [
-          "Statement 19",
-          "Proved Statement 19",
+          "Statement 15",
+          "Proved Statement 15",
           "Statement 20",
           "Proved Statement 20"
-        ],
-        "Prove Statement 22": [
-          "Statement 14",
-          "Proved Statement 14",
-          "Statement 21",
-          "Proved Statement 21"
-        ],
-        "Proved Statement 22": [
-          "Statement 14",
-          "Proved Statement 14",
-          "Statement 21",
-          "Proved Statement 21"
         ]
       },
       "entrance_dependencies": {
         "From fveq2 to eleq12d": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 5",
-          "Proved Statement 5"
+          "Statement 6",
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "From id to eleq12d": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 5",
-          "Proved Statement 5"
+          "Statement 6",
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "From eleq12d to notbid": [
-          "Statement 6",
-          "Proved Statement 6"
+          "Statement 8",
+          "Proved Statement 8"
         ],
         "From notbid to elrab": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From vx to elrab": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From elrab to baibr": [
           "Statement 10",
           "Proved Statement 10"
         ],
-        "From vx to ssrab2": [
-          "Statement 9",
-          "Proved Statement 9"
+        "From elrab to baibr": [
+          "Statement 11",
+          "Proved Statement 11"
+        ],
+        "From canth.1 to elpwi2": [
+          "Statement 1",
+          "Proved Statement 1",
+          "Statement 13",
+          "Proved Statement 13"
         ],
         "From ssrab2 to elpwi2": [
+          "Statement 1",
+          "Proved Statement 1",
+          "Statement 13",
+          "Proved Statement 13"
+        ],
+        "From forn to eleqtrrid": [
+          "Statement 4",
+          "Proved Statement 4",
+          "Statement 14",
+          "Proved Statement 14"
+        ],
+        "From elpwi2 to eleqtrrid": [
+          "Statement 4",
+          "Proved Statement 4",
+          "Statement 14",
+          "Proved Statement 14"
+        ],
+        "From fofn to syl": [
+          "Statement 3",
+          "Proved Statement 3",
+          "Statement 5",
+          "Proved Statement 5"
+        ],
+        "From fvelrnb to syl": [
+          "Statement 3",
+          "Proved Statement 3",
+          "Statement 5",
+          "Proved Statement 5"
+        ],
+        "From nbbn to sylib": [
+          "Statement 9",
+          "Proved Statement 9",
           "Statement 12",
           "Proved Statement 12"
         ],
-        "From forn to eleqtrrid": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 13",
-          "Proved Statement 13"
-        ],
-        "From elpwi2 to eleqtrrid": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 13",
-          "Proved Statement 13"
-        ],
-        "From nbbn to sylib": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 11",
-          "Proved Statement 11"
-        ],
         "From baibr to sylib": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 11",
-          "Proved Statement 11"
+          "Statement 9",
+          "Proved Statement 9",
+          "Statement 12",
+          "Proved Statement 12"
         ],
         "From eleq2 to nsyl": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 15",
-          "Proved Statement 15"
+          "Statement 2",
+          "Proved Statement 2",
+          "Statement 17",
+          "Proved Statement 17"
         ],
         "From sylib to nsyl": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 15",
-          "Proved Statement 15"
-        ],
-        "From vy to fvelrnb": [
+          "Statement 2",
+          "Proved Statement 2",
           "Statement 17",
           "Proved Statement 17"
         ],
         "From nsyl to nrex": [
-          "Statement 16",
-          "Proved Statement 16",
-          "Statement 17",
-          "Proved Statement 17"
-        ],
-        "From vy to nrex": [
-          "Statement 16",
-          "Proved Statement 16",
-          "Statement 17",
-          "Proved Statement 17"
-        ],
-        "From fofn to syl": [
-          "Statement 2",
-          "Proved Statement 2",
           "Statement 18",
           "Proved Statement 18"
-        ],
-        "From fvelrnb to syl": [
-          "Statement 2",
-          "Proved Statement 2",
-          "Statement 18",
-          "Proved Statement 18"
-        ],
-        "From nrex to mtbiri": [
-          "Statement 19",
-          "Proved Statement 19",
-          "Statement 20",
-          "Proved Statement 20"
         ],
         "From syl to mtbiri": [
+          "Statement 16",
+          "Proved Statement 16",
           "Statement 19",
-          "Proved Statement 19",
+          "Proved Statement 19"
+        ],
+        "From nrex to mtbiri": [
+          "Statement 16",
+          "Proved Statement 16",
+          "Statement 19",
+          "Proved Statement 19"
+        ],
+        "From eleqtrrid to pm2.65i": [
+          "Statement 15",
+          "Proved Statement 15",
           "Statement 20",
           "Proved Statement 20"
         ],
-        "From eleqtrrid to pm2.65i": [
-          "Statement 14",
-          "Proved Statement 14",
-          "Statement 21",
-          "Proved Statement 21"
-        ],
         "From mtbiri to pm2.65i": [
-          "Statement 14",
-          "Proved Statement 14",
-          "Statement 21",
-          "Proved Statement 21"
+          "Statement 15",
+          "Proved Statement 15",
+          "Statement 20",
+          "Proved Statement 20"
         ]
       },
       "exit_dependencies": {
-        "From eleq2 to nsyl": [
+        "From canth.1 to elpwi2": [
           "Statement 1",
           "Proved Statement 1",
-          "Statement 15",
-          "Proved Statement 15"
-        ],
-        "From fofn to syl": [
-          "Statement 2",
-          "Proved Statement 2",
-          "Statement 18",
-          "Proved Statement 18"
-        ],
-        "From forn to eleqtrrid": [
-          "Statement 3",
-          "Proved Statement 3",
           "Statement 13",
           "Proved Statement 13"
         ],
-        "From fveq2 to eleq12d": [
-          "Statement 4",
-          "Proved Statement 4",
+        "From eleq2 to nsyl": [
+          "Statement 2",
+          "Proved Statement 2",
+          "Statement 17",
+          "Proved Statement 17"
+        ],
+        "From fofn to syl": [
+          "Statement 3",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
+        ],
+        "From forn to eleqtrrid": [
+          "Statement 4",
+          "Proved Statement 4",
+          "Statement 14",
+          "Proved Statement 14"
+        ],
+        "From fvelrnb to syl": [
+          "Statement 3",
+          "Proved Statement 3",
+          "Statement 5",
+          "Proved Statement 5"
+        ],
+        "From fveq2 to eleq12d": [
+          "Statement 6",
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "From id to eleq12d": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 5",
-          "Proved Statement 5"
+          "Statement 6",
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "From eleq12d to notbid": [
-          "Statement 6",
-          "Proved Statement 6"
+          "Statement 8",
+          "Proved Statement 8"
         ],
         "From nbbn to sylib": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 11",
-          "Proved Statement 11"
-        ],
-        "From notbid to elrab": [
-          "Statement 8",
-          "Proved Statement 8",
           "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From vx to elrab": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From vx to ssrab2": [
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From elrab to baibr": [
-          "Statement 10",
-          "Proved Statement 10"
-        ],
-        "From baibr to sylib": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 11",
-          "Proved Statement 11"
-        ],
-        "From ssrab2 to elpwi2": [
+          "Proved Statement 9",
           "Statement 12",
           "Proved Statement 12"
         ],
-        "From elpwi2 to eleqtrrid": [
-          "Statement 3",
-          "Proved Statement 3",
+        "From notbid to elrab": [
+          "Statement 10",
+          "Proved Statement 10"
+        ],
+        "From elrab to baibr": [
+          "Statement 11",
+          "Proved Statement 11"
+        ],
+        "From baibr to sylib": [
+          "Statement 9",
+          "Proved Statement 9",
+          "Statement 12",
+          "Proved Statement 12"
+        ],
+        "From ssrab2 to elpwi2": [
+          "Statement 1",
+          "Proved Statement 1",
           "Statement 13",
           "Proved Statement 13"
         ],
-        "From eleqtrrid to pm2.65i": [
+        "From elpwi2 to eleqtrrid": [
+          "Statement 4",
+          "Proved Statement 4",
           "Statement 14",
-          "Proved Statement 14",
-          "Statement 21",
-          "Proved Statement 21"
+          "Proved Statement 14"
         ],
-        "From sylib to nsyl": [
-          "Statement 1",
-          "Proved Statement 1",
+        "From eleqtrrid to pm2.65i": [
           "Statement 15",
-          "Proved Statement 15"
-        ],
-        "From nsyl to nrex": [
-          "Statement 16",
-          "Proved Statement 16",
-          "Statement 17",
-          "Proved Statement 17"
-        ],
-        "From vy to fvelrnb": [
-          "Statement 17",
-          "Proved Statement 17"
-        ],
-        "From vy to nrex": [
-          "Statement 16",
-          "Proved Statement 16",
-          "Statement 17",
-          "Proved Statement 17"
-        ],
-        "From fvelrnb to syl": [
-          "Statement 2",
-          "Proved Statement 2",
-          "Statement 18",
-          "Proved Statement 18"
-        ],
-        "From nrex to mtbiri": [
-          "Statement 19",
-          "Proved Statement 19",
+          "Proved Statement 15",
           "Statement 20",
           "Proved Statement 20"
         ],
         "From syl to mtbiri": [
+          "Statement 16",
+          "Proved Statement 16",
           "Statement 19",
-          "Proved Statement 19",
-          "Statement 20",
-          "Proved Statement 20"
+          "Proved Statement 19"
+        ],
+        "From sylib to nsyl": [
+          "Statement 2",
+          "Proved Statement 2",
+          "Statement 17",
+          "Proved Statement 17"
+        ],
+        "From nsyl to nrex": [
+          "Statement 18",
+          "Proved Statement 18"
+        ],
+        "From nrex to mtbiri": [
+          "Statement 16",
+          "Proved Statement 16",
+          "Statement 19",
+          "Proved Statement 19"
         ],
         "From mtbiri to pm2.65i": [
-          "Statement 14",
-          "Proved Statement 14",
-          "Statement 21",
-          "Proved Statement 21"
+          "Statement 15",
+          "Proved Statement 15",
+          "Statement 20",
+          "Proved Statement 20"
         ]
       },
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
       "slot_data": {
         "proof_structure": {
           "1": {
+            "label": "canth.1",
+            "expression": "|- A e. _V",
+            "dependencies": [],
+            "full_text": "canth.1: |- A e. _V"
+          },
+          "2": {
             "label": "eleq2",
             "expression": "|- ( A = B -> ( C e. A <-> C e. B ) )",
             "dependencies": [],
             "full_text": "eleq2: Equality implies equivalence of membership.  (Contributed by NM, 26-May-1993.)  (Proof shortened by Wolf Lammen, 20-Nov-2019.)",
             "instantiated_expression": "|- ( ( F ` y ) = { x e. A | -. x e. ( F ` x ) } -> ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
-          "2": {
+          "3": {
             "label": "fofn",
             "expression": "|- ( F : A -onto-> B -> F Fn A )",
             "dependencies": [],
             "full_text": "fofn: An onto mapping is a function on its domain.  (Contributed by NM, 16-Dec-2008.)",
             "instantiated_expression": "|- ( F : A -onto-> ~P A -> F Fn A )"
           },
-          "3": {
+          "4": {
             "label": "forn",
             "expression": "|- ( F : A -onto-> B -> ran F = B )",
             "dependencies": [],
             "full_text": "forn: The codomain of an onto function is its range.  (Contributed by NM, 3-Aug-1994.)",
             "instantiated_expression": "|- ( F : A -onto-> ~P A -> ran F = ~P A )"
           },
-          "4": {
+          "5": {
+            "label": "fvelrnb",
+            "expression": "|- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
+            "dependencies": [],
+            "full_text": "fvelrnb: A member of a function's range is a value of the function.  (Contributed by NM, 31-Oct-1995.)",
+            "instantiated_expression": "|- ( F Fn A -> ( { x e. A | -. x e. ( F ` x ) } e. ran F <-> E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) } ) )"
+          },
+          "6": {
             "label": "fveq2",
             "expression": "|- ( A = B -> ( F ` A ) = ( F ` B ) )",
             "dependencies": [],
             "full_text": "fveq2: Equality theorem for function value.  (Contributed by NM, 29-Dec-1996.)",
             "instantiated_expression": "|- ( x = y -> ( F ` x ) = ( F ` y ) )"
           },
-          "5": {
+          "7": {
             "label": "id",
             "expression": "|- ( ph -> ph )",
             "dependencies": [],
             "full_text": "id: Principle of identity.  Theorem *2.08 of [WhiteheadRussell] p. 101.  For another version of the proof directly from axioms, see ~ idALT .  Its associated inference, ~ idi , requires no axioms for its proof, contrary to ~ id .  Note that the second occurrences of ` ph ` in Steps 1 and 2 may be simultaneously replaced by any wff ` ps ` , which may ease the understanding of the proof.  (Contributed by NM, 29-Dec-1992.)  (Proof shortened by Stefan Allan, 20-Mar-2006.)",
             "instantiated_expression": "|- ( x = y -> x = y )"
           },
-          "6": {
+          "8": {
             "label": "eleq12d",
             "expression": "|- ( ph -> ( A e. C <-> B e. D ) )",
             "dependencies": [
-              5,
-              4
+              7,
+              6
             ],
             "full_text": "eleq12d: Theorem eleq12i is the congruence law for elementhood. $) $( $j congruence 'eleq12i'; $) $} $} ${ eleq12d.1 $e |- ( ph -> A = B ) $. eleq12d.2 $e |- ( ph -> C = D ) $. $( Deduction from equality to equivalence of membership.  (Contributed by NM, 31-May-1994.)",
             "instantiated_expression": "|- ( x = y -> ( x e. ( F ` x ) <-> y e. ( F ` y ) ) )"
           },
-          "7": {
+          "9": {
             "label": "nbbn",
             "expression": "|- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
             "dependencies": [],
-            "full_text": "nbbn: Move negation outside of biconditional.  Compare Theorem *5.18 of [WhiteheadRussell] p. 124.  (Contributed by NM, 27-Jun-2002.)  (Proof shortened by Wolf Lammen, 20-Sep-2013.)",
+            "full_text": "nbbn: Move negation outside of biconditional.  Compare Theorem *5.18 of [WhiteheadRussell] p. 124.  (Contributed by NM, 27-Jun-2002.)  (Proof shortened by Wolf Lammen, 20-Sep-2013.)  (Proof shortened by Umit Teoman Dogan, 10-Jun-2026.)",
             "instantiated_expression": "|- ( ( -. y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) <-> -. ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
-          "8": {
+          "10": {
             "label": "notbid",
             "expression": "|- ( ph -> ( -. ps <-> -. ch ) )",
             "dependencies": [
-              6
+              8
             ],
             "full_text": "notbid: Deduction negating both sides of a logical equivalence.  (Contributed by NM, 21-May-1994.)",
             "instantiated_expression": "|- ( x = y -> ( -. x e. ( F ` x ) <-> -. y e. ( F ` y ) ) )"
           },
-          "9": {
-            "label": "vx",
-            "expression": "setvar x",
-            "dependencies": [],
-            "full_text": "vx: #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# Predicate calculus with equality:  Tarski's system S2 (1 rule, 6 schemes) #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# Here we extend the language of wffs with predicate calculus, which allows to talk about individual objects in a domain of discourse (which for us will be the universe of all sets, so we call them \"setvar variables\") and make true/false statements about predicates, which are relationships between objects, such as whether or not two objects are equal.  In addition, we introduce universal quantification (\"for all\", e.g., ~ ax-4 ) in order to make statements about whether a wff holds for every object in the domain of discourse.  Later we introduce existential quantification (\"there exists\", ~ df-ex ) which is defined in terms of universal quantification. Our axioms are really axiom _schemes_, and our wff and setvar variables are metavariables ranging over expressions in an underlying \"object language\". This is explained here:  ~ mmset.html#axiomnote . Our axiom system starts with the predicate calculus axiom schemes system S2 of Tarski defined in his 1965 paper, \"A Simplified Formalization of Predicate Logic with Identity\" [Tarski].  System S2 is defined in the last paragraph on p. 77, and repeated on p. 81 of [KalishMontague].  We do not include scheme B5 (our ~ sp ) of system S2 since [KalishMontague] shows it to be logically redundant (Lemma 9, p. 87, which we prove as Theorem ~ spw below). Theorem ~ spw can be used to prove any _instance_ of ~ sp having mutually distinct setvar variables and no wff metavariables.  However, it seems that ~ sp in its general form cannot be derived from only Tarski's schemes.  We do not include B5 i.e. ~ sp as part of what we call \"Tarski's system\" because we want it to be the smallest set of axioms that is logically complete with no redundancies.  We later prove ~ sp as Theorem ~ axc5 using the auxiliary axiom schemes that make our system metalogically complete. Our version of Tarski's system S2 consists of propositional calculus ( ~ ax-mp , ~ ax-1 , ~ ax-2 , ~ ax-3 ) plus ~ ax-gen , ~ ax-4 , ~ ax-5 , ~ ax-6 , ~ ax-7 , ~ ax-8 , and ~ ax-9 .  The last three are equality axioms that represent three sub-schemes of Tarski's scheme B8.  Due to its side-condition (\"where ` ph ` is an atomic formula and ` ps ` is obtained by replacing an occurrence of the variable ` x ` by the variable ` y ` \"), we cannot represent his B8 directly without greatly complicating our scheme language, but the simpler schemes ~ ax-7 , ~ ax-8 , and ~ ax-9 are sufficient for set theory and much easier to work with. Tarski's system is exactly equivalent to the traditional axiom system in most logic textbooks but has the advantage of being easy to manipulate with a computer program, and its simpler metalogic (with no built-in notions of \"free variable\" and \"proper substitution\") is arguably easier for a non-logician human to follow step by step in a proof (where \"follow\" means being able to identify the substitutions that were made, without necessarily a higher-level understanding).  In particular, it is logically complete in that it can derive all possible object-language theorems of predicate calculus with equality, i.e., the same theorems as the traditional system can derive. However, for efficiency (and indeed a key feature that makes Metamath successful), our system is designed to derive reusable theorem schemes (rather than object-language theorems) from other schemes.  From this \"metalogical\" point of view, Tarski's S2 is not complete.  For example, we cannot derive scheme ~ sp , even though (using ~ spw ) we can derive all instances of it that do not involve wff metavariables or bundled setvar variables.  (Two setvar variables are \"bundled\" if they can be substituted with the same setvar variable, i.e., do not have a \"$d\" disjoint variable condition.)  Later we will introduce auxiliary axiom schemes ~ ax-10 , ~ ax-11 , ~ ax-12 , and ~ ax-13 that are metatheorems of Tarski's system (i.e. are logically redundant) but which give our system the property of \"scheme completeness\", allowing us to prove directly (instead of, say, by induction on formula length) all possible schemes that can be expressed in our language. $) $( =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Universal quantifier (continued); define \"exists\" and \"not free\" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= The universal quantifier was introduced above in ~ wal for use by ~ df-tru . See the comments in that section.  In this section, we continue with the first \"real\" use of it. $) $( Declare some names for individual variables. $) $v x $. $v y $. $v z $. $v w $. $v v $. $v u $. $v t $. $( Let ` x ` be an individual variable."
-          },
-          "10": {
+          "11": {
             "label": "elrab",
             "expression": "|- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
             "dependencies": [
-              9,
-              8
+              10
             ],
             "full_text": "elrab: Membership in a restricted class abstraction, using implicit substitution.  (Contributed by NM, 21-May-1999.)  Remove dependency on ~ ax-13 .  (Revised by Steven Nguyen, 23-Nov-2022.)",
             "instantiated_expression": "|- ( y e. { x e. A | -. x e. ( F ` x ) } <-> ( y e. A /\\ -. y e. ( F ` y ) ) )"
           },
-          "11": {
+          "12": {
             "label": "baibr",
             "expression": "|- ( ps -> ( ch <-> ph ) )",
             "dependencies": [
-              10
+              11
             ],
             "full_text": "baibr: Move conjunction outside of biconditional.  (Contributed by NM, 11-Jul-1994.)",
             "instantiated_expression": "|- ( y e. A -> ( -. y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
-          "12": {
+          "13": {
             "label": "ssrab2",
             "expression": "|- { x e. A | ph } C_ A",
-            "dependencies": [
-              9
-            ],
+            "dependencies": [],
             "full_text": "ssrab2: Subclass relation for a restricted class.  (Contributed by NM, 19-Mar-1997.)  (Proof shortened by BJ and SN, 8-Aug-2024.)",
             "instantiated_expression": "|- { x e. A | -. x e. ( F ` x ) } C_ A"
           },
-          "13": {
+          "14": {
             "label": "elpwi2",
             "expression": "|- A e. ~P B",
             "dependencies": [
-              12
+              1,
+              13
             ],
             "full_text": "elpwi2: Membership in a power class.  (Contributed by Glauco Siliprandi, 3-Mar-2021.)  (Proof shortened by Wolf Lammen, 26-May-2024.)",
             "instantiated_expression": "|- { x e. A | -. x e. ( F ` x ) } e. ~P A"
           },
-          "14": {
+          "15": {
             "label": "eleqtrrid",
             "expression": "|- ( ph -> A e. C )",
             "dependencies": [
-              13,
-              3
+              14,
+              4
             ],
             "full_text": "eleqtrrid: A membership and equality inference.  (Contributed by NM, 4-Jan-2006.)",
             "instantiated_expression": "|- ( F : A -onto-> ~P A -> { x e. A | -. x e. ( F ` x ) } e. ran F )"
           },
-          "15": {
+          "16": {
+            "label": "syl",
+            "expression": "|- ( ph -> ch )",
+            "dependencies": [
+              3,
+              5
+            ],
+            "full_text": "syl: An inference version of the transitive laws for implication ~ imim2 and ~ imim1 (and ~ imim1i and ~ imim2i ), which Russell and Whitehead call \"the principle of the syllogism ... because ... the syllogism in Barbara [[ ~ barbara ] is derived from [[ ~ syl ]\" (quote after Theorem *2.06 of [WhiteheadRussell] p. 101).  Some authors call this law a \"hypothetical syllogism\".  Its associated inference is ~ mp2b . (A bit of trivia: this is the most commonly referenced assertion in our database (13449 times as of 22-Jul-2021).  In second place is ~ eqid (9597 times), followed by ~ adantr (8861 times), ~ syl2anc (7421 times), ~ adantl (6403 times), and ~ simpr (5829 times).  The Metamath program command 'show usage' shows the number of references.) 20-Oct-2011.)  (Proof shortened by Wolf Lammen, 26-Jul-2012.)",
+            "instantiated_expression": "|- ( F : A -onto-> ~P A -> ( { x e. A | -. x e. ( F ` x ) } e. ran F <-> E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) } ) )"
+          },
+          "17": {
             "label": "sylib",
             "expression": "|- ( ph -> ch )",
             "dependencies": [
-              11,
-              7
+              12,
+              9
             ],
             "full_text": "sylib: A mixed syllogism inference from an implication and a biconditional.",
             "instantiated_expression": "|- ( y e. A -> -. ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
-          "16": {
+          "18": {
             "label": "nsyl",
             "expression": "|- ( ph -> -. ch )",
             "dependencies": [
-              15,
-              1
+              17,
+              2
             ],
             "full_text": "nsyl: A negated syllogism inference.  (Contributed by NM, 31-Dec-1993.) (Proof shortened by Wolf Lammen, 2-Mar-2013.)",
             "instantiated_expression": "|- ( y e. A -> -. ( F ` y ) = { x e. A | -. x e. ( F ` x ) } )"
-          },
-          "17": {
-            "label": "vy",
-            "expression": "setvar y",
-            "dependencies": [],
-            "full_text": "vy: Let ` y ` be an individual variable."
-          },
-          "18": {
-            "label": "fvelrnb",
-            "expression": "|- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-            "dependencies": [
-              17
-            ],
-            "full_text": "fvelrnb: A member of a function's range is a value of the function.  (Contributed by NM, 31-Oct-1995.)",
-            "instantiated_expression": "|- ( F Fn A -> ( { x e. A | -. x e. ( F ` x ) } e. ran F <-> E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "19": {
             "label": "nrex",
             "expression": "|- -. E. x e. A ps",
             "dependencies": [
-              17,
-              16
+              18
             ],
             "full_text": "nrex: Inference adding restricted existential quantifier to negated wff.",
             "instantiated_expression": "|- -. E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) }"
           },
           "20": {
-            "label": "syl",
-            "expression": "|- ( ph -> ch )",
-            "dependencies": [
-              2,
-              18
-            ],
-            "full_text": "syl: An inference version of the transitive laws for implication ~ imim2 and ~ imim1 (and ~ imim1i and ~ imim2i ), which Russell and Whitehead call \"the principle of the syllogism ... because ... the syllogism in Barbara [[ ~ barbara ] is derived from [[ ~ syl ]\" (quote after Theorem *2.06 of [WhiteheadRussell] p. 101).  Some authors call this law a \"hypothetical syllogism\".  Its associated inference is ~ mp2b . (A bit of trivia: this is the most commonly referenced assertion in our database (13449 times as of 22-Jul-2021).  In second place is ~ eqid (9597 times), followed by ~ adantr (8861 times), ~ syl2anc (7421 times), ~ adantl (6403 times), and ~ simpr (5829 times).  The Metamath program command 'show usage' shows the number of references.) 20-Oct-2011.)  (Proof shortened by Wolf Lammen, 26-Jul-2012.)",
-            "instantiated_expression": "|- ( F : A -onto-> ~P A -> ( { x e. A | -. x e. ( F ` x ) } e. ran F <-> E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) } ) )"
-          },
-          "21": {
             "label": "mtbiri",
             "expression": "|- ( ph -> -. ps )",
             "dependencies": [
               19,
-              20
+              16
             ],
             "full_text": "mtbiri: An inference from a biconditional, similar to modus tollens.",
             "instantiated_expression": "|- ( F : A -onto-> ~P A -> -. { x e. A | -. x e. ( F ` x ) } e. ran F )"
           },
-          "22": {
+          "21": {
             "label": "pm2.65i",
             "expression": "|- -. ph",
             "dependencies": [
-              14,
-              21
+              15,
+              20
             ],
-            "full_text": "pm2.65i: Inference for proof by contradiction.  (Contributed by NM, 18-May-1994.) (Proof shortened by Wolf Lammen, 11-Sep-2013.)",
+            "full_text": "pm2.65i: Inference for proof by contradiction.  (Contributed by NM, 18-May-1994.) (Proof shortened by Wolf Lammen, 11-Sep-2013.)  (Proof shortened by Garrett Katz, 7-Jun-2026.)",
             "instantiated_expression": "|- -. F : A -onto-> ~P A"
           }
         },
@@ -3482,7 +3330,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Proved Statement 22"
+        "item": "Proved Statement 21"
       }
     }
   },

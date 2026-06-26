@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Castlevania 64 WorldGen",
   "game_directory": "cv64_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -2093,26 +2093,14 @@
             "name": "Lower sealed cracked wall",
             "connected_region": "Castle Center: big crystal",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Magical Nitro": 2,
-                  "Mandragora": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Upper cracked wall",
             "connected_region": "Castle Center: library",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Magical Nitro",
-                  "Mandragora"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -4414,6 +4402,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Castlevania 64 WorldGen",

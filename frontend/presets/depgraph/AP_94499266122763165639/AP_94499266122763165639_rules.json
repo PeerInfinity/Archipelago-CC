@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph",
   "game_directory": "depgraph",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 18,
   "seed_name": "94499266122763165639",
   "player_names": {
@@ -33288,6 +33288,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph",

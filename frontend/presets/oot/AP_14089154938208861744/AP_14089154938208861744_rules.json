@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Ocarina of Time",
   "game_directory": "oot",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -36112,6 +36112,7 @@
       "Small Key (Fire Temple)"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Ocarina of Time",

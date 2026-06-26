@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Factorio WorldGen",
   "game_directory": "factorio_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -39,15 +39,7 @@
             "name": "AP-5-349",
             "id": 135416,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -86,15 +78,7 @@
             "name": "AP-5-126",
             "id": 135193,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -133,13 +117,7 @@
             "name": "AP-4-431",
             "id": 134499,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -157,13 +135,7 @@
             "name": "AP-3-926",
             "id": 133995,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-science-pack",
@@ -202,13 +174,7 @@
             "name": "AP-3-413",
             "id": 133482,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-physical-projectile-damage",
@@ -226,15 +192,7 @@
             "name": "AP-4-529",
             "id": 134597,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-worker-robots-storage",
@@ -252,13 +210,7 @@
             "name": "AP-2-416",
             "id": 132486,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-research-speed",
@@ -276,15 +228,7 @@
             "name": "AP-4-304",
             "id": 134372,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -302,15 +246,7 @@
             "name": "AP-4-024",
             "id": 134092,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-flamethrower",
@@ -328,16 +264,7 @@
             "name": "AP-6-946",
             "id": 137012,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "rocket-silo",
@@ -355,15 +282,7 @@
             "name": "AP-4-169",
             "id": 134237,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-physical-projectile-damage",
@@ -381,13 +300,7 @@
             "name": "AP-4-954",
             "id": 135022,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -405,14 +318,7 @@
             "name": "AP-3-041",
             "id": 133110,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-logistics",
@@ -430,13 +336,7 @@
             "name": "AP-4-822",
             "id": 134890,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -454,13 +354,7 @@
             "name": "AP-2-179",
             "id": 132249,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-mining-productivity",
@@ -499,13 +393,7 @@
             "name": "AP-2-634",
             "id": 132704,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-military",
@@ -523,14 +411,7 @@
             "name": "AP-3-974",
             "id": 134043,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-flamethrower",
@@ -548,13 +429,7 @@
             "name": "AP-2-688",
             "id": 132758,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "radar",
@@ -572,13 +447,7 @@
             "name": "AP-4-499",
             "id": 134567,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -596,14 +465,7 @@
             "name": "AP-4-738",
             "id": 134806,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-follower",
@@ -642,13 +504,7 @@
             "name": "AP-2-683",
             "id": 132753,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "advanced-circuit",
@@ -666,13 +522,7 @@
             "name": "AP-2-650",
             "id": 132720,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "rocket-fuel",
@@ -753,13 +603,7 @@
             "name": "AP-2-269",
             "id": 132339,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-flamethrower",
@@ -777,15 +621,7 @@
             "name": "AP-5-220",
             "id": 135287,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "explosives",
@@ -803,15 +639,7 @@
             "name": "AP-5-338",
             "id": 135405,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-stronger-explosives",
@@ -829,15 +657,7 @@
             "name": "AP-4-022",
             "id": 134090,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-physical-projectile-damage",
@@ -855,13 +675,7 @@
             "name": "AP-2-413",
             "id": 132483,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-weapon-shooting-speed",
@@ -900,13 +714,7 @@
             "name": "AP-3-722",
             "id": 133791,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-mining-productivity",
@@ -924,13 +732,7 @@
             "name": "AP-3-806",
             "id": 133875,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-physical-projectile-damage",
@@ -990,15 +792,7 @@
             "name": "AP-6-011",
             "id": 136077,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-worker-robots-speed",
@@ -1016,15 +810,7 @@
             "name": "AP-4-013",
             "id": 134081,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "battery",
@@ -1042,15 +828,7 @@
             "name": "AP-4-849",
             "id": 134917,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-productivity-module",
@@ -1068,14 +846,7 @@
             "name": "AP-4-600",
             "id": 134668,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-physical-projectile-damage",
@@ -1093,14 +864,7 @@
             "name": "AP-4-374",
             "id": 134442,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-stronger-explosives",
@@ -1118,15 +882,7 @@
             "name": "AP-6-002",
             "id": 136068,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-worker-robots-speed",
@@ -1165,15 +921,7 @@
             "name": "AP-4-274",
             "id": 134342,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -1191,13 +939,7 @@
             "name": "AP-2-272",
             "id": 132342,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-research-speed",
@@ -1236,13 +978,7 @@
             "name": "AP-2-072",
             "id": 132142,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-mining-productivity",
@@ -1260,13 +996,7 @@
             "name": "AP-2-898",
             "id": 132968,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-worker-robots-storage",
@@ -1284,15 +1014,7 @@
             "name": "AP-4-696",
             "id": 134764,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "effect-transmission",
@@ -1331,15 +1053,7 @@
             "name": "AP-4-972",
             "id": 135040,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-science-pack",
@@ -1378,14 +1092,7 @@
             "name": "AP-3-719",
             "id": 133788,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -1424,13 +1131,7 @@
             "name": "AP-5-703",
             "id": 135770,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-speed-module",
@@ -1469,14 +1170,7 @@
             "name": "AP-6-676",
             "id": 136742,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-automation",
@@ -1494,15 +1188,7 @@
             "name": "AP-5-735",
             "id": 135802,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-research-speed",
@@ -1520,13 +1206,7 @@
             "name": "AP-2-270",
             "id": 132340,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-speed-module",
@@ -1544,14 +1224,7 @@
             "name": "AP-5-755",
             "id": 135822,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -1590,13 +1263,7 @@
             "name": "AP-2-861",
             "id": 132931,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-weapon-shooting-speed",
@@ -1614,15 +1281,7 @@
             "name": "AP-6-077",
             "id": 136143,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-logistics",
@@ -1640,13 +1299,7 @@
             "name": "AP-2-469",
             "id": 132539,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "concrete",
@@ -1664,14 +1317,7 @@
             "name": "AP-5-464",
             "id": 135531,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -1689,14 +1335,7 @@
             "name": "AP-3-954",
             "id": 134023,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-weapon-shooting-speed",
@@ -1714,14 +1353,7 @@
             "name": "AP-3-886",
             "id": 133955,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-weapon-shooting-speed",
@@ -1739,14 +1371,7 @@
             "name": "AP-4-999",
             "id": 135067,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "solar-energy",
@@ -1764,16 +1389,7 @@
             "name": "AP-5-609",
             "id": 135676,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -1791,17 +1407,7 @@
             "name": "AP-6-201",
             "id": 136267,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -1819,14 +1425,7 @@
             "name": "AP-5-316",
             "id": 135383,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-efficiency-module",
@@ -1844,13 +1443,7 @@
             "name": "AP-4-829",
             "id": 134897,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -1868,14 +1461,7 @@
             "name": "AP-3-702",
             "id": 133771,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -1914,13 +1500,7 @@
             "name": "AP-3-953",
             "id": 134022,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-stronger-explosives",
@@ -1980,13 +1560,7 @@
             "name": "AP-2-901",
             "id": 132971,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "lamp",
@@ -2004,16 +1578,7 @@
             "name": "AP-5-844",
             "id": 135911,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "lubricant",
@@ -2031,16 +1596,7 @@
             "name": "AP-5-734",
             "id": 135801,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-flamethrower",
@@ -2079,17 +1635,7 @@
             "name": "AP-6-193",
             "id": 136259,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -2128,14 +1674,7 @@
             "name": "AP-4-406",
             "id": 134474,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-follower-robot-count",
@@ -2174,15 +1713,7 @@
             "name": "AP-6-148",
             "id": 136214,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-armor",
@@ -2200,13 +1731,7 @@
             "name": "AP-4-827",
             "id": 134895,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "repair-pack",
@@ -2224,13 +1749,7 @@
             "name": "AP-4-409",
             "id": 134477,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-productivity-module",
@@ -2248,14 +1767,7 @@
             "name": "AP-3-240",
             "id": 133309,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -2273,14 +1785,7 @@
             "name": "AP-3-025",
             "id": 133094,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-weapons-damage",
@@ -2298,16 +1803,7 @@
             "name": "AP-5-133",
             "id": 135200,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-turret",
@@ -2346,13 +1842,7 @@
             "name": "AP-2-585",
             "id": 132655,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-flamethrower",
@@ -2370,15 +1860,7 @@
             "name": "AP-4-350",
             "id": 134418,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-military",
@@ -2396,14 +1878,7 @@
             "name": "AP-3-466",
             "id": 133535,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "landfill",
@@ -2421,13 +1896,7 @@
             "name": "AP-5-401",
             "id": 135468,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-research-speed",
@@ -2466,14 +1935,7 @@
             "name": "AP-3-210",
             "id": 133279,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -2512,14 +1974,7 @@
             "name": "AP-4-603",
             "id": 134671,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-weapon-shooting-speed",
@@ -2537,16 +1992,7 @@
             "name": "AP-6-618",
             "id": 136684,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "artillery",
@@ -2564,14 +2010,7 @@
             "name": "AP-6-496",
             "id": 136562,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-research-speed",
@@ -2589,15 +2028,7 @@
             "name": "AP-5-180",
             "id": 135247,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -2636,13 +2067,7 @@
             "name": "AP-3-801",
             "id": 133870,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-stronger-explosives",
@@ -2660,15 +2085,7 @@
             "name": "AP-5-693",
             "id": 135760,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-personal-battery",
@@ -2686,15 +2103,7 @@
             "name": "AP-5-934",
             "id": 136001,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-military",
@@ -2733,15 +2142,7 @@
             "name": "AP-5-261",
             "id": 135328,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-efficiency-module",
@@ -2759,13 +2160,7 @@
             "name": "AP-2-784",
             "id": 132854,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-wall",
@@ -2783,16 +2178,7 @@
             "name": "AP-6-269",
             "id": 136335,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-electric-energy-distribution",
@@ -2810,14 +2196,7 @@
             "name": "AP-6-746",
             "id": 136812,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-vehicle",
@@ -2835,13 +2214,7 @@
             "name": "AP-2-514",
             "id": 132584,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "cliff-explosives",
@@ -2859,13 +2232,7 @@
             "name": "AP-3-554",
             "id": 133623,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "discharge-defense-equipment",
@@ -2883,13 +2250,7 @@
             "name": "AP-2-889",
             "id": 132959,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-vehicle",
@@ -2907,16 +2268,7 @@
             "name": "AP-6-092",
             "id": 136158,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-flamethrower",
@@ -2934,13 +2286,7 @@
             "name": "AP-2-473",
             "id": 132543,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "low-density-structure",
@@ -2958,15 +2304,7 @@
             "name": "AP-4-336",
             "id": 134404,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "solar-panel-equipment",
@@ -3005,14 +2343,7 @@
             "name": "AP-4-126",
             "id": 134194,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-personal-roboport-equipment",
@@ -3030,15 +2361,7 @@
             "name": "AP-5-034",
             "id": 135101,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-energy-shield",
@@ -3077,14 +2400,7 @@
             "name": "AP-6-117",
             "id": 136183,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -3102,16 +2418,7 @@
             "name": "AP-6-577",
             "id": 136643,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-turret",
@@ -3129,16 +2436,7 @@
             "name": "AP-5-472",
             "id": 135539,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-research-speed",
@@ -3177,14 +2475,7 @@
             "name": "AP-3-063",
             "id": 133132,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-train-network",
@@ -3202,16 +2493,7 @@
             "name": "AP-6-737",
             "id": 136803,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-weapons-damage",
@@ -3229,13 +2511,7 @@
             "name": "AP-4-881",
             "id": 134949,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-worker-robots-speed",
@@ -3253,15 +2529,7 @@
             "name": "AP-4-276",
             "id": 134344,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-weapons-damage",
@@ -3279,13 +2547,7 @@
             "name": "AP-5-561",
             "id": 135628,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -3303,15 +2565,7 @@
             "name": "AP-6-576",
             "id": 136642,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-weapon-shooting-speed",
@@ -3329,13 +2583,7 @@
             "name": "AP-4-678",
             "id": 134746,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-wall",
@@ -3353,17 +2601,7 @@
             "name": "AP-6-371",
             "id": 136437,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-armor",
@@ -3381,13 +2619,7 @@
             "name": "AP-4-823",
             "id": 134891,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-fluid-handling",
@@ -3405,14 +2637,7 @@
             "name": "AP-3-733",
             "id": 133802,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -3430,14 +2655,7 @@
             "name": "AP-3-318",
             "id": 133387,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -3455,14 +2673,7 @@
             "name": "AP-3-079",
             "id": 133148,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -3480,14 +2691,7 @@
             "name": "AP-3-537",
             "id": 133606,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-automation",
@@ -3505,14 +2709,7 @@
             "name": "AP-3-674",
             "id": 133743,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-stronger-explosives",
@@ -3551,14 +2748,7 @@
             "name": "AP-5-599",
             "id": 135666,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-speed-module",
@@ -3576,15 +2766,7 @@
             "name": "AP-6-406",
             "id": 136472,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-processing",
@@ -3602,13 +2784,7 @@
             "name": "AP-5-298",
             "id": 135365,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-follower-robot-count",
@@ -3626,14 +2802,7 @@
             "name": "AP-4-527",
             "id": 134595,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-rocketry",
@@ -3651,15 +2820,7 @@
             "name": "AP-6-800",
             "id": 136866,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-productivity-module",
@@ -3677,15 +2838,7 @@
             "name": "AP-4-927",
             "id": 134995,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-armor",
@@ -3724,17 +2877,7 @@
             "name": "AP-6-321",
             "id": 136387,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -3752,15 +2895,7 @@
             "name": "AP-5-356",
             "id": 135423,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-engine",
@@ -3799,15 +2934,7 @@
             "name": "AP-4-649",
             "id": 134717,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "logistic-system",
@@ -3846,15 +2973,7 @@
             "name": "AP-5-953",
             "id": 136020,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-science-pack",
@@ -3872,13 +2991,7 @@
             "name": "AP-2-255",
             "id": 132325,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-advanced-material-processing",
@@ -3896,14 +3009,7 @@
             "name": "AP-3-106",
             "id": 133175,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-fluid-handling",
@@ -3921,13 +3027,7 @@
             "name": "AP-2-794",
             "id": 132864,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-worker-robots-speed",
@@ -3945,17 +3045,7 @@
             "name": "AP-6-070",
             "id": 136136,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-stronger-explosives",
@@ -3973,15 +3063,7 @@
             "name": "AP-5-998",
             "id": 136065,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-personal-roboport-equipment",
@@ -3999,16 +3081,7 @@
             "name": "AP-5-075",
             "id": 135142,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-inserter",
@@ -4047,14 +3120,7 @@
             "name": "AP-3-043",
             "id": 133112,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-follower",
@@ -4114,14 +3180,7 @@
             "name": "AP-6-096",
             "id": 136162,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-rocketry",
@@ -4181,14 +3240,7 @@
             "name": "AP-3-794",
             "id": 133863,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "oil-gathering",
@@ -4206,16 +3258,7 @@
             "name": "AP-6-684",
             "id": 136750,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "progressive-efficiency-module",
@@ -4254,17 +3297,7 @@
             "name": "AP-6-685",
             "id": 136751,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "construction-robotics",
@@ -4282,13 +3315,7 @@
             "name": "AP-2-763",
             "id": 132833,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "steel-axe",
@@ -4348,26 +3375,7 @@
             "name": "Rocket Launch",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "advanced-circuit",
-                  "advanced-material-processing-2",
-                  "advanced-oil-processing",
-                  "concrete",
-                  "electric-engine",
-                  "engine",
-                  "flamethrower",
-                  "lubricant",
-                  "night-vision-equipment",
-                  "oil-processing",
-                  "plastics",
-                  "processing-unit",
-                  "rocket-silo",
-                  "steel-processing",
-                  "sulfur-processing"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Victory",
@@ -4397,21 +3405,7 @@
             "name": "Automate chemical-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "advanced-circuit",
-                  "advanced-oil-processing",
-                  "automation",
-                  "chemical-science-pack",
-                  "engine",
-                  "oil-gathering",
-                  "oil-processing",
-                  "plastics",
-                  "steel-processing",
-                  "sulfur-processing"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Automated chemical-science-pack",
@@ -4444,15 +3438,7 @@
             "name": "Automate military-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "military-2",
-                  "military-science-pack",
-                  "steel-processing",
-                  "stone-wall"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Automated military-science-pack",
@@ -4467,24 +3453,7 @@
             "name": "Automate production-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "advanced-circuit",
-                  "advanced-material-processing-2",
-                  "advanced-oil-processing",
-                  "circuit-network",
-                  "concrete",
-                  "electric-energy-distribution-1",
-                  "oil-gathering",
-                  "oil-processing",
-                  "plastics",
-                  "production-science-pack",
-                  "productivity-module",
-                  "railway",
-                  "steel-processing"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Automated production-science-pack",
@@ -4499,27 +3468,7 @@
             "name": "Automate utility-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "advanced-circuit",
-                  "advanced-oil-processing",
-                  "automation",
-                  "battery",
-                  "electric-engine",
-                  "engine",
-                  "low-density-structure",
-                  "lubricant",
-                  "oil-gathering",
-                  "oil-processing",
-                  "plastics",
-                  "processing-unit",
-                  "robotics",
-                  "steel-processing",
-                  "sulfur-processing",
-                  "utility-science-pack"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Automated utility-science-pack",
@@ -7592,6 +6541,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Factorio WorldGen",
@@ -8404,7 +7354,8 @@
             "file_name": "setup_en.md",
             "link": "setup/en",
             "authors": [
-              "Berserker, Farrak Kilhn"
+              "Berserker",
+              "Farrak Kilhn"
             ]
           }
         ]

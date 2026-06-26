@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Final Fantasy Mystic Quest WorldGen",
   "game_directory": "ffmq_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -184,26 +184,14 @@
             "name": "Subregion Aquaria to Subregion Fireburg",
             "connected_region": "Subregion Fireburg",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "River Coin",
-                  "Sand Coin"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Subregion Aquaria to Subregion Windia",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Sand Coin",
-                  "Sun Coin"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
@@ -278,13 +266,7 @@
             "name": "Subregion Frozen Fields to Subregion Volcano Battlefield",
             "connected_region": "Subregion Volcano Battlefield",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dualhead Hydra",
-                  "Summer Aquaria"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -366,26 +348,14 @@
             "name": "Subregion Fireburg to Subregion Aquaria",
             "connected_region": "Subregion Aquaria",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "River Coin",
-                  "Sand Coin"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Subregion Fireburg to Subregion Windia",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "River Coin",
-                  "Sun Coin"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
@@ -543,26 +513,14 @@
             "name": "Subregion Windia to Subregion Aquaria",
             "connected_region": "Subregion Aquaria",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Sand Coin",
-                  "Sun Coin"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Subregion Windia to Subregion Fireburg",
             "connected_region": "Subregion Fireburg",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "River Coin",
-                  "Sun Coin"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
@@ -617,13 +575,7 @@
             "name": "Subregion Ship Dock to Subregion Mac's Ship",
             "connected_region": "Subregion Mac's Ship",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Ship Dock Access",
-                  "Ship Liberated"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -644,27 +596,14 @@
             "name": "Subregion Mac's Ship to Subregion Ship Dock",
             "connected_region": "Subregion Ship Dock",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Ship Dock Access",
-                  "Ship Liberated"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Subregion Mac's Ship to Subregion Doom Castle",
             "connected_region": "Subregion Doom Castle",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Ship Dock Access",
-                  "Ship Loaned",
-                  "Ship Steering Wheel"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -709,14 +648,7 @@
             "name": "Subregion Doom Castle to Subregion Mac's Ship",
             "connected_region": "Subregion Mac's Ship",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Ship Dock Access",
-                  "Ship Loaned",
-                  "Ship Steering Wheel"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -737,13 +669,7 @@
             "name": "Doom Castle - Sand Floor - To Sky Door - Sand Floor",
             "connected_region": "Focus Tower B1 - Inner Loop",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw",
-                  "Mega Grenade"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -752,15 +678,7 @@
             "name": "Doom Castle B2 - Southeast Chest",
             "id": 4325377,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -1152,26 +1070,7 @@
             "name": "Focus Tower 2F - Venus Chest",
             "id": 4325685,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Jumbo Bomb",
-                      "Mega Grenade",
-                      "Progressive Bomb"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Venus Key"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Cure Potion",
@@ -1259,16 +1158,7 @@
             "name": "Level Forest - Northwest Box",
             "id": 4325416,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -1283,16 +1173,7 @@
             "name": "Level Forest - Northeast Box",
             "id": 4325417,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -1322,16 +1203,7 @@
             "name": "Level Forest - Southwest Box",
             "id": 4325419,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -1346,16 +1218,7 @@
             "name": "Level Forest - Southeast Box",
             "id": 4325420,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Mega Grenade",
@@ -1404,13 +1267,7 @@
             "name": "Level Forest - Kaeli",
             "id": 4325677,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Kaeli 1",
-                  "Minotaur"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Heal Potion",
@@ -1468,16 +1325,7 @@
             "name": "Foresta - Outside Box",
             "id": 4325421,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -1541,14 +1389,7 @@
             "name": "Kaeli 2",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Elixir",
-                  "Kaeli 1",
-                  "Minotaur"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Kaeli 2",
@@ -1899,15 +1740,7 @@
             "name": "Bone Dungeon B1 - Waterway - Exit Waterway",
             "connected_region": "Bone Dungeon B1 - Checker Room",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -1916,15 +1749,7 @@
             "name": "Bone Dungeon B1 - Skull Chest",
             "id": 4325382,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -1998,15 +1823,7 @@
             "name": "Bone Dungeon B1 - Checker Room Box",
             "id": 4325432,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -2091,15 +1908,7 @@
             "name": "Long Spine",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Long Spine Bombed",
@@ -2168,15 +1977,7 @@
             "name": "Short Spine",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Short Spine Bombed",
@@ -2316,15 +2117,7 @@
             "name": "Skull 1",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Skull 1 Bombed",
@@ -2375,15 +2168,7 @@
             "name": "Skull 2",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Skull 2 Bombed",
@@ -2412,15 +2197,7 @@
             "name": "Bonne Dungeon B2 - Two Skulls Room - To Boss Room",
             "connected_region": "Bone Dungeon B2 - Boss Room",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -2790,29 +2567,14 @@
             "name": "Wintry Cave 1F - To 3F Top",
             "connected_region": "Wintry Cave 3F Top",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space",
             "connected_region": "Wintry Cave 1F - Central Space",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -2851,14 +2613,7 @@
             "name": "Wintry Cave 1F - Slippery Cliff Box",
             "id": 4325444,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Bomb Refill",
@@ -2897,28 +2652,14 @@
             "name": "Wintry Cave 1F - Central Space to Wintry Cave 1F - East Ledge",
             "connected_region": "Wintry Cave 1F - East Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge",
             "connected_region": "Wintry Cave 1F - West Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -2927,14 +2668,7 @@
             "name": "Wintry Cave 1F - Scenic Overlook Box",
             "id": 4325445,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Bomb Refill",
@@ -2955,29 +2689,14 @@
             "name": "Wintry Cave 1F - To 2F",
             "connected_region": "Wintry Cave 2F",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Wintry Cave 1F - West Ledge to Wintry Cave 1F - Central Space",
             "connected_region": "Wintry Cave 1F - Central Space",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -3395,15 +3114,7 @@
             "name": "Ice Pyramid 1F Statue",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Ice Pyramid 1F Statue",
@@ -3554,15 +3265,7 @@
             "name": "Ice Pyramid 2F - South Side Glass Door Box",
             "id": 4325463,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -3667,15 +3370,7 @@
             "name": "Ice Pyramid 2F - North Room Glass Door Box",
             "id": 4325464,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Magic Ring",
@@ -3712,15 +3407,7 @@
             "name": "Ice Pyramid 2F - North Corridor Glass Door Box",
             "id": 4325465,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -3865,15 +3552,7 @@
             "name": "Ice Pyramid 3F Statue",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Ice Pyramid 3F Statue",
@@ -4082,15 +3761,7 @@
             "name": "Ice Pyramid 4F Statue",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Ice Pyramid 4F Statue",
@@ -4126,41 +3797,7 @@
             "name": "Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room",
             "connected_region": "Ice Pyramid B1 Taunt Room",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Excalibur",
-                      "Knight Sword",
-                      "Progressive Sword",
-                      "Steel Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cat Claw",
-                      "Charm Claw",
-                      "Dragon Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Jumbo Bomb",
-                      "Mega Grenade",
-                      "Progressive Bomb"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -4294,15 +3931,7 @@
             "name": "Ice Pyramid 5F Statue",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Ice Pyramid 5F Statue",
@@ -4331,14 +3960,7 @@
             "name": "Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space",
             "connected_region": "Ice Pyramid Climbing Wall Room Upper Space",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4359,14 +3981,7 @@
             "name": "Ice Pyramid Climbing Wall Room Upper Space to Ice Pyramid Climbing Wall Room Lower Space",
             "connected_region": "Ice Pyramid Climbing Wall Room Lower Space",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4473,14 +4088,7 @@
             "name": "Spencer's Cave - Box",
             "id": 4325487,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -4595,29 +4203,14 @@
             "name": "Spencer Cave Caved In Main Loop to Spencer Cave Caved In Waters",
             "connected_region": "Spencer Cave Caved In Waters",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Spencer Cave Caved In Main Loop to Spencer Cave Caved In Libra Nook",
             "connected_region": "Spencer Cave Caved In Libra Nook",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4631,14 +4224,7 @@
             "name": "Spencer Cave Caved In Waters to Spencer Cave Caved In Main Loop",
             "connected_region": "Spencer Cave Caved In Main Loop",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4647,25 +4233,7 @@
             "name": "Bomb Libra Block",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cat Claw",
-                      "Charm Claw",
-                      "Dragon Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mega Grenade"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Spencer Cave Libra Block Bombed",
@@ -4741,15 +4309,7 @@
             "name": "Spencer Cave Caved In Mobius Chest to Spencer Cave Caved In Libra Corridor",
             "connected_region": "Spencer Cave Caved In Libra Corridor",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4869,14 +4429,7 @@
             "name": "Fireburg Upper Plaza to Fireburg Lower Plaza",
             "connected_region": "Fireburg Lower Plaza",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4890,14 +4443,7 @@
             "name": "Fireburg Lower Plaza to Fireburg Upper Plaza",
             "connected_region": "Fireburg Upper Plaza",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -5136,13 +4682,7 @@
             "name": "Fireburg - Tristam",
             "id": 4325686,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Tristam",
-                  "Tristam Bone Item Given"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Projectile Refill",
@@ -5184,57 +4724,28 @@
             "name": "Mine Exterior - To Parallel Room",
             "connected_region": "Mine Parallel Room",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Mine Exterior North West Platforms to Mine Exterior Central Ledge",
             "connected_region": "Mine Exterior Central Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Mine Exterior North West Platforms to Mine Exterior North Ledge",
             "connected_region": "Mine Exterior North Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Mine Exterior North West Platforms to Mine Exterior South East Platforms",
             "connected_region": "Mine Exterior South East Platforms",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -5248,29 +4759,14 @@
             "name": "Mine Exterior - To Climbing Room",
             "connected_region": "Mine Climbing Room",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Mine Exterior Central Ledge to Mine Exterior North West Platforms",
             "connected_region": "Mine Exterior North West Platforms",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -5284,29 +4780,14 @@
             "name": "Mine Exterior - To Crescent Room",
             "connected_region": "Mine Crescent Room",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Mine Exterior North Ledge to Mine Exterior Central Ledge",
             "connected_region": "Mine Exterior Central Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -5337,14 +4818,7 @@
             "name": "Mine Exterior South East Platforms to Mine Exterior Central Ledge",
             "connected_region": "Mine Exterior Central Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -5384,14 +4858,7 @@
             "name": "Mine - Parallel Room West Box",
             "id": 4325495,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Mobius Crest",
@@ -5406,14 +4873,7 @@
             "name": "Mine - Parallel Room East Box",
             "id": 4325496,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Battle Axe",
@@ -5473,14 +4933,7 @@
             "name": "Mine - Glitchy Collision Cave Box",
             "id": 4325494,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -6078,14 +5531,7 @@
             "name": "Lava Dome Inner Ring Center Ledge to Lava Dome Inner Ring Main Loop",
             "connected_region": "Lava Dome Inner Ring Main Loop",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -6160,28 +5606,14 @@
             "name": "Lava Dome Inner Ring Upper Ledge West to Lava Dome Inner Ring Upper Ledge East",
             "connected_region": "Lava Dome Inner Ring Upper Ledge East",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Lava Dome Inner Ring Upper Ledge West to Lava Dome Inner Ring Main Loop",
             "connected_region": "Lava Dome Inner Ring Main Loop",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -6202,14 +5634,7 @@
             "name": "Lava Dome Inner Ring Upper Ledge East to Lava Dome Inner Ring Upper Ledge West",
             "connected_region": "Lava Dome Inner Ring Upper Ledge West",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -6647,14 +6072,7 @@
             "name": "Lava Dome Life Chest Room Lower Ledge to Lava Dome Life Chest Room Upper Ledge",
             "connected_region": "Lava Dome Life Chest Room Upper Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -6694,14 +6112,7 @@
             "name": "Lava Dome Life Chest Room Upper Ledge to Lava Dome Life Chest Room Lower Ledge",
             "connected_region": "Lava Dome Life Chest Room Lower Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -6830,15 +6241,7 @@
             "name": "Lava Dome Big Jump Room MegaGrenade Area to Lava Dome Big Jump Room Main Area",
             "connected_region": "Lava Dome Big Jump Room Main Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -7140,113 +6543,35 @@
             "name": "Alive Forest - West Entrance 1",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Alive Forest - Libra Teleporter Script",
             "connected_region": "Libra Treehouse",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Libra Crest"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Alive Forest - Gemini Teleporter Script",
             "connected_region": "Gemini Treehouse",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gemini Crest"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Alive Forest - Mobius Teleporter Script",
             "connected_region": "Mobius Treehouse",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mobius Crest"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Alive Forest - Giant Tree Entrance",
             "connected_region": "Giant Tree 1F Main Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -7255,16 +6580,7 @@
             "name": "Alive Forest - Tree Stump Chest",
             "id": 4325397,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -7279,16 +6595,7 @@
             "name": "Alive Forest - Near Entrance Box",
             "id": 4325541,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -7303,16 +6610,7 @@
             "name": "Alive Forest - After Bridge Box",
             "id": 4325542,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -7327,16 +6625,7 @@
             "name": "Alive Forest - Gemini Stump Box",
             "id": 4325543,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -7540,15 +6829,7 @@
             "name": "Giant Tree 2F West Ledge - To 3F Northwest Ledge",
             "connected_region": "Giant Tree 3F West Platform",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -7588,28 +6869,14 @@
             "name": "Giant Tree 2F Lower Area to Giant Tree 2F Central Island",
             "connected_region": "Giant Tree 2F Central Island",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 2F Lower Area to Giant Tree 2F East Ledge",
             "connected_region": "Giant Tree 2F East Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -7639,29 +6906,14 @@
             "name": "Giant Tree 2F Central Island to Giant Tree 2F Lower Area",
             "connected_region": "Giant Tree 2F Lower Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 2F Main Lobby - Central Entrance to 3F",
             "connected_region": "Giant Tree 3F Central Island",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -7675,14 +6927,7 @@
             "name": "Giant Tree 2F East Ledge to Giant Tree 2F Lower Area",
             "connected_region": "Giant Tree 2F Lower Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -7736,43 +6981,14 @@
             "name": "Giant Tree 2F Mushroom Room - Entrance",
             "connected_region": "Giant Tree 2F Main Lobby",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 2F Mushroom Room - North Face to Meteor",
             "connected_region": "Giant Tree 2F Meteor Chest Room",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gidrah"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -7781,16 +6997,7 @@
             "name": "Giant Tree 2F - Mushroom Tunnel West Box",
             "id": 4325551,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Gemini Crest",
@@ -7805,16 +7012,7 @@
             "name": "Giant Tree 2F - Mushroom Tunnel East Box",
             "id": 4325552,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -7842,14 +7040,7 @@
             "name": "Giant Tree 3F Central Island to Giant Tree 3F Central Area",
             "connected_region": "Giant Tree 3F Central Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -7889,14 +7080,7 @@
             "name": "Giant Tree 3F Central Area to Giant Tree 3F Central Island",
             "connected_region": "Giant Tree 3F Central Island",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -7965,15 +7149,7 @@
             "name": "Giant Tree 3F Central Room - East Entrance to Worm Room",
             "connected_region": "Giant Tree Worm Room Upper Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8024,14 +7200,7 @@
             "name": "Giant Tree 3F Middle Up Island to Giant Tree 3F Central Area",
             "connected_region": "Giant Tree 3F Central Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8045,28 +7214,14 @@
             "name": "Giant Tree 3F West Platform to Giant Tree 3F Middle Up Island",
             "connected_region": "Giant Tree 3F Middle Up Island",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 3F West Platform to Giant Tree 3F North Ledge",
             "connected_region": "Giant Tree 3F North Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -8087,43 +7242,21 @@
             "name": "Giant Tree 3F West Platform - Top Entrance",
             "connected_region": "Giant Tree 4F Lower Floor",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 3F North Ledge to Giant Tree 3F Middle Up Island",
             "connected_region": "Giant Tree 3F Middle Up Island",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 3F North Ledge to Giant Tree 3F Central Area",
             "connected_region": "Giant Tree 3F Central Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8137,47 +7270,14 @@
             "name": "Giant Tree Worm Room - East Entrance",
             "connected_region": "Giant Tree 3F Lower Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge",
             "connected_region": "Giant Tree Worm Room Lower Ledge",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cat Claw",
-                      "Charm Claw",
-                      "Dragon Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -8186,16 +7286,7 @@
             "name": "Giant Tree 3F - Worm Room North Box",
             "id": 4325557,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Quake Book",
@@ -8210,16 +7301,7 @@
             "name": "Giant Tree 3F - Worm Room South Box",
             "id": 4325558,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Cure Potion",
@@ -8275,15 +7357,7 @@
             "name": "Giant Tree 4F Lower Floor - Lower East Mouth",
             "connected_region": "Giant Tree 4F Slime Room East Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8304,14 +7378,7 @@
             "name": "Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor",
             "connected_region": "Giant Tree 4F Upper Floor",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -8366,29 +7433,14 @@
             "name": "Giant Tree 4F Upper Floor - Upper Central Mouth",
             "connected_region": "Giant Tree 5F Lower Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 4F Upper Floor to Giant Tree 4F Middle Floor",
             "connected_region": "Giant Tree 4F Middle Floor",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8459,16 +7511,7 @@
             "name": "Giant Tree 4F - East Slime Room Box",
             "id": 4325564,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -8489,63 +7532,21 @@
             "name": "Giant Tree 4F Slime Room - Central Entrance",
             "connected_region": "Giant Tree 4F Lower Floor",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 4F Slime Room - West Entrance",
             "connected_region": "Giant Tree 4F Lower Floor",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
             "name": "Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform",
             "connected_region": "Giant Tree 4F Slime Room Platform",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cat Claw",
-                      "Charm Claw",
-                      "Dragon Claw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -8566,14 +7567,7 @@
             "name": "Giant Tree 4F Slime Room Platform to Giant Tree 4F Slime Room West Area",
             "connected_region": "Giant Tree 4F Slime Room West Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8610,14 +7604,7 @@
             "name": "Giant Tree 5F Lower Area to Giant Tree 5F Gidrah Platform",
             "connected_region": "Giant Tree 5F Gidrah Platform",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -8699,14 +7686,7 @@
             "name": "Giant Tree 5F Gidrah Platform to Giant Tree 5F Lower Area",
             "connected_region": "Giant Tree 5F Lower Area",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8715,13 +7695,7 @@
             "name": "Gidrah",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "River Coin",
-                  "Sand Coin"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Gidrah",
@@ -8750,14 +7724,7 @@
             "name": "Kaidge Temple Lower Ledge to Kaidge Temple Upper Ledge",
             "connected_region": "Kaidge Temple Upper Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8781,14 +7748,7 @@
             "name": "Kaidge Temple Upper Ledge to Kaidge Temple Lower Ledge",
             "connected_region": "Kaidge Temple Lower Ledge",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -8857,13 +7817,7 @@
             "name": "Mount Gale - Dullahan Chest",
             "id": 4325399,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw",
-                  "Dullahan"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Noble Armor",
@@ -8878,14 +7832,7 @@
             "name": "Dullahan",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw",
-                  "River Coin",
-                  "Sand Coin"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Dullahan",
@@ -9308,13 +8255,7 @@
             "name": "Pazuzu 1F",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "River Coin",
-                  "Sand Coin"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pazuzu 1F",
@@ -9345,15 +8286,7 @@
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall West Box",
             "id": 4325578,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -9368,15 +8301,7 @@
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall Center Box",
             "id": 4325579,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Steel Sword",
@@ -9391,15 +8316,7 @@
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall East Box",
             "id": 4325580,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -9519,16 +8436,7 @@
             "name": "Pazuzu 2F Lock",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Pazuzu 2F Lock",
@@ -9544,15 +8452,7 @@
             "name": "Pazuzu 2F",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Pazuzu 2F",
@@ -9746,15 +8646,7 @@
             "name": "Pazuzu's Tower 4F - Elevator West Box",
             "id": 4325587,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Projectile Refill",
@@ -9769,15 +8661,7 @@
             "name": "Pazuzu's Tower 4F - Elevator East Box",
             "id": 4325588,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -9807,16 +8691,7 @@
             "name": "Pazuzu 4F Lock",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Axe",
-                  "Progressive Claw"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Pazuzu 4F Lock",
@@ -9832,15 +8707,7 @@
             "name": "Pazuzu 4F",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Pazuzu 4F",
@@ -10012,32 +8879,7 @@
             "name": "Pazuzu 6F Lock",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Jumbo Bomb",
-                      "Mega Grenade",
-                      "Progressive Bomb"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Axe",
-                      "Battle Axe",
-                      "Giant's Axe",
-                      "Progressive Axe",
-                      "Progressive Claw"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pazuzu 6F Lock",
@@ -10053,15 +8895,7 @@
             "name": "Pazuzu 6F",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade",
-                  "Progressive Bomb"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Pazuzu 6F",
@@ -10131,21 +8965,7 @@
             "name": "Pazuzu 7F Rest of the Area to Pazuzu 7F Sky Room",
             "connected_region": "Pazuzu 7F Sky Room",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw",
-                  "Pazuzu 1F",
-                  "Pazuzu 2F",
-                  "Pazuzu 2F Lock",
-                  "Pazuzu 3F",
-                  "Pazuzu 4F",
-                  "Pazuzu 4F Lock",
-                  "Pazuzu 5F",
-                  "Pazuzu 6F",
-                  "Pazuzu 6F Lock"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -10186,20 +9006,7 @@
             "name": "Pazuzu",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Pazuzu 1F",
-                  "Pazuzu 2F",
-                  "Pazuzu 2F Lock",
-                  "Pazuzu 3F",
-                  "Pazuzu 4F",
-                  "Pazuzu 4F Lock",
-                  "Pazuzu 5F",
-                  "Pazuzu 6F",
-                  "Pazuzu 6F Lock"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pazuzu",
@@ -10845,27 +9652,14 @@
             "name": "Doom Castle Corridor of Destiny - Sky Floor Entrance",
             "connected_region": "Doom Castle Sky Floor",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Stone Golem",
-                  "Twinhead Wyvern"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Doom Castle Corridor of Destiny - Hero Room Entrance",
             "connected_region": "Doom Castle Hero Room",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Stone Golem",
-                  "Twinhead Wyvern",
-                  "Zuh"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -10888,26 +9682,7 @@
             "name": "Doom Castle 4F - Northwest Room Box",
             "id": 4325607,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Excalibur",
-                      "Knight Sword",
-                      "Progressive Sword",
-                      "Steel Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Thunder Seal",
@@ -10922,26 +9697,7 @@
             "name": "Doom Castle 4F - Southwest Room Box",
             "id": 4325608,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Excalibur",
-                      "Knight Sword",
-                      "Progressive Sword",
-                      "Steel Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Projectile Refill",
@@ -10956,15 +9712,7 @@
             "name": "Doom Castle 4F - Northeast Room Box",
             "id": 4325609,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Excalibur",
-                  "Knight Sword",
-                  "Progressive Sword",
-                  "Steel Sword"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Heal Potion",
@@ -10979,26 +9727,7 @@
             "name": "Doom Castle 4F - Southeast Room Box",
             "id": 4325610,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Excalibur",
-                      "Knight Sword",
-                      "Progressive Sword",
-                      "Steel Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Refresher",
@@ -11013,26 +9742,7 @@
             "name": "Stone Golem",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Excalibur",
-                      "Knight Sword",
-                      "Progressive Sword",
-                      "Steel Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Stone Golem",
@@ -13016,6 +11726,7 @@
       "Steel Armor"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Final Fantasy Mystic Quest WorldGen",

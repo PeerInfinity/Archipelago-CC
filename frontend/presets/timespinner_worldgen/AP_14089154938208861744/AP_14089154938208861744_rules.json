@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Timespinner WorldGen",
   "game_directory": "timespinner_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -72,38 +72,14 @@
             "name": "Lake desolation -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_timestop",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Talaria Attachment"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
             "name": "Lake desolation -> Upper lake desolation",
             "connected_region": "Upper lake desolation",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_fire",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Upper Lake Serene"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -197,19 +173,7 @@
             "name": "Lake Desolation: Forget me not chest",
             "id": 1337006,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_fire",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Upper Lake Serene"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Potion",
@@ -223,15 +187,7 @@
             "name": "Lake Desolation (Lower): Chicken chest",
             "id": 1337007,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Captain's Cap",
@@ -313,14 +269,7 @@
             "name": "Lake Desolation (Upper): Double jump cave platform",
             "id": 1337012,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Plasma Geyser",
@@ -464,15 +413,7 @@
             "name": "Lake Desolation (Upper): Tank chest",
             "id": 1337009,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Max Sand",
@@ -526,19 +467,7 @@
             "name": "Eastern lake desolation -> Upper lake desolation",
             "connected_region": "Upper lake desolation",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_fire",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Upper Lake Serene"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -573,19 +502,7 @@
             "name": "Library -> Library top",
             "connected_region": "Library top",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Talaria Attachment"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -879,13 +796,7 @@
             "name": "Library: V terminal 1 (War of the Sisters)",
             "id": 1337160,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Library Keycard V",
-                  "Tablet"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Frozen Spires",
@@ -899,13 +810,7 @@
             "name": "Library: V terminal 2 (Lake Desolation Map)",
             "id": 1337161,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Library Keycard V",
-                  "Tablet"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Security Keycard B",
@@ -919,13 +824,7 @@
             "name": "Library: V terminal 3 (Vilete)",
             "id": 1337162,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Library Keycard V",
-                  "Tablet"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Jewelry Box",
@@ -1117,32 +1016,14 @@
             "name": "Varndagroth tower left -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Varndagroth tower left -> Refugee Camp",
             "connected_region": "Refugee Camp",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Timespinner Spindle",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -1307,19 +1188,7 @@
             "name": "Varndagroth Towers (Right): Elevator card chest",
             "id": 1337038,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Max HP",
@@ -1333,19 +1202,7 @@
             "name": "Varndagroth Towers (Right): Air vents right chest",
             "id": 1337039,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Max Sand",
@@ -1359,19 +1216,7 @@
             "name": "Varndagroth Towers (Right): Air vents left chest",
             "id": 1337040,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Plasma Orb",
@@ -1432,19 +1277,7 @@
             "name": "Varndagroth tower right (lower) -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -1617,19 +1450,7 @@
             "name": "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)",
             "id": 1337164,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tablet"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Max Sand",
@@ -1812,33 +1633,14 @@
             "name": "Military Fortress -> Temporal Gyre",
             "connected_region": "Temporal Gyre",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_kill_all_3_bosses",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Military Fortress -> Military Fortress (hangar)",
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -1847,19 +1649,7 @@
             "name": "Military Fortress: Bomber chest",
             "id": 1337058,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Empire Orb",
@@ -1951,17 +1741,7 @@
             "name": "Military Fortress: B door chest 2",
             "id": 1337063,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Icicle Ring",
@@ -1975,17 +1755,7 @@
             "name": "Military Fortress: B door chest 1",
             "id": 1337064,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Bombardment",
@@ -1999,17 +1769,7 @@
             "name": "Military Fortress: Pedestal",
             "id": 1337065,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Dark Flames",
@@ -2064,30 +1824,7 @@
             "name": "Main Lab -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Genza"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -2110,14 +1847,7 @@
             "name": "Lab: Lower trash right",
             "id": 1337067,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Old Coat",
@@ -2146,14 +1876,7 @@
             "name": "Lab: Below lab entrance",
             "id": 1337069,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Sand Vial",
@@ -2167,19 +1890,7 @@
             "name": "Lab: Trash jump room",
             "id": 1337070,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Max Sand",
@@ -2193,21 +1904,7 @@
             "name": "Lab: Experiment #13",
             "id": 1337073,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lab Access Experiment"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Trendy Jacket",
@@ -2221,50 +1918,7 @@
             "name": "Lab: Sentry platform terminal (Origins)",
             "id": 1337167,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "can_teleport_to",
-                      "_original_ast_type": "rb_defined_helper",
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Time"
-                          }
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "GateDadsTower"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Genza"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tablet"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Silence Ring",
@@ -2318,30 +1972,7 @@
             "name": "Lab: Dynamo Works",
             "id": 1337071,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_upwarddash",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Dynamo"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Meyef",
@@ -2416,44 +2047,14 @@
             "name": "The lab (upper) -> Emperors tower (courtyard)",
             "connected_region": "Emperors tower (courtyard)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Talaria Attachment"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
             "name": "The lab (upper) -> Ancient Pyramid (entrance)",
             "connected_region": "Ancient Pyramid (entrance)",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Timespinner Gear 1",
-                  "Timespinner Gear 2",
-                  "Timespinner Gear 3",
-                  "Timespinner Spindle",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -2552,14 +2153,7 @@
             "name": "Emperors tower (courtyard) -> Emperors tower",
             "connected_region": "Emperors tower",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -2596,17 +2190,7 @@
             "name": "Emperor's Tower: Courtyard floor secret",
             "id": 1337078,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Colossal Blade",
@@ -2663,28 +2247,7 @@
             "name": "Emperor's Tower: Wayyyy up there",
             "id": 1337082,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Timespinner Wheel"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Filigree Clasp",
@@ -2849,15 +2412,7 @@
             "name": "Sealed Caves (Xarion): Shroom jump room",
             "id": 1337045,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Ether",
@@ -2885,28 +2440,7 @@
             "name": "Sealed Caves (Xarion): Jacksquat room",
             "id": 1337047,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Talaria Attachment"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Elevator Keycard",
@@ -2981,14 +2515,7 @@
             "name": "Sealed Caves (Xarion): Last chance before Xarion",
             "id": 1337051,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Max HP",
@@ -3126,19 +2653,7 @@
             "name": "Forest -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_timestop",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Talaria Attachment"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -3152,25 +2667,7 @@
             "name": "Forest -> Castle Ramparts",
             "connected_region": "Castle Ramparts",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Drawbridge Key"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           }
         ],
@@ -3193,21 +2690,7 @@
             "name": "Forest: Bat jump ledge",
             "id": 1337091,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_fastjump_on_npc",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Buckle Hat",
@@ -3342,15 +2825,7 @@
             "name": "Left Side forest Caves -> Upper Lake Serene",
             "connected_region": "Upper Lake Serene",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -3476,14 +2951,7 @@
             "name": "Lake Serene (Upper): Double jump cave platform",
             "id": 1337100,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Berry Pick-Mi-Up+",
@@ -3907,13 +3375,7 @@
             "name": "Caves of Banishment (Maw) -> Caves of Banishment (Sirens)",
             "connected_region": "Caves of Banishment (Sirens)",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Gas Mask",
-                  "Talaria Attachment"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -3968,13 +3430,7 @@
             "name": "Caves of Banishment (Maw): Plasma Crystal",
             "id": 1337173,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Gas Mask",
-                  "Talaria Attachment"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Max Aura",
@@ -4006,13 +3462,7 @@
             "name": "Caves of Banishment (Maw): Mineshaft",
             "id": 1337122,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Gas Mask",
-                  "Talaria Attachment"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Princess Dress",
@@ -4184,19 +3634,7 @@
             "name": "Castle Ramparts: Bomber chest",
             "id": 1337128,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Berry Pick-Mi-Up+",
@@ -4210,19 +3648,7 @@
             "name": "Castle Ramparts: Freeze the engineer",
             "id": 1337129,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_timestop",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Talaria Attachment"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Empress Robe",
@@ -4297,28 +3723,7 @@
             "name": "Castle Keep -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "has_pink",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -4362,15 +3767,7 @@
             "name": "Killed Twins",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Killed Twins",
@@ -4385,15 +3782,7 @@
             "name": "Castle Keep: Advisor jump",
             "id": 1337171,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Lab Coat",
@@ -4407,15 +3796,7 @@
             "name": "Castle Keep: Twins",
             "id": 1337140,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Dusk Ring",
@@ -4429,17 +3810,7 @@
             "name": "Castle Keep: Royal guard tiny room",
             "id": 1337141,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_fastjump_on_npc",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Max Sand",
@@ -4560,19 +3931,7 @@
             "name": "Royal towers (lower) -> Royal towers",
             "connected_region": "Royal towers",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -4602,14 +3961,7 @@
             "name": "Castle Keep: Yas queen room",
             "id": 1337135,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Plasma Geyser",
-                  "Plasma Orb",
-                  "Royal Ring"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Max HP",
@@ -4623,17 +3975,7 @@
             "name": "Royal Towers: Floor secret",
             "id": 1337142,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Meteor Sparrow Trap",
@@ -4659,14 +4001,7 @@
             "name": "Royal towers -> Royal towers (upper)",
             "connected_region": "Royal towers (upper)",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             }
           }
         ],
@@ -4718,28 +4053,7 @@
             "name": "Royal Towers: Bottom struggle juggle",
             "id": 1337146,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Timespinner Wheel"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Max Aura",
@@ -4781,28 +4095,7 @@
             "name": "Royal Towers: Top struggle juggle",
             "id": 1337147,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Timespinner Wheel"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Max Aura",
@@ -4887,13 +4180,7 @@
             "name": "Royal Towers: Aelana's attic",
             "id": 1337153,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Max HP",
@@ -4953,14 +4240,7 @@
             "name": "Ancient Pyramid (entrance) -> Ancient Pyramid (left)",
             "connected_region": "Ancient Pyramid (left)",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Celestial Sash",
-                  "Lightwall",
-                  "Succubus Hairpin"
-                ]
-              }
+              "rule": "HasAny"
             }
           },
           {
@@ -5076,17 +4356,7 @@
             "name": "Ancient Pyramid: Regret chest",
             "id": 1337249,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Security Keycard D",
@@ -5150,16 +4420,7 @@
             "name": "Killed Nightmare",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Timespinner Gear 1",
-                  "Timespinner Gear 2",
-                  "Timespinner Gear 3",
-                  "Timespinner Spindle",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Killed Nightmare",
@@ -5560,45 +4821,7 @@
             "name": "Space time continuum -> Ancient Pyramid (entrance)",
             "connected_region": "Ancient Pyramid (entrance)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "can_teleport_to",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Time"
-                      }
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "GateGyre"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_teleport_to",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Time"
-                      }
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "GateLeftPyramid"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -8274,6 +7497,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Timespinner WorldGen",

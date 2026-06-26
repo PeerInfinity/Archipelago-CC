@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Shivers WorldGen",
   "game_directory": "shivers_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -104,32 +104,7 @@
             "name": "Puzzle Solved Office Elevator",
             "id": 27110,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Office"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Underground Lake"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key for Office Elevator"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Cloth Always Available in Burial Room",
@@ -143,32 +118,7 @@
             "name": "Puzzle Solved Three Floor Elevator",
             "id": 27112,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Maze"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Maintenance Tunnels"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key for Three Floor Elevator"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Sand Always Available in Greenhouse",
@@ -470,13 +420,7 @@
             "name": "To Bedroom Elevator From Office",
             "connected_region": "Bedroom Elevator",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Crawling",
-                  "Key for Bedroom Elevator"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
@@ -549,13 +493,7 @@
             "name": "Puzzle Solved Bedroom Elevator",
             "id": 27111,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Crawling",
-                  "Key for Bedroom Elevator"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Water Pot Bottom",
@@ -638,13 +576,7 @@
             "name": "To Office From Bedroom Elevator",
             "connected_region": "Office",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Crawling",
-                  "Key for Bedroom Elevator"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
@@ -752,25 +684,7 @@
             "name": "To Tar River From Lobby",
             "connected_region": "Tar River",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "oil_capturable",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Tar River"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crawling"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -956,21 +870,7 @@
             "name": "Storage: Slide",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Slide Room"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lost Your Head"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Ash Pot Bottom DUPE",
@@ -1348,10 +1248,7 @@
             "name": "To Clock Tower Staircase From Theater Back Hallway",
             "connected_region": "Clock Tower Staircase",
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Three Floor Elevator"
-              }
+              "rule": "CanReachRegion"
             }
           },
           {
@@ -1380,10 +1277,7 @@
             "name": "Puzzle Solved Clock Tower Door",
             "id": 27005,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Three Floor Elevator"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Ash Always Available in Office",
@@ -1800,10 +1694,7 @@
             "name": "Puzzle Solved Atlantis",
             "id": 27007,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Office"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Key for Generator Room",
@@ -1886,10 +1777,7 @@
             "name": "To Maze From Maze Staircase",
             "connected_region": "Maze",
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Projector Room"
-              }
+              "rule": "CanReachRegion"
             }
           }
         ],
@@ -1947,19 +1835,7 @@
             "name": "To Lobby From Tar River",
             "connected_region": "Lobby",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "oil_capturable",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crawling"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -2022,10 +1898,7 @@
             "name": "To Burial From Egypt",
             "connected_region": "Burial",
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Egypt"
-              }
+              "rule": "CanReachRegion"
             }
           },
           {
@@ -2239,10 +2112,7 @@
             "name": "To Gods Room From Shaman",
             "connected_region": "Gods Room",
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Clock Tower"
-              }
+              "rule": "CanReachRegion"
             }
           },
           {
@@ -2258,10 +2128,7 @@
             "name": "Puzzle Solved Shaman Drums",
             "id": 27013,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Clock Tower"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Metal Always Available in Prehistoric",
@@ -2302,10 +2169,7 @@
             "name": "To Anansi From Gods Room",
             "connected_region": "Anansi",
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Maintenance Tunnels"
-              }
+              "rule": "CanReachRegion"
             }
           },
           {
@@ -2345,10 +2209,7 @@
             "name": "Puzzle Solved Red Door",
             "id": 27015,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Maintenance Tunnels"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Easier Lyre",
@@ -2442,10 +2303,7 @@
             "name": "To Gods Room From Anansi",
             "connected_region": "Gods Room",
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Gods Room"
-              }
+              "rule": "CanReachRegion"
             }
           },
           {
@@ -2705,10 +2563,7 @@
             "name": "Puzzle Solved UFO Symbols",
             "id": 27018,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Library"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Sand Pot Bottom",
@@ -2722,10 +2577,7 @@
             "name": "Storage: UFO",
             "id": null,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Library"
-              }
+              "rule": "CanReachRegion"
             },
             "item": {
               "name": "Wood Pot Bottom DUPE",
@@ -4943,6 +4795,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Shivers WorldGen",

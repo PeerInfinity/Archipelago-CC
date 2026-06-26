@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Yoshi's Island WorldGen",
   "game_directory": "yoshisisland_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -477,13 +477,7 @@
             "name": "Make Eggs, Throw Eggs: Red Coins",
             "id": 3166240,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Dashed Stairs"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -498,13 +492,7 @@
             "name": "Make Eggs, Throw Eggs: Flowers",
             "id": 3166241,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Dashed Stairs"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Giant Eggs",
@@ -519,14 +507,7 @@
             "name": "Make Eggs, Throw Eggs: Stars",
             "id": 3166242,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Dashed Stairs",
-                  "Tulip"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -565,13 +546,7 @@
             "name": "Watch Out Below!: Red Coins",
             "id": 3166244,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Helicopter Morph",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Vanishing Arrow Wheel",
@@ -586,13 +561,7 @@
             "name": "Watch Out Below!: Flowers",
             "id": 3166245,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Helicopter Morph",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "2-Up",
@@ -607,19 +576,7 @@
             "name": "Watch Out Below!: Stars",
             "id": 3166246,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Large Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Egg Capacity Upgrade",
@@ -757,34 +714,7 @@
             "name": "Burt The Bashful's Fort: Flowers",
             "id": 3166253,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 3
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Key",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "World 3 Gate",
@@ -799,30 +729,7 @@
             "name": "Burt The Bashful's Fort: Stars",
             "id": 3166254,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "! Switch",
@@ -912,17 +819,7 @@
             "name": "Hop! Hop! Donut Lifts: Stars",
             "id": 3166259,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "cansee_clouds",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "World 6 Gate",
@@ -958,15 +855,7 @@
             "name": "Shy-Guys On Stilts: Red Coins",
             "id": 3166261,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Flashing Eggs",
-                  "Large Spring Ball",
-                  "Mole Tank Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -999,50 +888,7 @@
             "name": "Shy-Guys On Stilts: Stars",
             "id": 3166263,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "has_midring",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Beanstalk"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "has_midring",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Tulip"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Large Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "10-Up",
@@ -1057,13 +903,7 @@
             "name": "Shy-Guys On Stilts: Level Clear",
             "id": 3166264,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Anytime Egg",
@@ -1084,15 +924,7 @@
             "name": "Touch Fuzzy Get Dizzy: Red Coins",
             "id": 3166265,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Chomp Rock",
-                  "Flashing Eggs",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Melon",
@@ -1122,32 +954,7 @@
             "name": "Touch Fuzzy Get Dizzy: Stars",
             "id": 3166267,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "cansee_clouds",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Beanstalk",
-                          "Chomp Rock",
-                          "Spring Ball"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "3-Up",
@@ -1245,33 +1052,7 @@
             "name": "Salvo The Slime's Castle: Stars",
             "id": 3166271,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Arrow Wheel",
-                          "Key"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Platform Ghost"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "2-Up",
@@ -1331,14 +1112,7 @@
             "name": "Visit Koopa And Para-Koopa: Red Coins",
             "id": 3166273,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Large Spring Ball",
-                  "Poochy",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+10 Stars",
@@ -1353,13 +1127,7 @@
             "name": "Visit Koopa And Para-Koopa: Flowers",
             "id": 3166274,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Large Spring Ball",
-                  "Super Star"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Melon",
@@ -1374,19 +1142,7 @@
             "name": "Visit Koopa And Para-Koopa: Stars",
             "id": 3166275,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Large Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "+20 Stars",
@@ -1425,16 +1181,7 @@
             "name": "The Baseball Boys: Red Coins",
             "id": 3166277,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Egg Launcher",
-                  "Large Spring Ball",
-                  "Mole Tank Morph",
-                  "Super Star"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "1-Up",
@@ -1449,16 +1196,7 @@
             "name": "The Baseball Boys: Flowers",
             "id": 3166278,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Egg Launcher",
-                  "Large Spring Ball",
-                  "Spring Ball",
-                  "Super Star"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "2-Up",
@@ -1473,25 +1211,7 @@
             "name": "The Baseball Boys: Stars",
             "id": 3166279,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Beanstalk",
-                      "Egg Launcher",
-                      "Large Spring Ball",
-                      "Super Star",
-                      "Tulip"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Submarine Morph",
@@ -1506,15 +1226,7 @@
             "name": "The Baseball Boys: Level Clear",
             "id": 3166280,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Egg Launcher",
-                  "Large Spring Ball",
-                  "Super Star"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -1553,13 +1265,7 @@
             "name": "What's Gusty Taste Like?: Flowers",
             "id": 3166282,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Large Spring Ball",
-                  "Super Star"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -1589,13 +1295,7 @@
             "name": "What's Gusty Taste Like?: Level Clear",
             "id": 3166284,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Large Spring Ball",
-                  "Super Star"
-                ]
-              }
+              "rule": "HasAny"
             },
             "item": {
               "name": "Pocket Melon",
@@ -1625,14 +1325,7 @@
             "name": "Bigger Boo's Fort: Red Coins",
             "id": 3166285,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Dashed Stairs",
-                  "Key"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Egg Capacity Upgrade",
@@ -1647,14 +1340,7 @@
             "name": "Bigger Boo's Fort: Flowers",
             "id": 3166286,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Dashed Stairs",
-                  "Key"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "1-Up",
@@ -1669,23 +1355,7 @@
             "name": "Bigger Boo's Fort: Stars",
             "id": 3166287,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "! Switch",
-                      "Dashed Stairs",
-                      "Key"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "2-Up",
@@ -1763,14 +1433,7 @@
             "name": "Watch Out For Lakitu: Flowers",
             "id": 3166290,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Chomp Rock",
-                  "Key",
-                  "Train Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Anytime Egg",
@@ -1842,13 +1505,7 @@
             "name": "The Cave Of The Mystery Maze: Flowers",
             "id": 3166294,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Egg Launcher",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -1863,19 +1520,7 @@
             "name": "The Cave Of The Mystery Maze: Stars",
             "id": 3166295,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Large Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -1931,33 +1576,7 @@
             "name": "Lakitu's Wall: Red Coins",
             "id": 3166297,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Dashed Platform",
-                          "Giant Eggs"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Large Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -1972,33 +1591,7 @@
             "name": "Lakitu's Wall: Flowers",
             "id": 3166298,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Giant Eggs"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "! Switch",
-                      "Large Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "+20 Stars",
@@ -2013,19 +1606,7 @@
             "name": "Lakitu's Wall: Stars",
             "id": 3166299,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Giant Eggs"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -2040,13 +1621,7 @@
             "name": "Lakitu's Wall: Level Clear",
             "id": 3166300,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Car Morph",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Melon",
@@ -2093,14 +1668,7 @@
             "name": "The Potted Ghost's Castle: Red Coins",
             "id": 3166301,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Arrow Wheel",
-                  "Egg Capacity Upgrade",
-                  "Key"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -2115,15 +1683,7 @@
             "name": "The Potted Ghost's Castle: Flowers",
             "id": 3166302,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Arrow Wheel",
-                  "Egg Capacity Upgrade",
-                  "Key",
-                  "Train Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -2138,23 +1698,7 @@
             "name": "The Potted Ghost's Castle: Stars",
             "id": 3166303,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Arrow Wheel",
-                      "Egg Capacity Upgrade",
-                      "Key"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -2281,13 +1825,7 @@
             "name": "Jungle Rhythm...: Red Coins",
             "id": 3166309,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Stairs",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "3-Up",
@@ -2302,13 +1840,7 @@
             "name": "Jungle Rhythm...: Flowers",
             "id": 3166310,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Stairs",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "3-Up",
@@ -2323,19 +1855,7 @@
             "name": "Jungle Rhythm...: Stars",
             "id": 3166311,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tulip"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -2350,13 +1870,7 @@
             "name": "Jungle Rhythm...: Level Clear",
             "id": 3166312,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Stairs",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Anytime Egg",
@@ -2377,13 +1891,7 @@
             "name": "Nep-Enuts' Domain: Red Coins",
             "id": 3166313,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Helicopter Morph",
-                  "Submarine Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -2398,13 +1906,7 @@
             "name": "Nep-Enuts' Domain: Flowers",
             "id": 3166314,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Helicopter Morph",
-                  "Submarine Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+10 Stars",
@@ -2419,22 +1921,7 @@
             "name": "Nep-Enuts' Domain: Stars",
             "id": 3166315,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Helicopter Morph",
-                      "Submarine Morph"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "3-Up",
@@ -2449,13 +1936,7 @@
             "name": "Nep-Enuts' Domain: Level Clear",
             "id": 3166316,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Helicopter Morph",
-                  "Submarine Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Melon",
@@ -2503,31 +1984,7 @@
             "name": "Prince Froggy's Fort: Flowers",
             "id": 3166318,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 5
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dashed Platform"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "+20 Stars",
@@ -2618,19 +2075,7 @@
             "name": "Jammin' Through The Trees: Flowers",
             "id": 3166322,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "melon_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Watermelon"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "3-Up",
@@ -2645,48 +2090,7 @@
             "name": "Jammin' Through The Trees: Stars",
             "id": 3166323,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "cansee_clouds",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "has_midring",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Tulip"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tulip"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Pocket Melon",
@@ -2722,15 +2126,7 @@
             "name": "The Cave Of Harry Hedgehog: Red Coins",
             "id": 3166325,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Chomp Rock",
-                  "Large Spring Ball",
-                  "Mole Tank Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Poochy",
@@ -2745,16 +2141,7 @@
             "name": "The Cave Of Harry Hedgehog: Flowers",
             "id": 3166326,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Beanstalk",
-                  "Chomp Rock",
-                  "Large Spring Ball",
-                  "Mole Tank Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -2769,26 +2156,7 @@
             "name": "The Cave Of Harry Hedgehog: Stars",
             "id": 3166327,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Beanstalk",
-                      "Chomp Rock",
-                      "Dashed Stairs",
-                      "Large Spring Ball",
-                      "Mole Tank Morph",
-                      "Tulip"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -2803,14 +2171,7 @@
             "name": "The Cave Of Harry Hedgehog: Level Clear",
             "id": 3166328,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Chomp Rock",
-                  "Key",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+10 Stars",
@@ -2831,15 +2192,7 @@
             "name": "Monkeys' Favorite Lake: Red Coins",
             "id": 3166329,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Beanstalk",
-                  "Large Spring Ball",
-                  "Submarine Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -2854,13 +2207,7 @@
             "name": "Monkeys' Favorite Lake: Flowers",
             "id": 3166330,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beanstalk",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "2-Up",
@@ -2926,20 +2273,7 @@
             "name": "Naval Piranha's Castle: Red Coins",
             "id": 3166333,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "combat_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade",
-                    "count": 3
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -2954,20 +2288,7 @@
             "name": "Naval Piranha's Castle: Flowers",
             "id": 3166334,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "combat_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade",
-                    "count": 3
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Dashed Stairs",
@@ -2982,19 +2303,7 @@
             "name": "Naval Piranha's Castle: Stars",
             "id": 3166335,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tulip"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -3090,28 +2399,7 @@
             "name": "GO! GO! MARIO!!: Stars",
             "id": 3166339,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "cansee_clouds",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tulip"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "+20 Stars",
@@ -3150,14 +2438,7 @@
             "name": "The Cave Of The Lakitus: Red Coins",
             "id": 3166341,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Egg Launcher",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -3172,13 +2453,7 @@
             "name": "The Cave Of The Lakitus: Flowers",
             "id": 3166342,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Egg Launcher",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -3193,13 +2468,7 @@
             "name": "The Cave Of The Lakitus: Stars",
             "id": 3166343,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Large Spring Ball",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Key",
@@ -3238,14 +2507,7 @@
             "name": "Don't Look Back!: Red Coins",
             "id": 3166345,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Helicopter Morph",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -3260,13 +2522,7 @@
             "name": "Don't Look Back!: Flowers",
             "id": 3166346,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -3281,22 +2537,7 @@
             "name": "Don't Look Back!: Stars",
             "id": 3166347,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "! Switch",
-                      "Tulip"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Egg Launcher",
@@ -3344,36 +2585,7 @@
             "name": "Marching Milde's Fort: Red Coins",
             "id": 3166349,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Arrow Wheel",
-                      "Bucket",
-                      "Dashed Stairs",
-                      "Key",
-                      "Vanishing Arrow Wheel"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -3388,35 +2600,7 @@
             "name": "Marching Milde's Fort: Flowers",
             "id": 3166350,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Arrow Wheel",
-                      "Bucket",
-                      "Dashed Stairs",
-                      "Vanishing Arrow Wheel"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Anytime Egg",
@@ -3431,34 +2615,7 @@
             "name": "Marching Milde's Fort: Stars",
             "id": 3166351,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "cansee_clouds",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Vanishing Arrow Wheel"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dashed Stairs"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -3518,15 +2675,7 @@
             "name": "Chomp Rock Zone: Red Coins",
             "id": 3166353,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Chomp Rock",
-                  "Dashed Platform",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Train Morph",
@@ -3541,15 +2690,7 @@
             "name": "Chomp Rock Zone: Flowers",
             "id": 3166354,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Chomp Rock",
-                  "Dashed Platform",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -3564,15 +2705,7 @@
             "name": "Chomp Rock Zone: Stars",
             "id": 3166355,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Chomp Rock",
-                  "Dashed Platform",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Platform Ghost",
@@ -3608,33 +2741,7 @@
             "name": "Lake Shore Paradise: Red Coins",
             "id": 3166357,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Plant"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Large Spring Ball",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "+20 Stars",
@@ -3649,33 +2756,7 @@
             "name": "Lake Shore Paradise: Flowers",
             "id": 3166358,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Plant"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Large Spring Ball",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -3690,48 +2771,7 @@
             "name": "Lake Shore Paradise: Stars",
             "id": 3166359,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "cansee_clouds",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Tulip"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Plant"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Melon",
@@ -3746,19 +2786,7 @@
             "name": "Lake Shore Paradise: Level Clear",
             "id": 3166360,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "combat_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Plant"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "3-Up",
@@ -3815,22 +2843,7 @@
             "name": "Ride Like The Wind: Stars",
             "id": 3166363,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Helicopter Morph",
-                      "Large Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "+20 Stars",
@@ -3895,14 +2908,7 @@
             "name": "Hookbill The Koopa's Castle: Red Coins",
             "id": 3166365,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Stairs",
-                  "Key",
-                  "Vanishing Arrow Wheel"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "10-Up",
@@ -3917,14 +2923,7 @@
             "name": "Hookbill The Koopa's Castle: Flowers",
             "id": 3166366,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Stairs",
-                  "Key",
-                  "Vanishing Arrow Wheel"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Super Star",
@@ -3939,22 +2938,7 @@
             "name": "Hookbill The Koopa's Castle: Stars",
             "id": 3166367,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dashed Stairs",
-                      "Vanishing Arrow Wheel"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -4014,13 +2998,7 @@
             "name": "BLIZZARD!!!: Red Coins",
             "id": 3166369,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Stairs",
-                  "Helicopter Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -4050,34 +3028,7 @@
             "name": "BLIZZARD!!!: Stars",
             "id": 3166371,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dashed Stairs"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "cansee_clouds",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tulip"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -4143,19 +3094,7 @@
             "name": "Ride The Ski Lifts: Stars",
             "id": 3166375,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Star"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Anytime Egg",
@@ -4191,36 +3130,7 @@
             "name": "Danger - Icy Conditions Ahead: Red Coins",
             "id": 3166377,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "melon_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Melon"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Bucket",
-                      "Dashed Platform",
-                      "Skis",
-                      "Spring Ball",
-                      "Super Star"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -4235,34 +3145,7 @@
             "name": "Danger - Icy Conditions Ahead: Flowers",
             "id": 3166378,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "melon_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Melon"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Dashed Platform",
-                      "Skis",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -4277,34 +3160,7 @@
             "name": "Danger - Icy Conditions Ahead: Stars",
             "id": 3166379,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "melon_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Melon"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring Ball"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Arrow Wheel",
@@ -4319,14 +3175,7 @@
             "name": "Danger - Icy Conditions Ahead: Level Clear",
             "id": 3166380,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Platform",
-                  "Skis",
-                  "Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -4356,14 +3205,7 @@
             "name": "Sluggy The Unshaven's Fort: Red Coins",
             "id": 3166381,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Platform",
-                  "Dashed Stairs",
-                  "Platform Ghost"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+20 Stars",
@@ -4378,14 +3220,7 @@
             "name": "Sluggy The Unshaven's Fort: Flowers",
             "id": 3166382,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Platform",
-                  "Dashed Stairs",
-                  "Platform Ghost"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+10 Stars",
@@ -4400,45 +3235,7 @@
             "name": "Sluggy The Unshaven's Fort: Stars",
             "id": 3166383,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "cansee_clouds",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Dashed Platform",
-                          "Dashed Stairs"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Dashed Stairs",
-                          "Platform Ghost"
-                        ]
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "1-Up",
@@ -4498,13 +3295,7 @@
             "name": "Goonie Rides!: Red Coins",
             "id": 3166385,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Helicopter Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+20 Stars",
@@ -4519,13 +3310,7 @@
             "name": "Goonie Rides!: Flowers",
             "id": 3166386,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Helicopter Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "World 2 Gate",
@@ -4556,13 +3341,7 @@
             "name": "Goonie Rides!: Level Clear",
             "id": 3166388,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "! Switch",
-                  "Helicopter Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Egg Capacity Upgrade",
@@ -4613,19 +3392,7 @@
             "name": "Welcome To Cloud World: Stars",
             "id": 3166391,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tulip"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Helicopter Morph",
@@ -4661,19 +3428,7 @@
             "name": "Shifting Platforms Ahead: Red Coins",
             "id": 3166393,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "combat_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Pocket Melon",
@@ -4688,19 +3443,7 @@
             "name": "Shifting Platforms Ahead: Flowers",
             "id": 3166394,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "combat_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "3-Up",
@@ -4761,13 +3504,7 @@
             "name": "Raphael The Raven's Castle: Red Coins",
             "id": 3166397,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Arrow Wheel",
-                  "Train Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -4782,13 +3519,7 @@
             "name": "Raphael The Raven's Castle: Flowers",
             "id": 3166398,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Arrow Wheel",
-                  "Train Morph"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+10 Stars",
@@ -4803,19 +3534,7 @@
             "name": "Raphael The Raven's Castle: Stars",
             "id": 3166399,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Arrow Wheel"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -4875,13 +3594,7 @@
             "name": "Scary Skeleton Goonies!: Red Coins",
             "id": 3166401,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Platform",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+10 Stars",
@@ -4896,13 +3609,7 @@
             "name": "Scary Skeleton Goonies!: Flowers",
             "id": 3166402,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Platform",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "1-Up",
@@ -4917,19 +3624,7 @@
             "name": "Scary Skeleton Goonies!: Stars",
             "id": 3166403,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dashed Platform"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -4944,13 +3639,7 @@
             "name": "Scary Skeleton Goonies!: Level Clear",
             "id": 3166404,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dashed Platform",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "3-Up",
@@ -5007,17 +3696,7 @@
             "name": "The Cave Of The Bandits: Stars",
             "id": 3166407,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "cansee_clouds",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Pocket Melon",
@@ -5131,36 +3810,7 @@
             "name": "Tap-Tap The Red Nose's Fort: Red Coins",
             "id": 3166413,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 3
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Egg Plant",
-                      "Key",
-                      "Large Spring Ball",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "+10 Stars",
@@ -5175,36 +3825,7 @@
             "name": "Tap-Tap The Red Nose's Fort: Flowers",
             "id": 3166414,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 3
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Egg Plant",
-                      "Key",
-                      "Large Spring Ball",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Magnifying Glass",
@@ -5219,24 +3840,7 @@
             "name": "Tap-Tap The Red Nose's Fort: Stars",
             "id": 3166415,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Egg Plant",
-                      "Key",
-                      "Large Spring Ball",
-                      "Spring Ball"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -5296,31 +3900,7 @@
             "name": "The Very Loooooong Cave: Red Coins",
             "id": 3166417,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 3
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chomp Rock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -5335,31 +3915,7 @@
             "name": "The Very Loooooong Cave: Flowers",
             "id": 3166418,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 3
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chomp Rock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Skis",
@@ -5374,35 +3930,7 @@
             "name": "The Very Loooooong Cave: Stars",
             "id": 3166419,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_midring",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "combat_item",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 3
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chomp Rock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Fire Melon",
@@ -5438,14 +3966,7 @@
             "name": "The Deep, Underground Maze: Red Coins",
             "id": 3166421,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Chomp Rock",
-                  "Key",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "+20 Stars",
@@ -5460,14 +3981,7 @@
             "name": "The Deep, Underground Maze: Flowers",
             "id": 3166422,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Chomp Rock",
-                  "Key",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "2-Up",
@@ -5482,38 +3996,7 @@
             "name": "The Deep, Underground Maze: Stars",
             "id": 3166423,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Chomp Rock",
-                          "Key",
-                          "Large Spring Ball"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chomp Rock",
-                      "Key",
-                      "Tulip"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Pocket Ice Melon",
@@ -5528,15 +4011,7 @@
             "name": "The Deep, Underground Maze: Level Clear",
             "id": 3166424,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Chomp Rock",
-                  "Dashed Platform",
-                  "Key",
-                  "Large Spring Ball"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Egg Capacity Upgrade",
@@ -5557,19 +4032,7 @@
             "name": "KEEP MOVING!!!!: Red Coins",
             "id": 3166425,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "combat_item",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade"
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Anytime Egg",
@@ -5648,22 +4111,7 @@
             "name": "King Bowser's Castle: Red Coins",
             "id": 3166429,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "_68CollectibleRoute",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Egg Plant",
-                      "Helicopter Morph"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Bucket",
@@ -5678,22 +4126,7 @@
             "name": "King Bowser's Castle: Flowers",
             "id": 3166430,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "_68CollectibleRoute",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Egg Plant",
-                      "Helicopter Morph"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "1-Up",
@@ -5708,22 +4141,7 @@
             "name": "King Bowser's Castle: Stars",
             "id": 3166431,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "_68Route",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Egg Plant",
-                      "Helicopter Morph"
-                    ]
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Anywhere Pow",
@@ -6865,6 +5283,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Yoshi's Island WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Multiworld",
   "game_directory": "multiworld",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 3,
   "seed_name": "84719271504320872445",
   "player_names": {
@@ -31374,6 +31374,7 @@
     "3": [],
     "4": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "A Hat in Time",

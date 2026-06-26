@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HasGroup, HelperCall, Or
+from rule_builder import True_, False_, False_, Has, HasGroup, HelperCall, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -85,17 +85,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Time's End", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 35))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 8))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Time Piece', 17))
+        True_()
     )
 
     world.set_rule(
@@ -130,107 +130,107 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
-        HasGroup('Burger', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
-        HasGroup('Burger', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
-        HasGroup('Burger', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
-        HasGroup('Burger', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
-        HasGroup('Burger', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
-        HasGroup('Burger', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
-        And(CanReachRegion('Picture Perfect'), CanReachLocation('Act Completion (Picture Perfect)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player),
-        And(CanReachRegion('The Golden Vault'), CanReachLocation('Act Completion (The Golden Vault)'))
+        True_()
     )
 
     world.set_rule(
@@ -265,57 +265,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
-        HasGroup('Train', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
-        And(CanReachRegion('Mail Delivery Service'), CanReachRegion('Train Rush'), CanReachLocation('Act Completion (Mail Delivery Service)'), CanReachLocation('Act Completion (Train Rush)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
-        And(CanReachRegion('Alpine Free Roam'), CanReachRegion('Heating Up Mafia Town'), CanReachLocation('Act Completion (Heating Up Mafia Town)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
-        And(CanReachRegion('Alpine Free Roam'), CanReachRegion('Heating Up Mafia Town'), CanReachLocation('Act Completion (Heating Up Mafia Town)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
-        HasGroup('Train', 2)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        True_()
     )
 
     world.set_rule(
@@ -345,107 +345,107 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
-        HasGroup('UFO', 4)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
-        And(CanReachRegion('Down with the Mafia!'), CanReachLocation('Act Completion (Down with the Mafia!)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation('Act Completion (Dead Bird Studio Basement)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
-        HasGroup('UFO', 4)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
-        And(CanReachRegion('Down with the Mafia!'), CanReachLocation('Act Completion (Down with the Mafia!)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation('Act Completion (Dead Bird Studio Basement)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
-        HasGroup('UFO', 4)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
-        And(CanReachRegion('Down with the Mafia!'), CanReachLocation('Act Completion (Down with the Mafia!)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation('Act Completion (Dead Bird Studio Basement)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
-        HasGroup('UFO', 4)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
-        And(CanReachRegion('Down with the Mafia!'), CanReachLocation('Act Completion (Down with the Mafia!)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation('Act Completion (Dead Bird Studio Basement)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
-        HasGroup('UFO', 4)
+        HasGroup('')
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
-        And(CanReachRegion('Down with the Mafia!'), CanReachLocation('Act Completion (Down with the Mafia!)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation('Act Completion (Dead Bird Studio Basement)'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        True_()
     )
 
     world.set_rule(
@@ -465,7 +465,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        And(HasGroup('Crayon', 4), HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
@@ -475,7 +475,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
@@ -490,12 +490,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
-        HasGroup('Crayon', 4)
+        HasGroup('')
     )
 
     world.set_rule(
@@ -505,128 +505,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), Has('TOD Access'))
-    )
-    # Register indirect conditions for proper sphere calculation
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Mail Delivery Service"),
-        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Train Rush"),
-        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Alpine Free Roam"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Heating Up Mafia Town"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Alpine Free Roam"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Heating Up Mafia Town"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player)
+        True_()
     )
     # Location rules
     world.set_rule(
@@ -656,7 +535,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio)", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
@@ -711,17 +590,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Tepee Chest", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Conductor Chest", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
@@ -736,7 +615,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
+        True_()
     )
 
     world.set_rule(
@@ -746,7 +625,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(4,)))
+        False_()
     )
 
     world.set_rule(
@@ -756,7 +635,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit", args=(True,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), Has('AFR Access'))
+        True_()
     )
 
     world.set_rule(
@@ -766,7 +645,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
@@ -806,12 +685,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Old Man (Seaside Spaghetti)", player),
-        Or(CanReachRegion('Barrel Battle'), CanReachRegion('Cheating the Race'), CanReachRegion('Down with the Mafia!'), CanReachRegion('The Golden Vault'), CanReachRegion('Welcome to Mafia Town'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Old Man (Steel Beams)", player),
-        Or(CanReachRegion('Barrel Battle'), CanReachRegion('Cheating the Race'), CanReachRegion('Down with the Mafia!'), CanReachRegion('The Golden Vault'), CanReachRegion('Welcome to Mafia Town'))
+        False_()
     )
 
     world.set_rule(
@@ -826,7 +705,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - On Scaffolding", player),
-        Or(CanReachRegion('Barrel Battle'), CanReachRegion('Cheating the Race'), CanReachRegion('Heating Up Mafia Town'), CanReachRegion('She Came from Outer Space'), CanReachRegion('The Golden Vault'), CanReachRegion('Welcome to Mafia Town'))
+        False_()
     )
 
     world.set_rule(
@@ -841,12 +720,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Secret Cave", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('HUMT Access'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Above Boats", player),
-        Or(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), Has('HUMT Access'))
+        False_()
     )
 
     world.set_rule(
@@ -861,12 +740,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Mafia Geek Platform", player),
-        Or(CanReachRegion('Barrel Battle'), CanReachRegion('Cheating the Race'), CanReachRegion('Down with the Mafia!'), CanReachRegion('Heating Up Mafia Town'), CanReachRegion('The Golden Vault'), CanReachRegion('Welcome to Mafia Town'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Behind HQ Chest", player),
-        Or(CanReachLocation('Act Completion (Heating Up Mafia Town)'), CanReachRegion('Cheating the Race'), CanReachRegion('Down with the Mafia!'), CanReachRegion('The Golden Vault'))
+        False_()
     )
 
     world.set_rule(
@@ -926,15 +805,15 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Village)", player),
-        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Umbrella'))
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
+        True_()
     )

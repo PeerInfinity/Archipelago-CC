@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "The Wind Waker",
   "game_directory": "tww",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -5626,6 +5626,7 @@
       "Progressive Sword"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "The Wind Waker",

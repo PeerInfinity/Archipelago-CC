@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "APCalc",
   "game_directory": "apcalc",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 3,
   "seed_name": "84719271504320872445",
   "player_names": {
@@ -59,88 +59,7 @@
             "name": "Victory",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Checked 1",
-                  "Checked 10",
-                  "Checked 11",
-                  "Checked 12",
-                  "Checked 13",
-                  "Checked 14",
-                  "Checked 15",
-                  "Checked 16",
-                  "Checked 17",
-                  "Checked 18",
-                  "Checked 19",
-                  "Checked 2",
-                  "Checked 20",
-                  "Checked 21",
-                  "Checked 22",
-                  "Checked 23",
-                  "Checked 24",
-                  "Checked 25",
-                  "Checked 26",
-                  "Checked 27",
-                  "Checked 28",
-                  "Checked 29",
-                  "Checked 3",
-                  "Checked 30",
-                  "Checked 31",
-                  "Checked 32",
-                  "Checked 33",
-                  "Checked 34",
-                  "Checked 35",
-                  "Checked 36",
-                  "Checked 37",
-                  "Checked 38",
-                  "Checked 39",
-                  "Checked 4",
-                  "Checked 40",
-                  "Checked 41",
-                  "Checked 42",
-                  "Checked 43",
-                  "Checked 44",
-                  "Checked 45",
-                  "Checked 46",
-                  "Checked 47",
-                  "Checked 48",
-                  "Checked 49",
-                  "Checked 5",
-                  "Checked 50",
-                  "Checked 51",
-                  "Checked 52",
-                  "Checked 53",
-                  "Checked 54",
-                  "Checked 55",
-                  "Checked 56",
-                  "Checked 57",
-                  "Checked 58",
-                  "Checked 59",
-                  "Checked 6",
-                  "Checked 60",
-                  "Checked 61",
-                  "Checked 62",
-                  "Checked 63",
-                  "Checked 64",
-                  "Checked 65",
-                  "Checked 66",
-                  "Checked 67",
-                  "Checked 68",
-                  "Checked 69",
-                  "Checked 7",
-                  "Checked 70",
-                  "Checked 71",
-                  "Checked 72",
-                  "Checked 73",
-                  "Checked 74",
-                  "Checked 75",
-                  "Checked 76",
-                  "Checked 77",
-                  "Checked 8",
-                  "Checked 9"
-                ]
-              }
+              "rule": "HasAll"
             },
             "item": {
               "name": "Victory",
@@ -160,79 +79,35 @@
             "name": "Region 1 to Region 8",
             "connected_region": "Region 8",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 1",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 7"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 1 to Region 10",
             "connected_region": "Region 10",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: -",
-                  "Button: 1",
-                  "Button: 5",
-                  "Button: 6"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 1 to Region 7",
             "connected_region": "Region 7",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 1 to Region 16",
             "connected_region": "Region 16",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 4": 1,
-                  "Button: 5": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 1 to Region 6",
             "connected_region": "Region 6",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 1",
-                  "Button: 6",
-                  "Button: 7",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -275,76 +150,35 @@
             "name": "Region 2 to Region 5",
             "connected_region": "Region 5",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 5"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 2 to Region 6",
             "connected_region": "Region 6",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 7"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 2 to Region 16",
             "connected_region": "Region 16",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 4": 1,
-                  "Button: 5": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 2 to Region 18",
             "connected_region": "Region 18",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 5": 2,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 2 to Region 21",
             "connected_region": "Region 21",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 5",
-                  "Button: 6"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -387,47 +221,21 @@
             "name": "Region 3 to Region 18",
             "connected_region": "Region 18",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 9"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 3 to Region 7",
             "connected_region": "Region 7",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 6"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 3 to Region 10",
             "connected_region": "Region 10",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 6",
-                  "Button: 7"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -470,72 +278,35 @@
             "name": "Region 4 to Region 7",
             "connected_region": "Region 7",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 4 to Region 5",
             "connected_region": "Region 5",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 5"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 4 to Region 14",
             "connected_region": "Region 14",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 4 to Region 21",
             "connected_region": "Region 21",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 4 to Region 24",
             "connected_region": "Region 24",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 4"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -578,84 +349,35 @@
             "name": "Region 5 to Region 9",
             "connected_region": "Region 9",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 5 to Region 13",
             "connected_region": "Region 13",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 5 to Region 15",
             "connected_region": "Region 15",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 5 to Region 33",
             "connected_region": "Region 33",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 5": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 5 to Region 71",
             "connected_region": "Region 71",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 8",
-                  "Button: 9"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -698,93 +420,35 @@
             "name": "Region 6 to Region 11",
             "connected_region": "Region 11",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 6 to Region 33",
             "connected_region": "Region 33",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 6",
-                  "Button: 7",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 6 to Region 19",
             "connected_region": "Region 19",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 2,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 6 to Region 45",
             "connected_region": "Region 45",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 6 to Region 54",
             "connected_region": "Region 54",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 1",
-                  "Button: 4",
-                  "Button: 6",
-                  "Button: 7",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -827,91 +491,35 @@
             "name": "Region 7 to Region 9",
             "connected_region": "Region 9",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 7"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 7 to Region 12",
             "connected_region": "Region 12",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 7",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 7 to Region 33",
             "connected_region": "Region 33",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 5": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 7 to Region 22",
             "connected_region": "Region 22",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 6"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 7 to Region 28",
             "connected_region": "Region 28",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 3": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -954,78 +562,28 @@
             "name": "Region 8 to Region 15",
             "connected_region": "Region 15",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 8 to Region 22",
             "connected_region": "Region 22",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: /": 1,
-                  "Button: 1": 3,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 8 to Region 33",
             "connected_region": "Region 33",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: +",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 7"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 8 to Region 39",
             "connected_region": "Region 39",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1068,39 +626,14 @@
             "name": "Region 9 to Region 34",
             "connected_region": "Region 34",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 4": 1,
-                  "Button: 6": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 9 to Region 29",
             "connected_region": "Region 29",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 2,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1143,85 +676,35 @@
             "name": "Region 10 to Region 9",
             "connected_region": "Region 9",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 10 to Region 19",
             "connected_region": "Region 19",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: -": 2,
-                  "Button: 1": 2,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 10 to Region 11",
             "connected_region": "Region 11",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 5": 2,
-                  "Button: 6": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 10 to Region 25",
             "connected_region": "Region 25",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 10 to Region 33",
             "connected_region": "Region 33",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 5",
-                  "Button: 6"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -1334,42 +817,14 @@
             "name": "Region 13 to Region 20",
             "connected_region": "Region 20",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 13 to Region 34",
             "connected_region": "Region 34",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 2",
-                  "Button: 3",
-                  "Button: 4",
-                  "Button: 5",
-                  "Button: 6",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -1412,90 +867,35 @@
             "name": "Region 14 to Region 15",
             "connected_region": "Region 15",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 14 to Region 9",
             "connected_region": "Region 9",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 4": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 14 to Region 33",
             "connected_region": "Region 33",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 5": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 14 to Region 11",
             "connected_region": "Region 11",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 4,
-                  "Button: 2": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 14 to Region 12",
             "connected_region": "Region 12",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 3": 1,
-                  "Button: 5": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1573,40 +973,14 @@
             "name": "Region 16 to Region 17",
             "connected_region": "Region 17",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 16 to Region 13",
             "connected_region": "Region 13",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1684,75 +1058,28 @@
             "name": "Region 18 to Region 19",
             "connected_region": "Region 19",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 18 to Region 28",
             "connected_region": "Region 28",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 18 to Region 12",
             "connected_region": "Region 12",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 3": 1,
-                  "Button: 5": 2,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 18 to Region 15",
             "connected_region": "Region 15",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1795,99 +1122,35 @@
             "name": "Region 19 to Region 20",
             "connected_region": "Region 20",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 19 to Region 34",
             "connected_region": "Region 34",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 2,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 19 to Region 55",
             "connected_region": "Region 55",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 7": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 19 to Region 59",
             "connected_region": "Region 59",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 19 to Region 64",
             "connected_region": "Region 64",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1965,88 +1228,35 @@
             "name": "Region 21 to Region 22",
             "connected_region": "Region 22",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 6": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 21 to Region 28",
             "connected_region": "Region 28",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 3": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 21 to Region 25",
             "connected_region": "Region 25",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 5": 1,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 21 to Region 9",
             "connected_region": "Region 9",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 21 to Region 19",
             "connected_region": "Region 19",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2089,18 +1299,7 @@
             "name": "Region 22 to Region 23",
             "connected_region": "Region 23",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2143,20 +1342,7 @@
             "name": "Region 23 to Region 27",
             "connected_region": "Region 27",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2199,68 +1385,28 @@
             "name": "Region 24 to Region 25",
             "connected_region": "Region 25",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: *",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 1",
-                  "Button: 4",
-                  "Button: 6",
-                  "Button: 7",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 24 to Region 9",
             "connected_region": "Region 9",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 4",
-                  "Button: 8"
-                ]
-              }
+              "rule": "HasAll"
             }
           },
           {
             "name": "Region 24 to Region 19",
             "connected_region": "Region 19",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 7": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 24 to Region 22",
             "connected_region": "Region 22",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Button: +",
-                  "Button: -",
-                  "Button: 0",
-                  "Button: 4",
-                  "Button: 9"
-                ]
-              }
+              "rule": "HasAll"
             }
           }
         ],
@@ -2303,42 +1449,14 @@
             "name": "Region 25 to Region 26",
             "connected_region": "Region 26",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 25 to Region 31",
             "connected_region": "Region 31",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2381,22 +1499,7 @@
             "name": "Region 26 to Region 49",
             "connected_region": "Region 49",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2474,21 +1577,7 @@
             "name": "Region 28 to Region 29",
             "connected_region": "Region 29",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2531,23 +1620,7 @@
             "name": "Region 29 to Region 30",
             "connected_region": "Region 30",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2590,74 +1663,21 @@
             "name": "Region 30 to Region 37",
             "connected_region": "Region 37",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 30 to Region 38",
             "connected_region": "Region 38",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 30 to Region 63",
             "connected_region": "Region 63",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 5,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2700,46 +1720,14 @@
             "name": "Region 31 to Region 32",
             "connected_region": "Region 32",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 31 to Region 66",
             "connected_region": "Region 66",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 4,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2817,20 +1805,7 @@
             "name": "Region 33 to Region 34",
             "connected_region": "Region 34",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 1,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 5": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2873,20 +1848,7 @@
             "name": "Region 34 to Region 35",
             "connected_region": "Region 35",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: -": 1,
-                  "Button: /": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 5": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -2929,22 +1891,7 @@
             "name": "Region 35 to Region 36",
             "connected_region": "Region 36",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: -": 1,
-                  "Button: /": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 5": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3022,25 +1969,7 @@
             "name": "Region 37 to Region 50",
             "connected_region": "Region 50",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 4,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3083,25 +2012,7 @@
             "name": "Region 38 to Region 51",
             "connected_region": "Region 51",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 5,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3144,20 +2055,7 @@
             "name": "Region 39 to Region 40",
             "connected_region": "Region 40",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3200,88 +2098,28 @@
             "name": "Region 40 to Region 41",
             "connected_region": "Region 41",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 40 to Region 53",
             "connected_region": "Region 53",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 40 to Region 68",
             "connected_region": "Region 68",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 40 to Region 76",
             "connected_region": "Region 76",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3324,23 +2162,7 @@
             "name": "Region 41 to Region 42",
             "connected_region": "Region 42",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3383,24 +2205,7 @@
             "name": "Region 42 to Region 43",
             "connected_region": "Region 43",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 1": 4,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3443,24 +2248,7 @@
             "name": "Region 43 to Region 44",
             "connected_region": "Region 44",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 2,
-                  "Button: 1": 5,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3538,42 +2326,14 @@
             "name": "Region 45 to Region 46",
             "connected_region": "Region 46",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           },
           {
             "name": "Region 45 to Region 52",
             "connected_region": "Region 52",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3616,21 +2376,7 @@
             "name": "Region 46 to Region 47",
             "connected_region": "Region 47",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3673,22 +2419,7 @@
             "name": "Region 47 to Region 48",
             "connected_region": "Region 48",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3766,24 +2497,7 @@
             "name": "Region 49 to Region 74",
             "connected_region": "Region 74",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 3,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -3826,25 +2540,7 @@
             "name": "Region 50 to Region 62",
             "connected_region": "Region 62",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 5,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4027,22 +2723,7 @@
             "name": "Region 55 to Region 56",
             "connected_region": "Region 56",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4085,25 +2766,7 @@
             "name": "Region 56 to Region 57",
             "connected_region": "Region 57",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4146,25 +2809,7 @@
             "name": "Region 57 to Region 58",
             "connected_region": "Region 58",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 5,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4242,23 +2887,7 @@
             "name": "Region 59 to Region 60",
             "connected_region": "Region 60",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4301,24 +2930,7 @@
             "name": "Region 60 to Region 61",
             "connected_region": "Region 61",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 1,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4466,22 +3078,7 @@
             "name": "Region 64 to Region 65",
             "connected_region": "Region 65",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4559,23 +3156,7 @@
             "name": "Region 66 to Region 67",
             "connected_region": "Region 67",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 0": 1,
-                  "Button: 1": 4,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4653,24 +3234,7 @@
             "name": "Region 68 to Region 69",
             "connected_region": "Region 69",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4713,24 +3277,7 @@
             "name": "Region 69 to Region 70",
             "connected_region": "Region 70",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 2,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4808,20 +3355,7 @@
             "name": "Region 71 to Region 72",
             "connected_region": "Region 72",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 1,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 8": 1,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4864,23 +3398,7 @@
             "name": "Region 72 to Region 73",
             "connected_region": "Region 73",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 1,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -4958,25 +3476,7 @@
             "name": "Region 74 to Region 75",
             "connected_region": "Region 75",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: /": 1,
-                  "Button: 0": 1,
-                  "Button: 1": 5,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 2
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -5054,23 +3554,7 @@
             "name": "Region 76 to Region 77",
             "connected_region": "Region 77",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Button: *": 2,
-                  "Button: +": 1,
-                  "Button: -": 2,
-                  "Button: 1": 1,
-                  "Button: 2": 1,
-                  "Button: 3": 1,
-                  "Button: 4": 1,
-                  "Button: 5": 2,
-                  "Button: 6": 2,
-                  "Button: 7": 1,
-                  "Button: 8": 2,
-                  "Button: 9": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -6358,6 +4842,7 @@
       "Button: 0"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "APCalc",

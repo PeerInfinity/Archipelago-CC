@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "APQuest WorldGen",
   "game_directory": "apquest_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -183,13 +183,7 @@
             "name": "Final Boss Defeated",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Shield",
-                  "Sword"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Victory",
@@ -342,6 +336,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "APQuest WorldGen",

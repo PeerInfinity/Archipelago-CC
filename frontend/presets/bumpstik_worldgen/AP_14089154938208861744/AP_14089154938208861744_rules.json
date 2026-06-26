@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Bumper Stickers WorldGen",
   "game_directory": "bumpstik_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -17,13 +17,7 @@
             "name": "To Level 1",
             "connected_region": "Level 1",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Treasure Bumper": 8,
-                  "Booster Bumper": 1
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -365,13 +359,7 @@
             "name": "To Level 2",
             "connected_region": "Level 2",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Booster Bumper": 2,
-                  "Treasure Bumper": 16
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -743,13 +731,7 @@
             "name": "To Level 3",
             "connected_region": "Level 3",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Booster Bumper": 3,
-                  "Treasure Bumper": 24
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1163,13 +1145,7 @@
             "name": "To Level 4",
             "connected_region": "Level 4",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Booster Bumper": 5,
-                  "Treasure Bumper": 32
-                }
-              }
+              "rule": "HasAllCounts"
             }
           }
         ],
@@ -1920,6 +1896,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Bumper Stickers WorldGen",
