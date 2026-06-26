@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Undertale WorldGen",
   "game_directory": "undertale_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -422,22 +422,7 @@
             "name": "Nicecream Punch Card",
             "id": 79003,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Waterfall"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Punch Card",
-                    "count": 3
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Starfait",
@@ -673,22 +658,7 @@
             "name": "TemmieShop 4",
             "id": 79053,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Waterfall"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "1000G",
-                    "count": 2
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Glamburger",
@@ -1038,7 +1008,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Left Home Key",
                       "Right Home Key"
                     ]
@@ -2172,6 +2142,7 @@
       "Ruins Key"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Undertale WorldGen",

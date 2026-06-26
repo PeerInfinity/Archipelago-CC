@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Civilization VI WorldGen",
   "game_directory": "civ_6_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -30,33 +30,7 @@
             "name": "ERA_ANCIENT -> ERA_CLASSICAL",
             "connected_region": "ERA_CLASSICAL",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_ANCIENT"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_ANCIENT"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -472,33 +446,7 @@
             "name": "ERA_CLASSICAL -> ERA_MEDIEVAL",
             "connected_region": "ERA_MEDIEVAL",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_CLASSICAL"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_CLASSICAL"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -722,33 +670,7 @@
             "name": "ERA_MEDIEVAL -> ERA_RENAISSANCE",
             "connected_region": "ERA_RENAISSANCE",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_MEDIEVAL"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_MEDIEVAL"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -972,33 +894,7 @@
             "name": "ERA_RENAISSANCE -> ERA_INDUSTRIAL",
             "connected_region": "ERA_INDUSTRIAL",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_RENAISSANCE"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_RENAISSANCE"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -1222,33 +1118,7 @@
             "name": "ERA_INDUSTRIAL -> ERA_MODERN",
             "connected_region": "ERA_MODERN",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_INDUSTRIAL"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_INDUSTRIAL"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -1472,33 +1342,7 @@
             "name": "ERA_MODERN -> ERA_ATOMIC",
             "connected_region": "ERA_ATOMIC",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_MODERN"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_MODERN"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -1750,33 +1594,7 @@
             "name": "ERA_ATOMIC -> ERA_INFORMATION",
             "connected_region": "ERA_INFORMATION",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_ATOMIC"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_ATOMIC"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -1972,33 +1790,7 @@
             "name": "ERA_INFORMATION -> ERA_FUTURE",
             "connected_region": "ERA_FUTURE",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_INFORMATION"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "rb_defined_helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_INFORMATION"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -4434,6 +4226,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Civilization VI WorldGen",

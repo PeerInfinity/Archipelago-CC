@@ -22,390 +22,390 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From command_line to package_managers", player),
-        HasAll('Event: Command Line', 'Command Line')
+        HasAll('Completed Node 1', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From command_line to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line')
+        HasAll('Completed Node 1', 'Completed Node 10', 'Completed Node 2', 'Completed Node 4', 'Completed Node 6', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From git to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Git')
+        HasAll('Completed Node 1', 'Completed Node 10', 'Completed Node 2', 'Completed Node 4', 'Completed Node 6', 'Node 2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From html to css", player),
-        HasAll('Event: HTML', 'HTML')
+        HasAll('Completed Node 3', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From css to design_systems", player),
-        HasAll('Event: CSS', 'CSS')
+        HasAll('Completed Node 4', 'Node 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From css to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'CSS')
+        HasAll('Completed Node 1', 'Completed Node 10', 'Completed Node 2', 'Completed Node 4', 'Completed Node 6', 'Node 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From design_systems to ui_ux", player),
-        HasAll('Event: Static Website Complete', 'Event: Design Systems', 'Design Systems')
+        HasAll('Completed Node 12', 'Completed Node 5', 'Node 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From javascript to algorithms", player),
-        HasAll('Event: JavaScript Basics', 'JavaScript Basics')
+        HasAll('Completed Node 6', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From javascript to dom_manipulation", player),
-        HasAll('Event: JavaScript Basics', 'JavaScript Basics')
+        HasAll('Completed Node 6', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From javascript to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'JavaScript Basics')
+        HasAll('Completed Node 1', 'Completed Node 10', 'Completed Node 2', 'Completed Node 4', 'Completed Node 6', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From algorithms to vanilla_js", player),
-        HasAll('Event: Static Website Complete', 'Event: Algorithms', 'Algorithms')
+        HasAll('Completed Node 12', 'Completed Node 7', 'Node 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From dom_manipulation to react", player),
-        HasAll('Event: Static Website Complete', 'Event: DOM Manipulation', 'DOM Manipulation')
+        HasAll('Completed Node 12', 'Completed Node 8', 'Node 8')
     )
 
     world.set_rule(
         multiworld.get_entrance("From server_basics to http_basics", player),
-        HasAll('Event: Server Basics', 'Server Basics')
+        HasAll('Completed Node 10', 'Node 10')
     )
 
     world.set_rule(
         multiworld.get_entrance("From server_basics to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Server Basics')
+        HasAll('Completed Node 1', 'Completed Node 10', 'Completed Node 2', 'Completed Node 4', 'Completed Node 6', 'Node 10')
     )
 
     world.set_rule(
         multiworld.get_entrance("From http_basics to sessions", player),
-        HasAll('Event: HTTP Basics', 'Event: Interactive App Complete', 'HTTP Basics')
+        HasAll('Completed Node 11', 'Completed Node 39', 'Node 11')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to django", player),
-        HasAll('Event: Static Website Complete', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to express", player),
-        HasAll('Event: Static Website Complete', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to flask", player),
-        HasAll('Event: Static Website Complete', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to nosql", player),
-        HasAll('Event: Static Website Complete', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to react", player),
-        HasAll('Event: Static Website Complete', 'Event: DOM Manipulation', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Completed Node 8', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to sql", player),
-        HasAll('Event: Static Website Complete', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to ui_ux", player),
-        HasAll('Event: Static Website Complete', 'Event: Design Systems', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Completed Node 5', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to vanilla_js", player),
-        HasAll('Event: Static Website Complete', 'Event: Algorithms', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Completed Node 7', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to vue", player),
-        HasAll('Event: Static Website Complete', 'Static Website Complete')
+        HasAll('Completed Node 12', 'Node 12')
     )
 
     world.set_rule(
         multiworld.get_entrance("From django to django_rest", player),
-        HasAll('Event: Django', 'Django')
+        HasAll('Completed Node 13', 'Node 13')
     )
 
     world.set_rule(
         multiworld.get_entrance("From django_rest to django_db", player),
-        HasAll('Event: Django APIs', 'Django APIs')
+        HasAll('Completed Node 14', 'Node 14')
     )
 
     world.set_rule(
         multiworld.get_entrance("From django_db to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 15')
     )
 
     world.set_rule(
         multiworld.get_entrance("From express to express_apis", player),
-        HasAll('Event: Express', 'Express')
+        HasAll('Completed Node 16', 'Node 16')
     )
 
     world.set_rule(
         multiworld.get_entrance("From express_apis to express_db", player),
-        HasAll('Event: Express APIs', 'Express APIs')
+        HasAll('Completed Node 17', 'Node 17')
     )
 
     world.set_rule(
         multiworld.get_entrance("From express_db to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Express DB Integration')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 18')
     )
 
     world.set_rule(
         multiworld.get_entrance("From flask to flask_restful", player),
-        HasAll('Event: Flask', 'Flask')
+        HasAll('Completed Node 19', 'Node 19')
     )
 
     world.set_rule(
         multiworld.get_entrance("From flask_restful to flask_db", player),
-        HasAll('Event: Flask APIs', 'Flask APIs')
+        HasAll('Completed Node 20', 'Node 20')
     )
 
     world.set_rule(
         multiworld.get_entrance("From flask_db to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'SQLAlchemy')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 21')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nosql to mongodb_basics", player),
-        HasAll('Event: NoSQL', 'NoSQL')
+        HasAll('Completed Node 22', 'Node 22')
     )
 
     world.set_rule(
         multiworld.get_entrance("From mongodb_basics to nosql_indexing", player),
-        HasAll('Event: MongoDB Basics', 'MongoDB Basics')
+        HasAll('Completed Node 23', 'Node 23')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nosql_indexing to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'NoSQL Indexing')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 24')
     )
 
     world.set_rule(
         multiworld.get_entrance("From react to react_mastery", player),
-        HasAll('Event: React', 'React')
+        HasAll('Completed Node 25', 'Node 25')
     )
 
     world.set_rule(
         multiworld.get_entrance("From react_mastery to redux", player),
-        HasAll('Event: React Mastery', 'React Mastery')
+        HasAll('Completed Node 26', 'Node 26')
     )
 
     world.set_rule(
         multiworld.get_entrance("From redux to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Redux')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 27')
     )
 
     world.set_rule(
         multiworld.get_entrance("From sql to postgresql", player),
-        HasAll('Event: SQL', 'SQL')
+        HasAll('Completed Node 28', 'Node 28')
     )
 
     world.set_rule(
         multiworld.get_entrance("From postgresql to sql_optimization", player),
-        HasAll('Event: PostgreSQL', 'PostgreSQL')
+        HasAll('Completed Node 29', 'Node 29')
     )
 
     world.set_rule(
         multiworld.get_entrance("From sql_optimization to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'SQL Optimization')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 30')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ui_ux to responsive_design", player),
-        HasAll('Event: UI/UX', 'UI/UX')
+        HasAll('Completed Node 31', 'Node 31')
     )
 
     world.set_rule(
         multiworld.get_entrance("From responsive_design to accessibility", player),
-        HasAll('Event: Responsive Design', 'Responsive Design')
+        HasAll('Completed Node 32', 'Node 32')
     )
 
     world.set_rule(
         multiworld.get_entrance("From accessibility to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Accessibility')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 33')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vanilla_js to custom_state", player),
-        HasAll('Event: Vanilla JS Mastery', 'Vanilla JS Mastery')
+        HasAll('Completed Node 34', 'Node 34')
     )
 
     world.set_rule(
         multiworld.get_entrance("From custom_state to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Custom State System')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 35')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vue to vue_mastery", player),
-        HasAll('Event: Vue', 'Vue')
+        HasAll('Completed Node 36', 'Node 36')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vue_mastery to vuex", player),
-        HasAll('Event: Vue Mastery', 'Vue Mastery')
+        HasAll('Completed Node 37', 'Node 37')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vuex to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Vuex')
+        HasAll('Completed Node 15', 'Completed Node 18', 'Completed Node 21', 'Completed Node 24', 'Completed Node 27', 'Completed Node 30', 'Completed Node 33', 'Completed Node 35', 'Completed Node 38', 'Node 38')
     )
 
     world.set_rule(
         multiworld.get_entrance("From interactive_app to caching", player),
-        HasAll('Event: Interactive App Complete', 'Interactive App Complete')
+        HasAll('Completed Node 39', 'Node 39')
     )
 
     world.set_rule(
         multiworld.get_entrance("From interactive_app to docker", player),
-        HasAll('Event: Interactive App Complete', 'Interactive App Complete')
+        HasAll('Completed Node 39', 'Node 39')
     )
 
     world.set_rule(
         multiworld.get_entrance("From interactive_app to sessions", player),
-        HasAll('Event: HTTP Basics', 'Event: Interactive App Complete', 'Interactive App Complete')
+        HasAll('Completed Node 11', 'Completed Node 39', 'Node 39')
     )
 
     world.set_rule(
         multiworld.get_entrance("From interactive_app to unit_tests", player),
-        HasAll('Event: Interactive App Complete', 'Interactive App Complete')
+        HasAll('Completed Node 39', 'Node 39')
     )
 
     world.set_rule(
         multiworld.get_entrance("From caching to cdn", player),
-        HasAll('Event: Caching', 'Caching')
+        HasAll('Completed Node 40', 'Node 40')
     )
 
     world.set_rule(
         multiworld.get_entrance("From cdn to load_balancing", player),
-        HasAll('Event: CDN', 'CDN')
+        HasAll('Completed Node 41', 'Node 41')
     )
 
     world.set_rule(
         multiworld.get_entrance("From docker to ci_cd", player),
-        HasAll('Event: Docker', 'Docker')
+        HasAll('Completed Node 42', 'Node 42')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ci_cd to monitoring", player),
-        HasAll('Event: CI/CD', 'CI/CD')
+        HasAll('Completed Node 43', 'Node 43')
     )
 
     world.set_rule(
         multiworld.get_entrance("From load_balancing to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Performance')
+        HasAll('Completed Node 44', 'Completed Node 45', 'Completed Node 48', 'Completed Node 51', 'Node 44')
     )
 
     world.set_rule(
         multiworld.get_entrance("From monitoring to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'DevOps')
+        HasAll('Completed Node 44', 'Completed Node 45', 'Completed Node 48', 'Completed Node 51', 'Node 45')
     )
 
     world.set_rule(
         multiworld.get_entrance("From sessions to jwt", player),
-        HasAll('Event: Sessions', 'Sessions')
+        HasAll('Completed Node 46', 'Node 46')
     )
 
     world.set_rule(
         multiworld.get_entrance("From jwt to oauth", player),
-        HasAll('Event: JWT', 'JWT')
+        HasAll('Completed Node 47', 'Node 47')
     )
 
     world.set_rule(
         multiworld.get_entrance("From oauth to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Authentication')
+        HasAll('Completed Node 44', 'Completed Node 45', 'Completed Node 48', 'Completed Node 51', 'Node 48')
     )
 
     world.set_rule(
         multiworld.get_entrance("From unit_tests to integration_tests", player),
-        HasAll('Event: Unit Tests', 'Unit Tests')
+        HasAll('Completed Node 49', 'Node 49')
     )
 
     world.set_rule(
         multiworld.get_entrance("From integration_tests to e2e_tests", player),
-        HasAll('Event: Integration Tests', 'Integration Tests')
+        HasAll('Completed Node 50', 'Node 50')
     )
 
     world.set_rule(
         multiworld.get_entrance("From e2e_tests to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Testing')
+        HasAll('Completed Node 44', 'Completed Node 45', 'Completed Node 48', 'Completed Node 51', 'Node 51')
     )
 
     world.set_rule(
         multiworld.get_entrance("From fullstack to cloud_provider", player),
-        HasAll('Event: Full-Stack Complete', 'Full-Stack Complete')
+        HasAll('Completed Node 52', 'Node 52')
     )
 
     world.set_rule(
         multiworld.get_entrance("From fullstack to horizontal_scaling", player),
-        HasAll('Event: Full-Stack Complete', 'Full-Stack Complete')
+        HasAll('Completed Node 52', 'Node 52')
     )
 
     world.set_rule(
         multiworld.get_entrance("From fullstack to https", player),
-        HasAll('Event: Full-Stack Complete', 'Full-Stack Complete')
+        HasAll('Completed Node 52', 'Node 52')
     )
 
     world.set_rule(
         multiworld.get_entrance("From cloud_provider to domain_setup", player),
-        HasAll('Event: Cloud Provider', 'Cloud Provider')
+        HasAll('Completed Node 53', 'Node 53')
     )
 
     world.set_rule(
         multiworld.get_entrance("From domain_setup to ssl_certificate", player),
-        HasAll('Event: Domain', 'Event: HTTPS', 'Domain')
+        HasAll('Completed Node 54', 'Completed Node 56', 'Node 54')
     )
 
     world.set_rule(
         multiworld.get_entrance("From horizontal_scaling to microservices", player),
-        HasAll('Event: Horizontal Scaling', 'Horizontal Scaling')
+        HasAll('Completed Node 55', 'Node 55')
     )
 
     world.set_rule(
         multiworld.get_entrance("From https to cors", player),
-        HasAll('Event: HTTPS', 'HTTPS')
+        HasAll('Completed Node 56', 'Node 56')
     )
 
     world.set_rule(
         multiworld.get_entrance("From https to ssl_certificate", player),
-        HasAll('Event: Domain', 'Event: HTTPS', 'HTTPS')
+        HasAll('Completed Node 54', 'Completed Node 56', 'Node 56')
     )
 
     world.set_rule(
         multiworld.get_entrance("From cors to input_validation", player),
-        HasAll('Event: CORS', 'CORS')
+        HasAll('Completed Node 57', 'Node 57')
     )
 
     world.set_rule(
         multiworld.get_entrance("From input_validation to production", player),
-        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Security Complete')
+        HasAll('Completed Node 58', 'Completed Node 59', 'Completed Node 60', 'Node 58')
     )
 
     world.set_rule(
         multiworld.get_entrance("From microservices to production", player),
-        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Scaling Complete')
+        HasAll('Completed Node 58', 'Completed Node 59', 'Completed Node 60', 'Node 59')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ssl_certificate to production", player),
-        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Deployment Complete')
+        HasAll('Completed Node 58', 'Completed Node 59', 'Completed Node 60', 'Node 60')
     )

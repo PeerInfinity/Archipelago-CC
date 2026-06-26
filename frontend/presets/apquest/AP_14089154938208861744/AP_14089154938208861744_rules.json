@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "APQuest",
   "game_directory": "apquest",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -185,7 +185,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Shield",
                   "Sword"
                 ]
@@ -333,6 +333,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "APQuest",
@@ -460,8 +461,10 @@
   "game_info": {
     "1": {
       "completion_condition": {
-        "type": "item_check",
-        "item": "Victory"
+        "rule": "Has",
+        "args": {
+          "item_name": "Victory"
+        }
       }
     }
   },

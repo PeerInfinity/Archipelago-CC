@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Satisfactory",
   "game_directory": "satisfactory",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -36,7 +36,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Build: AWESOME Shop",
                   "Can Build: AWESOME Sink"
                 ]
@@ -251,7 +251,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Smart Plating",
                       "Can Produce: Versatile Framework",
                       "Can Produce: Automated Wiring"
@@ -14000,7 +14000,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Build: Foundation",
                   "Can Build: Walls Orange"
                 ]
@@ -15818,7 +15818,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Build: Power level: Automated",
                       "Can Build: MAM",
                       "Can Build: AWESOME Sink",
@@ -26119,7 +26119,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Plate",
                           "Can Produce: Screw"
                         ]
@@ -26145,7 +26145,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Plate",
                           "Can Produce: Rubber"
                         ]
@@ -26171,7 +26171,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Plate",
                           "Can Produce: Screw"
                         ]
@@ -26191,7 +26191,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Plate",
                           "Can Produce: Wire"
                         ]
@@ -26236,7 +26236,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Rod",
                           "Can Produce: Screw"
                         ]
@@ -26262,7 +26262,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Sheet",
                           "Can Produce: Screw"
                         ]
@@ -26288,7 +26288,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Wire"
                         ]
@@ -26333,7 +26333,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Wire"
                         ]
@@ -26359,7 +26359,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Quickwire"
                         ]
@@ -26401,7 +26401,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Iron Ingot",
                       "Can Produce: Plastic"
                     ]
@@ -26435,7 +26435,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Copper Ingot",
                       "Can Produce: Caterium Ingot"
                     ]
@@ -26478,7 +26478,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Wire",
                           "Can Produce: Rubber"
                         ]
@@ -26504,7 +26504,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Quickwire",
                           "Can Produce: Rubber"
                         ]
@@ -26546,7 +26546,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Caterium Ingot",
                       "Can Produce: Copper Ingot"
                     ]
@@ -26589,7 +26589,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Limestone",
                           "Can Produce: Silica"
                         ]
@@ -26615,7 +26615,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Limestone",
                           "Can Produce: Rubber"
                         ]
@@ -26657,7 +26657,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Raw Quartz",
                       "Can Produce: Limestone"
                     ]
@@ -26697,7 +26697,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Coal",
                       "Can Produce: Sulfur"
                     ]
@@ -26740,7 +26740,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Rotor",
                           "Can Produce: Stator"
                         ]
@@ -26766,7 +26766,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Electromagnetic Control Rod",
                           "Can Produce: Rotor"
                         ]
@@ -26811,7 +26811,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Reinforced Iron Plate",
                           "Can Produce: Iron Rod"
                         ]
@@ -26837,7 +26837,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Reinforced Iron Plate",
                           "Can Produce: Screw"
                         ]
@@ -26863,7 +26863,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Reinforced Iron Plate",
                           "Can Produce: Steel Pipe"
                         ]
@@ -26908,7 +26908,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Steel Beam",
                           "Can Produce: Concrete"
                         ]
@@ -26934,7 +26934,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Concrete"
                         ]
@@ -26976,7 +26976,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Circuit Board",
                       "Can Produce: Crystal Oscillator"
                     ]
@@ -27019,7 +27019,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Sheet",
                           "Can Produce: Plastic"
                         ]
@@ -27045,7 +27045,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Rubber",
                           "Can Produce: Petroleum Coke"
                         ]
@@ -27071,7 +27071,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Sheet",
                           "Can Produce: Silica"
                         ]
@@ -27097,7 +27097,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Plastic",
                           "Can Produce: Quickwire"
                         ]
@@ -27142,7 +27142,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Sheet",
                           "Can Produce: Quickwire"
                         ]
@@ -27168,7 +27168,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Quickwire",
                           "Can Produce: Plastic"
                         ]
@@ -27213,7 +27213,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Stator",
                           "Can Produce: AI Limiter"
                         ]
@@ -27239,7 +27239,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Stator",
                           "Can Produce: High-Speed Connector"
                         ]
@@ -27281,7 +27281,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Reinforced Iron Plate",
                       "Can Produce: Rotor"
                     ]
@@ -27321,7 +27321,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Modular Frame",
                       "Can Produce: Steel Beam"
                     ]
@@ -27361,7 +27361,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Stator",
                       "Can Produce: Cable"
                     ]
@@ -27401,7 +27401,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Aluminum Ingot",
                       "Can Produce: Copper Ingot"
                     ]
@@ -27441,7 +27441,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Aluminum Ingot",
                       "Can Produce: Copper Ingot"
                     ]
@@ -27484,7 +27484,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Alclad Aluminum Sheet",
                           "Can Produce: Silica"
                         ]
@@ -27510,7 +27510,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Aluminum Casing",
                           "Can Produce: Rubber"
                         ]
@@ -27552,7 +27552,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Biomass",
                       "Can Produce: Mycelia"
                     ]
@@ -27592,7 +27592,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Iron Plate",
                       "Can Produce: Copper Sheet"
                     ]
@@ -27632,7 +27632,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Sulfur",
                       "Can Produce: Compacted Coal"
                     ]
@@ -27672,7 +27672,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Copper Sheet",
                       "Can Produce: Smokeless Powder"
                     ]
@@ -27712,7 +27712,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Black Powder",
                       "Can Produce: Steel Pipe"
                     ]
@@ -27758,7 +27758,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Rotor",
                       "Can Produce: Stator",
                       "Can Produce: Crystal Oscillator"
@@ -27802,7 +27802,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Modular Frame",
                           "Can Produce: Steel Pipe",
                           "Can Produce: Encased Industrial Beam",
@@ -27830,7 +27830,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Modular Frame",
                           "Can Produce: Encased Industrial Beam",
                           "Can Produce: Rubber",
@@ -27858,7 +27858,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Modular Frame",
                           "Can Produce: Encased Industrial Beam",
                           "Can Produce: Steel Pipe",
@@ -27905,7 +27905,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Circuit Board",
                           "Can Produce: Cable",
                           "Can Produce: Plastic"
@@ -27932,7 +27932,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Circuit Board",
                           "Can Produce: Quickwire",
                           "Can Produce: Rubber"
@@ -27978,7 +27978,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Quartz Crystal",
                           "Can Produce: Cable",
                           "Can Produce: Reinforced Iron Plate"
@@ -28005,7 +28005,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Quartz Crystal",
                           "Can Produce: Rubber",
                           "Can Produce: AI Limiter"
@@ -28051,7 +28051,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Quickwire",
                           "Can Produce: Cable",
                           "Can Produce: Circuit Board"
@@ -28078,7 +28078,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Quickwire",
                           "Can Produce: Silica",
                           "Can Produce: Circuit Board"
@@ -28121,7 +28121,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Reinforced Iron Plate",
                       "Can Produce: Rotor",
                       "Can Produce: Plastic"
@@ -28162,7 +28162,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Modular Frame",
                       "Can Produce: Steel Beam",
                       "Can Produce: Rubber"
@@ -28203,7 +28203,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Stator",
                       "Can Produce: Wire",
                       "Can Produce: High-Speed Connector"
@@ -28247,7 +28247,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Aluminum Casing",
                           "Can Produce: Crystal Oscillator",
                           "Can Produce: Computer"
@@ -28274,7 +28274,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Heat Sink",
                           "Can Produce: High-Speed Connector",
                           "Can Produce: Quartz Crystal"
@@ -28301,7 +28301,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Crystal Oscillator",
                           "Can Produce: Circuit Board",
                           "Can Produce: Aluminum Casing",
@@ -28345,7 +28345,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Uranium",
                       "Can Produce: Silica",
                       "Can Produce: Sulfur",
@@ -28356,7 +28356,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Hazmat Suit",
                       "Can Produce: Iodine-Infused Filter"
                     ]
@@ -28396,7 +28396,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Coal",
                       "Can Produce: Rubber",
                       "Can Produce: Fabric"
@@ -28437,7 +28437,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Gas Filter",
                       "Can Produce: Quickwire",
                       "Can Produce: Aluminum Casing"
@@ -28478,7 +28478,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Reanimated SAM",
                       "Can Produce: Steel Pipe",
                       "Can Produce: Wire"
@@ -28525,7 +28525,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Fuel",
                       "Can Produce: Empty Canister"
                     ]
@@ -28537,7 +28537,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -28546,7 +28546,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -28588,7 +28588,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Turbofuel",
                       "Can Produce: Empty Canister"
                     ]
@@ -28600,7 +28600,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -28609,7 +28609,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -28651,7 +28651,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Water",
                       "Can Produce: Empty Canister"
                     ]
@@ -28663,7 +28663,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -28672,7 +28672,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -28732,7 +28732,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -28741,7 +28741,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -28769,7 +28769,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Polymer Resin",
                           "Can Produce: Water"
                         ]
@@ -28781,7 +28781,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -28790,7 +28790,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -28818,7 +28818,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Rubber",
                           "Can Produce: Fuel"
                         ]
@@ -28830,7 +28830,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -28839,7 +28839,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -28895,7 +28895,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -28904,7 +28904,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -28932,7 +28932,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Polymer Resin",
                           "Can Produce: Water"
                         ]
@@ -28944,7 +28944,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -28953,7 +28953,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -28981,7 +28981,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Plastic",
                           "Can Produce: Fuel"
                         ]
@@ -28993,7 +28993,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29002,7 +29002,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29046,7 +29046,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Wire",
                       "Can Produce: Heavy Oil Residue"
                     ]
@@ -29058,7 +29058,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -29067,7 +29067,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -29109,7 +29109,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Copper Ingot",
                       "Can Produce: Water"
                     ]
@@ -29121,7 +29121,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -29130,7 +29130,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -29184,7 +29184,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29193,7 +29193,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29230,7 +29230,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29239,7 +29239,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29276,7 +29276,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29285,7 +29285,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29322,7 +29322,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29331,7 +29331,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29387,7 +29387,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29396,7 +29396,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29433,7 +29433,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29442,7 +29442,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29479,7 +29479,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29488,7 +29488,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29544,7 +29544,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29553,7 +29553,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29590,7 +29590,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29599,7 +29599,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29643,7 +29643,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Limestone",
                       "Can Produce: Water"
                     ]
@@ -29655,7 +29655,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -29664,7 +29664,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -29706,7 +29706,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Bauxite",
                       "Can Produce: Water"
                     ]
@@ -29718,7 +29718,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -29727,7 +29727,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -29769,7 +29769,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Raw Quartz",
                       "Can Produce: Nitric Acid"
                     ]
@@ -29781,7 +29781,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -29790,7 +29790,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -29835,7 +29835,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Raw Quartz",
                           "Can Produce: Water"
                         ]
@@ -29847,7 +29847,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29856,7 +29856,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29884,7 +29884,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Raw Quartz",
                           "Can Produce: Nitric Acid"
                         ]
@@ -29896,7 +29896,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29905,7 +29905,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -29952,7 +29952,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Water"
                         ]
@@ -29964,7 +29964,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -29973,7 +29973,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30001,7 +30001,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Sulfuric Acid"
                         ]
@@ -30013,7 +30013,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30022,7 +30022,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30069,7 +30069,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Ore",
                           "Can Produce: Water"
                         ]
@@ -30081,7 +30081,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30090,7 +30090,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30118,7 +30118,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Ore",
                           "Can Produce: Sulfuric Acid"
                         ]
@@ -30130,7 +30130,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30139,7 +30139,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30186,7 +30186,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Caterium Ore",
                           "Can Produce: Water"
                         ]
@@ -30198,7 +30198,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30207,7 +30207,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30235,7 +30235,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Caterium Ore",
                           "Can Produce: Sulfuric Acid"
                         ]
@@ -30247,7 +30247,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30256,7 +30256,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30309,7 +30309,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -30318,7 +30318,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -30363,7 +30363,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Bauxite",
                           "Can Produce: Water"
                         ]
@@ -30375,7 +30375,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30384,7 +30384,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30412,7 +30412,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Bauxite",
                           "Can Produce: Water"
                         ]
@@ -30424,7 +30424,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30433,7 +30433,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30480,7 +30480,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Alumina Solution",
                           "Can Produce: Coal"
                         ]
@@ -30492,7 +30492,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30501,7 +30501,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30529,7 +30529,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Alumina Solution",
                           "Can Produce: Petroleum Coke"
                         ]
@@ -30541,7 +30541,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30550,7 +30550,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30594,7 +30594,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Sulfur",
                       "Can Produce: Water"
                     ]
@@ -30606,7 +30606,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -30615,7 +30615,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -30657,7 +30657,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Polymer Resin",
                       "Can Produce: Water"
                     ]
@@ -30669,7 +30669,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -30678,7 +30678,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -30720,7 +30720,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Packaged Water"
                     ]
@@ -30732,7 +30732,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -30741,7 +30741,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -30786,7 +30786,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Fuel",
                           "Can Produce: Compacted Coal"
                         ]
@@ -30798,7 +30798,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30807,7 +30807,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30835,7 +30835,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Heavy Oil Residue",
                           "Can Produce: Compacted Coal"
                         ]
@@ -30847,7 +30847,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipes Mk.1",
                               "Can Build: Pipes Mk.2"
                             ]
@@ -30856,7 +30856,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Can Build: Pipeline Pump Mk.1",
                               "Can Build: Pipeline Pump Mk.2"
                             ]
@@ -30900,7 +30900,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Black Powder",
                       "Can Produce: Heavy Oil Residue"
                     ]
@@ -30912,7 +30912,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -30921,7 +30921,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -30969,7 +30969,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Water"
                     ]
@@ -30981,7 +30981,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -30990,7 +30990,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31032,7 +31032,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Dissolved Silica",
                       "Can Produce: Limestone",
                       "Can Produce: Water"
@@ -31045,7 +31045,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31054,7 +31054,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31096,7 +31096,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Bauxite",
                       "Can Produce: Coal",
                       "Can Produce: Sulfuric Acid",
@@ -31110,7 +31110,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31119,7 +31119,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31161,7 +31161,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Nitrogen Gas",
                       "Can Produce: Water",
                       "Can Produce: Iron Plate"
@@ -31174,7 +31174,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31183,7 +31183,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31225,7 +31225,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Uranium",
                       "Can Produce: Concrete",
                       "Can Produce: Sulfuric Acid"
@@ -31238,7 +31238,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31247,7 +31247,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31258,7 +31258,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Hazmat Suit",
                       "Can Produce: Iodine-Infused Filter"
                     ]
@@ -31298,7 +31298,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Fuel",
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Sulfur",
@@ -31312,7 +31312,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31321,7 +31321,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31541,7 +31541,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Hazmat Suit",
                       "Can Produce: Iodine-Infused Filter"
                     ]
@@ -31604,7 +31604,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31613,7 +31613,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31658,7 +31658,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -31667,7 +31667,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -31857,7 +31857,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Iron Ingot",
                       "Can Produce: Steel Ingot"
                     ]
@@ -31897,7 +31897,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Steel Ingot",
                       "Can Produce: Concrete"
                     ]
@@ -31937,7 +31937,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Steel Ingot",
                       "Can Produce: Concrete"
                     ]
@@ -31977,7 +31977,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Raw Quartz",
                       "Can Produce: Coal"
                     ]
@@ -32020,7 +32020,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Copper Ore"
                         ]
@@ -32040,7 +32040,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Limestone"
                         ]
@@ -32085,7 +32085,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Coal"
                         ]
@@ -32111,7 +32111,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Petroleum Coke"
                         ]
@@ -32137,7 +32137,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Compacted Coal"
                         ]
@@ -32163,7 +32163,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Iron Ingot",
                           "Can Produce: Coal"
                         ]
@@ -32208,7 +32208,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Ore",
                           "Can Produce: Iron Ore"
                         ]
@@ -32234,7 +32234,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Produce: Copper Ore",
                           "Can Produce: Petroleum Coke"
                         ]
@@ -32276,7 +32276,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Caterium Ore",
                       "Can Produce: Petroleum Coke"
                     ]
@@ -32316,7 +32316,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Aluminum Scrap",
                       "Can Produce: Silica"
                     ]
@@ -32399,7 +32399,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipes Mk.1",
                           "Can Build: Pipes Mk.2"
                         ]
@@ -32408,7 +32408,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Can Build: Pipeline Pump Mk.1",
                           "Can Build: Pipeline Pump Mk.2"
                         ]
@@ -32456,7 +32456,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Rubber",
                       "Can Produce: Plastic",
                       "Can Produce: Fabric",
@@ -32498,7 +32498,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Coal",
                       "Can Produce: Sulfur"
                     ]
@@ -32538,7 +32538,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Can Produce: Reinforced Iron Plate",
                       "Can Produce: Wire",
                       "Can Produce: Screw"
@@ -32615,7 +32615,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Alien DNA Capsule",
                   "Can Produce: Steel Beam"
                 ]
@@ -32692,7 +32692,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Alien Protein",
                   "Can Produce: Cable"
                 ]
@@ -32705,7 +32705,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Alien DNA Capsule",
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: High-Speed Connector"
@@ -32719,7 +32719,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Alien DNA Capsule",
                   "Can Produce: Iron Rod"
                 ]
@@ -32732,7 +32732,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Alien Protein",
                   "Can Produce: Beryl Nut",
                   "Can Produce: Rotor"
@@ -32896,7 +32896,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Rotor",
                   "Can Produce: Reinforced Iron Plate",
                   "Can Produce: Screw"
@@ -33042,7 +33042,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Reanimated SAM",
                   "Can Produce: Steel Pipe",
                   "Can Produce: Wire"
@@ -33078,7 +33078,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33123,7 +33123,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33158,7 +33158,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: Computer",
                   "Can Produce: SAM Fluctuator"
@@ -33172,7 +33172,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33185,7 +33185,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33241,7 +33241,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33276,7 +33276,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33311,7 +33311,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33367,7 +33367,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33402,7 +33402,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33437,7 +33437,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mercer Sphere",
                   "Can Produce: SAM Fluctuator"
                 ]
@@ -33525,7 +33525,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Somersloop",
                   "Can Produce: SAM Fluctuator",
                   "Can Produce: Circuit Board"
@@ -33539,7 +33539,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Somersloop",
                   "Can Produce: SAM Fluctuator",
                   "Can Produce: Computer"
@@ -33633,7 +33633,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Quickwire",
                   "Can Produce: Plastic"
                 ]
@@ -33656,7 +33656,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Quickwire",
                   "Can Produce: Copper Sheet"
                 ]
@@ -33712,7 +33712,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: High-Speed Connector",
                   "Can Produce: Rifle Ammo"
                 ]
@@ -33725,7 +33725,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: High-Speed Connector",
                   "Can Produce: Quickwire"
                 ]
@@ -33738,7 +33738,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: AI Limiter",
                   "Can Produce: Computer",
                   "Can Produce: Heavy Modular Frame"
@@ -33752,7 +33752,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: High-Speed Connector",
                   "Can Produce: Quickwire",
                   "Can Produce: Motor"
@@ -33862,7 +33862,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Quickwire",
                   "Can Produce: Cable"
                 ]
@@ -33875,7 +33875,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Quickwire",
                   "Can Produce: Iron Rebar"
                 ]
@@ -33952,7 +33952,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: High-Speed Connector",
                   "Can Produce: Steel Pipe"
                 ]
@@ -33987,7 +33987,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Steel Beam",
                   "Can Produce: AI Limiter"
                 ]
@@ -34000,7 +34000,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: AI Limiter",
                   "Can Produce: Reinforced Iron Plate"
                 ]
@@ -34013,7 +34013,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: AI Limiter",
                   "Can Produce: Computer",
                   "Can Produce: Heavy Modular Frame"
@@ -34027,7 +34027,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: High-Speed Connector",
                   "Can Produce: Quickwire",
                   "Can Produce: Motor"
@@ -34247,7 +34247,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mycelia",
                   "Can Produce: Biomass"
                 ]
@@ -34260,7 +34260,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mycelia",
                   "Can Produce: Stator"
                 ]
@@ -34273,7 +34273,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Nobelisk",
                   "Can Produce: Mycelia",
                   "Can Produce: Biomass"
@@ -34309,7 +34309,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Fabric",
                   "Can Produce: Rotor"
                 ]
@@ -34322,7 +34322,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Fabric",
                   "Can Produce: Cable"
                 ]
@@ -34335,7 +34335,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Fabric",
                   "Can Produce: Polymer Resin"
                 ]
@@ -34348,7 +34348,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Coal",
                   "Can Produce: Fabric",
                   "Can Produce: Steel Pipe"
@@ -34384,7 +34384,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mycelia",
                   "Can Produce: Bacon Agaric",
                   "Can Produce: Alien Protein"
@@ -34398,7 +34398,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Mycelia",
                   "Can Produce: Paleberry"
                 ]
@@ -34574,7 +34574,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Modular Frame",
                   "Can Produce: Steel Pipe",
                   "Can Produce: Wire"
@@ -34610,7 +34610,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Modular Frame",
                   "Can Produce: Steel Pipe",
                   "Can Produce: Wire"
@@ -34646,7 +34646,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Modular Frame",
                   "Can Produce: Steel Pipe",
                   "Can Produce: Wire"
@@ -34682,7 +34682,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Bacon Agaric",
                   "Can Produce: Paleberry",
                   "Can Produce: Beryl Nut"
@@ -34776,7 +34776,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Iron Rod",
                   "Can Produce: Wire",
                   "Can Produce: Screw"
@@ -34790,7 +34790,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Yellow Power Slug",
                   "Can Produce: Rotor",
                   "Can Produce: Cable"
@@ -34804,7 +34804,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Power Shard",
                   "Can Produce: Iron Plate",
                   "Can Produce: Wire"
@@ -34840,7 +34840,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Purple Power Slug",
                   "Can Produce: Modular Frame",
                   "Can Produce: Copper Sheet"
@@ -34934,7 +34934,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: Nobelisk"
                 ]
@@ -34947,7 +34947,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: Modular Frame"
                 ]
@@ -34960,7 +34960,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: Reinforced Iron Plate"
                 ]
@@ -34973,7 +34973,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: Motor",
                   "Can Produce: Object Scanner"
@@ -34987,7 +34987,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: Heavy Modular Frame",
                   "Can Produce: Computer"
@@ -35023,7 +35023,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Quartz Crystal",
                   "Can Produce: Reinforced Iron Plate"
                 ]
@@ -35036,7 +35036,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Quartz Crystal",
                   "Can Produce: Iron Rebar"
                 ]
@@ -35134,7 +35134,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Silica",
                   "Can Produce: Modular Frame"
                 ]
@@ -35363,7 +35363,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Motor",
                   "Can Produce: Rubber"
@@ -35377,7 +35377,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Iron Rebar",
                   "Can Produce: Steel Beam"
@@ -35391,7 +35391,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Nobelisk"
                 ]
@@ -35426,7 +35426,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Sulfur",
                   "Can Produce: Coal"
                 ]
@@ -35439,7 +35439,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Sulfur",
                   "Can Produce: Modular Frame",
                   "Can Produce: Rotor"
@@ -35496,7 +35496,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Computer"
                 ]
@@ -35509,7 +35509,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Rifle Ammo",
                   "Can Produce: Packaged Turbofuel",
                   "Can Produce: Aluminum Casing"
@@ -35566,7 +35566,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Black Powder",
                   "Can Produce: Steel Pipe",
                   "Can Produce: Cable"
@@ -35580,7 +35580,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Black Powder",
                   "Can Produce: Plastic"
                 ]
@@ -35593,7 +35593,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Black Powder",
                   "Can Produce: Encased Industrial Beam"
                 ]
@@ -35649,7 +35649,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Computer"
                 ]
@@ -35662,7 +35662,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Nobelisk",
                   "Can Produce: Encased Uranium Cell",
                   "Can Produce: AI Limiter"
@@ -35698,7 +35698,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Hard Drive",
                   "Can Produce: Sulfur",
                   "Can Produce: Coal"
@@ -35712,7 +35712,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Hard Drive",
                   "Can Produce: Compacted Coal",
                   "Can Produce: Packaged Fuel"
@@ -35748,7 +35748,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Computer"
                 ]
@@ -35825,7 +35825,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Can Produce: Smokeless Powder",
                   "Can Produce: Computer"
                 ]
@@ -47282,6 +47282,7 @@
       "Building: Personal Storage Box"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Satisfactory",
@@ -47319,7 +47320,87 @@
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},
-        "start_location_hints": [],
+        "start_location_hints": [
+          "Hub 1-1, item 1",
+          "Hub 1-1, item 10",
+          "Hub 1-1, item 2",
+          "Hub 1-1, item 3",
+          "Hub 1-1, item 4",
+          "Hub 1-1, item 5",
+          "Hub 1-1, item 6",
+          "Hub 1-1, item 7",
+          "Hub 1-1, item 8",
+          "Hub 1-1, item 9",
+          "Hub 1-2, item 1",
+          "Hub 1-2, item 2",
+          "Hub 1-2, item 3",
+          "Hub 1-2, item 4",
+          "Hub 1-2, item 5",
+          "Hub 1-2, item 6",
+          "Hub 1-2, item 7",
+          "Hub 1-2, item 8",
+          "Hub 1-2, item 9",
+          "Hub 1-3, item 1",
+          "Hub 1-3, item 10",
+          "Hub 1-3, item 2",
+          "Hub 1-3, item 3",
+          "Hub 1-3, item 4",
+          "Hub 1-3, item 6",
+          "Hub 1-3, item 7",
+          "Hub 1-3, item 8",
+          "Hub 1-3, item 9",
+          "Hub 1-4, item 1",
+          "Hub 1-4, item 10",
+          "Hub 1-4, item 2",
+          "Hub 1-4, item 3",
+          "Hub 1-4, item 4",
+          "Hub 1-4, item 5",
+          "Hub 1-4, item 6",
+          "Hub 1-4, item 7",
+          "Hub 1-4, item 8",
+          "Hub 1-4, item 9",
+          "Hub 2-1, item 1",
+          "Hub 2-1, item 10",
+          "Hub 2-1, item 2",
+          "Hub 2-1, item 5",
+          "Hub 2-1, item 6",
+          "Hub 2-1, item 7",
+          "Hub 2-1, item 9",
+          "Hub 2-2, item 1",
+          "Hub 2-2, item 10",
+          "Hub 2-2, item 2",
+          "Hub 2-2, item 3",
+          "Hub 2-2, item 4",
+          "Hub 2-2, item 5",
+          "Hub 2-2, item 6",
+          "Hub 2-2, item 7",
+          "Hub 2-2, item 8",
+          "Hub 2-2, item 9",
+          "Hub 2-3, item 1",
+          "Hub 2-3, item 10",
+          "Hub 2-3, item 2",
+          "Hub 2-3, item 3",
+          "Hub 2-3, item 4",
+          "Hub 2-3, item 6",
+          "Hub 2-3, item 7",
+          "Hub 2-3, item 8",
+          "Hub 2-3, item 9",
+          "Hub 2-4, item 10",
+          "Hub 2-4, item 2",
+          "Hub 2-4, item 4",
+          "Hub 2-4, item 5",
+          "Hub 2-4, item 6",
+          "Hub 2-4, item 8",
+          "Hub 2-5, item 1",
+          "Hub 2-5, item 2",
+          "Hub 2-5, item 3",
+          "Hub 2-5, item 4",
+          "Hub 2-5, item 5",
+          "Hub 2-5, item 6",
+          "Hub 2-5, item 7",
+          "Hub 2-5, item 8",
+          "Hub 2-5, item 9"
+        ],
         "starting_inventory_preset": 2,
         "trap_chance": 10,
         "trap_selection_override": [
@@ -48163,26 +48244,54 @@
   "game_info": {
     "1": {
       "completion_condition": {
-        "type": "function_call",
-        "function": {
-          "type": "attribute",
-          "object": {
-            "type": "attribute",
-            "object": {
-              "type": "name",
-              "name": "self"
-            },
-            "attr": "state_logic"
-          },
-          "attr": "can_produce_all"
-        },
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Automated Wiring",
-              "Smart Plating",
-              "Versatile Framework"
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "state_logic"
+              },
+              "attr": "can_produce_all"
+            },
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Automated Wiring",
+                  "Smart Plating",
+                  "Versatile Framework"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "state_logic"
+              },
+              "attr": "can_build_all"
+            },
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Space Elevator"
+                ]
+              }
             ]
           }
         ]

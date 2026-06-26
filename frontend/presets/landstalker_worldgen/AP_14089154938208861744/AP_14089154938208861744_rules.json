@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Landstalker - The Treasures of King Nole WorldGen",
   "game_directory": "landstalker_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -34,7 +34,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe Magic",
                   "Lantern"
                 ]
@@ -202,7 +202,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe Magic",
                   "Lantern"
                 ]
@@ -761,7 +761,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Einstein Whistle",
                   "event_visited_massan"
                 ]
@@ -1561,7 +1561,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Einstein Whistle",
                   "event_visited_massan"
                 ]
@@ -5297,7 +5297,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Blue Jewel",
                   "Green Jewel",
                   "Purple Jewel",
@@ -5664,7 +5664,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe Magic",
                   "event_visited_king_nole_labyrinth_raft_entrance"
                 ]
@@ -6282,7 +6282,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gola's Fang",
                   "Gola's Horn",
                   "Gola's Nail"
@@ -7472,6 +7472,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Landstalker - The Treasures of King Nole WorldGen",

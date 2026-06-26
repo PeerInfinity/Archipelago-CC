@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Shivers WorldGen",
   "game_directory": "shivers_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -104,32 +104,7 @@
             "name": "Puzzle Solved Office Elevator",
             "id": 27110,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Office"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Underground Lake"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key for Office Elevator"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Cloth Always Available in Burial Room",
@@ -143,32 +118,7 @@
             "name": "Puzzle Solved Three Floor Elevator",
             "id": 27112,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Maze"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Maintenance Tunnels"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key for Three Floor Elevator"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Sand Always Available in Greenhouse",
@@ -472,7 +422,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crawling",
                   "Key for Bedroom Elevator"
                 ]
@@ -551,7 +501,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crawling",
                   "Key for Bedroom Elevator"
                 ]
@@ -640,7 +590,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crawling",
                   "Key for Bedroom Elevator"
                 ]
@@ -752,25 +702,7 @@
             "name": "To Tar River From Lobby",
             "connected_region": "Tar River",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "oil_capturable",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Tar River"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crawling"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -956,21 +888,7 @@
             "name": "Storage: Slide",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Slide Room"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lost Your Head"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Ash Pot Bottom DUPE",
@@ -1947,19 +1865,7 @@
             "name": "To Lobby From Tar River",
             "connected_region": "Lobby",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "oil_capturable",
-                  "_original_ast_type": "rb_defined_helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crawling"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -4943,6 +4849,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Shivers WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Aquaria",
   "game_directory": "aquaria",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -57,7 +57,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Form",
+              "name": "Transturtle Abyss right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -74,7 +74,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Berry Ice Cream",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -110,7 +110,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vedha's Cure-All",
+              "name": "Leaf Poultice x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -125,7 +125,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Legendary Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -140,7 +140,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup x 2",
+              "name": "Sun Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -157,7 +157,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Long Life Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -237,7 +237,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Glowing Egg",
+              "name": "Tasty Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -267,7 +267,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cold Borscht",
+              "name": "Eel Oil x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -297,7 +297,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Plump Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -314,7 +314,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Baby Dumbo",
+              "name": "Spirit Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -345,7 +345,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Buttery Sea Loaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -500,7 +500,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -517,7 +517,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -576,7 +576,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Krotite Armor",
+              "name": "Jelly Plant",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -608,7 +608,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Special Cake",
+              "name": "Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -625,7 +625,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Plant Leaf",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -642,7 +642,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Jelly Plant",
+              "name": "Mithalas Pot",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -657,7 +657,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -674,7 +674,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Transturtle Abyss right",
+              "name": "Urchin Costume",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -730,7 +730,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Fish Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -747,7 +747,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Transturtle Home Waters",
+              "name": "Special Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -835,7 +835,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Soup",
+              "name": "Cold Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -885,9 +885,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Transturtle Veil top left",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -921,7 +921,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Vedha Sea Crisp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -977,7 +977,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Transturtle Arnassi Ruins",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1029,7 +1029,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Ice Cream",
+              "name": "Volcano Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1061,7 +1061,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Soup",
+              "name": "Fish Oil",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1115,7 +1115,8 @@
                           "Li and Li Song",
                           "Baby Nautilus",
                           "Baby Piranha",
-                          "Baby Blaster"
+                          "Baby Blaster",
+                          "Urchin Costume"
                         ]
                       },
                       "_converted_from_ast": true
@@ -1196,7 +1197,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1211,7 +1212,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1226,7 +1227,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Simon Says",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1335,7 +1336,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Perogi",
+              "name": "Glowing Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1350,7 +1351,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice x 3",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1402,7 +1403,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 2",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1419,7 +1420,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1495,7 +1496,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Zuuna's Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1510,7 +1511,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Egg x 2",
+              "name": "Special Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1577,7 +1578,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Divine Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1592,7 +1593,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1607,7 +1608,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Black Pearl",
+              "name": "Krotite Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1651,7 +1652,7 @@
               ]
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1829,7 +1830,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice x 3",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1858,7 +1859,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Turtle Soup",
+              "name": "Shield Song",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1990,7 +1991,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Tough Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2053,7 +2054,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2068,7 +2069,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Royal Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2083,7 +2084,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sight Poultice",
+              "name": "Small Egg x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2098,7 +2099,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Magic Soup",
+              "name": "Crab Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2113,7 +2114,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Turtle Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2128,7 +2129,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vedha Sea Crisp",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2143,7 +2144,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2173,7 +2174,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Glowing Egg x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2236,7 +2237,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Veil top right",
+              "name": "Baby Piranha",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2251,7 +2252,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2266,7 +2267,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2281,7 +2282,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Nature Form",
+              "name": "Transturtle Open Waters top right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2298,7 +2299,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Jelly Costume",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2329,7 +2330,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Small Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2346,7 +2347,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2420,7 +2421,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Fish Oil x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2501,7 +2502,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Baby Blaster",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2547,7 +2548,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2596,7 +2597,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leadership Roll x 2",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2613,7 +2614,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Small Tentacle x 2",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2634,7 +2635,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Hot Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2649,7 +2650,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Cake",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2664,7 +2665,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2679,7 +2680,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Open Waters top right",
+              "name": "Transturtle Kelp Forest bottom left",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2694,7 +2695,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Long Life Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2709,7 +2710,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Cake",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2724,7 +2725,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Cold Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2739,7 +2740,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Crab Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2754,7 +2755,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Long Life Soup",
+              "name": "Tasty Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2769,7 +2770,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Fish Oil",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2809,7 +2810,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Plant Leaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2824,7 +2825,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2881,7 +2882,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tough Cake",
+              "name": "Spicy Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2896,7 +2897,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2911,7 +2912,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2926,7 +2927,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Royal Soup",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2941,7 +2942,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2994,7 +2995,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Glowing Egg x 2",
+              "name": "Jelly Costume",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3115,7 +3116,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Plant Leaf x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3130,7 +3131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leadership Roll",
+              "name": "Healing Poultice x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3145,7 +3146,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Nature Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3162,7 +3163,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Crab Armor",
+              "name": "Turtle Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3193,7 +3194,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Buttery Sea Loaf",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3208,7 +3209,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Berry",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3277,7 +3278,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3292,7 +3293,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3322,7 +3323,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Turtle Soup",
+              "name": "Vedha's Cure-All",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3377,7 +3378,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Meat x 2",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3528,7 +3529,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cold Borscht",
+              "name": "Berry Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3557,7 +3558,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Ice Cream",
+              "name": "Cold Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3574,7 +3575,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Eel Oil x 2",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3626,7 +3627,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Spider Roll",
+              "name": "Shark Fin Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3655,7 +3656,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Arnassi Ruins",
+              "name": "Arnassi Armor",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3717,7 +3718,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Sun Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3755,7 +3756,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil x 3",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3786,7 +3787,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3801,7 +3802,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3849,7 +3850,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Urchin Costume",
+              "name": "Black Pearl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4066,7 +4067,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice x 2",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4083,7 +4084,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Fish Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4100,7 +4101,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Li and Li Song",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4115,7 +4116,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4266,7 +4267,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4281,7 +4282,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4365,7 +4366,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4380,7 +4381,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Form",
+              "name": "Baby Blaster",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4444,7 +4445,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 2",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4525,7 +4526,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Crab Cake",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4570,7 +4571,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Spider Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4599,7 +4600,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 2",
+              "name": "Wok",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4681,7 +4682,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Transturtle Veil top left",
+              "name": "Li and Li Song",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4710,7 +4711,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Ice Cream",
+              "name": "Mushroom x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4727,7 +4728,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4778,7 +4779,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4793,7 +4794,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cold Soup",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4808,7 +4809,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4912,7 +4913,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Sight Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4927,7 +4928,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4942,7 +4943,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Long Life Soup",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5022,7 +5023,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5037,7 +5038,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5065,7 +5066,7 @@
               ]
             },
             "item": {
-              "name": "Small Egg",
+              "name": "Red Berry",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5093,7 +5094,7 @@
               ]
             },
             "item": {
-              "name": "Sight Poultice",
+              "name": "Small Bone x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5131,7 +5132,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shield Song",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5220,7 +5221,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil",
+              "name": "Leaf Poultice x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5235,7 +5236,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5265,7 +5266,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5316,7 +5317,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Mushroom x 2",
+              "name": "Small Tentacle x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5418,7 +5419,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Vedha Sea Crisp",
+              "name": "Plant Leaf x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5433,7 +5434,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spider Roll",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5448,7 +5449,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Veggie Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5609,7 +5610,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arnassi Armor",
+              "name": "Transturtle Simon Says",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5647,7 +5648,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5662,7 +5663,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5677,7 +5678,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Vedha Sea Crisp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5692,7 +5693,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Legendary Cake",
+              "name": "Veggie Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5707,7 +5708,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Roll",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5755,7 +5756,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Cake",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5770,7 +5771,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Rainbow Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5843,7 +5844,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Key",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5858,7 +5859,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Loaf of Life",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6172,7 +6173,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Healing Poultice x 2",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6187,7 +6188,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Soup",
+              "name": "Spider Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6216,7 +6217,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Wok",
+              "name": "Shark Fin Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6231,7 +6232,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Soup",
+              "name": "Veggie Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6246,7 +6247,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6276,7 +6277,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Transturtle Home Waters",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6334,7 +6335,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Borscht",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6349,7 +6350,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6389,7 +6390,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shark Fin Soup",
+              "name": "Healing Poultice x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6404,7 +6405,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6583,7 +6584,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mithalas Pot",
+              "name": "Veggie Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6613,7 +6614,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Roll",
+              "name": "Leadership Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6657,7 +6658,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Kelp Forest bottom left",
+              "name": "Baby Dumbo",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6780,7 +6781,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6883,7 +6884,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6913,7 +6914,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spirit Form",
+              "name": "Transturtle Veil top right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6935,7 +6936,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Plant Leaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7032,7 +7033,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7054,7 +7055,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shark Fin Soup",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7069,7 +7070,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Zuuna's Perogi",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7106,7 +7107,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Sight Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7121,7 +7122,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Baby Piranha",
+              "name": "Hot Soup x 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7136,7 +7137,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Loaf of Life",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7151,7 +7152,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7166,7 +7167,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Divine Soup",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7188,7 +7189,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Magic Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7203,7 +7204,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Volcano Roll",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7218,7 +7219,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Tasty Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7248,7 +7249,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plump Perogi",
+              "name": "Leadership Roll x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7634,9 +7635,10 @@
         "name": "Urchin Costume",
         "id": 698034,
         "groups": [
+          "Damage",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -9031,6 +9033,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Aquaria",
@@ -9709,6 +9712,10 @@
             {
               "type": "item_check",
               "item": "Nature Form"
+            },
+            {
+              "type": "item_check",
+              "item": "Urchin Costume"
             }
           ]
         }

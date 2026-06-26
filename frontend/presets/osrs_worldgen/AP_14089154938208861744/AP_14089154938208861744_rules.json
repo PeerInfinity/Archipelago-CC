@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Old School Runescape WorldGen",
   "game_directory": "osrs_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -258,48 +258,14 @@
             "name": "Lumbridge->Barbarian Village",
             "connected_region": "Barbarian Village",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Barbarian Village"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Lumbridge->Edgeville",
             "connected_region": "Edgeville",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Willow Tree"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Edgeville"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -383,55 +349,7 @@
             "name": "Lumbridge->Canoe Tree",
             "connected_region": "Canoe Tree",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Barbarian Village"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Edgeville"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -468,39 +386,7 @@
             "name": "Quest: Cook's Assistant",
             "id": 458752,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Egg"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Milk"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wheat"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Windmill"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Crandor",
@@ -532,27 +418,7 @@
             "name": "Quest: The Restless Ghost",
             "id": 458754,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge Swamp"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wizard Tower"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Edgeville",
@@ -584,27 +450,7 @@
             "name": "Quest: Rune Mysteries",
             "id": 458768,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wizard Tower"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Mudskipper Point",
@@ -636,27 +482,7 @@
             "name": "Quest: X Marks the Spot",
             "id": 458771,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Weapons",
@@ -983,21 +809,7 @@
             "name": "Quest: Sheep Shearer",
             "id": 458756,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge Farms West"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Spinning Wheel"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Armor",
@@ -1205,27 +1017,7 @@
             "name": "South of Varrock->Edgeville",
             "connected_region": "Edgeville",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Willow Tree"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Edgeville"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -1302,61 +1094,7 @@
             "name": "South of Varrock->Canoe Tree",
             "connected_region": "Canoe Tree",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Edgeville"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wilderness"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Barbarian Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -1583,33 +1321,7 @@
             "name": "Quest: Demon Slayer",
             "id": 458753,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Varrock Palace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wizard Tower"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Tools",
@@ -1641,33 +1353,7 @@
             "name": "Quest: Romeo & Juliet",
             "id": 458755,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Varrock Palace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "West Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Karamja",
@@ -1699,33 +1385,7 @@
             "name": "Quest: Shield of Arrav",
             "id": 458757,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Varrock Palace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "West Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Armor",
@@ -1757,27 +1417,7 @@
             "name": "Have the Apothecary Make a Strength Potion",
             "id": 458884,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Limpwurt Root"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Red Spider Eggs"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Corsair Cove",
@@ -1969,89 +1609,7 @@
             "name": "West Varrock->Cook's Guild",
             "connected_region": "Cook's Guild",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Fly Fishing Spot"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Shrimp Spot"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Port Sarim"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Wheat"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Egg"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Milk"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Shrimp Spot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: West Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -2153,89 +1711,7 @@
             "name": "Enter the Cook's Guild",
             "id": 458825,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Fly Fishing Spot"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Shrimp Spot"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Port Sarim"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Wheat"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Egg"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Milk"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Shrimp Spot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Cook's Guild"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Barbarian Village",
@@ -2284,48 +1760,14 @@
             "name": "Edgeville->South of Varrock",
             "connected_region": "South of Varrock",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: South of Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
             "name": "Edgeville->Lumbridge",
             "connected_region": "Lumbridge",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Willow Tree"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Lumbridge"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -2395,61 +1837,7 @@
             "name": "Edgeville->Canoe Tree",
             "connected_region": "Canoe Tree",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Barbarian Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wilderness"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -2600,55 +1988,7 @@
             "name": "Barbarian Village->Canoe Tree",
             "connected_region": "Canoe Tree",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wilderness"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Edgeville"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -2892,56 +2232,7 @@
             "name": "Quest: Doric's Quest",
             "id": 458762,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Bronze Ores"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Clay Ore"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bronze Ores"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Clay Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mountain Pass"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Iron Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Iron Ore"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Weapons",
@@ -3066,56 +2357,7 @@
             "name": "Quest: Black Knights' Fortress",
             "id": 458763,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 12
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mines"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador Farms"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Ice Mountain"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Monastery"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Armor"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Varrock Palace",
@@ -3147,62 +2389,7 @@
             "name": "Quest: Below Ice Mountain",
             "id": 458772,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 16
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Barbarian Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mines"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mountain Pass"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Edgeville"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Ice Mountain"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Armor",
@@ -3268,39 +2455,7 @@
             "name": "Quest: Goblin Diplomacy",
             "id": 458766,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Goblin Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Onion"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Magic Spell",
@@ -3369,7 +2524,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "1 QP (Below Ice Mountain)",
                   "Area: Ice Mountain"
                 ]
@@ -3582,108 +2737,7 @@
             "name": "Quest: The Knight's Sword",
             "id": 458765,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Wheat"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Egg"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Milk"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Shrimp Spot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Bronze Ores"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Clay Ore"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Mudskipper Point"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Pie Dish"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Varrock Palace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Windmill"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Ranged Weapon",
@@ -3875,74 +2929,7 @@
             "name": "Port Sarim->Crandor",
             "connected_region": "Crandor",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">=",
-                    "right": 32
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mines"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Edgeville"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Monastery"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rimmington"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Crandor"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -4014,33 +3001,7 @@
             "name": "Quest: Pirate's Treasure",
             "id": 458767,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Karamja"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Lumberyard",
@@ -4181,74 +3142,7 @@
             "name": "Karamja->Crandor",
             "connected_region": "Crandor",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">=",
-                    "right": 32
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mines"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Edgeville"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Monastery"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rimmington"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Crandor"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -4388,74 +3282,7 @@
             "name": "Quest: Dragon Slayer",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 32
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Crandor"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dwarven Mines"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Edgeville"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Monastery"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rimmington"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "South of Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Victory",
@@ -4515,21 +3342,7 @@
             "name": "Rimmington->Corsair Cove",
             "connected_region": "Corsair Cove",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador Farms"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Corsair Cove"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -4629,21 +3442,7 @@
             "name": "Quest: Witch's Potion",
             "id": 458764,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rimmington"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Tools",
@@ -4675,27 +3474,7 @@
             "name": "Quest: The Corsair Curse",
             "id": 458770,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Corsair Cove"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Falador Farms"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rimmington"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: HAM Hideout",
@@ -4775,102 +3554,7 @@
             "name": "Crafting Guild Outskirts->Crafting Guild",
             "connected_region": "Crafting Guild",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_gold",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Coal Ore"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_silver",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "can_tan",
-                      "_original_ast_type": "rb_defined_helper"
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Crafting Guild"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -4911,102 +3595,7 @@
             "name": "Crafting Guild->Crafting Guild",
             "connected_region": "Crafting Guild",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_gold",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Coal Ore"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_silver",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "can_tan",
-                      "_original_ast_type": "rb_defined_helper"
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Crafting Guild"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -5187,27 +3776,7 @@
             "name": "Quest: Vampyre Slayer",
             "id": 458759,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Manor"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Armor",
@@ -5287,21 +3856,7 @@
             "name": "Quest: Imp Catcher",
             "id": 458760,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Imps"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wizard Tower"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Weapons",
@@ -5508,51 +4063,7 @@
             "name": "Quest: Prince Ali Rescue",
             "id": 458761,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Al Kharid"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bronze Ores"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Central Varrock"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Clay Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Draynor Village"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Sheep"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Spinning Wheel"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Dwarven Mines",
@@ -5584,21 +4095,7 @@
             "name": "Get Sent to Jail in Shantay Pass",
             "id": 458883,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Al Kharid"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Ranged Armor",
@@ -5759,27 +4256,7 @@
             "name": "Wilderness->South of Varrock",
             "connected_region": "South of Varrock",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Willow Tree"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: South of Varrock"
-                  }
-                }
-              ]
+              "rule": "And"
             }
           },
           {
@@ -5863,55 +4340,7 @@
             "name": "Wilderness->Canoe Tree",
             "connected_region": "Canoe Tree",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Barbarian Village"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Edgeville"
-                  }
-                }
-              ]
+              "rule": "Or"
             }
           },
           {
@@ -6026,107 +4455,7 @@
             "name": "Cut a Diamond",
             "id": 458801,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 8
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_gold",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Coal Ore"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_silver",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "can_tan",
-                      "_original_ast_type": "rb_defined_helper"
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Chisel"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Falador",
@@ -6140,107 +4469,7 @@
             "name": "Cut a Ruby",
             "id": 458799,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 4
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_gold",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Coal Ore"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_silver",
-                          "_original_ast_type": "rb_defined_helper"
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Anvil"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Furnace"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "can_tan",
-                      "_original_ast_type": "rb_defined_helper"
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Chisel"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Armor",
@@ -6266,62 +4495,7 @@
             "name": "Smelt an Iron Bar",
             "id": 458812,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Bronze Ores"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Clay Ore"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Furnace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Iron Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Anvil"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bronze Ores"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Furnace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Iron Ore"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Port Sarim",
@@ -6341,38 +4515,7 @@
             "name": "Mine Silver",
             "id": 458808,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Bronze Ores"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Clay Ore"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Silver Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Iron Ore"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: West Varrock",
@@ -6398,79 +4541,7 @@
             "name": "Smelt a Gold Bar",
             "id": 458815,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 6
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Bronze Ores"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Clay Ore"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Furnace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Gold Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Anvil"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bronze Ores"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Coal Ore"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Furnace"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Iron Ore"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Magic Spell",
@@ -6508,33 +4579,7 @@
             "name": "Catch a Trout",
             "id": 458818,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Fly Fishing Spot"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Fly Fishing Spot"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Shrimp Spot"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Wizard Tower",
@@ -6554,44 +4599,7 @@
             "name": "Catch a Lobster",
             "id": 458820,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 6
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lobster Spot"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Fly Fishing Spot"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Port Sarim"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Shrimp Spot"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Ranged Weapon",
@@ -6611,73 +4619,7 @@
             "name": "Bake a Redberry Pie",
             "id": 458822,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Wheat"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Egg"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Milk"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Shrimp Spot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Pie Dish"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Redberry Bush"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wheat"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Windmill"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Monastery",
@@ -6727,124 +4669,7 @@
             "name": "Bake a Cake",
             "id": 458826,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 6
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Fly Fishing Spot"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Shrimp Spot"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Port Sarim"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Wheat"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Egg"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Milk"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Shrimp Spot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Cake Tin"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Egg"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Milk"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Wheat"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Windmill"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Rimmington",
@@ -6894,21 +4719,7 @@
             "name": "Burn some Oak Logs",
             "id": 458829,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Ranged Weapon",
@@ -6928,27 +4739,7 @@
             "name": "Burn some Willow Logs",
             "id": 458830,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Willow Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Oak Tree"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Willow Tree"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Area: Lumbridge Swamp",
@@ -7032,26 +4823,7 @@
             "name": "Kill a Hill Giant",
             "id": 458842,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "rb_defined_helper"
-                    },
-                    "op": ">",
-                    "right": 2
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Hill Giant"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Armor",
@@ -7107,21 +4879,7 @@
             "name": "Cast Bones To Bananas",
             "id": 458779,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Nature Runes"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Mind Runes"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Progressive Tools",
@@ -8509,6 +6267,7 @@
       "Area: Lumbridge"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Old School Runescape WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Inscryption",
   "game_directory": "inscryption",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -46,7 +46,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Film Roll",
                       "Monocle",
@@ -73,7 +73,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Film Roll",
                       "Gems Module",
@@ -317,7 +317,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Oil Painting's Clover Plant",
                   "Squirrel Totem Head"
                 ]
@@ -337,7 +337,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Oil Painting's Clover Plant",
                   "Squirrel Totem Head"
                 ]
@@ -377,7 +377,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -403,7 +403,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -461,7 +461,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -490,7 +490,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -510,7 +510,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -530,7 +530,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -598,7 +598,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -641,7 +641,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -684,7 +684,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -724,7 +724,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -756,7 +756,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -788,7 +788,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -845,7 +845,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -938,7 +938,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -973,7 +973,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -1016,7 +1016,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -1059,7 +1059,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -1099,7 +1099,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1131,7 +1131,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1163,7 +1163,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1195,7 +1195,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1227,7 +1227,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1259,7 +1259,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1291,7 +1291,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1326,7 +1326,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -1420,7 +1420,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Camera Replica",
                           "Pile Of Meat"
                         ]
@@ -1488,7 +1488,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Camera Replica",
                       "Pile Of Meat"
                     ]
@@ -1666,7 +1666,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -1686,7 +1686,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1706,7 +1706,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1726,7 +1726,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery",
                   "Mycologists Holo Key",
@@ -1748,7 +1748,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bone Lord Holo Key",
                   "Inspectometer Battery"
                 ]
@@ -1768,7 +1768,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1839,7 +1839,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1859,7 +1859,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Holo Pelt",
                   "Inspectometer Battery"
@@ -1890,7 +1890,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
@@ -1922,7 +1922,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
@@ -1954,7 +1954,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
@@ -1986,7 +1986,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
@@ -2036,7 +2036,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -2073,7 +2073,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -2107,7 +2107,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -2127,7 +2127,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -2147,7 +2147,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -2167,7 +2167,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -2187,7 +2187,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery",
                   "Quill"
@@ -2239,7 +2239,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery",
                   "Quill"
@@ -2772,6 +2772,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Inscryption",

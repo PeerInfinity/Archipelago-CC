@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Dark Souls III",
   "game_directory": "dark_souls_3",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -152,7 +152,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cinders of a Lord - Abyss Watcher",
                   "Cinders of a Lord - Aldrich",
                   "Cinders of a Lord - Lothric Prince",
@@ -824,7 +824,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Boreal Valley Vordt",
                   "Transposing Kiln"
                 ]
@@ -845,7 +845,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Boreal Valley Vordt",
                   "Transposing Kiln"
                 ]
@@ -866,7 +866,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Rosaria",
                   "Transposing Kiln"
                 ]
@@ -887,7 +887,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Aldrich",
                   "Transposing Kiln"
                 ]
@@ -908,7 +908,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Aldrich",
                   "Transposing Kiln"
                 ]
@@ -929,7 +929,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Rotted Greatwood",
                   "Transposing Kiln"
                 ]
@@ -950,7 +950,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Rotted Greatwood",
                   "Transposing Kiln"
                 ]
@@ -971,7 +971,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of a Crystal Sage",
                   "Transposing Kiln"
                 ]
@@ -992,7 +992,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of a Crystal Sage",
                   "Transposing Kiln"
                 ]
@@ -1013,7 +1013,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Deacons of the Deep",
                   "Transposing Kiln"
                 ]
@@ -1034,7 +1034,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Deacons of the Deep",
                   "Transposing Kiln"
                 ]
@@ -1055,7 +1055,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of a Stray Demon",
                   "Transposing Kiln"
                 ]
@@ -1076,7 +1076,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of a Stray Demon",
                   "Transposing Kiln"
                 ]
@@ -1097,7 +1097,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Blood of the Wolf",
                   "Transposing Kiln"
                 ]
@@ -1118,7 +1118,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Blood of the Wolf",
                   "Transposing Kiln"
                 ]
@@ -1139,7 +1139,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of High Lord Wolnir",
                   "Transposing Kiln"
                 ]
@@ -1160,7 +1160,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of High Lord Wolnir",
                   "Transposing Kiln"
                 ]
@@ -1181,7 +1181,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of a Demon",
                   "Transposing Kiln"
                 ]
@@ -1202,7 +1202,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of a Demon",
                   "Transposing Kiln"
                 ]
@@ -1223,7 +1223,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Old Demon King",
                   "Transposing Kiln"
                 ]
@@ -1244,7 +1244,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Old Demon King",
                   "Transposing Kiln"
                 ]
@@ -1265,7 +1265,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Pontiff Sulyvahn",
                   "Transposing Kiln"
                 ]
@@ -1286,7 +1286,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Pontiff Sulyvahn",
                   "Transposing Kiln"
                 ]
@@ -1307,7 +1307,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Yhorm the Giant",
                   "Transposing Kiln"
                 ]
@@ -1328,7 +1328,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Yhorm the Giant",
                   "Transposing Kiln"
                 ]
@@ -1349,7 +1349,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Dancer",
                   "Transposing Kiln"
                 ]
@@ -1370,7 +1370,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Dancer",
                   "Transposing Kiln"
                 ]
@@ -1391,7 +1391,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Dragonslayer Armour",
                   "Transposing Kiln"
                 ]
@@ -1412,7 +1412,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Dragonslayer Armour",
                   "Transposing Kiln"
                 ]
@@ -1433,7 +1433,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Consumed Oceiros",
                   "Transposing Kiln"
                 ]
@@ -1454,7 +1454,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Consumed Oceiros",
                   "Transposing Kiln"
                 ]
@@ -1475,7 +1475,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Twin Princes",
                   "Transposing Kiln"
                 ]
@@ -1496,7 +1496,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Twin Princes",
                   "Transposing Kiln"
                 ]
@@ -1517,7 +1517,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Champion Gundyr",
                   "Transposing Kiln"
                 ]
@@ -1538,7 +1538,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of Champion Gundyr",
                   "Transposing Kiln"
                 ]
@@ -1559,7 +1559,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Nameless King",
                   "Transposing Kiln"
                 ]
@@ -1580,7 +1580,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Nameless King",
                   "Transposing Kiln"
                 ]
@@ -1601,7 +1601,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Nameless King",
                   "Transposing Kiln"
                 ]
@@ -1622,7 +1622,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Lords",
                   "Transposing Kiln"
                 ]
@@ -1643,7 +1643,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Soul of the Lords",
                   "Transposing Kiln"
                 ]
@@ -3033,7 +3033,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Pyromancy Flame",
                   "Transposing Kiln",
                   "US -> RS"
@@ -3092,7 +3092,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carthus Pyromancy Tome",
                   "Great Swamp Pyromancy Tome",
                   "Izalith Pyromancy Tome"
@@ -3113,7 +3113,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carthus Pyromancy Tome",
                   "Great Swamp Pyromancy Tome",
                   "Izalith Pyromancy Tome"
@@ -3134,7 +3134,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carthus Pyromancy Tome",
                   "Great Swamp Pyromancy Tome",
                   "Izalith Pyromancy Tome"
@@ -3155,7 +3155,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carthus Pyromancy Tome",
                   "Great Swamp Pyromancy Tome",
                   "Izalith Pyromancy Tome"
@@ -3176,7 +3176,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Braille Divine Tome of Carim",
                   "Braille Divine Tome of Lothric"
                 ]
@@ -6088,7 +6088,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -6327,7 +6327,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -6350,7 +6350,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -6477,7 +6477,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -8095,7 +8095,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -8117,7 +8117,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -9093,7 +9093,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -9130,7 +9130,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -9153,7 +9153,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -9175,7 +9175,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -9197,7 +9197,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -9219,7 +9219,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Crystal Scroll",
                   "Golden Scroll",
                   "Logan's Scroll",
@@ -14937,7 +14937,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Pyromancy Flame",
                   "Transposing Kiln"
                 ]
@@ -14967,7 +14967,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Grand Archives Key",
                       "Pyromancy Flame",
                       "Transposing Kiln"
@@ -20231,7 +20231,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Deep Braille Divine Tome",
                   "Grave Warden Pyromancy Tome",
                   "Londor Braille Divine Tome",
@@ -20254,7 +20254,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Deep Braille Divine Tome",
                   "Grave Warden Pyromancy Tome",
                   "Londor Braille Divine Tome",
@@ -20277,7 +20277,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Deep Braille Divine Tome",
                   "Grave Warden Pyromancy Tome",
                   "Londor Braille Divine Tome",
@@ -20300,7 +20300,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Deep Braille Divine Tome",
                   "Grave Warden Pyromancy Tome",
                   "Londor Braille Divine Tome",
@@ -34515,6 +34515,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Dark Souls III",

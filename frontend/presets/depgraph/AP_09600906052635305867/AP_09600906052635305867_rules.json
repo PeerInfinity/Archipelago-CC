@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph",
   "game_directory": "depgraph",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 19,
   "seed_name": "09600906052635305867",
   "player_names": {
@@ -39,7 +39,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 1",
                   "Node 1"
                 ]
@@ -88,7 +88,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 2",
                   "Node 2"
                 ]
@@ -101,7 +101,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 17",
                   "Completed Node 2",
                   "Node 2"
@@ -151,7 +151,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 3",
                   "Completed Node 6",
                   "Node 3"
@@ -201,7 +201,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 4",
                   "Node 4"
                 ]
@@ -250,7 +250,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 5",
                   "Node 5"
                 ]
@@ -263,7 +263,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 13",
                   "Completed Node 5",
                   "Node 5"
@@ -313,7 +313,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 3",
                   "Completed Node 6",
                   "Node 6"
@@ -327,7 +327,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 6",
                   "Node 6"
                 ]
@@ -376,7 +376,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 7",
                   "Node 7"
                 ]
@@ -425,7 +425,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 8",
                   "Node 8"
                 ]
@@ -474,7 +474,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 9",
                   "Node 9"
                 ]
@@ -523,7 +523,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 10",
                   "Node 10"
                 ]
@@ -572,7 +572,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 11",
                   "Node 11"
                 ]
@@ -656,7 +656,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 13",
                   "Completed Node 5",
                   "Node 13"
@@ -670,7 +670,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 13",
                   "Node 13"
                 ]
@@ -719,7 +719,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 14",
                   "Node 14"
                 ]
@@ -768,7 +768,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 15",
                   "Node 15"
                 ]
@@ -852,7 +852,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 17",
                   "Completed Node 2",
                   "Node 17"
@@ -866,7 +866,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 17",
                   "Node 17"
                 ]
@@ -915,7 +915,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Completed Node 18",
                   "Node 18"
                 ]
@@ -12338,6 +12338,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Meritous WorldGen",
   "game_directory": "meritous_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -17,23 +17,7 @@
             "name": "To Meridian",
             "connected_region": "Meridian",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Important Artifacts",
-                    "count": 1
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "PSI Keys",
-                    "count": 1
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -397,23 +381,7 @@
             "name": "To Ataraxia",
             "connected_region": "Ataraxia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Important Artifacts",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "PSI Keys",
-                    "count": 2
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -777,23 +745,7 @@
             "name": "To Merodach",
             "connected_region": "Merodach",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Important Artifacts",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "PSI Keys",
-                    "count": 3
-                  }
-                }
-              ]
+              "rule": "And"
             }
           }
         ],
@@ -1169,7 +1121,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Agate Knife",
                   "Cursed Seal"
                 ]
@@ -2228,6 +2180,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Meritous WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Inscryption WorldGen",
   "game_directory": "inscryption_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -36,7 +36,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Epitaph Piece": 9,
                   "Camera Replica": 1,
                   "Film Roll": 1,
@@ -52,7 +52,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Epitaph Piece": 9,
                   "Camera Replica": 1,
                   "Film Roll": 1,
@@ -295,7 +295,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Oil Painting's Clover Plant",
                   "Squirrel Totem Head"
                 ]
@@ -315,7 +315,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Oil Painting's Clover Plant",
                   "Squirrel Totem Head"
                 ]
@@ -355,7 +355,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -373,36 +373,7 @@
             "name": "Act 2 - Boss Magnificus",
             "id": 147018,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Card Pack",
@@ -434,25 +405,7 @@
             "name": "Act 2 - Boss P03",
             "id": 147020,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -468,7 +421,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -488,7 +441,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -508,7 +461,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -568,36 +521,7 @@
             "name": "Act 2 - Battle Goobert",
             "id": 147027,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Magnificus Eye",
@@ -611,36 +535,7 @@
             "name": "Act 2 - Battle Pike Mage",
             "id": 147028,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -654,36 +549,7 @@
             "name": "Act 2 - Battle Lonely Wizard",
             "id": 147029,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -697,25 +563,7 @@
             "name": "Act 2 - Battle Inspector",
             "id": 147030,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Greater Smoke",
@@ -729,25 +577,7 @@
             "name": "Act 2 - Battle Melter",
             "id": 147031,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Holo Pelt",
@@ -761,25 +591,7 @@
             "name": "Act 2 - Battle Dredger",
             "id": 147032,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Stunted Wolf Card",
@@ -823,7 +635,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Camera Replica",
                   "Pile Of Meat"
                 ]
@@ -911,25 +723,7 @@
             "name": "Act 2 - Tower Chest 1",
             "id": 147041,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -943,36 +737,7 @@
             "name": "Act 2 - Tower Chest 2",
             "id": 147042,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Currency",
@@ -986,36 +751,7 @@
             "name": "Act 2 - Tower Chest 3",
             "id": 147043,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Holo Pelt",
@@ -1029,36 +765,7 @@
             "name": "Act 2 - Tentacle",
             "id": 147044,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Great Kraken Card",
@@ -1072,25 +779,7 @@
             "name": "Act 2 - Factory Trash Can",
             "id": 147045,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Currency",
@@ -1104,25 +793,7 @@
             "name": "Act 2 - Factory Drawer 1",
             "id": 147046,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Gems Module",
@@ -1136,25 +807,7 @@
             "name": "Act 2 - Factory Drawer 2",
             "id": 147047,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Wardrobe Key",
@@ -1168,25 +821,7 @@
             "name": "Act 2 - Factory Chest 1",
             "id": 147048,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Currency",
@@ -1200,25 +835,7 @@
             "name": "Act 2 - Factory Chest 2",
             "id": 147049,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Card Pack",
@@ -1232,25 +849,7 @@
             "name": "Act 2 - Factory Chest 3",
             "id": 147050,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Currency",
@@ -1264,25 +863,7 @@
             "name": "Act 2 - Factory Chest 4",
             "id": 147051,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Card Pack",
@@ -1296,36 +877,7 @@
             "name": "Act 2 - Ancient Obol",
             "id": 147052,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -1390,36 +942,7 @@
             "name": "Act 2 - Mycologists Holo Key",
             "id": 147056,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
-                  }
-                }
-              ]
+              "rule": "And"
             },
             "item": {
               "name": "Currency",
@@ -1461,25 +984,7 @@
             "name": "Act 2 - Monocle",
             "id": 147059,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                }
-              ]
+              "rule": "Or"
             },
             "item": {
               "name": "Card Pack",
@@ -1644,7 +1149,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -1664,7 +1169,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1684,7 +1189,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1704,7 +1209,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery",
                   "Mycologists Holo Key",
@@ -1726,7 +1231,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bone Lord Holo Key",
                   "Inspectometer Battery"
                 ]
@@ -1746,7 +1251,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1817,7 +1322,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -1837,7 +1342,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Holo Pelt",
                   "Inspectometer Battery"
@@ -1858,7 +1363,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Holo Pelt": 2,
                   "Gems Module": 1,
                   "Inspectometer Battery": 1
@@ -1879,7 +1384,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Holo Pelt": 3,
                   "Gems Module": 1,
                   "Inspectometer Battery": 1
@@ -1900,7 +1405,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Holo Pelt": 4,
                   "Gems Module": 1,
                   "Inspectometer Battery": 1
@@ -1921,7 +1426,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Holo Pelt": 5,
                   "Gems Module": 1,
                   "Inspectometer Battery": 1
@@ -1970,7 +1475,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -2007,7 +1512,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -2041,7 +1546,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery"
                 ]
@@ -2061,7 +1566,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -2081,7 +1586,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -2101,7 +1606,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Inspectometer Battery",
                   "Quill"
                 ]
@@ -2121,7 +1626,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery",
                   "Quill"
@@ -2173,7 +1678,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Gems Module",
                   "Inspectometer Battery",
                   "Quill"
@@ -2807,6 +2312,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Inscryption WorldGen",
