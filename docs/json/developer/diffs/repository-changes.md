@@ -157,7 +157,6 @@ test/general/test_rule_builder.py
 ### World Init Files (see diff-files/world-init-files.diff)
 ```
 worlds/alttp/__init__.py
-worlds/dkc3/__init__.py
 worlds/ff1/__init__.py
 worlds/lufia2ac/__init__.py
 worlds/mmbn3/__init__.py
@@ -180,7 +179,6 @@ Note: `BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, and `Launcher.
 ### World Implementations (skip_required_files support)
 Modified world implementations to support generation without ROM files:
 - A Link to the Past (alttp)
-- Donkey Kong Country 3 (dkc3)
 - Final Fantasy I (ff1)
 - Lufia II Ancient Cave (lufia2ac)
 - Mega Man Battle Network 3 (mmbn3)
@@ -196,9 +194,12 @@ Modified world implementations to support generation without ROM files:
 - **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic
 - **test/general/test_rule_builder.py** - Added ~600 lines of evaluation tests for fork-only Rule Builder rule types: CountItem, CountFromList, Compare, Arithmetic, MinValue, MaxValue, WeightedSum, and more
 
-### Rule Builder
-- **rule_builder/rules.py** - Extended from 1,822 to 4,219 lines. Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and many new rule types for AST format support (`Not`, `CountItem`, `Compare`, `Arithmetic`, `Conditional`, `HelperCall`, etc.). See [fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md) for detailed comparison.
-- **rule_builder/__init__.py** - Upstream: empty file. Fork: 165 lines with full API exports and documentation.
+As of the 2026-06-25 overlay re-base, the fork's `rule_builder/` is the **clean upstream base plus separate overlay modules**, not a monolithic `rules.py`. See [fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md) for the detailed comparison.
+- **rule_builder/rules.py** - Upstream base with minimal additive edits (`get_value`/`get_count`/`to_dict`/`__lshift__` base methods, widened `Has.count`, `_make_hashable` for HelperCall args). Otherwise kept byte-identical to upstream so future merges stay low-conflict.
+- **rule_builder/extra_rules.py** - Fork overlay: the 15 fork-specific rule types (Arithmetic, ASTRule, CountItem, CountFromList, Compare, etc.), self-registered into `DEFAULT_RULES`.
+- **rule_builder/world_mixin.py** - Fork overlay: `RuleWorldMixin` / `RuleBuilderLogicMixin` (World bound to object at runtime, LogicMixin resolved lazily).
+- **rule_builder/{ast_format,ast_explain,_ast_utils,pathfinding}.py** - Fork overlay: AST-format support and pathfinding helpers.
+- **rule_builder/__init__.py** - Upstream: empty file. Fork: re-exports the full API surface (57 names) across the split modules plus the upstream field_resolvers.
 
 ### Configuration Files
 - **.gitignore** - Added patterns for project-specific files
