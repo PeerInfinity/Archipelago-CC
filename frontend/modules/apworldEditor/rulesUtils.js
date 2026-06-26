@@ -90,8 +90,11 @@ export function renameItemInRules(rulesDoc, playerId, oldName, newName) {
     } else if (
       node.rule === 'HasAll' || node.rule === 'HasAny' || node.rule === 'HasFromList'
     ) {
-      if (node.args && Array.isArray(node.args.items)) {
-        node.args.items = node.args.items.map(i => i === oldName ? newName : i);
+      // Upstream key is `item_names`; accept legacy `items` and write back to whichever exists.
+      const key = node.args && Array.isArray(node.args.item_names) ? 'item_names'
+        : (node.args && Array.isArray(node.args.items) ? 'items' : null);
+      if (key) {
+        node.args[key] = node.args[key].map(i => i === oldName ? newName : i);
       }
     }
   });
@@ -212,7 +215,8 @@ export function validateRules(rulesDoc, playerId) {
     } else if (
       node.rule === 'HasAll' || node.rule === 'HasAny' || node.rule === 'HasFromList'
     ) {
-      const arr = Array.isArray(node.args?.items) ? node.args.items : [];
+      const arr = Array.isArray(node.args?.item_names) ? node.args.item_names
+        : (Array.isArray(node.args?.items) ? node.args.items : []);
       for (const name of arr) {
         if (name && !itemNames.has(name)) {
           issues.push({

@@ -1122,7 +1122,7 @@ export class PathAnalyzerLogic {
 
       case 'HasAll':
       case 'HasAny': {
-        const items = args.items || [];
+        const items = args.item_names || args.items || [];
         const itemNames = items.map(i => i.item_name || i).join(', ');
         return {
           type: ruleName.toLowerCase(),

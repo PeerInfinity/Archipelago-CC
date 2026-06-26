@@ -39,7 +39,7 @@ function defaultShape(ruleName) {
       break;
     case 'HasAll':
     case 'HasAny':
-      node.args = { items: [] };
+      node.args = { item_names: [] };
       break;
     case 'And':
     case 'Or':
@@ -262,8 +262,11 @@ export default class RuleTreeEditor {
   }
 
   _hasListFields(node) {
-    const args = node.args || (node.args = { items: [] });
-    if (!Array.isArray(args.items)) args.items = [];
+    const args = node.args || (node.args = { item_names: [] });
+    // Accept legacy `items`; canonicalize to upstream `item_names`.
+    if (args.item_names === undefined && Array.isArray(args.items)) args.item_names = args.items;
+    if ('items' in args) delete args.items;
+    if (!Array.isArray(args.item_names)) args.item_names = [];
     const wrap = this._fieldRow();
     wrap.style.alignItems = 'flex-start';
     wrap.appendChild(this._label('items:'));
@@ -273,15 +276,15 @@ export default class RuleTreeEditor {
     listWrap.style.flexDirection = 'column';
     listWrap.style.gap = '2px';
 
-    args.items.forEach((itemName, idx) => {
+    args.item_names.forEach((itemName, idx) => {
       const row = document.createElement('div');
       row.style.display = 'flex';
       row.style.gap = '4px';
       const input = this._makeItemInput(itemName);
-      input.addEventListener('input', (e) => { args.items[idx] = e.target.value; });
+      input.addEventListener('input', (e) => { args.item_names[idx] = e.target.value; });
       row.appendChild(input);
       const rm = this._makeButton('×', '#8a2a2a', () => {
-        args.items.splice(idx, 1);
+        args.item_names.splice(idx, 1);
         this._render();
       });
       rm.style.padding = '1px 6px';
@@ -290,7 +293,7 @@ export default class RuleTreeEditor {
     });
 
     const addBtn = this._makeButton('+ item', '#3a3a3a', () => {
-      args.items.push('');
+      args.item_names.push('');
       this._render();
     });
     addBtn.style.alignSelf = 'flex-start';

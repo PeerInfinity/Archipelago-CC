@@ -654,8 +654,8 @@ function describeRule(rule) {
     if (rule.rule === 'True_') return 'True_';
     if (rule.rule === 'False_') return 'False_';
     if (rule.rule === 'Has') return `Has(${rule.args?.item_name ?? '?'})`;
-    if (rule.rule === 'HasAll') return `HasAll(${(rule.args?.items ?? []).join(', ')})`;
-    if (rule.rule === 'HasAny') return `HasAny(${(rule.args?.items ?? []).join(', ')})`;
+    if (rule.rule === 'HasAll') return `HasAll(${(rule.args?.item_names ?? rule.args?.items ?? []).join(', ')})`;
+    if (rule.rule === 'HasAny') return `HasAny(${(rule.args?.item_names ?? rule.args?.items ?? []).join(', ')})`;
     if (rule.rule === 'And') return `And(${(rule.children ?? []).map(describeRule).join(', ')})`;
     if (rule.rule === 'Or') return `Or(${(rule.children ?? []).map(describeRule).join(', ')})`;
     return rule.rule ?? JSON.stringify(rule);

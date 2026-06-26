@@ -422,21 +422,21 @@ class HelperStatementMixin:
             # Handle HasAll rules (Rule Builder format)
             if rule_type == 'HasAll':
                 args = expr.get('args', {})
-                items = args.get('items', [])
+                items = args.get('item_names', args.get('items', []))
                 # Use list literal to match original ALTTP style
                 return f"state.has_all({items!r}, player)"
 
             # Handle HasAny rules (Rule Builder format)
             if rule_type == 'HasAny':
                 args = expr.get('args', {})
-                items = args.get('items', [])
+                items = args.get('item_names', args.get('items', []))
                 # Use list literal to match original ALTTP style
                 return f"state.has_any({items!r}, player)"
 
             # Handle HasFromList rules (Rule Builder format)
             if rule_type == 'HasFromList':
                 args = expr.get('args', {})
-                items_raw = args.get('items', [])
+                items_raw = args.get('item_names', args.get('items', []))
                 count = args.get('count', 1)
                 # Resolve items if they're a complex expression (e.g., list(dict.values()))
                 items = self._resolve_items_for_has_from_list(items_raw)
@@ -447,7 +447,7 @@ class HelperStatementMixin:
             # Handle HasFromListUnique rules (Rule Builder format)
             if rule_type == 'HasFromListUnique':
                 args = expr.get('args', {})
-                items_raw = args.get('items', [])
+                items_raw = args.get('item_names', args.get('items', []))
                 count = args.get('count', 1)
                 # Resolve items if they're a complex expression
                 items = self._resolve_items_for_has_from_list(items_raw)
