@@ -499,13 +499,25 @@ Against pristine upstream v0.2.32:
 
 ---
 
-## Fixes to Original Copy
+## Python 3.11 f-string compatibility
 
-As of v0.2.32 the original copy in `scripts/test/fixtures/tracker_original/` is
-**byte-pristine upstream** — no fixes are applied. The repo runs Python 3.12, which
-natively supports the nested same-quote f-strings (e.g.
-`f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"`) that previously required
-a single-quote workaround for Python < 3.12.
+Upstream UT v0.2.32 uses Python 3.12+ f-string syntax (PEP 701) in `TrackerClient.py`:
+nested same-quote f-strings (e.g.
+`f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"`) and backslashes inside
+f-string expressions (e.g. `f"...{'\n    '.join(...)}"`). These are hard `SyntaxError`s
+under Python < 3.12. The application runtime uses 3.12, but the **`Analyze modified
+files` CI workflow runs flake8 under Python 3.11**, where these files fail to parse
+(`E999`). Handled in two ways:
+
+- **Live fork copy** (`worlds/tracker/TrackerClient.py`): the two backslash-in-f-string
+  expressions in the `explain` override block are rewritten to hoist the join into an
+  `indented` variable, keeping the file importable on Python 3.11. (The fork copy is the
+  one users actually run, so it is kept 3.11-compatible rather than excluded.)
+- **Vendored reference fixtures** (`scripts/test/fixtures/tracker_original*/`): kept
+  **byte-pristine upstream** — not edited — and instead excluded from flake8 via the
+  fork-owned `.flake8` (`extend-exclude = scripts/test/fixtures/tracker_original*`).
+  These snapshots exist only as fuzz-comparison baselines and are never imported on 3.11,
+  so preserving byte-identity outweighs linting them.
 
 ---
 

@@ -1,0 +1,14 @@
+# Fork-owned flake8 config (upstream Archipelago ships no flake8 config file).
+#
+# The vendored Universal Tracker reference fixtures under
+# scripts/test/fixtures/tracker_original* are byte-pristine snapshots of
+# FarisTheAncient's UT (kept unmodified so the fuzz tests can diff our
+# tracker against the baseline). Upstream UT v0.2.32 uses Python 3.12+
+# f-string syntax (PEP 701: same-quote nesting and backslashes inside
+# f-string expressions) in TrackerClient.py, which is a hard SyntaxError
+# under the 3.11 interpreter that the "Analyze modified files" workflow
+# runs flake8 with. Exclude these vendored snapshots from linting rather
+# than edit them; the live fork copy (worlds/tracker/TrackerClient.py) is
+# kept 3.11-compatible and is NOT excluded.
+[flake8]
+extend-exclude = scripts/test/fixtures/tracker_original*
