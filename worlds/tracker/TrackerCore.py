@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional
 
 from BaseClasses import CollectionState, LocationProgressType, ItemClassification
 from . import CurrentTrackerState, UT_VERSION, DeferredEntranceMode
-from .TrackerCoreBase import TrackerCoreBase
+from .TrackerCoreBase import TrackerCoreBase, TrackerLogLine, TrackerLogLineGroup
 from .worldgen_mixin import WorldgenMixin
 from .pickle_mixin import PickleMixin
 from .tracker_extensions import TrackerTestingMixin
@@ -357,14 +357,21 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         """
         Update tracker state with extension support.
 
-        This overrides the base updateTracker to add:
-        - Lenient error handling in sphere_log_mode
-        - Configurable event filtering
-        - Server-trusted item classification
+        Layers the fork's testing/tracking features on top of upstream v0.2.32's
+        TrackerLogLine logging+sorting system. The structure mirrors the base
+        TrackerCoreBase.updateTracker; the fork-specific hooks are marked "[fork]":
+        - lenient invalid-item handling in sphere_log_mode (warn vs. raise)
+        - configurable item/location inclusion (_filter_invalid_items, _should_*)
+        - server-trusted item classification (ItemClassification(item_flags))
+
+        Display ordering/grouping is handled by the base's get_readable_locations /
+        sort_log_lines / log_all_to_tab; tracking correctness (callback_list ->
+        in_logic_locations, what the UT fuzz comparison uses) is unaffected by it.
         """
         if self.player_id is None or self.multiworld is None:
             self.logger.error("Player YAML not installed or Generator failed")
-            self.set_page(f"Check Player YAMLs for error; Tracker {UT_VERSION} for AP version {__version__}")
+            error_label: str = f"Check Player YAMLs for error; Tracker {UT_VERSION} for AP version {__version__}"
+            self.set_page(TrackerLogLine(error_label, "", TrackerLogLineGroup.UT_STATUS))
             return CurrentTrackerState.init_empty_state()
 
         state = CollectionState(self.multiworld, self.enforce_deferred_connections != DeferredEntranceMode.disabled)
@@ -377,23 +384,23 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         item_id_to_name = self.multiworld.worlds[self.player_id].item_id_to_name
         location_id_to_name = self.multiworld.worlds[self.player_id].location_id_to_name
 
-        # Check for invalid items
+        # [fork] Lenient invalid-item handling: warn instead of raising in sphere_log_mode
         invalid_items = [str(item.item) for item in self.tracker_items_received if item.item not in item_id_to_name]
         if invalid_items:
             if self.sphere_log_mode:
-                # In sphere_log_mode: Log warning but don't throw
                 self.logger.warning(
                     f"Skipping {len(invalid_items)} unknown items (datapackage mismatch?): "
                     f"{invalid_items[:5]}{'...' if len(invalid_items) > 5 else ''}"
                 )
             else:
-                # Normal mode: throw an exception (original behavior)
                 print(invalid_items)
                 self.logger.error("Your datapackage is incorrect, please correct the apworld for " + str(self.game))
                 self.logger.error("The Following items are unknown [" + ",".join(invalid_items) + "]")
                 raise Exception("Your datapackage is incorrect, please correct the apworld for " + str(self.game))
 
-        # Filter to only valid items in sphere_log_mode
+        self.clear_page()
+
+        # [fork] Filter to only valid items (sphere_log_mode tolerance)
         items_to_process = self._filter_invalid_items(self.tracker_items_received, item_id_to_name)
 
         for item_name, item_flags, item_loc, item_player in [
@@ -402,33 +409,31 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         ] + [(name, ItemClassification.progression, -1, -1) for name in self.manual_items]:
             try:
                 world_item = self.multiworld.create_item(item_name, self.player_id)
-                if item_loc > 0 and item_player == self.slot and item_loc in location_id_to_name:
+                if item_loc > 0 and item_player == self.slot and item_loc in location_id_to_name and location_id_to_name[item_loc] in self.multiworld.regions.location_cache[self.player_id]:
                     world_item.location = self.multiworld.get_location(location_id_to_name[item_loc], self.player_id)
-                # Use server's item_flags directly for classification
+                # [fork] Trust the server's item_flags directly for classification
                 world_item.classification = ItemClassification(item_flags)
                 state.collect(world_item, True)
                 if world_item.advancement:
                     prog_items[world_item.name] += 1
-                if self._should_include_item_in_count(world_item):
+                if self._should_include_item_in_count(world_item):  # [fork]
                     all_items[world_item.name] += 1
             except Exception:
-                self.log_to_tab("Item id " + str(item_name) + " not able to be created", False)
+                error_label: str = "Item id " + str(item_name) + " not able to be created"
+                self.add_log_line(TrackerLogLine(error_label, "", TrackerLogLineGroup.UT_ERROR))
 
-        if self._should_sweep_for_advancements():
+        if self._should_sweep_for_advancements():  # [fork]
             state.sweep_for_advancements(
                 locations=[location for location in self.multiworld.get_locations(self.player_id) if not location.address]
             )
 
-        self.clear_page()
         regions = []
         locations = []
-        readable_locations = []
         glitches_locations: list[int] = []
         hinted_locations = []
-
         for temp_loc in self.multiworld.get_reachable_locations(state, self.player_id):
             address_is_none_or_list = temp_loc.address is None or isinstance(temp_loc.address, list)
-            if not self._should_include_location(temp_loc, address_is_none_or_list):
+            if not self._should_include_location(temp_loc, address_is_none_or_list):  # [fork]
                 continue
             elif self.hide_excluded and temp_loc.progress_type == LocationProgressType.EXCLUDED:
                 continue
@@ -442,33 +447,20 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
                     temp_name = temp_loc.name
                     if temp_loc.address in self.location_alias_map:
                         temp_name += f" ({self.location_alias_map[temp_loc.address]})"
-                    if self.output_format == "Both":
-                        if temp_loc.progress_type == LocationProgressType.EXCLUDED:
-                            self.log_to_tab("[color=" + self.get_ut_color("excluded") + "]" + region + " | " + temp_name + "[/color]", True)
-                        elif temp_loc.address in self.hints:
-                            self.log_to_tab("[color=" + self.get_ut_color("hinted") + "]" + region + " | " + temp_name + "[/color]", True)
-                            hinted_locations.append(temp_loc)
-                        else:
-                            self.log_to_tab(region + " | " + temp_name, True)
-                        readable_locations.append(region + " | " + temp_name)
-                    elif self.output_format == "Location":
-                        if temp_loc.progress_type == LocationProgressType.EXCLUDED:
-                            self.log_to_tab("[color=" + self.get_ut_color("excluded") + "]" + temp_name + "[/color]", True)
-                        elif temp_loc.address in self.hints:
-                            self.log_to_tab("[color=" + self.get_ut_color("hinted") + "]" + temp_name + "[/color]", True)
-                            hinted_locations.append(temp_loc)
-                        else:
-                            self.log_to_tab(temp_name, True)
-                        readable_locations.append(temp_name)
+                    group: TrackerLogLineGroup = TrackerLogLineGroup.DEFAULT
+                    if temp_loc.progress_type == LocationProgressType.EXCLUDED:
+                        group = TrackerLogLineGroup.EXCLUDED
+                    elif temp_loc.address in self.hints:
+                        group = TrackerLogLineGroup.HINTED
+                        hinted_locations.append(temp_loc)
+                    self.add_log_line(TrackerLogLine(temp_name, region, group))
                     if region not in regions:
                         regions.append(region)
-                        if self.output_format == "Region":
-                            self.log_to_tab(region, True)
-                            readable_locations.append(region)
                     callback_list.append(temp_loc.name)
                     locations.append(temp_loc.address)
             except Exception:
-                self.log_to_tab("ERROR: location " + temp_loc.name + " broke something, report this to discord")
+                error_label: str = "ERROR: location " + temp_loc.name + " broke something, report this to discord"
+                self.add_log_line(TrackerLogLine(error_label, region, TrackerLogLineGroup.UT_ERROR))
                 pass
 
         events = [location.item.name for location in state.advancements if location.player == self.player_id and location.item is not None]
@@ -477,16 +469,23 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
             entrance for region in state.reachable_regions[self.player_id]
             for entrance in region.exits if entrance.can_reach(state) and entrance.connected_region is None
         ]
+        for entrance in unconnected_entrances:
+            entrance_region = entrance.parent_region.name
+            self.add_log_line(TrackerLogLine(entrance.name, entrance_region, TrackerLogLineGroup.UNCONNECTED))
+            if entrance_region not in regions:
+                regions.append(entrance_region)
 
         self.locations_available = locations
         glitches_item_name = getattr(self.multiworld.worlds[self.player_id], "glitches_item_name", "")
-        glitches_state = state.copy()
+        glitches_state = None
         if glitches_item_name:
+            glitches_state = state.copy()
             try:
                 world_item = self.multiworld.create_item(glitches_item_name, self.player_id)
                 glitches_state.collect(world_item, True)
             except Exception:
-                self.log_to_tab("Item id " + str(glitches_item_name) + " not able to be created", False)
+                error_label: str = "Item id " + str(glitches_item_name) + " not able to be created"
+                self.add_log_line(TrackerLogLine(error_label, region, TrackerLogLineGroup.UT_ERROR))
             else:
                 glitches_state.sweep_for_advancements(
                     locations=[location for location in self.multiworld.get_locations(self.player_id) if not location.address]
@@ -511,33 +510,24 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
                                 temp_name = temp_loc.name
                                 if temp_loc.address in self.location_alias_map:
                                     temp_name += f" ({self.location_alias_map[temp_loc.address]})"
-                                if self.output_format == "Both":
-                                    if temp_loc.progress_type == LocationProgressType.EXCLUDED:
-                                        self.log_to_tab("[color=" + self.get_ut_color("out_of_logic_glitched") + "]" + region + " | " + temp_name + "[/color]", True)
-                                    elif temp_loc.address in self.hints:
-                                        self.log_to_tab("[color=" + self.get_ut_color("hinted_glitched") + "]" + region + " | " + temp_name + "[/color]", True)
-                                        hinted_locations.append(temp_loc)
-                                    else:
-                                        self.log_to_tab("[color=" + self.get_ut_color("glitched") + "]" + region + " | " + temp_name + "[/color]", True)
-                                    readable_locations.append(region + " | " + temp_name)
-                                elif self.output_format == "Location":
-                                    if temp_loc.progress_type == LocationProgressType.EXCLUDED:
-                                        self.log_to_tab("[color=" + self.get_ut_color("out_of_logic_glitched") + "]" + temp_name + "[/color]", True)
-                                    elif temp_loc.address in self.hints:
-                                        self.log_to_tab("[color=" + self.get_ut_color("hinted_glitched") + "]" + temp_name + "[/color]", True)
-                                        hinted_locations.append(temp_loc)
-                                    else:
-                                        self.log_to_tab("[color=" + self.get_ut_color("glitched") + "]" + temp_name + "[/color]", True)
-                                    readable_locations.append(temp_name)
-                            if region not in regions:
-                                regions.append(region)
-                                if self.output_format == "Region" and self.enable_glitched_logic:
-                                    self.log_to_tab("[color=" + self.get_ut_color("glitched") + "]" + region + "[/color]", True)
-                                    readable_locations.append(region)
+                                group: TrackerLogLineGroup = TrackerLogLineGroup.GLITCHED
+                                if temp_loc.progress_type == LocationProgressType.EXCLUDED:
+                                    group = TrackerLogLineGroup.EXCLUDED_GLITCHED
+                                elif temp_loc.address in self.hints:
+                                    group = TrackerLogLineGroup.HINTED_GLITCHED
+                                    hinted_locations.append(temp_loc)
+                                self.add_log_line(TrackerLogLine(temp_name, region, group))
+                                if region not in regions:
+                                    regions.append(region)
                     except Exception:
-                        self.log_to_tab("ERROR: location " + temp_loc.name + " broke something, report this to discord")
+                        error_label: str = "ERROR: location " + temp_loc.name + " broke something, report this to discord"
+                        self.add_log_line(TrackerLogLine(error_label, "", TrackerLogLineGroup.UT_ERROR))
                         pass
         self.glitched_locations = glitches_locations
+
+        readable_locations = self.get_readable_locations()
+        self.sort_log_lines()
+        self.log_all_to_tab()
 
         return CurrentTrackerState(
             all_items, prog_items, glitches_callback_list, events, event_locations,
