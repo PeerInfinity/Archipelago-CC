@@ -593,28 +593,6 @@
     "template_file": "DepGraph WorldGen.yaml",
     "world_directory": "depgraph_worldgen"
   },
-  "Donkey Kong Country 3": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Donkey Kong Country 3",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Donkey Kong Country 3.yaml",
-    "world_directory": "dkc3"
-  },
-  "Donkey Kong Country 3 WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Donkey Kong Country 3 WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Donkey Kong Country 3 WorldGen.yaml",
-    "world_directory": "dkc3_worldgen"
-  },
   "EarthBound": {
     "exporter_path": null,
     "exporter_size": 0,
