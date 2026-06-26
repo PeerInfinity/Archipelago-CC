@@ -58,7 +58,7 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
 - `rule_builder/rules.py`
 
-  Extended from 1,822 to 4,224 lines. Adds RuleWorldMixin, RuleBuilderLogicMixin, and 15 new rule types for AST format support.
+  Upstream base kept byte-identical except minimal additive edits (base get_value/get_count/to_dict/__lshift__, widened Has.count, _make_hashable for HelperCall args). The 15 fork rule types, RuleWorldMixin, and AST support live in separate overlay modules (extra_rules.py, world_mixin.py, ast_*).
 
   [Rule Builder Modifications](../rule-builder/rule-builder-modifications.md) | [Fork vs Upstream Comparison](../rule-builder/fork-vs-upstream-rule-builder.md)
 
