@@ -490,6 +490,14 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
                         combined_deps[entrance_name] = {id(self), *rules}
             return combined_deps
 
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Override to serialize children instead of args."""
+            return {
+                "rule": self._rule_class_name,
+                "children": [c.to_dict() for c in self.children],
+            }
+
 
 class AtLeast(NestedRule[TWorld], game="Archipelago"):
     """A rule that returns true when at least N child rules evaluate as true"""

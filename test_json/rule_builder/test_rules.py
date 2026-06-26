@@ -588,3 +588,29 @@ class TestResolvedToDictArgs:
             f"{type(resolved).__qualname__}.to_dict() dropped/altered args: "
             f"{result.get('args')!r} != {expected_args!r}"
         )
+
+
+class TestNestedResolvedToDict:
+    """Regression guard: a resolved And/Or must serialize its children.
+
+    NestedRule.Resolved.to_dict() emits {"rule": ..., "children": [...]} instead
+    of args. Without that override the base Resolved.to_dict() emits an argless
+    `{"rule": "Or"}`, which world_generator reads as an empty Or -> False_() (or
+    empty And -> True_()), silently making locations permanently unreachable ->
+    worldgen2 "Could not access required locations" FillError. See the
+    rule_builder upstream re-base regression (worldgen2 failures).
+    """
+
+    @pytest.mark.parametrize("rule_cls", [And, Or])
+    def test_nested_resolved_to_dict_serializes_children(self, rule_cls):
+        children = (
+            Has.Resolved(item_name="Sword", count=1, player=1),
+            CanReachRegion.Resolved(region_name="Castle", player=1),
+        )
+        resolved = rule_cls.Resolved(children, player=1)
+        result = resolved.to_dict()
+        assert result["rule"] == rule_cls.__name__
+        assert result.get("children") == [c.to_dict() for c in children], (
+            f"{rule_cls.__name__}.Resolved.to_dict() dropped children: "
+            f"{result.get('children')!r}"
+        )
