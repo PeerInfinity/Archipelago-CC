@@ -2,11 +2,21 @@
 
 This document describes the modifications made to the Universal Tracker compared to the original from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago) (tracker branch).
 
-- **Original version:** v0.2.26
-- **Modified version:** v0.2.23-modified (based on earlier version with extensive additions)
+- **Original version:** v0.2.32
+- **Modified version:** v0.2.32-modified
 - **Location in this repository:** `worlds/tracker/`
-- **Original copy for comparison:** `scripts/test/fixtures/tracker_original/`
-- **Last compared:** 2026-02-03
+- **Original copy for comparison:** `scripts/test/fixtures/tracker_original/` (dated snapshots: `tracker_original_v0.2.26/`, `_v0.2.27/`, `_v0.2.32/`)
+- **Last compared:** 2026-06-26
+
+> **Overlay re-base (2026-06-26).** UT was re-based onto clean upstream v0.2.32 in
+> the spirit of the rule_builder overlay re-base. `TrackerCoreBase.py` is now
+> **byte-pristine upstream v0.2.32** except for the class rename and a single,
+> clearly-marked 3-line `seed_override` hook in `run_generator`. All fork behaviour
+> lives in the overlay mixins (`pickle_mixin`, `worldgen_mixin`, `tracker_extensions`)
+> and the extended `TrackerCore.py`. The extended `updateTracker` was rewritten to
+> mirror upstream v0.2.32's new `TrackerLogLine`/`TrackerLogLineGroup` logging+sorting
+> system (so it is now upstream's method plus a few `[fork]` hooks, not a diverged
+> copy). Future UT merges should be near drop-in for `TrackerCoreBase.py`.
 
 ## Summary of Changes
 
@@ -22,13 +32,20 @@ The modifications extend Universal Tracker with:
 
 These changes integrate UT with the JSON Export system, allowing it to explain rules for any world that has exported rules, not just worlds with native Rule Builder support. The pickle mode provides the fastest tracking by loading a serialized multiworld directly.
 
-### Backported from v0.2.26
+### Reconciled with upstream v0.2.32
 
-The following bug fixes and features were backported from upstream v0.2.26:
+The fixes that were previously backported from v0.2.26 (the `glitches_state` field on
+`CurrentTrackerState`, the "Nothing items" `location.item is not None` guard, and the
+`glitches_state = state.copy()` ordering) are all **native in upstream v0.2.32**, so
+they are no longer fork-specific — the fork's `__init__.py` and the re-based
+`updateTracker` now match upstream on `CurrentTrackerState` and glitches handling.
 
-1. **`glitches_state` field** - Added to `CurrentTrackerState` for separate glitch logic tracking (prevents contaminating main state)
-2. **Nothing items fix** - Added `and location.item is not None` check to prevent crashes when events have no item
-3. **Glitches state copy** - Create a copy of state before applying glitch items (`glitches_state = state.copy()`)
+v0.2.32 also introduced (now inherited from the pristine base, not fork code):
+1. **`TrackerLogLine` / `TrackerLogLineGroup`** - data/rendering separation for the
+   tracker tab, with configurable per-group `sorting_priorities` and `sorting_method`
+2. **New `TrackerSettings`** - `save_entered_commands`, `sorting_priorities`, `sorting_method`
+3. **Per-seed persistence** in `TrackerClient` - `load_seed_data`/`persist_seed_data`
+   keyed on `seed:team:slot` (gated on the `save_entered_commands` setting)
 
 ---
 
@@ -80,18 +97,26 @@ When `exporter/tracking-mode-config.json` is present, the order is driven by its
 
 ### `TrackerCoreBase.py` (formerly TrackerCore.py)
 
-**Lines:** 513 (matches upstream v0.2.26)
+**Lines:** 632 (pristine upstream v0.2.32 is 626)
 
-This file contains the original TrackerCore code from upstream, with minimal changes:
-- Class renamed to `TrackerCoreBase` for inheritance
-- Backported `glitches_state` fix from v0.2.26
-- Backported "Nothing items" fix from v0.2.26
+This file is **byte-pristine upstream v0.2.32 TrackerCore** with exactly two edits:
+- Class renamed `TrackerCore` → `TrackerCoreBase` for inheritance (the overlay seam)
+- A single 3-line `[fork hook]` in `run_generator` that injects `self.seed_override`
+  into `args.seed` for deterministic generation (used by `original_seeded` mode + fuzz)
+
+Nothing else is fork-specific here — refresh by dropping in the new upstream file and
+re-applying those two edits.
 
 ### `TrackerCore.py` (Extended Version)
 
-**Lines:** ~280
+**Lines:** ~536
 
-This file extends TrackerCoreBase with our modifications via mixins.
+This file extends TrackerCoreBase with our modifications via mixins. Its `updateTracker`
+override mirrors upstream v0.2.32's `TrackerLogLine` logging structure (clear_page →
+add_log_line → get_readable_locations/sort_log_lines/log_all_to_tab, `set_page(TrackerLogLine)`)
+with `[fork]` hooks for: lenient `sphere_log_mode` invalid-item handling, the
+`_filter_invalid_items`/`_should_include_location`/`_should_include_item_in_count`/
+`_should_sweep_for_advancements` gates, and server-trusted item classification.
 
 ### `worldgen_mixin.py`
 
@@ -204,9 +229,13 @@ Benefits over worldgen mode:
 
 ### `TrackerClient.py`
 
-**Lines:** 1613 → 1970 (~357 lines added)
-
-Adds testing infrastructure and debug logging capabilities.
+Adds testing infrastructure and debug logging capabilities. **Lines:** ~2086 (upstream
+v0.2.32 is 1779). Reconciled via a 3-way merge (v0.2.27 fixture ancestor); picks up
+upstream's per-seed persistence (`load_seed_data`/`persist_seed_data`), `get_help_text`,
+`waiting_on_entrances`, the `update_defered_entrances(list[str])` signature, and the
+glitches-state explain/path fallbacks. `explain()`/`get_logical_path()` use upstream's
+more capable versions plus the fork's worldgen-explain fallback; the fork's
+`sphere_log_mode` watcher tolerance and test-sync/debug-logging are preserved.
 
 #### New Methods
 
@@ -242,7 +271,9 @@ def _handle_ut_test_sync_bounce(self, args: dict):
 
 ### `fuzzer_hook.py`
 
-**Lines:** 98 → 667 (~569 lines added)
+**Lines:** ~707 (upstream v0.2.32 is 105). Re-based via 3-way merge; the only net
+upstream additions to `Hook.after_generate` are the default `GenOutcome.OptionError`
+status and the `slot_data = json.loads(json.dumps(slot_data))` type round-trip.
 
 Extended for comprehensive testing with explain stats collection, ALttP entrance shuffle handling, fractional sphere logic, and multiworld support.
 
@@ -299,23 +330,16 @@ class MultiworldHook(BaseHook):
 
 ### `__init__.py`
 
-**Lines:** 191 → 190 (1 line removed)
+**Lines:** ~252 (upstream v0.2.32 is 222)
 
-Minor changes:
-- Version number set to v0.2.23 (based on older version before glitches_state was added)
-- Removed `glitches_state` field from `CurrentTrackerState` namedtuple
-
-```python
-# Original
-class CurrentTrackerState(NamedTuple):
-    ...
-    glitches_state: Optional[CollectionState]
-
-# Modified - glitches_state removed
-class CurrentTrackerState(NamedTuple):
-    ...
-    state: Optional[CollectionState]  # Last field, no glitches_state
-```
+Changes vs upstream v0.2.32:
+- `UT_VERSION = "v0.2.32-modified"`
+- Fork-only blocks preserved: `WebWorld`/`TrackerWorldWeb` web-disable, the
+  `EnabledBool` setting + `enabled` field, and the `_is_enabled()` settings-cache fix
+  (see below). The new upstream settings (`SaveEnteredCommands`, `SortingPriorties`,
+  `SortingMethod` + their fields) were added.
+- `CurrentTrackerState` now **matches upstream** (it carries `glitches_state` again —
+  the earlier fork removal is reconciled, since the re-based `updateTracker` returns it).
 
 #### `_is_enabled()` — settings cache poison fix (2026-05-09)
 
@@ -460,32 +484,28 @@ elif tracker.auto_discover_rules_json():
 
 ## Diff Statistics
 
-| File | Original Lines | Modified Lines | Lines Added |
-|------|---------------|----------------|-------------|
-| `TrackerCore.py` | 513 | 1055 | ~542 |
-| `pickle_mixin.py` | 0 | 286 | ~286 |
-| `TrackerClient.py` | 1613 | 1970 | ~357 |
-| `fuzzer_hook.py` | 98 | 667 | ~569 |
-| `__init__.py` | 191 | 190 | -1 |
-| **Total** | 2415 | 4168 | **~1753** |
+Against pristine upstream v0.2.32:
+
+| File | Upstream v0.2.32 | Fork | Notes |
+|------|------------------|------|-------|
+| `TrackerCoreBase.py` | 626 | 632 | pristine + class rename + seed_override hook |
+| `TrackerCore.py` (extended) | — | 536 | fork-only overlay class |
+| `pickle_mixin.py` | — | 291 | fork-only overlay |
+| `worldgen_mixin.py` | — | 529 | fork-only overlay |
+| `tracker_extensions.py` | — | 132 | fork-only overlay |
+| `TrackerClient.py` | 1779 | 2086 | 3-way merge |
+| `fuzzer_hook.py` | 105 | 707 | 3-way merge (+2 upstream lines) |
+| `__init__.py` | 222 | 252 | fork blocks + new upstream settings |
 
 ---
 
 ## Fixes to Original Copy
 
-The original copy in `scripts/test/fixtures/tracker_original/` has been modified to fix issues that prevent linting or testing:
-
-### `TrackerClient.py`
-
-**F-string quote syntax (lines 478, 480, 482):** Changed double quotes to single quotes inside f-string expressions for Python < 3.12 compatibility.
-
-```python
-# Original (syntax error in Python < 3.12)
-f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"
-
-# Fixed
-f"Go mode: [color={get_ut_color('in_logic')}]Yes[/color]"
-```
+As of v0.2.32 the original copy in `scripts/test/fixtures/tracker_original/` is
+**byte-pristine upstream** — no fixes are applied. The repo runs Python 3.12, which
+natively supports the nested same-quote f-strings (e.g.
+`f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"`) that previously required
+a single-quote workaround for Python < 3.12.
 
 ---
 

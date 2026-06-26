@@ -2,11 +2,20 @@
 
 This document describes the modifications made to the fuzzer compared to the original [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong.
 
-- **Original version:** 0.5.1 (updated 2026-03-20 with upstream commits through 2026-03-14)
-- **Modified version:** 0.5.1-modified
+- **Original version:** 0.6.2
+- **Modified version:** 0.6.2-modified
 - **Location in this repository:** `fuzz.py`
 - **Original copy for comparison:** `scripts/test/fixtures/fuzzer_original/`
-- **Last compared:** 2026-03-20
+- **Last compared:** 2026-06-26
+
+> **Updated to 0.6.2 (2026-06-26).** Re-based via a 3-way merge with the 0.5.1 fixture
+> as the common ancestor. Upstream 0.6.2 restructured the main loop (multiple apworlds
+> per run via `args.game`, the `--sample-from` and `--with-static-worlds` inputs) and
+> rewrote `OptionCounter` randomization with json-schema property extraction
+> (`_extract_schema_properties` / `_random_value_for_property`). All fork features below
+> were re-applied on top of that new structure; the fork's `max_item_dict_value` override
+> is threaded into upstream's schema path, and `default_options`/`disallow_options` are
+> threaded into the multi-apworld `generate_random_yaml` calls.
 
 ## Summary of Changes
 
@@ -22,12 +31,16 @@ The modifications add several features:
 Additionally, there are bug fixes for specific edge cases encountered during testing:
 8. **Timeout hang fix** — added missing `queue.task_done()` call in the timeout handler to prevent the fuzzer from hanging indefinitely when a worker times out
 
-### Features from Upstream (Backported)
+### Features from Upstream (now inherited from 0.6.2)
 
-The following features were backported from upstream v0.5.1:
+The following are native in upstream 0.6.2 (no longer fork-specific):
 - **Fuzz constraints system** - Sophisticated constraint handling for option combinations via meta files
 - **Triggers support** - Archipelago triggers in meta files
 - **option_defs tracking** - For Range validation in constraints
+- **Multiple apworlds per run** - `args.game` is a list; the main loop iterates `apworld_names`
+- **`--sample-from` / `--with-static-worlds`** - seed YAMLs from a directory of presets
+- **Schema-based `OptionCounter` randomization** - extracts allowed keys/value ranges from
+  an option's `schema.Schema(...)` when it has no `valid_keys`
 
 ---
 
@@ -247,9 +260,9 @@ parser.add_argument("--stop-on-first-failure", default=False, action="store_true
 
 | Metric | Value |
 |--------|-------|
-| Original lines (v0.5.1) | 1019 |
-| Modified lines | 1189 |
-| Lines added | 170 |
+| Original lines (v0.6.2) | 1157 |
+| Modified lines | 1326 |
+| Lines added | ~169 |
 
 ---
 
