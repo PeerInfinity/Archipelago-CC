@@ -579,6 +579,14 @@ class AtLeast(NestedRule[TWorld], game="Archipelago"):
         count: int
 
         @override
+        def to_dict(self) -> dict[str, Any]:
+            # NestedRule.Resolved.to_dict() serializes "children"; AtLeast also
+            # carries a "count", mirroring the unresolved AtLeast.to_dict().
+            output = super().to_dict()
+            output["count"] = self.count
+            return output
+
+        @override
         def _evaluate(self, state: CollectionState) -> bool:
             count = self.count
             for rule in self.children:

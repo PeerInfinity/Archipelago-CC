@@ -8,7 +8,7 @@ import pytest
 
 from rule_builder import (
     RuleWorldMixin,
-    True_, False_, Has, HasAll, HasAny, And, Or, Not,
+    True_, False_, Has, HasAll, HasAny, And, Or, Not, AtLeast,
     CanReachRegion, CanReachLocation, CanReachEntrance,
     HasGroup, HasAllCounts, HasAnyCount,
     Compare, Arithmetic, Conditional, CountItem, HelperCall,
@@ -614,3 +614,16 @@ class TestNestedResolvedToDict:
             f"{rule_cls.__name__}.Resolved.to_dict() dropped children: "
             f"{result.get('children')!r}"
         )
+
+    def test_atleast_resolved_to_dict_serializes_children_and_count(self):
+        # AtLeast also carries a count; its resolved to_dict() must keep both.
+        children = (
+            Has.Resolved(item_name="Sword", count=1, player=1),
+            Has.Resolved(item_name="Shield", count=1, player=1),
+            CanReachRegion.Resolved(region_name="Castle", player=1),
+        )
+        resolved = AtLeast.Resolved(children, count=2, player=1)
+        result = resolved.to_dict()
+        assert result["rule"] == "AtLeast"
+        assert result.get("count") == 2
+        assert result.get("children") == [c.to_dict() for c in children]
