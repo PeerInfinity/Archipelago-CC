@@ -88,32 +88,26 @@ If upstream does touch any of these in a future merge, use the diff files to und
 
 **Action:** After merging, reapply fork changes. For `test_rule_builder.py`, the fork tests are appended at the end of the file, so they should be straightforward to re-add even if upstream changed earlier parts of the file.
 
-### Category 6: Rule Builder (manual merge required)
+### Category 6: Rule Builder (keep ours — now low-conflict)
 
-| File | Fork change | Upstream |
-|------|------------|----------|
-| `rule_builder/__init__.py` | 165 lines of API exports | Empty file upstream |
-| `rule_builder/rules.py` | Extended from ~1,800 to ~4,200 lines | May have changes |
+> **Updated 2026-06-25.** As of the rule_builder upstream re-base (commits `3b523b214`→`010200be9`), this category is **much simpler** than it used to be. The fork's `rule_builder/` is now the **clean upstream base plus overlay files**, not a monolithic 4,200-line `rules.py`. See [[project_rule_builder_upstream_merge]] and `docs/json/developer/diffs/rule-builder/fork-vs-upstream-rule-builder.md`.
 
-**These files cannot be merged automatically.** The fork extends `rules.py` extensively — a git merge will produce unusable conflicts.
+| File | Fork state | Merge action |
+|------|-----------|--------------|
+| `rule_builder/rules.py` | Upstream base + **minimal additive edits** (~2,100 lines) | Keep ours (`--ours`) |
+| `rule_builder/__init__.py` | 57-name API export surface | Keep ours |
+| `rule_builder/{cached_world,field_resolvers,options}.py` | Identical to upstream | Auto-merges clean |
+| `rule_builder/{extra_rules,world_mixin,ast_format,ast_explain,_ast_utils,pathfinding}.py` | **Fork-only overlay files** (upstream has none) | No conflict |
+
+**Key fact:** the fork's `rule_builder/` was based on a recent upstream commit and is currently **0-drift** vs upstream `rule_builder/` (verify: `git rev-list --count <LAST_RB_BASE>..upstream/main -- rule_builder/`). When that count is 0, **upstream brings no new rule_builder changes**, so there is *nothing to manually re-apply* — just keep ours for any `rule_builder/` conflicts.
 
 **Action:**
-1. Before merging, examine what upstream changed:
+1. Confirm rule_builder is still 0-drift vs the upstream you're merging:
    ```bash
-   git diff <LAST_MERGE_COMMIT>..upstream/main -- rule_builder/rules.py
+   git rev-list --count <FORK_RB_BASE_COMMIT>..upstream/main -- rule_builder/   # FORK_RB_BASE_COMMIT = 5ccef9802 for the 2026-06 re-base
    ```
-2. Save the fork's version of the file before merging:
-   ```bash
-   cp rule_builder/rules.py rule_builder/rules.py.fork-backup
-   ```
-3. During the merge, accept the fork's version for `rule_builder/rules.py`:
-   ```bash
-   git checkout --ours rule_builder/rules.py
-   ```
-4. Manually review the upstream diff and apply any relevant changes to the fork's version. Use the Rule Builder documentation to understand the fork's structure:
-   - `docs/json/developer/diffs/rule-builder/fork-vs-upstream-rule-builder.md`
-   - `docs/json/developer/diffs/rule-builder/rule-builder-modifications.md`
-5. Update `docs/json/developer/diffs/rule-builder/upstream-rule-builder-changes.md` to document the new upstream changes.
+2. **If 0:** keep ours for any conflicting `rule_builder/` files — `git checkout --ours rule_builder/rules.py rule_builder/__init__.py`. The overlay files won't conflict. Done.
+3. **If non-zero:** upstream changed `rule_builder/` after the re-base base. Apply those upstream changes to *our* files — most land in `rules.py` (base types) or as new upstream modules; the fork overlays (`extra_rules.py`, `world_mixin.py`, …) are unaffected. Then update `docs/json/developer/diffs/rule-builder/upstream-rule-builder-changes.md`.
 
 ## Merge Procedure
 
@@ -159,13 +153,12 @@ git add <resolved files>
 git commit
 ```
 
-### Step 5: Apply Rule Builder upstream changes
+### Step 5: Apply Rule Builder upstream changes (usually a no-op now)
 
-Review the upstream diff saved earlier and manually apply relevant changes to the fork's `rule_builder/rules.py`. Common types of upstream changes:
-- Bug fixes → always apply
-- New rule types → check if the fork already has equivalent functionality
-- Refactoring → apply if compatible with fork extensions
-- API changes → apply and update fork code that depends on changed APIs
+Per **Category 6**, first check `git rev-list --count <FORK_RB_BASE_COMMIT>..upstream/main -- rule_builder/`. If it's **0** (the expected case while the fork's rule_builder stays current with upstream), there is nothing to apply — keeping ours is complete. Only if it's non-zero do you manually fold the upstream `rule_builder/` changes into our files:
+- Bug fixes → always apply (to `rules.py` base types)
+- New rule types → check if the fork already has equivalent functionality (likely in `extra_rules.py`)
+- Refactoring / API changes → apply to `rules.py`; the fork overlay modules usually need no change
 
 ### Step 6: Clean up
 

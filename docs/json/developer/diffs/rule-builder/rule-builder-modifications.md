@@ -4,7 +4,9 @@ This document provides a brief overview of the modifications made to the Rule Bu
 
 - **Original source:** [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops (original `rules-engine` branch no longer available)
 - **Location in this repository:** `rule_builder/`
-- **Last updated:** 2026-02-11
+- **Last updated:** 2026-06-25
+
+> **Structure note (2026-06-25):** `rule_builder/` was re-based onto the **clean upstream** package, with the fork's features moved into **separate overlay modules** rather than one monolithic `rules.py` (commits `3b523b214`→`010200be9`). `rules.py` is now upstream-base + minimal additive edits; the extended rule types live in `extra_rules.py`, the world/logic mixins in `world_mixin.py`. See `fork-vs-upstream-rule-builder.md` (§7) and [[project_rule_builder_upstream_merge]].
 
 ## Summary of Changes
 
@@ -20,15 +22,19 @@ These changes integrate Rule Builder with the JSON Export system, enabling round
 
 ## File Overview
 
-| File | Lines | Origin | Description |
-|------|-------|--------|-------------|
-| `rules.py` | 4219 | Modified from PR #5048 | Core rule classes, extended with AST rule types |
-| `ast_explain.py` | 803 | **New** | Human-readable explanations for AST rules |
-| `ast_format.py` | 642 | **New** | Parse AST JSON into Rule Builder objects |
-| `pathfinding.py` | 429 | **New** | Pathfinding and accessibility analysis tools |
-| `_ast_utils.py` | 178 | **New** | Shared AST parsing utilities |
-| `__init__.py` | 165 | **New** | Module exports and documentation |
-| **Total** | **6436** | | |
+Current layout (post 2026-06-25 re-base):
+
+| File | Origin | Description |
+|------|--------|-------------|
+| `rules.py` | Upstream base + **minimal additive edits** | Base rule classes; fork added get_value/get_count/to_dict, `_make_hashable`, `Has` dynamic counts, broadened subclass guard |
+| `extra_rules.py` | **New (fork)** | The 15 extended rule types (CountItem, Compare, Arithmetic, HelperCall, …) + `BOOLEAN_RULE_TYPES` |
+| `world_mixin.py` | **New (fork)** | `RuleWorldMixin` / `RuleBuilderLogicMixin` (was inline in the old monolithic `rules.py`) |
+| `ast_format.py` | **New (fork)** | Parse AST JSON into Rule Builder objects |
+| `ast_explain.py` | **New (fork)** | Human-readable explanations for AST rules |
+| `pathfinding.py` | **New (fork)** | Pathfinding and accessibility analysis tools |
+| `_ast_utils.py` | **New (fork)** | Shared AST parsing utilities |
+| `__init__.py` | **New (fork)** | Public API re-exports across the split modules (57 names) |
+| `cached_world.py`, `field_resolvers.py`, `options.py` | Upstream (unchanged) | Carried from upstream; `field_resolvers.py` powers dynamic values |
 
 ---
 
@@ -93,7 +99,7 @@ Features:
 
 ---
 
-## Extended Rule Types in `rules.py`
+## Extended Rule Types (now in `extra_rules.py`)
 
 The original `rules.py` from PR #5048 has been extended with additional rule classes to support AST format:
 
@@ -173,6 +179,6 @@ A more thorough analysis comparing the exact changes to `rules.py` against the o
 ## Related Documentation
 
 - **Original PR:** https://github.com/ArchipelagoMW/Archipelago/pull/5048
-- **Rule Builder README:** [rule_builder/README.md](../../../../../rule_builder/README.md)
+- **Fork vs upstream comparison:** [fork-vs-upstream-rule-builder.md](fork-vs-upstream-rule-builder.md)
 - **Format Converter Guide:** [format-converter.md](../../guides/format-converter.md)
 - **Rule Types Reference:** [rule-types-reference.md](../../reference/rule-types-reference.md)

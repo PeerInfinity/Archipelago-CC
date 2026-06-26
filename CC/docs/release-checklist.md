@@ -40,7 +40,7 @@ git merge upstream/main
 ```
 
 The merge guide categorizes each fork-modified file and explains how to handle conflicts. Key points:
-- **Rule Builder** (`rule_builder/rules.py`) — cannot merge automatically; back up fork version, keep ours, manually apply upstream changes
+- **Rule Builder** (`rule_builder/`) — now the clean upstream base + overlay files (re-based 2026-06-25, commits `3b523b214`→`010200be9`); **keep ours** for any conflicts. If `git rev-list --count <RB_BASE>..upstream/main -- rule_builder/` is 0, no manual re-apply is needed. See the merge guide's Category 6.
 - **Romless world patches** (11 `__init__.py` files) — accept upstream, reapply from `world-init-files.diff`
 - **Test files** — accept upstream, reapply from `test-files.diff` and `test-rule-builder-fork.diff`
 - **Bug fixes** (`alttp/Rules.py`, `landstalker/Hints.py`, `lufia2ac/Options.py`) — check if upstream fixed independently; if not, reapply from diff files
