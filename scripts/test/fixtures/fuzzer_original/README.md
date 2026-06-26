@@ -18,17 +18,24 @@ The output will be available in `./fuzz_output`.
 
 ## Flags
 
-- `-g` selects the apworld to fuzz. If omitted, every run will take a random loaded world
+- `-g` selects the apworld to fuzz. If omitted, every run will take a random
+  loaded world. Can be passed multiple times (e.g. `-g alttp -g pokemon_crystal`)
+  to fuzz several games together; each generation will include N (see `-n`)
+  YAMLs for each listed game.
 - `-j` specifies the number of jobs to run in parallel. Defaults to 10, recommended value is the number of cores of your CPU.
 - `-r` specifies the number of generations to do. This is a mandatory setting
-- `-n` specifies how many YAMLs to use per generation. Defaults to 1. You can
-  also specify ranges like `1-10` to make all generations pick a number between
-  1 and 10 YAMLs.
+- `-n` specifies how many YAMLs to use per generation (per selected game).
+  Defaults to 1. You can also specify ranges like `1-10` to make all
+  generations pick a number between 1 and 10 YAMLs.
 - `-t` specifies the maximum time per generation in seconds. Defaults to 15s.
 - `-m` to specify a meta file that overrides specific values
 - `--skip-output` specifies to skip the output step of generation.
 - `--dump-ignored` makes it so option errors are also dumped in the result.
 - `--with-static-worlds` takes a path to a directory containing YAML to include in every generation. Not recursive.
+- `--sample-from` takes a path to a directory of YAML files to sample from
+  instead of generating random YAMLs. Each generation picks N random files from
+  the directory (see `-n`). Not recursive. Incompatible with `-g` and with `-m`.
+  Composes with `--with-static-worlds`.
 - `--hook` takes a `module:class` string to a hook and can be specified multiple times. More information about that below
 
 ## Meta files
@@ -138,10 +145,24 @@ Cap a numeric option to the size of another option.
 ```
 
 #### `max_remaining_from`
+
 Cap a numeric option so that the total of this option and the size of another option does not exceed a fixed maximum capacity.
+
 ```yaml
 - option: num_required_levels
   max_remaining_from: excluded_levels
+  max_capacity: 20
+```
+
+#### `sum_cap`
+
+Cap a set of numeric so that their sum does not exceed a fixed maximum capacity.
+
+```yaml
+# sum of base_items, and extra_items cannot exceed 20
+- sum_cap:
+      - base_items
+      - extra_items
   max_capacity: 20
 ```
 
