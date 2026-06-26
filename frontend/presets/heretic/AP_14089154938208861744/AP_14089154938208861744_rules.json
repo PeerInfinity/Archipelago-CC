@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Heretic",
   "game_directory": "heretic",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -45,7 +45,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow"
                     ]
@@ -69,7 +69,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow"
                     ]
@@ -93,7 +93,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow"
                     ]
@@ -117,7 +117,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Gauntlets of the Necromancer"
                     ]
@@ -126,7 +126,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Ethereal Crossbow",
                       "The Citadel (E1M5)"
                     ]
@@ -144,7 +144,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Gauntlets of the Necromancer"
                     ]
@@ -153,7 +153,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Ethereal Crossbow",
                       "The Cathedral (E1M6)"
                     ]
@@ -171,7 +171,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Gauntlets of the Necromancer"
                     ]
@@ -180,7 +180,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Ethereal Crossbow",
                       "The Crypts (E1M7)"
                     ]
@@ -195,7 +195,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon Claw",
                   "Ethereal Crossbow",
                   "Gauntlets of the Necromancer",
@@ -210,7 +210,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon Claw",
                   "Ethereal Crossbow",
                   "Gauntlets of the Necromancer",
@@ -238,7 +238,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow"
                     ]
@@ -259,7 +259,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon Claw",
                   "Ethereal Crossbow",
                   "The River of Fire (E2M3)"
@@ -276,7 +276,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Firemace",
                       "Hellstaff"
                     ]
@@ -285,7 +285,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "The Ice Grotto (E2M4)"
@@ -304,7 +304,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Firemace",
                       "Hellstaff",
                       "Phoenix Rod"
@@ -314,7 +314,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Gauntlets of the Necromancer",
@@ -334,7 +334,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Firemace",
                       "Hellstaff",
                       "Phoenix Rod"
@@ -344,7 +344,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Gauntlets of the Necromancer",
@@ -364,7 +364,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hellstaff",
                       "Phoenix Rod"
                     ]
@@ -373,7 +373,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Firemace",
@@ -391,7 +391,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon Claw",
                   "Ethereal Crossbow",
                   "Firemace",
@@ -412,7 +412,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hellstaff",
                       "Phoenix Rod"
                     ]
@@ -421,7 +421,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Firemace",
@@ -449,7 +449,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon Claw",
                   "Ethereal Crossbow",
                   "Firemace",
@@ -468,7 +468,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Firemace",
                       "Gauntlets of the Necromancer",
                       "Hellstaff",
@@ -479,7 +479,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "The Confluence (E3M3)"
@@ -498,7 +498,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Firemace",
                       "Gauntlets of the Necromancer",
                       "Phoenix Rod"
@@ -508,7 +508,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Hellstaff",
@@ -528,7 +528,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Firemace",
                       "Gauntlets of the Necromancer",
                       "Phoenix Rod"
@@ -538,7 +538,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Hellstaff",
@@ -558,7 +558,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gauntlets of the Necromancer",
                       "Phoenix Rod"
                     ]
@@ -567,7 +567,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Firemace",
@@ -588,7 +588,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gauntlets of the Necromancer",
                       "Phoenix Rod"
                     ]
@@ -597,7 +597,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon Claw",
                       "Ethereal Crossbow",
                       "Firemace",
@@ -615,7 +615,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "D'Sparil's Keep (E3M8)",
                   "Dragon Claw",
                   "Ethereal Crossbow",
@@ -633,7 +633,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon Claw",
                   "Ethereal Crossbow",
                   "Firemace",
@@ -4267,7 +4267,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "The Ice Grotto (E2M4) - Blue key",
                   "The Ice Grotto (E2M4) - Green key"
                 ]
@@ -12893,7 +12893,6 @@
       "The Storehouse (E3M1)"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Heretic",

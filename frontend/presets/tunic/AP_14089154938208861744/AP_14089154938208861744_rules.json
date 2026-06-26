@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "TUNIC",
   "game_directory": "tunic",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -123,7 +123,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hero's Laurels",
                       "Magic Orb"
                     ]
@@ -391,7 +391,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gun",
                       "Hero's Laurels",
                       "Magic Orb"
@@ -646,7 +646,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "East Bell",
                           "West Bell"
                         ]
@@ -672,7 +672,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Ring Eastern Bell",
                           "Ring Western Bell"
                         ]
@@ -887,7 +887,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -1800,7 +1800,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -1913,7 +1913,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -2059,7 +2059,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gun",
                       "Hero's Laurels",
                       "Magic Orb"
@@ -2628,7 +2628,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -2827,7 +2827,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -3993,7 +3993,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Blue Questagon",
                   "Green Questagon",
                   "Red Questagon"
@@ -4686,7 +4686,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Magic Dagger",
                       "Magic Orb",
                       "Magic Wand"
@@ -4737,7 +4737,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -6845,7 +6845,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -6924,7 +6924,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Atoll Northeast Fuse",
                               "Atoll Northwest Fuse",
                               "Atoll Southeast Fuse",
@@ -7006,7 +7006,7 @@
                                     {
                                       "rule": "HasAny",
                                       "args": {
-                                        "item_names": [
+                                        "items": [
                                           "Gun",
                                           "Magic Wand"
                                         ]
@@ -7017,7 +7017,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "item_names": [
+                                    "items": [
                                       "Hero's Laurels",
                                       "Magic Orb"
                                     ]
@@ -7333,7 +7333,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -7422,7 +7422,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -7734,7 +7734,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -7768,7 +7768,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -7917,7 +7917,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -7997,7 +7997,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hero's Laurels",
                       "Magic Orb"
                     ]
@@ -8474,7 +8474,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gun",
                       "Magic Wand"
                     ]
@@ -8504,7 +8504,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gun",
                       "Magic Wand"
                     ]
@@ -8534,7 +8534,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Gun",
                       "Magic Wand"
                     ]
@@ -8630,7 +8630,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hero's Laurels",
                       "Magic Orb"
                     ]
@@ -8830,7 +8830,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Hero's Laurels",
                   "Magic Orb"
                 ]
@@ -9339,7 +9339,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Gun",
                           "Hero's Laurels",
                           "Magic Orb",
@@ -9433,7 +9433,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Gun",
                           "Hero's Laurels",
                           "Magic Dagger",
@@ -9749,7 +9749,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Activate South and West Fortress Exterior Fuses",
                   "Activate Upper and Central Fortress Exterior Fuses"
                 ]
@@ -12428,7 +12428,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Swamp Fuse 1",
                           "Swamp Fuse 2",
                           "Swamp Fuse 3"
@@ -12527,7 +12527,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "item_names": [
+                                    "items": [
                                       "Ladder to Swamp",
                                       "Ladders in Overworld Town",
                                       "Ladders near Weathervane"
@@ -12906,7 +12906,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Swamp Fuse 1",
                           "Swamp Fuse 2",
                           "Swamp Fuse 3"
@@ -14044,7 +14044,7 @@
                     {
                       "rule": "HasGroupUnique",
                       "args": {
-                        "item_name_group": "Hero Relics",
+                        "group": "Hero Relics",
                         "count": 6
                       }
                     },
@@ -16554,7 +16554,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "TUNIC",

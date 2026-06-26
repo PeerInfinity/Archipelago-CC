@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "EarthBound",
   "game_directory": "earthbound",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -19,7 +19,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Jeff",
                   "Ness",
                   "Paula",
@@ -34,7 +34,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Jeff",
                   "Ness",
                   "Paula",
@@ -195,7 +195,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Magicant Teleport",
                   "Magicant Unlock"
                 ]
@@ -640,7 +640,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Pencil Eraser",
                   "Valley Bridge Repair"
                 ]
@@ -653,7 +653,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Threed Tunnels Clear",
                   "Wad of Bills"
                 ]
@@ -872,7 +872,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Pencil Eraser",
                   "Valley Bridge Repair"
                 ]
@@ -1215,7 +1215,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Bad Key Machine",
                   "UFO Engine"
                 ]
@@ -4125,7 +4125,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Key to the Tower"
                 ]
               }
@@ -4617,7 +4617,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hawk Eye",
                   "Shyness Book"
                 ]
@@ -8599,7 +8599,6 @@
       "Ness"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "EarthBound",

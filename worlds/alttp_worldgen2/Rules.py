@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from worlds.generic.Rules import location_item_name, item_name_in_location_names
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, False_, Has, HasAll, HasAllCounts, HasGroup, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HasAllCounts, HasAny, HasGroup, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -303,7 +303,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Zoras River", player),
-        False_()
+        Or(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Flippers'))
     )
 
     world.set_rule(
@@ -368,22 +368,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dark Desert Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts")), Has('Activated Flute'))
     )
 
     world.set_rule(
         multiworld.get_entrance("East Hyrule Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), HasAll('Hammer', 'Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("South Hyrule Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), HasAll('Hammer', 'Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Kakariko Teleporter", player),
-        True_()
+        And(Or(And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Hammer')), HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts"))), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -473,7 +473,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Agahnims Tower", player),
-        False_()
+        Or(HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Beat Agahnim 1', 'Cape'))
     )
 
     world.set_rule(
@@ -496,7 +496,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Agahnim 1", player),
-        True_()
+        And(HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAllCounts({'Small Key (Agahnims Tower)': 4, 'Lamp': 1}))
     )
 
     world.set_rule(
@@ -571,7 +571,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts")), Has('Hammer'))
     )
 
     world.set_rule(
@@ -586,12 +586,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
-        True_()
+        And(HelperCall(helper_func=can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Or(And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Silver Bow')), HelperCall(helper_func=has_melee_weapon, helper_name="has_melee_weapon"), HasAny('Cane of Byrna', 'Cane of Somaria')), Has('Big Key (Tower of Hera)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Fairy", player),
-        True_()
+        And(Or(HasAll('Beat Agahnim 1', 'Magic Mirror'), HelperCall(helper_func=cross_peg_bridge, helper_name="cross_peg_bridge", body_rule=(Has("Hammer")) & (Has("Moon Pearl")))), CanReachRegion('Big Bomb Shop'), CanReachRegion('East Dark World'), HasAll('Crystal 5', 'Crystal 6'))
     )
 
     world.set_rule(
@@ -621,7 +621,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Northeast Dark World Broken Bridge Pass", player),
-        True_()
+        And(Or(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), HasAny('Flippers', 'Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -636,7 +636,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("East Dark World Broken Bridge Pass", player),
-        True_()
+        And(Or(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -656,12 +656,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hype Cave", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Heavy Rock", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts")), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -706,12 +706,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Fairy", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Spike Cave", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -721,7 +721,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Brewery", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -741,7 +741,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Entrance Rock", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -751,7 +751,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Eastern Rocks", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts")), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -771,7 +771,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Peg Area Rocks", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts")), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -781,7 +781,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Exit (Bottom)", player),
-        True_()
+        And(HasAny('Cape', 'Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -811,7 +811,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire", player),
-        True_()
+        And(HelperCall(helper_func=has_misery_mire_medallion, helper_name="has_misery_mire_medallion"), HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -844,7 +844,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -854,7 +854,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock", player),
-        True_()
+        And(HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HelperCall(helper_func=has_turtle_rock_medallion, helper_name="has_turtle_rock_medallion"), CanReachRegion('Turtle Rock (Top)'), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -889,7 +889,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Bomb Wall (South)", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -934,7 +934,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Blind Fight", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Small Key (Thieves Town)', 3))
     )
 
     world.set_rule(
@@ -979,12 +979,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Torch Room", player),
-        True_()
+        And(HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAllCounts({'Small Key (Skull Woods)': 4, 'Fire Rod': 1}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Second Section)", player),
-        True_()
+        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Small Key (Ice Palace)'))
     )
 
     world.set_rule(
@@ -997,17 +997,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Kholdstare)", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Or(HasAllCounts({'Small Key (Ice Palace)': 5, 'Cane of Somaria': 1}), Has('Small Key (Ice Palace)', 6)), HasAll('Big Key (Ice Palace)', 'Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (East Top)", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Entrance Gap", player),
-        True_()
+        And(Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod', 'Hammer', 'Ice Rod')), HasAny('Hookshot', 'Pegasus Boots'))
     )
 
     multiworld.get_entrance("Misery Mire (West)", player).access_rule = \
@@ -1020,7 +1020,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire (Vitreous)", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HasAll('Cane of Somaria', 'Lamp'))
     )
 
     world.set_rule(
@@ -1066,12 +1066,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Big Key Door", player),
-        True_()
+        And(HelperCall(helper_func=can_bomb_or_bonk, helper_name="can_bomb_or_bonk"), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(10,)), HasAll('Big Key (Turtle Rock)', 'Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Second Section Bomb Wall", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(10,)), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1081,7 +1081,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Big Chest) (North)", player),
-        True_()
+        And(HasAny('Cane of Somaria', 'Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1121,7 +1121,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Eye Bridge Bomb Wall", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1131,7 +1131,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bonk Wall", player),
-        True_()
+        And(HelperCall(helper_func=can_bomb_or_bonk, helper_name="can_bomb_or_bonk"), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"))
     )
 
     multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player).access_rule = \
@@ -1144,7 +1144,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Door", player),
-        True_()
+        And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HasAllCounts({'Small Key (Palace of Darkness)': 6, 'Big Key (Palace of Darkness)': 1, 'Hammer': 1, 'Lamp': 1}))
     )
 
     world.set_rule(
@@ -1167,12 +1167,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Hookshot Room)", player),
-        True_()
+        And(HasAny('Hookshot', 'Pegasus Boots'), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Big Key Door", player),
-        True_()
+        And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Big Key (Ganons Tower)'))
     )
 
     multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player).access_rule = \
@@ -1197,7 +1197,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Moldorm Door", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Small Key (Ganons Tower)', 8))
     )
 
     multiworld.get_entrance("Ganons Tower Moldorm Gap", player).access_rule = \
@@ -1205,7 +1205,20 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ganon Drop", player),
-        True_()
+        And(HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), Has('Moon Pearl'))
+    )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Big Bomb Shop"),
+        multiworld.get_entrance("Pyramid Fairy", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("East Dark World"),
+        multiworld.get_entrance("Pyramid Fairy", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Turtle Rock (Top)"),
+        multiworld.get_entrance("Turtle Rock", player)
     )
     # Location rules
     world.set_rule(
@@ -1280,7 +1293,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Missing Smith", player),
-        True_()
+        And(CanReachRegion('Blacksmiths Hut'), Has('Get Frog'))
     )
 
     world.set_rule(
@@ -1350,12 +1363,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Beamos Hall Pot Key", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Small Key (Desert Palace)', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Desert Tiles 2 Pot Key", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Small Key (Desert Palace)', 3))
     )
 
     multiworld.get_location("Desert Palace - Boss", player).access_rule = \
@@ -1376,7 +1389,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Dark Eyegore Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), HasAll('Big Key (Eastern Palace)', 'Lamp'))
     )
 
     world.set_rule(
@@ -1397,7 +1410,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Boomerang Chest", player),
-        True_()
+        And(HelperCall(helper_func=basement_key_rule, helper_name="basement_key_rule", body_rule=Has("Small Key (Hyrule Castle)", 2)), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,)))
     )
 
     world.set_rule(
@@ -1412,12 +1425,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Boomerang Guard Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=basement_key_rule, helper_name="basement_key_rule", body_rule=Has("Small Key (Hyrule Castle)", 2)), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(2,)))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Big Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), Has('Small Key (Hyrule Castle)', 4))
     )
 
     world.set_rule(
@@ -1427,7 +1440,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sewers - Key Rat Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), Has('Small Key (Hyrule Castle)', 3))
     )
 
     world.set_rule(
@@ -1437,17 +1450,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), HasAll('Lamp', 'Small Key (Agahnims Tower)'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Archer Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), HasAllCounts({'Small Key (Agahnims Tower)': 2, 'Lamp': 1}))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Circle of Pots Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), HasAllCounts({'Small Key (Agahnims Tower)': 3, 'Lamp': 1}))
     )
 
     multiworld.get_location("Agahnim 1", player).access_rule = \
@@ -1460,27 +1473,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Far Left", player),
-        False_()
+        Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Left", player),
-        False_()
+        Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Right", player),
-        False_()
+        Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Far Right", player),
-        False_()
+        Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Middle", player),
-        False_()
+        Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
@@ -1546,27 +1559,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Top", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Middle Right", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Middle Left", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Bottom", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Frog", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_rule=Has("Titans Mitts")), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1621,7 +1634,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Spike Cave", player),
-        True_()
+        And(HelperCall(helper_func=can_lift_rocks, helper_name="can_lift_rocks", body_rule=(Has("Power Glove")) | (Has("Titans Mitts"))), Or(And(HelperCall(helper_func=can_extend_magic, helper_name="can_extend_magic", args=(16, True,)), Has('Cape')), And(Or(HelperCall(helper_func=can_extend_magic, helper_name="can_extend_magic", args=(12, True,)), HelperCall(helper_func=has_hearts, helper_name="has_hearts", args=(4,)), Has('Pegasus Boots')), Has('Cane of Byrna'))), HasAll('Hammer', 'Moon Pearl'))
     )
 
     world.set_rule(
@@ -1636,7 +1649,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Bottom Right", player),
-        True_()
+        And(HasAny('Hookshot', 'Pegasus Boots'), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1654,7 +1667,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Map Chest", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1827,12 +1840,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Jelly Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Compass Chest", player),
-        True_()
+        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), HasAll('Moon Pearl', 'Small Key (Ice Palace)'))
     )
 
     world.set_rule(
@@ -1893,12 +1906,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Map Chest", player),
-        True_()
+        And(Or(And(HelperCall(helper_func=can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Has('Small Key (Misery Mire)', 2)), Has('Small Key (Misery Mire)', 4)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Main Lobby", player),
-        True_()
+        And(Or(And(HelperCall(helper_func=can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Has('Small Key (Misery Mire)', 3)), Has('Small Key (Misery Mire)', 5)), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1908,7 +1921,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spike Chest", player),
-        True_()
+        And(Or(HelperCall(helper_func=has_hearts, helper_name="has_hearts", args=(4,)), HasAny('Cane of Byrna', 'Cape')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1918,7 +1931,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Fishbone Pot Key", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1928,12 +1941,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Compass Chest", player),
-        True_()
+        And(HelperCall(helper_func=has_fire_source, helper_name="has_fire_source", body_rule=(Has("Fire Rod")) | (Has("Lamp"))), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Big Key Chest", player),
-        True_()
+        And(HelperCall(helper_func=has_fire_source, helper_name="has_fire_source", body_rule=(Has("Fire Rod")) | (Has("Lamp"))), Has('Moon Pearl'))
     )
 
     multiworld.get_location("Misery Mire - Boss", player).access_rule = \
@@ -1959,27 +1972,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Pokey 1 Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(5,)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Chain Chomps", player),
-        True_()
+        And(Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Blue Boomerang', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Key Chest", player),
-        True_()
+        And(Has('Small Key (Turtle Rock)', HelperCall(helper_func=tr_big_key_chest_keys_needed, helper_name="tr_big_key_chest_keys_needed", args=())), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Pokey 2 Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(5,)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Chest", player),
-        True_()
+        And(HasAny('Cane of Somaria', 'Hookshot'), HasAll('Big Key (Turtle Rock)', 'Moon Pearl'))
     )
 
     world.set_rule(
@@ -1989,22 +2002,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Bottom Left", player),
-        True_()
+        And(HasAny('Cane of Byrna', 'Cape', 'Mirror Shield'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Bottom Right", player),
-        True_()
+        And(HasAny('Cane of Byrna', 'Cape', 'Mirror Shield'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Top Left", player),
-        True_()
+        And(HasAny('Cane of Byrna', 'Cape', 'Mirror Shield'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Top Right", player),
-        True_()
+        And(HasAny('Cane of Byrna', 'Cape', 'Mirror Shield'), Has('Moon Pearl'))
     )
 
     multiworld.get_location("Turtle Rock - Boss", player).access_rule = \
@@ -2035,7 +2048,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - The Arena - Ledge", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -2070,7 +2083,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Chest", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HasAll('Big Key (Palace of Darkness)', 'Moon Pearl'))
     )
 
     world.set_rule(
@@ -2146,7 +2159,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Double Switch Pot Key", player),
-        True_()
+        And(Or(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -2200,12 +2213,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Pre-Moldorm Chest", player),
-        True_()
+        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), HasAllCounts({'Small Key (Ganons Tower)': 7, 'Moon Pearl': 1}))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), Has('Moon Pearl'))
     )
 
     world.set_rule(

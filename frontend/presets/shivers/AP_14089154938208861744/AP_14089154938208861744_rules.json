@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Shivers",
   "game_directory": "shivers",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -472,7 +472,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Crawling",
                   "Key for Bedroom Elevator"
                 ]
@@ -551,7 +551,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Crawling",
                   "Key for Bedroom Elevator"
                 ]
@@ -640,7 +640,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Crawling",
                   "Key for Bedroom Elevator"
                 ]
@@ -4844,7 +4844,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Shivers",

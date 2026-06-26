@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Sonic Adventure 2 Battle WorldGen",
   "game_directory": "sa2b_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -120,7 +120,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring"
                 ]
@@ -161,7 +161,21 @@
             "name": "Metal Harbor - 2",
             "id": 16711715,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Metal Harbor - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -431,7 +445,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Light Shoes",
                   "Sonic - Mystic Melody"
@@ -489,7 +503,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring",
                   "Sonic - Light Shoes"
@@ -508,7 +522,21 @@
             "name": "Crazy Gadget - 2",
             "id": 16711726,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Crazy Gadget - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -558,7 +586,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring",
                   "Sonic - Light Shoes"
@@ -579,7 +607,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring",
                   "Sonic - Light Shoes"
@@ -870,7 +898,21 @@
             "name": "Mission Street - 2",
             "id": 16711718,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Mission Street - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Magnetic Shield",
@@ -1026,7 +1068,21 @@
             "name": "Hidden Base - 2",
             "id": 16711721,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Hidden Base - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -1093,7 +1149,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1119,7 +1175,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1137,7 +1193,21 @@
             "name": "Eternal Engine - 2",
             "id": 16711724,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Eternal Engine - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Knuckles - Shovel Claws",
@@ -1170,7 +1240,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1207,7 +1277,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1566,7 +1636,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -1584,7 +1654,24 @@
             "name": "Death Chamber - 2",
             "id": 16711723,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Death Chamber - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Knuckles - Hammer Gloves",
+                      "Knuckles - Shovel Claws"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -1634,7 +1721,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -1654,7 +1741,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -1694,7 +1781,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -2488,7 +2575,21 @@
             "name": "Lost Colony - 2",
             "id": 16711733,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Lost Colony - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -2586,7 +2687,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon"
                 ]
@@ -2604,7 +2705,24 @@
             "name": "Weapons Bed - 2",
             "id": 16711734,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Weapons Bed - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Eggman - Large Cannon"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Shadow - Mystic Melody",
@@ -2634,7 +2752,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon"
                 ]
@@ -2654,7 +2772,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon"
                 ]
@@ -2709,7 +2827,21 @@
             "name": "Cosmic Wall - 2",
             "id": 16711740,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Cosmic Wall - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -2889,7 +3021,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rouge - Iron Boots",
                   "Rouge - Mystic Melody",
                   "Rouge - Pick Nails"
@@ -3061,7 +3193,21 @@
             "name": "Security Hall - 2",
             "id": 16711735,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Security Hall - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Rouge - Pick Nails"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Magnetic Shield",
@@ -3136,7 +3282,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rouge - Iron Boots",
                   "Rouge - Mystic Melody"
                 ]
@@ -3199,7 +3345,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rouge - Iron Boots",
                   "Rouge - Pick Nails"
                 ]
@@ -3217,7 +3363,21 @@
             "name": "Mad Space - 2",
             "id": 16711739,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Mad Space - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Rouge - Iron Boots"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -3329,7 +3489,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Knuckles - Air Necklace",
                   "Knuckles - Hammer Gloves",
@@ -3350,7 +3510,24 @@
             "name": "Cannon's Core - 2",
             "id": 16711742,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Cannon's Core - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Tails - Booster"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Shield",
@@ -3366,7 +3543,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon",
                   "Tails - Booster"
@@ -3387,7 +3564,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Tails - Booster"
                 ]
@@ -3407,7 +3584,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Knuckles - Air Necklace",
                   "Knuckles - Hammer Gloves",
@@ -3430,7 +3607,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Knuckles - Air Necklace",
                   "Knuckles - Hammer Gloves",
@@ -6228,7 +6405,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Sonic Adventure 2 Battle WorldGen",

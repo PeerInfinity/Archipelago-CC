@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Link to the Past",
   "game_directory": "alttp",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -220,7 +220,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Beat Agahnim 1",
                   "Pegasus Boots"
                 ]
@@ -386,7 +386,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hammer",
                       "Moon Pearl"
                     ]
@@ -409,7 +409,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hammer",
                       "Moon Pearl"
                     ]
@@ -1919,7 +1919,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Bottles"
+                "group": "Bottles"
               }
             },
             "item": {
@@ -3234,7 +3234,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Desert Palace)",
                       "Small Key (Desert Palace)"
                     ]
@@ -3326,7 +3326,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Desert Palace)",
                       "Small Key (Desert Palace)"
                     ]
@@ -3461,7 +3461,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Eastern Palace)",
                       "Lamp"
                     ]
@@ -3628,7 +3628,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Eastern Palace)",
                       "Lamp"
                     ]
@@ -3695,7 +3695,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Eastern Palace)",
                       "Lamp"
                     ]
@@ -3731,7 +3731,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Blue Pendant",
                   "Green Pendant",
                   "Red Pendant"
@@ -3820,7 +3820,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Beat Agahnim 1",
                       "Cape"
                     ]
@@ -4466,7 +4466,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Lamp",
                       "Small Key (Agahnims Tower)"
                     ]
@@ -5105,7 +5105,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Fire Rod"
                     ]
@@ -5148,7 +5148,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Fire Rod"
                     ]
@@ -5191,7 +5191,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Fire Rod"
                     ]
@@ -5234,7 +5234,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Fire Rod"
                     ]
@@ -5277,7 +5277,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Fire Rod"
                     ]
@@ -5849,7 +5849,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Cane of Byrna",
                           "Cane of Somaria"
                         ]
@@ -6095,7 +6095,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Beat Agahnim 1",
                           "Magic Mirror"
                         ]
@@ -6123,7 +6123,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Crystal 5",
                       "Crystal 6"
                     ]
@@ -6138,7 +6138,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hammer",
                   "Moon Pearl"
                 ]
@@ -6161,7 +6161,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Moon Pearl"
                 ]
@@ -6226,7 +6226,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Flippers",
                           "Hammer"
                         ]
@@ -6317,7 +6317,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -6377,7 +6377,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Moon Pearl"
                 ]
@@ -6420,7 +6420,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Moon Pearl"
                 ]
@@ -6500,7 +6500,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hammer",
                   "Moon Pearl"
                 ]
@@ -6527,7 +6527,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Moon Pearl",
                   "Pegasus Boots"
                 ]
@@ -6657,7 +6657,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Magic Mirror",
                   "Moon Pearl"
@@ -6722,7 +6722,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Moon Pearl"
                 ]
@@ -6966,7 +6966,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Moon Pearl"
                 ]
@@ -7023,7 +7023,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Magic Mirror",
                   "Moon Pearl"
                 ]
@@ -7036,7 +7036,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Magic Mirror",
                   "Moon Pearl"
                 ]
@@ -7076,7 +7076,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hammer",
                   "Moon Pearl"
                 ]
@@ -7178,7 +7178,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hammer",
                   "Moon Pearl"
                 ]
@@ -7218,7 +7218,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hammer",
                   "Moon Pearl"
                 ]
@@ -7701,7 +7701,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cape",
                       "Hookshot"
                     ]
@@ -7722,7 +7722,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cape",
                   "Moon Pearl"
                 ]
@@ -7862,7 +7862,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Fire Rod",
                   "Moon Pearl"
                 ]
@@ -8269,7 +8269,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Magic Mirror",
                   "Moon Pearl"
                 ]
@@ -8468,7 +8468,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hammer",
                       "Moon Pearl"
                     ]
@@ -8534,7 +8534,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -8557,7 +8557,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -8583,7 +8583,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hookshot",
                       "Pegasus Boots"
                     ]
@@ -8614,7 +8614,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -8859,7 +8859,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Flippers",
                   "Magic Mirror",
                   "Open Floodgate"
@@ -9163,7 +9163,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -9690,7 +9690,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hammer",
                       "Moon Pearl"
                     ]
@@ -9736,7 +9736,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Moon Pearl",
                   "Small Key (Thieves Town)"
                 ]
@@ -9760,7 +9760,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Moon Pearl",
                   "Small Key (Thieves Town)"
                 ]
@@ -10579,7 +10579,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Moon Pearl",
                       "Small Key (Ice Palace)"
                     ]
@@ -10759,7 +10759,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Ice Palace)",
                       "Hammer"
                     ]
@@ -10817,7 +10817,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Big Key (Ice Palace)",
                   "Moon Pearl"
                 ]
@@ -11125,7 +11125,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Cane of Somaria",
                           "Fire Rod",
                           "Hammer",
@@ -11138,7 +11138,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hookshot",
                       "Pegasus Boots"
                     ]
@@ -11257,7 +11257,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Big Key (Misery Mire)",
                   "Moon Pearl"
                 ]
@@ -11428,7 +11428,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Cane of Byrna",
                           "Cape"
                         ]
@@ -11727,7 +11727,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Lamp"
                     ]
@@ -11868,7 +11868,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cane of Somaria",
                   "Moon Pearl"
                 ]
@@ -11925,7 +11925,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cane of Somaria",
                   "Moon Pearl"
                 ]
@@ -11948,7 +11948,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cane of Somaria",
                   "Fire Rod",
                   "Moon Pearl"
@@ -11972,7 +11972,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cane of Somaria",
                   "Fire Rod",
                   "Moon Pearl"
@@ -12203,7 +12203,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Blue Boomerang",
                           "Cane of Somaria",
                           "Fire Rod",
@@ -12282,7 +12282,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Turtle Rock)",
                       "Moon Pearl"
                     ]
@@ -12448,7 +12448,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Hookshot"
                     ]
@@ -12484,7 +12484,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Somaria",
                       "Hookshot"
                     ]
@@ -12493,7 +12493,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Turtle Rock)",
                       "Moon Pearl"
                     ]
@@ -12578,7 +12578,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cane of Somaria",
                   "Lamp"
                 ]
@@ -12591,7 +12591,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cane of Somaria",
                   "Lamp"
                 ]
@@ -12661,7 +12661,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Turtle Rock)",
                       "Cane of Somaria",
                       "Moon Pearl"
@@ -12702,7 +12702,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cape",
                       "Mirror Shield"
@@ -12737,7 +12737,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cape",
                       "Mirror Shield"
@@ -12772,7 +12772,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cape",
                       "Mirror Shield"
@@ -12807,7 +12807,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cape",
                       "Mirror Shield"
@@ -13119,7 +13119,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Palace of Darkness)",
                       "Hammer",
                       "Lamp"
@@ -13384,7 +13384,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Lamp",
                   "Moon Pearl"
                 ]
@@ -13407,7 +13407,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Lamp",
                   "Moon Pearl"
                 ]
@@ -13489,7 +13489,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Big Key (Palace of Darkness)",
                       "Moon Pearl"
                     ]
@@ -13683,7 +13683,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Hookshot",
                       "Pegasus Boots"
                     ]
@@ -13733,7 +13733,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Moon Pearl",
                   "Pegasus Boots"
                 ]
@@ -14064,7 +14064,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Fire Rod",
                       "Moon Pearl"
                     ]
@@ -14163,7 +14163,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Fire Rod",
                       "Moon Pearl"
                     ]
@@ -14262,7 +14262,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Fire Rod",
                       "Moon Pearl"
                     ]
@@ -14361,7 +14361,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Fire Rod",
                       "Moon Pearl"
                     ]
@@ -14460,7 +14460,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Fire Rod",
                       "Moon Pearl"
                     ]
@@ -14570,7 +14570,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -14593,7 +14593,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -14616,7 +14616,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -14639,7 +14639,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hookshot",
                   "Moon Pearl"
                 ]
@@ -15292,7 +15292,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Big Key (Ganons Tower)",
                   "Moon Pearl"
                 ]
@@ -16011,7 +16011,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Beat Agahnim 2",
                       "Moon Pearl"
                     ]
@@ -16128,7 +16128,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cane of Somaria",
                       "Fire Rod",
@@ -16266,7 +16266,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Blue Boomerang",
                       "Red Boomerang"
                     ]
@@ -16310,7 +16310,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Bug Catching Net",
                       "Hammer"
                     ]
@@ -16490,7 +16490,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cane of Somaria"
                     ]
@@ -16656,7 +16656,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Bombos",
                               "Fire Rod"
                             ]
@@ -16836,7 +16836,7 @@
                     "condition": {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Fire Rod",
                           "Ice Rod"
                         ]
@@ -16902,7 +16902,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Golden Sword",
                           "Hammer",
                           "Tempered Sword"
@@ -17013,7 +17013,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Bug Catching Net",
                       "Hammer"
                     ]
@@ -17140,7 +17140,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Blue Boomerang",
                       "Red Boomerang"
                     ]
@@ -17167,7 +17167,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cane of Byrna",
                       "Cane of Somaria",
                       "Fire Rod",
@@ -19559,7 +19559,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "A Link to the Past",

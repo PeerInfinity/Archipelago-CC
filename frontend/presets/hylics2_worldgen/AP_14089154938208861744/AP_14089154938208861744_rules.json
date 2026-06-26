@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Hylics 2 WorldGen",
   "game_directory": "hylics2_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -44,7 +44,17 @@
             "name": "Afterlife To Viewax",
             "connected_region": "Viewax",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "airship",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -75,7 +85,17 @@
             "name": "Afterlife To Foglast",
             "connected_region": "Foglast",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "enter_foglast",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -90,7 +110,21 @@
             "name": "Afterlife To Hylemxylem",
             "connected_region": "Hylemxylem",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "enter_hylemxylem",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "paper_cup",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           }
         ],
@@ -295,14 +329,34 @@
             "name": "World To Viewax",
             "connected_region": "Viewax",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "airship",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
             "name": "World To Arcade Island",
             "connected_region": "Arcade Island",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "airship",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
@@ -341,21 +395,63 @@
             "name": "World To Foglast",
             "connected_region": "Foglast",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "enter_foglast",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
             "name": "World To Sage Airship",
             "connected_region": "Sage Airship",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "enter_sageship",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "paper_cup",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "worm_room_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           },
           {
             "name": "World To Hylemxylem",
             "connected_region": "Hylemxylem",
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "enter_hylemxylem",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "paper_cup",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             }
           }
         ],
@@ -563,7 +659,39 @@
             "name": "New Muldul: Rescued Blerol 1",
             "id": 200645,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "jail_key",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "paddle",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "air_dash",
+                          "_original_ast_type": "rb_defined_helper"
+                        },
+                        {
+                          "rule": "airship",
+                          "_original_ast_type": "rb_defined_helper"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "rule": "enter_hylemxylem",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "CLOUD GERM",
@@ -577,7 +705,39 @@
             "name": "New Muldul: Rescued Blerol 2",
             "id": 200646,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "jail_key",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "paddle",
+                      "_original_ast_type": "rb_defined_helper"
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "air_dash",
+                          "_original_ast_type": "rb_defined_helper"
+                        },
+                        {
+                          "rule": "airship",
+                          "_original_ast_type": "rb_defined_helper"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "rule": "enter_hylemxylem",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "BANANA",
@@ -818,7 +978,17 @@
             "name": "Viewax's Edifice: Tower Chest",
             "id": 200660,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "paddle",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "tower_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "BURRITO",
@@ -1027,7 +1197,17 @@
             "name": "Viewax's Edifice: TV",
             "id": 200666,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "jail_key",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "paddle",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "BANANA",
@@ -1503,7 +1683,17 @@
             "name": "Foglast: Roof Sarcophagus",
             "id": 200700,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "STEM CELL",
@@ -1517,7 +1707,17 @@
             "name": "Foglast: Under Lair Sarcophagus 1",
             "id": 200701,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "TIME SIGIL",
@@ -1531,7 +1731,17 @@
             "name": "Foglast: Under Lair Sarcophagus 2",
             "id": 200702,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -1545,7 +1755,17 @@
             "name": "Foglast: Under Lair Sarcophagus 3",
             "id": 200703,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -1559,7 +1779,17 @@
             "name": "Foglast: Sage Sarcophagus",
             "id": 200704,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -1573,7 +1803,17 @@
             "name": "Foglast: Sage Item 1",
             "id": 200705,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "CUPCAKE",
@@ -1587,7 +1827,17 @@
             "name": "Foglast: Sage Item 2",
             "id": 200706,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "MULTI STEM CELL",
@@ -1601,7 +1851,17 @@
             "name": "Foglast: TV",
             "id": 200697,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "clicker",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "BURRITO",
@@ -1956,7 +2216,17 @@
             "name": "Sage Labyrinth: Motor Hunter Sarcophagus",
             "id": 200725,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                {
+                  "rule": "paper_cup",
+                  "_original_ast_type": "rb_defined_helper"
+                }
+              ]
             },
             "item": {
               "name": "BURRITO",
@@ -2419,7 +2689,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "UPPER CHAMBER KEY",
                   "VESSEL ROOM KEY"
                 ]
@@ -3384,7 +3654,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Hylics 2 WorldGen",

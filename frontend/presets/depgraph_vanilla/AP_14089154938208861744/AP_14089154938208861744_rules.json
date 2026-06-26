@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph",
   "game_directory": "depgraph",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -60,7 +60,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Node 1"
                 ]
@@ -73,7 +73,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 10",
                   "Completed Node 2",
@@ -126,7 +126,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 10",
                   "Completed Node 2",
@@ -179,7 +179,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 3",
                   "Node 3"
                 ]
@@ -228,7 +228,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 4",
                   "Node 4"
                 ]
@@ -241,7 +241,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 10",
                   "Completed Node 2",
@@ -294,7 +294,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Completed Node 5",
                   "Node 5"
@@ -344,7 +344,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 6",
                   "Node 6"
                 ]
@@ -357,7 +357,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 6",
                   "Node 6"
                 ]
@@ -370,7 +370,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 10",
                   "Completed Node 2",
@@ -423,7 +423,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Completed Node 7",
                   "Node 7"
@@ -473,7 +473,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Completed Node 8",
                   "Node 8"
@@ -558,7 +558,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 10",
                   "Node 10"
                 ]
@@ -571,7 +571,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 10",
                   "Completed Node 2",
@@ -624,7 +624,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 11",
                   "Completed Node 39",
                   "Node 11"
@@ -674,7 +674,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -687,7 +687,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -700,7 +700,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -713,7 +713,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -726,7 +726,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Completed Node 8",
                   "Node 12"
@@ -740,7 +740,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -753,7 +753,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Completed Node 5",
                   "Node 12"
@@ -767,7 +767,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Completed Node 7",
                   "Node 12"
@@ -781,7 +781,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -830,7 +830,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 13",
                   "Node 13"
                 ]
@@ -879,7 +879,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 14",
                   "Node 14"
                 ]
@@ -928,7 +928,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -985,7 +985,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 16",
                   "Node 16"
                 ]
@@ -1034,7 +1034,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 17",
                   "Node 17"
                 ]
@@ -1083,7 +1083,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -1140,7 +1140,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 19",
                   "Node 19"
                 ]
@@ -1189,7 +1189,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 20",
                   "Node 20"
                 ]
@@ -1238,7 +1238,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -1295,7 +1295,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 22",
                   "Node 22"
                 ]
@@ -1344,7 +1344,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 23",
                   "Node 23"
                 ]
@@ -1393,7 +1393,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -1450,7 +1450,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 25",
                   "Node 25"
                 ]
@@ -1499,7 +1499,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 26",
                   "Node 26"
                 ]
@@ -1548,7 +1548,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -1605,7 +1605,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 28",
                   "Node 28"
                 ]
@@ -1654,7 +1654,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 29",
                   "Node 29"
                 ]
@@ -1703,7 +1703,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -1760,7 +1760,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 31",
                   "Node 31"
                 ]
@@ -1809,7 +1809,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 32",
                   "Node 32"
                 ]
@@ -1858,7 +1858,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -1915,7 +1915,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 34",
                   "Node 34"
                 ]
@@ -1964,7 +1964,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -2021,7 +2021,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 36",
                   "Node 36"
                 ]
@@ -2070,7 +2070,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 37",
                   "Node 37"
                 ]
@@ -2119,7 +2119,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 15",
                   "Completed Node 18",
                   "Completed Node 21",
@@ -2176,7 +2176,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 39",
                   "Node 39"
                 ]
@@ -2189,7 +2189,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 39",
                   "Node 39"
                 ]
@@ -2202,7 +2202,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 11",
                   "Completed Node 39",
                   "Node 39"
@@ -2216,7 +2216,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 39",
                   "Node 39"
                 ]
@@ -2265,7 +2265,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 40",
                   "Node 40"
                 ]
@@ -2314,7 +2314,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 41",
                   "Node 41"
                 ]
@@ -2363,7 +2363,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 42",
                   "Node 42"
                 ]
@@ -2412,7 +2412,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 43",
                   "Node 43"
                 ]
@@ -2461,7 +2461,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 44",
                   "Completed Node 45",
                   "Completed Node 48",
@@ -2513,7 +2513,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 44",
                   "Completed Node 45",
                   "Completed Node 48",
@@ -2565,7 +2565,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 46",
                   "Node 46"
                 ]
@@ -2614,7 +2614,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 47",
                   "Node 47"
                 ]
@@ -2663,7 +2663,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 44",
                   "Completed Node 45",
                   "Completed Node 48",
@@ -2715,7 +2715,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 49",
                   "Node 49"
                 ]
@@ -2764,7 +2764,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 50",
                   "Node 50"
                 ]
@@ -2813,7 +2813,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 44",
                   "Completed Node 45",
                   "Completed Node 48",
@@ -2865,7 +2865,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 52",
                   "Node 52"
                 ]
@@ -2878,7 +2878,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 52",
                   "Node 52"
                 ]
@@ -2891,7 +2891,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 52",
                   "Node 52"
                 ]
@@ -2940,7 +2940,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 53",
                   "Node 53"
                 ]
@@ -2989,7 +2989,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 54",
                   "Completed Node 56",
                   "Node 54"
@@ -3039,7 +3039,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 55",
                   "Node 55"
                 ]
@@ -3088,7 +3088,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 56",
                   "Node 56"
                 ]
@@ -3101,7 +3101,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 54",
                   "Completed Node 56",
                   "Node 56"
@@ -3151,7 +3151,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 57",
                   "Node 57"
                 ]
@@ -3200,7 +3200,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 58",
                   "Completed Node 59",
                   "Completed Node 60",
@@ -3251,7 +3251,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 58",
                   "Completed Node 59",
                   "Completed Node 60",
@@ -3302,7 +3302,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 58",
                   "Completed Node 59",
                   "Completed Node 60",
@@ -15266,7 +15266,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Kirby's Dream Land 3",
   "game_directory": "kdl3",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -1205,7 +1205,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Stone",
                   "Stone Ability"
                 ]
@@ -4420,7 +4420,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Kine",
                   "Kine Spawn"
                 ]
@@ -4568,7 +4568,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Kine",
                   "Kine Spawn"
                 ]
@@ -8201,7 +8201,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cutter",
                   "Cutter Ability"
                 ]
@@ -9937,7 +9937,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Burning",
                           "Burning Ability"
                         ]
@@ -9946,7 +9946,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Stone",
                           "Stone Ability"
                         ]
@@ -9960,7 +9960,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Clean",
                           "Clean Ability"
                         ]
@@ -9969,7 +9969,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Spark",
                           "Spark Ability"
                         ]
@@ -9983,7 +9983,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Cutter",
                           "Cutter Ability"
                         ]
@@ -9992,7 +9992,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Parasol",
                           "Parasol Ability"
                         ]
@@ -10006,7 +10006,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Ice",
                           "Ice Ability"
                         ]
@@ -10015,7 +10015,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Needle",
                           "Needle Ability"
                         ]
@@ -10026,7 +10026,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Coo",
                       "Coo Spawn",
                       "Kine",
@@ -15176,7 +15176,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Burning",
                   "Burning Ability"
                 ]
@@ -15196,7 +15196,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Burning",
                   "Burning Ability"
                 ]
@@ -15338,7 +15338,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Burning",
                   "Burning Ability"
                 ]
@@ -18040,7 +18040,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Burning",
                   "Burning Ability",
                   "Clean",
@@ -18291,7 +18291,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Level 1 Boss Purified",
                       "Level 2 Boss Purified",
                       "Level 3 Boss Purified",
@@ -18364,7 +18364,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Level 1 Boss Defeated",
                   "Level 1 Boss Purified"
                 ]
@@ -18432,7 +18432,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Level 2 Boss Defeated",
                   "Level 2 Boss Purified"
                 ]
@@ -18500,7 +18500,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Level 3 Boss Defeated",
                   "Level 3 Boss Purified"
                 ]
@@ -18568,7 +18568,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Level 4 Boss Defeated",
                   "Level 4 Boss Purified"
                 ]
@@ -19347,7 +19347,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Kirby's Dream Land 3",

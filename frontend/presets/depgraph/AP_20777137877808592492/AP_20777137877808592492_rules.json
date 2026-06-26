@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph",
   "game_directory": "depgraph",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 8,
   "seed_name": "20777137877808592492",
   "player_names": {
@@ -32,7 +32,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Node 1"
                 ]
@@ -45,7 +45,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Node 1"
                 ]
@@ -94,7 +94,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 2",
                   "Node 2"
                 ]
@@ -143,7 +143,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 3",
                   "Completed Node 5",
                   "Node 3"
@@ -193,7 +193,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 4",
                   "Node 4"
                 ]
@@ -242,7 +242,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 3",
                   "Completed Node 5",
                   "Node 5"
@@ -292,7 +292,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 6",
                   "Node 6"
                 ]
@@ -305,7 +305,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 6",
                   "Node 6"
                 ]
@@ -354,7 +354,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 7",
                   "Completed Node 8",
                   "Node 7"
@@ -404,7 +404,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 7",
                   "Completed Node 8",
                   "Node 8"
@@ -454,7 +454,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 9",
                   "Node 9"
                 ]
@@ -11702,7 +11702,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DOOM 1993",
   "game_directory": "doom_1993",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -45,7 +45,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Shotgun"
                     ]
@@ -86,7 +86,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Phobos Lab (E1M5)",
                   "Shotgun"
@@ -100,7 +100,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Central Processing (E1M6)",
                   "Chaingun",
                   "Rocket launcher",
@@ -128,7 +128,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -138,7 +138,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Phobos Anomaly (E1M8)",
                       "Shotgun"
@@ -154,7 +154,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Military Base (E1M9)",
                   "Shotgun"
@@ -181,7 +181,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Plasma gun"
                     ]
@@ -190,7 +190,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Containment Area (E2M2)",
                       "Shotgun"
                     ]
@@ -208,7 +208,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Plasma gun"
                     ]
@@ -217,7 +217,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Refinery (E2M3)",
                       "Shotgun"
                     ]
@@ -242,7 +242,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Command Center (E2M5)",
                   "Plasma gun",
@@ -257,7 +257,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Halls of the Damned (E2M6)",
                   "Plasma gun",
@@ -272,7 +272,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Plasma gun",
                   "Rocket launcher",
@@ -301,7 +301,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -311,7 +311,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Fortress of Mystery (E2M9)",
                       "Shotgun"
@@ -340,7 +340,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Shotgun"
                     ]
@@ -364,7 +364,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -374,7 +374,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Pandemonium (E3M3)",
                       "Shotgun"
@@ -393,7 +393,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -403,7 +403,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "House of Pain (E3M4)",
                       "Shotgun"
@@ -429,7 +429,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Mt. Erebus (E3M6)",
                   "Shotgun"
@@ -446,7 +446,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -456,7 +456,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Limbo (E3M7)",
                       "Shotgun"
@@ -475,7 +475,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -485,7 +485,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Dis (E3M8)",
                       "Shotgun"
@@ -504,7 +504,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Rocket launcher"
                     ]
@@ -513,7 +513,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Plasma gun",
                       "Shotgun",
@@ -1078,7 +1078,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Shotgun"
                 ]
@@ -1112,7 +1112,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Command Control (E1M4) - Blue keycard",
                   "Command Control (E1M4) - Yellow keycard"
                 ]
@@ -1125,7 +1125,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Command Control (E1M4) - Blue keycard",
                   "Command Control (E1M4) - Yellow keycard"
                 ]
@@ -1245,7 +1245,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Command Control (E1M4) - Blue keycard",
                   "Command Control (E1M4) - Yellow keycard"
                 ]
@@ -1348,7 +1348,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Shotgun"
                 ]
@@ -2250,7 +2250,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Computer Station (E1M7) - Red keycard",
                   "Computer Station (E1M7) - Yellow keycard"
                 ]
@@ -2434,7 +2434,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Rocket launcher",
                   "Shotgun"
@@ -3879,7 +3879,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Plasma gun",
                   "Shotgun"
@@ -4074,7 +4074,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Halls of the Damned (E2M6) - Blue skull key",
                   "Halls of the Damned (E2M6) - Red skull key",
                   "Halls of the Damned (E2M6) - Yellow skull key"
@@ -4339,7 +4339,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Halls of the Damned (E2M6) - Blue skull key",
                   "Halls of the Damned (E2M6) - Red skull key",
                   "Halls of the Damned (E2M6) - Yellow skull key"
@@ -4429,7 +4429,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Spawning Vats (E2M7) - Blue keycard",
                   "Spawning Vats (E2M7) - Red keycard"
                 ]
@@ -4748,7 +4748,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Spawning Vats (E2M7) - Blue keycard",
                   "Spawning Vats (E2M7) - Red keycard"
                 ]
@@ -4861,7 +4861,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -4871,7 +4871,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Shotgun"
                     ]
@@ -5177,7 +5177,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaingun",
                   "Shotgun"
                 ]
@@ -6296,7 +6296,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
@@ -6306,7 +6306,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaingun",
                       "Shotgun"
                     ]
@@ -9684,7 +9684,6 @@
       "Hell Keep (E3M1)"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DOOM 1993",

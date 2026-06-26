@@ -490,6 +490,14 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
                         combined_deps[entrance_name] = {id(self), *rules}
             return combined_deps
 
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Override to serialize children instead of args."""
+            return {
+                "rule": self._rule_class_name,
+                "children": [c.to_dict() for c in self.children],
+            }
+
 
 class AtLeast(NestedRule[TWorld], game="Archipelago"):
     """A rule that returns true when at least N child rules evaluate as true"""
@@ -569,6 +577,14 @@ class AtLeast(NestedRule[TWorld], game="Archipelago"):
 
     class Resolved(NestedRule.Resolved):
         count: int
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            # NestedRule.Resolved.to_dict() serializes "children"; AtLeast also
+            # carries a "count", mirroring the unresolved AtLeast.to_dict().
+            output = super().to_dict()
+            output["count"] = self.count
+            return output
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:

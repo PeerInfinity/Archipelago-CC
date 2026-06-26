@@ -1,0 +1,50 @@
+﻿Archipelago Version 0.6.7  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Bounce DJ WorldGen
+Location Count:                  7
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+
+
+Locations:
+
+region_4_2__loc_0: Victory
+region_4_2__loc_1: Right arrow
+region_3_3__loc_0: Left arrow
+region_4_3__loc_0: Jetpacks
+region_4_3__loc_1: Brown platforms
+region_3_4__loc_0: Springs
+region_4_4__loc_0: Blue platforms
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  region_3_3__loc_0: Left arrow
+}
+2: {
+  region_4_3__loc_0: Jetpacks
+  region_4_3__loc_1: Brown platforms
+  region_4_4__loc_0: Blue platforms
+}
+3: {
+  region_3_4__loc_0: Springs
+  region_4_2__loc_0: Victory
+  region_4_2__loc_1: Right arrow
+}

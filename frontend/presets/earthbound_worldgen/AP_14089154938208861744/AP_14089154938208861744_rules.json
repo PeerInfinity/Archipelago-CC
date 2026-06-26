@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "EarthBound WorldGen",
   "game_directory": "earthbound_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -19,7 +19,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Jeff",
                   "Ness",
                   "Paula",
@@ -34,7 +34,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Jeff",
                   "Ness",
                   "Paula",
@@ -195,7 +195,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Magicant Teleport",
                   "Magicant Unlock"
                 ]
@@ -640,7 +640,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Pencil Eraser",
                   "Valley Bridge Repair"
                 ]
@@ -653,7 +653,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Threed Tunnels Clear",
                   "Wad of Bills"
                 ]
@@ -872,7 +872,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Pencil Eraser",
                   "Valley Bridge Repair"
                 ]
@@ -1215,7 +1215,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Bad Key Machine",
                   "UFO Engine"
                 ]
@@ -2237,7 +2237,21 @@
             "name": "Monkey Caves - West 2F Left Chest",
             "id": 15401203,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Twoson - Paula's Room Present"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Threed - Downtown Trashcan"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Magicant Bat",
@@ -2279,7 +2293,21 @@
             "name": "Monkey Caves - East 2F Left Chest",
             "id": 15401206,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Twoson - Paula's Room Present"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Threed - Downtown Trashcan"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Chick",
@@ -2307,7 +2335,21 @@
             "name": "Monkey Caves - East West 3F Right Chest #1",
             "id": 15401208,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Twoson - Paula's Room Present"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Threed - Downtown Trashcan"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "For Sale Sign",
@@ -2321,7 +2363,21 @@
             "name": "Monkey Caves - East West 3F Right Chest #2",
             "id": 15401209,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Twoson - Paula's Room Present"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Threed - Downtown Trashcan"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Key to the Locker",
@@ -2363,7 +2419,21 @@
             "name": "Monkey Caves - East End Chest",
             "id": 15401092,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Twoson - Paula's Room Present"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Threed - Downtown Trashcan"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Broken Spray Can",
@@ -2377,7 +2447,21 @@
             "name": "Monkey Caves - East End Trashcan",
             "id": 15401093,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Twoson - Paula's Room Present"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Threed - Downtown Trashcan"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cold Remedy",
@@ -2405,7 +2489,32 @@
             "name": "Monkey Caves - Talah Rama Chest #1",
             "id": 15401095,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Twoson - Paula's Room Present"
+                      }
+                    },
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Threed - Downtown Trashcan"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Pencil Eraser"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cold Remedy",
@@ -2419,7 +2528,32 @@
             "name": "Monkey Caves - Talah Rama Chest #2",
             "id": 15401096,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Twoson - Paula's Room Present"
+                      }
+                    },
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Threed - Downtown Trashcan"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Pencil Eraser"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cookie",
@@ -2433,7 +2567,32 @@
             "name": "Monkey Caves - Talah Rama Gift",
             "id": 15401097,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Twoson - Paula's Room Present"
+                      }
+                    },
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Threed - Downtown Trashcan"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Pencil Eraser"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wad of Bills",
@@ -2447,7 +2606,32 @@
             "name": "Monkey Caves - Monkey Power",
             "id": 15401098,
             "access_rule": {
-              "rule": "And"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Twoson - Paula's Room Present"
+                      }
+                    },
+                    {
+                      "rule": "CanReachLocation",
+                      "args": {
+                        "location_name": "Threed - Downtown Trashcan"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Pencil Eraser"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Broken Spray Can",
@@ -4431,7 +4615,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Hawk Eye",
                   "Shyness Book"
                 ]
@@ -8679,7 +8863,6 @@
       "Ness"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "EarthBound WorldGen",

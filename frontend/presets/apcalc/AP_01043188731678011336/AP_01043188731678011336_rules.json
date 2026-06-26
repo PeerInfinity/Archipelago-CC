@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "APCalc",
   "game_directory": "apcalc",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -61,7 +61,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Checked 1",
                   "Checked 10",
                   "Checked 11",
@@ -158,7 +158,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: 0": 1,
                   "Button: 3": 1,
@@ -174,7 +174,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 3",
                   "Button: 5",
@@ -189,7 +189,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: -",
                   "Button: 0",
                   "Button: 5"
@@ -203,7 +203,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 0",
                   "Button: 4",
@@ -219,7 +219,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: -",
                   "Button: 1",
                   "Button: 3",
@@ -271,7 +271,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 3",
                   "Button: 5",
@@ -286,7 +286,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: -",
                   "Button: 3",
                   "Button: 4",
@@ -302,7 +302,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: *",
                   "Button: 4",
                   "Button: 5",
@@ -318,7 +318,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: -": 1,
                   "Button: 0": 2,
                   "Button: 4": 1,
@@ -334,7 +334,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 4",
                   "Button: 6",
@@ -386,7 +386,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: -",
                   "Button: 0",
                   "Button: 3",
@@ -401,7 +401,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: -": 1,
                   "Button: 0": 1,
                   "Button: 3": 1,
@@ -417,7 +417,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: 2": 1,
                   "Button: 3": 2,
@@ -432,7 +432,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 2",
                   "Button: 3",
@@ -448,7 +448,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 2",
                   "Button: 3"
@@ -498,7 +498,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Button: +",
                   "Button: 0",
                   "Button: 3",
@@ -514,7 +514,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: 3": 1,
                   "Button: 4": 1,
@@ -530,7 +530,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: 1": 1,
                   "Button: 3": 1,
@@ -582,7 +582,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 0": 1,
@@ -600,7 +600,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 1,
@@ -658,7 +658,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 2,
@@ -712,7 +712,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 0": 1,
@@ -729,7 +729,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 1,
@@ -783,7 +783,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 3": 1,
@@ -801,7 +801,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 3": 1,
@@ -855,7 +855,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: -": 1,
                   "Button: 0": 1,
@@ -872,7 +872,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 2": 1,
@@ -889,7 +889,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: -": 1,
                   "Button: 0": 2,
@@ -1048,7 +1048,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: /": 1,
@@ -1068,7 +1068,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1090,7 +1090,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1146,7 +1146,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 0": 1,
@@ -1164,7 +1164,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: -": 1,
                   "Button: 2": 1,
@@ -1184,7 +1184,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 0": 1,
@@ -1205,7 +1205,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: 1": 1,
@@ -1226,7 +1226,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: -": 1,
                   "Button: 1": 1,
@@ -1281,7 +1281,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1300,7 +1300,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: -": 1,
                   "Button: 0": 2,
@@ -1317,7 +1317,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1410,7 +1410,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1430,7 +1430,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: 0": 1,
@@ -1485,7 +1485,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1505,7 +1505,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1563,7 +1563,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: -": 1,
                   "Button: 0": 2,
@@ -1581,7 +1581,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 1,
@@ -1602,7 +1602,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 3,
@@ -1622,7 +1622,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 1,
@@ -1641,7 +1641,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: -": 2,
                   "Button: 0": 2,
                   "Button: 1": 1,
@@ -1695,7 +1695,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1714,7 +1714,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1773,7 +1773,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1828,7 +1828,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1847,7 +1847,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -1904,7 +1904,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -1925,7 +1925,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: 0": 1,
@@ -1980,7 +1980,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2002,7 +2002,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2061,7 +2061,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2083,7 +2083,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2106,7 +2106,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2166,7 +2166,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 1,
                   "Button: 0": 2,
@@ -2220,7 +2220,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2275,7 +2275,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2296,7 +2296,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: -": 2,
                   "Button: 0": 2,
@@ -2350,7 +2350,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2408,7 +2408,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2430,7 +2430,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2488,7 +2488,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2546,7 +2546,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2605,7 +2605,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2700,7 +2700,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -2722,7 +2722,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2746,7 +2746,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2805,7 +2805,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2829,7 +2829,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2851,7 +2851,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -2944,7 +2944,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 2,
                   "Button: 0": 2,
@@ -2964,7 +2964,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: +": 1,
                   "Button: -": 2,
                   "Button: 0": 2,
@@ -3056,7 +3056,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -3116,7 +3116,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3177,7 +3177,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3201,7 +3201,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3295,7 +3295,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3458,7 +3458,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3552,7 +3552,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 1,
@@ -3612,7 +3612,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3673,7 +3673,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3764,7 +3764,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3824,7 +3824,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -3990,7 +3990,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -4261,7 +4261,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: -": 2,
                   "Button: 0": 1,
@@ -4318,7 +4318,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 1,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -4378,7 +4378,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -4508,7 +4508,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -4568,7 +4568,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Button: *": 2,
                   "Button: +": 1,
                   "Button: -": 2,
@@ -5820,7 +5820,6 @@
       "Button: 4"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "APCalc",

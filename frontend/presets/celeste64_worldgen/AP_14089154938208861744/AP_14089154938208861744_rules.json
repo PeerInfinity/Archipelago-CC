@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Celeste 64 WorldGen",
   "game_directory": "celeste64_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -39,7 +39,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Climb Sign Checkpoint",
                   "Granny Checkpoint",
                   "South-East Tower Checkpoint"
@@ -53,7 +53,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Freeway Checkpoint",
                   "Freeway Feather Checkpoint"
                 ]
@@ -112,7 +112,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Ground Dash",
@@ -129,7 +129,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Ground Dash"
@@ -169,7 +169,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Dash Refills"
                 ]
@@ -192,7 +192,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Dash Refills"
@@ -206,7 +206,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Double Dash Refills"
@@ -222,7 +222,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Skid Jump"
                 ]
@@ -242,7 +242,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Skid Jump"
                 ]
@@ -262,7 +262,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Traffic Blocks"
@@ -300,7 +300,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Dash Refills"
                 ]
@@ -337,7 +337,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Cassettes",
@@ -359,7 +359,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Cassettes",
@@ -381,7 +381,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Dash Refills",
@@ -448,7 +448,24 @@
             "name": "Freeway Island -> Granny Island",
             "connected_region": "Granny Island",
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Air Dash",
+                      "Dash Refills"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Traffic Blocks"
+                  }
+                }
+              ]
             }
           },
           {
@@ -504,7 +521,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb"
                 ]
@@ -522,7 +539,27 @@
             "name": "Breakable Blocks Strawberry",
             "id": 13238284,
             "access_rule": {
-              "rule": "Or"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Air Dash",
+                      "Breakable Blocks"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Breakable Blocks",
+                      "Ground Dash"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Strawberry",
@@ -538,7 +575,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Climb",
@@ -560,7 +597,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Climb"
@@ -672,7 +709,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Feathers"
@@ -688,7 +725,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Feathers"
                 ]
@@ -708,7 +745,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Feathers"
@@ -746,7 +783,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Climb",
@@ -769,7 +806,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Climb",
@@ -818,7 +855,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Double Dash Refills",
                   "Traffic Blocks"
@@ -832,7 +869,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Double Dash Refills"
                 ]
@@ -847,7 +884,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Double Dash Refills",
                   "Feathers",
                   "Traffic Blocks"
@@ -868,7 +905,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Climb",
                   "Double Dash Refills"
@@ -889,7 +926,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Double Dash Refills",
                   "Skid Jump",
@@ -911,7 +948,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Climb",
@@ -959,7 +996,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Feathers"
@@ -1003,7 +1040,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Feathers"
@@ -1029,7 +1066,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Climb",
@@ -1053,7 +1090,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Ground Dash"
                 ]
@@ -1066,7 +1103,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Ground Dash"
                 ]
@@ -1091,7 +1128,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Cassettes",
                   "Coins",
@@ -1133,7 +1170,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Ground Dash"
                 ]
@@ -1162,7 +1199,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Air Dash",
                   "Breakable Blocks",
                   "Cassettes",
@@ -1546,7 +1583,6 @@
       "Climb"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Celeste 64 WorldGen",

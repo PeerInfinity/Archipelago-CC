@@ -237,7 +237,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Room", player),
+        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Shop", player),
         False_()
     )
 
@@ -248,12 +248,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop", player),
-        Has('Power Thistle', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Key of Strength Shop -> Searing Crags - Key of Strength Room", player),
-        Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart'))
+        And(Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart')), Has('Power Thistle'))
     )
 
     world.set_rule(
@@ -393,7 +388,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dark Cave - Right -> Dark Cave - Left", player),
-        HasAll('Candle', 'Rope Dart', 'Wingsuit')
+        HasAll('Candle', 'Rope Dart')
     )
 
     world.set_rule(
