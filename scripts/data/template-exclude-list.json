@@ -17,6 +17,10 @@
     {
       "name": "Universal Tracker.yaml",
       "reason": "Not a game."
+    },
+    {
+      "name": "UT Pickle Mode.yaml",
+      "reason": "Not a game. Universal Tracker pickle-mode meta-template, not a playable world (its worldgen variant fails with AttributeError in ut_pickle_worldgen._place_original_items)."
     }
   ],
   "generation_exclude_list_comment": "Excluded from PRESET GENERATION only (scripts/utils/list-template-files.py via generate_all_templates.sh, applied to both the base and worldgen template lists). Games here still run in any tests where they pass; their presets are simply not generated -- either the exporter cannot faithfully represent their rules, or the preset is too large/slow to load in the frontend.",
@@ -105,6 +109,10 @@
   ],
   "worldgen_test_exclude_list_comment": "Excluded from world-generator tests and worldgen preset generation.",
   "worldgen_test_exclude_list": [
+    {
+      "name": "Seedling.yaml",
+      "reason": "WorldGen variant generation produces a broken world (worlds/seedling_worldgen missing Items.py, causing ModuleNotFoundError on load)."
+    },
     {
       "name": "Bomb Rush Cyberfunk.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
