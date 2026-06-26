@@ -147,7 +147,26 @@ These overlap but are **not drop-in compatible**: upstream resolves a *field* to
 2. **Keep the fork's numeric rules, add FieldResolver alongside** — accept both `int | FieldResolver | Rule` on count fields. Lower risk to existing exported `rules.json`, but widens the base classes and leaves two parallel systems.
 3. **Defer** — port everything except the dynamic-count integration; leave fork counts as `int | Rule` and don't wire FieldResolver into the counting rules yet.
 
-**This is the key open decision and should be settled before the `rules.py` port begins** (the answer determines how much of the base classes must change). The exported-JSON impact (does `rules.json` format change?) is the deciding constraint, since many generated worlds depend on it.
+**RESOLVED (2026-06-25) by compatibility data → Option 2 ("keep fork's mechanism, accept FieldResolver alongside").** The deciding constraint is the exported-JSON format:
+
+- **84** preset `rules.json` files already use the fork's dynamic-count format — a nested-rule dict, e.g. `"count": {"rule": "tr_big_key_chest_keys_needed", "_original_ast_type": "helper", "_converted_from_ast": true}`.
+- **0** use upstream's `FieldResolver` `{"resolver": ...}` format.
+
+The frontend JS evaluator and `world_generator` both consume the nested-rule form. Replacing it with `FieldResolver` would break all 84 presets and the JS side. Therefore the port **keeps** `count: int | Rule` (and the `CountItem`/`Compare`/… numeric-rule family) as the canonical mechanism, and **must additionally support** `FieldResolver` (see §6a — it is not optional: the Baba Is You world requires it). Upstream's new `AtLeast` is absorbed as-is. The two forms coexist in one `rules.json` and are distinguishable by key: `{"resolver": …}` (official) vs `{"rule": …}` (fork nested rule).
+
+### 6a. Empirical confirmation: the Baba Is You two-format test (2026-06-25)
+
+`custom_worlds/baba_is_you.apworld` is a real rule_builder world. It is authored against the **official** `field_resolvers` API — `levels.py`/`custom_rules.py` do `from rule_builder.field_resolvers import FieldResolver, FromOption, FromWorldAttr, resolve_field`, and its custom `Resolved` uses the official `caching_enabled=` constructor. Generating seed 1 with each rule_builder:
+
+| | Seed generation | Rule export → frontend `rules.json` |
+|---|---|---|
+| **Official rule_builder** (current live) | ✅ generates | ❌ rules lost — exporter's rule_builder→JSON path needs the fork's *extended* rule_builder; it falls back to AST/lambda analysis which errors on `Resolved` objects (`access_rule: None` everywhere) |
+| **Fork rule_builder** (`rule_builder_modified`) | ❌ fails to import — `ModuleNotFoundError: No module named 'rule_builder.field_resolvers'` → "No functional world found to handle game Baba Is You" | n/a |
+
+**Conclusions:**
+1. **Supporting both formats is required, not just preferred.** Baba needs official `FieldResolver`; the 84 existing presets need the fork's nested-rule form. Neither rule_builder alone covers both worlds.
+2. **The export pipeline is a second front.** The exporter gates on the fork's extended rule_builder via `from rule_builder import BOOLEAN_RULE_TYPES` (`worlds/json_tools_installer/export_hook.py`, `exporter/exporter.py:2651`). Re-adding the fork extensions onto the official base re-enables that path — but the exporter must then *also* serialize official `FieldResolver` fields (and the frontend evaluator + `world_generator` must parse them). This is the "update frontend and worldgen" follow-up.
+3. **The merged target:** official base (keeps `field_resolvers.py`, `AtLeast`, `cached_world.py`) **+** the fork's extended rule types and exporter integration on top — a genuine superset that supports both Baba-style official worlds and the fork's AST-converted worlds.
 
 ---
 
