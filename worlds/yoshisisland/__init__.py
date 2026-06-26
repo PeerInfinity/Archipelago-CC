@@ -346,7 +346,6 @@ class YoshisIslandWorld(World):
             return
             
         try:
-            world = self.multiworld
             player = self.player
             rom = LocalRom(get_base_rom_path())
             patch_rom(self, rom, self.player)
@@ -356,7 +355,7 @@ class YoshisIslandWorld(World):
             self.rom_name = rom.name
 
             patch = YoshisIslandDeltaPatch(os.path.splitext(rompath)[0] + YoshisIslandDeltaPatch.patch_file_ending,
-                                           player=player, player_name=world.player_name[player], patched_path=rompath)
+                                           player=player, player_name=self.player_name, patched_path=rompath)
             patch.write()
         finally:
             self.rom_name_available_event.set()
