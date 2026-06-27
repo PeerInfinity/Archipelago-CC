@@ -7,7 +7,7 @@ Checklist for preparing a release of Archipelago-CC (dev) and merging to the sta
 | Name | Remote | URL |
 |------|--------|-----|
 | Development | `origin` | `PeerInfinity/Archipelago-CC` (branch: `main`) |
-| Stable | `archipelago` | `PeerInfinity/Archipelago` (branch: `JSONExport`) |
+| Stable | `stable` | `PeerInfinity/Archipelago` (branch: `JSONExport`) |
 | Upstream | `upstream` | `ArchipelagoMW/Archipelago` (branch: `main`) |
 
 ---
