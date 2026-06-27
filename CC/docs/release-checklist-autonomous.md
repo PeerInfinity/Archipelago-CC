@@ -7,9 +7,8 @@ fix-up scripts — with the human approving each outward-facing step.
 
 > **Status: work in progress.** The original [release-checklist.md](release-checklist.md)
 > remains the authoritative document. This file is being written phase by
-> phase, starting with what we have the most operational experience in
-> (Phase 2 — Preset Generation). Unfinished phases below are stubs that point
-> back at the original.
+> phase as each is run for real. **Migrated so far: Phases 2, 3, 4.** Phases 1
+> and 5–8 below are stubs that point back at the original.
 
 ---
 
@@ -304,13 +303,158 @@ never reaches `main` — so extra debugging runs are harmless. Only tag (2.4) th
 ---
 
 ## Phase 3: Freshness Report Review
+
+Entirely local and read-only — no workflows, no commits. The point is to learn
+*which* documents are stale so Phase 5 runs only what it must. (For a full
+release after an upstream merge, expect **everything** to be stale.)
+
+```bash
+source .venv/bin/activate
+python scripts/docs/generate-freshness-report.py
+```
+
+This regenerates `docs/json/developer/test-results/test-results-freshness.md`
+and prints a one-line coverage summary for the doc-sync checks. Read the report:
+
+- The **Document Freshness** table colour-codes all ~46 test-result docs
+  (🔴 stale >30d → 🟢 fresh). Each row gives the GitHub workflow *and* the local
+  command that regenerates it.
+- The **Documentation Sync Status** block summarises four coverage checks
+  (rule docs, rule tests, script docs, doc reachability). These are *coverage*
+  gaps, not release blockers — note them but don't gate the release on them.
+
+**Do not commit the regenerated report here.** It only captures the *pre-test*
+state (all stale), and Phase 6 regenerates it for real once the new test data
+has landed. Revert it before moving on so the working tree stays clean for the
+Phase 4 fix commits:
+
+```bash
+git checkout -- docs/json/developer/test-results/test-results-freshness.md
+```
+
+**2026-06-27 (AP 0.6.8) result:** all 46 docs 🔴 stale (84–98 days) → Phase 5
+must run the full workflow set. Coverage gaps were minor (1 undocumented +
+untested rule type `AtLeast`; 16 undocumented scripts; 30 orphaned docs) and
+were left as-is.
+
+---
+
 ## Phase 4: Local Validation
+
+Local checks before spending CI time. The two heavy suites (`pytest`,
+`npm run test:unit`) are *also* run by Phase 5 workflows, but running them
+locally first catches regressions from the upstream merge / preset regen before
+you dispatch a single workflow. **Run them in the background** (pytest takes
+~13 min) and do the fast read-only checks meanwhile.
+
+### 4.1 Heavy suites (background)
+
+```bash
+source .venv/bin/activate
+python -m pytest -q -p no:cacheprovider     # ~13 min; runs test/, test_json/, worlds/
+npm run test:unit                            # vitest; ~50 s
+```
+
+> **Gotcha — don't pipe these to `tail`.** `cmd | tail -6` makes the shell exit
+> code that of `tail` (always 0), masking a real failure, *and* discards the
+> failure detail you need. Capture full output to a file (`> run.log 2>&1; echo
+> $?`) and `grep` it, or read the background task's output file directly.
+
+> **Gotcha — vitest flakes under concurrency.** A full `npm run test:unit` run
+> launched *while another vitest run or the round-trip-reading suite is also
+> live* can spuriously report 1 failure (the `forwardSimulator` round-trip reads
+> a preset file from disk). Re-run it alone to confirm; a clean solo run is the
+> source of truth.
+
+> **Gotcha — pytest leaves preset side-effects.** World tests (e.g.
+> `worlds/apquest/`) generate a preset dir under `frontend/presets/<game>/` and
+> register it in `frontend/presets/preset_files.json`. These are **test
+> artifacts, not release changes** — revert them before committing anything:
+> ```bash
+> git checkout -- frontend/presets/preset_files.json
+> rm -rf frontend/presets/apquest/AP_*/     # whatever new untracked dir appeared
+> ```
+> (The user-flagged "temp `baba_is_you.apworld` pytest failures are expected
+> noise" is a separate, known item — ignore those specific failures.)
+
+### 4.2 Fast read-only checks (foreground)
+
+```bash
+python scripts/docs/sync-rule-docs.py        # rule types documented?
+python scripts/docs/sync-rule-tests.py       # rule types tested?
+python scripts/docs/sync-script-docs.py      # scripts documented in READMEs?
+python scripts/docs/find_orphaned_docs.py    # all .md reachable from an entry point?
+```
+
+All four are read-only reports (coverage %, not pass/fail). Same gaps as the
+freshness report — informational.
+
+### 4.3 Local-only tests (not covered by any workflow)
+
+```bash
+python scripts/test/test_ast_format_parsing.py        # AST-format rule parsing
+node scripts/test/test-bidirectional-detection.js     # exit bidirectionality detection
+npm run bench                                          # JS rule-engine benchmarks (optional, no pass/fail)
+```
+
+### 4.4 Triage failures — and expect the `item_names` rename class
+
+If a vitest/pytest failure is *not* a known-noise item, **investigate it; do not
+hand-wave it as flake** until you've reproduced it solo. Decisive technique for a
+round-trip / preset-comparison failure: swap in the pre-regen version of the
+input file and re-run just that test —
+
+```bash
+# Example: did the Phase-2 regen break forwardSimulator's Adventure round-trip?
+P=frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json
+git show <preset-regen-commit>^:$P > $P          # restore pre-regen input
+npx vitest run frontend/modules/shared/procgen/forwardSimulator.test.js
+git checkout -- $P                               # restore the committed version
+```
+
+If pre-regen passes and post-regen fails, the regen exposed a **consumer bug**,
+not a data bug.
+
+> **Known regression class — `items` → `item_names`.** The upstream rule-arg
+> rename (`project_rule_arg_upstream_rename`: `items`→`item_names` in `HasAll`/
+> `HasAny` args) lands in preset `rules.json` during the Phase-2 regen. Any
+> frontend consumer that reads `rule.args.items` *without* a dual-read falls over
+> silently — `HasAll([])` is vacuously true, `HasAny([])` always false, so sphere
+> / requirement computation is wrong with **no error thrown**. The canonical fix
+> is the same one-liner everywhere:
+> ```js
+> const items = rule.args?.items ?? rule.args?.item_names ?? [];
+> ```
+> **2026-06-27:** two evaluators had been missed by the rename's dual-read pass
+> and were fixed this release:
+> - `frontend/modules/shared/procgen/library.js` (`evaluateRuleAgainstInventory`)
+>   — **submodule**; broke the `forwardSimulator` round-trip. Committed inside
+>   the `shared` submodule (`a53868a`), then the pointer was bumped in the outer
+>   repo.
+> - `frontend/modules/procgenPipeline/ruleRequirements.js` (`extractRec`) — outer
+>   repo (`8944ccc49`, same commit as the pointer bump).
+>
+> Already-correct (don't re-touch): `ruleEngine/ruleBuilderEvaluator.js`,
+> `apworldEditor/rulesUtils.js`, `apworldEditor/ruleTreeEditor.js` (all dual-read
+> or canonicalize to `item_names`). `UniqueCount` and the `item_counts` dict
+> rules use a *different* key and are unaffected.
+>
+> These are **consumer-side** fixes — they do **not** change any preset, so they
+> do **not** trigger a Phase-2 re-run. Commit them (submodule fix, then outer-repo
+> pointer bump + companion fix) and re-run the full vitest suite to confirm green
+> (2026-06-27: 2465/2465).
+
+**2026-06-27 (AP 0.6.8) result:** after the two fixes — vitest 2465/2465,
+pytest 1476 passed / 2 skipped / 66405 subtests passed; local-only tests pass.
+
+---
+
 ## Phase 5: Test Workflows
 ## Phase 6: Documentation Generation
 ## Phase 7: APWorld Packaging and Dev Testing
 ## Phase 8: Stable Release
 
-> **Stubs — not yet migrated.** Follow Phases 3–8 of
+> **Stubs — not yet migrated.** Follow Phases 5–8 of
 > [release-checklist.md](release-checklist.md). These will be rewritten in the
 > autonomous style (with the exact `gh workflow run` invocations, monitoring,
-> and result-merge steps) once Phase 2 is settled in practice.
+> and result-merge steps) as each phase is run for real.
