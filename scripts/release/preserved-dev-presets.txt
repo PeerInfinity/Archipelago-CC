@@ -1,0 +1,19 @@
+# Preserved dev/demo/test presets.
+#
+# These preset directories are hand-maintained demos that the Generate
+# Presets workflow does NOT produce (its clean_existing step wipes
+# frontend/presets/ and only the generation-set games are regenerated).
+# apply-post-preset-merge.sh restores the dirs listed here from the
+# pre-regen ref and re-adds their preset_files.json entries after the
+# regenerated `generated-presets` branch is merged into main.
+#
+# One preset game-id (frontend/presets/<id>) per line. Blank lines and
+# lines starting with '#' are ignored.
+#
+# NOTE: worldgen worlds (worlds/*_worldgen) and *_worldgen preset dirs are
+# intentionally NOT preserved — do not add them here.
+
+jta_mixed_test
+jta_substrate_test
+procgen_maze
+robotkitty_tilemap
