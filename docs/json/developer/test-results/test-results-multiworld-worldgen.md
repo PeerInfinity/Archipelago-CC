@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2026-06-27 21:28:31 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-21T23:18:10.402148+00:00
 
@@ -75,7 +75,6 @@
 | Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mega Man 2 WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mega Man 3 WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | MegaMan Battle Network 3 WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Meritous WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Metamath WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
@@ -397,15 +396,6 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Celeste 64 WorldGen.yaml |
 | 3 | EarthBound WorldGen.yaml |
 | 4 | Mega Man 2 WorldGen.yaml |
-
-### Mega Man 3 WorldGen ✅ (Split 10)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
 
 ### MegaMan Battle Network 3 WorldGen ✅ (Split 1)
 
@@ -800,7 +790,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Lufia II Ancient Cave WorldGen | 4 | 6 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga WorldGen | 4 | 6 | 4 | ✅ Passed |
 | Mega Man 2 WorldGen | 4 | 6 | 4 | ✅ Passed |
-| Mega Man 3 WorldGen | 4 | 6 | 4 | ✅ Passed |
 | MegaMan Battle Network 3 WorldGen | 5 | 7 | 5 | ✅ Passed |
 | Meritous WorldGen | 5 | 7 | 5 | ✅ Passed |
 | Old School Runescape WorldGen | 5 | 7 | 5 | ✅ Passed |
@@ -1253,16 +1242,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Shivers WorldGen.yaml |
 | 6 | The Messenger WorldGen.yaml |
 
-#### Mega Man 3 WorldGen ✅ (Split 10)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
 
 #### MegaMan Battle Network 3 WorldGen ✅ (Split 1)
 
