@@ -6,9 +6,11 @@
 
 [📖 Learn about this test](../tests/test-multiworld.md)
 
+[View APWorld Template Results](./test-results-multiworld-apworld.md)
+
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-06-27 20:42:00 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T07:49:55.986774+00:00
 
@@ -43,7 +45,7 @@
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 4.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
@@ -61,7 +63,7 @@
 | EarthBound | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 14.0KB | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 13.9KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
@@ -70,7 +72,7 @@
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 4 | 4 | 20.4KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 3.6KB | ✅ |
-| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 38.2KB | ✅ |
+| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 38.2KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 7.3KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -88,15 +90,15 @@
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Satisfactory | ✅ Passed | ✅ Passed | 6 | 6 | 41.8KB | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 5.6KB | ✅ |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 5.6KB | 7.5KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 29.3KB | ✅ |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 29.3KB | 90.1KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | ✅ Passed | 7 | 7 | 61.0KB | ✅ |
+| Super Metroid | ✅ Passed | ✅ Passed | 7 | 7 | 61.0KB | 119.4KB |
 | TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | 0.6KB | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |

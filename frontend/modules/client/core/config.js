@@ -3,7 +3,7 @@ export const Config = {
   PROTOCOL_VERSION: {
     major: 0,
     minor: 6,
-    build: 4,
+    build: 8,
     class: 'Version',
   },
   DEFAULT_SERVER_PORT: 38281,
