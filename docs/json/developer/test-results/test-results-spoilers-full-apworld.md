@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-spoilers-full.md)
 
-**Generated:** 2026-06-27 19:50:25 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T00:25:21.031601+00:00
 
@@ -35,17 +35,17 @@
 | A Dance of Fire and Ice | ✅ Passed | 0 | 3.3 | 3.3 | 🟢 Complete | ✅ | ✅ |
 | A Difficult Game About Climbing | ✅ Passed | 0 | 3.5 | 3.5 | 🟢 Complete | ✅ | ✅ |
 | A Link Between Worlds | ❌ Failed | 0 | 0 | 22.4 | 🔴 0.0% | ✅ | ✅ |
-| ANIMAL WELL | ❌ Failed | 0 | 0.14 | 10.1 | 🟠 1.4% | ✅ | ✅ |
+| ANIMAL WELL | ❌ Failed | 0 | 0.14 | 10.1 | 🟠 1.4% | 1.5KB | ✅ |
 | Actraiser | ✅ Passed | 0 | 8.9 | 8.9 | 🟢 Complete | ✅ | ✅ |
 | Against the Storm | ❌ Failed | 0 | 0 | 17.1 | 🔴 0.0% | ✅ | ✅ |
-| Air Delivery | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
-| An Untitled Story | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
-| Anodyne | ❌ Failed | 1 | 0.1 | 18.1 | 🟠 0.6% | ✅ | ✅ |
-| Another Crabs Treasure | ❌ Failed | 0 | 1.1 | 4.54 | 🟡 24.2% | ✅ | ✅ |
+| Air Delivery | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 6.6KB | ✅ |
+| An Untitled Story | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 8.7KB | ✅ |
+| Anodyne | ❌ Failed | 1 | 0.1 | 18.1 | 🟠 0.6% | 10.7KB | ✅ |
+| Another Crabs Treasure | ❌ Failed | 0 | 1.1 | 4.54 | 🟡 24.2% | 3.1KB | ✅ |
 | Ape Escape | ❌ Failed | 0 | 0 | 16.1 | 🔴 0.0% | ✅ | ✅ |
 | Ape Escape 3 | ❌ Failed | 0 | 0 | 11.4 | 🔴 0.0% | ✅ | ✅ |
 | Astalon | ❌ Failed | 0 | 0 | 9.6 | 🔴 0.0% | ✅ | ✅ |
-| Autopelago | ✅ Passed | 0 | 11.9 | 11.9 | 🟢 Complete | ✅ | ✅ |
+| Autopelago | ✅ Passed | 0 | 11.9 | 11.9 | 🟢 Complete | 9.2KB | ✅ |
 | Axiom Verge | ❌ Failed | 0 | 0 | 7.1 | 🔴 0.0% | ✅ | ✅ |
 | Balatro | ❌ Failed | 0 | 0 | 8.16 | 🔴 0.0% | ✅ | ✅ |
 | Brotato | ✅ Passed | 0 | 2.3 | 2.3 | 🟢 Complete | ✅ | ✅ |
@@ -56,7 +56,7 @@
 | Corn Kidz 64 | ❌ Failed | 0 | 0 | 8.2 | 🔴 0.0% | ✅ | ✅ |
 | CrossCode | ❌ Failed | 0 | 0 | 8.2 | 🔴 0.0% | ✅ | ✅ |
 | Crystal Project | ❌ Failed | 0 | 0.19 | 8.1 | 🟠 2.3% | ✅ | ✅ |
-| Crystalis | ❌ Failed | 0 | 5.2 | 11.1 | 🟡 46.8% | ✅ | ✅ |
+| Crystalis | ❌ Failed | 0 | 5.2 | 11.1 | 🟡 46.8% | 9.2KB | ✅ |
 | Cuphead | ❌ Failed | 9 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | DORONKO WANKO | ❌ Failed | 0 | 1.4 | 3.4 | 🟡 41.2% | ✅ | ✅ |
 | Deep Rock Galactic | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
@@ -79,7 +79,7 @@
 | Into the Breach | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | Isles Of Sea And Sky | ✅ Passed | 0 | 10.39 | 10.39 | 🟢 Complete | ✅ | ✅ |
 | Ittle Dew 2 | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | ✅ | ✅ |
-| Jigsaw | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
+| Jigsaw | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | 1.6KB | ✅ |
 | K-On! After School Live!! | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Keep Talking and Nobody Explodes | ❌ Failed | 0 | 2.1 | 6.11 | 🟡 34.4% | ✅ | ✅ |
 | Kingdom Hearts Birth by Sleep | ✅ Passed | 0 | 9.16 | 9.16 | 🟢 Complete | ✅ | ✅ |
@@ -91,28 +91,28 @@
 | Lingo 2 | ❌ Failed | 0 | 0 | 45.4 | 🔴 0.0% | ⚫ | ✅ |
 | Little Witch Nobeta | ❌ Failed | 0 | 1.3 | 2.41 | 🟡 53.9% | ✅ | ✅ |
 | Luigi's Mansion | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | ✅ | ✅ |
-| Lunacid | ❌ Failed | 0 | 0 | 5.4 | 🔴 0.0% | ✅ | ✅ |
-| Majora's Mask Recompiled | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
+| Lunacid | ❌ Failed | 0 | 0 | 5.4 | 🔴 0.0% | 8.2KB | ✅ |
+| Majora's Mask Recompiled | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 10.4KB | ✅ |
 | Mario Kart Double Dash | ❌ Failed | 0 | 0.2 | 12.1 | 🟠 1.7% | ✅ | ✅ |
 | MetroCUBEvania | ✅ Passed | 0 | 3.3 | 3.3 | 🟢 Complete | ✅ | ✅ |
 | Metroid Fusion | ❌ Failed | 0 | 0 | 11.1 | 🔴 0.0% | ✅ | ✅ |
-| Minishoot Adventures | ❌ Failed | 0 | 1.9 | 7.1 | 🟡 26.8% | ✅ | ✅ |
-| Minit | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| Minishoot Adventures | ❌ Failed | 0 | 1.9 | 7.1 | 🟡 26.8% | 25.9KB | ✅ |
+| Minit | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 23.9KB | ✅ |
 | Monster Sanctuary | ❌ Failed | 0 | 0 | 17.1 | 🔴 0.0% | ✅ | ✅ |
 | Nine Sols | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Ori and the Blind Forest | ✅ Passed | 0 | 13.13 | 13.13 | 🟢 Complete | ✅ | ✅ |
+| Ori and the Blind Forest | ✅ Passed | 0 | 13.13 | 13.13 | 🟢 Complete | 23.2KB | ✅ |
 | Ori and the Will of the Wisps | ❌ Failed | 0 | 0 | 28.25 | 🔴 0.0% | ✅ | ✅ |
 | Oxygen Not Included | ❌ Failed | 0 | 0.73 | 3.39 | 🟠 21.5% | ✅ | ✅ |
-| Pizza Tower | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | ✅ | ✅ |
+| Pizza Tower | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 7.0KB | ✅ |
 | PlateUp | ✅ Passed | 0 | 1.25 | 1.25 | 🟢 Complete | ✅ | ✅ |
 | Pokemon FireRed and LeafGreen | ❌ Failed | 0 | 0 | 20.4 | 🔴 0.0% | ✅ | ✅ |
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | 0 | 0 | 13.1 | 🔴 0.0% | ✅ | ✅ |
-| Pseudoregalia | ❌ Failed | 0 | 0.3 | 9.1 | 🟠 3.3% | ✅ | ✅ |
+| Pseudoregalia | ❌ Failed | 0 | 0.3 | 9.1 | 🟠 3.3% | 17.1KB | ✅ |
 | Rabi-Ribi | ✅ Passed | 0 | 4.35 | 4.35 | 🟢 Complete | ✅ | ✅ |
-| Rain World | ❌ Failed | 0 | 0.1 | 12.5 | 🟠 0.8% | ✅ | ✅ |
+| Rain World | ❌ Failed | 0 | 0.1 | 12.5 | 🟠 0.8% | 11.8KB | ✅ |
 | Ratchet & Clank 2 | ✅ Passed | 0 | 18.4 | 18.4 | 🟢 Complete | ✅ | ✅ |
 | Reventure | ❌ Failed | 0 | 0.6 | 5.9 | 🟠 10.2% | ✅ | ✅ |
-| Rift Wizard | ✅ Passed | 0 | 25.1 | 25.1 | 🟢 Complete | ✅ | ✅ |
+| Rift Wizard | ✅ Passed | 0 | 25.1 | 25.1 | 🟢 Complete | 7.7KB | ✅ |
 | Rift of the Necrodancer | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | ✅ | ✅ |
 | Rusted Moss | ❌ Failed | 2374 | 0 | 10.1 | 🔴 0.0% | ✅ | ✅ |
 | Sentinels of the Multiverse | ❌ Failed | 0 | 0 | 28.1 | 🔴 0.0% | ✅ | ✅ |
@@ -120,34 +120,34 @@
 | Ship of Harkinian | ❌ Failed | 0 | 0 | 23.1 | 🔴 0.0% | ✅ | ✅ |
 | Simon Tatham's Portable Puzzle Collection | ✅ Passed | 0 | 31.1 | 31.1 | 🟢 Complete | ✅ | ✅ |
 | Sly Cooper and the Thievius Raccoonus | ❌ Failed | 0 | 9.1 | 10.1 | 🟡 90.1% | ✅ | ✅ |
-| Sonic Adventure DX | ❌ Failed | 0 | 0 | 8.1 | 🔴 0.0% | ✅ | ✅ |
+| Sonic Adventure DX | ❌ Failed | 0 | 0 | 8.1 | 🔴 0.0% | 29.9KB | ✅ |
 | Sonic Heroes | ❌ Failed | 0 | 0 | 7.2 | 🔴 0.0% | ✅ | ✅ |
 | Sonic Rush | ❌ Failed | 0 | 0.7 | 4.3 | 🟠 16.3% | ✅ | ✅ |
-| Sonic the Hedgehog 1 | ✅ Passed | 0 | 3.2 | 3.2 | 🟢 Complete | ✅ | ✅ |
-| Soul Blazer | ❌ Failed | 0 | 0.1 | 16.1 | 🟠 0.6% | ✅ | ✅ |
+| Sonic the Hedgehog 1 | ✅ Passed | 0 | 3.2 | 3.2 | 🟢 Complete | 9.4KB | ✅ |
+| Soul Blazer | ❌ Failed | 0 | 0.1 | 16.1 | 🟠 0.6% | 10.5KB | ✅ |
 | Spinball | ✅ Passed | 0 | 1.1 | 1.1 | 🟢 Complete | ✅ | ✅ |
-| Spyro 3 | ❌ Failed | 0 | 0 | 10.2 | 🔴 0.0% | ✅ | ✅ |
-| Stacklands | ❌ Failed | 0 | 0.2 | 10.1 | 🟠 2.0% | ✅ | ✅ |
-| Star Fox 64 | ❌ Failed | 0 | 0 | 8.2 | 🔴 0.0% | ✅ | ✅ |
-| Star Wars Episode I Racer | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
+| Spyro 3 | ❌ Failed | 0 | 0 | 10.2 | 🔴 0.0% | 15.3KB | ✅ |
+| Stacklands | ❌ Failed | 0 | 0.2 | 10.1 | 🟠 2.0% | 12.7KB | ✅ |
+| Star Fox 64 | ❌ Failed | 0 | 0 | 8.2 | 🔴 0.0% | 17.2KB | ✅ |
+| Star Wars Episode I Racer | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 5.7KB | ✅ |
 | Super Cat Planet | ❌ Failed | 0 | 0.2 | 6.3 | 🟠 3.2% | ✅ | ✅ |
 | Symphony of the Night | ✅ Passed | 0 | 4.32 | 4.32 | 🟢 Complete | ✅ | ✅ |
-| System Shock 2 | ❌ Failed | 0 | 0.2 | 15.15 | 🟠 1.3% | ✅ | ✅ |
+| System Shock 2 | ❌ Failed | 0 | 0.2 | 15.15 | 🟠 1.3% | 15.1KB | ✅ |
 | TCG Card Shop Simulator | ❌ Failed | 0 | 2.7 | 6.2 | 🟡 43.5% | ✅ | ✅ |
-| Tetris Attack | ❌ Failed | 3 | 0 | 58.2 | 🔴 0.0% | ✅ | ✅ |
+| Tetris Attack | ❌ Failed | 3 | 0 | 58.2 | 🔴 0.0% | 23.1KB | ✅ |
 | Tevi | ❌ Failed | 0 | 0 | 10.38 | 🔴 0.0% | ✅ | ✅ |
 | The Legend of Zelda - Oracle of Seasons | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | The Legend of Zelda - Phantom Hourglass | ❌ Failed | 0 | 0 | 19.6 | 🔴 0.0% | ✅ | ✅ |
-| The Sims 4 | ❌ Failed | 0 | 0 | 49.1 | 🔴 0.0% | ✅ | ✅ |
+| The Sims 4 | ❌ Failed | 0 | 0 | 49.1 | 🔴 0.0% | 5.5KB | ✅ |
 | ToeJam and Earl | ❌ Failed | 0 | 0.45 | 4.3 | 🟠 10.5% | ✅ | ✅ |
 | TurnipBoy | ✅ Passed | 0 | 17.2 | 17.2 | 🟢 Complete | ✅ | ✅ |
 | Tyrian | ❌ Failed | 0 | 0 | 18.1 | 🔴 0.0% | ✅ | ✅ |
 | Vampire Survivors | ✅ Passed | 0 | 37.1 | 37.1 | 🟢 Complete | ✅ | ✅ |
 | Wario Land | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
-| Watery Words | ✅ Passed | 0 | 5.8 | 5.8 | 🟢 Complete | ✅ | ✅ |
-| Wordipelago | ❌ Failed | 0 | 4.4 | 10.1 | 🟡 43.6% | ✅ | ✅ |
+| Watery Words | ✅ Passed | 0 | 5.8 | 5.8 | 🟢 Complete | 9.1KB | ✅ |
+| Wordipelago | ❌ Failed | 0 | 4.4 | 10.1 | 🟡 43.6% | 19.5KB | ✅ |
 | XCOM 2 War of the Chosen | ❌ Failed | 0 | 0 | 6.1 | 🔴 0.0% | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | 0 | 4.9 | 15.4 | 🟡 31.8% | ✅ | ✅ |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | 0 | 4.9 | 15.4 | 🟡 31.8% | 28.8KB | ✅ |
 | Yu-Gi-Oh! Forbidden Memories | ❌ Failed | 0 | 0 | 10.15 | 🔴 0.0% | ✅ | ✅ |
 | osu! | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 
