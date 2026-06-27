@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Pokemon Red and Blue",
   "game_directory": "pokemon_rb",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -377,7 +377,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Pikachu",
                   "Thunder Stone"
                 ]
@@ -475,7 +475,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Moon Stone",
                   "Nidorina"
                 ]
@@ -535,7 +535,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Moon Stone",
                   "Nidorino"
                 ]
@@ -557,7 +557,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Clefairy",
                   "Moon Stone"
                 ]
@@ -579,7 +579,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Fire Stone",
                   "Vulpix"
                 ]
@@ -601,7 +601,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Jigglypuff",
                   "Moon Stone"
                 ]
@@ -889,7 +889,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Poliwhirl",
                   "Water Stone"
                 ]
@@ -1101,7 +1101,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Leaf Stone",
                   "Weepinbell"
                 ]
@@ -1465,7 +1465,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Shellder",
                   "Water Stone"
                 ]
@@ -1677,7 +1677,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Exeggcute",
                   "Leaf Stone"
                 ]
@@ -1889,7 +1889,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Staryu",
                   "Water Stone"
                 ]
@@ -14670,7 +14670,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Coin Case",
                   "Game Corner"
                 ]
@@ -14693,7 +14693,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Coin Case",
                   "Game Corner"
                 ]
@@ -14716,7 +14716,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Coin Case",
                   "Game Corner"
                 ]
@@ -14739,7 +14739,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Coin Case",
                   "Game Corner"
                 ]
@@ -14762,7 +14762,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Coin Case",
                   "Game Corner"
                 ]
@@ -14785,7 +14785,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Coin Case",
                   "Game Corner"
                 ]
@@ -32350,7 +32350,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cinnabar Island",
                   "Old Amber"
                 ]
@@ -32374,7 +32374,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cinnabar Island",
                   "Helix Fossil"
                 ]
@@ -32398,7 +32398,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cinnabar Island",
                   "Dome Fossil"
                 ]
@@ -37575,6 +37575,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Pokemon Red and Blue",

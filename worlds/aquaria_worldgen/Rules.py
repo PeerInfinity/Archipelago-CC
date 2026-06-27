@@ -33,7 +33,7 @@ def _has_bind_song(state: "CollectionState", player: int) -> bool:
 
 
 def _has_damaging_item(state: "CollectionState", player: int, damaging_items = None) -> bool:
-    return (state.has('Baby Blaster', player)) or (state.has('Baby Nautilus', player)) or (state.has('Baby Piranha', player)) or (state.has('Beast Form', player)) or (state.has('Energy Form', player)) or (state.has('Li and Li Song', player)) or (state.has('Nature Form', player))
+    return (state.has('Baby Blaster', player)) or (state.has('Baby Nautilus', player)) or (state.has('Baby Piranha', player)) or (state.has('Beast Form', player)) or (state.has('Energy Form', player)) or (state.has('Li and Li Song', player)) or (state.has('Nature Form', player)) or (state.has('Urchin Costume', player))
 
 
 def _has_dual_form(state: "CollectionState", player: int) -> bool:
@@ -201,7 +201,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area to Open Waters top right area, Mithalas entrance", player),
-        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", args=(['Energy Form', 'Beast Form', 'Li and Li Song', 'Baby Nautilus', 'Baby Piranha', 'Baby Blaster'],), body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form"))))
+        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", args=(['Energy Form', 'Beast Form', 'Li and Li Song', 'Baby Nautilus', 'Baby Piranha', 'Baby Blaster', 'Urchin Costume'],), body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume"))))
     )
 
     world.set_rule(
@@ -371,7 +371,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas City to Mithalas City urns", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume")))
     )
 
     world.set_rule(
@@ -396,7 +396,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas castle to Mithalas castle urns", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume")))
     )
 
     world.set_rule(
@@ -446,7 +446,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas Cathedral start to Mithalas Cathedral start urns", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume")))
     )
 
     world.set_rule(
@@ -471,7 +471,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas Cathedral underground to Mithalas Cathedral end", player),
-        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form"))))
+        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume"))))
     )
 
     world.set_rule(
@@ -1111,12 +1111,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mithalas City, urn in the Castle flower tube entrance", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume")))
     )
 
     world.set_rule(
         multiworld.get_location("Mithalas City, urn inside a home fish pass", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")) | (Has("Urchin Costume")))
     )
 
     world.set_rule(

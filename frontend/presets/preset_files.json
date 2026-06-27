@@ -483,7 +483,6 @@
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1_costs.json",
           "AP_14089154938208861744_P1_Player1_gamedata.json",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -501,7 +500,6 @@
         ],
         "files": [
           "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_P1_Player1_costs.json",
           "AP_01043188731678011336_P1_Player1_gamedata.json",
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
@@ -519,7 +517,6 @@
         ],
         "files": [
           "AP_84719271504320872445.archipelago",
-          "AP_84719271504320872445_P1_Player1_costs.json",
           "AP_84719271504320872445_P1_Player1_gamedata.json",
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
@@ -1816,52 +1813,6 @@
       }
     }
   },
-  "blasphemous": {
-    "name": "Blasphemous",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Blasphemous"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 130,
-        "total_locations": 305
-      }
-    }
-  },
   "bomb_rush_cyberfunk": {
     "name": "Bomb Rush Cyberfunk",
     "folders": {
@@ -2101,66 +2052,6 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
-      }
-    }
-  },
-  "celeste_open_world": {
-    "name": "Celeste (Open World)",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Celeste (Open World)"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 237,
-        "total_locations": 237
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 9,
-        "runs_failed": 1,
-        "failure_types": "1 test"
       }
     }
   },
@@ -2631,66 +2522,6 @@
       }
     }
   },
-  "dkc3": {
-    "name": "Donkey Kong Country 3",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Donkey Kong Country 3"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 180,
-        "total_locations": 180
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
   "earthbound": {
     "name": "EarthBound",
     "folders": {
@@ -2765,7 +2596,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.8.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -3040,52 +2871,6 @@
       }
     }
   },
-  "hk": {
-    "name": "Hollow Knight",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Hollow Knight"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 0,
-        "total_locations": 0
-      }
-    }
-  },
   "hylics2": {
     "name": "Hylics 2",
     "folders": {
@@ -3265,7 +3050,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.8.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -3326,7 +3111,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-04Apr2026-050702_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-26Jun2026-234417_0.6.8.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -4099,52 +3884,6 @@
       }
     }
   },
-  "oot": {
-    "name": "Ocarina of Time",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Ocarina of Time"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 0,
-        "total_locations": 25
-      }
-    }
-  },
   "osrs": {
     "name": "Old School Runescape",
     "folders": {
@@ -4322,53 +4061,6 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
-      }
-    }
-  },
-  "pokemon_emerald": {
-    "name": "Pokemon Emerald",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Pokemon Emerald"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apemerald",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 1061,
-        "total_locations": 1061
       }
     }
   },
@@ -4763,6 +4455,27 @@
         "runs_passed": 5,
         "runs_failed": 5,
         "failure_types": "5 test"
+      }
+    }
+  },
+  "seedling": {
+    "name": "Seedling",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Seedling"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -7393,60 +7106,6 @@
       }
     }
   },
-  "dkc3_worldgen": {
-    "name": "Donkey Kong Country 3 WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Donkey Kong Country 3 WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 180,
-        "total_locations": 180
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
   "earthbound_worldgen": {
     "name": "EarthBound WorldGen",
     "folders": {
@@ -9828,10 +9487,10 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-04-04T05:23:12.060875+00:00",
-    "games_with_test_data": 155,
-    "total_games": 162,
-    "games_without_test_data": 7,
+    "test_data_updated": "2026-06-27T00:01:22.507539+00:00",
+    "games_with_test_data": 147,
+    "total_games": 155,
+    "games_without_test_data": 8,
     "test_types_loaded": [
       "minimal_spoiler",
       "full_spoiler",
@@ -9839,486 +9498,5 @@
       "multiworld",
       "spoiler_fuzz"
     ]
-  },
-  "seedling": {
-    "name": "Seedling",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Seedling"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "robotkitty_tilemap": {
-    "name": "Robot Wants Kitty (Tile Map Analyzer)",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Robot Wants Kitty"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744_rules.json",
-          "robotkitty_tilemap.json",
-          "robotkitty_tiles.json"
-        ]
-      }
-    }
-  },
-  "procgen_maze": {
-    "name": "Procgen Maze",
-    "folders": {
-      "AP_1": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze"
-          }
-        ],
-        "files": [
-          "AP_1_rules.json"
-        ],
-        "has_procgen_data": true
-      },
-      "AP_2": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze"
-          }
-        ],
-        "files": [
-          "AP_2_rules.json"
-        ],
-        "has_procgen_data": true
-      },
-      "AP_3": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze"
-          }
-        ],
-        "files": [
-          "AP_3_rules.json"
-        ],
-        "has_procgen_data": true
-      }
-    }
-  },
-  "procgen_maze_worldgen": {
-    "name": "Procgen Maze WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      }
-    }
-  },
-  "procgen_topdown": {
-    "name": "Procgen Top-Down",
-    "folders": {
-      "AP_1": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_1_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure s1"
-      },
-      "AP_2": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_2_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure s2"
-      },
-      "AP_3": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_3_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure s3"
-      },
-      "AP_4": {
-        "seed": 4,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_4_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "apcalc s1"
-      },
-      "AP_5": {
-        "seed": 5,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_5_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "apcalc s2"
-      },
-      "AP_6": {
-        "seed": 6,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_6_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "apcalc s3"
-      },
-      "AP_7": {
-        "seed": 7,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_7_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "alttp s1"
-      },
-      "AP_8": {
-        "seed": 8,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_8_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "alttp s2"
-      },
-      "AP_9": {
-        "seed": 9,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_9_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "alttp s3"
-      },
-      "AP_10": {
-        "seed": 10,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_10_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s1"
-      },
-      "AP_11": {
-        "seed": 11,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_11_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s2"
-      },
-      "AP_12": {
-        "seed": 12,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_12_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s3"
-      }
-    }
-  },
-  "jta_substrate_test": {
-    "name": "JtA (substrate test)",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "JtA (substrate test)"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744_rules.json"
-        ],
-        "has_procgen_data": true
-      }
-    }
-  },
-  "jta_mixed_test": {
-    "name": "JtA (mixed substrate test)",
-    "folders": {
-      "AP_1": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "JtA (mixed substrate test)"
-          }
-        ],
-        "files": [
-          "AP_1_rules.json"
-        ],
-        "has_procgen_data": true
-      }
-    }
-  },
-  "bounce_worldgen": {
-    "name": "Bounce Demo WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce Demo WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      },
-      "AP_01043188731678011336": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce Demo WorldGen"
-          }
-        ],
-        "files": [
-          "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json",
-          "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      }
-    }
-  },
-  "bounce_sphere_worldgen": {
-    "name": "Bounce Sphere WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce Sphere WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      },
-      "AP_01043188731678011336": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce Sphere WorldGen"
-          }
-        ],
-        "files": [
-          "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json",
-          "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      }
-    }
-  },
-  "bounce_mixed_worldgen": {
-    "name": "Bounce Mixed WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce Mixed WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      }
-    }
-  },
-  "bounce_dj_worldgen": {
-    "name": "Bounce DJ WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce DJ WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "has_procgen_data": true
-      }
-    }
-  },
-  "bounce_loop_worldgen": {
-    "name": "Bounce Loop WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bounce Loop WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744_rules.json"
-        ],
-        "has_procgen_data": true
-      }
-    }
   }
 }

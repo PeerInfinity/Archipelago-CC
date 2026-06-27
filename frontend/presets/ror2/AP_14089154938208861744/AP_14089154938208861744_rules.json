@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Risk of Rain 2",
   "game_directory": "ror2",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3406,7 +3406,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hidden Realm: A Moment, Fractured",
                   "Stage 5"
                 ]
@@ -3419,7 +3419,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Commencement",
                   "Stage 5"
                 ]
@@ -3434,7 +3434,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Helminth Hatchery",
                   "Sky Meadow"
                 ]
@@ -3861,7 +3861,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beads of Fealty",
                   "Hidden Realm: A Moment, Whole"
                 ]
@@ -3939,7 +3939,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hidden Realm: Bazaar Between Time",
                   "Void Fields"
                 ]
@@ -4699,6 +4699,7 @@
       "Distant Roost"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Risk of Rain 2",

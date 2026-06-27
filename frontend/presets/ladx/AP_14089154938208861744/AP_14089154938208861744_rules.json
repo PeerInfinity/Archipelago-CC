@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Links Awakening DX",
   "game_directory": "ladx",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -19,7 +19,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Manbo's Mambo",
                   "Ocarina"
                 ]
@@ -83,7 +83,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -110,7 +110,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Feather",
                   "Hookshot",
@@ -138,7 +138,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -151,7 +151,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Magic Powder",
                       "Rooster"
@@ -167,7 +167,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Power Bracelet",
                   "Rooster"
@@ -231,7 +231,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -251,7 +251,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -278,7 +278,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -315,7 +315,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -332,7 +332,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -352,7 +352,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -428,7 +428,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -461,7 +461,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -502,7 +502,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -550,7 +550,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -650,7 +650,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -673,7 +673,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -713,7 +713,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -805,7 +805,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -842,7 +842,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -863,7 +863,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -883,7 +883,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -896,7 +896,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Rooster"
                     ]
@@ -931,7 +931,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Magic Rod",
                       "Progressive Sword"
@@ -941,7 +941,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Rooster"
                     ]
@@ -962,7 +962,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -1003,7 +1003,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -1016,7 +1016,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Rooster"
                     ]
@@ -1072,7 +1072,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Fishing Hook",
                   "Flippers"
@@ -1086,7 +1086,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Necklace"
                 ]
@@ -1205,7 +1205,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Flippers",
                   "Rooster"
@@ -1222,7 +1222,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -1247,7 +1247,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -1311,7 +1311,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -1357,7 +1357,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Feather",
                           "Pegasus Boots"
                         ]
@@ -1374,7 +1374,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Rooster"
                     ]
@@ -1409,7 +1409,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -1438,7 +1438,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Power Bracelet",
                   "Rooster"
@@ -1452,7 +1452,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Hookshot"
                 ]
@@ -1572,7 +1572,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Ballad of the Wind Fish",
                   "Conch Horn",
                   "Coral Triangle",
@@ -1605,7 +1605,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Magic Powder",
@@ -1618,7 +1618,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Feather",
                           "Magic Powder",
                           "Rooster"
@@ -1630,7 +1630,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -1649,7 +1649,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Rooster"
                 ]
@@ -1662,7 +1662,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "BowWow",
                   "Hookshot",
@@ -1677,7 +1677,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -1694,7 +1694,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Rooster"
                 ]
@@ -1717,7 +1717,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "BowWow",
                   "Hookshot",
@@ -1738,7 +1738,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Rooster"
                 ]
@@ -1881,7 +1881,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "BowWow",
                   "Hookshot",
@@ -1917,7 +1917,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -1955,7 +1955,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Rooster"
                 ]
@@ -1988,7 +1988,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot",
                   "Rooster"
@@ -2025,7 +2025,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot",
                   "Rooster"
@@ -2156,7 +2156,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Magic Powder",
                   "Magic Rod"
                 ]
@@ -2169,7 +2169,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "BowWow",
                   "Hookshot",
@@ -2246,7 +2246,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Magic Powder",
                   "Magic Rod"
                 ]
@@ -2259,7 +2259,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -2275,7 +2275,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -2295,7 +2295,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Bow",
                       "Magic Rod",
@@ -2332,7 +2332,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -2371,7 +2371,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -2404,7 +2404,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bow",
                           "Magic Rod"
                         ]
@@ -2421,7 +2421,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Progressive Sword"
                     ]
@@ -2517,7 +2517,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -2574,7 +2574,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -2685,7 +2685,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Ballad of the Wind Fish",
                           "Ocarina"
                         ]
@@ -2694,7 +2694,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Bow",
                           "Magic Rod",
@@ -2707,7 +2707,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -2737,7 +2737,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Progressive Power Bracelet",
                       "Small Key (Bottle Grotto)"
                     ]
@@ -2781,7 +2781,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Ballad of the Wind Fish",
                           "Ocarina"
                         ]
@@ -2790,7 +2790,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Bow",
                           "Magic Rod",
@@ -2803,7 +2803,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -2866,7 +2866,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Progressive Power Bracelet",
                       "Small Key (Bottle Grotto)"
                     ]
@@ -2928,7 +2928,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Magic Rod",
                       "Progressive Sword"
                     ]
@@ -2937,7 +2937,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Nightmare Key (Bottle Grotto)",
                       "Progressive Power Bracelet"
                     ]
@@ -2962,7 +2962,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Magic Rod",
                       "Progressive Sword"
                     ]
@@ -2971,7 +2971,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Nightmare Key (Bottle Grotto)",
                       "Progressive Power Bracelet"
                     ]
@@ -3024,7 +3024,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bow",
                   "Magic Powder",
                   "Magic Rod"
@@ -3067,7 +3067,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bow",
                   "Magic Powder",
                   "Magic Rod"
@@ -3110,7 +3110,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bow",
                           "Magic Rod"
                         ]
@@ -3127,7 +3127,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Progressive Sword"
                     ]
@@ -3168,7 +3168,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Bow",
                       "Magic Rod",
@@ -3224,7 +3224,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -3238,7 +3238,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Hookshot"
                     ]
@@ -3285,7 +3285,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -3299,7 +3299,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Hookshot"
                     ]
@@ -3446,7 +3446,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -3514,7 +3514,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -3531,7 +3531,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bow",
                   "Magic Rod",
                   "Progressive Sword"
@@ -3548,7 +3548,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow",
                       "Hookshot",
@@ -3585,7 +3585,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -3632,7 +3632,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -3653,7 +3653,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -3728,7 +3728,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -3770,7 +3770,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -3840,7 +3840,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -3898,7 +3898,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bow",
                   "Magic Rod",
                   "Progressive Sword"
@@ -3936,7 +3936,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow",
                       "Hookshot",
@@ -4059,7 +4059,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Ocarina"
                 ]
@@ -4088,7 +4088,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Ocarina"
                 ]
@@ -4125,7 +4125,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -4151,7 +4151,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Pegasus Boots"
                 ]
@@ -4164,7 +4164,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Angler Key",
                   "Flippers"
                 ]
@@ -4218,7 +4218,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -4244,7 +4244,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Progressive Shield",
                   "Progressive Sword"
                 ]
@@ -4290,7 +4290,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Progressive Shield",
                   "Progressive Sword"
                 ]
@@ -4351,7 +4351,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Flippers"
                     ]
@@ -4396,7 +4396,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Pegasus Boots"
                 ]
@@ -4412,7 +4412,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Flippers"
                     ]
@@ -4480,7 +4480,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Pegasus Boots"
                 ]
@@ -4525,7 +4525,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -4561,7 +4561,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Flippers"
                 ]
@@ -4616,7 +4616,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Progressive Sword",
                       "Small Key (Angler's Tunnel)"
                     ]
@@ -4634,7 +4634,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -4654,7 +4654,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Small Key (Angler's Tunnel)"
                     ]
@@ -4679,7 +4679,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -4761,7 +4761,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Flippers"
                 ]
@@ -4777,7 +4777,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Pegasus Boots"
                     ]
@@ -4839,7 +4839,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Pegasus Boots"
                     ]
@@ -4893,7 +4893,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -4944,7 +4944,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Progressive Sword",
                       "Small Key (Angler's Tunnel)"
                     ]
@@ -4969,7 +4969,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bow",
                       "Magic Rod",
                       "Progressive Sword"
@@ -4979,7 +4979,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Nightmare Key (Angler's Tunnel)"
                     ]
@@ -4997,7 +4997,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -5017,7 +5017,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Small Key (Angler's Tunnel)"
                     ]
@@ -5042,7 +5042,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bow",
                       "Magic Rod",
                       "Progressive Sword"
@@ -5052,7 +5052,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Flippers",
                       "Nightmare Key (Angler's Tunnel)"
                     ]
@@ -5105,7 +5105,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Pegasus Boots"
                 ]
@@ -5128,7 +5128,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Flippers"
                 ]
@@ -5181,7 +5181,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Flippers"
                 ]
@@ -5217,7 +5217,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Hookshot"
                 ]
@@ -5388,7 +5388,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Scale"
                 ]
@@ -5411,7 +5411,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -5434,7 +5434,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -5530,7 +5530,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Scale"
                 ]
@@ -5596,7 +5596,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -5613,7 +5613,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -5662,7 +5662,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -5787,7 +5787,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Feather",
                       "Hookshot"
@@ -5825,7 +5825,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Feather",
                       "Hookshot"
@@ -5878,7 +5878,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -5896,7 +5896,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -5920,7 +5920,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -5979,7 +5979,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -6010,7 +6010,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bow",
                   "Magic Rod",
                   "Progressive Sword"
@@ -6037,7 +6037,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bow",
                   "Magic Rod",
                   "Progressive Sword"
@@ -6264,7 +6264,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -6307,7 +6307,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -6439,7 +6439,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Sword"
                 ]
@@ -6452,7 +6452,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -6465,7 +6465,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Pegasus Boots",
                   "Rooster"
                 ]
@@ -6491,7 +6491,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -6525,7 +6525,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Pegasus Boots",
                   "Rooster"
                 ]
@@ -6561,7 +6561,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "ANGLER_KEYHOLE",
                   "Angler Key"
                 ]
@@ -6574,7 +6574,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Rooster"
                 ]
@@ -6587,7 +6587,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Rooster"
                 ]
@@ -6614,7 +6614,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Rooster"
                 ]
@@ -6633,7 +6633,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Rooster"
                 ]
@@ -6649,7 +6649,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Rooster"
                     ]
@@ -6670,7 +6670,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -6699,7 +6699,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Rooster"
                     ]
@@ -6741,7 +6741,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -6761,7 +6761,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -6783,7 +6783,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -6806,7 +6806,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -6971,7 +6971,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Frog's Song of Soul",
                   "Ocarina",
                   "Progressive Sword"
@@ -7008,7 +7008,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -7030,7 +7030,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -7072,7 +7072,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Bomb",
                               "Boomerang",
                               "Bow",
@@ -7145,7 +7145,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Magic Rod"
                 ]
@@ -7158,7 +7158,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Magic Rod"
                 ]
@@ -7171,7 +7171,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Magic Rod"
                 ]
@@ -7305,7 +7305,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -7327,7 +7327,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -7348,7 +7348,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -7367,7 +7367,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -7383,7 +7383,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot"
                 ]
@@ -7435,7 +7435,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -7456,7 +7456,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -7498,7 +7498,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -7537,7 +7537,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot"
                 ]
@@ -7736,7 +7736,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Magic Rod"
                     ]
@@ -7745,7 +7745,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -7762,7 +7762,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot"
                 ]
@@ -7810,7 +7810,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -7853,7 +7853,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Magic Rod"
                     ]
@@ -7862,7 +7862,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -7902,7 +7902,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot"
                 ]
@@ -7977,7 +7977,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather"
                 ]
@@ -8049,7 +8049,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Small Key (Turtle Rock)"
                     ]
@@ -8071,7 +8071,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Sword"
                 ]
@@ -8094,7 +8094,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Small Key (Turtle Rock)"
                     ]
@@ -8116,7 +8116,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Sword"
                 ]
@@ -8191,7 +8191,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Magic Rod"
                 ]
@@ -8221,7 +8221,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Progressive Sword",
                       "Small Key (Turtle Rock)"
@@ -8254,7 +8254,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Progressive Sword",
                       "Small Key (Turtle Rock)"
@@ -8293,7 +8293,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Magic Rod"
                 ]
@@ -8306,7 +8306,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Magic Rod",
                   "Nightmare Key (Turtle Rock)"
                 ]
@@ -8326,7 +8326,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Magic Rod",
                   "Nightmare Key (Turtle Rock)"
                 ]
@@ -8383,7 +8383,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -8448,7 +8448,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Bomb",
                               "Boomerang",
                               "Bow",
@@ -8691,7 +8691,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Rooster"
                 ]
@@ -8806,7 +8806,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Rooster"
                 ]
@@ -8956,7 +8956,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Rooster"
                     ]
@@ -9043,7 +9043,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bird Key",
                   "Progressive Power Bracelet"
                 ]
@@ -9099,7 +9099,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9141,7 +9141,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9198,7 +9198,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -9211,7 +9211,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Boomerang",
                           "Bow",
                           "Hookshot",
@@ -9228,7 +9228,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Feather"
                         ]
@@ -9251,7 +9251,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9340,7 +9340,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -9353,7 +9353,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Boomerang",
                           "Bow",
                           "Hookshot",
@@ -9370,7 +9370,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Feather"
                         ]
@@ -9416,7 +9416,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9440,7 +9440,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9457,7 +9457,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -9494,7 +9494,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -9513,7 +9513,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9530,7 +9530,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Hookshot"
                 ]
@@ -9572,7 +9572,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9612,7 +9612,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -9651,7 +9651,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9691,7 +9691,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -9731,7 +9731,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Hookshot"
                 ]
@@ -9887,7 +9887,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Magic Rod",
                       "Progressive Sword"
@@ -9920,7 +9920,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Magic Rod",
                       "Progressive Sword"
@@ -10012,7 +10012,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow"
                     ]
@@ -10021,7 +10021,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Magic Powder",
                       "Progressive Sword"
                     ]
@@ -10036,7 +10036,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Ballad of the Wind Fish",
                   "Conch Horn",
                   "Coral Triangle",
@@ -10066,7 +10066,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow"
                     ]
@@ -10075,7 +10075,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Magic Powder",
                       "Progressive Sword"
                     ]
@@ -10115,7 +10115,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10157,7 +10157,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10204,7 +10204,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Rooster"
                 ]
@@ -10223,7 +10223,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hookshot",
                           "Pegasus Boots"
                         ]
@@ -10232,7 +10232,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Feather"
                         ]
@@ -10268,7 +10268,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Rooster"
                 ]
@@ -10310,7 +10310,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -10354,7 +10354,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -10406,7 +10406,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hookshot",
                           "Pegasus Boots"
                         ]
@@ -10415,7 +10415,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Feather"
                         ]
@@ -10459,7 +10459,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -10491,7 +10491,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -10512,7 +10512,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10537,7 +10537,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -10565,7 +10565,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Magic Powder",
                       "Small Key (Color Dungeon)"
                     ]
@@ -10583,7 +10583,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10641,7 +10641,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10689,7 +10689,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -10755,7 +10755,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Magic Powder",
                       "Small Key (Color Dungeon)"
                     ]
@@ -10806,7 +10806,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10858,7 +10858,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10883,7 +10883,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -10927,7 +10927,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -10975,7 +10975,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11025,7 +11025,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -11034,7 +11034,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -11085,7 +11085,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -11094,7 +11094,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -11116,7 +11116,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow",
                       "Hookshot",
@@ -11150,7 +11150,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow",
                       "Hookshot",
@@ -11417,7 +11417,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11435,7 +11435,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11477,7 +11477,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11518,7 +11518,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11540,7 +11540,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -11662,7 +11662,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -11709,7 +11709,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11725,7 +11725,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11742,7 +11742,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11788,7 +11788,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11871,7 +11871,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11917,7 +11917,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -11957,7 +11957,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -12003,7 +12003,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -12043,7 +12043,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -12061,7 +12061,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather",
                   "Pegasus Boots"
@@ -12078,7 +12078,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -12110,7 +12110,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -12132,7 +12132,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Progressive Sword"
                     ]
@@ -12147,7 +12147,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Bow",
                   "Hookshot",
@@ -12163,7 +12163,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -12230,7 +12230,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -12271,7 +12271,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather",
                   "Pegasus Boots"
@@ -12311,7 +12311,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -12366,7 +12366,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Bow",
@@ -12388,7 +12388,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Progressive Sword"
                     ]
@@ -12469,7 +12469,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Bow",
                   "Hookshot",
@@ -12508,7 +12508,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -12703,7 +12703,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Bow",
                       "Hookshot",
@@ -12715,7 +12715,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -12762,7 +12762,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Bow",
                       "Hookshot",
@@ -12774,7 +12774,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -12789,7 +12789,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Nightmare Key (Key Cavern)",
                   "Pegasus Boots",
                   "Progressive Sword"
@@ -12826,7 +12826,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Nightmare Key (Key Cavern)",
                   "Pegasus Boots",
                   "Progressive Sword"
@@ -12881,7 +12881,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -12927,7 +12927,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -13096,7 +13096,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Pegasus Boots"
                 ]
@@ -13153,7 +13153,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Pegasus Boots"
                 ]
@@ -13190,7 +13190,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -13229,7 +13229,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Feather",
                           "Pegasus Boots"
                         ]
@@ -13246,7 +13246,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Rooster"
                     ]
@@ -13276,7 +13276,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -13389,7 +13389,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Rooster"
                     ]
@@ -13433,7 +13433,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Rooster"
                     ]
@@ -13552,7 +13552,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot",
                   "Rooster"
@@ -13579,7 +13579,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot",
                   "Rooster"
@@ -13617,7 +13617,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -13658,7 +13658,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Magic Powder",
@@ -13704,7 +13704,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Fishing Hook",
                   "Flippers"
@@ -13740,7 +13740,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Necklace"
                 ]
@@ -13808,7 +13808,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -13883,7 +13883,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -13901,7 +13901,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Sword"
                 ]
@@ -13937,7 +13937,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Progressive Sword"
                 ]
@@ -13973,7 +13973,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -14001,7 +14001,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Progressive Sword"
                 ]
@@ -14027,7 +14027,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow",
                       "Hookshot",
@@ -14045,7 +14045,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Small Key (Catfish's Maw)"
                     ]
@@ -14067,7 +14067,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -14141,7 +14141,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Progressive Sword"
                 ]
@@ -14157,7 +14157,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -14193,7 +14193,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Hookshot"
                 ]
@@ -14229,7 +14229,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot"
                 ]
@@ -14271,7 +14271,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Feather",
                   "Hookshot"
                 ]
@@ -14287,7 +14287,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Bow",
                       "Hookshot",
@@ -14305,7 +14305,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Small Key (Catfish's Maw)"
                     ]
@@ -14376,7 +14376,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Nightmare Key (Catfish's Maw)",
                   "Progressive Sword"
@@ -14397,7 +14397,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Nightmare Key (Catfish's Maw)",
                   "Progressive Sword"
@@ -14462,7 +14462,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -14503,7 +14503,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Progressive Sword"
                 ]
@@ -14519,7 +14519,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -14553,7 +14553,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Pegasus Boots"
                     ]
@@ -14663,7 +14663,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Progressive Sword"
                 ]
@@ -14676,7 +14676,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather",
                   "Progressive Sword"
@@ -14697,7 +14697,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather",
                   "Progressive Sword"
@@ -14737,7 +14737,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -14784,7 +14784,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Flippers",
                   "Hookshot"
                 ]
@@ -14883,7 +14883,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Feather",
                               "Pegasus Boots"
                             ]
@@ -14942,7 +14942,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Feather",
                               "Pegasus Boots"
                             ]
@@ -15035,7 +15035,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Magic Rod"
                     ]
@@ -15061,7 +15061,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather"
                 ]
@@ -15077,7 +15077,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Magic Rod"
                     ]
@@ -15101,7 +15101,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang"
                     ]
@@ -15125,7 +15125,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Magic Rod"
                     ]
@@ -15181,7 +15181,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Magic Rod"
                     ]
@@ -15253,7 +15253,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Feather"
                 ]
@@ -15292,7 +15292,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Magic Rod"
                     ]
@@ -15339,7 +15339,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang"
                     ]
@@ -15360,7 +15360,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Bow",
                   "Magic Rod"
@@ -15423,7 +15423,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Bow",
                   "Magic Rod"
@@ -15538,7 +15538,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Magic Rod"
                     ]
@@ -15626,7 +15626,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Progressive Power Bracelet"
                 ]
@@ -15656,7 +15656,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Progressive Power Bracelet"
                 ]
@@ -15720,7 +15720,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Nightmare Key (Face Shrine)"
                 ]
@@ -15739,7 +15739,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Ballad of the Wind Fish",
                           "Ocarina"
                         ]
@@ -15748,7 +15748,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Magic Rod"
                         ]
@@ -15773,7 +15773,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Pegasus Boots",
                       "Small Key (Face Shrine)"
                     ]
@@ -15811,7 +15811,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Nightmare Key (Face Shrine)"
                 ]
@@ -15868,7 +15868,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Ballad of the Wind Fish",
                           "Ocarina"
                         ]
@@ -15877,7 +15877,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Magic Rod"
                         ]
@@ -15902,7 +15902,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Pegasus Boots",
                       "Small Key (Face Shrine)"
                     ]
@@ -15930,7 +15930,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hookshot",
                           "Progressive Power Bracelet",
                           "Small Key (Face Shrine)"
@@ -15952,7 +15952,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hookshot",
                           "Small Key (Face Shrine)"
                         ]
@@ -16002,7 +16002,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Small Key (Face Shrine)"
                     ]
@@ -16056,7 +16056,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Bomb",
                           "Boomerang",
                           "Magic Powder",
@@ -16069,7 +16069,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Feather",
                           "Rooster"
                         ]
@@ -16083,7 +16083,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Boomerang",
                           "Magic Rod",
                           "Progressive Sword"
@@ -16093,7 +16093,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Feather",
                           "Rooster"
                         ]
@@ -16325,7 +16325,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -16435,7 +16435,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Feather",
                   "Hookshot",
@@ -16466,7 +16466,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Feather",
                   "Hookshot",
@@ -16543,7 +16543,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Frog's Song of Soul",
                   "Ocarina"
                 ]
@@ -16569,7 +16569,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Frog's Song of Soul",
                   "Ocarina"
                 ]
@@ -16606,7 +16606,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -16636,7 +16636,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -16679,7 +16679,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -16730,7 +16730,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -16877,7 +16877,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -16904,7 +16904,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Magic Powder",
@@ -16946,7 +16946,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -16995,7 +16995,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Hookshot",
@@ -17011,7 +17011,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -17033,7 +17033,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -17047,7 +17047,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -17115,7 +17115,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Small Key (Tail Cave)"
                     ]
@@ -17205,7 +17205,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Hookshot",
@@ -17244,7 +17244,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Boomerang",
                   "Bow",
@@ -17289,7 +17289,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -17303,7 +17303,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -17460,7 +17460,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Feather",
                       "Small Key (Tail Cave)"
                     ]
@@ -17498,7 +17498,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -17518,7 +17518,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -17572,7 +17572,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Boomerang",
                   "Bow",
                   "Hookshot",
@@ -17615,7 +17615,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Boomerang",
                       "Bow",
@@ -17763,7 +17763,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -17792,7 +17792,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hookshot",
                   "Rooster"
                 ]
@@ -19503,6 +19503,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Links Awakening DX",

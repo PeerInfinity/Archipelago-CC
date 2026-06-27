@@ -3,7 +3,7 @@
   "game_name": "Adventure",
   "game_directory": "adventure",
   "playerId": "4",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -66,7 +66,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Black Key",
                   "Bridge"
                 ]
@@ -221,7 +221,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Right Difficulty Switch",
                   "Sword"
                 ]
@@ -270,7 +270,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Chalice",
                   "Yellow Key"
                 ]
@@ -314,7 +314,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bridge",
                   "Magnet"
                 ]
@@ -415,7 +415,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Right Difficulty Switch",
                   "Sword"
                 ]
@@ -448,7 +448,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bridge",
                   "Magnet"
                 ]
@@ -505,7 +505,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Right Difficulty Switch",
                   "Sword"
                 ]

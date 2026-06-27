@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Jak and Daxter: The Precursor Legacy",
   "game_directory": "jakanddaxter",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -338,7 +338,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -347,7 +347,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -541,7 +541,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -550,7 +550,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut",
                       "Jump Kick"
@@ -575,7 +575,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -584,7 +584,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut",
                       "Jump Kick"
@@ -609,7 +609,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Double Jump",
                       "Jump Kick"
                     ]
@@ -618,7 +618,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Roll",
                       "Roll Jump"
                     ]
@@ -779,7 +779,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -788,7 +788,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -797,7 +797,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Double Jump",
                       "Jump Dive"
                     ]
@@ -866,7 +866,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -959,7 +959,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -1059,7 +1059,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -1261,7 +1261,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -1415,7 +1415,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -1432,7 +1432,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -1484,7 +1484,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -1643,7 +1643,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -1652,7 +1652,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Blue Eco Switch",
                       "Jump Dive"
                     ]
@@ -1717,7 +1717,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -1754,7 +1754,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Kick",
                   "Kick",
                   "Punch"
@@ -1775,7 +1775,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Kick",
                   "Kick",
                   "Punch"
@@ -1811,7 +1811,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -1851,7 +1851,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -1897,7 +1897,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -1906,7 +1906,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Blue Eco Switch",
                       "Jump Dive"
                     ]
@@ -1943,7 +1943,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -1999,7 +1999,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -2047,7 +2047,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2081,7 +2081,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crouch",
                   "Crouch Jump"
                 ]
@@ -2184,7 +2184,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2235,7 +2235,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -2256,7 +2256,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -2290,7 +2290,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2325,7 +2325,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -2365,7 +2365,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2422,7 +2422,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -2469,7 +2469,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2500,7 +2500,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2534,7 +2534,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Crouch",
                   "Crouch Jump"
                 ]
@@ -2547,7 +2547,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -2600,7 +2600,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -2755,7 +2755,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Roll",
                   "Roll Jump"
                 ]
@@ -2926,7 +2926,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2957,7 +2957,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -2988,7 +2988,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -3019,7 +3019,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -3076,7 +3076,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Roll",
                   "Roll Jump"
                 ]
@@ -3115,7 +3115,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -3124,7 +3124,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut",
                       "Jump Kick"
@@ -3452,7 +3452,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Double Jump",
                   "Jump Dive"
                 ]
@@ -3470,7 +3470,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -3504,7 +3504,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Double Jump",
                   "Jump Dive"
                 ]
@@ -3519,7 +3519,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Double Jump",
                   "Jump Dive"
                 ]
@@ -3564,7 +3564,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -3668,7 +3668,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -3782,7 +3782,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -3888,7 +3888,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Punch",
                           "Punch Uppercut"
                         ]
@@ -3897,7 +3897,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Double Jump",
                           "Jump Kick"
                         ]
@@ -3950,7 +3950,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Punch",
                       "Punch Uppercut"
                     ]
@@ -3959,7 +3959,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Double Jump",
                       "Jump Kick"
                     ]
@@ -3979,7 +3979,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Punch",
                       "Punch Uppercut"
                     ]
@@ -3988,7 +3988,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Double Jump",
                       "Jump Kick"
                     ]
@@ -4016,7 +4016,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Double Jump",
                   "Jump Dive",
                   "Jump Kick",
@@ -4034,7 +4034,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Double Jump",
                   "Jump Dive",
                   "Jump Kick",
@@ -4161,7 +4161,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Double Jump",
                       "Jump Kick"
                     ]
@@ -4170,7 +4170,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Roll",
                       "Roll Jump"
                     ]
@@ -4386,7 +4386,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -5081,7 +5081,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5112,7 +5112,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5143,7 +5143,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5174,7 +5174,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5205,7 +5205,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5236,7 +5236,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5267,7 +5267,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5335,7 +5335,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Crouch",
                           "Crouch Jump"
                         ]
@@ -5352,7 +5352,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Jump Kick",
                       "Kick",
@@ -5465,7 +5465,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Jump Kick",
                       "Kick",
@@ -5476,7 +5476,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Roll",
                       "Roll Jump"
                     ]
@@ -5522,7 +5522,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5612,7 +5612,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Double Jump",
                   "Jump Kick"
                 ]
@@ -5625,7 +5625,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -5676,7 +5676,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -5839,7 +5839,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -5868,7 +5868,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -5911,7 +5911,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Jump Kick",
                       "Kick",
@@ -5950,7 +5950,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Jump Kick",
                       "Kick",
@@ -6050,7 +6050,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -6059,7 +6059,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Yellow Eco Switch"
                     ]
@@ -6150,7 +6150,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -6280,7 +6280,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -6311,7 +6311,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -6351,7 +6351,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Crouch",
                           "Crouch Jump"
                         ]
@@ -6368,7 +6368,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Jump Kick",
                       "Kick",
@@ -6467,7 +6467,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -6491,7 +6491,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Jump"
                     ]
@@ -6515,7 +6515,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Punch",
                       "Punch Uppercut"
                     ]
@@ -6524,7 +6524,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Double Jump",
                       "Jump Kick"
                     ]
@@ -6629,7 +6629,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -6822,7 +6822,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Roll",
                       "Roll Jump"
                     ]
@@ -6855,7 +6855,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -6910,7 +6910,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Roll",
                           "Roll Jump"
                         ]
@@ -6949,7 +6949,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Roll",
                           "Roll Jump"
                         ]
@@ -6985,7 +6985,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Freed The Blue Sage",
                       "Freed The Red Sage",
                       "Freed The Yellow Sage"
@@ -7006,7 +7006,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -7053,7 +7053,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Roll",
                           "Roll Jump"
                         ]
@@ -7083,7 +7083,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7105,7 +7105,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7152,7 +7152,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Crouch",
                           "Crouch Uppercut"
                         ]
@@ -7225,7 +7225,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7247,7 +7247,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7309,7 +7309,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Roll",
                           "Roll Jump"
                         ]
@@ -7339,7 +7339,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7361,7 +7361,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7386,7 +7386,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -7430,7 +7430,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Jump Dive",
                       "Jump Kick",
                       "Kick",
@@ -7455,7 +7455,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7477,7 +7477,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Jump Dive",
                   "Jump Kick",
                   "Kick",
@@ -7502,7 +7502,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Crouch",
                       "Crouch Uppercut"
                     ]
@@ -8666,6 +8666,7 @@
       "Kick"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Jak and Daxter: The Precursor Legacy",

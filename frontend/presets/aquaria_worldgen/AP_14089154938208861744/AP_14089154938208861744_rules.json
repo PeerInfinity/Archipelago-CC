@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Aquaria WorldGen",
   "game_directory": "aquaria_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -56,7 +56,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Form",
+              "name": "Transturtle Abyss right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -71,7 +71,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Berry Ice Cream",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -106,7 +106,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vedha's Cure-All",
+              "name": "Leaf Poultice x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -120,7 +120,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Legendary Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -134,7 +134,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup x 2",
+              "name": "Sun Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -149,7 +149,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Long Life Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -224,7 +224,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Glowing Egg",
+              "name": "Tasty Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -252,7 +252,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cold Borscht",
+              "name": "Eel Oil x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -280,7 +280,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Plump Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -295,7 +295,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Baby Dumbo",
+              "name": "Spirit Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -324,7 +324,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Buttery Sea Loaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -476,7 +476,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -491,7 +491,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -547,7 +547,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Krotite Armor",
+              "name": "Jelly Plant",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -576,7 +576,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Special Cake",
+              "name": "Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -591,7 +591,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Plant Leaf",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -606,7 +606,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Jelly Plant",
+              "name": "Mithalas Pot",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -620,7 +620,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -635,7 +635,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Transturtle Abyss right",
+              "name": "Urchin Costume",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -687,7 +687,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Fish Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -702,7 +702,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Transturtle Home Waters",
+              "name": "Special Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -784,7 +784,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Soup",
+              "name": "Cold Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -830,9 +830,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Transturtle Veil top left",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -865,7 +865,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Vedha Sea Crisp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -918,7 +918,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Transturtle Arnassi Ruins",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -968,7 +968,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Ice Cream",
+              "name": "Volcano Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -997,7 +997,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Soup",
+              "name": "Fish Oil",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1044,7 +1044,8 @@
                       "Li and Li Song",
                       "Baby Nautilus",
                       "Baby Piranha",
-                      "Baby Blaster"
+                      "Baby Blaster",
+                      "Urchin Costume"
                     ]
                   ]
                 }
@@ -1118,7 +1119,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1132,7 +1133,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1146,7 +1147,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Simon Says",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1254,7 +1255,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Perogi",
+              "name": "Glowing Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1268,7 +1269,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice x 3",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1318,7 +1319,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 2",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1333,7 +1334,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1405,7 +1406,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Zuuna's Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1419,7 +1420,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Egg x 2",
+              "name": "Special Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1483,7 +1484,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Divine Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1497,7 +1498,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1511,7 +1512,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Black Pearl",
+              "name": "Krotite Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1550,7 +1551,7 @@
               ]
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1721,7 +1722,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice x 3",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1749,7 +1750,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Turtle Soup",
+              "name": "Shield Song",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1879,7 +1880,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Tough Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1938,7 +1939,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1952,7 +1953,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Royal Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1966,7 +1967,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sight Poultice",
+              "name": "Small Egg x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1980,7 +1981,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Magic Soup",
+              "name": "Crab Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1994,7 +1995,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Turtle Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2008,7 +2009,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vedha Sea Crisp",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2022,7 +2023,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2050,7 +2051,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Glowing Egg x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2110,7 +2111,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Veil top right",
+              "name": "Baby Piranha",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2124,7 +2125,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2138,7 +2139,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2152,7 +2153,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Nature Form",
+              "name": "Transturtle Open Waters top right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2167,7 +2168,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Jelly Costume",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2196,7 +2197,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Small Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2211,7 +2212,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2279,7 +2280,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Fish Oil x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2353,7 +2354,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Baby Blaster",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2397,7 +2398,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2442,7 +2443,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leadership Roll x 2",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2457,7 +2458,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Small Tentacle x 2",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2477,7 +2478,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Hot Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2491,7 +2492,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Cake",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2505,7 +2506,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2519,7 +2520,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Open Waters top right",
+              "name": "Transturtle Kelp Forest bottom left",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2533,7 +2534,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Long Life Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2547,7 +2548,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Cake",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2561,7 +2562,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Cold Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2575,7 +2576,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Crab Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2589,7 +2590,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Long Life Soup",
+              "name": "Tasty Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2603,7 +2604,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Fish Oil",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2640,7 +2641,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Plant Leaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2654,7 +2655,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2707,7 +2708,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tough Cake",
+              "name": "Spicy Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2721,7 +2722,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2735,7 +2736,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2749,7 +2750,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Royal Soup",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2763,7 +2764,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2813,7 +2814,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Glowing Egg x 2",
+              "name": "Jelly Costume",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2926,7 +2927,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Plant Leaf x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2940,7 +2941,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leadership Roll",
+              "name": "Healing Poultice x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2954,7 +2955,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Nature Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2969,7 +2970,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Crab Armor",
+              "name": "Turtle Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2998,7 +2999,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Buttery Sea Loaf",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3012,7 +3013,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Berry",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3077,7 +3078,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3091,7 +3092,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3119,7 +3120,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Turtle Soup",
+              "name": "Vedha's Cure-All",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3170,7 +3171,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Meat x 2",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3317,7 +3318,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cold Borscht",
+              "name": "Berry Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3345,7 +3346,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Ice Cream",
+              "name": "Cold Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3360,7 +3361,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Eel Oil x 2",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3410,7 +3411,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Spider Roll",
+              "name": "Shark Fin Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3438,7 +3439,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Arnassi Ruins",
+              "name": "Arnassi Armor",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3497,7 +3498,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Sun Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3533,7 +3534,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil x 3",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3562,7 +3563,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3576,7 +3577,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3621,7 +3622,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Urchin Costume",
+              "name": "Black Pearl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3832,7 +3833,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice x 2",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3847,7 +3848,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Fish Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3862,7 +3863,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Li and Li Song",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3876,7 +3877,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4022,7 +4023,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4036,7 +4037,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4114,7 +4115,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4128,7 +4129,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Form",
+              "name": "Baby Blaster",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4188,7 +4189,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 2",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4263,7 +4264,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Crab Cake",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4306,7 +4307,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Spider Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4334,7 +4335,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 2",
+              "name": "Wok",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4413,7 +4414,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Transturtle Veil top left",
+              "name": "Li and Li Song",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4441,7 +4442,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Ice Cream",
+              "name": "Mushroom x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4456,7 +4457,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4505,7 +4506,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4519,7 +4520,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cold Soup",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4533,7 +4534,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4631,7 +4632,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Sight Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4645,7 +4646,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4659,7 +4660,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Long Life Soup",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4734,7 +4735,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4748,7 +4749,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4774,7 +4775,7 @@
               ]
             },
             "item": {
-              "name": "Small Egg",
+              "name": "Red Berry",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4800,7 +4801,7 @@
               ]
             },
             "item": {
-              "name": "Sight Poultice",
+              "name": "Small Bone x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4836,7 +4837,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shield Song",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4920,7 +4921,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil",
+              "name": "Leaf Poultice x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4934,7 +4935,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4962,7 +4963,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5008,7 +5009,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Mushroom x 2",
+              "name": "Small Tentacle x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5101,7 +5102,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Vedha Sea Crisp",
+              "name": "Plant Leaf x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5115,7 +5116,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spider Roll",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5129,7 +5130,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Veggie Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5284,7 +5285,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arnassi Armor",
+              "name": "Transturtle Simon Says",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5320,7 +5321,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5334,7 +5335,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5348,7 +5349,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Vedha Sea Crisp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5362,7 +5363,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Legendary Cake",
+              "name": "Veggie Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5376,7 +5377,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Roll",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5421,7 +5422,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Cake",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5435,7 +5436,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Rainbow Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5506,7 +5507,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Key",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5520,7 +5521,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Loaf of Life",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5812,7 +5813,7 @@
               "_original_ast_type": "rb_defined_helper"
             },
             "item": {
-              "name": "Healing Poultice x 2",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5826,7 +5827,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Soup",
+              "name": "Spider Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5854,7 +5855,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Wok",
+              "name": "Shark Fin Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5868,7 +5869,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Veggie Soup",
+              "name": "Veggie Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5882,7 +5883,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5910,7 +5911,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Transturtle Home Waters",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5966,7 +5967,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Borscht",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5980,7 +5981,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6017,7 +6018,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shark Fin Soup",
+              "name": "Healing Poultice x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6031,7 +6032,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6201,7 +6202,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mithalas Pot",
+              "name": "Veggie Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6229,7 +6230,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Roll",
+              "name": "Leadership Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6271,7 +6272,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Kelp Forest bottom left",
+              "name": "Baby Dumbo",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6386,7 +6387,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6482,7 +6483,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6510,7 +6511,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spirit Form",
+              "name": "Transturtle Veil top right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6531,7 +6532,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Plant Leaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6621,7 +6622,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6642,7 +6643,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shark Fin Soup",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6656,7 +6657,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Zuuna's Perogi",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6691,7 +6692,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Sight Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6705,7 +6706,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Baby Piranha",
+              "name": "Hot Soup x 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6719,7 +6720,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Loaf of Life",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6733,7 +6734,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6747,7 +6748,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Divine Soup",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6768,7 +6769,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Magic Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6782,7 +6783,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Volcano Roll",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6796,7 +6797,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Tasty Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6824,7 +6825,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plump Perogi",
+              "name": "Leadership Roll x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7208,9 +7209,10 @@
         "name": "Urchin Costume",
         "id": 698034,
         "groups": [
+          "Damage",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -8603,239 +8605,239 @@
       "Open Waters top right area, bulb in the path from the left entrance": "Rotten Meat",
       "Sun Temple, Sun Key": "Rotten Meat",
       "Verse Cave right area, bulb in the skeleton room": "Rotten Meat",
-      "Verse Cave right area, bulb in the path right of the skeleton room": "Fish Form",
-      "Verse Cave right area, Big Seed": "Berry Ice Cream",
-      "Verse Cave left area, the Naija hint about the shield ability": "Vedha's Cure-All",
-      "Abyss right area, bulb in the left green room": "Rainbow Mushroom",
-      "Kelp Forest top left area, bulb in the bottom left clearing": "Rainbow Mushroom",
-      "Sun Temple boss path, second path bulb": "Rainbow Mushroom",
-      "Verse Cave left area, bulb in the center part": "Rainbow Mushroom",
-      "Verse Cave left area, bulb in the right part": "Hot Soup x 2",
-      "Mithalas Cathedral, third urn in the path behind the flesh vein": "Healing Poultice",
-      "Mithalas City, first urn in one of the homes": "Healing Poultice",
-      "The Veil top right area, bulb at the top of the waterfall": "Healing Poultice",
-      "Verse Cave left area, bulb under the rock at the end of the path": "Healing Poultice",
-      "Home Waters, bulb below the grouper fish": "Glowing Egg",
+      "Verse Cave right area, bulb in the path right of the skeleton room": "Transturtle Abyss right",
+      "Kelp Forest top right area, bulb in the top fish pass": "Health Upgrade",
+      "King Jellyfish Cave, bulb in the right path from King Jelly": "Health Upgrade",
+      "Mithalas City, second bulb at the end of the top path": "Health Upgrade",
+      "Naija's Home, bulb after the energy door": "Health Upgrade",
+      "Verse Cave right area, Big Seed": "Health Upgrade",
+      "Abyss left area, bulb in hidden path room": "Leaf Poultice x 3",
+      "Verse Cave left area, the Naija hint about the shield ability": "Leaf Poultice x 3",
+      "Verse Cave left area, bulb in the center part": "Legendary Cake",
+      "Verse Cave left area, bulb in the right part": "Sun Form",
+      "Mithalas Cathedral, urn in the top left eyes boss room": "Long Life Soup",
+      "Verse Cave left area, bulb under the rock at the end of the path": "Long Life Soup",
+      "Home Waters, bulb below the grouper fish": "Tasty Roll",
+      "Mithalas City Castle, second urn of the single lamp path": "Tasty Roll",
       "Home Waters, bulb in the little room above the grouper fish": "Tooth",
-      "Home Waters, bulb in the end of the path close to the Verse Cave": "Cold Borscht",
-      "Kelp Forest bottom left area, Transturtle": "Cold Borscht",
+      "Home Waters, bulb in the end of the path close to the Verse Cave": "Eel Oil x 2",
       "Home Waters, bulb in the top left path": "Golden Starfish",
-      "Home Waters, Nautilus Egg": "Health Upgrade",
-      "Home Waters, bulb close to Naija's Home": "Health Upgrade",
-      "Mithalas City Castle, Trident Head": "Health Upgrade",
-      "Mithalas City, Doll": "Health Upgrade",
-      "Song Cave, Jelly Beacon": "Health Upgrade",
-      "Home Waters, bulb under the rock in the left path from the Verse Cave": "Baby Dumbo",
+      "Home Waters, bulb close to Naija's Home": "Plump Perogi",
+      "Home Waters, bulb under the rock in the left path from the Verse Cave": "Spirit Form",
+      "Home Waters, Nautilus Egg": "Buttery Sea Loaf",
       "Beating Nautilus Prime": "Nautilus Prime beated",
       "Home Waters, Transturtle": "Plant Leaf",
-      "Kelp Forest top right area, bulb in the left path's big room": "Plant Leaf",
-      "Song Cave, bulb under the rock close to the song door": "Plant Leaf",
-      "Naija's Home, bulb after the energy door": "Hearty Soup",
-      "Sun Temple boss path, first path bulb": "Hearty Soup",
-      "Sun Temple, bulb in the top right part": "Hearty Soup",
-      "Sunken City left area, crate close to the save crystal": "Hearty Soup",
-      "The Veil top left area, Transturtle": "Hearty Soup",
-      "Kelp Forest boss room, bulb at the bottom of the area": "Swamp Cake",
-      "Mithalas Cathedral, first urn in the bottom right path": "Swamp Cake",
-      "Naija's Home, bulb under the rock at the right of the main path": "Swamp Cake",
+      "Mithalas Cathedral, first urn in the bottom right path": "Plant Leaf",
+      "Sunken City right area, crate close to the save crystal": "Plant Leaf",
+      "Mithalas Cathedral, Mithalan Dress": "Leaf Poultice",
+      "Mithalas City, bulb in the bottom left part": "Leaf Poultice",
+      "Naija's Home, bulb under the rock at the right of the main path": "Leaf Poultice",
+      "The Veil top right area, Transturtle": "Leaf Poultice",
+      "The Veil top right area, bulb in the middle of the wall jump cliff": "Leaf Poultice",
       "Song Cave, Erulian spirit": "King's Skull",
       "Song Cave, bulb in the top right part": "Energy Form",
-      "Song Cave, bulb in the big anemone room": "Krotite Armor",
+      "Song Cave, bulb in the big anemone room": "Jelly Plant",
       "Song Cave, bulb in the path to the singing statues": "Bind Song",
-      "Bubble Cave, bulb in the left cave wall": "Special Cake",
-      "Song Cave, bulb under the rock in the path to the singing statues": "Special Cake",
-      "Song Cave, Verse Egg": "Jelly Plant",
-      "Song Cave, Anemone Seed": "Transturtle Abyss right",
-      "Energy Temple bottom entrance, Krotite Armor": "Hot Soup",
-      "Energy Temple first area, beating the Energy Statue": "Hot Soup",
-      "Kelp Forest top left area, bulb in the top left clearing": "Hot Soup",
-      "Energy Temple first area, bulb in the bottom room blocked by a rock": "Transturtle Home Waters",
+      "Song Cave, bulb under the rock in the path to the singing statues": "Ice Cream",
+      "Sun Temple, bulb in the right part": "Ice Cream",
+      "Kelp Forest top right area, bulb at the left of the center clearing": "Special Bulb",
+      "Mithalas Cathedral, first urn in the path behind the flesh vein": "Special Bulb",
+      "Mithalas City Castle, Trident Head": "Special Bulb",
+      "Open Waters top right area, Transturtle": "Special Bulb",
+      "Song Cave, bulb under the rock close to the song door": "Special Bulb",
+      "Song Cave, Verse Egg": "Mithalas Pot",
+      "Abyss left area, Glowing Plant": "Arcane Poultice",
+      "Abyss right area, bulb behind the rock in the middle path": "Arcane Poultice",
+      "Kelp Forest sprite cave, bulb in the second room": "Arcane Poultice",
+      "Open Waters top right area, bulb in the big clearing close to the save crystal": "Arcane Poultice",
+      "Open Waters top right area, second urn in the Mithalas exit": "Arcane Poultice",
+      "Song Cave, Jelly Beacon": "Arcane Poultice",
+      "Sun Temple, bulb at the top of the high dark room": "Arcane Poultice",
+      "Song Cave, Anemone Seed": "Urchin Costume",
+      "Energy Temple first area, beating the Energy Statue": "Fish Form",
+      "Energy Temple first area, bulb in the bottom room blocked by a rock": "Special Cake",
+      "Open Waters skeleton path, bulb behind the chomper fish": "Special Cake",
       "Energy Temple second area, bulb under the rock": "Rotten Meat x 2",
-      "Energy Temple third area, bulb in the bottom path": "Veggie Soup",
-      "The Body left area, second bulb in the top face room": "Veggie Soup",
-      "Abyss left area, Glowing Seed": "Spicy Roll",
-      "Arnassi Ruins, bulb in the left part": "Spicy Roll",
-      "Energy Temple boss area, Fallen God Tooth": "Spicy Roll",
-      "Kelp Forest sprite cave, bulb in the second room": "Spicy Roll",
-      "Mithalas Cathedral, second urn in the bottom right path": "Spicy Roll",
-      "Mithalas Cathedral, third urn in the top right room": "Spicy Roll",
-      "Mithalas Cathedral, urn in the top left eyes boss room": "Spicy Roll",
-      "Mithalas City Castle, bulb in the flesh hole": "Spicy Roll",
-      "Mithalas City, bulb in the bottom left part": "Spicy Roll",
-      "The Body left area, bulb in the bottom face room": "Spicy Roll",
-      "The Veil top right area, bulb in the middle of the wall jump cliff": "Spicy Roll",
+      "Energy Temple third area, bulb in the bottom path": "Cold Soup",
+      "Energy Temple boss area, Fallen God Tooth": "Transturtle Veil top left",
       "Beating Fallen God": "Fallen God beated",
-      "Energy Temple blaster room, Blaster Egg": "Hand Roll",
-      "Home Waters, bulb in the bottom left room": "Hand Roll",
-      "Ice Cavern, second bulb in the top exit room": "Hand Roll",
-      "Mithalas City, second bulb in the left city part": "Hand Roll",
-      "Open Waters top right area, bulb in the clearing close to the bottom exit": "Hand Roll",
+      "Energy Temple blaster room, Blaster Egg": "Vedha Sea Crisp",
+      "Ice Cavern, second bulb in the top exit room": "Vedha Sea Crisp",
       "Beating Blaster Peg Prime": "Blaster Peg Prime beated",
-      "Open Waters top left area, bulb under the rock in the right path": "Ice Cream",
-      "Turtle cave, bulb in Bubble Cliff": "Ice Cream",
+      "Energy Temple bottom entrance, Krotite Armor": "Transturtle Arnassi Ruins",
+      "Open Waters top left area, bulb under the rock in the right path": "Volcano Roll",
       "Open Waters top left area, bulb under the rock in the left path": "Golden Gear",
-      "Open Waters top left area, bulb to the right of the save crystal": "Spicy Soup",
+      "Mithalas Cathedral, urn below the left entrance": "Fish Oil",
+      "Open Waters top left area, bulb to the right of the save crystal": "Fish Oil",
       "Open Waters top right area, bulb in the small path before Mithalas": "Seed Bag",
-      "Mithalas City, first bulb in a broken home": "Leaf Poultice",
-      "Open Waters skeleton path, bulb close to the right exit": "Leaf Poultice",
-      "Open Waters top right area, bulb in the big clearing close to the save crystal": "Leaf Poultice",
-      "Sun Temple, bulb in the right part": "Leaf Poultice",
-      "Sun Temple, first bulb of the temple": "Leaf Poultice",
-      "Open Waters top right area, bulb in the big clearing to the top exit": "Transturtle Simon Says",
-      "Open Waters top right area, bulb in the turtle room": "Perogi",
-      "Arnassi Ruins, Transturtle": "Leaf Poultice x 3",
-      "Open Waters top right area, Transturtle": "Leaf Poultice x 3",
-      "Octopus Cave, Dumbo Egg": "Plant Leaf x 2",
-      "Open Waters bottom left area, bulb behind the chomper fish": "Plant Leaf x 2",
-      "Arnassi Ruins, Arnassi Armor": "Special Bulb",
-      "Cathedral Underground, bulb close to the save crystal": "Special Bulb",
-      "Mithalas City, bulb in the top path": "Special Bulb",
-      "Open Waters bottom left area, bulb inside the lowest fish pass": "Special Bulb",
-      "The Veil bottom area, Stone Head": "Special Bulb",
-      "Open Waters skeleton path, bulb behind the chomper fish": "Small Egg x 2",
+      "Ice Cavern, first bulb in the top exit room": "Rainbow Mushroom",
+      "Mithalas Cathedral, second urn in the top right room": "Rainbow Mushroom",
+      "Mithalas City, second bulb in a broken home": "Rainbow Mushroom",
+      "Open Waters top right area, bulb in the clearing close to the bottom exit": "Rainbow Mushroom",
+      "Mithalas City Castle, beating the Priests": "Hot Soup",
+      "Open Waters top right area, bulb in the big clearing to the top exit": "Hot Soup",
+      "The Veil top left area, bulb hidden behind the blocking rock": "Hot Soup",
+      "Open Waters top right area, bulb in the turtle room": "Glowing Egg",
+      "Kelp Forest sprite cave, Seed Bag": "Dumbo Ice Cream",
+      "Open Waters bottom left area, bulb behind the chomper fish": "Dumbo Ice Cream",
+      "Turtle cave, Urchin Costume": "Dumbo Ice Cream",
+      "Abyss left area, Glowing Seed": "Spicy Roll",
+      "Bubble Cave, bulb in the left cave wall": "Spicy Roll",
+      "Cathedral Underground, bulb close to the save crystal": "Spicy Roll",
+      "Home Waters, bulb in the bottom left room": "Spicy Roll",
+      "Kelp Forest top left area, Verse Egg": "Spicy Roll",
+      "Open Waters bottom left area, bulb inside the lowest fish pass": "Spicy Roll",
+      "Sun Temple boss area, beating Lumerean God": "Spicy Roll",
+      "Sun Temple, bulb in the hidden room of the right part": "Spicy Roll",
+      "Sunken City left area, crate in the little pipe room": "Spicy Roll",
+      "The Body bottom area, bulb in the nautilus room": "Spicy Roll",
+      "The Veil top right area, bulb at the top of the waterfall": "Spicy Roll",
+      "Open Waters skeleton path, bulb close to the right exit": "Zuuna's Perogi",
       "Open Waters skeleton path, King Skull": "Trident",
-      "Arnassi Ruins, bulb in the right part": "Red Bulb x 2",
-      "Ice Cavern, bulb in the room to the right": "Red Bulb x 2",
-      "Mithalas City, urn inside a home fish pass": "Red Bulb x 2",
-      "Arnassi Ruins, bulb in the center part": "Black Pearl",
+      "Arnassi Ruins, bulb in the right part": "Divine Soup",
+      "Arnassi Ruins, bulb in the left part": "Plant Leaf x 3",
+      "Kelp Forest bottom left area, Walker Baby": "Plant Leaf x 3",
+      "Sun Temple boss path, first path bulb": "Plant Leaf x 3",
+      "The Body left area, bulb below the water stream": "Plant Leaf x 3",
+      "Arnassi Ruins, bulb in the center part": "Krotite Armor",
       "Arnassi Ruins, Song Plant Spore": "Poison Loaf",
+      "Arnassi Ruins, Arnassi Armor": "Healing Poultice",
+      "Cathedral Underground, second bulb in the top left part": "Healing Poultice",
+      "Kelp Forest top left area, bulb close to the Verse Egg": "Healing Poultice",
+      "Open Waters top right area, first urn in the Mithalas exit": "Healing Poultice",
       "Arnassi Ruins, Arnassi Statue": "Sea Loaf",
-      "Arnassi Ruins, Crab Armor": "Turtle Soup",
-      "Kelp Forest top right area, bulb at the top of the center clearing": "Turtle Soup",
+      "Arnassi Ruins, Transturtle": "Small Bone x 3",
+      "The Body center area, breaking Li's cage": "Small Bone x 3",
+      "The Veil bottom area, bulb in the left path": "Small Bone x 3",
+      "Arnassi Ruins, Crab Armor": "Shield Song",
       "Beating Crabbius Maximus": "Crabbius Maximus beated",
       "Simon Says area, beating Simon Says": "Song Plant Spore",
-      "Abyss left area, bulb in the right part": "Arcane Poultice",
-      "Mithalas Cathedral, first urn in the top right room": "Arcane Poultice",
-      "Mithalas City, second bulb in one of the homes": "Arcane Poultice",
-      "Mithalas City, second urn in the city reserve": "Arcane Poultice",
-      "Simon Says area, Transturtle": "Arcane Poultice",
-      "The Body right area, bulb in the bottom face room": "Arcane Poultice",
-      "Turtle cave, Urchin Costume": "Arcane Poultice",
-      "Bubble Cave, bulb in the right cave wall (behind the ice crystal)": "Leeching Poultice",
-      "Cathedral Underground, second bulb in the top left part": "Leeching Poultice",
-      "Mithalas City, first bulb in the left city part": "Leeching Poultice",
-      "Sunken City left area, crate in the little pipe room": "Leeching Poultice",
-      "Mithalas City, bulb in the right part": "Sight Poultice",
-      "Sun Temple boss path, second cliff bulb": "Sight Poultice",
-      "Mithalas City, bulb at the top of the city": "Magic Soup",
-      "Abyss right area, bulb in the middle path": "Vedha Sea Crisp",
-      "Mithalas City, second bulb in a broken home": "Vedha Sea Crisp",
+      "Simon Says area, Transturtle": "Tough Cake",
+      "Kelp Forest top right area, bulb in the left path's big room": "Spicy Meat x 2",
+      "Mithalas City, first bulb in the left city part": "Spicy Meat x 2",
+      "Sun Temple, bulb in the top right part": "Spicy Meat x 2",
+      "Mithalas City, second bulb in the left city part": "Royal Soup",
+      "Mithalas City, bulb in the right part": "Small Egg x 2",
+      "Mithalas City, bulb at the top of the city": "Crab Armor",
+      "Kelp Forest top left area, Jelly Egg": "Turtle Soup",
+      "Mithalas City, first bulb in a broken home": "Turtle Soup",
       "Mithalas City, first bulb in one of the homes": "Jelly Egg",
+      "Mithalas City, second bulb in one of the homes": "Glowing Egg x 2",
       "Second Secret": "Second Secret obtained",
-      "Mithalas City, first bulb at the end of the top path": "Transturtle Veil top right",
-      "Kelp Forest sprite cave, Seed Bag": "Sea Cake",
-      "Mithalas City Castle, second urn of the single lamp path": "Sea Cake",
-      "Mithalas City Castle, urn in the bedroom": "Sea Cake",
-      "Mithalas City, second bulb at the end of the top path": "Sea Cake",
-      "Mithalas City, Mithalas Pot": "Nature Form",
-      "Mithalas City, urn in the Castle flower tube entrance": "Jelly Costume",
+      "Mithalas City, first bulb at the end of the top path": "Baby Piranha",
+      "Mithalas City, bulb in the top path": "Red Bulb x 2",
+      "Mithalas City, third urn in the city reserve": "Red Bulb x 2",
+      "The Body right area, bulb in the bottom face room": "Red Bulb x 2",
+      "Mithalas City, Mithalas Pot": "Transturtle Open Waters top right",
+      "Mithalas City, first urn in the city reserve": "Hearty Soup",
+      "Mithalas City, second urn in the city reserve": "Hearty Soup",
+      "Mithalas City, urn in the Castle flower tube entrance": "Hearty Soup",
+      "Sun Temple, Golden Gear": "Hearty Soup",
+      "Sunken City left area, crate close to the save crystal": "Hearty Soup",
+      "Mithalas City, Doll": "Small Egg",
+      "Cathedral Underground, first bulb in the top left part": "Hand Roll",
+      "Ice Cavern, bulb in the room to the right": "Hand Roll",
+      "Mithalas Cathedral, third urn in the top right room": "Hand Roll",
+      "Mithalas City, urn inside a home fish pass": "Hand Roll",
+      "The Body right area, bulb in the top path to the bottom face room": "Hand Roll",
+      "Mithalas City Castle, bulb in the flesh hole": "Fish Oil x 3",
       "Mithalas City Castle, Blue Banner": "Sea Loaf x 2",
       "Mithalas City Castle, sitting on the sealed throne": "Door to the Cathedral opened",
-      "Mithalas City Castle, beating the Priests": "Baby Blaster",
       "Beating Mithalan priests": "Mithalan priests beated",
-      "Mithalas Cathedral, bulb in the flesh room with fleas": "Leadership Roll x 2",
-      "Mithalas Cathedral, Mithalan Dress": "Small Tentacle x 2",
-      "Mithalas Cathedral, second urn in the top right room": "Veggie Cake",
-      "Mithalas Cathedral, urn behind the flesh vein": "Transturtle Open Waters top right",
-      "Mithalas Cathedral, first urn in the path behind the flesh vein": "Tasty Cake",
-      "Abyss left area, Glowing Plant": "Small Bone x 3",
-      "King Jellyfish Cave, Jellyfish Costume": "Small Bone x 3",
-      "Mithalas Cathedral, second urn in the path behind the flesh vein": "Small Bone x 3",
-      "Mithalas Cathedral, fourth urn in the top right room": "Long Life Soup",
-      "Sun Temple, bulb in the hidden room of the right part": "Long Life Soup",
-      "Kelp Forest top right area, bulb at the left of the center clearing": "Dumbo Ice Cream",
-      "Mithalas Cathedral, urn below the left entrance": "Dumbo Ice Cream",
-      "The Body left area, bulb below the water stream": "Dumbo Ice Cream",
-      "Cathedral Underground, bulb in the center part": "Tough Cake",
-      "Cathedral Underground, first bulb in the top left part": "Plant Leaf x 3",
-      "Energy Temple, Energy Idol": "Plant Leaf x 3",
-      "Sunken City right area, crate close to the save crystal": "Plant Leaf x 3",
-      "The Veil top left area, bulb under the rock in the top right path": "Plant Leaf x 3",
-      "Cathedral Underground, third bulb in the top left part": "Royal Soup",
+      "Mithalas Cathedral, bulb in the flesh room with fleas": "Swamp Cake",
+      "Sun Temple boss path, second path bulb": "Swamp Cake",
+      "The Veil top left area, In Li's cave": "Swamp Cake",
+      "Mithalas Cathedral, first urn in the top right room": "Hot Borscht",
+      "Mithalas Cathedral, urn behind the flesh vein": "Transturtle Kelp Forest bottom left",
+      "Kelp Forest bottom left area, bulb close to the spirit crystals": "Cold Borscht",
+      "Mithalas Cathedral, second urn in the path behind the flesh vein": "Cold Borscht",
+      "Mithalas Cathedral, third urn in the path behind the flesh vein": "Crab Cake",
+      "Mithalas Cathedral, fourth urn in the top right room": "Tasty Cake",
+      "Cathedral Underground, third bulb in the top left part": "Sea Cake",
+      "Kelp Forest sprite cave, bulb inside the fish pass": "Sea Cake",
+      "Mithalas Cathedral, second urn in the bottom right path": "Sea Cake",
+      "Mithalas City Castle, first urn of the single lamp path": "Sea Cake",
+      "Cathedral Underground, bulb in the center part": "Spicy Soup",
       "Cathedral Underground, bulb in the bottom right path": "Baby Walker",
-      "Mithalas boss area, beating Mithalan God": "Glowing Egg x 2",
+      "Mithalas boss area, beating Mithalan God": "Jelly Costume",
       "Beating Mithalan God": "Mithalan God beated",
-      "Kelp Forest top left area, bulb in the path down from the top left clearing": "Leadership Roll",
-      "Kelp Forest top left area, Jelly Egg": "Crab Armor",
-      "Kelp Forest top left area, bulb close to the Verse Egg": "Buttery Sea Loaf",
-      "Kelp Forest top left area, Verse Egg": "Red Berry",
+      "Abyss right area, bulb in the middle path": "Plant Leaf x 2",
+      "Kelp Forest top left area, bulb in the bottom left clearing": "Plant Leaf x 2",
+      "Kelp Forest top left area, bulb in the path down from the top left clearing": "Healing Poultice x 2",
+      "The Body bottom area, bulb in the Jelly Zap room": "Healing Poultice x 2",
+      "Kelp Forest top left area, bulb in the top left clearing": "Nature Form",
       "Kelp Forest top right area, bulb under the rock in the right path": "Mithalas Doll",
       "Kelp Forest top right area, bulb in the left path's small room": "Energy Statue",
+      "Kelp Forest top right area, bulb at the top of the center clearing": "Vedha's Cure-All",
       "Kelp Forest top right area, Black Pearl": "Girl Costume",
-      "Kelp Forest top right area, bulb in the top fish pass": "Fish Meat x 2",
-      "Kelp Forest bottom left area, bulb close to the spirit crystals": "Veggie Ice Cream",
-      "Kelp Forest bottom left area, Walker Baby": "Eel Oil x 2",
-      "Abyss right area, bulb behind the rock in the middle path": "Spider Roll",
-      "Kelp Forest bottom right area, Odd Container": "Spider Roll",
-      "Kelp Forest boss area, beating Drunian God": "Transturtle Arnassi Ruins",
+      "Kelp Forest bottom left area, Transturtle": "Berry Ice Cream",
+      "Kelp Forest bottom right area, Odd Container": "Shark Fin Soup",
+      "The Body left area, first bulb in the top face room": "Shark Fin Soup",
+      "Kelp Forest boss area, beating Drunian God": "Arnassi Armor",
       "Beating Drunian God": "Drunian God beated",
-      "Kelp Forest sprite cave, bulb inside the fish pass": "Fish Oil x 3",
-      "Mermog cave, bulb in the left part of the cave": "Urchin Costume",
+      "Kelp Forest boss room, bulb at the bottom of the area": "Sun Key",
+      "Mermog cave, bulb in the left part of the cave": "Black Pearl",
       "Mermog cave, Piranha Egg": "Turtle Egg",
       "Beating Mergog": "Mergog beated",
       "Kelp Forest bottom left area, Fish Cave puzzle": "Odd Container",
-      "The Body center area, breaking Li's cage": "Healing Poultice x 2",
-      "The Veil top left area, In Li's cave": "Healing Poultice x 2",
-      "The Veil top left area, bulb hidden behind the blocking rock": "Li and Li Song",
+      "The Veil top left area, bulb under the rock in the top right path": "Fish Meat x 2",
+      "The Veil top left area, Transturtle": "Perogi",
       "The Veil top left area, bulb inside the fish pass": "Beast Form",
-      "Ice Cavern, first bulb in the top exit room": "Spicy Meat x 2",
-      "The Body bottom area, bulb in the nautilus room": "Spicy Meat x 2",
-      "The Veil top right area, Transturtle": "Spicy Meat x 2",
-      "The Veil top right area, Golden Starfish": "Sun Form",
-      "The Veil bottom area, bulb in the left path": "Small Bone x 2",
+      "The Veil top right area, Golden Starfish": "Baby Blaster",
       "The Veil bottom area, bulb in the spirit path": "Jelly Beacon",
-      "The Veil bottom area, Verse Egg": "Crab Cake",
+      "Abyss left area, bulb in the right part": "Leeching Poultice",
+      "Energy Temple, Energy Idol": "Leeching Poultice",
+      "Ice Cavern, bulb in the left room": "Leeching Poultice",
+      "The Veil bottom area, Verse Egg": "Leeching Poultice",
+      "The Body center area, bulb on the main path blocking tube": "Spider Roll",
+      "The Veil bottom area, Stone Head": "Spider Roll",
+      "Octopus Cave, Dumbo Egg": "Wok",
       "Beating Octopus Prime": "Octopus Prime beated",
       "Octopus Cave, bulb in the path below the Octopus Cave path": "Mithalan Dress",
-      "Turtle cave, Turtle Egg": "Transturtle Veil top left",
+      "Turtle cave, Turtle Egg": "Li and Li Song",
+      "Turtle cave, bulb in Bubble Cliff": "Mushroom x 2",
       "Sun Temple, bulb in the top left part": "Baby Nautilus",
-      "Sun Temple, bulb at the top of the high dark room": "Cold Soup",
-      "Abyss left area, bulb in hidden path room": "Fish Oil",
-      "Sun Temple, Golden Gear": "Fish Oil",
       "Third Secret": "Third Secret obtained",
+      "Mithalas City, first urn in one of the homes": "Sight Poultice",
+      "Sun Temple, first bulb of the temple": "Sight Poultice",
       "Sun Crystal": "Has Sun Crystal",
-      "Sun Temple boss path, first cliff bulb": "Small Egg",
-      "Sun Temple boss area, beating Lumerean God": "Shield Song",
+      "Sun Temple boss path, first cliff bulb": "Red Berry",
+      "Sun Temple boss path, second cliff bulb": "Small Bone x 2",
       "Beating Lumerean God": "Lumerean God beated",
-      "Abyss left area, bulb in the bottom fish pass": "Mushroom x 2",
+      "Abyss left area, bulb in the bottom fish pass": "Small Tentacle x 2",
+      "Abyss right area, bulb in the left green room": "Veggie Soup",
+      "Final Boss area, first bulb in the turtle room": "Veggie Soup",
       "Abyss right area, bulb behind the rock in the whale room": "Mutant Costume",
-      "Abyss right area, Transturtle": "Arnassi Armor",
-      "Ice Cavern, third bulb in the top exit room": "Legendary Cake",
-      "Final Boss area, third bulb in the turtle room": "Tasty Roll",
-      "Ice Cavern, bulb in the left room": "Tasty Roll",
+      "Abyss right area, Transturtle": "Transturtle Simon Says",
+      "Ice Cavern, third bulb in the top exit room": "Veggie Cake",
+      "Bubble Cave, bulb in the right cave wall (behind the ice crystal)": "Rainbow Soup",
       "Bubble Cave, Verse Egg": "Rotten Loaf x 8",
       "Beating Mantis Shrimp Prime": "Mantis Shrimp Prime beated",
-      "King Jellyfish Cave, bulb in the right path from King Jelly": "Sun Key",
+      "King Jellyfish Cave, Jellyfish Costume": "Loaf of Life",
       "Beating King Jellyfish God Prime": "King Jellyfish God Prime beated",
       "The Whale, Verse Egg": "Glowing Seed",
       "Sunken City, bulb on top of the boss area": "Anemone",
       "Beating the Golem": "The Golem beated",
       "Sunken City cleared": "Body Tongue cleared",
       "Sunken City left area, Girl Costume": "Dual Form",
-      "The Body center area, bulb on the main path blocking tube": "Rainbow Soup",
-      "The Body left area, first bulb in the top face room": "Wok",
+      "The Body left area, second bulb in the top face room": "Veggie Ice Cream",
       "The Body left area, bulb in the top path to the top face room": "Rotten Meat x 8",
+      "The Body left area, bulb in the bottom face room": "Transturtle Home Waters",
       "The Body right area, bulb in the top face room": "Stone Head",
-      "The Body right area, bulb in the top path to the bottom face room": "Hot Borscht",
-      "Open Waters top right area, first urn in the Mithalas exit": "Shark Fin Soup",
-      "The Body bottom area, bulb in the Jelly Zap room": "Shark Fin Soup",
       "The Body bottom area, Mutant Costume": "Poison Soup",
-      "Final Boss area, first bulb in the turtle room": "Mithalas Pot",
       "Final Boss area, second bulb in the turtle room": "Rotten Cake",
+      "Final Boss area, third bulb in the turtle room": "Leadership Roll",
       "Final Boss area, Transturtle": "Transturtle Final Boss",
-      "Final Boss area, bulb in the boss third form room": "Transturtle Kelp Forest bottom left",
+      "Final Boss area, bulb in the boss third form room": "Baby Dumbo",
       "Objective complete": "Victory",
       "First Secret": "First Secret obtained",
-      "Sunken City left area, crate before the bedroom": "Spirit Form",
+      "Sunken City left area, crate before the bedroom": "Transturtle Veil top right",
       "Sunken City right area, crate in the left bottom room": "Arnassi Statue",
-      "Open Waters top right area, second urn in the Mithalas exit": "Zuuna's Perogi",
       "Open Waters top right area, third urn in the Mithalas exit": "Big Seed",
-      "Mithalas City, second urn in one of the homes": "Baby Piranha",
-      "Mithalas City, first urn in the city reserve": "Loaf of Life",
-      "Mithalas City, third urn in the city reserve": "Divine Soup",
-      "Mithalas City Castle, first urn of the single lamp path": "Volcano Roll",
+      "Mithalas City, second urn in one of the homes": "Hot Soup x 2",
+      "Mithalas City Castle, urn in the bedroom": "Magic Soup",
       "Mithalas City Castle, urn in the bottom room": "Mithalas Banner",
-      "Mithalas City Castle, first urn on the entrance path": "Plump Perogi"
+      "Mithalas City Castle, first urn on the entrance path": "Leadership Roll x 2"
     }
   },
   "progression_mapping": {
@@ -8844,6 +8846,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Aquaria WorldGen",
@@ -9535,6 +9538,10 @@
             {
               "type": "item_check",
               "item": "Nature Form"
+            },
+            {
+              "type": "item_check",
+              "item": "Urchin Costume"
             }
           ]
         }

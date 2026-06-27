@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Meritous",
   "game_directory": "meritous",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -22,7 +22,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "Important Artifacts",
+                    "item_name_group": "Important Artifacts",
                     "count": {
                       "type": "constant",
                       "value": 1
@@ -32,7 +32,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "PSI Keys",
+                    "item_name_group": "PSI Keys",
                     "count": {
                       "type": "constant",
                       "value": 1
@@ -408,7 +408,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "Important Artifacts",
+                    "item_name_group": "Important Artifacts",
                     "count": {
                       "type": "constant",
                       "value": 2
@@ -418,7 +418,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "PSI Keys",
+                    "item_name_group": "PSI Keys",
                     "count": {
                       "type": "constant",
                       "value": 2
@@ -794,7 +794,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "Important Artifacts",
+                    "item_name_group": "Important Artifacts",
                     "count": {
                       "type": "constant",
                       "value": 3
@@ -804,7 +804,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "PSI Keys",
+                    "item_name_group": "PSI Keys",
                     "count": {
                       "type": "constant",
                       "value": 3
@@ -1187,7 +1187,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Agate Knife",
                   "Cursed Seal"
                 ]
@@ -2136,6 +2136,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Meritous",

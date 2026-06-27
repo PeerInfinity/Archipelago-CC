@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "VVVVVV",
   "game_directory": "v6",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -20,7 +20,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Trinket 01",
                   "Trinket 02",
                   "Trinket 03"
@@ -34,7 +34,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Trinket 04",
                   "Trinket 05",
                   "Trinket 06"
@@ -48,7 +48,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Trinket 07",
                   "Trinket 08",
                   "Trinket 09"
@@ -62,7 +62,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Trinket 10",
                   "Trinket 11",
                   "Trinket 12"
@@ -687,6 +687,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "VVVVVV",

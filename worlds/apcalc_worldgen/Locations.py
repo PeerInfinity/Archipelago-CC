@@ -30,7 +30,7 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
-    "Victory": LocationData("Menu", "Victory", None, True),
+    "Victory": LocationData("C", "Victory", None, True),
     "Reach 6": LocationData("Node 6", "Reach 6", 234810101, False),
     "Checked 1": LocationData("Node 6", "Checked 1", None, True),
     "Reach 8": LocationData("Node 8", "Reach 8", 234810102, False),

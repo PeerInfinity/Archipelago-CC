@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Baking Adventure Vanilla WorldGen2",
   "game_directory": "bakingadventure_vanilla_worldgen2",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -172,7 +172,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Creamed Mixture",
                   "Flour Mixture"
                 ]
@@ -187,7 +187,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Electric Mixer",
                   "Mixing Bowls",
                   "Softened Butter"
@@ -369,7 +369,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cookie Dough",
                   "Prepared Sheets"
                 ]
@@ -403,7 +403,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Preheated Oven",
                   "Shaped Cookies"
                 ]
@@ -662,6 +662,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Baking Adventure Vanilla WorldGen2",

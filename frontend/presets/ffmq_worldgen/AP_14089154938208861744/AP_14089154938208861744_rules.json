@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Final Fantasy Mystic Quest WorldGen",
   "game_directory": "ffmq_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -186,7 +186,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "River Coin",
                   "Sand Coin"
                 ]
@@ -199,7 +199,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Sand Coin",
                   "Sun Coin"
                 ]
@@ -280,7 +280,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dualhead Hydra",
                   "Summer Aquaria"
                 ]
@@ -368,7 +368,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "River Coin",
                   "Sand Coin"
                 ]
@@ -381,7 +381,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "River Coin",
                   "Sun Coin"
                 ]
@@ -545,7 +545,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Sand Coin",
                   "Sun Coin"
                 ]
@@ -558,7 +558,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "River Coin",
                   "Sun Coin"
                 ]
@@ -619,7 +619,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Ship Dock Access",
                   "Ship Liberated"
                 ]
@@ -646,7 +646,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Ship Dock Access",
                   "Ship Liberated"
                 ]
@@ -659,7 +659,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Ship Dock Access",
                   "Ship Loaned",
                   "Ship Steering Wheel"
@@ -711,7 +711,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Ship Dock Access",
                   "Ship Loaned",
                   "Ship Steering Wheel"
@@ -739,7 +739,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dragon Claw",
                   "Mega Grenade"
                 ]
@@ -754,7 +754,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -1157,7 +1157,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Jumbo Bomb",
                       "Mega Grenade",
@@ -1261,7 +1261,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -1285,7 +1285,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -1324,7 +1324,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -1348,7 +1348,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -1406,7 +1406,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Kaeli 1",
                   "Minotaur"
                 ]
@@ -1470,7 +1470,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -1543,7 +1543,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Elixir",
                   "Kaeli 1",
                   "Minotaur"
@@ -1901,7 +1901,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -1918,7 +1918,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2000,7 +2000,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2093,7 +2093,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2170,7 +2170,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2318,7 +2318,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2377,7 +2377,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2414,7 +2414,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2792,7 +2792,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2807,7 +2807,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -2853,7 +2853,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -2899,7 +2899,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -2913,7 +2913,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -2929,7 +2929,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -2957,7 +2957,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -2972,7 +2972,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -3397,7 +3397,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -3556,7 +3556,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -3669,7 +3669,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -3714,7 +3714,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -3867,7 +3867,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -4084,7 +4084,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -4131,7 +4131,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Excalibur",
                       "Knight Sword",
                       "Progressive Sword",
@@ -4142,7 +4142,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Cat Claw",
                       "Charm Claw",
                       "Dragon Claw"
@@ -4152,7 +4152,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Jumbo Bomb",
                       "Mega Grenade",
@@ -4296,7 +4296,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -4333,7 +4333,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -4361,7 +4361,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -4475,7 +4475,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -4597,7 +4597,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -4611,7 +4611,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -4633,7 +4633,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -4652,7 +4652,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Cat Claw",
                       "Charm Claw",
                       "Dragon Claw"
@@ -4743,7 +4743,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -4871,7 +4871,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -4892,7 +4892,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5138,7 +5138,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Tristam",
                   "Tristam Bone Item Given"
                 ]
@@ -5186,7 +5186,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -5201,7 +5201,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5215,7 +5215,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5229,7 +5229,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5250,7 +5250,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -5265,7 +5265,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5286,7 +5286,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -5301,7 +5301,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5339,7 +5339,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5386,7 +5386,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5408,7 +5408,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -5475,7 +5475,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6080,7 +6080,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6162,7 +6162,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6176,7 +6176,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6204,7 +6204,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6649,7 +6649,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6696,7 +6696,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -6832,7 +6832,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -7142,7 +7142,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7161,7 +7161,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -7188,7 +7188,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -7215,7 +7215,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -7239,7 +7239,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7257,7 +7257,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7281,7 +7281,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7305,7 +7305,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7329,7 +7329,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7542,7 +7542,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -7590,7 +7590,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -7604,7 +7604,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -7641,7 +7641,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -7655,7 +7655,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -7677,7 +7677,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -7738,7 +7738,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7757,7 +7757,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -7783,7 +7783,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7807,7 +7807,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -7844,7 +7844,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -7891,7 +7891,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -7967,7 +7967,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -8026,7 +8026,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8047,7 +8047,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8061,7 +8061,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8089,7 +8089,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -8104,7 +8104,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8118,7 +8118,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8139,7 +8139,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -8158,7 +8158,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Cat Claw",
                       "Charm Claw",
                       "Dragon Claw"
@@ -8168,7 +8168,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -8188,7 +8188,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -8212,7 +8212,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -8277,7 +8277,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -8306,7 +8306,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8368,7 +8368,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -8383,7 +8383,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8461,7 +8461,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -8491,7 +8491,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -8507,7 +8507,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -8526,7 +8526,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Cat Claw",
                       "Charm Claw",
                       "Dragon Claw"
@@ -8536,7 +8536,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -8568,7 +8568,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8612,7 +8612,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8701,7 +8701,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8717,7 +8717,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "River Coin",
                   "Sand Coin"
                 ]
@@ -8752,7 +8752,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8783,7 +8783,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Cat Claw",
                   "Charm Claw",
                   "Dragon Claw"
@@ -8859,7 +8859,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dragon Claw",
                   "Dullahan"
                 ]
@@ -8880,7 +8880,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dragon Claw",
                   "River Coin",
                   "Sand Coin"
@@ -9310,7 +9310,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "River Coin",
                   "Sand Coin"
                 ]
@@ -9347,7 +9347,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -9370,7 +9370,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -9393,7 +9393,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -9521,7 +9521,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -9546,7 +9546,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -9748,7 +9748,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -9771,7 +9771,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -9809,7 +9809,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Axe",
                   "Battle Axe",
                   "Giant's Axe",
@@ -9834,7 +9834,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -10017,7 +10017,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bomb",
                       "Jumbo Bomb",
                       "Mega Grenade",
@@ -10028,7 +10028,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Axe",
                       "Battle Axe",
                       "Giant's Axe",
@@ -10055,7 +10055,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Bomb",
                   "Jumbo Bomb",
                   "Mega Grenade",
@@ -10133,7 +10133,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dragon Claw",
                   "Pazuzu 1F",
                   "Pazuzu 2F",
@@ -10188,7 +10188,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Pazuzu 1F",
                   "Pazuzu 2F",
                   "Pazuzu 2F Lock",
@@ -10847,7 +10847,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Stone Golem",
                   "Twinhead Wyvern"
                 ]
@@ -10860,7 +10860,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Stone Golem",
                   "Twinhead Wyvern",
                   "Zuh"
@@ -10893,7 +10893,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Excalibur",
                       "Knight Sword",
                       "Progressive Sword",
@@ -10927,7 +10927,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Excalibur",
                       "Knight Sword",
                       "Progressive Sword",
@@ -10958,7 +10958,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Excalibur",
                   "Knight Sword",
                   "Progressive Sword",
@@ -10984,7 +10984,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Excalibur",
                       "Knight Sword",
                       "Progressive Sword",
@@ -11018,7 +11018,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Excalibur",
                       "Knight Sword",
                       "Progressive Sword",
@@ -13016,6 +13016,7 @@
       "Steel Armor"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Final Fantasy Mystic Quest WorldGen",
