@@ -695,6 +695,18 @@
     "template_file": "Lil Gator Game.yaml",
     "world_directory": "lil_gator_game"
   },
+  "Lingo 2": {
+    "apworld_path": "custom_worlds/lingo2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Lingo 2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Lingo 2.yaml",
+    "world_directory": "lingo2"
+  },
   "Little Witch Nobeta": {
     "apworld_path": "custom_worlds/little_witch_nobeta.apworld",
     "exporter_path": null,
@@ -1234,18 +1246,6 @@
     "has_custom_game_logic": false,
     "template_file": "Symphony of the Night.yaml",
     "world_directory": "sotn"
-  },
-  "System Shock 2": {
-    "apworld_path": "custom_worlds/ss2.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "System Shock 2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "System Shock 2.yaml",
-    "world_directory": "ss2"
   },
   "TCG Card Shop Simulator": {
     "apworld_path": "custom_worlds/tcg_card_shop_simulator.apworld",

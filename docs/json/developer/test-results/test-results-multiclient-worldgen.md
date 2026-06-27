@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-27 23:08:02 UTC
 
 **Source Data Created:** 2026-03-21T23:07:39.711834+00:00
 
@@ -71,6 +71,7 @@
 | Lufia II Ancient Cave WorldGen | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | ✅ | ✅ |
 | Mega Man 2 WorldGen | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | ✅ | ✅ |
+| Mega Man 3 WorldGen | ✅ Passed | 0 | ✅ | 75/75 | 64/64 | 11/11 | ✅ | 75/75 | ✅ | ✅ |
 | MegaMan Battle Network 3 WorldGen | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | ✅ | ✅ |
 | Meritous WorldGen | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath WorldGen | ✅ Passed | 0 | ✅ | 18/18 | 9/9 | 9/9 | ✅ | 18/18 | ✅ | ✅ |
