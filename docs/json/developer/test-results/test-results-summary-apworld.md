@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (APWorld)
 
-**Generated:** 2026-06-27 20:34:49 UTC
+**Generated:** 2026-04-03 22:56:22 UTC
 
 **Source Data Created:** 2026-03-22T00:10:03.442853+00:00
 
@@ -50,15 +50,15 @@ Additional information:
 
 Of the 13 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 13/13 (100.0%)
+- **Passing with Generic Exporter:** 9/13 (69.2%)
 - **Passing with Generic Logic:** 13/13 (100.0%)
-- **Passing with Both Generic:** 13/13 (100.0%)
+- **Passing with Both Generic:** 9/13 (69.2%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 0.0KB
+- **Total Exporter Code:** 387.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 0.0KB
+- **Combined Total:** 387.6KB
 
 ## Test Results
 
@@ -67,17 +67,17 @@ Of the 13 templates passing all 4 tests:
 | A Dance of Fire and Ice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *A Link Between Worlds* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *ANIMAL WELL* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| *ANIMAL WELL* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 1.5KB | ✅ | N/A |
 | Actraiser | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Against the Storm* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Air Delivery* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
-| An Untitled Story | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Anodyne* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Another Crabs Treasure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| *Air Delivery* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 6.6KB | ✅ | N/A |
+| An Untitled Story | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.7KB | ✅ | N/A |
+| *Anodyne* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 10.7KB | ✅ | N/A |
+| Another Crabs Treasure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 3.1KB | ✅ | N/A |
 | *Ape Escape* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Ape Escape 3* | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Astalon* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Autopelago | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Autopelago | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 9.2KB | ✅ | N/A |
 | *Axiom Verge* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Balatro* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Brotato | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -88,7 +88,7 @@ Of the 13 templates passing all 4 tests:
 | *Corn Kidz 64* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *CrossCode* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Crystal Project* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| *Crystalis* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Crystalis* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 9.2KB | ✅ | N/A |
 | Cuphead | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | DORONKO WANKO | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Deep Rock Galactic* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
@@ -111,7 +111,7 @@ Of the 13 templates passing all 4 tests:
 | *Into the Breach* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Jigsaw | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Jigsaw | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Keep Talking and Nobody Explodes* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -123,28 +123,28 @@ Of the 13 templates passing all 4 tests:
 | *Lingo 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ⚫ | ✅ | N/A |
 | Little Witch Nobeta | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Lunacid* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Majora's Mask Recompiled* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Lunacid* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 8.2KB | ✅ | N/A |
+| *Majora's Mask Recompiled* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.4KB | ✅ | N/A |
 | *Mario Kart Double Dash* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Minishoot Adventures* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Minit* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Minishoot Adventures* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 25.9KB | ✅ | N/A |
+| *Minit* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 23.9KB | ✅ | N/A |
 | *Monster Sanctuary* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Nine Sols* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Ori and the Blind Forest* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Ori and the Blind Forest* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 23.2KB | ✅ | N/A |
 | *Ori and the Will of the Wisps* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ⚫ | ✅ | ✅ | N/A |
 | *Oxygen Not Included* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Pizza Tower* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Pizza Tower* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 7.0KB | ✅ | N/A |
 | PlateUp | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Pokemon FireRed and LeafGreen* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Pokemon Mystery Dungeon Explorers of Sky* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Pseudoregalia* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Pseudoregalia* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 17.1KB | ✅ | N/A |
 | *Rabi-Ribi* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rain World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Rain World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 11.8KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Reventure* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Rift Wizard | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 7.7KB | ✅ | N/A |
 | *Rift of the Necrodancer* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Rusted Moss* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Sentinels of the Multiverse* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -152,36 +152,71 @@ Of the 13 templates passing all 4 tests:
 | *Ship of Harkinian* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Sly Cooper and the Thievius Raccoonus* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Sonic Adventure DX* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| *Sonic Adventure DX* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Sonic Rush* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Sonic the Hedgehog 1 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Soul Blazer* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Sonic the Hedgehog 1 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 9.4KB | ✅ | N/A |
+| *Soul Blazer* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 10.5KB | ✅ | N/A |
 | Spinball | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Spyro 3* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Stacklands* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Star Fox 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Star Wars Episode I Racer | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Spyro 3* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 15.3KB | ✅ | N/A |
+| *Stacklands* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 12.7KB | ✅ | N/A |
+| Star Fox 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 17.2KB | ✅ | N/A |
+| Star Wars Episode I Racer | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *System Shock 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| *System Shock 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 15.1KB | ✅ | N/A |
 | *TCG Card Shop Simulator* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Tetris Attack* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Tetris Attack* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 23.1KB | ✅ | N/A |
 | Tevi | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *The Legend of Zelda - Oracle of Seasons* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | *The Legend of Zelda - Phantom Hourglass* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| *The Sims 4* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *The Sims 4* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.5KB | ✅ | N/A |
 | *ToeJam and Earl* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Tyrian* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Wario Land* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Watery Words | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Wordipelago | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Watery Words | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ | 9.1KB | ✅ | N/A |
+| Wordipelago | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 19.5KB | ✅ | N/A |
 | *XCOM 2 War of the Chosen* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 28.8KB | ✅ | N/A |
 | *Yu-Gi-Oh! Forbidden Memories* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | osu! | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+
+### Exporter Files by Size
+
+| Rank | Game Name | Exporter Size |
+|------|-----------|---------------|
+| 1 | Sonic Adventure DX | 29.9KB |
+| 2 | Yu-Gi-Oh! Dungeon Dice Monsters | 28.8KB |
+| 3 | Minishoot Adventures | 25.9KB |
+| 4 | Minit | 23.9KB |
+| 5 | Ori and the Blind Forest | 23.2KB |
+| 6 | Tetris Attack | 23.1KB |
+| 7 | Wordipelago | 19.5KB |
+| 8 | Star Fox 64 | 17.2KB |
+| 9 | Pseudoregalia | 17.1KB |
+| 10 | Spyro 3 | 15.3KB |
+| 11 | System Shock 2 | 15.1KB |
+| 12 | Stacklands | 12.7KB |
+| 13 | Rain World | 11.8KB |
+| 14 | Anodyne | 10.7KB |
+| 15 | Soul Blazer | 10.5KB |
+| 16 | Majora's Mask Recompiled | 10.4KB |
+| 17 | Sonic the Hedgehog 1 | 9.4KB |
+| 18 | Crystalis | 9.2KB |
+| 19 | Autopelago | 9.2KB |
+| 20 | Watery Words | 9.1KB |
+| 21 | An Untitled Story | 8.7KB |
+| 22 | Lunacid | 8.2KB |
+| 23 | Rift Wizard | 7.7KB |
+| 24 | Pizza Tower | 7.0KB |
+| 25 | Air Delivery | 6.6KB |
+| 26 | Star Wars Episode I Racer | 5.7KB |
+| 27 | The Sims 4 | 5.5KB |
+| 28 | Another Crabs Treasure | 3.1KB |
+| 29 | Jigsaw | 1.6KB |
+| 30 | ANIMAL WELL | 1.5KB |
 
 ## Excluded Templates
 
