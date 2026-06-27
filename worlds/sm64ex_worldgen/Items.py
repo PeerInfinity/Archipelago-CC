@@ -22,7 +22,7 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
-    "Power Star": ItemData(3626000, ItemClassification.progression_deprioritized_skip_balancing),
+    "Power Star": ItemData(3626000, ItemClassification.progression_skip_balancing),
     "Basement Key": ItemData(3626178, ItemClassification.filler),
     "Second Floor Key": ItemData(3626179, ItemClassification.filler),
     "Progressive Key": ItemData(3626180, ItemClassification.progression),

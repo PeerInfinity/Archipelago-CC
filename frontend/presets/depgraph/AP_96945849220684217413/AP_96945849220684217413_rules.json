@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph",
   "game_directory": "depgraph",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 5,
   "seed_name": "96945849220684217413",
   "player_names": {
@@ -67,7 +67,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 5",
                   "Completed Node 8",
@@ -118,7 +118,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 2",
                   "Node 2"
                 ]
@@ -167,7 +167,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 3",
                   "Node 3"
                 ]
@@ -216,7 +216,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 11",
                   "Completed Node 4",
                   "Node 4"
@@ -266,7 +266,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 5",
                   "Completed Node 8",
@@ -317,7 +317,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 14",
                   "Completed Node 6",
                   "Node 6"
@@ -367,7 +367,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 13",
                   "Completed Node 7",
                   "Node 7"
@@ -417,7 +417,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 1",
                   "Completed Node 5",
                   "Completed Node 8",
@@ -468,7 +468,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 9",
                   "Node 9"
                 ]
@@ -517,7 +517,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 10",
                   "Node 10"
                 ]
@@ -566,7 +566,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 11",
                   "Completed Node 4",
                   "Node 11"
@@ -616,7 +616,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 12",
                   "Node 12"
                 ]
@@ -665,7 +665,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 13",
                   "Completed Node 7",
                   "Node 13"
@@ -715,7 +715,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Completed Node 14",
                   "Completed Node 6",
                   "Node 14"
@@ -12034,7 +12034,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "The Messenger WorldGen",
   "game_directory": "messenger_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -98,7 +98,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Key of Chaos",
                   "Key of Courage",
                   "Key of Hope",
@@ -141,7 +141,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Shards": 4566,
                   "Money Wrench": 1
                 }
@@ -908,7 +908,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1017,7 +1017,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -1026,7 +1026,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Second Wind"
                     ]
@@ -1054,7 +1054,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -1063,7 +1063,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Second Wind"
                     ]
@@ -1092,7 +1092,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1158,7 +1158,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -1179,7 +1179,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1279,7 +1279,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1335,7 +1335,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Aerobatics Warrior",
                   "Wingsuit"
                 ]
@@ -1438,7 +1438,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Acro",
                   "Claustro",
                   "Necro",
@@ -1460,7 +1460,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Acro",
                   "Claustro",
                   "Necro",
@@ -1478,7 +1478,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -1487,7 +1487,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Wingsuit"
                     ]
@@ -1552,7 +1552,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Meditation",
                               "Path of Resilience"
                             ]
@@ -1632,7 +1632,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1652,7 +1652,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1694,7 +1694,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -1723,7 +1723,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -2206,7 +2206,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Meditation",
                               "Path of Resilience"
                             ]
@@ -2512,7 +2512,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Meditation",
                           "Path of Resilience"
                         ]
@@ -2557,7 +2557,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -2680,7 +2680,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Meditation",
                               "Path of Resilience"
                             ]
@@ -2697,7 +2697,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Strike of the Ninja",
                           "Wingsuit"
                         ]
@@ -3125,7 +3125,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Lightfoot Tabi",
                   "Wingsuit"
                 ]
@@ -3243,7 +3243,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -3312,7 +3312,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Strike of the Ninja"
                 ]
@@ -3320,8 +3320,8 @@
             }
           },
           {
-            "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Room",
-            "connected_region": "Searing Crags - Key of Strength Room",
+            "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Shop",
+            "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
               "rule": "False_"
             }
@@ -3375,10 +3375,35 @@
             "name": "Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop",
             "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Power Thistle"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Strike of the Ninja",
+                          "Wingsuit"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Rope Dart"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Power Thistle"
+                  }
+                }
+              ]
             }
           },
           {
@@ -3449,38 +3474,7 @@
         "name": "Searing Crags - Key of Strength Shop",
         "exits": [
           {
-            "name": "Searing Crags - Key of Strength Shop -> Searing Crags - Key of Strength Room",
-            "connected_region": "Searing Crags - Key of Strength Room",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "item_names": [
-                      "Strike of the Ninja",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [],
-        "parent": "Searing Crags"
-      },
-      "Searing Crags - Key of Strength Room": {
-        "name": "Searing Crags - Key of Strength Room",
-        "exits": [
-          {
-            "name": "Searing Crags - Key of Strength Room -> Searing Crags - Searing Mega Shard Shop",
+            "name": "Searing Crags - Key of Strength Shop -> Searing Crags - Searing Mega Shard Shop",
             "connected_region": "Searing Crags - Searing Mega Shard Shop",
             "access_rule": {
               "rule": "True_"
@@ -3533,7 +3527,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -3687,7 +3681,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -3834,7 +3828,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Meditation",
                           "Path of Resilience"
                         ]
@@ -3843,7 +3837,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Second Wind",
                           "Wingsuit"
                         ]
@@ -4034,7 +4028,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Meditation",
                               "Path of Resilience"
                             ]
@@ -4084,7 +4078,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Meditation",
                           "Path of Resilience"
                         ]
@@ -4120,7 +4114,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4249,7 +4243,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Wingsuit"
                     ]
@@ -4258,7 +4252,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience",
                       "Second Wind"
@@ -4274,7 +4268,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4296,7 +4290,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Meditation",
                               "Path of Resilience"
                             ]
@@ -4395,7 +4389,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4422,7 +4416,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4460,7 +4454,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -4469,7 +4463,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Second Wind",
                       "Wingsuit"
                     ]
@@ -4512,7 +4506,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Meditation",
                           "Path of Resilience"
                         ]
@@ -4529,7 +4523,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Wingsuit"
                     ]
@@ -4550,7 +4544,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Meditation",
                           "Path of Resilience"
                         ]
@@ -4567,7 +4561,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Wingsuit"
                     ]
@@ -4598,7 +4592,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4631,7 +4625,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4685,7 +4679,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -4784,7 +4778,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Lightfoot Tabi",
                   "Rope Dart",
                   "Strike of the Ninja",
@@ -4815,7 +4809,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Aerobatics Warrior",
                   "Wingsuit"
                 ]
@@ -4860,7 +4854,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "item_names": [
+                                "items": [
                                   "Meditation",
                                   "Path of Resilience"
                                 ]
@@ -4877,7 +4871,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "item_names": [
+                            "items": [
                               "Rope Dart",
                               "Strike of the Ninja"
                             ]
@@ -4899,7 +4893,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Strike of the Ninja",
                           "Wingsuit"
                         ]
@@ -4998,7 +4992,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Wingsuit"
                     ]
@@ -5007,7 +5001,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Lightfoot Tabi",
                       "Strike of the Ninja"
                     ]
@@ -5082,10 +5076,9 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Candle",
-                  "Rope Dart",
-                  "Wingsuit"
+                  "Rope Dart"
                 ]
               }
             }
@@ -5178,7 +5171,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Strike of the Ninja",
                       "Wingsuit"
                     ]
@@ -5204,7 +5197,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -5241,7 +5234,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Meditation",
                       "Path of Resilience"
                     ]
@@ -5250,7 +5243,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rope Dart",
                       "Second Wind"
                     ]
@@ -5274,7 +5267,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Rope Dart",
                   "Wingsuit"
                 ]
@@ -5558,7 +5551,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Currents Master",
                   "Rope Dart"
                 ]
@@ -5621,7 +5614,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Aerobatics Warrior",
                   "Rope Dart",
                   "Strike of the Ninja",
@@ -5759,7 +5752,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Moon Crest",
                   "Sun Crest"
                 ]
@@ -5884,7 +5877,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Meditation",
                           "Path of Resilience"
                         ]
@@ -7061,7 +7054,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "The Messenger WorldGen",

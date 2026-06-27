@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Adventure",
   "game_directory": "adventure",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -62,7 +62,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Black Key",
                   "Bridge"
                 ]
@@ -217,7 +217,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Right Difficulty Switch",
                   "Sword"
                 ]
@@ -266,7 +266,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Chalice",
                   "Yellow Key"
                 ]
@@ -310,7 +310,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Bridge",
                   "Magnet"
                 ]
@@ -411,7 +411,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Right Difficulty Switch",
                   "Sword"
                 ]
@@ -444,7 +444,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Bridge",
                   "Magnet"
                 ]
@@ -501,7 +501,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Right Difficulty Switch",
                   "Sword"
                 ]
@@ -821,7 +821,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Adventure",

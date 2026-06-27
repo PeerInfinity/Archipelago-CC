@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Wargroove",
   "game_directory": "wargroove",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -376,7 +376,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Barge",
                   "Merfolk",
                   "Warship"
@@ -392,7 +392,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Barge",
                   "Merfolk",
                   "Warship"
@@ -418,7 +418,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon",
                   "Harpy"
                 ]
@@ -431,7 +431,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon",
                   "Harpy"
                 ]
@@ -446,7 +446,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon",
                   "Harpy"
                 ]
@@ -466,7 +466,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Dragon",
                   "Harpy"
                 ]
@@ -494,7 +494,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon",
                       "Harpy",
                       "Spearman"
@@ -519,7 +519,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon",
                       "Harpy",
                       "Spearman"
@@ -546,7 +546,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Dragon",
                       "Harpy",
                       "Spearman"
@@ -634,7 +634,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Merfolk",
                       "Turtle"
                     ]
@@ -660,7 +660,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Merfolk",
                       "Turtle"
                     ]
@@ -705,7 +705,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Archer",
                   "Southern Walls"
                 ]
@@ -747,7 +747,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knight",
                   "Southern Walls"
                 ]
@@ -762,7 +762,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knight",
                   "Southern Walls"
                 ]
@@ -782,7 +782,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knight",
                   "Southern Walls"
                 ]
@@ -913,7 +913,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Rifleman",
                       "Thief"
                     ]
@@ -950,7 +950,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Knight",
                       "Mage"
                     ]
@@ -981,7 +981,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Knight",
                       "Mage"
                     ]
@@ -1080,7 +1080,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Mage",
                       "Thief"
                     ]
@@ -1117,7 +1117,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Mage",
                       "Spearman"
                     ]
@@ -1275,7 +1275,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Final Bridges",
                   "Final Sickle",
                   "Final Walls"
@@ -1672,7 +1672,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Wargroove",

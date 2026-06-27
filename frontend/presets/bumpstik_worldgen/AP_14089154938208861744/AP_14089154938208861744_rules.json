@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Bumper Stickers WorldGen",
   "game_directory": "bumpstik_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -19,7 +19,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Treasure Bumper": 8,
                   "Booster Bumper": 1
                 }
@@ -367,7 +367,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Booster Bumper": 2,
                   "Treasure Bumper": 16
                 }
@@ -745,7 +745,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Booster Bumper": 3,
                   "Treasure Bumper": 24
                 }
@@ -1165,7 +1165,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "item_counts": {
+                "items": {
                   "Booster Bumper": 5,
                   "Treasure Bumper": 32
                 }
@@ -1920,7 +1920,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Bumper Stickers WorldGen",

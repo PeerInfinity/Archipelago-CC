@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Journey to Ascension",
   "game_directory": "jta",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -32,7 +32,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -86,7 +86,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -140,7 +140,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -208,7 +208,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -262,7 +262,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -330,7 +330,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -398,7 +398,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -452,7 +452,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -520,7 +520,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -574,7 +574,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -628,7 +628,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -696,7 +696,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -750,7 +750,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -818,7 +818,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -872,7 +872,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "item_names": [
+                "items": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -1563,7 +1563,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Journey to Ascension",

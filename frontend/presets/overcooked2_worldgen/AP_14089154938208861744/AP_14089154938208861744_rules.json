@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Overcooked! 2 WorldGen",
   "game_directory": "overcooked2_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -187,7 +187,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "1-4 Level Complete",
                       "Yellow Ramp"
                     ]
@@ -230,7 +230,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "1-5 Level Complete",
                       "Yellow Ramp"
                     ]
@@ -283,7 +283,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "5-1 Level Complete",
                           "Purple Ramp"
                         ]
@@ -343,7 +343,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "5-1 Level Complete",
                           "Purple Ramp"
                         ]
@@ -530,7 +530,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "3-1 Level Complete",
                       "Blue Ramp"
                     ]
@@ -573,7 +573,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "3-2 Level Complete",
                       "Blue Ramp"
                     ]
@@ -616,7 +616,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "3-3 Level Complete",
                       "Blue Ramp"
                     ]
@@ -659,7 +659,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "3-4 Level Complete",
                       "Blue Ramp"
                     ]
@@ -981,7 +981,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "5-1 Level Complete",
                           "Purple Ramp"
                         ]
@@ -1078,7 +1078,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "5-3 Level Complete",
                       "Purple Ramp"
@@ -1122,7 +1122,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "5-4 Level Complete",
                       "Purple Ramp"
@@ -1166,7 +1166,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "5-5 Level Complete",
                       "Purple Ramp"
@@ -1250,7 +1250,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "6-1 Level Complete",
                       "Purple Ramp"
@@ -1294,7 +1294,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "6-2 Level Complete",
                       "Purple Ramp"
@@ -1341,7 +1341,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "5-1 Level Complete",
                           "Purple Ramp"
                         ]
@@ -1398,7 +1398,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "6-1 Level Complete",
                       "6-4 Level Complete",
@@ -1444,7 +1444,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "5-1 Level Complete",
                       "6-1 Level Complete",
                       "6-5 Level Complete",
@@ -1462,7 +1462,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dark Green Ramp",
                   "Kevin-1"
                 ]
@@ -1525,7 +1525,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "5-1 Level Complete",
                   "Kevin-7",
                   "Purple Ramp"
@@ -1539,7 +1539,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "5-1 Level Complete",
                   "6-1 Level Complete",
                   "Kevin-8",
@@ -1795,7 +1795,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -2059,7 +2059,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -2323,7 +2323,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -2598,7 +2598,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -2863,7 +2863,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -3138,7 +3138,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -3402,7 +3402,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -3666,7 +3666,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -3930,7 +3930,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -4194,7 +4194,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -4469,7 +4469,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Fire Extinguisher",
                       "Larger Tip Jar",
                       "Progressive Dash",
@@ -4734,7 +4734,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -5009,7 +5009,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -5293,7 +5293,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -5577,7 +5577,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -5861,7 +5861,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Control Stick Batteries",
                       "Larger Tip Jar",
                       "Progressive Dash",
@@ -6126,7 +6126,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -6390,7 +6390,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -6654,7 +6654,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -6802,7 +6802,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Faster Condiment/Drink Switch",
                       "Fire Extinguisher"
                     ]
@@ -6932,7 +6932,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Faster Condiment/Drink Switch",
                       "Fire Extinguisher",
                       "Larger Tip Jar",
@@ -7218,7 +7218,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Control Stick Batteries",
                       "Larger Tip Jar",
                       "Progressive Dash",
@@ -7494,7 +7494,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -7759,7 +7759,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -8043,7 +8043,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Control Stick Batteries",
                       "Larger Tip Jar",
                       "Progressive Dash",
@@ -8308,7 +8308,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -8572,7 +8572,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -8836,7 +8836,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -9100,7 +9100,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -9364,7 +9364,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -9639,7 +9639,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -9904,7 +9904,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -10188,7 +10188,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Control Stick Batteries",
                       "Larger Tip Jar",
                       "Progressive Dash",
@@ -10289,7 +10289,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Calmer Unbread",
                       "Coin Purse"
                     ]
@@ -10372,7 +10372,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Calmer Unbread",
                       "Coin Purse"
                     ]
@@ -10456,7 +10456,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Calmer Unbread",
                       "Coin Purse"
                     ]
@@ -10718,7 +10718,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -10982,7 +10982,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -11021,7 +11021,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Progressive Dash",
                   "Progressive Throw/Catch",
                   "Spare Plate"
@@ -11043,7 +11043,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Progressive Dash",
                   "Progressive Throw/Catch",
                   "Spare Plate"
@@ -11130,7 +11130,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Progressive Dash",
                       "Progressive Throw/Catch",
                       "Spare Plate"
@@ -11261,7 +11261,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -11525,7 +11525,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -11789,7 +11789,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -12053,7 +12053,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -12540,7 +12540,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -12804,7 +12804,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -13068,7 +13068,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -13343,7 +13343,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
@@ -14699,7 +14699,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Overcooked! 2 WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Sonic Adventure 2 Battle WorldGen",
   "game_directory": "sa2b_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -120,7 +120,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring"
                 ]
@@ -445,7 +445,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Light Shoes",
                   "Sonic - Mystic Melody"
@@ -503,7 +503,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring",
                   "Sonic - Light Shoes"
@@ -586,7 +586,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring",
                   "Sonic - Light Shoes"
@@ -607,7 +607,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Sonic - Bounce Bracelet",
                   "Sonic - Flame Ring",
                   "Sonic - Light Shoes"
@@ -1149,7 +1149,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1175,7 +1175,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1240,7 +1240,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1277,7 +1277,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Tails - Bazooka",
                   "Tails - Booster"
                 ]
@@ -1636,7 +1636,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -1665,7 +1665,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Knuckles - Hammer Gloves",
                       "Knuckles - Shovel Claws"
                     ]
@@ -1721,7 +1721,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -1741,7 +1741,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -1781,7 +1781,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Knuckles - Hammer Gloves",
                   "Knuckles - Shovel Claws"
                 ]
@@ -2687,7 +2687,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon"
                 ]
@@ -2716,7 +2716,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Eggman - Jet Engine",
                       "Eggman - Large Cannon"
                     ]
@@ -2752,7 +2752,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon"
                 ]
@@ -2772,7 +2772,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon"
                 ]
@@ -3021,7 +3021,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rouge - Iron Boots",
                   "Rouge - Mystic Melody",
                   "Rouge - Pick Nails"
@@ -3282,7 +3282,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rouge - Iron Boots",
                   "Rouge - Mystic Melody"
                 ]
@@ -3345,7 +3345,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Rouge - Iron Boots",
                   "Rouge - Pick Nails"
                 ]
@@ -3489,7 +3489,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Knuckles - Air Necklace",
                   "Knuckles - Hammer Gloves",
@@ -3521,7 +3521,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Eggman - Jet Engine",
                       "Tails - Booster"
                     ]
@@ -3543,7 +3543,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Eggman - Large Cannon",
                   "Tails - Booster"
@@ -3564,7 +3564,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Tails - Booster"
                 ]
@@ -3584,7 +3584,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Knuckles - Air Necklace",
                   "Knuckles - Hammer Gloves",
@@ -3607,7 +3607,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Eggman - Jet Engine",
                   "Knuckles - Air Necklace",
                   "Knuckles - Hammer Gloves",
@@ -6405,7 +6405,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Sonic Adventure 2 Battle WorldGen",

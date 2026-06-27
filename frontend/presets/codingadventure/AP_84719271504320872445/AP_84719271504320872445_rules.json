@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Coding Adventure",
   "game_directory": "codingadventure",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 3,
   "seed_name": "84719271504320872445",
   "player_names": {
@@ -63,7 +63,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Git",
                       "JavaScript Basics",
                       "Server Basics"
@@ -73,7 +73,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "CSS",
                       "HTML"
                     ]
@@ -338,7 +338,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Database Basics",
                       "State Management"
                     ]
@@ -347,7 +347,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Frontend Framework",
                       "REST APIs"
                     ]
@@ -978,7 +978,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "DevOps",
                           "Performance"
                         ]
@@ -987,7 +987,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "DevOps",
                           "Testing"
                         ]
@@ -996,7 +996,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Performance",
                           "Testing"
                         ]
@@ -1098,7 +1098,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Database Basics",
                   "REST APIs"
                 ]
@@ -1229,7 +1229,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Docker",
                   "Git"
                 ]
@@ -1292,7 +1292,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Deployment Complete",
                   "Scaling Complete",
                   "Security Complete"
@@ -1456,7 +1456,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Domain",
                   "HTTPS"
                 ]
@@ -2161,7 +2161,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Coding Adventure",

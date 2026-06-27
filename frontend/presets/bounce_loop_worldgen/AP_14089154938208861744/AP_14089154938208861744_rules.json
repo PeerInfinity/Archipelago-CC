@@ -1,0 +1,774 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "region_2_1",
+            "connected_region": "region_2_1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Left arrow"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_1__loc_0",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_2_1": {
+        "name": "region_2_1",
+        "exits": [
+          {
+            "name": "exit_W",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Left arrow"
+              }
+            }
+          },
+          {
+            "name": "region_2_2",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Right arrow"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_1__loc_0",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Left arrow",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_2_2": {
+        "name": "region_2_2",
+        "exits": [
+          {
+            "name": "exit_N",
+            "connected_region": "region_2_1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Right arrow"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_2__loc_0",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Right arrow",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Victory": {
+        "name": "Victory",
+        "id": 1,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Left arrow": {
+        "name": "Left arrow",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Right arrow": {
+        "name": "Right arrow",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Victory": 1,
+      "Left arrow": 1,
+      "Right arrow": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_1_1__loc_0": "Victory",
+      "region_2_1__loc_0": "Left arrow",
+      "region_2_2__loc_0": "Right arrow"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "preset_sidecars": {
+    "1": {
+      "region_2_2": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_2_2",
+              "size": {
+                "width": 700,
+                "height": 1000
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 350,
+                  "y": 900,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 350,
+                  "y": 780,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 350,
+                  "y": 660,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 350,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 490,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 490,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 490,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 490,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 630,
+                  "y": 180,
+                  "type": "green"
+                }
+              ],
+              "springs": [],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 350,
+                  "y": 640,
+                  "on": "p2"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_N",
+                  "x": 630,
+                  "y": 160,
+                  "on": "p8",
+                  "target_region": null,
+                  "direction": "up"
+                }
+              ]
+            },
+            "sidePortals": {
+              "N": "side_exit_N"
+            }
+          },
+          "ap_locations": {
+            "loc_0": "region_2_2__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_N",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_2_1",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_2_2"
+            }
+          ],
+          "manaEnabled": true,
+          "fogEnabled": true
+        }
+      },
+      "region_2_1": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 1
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_2_1",
+              "size": {
+                "width": 700,
+                "height": 1000
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 350,
+                  "y": 900,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 350,
+                  "y": 780,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 350,
+                  "y": 660,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 350,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 350,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 210,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 210,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 210,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 70,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p9",
+                  "x": 490,
+                  "y": 300,
+                  "type": "green"
+                }
+              ],
+              "springs": [],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 350,
+                  "y": 520,
+                  "on": "p3"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_W",
+                  "x": 70,
+                  "y": 40,
+                  "on": "p8",
+                  "target_region": null,
+                  "direction": "left"
+                },
+                {
+                  "id": "side_exit_S",
+                  "x": 490,
+                  "y": 280,
+                  "on": "p9",
+                  "target_region": null,
+                  "direction": "down"
+                }
+              ]
+            },
+            "sidePortals": {
+              "W": "side_exit_W",
+              "S": "side_exit_S"
+            },
+            "backExitSide": "S",
+            "fallBehavior": "current"
+          },
+          "ap_locations": {
+            "loc_0": "region_2_1__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_W",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_2_1"
+            },
+            {
+              "exit_id": "region_2_2",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "region_2_2",
+              "targetRegion": "region_2_2",
+              "targetExitId": "exit_N",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "manaEnabled": true,
+          "fogEnabled": true
+        }
+      },
+      "region_1_1": {
+        "substrate": "bounce",
+        "render_hint": "bounce",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "gameId": "bounceDemo",
+          "params": {
+            "bounceLevel": {
+              "id": "region_1_1",
+              "size": {
+                "width": 700,
+                "height": 1000
+              },
+              "platforms": [
+                {
+                  "id": "p0",
+                  "x": 350,
+                  "y": 900,
+                  "type": "green"
+                },
+                {
+                  "id": "p1",
+                  "x": 350,
+                  "y": 780,
+                  "type": "green"
+                },
+                {
+                  "id": "p2",
+                  "x": 350,
+                  "y": 660,
+                  "type": "green"
+                },
+                {
+                  "id": "p3",
+                  "x": 350,
+                  "y": 540,
+                  "type": "green"
+                },
+                {
+                  "id": "p4",
+                  "x": 210,
+                  "y": 420,
+                  "type": "green"
+                },
+                {
+                  "id": "p5",
+                  "x": 210,
+                  "y": 300,
+                  "type": "green"
+                },
+                {
+                  "id": "p6",
+                  "x": 210,
+                  "y": 180,
+                  "type": "green"
+                },
+                {
+                  "id": "p7",
+                  "x": 210,
+                  "y": 60,
+                  "type": "green"
+                },
+                {
+                  "id": "p8",
+                  "x": 70,
+                  "y": 300,
+                  "type": "green"
+                }
+              ],
+              "springs": [],
+              "jetpacks": [],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "x": 350,
+                  "y": 640,
+                  "on": "p2"
+                }
+              ],
+              "portals": [
+                {
+                  "id": "side_exit_E",
+                  "x": 70,
+                  "y": 280,
+                  "on": "p8",
+                  "target_region": null,
+                  "direction": "right"
+                }
+              ]
+            },
+            "sidePortals": {
+              "E": "side_exit_E"
+            },
+            "backExitSide": "E",
+            "fallBehavior": "current"
+          },
+          "ap_locations": {
+            "loc_0": "region_1_1__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_2_1",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "region_2_1",
+              "targetRegion": "region_2_1",
+              "targetExitId": "exit_W",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "manaEnabled": true,
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "driver": "sphere-growth",
+    "stop_reason": "plan_complete",
+    "sphere_plan": {
+      "seed": 1,
+      "spheres": [
+        {
+          "sphere": 1,
+          "items": [
+            "Right arrow"
+          ]
+        },
+        {
+          "sphere": 2,
+          "items": [
+            "Left arrow"
+          ]
+        },
+        {
+          "sphere": 3,
+          "items": [
+            "Victory"
+          ]
+        }
+      ]
+    },
+    "region_count": 3,
+    "grid_dims": {
+      "width": 3,
+      "height": 3
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_2_2__loc_0"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_2_2"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Right arrow": 1
+            },
+            "resolved_items": {
+              "Right arrow": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_2_1__loc_0"
+          ],
+          "new_accessible_regions": [
+            "region_2_1"
+          ],
+          "sphere_locations": [
+            "region_2_2__loc_0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Left arrow": 1
+            },
+            "resolved_items": {
+              "Left arrow": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__loc_0"
+          ],
+          "new_accessible_regions": [
+            "region_1_1"
+          ],
+          "sphere_locations": [
+            "region_2_1__loc_0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__loc_0"
+          ]
+        }
+      }
+    }
+  ],
+  "loop_costs": {
+    "version": "1.0",
+    "generatedAt": "2026-06-13T02:10:07.101Z",
+    "generatedFrom": "seed_1",
+    "regions": {
+      "Menu": {
+        "moveCost": 0,
+        "xpEffect": "cost"
+      },
+      "region_2_2": {
+        "moveCost": 50,
+        "xpEffect": "cost"
+      },
+      "region_2_1": {
+        "moveCost": 55,
+        "xpEffect": "cost"
+      },
+      "region_1_1": {
+        "moveCost": 60,
+        "xpEffect": "cost"
+      }
+    },
+    "locations": {
+      "region_2_2__loc_0": 50,
+      "region_2_1__loc_0": 55,
+      "region_1_1__loc_0": 60
+    },
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10,
+    "defaultRegionXpEffect": "cost"
+  }
+}

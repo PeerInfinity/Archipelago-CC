@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Timespinner WorldGen",
   "game_directory": "timespinner_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -225,7 +225,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -315,7 +315,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -466,7 +466,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -609,7 +609,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C",
@@ -722,7 +722,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C",
@@ -763,7 +763,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C",
@@ -804,7 +804,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C",
@@ -881,7 +881,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Library Keycard V",
                   "Tablet"
                 ]
@@ -901,7 +901,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Library Keycard V",
                   "Tablet"
                 ]
@@ -921,7 +921,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Library Keycard V",
                   "Tablet"
                 ]
@@ -1069,7 +1069,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C"
@@ -1102,7 +1102,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B"
                     ]
@@ -1138,7 +1138,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Timespinner Spindle",
                   "Timespinner Wheel"
                 ]
@@ -1196,7 +1196,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C"
@@ -1407,7 +1407,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B"
                     ]
@@ -1462,7 +1462,7 @@
                 "if_true": {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Laser Access A",
                       "Laser Access I",
                       "Laser Access M"
@@ -1472,7 +1472,7 @@
                 "if_false": {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Killed Aelana",
                       "Killed Maw",
                       "Killed Twins"
@@ -1577,7 +1577,7 @@
                 "if_false": {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Security Keycard A",
                       "Security Keycard B",
                       "Security Keycard C"
@@ -1786,7 +1786,7 @@
                 "if_true": {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Laser Access A",
                       "Laser Access I",
                       "Laser Access M"
@@ -1796,7 +1796,7 @@
                 "if_false": {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Killed Aelana",
                       "Killed Maw",
                       "Killed Twins"
@@ -1833,7 +1833,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -2074,7 +2074,10 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Not"
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2109,7 +2112,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -2145,7 +2148,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -2171,7 +2174,10 @@
                   "_original_ast_type": "rb_defined_helper"
                 },
                 {
-                  "rule": "Not"
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
                 }
               ]
             },
@@ -2190,7 +2196,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Not"
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2236,7 +2245,10 @@
                       ]
                     },
                     {
-                      "rule": "Not"
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2324,7 +2336,10 @@
                   ]
                 },
                 {
-                  "rule": "Not"
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
                 }
               ]
             },
@@ -2431,7 +2446,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Timespinner Gear 1",
                   "Timespinner Gear 2",
                   "Timespinner Gear 3",
@@ -2539,7 +2554,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -2836,7 +2851,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -2968,7 +2983,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -3144,7 +3159,10 @@
                   "_original_ast_type": "rb_defined_helper"
                 },
                 {
-                  "rule": "Not"
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3326,7 +3344,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -3460,7 +3478,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -3891,7 +3909,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Gas Mask",
                   "Talaria Attachment"
                 ]
@@ -3952,7 +3970,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Gas Mask",
                   "Talaria Attachment"
                 ]
@@ -3990,7 +4008,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Gas Mask",
                   "Talaria Attachment"
                 ]
@@ -4293,7 +4311,10 @@
                       "_original_ast_type": "rb_defined_helper"
                     },
                     {
-                      "rule": "Not"
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
                     }
                   ]
                 }
@@ -4343,7 +4364,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -4366,7 +4387,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -4388,7 +4409,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin",
@@ -4583,7 +4604,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Plasma Geyser",
                   "Plasma Orb",
                   "Royal Ring"
@@ -4640,7 +4661,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -4868,7 +4889,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall"
                 ]
@@ -4934,7 +4955,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Celestial Sash",
                   "Lightwall",
                   "Succubus Hairpin"
@@ -5131,7 +5152,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Timespinner Gear 1",
                   "Timespinner Gear 2",
                   "Timespinner Gear 3",
@@ -8253,7 +8274,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Timespinner WorldGen",

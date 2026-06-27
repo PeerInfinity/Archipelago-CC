@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["C", "Node 6", "Node 8", "Node 9", "Node 7", "Node 145 L1", "Node 96 L1", "Node 196 L1", "Node 9375 L1", "Node -3820 L2", "Node 7704 L1", "Node -87 L1", "Node 7 L1", "Node 48 L1", "Node 9809 L2", "Node -760293 L2", "Node 18 L1", "Node 21 L2", "Node 9364 L2", "Node 4335532 L3", "Node -6010 L2", "Node -18030 L3", "Node 9790 L3", "Node 9513 L2", "Node 380520 L3", "Node 380504 L4", "Node 112 L3", "Node -297 L4", "Node 930755 L2", "Node 930835 L3", "Node 929872 L4", "Node 1013376 L4", "Node 1013260 L5", "Node 1 L2", "Node 6396 L3", "Node 614016 L4", "Node 614724 L5", "Node 754728 L4", "Node 762631 L5", "Node 9977571220 L6", "Node 623327 L5", "Node 630411 L6", "Node 2521644 L7", "Node 764122 L5", "Node 4641277028 L6", "Node -23 L2", "Node 38650920 L4", "Node 2 L2", "Node 4698 L3", "Node 4634 L4", "Node 15324638 L5", "Node 15324638 L6", "Node 15324638 L7", "Node -108180 L4", "Node -103396 L5", "Node -10236204 L6", "Node 6509104 L5", "Node 30534206864 L6", "Node 968576 L4", "Node -1167 L2", "Node -10262598 L3", "Node 614025 L5", "Node 1842075 L6", "Node 1842079 L7", "Node 7840 L4", "Node 7792960 L5", "Node 7792967 L6", "Node 7792871 L7", "Node 509740 L5", "Node 171782380 L6", "Node 3104 L3", "Node 266944 L4", "Node 12279424 L5", "Node 380662144 L6", "Node 168571018 L6", "Node 14773 L2", "Node -170430 L3", "Node -170399 L4", "Node -1530353419 L5", "Node -13773180771 L6", "Node -1967597253 L7"]
+    region_names = ["Menu", "Node 6", "Node 8", "Node 9", "Node 7", "Node 145 L1", "Node 96 L1", "Node 196 L1", "Node 9375 L1", "Node -3820 L2", "Node 7704 L1", "Node -87 L1", "Node 7 L1", "Node 48 L1", "Node 9809 L2", "Node -760293 L2", "Node 18 L1", "Node 21 L2", "Node 9364 L2", "Node 4335532 L3", "Node -6010 L2", "Node -18030 L3", "Node 9790 L3", "Node 9513 L2", "Node 380520 L3", "Node 380504 L4", "Node 112 L3", "Node -297 L4", "Node 930755 L2", "Node 930835 L3", "Node 929872 L4", "Node 1013376 L4", "Node 1013260 L5", "Node 1 L2", "Node 6396 L3", "Node 614016 L4", "Node 614724 L5", "Node 754728 L4", "Node 762631 L5", "Node 9977571220 L6", "Node 623327 L5", "Node 630411 L6", "Node 2521644 L7", "Node 764122 L5", "Node 4641277028 L6", "Node -23 L2", "Node 38650920 L4", "Node 2 L2", "Node 4698 L3", "Node 4634 L4", "Node 15324638 L5", "Node 15324638 L6", "Node 15324638 L7", "Node -108180 L4", "Node -103396 L5", "Node -10236204 L6", "Node 6509104 L5", "Node 30534206864 L6", "Node 968576 L4", "Node -1167 L2", "Node -10262598 L3", "Node 614025 L5", "Node 1842075 L6", "Node 1842079 L7", "Node 7840 L4", "Node 7792960 L5", "Node 7792967 L6", "Node 7792871 L7", "Node 509740 L5", "Node 171782380 L6", "Node 3104 L3", "Node 266944 L4", "Node 12279424 L5", "Node 380662144 L6", "Node 168571018 L6", "Node 14773 L2", "Node -170430 L3", "Node -170399 L4", "Node -1530353419 L5", "Node -13773180771 L6", "Node -1967597253 L7"]
 
     regions = {}
     for region_name in region_names:
@@ -51,10 +51,10 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["C"], regions["Node 6"], "C to Region 1")
-    _create_entrance(regions["C"], regions["Node 8"], "C to Region 2")
-    _create_entrance(regions["C"], regions["Node 9"], "C to Region 3")
-    _create_entrance(regions["C"], regions["Node 7"], "C to Region 4")
+    _create_entrance(regions["Menu"], regions["Node 6"], "Menu to Region 1")
+    _create_entrance(regions["Menu"], regions["Node 8"], "Menu to Region 2")
+    _create_entrance(regions["Menu"], regions["Node 9"], "Menu to Region 3")
+    _create_entrance(regions["Menu"], regions["Node 7"], "Menu to Region 4")
     _create_entrance(regions["Node 6"], regions["Node 7704 L1"], "Region 1 to Region 10")
     _create_entrance(regions["Node 6"], regions["Node -87 L1"], "Region 1 to Region 11")
     _create_entrance(regions["Node 6"], regions["Node 48 L1"], "Region 1 to Region 13")

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Old School Runescape WorldGen",
   "game_directory": "osrs_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3369,7 +3369,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "1 QP (Below Ice Mountain)",
                   "Area: Ice Mountain"
                 ]
@@ -8509,7 +8509,6 @@
       "Area: Lumbridge"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Old School Runescape WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Factorio WorldGen",
   "game_directory": "factorio_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -41,7 +41,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -88,7 +88,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -135,7 +135,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -159,7 +159,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -204,7 +204,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -228,7 +228,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -254,7 +254,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -278,7 +278,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -304,7 +304,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -330,7 +330,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -357,7 +357,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -383,7 +383,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -407,7 +407,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -432,7 +432,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -456,7 +456,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -501,7 +501,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -525,7 +525,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -550,7 +550,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -574,7 +574,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -598,7 +598,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
@@ -644,7 +644,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -668,7 +668,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -755,7 +755,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -779,7 +779,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
@@ -805,7 +805,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -831,7 +831,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -857,7 +857,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -902,7 +902,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -926,7 +926,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -992,7 +992,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated production-science-pack",
@@ -1018,7 +1018,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1044,7 +1044,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1070,7 +1070,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack"
@@ -1095,7 +1095,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
@@ -1120,7 +1120,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
                   "Automated production-science-pack",
@@ -1167,7 +1167,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1193,7 +1193,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1238,7 +1238,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1262,7 +1262,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1286,7 +1286,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1333,7 +1333,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1380,7 +1380,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -1426,7 +1426,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated production-science-pack"
                 ]
@@ -1471,7 +1471,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated utility-science-pack"
@@ -1496,7 +1496,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -1522,7 +1522,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1546,7 +1546,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated production-science-pack"
@@ -1592,7 +1592,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1616,7 +1616,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
                   "Automated production-science-pack",
@@ -1642,7 +1642,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1666,7 +1666,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated production-science-pack"
@@ -1691,7 +1691,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -1716,7 +1716,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -1741,7 +1741,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -1766,7 +1766,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1793,7 +1793,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -1821,7 +1821,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated production-science-pack"
@@ -1846,7 +1846,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -1870,7 +1870,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -1916,7 +1916,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -1982,7 +1982,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2006,7 +2006,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2033,7 +2033,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2081,7 +2081,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2130,7 +2130,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
@@ -2176,7 +2176,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
                   "Automated production-science-pack",
@@ -2202,7 +2202,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -2226,7 +2226,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2250,7 +2250,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -2275,7 +2275,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -2300,7 +2300,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2348,7 +2348,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2372,7 +2372,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2398,7 +2398,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -2423,7 +2423,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated production-science-pack"
                 ]
@@ -2468,7 +2468,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -2514,7 +2514,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack"
@@ -2539,7 +2539,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -2566,7 +2566,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated production-science-pack",
                   "Automated utility-science-pack"
@@ -2591,7 +2591,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2638,7 +2638,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -2662,7 +2662,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -2688,7 +2688,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2735,7 +2735,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -2761,7 +2761,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2785,7 +2785,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2812,7 +2812,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated military-science-pack",
                   "Automated production-science-pack",
                   "Automated utility-science-pack"
@@ -2837,7 +2837,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2861,7 +2861,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -2885,7 +2885,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2909,7 +2909,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -2936,7 +2936,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -2960,7 +2960,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3007,7 +3007,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3032,7 +3032,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
@@ -3079,7 +3079,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
                   "Automated utility-science-pack"
@@ -3104,7 +3104,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
@@ -3131,7 +3131,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3179,7 +3179,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3204,7 +3204,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
@@ -3231,7 +3231,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -3255,7 +3255,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3281,7 +3281,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated production-science-pack"
                 ]
@@ -3305,7 +3305,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -3331,7 +3331,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated military-science-pack"
                 ]
@@ -3355,7 +3355,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3383,7 +3383,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack"
                 ]
@@ -3407,7 +3407,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3432,7 +3432,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3457,7 +3457,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3482,7 +3482,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3507,7 +3507,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3553,7 +3553,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated production-science-pack"
@@ -3578,7 +3578,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated military-science-pack",
                   "Automated production-science-pack",
@@ -3604,7 +3604,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated military-science-pack",
                   "Automated production-science-pack"
                 ]
@@ -3628,7 +3628,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack"
@@ -3653,7 +3653,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -3679,7 +3679,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3726,7 +3726,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3754,7 +3754,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated military-science-pack",
@@ -3801,7 +3801,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3848,7 +3848,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -3874,7 +3874,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -3898,7 +3898,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -3923,7 +3923,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -3947,7 +3947,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -3975,7 +3975,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -4001,7 +4001,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -4049,7 +4049,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -4116,7 +4116,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated logistic-science-pack",
                   "Automated production-science-pack",
                   "Automated utility-science-pack"
@@ -4183,7 +4183,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack"
@@ -4208,7 +4208,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
                   "Automated military-science-pack",
@@ -4256,7 +4256,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated chemical-science-pack",
                   "Automated logistic-science-pack",
@@ -4284,7 +4284,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Automated automation-science-pack",
                   "Automated logistic-science-pack"
                 ]
@@ -4350,7 +4350,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "advanced-circuit",
                   "advanced-material-processing-2",
                   "advanced-oil-processing",
@@ -4399,7 +4399,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "advanced-circuit",
                   "advanced-oil-processing",
                   "automation",
@@ -4446,7 +4446,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "military-2",
                   "military-science-pack",
                   "steel-processing",
@@ -4469,7 +4469,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "advanced-circuit",
                   "advanced-material-processing-2",
                   "advanced-oil-processing",
@@ -4501,7 +4501,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "advanced-circuit",
                   "advanced-oil-processing",
                   "automation",
@@ -7592,7 +7592,6 @@
   "starting_items": {
     "1": []
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Factorio WorldGen",
@@ -8405,8 +8404,7 @@
             "file_name": "setup_en.md",
             "link": "setup/en",
             "authors": [
-              "Berserker",
-              "Farrak Kilhn"
+              "Berserker, Farrak Kilhn"
             ]
           }
         ]

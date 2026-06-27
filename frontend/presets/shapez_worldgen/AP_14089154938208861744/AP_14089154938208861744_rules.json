@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "shapez WorldGen",
   "game_directory": "shapez_worldgen",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -29,7 +29,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Chaining Extractor",
                   "Extractor"
                 ]
@@ -52,7 +52,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Balancer",
                   "Belt",
                   "Belt Reader",
@@ -157,7 +157,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Belt",
                   "Compact Merger",
                   "Compact Splitter"
@@ -223,7 +223,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Double Painter",
                   "Painter"
                 ]
@@ -4227,7 +4227,6 @@
       "Extractor"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "shapez WorldGen",

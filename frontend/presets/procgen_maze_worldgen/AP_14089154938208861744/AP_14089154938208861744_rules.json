@@ -1,0 +1,447 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze WorldGen",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "14089154938208861744",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_1_0": {
+        "name": "region_1_0",
+        "exits": [
+          {
+            "name": "region_1_0__exit_1",
+            "connected_region": "region_2_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "region_1_1",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_0__key_red_pickup__5_5",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "region_1_0__key_red_pickup__2_4",
+            "id": 1001,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_2_0": {
+        "name": "region_2_0",
+        "exits": [
+          {
+            "name": "region_1_0",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_0__victory_pickup__2_3",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "region_1_1__exit_1",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "key_red": {
+        "name": "key_red",
+        "hint_text": "key red",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 2
+      },
+      "victory": {
+        "name": "victory",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "key_red": 2,
+      "victory": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "region_1_0__key_red_pickup__2_4": "key_red",
+      "region_1_0__key_red_pickup__5_5": "key_red",
+      "region_2_0__victory_pickup__2_3": "victory"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_1_1": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+          "entrance": {
+            "x": 4,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "exit_1",
+              "x": 6,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_1",
+              "targetRegion": "region_1_0",
+              "targetExitId": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 9,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_1_0": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+          "entrance": {
+            "x": 6,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "exit_1",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "exit_1",
+              "targetRegion": "region_2_0",
+              "targetExitId": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_1_1",
+              "x": 6,
+              "y": 5,
+              "side": "S",
+              "exitName": "region_1_1",
+              "targetRegion": "region_1_1",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 3,
+              "y": 4,
+              "id": "door_red"
+            }
+          ],
+          "items": [
+            {
+              "x": 5,
+              "y": 5,
+              "id": "key_red",
+              "locationName": "region_1_0__key_red_pickup__5_5"
+            },
+            {
+              "x": 2,
+              "y": 4,
+              "id": "key_red",
+              "locationName": "region_1_0__key_red_pickup__2_4"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 9,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_2_0": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 0
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+          "entrance": {
+            "x": 0,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "region_1_0",
+              "x": 0,
+              "y": 1,
+              "side": "W",
+              "exitName": "region_1_0",
+              "targetRegion": "region_1_0",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 2,
+              "y": 3,
+              "id": "victory",
+              "locationName": "region_2_0__victory_pickup__2_3"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      }
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze WorldGen",
+      "world_class_name": "ProcgenMazeWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "Procgen Maze WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Procgen Maze WorldGen world for Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Auto-generated"
+            ]
+          }
+        ]
+      },
+      "world_directory": "procgen_maze_worldgen"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "victory"
+      }
+    }
+  },
+  "helpers": {},
+  "is_canonical": true
+}

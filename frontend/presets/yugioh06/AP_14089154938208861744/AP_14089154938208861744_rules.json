@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Yu-Gi-Oh! 2006",
   "game_directory": "yugioh06",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -694,7 +694,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "item_name_group": "Campaign Boss Beaten",
+                    "group": "Campaign Boss Beaten",
                     "count": {
                       "type": "constant",
                       "value": 3
@@ -727,7 +727,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "item_name_group": "Campaign Boss Beaten",
+                    "group": "Campaign Boss Beaten",
                     "count": {
                       "type": "constant",
                       "value": 7
@@ -760,7 +760,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "item_name_group": "Campaign Boss Beaten",
+                    "group": "Campaign Boss Beaten",
                     "count": {
                       "type": "constant",
                       "value": 12
@@ -930,7 +930,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Mage Power",
                   "Megamorph",
                   "United We Stand",
@@ -1008,7 +1008,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "item_names": [
+                "items": [
                   "Fusion Gate",
                   "Polymerization",
                   "Power Bond"
@@ -1110,7 +1110,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Campaign Boss Beaten",
+                "group": "Campaign Boss Beaten",
                 "count": {
                   "type": "constant",
                   "value": 3
@@ -1211,7 +1211,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Messenger of Peace",
                       "Wall of Revealing Light"
                     ]
@@ -1250,7 +1250,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Magical Merchant",
                       "Monster Gate",
                       "Reasoning"
@@ -1290,7 +1290,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Magical Merchant",
                       "Monster Gate",
                       "Reasoning"
@@ -1316,7 +1316,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Solar Flare Dragon",
                       "UFO Turtle"
                     ]
@@ -1337,7 +1337,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Can Exodia Win",
                       "Can Last Turn Win",
                       "Wave-Motion Cannon"
@@ -1377,7 +1377,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Cyber Jar",
                       "Morphing Jar",
                       "Morphing Jar #2",
@@ -1388,7 +1388,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Spear Cretin",
                       "The Shallow Grave"
                     ]
@@ -1555,7 +1555,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Can Stall with ST",
                   "Final Countdown"
                 ]
@@ -1575,7 +1575,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "A Cat of Ill Omen",
                   "Can Stall with Monsters",
                   "Destiny Board and its letters"
@@ -1669,7 +1669,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Barox",
                           "Cyber-Stein",
                           "Mystik Wok",
@@ -1682,7 +1682,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Castle of Dark Illusions",
                       "Messenger of Peace",
                       "Mystik Wok"
@@ -2292,7 +2292,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "TD21 Victory D. Unlock",
                       "Victory D."
                     ]
@@ -3066,7 +3066,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Ojama Black",
                   "Ojama Delta Hurricane",
                   "Ojama Green",
@@ -3089,7 +3089,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Huge Revolution",
                   "Oppressed People",
                   "People Running About",
@@ -3112,7 +3112,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cocoon of Evolution",
                   "Perfectly Ultimate Great Moth",
                   "Petit Moth"
@@ -3134,7 +3134,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Alpha the Magnet Warrior",
                   "Beta the Magnet Warrior",
                   "Gamma the Magnet Warrior",
@@ -3157,7 +3157,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Dark Magician",
                   "Dark Sage",
                   "Time Wizard"
@@ -3179,7 +3179,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Destiny Board",
                   "Spirit Message 'A'",
                   "Spirit Message 'I'",
@@ -3203,7 +3203,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "X-Head Cannon",
                   "XY-Dragon Cannon",
                   "XYZ-Dragon Cannon",
@@ -3229,7 +3229,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "V-Tiger Jet",
                   "VW-Tiger Catapult",
                   "VWXYZ-Dragon Catapult Cannon",
@@ -3256,7 +3256,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Gate Guardian",
                   "Kazejin",
                   "Sanga of the Thunder",
@@ -3279,7 +3279,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Cliff the Trap Remover",
                   "Dark Scorpion - Chick the Yellow",
                   "Dark Scorpion - Gorg the Strong",
@@ -3304,7 +3304,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "item_names": [
+                "items": [
                   "Exodia",
                   "Heart of the Underdog"
                 ]
@@ -3328,7 +3328,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Banlist September 2003",
                       "No Banlist"
                     ]
@@ -3337,7 +3337,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Chaos Emperor Dragon - Envoy of the End",
                       "Sangan",
                       "Yata-Garasu"
@@ -3446,7 +3446,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Cyber-Stein",
                           "The Last Warrior from Another Planet"
                         ]
@@ -3455,7 +3455,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "item_names": [
+                        "items": [
                           "Jowgen the Spiritualist",
                           "Jowls of Dark Demise",
                           "Non Aggression Area"
@@ -3467,7 +3467,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Last Turn",
                       "Wall of Revealing Light"
                     ]
@@ -24366,7 +24366,6 @@
       "Banlist September 2005"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Yu-Gi-Oh! 2006",
@@ -24990,7 +24989,7 @@
           "additional_info": []
         }
       ],
-      "rom_name_text": "YGO06068_1_          1\u0000",
+      "rom_name_text": "YGO06067_1_          1\u0000",
       "world_description": "Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006 is the definitive Yu-Gi-Oh\nsimulator on the GBA. Featuring over 2000 cards and over 90 Challenges.",
       "slot_data": {
         "structure_deck": 0,

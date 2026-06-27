@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Hat in Time WorldGen2",
   "game_directory": "ahit_worldgen2",
-  "archipelago_version": "0.6.8",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -322,7 +322,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Burger",
+                "group": "Burger",
                 "count": 2
               }
             }
@@ -417,7 +417,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Burger",
+                "group": "Burger",
                 "count": 2
               }
             }
@@ -512,7 +512,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Burger",
+                "group": "Burger",
                 "count": 2
               }
             }
@@ -600,7 +600,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Burger",
+                "group": "Burger",
                 "count": 2
               }
             }
@@ -660,7 +660,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
                       "Snatcher's Contract - The Subcon Well",
@@ -872,7 +872,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Burger",
+                "group": "Burger",
                 "count": 2
               }
             }
@@ -962,7 +962,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Burger",
+                "group": "Burger",
                 "count": 2
               }
             }
@@ -1126,7 +1126,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Train",
+                "group": "Train",
                 "count": 2
               }
             }
@@ -1575,7 +1575,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
                       "Snatcher's Contract - The Subcon Well",
@@ -1648,7 +1648,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Train",
+                "group": "Train",
                 "count": 2
               }
             }
@@ -1666,7 +1666,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
                       "Snatcher's Contract - The Subcon Well",
@@ -2275,7 +2275,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "UFO",
+                "group": "UFO",
                 "count": 4
               }
             }
@@ -2391,7 +2391,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "UFO",
+                "group": "UFO",
                 "count": 4
               }
             }
@@ -2530,7 +2530,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "UFO",
+                "group": "UFO",
                 "count": 4
               }
             }
@@ -2716,7 +2716,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "UFO",
+                "group": "UFO",
                 "count": 4
               }
             }
@@ -2776,7 +2776,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
                       "Snatcher's Contract - The Subcon Well",
@@ -2877,7 +2877,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "UFO",
+                "group": "UFO",
                 "count": 4
               }
             }
@@ -3031,7 +3031,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "item_names": [
+                    "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
                       "Snatcher's Contract - The Subcon Well",
@@ -3096,7 +3096,7 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "item_name_group": "Crayon",
+                    "group": "Crayon",
                     "count": 4
                   }
                 },
@@ -3895,7 +3895,7 @@
             "access_rule": {
               "rule": "HasGroup",
               "args": {
-                "item_name_group": "Crayon",
+                "group": "Crayon",
                 "count": 4
               }
             }
@@ -7154,7 +7154,6 @@
       "Compass Badge"
     ]
   },
-  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "A Hat in Time WorldGen2",
