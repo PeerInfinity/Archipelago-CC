@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 1
+﻿Archipelago Version 0.6.8  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -28,59 +28,59 @@ Vanilla Item Placement:          No
 
 Starting Items:
 
-Statement 1
-Proved Statement 1
+2cn: |- 2 e. CC
+Given 2cn: |- 2 e. CC
 
 Locations:
 
-Prove Statement 2: Statement 8
-Proved Statement 2: Proved Statement 2
-Prove Statement 3: Statement 9
-Proved Statement 3: Proved Statement 3
-Prove Statement 4: Statement 5
-Proved Statement 4: Proved Statement 4
-Prove Statement 5: Statement 6
-Proved Statement 5: Proved Statement 5
-Prove Statement 6: Statement 7
-Proved Statement 6: Proved Statement 6
-Prove Statement 7: Statement 4
-Proved Statement 7: Proved Statement 7
-Prove Statement 8: Statement 10
-Proved Statement 8: Proved Statement 8
-Prove Statement 9: Statement 2
-Proved Statement 9: Proved Statement 9
-Prove Statement 10: Statement 3
-Proved Statement 10: Proved Statement 10
+Axiom ax-1cn: |- 1 e. CC: ax-1cn: |- 1 e. CC
+Proved Statement 2: Axiom ax-1cn: |- 1 e. CC
+Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) ): eqtr4i: |- A = C
+Proved Statement 3: Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )
+Definition df-2: |- 2 = ( 1 + 1 ): oveq1i: |- ( A F C ) = ( B F C )
+Proved Statement 4: Definition df-2: |- 2 = ( 1 + 1 )
+Definition df-3: |- 3 = ( 2 + 1 ): df-2: |- 2 = ( 1 + 1 )
+Proved Statement 5: Definition df-3: |- 3 = ( 2 + 1 )
+Definition df-4: |- 4 = ( 3 + 1 ): df-3: |- 3 = ( 2 + 1 )
+Proved Statement 6: Definition df-4: |- 4 = ( 3 + 1 )
+Prove oveq1i: |- ( A F C ) = ( B F C ): 3eqtri: |- A = D
+Proved Statement 7: Proved oveq1i: |- ( A F C ) = ( B F C )
+Prove 3eqtri: |- A = D: df-4: |- 4 = ( 3 + 1 )
+Proved Statement 8: Proved 3eqtri: |- A = D
+Prove oveq2i: |- ( C F A ) = ( C F B ): oveq2i: |- ( C F A ) = ( C F B )
+Proved Statement 9: Proved oveq2i: |- ( C F A ) = ( C F B )
+Prove eqtr4i: |- A = C: addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )
+Proved Statement 10: Proved eqtr4i: |- A = C
 
 Playthrough:
 
 0: {
-  Proved Statement 1
-  Statement 1
+  2cn: |- 2 e. CC
+  Given 2cn: |- 2 e. CC
 }
 1: {
-  Prove Statement 2: Statement 8
-  Prove Statement 4: Statement 5
-  Prove Statement 5: Statement 6
-  Prove Statement 6: Statement 7
-  Proved Statement 2: Proved Statement 2
-  Proved Statement 4: Proved Statement 4
-  Proved Statement 5: Proved Statement 5
-  Proved Statement 6: Proved Statement 6
+  Axiom ax-1cn: |- 1 e. CC: ax-1cn: |- 1 e. CC
+  Definition df-2: |- 2 = ( 1 + 1 ): oveq1i: |- ( A F C ) = ( B F C )
+  Definition df-3: |- 3 = ( 2 + 1 ): df-2: |- 2 = ( 1 + 1 )
+  Definition df-4: |- 4 = ( 3 + 1 ): df-3: |- 3 = ( 2 + 1 )
+  Proved Statement 2: Axiom ax-1cn: |- 1 e. CC
+  Proved Statement 4: Definition df-2: |- 2 = ( 1 + 1 )
+  Proved Statement 5: Definition df-3: |- 3 = ( 2 + 1 )
+  Proved Statement 6: Definition df-4: |- 4 = ( 3 + 1 )
 }
 2: {
-  Prove Statement 3: Statement 9
-  Prove Statement 7: Statement 4
-  Proved Statement 3: Proved Statement 3
-  Proved Statement 7: Proved Statement 7
+  Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) ): eqtr4i: |- A = C
+  Prove oveq1i: |- ( A F C ) = ( B F C ): 3eqtri: |- A = D
+  Prove oveq2i: |- ( C F A ) = ( C F B ): oveq2i: |- ( C F A ) = ( C F B )
+  Proved Statement 3: Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )
+  Proved Statement 7: Proved oveq1i: |- ( A F C ) = ( B F C )
+  Proved Statement 9: Proved oveq2i: |- ( C F A ) = ( C F B )
 }
 3: {
-  Prove Statement 8: Statement 10
-  Prove Statement 9: Statement 2
-  Proved Statement 8: Proved Statement 8
-  Proved Statement 9: Proved Statement 9
+  Prove 3eqtri: |- A = D: df-4: |- 4 = ( 3 + 1 )
+  Proved Statement 8: Proved 3eqtri: |- A = D
 }
 4: {
-  Prove Statement 10: Statement 3
-  Proved Statement 10: Proved Statement 10
+  Prove eqtr4i: |- A = C: addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )
+  Proved Statement 10: Proved eqtr4i: |- A = C
 }

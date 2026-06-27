@@ -1,0 +1,83 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Baking Adventure
+Location Count:                  15
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Vanilla Item Placement:          No
+
+
+Locations:
+
+Gather Mixing Bowls: Creamed Mixture
+Get Electric Mixer: Flour Mixture
+Find Measuring Tools: Softened Butter
+Preheat Oven to 375F: Cookie Dough
+Line Baking Sheets: Shaped Cookies
+Soften Butter: Mixing Bowls
+Cream Butter and Sugars: Basic Dough
+Add Eggs: Measured Flour
+Add Vanilla: Baked Cookies
+Measure Flour: Preheated Oven
+Add Baking Soda and Salt: Electric Mixer
+Gradually Mix Dry into Wet: Prepared Sheets
+Fold in Chocolate Chips: Measuring Tools
+Scoop Dough onto Sheets: Butter Sugar Base
+Bake for 9-11 Minutes: Egg Mixture
+Cool on Wire Rack: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Find Measuring Tools: Softened Butter
+  Gather Mixing Bowls: Creamed Mixture
+  Get Electric Mixer: Flour Mixture
+  Line Baking Sheets: Shaped Cookies
+  Preheat Oven to 375F: Cookie Dough
+  Soften Butter: Mixing Bowls
+}
+2: {
+  Gradually Mix Dry into Wet: Prepared Sheets
+}
+3: {
+  Scoop Dough onto Sheets: Butter Sugar Base
+}
+4: {
+  Add Eggs: Measured Flour
+}
+5: {
+  Add Baking Soda and Salt: Electric Mixer
+}
+6: {
+  Cream Butter and Sugars: Basic Dough
+}
+7: {
+  Fold in Chocolate Chips: Measuring Tools
+}
+8: {
+  Measure Flour: Preheated Oven
+}
+9: {
+  Bake for 9-11 Minutes: Egg Mixture
+}
+10: {
+  Add Vanilla: Baked Cookies
+}
+11: {
+  Cool on Wire Rack: Victory
+}

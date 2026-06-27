@@ -1,0 +1,331 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            DepGraph WorldGen
+Location Count:                  61
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+Use Canonical Options:           Yes
+Entrance Rule Mode:              Relaxed Items
+Graph File:                      Coding Adventure
+Randomize Starting Nodes:        Yes
+Starting Nodes %:                0
+Vanilla Item Placement:          No
+
+
+Locations:
+
+Command Line: SQL
+Completed Node 1: Event: Command Line
+Git: HTML
+Completed Node 2: Event: Git
+HTML: Command Line
+Completed Node 3: Event: HTML
+CSS: JavaScript Basics
+Completed Node 4: Event: CSS
+Design Systems: React Mastery
+Completed Node 5: Event: Design Systems
+JavaScript Basics: CSS
+Completed Node 6: Event: JavaScript Basics
+Algorithms: Express
+Completed Node 7: Event: Algorithms
+DOM Manipulation: Authentication
+Completed Node 8: Event: DOM Manipulation
+Package Managers: Algorithms
+Completed Node 9: Event: Package Managers
+Server Basics: Design Systems
+Completed Node 10: Event: Server Basics
+HTTP Basics: Unit Tests
+Completed Node 11: Event: HTTP Basics
+Static Website Complete: CORS
+Completed Node 12: Event: Static Website Complete
+Django: Django
+Completed Node 13: Event: Django
+Django APIs: Production Deployment
+Completed Node 14: Event: Django APIs
+Django ORM: Server Basics
+Completed Node 15: Event: Django ORM
+Express: NoSQL
+Completed Node 16: Event: Express
+Express APIs: SQL Optimization
+Completed Node 17: Event: Express APIs
+Express DB Integration: Responsive Design
+Completed Node 18: Event: Express DB Integration
+Flask: MongoDB Basics
+Completed Node 19: Event: Flask
+Flask APIs: Flask APIs
+Completed Node 20: Event: Flask APIs
+SQLAlchemy: Express APIs
+Completed Node 21: Event: SQLAlchemy
+NoSQL: HTTP Basics
+Completed Node 22: Event: NoSQL
+MongoDB Basics: Vanilla JS Mastery
+Completed Node 23: Event: MongoDB Basics
+NoSQL Indexing: HTTPS
+Completed Node 24: Event: NoSQL Indexing
+React: Vue Mastery
+Completed Node 25: Event: React
+React Mastery: Horizontal Scaling
+Completed Node 26: Event: React Mastery
+Redux: Static Website Complete
+Completed Node 27: Event: Redux
+SQL: Flask
+Completed Node 28: Event: SQL
+PostgreSQL: Django APIs
+Completed Node 29: Event: PostgreSQL
+SQL Optimization: Accessibility
+Completed Node 30: Event: SQL Optimization
+UI/UX: DOM Manipulation
+Completed Node 31: Event: UI/UX
+Responsive Design: Sessions
+Completed Node 32: Event: Responsive Design
+Accessibility: Vue
+Completed Node 33: Event: Accessibility
+Vanilla JS Mastery: React
+Completed Node 34: Event: Vanilla JS Mastery
+Custom State System: UI/UX
+Completed Node 35: Event: Custom State System
+Vue: JWT
+Completed Node 36: Event: Vue
+Vue Mastery: PostgreSQL
+Completed Node 37: Event: Vue Mastery
+Vuex: CDN
+Completed Node 38: Event: Vuex
+Interactive App Complete: Docker
+Completed Node 39: Event: Interactive App Complete
+Caching: Caching
+Completed Node 40: Event: Caching
+CDN: Integration Tests
+Completed Node 41: Event: CDN
+Docker: Full-Stack Complete
+Completed Node 42: Event: Docker
+CI/CD: Express DB Integration
+Completed Node 43: Event: CI/CD
+Performance: Git
+Completed Node 44: Event: Performance
+DevOps: Security Complete
+Completed Node 45: Event: DevOps
+Sessions: Cloud Provider
+Completed Node 46: Event: Sessions
+JWT: Testing
+Completed Node 47: Event: JWT
+Authentication: Interactive App Complete
+Completed Node 48: Event: Authentication
+Unit Tests: Package Managers
+Completed Node 49: Event: Unit Tests
+Integration Tests: CI/CD
+Completed Node 50: Event: Integration Tests
+Testing: Django ORM
+Completed Node 51: Event: Testing
+Full-Stack Complete: Vuex
+Completed Node 52: Event: Full-Stack Complete
+Cloud Provider: Deployment Complete
+Completed Node 53: Event: Cloud Provider
+Domain: NoSQL Indexing
+Completed Node 54: Event: Domain
+Horizontal Scaling: Redux
+Completed Node 55: Event: Horizontal Scaling
+HTTPS: Scaling Complete
+Completed Node 56: Event: HTTPS
+CORS: Domain
+Completed Node 57: Event: CORS
+Security Complete: Performance
+Completed Node 58: Event: Security Complete
+Scaling Complete: DevOps
+Completed Node 59: Event: Scaling Complete
+Deployment Complete: Custom State System
+Completed Node 60: Event: Deployment Complete
+Production Deployment: SQLAlchemy
+Completed Node 61: Event: Production Deployment
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Command Line: SQL
+  Completed Node 1: Event: Command Line
+  Completed Node 10: Event: Server Basics
+  Completed Node 2: Event: Git
+  Completed Node 3: Event: HTML
+  Completed Node 6: Event: JavaScript Basics
+  Git: HTML
+  HTML: Command Line
+  JavaScript Basics: CSS
+  Server Basics: Design Systems
+}
+2: {
+  CSS: JavaScript Basics
+  Completed Node 4: Event: CSS
+  Completed Node 9: Event: Package Managers
+  Package Managers: Algorithms
+}
+3: {
+  Algorithms: Express
+  Completed Node 12: Event: Static Website Complete
+  Completed Node 5: Event: Design Systems
+  Completed Node 7: Event: Algorithms
+  Completed Node 8: Event: DOM Manipulation
+  DOM Manipulation: Authentication
+  Design Systems: React Mastery
+  Static Website Complete: CORS
+}
+4: {
+  Completed Node 31: Event: UI/UX
+  Completed Node 34: Event: Vanilla JS Mastery
+  UI/UX: DOM Manipulation
+  Vanilla JS Mastery: React
+}
+5: {
+  Completed Node 25: Event: React
+  React: Vue Mastery
+}
+6: {
+  Completed Node 26: Event: React Mastery
+  React Mastery: Horizontal Scaling
+}
+7: {
+  Completed Node 27: Event: Redux
+  Redux: Static Website Complete
+}
+8: {
+  Completed Node 13: Event: Django
+  Completed Node 16: Event: Express
+  Completed Node 19: Event: Flask
+  Completed Node 22: Event: NoSQL
+  Completed Node 28: Event: SQL
+  Completed Node 36: Event: Vue
+  Django: Django
+  Express: NoSQL
+  Flask: MongoDB Basics
+  NoSQL: HTTP Basics
+  SQL: Flask
+  Vue: JWT
+}
+9: {
+  Completed Node 14: Event: Django APIs
+  Completed Node 17: Event: Express APIs
+  Completed Node 20: Event: Flask APIs
+  Completed Node 23: Event: MongoDB Basics
+  Completed Node 29: Event: PostgreSQL
+  Django APIs: Production Deployment
+  Express APIs: SQL Optimization
+  Flask APIs: Flask APIs
+  MongoDB Basics: Vanilla JS Mastery
+  PostgreSQL: Django APIs
+}
+10: {
+  Completed Node 15: Event: Django ORM
+  Completed Node 21: Event: SQLAlchemy
+  Completed Node 24: Event: NoSQL Indexing
+  Completed Node 35: Event: Custom State System
+  Custom State System: UI/UX
+  Django ORM: Server Basics
+  NoSQL Indexing: HTTPS
+  SQLAlchemy: Express APIs
+}
+11: {
+  Completed Node 11: Event: HTTP Basics
+  Completed Node 18: Event: Express DB Integration
+  Completed Node 32: Event: Responsive Design
+  Express DB Integration: Responsive Design
+  HTTP Basics: Unit Tests
+  Responsive Design: Sessions
+}
+12: {
+  Accessibility: Vue
+  Completed Node 33: Event: Accessibility
+}
+13: {
+  Completed Node 37: Event: Vue Mastery
+  Vue Mastery: PostgreSQL
+}
+14: {
+  Completed Node 30: Event: SQL Optimization
+  Completed Node 38: Event: Vuex
+  SQL Optimization: Accessibility
+  Vuex: CDN
+}
+15: {
+  Completed Node 39: Event: Interactive App Complete
+  Interactive App Complete: Docker
+}
+16: {
+  Completed Node 46: Event: Sessions
+  Sessions: Cloud Provider
+}
+17: {
+  Completed Node 47: Event: JWT
+  JWT: Testing
+}
+18: {
+  Authentication: Interactive App Complete
+  Completed Node 48: Event: Authentication
+}
+19: {
+  Caching: Caching
+  Completed Node 40: Event: Caching
+  Completed Node 42: Event: Docker
+  Completed Node 49: Event: Unit Tests
+  Docker: Full-Stack Complete
+  Unit Tests: Package Managers
+}
+20: {
+  CDN: Integration Tests
+  CI/CD: Express DB Integration
+  Completed Node 41: Event: CDN
+  Completed Node 43: Event: CI/CD
+  Completed Node 50: Event: Integration Tests
+  Integration Tests: CI/CD
+}
+21: {
+  Completed Node 44: Event: Performance
+  Completed Node 45: Event: DevOps
+  Completed Node 51: Event: Testing
+  DevOps: Security Complete
+  Performance: Git
+  Testing: Django ORM
+}
+22: {
+  Completed Node 52: Event: Full-Stack Complete
+  Full-Stack Complete: Vuex
+}
+23: {
+  Cloud Provider: Deployment Complete
+  Completed Node 53: Event: Cloud Provider
+  Completed Node 55: Event: Horizontal Scaling
+  Completed Node 56: Event: HTTPS
+  HTTPS: Scaling Complete
+  Horizontal Scaling: Redux
+}
+24: {
+  CORS: Domain
+  Completed Node 54: Event: Domain
+  Completed Node 57: Event: CORS
+  Completed Node 59: Event: Scaling Complete
+  Domain: NoSQL Indexing
+  Scaling Complete: DevOps
+}
+25: {
+  Completed Node 58: Event: Security Complete
+  Completed Node 60: Event: Deployment Complete
+  Deployment Complete: Custom State System
+  Security Complete: Performance
+}
+26: {
+  Completed Node 61: Event: Production Deployment
+  Production Deployment: SQLAlchemy
+}

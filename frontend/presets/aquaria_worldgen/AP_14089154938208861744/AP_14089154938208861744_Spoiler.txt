@@ -1,0 +1,356 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Aquaria WorldGen
+Location Count:                  219
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+Translate Aquarian:              No
+Big bosses to beat:              0
+Bind song needed to get sing bulbs under rocks:Yes
+Hide the goal's requirements:    No
+Dish Randomizer:                 No
+Early Bind song:                 Early
+Early Energy form:               Early
+Infinite Hot Soup:               Yes
+Randomize Ingredients:           Off
+Light needed to get to dark places:On
+Maximum ingredient amount:       8
+Minibosses to beat:              0
+No progression in the Abyss:     No
+No progression in Arnassi Ruins: No
+No progression in the Body:      No
+No progression in the Energy Temple:No
+No progression in the Frozen Veil:No
+No progression in hard or hidden locations:No
+No progression in Kelp Forest:   No
+No progression in Mithalas:      No
+No progression in Simon says area:No
+No progression in the Sunken City:No
+No progression in the Veil:      No
+Objective:                       Kill The Creator
+Open the body tongue:            No
+Save heal Naija:                 Yes
+Skip final boss third form:      No
+Skip Naija's first vision:       No
+Start Inventory from Pool:       
+Throne as a location:            No
+Turtle Randomizer:               All Except Final
+Unconfine Home Waters Area:      Off
+
+
+Locations:
+
+Verse Cave right area, bulb in the skeleton room: Rotten Meat
+Verse Cave right area, bulb in the path right of the skeleton room: Transturtle Abyss right
+Verse Cave right area, Big Seed: Health Upgrade
+Verse Cave left area, the Naija hint about the shield ability: Leaf Poultice x 3
+Verse Cave left area, bulb in the center part: Legendary Cake
+Verse Cave left area, bulb in the right part: Sun Form
+Verse Cave left area, bulb under the rock at the end of the path: Long Life Soup
+Home Waters, bulb below the grouper fish: Tasty Roll
+Home Waters, bulb in the little room above the grouper fish: Tooth
+Home Waters, bulb in the end of the path close to the Verse Cave: Eel Oil x 2
+Home Waters, bulb in the top left path: Golden Starfish
+Home Waters, bulb close to Naija's Home: Plump Perogi
+Home Waters, bulb under the rock in the left path from the Verse Cave: Spirit Form
+Home Waters, Nautilus Egg: Buttery Sea Loaf
+Beating Nautilus Prime: Nautilus Prime beated
+Home Waters, Transturtle: Plant Leaf
+Naija's Home, bulb after the energy door: Health Upgrade
+Naija's Home, bulb under the rock at the right of the main path: Leaf Poultice
+Song Cave, Erulian spirit: King's Skull
+Song Cave, bulb in the top right part: Energy Form
+Song Cave, bulb in the big anemone room: Jelly Plant
+Song Cave, bulb in the path to the singing statues: Bind Song
+Song Cave, bulb under the rock in the path to the singing statues: Ice Cream
+Song Cave, bulb under the rock close to the song door: Special Bulb
+Song Cave, Verse Egg: Mithalas Pot
+Song Cave, Jelly Beacon: Arcane Poultice
+Song Cave, Anemone Seed: Urchin Costume
+Energy Temple first area, beating the Energy Statue: Fish Form
+Energy Temple first area, bulb in the bottom room blocked by a rock: Special Cake
+Energy Temple second area, bulb under the rock: Rotten Meat x 2
+Energy Temple third area, bulb in the bottom path: Cold Soup
+Energy Temple boss area, Fallen God Tooth: Transturtle Veil top left
+Beating Fallen God: Fallen God beated
+Energy Temple blaster room, Blaster Egg: Vedha Sea Crisp
+Beating Blaster Peg Prime: Blaster Peg Prime beated
+Energy Temple bottom entrance, Krotite Armor: Transturtle Arnassi Ruins
+Open Waters top left area, bulb under the rock in the right path: Volcano Roll
+Open Waters top left area, bulb under the rock in the left path: Golden Gear
+Open Waters top left area, bulb to the right of the save crystal: Fish Oil
+Open Waters top right area, bulb in the small path before Mithalas: Seed Bag
+Open Waters top right area, bulb in the path from the left entrance: Rotten Meat
+Open Waters top right area, bulb in the clearing close to the bottom exit: Rainbow Mushroom
+Open Waters top right area, bulb in the big clearing close to the save crystal: Arcane Poultice
+Open Waters top right area, bulb in the big clearing to the top exit: Hot Soup
+Open Waters top right area, bulb in the turtle room: Glowing Egg
+Open Waters top right area, Transturtle: Special Bulb
+Open Waters bottom left area, bulb behind the chomper fish: Dumbo Ice Cream
+Open Waters bottom left area, bulb inside the lowest fish pass: Spicy Roll
+Open Waters skeleton path, bulb close to the right exit: Zuuna's Perogi
+Open Waters skeleton path, bulb behind the chomper fish: Special Cake
+Open Waters skeleton path, King Skull: Trident
+Arnassi Ruins, bulb in the right part: Divine Soup
+Arnassi Ruins, bulb in the left part: Plant Leaf x 3
+Arnassi Ruins, bulb in the center part: Krotite Armor
+Arnassi Ruins, Song Plant Spore: Poison Loaf
+Arnassi Ruins, Arnassi Armor: Healing Poultice
+Arnassi Ruins, Arnassi Statue: Sea Loaf
+Arnassi Ruins, Transturtle: Small Bone x 3
+Arnassi Ruins, Crab Armor: Shield Song
+Beating Crabbius Maximus: Crabbius Maximus beated
+Simon Says area, beating Simon Says: Song Plant Spore
+Simon Says area, Transturtle: Tough Cake
+Mithalas City, first bulb in the left city part: Spicy Meat x 2
+Mithalas City, second bulb in the left city part: Royal Soup
+Mithalas City, bulb in the right part: Small Egg x 2
+Mithalas City, bulb at the top of the city: Crab Armor
+Mithalas City, first bulb in a broken home: Turtle Soup
+Mithalas City, second bulb in a broken home: Rainbow Mushroom
+Mithalas City, bulb in the bottom left part: Leaf Poultice
+Mithalas City, first bulb in one of the homes: Jelly Egg
+Mithalas City, second bulb in one of the homes: Glowing Egg x 2
+Second Secret: Second Secret obtained
+Mithalas City, first bulb at the end of the top path: Baby Piranha
+Mithalas City, second bulb at the end of the top path: Health Upgrade
+Mithalas City, bulb in the top path: Red Bulb x 2
+Mithalas City, Mithalas Pot: Transturtle Open Waters top right
+Mithalas City, urn in the Castle flower tube entrance: Hearty Soup
+Mithalas City, Doll: Small Egg
+Mithalas City, urn inside a home fish pass: Hand Roll
+Mithalas City Castle, bulb in the flesh hole: Fish Oil x 3
+Mithalas City Castle, Blue Banner: Sea Loaf x 2
+Mithalas City Castle, sitting on the sealed throne: Door to the Cathedral opened
+Mithalas City Castle, beating the Priests: Hot Soup
+Beating Mithalan priests: Mithalan priests beated
+Mithalas City Castle, Trident Head: Special Bulb
+Mithalas Cathedral, bulb in the flesh room with fleas: Swamp Cake
+Mithalas Cathedral, Mithalan Dress: Leaf Poultice
+Mithalas Cathedral, first urn in the top right room: Hot Borscht
+Mithalas Cathedral, second urn in the top right room: Rainbow Mushroom
+Mithalas Cathedral, third urn in the top right room: Hand Roll
+Mithalas Cathedral, urn behind the flesh vein: Transturtle Kelp Forest bottom left
+Mithalas Cathedral, urn in the top left eyes boss room: Long Life Soup
+Mithalas Cathedral, first urn in the path behind the flesh vein: Special Bulb
+Mithalas Cathedral, second urn in the path behind the flesh vein: Cold Borscht
+Mithalas Cathedral, third urn in the path behind the flesh vein: Crab Cake
+Mithalas Cathedral, fourth urn in the top right room: Tasty Cake
+Mithalas Cathedral, urn below the left entrance: Fish Oil
+Mithalas Cathedral, first urn in the bottom right path: Plant Leaf
+Mithalas Cathedral, second urn in the bottom right path: Sea Cake
+Cathedral Underground, bulb in the center part: Spicy Soup
+Cathedral Underground, first bulb in the top left part: Hand Roll
+Cathedral Underground, second bulb in the top left part: Healing Poultice
+Cathedral Underground, third bulb in the top left part: Sea Cake
+Cathedral Underground, bulb close to the save crystal: Spicy Roll
+Cathedral Underground, bulb in the bottom right path: Baby Walker
+Mithalas boss area, beating Mithalan God: Jelly Costume
+Beating Mithalan God: Mithalan God beated
+Kelp Forest top left area, bulb in the bottom left clearing: Plant Leaf x 2
+Kelp Forest top left area, bulb in the path down from the top left clearing: Healing Poultice x 2
+Kelp Forest top left area, bulb in the top left clearing: Nature Form
+Kelp Forest top left area, Jelly Egg: Turtle Soup
+Kelp Forest top left area, bulb close to the Verse Egg: Healing Poultice
+Kelp Forest top left area, Verse Egg: Spicy Roll
+Kelp Forest top right area, bulb under the rock in the right path: Mithalas Doll
+Kelp Forest top right area, bulb at the left of the center clearing: Special Bulb
+Kelp Forest top right area, bulb in the left path's big room: Spicy Meat x 2
+Kelp Forest top right area, bulb in the left path's small room: Energy Statue
+Kelp Forest top right area, bulb at the top of the center clearing: Vedha's Cure-All
+Kelp Forest top right area, Black Pearl: Girl Costume
+Kelp Forest top right area, bulb in the top fish pass: Health Upgrade
+Kelp Forest bottom left area, Transturtle: Berry Ice Cream
+Kelp Forest bottom left area, bulb close to the spirit crystals: Cold Borscht
+Kelp Forest bottom left area, Walker Baby: Plant Leaf x 3
+Kelp Forest bottom right area, Odd Container: Shark Fin Soup
+Kelp Forest boss area, beating Drunian God: Arnassi Armor
+Beating Drunian God: Drunian God beated
+Kelp Forest boss room, bulb at the bottom of the area: Sun Key
+Kelp Forest sprite cave, bulb inside the fish pass: Sea Cake
+Kelp Forest sprite cave, bulb in the second room: Arcane Poultice
+Kelp Forest sprite cave, Seed Bag: Dumbo Ice Cream
+Mermog cave, bulb in the left part of the cave: Black Pearl
+Mermog cave, Piranha Egg: Turtle Egg
+Beating Mergog: Mergog beated
+Kelp Forest bottom left area, Fish Cave puzzle: Odd Container
+The Veil top left area, In Li's cave: Swamp Cake
+The Veil top left area, bulb under the rock in the top right path: Fish Meat x 2
+The Veil top left area, bulb hidden behind the blocking rock: Hot Soup
+The Veil top left area, Transturtle: Perogi
+The Veil top left area, bulb inside the fish pass: Beast Form
+The Veil top right area, bulb at the top of the waterfall: Spicy Roll
+The Veil top right area, Transturtle: Leaf Poultice
+The Veil top right area, bulb in the middle of the wall jump cliff: Leaf Poultice
+The Veil top right area, Golden Starfish: Baby Blaster
+The Veil bottom area, bulb in the left path: Small Bone x 3
+The Veil bottom area, bulb in the spirit path: Jelly Beacon
+The Veil bottom area, Verse Egg: Leeching Poultice
+The Veil bottom area, Stone Head: Spider Roll
+Octopus Cave, Dumbo Egg: Wok
+Beating Octopus Prime: Octopus Prime beated
+Octopus Cave, bulb in the path below the Octopus Cave path: Mithalan Dress
+Turtle cave, Turtle Egg: Li and Li Song
+Turtle cave, bulb in Bubble Cliff: Mushroom x 2
+Turtle cave, Urchin Costume: Dumbo Ice Cream
+Sun Temple, bulb in the top left part: Baby Nautilus
+Sun Temple, bulb in the top right part: Spicy Meat x 2
+Sun Temple, bulb at the top of the high dark room: Arcane Poultice
+Sun Temple, Golden Gear: Hearty Soup
+Third Secret: Third Secret obtained
+Sun Temple, first bulb of the temple: Sight Poultice
+Sun Temple, bulb in the right part: Ice Cream
+Sun Temple, bulb in the hidden room of the right part: Spicy Roll
+Sun Temple, Sun Key: Rotten Meat
+Sun Crystal: Has Sun Crystal
+Sun Temple boss path, first path bulb: Plant Leaf x 3
+Sun Temple boss path, second path bulb: Swamp Cake
+Sun Temple boss path, first cliff bulb: Red Berry
+Sun Temple boss path, second cliff bulb: Small Bone x 2
+Sun Temple boss area, beating Lumerean God: Spicy Roll
+Beating Lumerean God: Lumerean God beated
+Abyss left area, bulb in hidden path room: Leaf Poultice x 3
+Abyss left area, bulb in the right part: Leeching Poultice
+Abyss left area, Glowing Seed: Spicy Roll
+Abyss left area, Glowing Plant: Arcane Poultice
+Abyss left area, bulb in the bottom fish pass: Small Tentacle x 2
+Abyss right area, bulb in the middle path: Plant Leaf x 2
+Abyss right area, bulb behind the rock in the middle path: Arcane Poultice
+Abyss right area, bulb in the left green room: Veggie Soup
+Abyss right area, bulb behind the rock in the whale room: Mutant Costume
+Abyss right area, Transturtle: Transturtle Simon Says
+Ice Cavern, bulb in the room to the right: Hand Roll
+Ice Cavern, first bulb in the top exit room: Rainbow Mushroom
+Ice Cavern, second bulb in the top exit room: Vedha Sea Crisp
+Ice Cavern, third bulb in the top exit room: Veggie Cake
+Ice Cavern, bulb in the left room: Leeching Poultice
+Bubble Cave, bulb in the left cave wall: Spicy Roll
+Bubble Cave, bulb in the right cave wall (behind the ice crystal): Rainbow Soup
+Bubble Cave, Verse Egg: Rotten Loaf x 8
+Beating Mantis Shrimp Prime: Mantis Shrimp Prime beated
+King Jellyfish Cave, bulb in the right path from King Jelly: Health Upgrade
+King Jellyfish Cave, Jellyfish Costume: Loaf of Life
+Beating King Jellyfish God Prime: King Jellyfish God Prime beated
+The Whale, Verse Egg: Glowing Seed
+Sunken City, bulb on top of the boss area: Anemone
+Beating the Golem: The Golem beated
+Sunken City cleared: Body Tongue cleared
+Sunken City left area, Girl Costume: Dual Form
+The Body center area, breaking Li's cage: Small Bone x 3
+The Body center area, bulb on the main path blocking tube: Spider Roll
+The Body left area, first bulb in the top face room: Shark Fin Soup
+The Body left area, second bulb in the top face room: Veggie Ice Cream
+The Body left area, bulb below the water stream: Plant Leaf x 3
+The Body left area, bulb in the top path to the top face room: Rotten Meat x 8
+The Body left area, bulb in the bottom face room: Transturtle Home Waters
+The Body right area, bulb in the top face room: Stone Head
+The Body right area, bulb in the top path to the bottom face room: Hand Roll
+The Body right area, bulb in the bottom face room: Red Bulb x 2
+The Body bottom area, bulb in the Jelly Zap room: Healing Poultice x 2
+The Body bottom area, bulb in the nautilus room: Spicy Roll
+The Body bottom area, Mutant Costume: Poison Soup
+Final Boss area, first bulb in the turtle room: Veggie Soup
+Final Boss area, second bulb in the turtle room: Rotten Cake
+Final Boss area, third bulb in the turtle room: Leadership Roll
+Final Boss area, Transturtle: Transturtle Final Boss
+Final Boss area, bulb in the boss third form room: Baby Dumbo
+Objective complete: Victory
+First Secret: First Secret obtained
+Energy Temple, Energy Idol: Leeching Poultice
+Sunken City left area, crate in the little pipe room: Spicy Roll
+Sunken City left area, crate close to the save crystal: Hearty Soup
+Sunken City left area, crate before the bedroom: Transturtle Veil top right
+Sunken City right area, crate close to the save crystal: Plant Leaf
+Sunken City right area, crate in the left bottom room: Arnassi Statue
+Home Waters, bulb in the path below Nautilus Prime: Rotten Meat
+Home Waters, bulb in the bottom left room: Spicy Roll
+Open Waters top right area, first urn in the Mithalas exit: Healing Poultice
+Open Waters top right area, second urn in the Mithalas exit: Arcane Poultice
+Open Waters top right area, third urn in the Mithalas exit: Big Seed
+Mithalas City, first urn in one of the homes: Sight Poultice
+Mithalas City, second urn in one of the homes: Hot Soup x 2
+Mithalas City, first urn in the city reserve: Hearty Soup
+Mithalas City, second urn in the city reserve: Hearty Soup
+Mithalas City, third urn in the city reserve: Red Bulb x 2
+Mithalas City Castle, urn in the bedroom: Magic Soup
+Mithalas City Castle, first urn of the single lamp path: Sea Cake
+Mithalas City Castle, second urn of the single lamp path: Tasty Roll
+Mithalas City Castle, urn in the bottom room: Mithalas Banner
+Mithalas City Castle, first urn on the entrance path: Leadership Roll x 2
+Mithalas City Castle, second urn on the entrance path: Rotten Meat
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Song Cave, bulb in the path to the singing statues: Bind Song
+  Song Cave, bulb in the top right part: Energy Form
+  Verse Cave left area, bulb in the right part: Sun Form
+  Verse Cave right area, bulb in the path right of the skeleton room: Transturtle Abyss right
+}
+2: {
+  Abyss right area, Transturtle: Transturtle Simon Says
+  Beating Drunian God: Drunian God beated
+  Beating Fallen God: Fallen God beated
+  Beating Nautilus Prime: Nautilus Prime beated
+  Energy Temple boss area, Fallen God Tooth: Transturtle Veil top left
+  Energy Temple bottom entrance, Krotite Armor: Transturtle Arnassi Ruins
+  Energy Temple first area, beating the Energy Statue: Fish Form
+  Home Waters, bulb under the rock in the left path from the Verse Cave: Spirit Form
+  Kelp Forest boss area, beating Drunian God: Arnassi Armor
+  Kelp Forest top left area, bulb in the top left clearing: Nature Form
+  Mithalas City Castle, sitting on the sealed throne: Door to the Cathedral opened
+  Mithalas City, second urn in one of the homes: Hot Soup x 2
+  Open Waters top right area, bulb in the big clearing to the top exit: Hot Soup
+  Second Secret: Second Secret obtained
+}
+3: {
+  Beating Blaster Peg Prime: Blaster Peg Prime beated
+  Beating Crabbius Maximus: Crabbius Maximus beated
+  Beating Lumerean God: Lumerean God beated
+  Beating Mantis Shrimp Prime: Mantis Shrimp Prime beated
+  Beating Mithalan God: Mithalan God beated
+  Beating Mithalan priests: Mithalan priests beated
+  First Secret: First Secret obtained
+  Mithalas Cathedral, urn behind the flesh vein: Transturtle Kelp Forest bottom left
+  Mithalas City Castle, beating the Priests: Hot Soup
+  Mithalas City, Mithalas Pot: Transturtle Open Waters top right
+  Mithalas City, first bulb at the end of the top path: Baby Piranha
+  Song Cave, Anemone Seed: Urchin Costume
+  Sun Crystal: Has Sun Crystal
+  Sun Temple, bulb in the top left part: Baby Nautilus
+  The Veil top left area, bulb hidden behind the blocking rock: Hot Soup
+  The Veil top left area, bulb inside the fish pass: Beast Form
+  The Veil top right area, Golden Starfish: Baby Blaster
+  Third Secret: Third Secret obtained
+  Turtle cave, Turtle Egg: Li and Li Song
+}
+4: {
+  Beating King Jellyfish God Prime: King Jellyfish God Prime beated
+  Beating Mergog: Mergog beated
+  Beating Octopus Prime: Octopus Prime beated
+  Beating the Golem: The Golem beated
+  Sunken City cleared: Body Tongue cleared
+  Sunken City left area, Girl Costume: Dual Form
+  Sunken City left area, crate before the bedroom: Transturtle Veil top right
+}
+5: {
+  Final Boss area, bulb in the boss third form room: Baby Dumbo
+  Objective complete: Victory
+}

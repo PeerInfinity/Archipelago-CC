@@ -1,0 +1,181 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Coding Adventure
+Location Count:                  61
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Vanilla Item Placement:          No
+
+
+Locations:
+
+Learn HTML: Package Managers
+Learn CSS: Design Systems
+Learn Design Systems: Server Basics
+Learn JavaScript: HTML
+Learn DOM Manipulation: UI/UX
+Learn Algorithms: Database Integration
+Choose Server Language: REST APIs
+Learn File I/O: CI/CD
+Learn HTTP Basics: Testing
+Learn Git: CSS
+Learn Command Line: Database Basics
+Learn Package Managers: Integration Tests
+Static Website Milestone: Interactive App Complete
+Learn React: Unit Tests
+React Components: Sessions
+Redux: Domain
+Learn Vue: SQL
+Vue Components: Performance
+Vuex: CDN
+Advanced Vanilla JS: Cloud Provider
+Custom State System: HTTPS
+Learn Express: Static Website Complete
+Build REST APIs: Frontend Framework
+MongoDB Integration: State Management
+Learn Django: HTTP Basics
+Django REST Framework: Authentication
+Django ORM: Frontend Framework
+Learn Flask: Query Optimization
+Flask-RESTful: Frontend Framework
+SQLAlchemy: Full-Stack Complete
+UI/UX Principles: DevOps
+Responsive Design: Security Complete
+Accessibility: Docker
+Learn SQL: Deployment Complete
+PostgreSQL: Express
+Query Optimization: REST APIs
+Learn NoSQL: Git
+MongoDB: Django
+Indexing Strategies: JavaScript Basics
+Interactive App Milestone: State Management
+Sessions: File I/O
+JWT: CORS
+OAuth: Accessibility
+Caching: Flask
+CDN: State Management
+Load Balancing: Database Basics
+Unit Tests: Horizontal Scaling
+Integration Tests: Responsive Design
+E2E Tests: Algorithms
+Docker: DOM Manipulation
+CI/CD: Query Optimization
+Monitoring: NoSQL
+Full-Stack Integration Milestone: Caching
+HTTPS: Command Line
+CORS: Vue
+Input Validation: JWT
+Horizontal Scaling: Scaling Complete
+Microservices: Database Integration
+Cloud Provider: React
+Domain Setup: Database Integration
+SSL Certificate: REST APIs
+Production Deployment: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Choose Server Language: REST APIs
+  Learn Command Line: Database Basics
+  Learn Git: CSS
+  Learn HTML: Package Managers
+  Learn JavaScript: HTML
+}
+2: {
+  Learn CSS: Design Systems
+  Learn Design Systems: Server Basics
+}
+3: {
+  Django ORM: Frontend Framework
+  Indexing Strategies: JavaScript Basics
+  Learn Django: HTTP Basics
+  Learn File I/O: CI/CD
+  Learn Flask: Query Optimization
+  Learn HTTP Basics: Testing
+  Learn NoSQL: Git
+  Learn SQL: Deployment Complete
+  Learn Vue: SQL
+  Query Optimization: REST APIs
+  SQLAlchemy: Full-Stack Complete
+  Static Website Milestone: Interactive App Complete
+  UI/UX Principles: DevOps
+}
+4: {
+  Caching: Flask
+  Interactive App Milestone: State Management
+  Learn Algorithms: Database Integration
+  Learn DOM Manipulation: UI/UX
+  Learn Express: Static Website Complete
+  MongoDB Integration: State Management
+  Monitoring: NoSQL
+  PostgreSQL: Express
+  Sessions: File I/O
+  Unit Tests: Horizontal Scaling
+  Vuex: CDN
+}
+5: {
+  Build REST APIs: Frontend Framework
+  Flask-RESTful: Frontend Framework
+  Load Balancing: Database Basics
+  MongoDB: Django
+  Responsive Design: Security Complete
+}
+6: {
+  Django REST Framework: Authentication
+}
+7: {
+  Cloud Provider: React
+  Full-Stack Integration Milestone: Caching
+  HTTPS: Command Line
+  Microservices: Database Integration
+}
+8: {
+  CDN: State Management
+  Docker: DOM Manipulation
+  Learn Package Managers: Integration Tests
+}
+9: {
+  E2E Tests: Algorithms
+  Learn React: Unit Tests
+  React Components: Sessions
+  Redux: Domain
+}
+10: {
+  Advanced Vanilla JS: Cloud Provider
+  Custom State System: HTTPS
+  Integration Tests: Responsive Design
+  JWT: CORS
+}
+11: {
+  Accessibility: Docker
+  CORS: Vue
+  Domain Setup: Database Integration
+  Input Validation: JWT
+  SSL Certificate: REST APIs
+}
+12: {
+  CI/CD: Query Optimization
+  OAuth: Accessibility
+  Vue Components: Performance
+}
+13: {
+  Horizontal Scaling: Scaling Complete
+}
+14: {
+  Production Deployment: Victory
+}

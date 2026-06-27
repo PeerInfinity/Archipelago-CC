@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 1
+﻿Archipelago Version 0.6.8  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -37,177 +37,177 @@ Goal Song:
 Starting Items:
 
 Breaking Dawn
+CATCH ME IF YOU CAN
 Best One feat.tooko
-I don't care about Christmas though
-Koi no Moonlight
-Yuki no Shizuku Ame no Oto
+Heart Message feat. Aoi Tokimori
+NISEGAO
 
 Locations:
 
-Breaking Dawn-0: Great To Perfect (10 Pack)
-Breaking Dawn-1: Ira
-Best One feat.tooko-0: Music Sheet
-Best One feat.tooko-1: Mopemope
-I don't care about Christmas though-0: Music Sheet
-I don't care about Christmas though-1: Music Sheet
-Koi no Moonlight-0: Bass Telekinesis
-Koi no Moonlight-1: Dohna Dohna no Uta
-Yuki no Shizuku Ame no Oto-0: Stargazer
-Yuki no Shizuku Ame no Oto-1: Miss To Great (5 Pack)
-Iyaiya-0: Great To Perfect (10 Pack)
-Iyaiya-1: Great To Perfect (10 Pack)
-Heart Message feat. Aoi Tokimori-0: Miss To Great (5 Pack)
-Heart Message feat. Aoi Tokimori-1: Medicine of Sing
-irregulyze-0: Ira
-irregulyze-1: Dolphin and Broadcast
-Clock Room & Spiritual World-0: Great To Perfect (10 Pack)
-Clock Room & Spiritual World-1: Miss To Great (5 Pack)
-Latitude-0: Evolution
-Latitude-1: Lys Tourbillon
-Etude -Sunset--0: Great To Perfect (10 Pack)
-Etude -Sunset--1: Heart Message feat. Aoi Tokimori
-Evolution-0: Out of Sense
-Evolution-1: Great To Perfect (10 Pack)
-Blackest Luxury Car-0: Galaxy Striker
-Blackest Luxury Car-1: Out of Sense
-Bass Telekinesis-0: Dolphin and Broadcast
-Bass Telekinesis-1: Great To Perfect (10 Pack)
-Confession-0: From the New World
+Breaking Dawn-0: Dohna Dohna no Uta
+Breaking Dawn-1: umpopoff
+CATCH ME IF YOU CAN-0: Miss To Great (5 Pack)
+CATCH ME IF YOU CAN-1: Yume Ou Mono Yo
+Best One feat.tooko-0: Confession
+Best One feat.tooko-1: Great To Perfect (10 Pack)
+Heart Message feat. Aoi Tokimori-0: Koi no Moonlight
+Heart Message feat. Aoi Tokimori-1: DISCO NIGHT
+NISEGAO-0: DISCO NIGHT
+NISEGAO-1: Music Sheet
+Candy-coloured Love Theory-0: Funkotsu Saishin Casino
+Candy-coloured Love Theory-1: irregulyze
+Confession-0: My Life Is For You
 Confession-1: Miss To Great (5 Pack)
-Lys Tourbillon-0: Pancake is Love
-Lys Tourbillon-1: Frost Land
-Pancake is Love-0: Departure Road
-Pancake is Love-1: Shenri Kuaira -repeat-
-umpopoff-0: irregulyze
-umpopoff-1: Yume Ou Mono Yo
-Night Wander-0: Evolution
-Night Wander-1: Iyaiya
-Dolphin and Broadcast-0: Heart-Pounding Flight
-Dolphin and Broadcast-1: Aqua Stars
-Mezame Eurythmics-0: Extra Life
-Mezame Eurythmics-1: Great To Perfect (10 Pack)
-Mujinku-Vacuum-0: Goodbye Boss
-Mujinku-Vacuum-1: EXIST
-Departure Road-0: MilK
-Departure Road-1: Blackest Luxury Car
-MilK-0: Mujinku-Vacuum
-MilK-1: Candy-coloured Love Theory
-Yume Ou Mono Yo-0: Heart Message feat. Aoi Tokimori
+Clock Room & Spiritual World-0: Great To Perfect (10 Pack)
+Clock Room & Spiritual World-1: Great To Perfect (10 Pack)
+Funkotsu Saishin Casino-0: Imaginary World
+Funkotsu Saishin Casino-1: umpopoff
+Yuki no Shizuku Ame no Oto-0: Lian Ai Audio Navigation
+Yuki no Shizuku Ame no Oto-1: Great To Perfect (10 Pack)
+Lian Ai Audio Navigation-0: Blackest Luxury Car
+Lian Ai Audio Navigation-1: Music Sheet
+Stargazer-0: Iyaiya
+Stargazer-1: RUNNING FOR YOUR LIFE
+My Life Is For You-0: Music Sheet
+My Life Is For You-1: Yuki no Shizuku Ame no Oto
+Magical Wonderland-0: Yume Ou Mono Yo
+Magical Wonderland-1: Great To Perfect (10 Pack)
+RUNNING FOR YOUR LIFE-0: Night Wander
+RUNNING FOR YOUR LIFE-1: Music Sheet
+Mujinku-Vacuum-0: Great To Perfect (10 Pack)
+Mujinku-Vacuum-1: Great To Perfect (10 Pack)
+MilK-0: Say! Fanfare!
+MilK-1: irregulyze
+Bass Telekinesis-0: Miss To Great (5 Pack)
+Bass Telekinesis-1: Dohna Dohna no Uta
+Lights of Muse-0: Pancake is Love
+Lights of Muse-1: Latitude
+Mopemope-0: Great To Perfect (10 Pack)
+Mopemope-1: From the New World
+Pancake is Love-0: Music Sheet
+Pancake is Love-1: Magical Wonderland
+Blackest Luxury Car-0: Yuki no Shizuku Ame no Oto
+Blackest Luxury Car-1: Music Sheet
+Dohna Dohna no Uta-0: Nihao
+Dohna Dohna no Uta-1: Candy-coloured Love Theory
+Iyaiya-0: Dolphin and Broadcast
+Iyaiya-1: Pancake is Love
+Say! Fanfare!-0: Glimmer
+Say! Fanfare!-1: Lian Ai Audio Navigation
+umpopoff-0: Iyaiya
+umpopoff-1: Bass Telekinesis
+Goodbye Boss-0: Great To Perfect (10 Pack)
+Goodbye Boss-1: Medicine of Sing
+Koi no Moonlight-0: Candy-coloured Love Theory
+Koi no Moonlight-1: Stargazer
+From the New World-0: Imaginary World
+From the New World-1: Great To Perfect (10 Pack)
+Etude -Sunset--0: Lights of Muse
+Etude -Sunset--1: Mopemope
+Medicine of Sing-0: Confession
+Medicine of Sing-1: Great To Perfect (10 Pack)
+I don't care about Christmas though-0: Lights of Muse
+I don't care about Christmas though-1: Music Sheet
+irregulyze-0: Latitude
+irregulyze-1: INTERNET OVERDOSE
+Evolution-0: My Life Is For You
+Evolution-1: Say! Fanfare!
+Nihao-0: Goodbye Boss
+Nihao-1: MilK
+Formation-0: Great To Perfect (10 Pack)
+Formation-1: Mopemope
+Latitude-0: Great To Perfect (10 Pack)
+Latitude-1: Miss To Great (5 Pack)
+Imaginary World-0: Medicine of Sing
+Imaginary World-1: Tu Hua
+Dolphin and Broadcast-0: Music Sheet
+Dolphin and Broadcast-1: Music Sheet
+INTERNET OVERDOSE-0: Great To Perfect (10 Pack)
+INTERNET OVERDOSE-1: Evolution
+Night Wander-0: I don't care about Christmas though
+Night Wander-1: Glimmer
+Tu Hua-0: Clock Room & Spiritual World
+Tu Hua-1: Mujinku-Vacuum
+Yume Ou Mono Yo-0: Tu Hua
 Yume Ou Mono Yo-1: Great To Perfect (10 Pack)
-Frost Land-0: Great To Perfect (10 Pack)
-Frost Land-1: Blackest Luxury Car
-Say! Fanfare!-0: Etude -Sunset-
-Say! Fanfare!-1: umpopoff
-Out of Sense-0: Clock Room & Spiritual World
-Out of Sense-1: Night Wander
-Funkotsu Saishin Casino-0: Great To Perfect (10 Pack)
-Funkotsu Saishin Casino-1: Clock Room & Spiritual World
-Medicine of Sing-0: Great To Perfect (10 Pack)
-Medicine of Sing-1: Music Sheet
-Goodbye Boss-0: Latitude
-Goodbye Boss-1: Music Sheet
-Dohna Dohna no Uta-0: Pancake is Love
-Dohna Dohna no Uta-1: Confession
-Heart-Pounding Flight-0: Music Sheet
-Heart-Pounding Flight-1: Galaxy Striker
-Stargazer-0: Candy-coloured Love Theory
-Stargazer-1: DISCO NIGHT
-Aqua Stars-0: Great To Perfect (10 Pack)
-Aqua Stars-1: Dohna Dohna no Uta
-Ira-0: Lys Tourbillon
-Ira-1: Stargazer
-Mopemope-0: Etude -Sunset-
-Mopemope-1: Frost Land
-DISCO NIGHT-0: Say! Fanfare!
-DISCO NIGHT-1: From the New World
-From the New World-0: Heart-Pounding Flight
-From the New World-1: Lian Ai Audio Navigation
-Lights of Muse-0: Music Sheet
-Lights of Muse-1: Great To Perfect (10 Pack)
-Shenri Kuaira -repeat--0: Lights of Muse
-Shenri Kuaira -repeat--1: Music Sheet
-EXIST-0: Music Sheet
-EXIST-1: Mezame Eurythmics
-Lian Ai Audio Navigation-0: Confession
-Lian Ai Audio Navigation-1: Great To Perfect (10 Pack)
-Candy-coloured Love Theory-0: EXIST
-Candy-coloured Love Theory-1: Lights of Muse
-Galaxy Striker-0: Funkotsu Saishin Casino
-Galaxy Striker-1: Lian Ai Audio Navigation
+DISCO NIGHT-0: Formation
+DISCO NIGHT-1: Etude -Sunset-
+Glimmer-0: Great To Perfect (10 Pack)
+Glimmer-1: Koi no Moonlight
 
 Playthrough:
 
 0: {
   Best One feat.tooko
   Breaking Dawn
-  I don't care about Christmas though
-  Koi no Moonlight
-  Yuki no Shizuku Ame no Oto
+  CATCH ME IF YOU CAN
+  Heart Message feat. Aoi Tokimori
+  NISEGAO
 }
 1: {
-  Best One feat.tooko-0: Music Sheet
-  Best One feat.tooko-1: Mopemope
-  Breaking Dawn-1: Ira
-  I don't care about Christmas though-0: Music Sheet
-  I don't care about Christmas though-1: Music Sheet
-  Koi no Moonlight-0: Bass Telekinesis
-  Koi no Moonlight-1: Dohna Dohna no Uta
+  Breaking Dawn-0: Dohna Dohna no Uta
+  Breaking Dawn-1: umpopoff
+  CATCH ME IF YOU CAN-1: Yume Ou Mono Yo
+  Heart Message feat. Aoi Tokimori-0: Koi no Moonlight
+  Heart Message feat. Aoi Tokimori-1: DISCO NIGHT
+  NISEGAO-1: Music Sheet
 }
 2: {
-  Dohna Dohna no Uta-0: Pancake is Love
-  Dohna Dohna no Uta-1: Confession
-  Ira-1: Stargazer
-  Mopemope-1: Frost Land
+  DISCO NIGHT-0: Formation
+  DISCO NIGHT-1: Etude -Sunset-
+  Dohna Dohna no Uta-0: Nihao
+  Dohna Dohna no Uta-1: Candy-coloured Love Theory
+  Koi no Moonlight-1: Stargazer
+  Yume Ou Mono Yo-0: Tu Hua
+  umpopoff-0: Iyaiya
+  umpopoff-1: Bass Telekinesis
 }
 3: {
-  Pancake is Love-0: Departure Road
-  Pancake is Love-1: Shenri Kuaira -repeat-
-  Stargazer-0: Candy-coloured Love Theory
-  Stargazer-1: DISCO NIGHT
+  Candy-coloured Love Theory-0: Funkotsu Saishin Casino
+  Candy-coloured Love Theory-1: irregulyze
+  Etude -Sunset--1: Mopemope
+  Iyaiya-0: Dolphin and Broadcast
+  Iyaiya-1: Pancake is Love
+  Nihao-0: Goodbye Boss
+  Nihao-1: MilK
+  Stargazer-1: RUNNING FOR YOUR LIFE
+  Tu Hua-0: Clock Room & Spiritual World
+  Tu Hua-1: Mujinku-Vacuum
 }
 4: {
-  Candy-coloured Love Theory-0: EXIST
-  Candy-coloured Love Theory-1: Lights of Muse
-  DISCO NIGHT-0: Say! Fanfare!
-  DISCO NIGHT-1: From the New World
-  Departure Road-0: MilK
-  Departure Road-1: Blackest Luxury Car
-  Shenri Kuaira -repeat--1: Music Sheet
+  Dolphin and Broadcast-0: Music Sheet
+  Dolphin and Broadcast-1: Music Sheet
+  Funkotsu Saishin Casino-0: Imaginary World
+  Mopemope-1: From the New World
+  Pancake is Love-0: Music Sheet
+  Pancake is Love-1: Magical Wonderland
+  RUNNING FOR YOUR LIFE-0: Night Wander
+  RUNNING FOR YOUR LIFE-1: Music Sheet
+  irregulyze-1: INTERNET OVERDOSE
 }
 5: {
-  Blackest Luxury Car-0: Galaxy Striker
-  Blackest Luxury Car-1: Out of Sense
-  EXIST-0: Music Sheet
-  EXIST-1: Mezame Eurythmics
-  From the New World-0: Heart-Pounding Flight
-  Lights of Muse-0: Music Sheet
-  MilK-0: Mujinku-Vacuum
-  Say! Fanfare!-0: Etude -Sunset-
-  Say! Fanfare!-1: umpopoff
+  INTERNET OVERDOSE-1: Evolution
+  Imaginary World-0: Medicine of Sing
+  Night Wander-0: I don't care about Christmas though
 }
 6: {
-  Galaxy Striker-0: Funkotsu Saishin Casino
-  Galaxy Striker-1: Lian Ai Audio Navigation
-  Heart-Pounding Flight-0: Music Sheet
-  Mujinku-Vacuum-0: Goodbye Boss
-  Out of Sense-0: Clock Room & Spiritual World
-  Out of Sense-1: Night Wander
-  umpopoff-0: irregulyze
-  umpopoff-1: Yume Ou Mono Yo
+  Evolution-0: My Life Is For You
+  Evolution-1: Say! Fanfare!
+  I don't care about Christmas though-0: Lights of Muse
+  I don't care about Christmas though-1: Music Sheet
+  Medicine of Sing-0: Confession
 }
 7: {
-  Goodbye Boss-0: Latitude
-  Goodbye Boss-1: Music Sheet
-  Night Wander-0: Evolution
-  Night Wander-1: Iyaiya
-  Yume Ou Mono Yo-0: Heart Message feat. Aoi Tokimori
-  irregulyze-1: Dolphin and Broadcast
+  Lights of Muse-1: Latitude
+  My Life Is For You-0: Music Sheet
+  Say! Fanfare!-0: Glimmer
+  Say! Fanfare!-1: Lian Ai Audio Navigation
 }
 8: {
-  Dolphin and Broadcast-1: Aqua Stars
-  Heart Message feat. Aoi Tokimori-1: Medicine of Sing
-  Latitude-1: Lys Tourbillon
+  Lian Ai Audio Navigation-0: Blackest Luxury Car
+  Lian Ai Audio Navigation-1: Music Sheet
 }
 9: {
-  Medicine of Sing-1: Music Sheet
+  Blackest Luxury Car-0: Yuki no Shizuku Ame no Oto
+  Blackest Luxury Car-1: Music Sheet
 }

@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 1
+﻿Archipelago Version 0.6.8  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -99,7 +99,7 @@ Maximum Supply Per Item:         1
 Maximum Supply Reduction Per Item:1
 Lowest Maximum Supply:           180
 Upgrade Cost Discount Per Item:  2
-Filler Items Distribution:       1 Kerrigan Level: 0, Additional Maximum Supply: 1, Additional Starting Minerals: 1, Additional Starting Supply: 1, Additional Starting Vespene: 1, Decreased Maximum Supply: 0, Increased Building Construction Speed: 1, Increased Shield Regeneration: 1, Increased Upgrade Research Speed: 1, Reduced Upgrade Research Cost: 1
+Filler Items Distribution:       Additional Maximum Supply: 1, Additional Starting Minerals: 1, Additional Starting Supply: 1, Additional Starting Vespene: 1, Increased Building Construction Speed: 1, Increased Shield Regeneration: 1, Increased Upgrade Research Speed: 1, Reduced Upgrade Research Cost: 1
 Mission Order Scouting:          None
 
 

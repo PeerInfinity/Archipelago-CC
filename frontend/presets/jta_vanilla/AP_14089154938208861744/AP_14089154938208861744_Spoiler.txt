@@ -1,0 +1,106 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Journey to Ascension
+Location Count:                  21
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Goal Zone:                       15
+Free Zones:                      1
+Starting Perks:                  0
+Starting Perk List:              
+Game Data File:                  
+Resets Per Sphere:               5
+Vanilla Placement:               Yes
+Auto Cost Adjust:                Yes
+Cost Gen Mode:                   2
+Cost Gen: Normal Attempts:       2
+Cost Gen: Perk Attempts:         5
+Cost Gen: Traversal Attempts:    5
+Cost Gen: Item Collection:       Yes
+Cost Gen: Push/Collect:          Yes
+Cost Gen: Grind with Push/Collect:Yes
+Cost Gen: Artifact Usage:        Yes
+Automation: Auto Queue:          Yes
+Automation: Auto Reset:          Yes
+Automation: Drain Strategy:      Yes
+Automation: Loadout Sequencing:  Yes
+
+
+Locations:
+
+Learn How to Read: How to Read
+Learn How to Write: How to Write
+Rescue Villager: Villager Gratitude
+Save the Village: Village Hero
+Find an Amulet: Mysterious Amulet
+Try Casting a Spell: Energetic Spell
+Wipe Out Goblins: Goblin Scourge
+Get Used to Traveling: Experienced Traveler
+Study the Amulet: Understanding of the Reset
+Negotiate with a Rogue Guard: Underground Connection
+Cast a Spell: Minor Time Compression
+Purge Corrupt Bureaucracy: Purged Bureaucracy
+Scale the Mountain: High Altitude Climbing
+Figure Out How to Attune: Attunement
+Dive as a Squid: Sunken Treasure
+Explore Kraken's Lair: Deep Sea Diving
+Explore the Jungle: Found Lost Temple
+Avoid Notice by the Sandworm: Walk Without Rhythm
+Learn to Dance the Worm: The Worm
+Reflect on the Journey: Reflections on the Journey
+Practice Memorization: Energetic Memory
+Reach Goal Zone: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Learn How to Read: How to Read
+}
+2: {
+  Learn How to Write: How to Write
+}
+3: {
+  Rescue Villager: Villager Gratitude
+  Save the Village: Village Hero
+}
+4: {
+  Find an Amulet: Mysterious Amulet
+  Try Casting a Spell: Energetic Spell
+  Wipe Out Goblins: Goblin Scourge
+}
+5: {
+  Cast a Spell: Minor Time Compression
+  Get Used to Traveling: Experienced Traveler
+  Negotiate with a Rogue Guard: Underground Connection
+  Purge Corrupt Bureaucracy: Purged Bureaucracy
+  Study the Amulet: Understanding of the Reset
+}
+6: {
+  Avoid Notice by the Sandworm: Walk Without Rhythm
+  Dive as a Squid: Sunken Treasure
+  Explore Kraken's Lair: Deep Sea Diving
+  Explore the Jungle: Found Lost Temple
+  Figure Out How to Attune: Attunement
+  Learn to Dance the Worm: The Worm
+  Scale the Mountain: High Altitude Climbing
+}
+7: {
+  Practice Memorization: Energetic Memory
+  Reach Goal Zone: Victory
+  Reflect on the Journey: Reflections on the Journey
+}

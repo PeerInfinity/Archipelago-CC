@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 16
+﻿Archipelago Version 0.6.8  -  Seed: 16
 
 Filling Algorithm:               balanced
 Players:                         1
