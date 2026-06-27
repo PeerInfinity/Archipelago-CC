@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-28 17:13:12 UTC
+**Generated:** 2026-06-27 23:54:33 UTC
 
 **Source Data Created:** 2026-03-24T03:35:37.045542+00:00
 
@@ -61,102 +61,102 @@ Of the 63 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 618.2KB
+- **Total Exporter Code:** 618.3KB
 - **Total Game Logic Code:** 662.0KB
-- **Combined Total:** 1280.2KB
+- **Combined Total:** 1280.3KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 18.2KB | ✅ | 230.2KB |
-| A Link to the Past | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 14.0KB | ✅ | 664.0KB |
+| A Hat in Time | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 18.2KB | ✅ | 230.4KB |
+| A Link to the Past | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 14.0KB | ✅ | 664.5KB |
 | A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 74.4KB |
-| APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
-| Adventure | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 25.7KB |
-| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 277.3KB |
-| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 17.9KB |
-| Blasphemous | ❌ | 100 | 0 | 56 | 0 | 44 | ❌ 0.0% | ✅ | ✅ | 2760.8KB |
+| APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.1KB |
+| Adventure | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 25.8KB |
+| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 277.5KB |
+| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 18.0KB |
+| Blasphemous | ❌ | 100 | 0 | 56 | 0 | 44 | ❌ 0.0% | ✅ | ✅ | N/A |
 | *Bomb Rush Cyberfunk* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 1.4KB | 40.3KB | 325.3KB |
-| Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.4KB |
-| Castlevania - Circle of the Moon | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 93.8KB |
-| Castlevania 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 137.8KB |
-| *Celeste (Open World)* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 1039.8KB |
-| Celeste 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.6KB |
-| ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.4KB |
+| Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.5KB |
+| Castlevania - Circle of the Moon | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 93.9KB |
+| Castlevania 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 137.9KB |
+| *Celeste (Open World)* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Celeste 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.8KB |
+| ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.6KB |
 | Choo-Choo Charles | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 281.4KB |
 | Civilization VI | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 163.1KB |
 | Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 54.2KB |
-| DLCQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.2KB | ✅ | 49.8KB |
-| *DOOM 1993* | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 281.9KB |
-| *DOOM II* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 327.5KB |
-| Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1034.1KB |
-| DepGraph | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 201.9KB |
-| Donkey Kong Country 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.4KB |
-| EarthBound | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 337.6KB |
-| Factorio | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.8KB | ✅ | 290.1KB |
-| Faxanadu | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.1KB |
+| DLCQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.2KB | ✅ | 49.9KB |
+| *DOOM 1993* | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 282.1KB |
+| *DOOM II* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 327.8KB |
+| Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1034.5KB |
+| DepGraph | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 410.5KB |
+| Donkey Kong Country 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| EarthBound | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 337.7KB |
+| Factorio | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.8KB | ✅ | 290.8KB |
+| Faxanadu | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.2KB |
 | Final Fantasy | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.3KB |
-| Final Fantasy Mystic Quest | ✅ | 100 | 89 | 0 | 0 | 11 | ⚠️ 89.0% | 13.9KB | ✅ | 548.1KB |
-| *Heretic* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.6KB |
-| Hollow Knight | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 3501.1KB |
+| Final Fantasy Mystic Quest | ✅ | 100 | 89 | 0 | 0 | 11 | ⚠️ 89.0% | 14.0KB | ✅ | 549.4KB |
+| *Heretic* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.8KB |
+| Hollow Knight | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 100.4KB |
-| Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.0KB | ✅ | 84.3KB |
-| Jak and Daxter: The Precursor Legacy | ❌ | 100 | 1 | 99 | 0 | 0 | ❌ 1.0% | 21.7KB | 4.6KB | 257.9KB |
-| *Journey to Ascension* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 48.3KB |
-| *Kingdom Hearts* | ❌ | 100 | 45 | 55 | 0 | 0 | ❌ 45.0% | ✅ | ✅ | 748.7KB |
-| *Kingdom Hearts 2* | ❌ | 100 | 0 | 95 | 0 | 5 | ❌ 0.0% | 20.4KB | ✅ | 1630.7KB |
-| *Kirby's Dream Land 3* | ❌ | 100 | 88 | 10 | 0 | 2 | ⚠️ 88.0% | 10.1KB | ✅ | 528.7KB |
+| Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.0KB | ✅ | 84.6KB |
+| Jak and Daxter: The Precursor Legacy | ❌ | 100 | 1 | 99 | 0 | 0 | ❌ 1.0% | 21.7KB | 4.6KB | 258.5KB |
+| *Journey to Ascension* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 48.4KB |
+| *Kingdom Hearts* | ❌ | 100 | 45 | 55 | 0 | 0 | ❌ 45.0% | ✅ | ✅ | 748.9KB |
+| *Kingdom Hearts 2* | ❌ | 100 | 0 | 95 | 0 | 5 | ❌ 0.0% | 20.4KB | ✅ | 1631.0KB |
+| *Kirby's Dream Land 3* | ❌ | 100 | 88 | 10 | 0 | 2 | ⚠️ 88.0% | 10.1KB | ✅ | 528.8KB |
 | Landstalker - The Treasures of King Nole | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 3.6KB | ✅ | 209.2KB |
 | *Lingo* | ❌ | 100 | 2 | 43 | 0 | 55 | ❌ 2.0% | 38.2KB | 10.7KB | 940.0KB |
-| Links Awakening DX | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 7.3KB | ✅ | 703.1KB |
+| Links Awakening DX | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 7.3KB | ✅ | 705.1KB |
 | Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.8KB |
 | Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 395.5KB |
-| Mega Man 2 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 51.7KB |
-| Mega Man 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 71.7KB |
+| Mega Man 2 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 51.8KB |
+| *Mega Man 3* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 71.7KB |
 | MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 204.7KB |
 | Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.0KB |
-| Metamath | ❌ | 100 | 99 | 1 | 0 | 0 | 99.0% | ✅ | ✅ | 56.0KB |
-| *Muse Dash* | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 228.3KB |
-| Noita | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 73.9KB |
-| Ocarina of Time | ❌ | 100 | 0 | 98 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | 1274.4KB |
+| Metamath | ❌ | 100 | 99 | 1 | 0 | 0 | 99.0% | ✅ | ✅ | 56.1KB |
+| *Muse Dash* | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 229.8KB |
+| Noita | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 74.0KB |
+| Ocarina of Time | ❌ | 100 | 0 | 98 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% | 1.0KB | ✅ | 305.2KB |
-| Overcooked! 2 | ✅ | 100 | 67 | 0 | 0 | 33 | ⚠️ 67.0% | 28.5KB | ✅ | 488.3KB |
+| Overcooked! 2 | ✅ | 100 | 67 | 0 | 0 | 33 | ⚠️ 67.0% | 28.5KB | ✅ | 488.6KB |
 | *Paint* | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 2.7KB | ✅ | 123.5KB |
-| Pokemon Emerald | ❌ | 100 | 32 | 60 | 0 | 8 | ❌ 32.0% | 5.2KB | 8.7KB | 1350.2KB |
-| Pokemon Red and Blue | ❌ | 100 | 0 | 89 | 0 | 11 | ❌ 0.0% | 12.2KB | 13.0KB | 1270.2KB |
+| Pokemon Emerald | ❌ | 100 | 32 | 60 | 0 | 8 | ❌ 32.0% | 5.2KB | 8.7KB | N/A |
+| Pokemon Red and Blue | ❌ | 100 | 0 | 89 | 0 | 11 | ❌ 0.0% | 12.2KB | 13.0KB | 1270.3KB |
 | *Raft* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 131.4KB |
-| SMZ3 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 54.2KB | 51.3KB | 1890.6KB |
-| *Satisfactory* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 41.8KB | ✅ | 1619.5KB |
-| Saving Princess | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.6KB |
+| SMZ3 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 54.2KB | 51.3KB | 1890.8KB |
+| *Satisfactory* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 41.8KB | ✅ | 1624.0KB |
+| Saving Princess | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.7KB |
 | *Secret of Evermore* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.6KB | 7.5KB | 415.0KB |
 | Shivers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 150.1KB |
-| Sonic Adventure 2 Battle | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 262.2KB |
-| *Starcraft 2* | ❌ | 100 | 0 | 99 | 1 | 0 | ❌ 0.0% | 29.3KB | 90.1KB | 1086.9KB |
-| *Stardew Valley* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 20.0KB | 9.8KB | 2558.2KB |
+| Sonic Adventure 2 Battle | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 262.4KB |
+| *Starcraft 2* | ❌ | 100 | 0 | 99 | 1 | 0 | ❌ 0.0% | 29.3KB | 90.1KB | 1084.5KB |
+| *Stardew Valley* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 20.0KB | 9.8KB | 2558.8KB |
 | Subnautica | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 205.5KB |
-| Super Mario 64 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 101.2KB |
-| Super Mario Land 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 96.3KB | ✅ | 919.1KB |
-| Super Mario World | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 177.7KB |
+| Super Mario 64 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 101.3KB |
+| Super Mario Land 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 96.3KB | ✅ | 920.0KB |
+| Super Mario World | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 177.9KB |
 | *Super Metroid* | ❌ | 100 | 0 | 59 | 0 | 41 | ❌ 0.0% | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 0.6KB | ✅ | 99.7KB |
-| TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 0.5KB | ✅ | 99.7KB |
-| *TUNIC* | ❌ | 100 | 58 | 42 | 0 | 0 | ⚠️ 58.0% | 3.1KB | ✅ | 649.2KB |
-| Terraria | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 16.9KB | ✅ | 279.0KB |
-| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 554.6KB |
-| The Messenger | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 15.2KB | ✅ | 210.4KB |
-| The Wind Waker | ✅ | 100 | 54 | 0 | 0 | 46 | ⚠️ 54.0% | 7.0KB | ✅ | 250.2KB |
-| *The Witness* | ❌ | 100 | 15 | 85 | 0 | 0 | ❌ 15.0% | 14.6KB | ✅ | 468.1KB |
-| Timespinner | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 262.9KB |
+| TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 0.5KB | ✅ | 99.8KB |
+| *TUNIC* | ❌ | 100 | 58 | 42 | 0 | 0 | ⚠️ 58.0% | 3.1KB | ✅ | 649.4KB |
+| Terraria | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 16.9KB | ✅ | 279.5KB |
+| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 558.4KB |
+| The Messenger | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 15.2KB | ✅ | 211.0KB |
+| The Wind Waker | ✅ | 100 | 54 | 0 | 0 | 46 | ⚠️ 54.0% | 7.0KB | ✅ | 250.3KB |
+| *The Witness* | ❌ | 100 | 15 | 85 | 0 | 0 | ❌ 15.0% | 14.6KB | ✅ | 408.0KB |
+| Timespinner | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 263.1KB |
 | Undertale | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.7KB |
-| Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.1KB |
+| Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.3KB |
 | *Yacht Dice* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 0.9KB | 285.0KB | 248.5KB |
-| Yoshi's Island | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 9.2KB | ✅ | 295.3KB |
-| Yu-Gi-Oh! 2006 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 644.0KB |
+| Yoshi's Island | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 9.2KB | ✅ | 295.8KB |
+| Yu-Gi-Oh! 2006 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 644.2KB |
 | Zillion | ❌ | 100 | 0 | 75 | 18 | 7 | ❌ 0.0% | ✅ | ✅ | 321.2KB |
-| shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 153.8KB |
+| shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 153.9KB |
 
 ## Results Breakdown
 
@@ -407,15 +407,18 @@ These templates are excluded from testing:
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Mega Man 3.yaml | Temporarily excluded. WorldGen variant intermittently fails test_explicit_indirect_conditions_spheres with Fill.FillError on certain pytest seeds (e.g. 57516062135983689099). |
 | Muse Dash.yaml | Temporarily excluded. Block-bodied helper inlined into expression context causes SyntaxError. |
 | Paint.yaml | Temporarily excluded. Helper paint_percent_available not in JSON helpers dict causing NameError (calculate_paint_percent_available is present but referenced under wrong name). |
 | Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
 | Satisfactory.yaml | Temporarily excluded. Calls self.state_logic.can_produce_all() which resolves to state.has_all() but is not exported, causing AttributeError. |
 | Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Seedling.yaml | WorldGen variant generation produces a broken world (worlds/seedling_worldgen missing Items.py, causing ModuleNotFoundError on load). |
 | Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Super Metroid.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | TUNIC.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | The Witness.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
+| UT Pickle Mode.yaml | Not a game. Universal Tracker pickle-mode meta-template, not a playable world (its worldgen variant fails with AttributeError in ut_pickle_worldgen._place_original_items). |
 | Universal Tracker.yaml | Not a game. |
 | Yacht Dice.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
