@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-06-27 22:46:40 UTC
+**Generated:** 2026-06-27 23:10:37 UTC
 
 **Source Data Created:** 2026-06-27T22:26:11.913378+00:00
 
@@ -117,8 +117,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Undertale | 24.2s | 8 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
+| 2 | Risk of Rain 2 | 24.2s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml |
+| 3 | Super Metroid | 23.0s | 7 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 4 | The Witness | 23.0s | 7 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+2 more) |
+| 5 | Timespinner | 21.2s | 8 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+3 more) |
+| 6 | TOEM original | 21.2s | 7 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 7 | VVVVVV | 21.0s | 8 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 8 | Secret of Evermore | 20.3s | 6 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 9 | The Legend of Zelda | 20.1s | 7 | Aquaria.yaml, Civilization VI.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+2 more) |
+| 10 | Starcraft 2 | 18.9s | 6 | Aquaria.yaml, Civilization VI.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Starcraft 2 | 191.2s | 6 | Aquaria.yaml, Civilization VI.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 2 | Satisfactory | 168.1s | 6 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 3 | Kingdom Hearts 2 | 122.2s | 4 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 4 | Secret of Evermore | 99.1s | 6 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 5 | Kirby's Dream Land 3 | 64.1s | 4 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
+| 6 | The Witness | 45.3s | 7 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+2 more) |
+| 7 | Super Mario Land 2 | 45.1s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+1 more) |
+| 8 | Super Metroid | 43.6s | 7 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 9 | Kingdom Hearts | 39.6s | 4 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml |
+| 10 | Raft | 37.1s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml |
