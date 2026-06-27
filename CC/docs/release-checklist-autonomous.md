@@ -524,11 +524,27 @@ gh run cancel <run-id> --repo PeerInfinity/Archipelago-CC
 
 ### 5.2 Shard budget
 
-This account has **~40 concurrent shards**. `test-all-sequential` fans each test
-type into **10 splits**; a comfortable pattern is **3 concurrent 10-shard runs**
-(original/worldgen/apworld), leaving headroom. The fuzz/world-generator workflows
-parallelize lighter (`jobs=4` per runner). GitHub queues anything over the cap
-(not an error), but stay near 3×10 to leave room for other work.
+This account has **~40 concurrent shards**. **Essentially every test workflow run
+uses a 10-shard matrix** (`split_num: [1..10]`) — `test-all-sequential`,
+`test-ut-fuzz`, `test-spoiler-fuzz`, and `test-world-generator` all fan into 10.
+So the rule is simple: **run at most 3 workflow runs concurrently** (≈30 shards),
+leaving headroom. GitHub queues anything over the cap (not an error), but staying
+at 3 keeps monitoring sane and leaves room for other work.
+
+Two things that look like they'd change the count but don't:
+- **The `jobs` input on the fuzz workflows is NOT the shard count** — it's
+  per-runner CPU parallelism (default 4 threads *inside* each of the 10 shards).
+- **`test-world-generator test_mode=both` is still 10 shards peak**, not 20: the
+  `run-random-tests` job `needs: [setup, run-canonical-tests]`, so random runs
+  *after* canonical (10, then 10 — sequential, ~2× wall-clock).
+- **`test-all-sequential` is also 10 shards peak per run**, not 40: its phases
+  (minimal-spoiler → full-spoiler → multiclient → multiworld) each have 10 splits
+  but run *sequentially* (each `needs` the prior phase's combine), so only one
+  phase's 10 splits are live at a time.
+
+Consequence: the full Python sweep runs as **groups of ≤3 workflows**, each group
+fired only after the previous group's shards free up (e.g. group 1 = the 3
+`test-all-sequential` runs; group 2 = 3 UT-fuzz modes; etc. — see 5.4).
 
 ### 5.3 Smoke-test first
 
