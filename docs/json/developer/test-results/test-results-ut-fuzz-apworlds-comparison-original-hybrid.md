@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-03-28 17:13:12 UTC
+**Generated:** 2026-06-27 23:53:18 UTC
 
 **Source Data Last Updated:** 2026-03-28T03:49:09
 
@@ -21,7 +21,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Both:** 39 (31.7%)
 - **Passing Original Only:** 1 (0.8%)
 - **Passing Hybrid Only:** 45 (36.6%)
-- **Passing Hybrid Only with Generic Exporter:** 30 (24.4%)
+- **Passing Hybrid Only with Generic Exporter:** 45 (36.6%)
 - **Passing Neither:** 38 (30.9%)
 
 ## Full Comparison
@@ -31,17 +31,17 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | A Dance of Fire and Ice | ❌ | ✅ | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ⚠️ 67/100 | ✅ | ✅ | ✅ | N/A |
 | A Link Between Worlds | ❌ 15/100 | ❌ 15/100 | ✅ | ✅ | N/A |
-| ANIMAL WELL | ⚠️ 92/100 | ✅ | 1.5KB | ✅ | N/A |
+| ANIMAL WELL | ⚠️ 92/100 | ✅ | ✅ | ✅ | N/A |
 | Actraiser | ⚠️ 82/100 | ✅ | ✅ | ✅ | N/A |
 | Against the Storm | ⚠️ 64/99 | ⚠️ 64/99 | ✅ | ✅ | N/A |
-| Air Delivery | ✅ | ✅ | 6.6KB | ✅ | N/A |
-| An Untitled Story | ✅ | ✅ | 8.7KB | ✅ | N/A |
-| Anodyne | ✅ | ✅ | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ❌ 48/100 | ✅ | 3.1KB | ✅ | N/A |
+| Air Delivery | ✅ | ✅ | ✅ | ✅ | N/A |
+| An Untitled Story | ✅ | ✅ | ✅ | ✅ | N/A |
+| Anodyne | ✅ | ✅ | ✅ | ✅ | N/A |
+| Another Crabs Treasure | ❌ 48/100 | ✅ | ✅ | ✅ | N/A |
 | Ape Escape | ⚠️ 99/100 | ✅ | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ✅ | ✅ | ✅ | N/A |
 | Astalon | ✅ | ✅ | ✅ | ✅ | N/A |
-| Autopelago | ✅ | ✅ | 9.2KB | ✅ | N/A |
+| Autopelago | ✅ | ✅ | ✅ | ✅ | N/A |
 | Axiom Verge | ⚠️ 65/100 | ✅ | ✅ | ✅ | N/A |
 | Balatro | ❌ 9/36 | ❌ 7/19 | ✅ | ✅ | N/A |
 | Brotato | ⚠️ 44/79 | ✅ | ✅ | ✅ | N/A |
@@ -53,7 +53,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Corn Kidz 64 | ⚠️ 98/100 | ✅ | ✅ | ✅ | N/A |
 | CrossCode | ✅ | ✅ | ✅ | ✅ | N/A |
 | Crystal Project | ❌ 28/100 | ❌ 28/100 | ✅ | ✅ | N/A |
-| Crystalis | ⚠️ 60/81 | ⚠️ 59/62 | 9.2KB | ✅ | N/A |
+| Crystalis | ⚠️ 60/81 | ⚠️ 59/62 | ✅ | ✅ | N/A |
 | Cuphead | ❌ | ❌ | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | ✅ | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ❌ 34/100 | ❌ 35/100 | ✅ | ✅ | N/A |
@@ -76,7 +76,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Into the Breach | ❌ 45/100 | ❌ 45/100 | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ | ✅ | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ⚠️ 66/97 | ✅ | ✅ | ✅ | N/A |
-| Jigsaw | ❌ 48/100 | ✅ | 1.6KB | ✅ | N/A |
+| Jigsaw | ❌ 48/100 | ✅ | ✅ | ✅ | N/A |
 | K-On! After School Live!! | ✅ | ✅ | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ⚠️ 79/100 | ✅ | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -88,29 +88,29 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Lil Gator Game | ❌ | ❌ | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | ✅ | ✅ | N/A |
-| Lunacid | ✅ | ✅ | 8.2KB | ✅ | N/A |
-| Majora's Mask Recompiled | ⚠️ 89/100 | ✅ | 10.4KB | ✅ | N/A |
+| Lunacid | ✅ | ✅ | ✅ | ✅ | N/A |
+| Majora's Mask Recompiled | ⚠️ 89/100 | ✅ | ✅ | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 84/100 | ✅ | ✅ | ✅ | N/A |
-| Metroid: Zero Mission | ❌ 1/100 | ✅ | 9.8KB | ✅ | N/A |
-| Minishoot Adventures | ❌ 18/100 | ✅ | 25.9KB | ✅ | N/A |
-| Minit | ⚠️ 99/100 | ✅ | 23.9KB | ✅ | N/A |
+| Metroid: Zero Mission | ❌ 1/100 | ✅ | ✅ | ✅ | N/A |
+| Minishoot Adventures | ❌ 18/100 | ✅ | ✅ | ✅ | N/A |
+| Minit | ⚠️ 99/100 | ✅ | ✅ | ✅ | N/A |
 | Monster Sanctuary | ❌ 20/100 | ❌ 20/100 | ✅ | ✅ | N/A |
 | Nine Sols | ✅ | ✅ | ✅ | ✅ | N/A |
-| Ori and the Blind Forest | ⚠️ 98/100 | ✅ | 23.2KB | ✅ | N/A |
+| Ori and the Blind Forest | ⚠️ 98/100 | ✅ | ✅ | ✅ | N/A |
 | Ori and the Will of the Wisps | ❌ 20/100 | ❌ 20/70 | ✅ | ✅ | N/A |
 | Oxygen Not Included | ⚠️ 64/100 | ⚠️ 64/91 | ✅ | ✅ | N/A |
-| Pizza Tower | ❌ 49/100 | ✅ | 7.0KB | ✅ | N/A |
+| Pizza Tower | ❌ 49/100 | ✅ | ✅ | ✅ | N/A |
 | PlateUp | ❌ 5/90 | ❌ 5/65 | ✅ | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ⚠️ 80/100 | ✅ | ✅ | ✅ | N/A |
 | Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 78/100 | ⚠️ 78/100 | ✅ | ✅ | N/A |
-| Pseudoregalia | ✅ | ✅ | 17.1KB | ✅ | N/A |
+| Pseudoregalia | ✅ | ✅ | ✅ | ✅ | N/A |
 | Rabi-Ribi | ⚠️ 50/63 | ✅ | ✅ | ✅ | N/A |
-| Rain World | ⚠️ 36/37 | ✅ | 11.8KB | ✅ | N/A |
+| Rain World | ⚠️ 36/37 | ✅ | ✅ | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | ✅ | ✅ | ✅ | N/A |
 | Reventure | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ | ✅ | 7.7KB | ✅ | N/A |
+| Rift Wizard | ✅ | ✅ | ✅ | ✅ | N/A |
 | Rift of the Necrodancer | ✅ | ✅ | ✅ | ✅ | N/A |
 | Rusted Moss | ❌ 43/100 | ❌ 43/100 | ✅ | ✅ | N/A |
 | Sentinels of the Multiverse | ❌ | ❌ | ✅ | ✅ | N/A |
@@ -119,35 +119,35 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ | ❌ | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ⚠️ 88/100 | ⚠️ 87/99 | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ❌ 10/68 | ✅ | 29.9KB | ✅ | N/A |
+| Sonic Adventure DX | ❌ 10/68 | ✅ | ✅ | ✅ | N/A |
 | Sonic Heroes | ✅ | ❌ | ✅ | ✅ | N/A |
 | Sonic Rush | ⚠️ 99/100 | ✅ | ✅ | ✅ | N/A |
-| Sonic the Hedgehog 1 | ✅ | ✅ | 9.4KB | ✅ | N/A |
-| Soul Blazer | ✅ | ✅ | 10.5KB | ✅ | N/A |
+| Sonic the Hedgehog 1 | ✅ | ✅ | ✅ | ✅ | N/A |
+| Soul Blazer | ✅ | ✅ | ✅ | ✅ | N/A |
 | Spinball | ✅ | ✅ | ✅ | ✅ | N/A |
-| Spyro 3 | ❌ 10/99 | ✅ | 15.3KB | ✅ | N/A |
-| Stacklands | ✅ | ✅ | 12.7KB | ✅ | N/A |
-| Star Fox 64 | ✅ | ✅ | 17.2KB | ✅ | N/A |
-| Star Wars Episode I Racer | ❌ 4/100 | ✅ | 5.7KB | ✅ | N/A |
+| Spyro 3 | ❌ 10/99 | ✅ | ✅ | ✅ | N/A |
+| Stacklands | ✅ | ✅ | ✅ | ✅ | N/A |
+| Star Fox 64 | ✅ | ✅ | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ❌ 4/100 | ✅ | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ | ✅ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ✅ | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ 41/100 | ⚠️ 43/59 | 15.1KB | ✅ | N/A |
+| System Shock 2 | ❌ 41/100 | ⚠️ 43/59 | ✅ | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ | ❌ | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | ✅ | ✅ | N/A |
-| Tetris Attack | ⚠️ 83/87 | ✅ | 23.1KB | ✅ | N/A |
+| Tetris Attack | ⚠️ 83/87 | ✅ | ✅ | ✅ | N/A |
 | Tevi | ✅ | ✅ | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ | ❌ | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 11/100 | ❌ 13/98 | ✅ | ✅ | N/A |
-| The Sims 4 | ❌ | ✅ | 5.5KB | ✅ | N/A |
+| The Sims 4 | ❌ | ✅ | ✅ | ✅ | N/A |
 | ToeJam and Earl | ❌ 4/100 | ✅ | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tyrian | ⚠️ 38/75 | ⚠️ 40/71 | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | ✅ | ✅ | N/A |
 | Wario Land | ❌ | ❌ | ✅ | ✅ | N/A |
-| Watery Words | ✅ | ✅ | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ | ✅ | 19.5KB | ✅ | N/A |
+| Watery Words | ✅ | ✅ | ✅ | ✅ | N/A |
+| Wordipelago | ✅ | ✅ | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 84/100 | ⚠️ 81/100 | 28.8KB | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 84/100 | ⚠️ 81/100 | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 17/100 | ✅ | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ❌ 12/100 | ✅ | ✅ | ✅ | N/A |
 | osu! | ❌ 1/100 | ✅ | ✅ | ✅ | N/A |
@@ -158,12 +158,12 @@ These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Air Delivery | 6.6KB | ✅ | N/A |
-| An Untitled Story | 8.7KB | ✅ | N/A |
-| Anodyne | 10.7KB | ✅ | N/A |
+| Air Delivery | ✅ | ✅ | N/A |
+| An Untitled Story | ✅ | ✅ | N/A |
+| Anodyne | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ✅ | N/A |
 | Astalon | ✅ | ✅ | N/A |
-| Autopelago | 9.2KB | ✅ | N/A |
+| Autopelago | ✅ | ✅ | N/A |
 | Castlevania: Dawn of Sorrow | ✅ | ✅ | N/A |
 | CrossCode | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | ✅ | N/A |
@@ -175,27 +175,27 @@ These games have 100% success rate in both Universal Tracker versions.
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
-| Lunacid | 8.2KB | ✅ | N/A |
+| Lunacid | ✅ | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
 | Nine Sols | ✅ | ✅ | N/A |
-| Pseudoregalia | 17.1KB | ✅ | N/A |
+| Pseudoregalia | ✅ | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
-| Rift Wizard | 7.7KB | ✅ | N/A |
+| Rift Wizard | ✅ | ✅ | N/A |
 | Rift of the Necrodancer | ✅ | ✅ | N/A |
-| Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
-| Soul Blazer | 10.5KB | ✅ | N/A |
+| Sonic the Hedgehog 1 | ✅ | ✅ | N/A |
+| Soul Blazer | ✅ | ✅ | N/A |
 | Spinball | ✅ | ✅ | N/A |
-| Stacklands | 12.7KB | ✅ | N/A |
-| Star Fox 64 | 17.2KB | ✅ | N/A |
+| Stacklands | ✅ | ✅ | N/A |
+| Star Fox 64 | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | N/A |
 | Tevi | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
-| Wordipelago | 19.5KB | ✅ | N/A |
+| Wordipelago | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
 ## Games Passing Original Only (1)
@@ -214,9 +214,9 @@ These games pass in the Hybrid UT but fail in the Original UT.
 |-----------|:--------:|:---------:|:----------:|
 | A Dance of Fire and Ice | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ✅ | ✅ | N/A |
-| ANIMAL WELL | 1.5KB | ✅ | N/A |
+| ANIMAL WELL | ✅ | ✅ | N/A |
 | Actraiser | ✅ | ✅ | N/A |
-| Another Crabs Treasure | 3.1KB | ✅ | N/A |
+| Another Crabs Treasure | ✅ | ✅ | N/A |
 | Ape Escape | ✅ | ✅ | N/A |
 | Axiom Verge | ✅ | ✅ | N/A |
 | Brotato | ✅ | ✅ | N/A |
@@ -233,26 +233,26 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Here Comes Niko! | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ | ✅ | N/A |
-| Jigsaw | 1.6KB | ✅ | N/A |
+| Jigsaw | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
 | Kingdom Hearts RE Chain of Memories | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
-| Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
+| Majora's Mask Recompiled | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | N/A |
-| Metroid: Zero Mission | 9.8KB | ✅ | N/A |
-| Minishoot Adventures | 25.9KB | ✅ | N/A |
-| Minit | 23.9KB | ✅ | N/A |
-| Ori and the Blind Forest | 23.2KB | ✅ | N/A |
-| Pizza Tower | 7.0KB | ✅ | N/A |
+| Metroid: Zero Mission | ✅ | ✅ | N/A |
+| Minishoot Adventures | ✅ | ✅ | N/A |
+| Minit | ✅ | ✅ | N/A |
+| Ori and the Blind Forest | ✅ | ✅ | N/A |
+| Pizza Tower | ✅ | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ✅ | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
-| Rain World | 11.8KB | ✅ | N/A |
-| Sonic Adventure DX | 29.9KB | ✅ | N/A |
+| Rain World | ✅ | ✅ | N/A |
+| Sonic Adventure DX | ✅ | ✅ | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
-| Spyro 3 | 15.3KB | ✅ | N/A |
-| Star Wars Episode I Racer | 5.7KB | ✅ | N/A |
-| Tetris Attack | 23.1KB | ✅ | N/A |
-| The Sims 4 | 5.5KB | ✅ | N/A |
+| Spyro 3 | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ✅ | ✅ | N/A |
+| Tetris Attack | ✅ | ✅ | N/A |
+| The Sims 4 | ✅ | ✅ | N/A |
 | ToeJam and Earl | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
@@ -272,7 +272,7 @@ These games fail in both Universal Tracker versions.
 | Chrono Trigger Jets of Time | ✅ | ✅ | N/A |
 | ClusterTruck | ✅ | ✅ | N/A |
 | Crystal Project | ✅ | ✅ | N/A |
-| Crystalis | 9.2KB | ✅ | N/A |
+| Crystalis | ✅ | ✅ | N/A |
 | Cuphead | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ✅ | ✅ | N/A |
 | Duke Nukem 3D | ✅ | ✅ | N/A |
@@ -294,14 +294,14 @@ These games fail in both Universal Tracker versions.
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
-| System Shock 2 | 15.1KB | ✅ | N/A |
+| System Shock 2 | ✅ | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
-| Watery Words | 9.1KB | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 28.8KB | ✅ | N/A |
+| Watery Words | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ | N/A |
 
 ## Notes
 
