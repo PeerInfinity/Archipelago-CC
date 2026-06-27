@@ -31,7 +31,7 @@ function extractRec(rule) {
             return { items: new Map([[name, rule.args?.count ?? 1]]), exact: true };
         }
         case 'HasAll': {
-            const items = rule.args?.items ?? [];
+            const items = rule.args?.items ?? rule.args?.item_names ?? [];
             return { items: new Map(items.map((i) => [i, 1])), exact: true };
         }
         case 'And': {
@@ -67,7 +67,7 @@ function extractRec(rule) {
         case 'HasAny': {
             // OR of Has(item). One item ≡ Has; more ≡ a disjunction with
             // empty necessary subset.
-            const items = rule.args?.items ?? [];
+            const items = rule.args?.items ?? rule.args?.item_names ?? [];
             if (items.length === 1) return { items: new Map([[items[0], 1]]), exact: true };
             return { items: new Map(), exact: false };
         }
