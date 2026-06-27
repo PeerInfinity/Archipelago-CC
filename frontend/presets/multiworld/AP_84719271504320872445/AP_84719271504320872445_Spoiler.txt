@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 3
+﻿Archipelago Version 0.6.8  -  Seed: 3
 
 Filling Algorithm:               balanced
 Players:                         4
@@ -1416,9 +1416,10 @@ Act Completion (Time Rift - Bazaar) (Player1)
    =>   Time Rift - Bazaar
 Act Completion (Time Rift - Curly Tail Trail) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Contractual Obligations -> Time Rift - Village Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
+   =>   The Subcon Well -> Time Rift - Village Portal - Entrance 2
    =>   Time Rift - Curly Tail Trail
 Act Completion (Time Rift - Pipe) (Player1)
         Menu -> Save File -> Spaceship
@@ -1445,8 +1446,10 @@ Act Completion (Time Rift - Village) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Time Rift - Pipe Portal - Entrance 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 6: Connection 1
+   =>   Mail Delivery Service -> Time Rift - Pipe Portal - Entrance 5
    =>   Time Rift - Village
 Act Completion (Toilet of Doom) (Player1)
         Menu -> Save File -> Spaceship
@@ -2323,24 +2326,27 @@ Mafia Town - Yellow Sphere Building Chest (Player1)
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Below Dock (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Beside Red Building (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Mafia of Cooks
 Magic Bat (Player2)
         Links House -> Links House Exit

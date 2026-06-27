@@ -733,11 +733,11 @@
           "id": 10,
           "name": "Join the Watch",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 68.17511279798264,
           "skills": [
             0
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -746,11 +746,11 @@
           "id": 11,
           "name": "Read Noticeboard",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 1169.0813005726072,
           "skills": [
             1
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -759,11 +759,11 @@
           "id": 12,
           "name": "Train with Weapons",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.596236504767851,
           "skills": [
             2
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -772,11 +772,11 @@
           "id": 13,
           "name": "Learn How to Read",
           "type": 0,
-          "costMult": 12.319412208475939,
+          "costMult": 626.0945870630975,
           "skills": [
             1
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 2.8839139248548924,
           "maxReps": 1,
           "perk": 8,
           "item": null
@@ -785,11 +785,11 @@
           "id": 14,
           "name": "Beg for Food",
           "type": 0,
-          "costMult": 1,
+          "costMult": 13.83411771375898,
           "skills": [
             0
           ],
-          "xpMult": 40.31650641979044,
+          "xpMult": 11.53565569941957,
           "maxReps": 10,
           "perk": null,
           "item": 0
@@ -798,12 +798,12 @@
           "id": 15,
           "name": "Hide and Seek",
           "type": 0,
-          "costMult": 2,
+          "costMult": 37.41607785739023,
           "skills": [
             3,
             4
           ],
-          "xpMult": 30.237379814842832,
+          "xpMult": 8.651741774564677,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -812,11 +812,11 @@
           "id": 16,
           "name": "Observe Surroundings",
           "type": 0,
-          "costMult": 1,
+          "costMult": 43.07255889968036,
           "skills": [
             1
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 5,
           "perk": null,
           "item": null
@@ -831,11 +831,11 @@
           "id": 20,
           "name": "Notice Smoke in the Distance",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 12.563180615404761,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -844,11 +844,11 @@
           "id": 21,
           "name": "Learn Routines",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 113.57409081584498,
           "skills": [
             1
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -857,11 +857,11 @@
           "id": 22,
           "name": "Deal with Drunkards",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 14.803393392438156,
           "skills": [
             0
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 2,
           "perk": null,
           "item": null
@@ -870,11 +870,11 @@
           "id": 25,
           "name": "Fletch Arrows",
           "type": 0,
-          "costMult": 0.4,
+          "costMult": 0.05111800668163974,
           "skills": [
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 5,
           "perk": null,
           "item": 1
@@ -883,11 +883,11 @@
           "id": 27,
           "name": "Learn How to Write",
           "type": 0,
-          "costMult": 2.8452470560622762,
+          "costMult": 331.95287992607433,
           "skills": [
             1
           ],
-          "xpMult": 4.031650641979044,
+          "xpMult": 1.153565569941957,
           "maxReps": 1,
           "perk": 11,
           "item": null
@@ -896,11 +896,11 @@
           "id": 23,
           "name": "Chit-chat",
           "type": 0,
-          "costMult": 1,
+          "costMult": 7.829099403722895,
           "skills": [
             0
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -909,11 +909,11 @@
           "id": 24,
           "name": "Sparring",
           "type": 0,
-          "costMult": 1.5,
+          "costMult": 2.101383003147943,
           "skills": [
             2
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -922,12 +922,12 @@
           "id": 26,
           "name": "Daydream About Leaving",
           "type": 0,
-          "costMult": 1,
+          "costMult": 2.9760333275980284,
           "skills": [
             7,
             3
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 6,
           "perk": null,
           "item": null
@@ -942,11 +942,11 @@
           "id": 30,
           "name": "Enter the Wilderness",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 3.781381870761706,
           "skills": [
             7
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 2.8839139248548924,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -955,11 +955,11 @@
           "id": 31,
           "name": "Fight a Goblin",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 19.48590508439158,
           "skills": [
             2
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -968,11 +968,11 @@
           "id": 32,
           "name": "Warn Villagers",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 8.101097804555,
           "skills": [
             0
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -981,11 +981,11 @@
           "id": 33,
           "name": "Loot the Fallen",
           "type": 0,
-          "costMult": 0.4,
+          "costMult": 0.01,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": 2
@@ -994,12 +994,12 @@
           "id": 34,
           "name": "Rescue Villager",
           "type": 0,
-          "costMult": 0.1240692202191591,
+          "costMult": 3.7437457385337383,
           "skills": [
             4,
             3
           ],
-          "xpMult": 30.237379814842832,
+          "xpMult": 8.651741774564677,
           "maxReps": 3,
           "perk": 16,
           "item": null
@@ -1008,11 +1008,11 @@
           "id": 35,
           "name": "Treat Villager Wounds",
           "type": 0,
-          "costMult": 1.5,
+          "costMult": 0.1529187143568545,
           "skills": [
             5
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1025,7 +1025,7 @@
           "skills": [
             2
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 1,
           "maxReps": 1,
           "perk": null,
           "item": 8
@@ -1034,12 +1034,12 @@
           "id": 37,
           "name": "Save the Village",
           "type": 0,
-          "costMult": 1.1954722153245068,
+          "costMult": 2.140132865303259,
           "skills": [
             2,
             8
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": 7,
           "item": null,
@@ -1055,12 +1055,12 @@
           "id": 40,
           "name": "Find Cave Entrance",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 4.652481059036839,
           "skills": [
             7,
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1069,12 +1069,12 @@
           "id": 41,
           "name": "Look for Tracks",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.389368386247864,
           "skills": [
             3,
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1083,12 +1083,12 @@
           "id": 42,
           "name": "Survive the Night",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.3532888969926711,
           "skills": [
             9,
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1097,12 +1097,12 @@
           "id": 43,
           "name": "Find an Amulet",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 1.288973926768676,
           "skills": [
             3,
             8
           ],
-          "xpMult": 2.015825320989522,
+          "xpMult": 0.5767827849709785,
           "maxReps": 1,
           "perk": 17,
           "item": null
@@ -1111,12 +1111,12 @@
           "id": 45,
           "name": "Forage for Mushrooms",
           "type": 0,
-          "costMult": 0.25,
+          "costMult": 0.01,
           "skills": [
             3,
             9
           ],
-          "xpMult": 40.31650641979044,
+          "xpMult": 11.53565569941957,
           "maxReps": 5,
           "perk": null,
           "item": 3
@@ -1125,11 +1125,11 @@
           "id": 44,
           "name": "Build a Fire",
           "type": 0,
-          "costMult": 2,
+          "costMult": 4.888088074346423,
           "skills": [
             5
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1138,11 +1138,11 @@
           "id": 46,
           "name": "Befriend a Deer",
           "type": 0,
-          "costMult": 10,
+          "costMult": 29.515994415359074,
           "skills": [
             0
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1155,7 +1155,7 @@
           "skills": [
             2
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 1,
           "maxReps": 1,
           "perk": null,
           "item": 11
@@ -1164,11 +1164,11 @@
           "id": 48,
           "name": "Gather Magical Roots",
           "type": 0,
-          "costMult": 15,
+          "costMult": 5.555408558427439,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": 11,
@@ -1184,11 +1184,11 @@
           "id": 50,
           "name": "Leave Via Back Entrance",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 4.8054467733148165,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1197,11 +1197,11 @@
           "id": 51,
           "name": "Find a Way Through",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 41.04237560931382,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1210,12 +1210,12 @@
           "id": 52,
           "name": "Rescue Captives",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.5567841643609515,
           "skills": [
             0,
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1224,11 +1224,11 @@
           "id": 53,
           "name": "Steal Supplies",
           "type": 0,
-          "costMult": 0.3,
+          "costMult": 1.4825464790254768,
           "skills": [
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 5,
           "perk": null,
           "item": 4
@@ -1237,12 +1237,12 @@
           "id": 54,
           "name": "Try Casting a Spell",
           "type": 0,
-          "costMult": 0.04382670205027034,
+          "costMult": 2.208197300389965,
           "skills": [
             8,
             1
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 6,
           "perk": 30,
           "item": null
@@ -1251,11 +1251,11 @@
           "id": 55,
           "name": "Inspect Wall Paintings",
           "type": 0,
-          "costMult": 2,
+          "costMult": 65.17076463023655,
           "skills": [
             1
           ],
-          "xpMult": 80.63301283958089,
+          "xpMult": 23.07131139883914,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1264,11 +1264,11 @@
           "id": 56,
           "name": "Scout the Cave",
           "type": 0,
-          "costMult": 0.5,
+          "costMult": 5.287157618116199,
           "skills": [
             3
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1281,7 +1281,7 @@
           "skills": [
             2
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 1,
           "maxReps": 1,
           "perk": null,
           "item": 12
@@ -1290,11 +1290,11 @@
           "id": 58,
           "name": "Wipe Out Goblins",
           "type": 0,
-          "costMult": 0.7498942093324563,
+          "costMult": 10.868359863141514,
           "skills": [
             2
           ],
-          "xpMult": 6.047475962968567,
+          "xpMult": 1.7303483549129355,
           "maxReps": 1,
           "perk": 10,
           "item": null,
@@ -1310,11 +1310,11 @@
           "id": 60,
           "name": "Get to the City",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.8903168612830282,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1323,11 +1323,11 @@
           "id": 61,
           "name": "Join a Caravan",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.8571153612712736,
           "skills": [
             0
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 2.8839139248548924,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1336,12 +1336,12 @@
           "id": 62,
           "name": "Scout the Road Ahead",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 3.2619477164743196,
           "skills": [
             1,
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1350,11 +1350,11 @@
           "id": 63,
           "name": "Make Travel Equipment",
           "type": 0,
-          "costMult": 0.5,
+          "costMult": 0.01,
           "skills": [
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": 5
@@ -1363,12 +1363,12 @@
           "id": 64,
           "name": "Get Used to Traveling",
           "type": 0,
-          "costMult": 0.8237057527954682,
+          "costMult": 0.5150857306122544,
           "skills": [
             7,
             9
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": 12,
           "item": null
@@ -1377,11 +1377,11 @@
           "id": 69,
           "name": "Study the Amulet",
           "type": 0,
-          "costMult": 10.643758308981864,
+          "costMult": 23.1213804767154,
           "skills": [
             1
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 2.8839139248548924,
           "maxReps": 1,
           "perk": 2,
           "item": null
@@ -1390,11 +1390,11 @@
           "id": 65,
           "name": "Chat with Travelers",
           "type": 0,
-          "costMult": 1,
+          "costMult": 4.987965590883921,
           "skills": [
             0
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -1403,11 +1403,11 @@
           "id": 66,
           "name": "Practice Traveling Unnoticed",
           "type": 0,
-          "costMult": 2,
+          "costMult": 9.286114413629742,
           "skills": [
             4
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1420,7 +1420,7 @@
           "skills": [
             2
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 1,
           "maxReps": 1,
           "perk": null,
           "item": 14
@@ -1429,12 +1429,12 @@
           "id": 68,
           "name": "Loot Bandit Camp",
           "type": 0,
-          "costMult": 35,
+          "costMult": 4.45553360681911,
           "skills": [
             4,
             3
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 4,
           "perk": null,
           "item": 14,
@@ -1450,11 +1450,11 @@
           "id": 70,
           "name": "Enter the City",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.1763081743744618,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1463,11 +1463,11 @@
           "id": 71,
           "name": "Bribe the City Guards",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 3.294797325569937,
           "skills": [
             0
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1476,12 +1476,12 @@
           "id": 72,
           "name": "Survive a Mugging",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.27583562683949786,
           "skills": [
             2,
             9
           ],
-          "xpMult": 15.118689907421416,
+          "xpMult": 4.325870887282338,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1490,11 +1490,11 @@
           "id": 73,
           "name": "Buy a Book",
           "type": 0,
-          "costMult": 1,
+          "costMult": 3.5062424339511495,
           "skills": [
             0
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 5,
           "perk": null,
           "item": 6
@@ -1503,12 +1503,12 @@
           "id": 74,
           "name": "Negotiate with a Rogue Guard",
           "type": 0,
-          "costMult": 5.949681890021589,
+          "costMult": 16.258464346338023,
           "skills": [
             0,
             4
           ],
-          "xpMult": 6.047475962968567,
+          "xpMult": 1.7303483549129355,
           "maxReps": 1,
           "perk": 15,
           "item": null
@@ -1517,11 +1517,11 @@
           "id": 75,
           "name": "Spar with the Guards",
           "type": 0,
-          "costMult": 0.75,
+          "costMult": 0.8498382114900648,
           "skills": [
             2
           ],
-          "xpMult": 40.31650641979044,
+          "xpMult": 11.53565569941957,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -1530,11 +1530,11 @@
           "id": 76,
           "name": "Fend for Yourself",
           "type": 0,
-          "costMult": 0.5,
+          "costMult": 1.3174769052107185,
           "skills": [
             9
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1543,11 +1543,11 @@
           "id": 77,
           "name": "Skulk About",
           "type": 0,
-          "costMult": 2,
+          "costMult": 10.374532801105527,
           "skills": [
             4
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1562,11 +1562,11 @@
           "id": 80,
           "name": "Embark on a Quest",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 2.096163416324259,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1575,12 +1575,12 @@
           "id": 81,
           "name": "Investigate Rumors of a Magician",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 15.281859676560787,
           "skills": [
             0,
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -1589,12 +1589,12 @@
           "id": 82,
           "name": "Search the Archives for Magic",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.1200219195467644,
           "skills": [
             1,
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 5,
           "perk": null,
           "item": null
@@ -1603,12 +1603,12 @@
           "id": 83,
           "name": "Scribe Scroll of Haste",
           "type": 0,
-          "costMult": 2,
+          "costMult": 0.6664819989475995,
           "skills": [
             5,
             8
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": 7
@@ -1617,11 +1617,11 @@
           "id": 84,
           "name": "Cast a Spell",
           "type": 0,
-          "costMult": 0.010366329284376991,
+          "costMult": 0.36238610638910906,
           "skills": [
             8
           ],
-          "xpMult": 4.031650641979044,
+          "xpMult": 1.153565569941957,
           "maxReps": 6,
           "perk": 13,
           "item": null
@@ -1630,12 +1630,12 @@
           "id": 85,
           "name": "Study at the Mage's Guild",
           "type": 0,
-          "costMult": 2,
+          "costMult": 3.538019143825828,
           "skills": [
             1,
             8
           ],
-          "xpMult": 40.31650641979044,
+          "xpMult": 11.53565569941957,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1644,12 +1644,12 @@
           "id": 86,
           "name": "Train for Your Quest",
           "type": 0,
-          "costMult": 1,
+          "costMult": 1.0490378791560195,
           "skills": [
             3,
             9
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1662,7 +1662,7 @@
           "skills": [
             2
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 1,
           "maxReps": 1,
           "perk": null,
           "item": 16
@@ -1671,12 +1671,12 @@
           "id": 89,
           "name": "Purge Corrupt Bureaucracy",
           "type": 0,
-          "costMult": 1.14187137899178,
+          "costMult": 11.173368615559095,
           "skills": [
             1,
             4
           ],
-          "xpMult": 0.40316506419790443,
+          "xpMult": 0.1153565569941957,
           "maxReps": 1,
           "perk": 0,
           "item": null,
@@ -1692,12 +1692,12 @@
           "id": 90,
           "name": "Scale the Mountain",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.71380129671023,
           "skills": [
             7,
             9
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": 18,
           "item": null
@@ -1706,11 +1706,11 @@
           "id": 91,
           "name": "Locate the Mountain",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.7962826645574186,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1719,11 +1719,11 @@
           "id": 92,
           "name": "Make Climbing Gear",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.056064884774556935,
           "skills": [
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1732,11 +1732,11 @@
           "id": 93,
           "name": "Make Camping Equipment",
           "type": 0,
-          "costMult": 0.15,
+          "costMult": 0.18658098970158976,
           "skills": [
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": 9
@@ -1745,12 +1745,12 @@
           "id": 94,
           "name": "Prepare to Scale the Mountain",
           "type": 0,
-          "costMult": 1,
+          "costMult": 0.8856805933238814,
           "skills": [
             1,
             9
           ],
-          "xpMult": 80.63301283958089,
+          "xpMult": 23.07131139883914,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1759,11 +1759,11 @@
           "id": 95,
           "name": "Build a Hut",
           "type": 0,
-          "costMult": 0.3,
+          "costMult": 1.6325133401923433,
           "skills": [
             5
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1772,12 +1772,12 @@
           "id": 96,
           "name": "Go Sightseeing",
           "type": 0,
-          "costMult": 0.5,
+          "costMult": 2.1127369763139825,
           "skills": [
             3,
             7
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -1786,12 +1786,12 @@
           "id": 97,
           "name": "Meet a Magical Creature",
           "type": 0,
-          "costMult": 2,
+          "costMult": 6.652086719178326,
           "skills": [
             8,
             0
           ],
-          "xpMult": 60.474759629685664,
+          "xpMult": 17.303483549129353,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1804,7 +1804,7 @@
           "skills": [
             2
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 1,
           "maxReps": 1,
           "perk": null,
           "item": 17
@@ -1813,11 +1813,11 @@
           "id": 99,
           "name": "Gather Shed Fur from Lair",
           "type": 0,
-          "costMult": 8,
+          "costMult": 0.9815608169867169,
           "skills": [
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": 17,
@@ -1833,11 +1833,11 @@
           "id": 100,
           "name": "Hunt for the First Reagent",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.4991566894937876,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1850,7 +1850,7 @@
           "skills": [
             0
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1859,12 +1859,12 @@
           "id": 102,
           "name": "Do a Favor",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.5392680198174774,
           "skills": [
             5,
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1873,11 +1873,11 @@
           "id": 103,
           "name": "Steal Some Reagents",
           "type": 0,
-          "costMult": 0.15,
+          "costMult": 0.32338737266763473,
           "skills": [
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": 10
@@ -1886,12 +1886,12 @@
           "id": 104,
           "name": "Figure Out How to Attune",
           "type": 0,
-          "costMult": 33.74047951142094,
+          "costMult": 1.9536470279436222,
           "skills": [
             1,
             8
           ],
-          "xpMult": 2.015825320989522,
+          "xpMult": 0.5767827849709785,
           "maxReps": 1,
           "perk": 4,
           "item": null
@@ -1900,11 +1900,11 @@
           "id": 105,
           "name": "Give Yourself a Pep Talk",
           "type": 0,
-          "costMult": 2,
+          "costMult": 12.549959843818991,
           "skills": [
             0
           ],
-          "xpMult": 80.63301283958089,
+          "xpMult": 23.07131139883914,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1913,11 +1913,11 @@
           "id": 106,
           "name": "Try to Transform Into an Eagle",
           "type": 0,
-          "costMult": 1,
+          "costMult": 0.9020354293747539,
           "skills": [
             8
           ],
-          "xpMult": 201.5825320989522,
+          "xpMult": 57.67827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1926,11 +1926,11 @@
           "id": 107,
           "name": "Low-oxygen Exercise",
           "type": 0,
-          "costMult": 0.5,
+          "costMult": 0.14795979746002053,
           "skills": [
             9
           ],
-          "xpMult": 80.63301283958089,
+          "xpMult": 23.07131139883914,
           "maxReps": 5,
           "perk": null,
           "item": null
@@ -1949,7 +1949,7 @@
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1958,11 +1958,11 @@
           "id": 111,
           "name": "Weather a Storm",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.018864271480692172,
           "skills": [
             9
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1971,11 +1971,11 @@
           "id": 112,
           "name": "Find the Island",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 1.5124901312413004,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -1984,12 +1984,12 @@
           "id": 113,
           "name": "Catch Fish",
           "type": 0,
-          "costMult": 0.4,
+          "costMult": 0.3674323680618127,
           "skills": [
             5,
             3
           ],
-          "xpMult": 80.63301283958089,
+          "xpMult": 23.07131139883914,
           "maxReps": 5,
           "perk": null,
           "item": 13
@@ -1998,12 +1998,12 @@
           "id": 114,
           "name": "Dive as a Squid",
           "type": 0,
-          "costMult": 2.190735707411489,
+          "costMult": 0.5079346273083661,
           "skills": [
             8,
             3
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 2.8839139248548924,
           "maxReps": 3,
           "perk": 14,
           "item": null
@@ -2012,11 +2012,11 @@
           "id": 115,
           "name": "Look for Land",
           "type": 0,
-          "costMult": 0.5,
+          "costMult": 1.3169921454395186,
           "skills": [
             3
           ],
-          "xpMult": 161.26602567916177,
+          "xpMult": 46.14262279767828,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2025,11 +2025,11 @@
           "id": 116,
           "name": "Practice Transforming",
           "type": 0,
-          "costMult": 3,
+          "costMult": 0.6108203037236675,
           "skills": [
             8
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2042,7 +2042,7 @@
           "skills": [
             2
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 0.5,
           "maxReps": 1,
           "perk": null,
           "item": 19
@@ -2051,12 +2051,12 @@
           "id": 118,
           "name": "Explore Kraken's Lair",
           "type": 0,
-          "costMult": 15.294914565850418,
+          "costMult": 3.2462725945969746,
           "skills": [
             3,
             8
           ],
-          "xpMult": 12.094951925937133,
+          "xpMult": 3.460696709825871,
           "maxReps": 1,
           "perk": 19,
           "item": null,
@@ -2072,11 +2072,11 @@
           "id": 120,
           "name": "Hunt for the Second Reagent",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.02652477970053204,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2085,12 +2085,12 @@
           "id": 121,
           "name": "Gather Reagent",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.06937320935072158,
           "skills": [
             3,
             8
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2099,11 +2099,11 @@
           "id": 122,
           "name": "Repair Ship",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.052416144636053465,
           "skills": [
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2112,12 +2112,12 @@
           "id": 123,
           "name": "Catch More Fish",
           "type": 0,
-          "costMult": 1,
+          "costMult": 0.6582875419839853,
           "skills": [
             5,
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": 13
@@ -2126,13 +2126,13 @@
           "id": 124,
           "name": "Explore the Jungle",
           "type": 0,
-          "costMult": 0.8750240425608194,
+          "costMult": 0.31065763258218226,
           "skills": [
             3,
             7,
             9
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 6,
           "perk": 6,
           "item": null
@@ -2141,11 +2141,11 @@
           "id": 125,
           "name": "Build Another Hut",
           "type": 0,
-          "costMult": 2,
+          "costMult": 1.6354007738593723,
           "skills": [
             5
           ],
-          "xpMult": 100.7912660494761,
+          "xpMult": 28.839139248548925,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2154,12 +2154,12 @@
           "id": 126,
           "name": "Talk to the Local Wildlife",
           "type": 0,
-          "costMult": 2,
+          "costMult": 0.9764596330554703,
           "skills": [
             8,
             0
           ],
-          "xpMult": 40.31650641979044,
+          "xpMult": 11.53565569941957,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2172,7 +2172,7 @@
           "skills": [
             2
           ],
-          "xpMult": 10.07912660494761,
+          "xpMult": 0.5,
           "maxReps": 1,
           "perk": null,
           "item": 21
@@ -2181,12 +2181,12 @@
           "id": 128,
           "name": "Steal Their Oracle Bones",
           "type": 0,
-          "costMult": 8,
+          "costMult": 0.6430533259605914,
           "skills": [
             4,
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": 21,
@@ -2202,11 +2202,11 @@
           "id": 130,
           "name": "Enter the Oasis",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.42642155385497227,
           "skills": [
             7
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2215,11 +2215,11 @@
           "id": 131,
           "name": "Overcome Mirage",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 2.051122604493144,
           "skills": [
             9
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2228,11 +2228,11 @@
           "id": 132,
           "name": "Find the Oasis",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 1.6561848403048942,
           "skills": [
             3
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2241,11 +2241,11 @@
           "id": 133,
           "name": "Harvest Cactus",
           "type": 0,
-          "costMult": 0.2,
+          "costMult": 0.28278661659070814,
           "skills": [
             5
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": 15
@@ -2254,11 +2254,11 @@
           "id": 134,
           "name": "Avoid Notice by the Sandworm",
           "type": 0,
-          "costMult": 0.024558961884909393,
+          "costMult": 0.17375270336368612,
           "skills": [
             4
           ],
-          "xpMult": 20.15825320989522,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": 20,
           "item": null
@@ -2267,11 +2267,11 @@
           "id": 135,
           "name": "Work on Your Tan",
           "type": 0,
-          "costMult": 1,
+          "costMult": 0.1107768248724095,
           "skills": [
             9
           ],
-          "xpMult": 302.3737981484283,
+          "xpMult": 86.51741774564677,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2280,11 +2280,11 @@
           "id": 136,
           "name": "Comb the Desert",
           "type": 0,
-          "costMult": 2,
+          "costMult": 0.8724577310191202,
           "skills": [
             3
           ],
-          "xpMult": 201.5825320989522,
+          "xpMult": 57.67827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2297,7 +2297,7 @@
           "skills": [
             2
           ],
-          "xpMult": 8.063301283958088,
+          "xpMult": 0.4,
           "maxReps": 1,
           "perk": null,
           "item": 22
@@ -2306,12 +2306,12 @@
           "id": 138,
           "name": "Learn to Dance the Worm",
           "type": 0,
-          "costMult": 20.68182635644353,
+          "costMult": 3.9499440552011813,
           "skills": [
             1,
             0
           ],
-          "xpMult": 2.015825320989522,
+          "xpMult": 0.5767827849709785,
           "maxReps": 1,
           "perk": 5,
           "item": null,
@@ -2327,11 +2327,11 @@
           "id": 140,
           "name": "Return to the Magician",
           "type": 1,
-          "costMult": 0.01,
+          "costMult": 0.3745545355214043,
           "skills": [
             7
           ],
-          "xpMult": 1,
+          "xpMult": 5.767827849709785,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2340,11 +2340,11 @@
           "id": 141,
           "name": "Banish Evil Spirit",
           "type": 2,
-          "costMult": 0.0902519790063494,
+          "costMult": 0.03567372323621733,
           "skills": [
             8
           ],
-          "xpMult": 1,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2353,11 +2353,11 @@
           "id": 142,
           "name": "Gather Second Reagent",
           "type": 2,
-          "costMult": 0.01,
+          "costMult": 0.19099042101762054,
           "skills": [
             3
           ],
-          "xpMult": 1,
+          "xpMult": 5.767827849709785,
           "maxReps": 5,
           "perk": null,
           "item": null
@@ -2366,11 +2366,11 @@
           "id": 143,
           "name": "Bottle Oasis Water",
           "type": 0,
-          "costMult": 0.2,
+          "costMult": 0.01,
           "skills": [
             5
           ],
-          "xpMult": 1,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": null,
           "item": 18
@@ -2379,11 +2379,11 @@
           "id": 144,
           "name": "Reflect on the Journey",
           "type": 0,
-          "costMult": 1.0411825484051798,
+          "costMult": 0.065054799380583,
           "skills": [
             1
           ],
-          "xpMult": 1,
+          "xpMult": 5.767827849709785,
           "maxReps": 4,
           "perk": 1,
           "item": null
@@ -2392,12 +2392,12 @@
           "id": 145,
           "name": "Prepare for the Journey Ahead",
           "type": 0,
-          "costMult": 2.5,
+          "costMult": 0.07779603825851666,
           "skills": [
             7,
             2
           ],
-          "xpMult": 2,
+          "xpMult": 11.53565569941957,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -2406,11 +2406,11 @@
           "id": 146,
           "name": "Talk to the Djinn",
           "type": 0,
-          "costMult": 30,
+          "costMult": 4.8285254277734015,
           "skills": [
             0
           ],
-          "xpMult": 20,
+          "xpMult": 115.3565569941957,
           "maxReps": 1,
           "perk": null,
           "item": null
@@ -2432,12 +2432,12 @@
           "id": 148,
           "name": "Find More Lamps",
           "type": 0,
-          "costMult": 30,
+          "costMult": 0.5454297861957041,
           "skills": [
             3,
             4
           ],
-          "xpMult": 1,
+          "xpMult": 5.767827849709785,
           "maxReps": 3,
           "perk": null,
           "item": 23,
@@ -2453,7 +2453,7 @@
           "id": 150,
           "name": "Begin Search for the Next Ritual",
           "type": 1,
-          "costMult": 0.0451259895031747,
+          "costMult": 50,
           "skills": [
             7
           ],
@@ -2466,7 +2466,7 @@
           "id": 151,
           "name": "Apologize for Stealing Reagents",
           "type": 2,
-          "costMult": 0.03610079160253976,
+          "costMult": 40,
           "skills": [
             0
           ],
@@ -2479,7 +2479,7 @@
           "id": 152,
           "name": "Rest for a While",
           "type": 2,
-          "costMult": 0.902519790063494,
+          "costMult": 1000,
           "skills": [
             9
           ],
@@ -2506,7 +2506,7 @@
           "id": 154,
           "name": "Infuse Mystic Incense",
           "type": 0,
-          "costMult": 75,
+          "costMult": 0.02056937346534385,
           "skills": [
             8
           ],
@@ -2519,7 +2519,7 @@
           "id": 155,
           "name": "Practice Memorization",
           "type": 0,
-          "costMult": 0.020770589751052417,
+          "costMult": 0.2006390053984191,
           "skills": [
             1,
             8
@@ -2533,7 +2533,7 @@
           "id": 156,
           "name": "Guided Spellcasting",
           "type": 0,
-          "costMult": 100,
+          "costMult": 0.09990071884549384,
           "skills": [
             8
           ],
@@ -2546,7 +2546,7 @@
           "id": 157,
           "name": "Go for a Walk",
           "type": 0,
-          "costMult": 4,
+          "costMult": 1.911372867557842,
           "skills": [
             3,
             7
@@ -2560,7 +2560,7 @@
           "id": 158,
           "name": "Write Down Some Learnings",
           "type": 0,
-          "costMult": 500000,
+          "costMult": 0.11890197436209753,
           "skills": [
             8,
             1
@@ -3071,7 +3071,7 @@
             2,
             3
           ],
-          "xpMult": 1e-06,
+          "xpMult": 0.000001,
           "maxReps": 1,
           "perk": 29,
           "item": null,
@@ -3286,7 +3286,7 @@
           "skills": [
             9
           ],
-          "xpMult": 2e-05,
+          "xpMult": 0.00002,
           "maxReps": 3,
           "perk": 31,
           "item": null
@@ -3636,7 +3636,7 @@
           "skills": [
             9
           ],
-          "xpMult": 1e-06,
+          "xpMult": 0.000001,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -3677,7 +3677,7 @@
             9,
             7
           ],
-          "xpMult": 1e-06,
+          "xpMult": 0.000001,
           "maxReps": 3,
           "perk": null,
           "item": null
@@ -3703,7 +3703,7 @@
           "skills": [
             2
           ],
-          "xpMult": 1e-05,
+          "xpMult": 0.00001,
           "maxReps": 1,
           "perk": null,
           "item": 19
@@ -3829,7 +3829,7 @@
           "skills": [
             2
           ],
-          "xpMult": 5e-05,
+          "xpMult": 0.00005,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -3901,7 +3901,7 @@
           "skills": [
             9
           ],
-          "xpMult": 2e-07,
+          "xpMult": 2e-7,
           "maxReps": 2,
           "perk": 38,
           "item": null
@@ -3928,7 +3928,7 @@
             7,
             3
           ],
-          "xpMult": 1e-05,
+          "xpMult": 0.00001,
           "maxReps": 5,
           "perk": null,
           "item": null
@@ -3941,7 +3941,7 @@
           "skills": [
             2
           ],
-          "xpMult": 1e-05,
+          "xpMult": 0.00001,
           "maxReps": 1,
           "perk": null,
           "item": 19
@@ -3988,7 +3988,7 @@
           "skills": [
             9
           ],
-          "xpMult": 1e-06,
+          "xpMult": 0.000001,
           "maxReps": 8,
           "perk": null,
           "item": null
@@ -4002,7 +4002,7 @@
             1,
             4
           ],
-          "xpMult": 1e-05,
+          "xpMult": 0.00001,
           "maxReps": 4,
           "perk": null,
           "item": null
@@ -4068,7 +4068,7 @@
           "skills": [
             2
           ],
-          "xpMult": 1e-05,
+          "xpMult": 0.00001,
           "maxReps": 1,
           "perk": null,
           "item": 19

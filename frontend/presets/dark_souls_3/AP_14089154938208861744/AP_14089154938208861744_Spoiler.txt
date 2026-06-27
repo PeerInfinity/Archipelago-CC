@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 1
+﻿Archipelago Version 0.6.8  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -62,14 +62,14 @@ Locations:
 CA: Soul of a Deserted Corpse - right of spawn: Dung Pie x4
 CA: Firebomb - down the cliff edge: Purple Moss Clump
 CA: Titanite Shard - jump to coffin: Havel's Gauntlets
-CA: Soul of an Unknown Traveler - by miniboss: Titanite Scale
+CA: Soul of an Unknown Traveler - by miniboss: Twinkling Titanite x2
 CA: Titanite Scale - miniboss drop: Repair Powder
 CA: Coiled Sword - boss drop: Elite Knight Armor
 FS: Skull Ring - kill Ludleth: Moonlight Arrow x6
 FS: Uchigatana - NPC drop: Storm Ruler
 FS: Master's Attire - NPC drop: Black Eye Orb
 FS: Master's Gloves - NPC drop: Excrement-covered Ashes
-FS: Broken Straight Sword - gravestone after boss: Titanite Shard
+FS: Broken Straight Sword - gravestone after boss: Titanite Slab
 FS: Homeward Bone - cliff edge after boss: Soul of an Unknown Traveler
 FS: Ember - path right of Firelink entrance: Silver Eagle Kite Shield
 FS: Soul of a Deserted Corpse - bell tower door: Man-grub's Staff
@@ -129,7 +129,7 @@ FS: Old King's Great Hammer - Ludleth for Old Demon King: Large Titanite Shard
 FS: Chaos Bed Vestiges - Ludleth for Old Demon King: Flynn's Ring
 FS: Greatsword of Judgment - Ludleth for Pontiff: Crest Shield
 FS: Profaned Greatsword - Ludleth for Pontiff: Smough's Helm
-FS: Yhorm's Great Machete - Ludleth for Yhorm: Titanite Scale
+FS: Yhorm's Great Machete - Ludleth for Yhorm: Titanite Chunk
 FS: Yhorm's Greatshield - Ludleth for Yhorm: Northern Armor
 FS: Dancer's Enchanted Swords - Ludleth for Dancer: Great Scythe
 FS: Soothing Sunlight - Ludleth for Dancer: Titanite Shard
@@ -144,8 +144,8 @@ FS: Prisoner's Chain - Ludleth for Champion: Hood of Prayer
 FS: Storm Curved Sword - Ludleth for Nameless: Alva Leggings
 FS: Dragonslayer Swordspear - Ludleth for Nameless: Old Sorcerer Hat
 FS: Lightning Storm - Ludleth for Nameless: Manikin Claws
-FS: Firelink Greatsword - Ludleth for Cinder: Titanite Scale
-FS: Sunlight Spear - Ludleth for Cinder: Titanite Chunk
+FS: Firelink Greatsword - Ludleth for Cinder: Titanite Shard
+FS: Sunlight Spear - Ludleth for Cinder: Titanite Scale
 FSBT: Homeward Bone - roof: Soul of a Weary Warrior
 FSBT: Estus Ring - tower base: Estus Shard
 FSBT: Estus Shard - rafters: Dancer's Leggings
@@ -164,7 +164,7 @@ FSBT: Thank you Carving - crow for Hidden Blessing: Firebomb x2
 FSBT: I'm sorry Carving - crow for Shriving Stone: Toxic Mist
 FSBT: Sunlight Shield - crow for Mendicant's Staff: Large Soul of a Nameless Soldier
 FSBT: Hollow Gem - crow for Eleonora: Large Titanite Shard
-FSBT: Titanite Scale - crow for Blacksmith Hammer: Titanite Slab
+FSBT: Titanite Scale - crow for Blacksmith Hammer: Titanite Scale x3
 FSBT: Help me! Carving - crow for any sacred chime: Court Sorcerer Trousers
 FSBT: Titanite Slab - crow for Coiled Sword Fragment: Ember x2
 FSBT: Hello Carving - crow for Alluring Skull: Twinkling Titanite
@@ -222,17 +222,17 @@ HWL: Soul of a Deserted Corpse - wall tower, right of exit: Cleric's Candlestick
 HWL: Estus Shard - fort ground, on anvil: Estus Ring
 HWL: Silver Eagle Kite Shield - fort mezzanine: Soul of the Blood of the Wolf
 HWL: Astora Straight Sword - fort walkway, drop down: Titanite Shard
-HWL: Battle Axe - flame tower, mimic: Titanite Shard
+HWL: Battle Axe - flame tower, mimic: Titanite Slab
 HWL: Ember - fort roof, transforming hollow: Great Lightning Spear
 HWL: Titanite Shard - fort roof, transforming hollow: Soul Spear
 HWL: Ember - back tower, transforming hollow: Soul of a Deserted Corpse
 HWL: Titanite Shard - back tower, transforming hollow: Soul of a Deserted Corpse
 HWL: Refined Gem - promenade miniboss: Soul of a Deserted Corpse
-HWL: Way of Blue - Emma: Twinkling Titanite
+HWL: Way of Blue - Emma: Twinkling Titanite x3
 HWL: Red Eye Orb - wall tower, miniboss: Large Soul of a Deserted Corpse
 HWL: Raw Gem - fort roof, lizard: Ember
 US: Soul of the Rotted Greatwood: Great Magic Weapon
-US: Transposing Kiln - boss drop: Farron Coal
+US: Transposing Kiln - boss drop: Twinkling Titanite x2
 US: Pyromancy Flame - Cornyx: Drang Hammers
 US: Old Sage's Blindfold - kill Cornyx: Large Soul of a Nameless Soldier
 US: Cornyx's Garb - kill Cornyx: Soul of a Stray Demon
@@ -254,7 +254,7 @@ US: Wargod Wooden Shield - Pit of Hollows: Executioner's Greatsword
 US: Large Soul of a Deserted Corpse - on the way to tower, by well: Blood Gem
 US: Ember - bridge on the way to tower: Undead Hunter Charm x3
 US: Large Soul of a Deserted Corpse - stable: Kukri x5
-US: Titanite Shard - porch after burning tree: Large Titanite Shard
+US: Titanite Shard - porch after burning tree: Twinkling Titanite x3
 US: Alluring Skull - tower village building, upstairs: Charcoal Pine Resin x2
 US: Charcoal Pine Bundle - first building, middle floor: Caitha's Chime
 US: Blue Wooden Shield - graveyard by white tree: Red Bug Pellet
@@ -342,19 +342,19 @@ FS: Fire Surge - Cornyx: Blessed Weapon
 FS: Great Combustion - Cornyx: Crystal Scroll
 FS: Flash Sweat - Cornyx: Untrue Dark Ring
 FS: Poison Mist - Cornyx for Great Swamp Tome: Lucatiel's Mask
-FS: Fire Orb - Cornyx for Great Swamp Tome: Titanite Chunk
+FS: Fire Orb - Cornyx for Great Swamp Tome: Twinkling Titanite
 FS: Profuse Sweat - Cornyx for Great Swamp Tome: Heretic's Staff
 FS: Bursting Fireball - Cornyx for Great Swamp Tome: Dusk Crown Ring
 FS: Acid Surge - Cornyx for Carthus Tome: Painting Guardian's Curved Sword
-FS: Carthus Flame Arc - Cornyx for Carthus Tome: Titanite Chunk
+FS: Carthus Flame Arc - Cornyx for Carthus Tome: Titanite Scale
 FS: Carthus Beacon - Cornyx for Carthus Tome: Skull Ring
 FS: Great Chaos Fire Orb - Cornyx for Izalith Tome: Lothric's Holy Sword
-FS: Chaos Storm - Cornyx for Izalith Tome: Titanite Chunk
+FS: Chaos Storm - Cornyx for Izalith Tome: Twinkling Titanite
 FS: Saint's Ring - Irina: Homeward
-FS: Heal - Irina: Twinkling Titanite
+FS: Heal - Irina: Farron Coal
 FS: Replenishment - Irina: Estus Shard
 FS: Caressing Tears - Irina: Pale Tongue
-FS: Homeward - Irina: Titanite Scale
+FS: Homeward - Irina: Titanite Slab
 FS: Med Heal - Irina for Tome of Carim: Spider Shield
 FS: Tears of Denial - Irina for Tome of Carim: Ember
 FS: Force - Irina for Tome of Carim: Refined Gem
@@ -439,12 +439,12 @@ FS: Soul Spear - Orbeck for Logan's Scroll: Charcoal Pine Resin
 FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll: Dark Gem
 FS: Crystal Soul Spear - Orbeck for Crystal Scroll: Heysel Pick
 FS: Crystal Magic Weapon - Orbeck for Crystal Scroll: Black Leggings
-FS: Cast Light - Orbeck for Golden Scroll: Titanite Slab
-FS: Twisted Wall of Light - Orbeck for Golden Scroll: Titanite Scale x3
-FS: Hidden Weapon - Orbeck for Golden Scroll: Titanite Scale x3
-FS: Hidden Body - Orbeck for Golden Scroll: Titanite Chunk x2
+FS: Cast Light - Orbeck for Golden Scroll: Titanite Scale
+FS: Twisted Wall of Light - Orbeck for Golden Scroll: Large Titanite Shard
+FS: Hidden Weapon - Orbeck for Golden Scroll: Titanite Chunk
+FS: Hidden Body - Orbeck for Golden Scroll: Titanite Chunk
 FS: Repair - Orbeck for Golden Scroll: Farron Greatsword
-FS: Clandestine Coat - shop with Orbeck's Ashes: Titanite Slab
+FS: Clandestine Coat - shop with Orbeck's Ashes: Titanite Chunk
 FS: Young Dragon Ring - Orbeck for one scroll and buying three spells: Murakumo
 FS: Slumbering Dragoncrest Ring - Orbeck for buying four specific spells: Titanite Shard x2
 RS -> FK: RS -> FK
@@ -875,8 +875,8 @@ PC: Court Sorcerer's Staff - chapel, mimic on second floor: Large Soul of a Name
 PC: Greatshield of Glory - palace, mimic in far room: Titanite Chunk x2
 PC: Twinkling Titanite - halls above swamp, lizard #1: Titanite Chunk
 PC: Twinkling Titanite - halls above swamp, lizard #2: Bursting Fireball
-PC: Siegbräu - Siegward after killing boss: Twinkling Titanite x2
-PC: Storm Ruler - Siegward: Twinkling Titanite x3
+PC: Siegbräu - Siegward after killing boss: Titanite Chunk x2
+PC: Storm Ruler - Siegward: Titanite Scale x3
 PC: Pierce Shield - Siegward: Rusted Coin
 AL: Soul of Aldrich: Estus Shard
 AL: Cinders of a Lord - Aldrich: Titanite Scale
@@ -991,12 +991,12 @@ LC: Winged Knight Gauntlets - ascent, behind illusory wall: Havel's Armor
 LC: Winged Knight Leggings - ascent, behind illusory wall: Sniper Crossbow
 LC: Rusted Coin - chapel: Large Soul of a Weary Warrior
 LC: Braille Divine Tome of Lothric - wyvern room: Helm of Thorns
-LC: Red Tearstone Ring - chapel, drop onto roof: Fading Soul
+LC: Red Tearstone Ring - chapel, balcony before drop: Fading Soul
 LC: Twinkling Titanite - moat, left side: Soul of a Crestfallen Knight
 LC: Large Soul of a Nameless Soldier - plaza left, by pillar: Yellow Bug Pellet
 LC: Titanite Scale - altar: Soul of a Weary Warrior
 LC: Titanite Scale - chapel, chest: Havel's Leggings
-LC: Hood of Prayer: Homeward Bone x3
+LC: Hood of Prayer - ascent, chest at beginning: Homeward Bone x3
 LC: Robe of Prayer - ascent, chest at beginning: Lightning Stake
 LC: Skirt of Prayer - ascent, chest at beginning: Soul of High Lord Wolnir
 LC: Spirit Tree Crest Shield - basement, chest: Outrider Knight Leggings
@@ -1211,7 +1211,7 @@ AP: Calamity Ring - mausoleum, gesture at altar: Horsehoof Ring
 AP: Twinkling Titanite - walkway building, lizard: Titanite Scale x3
 AP: Titanite Chunk - walkway, miniboss drop: Titanite Chunk x2
 AP: Titanite Scale - walkway, miniboss drop: Painting Guardian Gloves
-AP: Twinkling Titanite - walkway, miniboss drop: Titanite Chunk x6
+AP: Twinkling Titanite - walkway, miniboss drop: Titanite Shard
 FS: Hawkwood's Swordgrass - Andre after gesture in AP summit: Carthus Rouge
 FS: Golden Crown - shop after killing AP boss: Battle Axe
 FS: Dragonscale Armor - shop after killing AP boss: Titanite Slab
@@ -1219,13 +1219,13 @@ FS: Golden Bracelets - shop after killing AP boss: Winged Knight Helm
 FS: Dragonscale Waistcloth - shop after killing AP boss: Pale Tongue
 FK: Twinkling Dragon Head Stone - Hawkwood drop: Exploding Bolt x6
 KFF: Soul of the Lords: Lightning Urn x3
-FS: Titanite Slab - shop after placing all Cinders: Twinkling Titanite x3
+FS: Titanite Slab - shop after placing all Cinders: Titanite Scale
 FS: Firelink Helm - shop after placing all Cinders: Silver Mask
 FS: Firelink Armor - shop after placing all Cinders: Shriving Stone
 FS: Firelink Gauntlets - shop after placing all Cinders: Titanite Slab
 FS: Firelink Leggings - shop after placing all Cinders: Broadsword
 FS: Billed Mask - shop after killing Yuria: Green Blossom x2
-FS: Black Dress - shop after killing Yuria: Titanite Scale
+FS: Black Dress - shop after killing Yuria: Titanite Chunk x6
 FS: Black Gauntlets - shop after killing Yuria: Gauntlets of Favor
 FS: Black Leggings - shop after killing Yuria: Notched Whip
 FS: Blue Tearstone Ring - Greirat: Cinders of a Lord - Yhorm the Giant
@@ -1244,7 +1244,7 @@ FS: Rapport - Karla for Quelana Tome: Large Club
 FS: Fire Whip - Karla for Quelana Tome: Wolf Knight Armor
 FS: Black Flame - Karla for Grave Warden Tome: Twinkling Titanite
 FS: Black Fire Orb - Karla for Grave Warden Tome: Great Chaos Fire Orb
-FS: Gnaw - Karla for Deep Braille Tome: Twinkling Titanite x2
+FS: Gnaw - Karla for Deep Braille Tome: Titanite Scale
 FS: Deep Protection - Karla for Deep Braille Tome: Irithyll Rapier
 FS: Vow of Silence - Karla for Londor Tome: Sunset Leggings
 FS: Dark Blade - Karla for Londor Tome: Sacred Oath

@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.7  -  Seed: 1
+﻿Archipelago Version 0.6.8  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -889,8 +889,6 @@ Playthrough:
   Level 34: Lucky Emblem
   Level 39: Wisdom Form
   Level 41: Aerial Sweep
-  Level 46: Guard Break
-  Level 48: Quick Run
 }
 9: {
   (CoR) Depths AP Boost: Finishing Leap
@@ -920,7 +918,8 @@ Playthrough:
   Hades Event Location: Hades Event
   Hollow Bastion Demyx Event Location: Hollow Bastion Demyx Event
   Hydra Event Location: Hydra Event
-  Level 50: Lucky Emblem
+  Level 46: Guard Break
+  Level 48: Quick Run
   Olympus Pete Event Location: Olympus Pete Event
   Valor level 6: Lucky Emblem
   Wisdom level 3: Horizontal Slash
@@ -961,6 +960,7 @@ Playthrough:
   Final level 5: Fire Element
   Final level 6: Lucky Emblem
   Hostile Program Event Location: Hostile Program Event
+  Level 50: Lucky Emblem
   Scar Event Location: Scar Event
   Storm Rider Event Location: Storm Rider Event
   Titan Cup Event Location: Titan Cup Event

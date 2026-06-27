@@ -1,0 +1,106 @@
+﻿Archipelago Version 0.6.8  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Journey to Ascension
+Location Count:                  21
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Goal Zone:                       15
+Free Zones:                      1
+Starting Perks:                  0
+Starting Perk List:              
+Game Data File:                  
+Resets Per Sphere:               5
+Vanilla Placement:               No
+Auto Cost Adjust:                Yes
+Cost Gen Mode:                   2
+Cost Gen: Normal Attempts:       2
+Cost Gen: Perk Attempts:         5
+Cost Gen: Traversal Attempts:    5
+Cost Gen: Item Collection:       Yes
+Cost Gen: Push/Collect:          Yes
+Cost Gen: Grind with Push/Collect:Yes
+Cost Gen: Artifact Usage:        Yes
+Automation: Auto Queue:          Yes
+Automation: Auto Reset:          Yes
+Automation: Drain Strategy:      Yes
+Automation: Loadout Sequencing:  Yes
+
+
+Locations:
+
+Learn How to Read: Attunement
+Learn How to Write: Walk Without Rhythm
+Rescue Villager: How to Write
+Save the Village: The Worm
+Find an Amulet: Found Lost Temple
+Try Casting a Spell: Energetic Spell
+Wipe Out Goblins: How to Read
+Get Used to Traveling: Deep Sea Diving
+Study the Amulet: Goblin Scourge
+Negotiate with a Rogue Guard: Reflections on the Journey
+Cast a Spell: High Altitude Climbing
+Purge Corrupt Bureaucracy: Energetic Memory
+Scale the Mountain: Purged Bureaucracy
+Figure Out How to Attune: Understanding of the Reset
+Dive as a Squid: Experienced Traveler
+Explore Kraken's Lair: Minor Time Compression
+Explore the Jungle: Village Hero
+Avoid Notice by the Sandworm: Villager Gratitude
+Learn to Dance the Worm: Underground Connection
+Reflect on the Journey: Mysterious Amulet
+Practice Memorization: Sunken Treasure
+Reach Goal Zone: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Learn How to Read: Attunement
+}
+2: {
+  Learn How to Write: Walk Without Rhythm
+}
+3: {
+  Rescue Villager: How to Write
+  Save the Village: The Worm
+}
+4: {
+  Find an Amulet: Found Lost Temple
+  Try Casting a Spell: Energetic Spell
+  Wipe Out Goblins: How to Read
+}
+5: {
+  Cast a Spell: High Altitude Climbing
+  Get Used to Traveling: Deep Sea Diving
+  Negotiate with a Rogue Guard: Reflections on the Journey
+  Purge Corrupt Bureaucracy: Energetic Memory
+  Study the Amulet: Goblin Scourge
+}
+6: {
+  Avoid Notice by the Sandworm: Villager Gratitude
+  Dive as a Squid: Experienced Traveler
+  Explore Kraken's Lair: Minor Time Compression
+  Explore the Jungle: Village Hero
+  Figure Out How to Attune: Understanding of the Reset
+  Learn to Dance the Worm: Underground Connection
+  Scale the Mountain: Purged Bureaucracy
+}
+7: {
+  Practice Memorization: Sunken Treasure
+  Reach Goal Zone: Victory
+  Reflect on the Journey: Mysterious Amulet
+}

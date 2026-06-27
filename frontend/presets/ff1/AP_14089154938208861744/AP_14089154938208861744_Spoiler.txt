@@ -1,0 +1,35 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Final Fantasy
+Location Count:                  0
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+locations:                       
+items:                           
+rules:                           
+
+
+Locations:
+
+Terminated Chaos: Terminated Chaos
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Terminated Chaos: Terminated Chaos
+}

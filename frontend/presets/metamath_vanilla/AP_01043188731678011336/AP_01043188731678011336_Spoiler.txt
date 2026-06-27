@@ -1,10 +1,10 @@
-﻿Archipelago Version 0.6.7  -  Seed: 2
+﻿Archipelago Version 0.6.8  -  Seed: 2
 
 Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Metamath
-Location Count:                  21
+Location Count:                  20
 Progression Balancing:           50
 Accessibility:                   Minimal
 Local Items:                     
@@ -72,8 +72,6 @@ Prove Statement 20: Statement 20
 Proved Statement 20: Proved Statement 20
 Prove Statement 21: Statement 21
 Proved Statement 21: Proved Statement 21
-Prove Statement 22: Statement 22
-Proved Statement 22: Proved Statement 22
 
 Playthrough:
 
@@ -82,64 +80,62 @@ Playthrough:
   Statement 1
 }
 1: {
-  Prove Statement 17: Statement 17
+  Prove Statement 13: Statement 13
   Prove Statement 2: Statement 2
   Prove Statement 3: Statement 3
   Prove Statement 4: Statement 4
   Prove Statement 5: Statement 5
+  Prove Statement 6: Statement 6
   Prove Statement 7: Statement 7
   Prove Statement 9: Statement 9
-  Proved Statement 17: Proved Statement 17
+  Proved Statement 13: Proved Statement 13
   Proved Statement 2: Proved Statement 2
   Proved Statement 3: Proved Statement 3
   Proved Statement 4: Proved Statement 4
   Proved Statement 5: Proved Statement 5
+  Proved Statement 6: Proved Statement 6
   Proved Statement 7: Proved Statement 7
   Proved Statement 9: Proved Statement 9
 }
 2: {
-  Prove Statement 12: Statement 12
-  Prove Statement 18: Statement 18
-  Prove Statement 6: Statement 6
-  Proved Statement 12: Proved Statement 12
-  Proved Statement 18: Proved Statement 18
-  Proved Statement 6: Proved Statement 6
-}
-3: {
-  Prove Statement 13: Statement 13
-  Prove Statement 20: Statement 20
+  Prove Statement 14: Statement 14
+  Prove Statement 16: Statement 16
   Prove Statement 8: Statement 8
-  Proved Statement 13: Proved Statement 13
-  Proved Statement 20: Proved Statement 20
+  Proved Statement 14: Proved Statement 14
+  Proved Statement 16: Proved Statement 16
   Proved Statement 8: Proved Statement 8
 }
-4: {
+3: {
   Prove Statement 10: Statement 10
-  Prove Statement 14: Statement 14
+  Prove Statement 15: Statement 15
   Proved Statement 10: Proved Statement 10
-  Proved Statement 14: Proved Statement 14
+  Proved Statement 15: Proved Statement 15
 }
-5: {
+4: {
   Prove Statement 11: Statement 11
   Proved Statement 11: Proved Statement 11
 }
+5: {
+  Prove Statement 12: Statement 12
+  Proved Statement 12: Proved Statement 12
+}
 6: {
-  Prove Statement 15: Statement 15
-  Proved Statement 15: Proved Statement 15
+  Prove Statement 17: Statement 17
+  Proved Statement 17: Proved Statement 17
 }
 7: {
-  Prove Statement 16: Statement 16
-  Proved Statement 16: Proved Statement 16
+  Prove Statement 18: Statement 18
+  Proved Statement 18: Proved Statement 18
 }
 8: {
   Prove Statement 19: Statement 19
   Proved Statement 19: Proved Statement 19
 }
 9: {
-  Prove Statement 21: Statement 21
-  Proved Statement 21: Proved Statement 21
+  Prove Statement 20: Statement 20
+  Proved Statement 20: Proved Statement 20
 }
 10: {
-  Prove Statement 22: Statement 22
-  Proved Statement 22: Proved Statement 22
+  Prove Statement 21: Statement 21
+  Proved Statement 21: Proved Statement 21
 }

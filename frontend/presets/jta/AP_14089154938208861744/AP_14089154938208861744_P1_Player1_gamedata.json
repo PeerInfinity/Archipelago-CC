@@ -5,61 +5,61 @@
       "id": 0,
       "name": "Charisma",
       "xpMult": 1,
-      "icon": "🎭"
+      "icon": "\ud83c\udfad"
     },
     {
       "id": 1,
       "name": "Study",
       "xpMult": 1,
-      "icon": "🧠"
+      "icon": "\ud83e\udde0"
     },
     {
       "id": 2,
       "name": "Combat",
       "xpMult": 5,
-      "icon": "⚔️"
+      "icon": "\u2694\ufe0f"
     },
     {
       "id": 3,
       "name": "Search",
       "xpMult": 1,
-      "icon": "🔎"
+      "icon": "\ud83d\udd0e"
     },
     {
       "id": 4,
       "name": "Subterfuge",
       "xpMult": 1,
-      "icon": "🗡️"
+      "icon": "\ud83d\udde1\ufe0f"
     },
     {
       "id": 5,
       "name": "Crafting",
       "xpMult": 1,
-      "icon": "🔨"
+      "icon": "\ud83d\udd28"
     },
     {
       "id": 7,
       "name": "Travel",
       "xpMult": 1,
-      "icon": "🗺️"
+      "icon": "\ud83d\uddfa\ufe0f"
     },
     {
       "id": 8,
       "name": "Magic",
       "xpMult": 3,
-      "icon": "🔮"
+      "icon": "\ud83d\udd2e"
     },
     {
       "id": 9,
       "name": "Fortitude",
       "xpMult": 5,
-      "icon": "🛡️"
+      "icon": "\ud83d\udee1\ufe0f"
     },
     {
       "id": 11,
       "name": "Ascension",
       "xpMult": 200,
-      "icon": "🙏"
+      "icon": "\ud83d\ude4f"
     }
   ],
   "perks": {
@@ -69,13 +69,13 @@
         "1": 0.5
       },
       "special": null,
-      "icon": "📖"
+      "icon": "\ud83d\udcd6"
     },
     "1": {
       "name": "How to Write",
       "skillModifiers": {},
       "special": "xp_bonus_50",
-      "icon": "📝"
+      "icon": "\ud83d\udcdd"
     },
     "2": {
       "name": "Villager Gratitude",
@@ -83,7 +83,7 @@
         "0": 0.5
       },
       "special": null,
-      "icon": "❤️"
+      "icon": "\u2764\ufe0f"
     },
     "3": {
       "name": "Mysterious Amulet",
@@ -91,13 +91,13 @@
         "8": 0.5
       },
       "special": "automation",
-      "icon": "📿"
+      "icon": "\ud83d\udcff"
     },
     "4": {
       "name": "Energetic Spell",
       "skillModifiers": {},
       "special": "max_energy_50",
-      "icon": "⚡️"
+      "icon": "\u26a1\ufe0f"
     },
     "5": {
       "name": "Experienced Traveler",
@@ -105,7 +105,7 @@
         "7": 0.5
       },
       "special": null,
-      "icon": "🦶"
+      "icon": "\ud83e\uddb6"
     },
     "6": {
       "name": "Underground Connection",
@@ -114,19 +114,19 @@
         "0": 0.2
       },
       "special": null,
-      "icon": "🎲"
+      "icon": "\ud83c\udfb2"
     },
     "7": {
       "name": "Minor Time Compression",
       "skillModifiers": {},
       "special": "minor_time_compression",
-      "icon": "⌚"
+      "icon": "\u231a"
     },
     "8": {
       "name": "High Altitude Climbing",
       "skillModifiers": {},
       "special": "energy_reduction_20",
-      "icon": "🗻"
+      "icon": "\ud83d\uddfb"
     },
     "10": {
       "name": "Village Hero",
@@ -135,13 +135,13 @@
         "2": 0.2
       },
       "special": null,
-      "icon": "🎖️"
+      "icon": "\ud83c\udf96\ufe0f"
     },
     "11": {
       "name": "Attunement",
       "skillModifiers": {},
       "special": "attunement",
-      "icon": "🌀"
+      "icon": "\ud83c\udf00"
     },
     "12": {
       "name": "Goblin Scourge",
@@ -150,7 +150,7 @@
         "9": 0.3
       },
       "special": null,
-      "icon": "💀"
+      "icon": "\ud83d\udc80"
     },
     "13": {
       "name": "Sunken Treasure",
@@ -159,7 +159,7 @@
         "9": 0.3
       },
       "special": null,
-      "icon": "⚓"
+      "icon": "\u2693"
     },
     "14": {
       "name": "Found Lost Temple",
@@ -167,7 +167,7 @@
         "8": 0.5
       },
       "special": null,
-      "icon": "🏯"
+      "icon": "\ud83c\udfef"
     },
     "15": {
       "name": "Walk Without Rhythm",
@@ -176,13 +176,13 @@
         "7": 0.2
       },
       "special": null,
-      "icon": "👣"
+      "icon": "\ud83d\udc63"
     },
     "16": {
       "name": "Reflections on the Journey",
       "skillModifiers": {},
       "special": "reflections",
-      "icon": "🕰️"
+      "icon": "\ud83d\udd70\ufe0f"
     },
     "17": {
       "name": "Purged Bureaucracy",
@@ -191,7 +191,7 @@
         "5": 0.3
       },
       "special": null,
-      "icon": "⚖️"
+      "icon": "\u2696\ufe0f"
     },
     "18": {
       "name": "Deep Sea Diving",
@@ -200,13 +200,13 @@
         "8": 0.3
       },
       "special": null,
-      "icon": "🤿"
+      "icon": "\ud83e\udd3f"
     },
     "19": {
       "name": "Energetic Memory",
       "skillModifiers": {},
       "special": "energetic_memory",
-      "icon": "💭"
+      "icon": "\ud83d\udcad"
     },
     "20": {
       "name": "The Worm",
@@ -214,7 +214,7 @@
         "0": 0.5
       },
       "special": null,
-      "icon": "💃"
+      "icon": "\ud83d\udc83"
     },
     "21": {
       "name": "Tower of Babel",
@@ -223,19 +223,19 @@
         "11": 0.3
       },
       "special": null,
-      "icon": "🧱"
+      "icon": "\ud83e\uddf1"
     },
     "22": {
       "name": "Awakening",
       "skillModifiers": {},
       "special": "divine_spark_bonus",
-      "icon": "💤"
+      "icon": "\ud83d\udca4"
     },
     "23": {
       "name": "Major Time Compression",
       "skillModifiers": {},
       "special": "major_time_compression",
-      "icon": "⏰"
+      "icon": "\u23f0"
     },
     "24": {
       "name": "Hide in Plain Sight",
@@ -243,7 +243,7 @@
         "4": 0.5
       },
       "special": null,
-      "icon": "👥"
+      "icon": "\ud83d\udc65"
     },
     "25": {
       "name": "Dream Prism",
@@ -252,7 +252,7 @@
         "7": 0.3
       },
       "special": null,
-      "icon": "🔷"
+      "icon": "\ud83d\udd37"
     },
     "26": {
       "name": "Dragon Killing Plan",
@@ -260,13 +260,13 @@
         "2": 0.5
       },
       "special": null,
-      "icon": "🏔️"
+      "icon": "\ud83c\udfd4\ufe0f"
     },
     "27": {
       "name": "Unified Theory of Magic",
       "skillModifiers": {},
       "special": "unified_theory",
-      "icon": "📜"
+      "icon": "\ud83d\udcdc"
     },
     "28": {
       "name": "Headmaster",
@@ -275,7 +275,7 @@
         "1": 0.3
       },
       "special": null,
-      "icon": "🧙‍♂️"
+      "icon": "\ud83e\uddd9\u200d\u2642\ufe0f"
     },
     "29": {
       "name": "Dragon Slayer",
@@ -284,13 +284,13 @@
         "0": 0.3
       },
       "special": null,
-      "icon": "🐉"
+      "icon": "\ud83d\udc09"
     },
     "30": {
       "name": "Understanding of the Reset",
       "skillModifiers": {},
       "special": "understanding_reset",
-      "icon": "🔁"
+      "icon": "\ud83d\udd01"
     },
     "31": {
       "name": "Overcame Fear of Skydiving",
@@ -299,7 +299,7 @@
         "9": 0.3
       },
       "special": null,
-      "icon": "🪂"
+      "icon": "\ud83e\ude82"
     },
     "32": {
       "name": "Destroyed the Ring",
@@ -308,13 +308,13 @@
         "0": 0.5
       },
       "special": null,
-      "icon": "💍"
+      "icon": "\ud83d\udc8d"
     },
     "33": {
       "name": "Gazed Beyond the Veil",
       "skillModifiers": {},
       "special": "xp_bonus_100",
-      "icon": "👀"
+      "icon": "\ud83d\udc40"
     },
     "34": {
       "name": "Studied Underground Forge",
@@ -322,7 +322,7 @@
         "5": 0.5
       },
       "special": null,
-      "icon": "⛏️"
+      "icon": "\u26cf\ufe0f"
     },
     "35": {
       "name": "Understanding Leviathan",
@@ -331,7 +331,7 @@
         "2": 0.3
       },
       "special": null,
-      "icon": "🐋"
+      "icon": "\ud83d\udc0b"
     },
     "36": {
       "name": "Purged Demonic Influences",
@@ -340,7 +340,7 @@
         "9": 0.3
       },
       "special": null,
-      "icon": "👹"
+      "icon": "\ud83d\udc79"
     },
     "37": {
       "name": "Defied the Gods",
@@ -348,7 +348,7 @@
         "11": 1.0
       },
       "special": "divine_spark_bonus_25",
-      "icon": "🚫"
+      "icon": "\ud83d\udeab"
     },
     "38": {
       "name": "Survived the Void",
@@ -357,13 +357,13 @@
         "9": 0.3
       },
       "special": null,
-      "icon": "⚫"
+      "icon": "\u26ab"
     },
     "39": {
       "name": "Communed with Damned Souls",
       "skillModifiers": {},
       "special": "double_attunement",
-      "icon": "👻"
+      "icon": "\ud83d\udc7b"
     },
     "40": {
       "name": "Divine Power",
@@ -374,7 +374,7 @@
         "1": 0.25
       },
       "special": null,
-      "icon": "☀️"
+      "icon": "\u2600\ufe0f"
     }
   },
   "items": {
@@ -382,7 +382,7 @@
       "name": "Food",
       "energy": 5,
       "skillModifiers": {},
-      "icon": "🍲",
+      "icon": "\ud83c\udf72",
       "namePlural": "Food"
     },
     "1": {
@@ -390,7 +390,7 @@
       "skillModifiers": {
         "2": 0.15
       },
-      "icon": "🏹",
+      "icon": "\ud83c\udff9",
       "namePlural": "Arrows"
     },
     "2": {
@@ -398,7 +398,7 @@
       "skillModifiers": {
         "0": 0.2
       },
-      "icon": "💰",
+      "icon": "\ud83d\udcb0",
       "namePlural": "Coins"
     },
     "3": {
@@ -407,7 +407,7 @@
         "8": 0.2,
         "3": 0.2
       },
-      "icon": "🍄",
+      "icon": "\ud83c\udf44",
       "namePlural": "Mushrooms"
     },
     "4": {
@@ -417,7 +417,7 @@
         "2": 0.1,
         "9": 0.1
       },
-      "icon": "📦",
+      "icon": "\ud83d\udce6",
       "namePlural": "Goblin Supplies"
     },
     "5": {
@@ -426,7 +426,7 @@
         "7": 0.1,
         "9": 0.1
       },
-      "icon": "🎒",
+      "icon": "\ud83c\udf92",
       "namePlural": "Travel Equipment"
     },
     "6": {
@@ -435,14 +435,14 @@
         "1": 0.1,
         "8": 0.1
       },
-      "icon": "📚",
+      "icon": "\ud83d\udcda",
       "namePlural": "Books"
     },
     "7": {
       "name": "ScrollOfHaste",
       "artifact": true,
       "skillModifiers": {},
-      "icon": "🐇",
+      "icon": "\ud83d\udc07",
       "namePlural": "Scrolls of Haste"
     },
     "8": {
@@ -450,7 +450,7 @@
       "skillModifiers": {
         "2": 1
       },
-      "icon": "🪓",
+      "icon": "\ud83e\ude93",
       "namePlural": "Goblin Waraxes"
     },
     "9": {
@@ -458,7 +458,7 @@
       "skillModifiers": {
         "9": 0.15
       },
-      "icon": "⛺",
+      "icon": "\u26fa",
       "namePlural": "Camping Equipment"
     },
     "10": {
@@ -467,7 +467,7 @@
         "8": 0.2,
         "5": 0.1
       },
-      "icon": "🌿",
+      "icon": "\ud83c\udf3f",
       "namePlural": "Reagents"
     },
     "11": {
@@ -476,7 +476,7 @@
         "9": 0.2,
         "8": 0.1
       },
-      "icon": "🌲",
+      "icon": "\ud83c\udf32",
       "namePlural": "Magical Roots"
     },
     "12": {
@@ -485,14 +485,14 @@
         "4": 0.5,
         "8": 0.5
       },
-      "icon": "💎",
+      "icon": "\ud83d\udc8e",
       "namePlural": "Goblin Treasures"
     },
     "13": {
       "name": "Fish",
       "energy": 10,
       "skillModifiers": {},
-      "icon": "🐟",
+      "icon": "\ud83d\udc1f",
       "namePlural": "Fish"
     },
     "14": {
@@ -501,7 +501,7 @@
         "4": 0.1,
         "2": 0.2
       },
-      "icon": "🔪",
+      "icon": "\ud83d\udd2a",
       "namePlural": "Bandit Weapons"
     },
     "15": {
@@ -509,7 +509,7 @@
       "skillModifiers": {
         "9": 0.15
       },
-      "icon": "🌵",
+      "icon": "\ud83c\udf35",
       "namePlural": "Cactuses"
     },
     "16": {
@@ -518,7 +518,7 @@
         "0": 0.5,
         "4": 0.5
       },
-      "icon": "🔗",
+      "icon": "\ud83d\udd17",
       "namePlural": "City Chains"
     },
     "17": {
@@ -527,7 +527,7 @@
         "0": 0.2,
         "9": 0.2
       },
-      "icon": "🐺",
+      "icon": "\ud83d\udc3a",
       "namePlural": "Werewolf Furs"
     },
     "18": {
@@ -536,14 +536,14 @@
         "8": 0.2,
         "9": 0.1
       },
-      "icon": "💧",
+      "icon": "\ud83d\udca7",
       "namePlural": "Oasis Water"
     },
     "19": {
       "name": "Calamari",
       "energy": 50,
       "skillModifiers": {},
-      "icon": "🦑",
+      "icon": "\ud83e\udd91",
       "namePlural": "Calamari"
     },
     "20": {
@@ -551,7 +551,7 @@
       "skillModifiers": {
         "11": 0.1
       },
-      "icon": "🕯️",
+      "icon": "\ud83d\udd6f\ufe0f",
       "namePlural": "Mystic Incense"
     },
     "21": {
@@ -562,7 +562,7 @@
         "11": 0.1,
         "7": 0.1
       },
-      "icon": "🦴",
+      "icon": "\ud83e\uddb4",
       "namePlural": "Oracle Bones"
     },
     "22": {
@@ -570,7 +570,7 @@
       "skillModifiers": {
         "9": 1
       },
-      "icon": "🧥",
+      "icon": "\ud83e\udde5",
       "namePlural": "Worm Hide Coats"
     },
     "23": {
@@ -579,14 +579,14 @@
         "11": 0.3,
         "8": 0.3
       },
-      "icon": "🧞",
+      "icon": "\ud83e\uddde",
       "namePlural": "Djinn Lamps"
     },
     "24": {
       "name": "Dreamcatcher",
       "artifact": true,
       "skillModifiers": {},
-      "icon": "🕸️",
+      "icon": "\ud83d\udd78\ufe0f",
       "namePlural": "Dreamcatchers"
     },
     "25": {
@@ -594,7 +594,7 @@
       "skillModifiers": {
         "8": 4
       },
-      "icon": "🌠",
+      "icon": "\ud83c\udf20",
       "namePlural": "Magical Essences"
     },
     "26": {
@@ -602,7 +602,7 @@
       "skillModifiers": {
         "5": 0.3
       },
-      "icon": "🛠️",
+      "icon": "\ud83d\udee0\ufe0f",
       "namePlural": "Crafting Recipes"
     },
     "27": {
@@ -611,7 +611,7 @@
         "2": 0.2,
         "9": 0.2
       },
-      "icon": "👢",
+      "icon": "\ud83d\udc62",
       "namePlural": "Knightly Boots"
     },
     "28": {
@@ -620,14 +620,14 @@
         "2": 0.5,
         "9": 0.5
       },
-      "icon": "🐲",
+      "icon": "\ud83d\udc32",
       "namePlural": "Dragon Scales"
     },
     "29": {
       "name": "CaveInsects",
       "energy": 5,
       "skillModifiers": {},
-      "icon": "🦟",
+      "icon": "\ud83e\udd9f",
       "namePlural": "Cave Insects"
     },
     "30": {
@@ -635,21 +635,21 @@
       "skillModifiers": {
         "11": 0.3
       },
-      "icon": "🏺",
+      "icon": "\ud83c\udffa",
       "namePlural": "Magical Vessels"
     },
     "31": {
       "name": "MagicRing",
       "artifact": true,
       "skillModifiers": {},
-      "icon": "💍",
+      "icon": "\ud83d\udc8d",
       "namePlural": "Magic Rings"
     },
     "32": {
       "name": "BottledLightning",
       "artifact": true,
       "skillModifiers": {},
-      "icon": "⚡",
+      "icon": "\u26a1",
       "namePlural": "Bottled Lightning"
     },
     "33": {
@@ -657,7 +657,7 @@
       "skillModifiers": {
         "0": 1.0
       },
-      "icon": "🔥",
+      "icon": "\ud83d\udd25",
       "namePlural": "Heat Essence"
     },
     "34": {
@@ -667,7 +667,7 @@
         "3": 0.3,
         "7": 0.1
       },
-      "icon": "📜",
+      "icon": "\ud83d\udcdc",
       "namePlural": "Divine Notes"
     },
     "35": {
@@ -675,7 +675,7 @@
       "skillModifiers": {
         "1": 1.0
       },
-      "icon": "🕊️",
+      "icon": "\ud83d\udd4a\ufe0f",
       "namePlural": "Griffin Quills"
     },
     "36": {
@@ -684,7 +684,7 @@
         "11": 5.0,
         "7": 1.0
       },
-      "icon": "🦇",
+      "icon": "\ud83e\udd87",
       "namePlural": "Wings of Shadow"
     },
     "37": {
@@ -692,7 +692,7 @@
       "skillModifiers": {
         "11": 1.0
       },
-      "icon": "☯️",
+      "icon": "\u262f\ufe0f",
       "namePlural": "Ritual Symbols"
     },
     "38": {
@@ -700,7 +700,7 @@
       "skillModifiers": {
         "3": 1.0
       },
-      "icon": "👓",
+      "icon": "\ud83d\udc53",
       "namePlural": "Glasses"
     },
     "39": {
@@ -710,7 +710,7 @@
         "7": 0.5,
         "9": 0.5
       },
-      "icon": "💡",
+      "icon": "\ud83d\udca1",
       "namePlural": "Light"
     },
     "40": {
@@ -720,7 +720,7 @@
         "5": 1,
         "2": 1
       },
-      "icon": "🤪",
+      "icon": "\ud83e\udd2a",
       "namePlural": "Mad Contraptions"
     }
   },
@@ -4295,21 +4295,21 @@
     "deenergizedBase": 0.9
   },
   "renderingConstants": {
-    "ENERGY_EMOJI": "🔋",
-    "ENERGY_TEXT": "🔋Energy",
-    "XP_EMOJI": "♟️",
-    "XP_TEXT": "♟️XP",
-    "DIVINE_SPARK_EMOJI": "✨",
-    "DIVINE_SPARK_TEXT": "✨Divine Spark",
-    "ATTUNEMENT_EMOJI": "🌀",
-    "ATTUNEMENT_TEXT": "🌀Attunement",
-    "POWER_EMOJI": "💪",
-    "POWER_TEXT": "💪Power",
-    "HASTE_EMOJI": "🐇",
-    "HASTE_TEXT": "🐇Haste",
-    "TRAVEL_EMOJI": "🗺️",
-    "MINOR_TIME_COMPRESSION_EMOJI": "⌚",
-    "BOTTLED_LIGHTNING_EMOJI": "⚡",
-    "BOTTLED_LIGHTNING_TEXT": "⚡Bottled Lightning"
+    "ENERGY_EMOJI": "\ud83d\udd0b",
+    "ENERGY_TEXT": "\ud83d\udd0bEnergy",
+    "XP_EMOJI": "\u265f\ufe0f",
+    "XP_TEXT": "\u265f\ufe0fXP",
+    "DIVINE_SPARK_EMOJI": "\u2728",
+    "DIVINE_SPARK_TEXT": "\u2728Divine Spark",
+    "ATTUNEMENT_EMOJI": "\ud83c\udf00",
+    "ATTUNEMENT_TEXT": "\ud83c\udf00Attunement",
+    "POWER_EMOJI": "\ud83d\udcaa",
+    "POWER_TEXT": "\ud83d\udcaaPower",
+    "HASTE_EMOJI": "\ud83d\udc07",
+    "HASTE_TEXT": "\ud83d\udc07Haste",
+    "TRAVEL_EMOJI": "\ud83d\uddfa\ufe0f",
+    "MINOR_TIME_COMPRESSION_EMOJI": "\u231a",
+    "BOTTLED_LIGHTNING_EMOJI": "\u26a1",
+    "BOTTLED_LIGHTNING_TEXT": "\u26a1Bottled Lightning"
   }
 }

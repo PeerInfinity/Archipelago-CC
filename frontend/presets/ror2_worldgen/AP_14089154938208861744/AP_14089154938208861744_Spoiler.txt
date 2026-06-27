@@ -1,0 +1,314 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Risk of Rain 2 WorldGen
+Location Count:                  187
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+Newts Per Environment:           1
+Boss Items:                      4
+Chests per Environment:          10
+Combat Trap:                     20
+Common Items:                    64
+Death Link:                      No
+Enable DLC - SOTS:               No
+Enable DLC - SOTV:               No
+Enable Lunar Item Shuffling:     Yes
+Enable Trap Items:               No
+Equipment:                       32
+1000 Exp:                        40
+Final Stage Death is Win:        No
+Game Mode:                       Explore
+Green Scraps:                    16
+Item Pickup Step:                1
+Use Item Weight Presets:         No
+Item Weights:                    Default
+Legendary Items:                 8
+Lunar Coins:                     20
+Lunar Items:                     16
+Money:                           64
+Mountain Trap:                   5
+Progressive Stages:              Yes
+Red Scraps:                      4
+Require Stages:                  Yes
+Radio Scanners per Environment:  1
+Scavenger per Environment:       0
+Show Seer Portals:               Yes
+Shrine use Step:                 0
+Shrines per Environment:         5
+Include Stage Variants:          No
+Start with a Revive:             Yes
+Teleport Trap:                   20
+Time Warp Trap:                  20
+Total Locations:                 40
+Total Revives as percentage:     4
+Uncommon Items:                  32
+Victory Condition:               Any
+Void Items:                      16
+White Scraps:                    32
+Yellow Scraps:                   1
+
+
+Starting Items:
+
+Dio's Best Friend
+Distant Roost
+
+Locations:
+
+Distant Roost: Chest 1: Uncommon Item
+Distant Roost: Chest 2: Uncommon Item
+Distant Roost: Chest 3: Boss Item
+Distant Roost: Chest 4: Equipment
+Distant Roost: Chest 5: Uncommon Item
+Distant Roost: Chest 6: Common Item
+Distant Roost: Chest 7: Verdant Falls
+Distant Roost: Chest 8: Progressive Stage
+Distant Roost: Chest 9: Legendary Item
+Distant Roost: Chest 10: Lunar Coin
+Distant Roost: Shrine 1: Uncommon Item
+Distant Roost: Shrine 2: Uncommon Item
+Distant Roost: Shrine 3: Lunar Coin
+Distant Roost: Shrine 4: 1000 Exp
+Distant Roost: Shrine 5: Equipment
+Distant Roost: Radio Scanner 1: 1000 Exp
+Distant Roost: Newt Altar 1: Lunar Coin
+Titanic Plains: Chest 1: Scorched Acres
+Titanic Plains: Chest 2: Common Item
+Titanic Plains: Chest 3: Money
+Titanic Plains: Chest 4: Uncommon Item
+Titanic Plains: Chest 5: Uncommon Item
+Titanic Plains: Chest 6: Item Scrap, Green
+Titanic Plains: Chest 7: Wetland Aspect
+Titanic Plains: Chest 8: Money
+Titanic Plains: Chest 9: Common Item
+Titanic Plains: Chest 10: Money
+Titanic Plains: Shrine 1: Item Scrap, White
+Titanic Plains: Shrine 2: Item Scrap, Green
+Titanic Plains: Shrine 3: Item Scrap, Red
+Titanic Plains: Shrine 4: Equipment
+Titanic Plains: Shrine 5: Uncommon Item
+Titanic Plains: Radio Scanner 1: Lunar Item
+Titanic Plains: Newt Altar 1: Item Scrap, White
+Verdant Falls: Chest 1: Common Item
+Verdant Falls: Chest 2: Item Scrap, Green
+Verdant Falls: Chest 3: Money
+Verdant Falls: Chest 4: Common Item
+Verdant Falls: Chest 5: 1000 Exp
+Verdant Falls: Chest 6: Titanic Plains
+Verdant Falls: Chest 7: Legendary Item
+Verdant Falls: Chest 8: Hidden Realm: A Moment, Whole
+Verdant Falls: Chest 9: Rallypoint Delta
+Verdant Falls: Chest 10: Common Item
+Verdant Falls: Shrine 1: Common Item
+Verdant Falls: Shrine 2: 1000 Exp
+Verdant Falls: Shrine 3: Item Scrap, Green
+Verdant Falls: Shrine 4: Common Item
+Verdant Falls: Shrine 5: Boss Item
+Verdant Falls: Radio Scanner 1: 1000 Exp
+Verdant Falls: Newt Altar 1: Common Item
+Abandoned Aqueduct: Chest 1: Common Item
+Abandoned Aqueduct: Chest 2: Item Scrap, White
+Abandoned Aqueduct: Chest 3: Lunar Coin
+Abandoned Aqueduct: Chest 4: Legendary Item
+Abandoned Aqueduct: Chest 5: 1000 Exp
+Abandoned Aqueduct: Chest 6: Equipment
+Abandoned Aqueduct: Chest 7: Money
+Abandoned Aqueduct: Chest 8: Item Scrap, White
+Abandoned Aqueduct: Chest 9: Dio's Best Friend
+Abandoned Aqueduct: Chest 10: Common Item
+Abandoned Aqueduct: Shrine 1: Money
+Abandoned Aqueduct: Shrine 2: Money
+Abandoned Aqueduct: Shrine 3: Equipment
+Abandoned Aqueduct: Shrine 4: Hidden Realm: A Moment, Fractured
+Abandoned Aqueduct: Shrine 5: Money
+Abandoned Aqueduct: Radio Scanner 1: Money
+Abandoned Aqueduct: Newt Altar 1: Sky Meadow
+Wetland Aspect: Chest 1: Money
+Wetland Aspect: Chest 2: Common Item
+Wetland Aspect: Chest 3: Item Scrap, Green
+Wetland Aspect: Chest 4: Equipment
+Wetland Aspect: Chest 5: 1000 Exp
+Wetland Aspect: Chest 6: 1000 Exp
+Wetland Aspect: Chest 7: Legendary Item
+Wetland Aspect: Chest 8: Money
+Wetland Aspect: Chest 9: Money
+Wetland Aspect: Chest 10: Money
+Wetland Aspect: Shrine 1: Progressive Stage
+Wetland Aspect: Shrine 2: Money
+Wetland Aspect: Shrine 3: Lunar Coin
+Wetland Aspect: Shrine 4: Uncommon Item
+Wetland Aspect: Shrine 5: Common Item
+Wetland Aspect: Radio Scanner 1: Money
+Wetland Aspect: Newt Altar 1: 1000 Exp
+Rallypoint Delta: Chest 1: Item Scrap, White
+Rallypoint Delta: Chest 2: Item Scrap, White
+Rallypoint Delta: Chest 3: Item Scrap, Green
+Rallypoint Delta: Chest 4: 1000 Exp
+Rallypoint Delta: Chest 5: Lunar Coin
+Rallypoint Delta: Chest 6: Beads of Fealty
+Rallypoint Delta: Chest 7: Equipment
+Rallypoint Delta: Chest 8: Lunar Item
+Rallypoint Delta: Chest 9: Common Item
+Rallypoint Delta: Chest 10: Lunar Coin
+Rallypoint Delta: Shrine 1: Commencement
+Rallypoint Delta: Shrine 2: Equipment
+Rallypoint Delta: Shrine 3: Item Scrap, White
+Rallypoint Delta: Shrine 4: Item Scrap, White
+Rallypoint Delta: Shrine 5: Money
+Rallypoint Delta: Radio Scanner 1: Lunar Coin
+Rallypoint Delta: Newt Altar 1: Common Item
+Scorched Acres: Chest 1: Equipment
+Scorched Acres: Chest 2: 1000 Exp
+Scorched Acres: Chest 3: Item Scrap, White
+Scorched Acres: Chest 4: Item Scrap, Green
+Scorched Acres: Chest 5: Common Item
+Scorched Acres: Chest 6: Equipment
+Scorched Acres: Chest 7: Common Item
+Scorched Acres: Chest 8: 1000 Exp
+Scorched Acres: Chest 9: Item Scrap, Green
+Scorched Acres: Chest 10: Common Item
+Scorched Acres: Shrine 1: Lunar Item
+Scorched Acres: Shrine 2: Common Item
+Scorched Acres: Shrine 3: 1000 Exp
+Scorched Acres: Shrine 4: Progressive Stage
+Scorched Acres: Shrine 5: Common Item
+Scorched Acres: Radio Scanner 1: Abyssal Depths
+Scorched Acres: Newt Altar 1: Lunar Coin
+Abyssal Depths: Chest 1: Dio's Best Friend
+Abyssal Depths: Chest 2: Dio's Best Friend
+Abyssal Depths: Chest 3: 1000 Exp
+Abyssal Depths: Chest 4: Money
+Abyssal Depths: Chest 5: 1000 Exp
+Abyssal Depths: Chest 6: Money
+Abyssal Depths: Chest 7: Uncommon Item
+Abyssal Depths: Chest 8: Lunar Item
+Abyssal Depths: Chest 9: Uncommon Item
+Abyssal Depths: Chest 10: Siren's Call
+Abyssal Depths: Shrine 1: Common Item
+Abyssal Depths: Shrine 2: Item Scrap, Green
+Abyssal Depths: Shrine 3: Money
+Abyssal Depths: Shrine 4: Common Item
+Abyssal Depths: Shrine 5: Progressive Stage
+Abyssal Depths: Radio Scanner 1: Dio's Best Friend
+Abyssal Depths: Newt Altar 1: Hidden Realm: Bulwark's Ambry
+Siren's Call: Chest 1: Lunar Coin
+Siren's Call: Chest 2: Common Item
+Siren's Call: Chest 3: Lunar Item
+Siren's Call: Chest 4: Item Scrap, Green
+Siren's Call: Chest 5: Money
+Siren's Call: Chest 6: Abandoned Aqueduct
+Siren's Call: Chest 7: Sundered Grove
+Siren's Call: Chest 8: Lunar Item
+Siren's Call: Chest 9: Equipment
+Siren's Call: Chest 10: Common Item
+Siren's Call: Shrine 1: Money
+Siren's Call: Shrine 2: Hidden Realm: Bazaar Between Time
+Siren's Call: Shrine 3: 1000 Exp
+Siren's Call: Shrine 4: 1000 Exp
+Siren's Call: Shrine 5: Money
+Siren's Call: Radio Scanner 1: Legendary Item
+Siren's Call: Newt Altar 1: Money
+Sundered Grove: Chest 1: Common Item
+Sundered Grove: Chest 2: Common Item
+Sundered Grove: Chest 3: Uncommon Item
+Sundered Grove: Chest 4: Item Scrap, Green
+Sundered Grove: Chest 5: Lunar Coin
+Sundered Grove: Chest 6: Lunar Item
+Sundered Grove: Chest 7: Common Item
+Sundered Grove: Chest 8: Item Scrap, Green
+Sundered Grove: Chest 9: Uncommon Item
+Sundered Grove: Chest 10: Lunar Item
+Sundered Grove: Shrine 1: Common Item
+Sundered Grove: Shrine 2: Legendary Item
+Sundered Grove: Shrine 3: Void Fields
+Sundered Grove: Shrine 4: Lunar Coin
+Sundered Grove: Shrine 5: Common Item
+Sundered Grove: Radio Scanner 1: Hidden Realm: Gilded Coast
+Sundered Grove: Newt Altar 1: Lunar Coin
+Sky Meadow: Chest 1: Common Item
+Sky Meadow: Chest 2: Dio's Best Friend
+Sky Meadow: Chest 3: 1000 Exp
+Sky Meadow: Chest 4: Money
+Sky Meadow: Chest 5: Common Item
+Sky Meadow: Chest 6: Money
+Sky Meadow: Chest 7: 1000 Exp
+Sky Meadow: Chest 8: Money
+Sky Meadow: Chest 9: Item Scrap, White
+Sky Meadow: Chest 10: Common Item
+Sky Meadow: Shrine 1: Money
+Sky Meadow: Shrine 2: Common Item
+Sky Meadow: Shrine 3: Legendary Item
+Sky Meadow: Shrine 4: Money
+Sky Meadow: Shrine 5: Radar Scanner
+Sky Meadow: Radio Scanner 1: Dio's Best Friend
+Sky Meadow: Newt Altar 1: Item Scrap, Green
+Victory: Victory
+
+Playthrough:
+
+0: {
+  Dio's Best Friend
+  Distant Roost
+}
+1: {
+  Distant Roost: Chest 7: Verdant Falls
+  Distant Roost: Chest 8: Progressive Stage
+}
+2: {
+  Verdant Falls: Chest 6: Titanic Plains
+  Verdant Falls: Chest 8: Hidden Realm: A Moment, Whole
+  Verdant Falls: Chest 9: Rallypoint Delta
+}
+3: {
+  Titanic Plains: Chest 1: Scorched Acres
+  Titanic Plains: Chest 7: Wetland Aspect
+}
+4: {
+  Wetland Aspect: Shrine 1: Progressive Stage
+}
+5: {
+  Rallypoint Delta: Chest 6: Beads of Fealty
+  Rallypoint Delta: Shrine 1: Commencement
+  Scorched Acres: Radio Scanner 1: Abyssal Depths
+  Scorched Acres: Shrine 4: Progressive Stage
+}
+6: {
+  Abyssal Depths: Chest 1: Dio's Best Friend
+  Abyssal Depths: Chest 10: Siren's Call
+  Abyssal Depths: Chest 2: Dio's Best Friend
+  Abyssal Depths: Radio Scanner 1: Dio's Best Friend
+  Abyssal Depths: Shrine 5: Progressive Stage
+}
+7: {
+  Siren's Call: Chest 6: Abandoned Aqueduct
+  Siren's Call: Chest 7: Sundered Grove
+  Siren's Call: Shrine 2: Hidden Realm: Bazaar Between Time
+}
+8: {
+  Abandoned Aqueduct: Chest 9: Dio's Best Friend
+  Abandoned Aqueduct: Newt Altar 1: Sky Meadow
+  Abandoned Aqueduct: Shrine 4: Hidden Realm: A Moment, Fractured
+  Sundered Grove: Shrine 3: Void Fields
+}
+9: {
+  Sky Meadow: Chest 2: Dio's Best Friend
+  Sky Meadow: Radio Scanner 1: Dio's Best Friend
+  Stage 5: Stage 5
+}
+10: {
+  Victory: Victory
+}
