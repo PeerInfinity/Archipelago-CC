@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario 64 WorldGen",
   "game_directory": "sm64ex_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -102,7 +102,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Basement Key",
                   "Progressive Key"
                 ]
@@ -115,7 +115,7 @@
             "access_rule": {
               "rule": "HasAnyCount",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Key": 2,
                   "Second Floor Key": 1
                 }
@@ -320,7 +320,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cannon Unlock BoB",
                   "Wing Cap"
                 ]
@@ -1475,7 +1475,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Cannon Unlock SSL",
                       "Wing Cap"
                     ]
@@ -1582,7 +1582,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Cannon Unlock SSL",
                       "Wing Cap"
                     ]
@@ -1689,7 +1689,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Metal Cap",
                   "Vanish Cap"
                 ]
@@ -3075,7 +3075,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression_skip_balancing",
+        "classification": "progression_deprioritized_skip_balancing",
         "type": null,
         "max_count": 105
       },
@@ -3655,6 +3655,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Super Mario 64 WorldGen",

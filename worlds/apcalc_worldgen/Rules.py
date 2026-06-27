@@ -21,22 +21,22 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Menu to Region 1", player),
+        multiworld.get_entrance("C to Region 1", player),
         Has('Button: 6', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Menu to Region 2", player),
+        multiworld.get_entrance("C to Region 2", player),
         Has('Button: 8', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Menu to Region 3", player),
+        multiworld.get_entrance("C to Region 3", player),
         Has('Button: 9', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Menu to Region 4", player),
+        multiworld.get_entrance("C to Region 4", player),
         Has('Button: 7', 1)
     )
 

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Faxanadu WorldGen",
   "game_directory": "faxanadu_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -32,7 +32,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Key Jack",
                   "Progressive Sword"
                 ]
@@ -290,7 +290,7 @@
             "access_rule": {
               "rule": "HasAnyCount",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Sword": 2,
                   "Deluge": 1
                 }
@@ -366,7 +366,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Deluge",
                   "Unlock Wingboots"
                 ]
@@ -523,7 +523,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Sword": 2,
                   "Joker Spring Flow": 1,
                   "Key Queen": 1,
@@ -770,7 +770,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Red Potion": 4,
                   "Key Queen": 1
                 }
@@ -1031,7 +1031,7 @@
             "access_rule": {
               "rule": "HasAnyCount",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Sword": 2,
                   "Deluge": 1
                 }
@@ -1171,7 +1171,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Key King",
                   "Unlock Wingboots"
                 ]
@@ -2661,6 +2661,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Faxanadu WorldGen",

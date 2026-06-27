@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Short Hike WorldGen",
   "game_directory": "shorthike_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -612,7 +612,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Golden Feather": 7,
                   "Progressive Fishing Rod": 2
                 }
@@ -970,7 +970,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Seashell": 15,
                   "Shell Necklace": 1
                 }
@@ -1180,7 +1180,7 @@
                 {
                   "rule": "HasAllCounts",
                   "args": {
-                    "items": {
+                    "item_counts": {
                       "Golden Feather": 0,
                       "Bucket": 1
                     }
@@ -1718,7 +1718,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Golden Feather": 3,
                   "Shovel": 1
                 }
@@ -1903,7 +1903,7 @@
                     {
                       "rule": "HasAllCounts",
                       "args": {
-                        "items": {
+                        "item_counts": {
                           "Golden Feather": 0,
                           "Bucket": 1
                         }
@@ -1990,7 +1990,7 @@
                     {
                       "rule": "HasAllCounts",
                       "args": {
-                        "items": {
+                        "item_counts": {
                           "Golden Feather": 0,
                           "Bucket": 1
                         }
@@ -2030,7 +2030,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bucket",
                       "Golden Feather"
                     ]
@@ -2062,7 +2062,7 @@
                 {
                   "rule": "HasAllCounts",
                   "args": {
-                    "items": {
+                    "item_counts": {
                       "Golden Feather": 0,
                       "Bucket": 1
                     }
@@ -2705,6 +2705,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "A Short Hike WorldGen",

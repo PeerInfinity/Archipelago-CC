@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Starcraft 2",
   "game_directory": "sc2",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -428,7 +428,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beat Evacuation (Terran)"
                 ]
               }
@@ -440,7 +440,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beat Evacuation (Terran)"
                 ]
               }
@@ -494,7 +494,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -518,7 +518,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -734,7 +734,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -746,7 +746,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -804,7 +804,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -816,7 +816,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -860,7 +860,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -872,7 +872,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -916,7 +916,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -928,7 +928,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -972,7 +972,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -984,7 +984,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -1028,7 +1028,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -1040,7 +1040,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -1112,7 +1112,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -1124,7 +1124,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -1168,7 +1168,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -1180,7 +1180,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -1480,7 +1480,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -1492,7 +1492,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -1501,7 +1501,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -1532,7 +1532,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -1541,7 +1541,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -1550,7 +1550,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -1727,7 +1727,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -1739,7 +1739,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -1748,7 +1748,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -1779,7 +1779,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -1788,7 +1788,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -1797,7 +1797,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -1928,7 +1928,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -1940,7 +1940,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -1949,7 +1949,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -1980,7 +1980,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -1989,7 +1989,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -1998,7 +1998,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -2129,7 +2129,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -2141,7 +2141,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -2150,7 +2150,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -2181,7 +2181,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -2190,7 +2190,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -2199,7 +2199,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -2346,7 +2346,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -2358,7 +2358,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -2367,7 +2367,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -2398,7 +2398,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -2407,7 +2407,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -2416,7 +2416,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -2547,7 +2547,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -2559,7 +2559,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -2568,7 +2568,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -2599,7 +2599,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -2608,7 +2608,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -2617,7 +2617,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -2748,7 +2748,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -2760,7 +2760,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -2769,7 +2769,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -2800,7 +2800,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -2809,7 +2809,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -2818,7 +2818,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -2949,7 +2949,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -2961,7 +2961,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -2970,7 +2970,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -3001,7 +3001,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -3010,7 +3010,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -3019,7 +3019,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -3150,7 +3150,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -3162,7 +3162,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -3171,7 +3171,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -3202,7 +3202,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -3211,7 +3211,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -3220,7 +3220,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -3351,7 +3351,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -3363,7 +3363,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -3372,7 +3372,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -3403,7 +3403,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -3412,7 +3412,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -3421,7 +3421,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -3552,7 +3552,7 @@
                             {
                               "rule": "HasAny",
                               "args": {
-                                "items": [
+                                "item_names": [
                                   "Battlecruiser",
                                   "Valkyrie",
                                   "Wraith"
@@ -3564,7 +3564,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Progressive High Impact Payload (Thor)",
                               "Thor"
                             ]
@@ -3573,7 +3573,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Cyclone",
                               "Goliath",
                               "Viking"
@@ -3604,7 +3604,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Liberator",
                               "Raid Artillery (Liberator)"
                             ]
@@ -3613,7 +3613,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Flechette Missiles (Valkyrie)",
                               "Valkyrie"
                             ]
@@ -3622,7 +3622,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Banshee",
                               "Battlecruiser",
                               "Goliath",
@@ -4253,7 +4253,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4282,7 +4282,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4338,7 +4338,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hercules",
                           "Medivac"
                         ]
@@ -4367,7 +4367,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hercules",
                   "Medivac",
                   "Raven",
@@ -4389,7 +4389,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hercules",
                   "Medivac",
                   "Raven",
@@ -4411,7 +4411,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hercules",
                   "Medivac",
                   "Raven",
@@ -4433,7 +4433,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hercules",
                   "Medivac",
                   "Raven",
@@ -4455,7 +4455,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Hercules",
                   "Medivac",
                   "Raven",
@@ -4491,7 +4491,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4520,7 +4520,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4565,7 +4565,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4594,7 +4594,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4639,7 +4639,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -4668,7 +4668,7 @@
                         {
                           "rule": "HasAny",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Hercules",
                               "Medivac"
                             ]
@@ -5691,7 +5691,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -5716,7 +5716,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -5755,7 +5755,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -5780,7 +5780,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -5805,7 +5805,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -5830,7 +5830,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -6310,7 +6310,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -6334,7 +6334,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -6358,7 +6358,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -6382,7 +6382,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -6420,7 +6420,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Firebat",
                   "Hellion",
@@ -7145,7 +7145,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beat Haven's Fall (Terran)"
                 ]
               }
@@ -7846,7 +7846,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -7858,7 +7858,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -7918,7 +7918,7 @@
                     {
                       "rule": "HasGroup",
                       "args": {
-                        "group": "Missions",
+                        "item_name_group": "Missions",
                         "count": {
                           "type": "constant",
                           "value": 1
@@ -7930,7 +7930,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Combat Shield (Marine)",
                       "Magrail Munitions (Marine)",
                       "Stabilizer Medpacks (Medic)"
@@ -9241,7 +9241,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beat Zero Hour (Terran)"
                 ]
               }
@@ -9255,25 +9255,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
                 {
                   "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
@@ -9314,7 +9295,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -9337,33 +9318,18 @@
             "name": "Zero Hour (Terran): Third Group Rescued",
             "id": 1303,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Dominion Trooper",
+                  "Goliath",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Vulture",
+                  "Warhound"
+                ]
+              }
             },
             "item": {
               "name": "Defensive Matrix (Science Vessel)",
@@ -9443,7 +9409,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Dominion Trooper",
                   "Goliath",
                   "Hellion",
@@ -9466,33 +9432,18 @@
             "name": "Zero Hour (Terran): Hold Just a Little Longer",
             "id": 1309,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Dominion Trooper",
+                  "Goliath",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Vulture",
+                  "Warhound"
+                ]
+              }
             },
             "item": {
               "name": "Optimized Logistics (Hellion)",
@@ -9506,33 +9457,18 @@
             "name": "Zero Hour (Terran): Cavalry's on the Way",
             "id": 1310,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Dominion Trooper",
+                  "Goliath",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Vulture",
+                  "Warhound"
+                ]
+              }
             },
             "item": {
               "name": "Advanced Siege Tech (Siege Tank)",
@@ -9548,25 +9484,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": 2,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
                 {
                   "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
@@ -35938,6 +35855,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Starcraft 2",
@@ -36186,12 +36104,10 @@
         "excluded_missions": [],
         "extra_locations": 0,
         "filler_items_distribution": {
-          "1 Kerrigan Level": 0,
           "Additional Maximum Supply": 1,
           "Additional Starting Minerals": 1,
           "Additional Starting Supply": 1,
           "Additional Starting Vespene": 1,
-          "Decreased Maximum Supply": 0,
           "Increased Building Construction Speed": 1,
           "Increased Shield Regeneration": 1,
           "Increased Upgrade Research Speed": 1,
@@ -37349,7 +37265,6 @@
         "Additional Starting Minerals": 1,
         "Additional Starting Supply": 1,
         "Additional Starting Vespene": 1,
-        "Decreased Maximum Supply": 0,
         "Increased Building Construction Speed": 1,
         "Increased Upgrade Research Speed": 1,
         "Reduced Upgrade Research Cost": 1

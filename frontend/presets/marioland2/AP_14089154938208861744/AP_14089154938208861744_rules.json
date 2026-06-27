@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario Land 2",
   "game_directory": "marioland2",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -120,7 +120,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "Tree Coin",
                   "Space Coin",
                   "Macro Coin",
@@ -29308,6 +29308,7 @@
       "Pipe Traversal"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Super Mario Land 2",
@@ -36219,9 +36220,54 @@
         ]
       },
       "coin_fragments_required": 1,
+      "ut": false,
       "world_description": "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival.",
       "slot_data": {
-        "energy_link": 1
+        "energy_link": 1,
+        "shuffle_golden_coins": 0,
+        "required_golden_coins": 6,
+        "coinsanity": 0,
+        "shuffle_midway_bells": 0,
+        "marios_castle_midway_bell": 0,
+        "shuffle_pipe_traversal": 0,
+        "auto_scroll_mode": 0,
+        "auto_scroll_levels": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "turtle_zone_1_shark_count": 0,
+        "mario_zone_3_crane_count": 3,
+        "coin_fragments_required": 1
       },
       "web": {
         "theme": "grass",

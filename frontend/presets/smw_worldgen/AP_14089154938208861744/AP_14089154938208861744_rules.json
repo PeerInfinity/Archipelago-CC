@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario World WorldGen",
   "game_directory": "smw_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -427,7 +427,7 @@
                     {
                       "rule": "HasAllCounts",
                       "args": {
-                        "items": {
+                        "item_counts": {
                           "Progressive Powerup": 3,
                           "Run": 1
                         }
@@ -436,7 +436,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Green Switch Palace",
                           "Yoshi"
                         ]
@@ -547,7 +547,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Climb",
                           "Progressive Powerup",
                           "Spin Jump"
@@ -770,7 +770,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "P-Switch",
                   "Swim"
@@ -913,7 +913,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Powerup": 3,
                   "Run": 1
                 }
@@ -929,7 +929,7 @@
                 {
                   "rule": "HasAllCounts",
                   "args": {
-                    "items": {
+                    "item_counts": {
                       "Progressive Powerup": 3,
                       "Run": 1
                     }
@@ -1041,7 +1041,7 @@
                     {
                       "rule": "HasAllCounts",
                       "args": {
-                        "items": {
+                        "item_counts": {
                           "Progressive Powerup": 3,
                           "Run": 1
                         }
@@ -1058,7 +1058,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Carry",
                       "P-Switch"
                     ]
@@ -1275,7 +1275,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Progressive Powerup",
                       "Super Star Activate"
                     ]
@@ -1302,7 +1302,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Climb",
                           "Red Switch Palace"
                         ]
@@ -1311,7 +1311,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Climb",
                           "Yoshi"
                         ]
@@ -1320,7 +1320,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Red Switch Palace",
                           "Yoshi"
                         ]
@@ -1421,7 +1421,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Climb",
                       "Yoshi"
                     ]
@@ -1445,7 +1445,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Climb",
                       "Yoshi"
                     ]
@@ -1454,7 +1454,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Carry",
                       "P-Switch",
                       "Swim"
@@ -1663,7 +1663,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Blue Switch Palace",
                   "Carry",
                   "Climb"
@@ -2213,7 +2213,7 @@
                 {
                   "rule": "HasAnyCount",
                   "args": {
-                    "items": {
+                    "item_counts": {
                       "Progressive Powerup": 3,
                       "Yoshi": 1
                     }
@@ -2420,7 +2420,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Climb",
                   "Run"
                 ]
@@ -2505,7 +2505,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "P-Balloon"
                 ]
@@ -2603,7 +2603,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "Swim"
                 ]
@@ -2691,7 +2691,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "Yoshi"
                 ]
@@ -2704,7 +2704,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "Progressive Powerup",
                   "Spin Jump"
@@ -3359,7 +3359,7 @@
                 {
                   "rule": "HasAllCounts",
                   "args": {
-                    "items": {
+                    "item_counts": {
                       "Progressive Powerup": 3,
                       "Run": 1
                     }
@@ -3380,7 +3380,7 @@
             "access_rule": {
               "rule": "HasAllCounts",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Powerup": 3,
                   "Run": 1
                 }
@@ -4097,7 +4097,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "Climb",
                   "Yoshi"
@@ -4196,7 +4196,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "P-Switch",
                   "Run"
@@ -4439,7 +4439,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Climb",
                       "Progressive Powerup",
                       "Run",
@@ -4738,7 +4738,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Progressive Powerup",
                   "Spin Jump"
                 ]
@@ -4751,7 +4751,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "Progressive Powerup",
                   "Spin Jump"
@@ -4842,7 +4842,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Carry",
                   "Swim"
                 ]
@@ -5019,7 +5019,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Green Switch Palace",
                           "Red Switch Palace"
                         ]
@@ -5125,7 +5125,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Blue Switch Palace",
                   "Carry",
                   "Climb",
@@ -5224,7 +5224,7 @@
                     {
                       "rule": "HasAllCounts",
                       "args": {
-                        "items": {
+                        "item_counts": {
                           "Progressive Powerup": 3,
                           "Run": 1
                         }
@@ -5357,7 +5357,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Climb",
                   "Yoshi"
                 ]
@@ -5417,7 +5417,7 @@
             "access_rule": {
               "rule": "HasAnyCount",
               "args": {
-                "items": {
+                "item_counts": {
                   "Progressive Powerup": 2,
                   "Super Star Activate": 1
                 }
@@ -5651,7 +5651,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Progressive Powerup",
                       "Spin Jump"
                     ]
@@ -5660,7 +5660,7 @@
                 {
                   "rule": "HasAnyCount",
                   "args": {
-                    "items": {
+                    "item_counts": {
                       "Progressive Powerup": 3,
                       "Carry": 1,
                       "Yoshi": 1
@@ -6163,6 +6163,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Super Mario World WorldGen",

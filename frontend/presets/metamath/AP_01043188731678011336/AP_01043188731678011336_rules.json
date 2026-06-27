@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Metamath",
   "game_directory": "metamath",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -60,7 +60,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 1",
                   "Proved Statement 2",
                   "Statement 1"
@@ -80,7 +80,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 1",
                   "Proved Statement 2",
                   "Statement 2"
@@ -130,7 +130,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 3",
                   "Proved Statement 6",
                   "Proved Statement 7",
@@ -181,7 +181,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 4",
                   "Statement 4"
                 ]
@@ -230,7 +230,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 5",
                   "Statement 5"
                 ]
@@ -279,7 +279,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 3",
                   "Proved Statement 6",
                   "Proved Statement 7",
@@ -330,7 +330,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 3",
                   "Proved Statement 6",
                   "Proved Statement 7",
@@ -381,7 +381,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 8",
                   "Proved Statement 9",
                   "Statement 8"
@@ -431,7 +431,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Proved Statement 8",
                   "Proved Statement 9",
                   "Statement 9"
@@ -1780,6 +1780,7 @@
       "Proved Statement 1"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Metamath",

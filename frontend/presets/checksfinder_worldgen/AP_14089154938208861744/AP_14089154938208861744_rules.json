@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "ChecksFinder WorldGen",
   "game_directory": "checksfinder_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -103,7 +103,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -125,7 +125,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -147,7 +147,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -169,7 +169,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -191,7 +191,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -213,7 +213,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -235,7 +235,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -257,7 +257,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -279,7 +279,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -301,7 +301,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -323,7 +323,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -345,7 +345,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -367,7 +367,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -389,7 +389,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -411,7 +411,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -433,7 +433,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -455,7 +455,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -477,7 +477,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -499,7 +499,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -521,7 +521,7 @@
             "access_rule": {
               "rule": "HasFromList",
               "args": {
-                "items": [
+                "item_names": [
                   "Map Bombs",
                   "Map Height",
                   "Map Width"
@@ -630,6 +630,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "ChecksFinder WorldGen",
