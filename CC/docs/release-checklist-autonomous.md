@@ -613,9 +613,30 @@ git show origin/test-results-original:scripts/output/spoiler-minimal/test-result
 - **Multiclient** (`scripts/output/multiclient/test-results.json`):
   `multiclient_test.success` + `client1_passed` + `client2_passed` (and
   `generation.success`). **No `analysis` key** — don't reuse the spoiler checker.
-- **Multiworld**: analogous (`multiworld_test.*` / `generation.*`).
+- **Multiworld** (`scripts/output/multiworld/test-results.json`):
+  `multiworld_test.success` is **tri-state** — `true` (pass), `false` (fail), or
+  **`null` = not evaluated**. A `null` is usually a grouping artifact, not a
+  failure: multiworld pairs templates into groups, so single-player/accumulator
+  entries carry `skip_reason` like `"Waiting for 2+ templates"`. There's also a
+  `prerequisite_check` (spoiler/multiclient must pass first) and a `second_pass`
+  (`second_pass.player_results.player_N.pass...`). Count `false` as the real
+  failures; treat `null` as skipped, not failed.
+
+Naming: result-dir suffixes track `template_type` —
+`scripts/output/<kind>/` (original), `<kind>-worldgen/`, `<kind>-apworld/`.
 
 The `metadata.last_updated` timestamp confirms you're reading *this* run's data.
+
+> **Per-phase persistence — cancelling mid-run is safe for finished phases.**
+> Each phase's `Combine <phase> Results` job does `git commit` + `git push` to the
+> result branch the moment that phase completes — it is **not** one push at the
+> end. So a run cancelled mid-sweep keeps every phase whose combine already ran
+> (e.g. cancelling during multiclient still leaves spoiler-minimal + spoiler-full
+> on the branch). In-progress/not-started phases are simply absent. (Each split
+> also `upload-artifact`s its raw JSON before combine, retrievable via
+> `gh run download <run-id>` — but the branch is the canonical, combined store.)
+> Verify what landed with `git ls-tree -r --name-only origin/<branch> | grep
+> test-results.json` and `git log --oneline origin/<branch>` before cancelling.
 
 ### 5.6 Merge results, fix failures, then hybrid
 
