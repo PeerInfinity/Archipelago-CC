@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Baking Adventure",
   "game_directory": "bakingadventure",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -172,7 +172,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Creamed Mixture",
                   "Flour Mixture"
                 ]
@@ -187,7 +187,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Electric Mixer",
                   "Mixing Bowls",
                   "Softened Butter"
@@ -369,7 +369,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cookie Dough",
                   "Prepared Sheets"
                 ]
@@ -403,7 +403,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Preheated Oven",
                   "Shaped Cookies"
                 ]
@@ -662,6 +662,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Baking Adventure",

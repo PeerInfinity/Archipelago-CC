@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Kingdom Hearts",
   "game_directory": "kh1",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -70,7 +70,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Blue Trinity",
                   "Progressive Glide"
                 ]
@@ -1188,7 +1188,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Blue Trinity",
                   "Progressive Fire"
                 ]
@@ -1507,7 +1507,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Progressive Fire",
                   "Progressive Glide"
                 ]
@@ -4091,7 +4091,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -4100,7 +4100,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -4524,7 +4524,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -4591,7 +4591,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -4658,7 +4658,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -6279,7 +6279,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -6288,7 +6288,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -6937,7 +6937,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -7115,7 +7115,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Yellow Trinity"
                 ]
@@ -7135,7 +7135,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Yellow Trinity"
                 ]
@@ -7343,7 +7343,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -7380,7 +7380,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -7752,7 +7752,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -7789,7 +7789,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -7934,7 +7934,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -7962,7 +7962,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -7982,7 +7982,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -8247,7 +8247,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -9309,7 +9309,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -9318,7 +9318,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -9361,7 +9361,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -9404,7 +9404,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide"
                     ]
@@ -10692,7 +10692,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Green Trinity",
                       "Progressive Glide"
                     ]
@@ -10724,7 +10724,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Green Trinity",
                       "Progressive Glide"
                     ]
@@ -10814,7 +10814,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Green Trinity",
                   "White Trinity"
                 ]
@@ -11585,7 +11585,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Glide",
                       "Progressive Thunder"
@@ -12629,7 +12629,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Blizzard",
                   "Progressive Glide"
@@ -12650,7 +12650,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Blizzard",
                   "Progressive Glide"
@@ -13021,7 +13021,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "High Jump",
                       "Progressive Blizzard"
                     ]
@@ -13266,7 +13266,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "High Jump",
                   "Progressive Glide"
                 ]
@@ -23910,6 +23910,7 @@
       "Dodge Roll"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Kingdom Hearts",

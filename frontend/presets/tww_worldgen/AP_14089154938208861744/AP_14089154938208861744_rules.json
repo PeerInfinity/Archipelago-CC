@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "The Wind Waker WorldGen",
   "game_directory": "tww_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -1041,7 +1041,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Grappling Hook"
                     ]
@@ -1078,7 +1078,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Grappling Hook"
                     ]
@@ -1115,7 +1115,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boomerang",
                       "Grappling Hook"
                     ]
@@ -1358,7 +1358,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "FW Small Key",
                       "Grappling Hook"
                     ]
@@ -1413,7 +1413,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "FW Small Key",
                       "Grappling Hook"
                     ]
@@ -2469,7 +2469,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Hookshot",
                       "Iron Boots"
                     ]
@@ -5578,6 +5578,7 @@
       "Progressive Sword"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "The Wind Waker WorldGen",

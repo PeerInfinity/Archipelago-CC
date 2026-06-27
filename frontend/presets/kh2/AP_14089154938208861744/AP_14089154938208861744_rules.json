@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Kingdom Hearts 2",
   "game_directory": "kh2",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -10482,7 +10482,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Valor",
                           "Valor Form"
                         ]
@@ -10545,7 +10545,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -10809,7 +10809,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Valor",
                           "Valor Form"
                         ]
@@ -10872,7 +10872,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -11136,7 +11136,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Valor",
                           "Valor Form"
                         ]
@@ -11199,7 +11199,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -11463,7 +11463,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Valor",
                           "Valor Form"
                         ]
@@ -11526,7 +11526,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -11790,7 +11790,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Valor",
                           "Valor Form"
                         ]
@@ -11853,7 +11853,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -12117,7 +12117,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Valor",
                           "Valor Form"
                         ]
@@ -12180,7 +12180,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -12450,7 +12450,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Wisdom",
                           "Wisdom Form"
                         ]
@@ -12513,7 +12513,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -12777,7 +12777,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Wisdom",
                           "Wisdom Form"
                         ]
@@ -12840,7 +12840,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -13104,7 +13104,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Wisdom",
                           "Wisdom Form"
                         ]
@@ -13167,7 +13167,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -13431,7 +13431,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Wisdom",
                           "Wisdom Form"
                         ]
@@ -13494,7 +13494,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -13758,7 +13758,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Wisdom",
                           "Wisdom Form"
                         ]
@@ -13821,7 +13821,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -14085,7 +14085,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Wisdom",
                           "Wisdom Form"
                         ]
@@ -14148,7 +14148,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -14418,7 +14418,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Limit",
                           "Limit Form"
                         ]
@@ -14481,7 +14481,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -14745,7 +14745,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Limit",
                           "Limit Form"
                         ]
@@ -14808,7 +14808,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -15072,7 +15072,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Limit",
                           "Limit Form"
                         ]
@@ -15135,7 +15135,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -15399,7 +15399,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Limit",
                           "Limit Form"
                         ]
@@ -15462,7 +15462,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -15726,7 +15726,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Limit",
                           "Limit Form"
                         ]
@@ -15789,7 +15789,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -16053,7 +16053,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Limit",
                           "Limit Form"
                         ]
@@ -16116,7 +16116,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -16378,7 +16378,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Drive Converter",
                               "Second Chance"
                             ]
@@ -16389,7 +16389,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Master",
                           "Master Form"
                         ]
@@ -16452,7 +16452,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -16708,7 +16708,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Drive Converter",
                               "Second Chance"
                             ]
@@ -16719,7 +16719,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Master",
                           "Master Form"
                         ]
@@ -16782,7 +16782,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -17038,7 +17038,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Drive Converter",
                               "Second Chance"
                             ]
@@ -17049,7 +17049,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Master",
                           "Master Form"
                         ]
@@ -17112,7 +17112,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -17368,7 +17368,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Drive Converter",
                               "Second Chance"
                             ]
@@ -17379,7 +17379,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Master",
                           "Master Form"
                         ]
@@ -17442,7 +17442,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -17698,7 +17698,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Drive Converter",
                               "Second Chance"
                             ]
@@ -17709,7 +17709,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Master",
                           "Master Form"
                         ]
@@ -17772,7 +17772,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -18028,7 +18028,7 @@
                         {
                           "rule": "HasAll",
                           "args": {
-                            "items": [
+                            "item_names": [
                               "Drive Converter",
                               "Second Chance"
                             ]
@@ -18039,7 +18039,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Master",
                           "Master Form"
                         ]
@@ -18102,7 +18102,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -18372,7 +18372,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Final",
                           "Final Form"
                         ]
@@ -18435,7 +18435,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -18699,7 +18699,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Final",
                           "Final Form"
                         ]
@@ -18762,7 +18762,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -19026,7 +19026,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Final",
                           "Final Form"
                         ]
@@ -19089,7 +19089,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -19353,7 +19353,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Final",
                           "Final Form"
                         ]
@@ -19416,7 +19416,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -19680,7 +19680,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Final",
                           "Final Form"
                         ]
@@ -19743,7 +19743,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -20007,7 +20007,7 @@
                     "if_true": {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Auto Final",
                           "Final Form"
                         ]
@@ -20070,7 +20070,7 @@
                                 {
                                   "rule": "HasAny",
                                   "args": {
-                                    "items": [
+                                    "item_names": [
                                       "Final Form",
                                       "Limit Form",
                                       "Master Form",
@@ -25913,6 +25913,7 @@
       "Glide"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Kingdom Hearts 2",
@@ -50231,7 +50232,6 @@
                     "Ice Cream",
                     "Way to the Dawn",
                     "Identity Disk",
-                    "Ice Cream",
                     "Namine Sketches"
                   ]
                 }

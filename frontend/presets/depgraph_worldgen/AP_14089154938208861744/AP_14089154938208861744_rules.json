@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "DepGraph WorldGen",
   "game_directory": "depgraph_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -60,7 +60,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Command Line",
                   "Event: Command Line"
                 ]
@@ -73,7 +73,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Command Line",
                   "Event: CSS",
                   "Event: Command Line",
@@ -126,7 +126,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
@@ -179,7 +179,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: HTML",
                   "HTML"
                 ]
@@ -228,7 +228,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "CSS",
                   "Event: CSS"
                 ]
@@ -241,7 +241,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "CSS",
                   "Event: CSS",
                   "Event: Command Line",
@@ -294,7 +294,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Design Systems",
                   "Event: Design Systems",
                   "Event: Static Website Complete"
@@ -344,7 +344,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: JavaScript Basics",
                   "JavaScript Basics"
                 ]
@@ -357,7 +357,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: JavaScript Basics",
                   "JavaScript Basics"
                 ]
@@ -370,7 +370,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
@@ -423,7 +423,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Algorithms",
                   "Event: Algorithms",
                   "Event: Static Website Complete"
@@ -473,7 +473,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "DOM Manipulation",
                   "Event: DOM Manipulation",
                   "Event: Static Website Complete"
@@ -558,7 +558,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Server Basics",
                   "Server Basics"
                 ]
@@ -571,7 +571,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
@@ -624,7 +624,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: HTTP Basics",
                   "Event: Interactive App Complete",
                   "HTTP Basics"
@@ -674,7 +674,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Static Website Complete",
                   "Static Website Complete"
                 ]
@@ -687,7 +687,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Static Website Complete",
                   "Static Website Complete"
                 ]
@@ -700,7 +700,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Static Website Complete",
                   "Static Website Complete"
                 ]
@@ -713,7 +713,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Static Website Complete",
                   "Static Website Complete"
                 ]
@@ -726,7 +726,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: DOM Manipulation",
                   "Event: Static Website Complete",
                   "Static Website Complete"
@@ -740,7 +740,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Static Website Complete",
                   "Static Website Complete"
                 ]
@@ -753,7 +753,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Design Systems",
                   "Event: Static Website Complete",
                   "Static Website Complete"
@@ -767,7 +767,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Algorithms",
                   "Event: Static Website Complete",
                   "Static Website Complete"
@@ -781,7 +781,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Static Website Complete",
                   "Static Website Complete"
                 ]
@@ -830,7 +830,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Django",
                   "Event: Django"
                 ]
@@ -879,7 +879,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Django APIs",
                   "Event: Django APIs"
                 ]
@@ -928,7 +928,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
@@ -985,7 +985,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Express",
                   "Express"
                 ]
@@ -1034,7 +1034,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Express APIs",
                   "Express APIs"
                 ]
@@ -1083,7 +1083,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1140,7 +1140,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Flask",
                   "Flask"
                 ]
@@ -1189,7 +1189,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Flask APIs",
                   "Flask APIs"
                 ]
@@ -1238,7 +1238,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1295,7 +1295,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: NoSQL",
                   "NoSQL"
                 ]
@@ -1344,7 +1344,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: MongoDB Basics",
                   "MongoDB Basics"
                 ]
@@ -1393,7 +1393,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1450,7 +1450,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: React",
                   "React"
                 ]
@@ -1499,7 +1499,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: React Mastery",
                   "React Mastery"
                 ]
@@ -1548,7 +1548,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1605,7 +1605,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: SQL",
                   "SQL"
                 ]
@@ -1654,7 +1654,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: PostgreSQL",
                   "PostgreSQL"
                 ]
@@ -1703,7 +1703,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1760,7 +1760,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: UI/UX",
                   "UI/UX"
                 ]
@@ -1809,7 +1809,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Responsive Design",
                   "Responsive Design"
                 ]
@@ -1858,7 +1858,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Accessibility",
                   "Event: Accessibility",
                   "Event: Custom State System",
@@ -1915,7 +1915,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Vanilla JS Mastery",
                   "Vanilla JS Mastery"
                 ]
@@ -1964,7 +1964,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Custom State System",
                   "Event: Accessibility",
                   "Event: Custom State System",
@@ -2021,7 +2021,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Vue",
                   "Vue"
                 ]
@@ -2070,7 +2070,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Vue Mastery",
                   "Vue Mastery"
                 ]
@@ -2119,7 +2119,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -2176,7 +2176,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Interactive App Complete",
                   "Interactive App Complete"
                 ]
@@ -2189,7 +2189,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Interactive App Complete",
                   "Interactive App Complete"
                 ]
@@ -2202,7 +2202,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: HTTP Basics",
                   "Event: Interactive App Complete",
                   "Interactive App Complete"
@@ -2216,7 +2216,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Interactive App Complete",
                   "Interactive App Complete"
                 ]
@@ -2265,7 +2265,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Caching",
                   "Event: Caching"
                 ]
@@ -2314,7 +2314,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "CDN",
                   "Event: CDN"
                 ]
@@ -2363,7 +2363,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Docker",
                   "Event: Docker"
                 ]
@@ -2412,7 +2412,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "CI/CD",
                   "Event: CI/CD"
                 ]
@@ -2461,7 +2461,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Authentication",
                   "Event: DevOps",
                   "Event: Performance",
@@ -2513,7 +2513,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "DevOps",
                   "Event: Authentication",
                   "Event: DevOps",
@@ -2565,7 +2565,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Sessions",
                   "Sessions"
                 ]
@@ -2614,7 +2614,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: JWT",
                   "JWT"
                 ]
@@ -2663,7 +2663,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Authentication",
                   "Event: Authentication",
                   "Event: DevOps",
@@ -2715,7 +2715,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Unit Tests",
                   "Unit Tests"
                 ]
@@ -2764,7 +2764,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Integration Tests",
                   "Integration Tests"
                 ]
@@ -2813,7 +2813,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Authentication",
                   "Event: DevOps",
                   "Event: Performance",
@@ -2865,7 +2865,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Full-Stack Complete",
                   "Full-Stack Complete"
                 ]
@@ -2878,7 +2878,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Full-Stack Complete",
                   "Full-Stack Complete"
                 ]
@@ -2891,7 +2891,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Full-Stack Complete",
                   "Full-Stack Complete"
                 ]
@@ -2940,7 +2940,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Cloud Provider",
                   "Event: Cloud Provider"
                 ]
@@ -2989,7 +2989,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Domain",
                   "Event: Domain",
                   "Event: HTTPS"
@@ -3039,7 +3039,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Horizontal Scaling",
                   "Horizontal Scaling"
                 ]
@@ -3088,7 +3088,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: HTTPS",
                   "HTTPS"
                 ]
@@ -3101,7 +3101,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Domain",
                   "Event: HTTPS",
                   "HTTPS"
@@ -3151,7 +3151,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "CORS",
                   "Event: CORS"
                 ]
@@ -3200,7 +3200,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Deployment Complete",
                   "Event: Scaling Complete",
                   "Event: Security Complete",
@@ -3251,7 +3251,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Event: Deployment Complete",
                   "Event: Scaling Complete",
                   "Event: Security Complete",
@@ -3302,7 +3302,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Deployment Complete",
                   "Event: Deployment Complete",
                   "Event: Scaling Complete",
@@ -15268,6 +15268,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "DepGraph WorldGen",

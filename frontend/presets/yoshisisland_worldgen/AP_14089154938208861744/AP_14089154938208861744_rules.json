@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Yoshi's Island WorldGen",
   "game_directory": "yoshisisland_worldgen",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -479,7 +479,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Dashed Stairs"
                 ]
@@ -500,7 +500,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Dashed Stairs"
                 ]
@@ -521,7 +521,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Dashed Stairs",
                   "Tulip"
@@ -567,7 +567,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Helicopter Morph",
                   "Large Spring Ball"
                 ]
@@ -588,7 +588,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Helicopter Morph",
                   "Large Spring Ball"
                 ]
@@ -778,7 +778,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Key",
                       "Spring Ball"
                     ]
@@ -960,7 +960,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Flashing Eggs",
                   "Large Spring Ball",
@@ -1059,7 +1059,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Large Spring Ball"
                 ]
@@ -1086,7 +1086,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Chomp Rock",
                   "Flashing Eggs",
@@ -1134,7 +1134,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Beanstalk",
                           "Chomp Rock",
                           "Spring Ball"
@@ -1257,7 +1257,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Arrow Wheel",
                           "Key"
                         ]
@@ -1333,7 +1333,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Large Spring Ball",
                   "Poochy",
                   "Spring Ball"
@@ -1355,7 +1355,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Large Spring Ball",
                   "Super Star"
                 ]
@@ -1427,7 +1427,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Egg Launcher",
                   "Large Spring Ball",
@@ -1451,7 +1451,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Egg Launcher",
                   "Large Spring Ball",
@@ -1482,7 +1482,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Beanstalk",
                       "Egg Launcher",
                       "Large Spring Ball",
@@ -1508,7 +1508,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Egg Launcher",
                   "Large Spring Ball",
@@ -1555,7 +1555,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Large Spring Ball",
                   "Super Star"
                 ]
@@ -1591,7 +1591,7 @@
             "access_rule": {
               "rule": "HasAny",
               "args": {
-                "items": [
+                "item_names": [
                   "Large Spring Ball",
                   "Super Star"
                 ]
@@ -1627,7 +1627,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Dashed Stairs",
                   "Key"
@@ -1649,7 +1649,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Dashed Stairs",
                   "Key"
@@ -1678,7 +1678,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "! Switch",
                       "Dashed Stairs",
                       "Key"
@@ -1765,7 +1765,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Chomp Rock",
                   "Key",
                   "Train Morph"
@@ -1844,7 +1844,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Egg Launcher",
                   "Large Spring Ball"
                 ]
@@ -1943,7 +1943,7 @@
                     {
                       "rule": "HasAny",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Dashed Platform",
                           "Giant Eggs"
                         ]
@@ -1992,7 +1992,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "! Switch",
                       "Large Spring Ball"
                     ]
@@ -2042,7 +2042,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Car Morph",
                   "Large Spring Ball"
                 ]
@@ -2095,7 +2095,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Arrow Wheel",
                   "Egg Capacity Upgrade",
                   "Key"
@@ -2117,7 +2117,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Arrow Wheel",
                   "Egg Capacity Upgrade",
                   "Key",
@@ -2147,7 +2147,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Arrow Wheel",
                       "Egg Capacity Upgrade",
                       "Key"
@@ -2283,7 +2283,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Stairs",
                   "Spring Ball"
                 ]
@@ -2304,7 +2304,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Stairs",
                   "Spring Ball"
                 ]
@@ -2352,7 +2352,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Stairs",
                   "Spring Ball"
                 ]
@@ -2379,7 +2379,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Helicopter Morph",
                   "Submarine Morph"
                 ]
@@ -2400,7 +2400,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Helicopter Morph",
                   "Submarine Morph"
                 ]
@@ -2428,7 +2428,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Helicopter Morph",
                       "Submarine Morph"
                     ]
@@ -2451,7 +2451,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Helicopter Morph",
                   "Submarine Morph"
                 ]
@@ -2724,7 +2724,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Chomp Rock",
                   "Large Spring Ball",
@@ -2747,7 +2747,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Beanstalk",
                   "Chomp Rock",
@@ -2778,7 +2778,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Beanstalk",
                       "Chomp Rock",
                       "Dashed Stairs",
@@ -2805,7 +2805,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Chomp Rock",
                   "Key",
                   "Large Spring Ball"
@@ -2833,7 +2833,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Beanstalk",
                   "Large Spring Ball",
@@ -2856,7 +2856,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Beanstalk",
                   "Large Spring Ball"
                 ]
@@ -3152,7 +3152,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Egg Launcher",
                   "Large Spring Ball"
@@ -3174,7 +3174,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Egg Launcher",
                   "Large Spring Ball"
                 ]
@@ -3195,7 +3195,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Large Spring Ball",
                   "Spring Ball"
                 ]
@@ -3240,7 +3240,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Helicopter Morph",
                   "Large Spring Ball"
@@ -3262,7 +3262,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Large Spring Ball"
                 ]
@@ -3290,7 +3290,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "! Switch",
                       "Tulip"
                     ]
@@ -3364,7 +3364,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Arrow Wheel",
                       "Bucket",
                       "Dashed Stairs",
@@ -3408,7 +3408,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Arrow Wheel",
                       "Bucket",
                       "Dashed Stairs",
@@ -3520,7 +3520,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Chomp Rock",
                   "Dashed Platform",
@@ -3543,7 +3543,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Chomp Rock",
                   "Dashed Platform",
@@ -3566,7 +3566,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Chomp Rock",
                   "Dashed Platform",
@@ -3628,7 +3628,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Large Spring Ball",
                       "Spring Ball"
                     ]
@@ -3669,7 +3669,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Large Spring Ball",
                       "Spring Ball"
                     ]
@@ -3824,7 +3824,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Helicopter Morph",
                       "Large Spring Ball"
                     ]
@@ -3897,7 +3897,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Stairs",
                   "Key",
                   "Vanishing Arrow Wheel"
@@ -3919,7 +3919,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Stairs",
                   "Key",
                   "Vanishing Arrow Wheel"
@@ -3948,7 +3948,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Dashed Stairs",
                       "Vanishing Arrow Wheel"
                     ]
@@ -4016,7 +4016,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Stairs",
                   "Helicopter Morph"
                 ]
@@ -4211,7 +4211,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Bucket",
                       "Dashed Platform",
                       "Skis",
@@ -4255,7 +4255,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Dashed Platform",
                       "Skis",
                       "Spring Ball"
@@ -4321,7 +4321,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Platform",
                   "Skis",
                   "Spring Ball"
@@ -4358,7 +4358,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Platform",
                   "Dashed Stairs",
                   "Platform Ghost"
@@ -4380,7 +4380,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Platform",
                   "Dashed Stairs",
                   "Platform Ghost"
@@ -4412,7 +4412,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Dashed Platform",
                           "Dashed Stairs"
                         ]
@@ -4430,7 +4430,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Dashed Stairs",
                           "Platform Ghost"
                         ]
@@ -4500,7 +4500,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Helicopter Morph"
                 ]
@@ -4521,7 +4521,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Helicopter Morph"
                 ]
@@ -4558,7 +4558,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "! Switch",
                   "Helicopter Morph"
                 ]
@@ -4763,7 +4763,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Arrow Wheel",
                   "Train Morph"
                 ]
@@ -4784,7 +4784,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Arrow Wheel",
                   "Train Morph"
                 ]
@@ -4877,7 +4877,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Platform",
                   "Large Spring Ball"
                 ]
@@ -4898,7 +4898,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Platform",
                   "Large Spring Ball"
                 ]
@@ -4946,7 +4946,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Dashed Platform",
                   "Large Spring Ball"
                 ]
@@ -5152,7 +5152,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Egg Plant",
                       "Key",
                       "Large Spring Ball",
@@ -5196,7 +5196,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Egg Plant",
                       "Key",
                       "Large Spring Ball",
@@ -5228,7 +5228,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Egg Plant",
                       "Key",
                       "Large Spring Ball",
@@ -5440,7 +5440,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Chomp Rock",
                   "Key",
                   "Large Spring Ball"
@@ -5462,7 +5462,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Chomp Rock",
                   "Key",
                   "Large Spring Ball"
@@ -5494,7 +5494,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Chomp Rock",
                           "Key",
                           "Large Spring Ball"
@@ -5506,7 +5506,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Chomp Rock",
                       "Key",
                       "Tulip"
@@ -5530,7 +5530,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Chomp Rock",
                   "Dashed Platform",
                   "Key",
@@ -5657,7 +5657,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Egg Plant",
                       "Helicopter Morph"
                     ]
@@ -5687,7 +5687,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Egg Plant",
                       "Helicopter Morph"
                     ]
@@ -5717,7 +5717,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Egg Plant",
                       "Helicopter Morph"
                     ]
@@ -6865,6 +6865,7 @@
   "starting_items": {
     "1": []
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Yoshi's Island WorldGen",

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Mega Man 3",
   "game_directory": "mm3",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -147,7 +147,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Gemini Laser",
                       "Shadow Blade"
                     ]
@@ -168,7 +168,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Doc Robot (Gemini) - Completed",
                   "Doc Robot (Needle) - Completed",
                   "Doc Robot (Shadow) - Completed",
@@ -344,7 +344,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Gemini Laser",
                       "Shadow Blade"
                     ]
@@ -1547,7 +1547,7 @@
             "access_rule": {
               "rule": "HasAll",
               "args": {
-                "items": [
+                "item_names": [
                   "Hard Knuckle",
                   "Search Snake",
                   "Shadow Blade"
@@ -2121,6 +2121,7 @@
       "Magnet Man Access Codes"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "Mega Man 3",

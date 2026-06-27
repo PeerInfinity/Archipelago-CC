@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "SMZ3",
   "game_directory": "smz3",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -628,7 +628,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Boots",
                       "Hookshot"
                     ]
@@ -645,7 +645,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "MoonPearl",
                       "ProgressiveSword",
                       "Quake"
@@ -677,7 +677,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Ether",
                       "Hammer",
                       "MoonPearl",
@@ -12727,7 +12727,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Byrna",
                       "CanBlockLasers",
                       "Cape"
@@ -12737,7 +12737,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyTR",
                       "Lamp"
                     ]
@@ -12777,7 +12777,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Byrna",
                       "CanBlockLasers",
                       "Cape"
@@ -12787,7 +12787,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyTR",
                       "Lamp"
                     ]
@@ -12827,7 +12827,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Byrna",
                       "CanBlockLasers",
                       "Cape"
@@ -12837,7 +12837,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyTR",
                       "Lamp"
                     ]
@@ -12877,7 +12877,7 @@
                 {
                   "rule": "HasAny",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "Byrna",
                       "CanBlockLasers",
                       "Cape"
@@ -12887,7 +12887,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyTR",
                       "Lamp"
                     ]
@@ -14336,7 +14336,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Firerod",
                           "Somaria"
                         ]
@@ -14345,7 +14345,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hammer",
                           "Hookshot"
                         ]
@@ -14395,7 +14395,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Firerod",
                           "Somaria"
                         ]
@@ -14404,7 +14404,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hammer",
                           "Hookshot"
                         ]
@@ -14454,7 +14454,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Firerod",
                           "Somaria"
                         ]
@@ -14463,7 +14463,7 @@
                     {
                       "rule": "HasAll",
                       "args": {
-                        "items": [
+                        "item_names": [
                           "Hammer",
                           "Hookshot"
                         ]
@@ -14510,7 +14510,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyGT",
                       "Bow"
                     ]
@@ -14555,7 +14555,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyGT",
                       "Bow"
                     ]
@@ -14600,7 +14600,7 @@
                 {
                   "rule": "HasAll",
                   "args": {
-                    "items": [
+                    "item_names": [
                       "BigKeyGT",
                       "Bow"
                     ]
@@ -30864,6 +30864,7 @@
       "CardLowerNorfairBoss"
     ]
   },
+  "preset_sidecars": {},
   "world": {
     "1": {
       "game": "SMZ3",
