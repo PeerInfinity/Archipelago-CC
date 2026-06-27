@@ -1,6 +1,6 @@
 # Processing Times Chart (WorldGen)
 
-**Generated:** 2026-06-27 22:41:20 UTC
+**Generated:** 2026-06-27 22:52:45 UTC
 
 **Source Data Created:** 2026-06-27T22:24:23.374452+00:00
 
@@ -94,8 +94,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Super Mario Land 2 WorldGen | 10.7s | 5 | A Link to the Past WorldGen.yaml, Celeste 64 WorldGen.yaml, Final Fantasy Mystic Quest WorldGen.yaml, Metamath WorldGen.yaml, Super Mario Land 2 WorldGen.yaml |
+| 2 | The Wind Waker WorldGen | 9.9s | 5 | Bumper Stickers WorldGen.yaml, EarthBound WorldGen.yaml, Mega Man 2 WorldGen.yaml, Sonic Adventure 2 Battle WorldGen.yaml, The Wind Waker WorldGen.yaml |
+| 3 | Metamath WorldGen | 9.7s | 4 | A Link to the Past WorldGen.yaml, Celeste 64 WorldGen.yaml, Final Fantasy Mystic Quest WorldGen.yaml, Metamath WorldGen.yaml |
+| 4 | VVVVVV WorldGen | 9.6s | 5 | A Link to the Past WorldGen.yaml, Celeste 64 WorldGen.yaml, Final Fantasy Mystic Quest WorldGen.yaml, Metamath WorldGen.yaml, VVVVVV WorldGen.yaml |
+| 5 | Final Fantasy Mystic Quest WorldGen | 9.0s | 3 | A Link to the Past WorldGen.yaml, Celeste 64 WorldGen.yaml, Final Fantasy Mystic Quest WorldGen.yaml |
+| 6 | Timespinner WorldGen | 8.9s | 5 | Castlevania - Circle of the Moon WorldGen.yaml, Factorio WorldGen.yaml, MegaMan Battle Network 3 WorldGen.yaml, Subnautica WorldGen.yaml, Timespinner WorldGen.yaml |
+| 7 | Celeste 64 WorldGen | 8.4s | 2 | A Link to the Past WorldGen.yaml, Celeste 64 WorldGen.yaml |
+| 8 | Yoshi's Island WorldGen | 7.8s | 6 | APCalc WorldGen.yaml, Choo-Choo Charles WorldGen.yaml, Inscryption WorldGen.yaml, Old School Runescape WorldGen.yaml, TOEM original WorldGen.yaml (+1 more) |
+| 9 | Sonic Adventure 2 Battle WorldGen | 7.2s | 4 | Bumper Stickers WorldGen.yaml, EarthBound WorldGen.yaml, Mega Man 2 WorldGen.yaml, Sonic Adventure 2 Battle WorldGen.yaml |
+| 10 | The Messenger WorldGen | 7.2s | 5 | Baking Adventure WorldGen.yaml, DepGraph WorldGen.yaml, Mario & Luigi Superstar Saga WorldGen.yaml, Shivers WorldGen.yaml, The Messenger WorldGen.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Super Mario Land 2 WorldGen | 129.6s | 5 | A Link to the Past WorldGen.yaml, Celeste 64 WorldGen.yaml, Final Fantasy Mystic Quest WorldGen.yaml, Metamath WorldGen.yaml, Super Mario Land 2 WorldGen.yaml |
+| 2 | Timespinner WorldGen | 56.1s | 5 | Castlevania - Circle of the Moon WorldGen.yaml, Factorio WorldGen.yaml, MegaMan Battle Network 3 WorldGen.yaml, Subnautica WorldGen.yaml, Timespinner WorldGen.yaml |
+| 3 | Terraria WorldGen | 44.2s | 5 | Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Links Awakening DX WorldGen.yaml, Risk of Rain 2 WorldGen.yaml, Terraria WorldGen.yaml |
+| 4 | Choo-Choo Charles WorldGen | 24.4s | 2 | APCalc WorldGen.yaml, Choo-Choo Charles WorldGen.yaml |
+| 5 | Mario & Luigi Superstar Saga WorldGen | 22.0s | 3 | Baking Adventure WorldGen.yaml, DepGraph WorldGen.yaml, Mario & Luigi Superstar Saga WorldGen.yaml |
+| 6 | Links Awakening DX WorldGen | 16.9s | 3 | Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Links Awakening DX WorldGen.yaml |
+| 7 | The Messenger WorldGen | 15.4s | 5 | Baking Adventure WorldGen.yaml, DepGraph WorldGen.yaml, Mario & Luigi Superstar Saga WorldGen.yaml, Shivers WorldGen.yaml, The Messenger WorldGen.yaml |
+| 8 | Subnautica WorldGen | 15.2s | 4 | Castlevania - Circle of the Moon WorldGen.yaml, Factorio WorldGen.yaml, MegaMan Battle Network 3 WorldGen.yaml, Subnautica WorldGen.yaml |
+| 9 | Factorio WorldGen | 12.4s | 2 | Castlevania - Circle of the Moon WorldGen.yaml, Factorio WorldGen.yaml |
+| 10 | DepGraph WorldGen | 11.9s | 2 | Baking Adventure WorldGen.yaml, DepGraph WorldGen.yaml |

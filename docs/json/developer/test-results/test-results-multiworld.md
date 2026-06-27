@@ -8,7 +8,9 @@
 
 [View APWorld Template Results](./test-results-multiworld-apworld.md)
 
-**Generated:** 2026-06-27 22:41:20 UTC
+[View WorldGen Template Results](./test-results-multiworld-worldgen.md)
+
+**Generated:** 2026-06-27 22:52:45 UTC
 
 **Source Data Created:** 2026-03-22T07:49:55.986774+00:00
 

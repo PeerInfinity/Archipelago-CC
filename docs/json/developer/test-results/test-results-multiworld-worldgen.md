@@ -8,99 +8,89 @@
 
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-27 22:52:45 UTC
 
-**Source Data Created:** 2026-03-21T23:18:10.402148+00:00
+**Source Data Created:** 2026-06-27T22:52:44.707901+00:00
 
-**Source Data Last Updated:** 2026-03-21T23:18:10.402161+00:00
+**Source Data Last Updated:** 2026-06-27T22:52:44.707910+00:00
 
 ## Summary
 
-- **Total Games:** 66
-- **Passed:** 52 (78.8%)
-- **Failed:** 14 (21.2%)
+- **Total Games:** 55
+- **Passed:** 44 (80.0%)
+- **Failed:** 11 (20.0%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 60
-- **Second Pass Passed:** 56
+- **Second Pass Tested:** 52
+- **Second Pass Passed:** 48
 - **Second Pass Failed:** 4
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 56/52 (107.7% of passed)
-- **Passing with Generic Logic:** 56/52 (107.7% of passed)
-- **Passing with Both Generic:** 56/52 (107.7% of passed)
+- **Passing with Generic Exporter:** 48/44 (109.1% of passed)
+- **Passing with Generic Logic:** 48/44 (109.1% of passed)
+- **Passing with Both Generic:** 48/44 (109.1% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Hat in Time WorldGen2 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | A Link to the Past WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| APCalc WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Adventure WorldGen2 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Aquaria WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Baking Adventure WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| Aquaria WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Baking Adventure WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Celeste 64 WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | ChecksFinder WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Civilization VI WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | 3 | 3 | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | 3 | 3 | ✅ | ✅ |
-| Coding Adventure WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| DLCQuest WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| DepGraph WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| EarthBound WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Faxanadu WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Hylics 2 WorldGen | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
-| Inscryption WorldGen | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mega Man 2 WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| MegaMan Battle Network 3 WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Meritous WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Metamath WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Noita WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Old School Runescape WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Saving Princess WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Shivers WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Subnautica WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
+| Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| Civilization VI WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| Coding Adventure WorldGen | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
+| DLCQuest WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| DepGraph WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| EarthBound WorldGen | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| Factorio WorldGen | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
+| Faxanadu WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Hylics 2 WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Inscryption WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Mega Man 2 WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| MegaMan Battle Network 3 WorldGen | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Meritous WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Metamath WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Noita WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Old School Runescape WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Risk of Rain 2 WorldGen | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
+| Saving Princess WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Shivers WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Subnautica WorldGen | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
+| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Super Mario Land 2 WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Super Mario World WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| TOEM original WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Terraria WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| The Messenger WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Timespinner WorldGen | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| Undertale WorldGen | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Wargroove WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| shapez WorldGen | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| Super Mario World WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| TOEM original WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Terraria WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
+| The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| The Messenger WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Timespinner WorldGen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
+| Undertale WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
+| VVVVVV WorldGen | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Wargroove WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
+| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
+| shapez WorldGen | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 
 ## Templates in Multiworld
 
@@ -112,637 +102,491 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
 
-### A Hat in Time WorldGen2 ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-
-### A Link to the Past Vanilla WorldGen ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-
-### A Link to the Past Vanilla WorldGen2 ✅ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-
-### A Link to the Past WorldGen ✅ (Split 5)
+### A Link to the Past WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
 
-### A Link to the Past WorldGen2 ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-
-### A Short Hike WorldGen ✅ (Split 7)
+### A Short Hike WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
 
-### A Short Hike WorldGen2 ✅ (Split 8)
+### APCalc WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
+| 1 | APCalc WorldGen.yaml |
 
-### APQuest WorldGen ✅ (Split 9)
+### APQuest WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
 
-### Adventure WorldGen ✅ (Split 10)
+### Adventure WorldGen ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure WorldGen.yaml |
 
-### Adventure WorldGen2 ✅ (Split 1)
+### Aquaria WorldGen ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria WorldGen.yaml |
+
+### Baking Adventure WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+
+### Bumper Stickers WorldGen ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers WorldGen.yaml |
+
+### Castlevania - Circle of the Moon WorldGen ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+
+### Castlevania 64 WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
 
-### Aquaria WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-
-### Baking Adventure Vanilla WorldGen ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-
-### Baking Adventure Vanilla WorldGen2 ✅ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-
-### Baking Adventure WorldGen ✅ (Split 5)
+### Celeste 64 WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-
-### Bumper Stickers WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-
-### Castlevania - Circle of the Moon WorldGen ✅ (Split 7)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-
-### Castlevania 64 WorldGen ✅ (Split 8)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-
-### Celeste 64 WorldGen ✅ (Split 9)
-
-| Player # | Template |
-|----------|----------|
-| 1 | APQuest WorldGen.yaml |
 | 2 | Celeste 64 WorldGen.yaml |
 
-### ChecksFinder WorldGen ✅ (Split 10)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-
-### Choo-Choo Charles WorldGen ✅ (Split 1)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-
-### Civilization VI WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-
-### Coding Adventure Vanilla WorldGen ❌ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-
-### Coding Adventure Vanilla WorldGen2 ❌ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-
-### Coding Adventure WorldGen ✅ (Split 5)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-
-### DLCQuest WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-
-### DepGraph WorldGen ✅ (Split 7)
+### ChecksFinder WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
 
-### Donkey Kong Country 3 WorldGen ✅ (Split 8)
+### Choo-Choo Charles WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+
+### Civilization VI WorldGen ✅ (Split 5)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+
+### Coding Adventure WorldGen ❌ (Split 6)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure WorldGen.yaml |
+| 2 | Coding Adventure WorldGen.yaml |
+
+### DLCQuest WorldGen ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+
+### DepGraph WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
 
 ### EarthBound WorldGen ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
-| 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
 
-### Factorio WorldGen ✅ (Split 10)
+### Factorio WorldGen ❌ (Split 10)
 
 | Player # | Template |
 |----------|----------|
-| 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | Factorio WorldGen.yaml |
 
 ### Faxanadu WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
 
 ### Final Fantasy Mystic Quest WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 1 | A Link to the Past WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
 
-### Hylics 2 WorldGen ❌ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
-
-### Inscryption WorldGen ❌ (Split 4)
+### Hylics 2 WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
+| 1 | A Short Hike WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+
+### Inscryption WorldGen ✅ (Split 4)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
 
 ### Landstalker - The Treasures of King Nole WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 1 | APQuest WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
 
 ### Links Awakening DX WorldGen ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
+| 1 | Adventure WorldGen.yaml |
+| 2 | Coding Adventure WorldGen.yaml |
+| 3 | Links Awakening DX WorldGen.yaml |
 
 ### Lufia II Ancient Cave WorldGen ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
 
 ### Mario & Luigi Superstar Saga WorldGen ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
 
 ### Mega Man 2 WorldGen ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
-| 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
 
-### MegaMan Battle Network 3 WorldGen ✅ (Split 1)
+### MegaMan Battle Network 3 WorldGen ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | Factorio WorldGen.yaml |
+| 3 | MegaMan Battle Network 3 WorldGen.yaml |
+
+### Meritous WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
 
-### Meritous WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-
-### Metamath WorldGen ❌ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
-| 5 | Metamath WorldGen.yaml |
-
-### Noita WorldGen ❌ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
-| 5 | Noita WorldGen.yaml |
-
-### Old School Runescape WorldGen ✅ (Split 5)
+### Metamath WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
 
-### Overcooked! 2 WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-
-### Risk of Rain 2 WorldGen ✅ (Split 7)
+### Noita WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
 
-### Saving Princess WorldGen ✅ (Split 8)
+### Old School Runescape WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
 
-### Shivers WorldGen ✅ (Split 9)
+### Overcooked! 2 WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
 
-### Sonic Adventure 2 Battle WorldGen ✅ (Split 10)
+### Risk of Rain 2 WorldGen ❌ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 2 | Coding Adventure WorldGen.yaml |
+| 3 | Links Awakening DX WorldGen.yaml |
+| 4 | Risk of Rain 2 WorldGen.yaml |
 
-### Subnautica WorldGen ✅ (Split 1)
+### Saving Princess WorldGen ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+
+### Shivers WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+
+### Sonic Adventure 2 Battle WorldGen ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+
+### Subnautica WorldGen ❌ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | Factorio WorldGen.yaml |
+| 3 | MegaMan Battle Network 3 WorldGen.yaml |
+| 4 | Subnautica WorldGen.yaml |
+
+### Super Mario 64 WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
 
-### Super Mario 64 WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-
-### Super Mario Land 2 WorldGen ❌ (Split 3)
+### Super Mario Land 2 WorldGen ❌ (Split 2)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
+| 1 | A Link to the Past WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
 | 5 | Super Mario Land 2 WorldGen.yaml |
 
-### Super Mario World WorldGen ❌ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
-| 5 | Super Mario World WorldGen.yaml |
-
-### TOEM original WorldGen ✅ (Split 5)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-
-### TOEM rule builder WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-
-### Terraria WorldGen ✅ (Split 7)
+### Super Mario World WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
 
-### The Legend of Zelda WorldGen ✅ (Split 8)
+### TOEM original WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
 
-### The Messenger WorldGen ✅ (Split 9)
+### TOEM rule builder WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
 
-### The Wind Waker WorldGen ✅ (Split 10)
+### Terraria WorldGen ❌ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
+| 2 | Coding Adventure WorldGen.yaml |
+| 3 | Links Awakening DX WorldGen.yaml |
+| 4 | Risk of Rain 2 WorldGen.yaml |
+| 5 | Terraria WorldGen.yaml |
 
-### Timespinner WorldGen ✅ (Split 1)
+### The Legend of Zelda WorldGen ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+| 5 | The Legend of Zelda WorldGen.yaml |
+
+### The Messenger WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+| 5 | The Messenger WorldGen.yaml |
+
+### The Wind Waker WorldGen ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 5 | The Wind Waker WorldGen.yaml |
+
+### Timespinner WorldGen ❌ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | Factorio WorldGen.yaml |
+| 3 | MegaMan Battle Network 3 WorldGen.yaml |
+| 4 | Subnautica WorldGen.yaml |
+| 5 | Timespinner WorldGen.yaml |
+
+### Undertale WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
-### Undertale WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-### VVVVVV WorldGen ❌ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
-| 5 | VVVVVV WorldGen.yaml |
-
-### Wargroove WorldGen ❌ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
-| 5 | Wargroove WorldGen.yaml |
-
-### Yoshi's Island WorldGen ✅ (Split 5)
+### VVVVVV WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
+| 5 | VVVVVV WorldGen.yaml |
 
-### shapez WorldGen ✅ (Split 6)
+### Wargroove WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
+| 1 | A Short Hike WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
+
+### Yoshi's Island WorldGen ✅ (Split 4)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
+
+### shapez WorldGen ✅ (Split 5)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
 
 ## Bisection Results
 
 When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
 
-### Metamath WorldGen (Metamath WorldGen.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-
-### Noita WorldGen (Noita WorldGen.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Inscryption WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-
 ### Super Mario Land 2 WorldGen (Super Mario Land 2 WorldGen.yaml)
 
-**No failing pairs found** (failure may be due to combination of 3+ templates)
+**Failing pairs found:** 4
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| A Link to the Past WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Celeste 64 WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Final Fantasy Mystic Quest WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Metamath WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
 
-### Super Mario World WorldGen (Super Mario World WorldGen.yaml)
+### Terraria WorldGen (Terraria WorldGen.yaml)
 
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Inscryption WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-
-### VVVVVV WorldGen (VVVVVV WorldGen.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
+**Failing pairs found:** 4
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Adventure WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Coding Adventure WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Links Awakening DX WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Risk of Rain 2 WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
 
-### Wargroove WorldGen (Wargroove WorldGen.yaml)
+### Timespinner WorldGen (Timespinner WorldGen.yaml)
 
-**No failing pairs found** (failure may be due to combination of 3+ templates)
+**Failing pairs found:** 4
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Inscryption WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Castlevania - Circle of the Moon WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Factorio WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| MegaMan Battle Network 3 WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
+| Subnautica WorldGen.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Second Pass Results
@@ -751,65 +595,58 @@ Templates tested in the first pass with fewer than the maximum number of players
 
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
-| A Hat in Time WorldGen | 1 | 7 | 1 | ✅ Passed |
-| A Hat in Time WorldGen2 | 1 | 7 | 1 | ✅ Passed |
-| A Link to the Past Vanilla WorldGen | 1 | 4 | 1 | ✅ Passed |
-| A Link to the Past Vanilla WorldGen2 | 1 | 4 | 1 | ✅ Passed |
-| A Link to the Past WorldGen | 1 | 7 | 1 | ✅ Passed |
-| A Link to the Past WorldGen2 | 1 | 7 | 1 | ✅ Passed |
+| A Hat in Time WorldGen | 1 | 6 | 1 | ✅ Passed |
+| A Link to the Past WorldGen | 1 | 5 | 1 | ✅ Passed |
 | A Short Hike WorldGen | 1 | 6 | 1 | ✅ Passed |
-| A Short Hike WorldGen2 | 1 | 6 | 1 | ✅ Passed |
+| APCalc WorldGen | 1 | 6 | 1 | ✅ Passed |
 | APQuest WorldGen | 1 | 6 | 1 | ✅ Passed |
-| Adventure WorldGen | 1 | 6 | 1 | ✅ Passed |
-| Adventure WorldGen2 | 2 | 7 | 2 | ✅ Passed |
-| Aquaria WorldGen | 2 | 7 | 2 | ✅ Passed |
-| Baking Adventure Vanilla WorldGen | 2 | 4 | 2 | ✅ Passed |
-| Baking Adventure Vanilla WorldGen2 | 2 | 4 | 2 | ✅ Passed |
-| Baking Adventure WorldGen | 2 | 7 | 2 | ✅ Passed |
-| Bumper Stickers WorldGen | 2 | 7 | 2 | ✅ Passed |
-| Castlevania - Circle of the Moon WorldGen | 2 | 6 | 2 | ✅ Passed |
+| Adventure WorldGen | 1 | 4 | 1 | ✅ Passed |
+| Aquaria WorldGen | 1 | 5 | 1 | ✅ Passed |
+| Baking Adventure WorldGen | 1 | 5 | 1 | ✅ Passed |
+| Bumper Stickers WorldGen | 1 | 5 | 1 | ✅ Passed |
+| Castlevania - Circle of the Moon WorldGen | 1 | 4 | 1 | ✅ Passed |
 | Castlevania 64 WorldGen | 2 | 6 | 2 | ✅ Passed |
-| Celeste 64 WorldGen | 2 | 6 | 2 | ✅ Passed |
+| Celeste 64 WorldGen | 2 | 5 | 2 | ✅ Passed |
 | ChecksFinder WorldGen | 2 | 6 | 2 | ✅ Passed |
-| Choo-Choo Charles WorldGen | 3 | 7 | 3 | ✅ Passed |
-| Civilization VI WorldGen | 3 | 7 | 3 | ✅ Passed |
-| Coding Adventure Vanilla WorldGen | 3 | 4 | 3 | ❌ Failed |
-| Coding Adventure Vanilla WorldGen2 | 3 | 4 | 3 | ❌ Failed |
-| Coding Adventure WorldGen | 3 | 7 | 3 | ✅ Passed |
-| DLCQuest WorldGen | 3 | 7 | 3 | ✅ Passed |
-| DepGraph WorldGen | 3 | 6 | 3 | ✅ Passed |
-| Donkey Kong Country 3 WorldGen | 3 | 6 | 3 | ✅ Passed |
-| EarthBound WorldGen | 3 | 6 | 3 | ✅ Passed |
-| Factorio WorldGen | 3 | 6 | 3 | ✅ Passed |
-| Faxanadu WorldGen | 4 | 7 | 4 | ✅ Passed |
-| Final Fantasy Mystic Quest WorldGen | 4 | 7 | 4 | ✅ Passed |
-| Hylics 2 WorldGen | 4 | 3 | 3 | ❌ Failed |
-| Inscryption WorldGen | 4 | 3 | 3 | ❌ Failed |
-| Landstalker - The Treasures of King Nole WorldGen | 4 | 7 | 4 | ✅ Passed |
-| Links Awakening DX WorldGen | 4 | 7 | 4 | ✅ Passed |
-| Lufia II Ancient Cave WorldGen | 4 | 6 | 4 | ✅ Passed |
-| Mario & Luigi Superstar Saga WorldGen | 4 | 6 | 4 | ✅ Passed |
-| Mega Man 2 WorldGen | 4 | 6 | 4 | ✅ Passed |
-| MegaMan Battle Network 3 WorldGen | 5 | 7 | 5 | ✅ Passed |
-| Meritous WorldGen | 5 | 7 | 5 | ✅ Passed |
-| Old School Runescape WorldGen | 5 | 7 | 5 | ✅ Passed |
-| Overcooked! 2 WorldGen | 5 | 7 | 5 | ✅ Passed |
-| Risk of Rain 2 WorldGen | 5 | 6 | 5 | ✅ Passed |
-| Saving Princess WorldGen | 5 | 6 | 5 | ✅ Passed |
-| Shivers WorldGen | 5 | 6 | 5 | ✅ Passed |
-| Sonic Adventure 2 Battle WorldGen | 5 | 6 | 5 | ✅ Passed |
-| Subnautica WorldGen | 6 | 7 | 6 | ✅ Passed |
-| Super Mario 64 WorldGen | 6 | 7 | 6 | ✅ Passed |
-| TOEM original WorldGen | 6 | 7 | 6 | ✅ Passed |
-| TOEM rule builder WorldGen | 6 | 7 | 6 | ✅ Passed |
-| Terraria WorldGen | 6 | 6 | 6 | ✅ Passed |
-| The Legend of Zelda WorldGen | 6 | 6 | 6 | ✅ Passed |
-| The Messenger WorldGen | 6 | 6 | 6 | ✅ Passed |
-| The Wind Waker WorldGen | 6 | 6 | 6 | ✅ Passed |
-| Timespinner WorldGen | 7 | 7 | 7 | ✅ Passed |
-| Undertale WorldGen | 7 | 7 | 7 | ✅ Passed |
-| Yoshi's Island WorldGen | 7 | 7 | 7 | ✅ Passed |
-| shapez WorldGen | 7 | 7 | 7 | ✅ Passed |
+| Choo-Choo Charles WorldGen | 2 | 6 | 2 | ✅ Passed |
+| Civilization VI WorldGen | 2 | 6 | 2 | ✅ Passed |
+| Coding Adventure WorldGen | 2 | 4 | 2 | ❌ Failed |
+| DLCQuest WorldGen | 2 | 5 | 2 | ✅ Passed |
+| DepGraph WorldGen | 2 | 5 | 2 | ✅ Passed |
+| EarthBound WorldGen | 2 | 5 | 2 | ✅ Passed |
+| Factorio WorldGen | 2 | 4 | 2 | ❌ Failed |
+| Faxanadu WorldGen | 3 | 6 | 3 | ✅ Passed |
+| Final Fantasy Mystic Quest WorldGen | 3 | 5 | 3 | ✅ Passed |
+| Hylics 2 WorldGen | 3 | 6 | 3 | ✅ Passed |
+| Inscryption WorldGen | 3 | 6 | 3 | ✅ Passed |
+| Landstalker - The Treasures of King Nole WorldGen | 3 | 6 | 3 | ✅ Passed |
+| Links Awakening DX WorldGen | 3 | 3 | 2 | ✅ Passed |
+| Lufia II Ancient Cave WorldGen | 3 | 5 | 3 | ✅ Passed |
+| Mario & Luigi Superstar Saga WorldGen | 3 | 5 | 3 | ✅ Passed |
+| Mega Man 2 WorldGen | 3 | 5 | 3 | ✅ Passed |
+| MegaMan Battle Network 3 WorldGen | 3 | 3 | 2 | ✅ Passed |
+| Meritous WorldGen | 4 | 6 | 4 | ✅ Passed |
+| Metamath WorldGen | 4 | 5 | 4 | ✅ Passed |
+| Noita WorldGen | 4 | 6 | 4 | ✅ Passed |
+| Old School Runescape WorldGen | 4 | 6 | 4 | ✅ Passed |
+| Overcooked! 2 WorldGen | 4 | 6 | 4 | ✅ Passed |
+| Risk of Rain 2 WorldGen | 4 | 3 | 3 | ❌ Failed |
+| Saving Princess WorldGen | 4 | 5 | 4 | ✅ Passed |
+| Shivers WorldGen | 4 | 5 | 4 | ✅ Passed |
+| Sonic Adventure 2 Battle WorldGen | 4 | 5 | 4 | ✅ Passed |
+| Subnautica WorldGen | 4 | 3 | 3 | ❌ Failed |
+| Super Mario 64 WorldGen | 5 | 6 | 5 | ✅ Passed |
+| Super Mario World WorldGen | 5 | 6 | 5 | ✅ Passed |
+| TOEM original WorldGen | 5 | 6 | 5 | ✅ Passed |
+| TOEM rule builder WorldGen | 5 | 6 | 5 | ✅ Passed |
+| The Legend of Zelda WorldGen | 5 | 5 | 5 | ✅ Passed |
+| The Messenger WorldGen | 5 | 5 | 5 | ✅ Passed |
+| The Wind Waker WorldGen | 5 | 5 | 5 | ✅ Passed |
+| Undertale WorldGen | 6 | 6 | 6 | ✅ Passed |
+| VVVVVV WorldGen | 5 | 5 | 5 | ✅ Passed |
+| Wargroove WorldGen | 6 | 6 | 6 | ✅ Passed |
+| Yoshi's Island WorldGen | 6 | 6 | 6 | ✅ Passed |
+| shapez WorldGen | 6 | 6 | 6 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
 
@@ -820,702 +657,574 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
-#### A Hat in Time WorldGen2 ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-#### A Link to the Past Vanilla WorldGen ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
-
-#### A Link to the Past Vanilla WorldGen2 ✅ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
-
-#### A Link to the Past WorldGen ✅ (Split 5)
+#### A Link to the Past WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
+| 5 | VVVVVV WorldGen.yaml |
 
-#### A Link to the Past WorldGen2 ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
-
-#### A Short Hike WorldGen ✅ (Split 7)
+#### A Short Hike WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
 
-#### A Short Hike WorldGen2 ✅ (Split 8)
+#### APCalc WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
 
-#### APQuest WorldGen ✅ (Split 9)
+#### APQuest WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
-#### Adventure WorldGen ✅ (Split 10)
+#### Adventure WorldGen ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
+| 2 | Coding Adventure WorldGen.yaml |
+| 3 | Links Awakening DX WorldGen.yaml |
+| 4 | Risk of Rain 2 WorldGen.yaml |
 
-#### Adventure WorldGen2 ✅ (Split 1)
+#### Aquaria WorldGen ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+| 5 | The Legend of Zelda WorldGen.yaml |
+
+#### Baking Adventure WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+| 5 | The Messenger WorldGen.yaml |
+
+#### Bumper Stickers WorldGen ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 5 | The Wind Waker WorldGen.yaml |
+
+#### Castlevania - Circle of the Moon WorldGen ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | Factorio WorldGen.yaml |
+| 3 | MegaMan Battle Network 3 WorldGen.yaml |
+| 4 | Subnautica WorldGen.yaml |
+
+#### Castlevania 64 WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
-#### Aquaria WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-#### Baking Adventure Vanilla WorldGen ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
-
-#### Baking Adventure Vanilla WorldGen2 ✅ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
-
-#### Baking Adventure WorldGen ✅ (Split 5)
+#### Celeste 64 WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
+| 5 | VVVVVV WorldGen.yaml |
 
-#### Bumper Stickers WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
-
-#### Castlevania - Circle of the Moon WorldGen ✅ (Split 7)
+#### ChecksFinder WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
 
-#### Castlevania 64 WorldGen ✅ (Split 8)
+#### Choo-Choo Charles WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
 
-#### Celeste 64 WorldGen ✅ (Split 9)
+#### Civilization VI WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
-#### ChecksFinder WorldGen ✅ (Split 10)
+#### Coding Adventure WorldGen ❌ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
+| 2 | Coding Adventure WorldGen.yaml |
+| 3 | Links Awakening DX WorldGen.yaml |
+| 4 | Risk of Rain 2 WorldGen.yaml |
 
-#### Choo-Choo Charles WorldGen ✅ (Split 1)
+#### DLCQuest WorldGen ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+| 5 | The Legend of Zelda WorldGen.yaml |
 
-#### Civilization VI WorldGen ✅ (Split 2)
+#### DepGraph WorldGen ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-#### Coding Adventure Vanilla WorldGen ❌ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
-| 3 | Coding Adventure Vanilla WorldGen.yaml |
-| 4 | Hylics 2 WorldGen.yaml |
-
-#### Coding Adventure Vanilla WorldGen2 ❌ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
-| 3 | Coding Adventure Vanilla WorldGen2.yaml |
-| 4 | Inscryption WorldGen.yaml |
-
-#### Coding Adventure WorldGen ✅ (Split 5)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
-
-#### DLCQuest WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
-
-#### DepGraph WorldGen ✅ (Split 7)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
-
-#### Donkey Kong Country 3 WorldGen ✅ (Split 8)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+| 5 | The Messenger WorldGen.yaml |
 
 #### EarthBound WorldGen ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
-| 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 5 | The Wind Waker WorldGen.yaml |
 
-#### Factorio WorldGen ✅ (Split 10)
+#### Factorio WorldGen ❌ (Split 10)
 
 | Player # | Template |
 |----------|----------|
-| 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | Factorio WorldGen.yaml |
+| 3 | MegaMan Battle Network 3 WorldGen.yaml |
+| 4 | Subnautica WorldGen.yaml |
 
 #### Faxanadu WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
 #### Final Fantasy Mystic Quest WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
+| 1 | A Link to the Past WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
+| 5 | VVVVVV WorldGen.yaml |
 
-#### Hylics 2 WorldGen ❌ (Split 3)
+#### Hylics 2 WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen.yaml |
-| 2 | Baking Adventure Vanilla WorldGen.yaml |
+| 1 | A Short Hike WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
 | 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
 
-#### Inscryption WorldGen ❌ (Split 4)
+#### Inscryption WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past Vanilla WorldGen2.yaml |
-| 2 | Baking Adventure Vanilla WorldGen2.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
 | 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
 
 #### Landstalker - The Treasures of King Nole WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
+| 1 | APQuest WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
 #### Links Awakening DX WorldGen ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
+| 1 | Adventure WorldGen.yaml |
+| 2 | Links Awakening DX WorldGen.yaml |
+| 3 | Risk of Rain 2 WorldGen.yaml |
 
 #### Lufia II Ancient Cave WorldGen ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+| 5 | The Legend of Zelda WorldGen.yaml |
 
 #### Mario & Luigi Superstar Saga WorldGen ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+| 5 | The Messenger WorldGen.yaml |
 
 #### Mega Man 2 WorldGen ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
-| 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 5 | The Wind Waker WorldGen.yaml |
 
+#### MegaMan Battle Network 3 WorldGen ✅ (Split 10)
 
-#### MegaMan Battle Network 3 WorldGen ✅ (Split 1)
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | MegaMan Battle Network 3 WorldGen.yaml |
+| 3 | Subnautica WorldGen.yaml |
+
+#### Meritous WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
-#### Meritous WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-#### Old School Runescape WorldGen ✅ (Split 5)
+#### Metamath WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
+| 5 | VVVVVV WorldGen.yaml |
 
-#### Overcooked! 2 WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
-
-#### Risk of Rain 2 WorldGen ✅ (Split 7)
+#### Noita WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
 
-#### Saving Princess WorldGen ✅ (Split 8)
+#### Old School Runescape WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
 
-#### Shivers WorldGen ✅ (Split 9)
+#### Overcooked! 2 WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
-#### Sonic Adventure 2 Battle WorldGen ✅ (Split 10)
+#### Risk of Rain 2 WorldGen ❌ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
+| 2 | Links Awakening DX WorldGen.yaml |
+| 3 | Risk of Rain 2 WorldGen.yaml |
 
-#### Subnautica WorldGen ✅ (Split 1)
+#### Saving Princess WorldGen ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+| 5 | The Legend of Zelda WorldGen.yaml |
+
+#### Shivers WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+| 5 | The Messenger WorldGen.yaml |
+
+#### Sonic Adventure 2 Battle WorldGen ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 5 | The Wind Waker WorldGen.yaml |
+
+#### Subnautica WorldGen ❌ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon WorldGen.yaml |
+| 2 | MegaMan Battle Network 3 WorldGen.yaml |
+| 3 | Subnautica WorldGen.yaml |
+
+#### Super Mario 64 WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
-#### Super Mario 64 WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-#### TOEM original WorldGen ✅ (Split 5)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
-
-#### TOEM rule builder WorldGen ✅ (Split 6)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
-
-#### Terraria WorldGen ✅ (Split 7)
+#### Super Mario World WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike WorldGen.yaml |
-| 2 | Castlevania - Circle of the Moon WorldGen.yaml |
-| 3 | DepGraph WorldGen.yaml |
-| 4 | Lufia II Ancient Cave WorldGen.yaml |
-| 5 | Risk of Rain 2 WorldGen.yaml |
-| 6 | Terraria WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
 
-#### The Legend of Zelda WorldGen ✅ (Split 8)
+#### TOEM original WorldGen ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike WorldGen2.yaml |
-| 2 | Castlevania 64 WorldGen.yaml |
-| 3 | Donkey Kong Country 3 WorldGen.yaml |
-| 4 | Mario & Luigi Superstar Saga WorldGen.yaml |
-| 5 | Saving Princess WorldGen.yaml |
-| 6 | The Legend of Zelda WorldGen.yaml |
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
 
-#### The Messenger WorldGen ✅ (Split 9)
+#### TOEM rule builder WorldGen ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest WorldGen.yaml |
-| 2 | Celeste 64 WorldGen.yaml |
-| 3 | EarthBound WorldGen.yaml |
-| 4 | Mega Man 2 WorldGen.yaml |
-| 5 | Shivers WorldGen.yaml |
-| 6 | The Messenger WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
-#### The Wind Waker WorldGen ✅ (Split 10)
+#### The Legend of Zelda WorldGen ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | Adventure WorldGen.yaml |
-| 2 | ChecksFinder WorldGen.yaml |
-| 3 | Factorio WorldGen.yaml |
-| 4 | Mega Man 3 WorldGen.yaml |
-| 5 | Sonic Adventure 2 Battle WorldGen.yaml |
-| 6 | The Wind Waker WorldGen.yaml |
+| 1 | Aquaria WorldGen.yaml |
+| 2 | DLCQuest WorldGen.yaml |
+| 3 | Lufia II Ancient Cave WorldGen.yaml |
+| 4 | Saving Princess WorldGen.yaml |
+| 5 | The Legend of Zelda WorldGen.yaml |
 
-#### Timespinner WorldGen ✅ (Split 1)
+#### The Messenger WorldGen ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure WorldGen.yaml |
+| 2 | DepGraph WorldGen.yaml |
+| 3 | Mario & Luigi Superstar Saga WorldGen.yaml |
+| 4 | Shivers WorldGen.yaml |
+| 5 | The Messenger WorldGen.yaml |
+
+#### The Wind Waker WorldGen ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers WorldGen.yaml |
+| 2 | EarthBound WorldGen.yaml |
+| 3 | Mega Man 2 WorldGen.yaml |
+| 4 | Sonic Adventure 2 Battle WorldGen.yaml |
+| 5 | The Wind Waker WorldGen.yaml |
+
+#### Undertale WorldGen ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time WorldGen.yaml |
-| 2 | Adventure WorldGen2.yaml |
-| 3 | Choo-Choo Charles WorldGen.yaml |
-| 4 | Faxanadu WorldGen.yaml |
-| 5 | MegaMan Battle Network 3 WorldGen.yaml |
-| 6 | Subnautica WorldGen.yaml |
-| 7 | Timespinner WorldGen.yaml |
+| 2 | Castlevania 64 WorldGen.yaml |
+| 3 | Faxanadu WorldGen.yaml |
+| 4 | Meritous WorldGen.yaml |
+| 5 | Super Mario 64 WorldGen.yaml |
+| 6 | Undertale WorldGen.yaml |
 
-#### Undertale WorldGen ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time WorldGen2.yaml |
-| 2 | Aquaria WorldGen.yaml |
-| 3 | Civilization VI WorldGen.yaml |
-| 4 | Final Fantasy Mystic Quest WorldGen.yaml |
-| 5 | Meritous WorldGen.yaml |
-| 6 | Super Mario 64 WorldGen.yaml |
-| 7 | Undertale WorldGen.yaml |
-
-#### Yoshi's Island WorldGen ✅ (Split 5)
+#### VVVVVV WorldGen ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past WorldGen.yaml |
-| 2 | Baking Adventure WorldGen.yaml |
-| 3 | Coding Adventure WorldGen.yaml |
-| 4 | Landstalker - The Treasures of King Nole WorldGen.yaml |
-| 5 | Old School Runescape WorldGen.yaml |
-| 6 | TOEM original WorldGen.yaml |
-| 7 | Yoshi's Island WorldGen.yaml |
+| 2 | Celeste 64 WorldGen.yaml |
+| 3 | Final Fantasy Mystic Quest WorldGen.yaml |
+| 4 | Metamath WorldGen.yaml |
+| 5 | VVVVVV WorldGen.yaml |
 
-#### shapez WorldGen ✅ (Split 6)
+#### Wargroove WorldGen ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Link to the Past WorldGen2.yaml |
-| 2 | Bumper Stickers WorldGen.yaml |
-| 3 | DLCQuest WorldGen.yaml |
-| 4 | Links Awakening DX WorldGen.yaml |
-| 5 | Overcooked! 2 WorldGen.yaml |
-| 6 | TOEM rule builder WorldGen.yaml |
-| 7 | shapez WorldGen.yaml |
+| 1 | A Short Hike WorldGen.yaml |
+| 2 | ChecksFinder WorldGen.yaml |
+| 3 | Hylics 2 WorldGen.yaml |
+| 4 | Noita WorldGen.yaml |
+| 5 | Super Mario World WorldGen.yaml |
+| 6 | Wargroove WorldGen.yaml |
+
+#### Yoshi's Island WorldGen ✅ (Split 4)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APCalc WorldGen.yaml |
+| 2 | Choo-Choo Charles WorldGen.yaml |
+| 3 | Inscryption WorldGen.yaml |
+| 4 | Old School Runescape WorldGen.yaml |
+| 5 | TOEM original WorldGen.yaml |
+| 6 | Yoshi's Island WorldGen.yaml |
+
+#### shapez WorldGen ✅ (Split 5)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest WorldGen.yaml |
+| 2 | Civilization VI WorldGen.yaml |
+| 3 | Landstalker - The Treasures of King Nole WorldGen.yaml |
+| 4 | Overcooked! 2 WorldGen.yaml |
+| 5 | TOEM rule builder WorldGen.yaml |
+| 6 | shapez WorldGen.yaml |
 
 ### Second Pass Bisection Results
 
 When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
 
-#### Coding Adventure Vanilla WorldGen (Coding Adventure Vanilla WorldGen.yaml)
+#### Coding Adventure WorldGen (Coding Adventure WorldGen.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Adventure WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Links Awakening DX WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Risk of Rain 2 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
 
-#### Coding Adventure Vanilla WorldGen2 (Coding Adventure Vanilla WorldGen2.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Inscryption WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Hylics 2 WorldGen (Hylics 2 WorldGen.yaml)
+#### Factorio WorldGen (Factorio WorldGen.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Castlevania - Circle of the Moon WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| MegaMan Battle Network 3 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Subnautica WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
 
-#### Inscryption WorldGen (Inscryption WorldGen.yaml)
+#### Risk of Rain 2 WorldGen (Risk of Rain 2 WorldGen.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| A Link to the Past Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2.yaml | ✅ | ✅ | ✅ | ✅ |
+| Adventure WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| Links Awakening DX WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+
+#### Subnautica WorldGen (Subnautica WorldGen.yaml)
+
+**No failing pairs found** (failure may be due to combination of 3+ templates)
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Castlevania - Circle of the Moon WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
+| MegaMan Battle Network 3 WorldGen.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Notes
