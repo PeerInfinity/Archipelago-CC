@@ -646,6 +646,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -960,6 +961,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1214,6 +1216,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1442,6 +1445,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
