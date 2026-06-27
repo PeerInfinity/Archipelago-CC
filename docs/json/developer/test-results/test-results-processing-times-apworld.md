@@ -1,6 +1,6 @@
 # Processing Times Chart (APWorld)
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-27 19:50:25 UTC
 
 **Source Data Created:** 2026-03-22T00:10:03.442853+00:00
 
