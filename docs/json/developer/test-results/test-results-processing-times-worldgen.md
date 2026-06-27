@@ -1,6 +1,6 @@
 # Processing Times Chart (WorldGen)
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-27 21:28:31 UTC
 
 **Source Data Created:** 2026-03-21T22:57:37.647834+00:00
 
@@ -71,6 +71,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Lufia II Ancient Cave WorldGen | 4.2s | 5.7s | 5.7s | 12.9s |
 | Mario & Luigi Superstar Saga WorldGen | 5.1s | 9.8s | 42.5s | 35.0s |
 | Mega Man 2 WorldGen | 3.6s | 5.5s | 5.6s | 12.4s |
+| Mega Man 3 WorldGen | 4.1s | 5.7s | 5.7s | 12.0s |
 | MegaMan Battle Network 3 WorldGen | 3.6s | 6.7s | 10.8s | 14.5s |
 | Meritous WorldGen | 3.6s | 5.7s | 5.7s | 12.3s |
 | Metamath WorldGen | 3.5s | 5.7s | 5.7s | 12.4s |
