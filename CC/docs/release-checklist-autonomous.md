@@ -476,8 +476,18 @@ Not every test runs in CI. The split is by **engine**:
      `No client1 test result files found`. In `test-all-sequential.yml` the four
      result-branch-checkout jobs (`test-full-spoiler`, `test-multiclient`,
      `test-multiworld-single`, `test-multiworld`) were missing this and failed
-     uniformly; fixed in `38dab2ba0`. *If you see a uniform 404/400 across all
-     games, suspect a missing-submodule checkout, not the games.*
+     uniformly; fixed in `38dab2ba0`. The SAME bug then bit
+     `test-spoiler-fuzz.yml` (`test-spoiler-fuzz`) and `test-world-generator.yml`
+     (`run-canonical-tests`, `run-random-tests`) — fixed in `acbed42eb`.
+     *If you see a uniform 404/400 across all games, suspect a missing-submodule
+     checkout, not the games.* **Lesson: audit ALL workflows at once**, e.g.
+     ```bash
+     # every frontend-serving job that lacks submodules:
+     for f in .github/workflows/*.yml; do
+       awk '/^  [a-z0-9_-]+:/{job=$0} /http.server 8000/{h[job]=1}
+            /submodules: recursive/{s[job]=1} END{for(j in h) if(!(j in s)) print FILENAME": "j}' "$f"
+     done   # (or the python audit used this release) — expect NO output
+     ```
   2. **The frontend client version must match the AP release.**
      `Config.PROTOCOL_VERSION` in `frontend/modules/client/core/config.js` is the
      version the JSON web client sends in its `Connect`. If it lags the AP
@@ -505,12 +515,26 @@ gh workflow run <file>.yml --repo PeerInfinity/Archipelago-CC -f key=value ...
 gh run list --repo PeerInfinity/Archipelago-CC --workflow <file>.yml -L 5
 
 # Watch to completion in the BACKGROUND so you're notified on exit
-# (--exit-status: 0 = success). Watch many runs in one poller loop.
-gh run watch <run-id> --repo PeerInfinity/Archipelago-CC --exit-status
+# (--exit-status: 0 = success). ALWAYS throttle: --interval 60 (poll once/min).
+gh run watch <run-id> --repo PeerInfinity/Archipelago-CC --interval 60 --exit-status
 
 # Cancel (e.g. wrong inputs, or a CI-env failure burning shards):
 gh run cancel <run-id> --repo PeerInfinity/Archipelago-CC
 ```
+
+> **Gotcha — `gh` REST rate limit (5000/hr) is easy to exhaust.** Default
+> `gh run watch` polls every ~3s; several concurrent watchers over a long sweep
+> burned the entire hourly quota this release (every subsequent `gh` call → HTTP
+> 403). Discipline:
+> - **Throttle every watch with `--interval 60`** and avoid redundant
+>   `gh run view`/`gh run list` calls.
+> - **`git push` / `git fetch` use the git protocol, NOT the REST API** — they
+>   keep working even when `gh` is 403'd, so you can still push/harvest.
+> - **`gh api rate_limit` does NOT count against the quota** — use it to check
+>   remaining and the reset time:
+>   `gh api rate_limit -q '.resources.core | "\(.remaining)/\(.limit) resets \(.reset)"'`.
+>   To resume after exhaustion, gate on recovery (poll `rate_limit` until
+>   `remaining >= 100`) rather than retrying blindly.
 
 > **Gotcha — job `conclusion: success` does NOT mean the games passed.** The
 > test jobs exit 0 even when every game fails; per-game pass/fail lives in the
@@ -576,14 +600,16 @@ merge reads from.
 | `unittests_frontend.yml` | (none) — optional; local vitest already green | 0–1 | (none) |
 
 Useful defaults/inputs:
-- `test-all-sequential`: `spoiler_mode` default **10-seeds** (thorough, slow) — use
-  `single-seed` for a fast pass; `retest_failures=2-times`; all `enable_*=true`;
+- `test-all-sequential`: `spoiler_mode` default **`single-seed`** (changed from
+  `10-seeds` in `0d4a95fd4` — fast pass; pass `-f spoiler_mode=10-seeds` for the
+  thorough run); `retest_failures=2-times`; all `enable_*=true`;
   `multiworld_parallelization=parallel-10-jobs`; `enable_vanilla_tests` /
   `enable_worldgen2_tests` default **false** (worldgen mode only — leave off if
   WorldGen2 has known failures).
-- `test-ut-fuzz` / `test-spoiler-fuzz`: `runs_per_game=10`, `starting_seed=1`,
-  `debug_mode=true` restricts to Adventure (bundled) / Clique (apworlds) for a
-  quick smoke.
+- `test-spoiler-fuzz`: `runs_per_game` default **`1`** (changed from 10 in
+  `79894e7c0` for a fast smoke; pass `-f runs_per_game=N` for deeper fuzzing).
+- `test-ut-fuzz`: `runs_per_game=10`, `starting_seed=1`. Both fuzz workflows take
+  `debug_mode=true` to restrict to Adventure (bundled) / Clique (apworlds).
 - `test-world-generator`: `test_mode` canonical \| random \| both; `debug_mode=true`
   = Adventure only.
 
@@ -640,10 +666,41 @@ The `metadata.last_updated` timestamp confirms you're reading *this* run's data.
 
 ### 5.6 Merge results, fix failures, then hybrid
 
-1. **Merge result branches** into `main`:
+1. **Merge result branches into `main` — autonomously, by "harvesting", not a git
+   merge.** `CC/scripts/interactive-branch-merge.sh` is the **manual** tool
+   (menu-driven `read -p` prompts + conflict cleanup) — unusable headlessly. For
+   an autonomous run, do **not** `git merge` the result branches either: the
+   sequential branches' merge-base is the *pre-session* `main`, so a merge (esp.
+   `-X theirs`) replays their stale code/doc files and can **clobber newer `main`
+   commits**. Instead, check out only the fresh **result JSONs** and make one
+   commit. Docs are **not** imported here — Phase 6 regenerates them from the JSONs.
+
    ```bash
-   bash CC/scripts/interactive-branch-merge.sh
+   # 1. Verify each result file exists + has a fresh `last_updated` on its branch
+   #    (git fetch/show use the git protocol — not REST-rate-limited):
+   git fetch origin <result-branches...> --quiet
+   git show origin/<branch>:scripts/output/<dir>/test-results*.json | \
+     python3 -c "import sys,json;print(json.load(sys.stdin)['metadata']['last_updated'])"
+
+   # 2. Harvest ONLY the freshly-produced result JSONs onto main:
+   git checkout origin/test-results-original  -- scripts/output/{spoiler-minimal,spoiler-full,multiclient,multiworld}/test-results.json
+   git checkout origin/test-results-worldgen  -- scripts/output/{spoiler-minimal,spoiler-full,multiclient,multiworld}-worldgen/test-results.json
+   git checkout origin/test-results-apworld   -- scripts/output/{spoiler-minimal,spoiler-full}-apworld/test-results.json   # skip phases that were cancelled/missing
+   git checkout origin/test-results-ut-fuzz-original -- scripts/output/ut-fuzz/test-results-original-fixed-seed.json
+   git checkout origin/test-results-ut-fuzz-worldgen -- scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
+   git checkout origin/test-results-ut-fuzz-pickle   -- scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json
+   git checkout origin/test-results-ut-fuzz-hybrid   -- scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json
+   git checkout origin/test-results-spoiler-fuzz       -- scripts/output/spoiler-fuzz/test-results-fixed-seed.json
+   git checkout origin/test-results-world-generator    -- scripts/output/world-generator/test-results-{canonical,random}.json
+
+   # 3. Sanity-check the staged set is ONLY scripts/output/**.json, then commit:
+   git status -s
+   git commit -m "test-results: harvest <groups> onto main"
    ```
+   Only harvest files that exist & are fresh (e.g. cancelled/skipped phases like
+   apworld multiclient/multiworld will be MISSING on the branch — skip them). This
+   is deterministic, conflict-free, and preserves newer `main` history. (The
+   interactive script remains available for a human-driven release.)
 2. **Surface unexpected failures** (compares against the exclude lists in
    `scripts/data/template-exclude-list.json`):
    ```bash
@@ -675,10 +732,16 @@ Before a clean Phase 5, these had to be fixed (all consumer/CI-side, no preset
 re-run):
 - **`item_names` dual-read** in two procgen evaluators (Phase 4) — `a53868a` +
   `8944ccc49`.
-- **CI submodules checkout** for the 4 browser-test jobs — `38dab2ba0`. Verified:
-  multiclient `original` went **0/76 → 75/76**.
+- **CI submodules checkout** — `38dab2ba0` (the 4 `test-all-sequential` browser
+  jobs) **and** `acbed42eb` (`test-spoiler-fuzz` + the 2 `test-world-generator`
+  jobs). Verified: multiclient `original` 0/76 → **75/76**; spoiler-fuzz
+  0/76 → **70/76**; world-generator completed/success.
 - **Client `PROTOCOL_VERSION`** 0.6.4 → 0.6.8 — `6b0030e1b`. The Witness
   0/147 → 32/147 (remaining fail = timer-window size limit, left included).
+
+Also tuned for fast autonomous passes: `test-spoiler-fuzz` `runs_per_game`
+default → `1` (`79894e7c0`); `test-all-sequential` `spoiler_mode` default →
+`single-seed` (`0d4a95fd4`).
 
 ---
 
