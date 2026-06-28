@@ -837,13 +837,22 @@ Non-romless variants verify on **Adventure**; `--romless` variants verify on
 **A Link to the Past** (ROM-less ALttP). The installer **exits non-zero if any
 verification test fails** (`[WARN] Some unexpected test failures occurred`).
 
-2026-06-28 results: `--dev` and `--dev --all` fully pass (Adventure spoiler +
-UT-fuzz). The **romless (ALttP) path failed** — bare `--romless` didn't generate
-the ALttP template (`Requested files not found: A Link to the Past.yaml`) so its
-spoiler failed; `--all --romless` spoiler passed but ALttP UT-fuzz failed in both
-romless variants. Deferred (ALttP is the known-fragile ROM-less special case);
-the non-romless install path is verified. See memory
-`project_romless_installer_alttp`.
+2026-06-28 results: **all four variants exit 0.** `--dev` and `--dev --all` pass
+(Adventure spoiler + UT-fuzz); both romless variants now pass too (ALttP imports,
+template generates, spoiler PASS, installer reports UT-fuzz PASS). The earlier
+romless failure was a **patch-version skew** — the installer applied a stale
+0.6.7 romless snapshot to a 0.6.8 env (`alttp/__init__.py` imported the
+since-removed `check_enemizer`) → alttp unregistered. Fixed by adding a
+version-detected snapshot (`scripts/build/generate_romless_patches.py` →
+`json_tools_patches/<ver>/romless/`) and version-aware selection in the installer
+(commits `398c01b1b`, `6eb1e05df`, apworld repack `b83d64641`).
+
+> Caveat: the UT-fuzz step gates its exit code on harness *Errors*, not per-seed
+> *Failures*, so a romless game can report PASS while individual seeds fail. The
+> ALttP romless fuzz still fails ~9/12 seeds when enemizer options
+> (`enemy_shuffle` etc.) are rolled, because `alttp/EnemyShuffle.py` reads the ROM
+> during item generation (unguarded by the romless patch). Tracked as a separate
+> sub-issue. See memory `project_romless_installer_alttp`.
 
 ### 7.3 Manual GUI installer test (human-run, not autonomous)
 
