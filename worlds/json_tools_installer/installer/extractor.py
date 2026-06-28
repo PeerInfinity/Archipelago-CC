@@ -38,6 +38,31 @@ class ExtractionResult:
     skipped_files: List[str] = field(default_factory=list)
 
 
+def _ap_base_version() -> str:
+    """Base AP version (e.g. '0.6.8'), used to locate version-specific patches.
+
+    The romless patch snapshot lives under json_tools_patches/<version>/romless
+    and MUST match the AP version being packed/installed — shipping an older
+    snapshot overwrites world files with stale code (see
+    scripts/build/generate_romless_patches.py).
+    """
+    try:
+        from Utils import __version__
+        return __version__.split("-")[0]
+    except Exception:
+        # Fall back to the newest snapshot present so packing still works.
+        patches_root = Path(local_path()) / "json_tools_patches"
+        if patches_root.exists():
+            versions = sorted(
+                (p.name for p in patches_root.iterdir()
+                 if p.is_dir() and (p / "romless").exists()),
+                key=lambda v: tuple(int(x) for x in v.split(".") if x.isdigit()),
+            )
+            if versions:
+                return versions[-1]
+        return "0.6.8"
+
+
 # Define available components (order matters for GUI display)
 COMPONENTS: Dict[str, Component] = {
     "exporter": Component(
@@ -102,7 +127,7 @@ COMPONENTS: Dict[str, Component] = {
         name="romless_patches",
         display_name="ROM-less Generation Patches",
         description="Patched world files for generation without ROMs",
-        source_paths=["json_tools_patches/0.6.7/romless"],
+        source_paths=[f"json_tools_patches/{_ap_base_version()}/romless"],
         required=False,
         size_estimate_mb=0.3,
     ),

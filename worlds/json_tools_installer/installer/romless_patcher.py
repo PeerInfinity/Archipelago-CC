@@ -76,6 +76,21 @@ def get_file_hash(filepath: Path) -> str:
     return sha256.hexdigest()
 
 
+def detect_ap_version() -> str:
+    """Detect the installed AP base version (e.g. '0.6.8').
+
+    The romless patch snapshot is version-specific. Defaulting to a hardcoded
+    version silently serves stale patches to a newer AP (e.g. a 0.6.7 snapshot
+    applied to 0.6.8 reintroduces a removed ``check_enemizer`` import and
+    de-registers alttp). Always resolve the version from the running AP.
+    """
+    try:
+        from Utils import __version__
+        return __version__.split("-")[0]
+    except Exception:
+        return "0.6.7"
+
+
 def get_romless_patches_dir(version: str) -> Optional[Path]:
     """
     Get the path to downloaded ROM-less patches for a specific AP version.
@@ -122,7 +137,7 @@ def _is_romless_backup(backup: BackupInfo) -> bool:
 
 def check_romless_patch_status(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.7"
+    version: Optional[str] = None
 ) -> Dict[str, RomlessPatchStatus]:
     """
     Check the current ROM-less patch status of all supported worlds.
@@ -136,6 +151,8 @@ def check_romless_patch_status(
     """
     if config is None:
         config = load_config()
+    if version is None:
+        version = detect_ap_version()
 
     root = Path(local_path())
     status = {}
@@ -337,7 +354,7 @@ def _backup_infrastructure_file(
 
 def apply_romless_patches(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.7",
+    version: Optional[str] = None,
     force: bool = False,
 ) -> RomlessPatchResult:
     """
@@ -358,6 +375,8 @@ def apply_romless_patches(
     """
     if config is None:
         config = load_config()
+    if version is None:
+        version = detect_ap_version()
 
     result = RomlessPatchResult(success=True)
     root = Path(local_path())
@@ -368,7 +387,8 @@ def apply_romless_patches(
         result.success = False
         result.errors.append(
             f"ROM-less patches not found for AP version {version}. "
-            f"Install the 'ROM-less Generation Patches' component first."
+            f"Regenerate them with scripts/build/generate_romless_patches.py "
+            f"and install the 'ROM-less Generation Patches' component."
         )
         return result
 
@@ -553,7 +573,7 @@ def revert_romless_patches(
 
 def get_romless_patch_summary(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.7"
+    version: Optional[str] = None
 ) -> Dict:
     """
     Get a summary of the current ROM-less patch state.
