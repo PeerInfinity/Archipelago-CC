@@ -7,8 +7,8 @@ fix-up scripts — with the human approving each outward-facing step.
 
 > **Status: work in progress.** The original [release-checklist.md](release-checklist.md)
 > remains the authoritative document. This file is being written phase by
-> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6.** Phases
-> 1, 7, and 8 below are stubs that point back at the original.
+> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6, 7.**
+> Phases 1 and 8 below are stubs that point back at the original.
 
 ---
 
@@ -796,8 +796,69 @@ else, then commit.
 ---
 
 ## Phase 7: APWorld Packaging and Dev Testing
+
+### 7.1 Pack the APWorlds (local)
+
+```bash
+source .venv/bin/activate
+python scripts/build/pack_json_tools_installer.py          # -> apworlds/json_tools_installer.apworld
+for g in metamath depgraph jta bakingadventure codingadventure; do
+  python scripts/build/pack_apworld.py "$g"                # -> apworlds/<g>.apworld
+done
+```
+
+The pack scripts produce **deterministic** zips, so only APWorlds whose *source*
+changed since the last pack show up in `git status` — the rest repack
+byte-identical. Commit only the changed `apworlds/*.apworld` (they're tracked
+release artifacts). (2026-06-27: `json_tools_installer`, `depgraph`, `metamath`
+changed; `jta`/`bakingadventure`/`codingadventure` byte-identical.)
+
+### 7.2 Dev installer test
+
+> **The `--dev` installer downloads from `github.com/PeerInfinity/Archipelago-CC/raw/main`**
+> (`scripts/install_json_tools.py`: `DEV_REPO @ DEV_BRANCH=main`). So **push the
+> packed APWorlds (7.1) and all release content to `main` BEFORE running this**, or
+> the test exercises the *previous* installer, not what you just built.
+
+Run the four variants. Each `--fresh` deletes and re-clones vanilla Archipelago
+into the shared `--target-dir`, so they **MUST run sequentially — never in
+parallel** (parallel runs clobber the shared clone). A single `for` loop is the
+safe pattern:
+
+```bash
+for v in "--dev" "--dev --all" "--dev --romless" "--dev --all --romless"; do
+  python scripts/install_json_tools.py $v --fresh --target-dir /tmp/jt-test
+done
+```
+
+Each run installs the JSON Tools Installer APWorld into the fresh clone, downloads
++ patches components from dev `main`, and runs verification (spoiler + UT-fuzz).
+Non-romless variants verify on **Adventure**; `--romless` variants verify on
+**A Link to the Past** (ROM-less ALttP). The installer **exits non-zero if any
+verification test fails** (`[WARN] Some unexpected test failures occurred`).
+
+2026-06-28 results: `--dev` and `--dev --all` fully pass (Adventure spoiler +
+UT-fuzz). The **romless (ALttP) path failed** — bare `--romless` didn't generate
+the ALttP template (`Requested files not found: A Link to the Past.yaml`) so its
+spoiler failed; `--all --romless` spoiler passed but ALttP UT-fuzz failed in both
+romless variants. Deferred (ALttP is the known-fragile ROM-less special case);
+the non-romless install path is verified. See memory
+`project_romless_installer_alttp`.
+
+### 7.3 Manual GUI installer test (human-run, not autonomous)
+
+`release-checklist.md` §7.3 — download `json_tools_installer.apworld` from `main`
+into a fresh vanilla Archipelago, run `Launcher.py`, and click through the JSON
+Tools Installer GUI. This is **interactive (a GUI)** and cannot be driven
+headlessly — flag it for the human to run; it isn't part of the autonomous flow.
+
+---
+
 ## Phase 8: Stable Release
 
-> **Stubs — not yet migrated.** Follow Phases 7–8 of
-> [release-checklist.md](release-checklist.md). These will be rewritten in the
-> autonomous style as each phase is run for real.
+> **Stub — not yet migrated.** Follow Phase 8 of
+> [release-checklist.md](release-checklist.md): `sync-to-stable.sh` → commit/push
+> to `PeerInfinity/Archipelago @ JSONExport` → deploy GitHub Pages → verify live
+> demos. This is the **outward-facing publish** (mirrors the repo to the public
+> stable repo) — gate it on explicit human approval. To be written in the
+> autonomous style when first run.
