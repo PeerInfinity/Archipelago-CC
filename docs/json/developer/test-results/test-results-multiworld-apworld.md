@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-28 01:45:41 UTC
 
 **Source Data Created:** 2026-03-22T02:21:24.007170+00:00
 
@@ -39,17 +39,17 @@
 | A Dance of Fire and Ice | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | A Difficult Game About Climbing | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | A Link Between Worlds | ❌ Failed | ❌ Failed | 1 | 1 | ✅ | ✅ |
-| ANIMAL WELL | ❌ Failed | ❌ Failed | 1 | 1 | 1.5KB | ✅ |
+| ANIMAL WELL | ❌ Failed | ❌ Failed | 1 | 1 | ✅ | ✅ |
 | Actraiser | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Against the Storm | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
-| Air Delivery | ❌ Failed | ❌ Failed | 1 | 1 | 6.6KB | ✅ |
-| An Untitled Story | ✅ Passed | ✅ Passed | 1 | 1 | 8.7KB | ✅ |
-| Anodyne | ❌ Failed | — | 2 | 2 | 10.7KB | ✅ |
-| Another Crabs Treasure | ❌ Failed | — | 2 | 2 | 3.1KB | ✅ |
+| Air Delivery | ❌ Failed | ❌ Failed | 1 | 1 | ✅ | ✅ |
+| An Untitled Story | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Anodyne | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
+| Another Crabs Treasure | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Ape Escape | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Ape Escape 3 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Astalon | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
-| Autopelago | ❌ Failed | ❌ Failed | 2 | 2 | 9.2KB | ✅ |
+| Autopelago | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
 | Axiom Verge | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Balatro | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Brotato | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -60,7 +60,7 @@
 | Corn Kidz 64 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | CrossCode | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Crystal Project | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
-| Crystalis | ❌ Failed | — | 2 | 2 | 9.2KB | ✅ |
+| Crystalis | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Cuphead | ❌ Failed | ❌ Failed | 1 | 1 | ✅ | ✅ |
 | DORONKO WANKO | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Deep Rock Galactic | ❌ Failed | — | 2 | N/A | ✅ | ✅ |
@@ -83,7 +83,7 @@
 | Into the Breach | ❌ Failed | — | 2 | N/A | ✅ | ✅ |
 | Isles Of Sea And Sky | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Ittle Dew 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Jigsaw | ❌ Failed | ❌ Failed | 5 | 5 | 1.6KB | ✅ |
+| Jigsaw | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | K-On! After School Live!! | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
 | Keep Talking and Nobody Explodes | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Kingdom Hearts Birth by Sleep | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
@@ -95,28 +95,28 @@
 | Lingo 2 | ❌ Failed | — | 5 | 5 | 17.1KB | ✅ |
 | Little Witch Nobeta | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | Luigi's Mansion | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Lunacid | ❌ Failed | — | 2 | 2 | 8.2KB | ✅ |
-| Majora's Mask Recompiled | ✅ Passed | ✅ Passed | 3 | 3 | 10.4KB | ✅ |
+| Lunacid | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
+| Majora's Mask Recompiled | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Mario Kart Double Dash | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | MetroCUBEvania | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
 | Metroid Fusion | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
-| Minishoot Adventures | ❌ Failed | — | 3 | 3 | 25.9KB | ✅ |
-| Minit | ✅ Passed | ✅ Passed | 4 | 4 | 23.9KB | ✅ |
+| Minishoot Adventures | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
+| Minit | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Monster Sanctuary | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Nine Sols | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
-| Ori and the Blind Forest | ✅ Passed | ✅ Passed | 3 | 3 | 23.2KB | ✅ |
+| Ori and the Blind Forest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Ori and the Will of the Wisps | ❌ Failed | — | 3 | N/A | ✅ | ✅ |
 | Oxygen Not Included | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
-| Pizza Tower | ❌ Failed | — | 2 | N/A | 7.0KB | ✅ |
+| Pizza Tower | ❌ Failed | — | 2 | N/A | ✅ | ✅ |
 | PlateUp | ❌ Failed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Pokemon FireRed and LeafGreen | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
-| Pseudoregalia | ❌ Failed | — | 4 | 4 | 17.1KB | ✅ |
+| Pseudoregalia | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | Rabi-Ribi | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Rain World | ❌ Failed | — | 2 | 2 | 11.8KB | ✅ |
+| Rain World | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Ratchet & Clank 2 | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
 | Reventure | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
-| Rift Wizard | ❌ Failed | — | 2 | N/A | 7.7KB | ✅ |
+| Rift Wizard | ❌ Failed | — | 2 | N/A | ✅ | ✅ |
 | Rift of the Necrodancer | ❌ Failed | ❌ Failed | 7 | 7 | ✅ | ✅ |
 | Rusted Moss | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | Sentinels of the Multiverse | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
@@ -124,34 +124,34 @@
 | Ship of Harkinian | ❌ Failed | — | 8 | 8 | ✅ | ✅ |
 | Simon Tatham's Portable Puzzle Collection | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
 | Sly Cooper and the Thievius Raccoonus | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Sonic Adventure DX | ❌ Failed | — | 6 | 6 | 29.9KB | ✅ |
+| Sonic Adventure DX | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | Sonic Heroes | ❌ Failed | — | 2 | N/A | ✅ | ✅ |
 | Sonic Rush | ❌ Failed | — | 8 | 8 | ✅ | ✅ |
-| Sonic the Hedgehog 1 | ❌ Failed | ❌ Failed | 5 | 5 | 9.4KB | ✅ |
-| Soul Blazer | ❌ Failed | — | 6 | 6 | 10.5KB | ✅ |
+| Sonic the Hedgehog 1 | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
+| Soul Blazer | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | Spinball | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
-| Spyro 3 | ❌ Failed | — | 4 | 4 | 15.3KB | ✅ |
-| Stacklands | ❌ Failed | — | 5 | 5 | 12.7KB | ✅ |
-| Star Fox 64 | ❌ Failed | — | 2 | 2 | 17.2KB | ✅ |
-| Star Wars Episode I Racer | ❌ Failed | ❌ Failed | 5 | 5 | 5.7KB | ✅ |
+| Spyro 3 | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
+| Stacklands | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
+| Star Fox 64 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
+| Star Wars Episode I Racer | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Super Cat Planet | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | Symphony of the Night | ❌ Failed | — | 2 | N/A | ✅ | ✅ |
-| System Shock 2 | ❌ Failed | — | 8 | 8 | 15.1KB | ✅ |
+| System Shock 2 | ❌ Failed | — | 8 | 8 | ✅ | ✅ |
 | TCG Card Shop Simulator | ❌ Failed | — | 6 | N/A | ✅ | ✅ |
-| Tetris Attack | ❌ Failed | — | 8 | 8 | 23.1KB | ✅ |
+| Tetris Attack | ❌ Failed | — | 8 | 8 | ✅ | ✅ |
 | Tevi | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | The Legend of Zelda - Oracle of Seasons | ❌ Failed | — | 6 | N/A | ✅ | ✅ |
 | The Legend of Zelda - Phantom Hourglass | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
-| The Sims 4 | ❌ Failed | — | 6 | 6 | 5.5KB | ✅ |
+| The Sims 4 | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | ToeJam and Earl | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | TurnipBoy | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Tyrian | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Vampire Survivors | ❌ Failed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Wario Land | ❌ Failed | — | 4 | N/A | ✅ | ✅ |
-| Watery Words | ❌ Failed | ❌ Failed | 6 | 6 | 9.1KB | ✅ |
-| Wordipelago | ❌ Failed | — | 2 | 2 | 19.5KB | ✅ |
+| Watery Words | ❌ Failed | ❌ Failed | 6 | 6 | ✅ | ✅ |
+| Wordipelago | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | XCOM 2 War of the Chosen | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | — | 8 | 8 | 28.8KB | ✅ |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | — | 8 | 8 | ✅ | ✅ |
 | Yu-Gi-Oh! Forbidden Memories | ❌ Failed | — | 7 | 7 | ✅ | ✅ |
 | osu! | ❌ Failed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 
