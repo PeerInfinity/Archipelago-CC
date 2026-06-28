@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-28 17:13:11 UTC
+**Generated:** 2026-06-28 01:45:41 UTC
 
 **Source Data Created:** 2026-03-21T18:02:52.341913+00:00
 
@@ -59,7 +59,7 @@ Of the 1 games with 100% pass rate:
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| DepGraph | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 201.9KB |
+| DepGraph | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 410.5KB |
 
 ## Results Breakdown
 
@@ -115,15 +115,18 @@ These templates are excluded from testing:
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Mega Man 3.yaml | Temporarily excluded. WorldGen variant intermittently fails test_explicit_indirect_conditions_spheres with Fill.FillError on certain pytest seeds (e.g. 57516062135983689099). |
 | Muse Dash.yaml | Temporarily excluded. Block-bodied helper inlined into expression context causes SyntaxError. |
 | Paint.yaml | Temporarily excluded. Helper paint_percent_available not in JSON helpers dict causing NameError (calculate_paint_percent_available is present but referenced under wrong name). |
 | Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
 | Satisfactory.yaml | Temporarily excluded. Calls self.state_logic.can_produce_all() which resolves to state.has_all() but is not exported, causing AttributeError. |
 | Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Seedling.yaml | WorldGen variant generation produces a broken world (worlds/seedling_worldgen missing Items.py, causing ModuleNotFoundError on load). |
 | Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Super Metroid.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | TUNIC.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | The Witness.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
+| UT Pickle Mode.yaml | Not a game. Universal Tracker pickle-mode meta-template, not a playable world (its worldgen variant fails with AttributeError in ut_pickle_worldgen._place_original_items). |
 | Universal Tracker.yaml | Not a game. |
 | Yacht Dice.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
