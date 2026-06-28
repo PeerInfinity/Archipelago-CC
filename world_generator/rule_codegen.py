@@ -563,6 +563,7 @@ class RuleCodeGenerator(
                 rb_to_type = {
                     'And': 'and',
                     'Or': 'or',
+                    'AtLeast': 'atleast',
                     'Not': 'not',
                     'Has': 'item_check',
                     'HasAll': 'group_check',
