@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-06-27 23:54:33 UTC
+**Generated:** 2026-06-28 01:45:42 UTC
 
 **Source Data Created:** 2026-06-27T23:54:33.277678+00:00
 
@@ -35,10 +35,10 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 15 (passes pickle mode per config)
-- **Unexpected Passes:** 5 (expected to fail but passed)
-- **Expected Failures:** 11 (doesn't pass pickle mode per config)
-- **Unexpected Failures (logic):** 58 (expected to pass but had logic mismatch)
+- **Expected Passes:** 20 (passes pickle mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 69 (doesn't pass pickle mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
@@ -147,7 +147,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (15)
+### Expected Passes (20)
 
 Games that pass pickle mode per tracking-mode-config.json and passed the test.
 
@@ -162,52 +162,28 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Coding Adventure | 10 | 10 | 0 | 0 | 100.0% |
 | Final Fantasy | 10 | 10 | 0 | 0 | 100.0% |
 | Hollow Knight | 10 | 10 | 0 | 0 | 100.0% |
+| Journey to Ascension | 10 | 0 | 0 | 0 | 0.0% |
 | Lingo | 10 | 3 | 0 | 0 | 30.0% |
 | MegaMan Battle Network 3 | 10 | 10 | 0 | 0 | 100.0% |
 | Meritous | 10 | 10 | 0 | 0 | 100.0% |
+| Ocarina of Time | 10 | 8 | 0 | 0 | 80.0% |
+| Pokemon Emerald | 10 | 7 | 0 | 0 | 70.0% |
 | Saving Princess | 10 | 10 | 0 | 0 | 100.0% |
+| Starcraft 2 | 10 | 0 | 0 | 0 | 0.0% |
+| Super Metroid | 10 | 5 | 0 | 0 | 50.0% |
 | The Wind Waker | 10 | 5 | 0 | 0 | 50.0% |
 | Wargroove | 10 | 10 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (5)
-
-Games NOT expected to pass pickle mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Journey to Ascension | 10 | 0 | 0 | 0 | 0.0% |
-| Ocarina of Time | 10 | 8 | 0 | 0 | 80.0% |
-| Pokemon Emerald | 10 | 7 | 0 | 0 | 70.0% |
-| Starcraft 2 | 10 | 0 | 0 | 0 | 0.0% |
-| Super Metroid | 10 | 5 | 0 | 0 | 50.0% |
-
-### Expected Failures (11)
+### Expected Failures (69)
 
 Games NOT expected to pass pickle mode and failed as expected.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| APCalc | 10 | 7 | 3 | 0 | 70.0% |
-| Kingdom Hearts | 10 | 9 | 1 | 0 | 90.0% |
-| Kingdom Hearts 2 | 10 | 6 | 1 | 0 | 60.0% |
-| Links Awakening DX | 10 | 1 | 9 | 0 | 10.0% |
-| Metamath | 10 | 2 | 8 | 0 | 20.0% |
-| Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
-| Seedling | 10 | 9 | 1 | 0 | 90.0% |
-| Shivers | 10 | 9 | 1 | 0 | 90.0% |
-| Stardew Valley | 10 | 4 | 6 | 0 | 40.0% |
-| The Messenger | 10 | 8 | 2 | 0 | 80.0% |
-| Zillion | 10 | 7 | 1 | 1 | 70.0% |
-
-### Unexpected Failures (Logic Mismatch) (58)
-
-Games expected to pass pickle mode but failed due to logic mismatches.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | A Hat in Time | 10 | 7 | 3 | 0 | 70.0% |
 | A Link to the Past | 10 | 4 | 2 | 0 | 40.0% |
 | A Short Hike | 10 | 7 | 3 | 0 | 70.0% |
+| APCalc | 10 | 7 | 3 | 0 | 70.0% |
 | APQuest | 10 | 9 | 1 | 0 | 90.0% |
 | Adventure | 10 | 8 | 2 | 0 | 80.0% |
 | Aquaria | 10 | 9 | 1 | 0 | 90.0% |
@@ -229,12 +205,16 @@ Games expected to pass pickle mode but failed due to logic mismatches.
 | Hylics 2 | 10 | 9 | 1 | 0 | 90.0% |
 | Inscryption | 10 | 9 | 1 | 0 | 90.0% |
 | Jak and Daxter: The Precursor Legacy | 10 | 9 | 1 | 0 | 90.0% |
+| Kingdom Hearts | 10 | 9 | 1 | 0 | 90.0% |
+| Kingdom Hearts 2 | 10 | 6 | 1 | 0 | 60.0% |
 | Kirby's Dream Land 3 | 10 | 9 | 1 | 0 | 90.0% |
 | Landstalker - The Treasures of King Nole | 10 | 9 | 1 | 0 | 90.0% |
+| Links Awakening DX | 10 | 1 | 9 | 0 | 10.0% |
 | Lufia II Ancient Cave | 10 | 9 | 1 | 0 | 90.0% |
 | Mario & Luigi Superstar Saga | 10 | 9 | 1 | 0 | 90.0% |
 | Mega Man 2 | 10 | 9 | 1 | 0 | 90.0% |
 | Mega Man 3 | 10 | 9 | 1 | 0 | 90.0% |
+| Metamath | 10 | 2 | 8 | 0 | 20.0% |
 | Muse Dash | 10 | 9 | 1 | 0 | 90.0% |
 | Noita | 10 | 9 | 1 | 0 | 90.0% |
 | Old School Runescape | 10 | 9 | 1 | 0 | 90.0% |
@@ -244,8 +224,12 @@ Games expected to pass pickle mode but failed due to logic mismatches.
 | Raft | 10 | 9 | 1 | 0 | 90.0% |
 | Risk of Rain 2 | 10 | 9 | 1 | 0 | 90.0% |
 | SMZ3 | 10 | 9 | 1 | 0 | 90.0% |
+| Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
 | Secret of Evermore | 10 | 9 | 1 | 0 | 90.0% |
+| Seedling | 10 | 9 | 1 | 0 | 90.0% |
+| Shivers | 10 | 9 | 1 | 0 | 90.0% |
 | Sonic Adventure 2 Battle | 10 | 9 | 1 | 0 | 90.0% |
+| Stardew Valley | 10 | 4 | 6 | 0 | 40.0% |
 | Subnautica | 10 | 9 | 1 | 0 | 90.0% |
 | Super Mario 64 | 10 | 9 | 1 | 0 | 90.0% |
 | Super Mario Land 2 | 10 | 9 | 1 | 0 | 90.0% |
@@ -255,6 +239,7 @@ Games expected to pass pickle mode but failed due to logic mismatches.
 | TUNIC | 10 | 9 | 1 | 0 | 90.0% |
 | Terraria | 10 | 9 | 1 | 0 | 90.0% |
 | The Legend of Zelda | 10 | 9 | 1 | 0 | 90.0% |
+| The Messenger | 10 | 8 | 2 | 0 | 80.0% |
 | The Witness | 10 | 9 | 1 | 0 | 90.0% |
 | Timespinner | 10 | 9 | 1 | 0 | 90.0% |
 | Undertale | 10 | 9 | 1 | 0 | 90.0% |
@@ -262,6 +247,7 @@ Games expected to pass pickle mode but failed due to logic mismatches.
 | Yacht Dice | 10 | 9 | 1 | 0 | 90.0% |
 | Yoshi's Island | 10 | 9 | 1 | 0 | 90.0% |
 | Yu-Gi-Oh! 2006 | 10 | 9 | 1 | 0 | 90.0% |
+| Zillion | 10 | 7 | 1 | 1 | 70.0% |
 | shapez | 10 | 9 | 1 | 0 | 90.0% |
 
 ## Explain Support Details
