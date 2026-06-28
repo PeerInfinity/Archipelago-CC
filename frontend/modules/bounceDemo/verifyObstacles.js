@@ -49,6 +49,15 @@ function evalRule(rule, inv) {
         case 'Has': return (inv[rule.args.item_name] ?? 0) >= (rule.args.count ?? 1);
         case 'And': return (rule.children ?? []).every((c) => evalRule(c, inv));
         case 'Or': return (rule.children ?? []).some((c) => evalRule(c, inv));
+        case 'AtLeast': {
+            const required = rule.count ?? 0;
+            if (required <= 0) return true;
+            let satisfied = 0;
+            for (const c of rule.children ?? []) {
+                if (evalRule(c, inv) && ++satisfied >= required) return true;
+            }
+            return false;
+        }
         default:
             throw new Error(`verifyObstacleGating: unsupported rule '${rule?.rule}'`);
     }

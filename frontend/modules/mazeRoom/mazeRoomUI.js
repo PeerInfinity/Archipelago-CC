@@ -3760,5 +3760,6 @@ function describeRule(rule) {
     if (rule.rule === 'HasAny') return `HasAny(${(rule.args?.item_names ?? rule.args?.items ?? []).join(', ')})`;
     if (rule.rule === 'And') return `And(${(rule.children ?? []).map(describeRule).join(', ')})`;
     if (rule.rule === 'Or') return `Or(${(rule.children ?? []).map(describeRule).join(', ')})`;
+    if (rule.rule === 'AtLeast') return `AtLeast(${rule.count ?? '?'} of ${(rule.children ?? []).map(describeRule).join(', ')})`;
     return rule.rule ?? JSON.stringify(rule);
 }

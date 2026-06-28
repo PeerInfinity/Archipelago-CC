@@ -719,6 +719,17 @@ export class PathAnalyzerLogic {
         return childRules.some((child) =>
           this.evaluateRuleWithOverrides(child, overrides, snapshotInterface)
         );
+      } else if (compoundType === 'atleast') {
+        // AtLeast / count_true: true when at least `count` children pass.
+        const required = rule.count ?? rule.args?.count ?? 0;
+        if (required <= 0) return true;
+        let satisfied = 0;
+        for (const child of childRules) {
+          if (this.evaluateRuleWithOverrides(child, overrides, snapshotInterface)) {
+            if (++satisfied >= required) return true;
+          }
+        }
+        return false;
       }
     }
 
@@ -842,6 +853,9 @@ export class PathAnalyzerLogic {
     if (rule.type === 'and' || rule.type === 'or') {
       return rule.type;
     }
+    if (rule.type === 'count_true') {
+      return 'atleast';
+    }
 
     // Rule Builder format (capitalized)
     if (rule.rule === 'And') {
@@ -849,6 +863,9 @@ export class PathAnalyzerLogic {
     }
     if (rule.rule === 'Or') {
       return 'or';
+    }
+    if (rule.rule === 'AtLeast') {
+      return 'atleast';
     }
 
     return null;
@@ -893,7 +910,7 @@ export class PathAnalyzerLogic {
     // Rule Builder format - check for leaf rules
     if (rule.rule && !rule.type) {
       // Rule Builder compound types (not leaf nodes)
-      const ruleBuilderCompoundTypes = ['And', 'Or', 'Not'];
+      const ruleBuilderCompoundTypes = ['And', 'Or', 'Not', 'AtLeast'];
 
       // If it's a compound type, it's not a leaf
       if (ruleBuilderCompoundTypes.includes(rule.rule)) {

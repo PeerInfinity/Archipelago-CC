@@ -101,6 +101,15 @@ function evalRule(rule, items) {
         case 'Has': return items.has(rule.args.item_name);
         case 'And': return rule.children.every((c) => evalRule(c, items));
         case 'Or': return rule.children.some((c) => evalRule(c, items));
+        case 'AtLeast': {
+            const required = rule.count ?? 0;
+            if (required <= 0) return true;
+            let satisfied = 0;
+            for (const c of rule.children ?? []) {
+                if (evalRule(c, items) && ++satisfied >= required) return true;
+            }
+            return false;
+        }
         default: throw new Error(`evalRule: unhandled rule '${rule.rule}'`);
     }
 }
