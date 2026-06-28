@@ -7,8 +7,8 @@ fix-up scripts — with the human approving each outward-facing step.
 
 > **Status: work in progress.** The original [release-checklist.md](release-checklist.md)
 > remains the authoritative document. This file is being written phase by
-> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5.** Phases 1
-> and 6–8 below are stubs that point back at the original.
+> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6.** Phases
+> 1, 7, and 8 below are stubs that point back at the original.
 
 ---
 
@@ -746,10 +746,58 @@ default → `1` (`79894e7c0`); `test-all-sequential` `spoiler_mode` default →
 ---
 
 ## Phase 6: Documentation Generation
+
+Entirely local (no workflows). Regenerate every test-result doc from the result
+JSONs harvested in Phase 5.6, then update the preset index annotations.
+
+### 6.1 Generate docs + annotate presets
+
+```bash
+source .venv/bin/activate
+python scripts/docs/generate-all-docs.py     # 7 generators, ~10s
+python scripts/docs/update-preset-files.py
+```
+
+- `generate-all-docs.py` runs all 7 generators over `scripts/output/**`: test
+  charts (spoiler/multiclient/multiworld), UT-fuzz charts + comparisons,
+  multiworld-ut-fuzz, spoiler-fuzz charts, the combined fuzz summary, the
+  world-generator report, and the freshness report. Expect `Passed: 7 / Failed: 0`.
+  Use `--only <tag>` / `--list` to target a subset.
+- `update-preset-files.py` re-annotates `frontend/presets/preset_files.json` with
+  per-game **test-data / placement flags** (`seeds_passed`, `passed`,
+  `players_passed`, …). It is **annotation-only** — it does **not** build or scan
+  index keys, so top-level keys stay identical and the two-index model
+  (`preset_files.json` dev vs `preset_files.live.json` canonical) is untouched.
+  It prints "Games without any test data" for games outside the test set
+  (excluded / apworld-only) — informational.
+
+### 6.2 Verify links
+
+```bash
+python scripts/docs/find_orphaned_docs.py
+```
+Reports `.md` files not reachable from a doc entry point. A pre-existing baseline
+of orphans (≈30 this release: vibe-coding-simulator, tracker fixtures, some game
+READMEs) is expected — only act on **new** orphans introduced this release.
+
+### 6.3 Commit
+
+The diff should be **only** `docs/json/developer/test-results/*.md` +
+`frontend/presets/preset_files.json`. Sanity-check `git status -s` shows nothing
+else, then commit.
+
+> **Freshness reflects scope, not staleness bugs.** After regeneration the
+> freshness report will still show 🔴 stale rows for any test type you
+> *intentionally skipped* (e.g. apworld UT-fuzz, apworld multiclient/multiworld,
+> `original_seeded`) — their source JSONs are genuinely old because they weren't
+> re-run. That's correct. Fresh rows = exactly what you ran this release.
+> (2026-06-27: 25 fresh / 21 stale, the 21 == the skipped scopes.)
+
+---
+
 ## Phase 7: APWorld Packaging and Dev Testing
 ## Phase 8: Stable Release
 
-> **Stubs — not yet migrated.** Follow Phases 6–8 of
+> **Stubs — not yet migrated.** Follow Phases 7–8 of
 > [release-checklist.md](release-checklist.md). These will be rewritten in the
-> autonomous style (with the exact `gh workflow run` invocations, monitoring,
-> and result-merge steps) as each phase is run for real.
+> autonomous style as each phase is run for real.
