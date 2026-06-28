@@ -6,6 +6,9 @@
     },
     "worlds/RomlessUtils.py": {
       "patched_sha256": "2087afe03e7788f016e0668834bee5dc610cb73423d8a3049fd6254c36872fea"
+    },
+    "worlds/alttp/EnemyShuffle.py": {
+      "patched_sha256": "0bd9eef02fad56e42abc218f0a025dab70cc9d03c20eef7b8027c75d15750358"
     }
   },
   "files": {

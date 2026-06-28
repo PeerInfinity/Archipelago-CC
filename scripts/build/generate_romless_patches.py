@@ -45,11 +45,13 @@ ROMLESS_WORLDS = [
     "yoshisisland",
 ]
 
-# Infrastructure files the romless world patches depend on. Keep in sync with
+# Additional files shipped alongside the world __init__.py patches (infra +
+# world-specific romless patches). Keep in sync with
 # worlds/json_tools_installer/installer/romless_patcher.py:ROMLESS_INFRASTRUCTURE_FILES
 ROMLESS_INFRASTRUCTURE_FILES = [
     "settings.py",
     "worlds/RomlessUtils.py",
+    "worlds/alttp/EnemyShuffle.py",
 ]
 
 

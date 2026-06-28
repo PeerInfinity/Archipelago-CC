@@ -36,13 +36,17 @@ ROMLESS_WORLDS = [
     "yoshisisland",
 ]
 
-# Infrastructure files required by romless world patches.
-# These are installed alongside the world patches.
+# Additional files installed alongside the world __init__.py patches. Carried by
+# repo-relative path (backed up / reverted via "romless:" config keys).
 # - settings.py: adds skip_required_files support
 # - worlds/RomlessUtils.py: provides check_rom_available() helper
+# - worlds/alttp/EnemyShuffle.py: world-specific romless patch — skips the
+#   enemizer base-ROM read during item generation when the ROM is absent
+#   (otherwise random enemy_shuffle seeds crash with FileNotFoundError).
 ROMLESS_INFRASTRUCTURE_FILES = [
     "settings.py",
     "worlds/RomlessUtils.py",
+    "worlds/alttp/EnemyShuffle.py",
 ]
 
 
