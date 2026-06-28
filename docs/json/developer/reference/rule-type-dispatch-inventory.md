@@ -91,18 +91,32 @@ AST path exists.
 
 ## 3. Display / editor / debug sites — FIX for completeness
 
-AtLeast can reach these (most dispatch on `rule.rule`); they don't corrupt access
-logic but will throw, mis-render, or mis-label.
+AtLeast can reach these — they render/edit/analyze **arbitrary** loaded or authored
+rules.json (any world), so AtLeast legitimately appears. They don't corrupt access
+logic but would mis-render or mis-label.
 
 | # | File:line | Dispatches on | Style | AtLeast? | Unknown behavior | Impact |
 |---|-----------|---------------|-------|----------|------------------|--------|
-| 9 | `frontend/modules/bounceDemo/verifyObstacles.js:46` (`evalRule`) | `rule?.rule` | `switch` | ✗ **[V]** | **THROWS** at `:53` | Bounce obstacle verifier crashes on an AtLeast gate. And/Or present — add beside. |
-| 10 | `frontend/modules/bounceDemo/generator.slow.test.js`, `zoneIntegration.test.js` | `rule.rule` | `switch` | ✗ **[A]** | THROWS | Same minimal `evalRule` in test harnesses; mirror the fix. |
 | 11 | `frontend/modules/commonUI/commonUI.js:2047` | `ruleName` (`rule.rule`) | `switch` | ✗ **[V]** | "[unhandled Rule Builder type]" text (`:2827`) | Rule tree UI shows AtLeast as unhandled; add a render case. |
 | 12 | `frontend/modules/apworldEditor/ruleTreeEditor.js:31,217` | `ruleName` | `switch` | ✗ **[V]** | `defaultShape`/render fall to null/default | AtLeast nodes not creatable/editable in the apworld editor. |
 | 13 | `frontend/modules/pathAnalyzer/pathAnalyzerLogic.js:726,842,889` | both `rule.type` & `rule.rule` | `switch`/`if` | ✗ **[V]** | nested-type detection only matches And/Or (`:847,850`) | AtLeast not recognized as a branch/nested node in path analysis. |
-| 14 | `frontend/modules/mazeRoom/mazeRoomVisualizer.js:654` & `mazeRoomUI.js:3756` (`describeRule`) | `rule.rule` | `if`-chain | ✗ **[V]** | `rule.rule ?? JSON.stringify` | AtLeast renders as bare name / raw JSON instead of `AtLeast(N: …)`. |
 | 15 | `frontend/modules/spoilerTest/testSpoilerRuleEvaluator.js:72` (`analyzeRuleTree`) | `ruleType` (both formats, `:44`) | `switch` | ✗ **[V]** | default `:269` logs name + JSON (display only; eval delegated elsewhere) | Spoiler-test tree log lacks an AtLeast branch; cosmetic. |
+
+### 3a. Substrate oracles — DO NOT add AtLeast (closed vocabulary)
+
+These were initially (mis)classified as §3 fixes and given AtLeast cases; the cases
+were **reverted** because AtLeast is structurally unreachable here. The bounce/maze
+procgen pipelines emit a **closed rule vocabulary `{True_, False_, Has, And, Or}`**
+(`minimalSetsToRule`, `composeAuthoredRule` → `Has` terms only, `compileAccessRule`).
+These `evalRule`/`describeRule` helpers are deliberate, dependency-free oracles over
+that closed set; `verifyObstacles.js`'s `default: throw` is an intentional **drift
+guard**. Adding AtLeast is dead code that dilutes the guard — leave them closed.
+
+| # | File:line | Role | Unknown behavior |
+|---|-----------|------|------------------|
+| 9 | `frontend/modules/bounceDemo/verifyObstacles.js:46` (`evalRule`) | logical-equivalence oracle | **THROWS** (drift guard — keep) |
+| 10 | `frontend/modules/bounceDemo/generator.slow.test.js`, `zoneIntegration.test.js` (`evalRule`) | independent winnability sweep oracles | THROWS (keep) |
+| 14 | `frontend/modules/mazeRoom/mazeRoomVisualizer.js` & `mazeRoomUI.js` (`describeRule`) | render compiled maze/obstacle rules (closed vocab) | graceful `rule.rule ?? JSON.stringify` |
 
 ---
 
