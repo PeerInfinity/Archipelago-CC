@@ -182,6 +182,11 @@ COMPONENTS: Dict[str, Component] = {
 # Default components to install
 DEFAULT_COMPONENTS = {
     "exporter",
+    "rule_builder",  # world_generator hard-imports fork rule_builder symbols
+                     # (BOOLEAN_RULE_TYPES, RuleWorldMixin, ...); vanilla AP's
+                     # rule_builder lacks them, so without this the installed
+                     # world_generator can't import and UT worldgen-mode
+                     # tracking fails. Replaces vanilla rule_builder/.
     "world_generator",
     "frontend",
     "docs",
