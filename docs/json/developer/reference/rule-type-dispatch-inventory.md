@@ -63,6 +63,7 @@ These see a native `{"rule":"AtLeast"}` and would mis-evaluate it.
 | 2 | `frontend/modules/shared/procgen/library.js:186` (`evaluateRuleAgainstInventory`) | `rule.rule` | `switch` | ✗ **[V]** | **Silent `false`** at `:222` ("treat as unsatisfied"). AtLeast → always unreachable in obstacle/forward sim. |
 | 3 | `frontend/modules/procgenPipeline/ruleRequirements.js:23` (`extractRec`) | `rule.rule` | `switch` | ✗ **[V]** | **Silent `{items:∅, exact:false}`** at `:74`. AtLeast → "no physical item requirement", geometry left wrongly open. |
 | 4 | `world_generator/_rule_expressions.py:40` (`_convert_rule_builder_format`) | `rb_rule` (the `rule` field) | `if`-chain | ✗ **[V]** | **Silent `return 'True_()'`** at **`:561`** — the most dangerous fallthrough. A regenerated world would make the AtLeast gate **always reachable**. |
+| 4b | `world_generator/rule_codegen.py:563` (`_convert_rule`'s `rb_to_type` map) | `rule['rule']` | dict map gate | ✗ **[V]** | **Hidden gate in front of #4:** `_convert_rule_builder_format` only runs for `rb_rule` names present in this map. A name not in the map skips the whole if-chain and hits the same `True_()` unknown fallback. AtLeast must be added **here too** (`'AtLeast': 'atleast'`), not just in #4. |
 
 `And`/`Or` are handled at all four (recurse over `rule.children`), so AtLeast slots
 in beside them. Count read pattern at these sites: `rule.count` at root (JS) /
