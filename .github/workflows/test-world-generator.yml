@@ -107,6 +107,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -226,6 +227,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
