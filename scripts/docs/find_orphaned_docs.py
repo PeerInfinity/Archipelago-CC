@@ -205,6 +205,15 @@ def main():
         for md_file in root.glob("*.md"):
             all_docs.add(md_file.resolve())
 
+    # Exclude vendored test-fixture docs — these are copies of third-party
+    # (e.g. Universal Tracker) docs that live under scripts/test/fixtures and are
+    # not part of this project's documentation tree. (The script-docs checker
+    # excludes scripts/test/fixtures for the same reason.)
+    all_docs = {
+        doc for doc in all_docs
+        if "scripts/test/fixtures" not in doc.as_posix()
+    }
+
     if not args.json:
         print("Finding orphaned documentation files...")
         print(f"  Checking {len(all_docs)} markdown files")

@@ -55,6 +55,8 @@ Design and implementation plans for features.
 | Plan | Description |
 |------|-------------|
 | [ALttP Bunny Rules Investigation](./docs/plans/alttp-bunny-rules-investigation.md) | Investigation into bunny state rules |
+| [APCalc Plan](./docs/plans/apcalc-plan.md) | APCalc game design and plan |
+| [APCalc V2 Design](./docs/plans/apcalc-v2-design.md) | APCalc v2 design |
 | [Bunny Rule Analyzer Support](./docs/plans/bunny-rule-analyzer-support.md) | Analyzer support for bunny rules |
 | [Bunny Rule Extraction Options](./docs/plans/bunny-rule-extraction-options.md) | Options for extracting bunny rules |
 | [Compare Rules Normalization Analysis](./docs/plans/compare-rules-normalization-analysis.md) | Rules normalization analysis |
@@ -65,9 +67,14 @@ Design and implementation plans for features.
 | [JtA Cost Adjustment Algorithm](./docs/plans/jta-cost-adjustment-algorithm.md) | JtA cost adjustment algorithm |
 | [JtA Queue UI Plan](./docs/plans/jta-queue-ui-plan.md) | JtA queue UI plan |
 | [JtA Strategy and APWorld Plan](./docs/plans/jta-strategy-and-apworld-plan.md) | JtA strategy and APWorld plan |
+| [Loops Module Untangling](./docs/plans/loops-module-untangling.md) | Untangling the loops module |
 | [Modules Panel Plan](./docs/plans/modules-panel-plan.md) | Modules panel plan |
 | [Multiworld Mystery Scenario Pack](./docs/plans/multiworld-mystery-scenario-pack.md) | Multiworld mystery scenario pack |
 | [Proof Modules Universal Graph](./docs/plans/proof-modules-universal-graph.md) | Proof modules universal graph |
+| [Rule Arg Upstream Naming Alignment](./docs/plans/rule-arg-upstream-naming-alignment.md) | Aligning rule arg names with upstream |
+| [Vibe Coding Simulator Plan](./docs/plans/vibe-coding-simulator-plan.md) | Vibe Coding Simulator design and plan |
+| [Vibe Coding Simulator UI Plan](./docs/plans/vibe-coding-simulator-ui-plan.md) | Vibe Coding Simulator UI plan |
+| [Vibe Coding Simulator V3 Mechanics](./docs/plans/vibe-coding-simulator-v3-mechanics.md) | Vibe Coding Simulator v3 mechanics |
 | [World Generator Game Handlers](./docs/plans/world-generator-game-handlers-plan.md) | Game-specific handler support |
 
 #### Partial Implementation
@@ -87,6 +94,7 @@ Design and implementation plans for features.
 |------|-------------|
 | [Analyzer Post-Process Improvements](./docs/plans/completed/analyzer-post-process-improvements.md) | Analyzer enhancements |
 | [Arithmetic Rules](./docs/plans/completed/arithmetic-rules-plan.md) | Arithmetic rule support |
+| [Client archipelago.js Migration](./docs/plans/completed/client-archipelago-js-migration.md) | Migrating the client to archipelago.js |
 | [Documentation Reorganization](./docs/plans/completed/documentation-reorganization-plan.md) | Documentation restructuring |
 | [Helper Generation](./docs/plans/completed/helper-generation-plan.md) | Auto-generating helpers |
 | [JSON Tools Installer APWorld](./docs/plans/completed/json-tools-installer-apworld-plan.md) | APWorld packaging |
@@ -114,10 +122,12 @@ Technical investigations and research documents:
 | [Exporter Simplification](./docs/investigations/exporter-simplification-analysis.md) | Simplification opportunities |
 | [Game-Specific Code Audit](./docs/investigations/game-specific-code-audit.md) | Game code audit |
 | [Player ID Slot Investigation](./docs/investigations/player_id_slot_investigation.md) | Player/slot ID analysis |
+| [UT v0.2.26 vs v0.2.27](./docs/investigations/ut-v0.2.26-vs-v0.2.27.md) | Universal Tracker version comparison |
 
 ### Release
 
 - **[Release Checklist](./docs/release-checklist.md)** — Release preparation checklist
+- **[Release Checklist (Autonomous)](./docs/release-checklist-autonomous.md)** — Agent-driven release checklist
 
 ### Announcements
 

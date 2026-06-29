@@ -2,16 +2,16 @@
 
 This report shows when each test result document was generated, how fresh the underlying data is, and how to regenerate each document.
 
-**Report Generated:** 2026-06-28 01:45:44 UTC
+**Report Generated:** 2026-06-29 19:37:53 UTC
 
 ## Summary
 
 - **Total Documents:** 46
 - **With Date Info:** 46
-- 🟢 **Fresh (0-1 days):** 25
+- 🟢 **Fresh (0-1 days):** 42
 - 🟡 **Recent (2-7 days):** 0
 - 🟠 **Aging (8-30 days):** 0
-- 🔴 **Stale (>30 days):** 21
+- 🔴 **Stale (>30 days):** 4
 
 ## Documentation Sync Status
 
@@ -19,10 +19,10 @@ Status of documentation coverage across the codebase:
 
 | Check | Coverage | Status | Command |
 |-------|----------|--------|--------|
-| Rule Types Documentation | 99.2% (132/133) | 🟡 1 gaps | `python scripts/docs/sync-rule-docs.py` |
-| Rule Types Test Coverage | 99.1% (116/117) | 🟡 1 gaps | `python scripts/docs/sync-rule-tests.py` |
-| Script Documentation | 85.2% (92/108) | 🟠 16 gaps | `python scripts/docs/sync-script-docs.py` |
-| Document Reachability | 97.2% (353/363) | 🟠 30 orphans | `python scripts/docs/find_orphaned_docs.py` |
+| Rule Types Documentation | 100.0% (133/133) | ✅ Complete | `python scripts/docs/sync-rule-docs.py` |
+| Rule Types Test Coverage | 100.0% (117/117) | ✅ Complete | `python scripts/docs/sync-rule-tests.py` |
+| Script Documentation | 100.0% (109/109) | ✅ Complete | `python scripts/docs/sync-script-docs.py` |
+| Document Reachability | 106.7% (384/360) | ✅ Complete | `python scripts/docs/find_orphaned_docs.py` |
 
 ## Workflow Overview
 
@@ -49,29 +49,29 @@ Runs spoiler, multiclient, and multiworld tests across all game templates.
 
 | Status | Mode | Test Result File | Document | Freshness |
 |--------|------|-----------------|----------|----------|
-| 🟢 | original / Minimal Spoilers | `scripts/output/spoiler-minimal/test-results.json` | [test-results-spoilers-minimal.md](./test-results-spoilers-minimal.md) | 2026-06-27 22:26 |
-| 🟢 | worldgen / Minimal Spoilers | `scripts/output/spoiler-minimal-worldgen/test-results.json` | [test-results-spoilers-minimal-worldgen.md](./test-results-spoilers-minimal-worldgen.md) | 2026-06-27 22:24 |
-| 🟢 | apworld / Minimal Spoilers | `scripts/output/spoiler-minimal-apworld/test-results.json` | [test-results-spoilers-minimal-apworld.md](./test-results-spoilers-minimal-apworld.md) | 2026-06-27 23:08 |
-| 🟢 | original / Full Spoilers | `scripts/output/spoiler-full/test-results.json` | [test-results-spoilers-full.md](./test-results-spoilers-full.md) | 2026-06-27 22:33 |
-| 🟢 | worldgen / Full Spoilers | `scripts/output/spoiler-full-worldgen/test-results.json` | [test-results-spoilers-full-worldgen.md](./test-results-spoilers-full-worldgen.md) | 2026-06-27 22:29 |
-| 🟢 | apworld / Full Spoilers | `scripts/output/spoiler-full-apworld/test-results.json` | [test-results-spoilers-full-apworld.md](./test-results-spoilers-full-apworld.md) | 2026-06-27 23:44 |
-| 🟢 | original / Multiclient | `scripts/output/multiclient/test-results.json` | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-06-27 22:46 |
-| 🟢 | worldgen / Multiclient | `scripts/output/multiclient-worldgen/test-results.json` | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-06-27 22:41 |
-| 🔴 | apworld / Multiclient | `scripts/output/multiclient-apworld/test-results.json` | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-03-22 01:12 (98 days) |
-| 🟢 | original / Multiworld | `scripts/output/multiworld/test-results.json` | [test-results-multiworld.md](./test-results-multiworld.md) | 2026-06-27 23:10 |
-| 🟢 | worldgen / Multiworld | `scripts/output/multiworld-worldgen/test-results.json` | [test-results-multiworld-worldgen.md](./test-results-multiworld-worldgen.md) | 2026-06-27 22:52 |
-| 🔴 | apworld / Multiworld | `scripts/output/multiworld-apworld/test-results.json` | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-03-22 02:21 (97 days) |
+| 🟢 | original / Minimal Spoilers | `scripts/output/spoiler-minimal/test-results.json` | [test-results-spoilers-minimal.md](./test-results-spoilers-minimal.md) | 2026-06-27 22:26 (1 day) |
+| 🟢 | worldgen / Minimal Spoilers | `scripts/output/spoiler-minimal-worldgen/test-results.json` | [test-results-spoilers-minimal-worldgen.md](./test-results-spoilers-minimal-worldgen.md) | 2026-06-27 22:24 (1 day) |
+| 🟢 | apworld / Minimal Spoilers | `scripts/output/spoiler-minimal-apworld/test-results.json` | [test-results-spoilers-minimal-apworld.md](./test-results-spoilers-minimal-apworld.md) | 2026-06-27 23:08 (1 day) |
+| 🟢 | original / Full Spoilers | `scripts/output/spoiler-full/test-results.json` | [test-results-spoilers-full.md](./test-results-spoilers-full.md) | 2026-06-27 22:33 (1 day) |
+| 🟢 | worldgen / Full Spoilers | `scripts/output/spoiler-full-worldgen/test-results.json` | [test-results-spoilers-full-worldgen.md](./test-results-spoilers-full-worldgen.md) | 2026-06-27 22:29 (1 day) |
+| 🟢 | apworld / Full Spoilers | `scripts/output/spoiler-full-apworld/test-results.json` | [test-results-spoilers-full-apworld.md](./test-results-spoilers-full-apworld.md) | 2026-06-27 23:44 (1 day) |
+| 🟢 | original / Multiclient | `scripts/output/multiclient/test-results.json` | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-06-27 22:46 (1 day) |
+| 🟢 | worldgen / Multiclient | `scripts/output/multiclient-worldgen/test-results.json` | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-06-27 22:41 (1 day) |
+| 🔴 | apworld / Multiclient | `scripts/output/multiclient-apworld/test-results.json` | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-03-22 01:12 (99 days) |
+| 🟢 | original / Multiworld | `scripts/output/multiworld/test-results.json` | [test-results-multiworld.md](./test-results-multiworld.md) | 2026-06-27 23:10 (1 day) |
+| 🟢 | worldgen / Multiworld | `scripts/output/multiworld-worldgen/test-results.json` | [test-results-multiworld-worldgen.md](./test-results-multiworld-worldgen.md) | 2026-06-27 22:52 (1 day) |
+| 🔴 | apworld / Multiworld | `scripts/output/multiworld-apworld/test-results.json` | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-03-22 02:21 (99 days) |
 
 **Derived documents** (generated from multiple result files):
 
 | Status | Document | Command | Freshness |
 |--------|----------|---------|-----------|
-| 🟢 | [test-results-summary.md](./test-results-summary.md) | `python scripts/docs/generate-test-chart.py --summary` | 2026-06-27 22:26 |
-| 🟢 | [test-results-summary-worldgen.md](./test-results-summary-worldgen.md) | `python scripts/docs/generate-test-chart.py --summary --worldgen` | 2026-06-27 22:24 |
-| 🟢 | [test-results-summary-apworld.md](./test-results-summary-apworld.md) | `python scripts/docs/generate-test-chart.py --summary --apworld` | 2026-06-27 23:08 |
-| 🟢 | [test-results-processing-times.md](./test-results-processing-times.md) | `python scripts/docs/generate-test-chart.py --processing-times` | 2026-06-27 22:26 |
-| 🟢 | [test-results-processing-times-worldgen.md](./test-results-processing-times-worldgen.md) | `python scripts/docs/generate-test-chart.py --processing-times --worldgen` | 2026-06-27 22:24 |
-| 🟢 | [test-results-processing-times-apworld.md](./test-results-processing-times-apworld.md) | `python scripts/docs/generate-test-chart.py --processing-times --apworld` | 2026-06-27 23:08 |
+| 🟢 | [test-results-summary.md](./test-results-summary.md) | `python scripts/docs/generate-test-chart.py --summary` | 2026-06-27 22:26 (1 day) |
+| 🟢 | [test-results-summary-worldgen.md](./test-results-summary-worldgen.md) | `python scripts/docs/generate-test-chart.py --summary --worldgen` | 2026-06-27 22:24 (1 day) |
+| 🟢 | [test-results-summary-apworld.md](./test-results-summary-apworld.md) | `python scripts/docs/generate-test-chart.py --summary --apworld` | 2026-06-27 23:08 (1 day) |
+| 🟢 | [test-results-processing-times.md](./test-results-processing-times.md) | `python scripts/docs/generate-test-chart.py --processing-times` | 2026-06-27 22:26 (1 day) |
+| 🟢 | [test-results-processing-times-worldgen.md](./test-results-processing-times-worldgen.md) | `python scripts/docs/generate-test-chart.py --processing-times --worldgen` | 2026-06-27 22:24 (1 day) |
+| 🟢 | [test-results-processing-times-apworld.md](./test-results-processing-times-apworld.md) | `python scripts/docs/generate-test-chart.py --processing-times --apworld` | 2026-06-27 23:08 (1 day) |
 
 ### [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml)
 
@@ -92,33 +92,33 @@ Fuzz tests Universal Tracker by generating random option combinations and tracki
 
 | Status | Mode | Test Result File | Document | Freshness |
 |--------|------|-----------------|----------|----------|
-| 🟢 | bundled / original | `scripts/output/ut-fuzz/test-results-original-fixed-seed.json` | [test-results-ut-fuzz-original.md](./test-results-ut-fuzz-original.md) | 2026-06-26 17:57 (1 day) |
-| 🔴 | bundled / original_seeded | `scripts/output/ut-fuzz/test-results-original_seeded-fixed-seed.json` | [test-results-ut-fuzz-original_seeded.md](./test-results-ut-fuzz-original_seeded.md) | 2026-03-24 03:55 (95 days) |
-| 🟢 | bundled / worldgen | `scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json` | [test-results-ut-fuzz-worldgen.md](./test-results-ut-fuzz-worldgen.md) | 2026-06-26 17:57 (1 day) |
-| 🔴 | bundled / hybrid | `scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json` | [test-results-ut-fuzz-hybrid.md](./test-results-ut-fuzz-hybrid.md) | 2026-03-21 18:02 (98 days) |
-| 🟢 | bundled / pickle | `scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json` | [test-results-ut-fuzz-pickle.md](./test-results-ut-fuzz-pickle.md) | 2026-06-27 23:54 |
-| 🔴 | apworlds / original | `scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json` | [test-results-ut-fuzz-apworlds-original.md](./test-results-ut-fuzz-apworlds-original.md) | 2026-03-28 03:49 (91 days) |
-| 🔴 | apworlds / original_seeded | `scripts/output/ut-fuzz/test-results-apworlds-original_seeded-fixed-seed.json` | [test-results-ut-fuzz-apworlds-original_seeded.md](./test-results-ut-fuzz-apworlds-original_seeded.md) | 2026-03-28 04:39 (91 days) |
-| 🔴 | apworlds / worldgen | `scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json` | [test-results-ut-fuzz-apworlds-worldgen.md](./test-results-ut-fuzz-apworlds-worldgen.md) | 2026-03-28 03:14 (91 days) |
-| 🔴 | apworlds / hybrid | `scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json` | [test-results-ut-fuzz-apworlds-hybrid.md](./test-results-ut-fuzz-apworlds-hybrid.md) | 2026-03-28 04:43 (91 days) |
-| 🔴 | apworlds / pickle | `scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json` | [test-results-ut-fuzz-apworlds-pickle.md](./test-results-ut-fuzz-apworlds-pickle.md) | 2026-03-28 03:52 (91 days) |
+| 🟢 | bundled / original | `scripts/output/ut-fuzz/test-results-original-fixed-seed.json` | [test-results-ut-fuzz-original.md](./test-results-ut-fuzz-original.md) | 2026-06-28 16:55 (1 day) |
+| 🟢 | bundled / original_seeded | `scripts/output/ut-fuzz/test-results-original_seeded-fixed-seed.json` | [test-results-ut-fuzz-original_seeded.md](./test-results-ut-fuzz-original_seeded.md) | 2026-06-28 18:06 (1 day) |
+| 🟢 | bundled / worldgen | `scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json` | [test-results-ut-fuzz-worldgen.md](./test-results-ut-fuzz-worldgen.md) | 2026-06-28 16:56 (1 day) |
+| 🟢 | bundled / hybrid | `scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json` | [test-results-ut-fuzz-hybrid.md](./test-results-ut-fuzz-hybrid.md) | 2026-06-28 17:04 (1 day) |
+| 🟢 | bundled / pickle | `scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json` | [test-results-ut-fuzz-pickle.md](./test-results-ut-fuzz-pickle.md) | 2026-06-28 16:54 (1 day) |
+| 🟢 | apworlds / original | `scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json` | [test-results-ut-fuzz-apworlds-original.md](./test-results-ut-fuzz-apworlds-original.md) | 2026-06-28 18:08 (1 day) |
+| 🟢 | apworlds / original_seeded | `scripts/output/ut-fuzz/test-results-apworlds-original_seeded-fixed-seed.json` | [test-results-ut-fuzz-apworlds-original_seeded.md](./test-results-ut-fuzz-apworlds-original_seeded.md) | 2026-06-28 18:07 (1 day) |
+| 🟢 | apworlds / worldgen | `scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json` | [test-results-ut-fuzz-apworlds-worldgen.md](./test-results-ut-fuzz-apworlds-worldgen.md) | 2026-06-28 18:16 (1 day) |
+| 🟢 | apworlds / hybrid | `scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json` | [test-results-ut-fuzz-apworlds-hybrid.md](./test-results-ut-fuzz-apworlds-hybrid.md) | 2026-06-28 18:30 (1 day) |
+| 🟢 | apworlds / pickle | `scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json` | [test-results-ut-fuzz-apworlds-pickle.md](./test-results-ut-fuzz-apworlds-pickle.md) | 2026-06-28 18:07 (1 day) |
 
 **Derived documents** (generated from multiple result files):
 
 | Status | Document | Command | Freshness |
 |--------|----------|---------|-----------|
-| 🔴 | [test-results-ut-fuzz-comparison-original-original_seeded.md](./test-results-ut-fuzz-comparison-original-original_seeded.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-03-24 03:55 (95 days) |
-| 🟢 | [test-results-ut-fuzz-comparison-original-worldgen.md](./test-results-ut-fuzz-comparison-original-worldgen.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-26 17:57 (1 day) |
-| 🔴 | [test-results-ut-fuzz-comparison-original-hybrid.md](./test-results-ut-fuzz-comparison-original-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-03-21 18:02 (98 days) |
-| 🟢 | [test-results-ut-fuzz-comparison-original-pickle.md](./test-results-ut-fuzz-comparison-original-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-26 17:57 (1 day) |
-| 🔴 | [test-results-ut-fuzz-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-03-21 18:02 (98 days) |
-| 🟢 | [test-results-ut-fuzz-comparison-worldgen-pickle.md](./test-results-ut-fuzz-comparison-worldgen-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-26 17:57 (1 day) |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md](./test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-03-28 03:49 (91 days) |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-worldgen.md](./test-results-ut-fuzz-apworlds-comparison-original-worldgen.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-03-28 03:14 (91 days) |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-03-28 03:49 (91 days) |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-pickle.md](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-03-28 03:49 (91 days) |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-03-28 03:14 (91 days) |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-03-28 03:14 (91 days) |
+| 🟢 | [test-results-ut-fuzz-comparison-original-original_seeded.md](./test-results-ut-fuzz-comparison-original-original_seeded.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-28 16:55 (1 day) |
+| 🟢 | [test-results-ut-fuzz-comparison-original-worldgen.md](./test-results-ut-fuzz-comparison-original-worldgen.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-28 16:55 (1 day) |
+| 🟢 | [test-results-ut-fuzz-comparison-original-hybrid.md](./test-results-ut-fuzz-comparison-original-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-28 16:55 (1 day) |
+| 🟢 | [test-results-ut-fuzz-comparison-original-pickle.md](./test-results-ut-fuzz-comparison-original-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-28 16:54 (1 day) |
+| 🟢 | [test-results-ut-fuzz-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-28 16:56 (1 day) |
+| 🟢 | [test-results-ut-fuzz-comparison-worldgen-pickle.md](./test-results-ut-fuzz-comparison-worldgen-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py` | 2026-06-28 16:54 (1 day) |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md](./test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-06-28 18:07 (1 day) |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-worldgen.md](./test-results-ut-fuzz-apworlds-comparison-original-worldgen.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-06-28 18:08 (1 day) |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-06-28 18:08 (1 day) |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-pickle.md](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-06-28 18:07 (1 day) |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-06-28 18:16 (1 day) |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md) | `python scripts/docs/compare_ut_fuzz_results.py --apworld` | 2026-06-28 18:07 (1 day) |
 
 ### [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml)
 
@@ -139,15 +139,15 @@ Fuzz tests by generating random seeds and running spoiler verification on them.
 
 | Status | Mode | Test Result File | Document | Freshness |
 |--------|------|-----------------|----------|----------|
-| 🟢 | bundled | `scripts/output/spoiler-fuzz/test-results-fixed-seed.json` | [test-results-spoiler-fuzz.md](./test-results-spoiler-fuzz.md) | 2026-06-28 01:38 |
-| 🔴 | apworlds | `scripts/output/spoiler-fuzz/test-results-apworlds-fixed-seed.json` | [test-results-spoiler-fuzz-apworlds.md](./test-results-spoiler-fuzz-apworlds.md) | 2026-03-22 03:15 (97 days) |
+| 🟢 | bundled | `scripts/output/spoiler-fuzz/test-results-fixed-seed.json` | [test-results-spoiler-fuzz.md](./test-results-spoiler-fuzz.md) | 2026-06-28 01:38 (1 day) |
+| 🔴 | apworlds | `scripts/output/spoiler-fuzz/test-results-apworlds-fixed-seed.json` | [test-results-spoiler-fuzz-apworlds.md](./test-results-spoiler-fuzz-apworlds.md) | 2026-03-22 03:15 (99 days) |
 
 **Derived documents** (generated from multiple result files):
 
 | Status | Document | Command | Freshness |
 |--------|----------|---------|-----------|
-| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | `python scripts/docs/generate_fuzz_summary_chart.py` | 2026-06-27 23:55 |
-| 🔴 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` | 2026-03-28 03:14 (91 days) |
+| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | `python scripts/docs/generate_fuzz_summary_chart.py` | 2026-06-28 16:56 (1 day) |
+| 🟢 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` | 2026-06-28 18:16 (1 day) |
 
 ### [Test World Generator](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-world-generator.yml)
 
@@ -166,59 +166,59 @@ Tests the world generator by generating worlds from rules and running spoiler te
 
 | Status | Mode | Test Result File | Document | Freshness |
 |--------|------|-----------------|----------|----------|
-| 🟢 | canonical | `scripts/output/world-generator/test-results-canonical.json` | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-06-28 01:28 |
-| 🟢 | random | `scripts/output/world-generator/test-results-random.json` | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-06-28 01:28 |
+| 🟢 | canonical | `scripts/output/world-generator/test-results-canonical.json` | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-06-28 01:28 (1 day) |
+| 🟢 | random | `scripts/output/world-generator/test-results-random.json` | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-06-28 01:28 (1 day) |
 
 ## Document Freshness
 
 | Status | Document | Source Data | Days Old | Workflow | Local Command |
 |--------|----------|-------------|----------|----------|---------------|
-| 🔴 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | 2026-03-28 03:14 | 91 days | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` |
-| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-06-27 23:55 |  | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
-| 🔴 | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-03-22 01:12 | 98 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --apworld -p` |
-| 🟢 | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-06-27 22:41 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --worldgen -p` |
-| 🟢 | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-06-27 22:46 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient -p` |
-| 🔴 | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-03-22 02:21 | 97 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --apworld -p` |
-| 🔴 | [test-results-multiworld-ut-fuzz.md](./test-results-multiworld-ut-fuzz.md) | 2026-03-22 03:19 | 97 days | _Local only_ | _Unknown_ |
-| 🟢 | [test-results-multiworld-worldgen.md](./test-results-multiworld-worldgen.md) | 2026-06-27 22:52 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --worldgen -p` |
-| 🟢 | [test-results-multiworld.md](./test-results-multiworld.md) | 2026-06-27 23:10 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld -p` |
-| 🟢 | [test-results-processing-times-apworld.md](./test-results-processing-times-apworld.md) | 2026-06-27 23:08 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times --apworld` |
-| 🟢 | [test-results-processing-times-worldgen.md](./test-results-processing-times-worldgen.md) | 2026-06-27 22:24 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times --worldgen` |
-| 🟢 | [test-results-processing-times.md](./test-results-processing-times.md) | 2026-06-27 22:26 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times` |
-| 🔴 | [test-results-spoiler-fuzz-apworlds.md](./test-results-spoiler-fuzz-apworlds.md) | 2026-03-22 03:15 | 97 days | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py --apworld -p` |
-| 🟢 | [test-results-spoiler-fuzz.md](./test-results-spoiler-fuzz.md) | 2026-06-28 01:38 |  | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py -p` |
-| 🟢 | [test-results-spoilers-full-apworld.md](./test-results-spoilers-full-apworld.md) | 2026-06-27 23:44 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers --apworld -p` |
-| 🟢 | [test-results-spoilers-full-worldgen.md](./test-results-spoilers-full-worldgen.md) | 2026-06-27 22:29 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers --worldgen -p` |
-| 🟢 | [test-results-spoilers-full.md](./test-results-spoilers-full.md) | 2026-06-27 22:33 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers -p` |
-| 🟢 | [test-results-spoilers-minimal-apworld.md](./test-results-spoilers-minimal-apworld.md) | 2026-06-27 23:08 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --minimal-spoilers --apworld -p` |
-| 🟢 | [test-results-spoilers-minimal-worldgen.md](./test-results-spoilers-minimal-worldgen.md) | 2026-06-27 22:24 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --minimal-spoilers --worldgen -p` |
-| 🟢 | [test-results-spoilers-minimal.md](./test-results-spoilers-minimal.md) | 2026-06-27 22:26 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --minimal-spoilers -p` |
-| 🟢 | [test-results-summary-apworld.md](./test-results-summary-apworld.md) | 2026-06-27 23:08 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --summary --apworld` |
-| 🟢 | [test-results-summary-worldgen.md](./test-results-summary-worldgen.md) | 2026-06-27 22:24 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --summary --worldgen` |
-| 🟢 | [test-results-summary.md](./test-results-summary.md) | 2026-06-27 22:26 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --summary` |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | 2026-03-28 03:49 | 91 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md](./test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md) | 2026-03-28 03:49 | 91 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-pickle.md](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | 2026-03-28 03:49 | 91 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-original-worldgen.md](./test-results-ut-fuzz-apworlds-comparison-original-worldgen.md) | 2026-03-28 03:14 | 91 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md) | 2026-03-28 03:14 | 91 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
-| 🔴 | [test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md) | 2026-03-28 03:14 | 91 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
-| 🔴 | [test-results-ut-fuzz-apworlds-hybrid.md](./test-results-ut-fuzz-apworlds-hybrid.md) | 2026-03-28 04:43 | 91 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --hybrid` |
-| 🔴 | [test-results-ut-fuzz-apworlds-original.md](./test-results-ut-fuzz-apworlds-original.md) | 2026-03-28 03:49 | 91 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --original` |
-| 🔴 | [test-results-ut-fuzz-apworlds-original_seeded.md](./test-results-ut-fuzz-apworlds-original_seeded.md) | 2026-03-28 04:39 | 91 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --original_seeded` |
-| 🔴 | [test-results-ut-fuzz-apworlds-pickle.md](./test-results-ut-fuzz-apworlds-pickle.md) | 2026-03-28 03:52 | 91 days | _Local only_ | _Unknown_ |
-| 🔴 | [test-results-ut-fuzz-apworlds-worldgen.md](./test-results-ut-fuzz-apworlds-worldgen.md) | 2026-03-28 03:14 | 91 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --worldgen` |
-| 🔴 | [test-results-ut-fuzz-comparison-original-hybrid.md](./test-results-ut-fuzz-comparison-original-hybrid.md) | 2026-03-21 18:02 | 98 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🔴 | [test-results-ut-fuzz-comparison-original-original_seeded.md](./test-results-ut-fuzz-comparison-original-original_seeded.md) | 2026-03-24 03:55 | 95 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🟢 | [test-results-ut-fuzz-comparison-original-pickle.md](./test-results-ut-fuzz-comparison-original-pickle.md) | 2026-06-26 17:57 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🟢 | [test-results-ut-fuzz-comparison-original-worldgen.md](./test-results-ut-fuzz-comparison-original-worldgen.md) | 2026-06-26 17:57 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🔴 | [test-results-ut-fuzz-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | 2026-03-21 18:02 | 98 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🟢 | [test-results-ut-fuzz-comparison-worldgen-pickle.md](./test-results-ut-fuzz-comparison-worldgen-pickle.md) | 2026-06-26 17:57 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🔴 | [test-results-ut-fuzz-hybrid.md](./test-results-ut-fuzz-hybrid.md) | 2026-03-21 18:02 | 98 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --hybrid` |
-| 🟢 | [test-results-ut-fuzz-original.md](./test-results-ut-fuzz-original.md) | 2026-06-26 17:57 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --original` |
-| 🔴 | [test-results-ut-fuzz-original_seeded.md](./test-results-ut-fuzz-original_seeded.md) | 2026-03-24 03:55 | 95 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --original_seeded` |
-| 🟢 | [test-results-ut-fuzz-pickle.md](./test-results-ut-fuzz-pickle.md) | 2026-06-27 23:54 |  | _Local only_ | _Unknown_ |
-| 🟢 | [test-results-ut-fuzz-worldgen.md](./test-results-ut-fuzz-worldgen.md) | 2026-06-26 17:57 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --worldgen` |
-| 🟢 | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-06-28 01:28 |  | [Test World Generator](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-world-generator.yml) | `python scripts/docs/generate-world-generator-report.py` |
+| 🟢 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | 2026-06-28 18:16 | 1 day | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` |
+| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-06-28 16:56 | 1 day | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
+| 🔴 | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-03-22 01:12 | 99 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --apworld -p` |
+| 🟢 | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-06-27 22:41 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --worldgen -p` |
+| 🟢 | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-06-27 22:46 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient -p` |
+| 🔴 | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-03-22 02:21 | 99 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --apworld -p` |
+| 🔴 | [test-results-multiworld-ut-fuzz.md](./test-results-multiworld-ut-fuzz.md) | 2026-03-22 03:19 | 99 days | _Local only_ | _Unknown_ |
+| 🟢 | [test-results-multiworld-worldgen.md](./test-results-multiworld-worldgen.md) | 2026-06-27 22:52 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --worldgen -p` |
+| 🟢 | [test-results-multiworld.md](./test-results-multiworld.md) | 2026-06-27 23:10 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld -p` |
+| 🟢 | [test-results-processing-times-apworld.md](./test-results-processing-times-apworld.md) | 2026-06-27 23:08 | 1 day | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times --apworld` |
+| 🟢 | [test-results-processing-times-worldgen.md](./test-results-processing-times-worldgen.md) | 2026-06-27 22:24 | 1 day | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times --worldgen` |
+| 🟢 | [test-results-processing-times.md](./test-results-processing-times.md) | 2026-06-27 22:26 | 1 day | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times` |
+| 🔴 | [test-results-spoiler-fuzz-apworlds.md](./test-results-spoiler-fuzz-apworlds.md) | 2026-03-22 03:15 | 99 days | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py --apworld -p` |
+| 🟢 | [test-results-spoiler-fuzz.md](./test-results-spoiler-fuzz.md) | 2026-06-28 01:38 | 1 day | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py -p` |
+| 🟢 | [test-results-spoilers-full-apworld.md](./test-results-spoilers-full-apworld.md) | 2026-06-27 23:44 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers --apworld -p` |
+| 🟢 | [test-results-spoilers-full-worldgen.md](./test-results-spoilers-full-worldgen.md) | 2026-06-27 22:29 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers --worldgen -p` |
+| 🟢 | [test-results-spoilers-full.md](./test-results-spoilers-full.md) | 2026-06-27 22:33 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers -p` |
+| 🟢 | [test-results-spoilers-minimal-apworld.md](./test-results-spoilers-minimal-apworld.md) | 2026-06-27 23:08 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --minimal-spoilers --apworld -p` |
+| 🟢 | [test-results-spoilers-minimal-worldgen.md](./test-results-spoilers-minimal-worldgen.md) | 2026-06-27 22:24 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --minimal-spoilers --worldgen -p` |
+| 🟢 | [test-results-spoilers-minimal.md](./test-results-spoilers-minimal.md) | 2026-06-27 22:26 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --minimal-spoilers -p` |
+| 🟢 | [test-results-summary-apworld.md](./test-results-summary-apworld.md) | 2026-06-27 23:08 | 1 day | _Local only_ | `python scripts/docs/generate-test-chart.py --summary --apworld` |
+| 🟢 | [test-results-summary-worldgen.md](./test-results-summary-worldgen.md) | 2026-06-27 22:24 | 1 day | _Local only_ | `python scripts/docs/generate-test-chart.py --summary --worldgen` |
+| 🟢 | [test-results-summary.md](./test-results-summary.md) | 2026-06-27 22:26 | 1 day | _Local only_ | `python scripts/docs/generate-test-chart.py --summary` |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | 2026-06-28 18:08 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md](./test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md) | 2026-06-28 18:07 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-pickle.md](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | 2026-06-28 18:07 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-original-worldgen.md](./test-results-ut-fuzz-apworlds-comparison-original-worldgen.md) | 2026-06-28 18:08 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md) | 2026-06-28 18:16 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
+| 🟢 | [test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md](./test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md) | 2026-06-28 18:07 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py --apworld` |
+| 🟢 | [test-results-ut-fuzz-apworlds-hybrid.md](./test-results-ut-fuzz-apworlds-hybrid.md) | 2026-06-28 18:30 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --hybrid` |
+| 🟢 | [test-results-ut-fuzz-apworlds-original.md](./test-results-ut-fuzz-apworlds-original.md) | 2026-06-28 18:08 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --original` |
+| 🟢 | [test-results-ut-fuzz-apworlds-original_seeded.md](./test-results-ut-fuzz-apworlds-original_seeded.md) | 2026-06-28 18:07 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --original_seeded` |
+| 🟢 | [test-results-ut-fuzz-apworlds-pickle.md](./test-results-ut-fuzz-apworlds-pickle.md) | 2026-06-28 18:07 | 1 day | _Local only_ | _Unknown_ |
+| 🟢 | [test-results-ut-fuzz-apworlds-worldgen.md](./test-results-ut-fuzz-apworlds-worldgen.md) | 2026-06-28 18:16 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --apworld --worldgen` |
+| 🟢 | [test-results-ut-fuzz-comparison-original-hybrid.md](./test-results-ut-fuzz-comparison-original-hybrid.md) | 2026-06-28 16:55 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-comparison-original-original_seeded.md](./test-results-ut-fuzz-comparison-original-original_seeded.md) | 2026-06-28 16:55 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-comparison-original-pickle.md](./test-results-ut-fuzz-comparison-original-pickle.md) | 2026-06-28 16:54 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-comparison-original-worldgen.md](./test-results-ut-fuzz-comparison-original-worldgen.md) | 2026-06-28 16:55 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | 2026-06-28 16:56 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-comparison-worldgen-pickle.md](./test-results-ut-fuzz-comparison-worldgen-pickle.md) | 2026-06-28 16:54 | 1 day | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-hybrid.md](./test-results-ut-fuzz-hybrid.md) | 2026-06-28 17:04 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --hybrid` |
+| 🟢 | [test-results-ut-fuzz-original.md](./test-results-ut-fuzz-original.md) | 2026-06-28 16:55 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --original` |
+| 🟢 | [test-results-ut-fuzz-original_seeded.md](./test-results-ut-fuzz-original_seeded.md) | 2026-06-28 18:06 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --original_seeded` |
+| 🟢 | [test-results-ut-fuzz-pickle.md](./test-results-ut-fuzz-pickle.md) | 2026-06-28 16:54 | 1 day | _Local only_ | _Unknown_ |
+| 🟢 | [test-results-ut-fuzz-worldgen.md](./test-results-ut-fuzz-worldgen.md) | 2026-06-28 16:56 | 1 day | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --worldgen` |
+| 🟢 | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-06-28 01:28 | 1 day | [Test World Generator](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-world-generator.yml) | `python scripts/docs/generate-world-generator-report.py` |
 
 ## Regeneration Commands
 

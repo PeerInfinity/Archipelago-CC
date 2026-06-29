@@ -71,6 +71,10 @@ These changes are not included in the `.diff` files because of their size. Inste
 
 Note: `rule_builder/cached_world.py` and `rule_builder/options.py` are **unmodified** from upstream.
 
+### 9. UT Pickle Mode Modifications (documented separately)
+Changes to Universal Tracker enabling **pickle mode** (tracking from a serialized multiworld pickle) are documented in their own subdirectory rather than the `.diff` files above:
+- **[ut_pickle/](./ut_pickle/README.md)** - Overview of the UT pickle-mode changes, the line-by-line [diff explanation](./ut_pickle/diff-explanation.md), and the [test script](./ut_pickle/test-script.md)
+
 ## How to Use These Diffs
 
 ### Viewing Changes
