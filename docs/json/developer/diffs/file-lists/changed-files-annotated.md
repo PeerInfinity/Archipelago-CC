@@ -82,7 +82,13 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
   [Rule Builder Modifications](../rule-builder/rule-builder-modifications.md)
 
-## `worlds/alttp/` (2 files)
+## `worlds/alttp/` (3 files)
+
+- `worlds/alttp/EnemyShuffle.py`
+
+  Skip the enemizer base-ROM read in `generate_enemy_shuffle_state()` when the ROM is absent (`check_rom_available`); enemy shuffle is a ROM-only effect, so the state stays `None`.
+
+  [Diff](../diff-files/world-init-files.diff)
 
 - `worlds/alttp/Rules.py`
 
@@ -184,4 +190,4 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
 ---
 
-**Total:** 27 changed files
+**Total:** 28 changed files

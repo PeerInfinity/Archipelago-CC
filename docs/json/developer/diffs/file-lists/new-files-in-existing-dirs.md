@@ -2,9 +2,10 @@
 
 Files added to directories that already existed in upstream commit `e6e0bc30`.
 
-## Root Directory (12 files)
+## Root Directory (13 files)
 
 ```
+.flake8
 .gitmodules
 CLAUDE.md
 conftest.py
@@ -69,4 +70,4 @@ worlds/RomlessUtils.py
 
 ---
 
-**Total:** 35 new files in existing directories
+**Total:** 36 new files in existing directories

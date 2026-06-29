@@ -36,9 +36,10 @@ test/general/test_reachability.py
 test/general/test_rule_builder.py
 ```
 
-## `worlds/alttp/` (2 files)
+## `worlds/alttp/` (3 files)
 
 ```
+worlds/alttp/EnemyShuffle.py
 worlds/alttp/Rules.py
 worlds/alttp/__init__.py
 ```
@@ -106,4 +107,4 @@ worlds/yoshisisland/__init__.py
 
 ---
 
-**Total:** 27 changed files
+**Total:** 28 changed files

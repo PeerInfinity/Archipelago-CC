@@ -4,13 +4,13 @@ This directory contains diff files showing changes made to this repository compa
 
 ## Available Diff Files
 
-### 1. `diff-files/core-files.diff` (41 lines)
+### 1. `diff-files/core-files.diff` (43 lines)
 Changes to the main Archipelago core files:
 - **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section
 
 This is the only core file modification. All other core files (`BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `diff-files/config-files.diff` (413 lines)
+### 2. `diff-files/config-files.diff` (465 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)
@@ -20,7 +20,7 @@ Changes to configuration and repository setup files:
 
 These files configure the development environment and CI/CD pipeline. Note: `requirements.txt` matches upstream exactly.
 
-### 3. `diff-files/alttp-bunny-rules.diff` (25 lines)
+### 3. `diff-files/alttp-bunny-rules.diff` (27 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
 - **worlds/alttp/Rules.py** - Fixed Python late binding bug in superbunny path lambdas (pre-compute `path_rule` outside lambda, use default argument binding)
 
@@ -38,13 +38,14 @@ Changes to upstream test files for fork compatibility:
 - **test/general/test_items.py** - Added `DLCQuest` coins to item exclusion dict; added logic to propagate exclusions from base games to WorldGen variant worlds (e.g., "A Link to the Past WorldGen" inherits "A Link to the Past" exclusions).
 - **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic as test_items.py.
 
-### 6. `diff-files/test-rule-builder-fork.diff` (635 lines)
+### 6. `diff-files/test-rule-builder-fork.diff` (642 lines)
 Fork-only additions to the upstream Rule Builder test file:
 - **test/general/test_rule_builder.py** - Added ~600 lines of evaluation tests for fork-only rule types: CountItem, CountFromList, CountGroup, Compare, Arithmetic, MinValue, MaxValue, WeightedSum, UniqueCount, OptionValue, EntranceAccessRuleCall, and ASTRule. These tests are appended after the existing upstream tests.
 
-### 7. `diff-files/world-init-files.diff` (372 lines)
-Changes to world implementation initialization files to support `skip_required_files` mode:
+### 7. `diff-files/world-init-files.diff` (392 lines)
+Changes to world implementation files to support `skip_required_files` (ROM-less) mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
+- **worlds/alttp/EnemyShuffle.py** - A Link to the Past (skip the enemizer base-ROM read in `generate_enemy_shuffle_state` when the ROM is absent; enemy shuffle is a ROM-only effect, so the state stays `None`)
 - **worlds/ff1/__init__.py** - Final Fantasy I
 - **worlds/lufia2ac/__init__.py** - Lufia II Ancient Cave
 - **worlds/mmbn3/__init__.py** - Mega Man Battle Network 3
@@ -54,7 +55,7 @@ Changes to world implementation initialization files to support `skip_required_f
 - **worlds/tloz/__init__.py** - The Legend of Zelda
 - **worlds/yoshisisland/__init__.py** - Yoshi's Island
 
-These modifications allow world generation to proceed without ROM files when `skip_required_files` is enabled, enabling JSON export for games without requiring their base ROMs. The romless world patches import `check_rom_available` from `worlds.RomlessUtils` (a new file in this repository).
+These modifications allow world generation to proceed without ROM files when `skip_required_files` is enabled, enabling JSON export for games without requiring their base ROMs. The romless world patches import `check_rom_available` from `worlds.RomlessUtils` (a new file in this repository). The JSON Tools installer ships these via its `romless_patches` component (applied with `--apply-romless-patches`).
 
 ### 8. Rule Builder Modifications (documented separately)
 Changes to the Rule Builder module (`rule_builder/`), which exists in upstream since PR #5048 was merged:
@@ -95,7 +96,7 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 ## Notes
 
 - These diffs are generated against upstream commit `e6e0bc30` (Archipelago 0.6.8)
-- Total lines changed across diff files: 1,655 lines (43 + 465 + 27 + 44 + 62 + 642 + 372)
+- Total lines changed across diff files: 1,675 lines (43 + 465 + 27 + 44 + 62 + 642 + 392)
 - Additionally, 2 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
@@ -151,13 +152,25 @@ python -m worlds.json_tools_installer status
 | Component | Description | Default |
 |-----------|-------------|---------|
 | `exporter` | Export game logic to JSON format | Yes |
-| `rule_builder` | Build access rules from JSON definitions | Yes |
+| `rule_builder` | Build access rules from JSON definitions (fork overlay; replaces vanilla `rule_builder/` — required by `world_generator`) | Yes |
 | `world_generator` | Generate world packages from JSON rules | Yes |
 | `frontend` | Web UI for viewing game logic (excludes presets) | Yes |
 | `presets` | Pre-generated game data (~75MB, requires frontend) | No |
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
-| `romless_patches` | Patched world files for generation without ROMs | Yes |
+| `romless_patches` | Patched world files for generation without ROMs (applied with `--apply-romless-patches`) | Yes |
+| `upstream_fixes` | Fork fixes for upstream world bugs overlaid onto vanilla worlds (ALttP bunny rules, shapez UT accuracy, lufia2ac/landstalker determinism) — opt-in via `--upstream-fixes` | No |
+| `tracker` | Universal Tracker integration world | Yes |
+| `testing` | Test scripts/data | Yes |
+| `demo_worlds` | Demo/example custom worlds | No |
+| `worldgen_worlds` | Auto-generated `*_worldgen` world packages | No |
+
+> `upstream_fixes` is intentionally **not** a default component: it overlays
+> fork-modified copies of upstream world files, so it stays opt-in (or included by
+> `--all`) until those files are reviewed against the current upstream versions.
+> The fixes it carries are catalogued in
+> [upstream-bugs/](../../upstream-bugs/README.md) and `world-minor-fixes.diff` /
+> `alttp-bunny-rules.diff` above.
 
 ### Version Sources
 

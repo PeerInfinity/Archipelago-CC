@@ -26,7 +26,20 @@ This directory documents bugs discovered in the upstream Archipelago repository 
 
 | Bug | Status | Description |
 |-----|--------|-------------|
+| [Non-Deterministic Hints](./landstalker/nondeterministic-hints.md) | Fixed in fork | `list(set(hint_texts))` before the seeded shuffle gives unstable ordering, so the same seed assigns different hints to NPCs |
 | [Memory Leak](./landstalker-memory-leak.md) | False alarm | Initially thought to be upstream bug, but was fork-specific (exporter called `fill_slot_data` after cleanup) |
+
+### Lufia II Ancient Cave
+
+| Bug | Status | Description |
+|-----|--------|-------------|
+| [Non-Deterministic Boss Groups](./lufia2ac/nondeterministic-boss-groups.md) | Fixed in fork | `Boss.extra_options` built from a `set`, so `enumerate()` assigns unstable integer keys to random-group names → non-deterministic JSON export |
+
+### shapez
+
+| Bug | Status | Description |
+|-----|--------|-------------|
+| [UT Balancer Accuracy](./shapez/ut-balancer-accuracy.md) | Fixed in fork | UT regen force-cleared `early_balancer_tunnel_and_trash`, making UT region logic more permissive than the server |
 
 ## Document Types
 
