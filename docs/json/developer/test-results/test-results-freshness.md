@@ -2,7 +2,7 @@
 
 This report shows when each test result document was generated, how fresh the underlying data is, and how to regenerate each document.
 
-**Report Generated:** 2026-06-29 19:37:53 UTC
+**Report Generated:** 2026-06-29 19:40:59 UTC
 
 ## Summary
 
@@ -22,7 +22,7 @@ Status of documentation coverage across the codebase:
 | Rule Types Documentation | 100.0% (133/133) | ✅ Complete | `python scripts/docs/sync-rule-docs.py` |
 | Rule Types Test Coverage | 100.0% (117/117) | ✅ Complete | `python scripts/docs/sync-rule-tests.py` |
 | Script Documentation | 100.0% (109/109) | ✅ Complete | `python scripts/docs/sync-script-docs.py` |
-| Document Reachability | 106.7% (384/360) | ✅ Complete | `python scripts/docs/find_orphaned_docs.py` |
+| Document Reachability | 100.0% (360/360) | ✅ Complete | `python scripts/docs/find_orphaned_docs.py` |
 
 ## Workflow Overview
 
