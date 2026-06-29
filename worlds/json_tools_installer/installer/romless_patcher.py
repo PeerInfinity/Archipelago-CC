@@ -43,6 +43,9 @@ ROMLESS_WORLDS = [
 # - worlds/alttp/EnemyShuffle.py: world-specific romless patch — skips the
 #   enemizer base-ROM read during item generation when the ROM is absent
 #   (otherwise random enemy_shuffle seeds crash with FileNotFoundError).
+# NOTE: general upstream bug fixes (e.g. the ALttP bunny-rules fix in
+# worlds/alttp/Rules.py) are NOT romless concerns — they ship via the separate
+# "upstream_fixes" component (see upstream_fixes.py).
 ROMLESS_INFRASTRUCTURE_FILES = [
     "settings.py",
     "worlds/RomlessUtils.py",

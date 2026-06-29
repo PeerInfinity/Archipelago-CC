@@ -131,6 +131,26 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=0.3,
     ),
+    "upstream_fixes": Component(
+        name="upstream_fixes",
+        display_name="Upstream Bug Fixes",
+        description="Fork fixes for upstream world bugs (overlaid onto vanilla worlds)",
+        # Individual fork-fixed world files overlaid directly onto the cloned
+        # vanilla worlds. These are general correctness fixes (NOT romless), e.g.
+        # the ALttP bunny-rules fix and shapez UT-accuracy fix; without them the
+        # installed env runs vanilla's buggy logic and UT worldgen fuzz mismatches.
+        # Pulled live from the version-matched fork archive (no stored snapshot to
+        # go stale). See docs/json/upstream-bugs/ and
+        # docs/json/developer/diffs/diff-files/{alttp-bunny-rules,world-minor-fixes}.diff
+        source_paths=[
+            "worlds/alttp/Rules.py",        # bunny-rules late-binding/invocation fix
+            "worlds/shapez/__init__.py",    # don't force-clear early_balancer option (UT accuracy)
+            "worlds/landstalker/Hints.py",  # deterministic hint ordering (sorted set)
+            "worlds/lufia2ac/Options.py",   # deterministic boss group ordering (list not set)
+        ],
+        required=False,
+        size_estimate_mb=0.2,
+    ),
     "tracker": Component(
         name="tracker",
         display_name="Tracker Integration",
@@ -192,6 +212,7 @@ DEFAULT_COMPONENTS = {
     "docs",
     "scripts",
     "romless_patches",
+    "upstream_fixes",  # fork bug fixes overlaid onto vanilla worlds (correctness)
     "tracker",
     "testing",
 }
