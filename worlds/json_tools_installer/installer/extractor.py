@@ -212,10 +212,13 @@ DEFAULT_COMPONENTS = {
     "docs",
     "scripts",
     "romless_patches",
-    "upstream_fixes",  # fork bug fixes overlaid onto vanilla worlds (correctness)
     "tracker",
     "testing",
 }
+# NOTE: "upstream_fixes" is intentionally NOT a default component. It overlays
+# fork-modified world files onto vanilla worlds, so it is opt-in (CLI
+# --upstream-fixes, or included by --all) until the patched files are reviewed
+# against the current upstream versions.
 
 # Patterns to always exclude
 EXCLUDE_PATTERNS: Set[str] = {

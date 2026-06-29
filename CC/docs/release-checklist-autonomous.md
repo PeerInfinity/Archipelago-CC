@@ -827,9 +827,15 @@ safe pattern:
 
 ```bash
 for v in "--dev" "--dev --all" "--dev --romless" "--dev --all --romless"; do
-  python scripts/install_json_tools.py $v --fresh --target-dir /tmp/jt-test
+  python scripts/install_json_tools.py $v --upstream-fixes --fresh --target-dir /tmp/jt-test
 done
 ```
+
+`--upstream-fixes` is required for the ALttP (romless) UT-fuzz to pass: it
+overlays the fork's upstream world-bug fixes (notably the ALttP bunny-rules fix)
+onto the cloned vanilla worlds. It is opt-in — NOT installed by default — so the
+test must request it explicitly. (`--dev --all` already includes it via `--all`;
+passing the flag too is harmless.)
 
 Each run installs the JSON Tools Installer APWorld into the fresh clone, downloads
 + patches components from dev `main`, and runs verification (spoiler + UT-fuzz).
