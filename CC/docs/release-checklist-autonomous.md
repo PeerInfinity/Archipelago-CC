@@ -853,12 +853,25 @@ version-detected snapshot (`scripts/build/generate_romless_patches.py` →
 `json_tools_patches/<ver>/romless/`) and version-aware selection in the installer
 (commits `398c01b1b`, `6eb1e05df`, apworld repack `b83d64641`).
 
-> Caveat: the UT-fuzz step gates its exit code on harness *Errors*, not per-seed
-> *Failures*, so a romless game can report PASS while individual seeds fail. The
-> ALttP romless fuzz still fails ~9/12 seeds when enemizer options
-> (`enemy_shuffle` etc.) are rolled, because `alttp/EnemyShuffle.py` reads the ROM
-> during item generation (unguarded by the romless patch). Tracked as a separate
-> sub-issue. See memory `project_romless_installer_alttp`.
+Three further issues were found and fixed while making the romless ALttP UT-fuzz
+actually pass on clean installs (it had been masked because the UT-fuzz step
+gates its exit code on harness *Errors*, not per-seed *Failures*):
+1. **Enemizer ROM read** — `alttp/EnemyShuffle.py` read the base ROM during item
+   generation; guarded under `check_rom_available` and shipped via the romless
+   patch (`24efebb90`).
+2. **rule_builder packaging** — `world_generator` (a default component) hard-imports
+   the fork rule_builder, which wasn't a default component, so bare installs had an
+   unimportable `world_generator` and UT worldgen tracking failed; added
+   `rule_builder` to `DEFAULT_COMPONENTS` (`9e6c97ed9`).
+3. **ALttP bunny rules** — vanilla `set_bunny_rules()` bugs made superbunny access
+   too permissive (Superbunny Cave mismatch); the fork fix
+   (`worlds/alttp/Rules.py`) and other fork upstream world fixes now ship via the
+   opt-in `upstream_fixes` component, enabled in the loop above with
+   `--upstream-fixes` (`0e85b0854`, `195dd7dac`).
+
+Final result (run with `--upstream-fixes`): **all four variants exit 0, spoiler
+PASS, and UT-fuzz 10/10 success / 0 failures** (both Adventure and ALttP). See
+memory `project_romless_installer_alttp`.
 
 ### 7.3 Manual GUI installer test (human-run, not autonomous)
 
