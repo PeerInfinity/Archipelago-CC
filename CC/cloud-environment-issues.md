@@ -11,6 +11,40 @@ work). These are environment/tooling obstacles that are *not* obvious from
 
 ---
 
+## Does `cloud-setup.md` work as written? (No — verified)
+
+Walking `cloud-setup.md` from Step 1 in a **fresh venv** confirms it does **not**
+get a cloud session to a working state, and does not resolve the issues below:
+
+| Step | Result in a fresh cloud venv |
+|------|------------------------------|
+| 1. `python -m venv .venv` | ✅ works |
+| 2. `pip install -r requirements.txt` | ❌ **fatal** — pip aborts during resolution on the `kivymd` git dep (issue #2); **zero** packages installed (not even PyYAML) |
+| 3. `python ModuleUpdate.py --yes` | ⚠️ partial — installs world-level deps (incl. `astunparse`/`dill`, issue #3) but the **root** requirements still abort on `kivymd`, so core deps (`PyYAML`, `schema`, `orjson`, …) remain missing |
+| 4. generate templates | ❌ `ModuleNotFoundError: No module named 'schema'` (core deps absent) |
+| 5–7. host settings / npm / Playwright | not reachable until 2–4 are fixed |
+| (missing) submodule init | ❌ **not mentioned at all** (issue #1) — frontend tests can't run without it |
+
+Root cause: a single VCS dependency (`kivymd @ git+https://github.com/...`) is
+unreachable through the egress proxy, and because pip needs its metadata during
+resolution, it takes down the **entire** root install — which then cascades to
+every later Python step. cloud-setup.md also never checks out the
+`frontend/modules/shared` submodule that the frontend tests depend on.
+
+Minimum changes that would make cloud-setup.md actually work in a cloud session:
+1. Step 2: install with the `kivymd` git line excluded (issue #2), e.g.
+   `grep -v 'kivymd' requirements.txt > /tmp/reqs-core.txt && pip install -r /tmp/reqs-core.txt`.
+2. Keep Step 3 (`ModuleUpdate.py --yes`) — it covers `astunparse`/`dill` and other
+   world deps once Step 2 no longer aborts.
+3. Add a submodule step: `git submodule update --init frontend/modules/shared`
+   (after `add_repo peerinfinity/archipelago-shared`, issue #1).
+4. Note the non-interactive `ModuleUpdate` prompt for downstream `Generate.py`
+   runs (issue #4).
+
+Details and workarounds for each follow.
+
+---
+
 ## 1. Git submodules can't be cloned by default (egress policy)
 
 **Symptom:** `git submodule update --init frontend/modules/shared` fails:
@@ -69,7 +103,7 @@ dependencies are blocked.
 
 ---
 
-## 3. Exporter dependencies missing from `requirements.txt`
+## 3. Exporter dependencies (`astunparse`, `dill`) — only via Step 3
 
 **Symptom:** generation "succeeds" (exit 0) but the rules JSON is **not rewritten**
 (its mtime never changes). The export step is a post-output hook
@@ -77,14 +111,26 @@ dependencies are blocked.
 ...`; if that import fails, the hook silently no-ops and the previously-committed
 preset is left in place — easy to mistake for "deterministic regeneration."
 
-The exporter imports modules that aren't in `requirements.txt`:
-
 ```
 ModuleNotFoundError: No module named 'astunparse'   # exporter/analyzer/source_extraction.py
 ModuleNotFoundError: No module named 'dill'         # exporter/pickle_exporter.py
 ```
 
-**Workaround:**
+**Important correction (verified by re-running cloud-setup.md from scratch):**
+these are **not** missing from the project. They're declared in *world-level*
+requirements (`worlds/json_tools_installer/requirements.txt`,
+`worlds/ut_pickle/requirements.txt`), and `python ModuleUpdate.py --yes`
+(cloud-setup Step 3) **does** install them — confirmed by importing both in a
+fresh venv after Step 3. They are simply absent from the **root**
+`requirements.txt`.
+
+The reason this bites in a worked-around session is the `ModuleUpdate` bypass in
+issue #4: setting `ModuleUpdate.update_ran = True` skips the world-requirements
+install entirely, so `astunparse`/`dill` never get installed. So either:
+
+- run `python ModuleUpdate.py --yes` once (after working around the kivymd dep,
+  issue #2) so it installs world deps, **or**
+- if using the bypass, install them explicitly:
 
 ```
 pip install astunparse dill
