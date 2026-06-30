@@ -15,6 +15,7 @@ For the most commonly used commands and workflows, see **[CLAUDE.md](../CLAUDE.m
 ### Environment Setup
 
 - **[Cloud Setup](./cloud-setup.md)**: Setting up the development environment in cloud environments
+- **[Cloud Environment Issues & Workarounds](./cloud-environment-issues.md)**: Non-obvious cloud-session obstacles (blocked egress, interactive prompts, working-tree pollution) and how to work around them
 
 ### Game Support and Debugging
 
