@@ -71,6 +71,38 @@ function extractRec(rule) {
             if (items.length === 1) return { items: new Map([[items[0], 1]]), exact: true };
             return { items: new Map(), exact: false };
         }
+        case 'AtLeast': {
+            // "At least N of M children." count == M ≡ And (exact). count < M
+            // is a disjunction over which N branches satisfy: the only items we
+            // can guarantee are those required by EVERY branch (necessary
+            // subset, like Or), so exact: false.
+            const childResults = (rule.children ?? []).map(extractRec);
+            const required = rule.count ?? rule.args?.count ?? 0;
+            if (required <= 0) return { items: new Map(), exact: true };
+            if (childResults.length < required) return { items: new Map(), exact: false };
+            if (required === childResults.length) {
+                const acc = new Map();
+                let exact = true;
+                for (const r of childResults) {
+                    exact = exact && r.exact;
+                    for (const [k, v] of r.items) acc.set(k, Math.max(acc.get(k) ?? 0, v));
+                }
+                return { items: acc, exact };
+            }
+            let inter = null;
+            for (const r of childResults) {
+                if (inter === null) {
+                    inter = new Map(r.items);
+                    continue;
+                }
+                const next = new Map();
+                for (const [k, v] of inter) {
+                    if (r.items.has(k)) next.set(k, Math.min(v, r.items.get(k)));
+                }
+                inter = next;
+            }
+            return { items: inter ?? new Map(), exact: false };
+        }
         default:
             // CountItem, helpers, False_, count_check, … — not expressible
             // as an AND-of-items. Fall back to "no physics requirement".

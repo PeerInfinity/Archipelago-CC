@@ -44,6 +44,40 @@ output shape. If any quota'd substrate declares a `victoryItem` on its
 registry entry (e.g. `bounce`), it's passed to `buildRulesJson` as the
 completion-condition item, mirroring the pipeline UI.
 
+```
+node scripts/procgen/dump-shuffled-spiral.js --seed 1 --quota bounce=4 -o /tmp/spiral.json
+```
+
+## dump-bounce-level.js
+
+Dumps a single Bounce (Doodle-Jump-style) level: the generated platform
+geometry, physics config, and compiled rules.json for one bounce region.
+
+```
+node scripts/procgen/dump-bounce-level.js --seed 1 -o /tmp/bounce-level.json
+```
+
+## dump-bounce-region.js
+
+Emits the per-platform requirement data and region report for a gated
+bounce braid (verified-vs-authored minimal item sets per row), surfacing
+the `deriveAccessRules({includePlatforms:true})` output.
+
+```
+node scripts/procgen/dump-bounce-region.js --seed 1 -o /tmp/bounce-region.json
+```
+
+## topdown-step.js
+
+Per-step driver for the top-down stepped pipeline (Layout → Realise →
+Finalize → Compile), the top-down analogue of `sphere-step.js`. Runs ONE
+step (or a contiguous range), reading the prior step's envelope JSON and
+writing the next.
+
+```
+node scripts/procgen/topdown-step.js run --from layout --to compile --seed 1 --rules-out rules.json
+```
+
 ## sphere-step.js
 
 Per-step driver for the stepped sphere-growth pipeline. Runs ONE step

@@ -88,6 +88,7 @@ class ASTToRuleBuilder:
             'and': self._convert_and,
             'or': self._convert_or,
             'not': self._convert_not,
+            'count_true': self._convert_count_true,
 
             # Reachability
             'can_reach': self._convert_can_reach,
@@ -883,6 +884,38 @@ class ASTToRuleBuilder:
 
         # Apply post-conversion optimizations
         return self._optimize_composite('Or', converted_children)
+
+    def _convert_count_true(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert count_true rule to its Rule Builder twin, AtLeast.
+
+        AST: {"type": "count_true", "conditions": [...], "count": N}
+        RB:  {"rule": "AtLeast", "children": [...], "count": N}
+
+        count_true means "at least `count` of the conditions are true", exactly
+        AtLeast's semantics. Mirror AtLeast's trivial collapses (count<=0 -> True_,
+        count>len -> False_, count==1 -> Or, count==len -> And) so the output is
+        canonical; otherwise emit a native AtLeast.
+        """
+        conditions = rule.get('conditions', [])
+        count_raw = rule.get('count', 0)
+        count, _ = self._extract_constant_value(count_raw)
+        converted = [self._convert_rule(cond) for cond in conditions]
+        n = len(converted)
+
+        if isinstance(count, int):
+            if count <= 0:
+                return self._make_rule('True_', {})
+            if n == 0 or count > n:
+                return self._make_rule('False_', {})
+            if count == 1:
+                return self._optimize_composite('Or', converted)
+            if count == n:
+                return self._optimize_composite('And', converted)
+
+        result = self._make_composite_rule('AtLeast', converted)
+        result['count'] = count
+        return result
 
     def _convert_not(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """

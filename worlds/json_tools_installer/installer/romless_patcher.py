@@ -36,13 +36,20 @@ ROMLESS_WORLDS = [
     "yoshisisland",
 ]
 
-# Infrastructure files required by romless world patches.
-# These are installed alongside the world patches.
+# Additional files installed alongside the world __init__.py patches. Carried by
+# repo-relative path (backed up / reverted via "romless:" config keys).
 # - settings.py: adds skip_required_files support
 # - worlds/RomlessUtils.py: provides check_rom_available() helper
+# - worlds/alttp/EnemyShuffle.py: world-specific romless patch — skips the
+#   enemizer base-ROM read during item generation when the ROM is absent
+#   (otherwise random enemy_shuffle seeds crash with FileNotFoundError).
+# NOTE: general upstream bug fixes (e.g. the ALttP bunny-rules fix in
+# worlds/alttp/Rules.py) are NOT romless concerns — they ship via the separate
+# "upstream_fixes" component (see upstream_fixes.py).
 ROMLESS_INFRASTRUCTURE_FILES = [
     "settings.py",
     "worlds/RomlessUtils.py",
+    "worlds/alttp/EnemyShuffle.py",
 ]
 
 
@@ -74,6 +81,21 @@ def get_file_hash(filepath: Path) -> str:
         for chunk in iter(lambda: f.read(8192), b""):
             sha256.update(chunk)
     return sha256.hexdigest()
+
+
+def detect_ap_version() -> str:
+    """Detect the installed AP base version (e.g. '0.6.8').
+
+    The romless patch snapshot is version-specific. Defaulting to a hardcoded
+    version silently serves stale patches to a newer AP (e.g. a 0.6.7 snapshot
+    applied to 0.6.8 reintroduces a removed ``check_enemizer`` import and
+    de-registers alttp). Always resolve the version from the running AP.
+    """
+    try:
+        from Utils import __version__
+        return __version__.split("-")[0]
+    except Exception:
+        return "0.6.7"
 
 
 def get_romless_patches_dir(version: str) -> Optional[Path]:
@@ -122,7 +144,7 @@ def _is_romless_backup(backup: BackupInfo) -> bool:
 
 def check_romless_patch_status(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.7"
+    version: Optional[str] = None
 ) -> Dict[str, RomlessPatchStatus]:
     """
     Check the current ROM-less patch status of all supported worlds.
@@ -136,6 +158,8 @@ def check_romless_patch_status(
     """
     if config is None:
         config = load_config()
+    if version is None:
+        version = detect_ap_version()
 
     root = Path(local_path())
     status = {}
@@ -337,7 +361,7 @@ def _backup_infrastructure_file(
 
 def apply_romless_patches(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.7",
+    version: Optional[str] = None,
     force: bool = False,
 ) -> RomlessPatchResult:
     """
@@ -358,6 +382,8 @@ def apply_romless_patches(
     """
     if config is None:
         config = load_config()
+    if version is None:
+        version = detect_ap_version()
 
     result = RomlessPatchResult(success=True)
     root = Path(local_path())
@@ -368,7 +394,8 @@ def apply_romless_patches(
         result.success = False
         result.errors.append(
             f"ROM-less patches not found for AP version {version}. "
-            f"Install the 'ROM-less Generation Patches' component first."
+            f"Regenerate them with scripts/build/generate_romless_patches.py "
+            f"and install the 'ROM-less Generation Patches' component."
         )
         return result
 
@@ -553,7 +580,7 @@ def revert_romless_patches(
 
 def get_romless_patch_summary(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.7"
+    version: Optional[str] = None
 ) -> Dict:
     """
     Get a summary of the current ROM-less patch state.

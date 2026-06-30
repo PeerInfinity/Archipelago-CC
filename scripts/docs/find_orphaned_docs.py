@@ -205,16 +205,25 @@ def main():
         for md_file in root.glob("*.md"):
             all_docs.add(md_file.resolve())
 
+    # Exclude vendored test-fixture docs — these are copies of third-party
+    # (e.g. Universal Tracker) docs that live under scripts/test/fixtures and are
+    # not part of this project's documentation tree. (The script-docs checker
+    # excludes scripts/test/fixtures for the same reason.)
+    all_docs = {
+        doc for doc in all_docs
+        if "scripts/test/fixtures" not in doc.as_posix()
+    }
+
     if not args.json:
         print("Finding orphaned documentation files...")
         print(f"  Checking {len(all_docs)} markdown files")
         print()
         print("Crawling from entry points...")
 
-    # Crawl from entry points
-    reachable, linked_by = crawl_from_entry_points(
+    # Crawl from entry points (the per-doc linked-by map is unused here)
+    reachable = crawl_from_entry_points(
         entry_points, all_docs, verbose=args.verbose
-    )
+    )[0]
 
     # Find orphaned files
     orphaned = all_docs - reachable
@@ -225,24 +234,29 @@ def main():
         if entry.exists():
             orphaned.discard(entry.resolve())
 
+    # Coverage is over the checked set only. The crawl follows links into
+    # docs outside `all_docs` (e.g. worlds/*/README.md), so `reachable` can
+    # exceed `all_docs`; intersect to keep the count <= total (no >100%).
+    reachable_in_scope = reachable & all_docs
+
     if args.json:
         # Group by category
-        by_category: Dict[str, List[str]] = {}
+        orphaned_by_category: Dict[str, List[str]] = {}
         for doc in orphaned:
             cat = categorize_document(doc, root)
             rel_path = str(doc.relative_to(root))
-            by_category.setdefault(cat, []).append(rel_path)
+            orphaned_by_category.setdefault(cat, []).append(rel_path)
 
         # Sort within categories
-        for cat in by_category:
-            by_category[cat].sort()
+        for cat in orphaned_by_category:
+            orphaned_by_category[cat].sort()
 
         output = {
             "total_documents": len(all_docs),
-            "reachable_count": len(reachable),
+            "reachable_count": len(reachable_in_scope),
             "orphaned_count": len(orphaned),
-            "coverage_percent": round(100 * len(reachable) / len(all_docs), 1) if all_docs else 100,
-            "orphaned_by_category": by_category,
+            "coverage_percent": round(100 * len(reachable_in_scope) / len(all_docs), 1) if all_docs else 100,
+            "orphaned_by_category": orphaned_by_category,
             "orphaned": sorted(str(doc.relative_to(root)) for doc in orphaned),
         }
         print(json.dumps(output, indent=2))
@@ -257,9 +271,9 @@ def main():
     print("ORPHANED DOCUMENTATION REPORT")
     print("=" * 60)
 
-    coverage_pct = 100 * len(reachable) / len(all_docs) if all_docs else 100
+    coverage_pct = 100 * len(reachable_in_scope) / len(all_docs) if all_docs else 100
     print(f"\nTotal documents:     {len(all_docs)}")
-    print(f"Reachable:           {len(reachable)}")
+    print(f"Reachable:           {len(reachable_in_scope)}")
     print(f"Orphaned:            {len(orphaned)}")
     print(f"Coverage:            {coverage_pct:.1f}%")
 

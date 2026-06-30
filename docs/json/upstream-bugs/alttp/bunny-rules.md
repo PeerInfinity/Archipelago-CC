@@ -210,6 +210,18 @@ These bugs exist in upstream Archipelago. The fixes have not been submitted upst
 
 ---
 
+## Shipping
+
+The fork's fixed `worlds/alttp/Rules.py` lives in this repository, but the JSON
+Tools installer clones **vanilla** Archipelago and so does not get the fix
+automatically. It is overlaid onto the vanilla worlds by the installer's opt-in
+`upstream_fixes` component (`--upstream-fixes`). Without it, an installed ROM-less
+ALttP runs the buggy (too-permissive) bunny rules and the worldgen UT-fuzz
+mismatches on Superbunny Cave. See the
+[JSON Tools Installer README](../../../../worlds/json_tools_installer/README.md).
+
+---
+
 ## Related Files
 
 | Purpose | Path |

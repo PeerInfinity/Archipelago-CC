@@ -7,8 +7,8 @@ fix-up scripts — with the human approving each outward-facing step.
 
 > **Status: work in progress.** The original [release-checklist.md](release-checklist.md)
 > remains the authoritative document. This file is being written phase by
-> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5.** Phases 1
-> and 6–8 below are stubs that point back at the original.
+> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6, 7.**
+> Phases 1 and 8 below are stubs that point back at the original.
 
 ---
 
@@ -82,6 +82,27 @@ Phase 1's only hard contract for the rest of this document: when it finishes,
 **all code changes are committed and pushed to `origin/main`**, and
 `origin/main` is the *pre-regen* reference (the preset workflow restores
 preserved dev presets from it — see Phase 2).
+
+### Rule Builder regression coverage (custom rules etc.)
+
+When an upstream sync touches `rule_builder/` (new rule types, `field_resolvers`,
+custom-rule machinery), the **`worlds/rulebuilder_test`** world is the regression
+guard. It is a tiny hidden fixture that exercises the rule_builder vocabulary
+end-to-end — generation → exporter → frontend — including a game-specific custom
+`Rule` subclass (`HasTreasure`), `FromOption`, `OptionValue`, dynamic counts,
+`Compare`/`Arithmetic`/`Min`/`MaxValue`, `AtLeast`, `HasGroup`, etc. No external
+download is needed (the world lives in the repo). Its coverage rides on the
+existing suites:
+
+- **Python side:** `pytest worlds/rulebuilder_test/test/` (also runs in the
+  general world suite), plus `pytest test/general/test_rule_builder.py` and
+  `pytest test_json/rule_builder/`.
+- **Export → frontend side:** its **spoiler test** runs as part of Phase 5's
+  spoiler suite (`test-all-sequential` / `test-spoiler-fuzz`); a green
+  `rulebuilder_test` spoiler result means custom rules and the rest of the
+  vocabulary still round-trip to the frontend. (Historical note: this support was
+  first developed against the Baba Is You apworld, which is *not* a stable apworld
+  and is kept out-of-repo at `custom_worlds_disabled/baba_is_you.apworld`.)
 
 ---
 
@@ -476,8 +497,18 @@ Not every test runs in CI. The split is by **engine**:
      `No client1 test result files found`. In `test-all-sequential.yml` the four
      result-branch-checkout jobs (`test-full-spoiler`, `test-multiclient`,
      `test-multiworld-single`, `test-multiworld`) were missing this and failed
-     uniformly; fixed in `38dab2ba0`. *If you see a uniform 404/400 across all
-     games, suspect a missing-submodule checkout, not the games.*
+     uniformly; fixed in `38dab2ba0`. The SAME bug then bit
+     `test-spoiler-fuzz.yml` (`test-spoiler-fuzz`) and `test-world-generator.yml`
+     (`run-canonical-tests`, `run-random-tests`) — fixed in `acbed42eb`.
+     *If you see a uniform 404/400 across all games, suspect a missing-submodule
+     checkout, not the games.* **Lesson: audit ALL workflows at once**, e.g.
+     ```bash
+     # every frontend-serving job that lacks submodules:
+     for f in .github/workflows/*.yml; do
+       awk '/^  [a-z0-9_-]+:/{job=$0} /http.server 8000/{h[job]=1}
+            /submodules: recursive/{s[job]=1} END{for(j in h) if(!(j in s)) print FILENAME": "j}' "$f"
+     done   # (or the python audit used this release) — expect NO output
+     ```
   2. **The frontend client version must match the AP release.**
      `Config.PROTOCOL_VERSION` in `frontend/modules/client/core/config.js` is the
      version the JSON web client sends in its `Connect`. If it lags the AP
@@ -505,12 +536,26 @@ gh workflow run <file>.yml --repo PeerInfinity/Archipelago-CC -f key=value ...
 gh run list --repo PeerInfinity/Archipelago-CC --workflow <file>.yml -L 5
 
 # Watch to completion in the BACKGROUND so you're notified on exit
-# (--exit-status: 0 = success). Watch many runs in one poller loop.
-gh run watch <run-id> --repo PeerInfinity/Archipelago-CC --exit-status
+# (--exit-status: 0 = success). ALWAYS throttle: --interval 60 (poll once/min).
+gh run watch <run-id> --repo PeerInfinity/Archipelago-CC --interval 60 --exit-status
 
 # Cancel (e.g. wrong inputs, or a CI-env failure burning shards):
 gh run cancel <run-id> --repo PeerInfinity/Archipelago-CC
 ```
+
+> **Gotcha — `gh` REST rate limit (5000/hr) is easy to exhaust.** Default
+> `gh run watch` polls every ~3s; several concurrent watchers over a long sweep
+> burned the entire hourly quota this release (every subsequent `gh` call → HTTP
+> 403). Discipline:
+> - **Throttle every watch with `--interval 60`** and avoid redundant
+>   `gh run view`/`gh run list` calls.
+> - **`git push` / `git fetch` use the git protocol, NOT the REST API** — they
+>   keep working even when `gh` is 403'd, so you can still push/harvest.
+> - **`gh api rate_limit` does NOT count against the quota** — use it to check
+>   remaining and the reset time:
+>   `gh api rate_limit -q '.resources.core | "\(.remaining)/\(.limit) resets \(.reset)"'`.
+>   To resume after exhaustion, gate on recovery (poll `rate_limit` until
+>   `remaining >= 100`) rather than retrying blindly.
 
 > **Gotcha — job `conclusion: success` does NOT mean the games passed.** The
 > test jobs exit 0 even when every game fails; per-game pass/fail lives in the
@@ -524,11 +569,27 @@ gh run cancel <run-id> --repo PeerInfinity/Archipelago-CC
 
 ### 5.2 Shard budget
 
-This account has **~40 concurrent shards**. `test-all-sequential` fans each test
-type into **10 splits**; a comfortable pattern is **3 concurrent 10-shard runs**
-(original/worldgen/apworld), leaving headroom. The fuzz/world-generator workflows
-parallelize lighter (`jobs=4` per runner). GitHub queues anything over the cap
-(not an error), but stay near 3×10 to leave room for other work.
+This account has **~40 concurrent shards**. **Essentially every test workflow run
+uses a 10-shard matrix** (`split_num: [1..10]`) — `test-all-sequential`,
+`test-ut-fuzz`, `test-spoiler-fuzz`, and `test-world-generator` all fan into 10.
+So the rule is simple: **run at most 3 workflow runs concurrently** (≈30 shards),
+leaving headroom. GitHub queues anything over the cap (not an error), but staying
+at 3 keeps monitoring sane and leaves room for other work.
+
+Two things that look like they'd change the count but don't:
+- **The `jobs` input on the fuzz workflows is NOT the shard count** — it's
+  per-runner CPU parallelism (default 4 threads *inside* each of the 10 shards).
+- **`test-world-generator test_mode=both` is still 10 shards peak**, not 20: the
+  `run-random-tests` job `needs: [setup, run-canonical-tests]`, so random runs
+  *after* canonical (10, then 10 — sequential, ~2× wall-clock).
+- **`test-all-sequential` is also 10 shards peak per run**, not 40: its phases
+  (minimal-spoiler → full-spoiler → multiclient → multiworld) each have 10 splits
+  but run *sequentially* (each `needs` the prior phase's combine), so only one
+  phase's 10 splits are live at a time.
+
+Consequence: the full Python sweep runs as **groups of ≤3 workflows**, each group
+fired only after the previous group's shards free up (e.g. group 1 = the 3
+`test-all-sequential` runs; group 2 = 3 UT-fuzz modes; etc. — see 5.4).
 
 ### 5.3 Smoke-test first
 
@@ -560,14 +621,16 @@ merge reads from.
 | `unittests_frontend.yml` | (none) — optional; local vitest already green | 0–1 | (none) |
 
 Useful defaults/inputs:
-- `test-all-sequential`: `spoiler_mode` default **10-seeds** (thorough, slow) — use
-  `single-seed` for a fast pass; `retest_failures=2-times`; all `enable_*=true`;
+- `test-all-sequential`: `spoiler_mode` default **`single-seed`** (changed from
+  `10-seeds` in `0d4a95fd4` — fast pass; pass `-f spoiler_mode=10-seeds` for the
+  thorough run); `retest_failures=2-times`; all `enable_*=true`;
   `multiworld_parallelization=parallel-10-jobs`; `enable_vanilla_tests` /
   `enable_worldgen2_tests` default **false** (worldgen mode only — leave off if
   WorldGen2 has known failures).
-- `test-ut-fuzz` / `test-spoiler-fuzz`: `runs_per_game=10`, `starting_seed=1`,
-  `debug_mode=true` restricts to Adventure (bundled) / Clique (apworlds) for a
-  quick smoke.
+- `test-spoiler-fuzz`: `runs_per_game` default **`1`** (changed from 10 in
+  `79894e7c0` for a fast smoke; pass `-f runs_per_game=N` for deeper fuzzing).
+- `test-ut-fuzz`: `runs_per_game=10`, `starting_seed=1`. Both fuzz workflows take
+  `debug_mode=true` to restrict to Adventure (bundled) / Clique (apworlds).
 - `test-world-generator`: `test_mode` canonical \| random \| both; `debug_mode=true`
   = Adventure only.
 
@@ -597,16 +660,68 @@ git show origin/test-results-original:scripts/output/spoiler-minimal/test-result
 - **Multiclient** (`scripts/output/multiclient/test-results.json`):
   `multiclient_test.success` + `client1_passed` + `client2_passed` (and
   `generation.success`). **No `analysis` key** — don't reuse the spoiler checker.
-- **Multiworld**: analogous (`multiworld_test.*` / `generation.*`).
+- **Multiworld** (`scripts/output/multiworld/test-results.json`):
+  `multiworld_test.success` is **tri-state** — `true` (pass), `false` (fail), or
+  **`null` = not evaluated**. A `null` is usually a grouping artifact, not a
+  failure: multiworld pairs templates into groups, so single-player/accumulator
+  entries carry `skip_reason` like `"Waiting for 2+ templates"`. There's also a
+  `prerequisite_check` (spoiler/multiclient must pass first) and a `second_pass`
+  (`second_pass.player_results.player_N.pass...`). Count `false` as the real
+  failures; treat `null` as skipped, not failed.
+
+Naming: result-dir suffixes track `template_type` —
+`scripts/output/<kind>/` (original), `<kind>-worldgen/`, `<kind>-apworld/`.
 
 The `metadata.last_updated` timestamp confirms you're reading *this* run's data.
 
+> **Per-phase persistence — cancelling mid-run is safe for finished phases.**
+> Each phase's `Combine <phase> Results` job does `git commit` + `git push` to the
+> result branch the moment that phase completes — it is **not** one push at the
+> end. So a run cancelled mid-sweep keeps every phase whose combine already ran
+> (e.g. cancelling during multiclient still leaves spoiler-minimal + spoiler-full
+> on the branch). In-progress/not-started phases are simply absent. (Each split
+> also `upload-artifact`s its raw JSON before combine, retrievable via
+> `gh run download <run-id>` — but the branch is the canonical, combined store.)
+> Verify what landed with `git ls-tree -r --name-only origin/<branch> | grep
+> test-results.json` and `git log --oneline origin/<branch>` before cancelling.
+
 ### 5.6 Merge results, fix failures, then hybrid
 
-1. **Merge result branches** into `main`:
+1. **Merge result branches into `main` — autonomously, by "harvesting", not a git
+   merge.** `CC/scripts/interactive-branch-merge.sh` is the **manual** tool
+   (menu-driven `read -p` prompts + conflict cleanup) — unusable headlessly. For
+   an autonomous run, do **not** `git merge` the result branches either: the
+   sequential branches' merge-base is the *pre-session* `main`, so a merge (esp.
+   `-X theirs`) replays their stale code/doc files and can **clobber newer `main`
+   commits**. Instead, check out only the fresh **result JSONs** and make one
+   commit. Docs are **not** imported here — Phase 6 regenerates them from the JSONs.
+
    ```bash
-   bash CC/scripts/interactive-branch-merge.sh
+   # 1. Verify each result file exists + has a fresh `last_updated` on its branch
+   #    (git fetch/show use the git protocol — not REST-rate-limited):
+   git fetch origin <result-branches...> --quiet
+   git show origin/<branch>:scripts/output/<dir>/test-results*.json | \
+     python3 -c "import sys,json;print(json.load(sys.stdin)['metadata']['last_updated'])"
+
+   # 2. Harvest ONLY the freshly-produced result JSONs onto main:
+   git checkout origin/test-results-original  -- scripts/output/{spoiler-minimal,spoiler-full,multiclient,multiworld}/test-results.json
+   git checkout origin/test-results-worldgen  -- scripts/output/{spoiler-minimal,spoiler-full,multiclient,multiworld}-worldgen/test-results.json
+   git checkout origin/test-results-apworld   -- scripts/output/{spoiler-minimal,spoiler-full}-apworld/test-results.json   # skip phases that were cancelled/missing
+   git checkout origin/test-results-ut-fuzz-original -- scripts/output/ut-fuzz/test-results-original-fixed-seed.json
+   git checkout origin/test-results-ut-fuzz-worldgen -- scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
+   git checkout origin/test-results-ut-fuzz-pickle   -- scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json
+   git checkout origin/test-results-ut-fuzz-hybrid   -- scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json
+   git checkout origin/test-results-spoiler-fuzz       -- scripts/output/spoiler-fuzz/test-results-fixed-seed.json
+   git checkout origin/test-results-world-generator    -- scripts/output/world-generator/test-results-{canonical,random}.json
+
+   # 3. Sanity-check the staged set is ONLY scripts/output/**.json, then commit:
+   git status -s
+   git commit -m "test-results: harvest <groups> onto main"
    ```
+   Only harvest files that exist & are fresh (e.g. cancelled/skipped phases like
+   apworld multiclient/multiworld will be MISSING on the branch — skip them). This
+   is deterministic, conflict-free, and preserves newer `main` history. (The
+   interactive script remains available for a human-driven release.)
 2. **Surface unexpected failures** (compares against the exclude lists in
    `scripts/data/template-exclude-list.json`):
    ```bash
@@ -638,18 +753,161 @@ Before a clean Phase 5, these had to be fixed (all consumer/CI-side, no preset
 re-run):
 - **`item_names` dual-read** in two procgen evaluators (Phase 4) — `a53868a` +
   `8944ccc49`.
-- **CI submodules checkout** for the 4 browser-test jobs — `38dab2ba0`. Verified:
-  multiclient `original` went **0/76 → 75/76**.
+- **CI submodules checkout** — `38dab2ba0` (the 4 `test-all-sequential` browser
+  jobs) **and** `acbed42eb` (`test-spoiler-fuzz` + the 2 `test-world-generator`
+  jobs). Verified: multiclient `original` 0/76 → **75/76**; spoiler-fuzz
+  0/76 → **70/76**; world-generator completed/success.
 - **Client `PROTOCOL_VERSION`** 0.6.4 → 0.6.8 — `6b0030e1b`. The Witness
   0/147 → 32/147 (remaining fail = timer-window size limit, left included).
+
+Also tuned for fast autonomous passes: `test-spoiler-fuzz` `runs_per_game`
+default → `1` (`79894e7c0`); `test-all-sequential` `spoiler_mode` default →
+`single-seed` (`0d4a95fd4`).
 
 ---
 
 ## Phase 6: Documentation Generation
+
+Entirely local (no workflows). Regenerate every test-result doc from the result
+JSONs harvested in Phase 5.6, then update the preset index annotations.
+
+### 6.1 Generate docs + annotate presets
+
+```bash
+source .venv/bin/activate
+python scripts/docs/generate-all-docs.py     # 7 generators, ~10s
+python scripts/docs/update-preset-files.py
+```
+
+- `generate-all-docs.py` runs all 7 generators over `scripts/output/**`: test
+  charts (spoiler/multiclient/multiworld), UT-fuzz charts + comparisons,
+  multiworld-ut-fuzz, spoiler-fuzz charts, the combined fuzz summary, the
+  world-generator report, and the freshness report. Expect `Passed: 7 / Failed: 0`.
+  Use `--only <tag>` / `--list` to target a subset.
+- `update-preset-files.py` re-annotates `frontend/presets/preset_files.json` with
+  per-game **test-data / placement flags** (`seeds_passed`, `passed`,
+  `players_passed`, …). It is **annotation-only** — it does **not** build or scan
+  index keys, so top-level keys stay identical and the two-index model
+  (`preset_files.json` dev vs `preset_files.live.json` canonical) is untouched.
+  It prints "Games without any test data" for games outside the test set
+  (excluded / apworld-only) — informational.
+
+### 6.2 Verify links
+
+```bash
+python scripts/docs/find_orphaned_docs.py
+```
+Reports `.md` files not reachable from a doc entry point. A pre-existing baseline
+of orphans (≈30 this release: vibe-coding-simulator, tracker fixtures, some game
+READMEs) is expected — only act on **new** orphans introduced this release.
+
+### 6.3 Commit
+
+The diff should be **only** `docs/json/developer/test-results/*.md` +
+`frontend/presets/preset_files.json`. Sanity-check `git status -s` shows nothing
+else, then commit.
+
+> **Freshness reflects scope, not staleness bugs.** After regeneration the
+> freshness report will still show 🔴 stale rows for any test type you
+> *intentionally skipped* (e.g. apworld UT-fuzz, apworld multiclient/multiworld,
+> `original_seeded`) — their source JSONs are genuinely old because they weren't
+> re-run. That's correct. Fresh rows = exactly what you ran this release.
+> (2026-06-27: 25 fresh / 21 stale, the 21 == the skipped scopes.)
+
+---
+
 ## Phase 7: APWorld Packaging and Dev Testing
+
+### 7.1 Pack the APWorlds (local)
+
+```bash
+source .venv/bin/activate
+python scripts/build/pack_json_tools_installer.py          # -> apworlds/json_tools_installer.apworld
+for g in metamath depgraph jta bakingadventure codingadventure; do
+  python scripts/build/pack_apworld.py "$g"                # -> apworlds/<g>.apworld
+done
+```
+
+The pack scripts produce **deterministic** zips, so only APWorlds whose *source*
+changed since the last pack show up in `git status` — the rest repack
+byte-identical. Commit only the changed `apworlds/*.apworld` (they're tracked
+release artifacts). (2026-06-27: `json_tools_installer`, `depgraph`, `metamath`
+changed; `jta`/`bakingadventure`/`codingadventure` byte-identical.)
+
+### 7.2 Dev installer test
+
+> **The `--dev` installer downloads from `github.com/PeerInfinity/Archipelago-CC/raw/main`**
+> (`scripts/install_json_tools.py`: `DEV_REPO @ DEV_BRANCH=main`). So **push the
+> packed APWorlds (7.1) and all release content to `main` BEFORE running this**, or
+> the test exercises the *previous* installer, not what you just built.
+
+Run the four variants. Each `--fresh` deletes and re-clones vanilla Archipelago
+into the shared `--target-dir`, so they **MUST run sequentially — never in
+parallel** (parallel runs clobber the shared clone). A single `for` loop is the
+safe pattern:
+
+```bash
+for v in "--dev" "--dev --all" "--dev --romless" "--dev --all --romless"; do
+  python scripts/install_json_tools.py $v --upstream-fixes --fresh --target-dir /tmp/jt-test
+done
+```
+
+`--upstream-fixes` is required for the ALttP (romless) UT-fuzz to pass: it
+overlays the fork's upstream world-bug fixes (notably the ALttP bunny-rules fix)
+onto the cloned vanilla worlds. It is opt-in — NOT installed by default — so the
+test must request it explicitly. (`--dev --all` already includes it via `--all`;
+passing the flag too is harmless.)
+
+Each run installs the JSON Tools Installer APWorld into the fresh clone, downloads
++ patches components from dev `main`, and runs verification (spoiler + UT-fuzz).
+Non-romless variants verify on **Adventure**; `--romless` variants verify on
+**A Link to the Past** (ROM-less ALttP). The installer **exits non-zero if any
+verification test fails** (`[WARN] Some unexpected test failures occurred`).
+
+2026-06-28 results: **all four variants exit 0.** `--dev` and `--dev --all` pass
+(Adventure spoiler + UT-fuzz); both romless variants now pass too (ALttP imports,
+template generates, spoiler PASS, installer reports UT-fuzz PASS). The earlier
+romless failure was a **patch-version skew** — the installer applied a stale
+0.6.7 romless snapshot to a 0.6.8 env (`alttp/__init__.py` imported the
+since-removed `check_enemizer`) → alttp unregistered. Fixed by adding a
+version-detected snapshot (`scripts/build/generate_romless_patches.py` →
+`json_tools_patches/<ver>/romless/`) and version-aware selection in the installer
+(commits `398c01b1b`, `6eb1e05df`, apworld repack `b83d64641`).
+
+Three further issues were found and fixed while making the romless ALttP UT-fuzz
+actually pass on clean installs (it had been masked because the UT-fuzz step
+gates its exit code on harness *Errors*, not per-seed *Failures*):
+1. **Enemizer ROM read** — `alttp/EnemyShuffle.py` read the base ROM during item
+   generation; guarded under `check_rom_available` and shipped via the romless
+   patch (`24efebb90`).
+2. **rule_builder packaging** — `world_generator` (a default component) hard-imports
+   the fork rule_builder, which wasn't a default component, so bare installs had an
+   unimportable `world_generator` and UT worldgen tracking failed; added
+   `rule_builder` to `DEFAULT_COMPONENTS` (`9e6c97ed9`).
+3. **ALttP bunny rules** — vanilla `set_bunny_rules()` bugs made superbunny access
+   too permissive (Superbunny Cave mismatch); the fork fix
+   (`worlds/alttp/Rules.py`) and other fork upstream world fixes now ship via the
+   opt-in `upstream_fixes` component, enabled in the loop above with
+   `--upstream-fixes` (`0e85b0854`, `195dd7dac`).
+
+Final result (run with `--upstream-fixes`): **all four variants exit 0, spoiler
+PASS, and UT-fuzz 10/10 success / 0 failures** (both Adventure and ALttP). See
+memory `project_romless_installer_alttp`.
+
+### 7.3 Manual GUI installer test (human-run, not autonomous)
+
+`release-checklist.md` §7.3 — download `json_tools_installer.apworld` from `main`
+into a fresh vanilla Archipelago, run `Launcher.py`, and click through the JSON
+Tools Installer GUI. This is **interactive (a GUI)** and cannot be driven
+headlessly — flag it for the human to run; it isn't part of the autonomous flow.
+
+---
+
 ## Phase 8: Stable Release
 
-> **Stubs — not yet migrated.** Follow Phases 6–8 of
-> [release-checklist.md](release-checklist.md). These will be rewritten in the
-> autonomous style (with the exact `gh workflow run` invocations, monitoring,
-> and result-merge steps) as each phase is run for real.
+> **Stub — not yet migrated.** Follow Phase 8 of
+> [release-checklist.md](release-checklist.md): `sync-to-stable.sh` → commit/push
+> to `PeerInfinity/Archipelago @ JSONExport` → deploy GitHub Pages → verify live
+> demos. This is the **outward-facing publish** (mirrors the repo to the public
+> stable repo) — gate it on explicit human approval. To be written in the
+> autonomous style when first run.

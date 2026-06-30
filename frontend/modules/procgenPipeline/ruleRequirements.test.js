@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import {
-    makeHasRule, makeAndRule, makeOrRule, makeTrueRule,
+    makeHasRule, makeAndRule, makeOrRule, makeTrueRule, makeAtLeastRule,
 } from '../shared/rulesJsonBuilder.js';
 
 describe('extractItemRequirementFromRule', () => {
@@ -64,6 +64,35 @@ describe('extractItemRequirementFromRule', () => {
         expect(extractItemRequirementFromRule({ rule: 'CountItem', args: {} }))
             .toEqual({ requirement: [], counts: {}, exact: false });
         expect(extractItemRequirementFromRule(null))
+            .toEqual({ requirement: [], counts: {}, exact: false });
+    });
+
+    it('AtLeast with count == #children behaves like And (union, exact)', () => {
+        const rule = makeAtLeastRule(2, [makeHasRule('A'), makeHasRule('B')]);
+        expect(extractItemRequirementFromRule(rule))
+            .toEqual({ requirement: ['A', 'B'], counts: {}, exact: true });
+    });
+
+    it('AtLeast with count < #children -> necessary subset only, not exact', () => {
+        // 2 of [ (A&B), (A&C), (A&D) ] => A is the only item common to all, inexact.
+        const rule = makeAtLeastRule(2, [
+            makeAndRule([makeHasRule('A'), makeHasRule('B')]),
+            makeAndRule([makeHasRule('A'), makeHasRule('C')]),
+            makeAndRule([makeHasRule('A'), makeHasRule('D')]),
+        ]);
+        expect(extractItemRequirementFromRule(rule))
+            .toEqual({ requirement: ['A'], counts: {}, exact: false });
+    });
+
+    it('AtLeast with count == 0 -> empty requirement, exact', () => {
+        const rule = makeAtLeastRule(0, [makeHasRule('A')]);
+        expect(extractItemRequirementFromRule(rule))
+            .toEqual({ requirement: [], counts: {}, exact: true });
+    });
+
+    it('AtLeast with count > #children -> empty, not exact', () => {
+        const rule = makeAtLeastRule(3, [makeHasRule('A'), makeHasRule('B')]);
+        expect(extractItemRequirementFromRule(rule))
             .toEqual({ requirement: [], counts: {}, exact: false });
     });
 });

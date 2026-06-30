@@ -10,7 +10,7 @@ on:
         options:
           - 'single-seed'
           - '10-seeds'
-        default: '10-seeds'
+        default: 'single-seed'
 
       start_seed:
         description: 'Starting seed number (single-seed uses this seed, 10-seeds uses this through start+9)'

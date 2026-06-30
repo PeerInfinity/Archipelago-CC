@@ -320,6 +320,7 @@ def run_installer(
     install_all: bool,
     patch_mode: str = "monkey",
     romless: bool = False,
+    upstream_fixes: bool = False,
     dry_run: bool = False,
 ) -> bool:
     """Run the JSON Tools installer."""
@@ -345,6 +346,9 @@ def run_installer(
 
     if romless:
         cmd.append("--apply-romless-patches")
+
+    if upstream_fixes:
+        cmd.append("--upstream-fixes")
 
     if dry_run:
         print(f"  [DRY RUN] Would run: {' '.join(cmd)}")
@@ -496,6 +500,12 @@ def main():
         help="Install and apply ROM-less patches (allows testing ROM-based games without ROMs)",
     )
     parser.add_argument(
+        "--upstream-fixes",
+        action="store_true",
+        help="Overlay fork fixes for upstream world bugs (e.g. ALttP bunny rules) "
+             "onto the vanilla worlds. Opt-in; needed for ALttP worldgen UT-fuzz to pass",
+    )
+    parser.add_argument(
         "--patch-mode",
         choices=["monkey", "none"],
         default="monkey",
@@ -574,7 +584,8 @@ def main():
         return 1
 
     # Step 5: Run installer (includes romless patches if requested)
-    if not run_installer(target_dir, version, args.all, args.patch_mode, args.romless, args.dry_run):
+    if not run_installer(target_dir, version, args.all, args.patch_mode, args.romless,
+                         args.upstream_fixes, args.dry_run):
         print("\n[FAIL] Failed to run JSON Tools installer")
         return 1
 

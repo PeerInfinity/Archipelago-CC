@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Summary (APWorld)
 
-**Generated:** 2026-06-27 23:10:37 UTC
+**Generated:** 2026-06-28 01:45:41 UTC
 
-**Source Data Created:** 2026-03-22T00:10:03.442853+00:00
+**Source Data Created:** 2026-06-27T23:08:01.657580+00:00
 
-**Source Data Last Updated:** 2026-03-22T00:10:03.442863+00:00
+**Source Data Last Updated:** 2026-06-27T23:08:01.657589+00:00
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -26,8 +26,8 @@ Additional information:
 
 ### Individual Test Results
 
-- **Minimal Test:** 44/118 passed (37.3%)
-- **Full Test:** 44/118 passed (37.3%)
+- **Minimal Test:** 38/117 passed (32.5%)
+- **Full Test:** 38/117 passed (32.5%)
 - **Multiclient Test:** 52/118 passed (44.1%)
 - **Multiworld Test:** 16/118 passed (13.6%)
 
@@ -40,19 +40,19 @@ Additional information:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 13/118 (11.0%)
-- **Templates passing 3 tests:** 31/118 (26.3%)
-- **Templates passing 2 tests:** 0/118 (0.0%)
-- **Templates passing 1 test:** 11/118 (9.3%)
-- **Templates passing 0 tests:** 63/118 (53.4%)
+- **Templates passing all 4 tests:** 9/118 (7.6%)
+- **Templates passing 3 tests:** 26/118 (22.0%)
+- **Templates passing 2 tests:** 7/118 (5.9%)
+- **Templates passing 1 test:** 16/118 (13.6%)
+- **Templates passing 0 tests:** 60/118 (50.8%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 13 templates passing all 4 tests:
+Of the 9 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 13/13 (100.0%)
-- **Passing with Generic Logic:** 13/13 (100.0%)
-- **Passing with Both Generic:** 13/13 (100.0%)
+- **Passing with Generic Exporter:** 9/9 (100.0%)
+- **Passing with Generic Logic:** 9/9 (100.0%)
+- **Passing with Both Generic:** 9/9 (100.0%)
 
 **Combined Custom Code Size:**
 
@@ -71,13 +71,13 @@ Of the 13 templates passing all 4 tests:
 | Actraiser | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Against the Storm* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Air Delivery* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
-| An Untitled Story | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Anodyne* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| An Untitled Story | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Anodyne* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Another Crabs Treasure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Ape Escape* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Ape Escape 3* | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Astalon* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Autopelago | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Autopelago | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Axiom Verge* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Balatro* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Brotato | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -89,7 +89,7 @@ Of the 13 templates passing all 4 tests:
 | *CrossCode* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Crystal Project* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | *Crystalis* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Cuphead | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Cuphead | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | DORONKO WANKO | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Deep Rock Galactic* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -101,7 +101,7 @@ Of the 13 templates passing all 4 tests:
 | *Fire Emblem Sacred Stones* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Frogmonster* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *GZDoom* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| *Garfield Kart - Furious Racing* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| *Garfield Kart - Furious Racing* | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Golden Sun The Lost Age | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Grim Dawn* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Hammerwatch* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -111,7 +111,7 @@ Of the 13 templates passing all 4 tests:
 | *Into the Breach* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Jigsaw | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Jigsaw | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | K-On! After School Live!! | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Keep Talking and Nobody Explodes* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -119,36 +119,36 @@ Of the 13 templates passing all 4 tests:
 | Kingdom Hearts RE Chain of Memories | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Kirby Super Star | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | League of Legends | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Lil Gator Game | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| *Lingo 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ⚫ | ✅ | N/A |
-| Little Witch Nobeta | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Lil Gator Game | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Lingo 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Little Witch Nobeta | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Lunacid* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Lunacid* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Majora's Mask Recompiled* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Mario Kart Double Dash* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Minishoot Adventures* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Minit* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Minit* | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Monster Sanctuary* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Nine Sols* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Ori and the Blind Forest* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Ori and the Will of the Wisps* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ⚫ | ✅ | ✅ | N/A |
+| *Ori and the Blind Forest* | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Ori and the Will of the Wisps* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Oxygen Not Included* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Pizza Tower* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Pizza Tower* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | PlateUp | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Pokemon FireRed and LeafGreen* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Pokemon Mystery Dungeon Explorers of Sky* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Pseudoregalia* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Rabi-Ribi* | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rain World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| *Rabi-Ribi* | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Rain World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Reventure* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *Reventure* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Rift Wizard | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Rift of the Necrodancer* | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Rusted Moss* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | *Sentinels of the Multiverse* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *Shadow The Hedgehog* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| *Shadow The Hedgehog* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | *Ship of Harkinian* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Sly Cooper and the Thievius Raccoonus* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -161,22 +161,22 @@ Of the 13 templates passing all 4 tests:
 | *Spyro 3* | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Stacklands* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Star Fox 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Star Wars Episode I Racer | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | Super Cat Planet | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *System Shock 2* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| *System Shock 2* | ❓ N/A | ❓ N/A | ❌ Failed | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | N/A |
 | *TCG Card Shop Simulator* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Tetris Attack* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tevi | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
-| *The Legend of Zelda - Oracle of Seasons* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| *The Legend of Zelda - Oracle of Seasons* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *The Legend of Zelda - Phantom Hourglass* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| *The Sims 4* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *The Sims 4* | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *ToeJam and Earl* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Tyrian* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *Wario Land* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Watery Words | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Watery Words | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | Wordipelago | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | *XCOM 2 War of the Chosen* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |

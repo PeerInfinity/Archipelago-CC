@@ -254,6 +254,12 @@
                 {"title": "Skip Required Files Proposal", "path": "docs/json/developer/proposals/skip-required-files-proposal.md"}
             ]
         },
+        "worlds/alttp/EnemyShuffle.py": {
+            "description": "Skip the enemizer base-ROM read in `generate_enemy_shuffle_state()` when the ROM is absent (`check_rom_available`); enemy shuffle is a ROM-only effect, so the state stays `None`.",
+            "links": [
+                {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/world-init-files.diff"}
+            ]
+        },
         "worlds/ff1/__init__.py": {
             "description": "Added skip_required_files support to allow generation without key items.",
             "links": [
