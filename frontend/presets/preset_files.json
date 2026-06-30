@@ -522,7 +522,6 @@
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1_costs.json",
           "AP_14089154938208861744_P1_Player1_gamedata.json",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -540,7 +539,6 @@
         ],
         "files": [
           "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_P1_Player1_costs.json",
           "AP_01043188731678011336_P1_Player1_gamedata.json",
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
@@ -558,7 +556,6 @@
         ],
         "files": [
           "AP_84719271504320872445.archipelago",
-          "AP_84719271504320872445_P1_Player1_costs.json",
           "AP_84719271504320872445_P1_Player1_gamedata.json",
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
@@ -2537,31 +2534,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 1194,
-        "total_locations": 1194
-      }
     }
   },
   "earthbound": {
@@ -2764,31 +2736,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": true,
-        "locations_checked": 1,
-        "total_locations": 1
       }
     }
   },
@@ -3052,31 +2999,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 180,
-        "total_locations": 239
-      }
     }
   },
   "kh1": {
@@ -3153,7 +3075,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-27Jun2026-180240_0.6.8.zip",
+          "AP-14089154938208861744-P1-Player1-30Jun2026-021247_0.6.8.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -4126,31 +4048,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 2,
-        "seeds_failed": 8,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 960,
-        "total_locations": 1010
-      }
     }
   },
   "raft": {
@@ -4292,31 +4189,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 105,
-        "total_locations": 316
       }
     }
   },
@@ -4758,31 +4630,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 489,
-        "total_locations": 489
       }
     }
   },
@@ -5830,31 +5677,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 90,
-        "total_locations": 90
-      }
     }
   },
   "yoshisisland": {
@@ -5937,31 +5759,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 981,
-        "total_locations": 981
-      }
     }
   },
   "zillion": {
@@ -5983,31 +5780,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
-        "total_seeds": 10,
-        "first_failure_seed": 1,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 0,
-        "total_locations": 147
       }
     }
   },
@@ -6145,38 +5917,6 @@
         ],
         "is_vanilla": true,
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6524,38 +6264,6 @@
         ],
         "is_vanilla": true,
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 16,
-        "total_locations": 16
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -7011,38 +6719,6 @@
         ],
         "is_vanilla": true,
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 62,
-        "total_locations": 62
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
       }
     }
   },
@@ -9228,38 +8904,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 232,
-        "total_locations": 232
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "alttp_vanilla_worldgen2": {
@@ -9283,38 +8927,6 @@
         "is_vanilla": true,
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "alttp_worldgen2": {
@@ -9336,38 +8948,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -9391,38 +8971,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 131,
-        "total_locations": 131
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "adventure_worldgen2": {
@@ -9444,38 +8992,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 25,
-        "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -9500,38 +9016,6 @@
         "is_vanilla": true,
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 16,
-        "total_locations": 16
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "codingadventure_vanilla_worldgen2": {
@@ -9555,336 +9039,13 @@
         "is_vanilla": true,
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 62,
-        "total_locations": 62
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
-      }
-    }
-  },
-  "procgen_topdown": {
-    "name": "Procgen Top-Down",
-    "folders": {
-      "AP_1": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_1_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure s1"
-      },
-      "AP_2": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_2_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure s2"
-      },
-      "AP_3": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_3_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure s3"
-      },
-      "AP_4": {
-        "seed": 4,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_4_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "apcalc s1"
-      },
-      "AP_5": {
-        "seed": 5,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_5_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "apcalc s2"
-      },
-      "AP_6": {
-        "seed": 6,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_6_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "apcalc s3"
-      },
-      "AP_7": {
-        "seed": 7,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_7_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "alttp s1"
-      },
-      "AP_8": {
-        "seed": 8,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_8_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "alttp s2"
-      },
-      "AP_9": {
-        "seed": 9,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_9_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "alttp s3"
-      },
-      "AP_10": {
-        "seed": 10,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_10_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s1"
-      },
-      "AP_11": {
-        "seed": 11,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_11_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s2"
-      },
-      "AP_12": {
-        "seed": 12,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Top-Down"
-          }
-        ],
-        "files": [
-          "AP_12_rules.json"
-        ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s3"
-      }
-    }
-  },
-  "jta_mixed_test": {
-    "name": "JtA (mixed substrate test)",
-    "folders": {
-      "AP_1": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "JtA (mixed substrate test)"
-          }
-        ],
-        "files": [
-          "AP_1_rules.json"
-        ],
-        "has_procgen_data": true
-      }
-    }
-  },
-  "jta_substrate_test": {
-    "name": "JtA (substrate test)",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "JtA (substrate test)"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744_rules.json"
-        ],
-        "has_procgen_data": true,
-        "is_vanilla": true
-      }
-    }
-  },
-  "procgen_maze": {
-    "name": "Procgen Maze",
-    "folders": {
-      "AP_1": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze"
-          }
-        ],
-        "files": [
-          "AP_1_rules.json"
-        ],
-        "has_procgen_data": true
-      },
-      "AP_2": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze"
-          }
-        ],
-        "files": [
-          "AP_2_rules.json"
-        ],
-        "has_procgen_data": true
-      },
-      "AP_3": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Procgen Maze"
-          }
-        ],
-        "files": [
-          "AP_3_rules.json"
-        ],
-        "has_procgen_data": true
-      }
-    }
-  },
-  "robotkitty_tilemap": {
-    "name": "Robot Wants Kitty (Tile Map Analyzer)",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Robot Wants Kitty"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744_rules.json",
-          "robotkitty_tilemap.json",
-          "robotkitty_tiles.json"
-        ]
-      }
     }
   },
   "metadata": {
-    "test_data_updated": "2026-06-28T01:45:49.700824+00:00",
+    "test_data_updated": "2026-06-30T02:29:29.181834+00:00",
     "games_with_test_data": 130,
-    "total_games": 160,
-    "games_without_test_data": 30,
+    "total_games": 155,
+    "games_without_test_data": 25,
     "test_types_loaded": [
       "minimal_spoiler",
       "full_spoiler",
