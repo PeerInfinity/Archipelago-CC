@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-06-28 01:45:41 UTC
+**Generated:** 2026-06-30 17:55:02 UTC
 
-**Source Data Created:** 2026-06-27T22:46:39.901087+00:00
+**Source Data Created:** 2026-06-30T17:55:01.209209+00:00
 
-**Source Data Last Updated:** 2026-06-27T22:46:39.901098+00:00
+**Source Data Last Updated:** 2026-06-30T17:55:01.209220+00:00
 
 ## Summary
 
-- **Total Games:** 76
-- **Passed:** 75 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Total Games:** 77
+- **Passed:** 77 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 41/75 (54.7% of passed)
-- **Passing with Generic Logic:** 70/75 (93.3% of passed)
-- **Passing with Both Generic:** 41/75 (54.7% of passed)
+- **Passing with Generic Exporter:** 42/77 (54.5% of passed)
+- **Passing with Generic Logic:** 72/77 (93.5% of passed)
+- **Passing with Both Generic:** 42/77 (54.5% of passed)
 
 ## Test Results
 
@@ -42,7 +42,7 @@
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | ✅ | 238/238 | 219/219 | 19/19 | ✅ | 238/238 | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 1.4KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 1.4KB | ✅ |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 4.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | ✅ | ✅ |
@@ -68,7 +68,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 20.4KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 3.6KB | ✅ |
-| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 38.2KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 38.2KB | ✅ |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 7.3KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | ✅ | ✅ |
@@ -84,18 +84,19 @@
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 189/189 | 187/187 | 2/2 | ✅ | 189/189 | ✅ | ✅ |
+| Rule Builder Test | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
 | Satisfactory | ✅ Passed | 0 | ✅ | 555/555 | 377/377 | 178/178 | ✅ | 555/555 | 41.8KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.6KB | 7.5KB |
+| Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.6KB | ✅ |
 | Seedling | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | ✅ | ✅ |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 29.3KB | 90.1KB |
+| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 29.3KB | ✅ |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 61.0KB | 119.4KB |
+| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 61.0KB | ✅ |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.6KB | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 3.1KB | ✅ |
@@ -103,7 +104,7 @@
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 7.0KB | ✅ |
-| The Witness | ❌ Failed | 0 | ❌ | 32/147 | 27/132 | 5/15 | ❌ | 30/147 | 14.6KB | ✅ |
+| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 32.0KB | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 3.8KB | ✅ |
