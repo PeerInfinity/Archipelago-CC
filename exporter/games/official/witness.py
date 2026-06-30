@@ -473,12 +473,172 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         return None
 
     # =========================================================================
+    # Complex helper resolution (expert pressure plates, theater->tunnels EP)
+    # =========================================================================
+
+    @staticmethod
+    def _and(*conditions: Dict[str, Any]) -> Dict[str, Any]:
+        return {'type': 'and', 'conditions': list(conditions)}
+
+    @staticmethod
+    def _or(*conditions: Dict[str, Any]) -> Dict[str, Any]:
+        return {'type': 'or', 'conditions': list(conditions)}
+
+    def _rule_for_callable(self, rule_func) -> Dict[str, Any]:
+        """Best-effort conversion of a single CollectionRule callable to a rule dict."""
+        from exporter.analyzer import analyze_rule
+
+        if rule_func is None:
+            return {'type': 'constant', 'value': True}
+
+        # Bare bound method region.can_reach.
+        region_name = self._extract_region_name(rule_func)
+        if region_name:
+            return {'type': 'can_reach', 'region': region_name}
+
+        # lambda state: region.can_reach(state) (single-region closure).
+        closure = getattr(rule_func, '__closure__', None)
+        if closure and len(closure) == 1:
+            try:
+                value = closure[0].cell_contents
+            except ValueError:
+                value = None
+            if (hasattr(value, 'name') and hasattr(value, 'entrances')
+                    and hasattr(value, 'can_reach')):
+                return {'type': 'can_reach', 'region': value.name}
+
+        analyzed = analyze_rule(rule_func=rule_func, game_handler=self)
+        if not analyzed or analyzed.get('type') == 'error':
+            # Couldn't recover the requirement; treat the connection as open so we
+            # don't under-permit (entrance rules are normally analyzable lambdas).
+            return {'type': 'constant', 'value': True}
+        return self._simplify_region_reachability(analyzed)
+
+    def _two_way_term(self, region_a: str, region_b: str) -> Dict[str, Any]:
+        """Build a rule for ``any(e.can_reach(state) for e in two_way[region_a, region_b])``.
+
+        ``e.can_reach`` means the entrance's parent region is reachable AND its own
+        access rule passes, so each entrance becomes ``And(can_reach(parent), rule)``
+        and the term is the OR over the (bidirectional) entrances connecting the
+        two regions.
+        """
+        register = getattr(getattr(self.world, 'player_regions', None),
+                           'two_way_entrance_register', None)
+        if register is None:
+            return {'type': 'constant', 'value': False}
+
+        seen = set()
+        entrances = []
+        for key in ((region_a, region_b), (region_b, region_a)):
+            for e in register.get(key, []):
+                if id(e) not in seen:
+                    seen.add(id(e))
+                    entrances.append(e)
+
+        options = []
+        for e in entrances:
+            parent = getattr(getattr(e, 'parent_region', None), 'name', None)
+            if parent is None:
+                continue
+            parent_reach = {'type': 'can_reach', 'region': parent}
+            sub = self._rule_for_callable(getattr(e, 'access_rule', None))
+            if sub.get('type') == 'constant':
+                if sub.get('value') is True:
+                    options.append(parent_reach)
+                # value is False -> this entrance can never be used; skip it
+                continue
+            options.append(self._and(parent_reach, sub))
+
+        if not options:
+            return {'type': 'constant', 'value': False}
+        if len(options) == 1:
+            return options[0]
+        return {'type': 'or', 'conditions': options}
+
+    def _build_expert_pp2_rule(self) -> Dict[str, Any]:
+        """Mirror worlds/witness/rules.py:_can_do_expert_pp2 as a concrete rule tree."""
+        t = self._two_way_term
+        return self._and(
+            t("Keep 2nd Pressure Plate", "Keep"),
+            {'type': 'can_reach', 'region': 'Keep'},
+            t("Keep 3rd Pressure Plate", "Keep 4th Pressure Plate"),
+            self._or(
+                t("Keep 4th Pressure Plate", "Shadows"),
+                self._and(
+                    t("Keep 4th Pressure Plate", "Keep Tower"),
+                    self._or(
+                        t("Keep", "Keep Tower"),
+                        self._and(
+                            t("Keep 4th Maze", "Keep Tower"),
+                            self._or(
+                                t("Keep 4th Maze", "Keep"),
+                                self._and(
+                                    t("Keep 4th Maze", "Keep 3rd Maze"),
+                                    self._or(
+                                        t("Keep 3rd Maze", "Keep"),
+                                        self._and(
+                                            t("Keep 3rd Maze", "Keep 2nd Maze"),
+                                            t("Keep 2nd Maze", "Keep"),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        )
+
+    def _build_theater_to_tunnels_rule(self) -> Dict[str, Any]:
+        """Mirror worlds/witness/rules.py:_can_do_theater_to_tunnels as a rule tree."""
+        t = self._two_way_term
+        return self._or(
+            self._and(
+                t("Tunnels", "Windmill Interior"),
+                t("Theater", "Windmill Interior"),
+            ),
+            self._and(
+                t("Tunnels", "Windmill Interior"),
+                t("Outside Windmill", "Windmill Interior"),
+            ),
+            t("Tunnels", "Town"),
+        )
+
+    _HELPER_BUILDERS = {
+        '_can_do_expert_pp2': '_build_expert_pp2_rule',
+        '_can_do_theater_to_tunnels': '_build_theater_to_tunnels_rule',
+    }
+
+    def _resolve_witness_helpers(self, node: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """Recursively replace unresolved witness helper references with rule trees.
+
+        The exporter emits ``_can_do_expert_pp2`` / ``_can_do_theater_to_tunnels``
+        as bare helper references because their Python bodies inspect runtime
+        entrance objects (two_way_entrance_register). The frontend has no
+        implementation, so it would evaluate them as False. We expand them here
+        into concrete can_reach/and/or rules the frontend can evaluate.
+        """
+        if isinstance(node, list):
+            return [self._resolve_witness_helpers(n) for n in node]
+        if not isinstance(node, dict):
+            return node
+
+        if node.get('type') == 'helper':
+            builder = self._HELPER_BUILDERS.get(node.get('name'))
+            if builder and getattr(self, 'world', None) is not None:
+                return getattr(self, builder)()
+            return node
+
+        return {k: self._resolve_witness_helpers(v) for k, v in node.items()}
+
+    # =========================================================================
     # Public API
     # =========================================================================
 
     def postprocess_rule(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """Post-process rules to handle region reachability and laser activations."""
         simplified = self._simplify_region_reachability(rule)
+        simplified = self._resolve_witness_helpers(simplified)
 
         # Handle laser activation locations.
         #
